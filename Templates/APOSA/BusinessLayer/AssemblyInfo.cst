@@ -1,0 +1,45 @@
+<%-- 
+Name: Assembly Info Template
+Author: Chris Lasater
+Description: Allows generation of Concrete Public BL classes from Update and Select stored procs
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="../Utility/ProjectHelper.cs" Inherits="Utility.ProjectHelper" Description="Assembly Info Template" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("<%= CompanyNameSpace %>.<%= ProjectNameSpace %>.BusinessLayer")]
+[assembly: AssemblyDescription("<%= ProjectDescription %>")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("<%= CompanyName %>")]
+[assembly: AssemblyProduct("<%= CompanyNameSpace %>.<%= ProjectNameSpace %>.BusinessLayer")]
+[assembly: AssemblyCopyright("Copyright <%= DateTime.Now.Year %>")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("350073a6-e35a-43f2-b7fb-eae0609e4936")]
+
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Revision and Build Numbers 
+// by using the '*' as shown below:
+[assembly: AssemblyVersion("<%= ProjectVersion %>")]
+[assembly: AssemblyFileVersion("<%= ProjectVersion %>")]

@@ -1,0 +1,141 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="XML"
+    Description="Generate Linq to Sql Dbml File"
+    Debug="true" OutputType="None" %>
+
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Src="Internal\Common.cs" %>
+<%@ Assembly Src="Internal\Schema.cs" %>
+<%@ Assembly Src="Internal\Generator.cs" %>
+
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="DbmlSchema" %>
+
+<%@ Property Category="1.Database" Name="SourceDatabase"
+    Type="SchemaExplorer.DatabaseSchema" Optional="False"
+    OnChanged="OnSourceDatabaseChanged"
+    Description="The source database for Linq to Sql." %>
+
+<%@ Property Category="1.Database" Name="IncludeViews"
+    Type="System.Boolean" Default="false" Optional="False"
+    Description="Include views in mapping." %>
+
+<%@ Property Category="1.Database" Name="IncludeFunctions"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Include stored procedures and user functions in mapping." %>
+
+<%@ Property Category="1.Database" Name="IgnoreList"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of regular expressions to ignore tables and views when generating mapping."
+    Default="^sysdiagrams$" %>
+
+<%@ Property Category="1.Database" Name="CleanExpression"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of regular expressions to clean table, view and column names."
+    Default="^\\w+_" %>
+
+<%@ Property Category="2.Class" Name="EntityBase"
+    Type="System.String" Default="LinqEntityBase" Optional="True"
+    Description="The base class for the entity." %>
+
+<%@ Property Category="2.Class" Name="EntityNamespace"
+    Type="System.String" Default="" Optional="False"
+    OnChanged="OnEntityNamespaceChanged"
+    Description="The namespace to use for the entity class files."%>
+
+<%@ Property Category="2.Class" Name="ContextNamespace"
+    Type="System.String" Default="" Optional="False"
+    OnChanged="OnContextNamespaceChanged"
+    Description="The namespace to use for the context class files."%>
+
+<%@ Property Category="2.Class" Name="DisableRenaming"
+    Type="System.Boolean" Default="false" Optional="true"
+    Description="Disable the automatic renaming.of class, property and function names." %>
+
+<%@ Property Category="3.Mapping" Name="DbmlFile"
+    Type="System.String" Default="Database.dbml" Optional="False"
+    Description="The full path to the dbml file."
+    Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<script runat="template">
+
+    public void Generate()
+    {
+        string filePath = Path.GetFullPath(DbmlFile);
+        string outputDirectory = Path.GetDirectoryName(filePath);
+        
+        if (!Directory.Exists(outputDirectory))
+            Directory.CreateDirectory(outputDirectory);
+
+        if (SourceDatabase != null)
+        {
+            this.Progress.MaximumValue = (SourceDatabase.Tables.Count + 1);
+            if (IncludeViews)
+                this.Progress.MaximumValue += SourceDatabase.Views.Count;
+            if (IncludeFunctions)
+                this.Progress.MaximumValue += SourceDatabase.Commands.Count;
+            this.Progress.Step = 1;
+        }
+       
+        GeneratorSettings settings = new GeneratorSettings();
+        settings.MappingFile = filePath;
+        settings.ContextNamespace = ContextNamespace;        
+        settings.EntityNamespace = EntityNamespace;
+        settings.EntityBase = EntityBase;
+        settings.IncludeViews = IncludeViews;
+        settings.IncludeFunctions = IncludeFunctions;
+        settings.DisableRenaming = DisableRenaming;
+        
+        foreach(string clean in CleanExpression)
+            settings.CleanExpressions.Add(new Regex(clean));
+        foreach(string ignore in IgnoreList)
+            settings.IgnoreExpressions.Add(new Regex(ignore));
+        
+        DbmlGenerator generator = new DbmlGenerator(settings);
+        generator.SchemaItemProcessed += new EventHandler<SchemaItemProcessedEventArgs>(OnSchemaItemProcessed);
+        Database db = generator.Create(SourceDatabase);
+    }
+    
+    private void OnSchemaItemProcessed(object sender, SchemaItemProcessedEventArgs e)
+    {
+        this.Progress.PerformStep();
+        Response.WriteLine(e.Name);
+    }
+    
+    private void OnSourceDatabaseChanged(object sender, EventArgs e)
+    {
+        if (SourceDatabase == null)
+            return;
+            
+        if(string.IsNullOrEmpty(DbmlFile) || DbmlFile.Equals("Database.dbml"))
+            DbmlFile = Path.Combine(CodeTemplateInfo.DirectoryName, SourceDatabase.Database.Name + ".dbml");
+
+        if (string.IsNullOrEmpty(ContextNamespace))
+            ContextNamespace = SourceDatabase.Database.Name + ".Data";;
+
+    }
+    private void OnEntityNamespaceChanged(object sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(EntityNamespace))
+            return;
+            
+        if (string.IsNullOrEmpty(ContextNamespace))
+            ContextNamespace = EntityNamespace;
+    }
+    private void OnContextNamespaceChanged(object sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(ContextNamespace))
+            return;
+            
+        if (string.IsNullOrEmpty(EntityNamespace))
+            EntityNamespace = ContextNamespace;
+    }
+</script>
+Generating Linq to Sql Dbml File ...
+<% Generate(); %>

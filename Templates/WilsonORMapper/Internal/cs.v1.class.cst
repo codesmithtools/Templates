@@ -1,0 +1,635 @@
+<%@ CodeTemplate 
+	Language="C#" 
+	TargetLanguage="C#" 
+	Description="This Template Generates C# Business Objects for the ORMapper" 
+	Debug="true" %>
+
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Src="CommonUtility.cs" %>
+
+<%@ Register Name="MappingCommon" Template="mapping.common.cst" MergeProperties="True" ExcludeProperties="MappingObject" %>
+<%@ Register Name="ClassCommon" Template="class.common.cst" MergeProperties="True" ExcludeProperties="" %>
+<%@ Register Name="CSharpProperty" Template="cs.property.cst" MergeProperties="False" ExcludeProperties="" %>
+
+<%@ Import Namespace="System.Collections" %>
+<%@ Import Namespace="System.Collections.Specialized" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Xml" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+
+<script runat="template">
+	
+	private System.Collections.Specialized.NameValueCollection  primaryKeys = new System.Collections.Specialized.NameValueCollection();
+	private StringBuilder properties;
+	private StringBuilder getHelper;
+	private StringBuilder setHelper;
+	
+	private string _className = "";
+	
+	[Browsable(false)]
+	public string ClassName {
+        get { return _className;}
+    }
+
+	public string GetPrimaryKeyArguments()
+	{
+		StringBuilder sb = new StringBuilder();
+		for(int x = 0; x < primaryKeys.Count; x++)
+		{
+			string property = primaryKeys.Keys[x];
+			string dataType = primaryKeys[x];			
+			string paramName = StringUtil.ToCamelCase(property);
+			paramName = CommonUtility.CreateEscapedIdentifier(paramName);
+			
+			sb.AppendFormat("{0} {1}", dataType, paramName);
+			if (x < primaryKeys.Count-1)
+			{
+				sb.Append(", ");
+			}
+		}
+		
+		return sb.ToString();
+	}
+	
+	public string GetPrimaryKeyWhere(string helperName, string whereName)
+	{
+		StringBuilder code = new StringBuilder();
+		for(int x = 0; x < primaryKeys.Count; x++)
+		{
+			string property = primaryKeys.Keys[x];
+			string parameter = StringUtil.ToCamelCase(property);
+			parameter = CommonUtility.CreateEscapedIdentifier(parameter);
+			string dataType = primaryKeys[x];			
+			
+			if (x > 0)
+			{
+				code.Append('\t', 3);
+				code.Append(whereName);
+				code.Append(" += ");
+			}
+			
+			code.Append(helperName);
+			code.Append(".GetExpression(\"");
+			code.Append(ClassName);
+			code.Append(".");
+			code.Append(property);
+			code.Append("\", ");
+			code.Append(parameter);
+			code.Append(");");			
+			code.Append("\r\n");
+			
+			if (x < primaryKeys.Count-1)
+			{
+				code.Append('\t', 3);
+				code.Append(whereName);
+				code.Append(" += ");
+				code.Append("\" and \";");
+				code.Append("\r\n");
+			}
+		}
+		
+		return code.ToString();
+	}
+	
+	public bool IsPrimaryKey(string name)
+	{
+		ArrayList keys = new ArrayList(this.MappingEntity.keyMember.Split(new Char[] {',', ' '}));
+		return keys.Contains(name);
+	}
+	
+	public void Generate()
+	{
+		_className = CommonUtility.GetClassName(this.MappingEntity.type);
+		CSharpProperty propertyTemplate = new CSharpProperty();
+		
+		primaryKeys = new System.Collections.Specialized.NameValueCollection ();
+		properties = new StringBuilder();
+		getHelper = new StringBuilder();
+		setHelper = new StringBuilder();
+		
+		foreach(attribute at in this.MappingEntity.attributes)
+		{
+			string summary = string.Format("Database mapping to column {0}.{1}", this.MappingEntity.table, at.field);
+			string propertyName = at.alias;
+			string propertyType = CommonUtility.GetAliasVariableType(at.type);
+			string memberName = at.member;
+			string memberType = propertyType;
+			string memberValue = "";
+			string propertyText = "";
+			bool isReadonly = (at.persistType == attributePersistType.ReadOnly ||  at.persistType == attributePersistType.Concurrent);
+			
+			if (at.nullValue != null && at.nullable)
+			{
+				memberValue = CommonUtility.GetNullDefault(at.type, at.nullValue);
+			}
+			
+			if (IsPrimaryKey(memberName))
+			{
+				primaryKeys.Add(propertyName, propertyType); // save primary key type
+				isReadonly = (isReadonly || this.MappingEntity.keyType == entityKeyType.Auto);
+			}
+						
+			propertyTemplate.MemberName = memberName;
+			propertyTemplate.MemberType = memberType;
+			propertyTemplate.MemberValue = memberValue;
+			propertyTemplate.PropertyName = propertyName;
+			propertyTemplate.PropertyType = propertyType;
+			propertyTemplate.Readonly = isReadonly;
+			propertyTemplate.Summary = summary;
+			propertyTemplate.PropertyGet = propertyText;
+			
+			properties.Append(propertyTemplate.RenderToString());
+			
+			//IObjectHelper get Indexer case statement
+			getHelper.AppendFormat("\t\t\t\t\tcase \"{0}\": return {0};\r\n", memberName);
+			//IObjectHelper set Indexer case statement
+			setHelper.AppendFormat("\t\t\t\t\tcase \"{0}\": {0} = ({1})value; break;\r\n", memberName, memberType);
+		}
+		
+		foreach(relation rt in this.MappingEntity.relations)
+		{
+			if (rt.queryOnly)
+				continue; // skip query only
+			
+			string summary = "";
+			string propertyName = rt.alias;
+			string propertyType = "";						
+			string memberName = rt.member;
+			string memberType = "";
+			string memberValue = "";			
+			string propertyText = memberName;
+			bool isReadonly = true;
+			string className = CommonUtility.GetClassName(rt.type);
+			
+			switch (rt.relationship)
+			{
+				case relationRelationship.ManyToOne :
+					summary = string.Format("Instance of a {0} object", className);
+					propertyType = className;
+					memberType = propertyType;
+						
+					if (rt.lazyLoad)
+					{
+						memberType = "ObjectHolder";
+						propertyText = string.Format("({0}){1}.InnerObject", propertyType, memberName);
+					}
+					break;
+				case relationRelationship.OneToMany :
+				case relationRelationship.ManyToMany :
+					summary = string.Format("Collection of {0} objects", className);
+					propertyType = "IList";
+					memberType = propertyType;
+					break;
+			}
+						
+			propertyTemplate.MemberName = memberName;
+			propertyTemplate.MemberType = memberType;
+			propertyTemplate.MemberValue = memberValue;
+			propertyTemplate.PropertyName = propertyName;
+			propertyTemplate.PropertyType = propertyType;
+			propertyTemplate.Readonly = isReadonly;
+			propertyTemplate.Summary = summary;
+			propertyTemplate.PropertyGet = propertyText;
+			
+			properties.Append(propertyTemplate.RenderToString());
+			
+			//IObjectHelper get Indexer case statement
+			getHelper.AppendFormat("\t\t\t\t\tcase \"{0}\": return {0};\r\n", memberName);
+			//IObjectHelper set Indexer case statement
+			setHelper.AppendFormat("\t\t\t\t\tcase \"{0}\": {0} = ({1})value; break;\r\n", memberName, memberType);
+			
+		}
+	}
+</script>
+<% this.Generate();  %>
+//------------------------------------------------------------------------------
+// <autogenerated>
+//     This code was generated by a CodeSmith Template.
+//
+//	   DO NOT MODIFY contents between the marked regions. Changes to the
+//	   marked regions will be lost if the code is regenerated.
+// </autogenerated>
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections;
+using Wilson.ORMapper;
+
+namespace <%= ClassNamespace %>
+{
+	///<summary>Database mapping to table <%= this.MappingEntity.table %></summary>
+	public class <%
+	 	Response.Write(ClassName);
+		if (ImplementHelper || ImplementNotification)
+			Response.Write(" : ");
+		
+		if (ImplementHelper)
+			Response.Write("IObjectHelper");
+			
+		if (ImplementNotification && ImplementHelper)
+			Response.Write(" , IObjectNotification");
+		else if (ImplementNotification && !ImplementHelper)
+			Response.Write("IObjectNotification");		
+	%>
+	{
+		///<summary>Initializes a new instance of this class</summary>
+		public <%= ClassName %>()
+		{
+			// Default Constructor
+		}
+		
+		#region CodeSmith Generated - DO NOT MODIFY
+		// ----------------------------------------------------------------------
+		//  NOTE: The following region is required by a CodeSmith template.
+		//        DO NOT MODIFY the contents of this region. Changes 
+		//        to this region will be lost if the code is regenerated.
+	    // ----------------------------------------------------------------------
+		//<CodeSmithGenerated>
+		#region ORMapper Properties - DO NOT MODIFY
+<%= properties.ToString() %>
+		#endregion //ORMapper Members - DO NOT MODIFY
+
+		#region ORMapper Default Methods - DO NOT MODIFY		
+		<% if (this.MappingEntity.keyType != entityKeyType.User 
+				&& this.MappingEntity.keyType != entityKeyType.Composite 
+				&& this.MappingEntity.keyType != entityKeyType.None) { %>
+		///<summary>Initializes a new instance of this class</summary>
+		///<param name="track">Set to true to begin ORMapper tracking on this instance</param>
+		public <%= ClassName %>(bool track)
+		{
+			if (track) DataManager.ObjectSpace.StartTracking(this, InitialState.Inserted);
+		}
+		<% } %>	
+		
+		<% if (this.MappingEntity.keyType != entityKeyType.None
+			&& primaryKeys.Count > 0) { %>
+		///<summary>Retrieve an instance of this class using its ID from the persistence store</summary>
+		public static <%= ClassName %> Retrieve(<%= GetPrimaryKeyArguments() %>)
+		{
+			<% if (this.MappingEntity.keyType == entityKeyType.Composite && primaryKeys.Count > 1) { %>			
+			QueryHelper helper = DataManager.ObjectSpace.QueryHelper;
+			string where = <%= GetPrimaryKeyWhere("helper", "where") %>
+			return RetrieveFirst(where);			
+			<% } else {%>	
+			return (<%= ClassName %>)DataManager.ObjectSpace.GetObject(typeof(<%= ClassName %>), <%= CommonUtility.CreateEscapedIdentifier(StringUtil.ToCamelCase(primaryKeys.GetKey(0))) %>);
+			<% } %>	
+		}
+		<% } %>	
+		
+		///<summary>Retrieve the first instance of this class using the where clause</summary>
+		///<param name="whereClause">The SQL where clause to filter the records</param>
+		public static <%= ClassName %> RetrieveFirst(string whereClause)
+		{
+			return RetrieveFirst(whereClause, string.Empty);
+		}
+
+		///<summary>Retrieve the first instance of this class using the where clause</summary>
+		///<param name="whereClause">The SQL where clause to filter the records</param>
+		///<param name="sortClause">The SQL sort statement</param>
+		public static <%= ClassName %> RetrieveFirst(string whereClause, string sortClause)
+		{
+			int pageCount;
+			IList pageSet = RetrievePage(whereClause, sortClause, 1, 1, out pageCount);
+			if (pageSet != null && pageSet.Count > 0)
+				return (<%= ClassName %>)pageSet[0];
+			else
+				return null;
+		}
+		
+		///<summary>Retrieve all instances of this class from the persistence store</summary>
+		public static IList RetrieveAll()
+		{
+			return RetrieveAll(string.Empty);
+		}
+
+		///<summary>Retrieve all instances of this class from the persistence store</summary>
+		///<param name="sortClause">The SQL sort statement</param>
+		public static IList RetrieveAll(string sortClause)
+		{
+			ObjectQuery query = new ObjectQuery(typeof(<%= ClassName %>), string.Empty, sortClause);
+			return RetrieveQuery(query);
+		}
+		
+		///<summary>Retrieve a paged collection of instances of this class from the persistence store</summary>
+		///<param name="pageSize">The number of records in each page</param>
+		///<param name="pageIndex">The page index to return</param>
+		///<param name="pageCount">The total number of pages</param>
+		public static IList RetrievePage(int pageSize, int pageIndex, out int pageCount)
+		{
+			return RetrievePage(string.Empty, string.Empty, pageSize, pageIndex, out pageCount);
+		}
+		
+		///<summary>Retrieve a paged collection of instances of this class from the persistence store</summary>
+		///<param name="whereClause">The SQL where clause to filter the records</param>
+		///<param name="pageSize">The number of records in each page</param>
+		///<param name="pageIndex">The page index to return</param>
+		///<param name="pageCount">The total number of pages</param>
+		public static IList RetrievePage(string whereClause, int pageSize, int pageIndex, out int pageCount)
+		{
+			return RetrievePage(whereClause, string.Empty, pageSize, pageIndex, out pageCount);
+		}
+		
+		///<summary>Retrieve a paged collection of instances of this class from the persistence store</summary>
+		///<param name="whereClause">The SQL where clause to filter the records</param>
+		///<param name="sortClause">The SQL sort statement</param>
+		///<param name="pageSize">The number of records in each page</param>
+		///<param name="pageIndex">The page index to return</param>
+		///<param name="pageCount">The total number of pages</param>
+		public static IList RetrievePage(string whereClause, string sortClause, int pageSize, int pageIndex, out int pageCount)
+		{
+			ObjectQuery query = new ObjectQuery(typeof(<%= ClassName %>), whereClause, sortClause, pageSize, pageIndex);
+			ObjectSet pageSet = RetrieveQuery(query);
+			pageCount = pageSet.PageCount;
+			return pageSet;
+		}
+		
+		///<summary>Retrieve instances of this class from the persistence store based on the where clause</summary>
+		///<param name="whereClause">The SQL where clause to filter the records</param>
+		public static IList RetrieveQuery(string whereClause)
+		{
+			return RetrieveQuery(whereClause, string.Empty);
+		}
+		
+		///<summary>Retrieve instances of this class from the persistence store based on the where clause</summary>
+		///<param name="whereClause">The SQL where clause to filter the records</param>
+		///<param name="sortClause">The SQL sort statement</param>
+		public static IList RetrieveQuery(string whereClause, string sortClause)
+		{
+			ObjectQuery query = new ObjectQuery(typeof(<%= ClassName %>), whereClause, sortClause);
+			return RetrieveQuery(query);
+		}
+		
+		/// <summary>Executes an OPathQuery against the data store and returns an IList filled with the results.</summary>
+		/// <param name="query">OPathQuery to execute.</param>
+		/// <returns>An IList filled with objects retrieved from the data store.</returns>
+		public static IList RetrieveQuery(OPathQuery query)
+		{
+			return DataManager.ObjectSpace.GetObjectSet(query);
+		}
+
+		/// <summary>Executes an OPathQuery against the database and returns an IList filled with the results.</summary>
+		/// <param name="query">OPathQuery to execute.</param>
+		/// <param name="parameters">Parameter values to use when executing the query.</param>
+		/// <returns>An IList filled with objects retrieved from the data store.</returns>
+		public static IList RetrieveQuery(OPathQuery query, params object[] parameters)
+		{
+			return DataManager.ObjectSpace.GetObjectSet(query, parameters);
+		}
+
+		/// <summary>Executes a CompiledQuery against the database and returns an IList filled with the results.</summary>
+		/// <param name="compiledQuery">CompiledQuery to execute.</param>
+		/// <returns>An IList filled with objects retrieved from the data store.</returns>
+		public static IList RetrieveQuery(CompiledQuery compiledQuery)
+		{
+			return DataManager.ObjectSpace.GetObjectSet(compiledQuery);
+		}
+
+		/// <summary>Executes a CompiledQuery against the database and returns an IList filled with the results.</summary>
+		/// <param name="compiledQuery">CompiledQuery to execute.</param>
+		/// <param name="parameters">Parameter values to use when executing the query.</param>
+		/// <returns>An IList filled with objects retrieved from the data store.</returns>
+		public static IList RetrieveQuery(CompiledQuery compiledQuery, params object[] parameters)
+		{
+			return DataManager.ObjectSpace.GetObjectSet(compiledQuery, parameters);
+		}
+		
+		///<summary>Retrieve instances of this class from the persistence store based on the ObjectQuery</summary>
+		///<param name="query">The object query to filter the records</param>
+		public static ObjectSet RetrieveQuery(ObjectQuery query)
+		{
+			return DataManager.ObjectSpace.GetObjectSet(query);
+		}
+
+		<% if (!this.MappingEntity.readOnly) { %>
+		///<summary>Save this instance to the persistence store</summary>
+		public void Save()
+		{
+			this.Save(false);
+		}
+
+		///<summary>Save this instance to the persistence store</summary>
+		///<param name="includeChildren">Include changes to related child instances</param>
+		public void Save(bool includeChildren)
+		{
+			if (DataManager.ObjectSpace.GetObjectState(this) == ObjectState.Unknown)
+				DataManager.ObjectSpace.StartTracking(this, InitialState.Inserted);
+
+			PersistDepth depth = includeChildren ? PersistDepth.ObjectGraph : PersistDepth.SingleObject;
+			DataManager.ObjectSpace.PersistChanges(this, depth);
+		}
+
+		///<summary>Save this instance to the persistence store using a transaction</summary>
+		///<param name="transaction">An instance of a Wilson.ORMapper.Transaction to perform operation with.</param>
+		public void Save(Wilson.ORMapper.Transaction transaction)
+		{
+			Save(transaction, false);
+		}
+
+		///<summary>Save this instance to the persistence store using a transaction</summary>
+		///<param name="transaction">An instance of a Wilson.ORMapper.Transaction to perform operation with.</param>
+		///<param name="includeChildren">Include changes to related child instances</param>
+		public void Save(Wilson.ORMapper.Transaction transaction, bool includeChildren)
+		{
+			if (transaction == null)
+				throw new ArgumentNullException("transaction");
+
+			if (DataManager.ObjectSpace.GetObjectState(this) == ObjectState.Unknown)
+				DataManager.ObjectSpace.StartTracking(this, InitialState.Inserted);
+
+			PersistDepth depth = includeChildren ? PersistDepth.ObjectGraph : PersistDepth.SingleObject;
+			transaction.PersistChanges(this, depth);
+		}
+		
+		///<summary>Delete this instance from the persistence store</summary>
+		public void Delete()
+		{
+			if (DataManager.ObjectSpace.GetObjectState(this) == ObjectState.Unknown)
+				return;
+
+			DataManager.ObjectSpace.MarkForDeletion(this);
+			DataManager.ObjectSpace.PersistChanges(this);
+		}
+		
+		///<summary>Delete this instance from the persistence store using a transaction</summary>
+		///<param name="transaction">An instance of a Wilson.ORMapper.Transaction to perform operation with.</param>
+		public void Delete(Wilson.ORMapper.Transaction transaction)
+		{
+			if (transaction == null)
+				throw new ArgumentNullException("transaction");
+			
+			if (DataManager.ObjectSpace.GetObjectState(this) == ObjectState.Unknown)
+				return;
+
+			DataManager.ObjectSpace.MarkForDeletion(this);
+			Save(transaction);
+		}
+		
+		///<summary>Delete instances from the persistence store based on the where clause</summary>
+		///<param name="whereClause">The SQL where clause of rows to delete</param>
+		public static int Delete(string whereClause)
+		{			
+			return DataManager.ObjectSpace.ExecuteDelete(typeof(<%= ClassName %>), whereClause);
+		}
+		
+		///<summary>Delete instances from the persistence store based on the where clause</summary>
+		///<param name="transaction">An instance of a Wilson.ORMapper.Transaction to perform operation with.</param>
+		///<param name="whereClause">The SQL where clause of rows to delete</param>
+		public static int Delete(Wilson.ORMapper.Transaction transaction, string whereClause)
+		{			
+			if (transaction == null)
+				throw new ArgumentNullException("transaction");
+			
+			return transaction.ExecuteDelete(typeof(<%= ClassName %>), whereClause);
+		}
+		
+		<% if (this.MappingEntity.keyType != entityKeyType.None && primaryKeys.Count > 0) { %>
+		///<summary>Delete instance from the persistence store based on primary key(s)</summary>
+		public static int DeleteByKey(<%= GetPrimaryKeyArguments() %>)
+		{			
+			QueryHelper helper = DataManager.ObjectSpace.QueryHelper;
+			string where = <%= GetPrimaryKeyWhere("helper", "where") %>
+			return Delete(where);
+		}
+		
+		///<summary>Delete instance from the persistence store based on primary key(s) using a transaction</summary>
+		///<param name="transaction">An instance of a Wilson.ORMapper.Transaction to perform operation with.</param>
+		public static int DeleteByKey(Wilson.ORMapper.Transaction transaction, <%= GetPrimaryKeyArguments() %>)
+		{			
+			QueryHelper helper = DataManager.ObjectSpace.QueryHelper;
+			string where = <%= GetPrimaryKeyWhere("helper", "where") %>
+			return Delete(transaction, where);
+		}
+		
+		<% } %>	
+		///<summary>Updates instances from the persistence store based on the where clause and uses the Update clause to set the values</summary>
+		///<param name="whereClause">The SQL where clause of rows to update</param>
+		///<param name="updateClause">The SQL update clause for values to set</param>
+		public static int Update(string whereClause, string updateClause)
+		{
+			return DataManager.ObjectSpace.ExecuteUpdate(typeof(<%= ClassName %>), whereClause, updateClause);
+		}
+		
+		///<summary>Updates instances from the persistence store based on the where clause and uses the Update clause to set the values</summary>
+		///<param name="transaction">An instance of a Wilson.ORMapper.Transaction to perform operation with.</param>
+		///<param name="whereClause">The SQL where clause of rows to update</param>
+		///<param name="updateClause">The SQL update clause for values to set</param>
+		public static int Update(Wilson.ORMapper.Transaction transaction, string whereClause, string updateClause)
+		{
+			if (transaction == null)
+				throw new ArgumentNullException("transaction");
+			
+			return transaction.ExecuteUpdate(typeof(<%= ClassName %>), whereClause, updateClause);
+		}
+
+		<% } // readonly%>
+		
+		/// <summary>Refresh the data for this instance from the persistence store</summary>
+		/// <returns>Returns a new instance with the refreshed data or null if instance not tracked</returns>
+		/// <example>Resync an instance code fragment
+		/// <code>
+		/// <%= ClassName %> instance;
+		/// // Some retrieval and update logic
+		/// instance = instance.Resync();
+		/// </code>
+		/// </example>
+		public <%= ClassName %> Resync()
+		{
+			if (DataManager.ObjectSpace.GetObjectState(this) == ObjectState.Unknown)
+				return null;
+			
+			return (<%= ClassName %>)DataManager.ObjectSpace.Resync(this);
+		}
+		
+		#endregion
+		
+<% if (ImplementHelper) { %>
+		#region IObjectHelper Members - DO NOT MODIFY
+		/// <summary>Indexer to update local member variables</summary>	
+		/// <remarks>This indexer is used by the Wilson ORMapper</remarks>
+		public object this[string memberName]
+		{
+			get {
+				switch (memberName) {
+<%= getHelper.ToString() %>									
+					default: throw new Exception(string.Format("Mapping: IObjectHelper Get is missing member case {0}", memberName));
+				}
+			}
+			set {
+				//handle null values
+				if(value == null)
+					return;
+					
+				switch (memberName) {
+<%= setHelper.ToString() %>				
+					default: throw new Exception(string.Format("Mapping: IObjectHelper Set is missing member case {0}", memberName));
+				}
+			}
+		}
+		#endregion //IObjectHelper Members
+<% } %>		
+		//</CodeSmithGenerated>
+		#endregion //CodeSmith Generated - DO NOT MODIFY
+
+<% if (ImplementNotification) { %>
+		#region IObjectNotification Members
+		/// <summary>Triggered after an entity object is created in the database</summary>
+		/// <param name="transaction">The current transaction object for custom cases</param>
+		public void OnCreated(Wilson.ORMapper.Transaction transaction)
+		{
+			// TODO
+		}
+
+		/// <summary>Triggered before an entity object is created in the database</summary>
+		/// <param name="transaction">The current transaction object for custom cases</param>
+		public void OnCreating(Wilson.ORMapper.Transaction transaction)
+		{
+			// TODO
+		}
+
+		/// <summary>Triggered after an entity object is deleted in the database</summary>
+		/// <param name="transaction">The current transaction object for custom cases</param>
+		public void OnDeleted(Wilson.ORMapper.Transaction transaction)
+		{
+			// TODO
+		}
+
+		/// <summary>Triggered before an entity object is deleted in the database</summary>
+		/// <param name="transaction">The current transaction object for custom cases</param>
+		public void OnDeleting(Wilson.ORMapper.Transaction transaction)
+		{
+			// TODO
+		}
+
+		/// <summary>Triggered when an entity object is materialized from the database</summary>
+		/// <param name="dataRecord">The current dataRecord used to materialize object</param>
+		public void OnMaterialized(System.Data.IDataRecord dataRecord)
+		{
+			// TODO
+		}
+
+		/// <summary>Triggered when an error has occurred persisting an entity object</summary>
+		/// <param name="transaction">The current transaction object for custom cases</param>
+		/// <param name="exception">The current exception encountered in persistence</param>
+		public void OnPersistError(Wilson.ORMapper.Transaction transaction, Exception exception)
+		{
+			// TODO
+		}
+
+		/// <summary>Triggered after an entity object is updated in the database</summary>
+		/// <param name="transaction">The current transaction object for custom cases</param>
+		public void OnUpdated(Wilson.ORMapper.Transaction transaction)
+		{
+			// TODO
+		}
+
+		/// <summary>Triggered before an entity object is updated in the database</summary>
+		/// <param name="transaction">The current transaction object for custom cases</param>
+		public void OnUpdating(Wilson.ORMapper.Transaction transaction)
+		{
+			// TODO
+		}
+		#endregion
+<% } %>
+	}
+}

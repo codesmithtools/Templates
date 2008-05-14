@@ -1,0 +1,89 @@
+<%@ CodeTemplate Src="TemplateBase.vb" Inherits="CodeSmith.Csla.TemplateBase" Language="VB" TargetLanguage="VB" Description="Generates a CSLA Editable Child Collection Object." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="ObjectName" Type="System.String" Optional="true" Category="1. Object" Description="Required - The Name of the Business Object Collection Class to Generate." %>
+<%@ Property Name="ChildName" Type="System.String" Optional="true" Category="1. Object" Description="Required - The Name of the Business Object Element of the Collection." %>
+<%@ Property Name="ParentName" Type="System.String" Optional="true" Default="" Category="1. Object" Description="The Name of parent Business object belongs." %>
+<%@ Property Name="RootCommand" Type="CommandSchema" Optional="true" Category="2. Data Source" Description="Required - The stored procedure that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootTable" Type="TableSchema" Optional="true" Category="2. Data Source" Description="Required - The Root Table that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootView" Type="ViewSchema" Optional="true" Category="2. Data Source" Description="Required - The Root View that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="ResultSetIndex" Type="System.Int32" Default="1" Optional="true" Category="2. Data Source" Description="Result set index indicates which result set to use from the stored procedure. Required when using RootCommand." %>
+<%-- Generic Variables for code to use  --%>
+<% Dim i As Integer = BaseIndentLevel
+   Dim objInfo As ObjectInfo = New ObjectInfo(Me) %>
+<!-- #INCLUDE FILE="AutoGenWarning.inc" -->
+<%=Indent(0, True)%>Imports System
+<%=Indent(0)%>Imports System.Data
+<%=Indent(0)%>Imports System.Data.SqlClient
+<%=Indent(0)%>Imports Csla
+<%=Indent(0)%>Imports Csla.Data
+<% If Not ClassNamespace Is Nothing AndAlso ClassNamespace.Length > 0 Then %>
+<%=Indent(0, True)%>Namespace <%=ClassNamespace %>
+<% i+=1 %>
+<% End If %> 
+<% If Not objInfo.IsUserPartial Then %>
+<%=Indent(i, True)%><Serializable()> _ 
+<%=Indent(i)%><%= objInfo.Modifiers %> Class <%=objInfo.NameAndSuffix%>
+<% Else %>
+<%=Indent(i, True)%><%= objInfo.Modifiers %> Class <%=objInfo.NameAndSuffix%>
+<% End If %>
+<% i+=1 %>
+<%=Indent(i)%>Inherits <%=objInfo.Inherits%>
+<% If objInfo.IsGeneratedClass AndAlso (objInfo.HasIdentity OrElse objInfo.HasObjectGeneratedKey) Then%>
+<%=Indent(0, True)%>#Region " BindingList Overrides "
+<%=Indent(i, True)%>Protected Overrides Function AddNewCore() As Object
+<%=Indent(i+1)%>Dim item As <%=objInfo.ChildType%> = <%=objInfo.ChildNameAndSuffix%>.<%=objInfo.NewChildMethodName%>()
+<%=Indent(i+1)%>Me.Add(item)
+<%=Indent(i+1)%>Return item
+<%=Indent(i)%>End Function
+<%=Indent(0, True)%>#End Region ' BindingList Overrides
+<% End If %>
+<!-- #INCLUDE FILE="ChildFactoryMethods.inc" -->
+<% If objInfo.IsGeneratedClass Then %>
+<%=Indent(0, True)%>#Region " Data Access "
+<% If objInfo.IsGeneratedBase Then %>
+<%=Indent(i, True)%><RunLocal> _
+<%=Indent(i)%>Protected Overrides Sub DataPortal_Create(ByVal criteria As Object) 
+<%=Indent(i+1)%>MarkAsChild()
+<%=Indent(i)%>End Sub
+<% End If %>
+<%=Indent(i, True)%><%=objInfo.LocalMethodModifiers%> Sub Fetch(ByVal dr As SafeDataReader)
+<% i+=1 %>
+<%=Indent(i)%>RaiseListChangedEvents = False
+<%=Indent(i, True)%>While dr.Read()
+<%=Indent(i+1)%>Me.Add(<%=objInfo.Child%><% If objInfo.IsGeneratedBase Then %>(Of <%=GenericTypeChildParameter%>)<% End If %>.<%=objInfo.GetChildMethodName%>(dr))
+<%=Indent(i)%>End While
+<%=Indent(i, True)%>RaiseListChangedEvents = True
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<% If objInfo.IsGeneratedBase Then %>
+<%=Indent(i, True)%>Friend Sub Update(Of <%=objInfo.ParentType%> As <%=objInfo.ParentNameAndSuffix%>)(<% If objInfo.UseAdoTransaction Then %>Byval tr as SqlTransaction, <% Else %>ByVal cn As SqlConnection, <% End If %>ByVal parent As <%=objInfo.ParentType%>) 
+<% Else %>
+<%=Indent(i, True)%>Friend Sub Update(<% If objInfo.UseAdoTransaction Then %>ByVal tr As SqlTransaction, <% Else %>ByVal cn As SqlConnection , <% End If %>ByVal parent As <%=objInfo.ParentType%>)
+<% End If %>
+<% i+=1 %>
+<%=Indent(i)%>RaiseListChangedEvents = False
+<%=Indent(i, True)%>' loop through each deleted child object
+<%=Indent(i)%>For Each deletedChild As <%=objInfo.ChildType%> In DeletedList
+<%=Indent(i+1)%>deletedChild.DeleteSelf(<% If objInfo.UseAdoTransaction Then %>tr<% Else %>cn<% End If %>)
+<%=Indent(i)%>Next
+<%=Indent(i)%>DeletedList.Clear()
+<%=Indent(i, True)%>' loop through each non-deleted child object
+<%=Indent(i)%>For Each child As <%=objInfo.ChildType%> In Me
+<%=Indent(i+1)%>If child.IsNew Then
+<%=Indent(i+2)%>child.Insert(<% If objInfo.UseAdoTransaction Then %>tr, <% Else %>cn, <% End If %>parent)
+<%=Indent(i+1)%>Else
+<%=Indent(i+2)%>child.Update(<% If objInfo.UseAdoTransaction Then %>tr, <% Else %>cn, <% End If %>parent)
+<%=Indent(i+1)%>End If
+<%=Indent(i)%>Next
+
+<%=Indent(i)%>RaiseListChangedEvents = True
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(0, True)%>#End Region ' Data Access
+<% End If %>
+<% i-=1 %>
+<%=Indent(i, True)%>End Class
+<% If Not ClassNamespace Is Nothing AndAlso ClassNamespace.Length > 0 Then %>
+<%=Indent(0, True)%>End Namespace<% End If %>

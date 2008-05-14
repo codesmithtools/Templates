@@ -1,0 +1,1688 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 11 (filtered)">
+<title>About the Domain Object Project Template</title>
+
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Arial Unicode MS";
+	panose-1:2 11 6 4 2 2 2 2 2 4;}
+@font-face
+	{font-family:"Arial Rounded MT Bold";
+	panose-1:2 15 7 4 3 5 4 3 2 4;}
+@font-face
+	{font-family:"\@Arial Unicode MS";
+	panose-1:2 11 6 4 2 2 2 2 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:Arial;}
+h1
+	{margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:6.0pt;
+	margin-left:0in;
+	page-break-after:avoid;
+	font-size:26.0pt;
+	font-family:"Arial Rounded MT Bold";
+	color:gray;
+	letter-spacing:-1.25pt;
+	font-weight:normal;}
+h2
+	{margin-top:6.0pt;
+	margin-right:0in;
+	margin-bottom:6.0pt;
+	margin-left:0in;
+	page-break-after:avoid;
+	font-size:14.0pt;
+	font-family:Arial;
+	letter-spacing:-.5pt;
+	font-weight:normal;}
+h3
+	{margin-top:6.0pt;
+	margin-right:0in;
+	margin-bottom:6.0pt;
+	margin-left:0in;
+	page-break-after:avoid;
+	font-size:12.0pt;
+	font-family:Arial;
+	color:gray;
+	letter-spacing:-.25pt;
+	font-weight:normal;}
+h4
+	{margin-top:0in;
+	margin-right:78.0pt;
+	margin-bottom:0in;
+	margin-left:0in;
+	margin-bottom:.0001pt;
+	text-indent:24.0pt;
+	page-break-after:avoid;
+	font-size:8.0pt;
+	font-family:"Courier New";
+	font-weight:normal;}
+p.MsoToc1, li.MsoToc1, div.MsoToc1
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:Arial;}
+p.MsoToc2, li.MsoToc2, div.MsoToc2
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:10.0pt;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:Arial;}
+p.MsoToc3, li.MsoToc3, div.MsoToc3
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:20.0pt;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:"Arial Rounded MT Bold";
+	font-weight:bold;}
+p.MsoHeader, li.MsoHeader, div.MsoHeader
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:Arial;}
+p.MsoFooter, li.MsoFooter, div.MsoFooter
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:Arial;}
+p.MsoCaption, li.MsoCaption, div.MsoCaption
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:12.0pt;
+	margin-left:0in;
+	font-size:10.0pt;
+	font-family:Arial;
+	letter-spacing:-.25pt;}
+p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:12.0pt;
+	margin-left:0in;
+	font-size:10.0pt;
+	font-family:Arial;
+	letter-spacing:-.25pt;}
+p.MsoBodyTextIndent, li.MsoBodyTextIndent, div.MsoBodyTextIndent
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:Arial;}
+p.MsoBodyTextIndent2, li.MsoBodyTextIndent2, div.MsoBodyTextIndent2
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:Arial;}
+p.MsoBodyTextIndent3, li.MsoBodyTextIndent3, div.MsoBodyTextIndent3
+	{margin-top:0in;
+	margin-right:78.0pt;
+	margin-bottom:0in;
+	margin-left:0in;
+	margin-bottom:.0001pt;
+	text-indent:.5in;
+	font-size:9.0pt;
+	font-family:Arial;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+p
+	{margin-right:0in;
+	margin-left:0in;
+	font-size:12.0pt;
+	font-family:"Arial Unicode MS";}
+p.HeaderBase, li.HeaderBase, div.HeaderBase
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:Arial;}
+span.CodeChar4
+	{font-family:"Courier New";
+	color:windowtext;
+	letter-spacing:-.5pt;}
+span.CodeChar
+	{font-family:"Courier New";
+	color:windowtext;
+	letter-spacing:-.5pt;}
+span.CodeChar1
+	{font-family:"Courier New";
+	color:windowtext;
+	letter-spacing:-.5pt;}
+span.Heading3Char
+	{font-family:"Arial Rounded MT Bold";
+	color:gray;
+	letter-spacing:-.25pt;}
+span.m1
+	{color:blue;}
+span.t1
+	{color:#990000;}
+span.tx1
+	{font-weight:bold;}
+span.ns1
+	{color:red;}
+ /* Page Definitions */
+ @page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link=blue vlink=purple>
+
+<div class=Section1>
+
+<p class=MsoBodyText>This document is extracted from the upcoming book
+“Advanced Patterns of Enterprise Architecture”. Details on the release date and
+other pertinent facts about this and other works by Christopher G. Lasater can
+be seen at <a href="http://www.geocities.com/lasaterconsult/">http://www.geocities.com/lasaterconsult</a>.
+</p>
+
+<p class=MsoNormal style='margin-right:.75in'><span style='font-size:22.0pt;
+font-family:"Arial Rounded MT Bold";color:gray;letter-spacing:-.25pt'>About the
+Domain Object Project Template</span></p>
+
+<p class=MsoNormal style='margin-right:.75in'><span style='font-size:22.0pt;
+font-family:"Arial Rounded MT Bold";color:gray;letter-spacing:-.25pt'>&nbsp;</span></p>
+
+<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc164154921">What is
+Domain Object Architecture?<span style='color:windowtext;display:none;
+text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>1</span></a></span></p>
+
+<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc164154922">Why use the
+Domain Object approach?<span style='color:windowtext;display:none;text-decoration:
+none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>2</span></a></span></p>
+
+<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc164154923">Template
+Generated Code<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>5</span></a></span></p>
+
+<p class=MsoToc3><span class=MsoHyperlink><span style='font-family:Arial;
+font-weight:normal;text-decoration:none'><a href="#_Toc164154924"><span
+style='text-decoration:none'>Generating the Stored Procedures<span
+style='display:none'>. </span></span><span
+style='display:none;text-decoration:none'>6</span></a></span></span></p>
+
+<p class=MsoToc3><span class=MsoHyperlink><span style='font-family:Arial;
+font-weight:normal;text-decoration:none'><a href="#_Toc164154925"><span
+style='text-decoration:none'>Defining the Record Sets<span style='display:none'>. </span></span><span style='display:none;text-decoration:none'>10</span></a></span></span></p>
+
+<p class=MsoToc3><span class=MsoHyperlink><span style='font-family:Arial;
+font-weight:normal;text-decoration:none'><a href="#_Toc164154926"><span
+style='text-decoration:none'>Using the Code Generation Templates to Generate
+your Code<span style='display:none'>. </span></span><span
+style='display:none;text-decoration:none'>12</span></a></span></span></p>
+
+<p class=MsoBodyText>&nbsp;</p>
+
+<h2><a name="_Toc164154921">What is Domain Object Architecture?</a></h2>
+
+<p class=MsoBodyText>The most common architecture used in modern business
+development is the tiered architecture or as it has recently been named, the
+Domain Object pattern. It is simple to implement, easy to maintain, and above
+all easy to understand by a wide variety of skill sets. Most enterprise
+applications use this model in some fashion. The probable reason for its
+ubiquitous use in business applications stems from its overall simplicity and
+that the pattern follows a very traditional and well known model. Since most
+applications are about pushing, pulling and manipulating data, this pattern
+serves a wide variety of needs for all types of business. It is relatively
+simple in its overall application and can be implemented in various degrees of
+complexity. This model is usually known as <i>domain object modeling</i> or <i>N-
+tiered architecture.</i> </p>
+
+  <p class=MsoBodyText>The pattern and example code I have created for this document 
+    is set up for a windows user interface type. Some of the decisions in the 
+    code are specific to this. So morphology of the pattern is expected. Since 
+    the example code for the test case in this document is specific to a problem, 
+    adapting the pattern to other conditions would not be hard; only the basic 
+    rules of the pattern need to be followed. If, for example, you were to adapt 
+    this pattern for a service oriented architecture or one that used transactions 
+    in code, you might replace the data layer with a DAL/DAC (data access layer/component) 
+    that supported transaction management. If you were dealing with serializing 
+    large numbers of records, the collections classes might be a bit cumbersome, 
+    so a more efficient (simpler) design might be appropriate; for instance a 
+    very light serializable class to replace the collections base or one that 
+    only returned the basic byte information from the records. Many other definitions 
+    for usability for the pattern come to mind, this I leave up to your creativity 
+    and imagination. Suffice it to say, this is a pattern, a basic definition 
+    for writing code, and adaptability is key. You will have to take the basic 
+    code examples I have provided, and create from them your own useable patterns 
+    for your business domain.</p>
+
+<p class=MsoBodyText>This template was written because I saw a lot of confusion
+and bad practices going on in the corporate business world surrounding software
+development, and I wanted to provide a common template for using this software
+pattern. I call this model for software design a pattern in this book, since I
+am defining a set of the attributes and principles it may contain. </p>
+
+  <p class=MsoBodyText>The architecture used for this document is a formalized 
+    N-Tier architecture, which has hard separations between each tier using interfaces 
+    and factories to form conditional boundaries separating the code layers. Each 
+    layer has some separation, but the boundary between the user interface layer 
+    and Business Layer is a firm Façade type layer that allows peeks into useable 
+    system data via bind-able objects and collections which are passed in lieu 
+    of less specialized objects like a dataset. This was done purposefully, to 
+    minimize interpretations in data between the layers, while allowing intuitive 
+    functionality to be passed from one layer to another.</p>
+
+<p class=MsoBodyText><span class=Heading3Char><span style='font-size:12.0pt'>Template
+Driven Code Design</span></span></p>
+
+<p class=MsoBodyText>So, what is the template? Since we are using a pattern,
+then we can design a way to template the pattern. Since a pattern is a set way
+of building something, a template is a tool for allowing some basic data to be
+fed in to generate code that follows the guidelines of the pattern to be
+reproduced. In other words, I have provided for this document a template that
+will generate your code.</p>
+
+<p class=MsoBodyText>The pattern I will be introducing you to is based on these
+concepts:</p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>The code you generate will be based on record sets using basic
+CRUD database queries.</p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>The code will follow a basic data in - data out model, utilizing
+record set object modeling.</p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Your tables will have referential integrity, or at least, primary
+keys.</p>
+
+<p class=MsoBodyText>These basic concepts allow the pattern to be produced and
+used, and especially rendered in code via a template that can gather the table
+schema data, and produce code from it. Everything that can be patterned can be
+generated using a template, so the methodology can exist as long as there is
+enough basic data to generate the code.</p>
+
+<p class=MsoBodyText>&nbsp;</p>
+
+<h2><a name="_Toc164154922"></a><a name="_Toc143830636"></a><a
+name="_Toc142722406"></a><a name="_Toc142719549">Why use the Domain Object
+approach?</a></h2>
+
+<p class=MsoBodyText>The first question to ask when using any architecture
+model or pattern is <i>‘why?’</i> Let’s discuss some reasons why you might or
+might not want to use the three tiered approach. As I said earlier, most
+business applications are about pushing to or pulling from a data source, and
+manipulating that data. So the first question you as a developer should ask is
+how complex will my data manipulation tasks become? If you can answer this
+question by saying that you want to pull known data from immutable (unchanging
+or unchangeable) objects and domains, and that the business rules and process
+will not need to change during runtime or will not change between iterations or
+releases of code, then you may be safe using the three tiered pattern. </p>
+
+<p class=MsoBodyText>Most data driven business applications implement the three
+tiered pattern in some form. It is easy to understand, has understandable and
+concentric layers of functionality, and has an easy to follow design. This is
+the least abstract pattern for architecture. The pattern has three basic
+layers: data, business logic and user interface. When beginning to implement
+this pattern you first need to look at its level of runtime flexibility. The
+3-tiered pattern is most useful when you have known and immutable domain
+objects that will not change between release iterations (to production) and
+there is no need for more runtime flexibility in class relationships and domain
+object relationships. </p>
+
+  <p class=MsoBodyText>But why use three tiers? There are many answers to this question. 
+    The most important to my mind is ease of maintainability, scalability, and 
+    portability. Ease of maintainability comes in the form of placing separated 
+    logic areas in an encapsulated domain, therefore limiting the scope of maintenance. 
+    Scalability is accomplished by allowing each tier to be responsible for only 
+    the functionality it needs to know about, making adding functionality to a 
+    tier easier, since the scope of changes will be smaller. Portability also 
+    is enhanced. Because the tiers are coupled as loosely as possible, the different 
+    tiers of code can be easily interchanged and do not rely on each other in 
+    an interwoven fashion. As well the Business Layer tier can be modeled to support 
+    either a win-forms user interface, a web front end, a web service or a variety 
+    of other input interfaces.</p>
+
+<p class=MsoBodyText>As I said before this model is very useful for a wide
+range of business data solutions. This is because the overall gist of the
+pattern is simple. Three layers, each doing specific duties, and with
+relatively static business logic, keeps things simple to understand and
+non-abstract in function. Since all class relationships between the tiers are
+fairly intuitive, the pattern makes scalability and maintenance between
+iterations a lot easier. One of the reasons for this is the encapsulation in
+each tier of specific logical duties. Data storage and retrieval are specific
+to the data source and are handled exclusively in the data tier.  Algorithms
+and code to massage and manipulate the data in and out exist in the business
+tier. And functions specific only to the user interface experience keep the
+user interface tier very light and focused on displaying data to and receiving
+data from the user. Indeed, keeping things in the user interface simple and
+pushing that complexity down into the business layer tier gives the pattern a
+lot more flexibility than keeping business specific code in the user interface.
+One major example of this would be data specific rules. Let’s say you have a
+windows form class that contains a varied amount of data validation, and you
+wish to replicate all this validation in another page. Examine the example:</p>
+
+<p class=MsoNormal style='text-autospace:none'>            <span
+style='font-family:"Courier New";color:blue'>if</span><span style='font-family:
+"Courier New"'>(user.UserName == <span style='color:blue'>null</span> ||
+user.UserName.Length &lt; 1)</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>            <span
+style='color:blue'>throw</span> <span style='color:blue'>new</span>
+ArgumentException(<span style='color:#A31515'>&quot;Value cannot be an empty
+string or null.&quot;</span>,</span></p>
+
+<p class=MsoNormal><span style='font-family:"Courier New"'>            <span
+style='color:#A31515'>&quot;UserName&quot;</span>);</span></p>
+
+<p class=MsoNormal style='text-autospace:none'>   </p>
+
+<p class=MsoBodyText>If you simply cut and pasted this validation code
+throughout the user interface layer then you have created a maintenance issue. 
+The overall integrity of this validation code is tightly dependant on
+maintaining the code in each place it exists throughout the user interface.
+Changes to one section of the code will not assure that the same code in other
+places will always function the same. </p>
+
+<p class=MsoBodyText>Instead, let’s consider refactoring the validation code
+into a single place in the business tier. Doing this limits the maintenance to
+a single place in the Business Layer code. It also allows the business tier to
+handle these rules, instead of multiple code blocks in the user interface. This
+gives uniformity to the way these rules are applied, provides a single place to
+maintain the code, and makes the user interface lighter overall. By putting
+validation rules into the Business Layer tier you can easily reuse them for a
+multitude of uses. Also you give the control to the Business Layer for all
+validation instead of the user interface, which will ensure a single pass
+through point. If you have specialized validation needs (as in the case of
+required field validators) you can build access to the rules from your Business
+Layer object which can be used for that level of validation.</p>
+
+<p class=MsoBodyText>Inside the Business Layer rules engine when we parse
+through a collection of user objects checking for data to validate a rule we
+can then add validation messages as needed to tell the user interface about
+problems we encounter, or any other information:</p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:green'>//In the Business Tier Rules Validation Engine...</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>if</span><span style='font-family:"Courier New"'>(user.UserName == <span
+style='color:blue'>null</span> || user.UserName.Length &lt; 1)</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>            user.ValidationMessages.Add(<span
+style='color:blue'>new</span> ValidationMessage(</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>                  ValidationLevel.Exception,
+<span style='color:#A31515'>&quot;UserName&quot;</span>, <span
+style='color:#A31515'>&quot;Value cannot be null or empty string.&quot;</span>));</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:green'>//the ValidationLevel parameter shows the level of exception. </span></p>
+
+<p class=HeaderBase><span style='font-family:"Courier New";color:green'>//In
+this case it is a business rule attached to a message.</span></p>
+
+<p class=HeaderBase style='text-indent:.25in'>&nbsp;</p>
+
+<p class=MsoBodyText>We can see that the <span style='color:green;letter-spacing:
+-.5pt'>UserName</span> property is checked for validation.  If the <span
+style='color:green;letter-spacing:-.5pt'>UserName</span> property is null or
+empty string, then our business rules state that we are to add a validation
+message. Since our business rules state we want to send messages to the user
+interface to tell it if a validation failed, we will attach a message and a
+parameter (<span style='font-size:9.0pt;color:green;letter-spacing:-.5pt'>ValidationLevel</span>)
+for the level of exception to allow the user interface some decision making in
+how to display or deal with the message. </p>
+
+<p class=MsoBodyText>Our user interface (which for this example is a web page)
+now can get a collection of Business Layer objects containing the data for a
+series of users each with their own validation messages and feed this
+collection into a web user control. Below we see that the user interface code
+to do this is fairly simple. We call a collection in the form of an interface
+with a concrete collection type behind it from a factory and feed the resulting
+collection into a web control:</p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>private</span><span style='font-family:"Courier New"'> <span
+style='color:blue'>void</span> Page_Load(<span style='color:blue'>object</span>
+sender, System.EventArgs e)</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>{</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>      IUsersDataBL
+users = Factory.GetUsers(); </span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>      UserRepeater.Datasource
+= users;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>}</span></p>
+
+<p class=MsoBodyText>&nbsp;</p>
+
+<p class=MsoBodyText>In our markup we want to display our <span
+style='color:green;letter-spacing:-.5pt'>UserName</span> properties value. In
+this case we want to use a repeater control to display a list of users and any
+validation messages. We get our validation messages through the validation
+collection inside the Business Layer class:</p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>&lt;</span><span style='font-family:"Courier New";color:#A31515'>repeater</span><span
+style='font-family:"Courier New"'> <span style='color:red'>id</span><span
+style='color:blue'>=&quot;UserRepeater&quot;</span> <span style='color:red'>runat</span><span
+style='color:blue'>=server</span> <span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>&lt;</span><span style='font-family:"Courier New";color:#A31515'>ItemTemplate</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span><span style='font-family:
+"Courier New"'>UserName is</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+background:yellow'>&lt;%</span><span style='font-family:"Courier New"'> <span
+style='color:blue'>#</span>((IUserDataBL)Container.DataItem).UserName ) <span
+style='background:yellow'>%&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>&lt;</span><span style='font-family:"Courier New";color:#A31515'>br</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+background:yellow'>&lt;%</span><span style='font-family:"Courier New"'>
+if(((IUserDataBL)Container.DataItem).HasExceptionValidationMessages) </span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>      {</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>      foreach(BusinessLayer.BL.Validation.ValidationMessage
+message in </span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>            ((IUserDataBL)Container.DataItem).ValidationMessages)</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>            if(message.FieldName.Equals(&quot;UserName&quot;))</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>             
+Response.Write(message.FieldName + &quot; &quot; + message.Message +
+&quot;&lt;BR&gt;&quot;);</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>}<span
+style='background:yellow'>%&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+background:yellow'>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>&lt;/</span><span style='font-family:"Courier New";color:#A31515'>Itemtemplate</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoBodyText><span style='font-family:"Courier New";color:blue'>&lt;/</span><span
+style='font-family:"Courier New";color:#A31515'>repeater</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoBodyText>This displays whether the  <span style='color:green;
+letter-spacing:-.5pt'>UserName</span> property and validation messages for
+Business Layer property. We take the <span style='color:green;letter-spacing:
+-.5pt'>UserName</span> property from the <span class=CodeChar><span
+style='font-family:Arial'>IUserDataBL</span></span> object inside the
+collection used for the repeater object’s data source and use it to display the
+desired text in the user interface. The <span class=CodeChar><span
+style='font-family:Arial'>IUsersDataBL</span></span> collection can even be
+mapped in the user interface to a control attribute (like <span
+style='color:green;letter-spacing:-.5pt'>Visible</span> or the <span
+style='color:green;letter-spacing:-.5pt'>FontColor</span>) for display.</p>
+
+<div style='border:solid windowtext 1.0pt;padding:1.0pt 4.0pt 1.0pt 4.0pt;
+margin-left:.5in;margin-right:.5in'>
+
+<p class=MsoBodyTextIndent style='margin-left:0in;border:none;padding:0in'><span
+style='color:maroon'>.Net 2.0 seems more attuned to user interface control
+property data binding in that it makes use of property binding in its data
+binding structure. In other words .Net 2.0 can bind a value from a data object
+to a specific property on a user interface control. </span></p>
+
+</div>
+
+<p class=MsoBodyTextIndent><span style='color:maroon'>&nbsp;</span></p>
+
+<p class=MsoBodyText>Now if our business rule states that if the <span
+style='color:green;letter-spacing:-.5pt'>UserName</span> property is null or
+empty then this condition was to cause an actual validation exception and we
+needed to check it (lets say to go to a error page) we could for instance get a
+user Business Layer object and check its validation messages.  So we can check
+for a null value in our Business Layer rules engine, which hands us up a series
+of validation messages. We could even have types of validation messages which
+could tie page urls, images, specialized globalization text, etc to each
+validation type and message. If it has some messages then the user interface
+could use them and make its own logic to redirect to an error page:</p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:green'>//get a user object from the factory inside the BL</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>IUserDataBL
+user = Factory.GetUser(<span style='color:blue'>int</span> id);</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:green'>//If the user object has validation messages then we build a
+string and send this</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:green'>//to an error page to display to the user…</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>if</span><span style='font-family:"Courier New"'>(user.HasExceptionValidationMessages)
+</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>{</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>      <span
+style='color:blue'>string</span> messages = <span style='color:blue'>string</span>.Empty;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>      <span
+style='color:blue'>foreach</span>(ValidationMessage message <span
+style='color:blue'>in</span> user.ValidationMessages)</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>            <span
+style='color:blue'>if</span>(message.ValidationLevel ==
+ValidationLevel.Exception)</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>                  <span
+style='color:green'>//check the exception level from the validation message </span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>                  <span
+style='color:green'>//and if it reaches the desired level then ad it to the </span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>                  <span
+style='color:green'>//message queue</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>                  messages
++= <span style='color:#A31515'>&quot;,&quot;</span> + message.Text;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>      Response.Redirect(<span
+style='color:blue'>string</span>.Format(<span style='color:#A31515'>&quot;~/ErrorPage.aspx?Message={0}&quot;</span>,</span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:.5in;text-autospace:
+none'><span style='font-family:"Courier New"'>Server.UrlEncode(messages)));</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New"'>}</span></p>
+
+<p class=MsoBodyText>&nbsp;</p>
+
+<p class=MsoBodyText>The test case I am using for the example will have a lot
+of bells and whistles that you may or may not need for your projects. The test
+case code examples are actual working code examples that can easily be adapted
+into any business code model that it may apply to. Except for the basic
+structure you can be assured to be safe when removing or even enhancing each
+aspect or piece of the overall pattern. This is expected to help you fit the
+pattern into your business model. </p>
+
+<h2>&nbsp;</h2>
+
+<h2><a name="_Toc164154923">Template Generated Code</a></h2>
+
+<p class=MsoBodyText>This entire pattern with all its layers and tiers might
+seem too complex to write for many programmers, too many widgets, too many
+rules to follow, too many points of failure on the part of the developer. The
+problem is one of managing the complexity of the code, more than the idea of
+it. That is where maintenance issues and complexity in development arise. The
+onus of any organization that develops custom code is that there has to be an agreement
+and a basic knowledge base with in the team, organization or company. Usually
+this does not exist, or only partly exists. Even if you have a team of top
+programmers, each one must be extra diligent when writing code, to make sure
+they follow the rules. Usually code conventions are loose if non-existent, and
+are dependant on either developer diligence or an architect to mandate and
+maintain the integrity of the code written. This can become a daunting task,
+especially in large companies. Code conventions can differ between projects,
+teams, or even assemblies. Organizing enforcement of any kind of
+standardization has had a lot of methodology and text applied to accomplishing
+this task, but one simple fact rises out of this process. That fact is that people
+make mistakes. No matter who you are, from Bill Gates to the developer starting
+his or her first job, you are going to make mistakes in your code. And the more
+code you write, and this applies double to high code volume or fast paced
+project iterations, the more chance for mistakes.</p>
+
+<p class=MsoBodyText>It seems that the weakest point in project development is
+the human element. The weakest point in the development process is me, you and
+every developer on your team. A development team is only as strong
+architecturally as its least knowledgeable member, and even the brightest and
+best are, well, only human. </p>
+
+<p class=MsoBodyText>However, what if I told you if you could do <u>two simple
+things</u> you could make the human element perform as it should. The human
+element does not need to create and maintain menial code and development jobs.
+The human element does not need to re-write code repeatedly (which is
+especially true when you pattern, you are simply re-using a standard code
+base). What the human element is good at is creating a design for an architectural
+template for a pattern that can be generated and re-generated repeatedly with
+different data from different sources.</p>
+
+<p class=MsoBodyText>The pattern we have covered in this document was meant to
+do exactly that. It was meant to be auto-generated using a template tool. </p>
+
+<p class=MsoBodyText>One of the two things you have to do to template and then
+re-generate any code is to first standardize the code into a recognized
+pattern. This can be done several ways, but most developers can see reusable
+code if they put their minds to it.</p>
+
+<p class=MsoBodyText>The second thing you must do is to create, using a tool, a
+template which can re-generate this pattern for different data points. These
+data points, like tables, stored procedures, variables, or any data that, when
+changed, should not change the overall functionality of the pattern, but
+instead supply the needed information to generate the code that corresponds
+with the data input.</p>
+
+<p class=MsoBodyText>For the example I am using in this pattern, I have done
+just such a thing. The first step is to find a tool to generate our template. The
+tool I am using for the example code and the one with which the example code is
+written with is <a href="http://www.codesmithtools.com/">CodeSmith</a> 4.0. I
+use this to run the actual template project, which gives me the ability to
+generate code from the pattern, from a basic user interface down to the stored
+procedures.</p>
+
+<p class=MsoBodyText>To help you understand and be able to generate your code
+from this pattern you will need to download a trial (unless you have a license)
+copy of CodeSmith from their site <a href="http://www.codesmithtools.com/"><span
+style='font-size:12.0pt;font-family:"Times New Roman";letter-spacing:0pt'>http://www.codesmithtools.com/</span></a>.
+The next step is to download or access from a companion CD, the example
+template code I have provided for this book, which will give you a working
+example of the template code we will use. You also have to have Visual Studio
+2005 and .NET 2.0 to compile and examine the example code.</p>
+
+<h3>First Steps</h3>
+
+<p class=MsoBodyText>The first step in using the template is to compile them
+using your <a href="http://www.codesmithtools.com/">CodeSmith</a> 4.0 IDE. Each
+of these projects must be compiled, before the main project (<span
+class=CodeChar1>DomainObjectsProject.csp</span>) will compile and run.</p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in'><span
+class=CodeChar1><span style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span class=CodeChar1>StoredProcedures/GenerateAllProcs.cst</span></p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in'><span
+class=CodeChar1><span style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span class=CodeChar1>MDIForms/MDIFormsProject.cst</span></p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in'><span
+class=CodeChar1><span style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span class=CodeChar1>FormsUIComponent/FormsUIErrorProviderProject.cst</span></p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in'><span
+class=CodeChar1><span style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span class=CodeChar1>DataLayer/DataLayerProject.cst</span></p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in'><span
+class=CodeChar1><span style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span class=CodeChar1>BusinessLayer/BusinessLayerProject.cst</span></p>
+
+<p class=MsoBodyText style='margin-left:.5in;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar1>ProjectCompile.cst</span></p>
+
+<p class=MsoBodyText>After you have compiled each of these sub projects using
+the IDE, then you can run the main project (<span class=CodeChar1>DomainObjectsProject.csp</span>).</p>
+
+<p class=MsoBodyText>&nbsp;</p>
+
+<h3><a name="_Toc164154924">Generating the Stored Procedures</a></h3>
+
+<p class=MsoBodyText>The next step in using the template is to determine which
+tables you want to use for your project. Once you have determined this, and
+made sure all tables have at least a primary key that increments its own
+identity seed (see Figure 3.11), or in the case of a unique identifier key,
+which can set its own key or have one set for it, <u>does not</u> set its own
+key. If these conditions cannot be met then generating your stored procedures
+using this template is not recommended without modifying the stored procedure
+generation templates.</p>
+
+<p class=MsoBodyText><img border=0 width=576 height=354
+src="images/image001.jpg"></p>
+
+<p class=MsoBodyText align=center style='text-align:center'>Figure 3.9</p>
+
+<p class=MsoBodyText>Generating the stored procedures is not difficult, but to
+get the most out of the code generation templates, the rules and definition
+contained in the generated stored procedure code should be followed without
+much deviation.</p>
+
+<p class=MsoBodyText>To actually generate the stored procedure you will need to
+create a template folder shortcut to the place where the templates for this document
+are on your drive (use the <img border=0 width=22 height=26
+src="images/image002.jpg"> button). You then
+can either open the CodeSmith Studio and find the file <span class=CodeChar>GenerateAllProcs.cst</span>
+and execute the procedure (see Figure 3.12), or simply double click the file
+from Windows Explorer to pull up the execution interface.</p>
+
+<p class=MsoBodyText align=center style='text-align:center'><img border=0
+width=224 height=289 src="images/image003.jpg"></p>
+
+<p class=MsoBodyText align=center style='text-align:center'>Figure 3.10</p>
+
+<p class=MsoBodyText>When you open the interface from the file <span
+class=CodeChar>GenerateAllProcs.cst</span>, you will notice a grid bag layout
+like in the project. You will need to set certain variables that will tell the
+template what database, table and columns you wish to use as query index keys,
+and naming prefixes.</p>
+
+<p class=MsoBodyText>These properties are:</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>SourceTable</span> – This is the table that
+you wish to run the template against to generate the three stored procedures
+(Select Collection, Select Record By ID, Update-Insert-Delete).</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>AutoExecuteScript</span> – Indicates whether
+the script will be executed on the database after generation.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>ExcludedColumns</span> – Indicates columns
+which are to not to be included in the query.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>IncludeDropStatement</span> – Indicates that
+a stored procedure drop statement be generated. Since the stored procedures are
+generated as CREATE statements, this is allowed as an optional parameter.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>KeyColumns</span> – This is a string
+collection list of any key columns to be used in the collection select query to
+pull records. The single record query always uses the primary key to pull only
+the single row for that key.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>ProcedureDescription</span> – This will put
+a description in the header  of the stored procedure.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+class=CodeChar><span style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span class=CodeChar>ProcedurePrefix</span> – This is the
+prefix that will help identify the stored procedure for a particular code base
+or application. Example is <span class=CodeChar>aposa_</span> which would name
+procedures as <span class=CodeChar>aposa_GetUserData.sql</span></p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>TablePrefix</span> - If this prefix is found
+at the start of a table name, it will be stripped off.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>OutPutDirectory</span> – The directory in
+which to output the stored procedure scripts. If the <span class=CodeChar>AutoExecuteScript</span>
+indicator is on, the script files are still generated, as files with the .sql
+extension.</p>
+
+<p class=MsoBodyText style='margin-bottom:0in;margin-bottom:.0001pt'>&nbsp;</p>
+
+<p class=MsoBodyText style='margin-bottom:0in;margin-bottom:.0001pt'>&nbsp;</p>
+
+<p class=MsoBodyText align=center style='text-align:center'><span
+style='font-family:"Courier New"'><img border=0 width=575 height=308
+src="images/image004.jpg"></span></p>
+
+<p class=MsoBodyText align=center style='text-align:center'>Figure 3.11</p>
+
+<p class=MsoBodyText>The Source Table property is the main property for this
+template, and is a mandatory one. Set this using the data source selection
+interface (see Figure 3.13 below), which will allow you to choose your database
+(or add one using a connection string) and your table you wish to execute the
+template against. Remember, the data in the table is never accessed, only the
+schema or meta-data, so there is little need for concern when looking at tables
+with large amounts of data in them. </p>
+
+<p class=MsoBodyText align=center style='text-align:center'><span
+style='font-family:"Courier New"'><img border=0 width=350 height=348
+src="images/image005.jpg"></span></p>
+
+<p class=MsoBodyText align=center style='text-align:center'>Figure 3.12</p>
+
+<p class=MsoBodyText>Three stored procedures will be generated. The first will
+be a select query to return a single record by primary key. The second will be
+a select query to return records for a collection either by the columns
+specified in <span class=CodeChar>KeyColumns</span> string collection of the
+template, or all records if no keys are specified. The third query will act as
+our data modifier, providing access to insert, update and delete functions. The
+output stored procedures are illustrated in detail in the Data Layer section in
+this document.</p>
+
+<p class=MsoBodyText>There is one other aspect of the stored procedure that
+bears scrutiny. Since CodeSmith 4.0 supports a code merge strategy, I provide a
+section for version update notes that gets generated when the query is first
+generated. Any text put between the region tags (as seen in the example below),
+should not be overwritten, as long as the <span class=CodeChar>IncludeDropStatement</span>
+property on the template is set to false.</p>
+
+<p class=MsoBodyText><span class=CodeChar><span style='color:green'>--region
+RevisionLog</span></span></p>
+
+<p class=MsoBodyText><span class=CodeChar><span style='color:green'>***************************** 
+Revision Log **********************************</span></span></p>
+
+<p class=MsoBodyText><span class=CodeChar><span style='color:green'> </span></span></p>
+
+<p class=MsoBodyText><span class=CodeChar><span style='color:green'>Version  
+Date        Revised By       Description / WO#</span></span></p>
+
+<p class=MsoBodyText><span class=CodeChar><span style='color:green'>-------- 
+----------  ---------------  ---------------------------------------</span></span></p>
+
+<p class=MsoBodyText><span class=CodeChar><span style='color:green'>   </span></span></p>
+
+<p class=MsoBodyText><span class=CodeChar><span style='color:green'>*****************************************************************************/</span></span></p>
+
+<p class=MsoBodyText><span class=CodeChar><span style='color:green'>--endregion</span></span></p>
+
+<h3><a name="_Toc164154925">Defining the Record Sets</a></h3>
+
+<p class=MsoBodyText>The main way of generating code for our pattern is by
+getting the data from a data source, like a database. All business specific
+classes are generated from record sets which are defined by stored procedures
+within the target database. Since each record set is defined by a stored
+procedure or up to three stored procedures, the actual code generated will be
+an extension of that data relationship. There is one mandatory stored procedure
+for the collection select query, one optional stored procedure for the
+individual record select query and one optional stored procedure for the update
+query for a single record. </p>
+
+<p class=MsoBodyText>The template generates the code by reading an xml file,
+which we talked about in the main project template and indicated by a project
+property <span class=CodeChar>ProcedureMap</span>, which is a directory path to
+the xml file containing the record set data.</p>
+
+<p class=MsoBodyText>This xml file we will now examine. The overall markup of
+the file we see below, with the <span class=CodeChar><span style='color:#993300'>RecordSets</span></span>
+node minimized for clarity. As you can see in the example markup xml, the xml
+file maps to a xml schema file named <span class=CodeChar><span
+style='color:#993300'>ProceduresToMap.xsd</span></span>. This schema file (see
+Figure 3.13) sets the structure for the xml and for the template, which allows
+the template to read as code the individual nodes by name and function. This is
+important because each node needs to be read in sequence and by name to
+retrieve the different data points for each record set.</p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:30.0pt;margin-bottom:
+0in;margin-left:24.0pt;margin-bottom:.0001pt;text-indent:-24.0pt'><span
+class=CodeChar><span style='color:#993300'><a
+href="ProjectsADVANCED_PATTERNS_OF_SOFTWARE_ARCHITECTUREDomain%20Object%20ModelingCodeSmith%20Domain%20Object%20Template%22"></a>&lt;Project
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+xsi:noNamespaceSchemaLocation=&quot;ProceduresToMap.xsd&quot;&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:42.0pt;margin-bottom:
+0in;margin-left:.5in;margin-bottom:.0001pt;text-indent:-24.0pt'><span
+class=CodeChar><span style='color:#993300'> &lt;NameSpace&gt;Test&lt;/NameSpace&gt;
+</span></span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:42.0pt;margin-bottom:
+0in;margin-left:.5in;margin-bottom:.0001pt;text-indent:-24.0pt'><span
+class=CodeChar><span style='color:#993300'><a
+href="ProjectsADVANCED_PATTERNS_OF_SOFTWARE_ARCHITECTUREDomain%20Object%20ModelingCodeSmith%20Domain%20Object%20Template%22"></a> &lt;RecordSets&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:42.0pt;margin-bottom:
+0in;margin-left:.5in;margin-bottom:.0001pt;text-indent:-12.0pt'><span
+class=CodeChar><span style='color:#993300'>...</span></span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:42.0pt;margin-bottom:
+0in;margin-left:24.0pt;margin-bottom:.0001pt;text-indent:-12.0pt'><span
+class=CodeChar><span style='color:#993300'> &lt;/RecordSets&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:30.0pt;margin-bottom:
+0in;margin-left:12.0pt;margin-bottom:.0001pt;text-indent:-12.0pt'><span
+class=CodeChar><span style='color:#993300'>&lt;/Project&gt;</span></span></p>
+
+<p class=MsoBodyText><span class=CodeChar><span style='color:#993300'>&nbsp;</span></span></p>
+
+<p class=MsoBodyText>&nbsp;</p>
+
+<p class=MsoBodyText align=center style='text-align:center'><img border=0
+width=575 height=206 src="images/image006.jpg"></p>
+
+<p class=MsoBodyText align=center style='text-align:center'>Figure 3.13</p>
+
+<p class=MsoBodyText>As we can see above the xml schema defines a node called
+project, which in turn defines nodes <span class=CodeChar><span
+style='color:#993300'>NameSpace</span></span> and <span class=CodeChar><span
+style='color:#993300'>RecordSets</span></span>. The <span class=CodeChar><span
+style='color:#993300'>NameSpace</span></span> node is ignored but the <span
+class=CodeChar><span style='color:#993300'>RecordSets</span></span> node is a
+collection node that defines each record set. Each record set definition
+consists of a name, which will be the base name of the generated record set
+objects, and node definitions for three stored procedure nodes.</p>
+
+<p class=MsoBodyText>If we look at the first node in the xml we see the
+definition for the first record set to be generated. The order of the record
+sets is not important. The <span class=CodeChar><span style='color:#993300'>Name</span></span>
+node contained in the <span class=CodeChar><span style='color:#993300'>RecordSet</span></span>
+node is the singular name for the entire record set. As an example, if you were
+going to build a record set from the stored procedures we examined earlier in the
+document for the User table, we would call this record set ‘User’ since that
+would correspond to the underlying table. That would cause the template to
+create collection classes and interfaces for the Data Layer and Business Layer
+named <span class=CodeChar><span style='color:teal'>IUsersBL</span></span> -<span
+class=CodeChar><span style='color:teal'>UsersBL</span></span> and <span
+class=CodeChar><span style='color:teal'>IUsersDL</span></span> - <span
+class=CodeChar><span style='color:teal'>UsersDL</span></span> and record set
+classes named <span class=CodeChar><span style='color:teal'>IUserBL</span></span>
+-<span class=CodeChar><span style='color:teal'>UserBL</span></span> and <span
+class=CodeChar><span style='color:teal'>IUserDL</span></span> - <span
+class=CodeChar><span style='color:teal'>UserDL</span></span>. The User
+Interface template would also generate a MDI Form grid form class, as well as
+‘add’ and ‘edit’ screens. The name you use should always be singular.</p>
+
+<p class=MsoBodyText>Notice in the markup example below the structure of the <span
+class=CodeChar><span style='color:#993300'>UpdateStoredProcedure</span></span>
+node. There is a node called <span style='font-family:"Courier New";color:#A31515'>ExcludedFromRules</span>,
+and a node called <span class=CodeChar><span style='color:#993300'>Command</span></span>.
+The <span class=CodeChar><span style='color:#993300'>Command</span></span> node
+is how the template will read the underlying schema and this node has two
+sub-nodes to indicate the stored procedure owner and the stored procedure name.
+If this stored procedure is not set to the update/insert/delete stored
+procedure, then no schema data is read, and the <span class=CodeChar><span
+style='color:#993300'>UpdateStoredProcedure</span></span> node is ignored. The <span
+style='font-family:"Courier New";color:#A31515'>ExcludedFromRules</span> node
+will be a comma delimited string of the property names (or column/parameter
+names) that you wish the rules class generation for the Business Layer rules
+engine to ignore.</p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>&lt;</span><span style='font-family:"Courier New";color:#A31515'>RecordSets</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'> &lt;</span><span style='font-family:"Courier New";color:#A31515'>RecordSet</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>  &lt;</span><span style='font-family:"Courier New";color:#A31515'>Name</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span><span style='font-family:
+"Courier New"'>User<span style='color:blue'>&lt;/</span><span style='color:
+#A31515'>Name</span><span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>  &lt;</span><span style='font-family:"Courier New";color:#A31515'>UpdateStoredProcedure</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>    &lt;</span><span style='font-family:"Courier New";color:#A31515'>Command</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>Owner</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span><span style='font-family:
+"Courier New"'>dbo<span style='color:blue'>&lt;/</span><span style='color:#A31515'>Owner</span><span
+style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>Name</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span><span style='font-family:
+"Courier New"'>aposa_SetUserData<span style='color:blue'>&lt;/</span><span
+style='color:#A31515'>Name</span><span style='color:blue'>&gt;          </span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>    &lt;/</span><span style='font-family:"Courier New";color:#A31515'>Command</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>    &lt;</span><span style='font-family:"Courier New";color:#A31515'>ExcludedFromRules</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span><span style='font-family:
+"Courier New"'>UserID,IsActive<span style='color:blue'>&lt;/</span><span
+style='color:#A31515'>ExcludedFromRules</span><span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-right:78.0pt'><span style='font-family:"Courier New";
+color:blue'>  &lt;/</span><span style='font-family:"Courier New";color:#A31515'>UpdateStoredProcedure</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='margin-right:78.0pt'><span class=CodeChar><span
+style='color:#993300'>&nbsp;</span></span></p>
+
+<p class=MsoNormal style='margin-right:78.0pt'>The next node to examine is the <span
+class=CodeChar><span style='color:#993300'>SelectStoredProcedure</span></span>
+node, which is the node used to indicate the single record select query. The
+basic structure of the node is the same, the only difference is that the <span
+class=CodeChar><span style='color:#993300'>Command.Name</span></span> node
+should be filled in with the name of the single record select query.</p>
+
+<p class=MsoNormal style='margin-right:78.0pt'><span class=CodeChar><span
+style='color:#993300'>&nbsp;</span></span></p>
+
+<p class=MsoNormal style='margin-right:66.0pt'><span class=CodeChar><span
+style='color:#993300'>   <a
+href="ProjectsADVANCED_PATTERNS_OF_SOFTWARE_ARCHITECTUREDomain%20Object%20ModelingCodeSmith%20Domain%20Object%20Template%22"></a>&lt;SelectStoredProcedure&gt;&nbsp;     
+</span></span></p>
+
+<p class=MsoNormal style='margin-right:78.0pt'><span class=CodeChar><span
+style='color:#993300'>    &lt;Command&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:78.0pt;margin-bottom:
+0in;margin-left:24.0pt;margin-bottom:.0001pt;text-indent:12.0pt'><span
+class=CodeChar><span style='color:#993300'>&lt;Owner&gt;dbo&lt;/Owner&gt; </span></span></p>
+
+<p class=MsoNormal style='margin-right:1.25in;text-indent:.5in'><span
+class=CodeChar><span style='color:#993300'>&lt;Name&gt;aposa_GetUserData&lt;/Name&gt;
+</span></span></p>
+
+<p class=MsoNormal style='margin-right:78.0pt'><span class=CodeChar><span
+style='color:#993300'>    &lt;/Command&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-right:78.0pt'><span class=CodeChar><span
+style='color:#993300'>    </span></span><span style='font-family:"Courier New";
+color:blue'>&lt;</span><span style='font-family:"Courier New";color:#A31515'>ExcludedFromRules</span><span
+style='font-family:"Courier New";color:blue'>&gt;&lt;/</span><span
+style='font-family:"Courier New";color:#A31515'>ExcludedFromRules</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='margin-right:66.0pt'><span class=CodeChar><span
+style='color:#993300'>   &lt;/SelectStoredProcedure&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-right:66.0pt'><span class=CodeChar><span
+style='color:#993300'>&nbsp;</span></span></p>
+
+<p class=MsoNormal style='margin-right:78.0pt'>The last node is the only node
+that is mandatory. This was done because sometimes there is a need for record
+sets that lookup data only and have no need to update their underlying data
+structures. The structure is exactly the same as the first two, and the only
+difference is that the <span class=CodeChar><span style='color:#993300'>Command.Name</span></span>
+node should be filled in with the name of the collection select query.</p>
+
+<p class=MsoNormal style='margin-right:66.0pt'><span class=CodeChar><span
+style='color:#993300'>&nbsp;</span></span></p>
+
+<p class=MsoNormal style='margin-right:66.0pt'><span class=CodeChar><span
+style='color:#993300'>   <a
+href="ProjectsADVANCED_PATTERNS_OF_SOFTWARE_ARCHITECTUREDomain%20Object%20ModelingCodeSmith%20Domain%20Object%20Template%22"></a>&lt;SelectCollectionStoredProcedure&gt;   
+</span></span></p>
+
+<p class=MsoNormal style='margin-right:78.0pt'><span class=CodeChar><span
+style='color:#993300'>    &lt;Command&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:78.0pt;margin-bottom:
+0in;margin-left:24.0pt;margin-bottom:.0001pt;text-indent:12.0pt'><span
+class=CodeChar><span style='color:#993300'>&lt;Owner&gt;dbo&lt;/Owner&gt; </span></span></p>
+
+<p class=MsoNormal style='margin-right:1.25in;text-indent:.5in'><span
+class=CodeChar><span style='color:#993300'>&lt;Name&gt;aposa_GetUserData&lt;/Name&gt;
+</span></span></p>
+
+<p class=MsoNormal style='margin-right:78.0pt'><span class=CodeChar><span
+style='color:#993300'>    &lt;/Command&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-right:78.0pt'><span class=CodeChar><span
+style='color:#993300'>    </span></span><span style='font-family:"Courier New";
+color:blue'>&lt;</span><span style='font-family:"Courier New";color:#A31515'>ExcludedFromRules</span><span
+style='font-family:"Courier New";color:blue'>&gt;&lt;/</span><span
+style='font-family:"Courier New";color:#A31515'>ExcludedFromRules</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='margin-right:66.0pt'><span class=CodeChar><span
+style='color:#993300'>   &lt;/SelectCollectionStoredProcedure&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-right:.75in'><span class=CodeChar><span
+style='color:#993300'>  &lt;/RecordSet&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-right:.75in'><span class=CodeChar><span
+style='color:#993300'>&nbsp;</span></span></p>
+
+<p class=MsoBodyText><span class=CodeChar><span style='font-family:Arial'>Other
+record set nodes can be added as are needed, to have any number of structures
+that make up record sets. Each </span></span><span class=CodeChar><span
+style='color:#993300'>RecordSet</span></span><span class=CodeChar><span
+style='font-family:Arial'> node must conform to the </span></span>schema file
+named <span class=CodeChar><span style='color:#993300'>ProceduresToMap.xsd</span></span>.
+<span class=CodeChar><span style='font-family:Arial'> </span></span></p>
+
+<p class=MsoNormal style='margin-right:.75in'><span class=CodeChar><span
+style='color:#993300'>  &lt;RecordSet&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-right:66.0pt'><span class=CodeChar><span
+style='color:#993300'>   &lt;Name&gt;Product&lt;/Name&gt; </span></span></p>
+
+<p class=MsoNormal style='margin-right:.75in'><span class=CodeChar><span
+style='color:#993300'>   ........</span></span></p>
+
+<p class=MsoNormal style='margin-right:.75in'><span class=CodeChar><span
+style='color:#993300'>  &lt;/RecordSet&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-right:.75in'><span class=CodeChar><span
+style='color:#993300'> <a
+href="ProjectsADVANCED_PATTERNS_OF_SOFTWARE_ARCHITECTUREDomain%20Object%20ModelingCodeSmith%20Domain%20Object%20Template%22"></a>&lt;RecordSets&gt;</span></span></p>
+
+<p class=MsoNormal style='margin-right:.75in'><span class=Heading3Char><span
+style='font-size:12.0pt'>&nbsp;</span></span></p>
+
+<p class=MsoBodyText>Now that your xml has been made ready, we can move ahead
+to our project, which will run against the xml file and generate our code from
+the four main templates.</p>
+
+<p class=MsoBodyText><span class=Heading3Char><span style='font-size:12.0pt'>&nbsp;</span></span></p>
+
+<h3><a name="_Toc164154926"><span class=Heading3Char>Using the Code Generation
+Templates to Generate your Code</span></a></h3>
+
+<p class=MsoNormal>Now that we have a basic understanding of how to build
+inputs for our template and what each part of those inputs look like, lets take
+a look at actually how the template works to generate all that cool code for
+the Domain Object pattern. This is where things get really high speed, in that
+your code will seem to write itself.</p>
+
+<p class=MsoNormal style='margin-right:78.0pt'>&nbsp;</p>
+
+<p class=MsoBodyText>The first step in designing templates in CodeSmith is to
+design a project. Our project has a default template class and one default
+output. Below we can see the user interface CodeSmith provides for viewing the
+overall project.</p>
+
+<p class=MsoBodyText><img border=0 width=575 height=385
+src="images/image007.gif"></p>
+
+<p class=MsoNormal align=center style='text-align:center;text-autospace:none'>Figure
+3.14</p>
+
+<p class=MsoNormal style='text-autospace:none'>&nbsp;</p>
+
+<p class=MsoBodyText>The project file is really just an xml file with a
+CodeSmith extension on it. Below we see the project as it appears in raw xml
+markup.</p>
+
+<p class=MsoNormal align=center style='text-align:center;text-autospace:none'><span
+style='color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>&lt;?</span><span style='font-family:"Courier New";color:#A31515'>xml</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>version</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>1.0</span>&quot;<span style='color:blue'>?&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>&lt;</span><span style='font-family:"Courier New";color:#A31515'>codeSmith</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>xmlns</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>http://www.codesmithtools.com/schema/csp.xsd</span>&quot;<span
+style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>  &lt;</span><span style='font-family:"Courier New";color:#A31515'>defaultTemplate</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>path</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>ProjectCompile.cst</span>&quot;<span style='color:blue'>
+/&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>  &lt;</span><span style='font-family:"Courier New";color:#A31515'>propertySets</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>    &lt;</span><span style='font-family:"Courier New";color:#A31515'>propertySet</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>template</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>ProjectCompile.cst</span>&quot;<span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>ProcedureMap</span>&quot;<span style='color:blue'>&gt;</span>ProceduresToMap.xml<span
+style='color:blue'>&lt;/</span><span style='color:#A31515'>property</span><span
+style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>UserInterfaceProjectGuid</span>&quot;<span style='color:
+blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New"'>697299bb-a1ea-4046-88e0-80ff83888148</span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New";color:blue'>&lt;/</span><span
+style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>DataLayerProjectGuid</span>&quot;<span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New"'>cb2c8c2b-05a4-45c8-bc8b-432bac261ca5</span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New";color:blue'>&lt;/</span><span
+style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>OutPutDirectory</span>&quot;<span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New"'>..\MDIForms Generated 3 Tier Example\</span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New";color:blue'>&lt;/</span><span
+style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>FormsUIComponentProjectGuid</span>&quot;<span
+style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New"'>0e1b985b-ea82-4a26-b33d-be421d07487f</span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New";color:blue'>&lt;/</span><span
+style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>TypeOfUserInterface</span>&quot;<span style='color:blue'>&gt;</span>MDIForm<span
+style='color:blue'>&lt;/</span><span style='color:#A31515'>property</span><span
+style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>CompanyName</span>&quot;<span style='color:blue'>&gt;</span>Your
+Company Name<span style='color:blue'>&lt;/</span><span style='color:#A31515'>property</span><span
+style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>CleanDirectories</span>&quot;<span style='color:blue'>&gt;</span>False<span
+style='color:blue'>&lt;/</span><span style='color:#A31515'>property</span><span
+style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>OutputFile</span>&quot;<span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New"'>..\MDIForms Generated 3 Tier
+Example\ProjectCompile.log</span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New";color:blue'>&lt;/</span><span
+style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>ProjectVersion</span>&quot;<span style='color:blue'>&gt;</span>1.0.0.1<span
+style='color:blue'>&lt;/</span><span style='color:#A31515'>property</span><span
+style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>SolutionProjectGuid</span>&quot;<span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New"'>a78e5bbf-eb6a-4d1f-8adb-790c587bb119</span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New";color:blue'>&lt;/</span><span
+style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>GenerateUI</span>&quot;<span style='color:blue'>&gt;</span>True<span
+style='color:blue'>&lt;/</span><span style='color:#A31515'>property</span><span
+style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>ProjectDescription</span>&quot;<span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New"'>Test Project Template</span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New";color:blue'>&lt;/</span><span
+style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>CanHaveNullablePrimitives</span>&quot;<span
+style='color:blue'>&gt;</span>False<span style='color:blue'>&lt;/</span><span
+style='color:#A31515'>property</span><span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>CompanyNameSpace</span>&quot;<span style='color:blue'>&gt;</span>APOSA<span
+style='color:blue'>&lt;/</span><span style='color:#A31515'>property</span><span
+style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>BusinessLayerProjectGuid</span>&quot;<span style='color:
+blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New"'>f9dcc057-a1d7-43cb-b37c-689127b2098e</span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New";color:blue'>&lt;/</span><span
+style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>TargetDatabase</span>&quot;<span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>        &lt;</span><span style='font-family:"Courier New";
+color:#A31515'>connectionString</span><span style='font-family:"Courier New";
+color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:.5in;text-autospace:
+none'><span style='font-family:"Courier New"'>SERVER=ANYDATABASE;DATABASE=APOSA;UID=testUser;PASSWORD=test;</span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-autospace:none'><span
+style='font-family:"Courier New"'>  <span style='color:blue'>&lt;/</span><span
+style='color:#A31515'>connectionString</span><span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>        &lt;</span><span style='font-family:"Courier New";
+color:#A31515'>providerType</span><span style='font-family:"Courier New";
+color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:.5in;text-autospace:
+none'><span style='font-family:"Courier New"'>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</span></p>
+
+<p class=MsoNormal style='text-indent:.5in;text-autospace:none'><span
+style='font-family:"Courier New"'>  <span style='color:blue'>&lt;/</span><span
+style='color:#A31515'>providerType</span><span style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;/</span><span style='font-family:"Courier New";
+color:#A31515'>property</span><span style='font-family:"Courier New";
+color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>ProjectNameSpace</span>&quot;<span style='color:blue'>&gt;</span>Test<span
+style='color:blue'>&lt;/</span><span style='color:#A31515'>property</span><span
+style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>      &lt;</span><span style='font-family:"Courier New";color:#A31515'>property</span><span
+style='font-family:"Courier New";color:blue'> </span><span style='font-family:
+"Courier New";color:red'>name</span><span style='font-family:"Courier New";
+color:blue'>=</span><span style='font-family:"Courier New"'>&quot;<span
+style='color:blue'>GenerateSolution</span>&quot;<span style='color:blue'>&gt;</span>True<span
+style='color:blue'>&lt;/</span><span style='color:#A31515'>property</span><span
+style='color:blue'>&gt;</span></span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>    &lt;/</span><span style='font-family:"Courier New";color:#A31515'>propertySet</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoNormal style='text-autospace:none'><span style='font-family:"Courier New";
+color:blue'>  &lt;/</span><span style='font-family:"Courier New";color:#A31515'>propertySets</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoBodyText><span style='font-family:"Courier New";color:blue'>&lt;/</span><span
+style='font-family:"Courier New";color:#A31515'>codeSmith</span><span
+style='font-family:"Courier New";color:blue'>&gt;</span></p>
+
+<p class=MsoBodyText>The project is how we will set up basic things like the
+company identifiers, project name, namespace and version and a list of other
+.NET project specific and non-data specific configuration information. I
+provide a basic list of these properties below.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>ProjectGuid</span> – This is a non-editable
+field which generates the .NET project unique identifier.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>CanHaveNullablePrimitives</span> – This
+indicates whether the primitive data types for business data property variables
+can be nullable, a feature of .NET 2.0</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>CompanyName</span> – This will go in the <span
+class=CodeChar>AssemblyInfo.cs</span> and is used for any manifests created.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>CompanyNameSpace</span> – This is the
+company initials or name (no spaces) that will appear before all namespace(s)
+in the project(s). Example: <span class=CodeChar><b>YourCompany</b></span><span
+class=CodeChar>.ProjectName.BusinessLayer</span>….</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>ProjectDescription</span> - This will go in
+the <span class=CodeChar>AssemblyInfo.cs</span> and is used for any manifests
+created.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>ProjectNameSpace</span> – This is the name
+of the overall project you are working on. Example: <span class=CodeChar>YourCompany.<b>ProjectName</b>.BusinessLayer</span>….</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>ProjectVersion</span> – the current version
+of the project when this code is generated.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>CleanDirectories</span> – Indicates whether
+or not to clean the output directory and delete all code before generation. If
+you are using the merge strategy and have existing code written in the regions,
+this should be set to false, so developer code does not get deleted.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>GenerateSolution</span> – This indicates
+whether or not to generate a solution file for the projects. If your solution
+contains projects or references that are not part of the template, set this to
+false.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>GenerateUI</span> – This indicates whether a
+default generic user interface project will be generated. This is a tool in the
+template that will generate a basic Web, MDI Forms or Windows Forms application
+for each of your tables or stored procedures that make up a record set.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>TargetDatabase</span> – This is a CodeSmith
+required field, and determines which database to search in for all the schemas,
+stored procedures and table definitions.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>TypeOfUserInterface</span> – This indicates
+which type of user interfaces to create, Web, MDI Forms or Windows Forms. The
+default is MDI Forms. Actually for this example, I only created a MDI forms
+template.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>OutPutDirectory</span> – This is the directory
+where the generated code will be placed.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>ProjectGuid</span>, <span class=CodeChar>BusinessLayerProjectGuid</span>
+, <span class=CodeChar>DataLayerProjectGuid</span>, <span class=CodeChar>FormsUIComponenetProjectGuid</span>,
+<span class=CodeChar>UserInterfaceProjectGuid</span> , <span class=CodeChar>SolutionProjectGuid</span>
+– These are used to generate the project and should be ignored.</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>ProcedureMap</span> – This is the directory
+where the xml file is located that will tell us from which stored procedures we
+should generate our code and defines our record sets (see ‘Defining Record
+Sets’ a little later in the document).</p>
+
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span class=CodeChar>OutputFile</span> – This is the directory
+where the log file for the generated code will go.</p>
+
+<p class=MsoBodyText style='margin-bottom:0in;margin-bottom:.0001pt'>&nbsp;</p>
+
+<p class=MsoBodyText style='margin-bottom:0in;margin-bottom:.0001pt'>&nbsp;</p>
+
+<p class=MsoBodyText><img border=0 width=575 height=440
+src="images/image008.jpg"></p>
+
+<p class=MsoBodyText align=center style='text-align:center'>Figure 3.15</p>
+
+<p class=MsoBodyText>In the figure above we see most of the properties
+displayed in a grid bag on a form. This is a form that CodeSmith provides to
+view Project Template details. For our project we have a main project template,
+which compiles and generates code using sub-templates for each project, the
+solution, and all supporting files.</p>
+
+<p class=MsoNormal>Once we have set up all our variables for our project and
+after your xml file is properly created and filled with all the names of the
+stored procedures for each record set, the project template to generate the
+code can come into play to help generate our code. </p>
+
+<p class=MsoNormal align=center style='text-align:center'><img border=0
+width=249 height=351 src="images/image009.jpg"></p>
+
+<p class=MsoNormal align=center style='margin-right:78.0pt;text-align:center'>&nbsp;</p>
+
+<p class=MsoNormal align=center style='text-align:center'>Figure 3.16</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>The template can be run in the CodeSmith Studio application
+or run by double clicking the project in Windows Explorer. The menu item in the
+CodeSmith Studio that is named ‘Generate Outputs’ will begin the code
+generation process.</p>
+
+<p class=MsoNormal><span class=CodeChar><span style='color:#993300'>&nbsp;</span></span></p>
+
+</div>
+
+</body>
+
+</html>

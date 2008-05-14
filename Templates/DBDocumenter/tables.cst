@@ -1,0 +1,61 @@
+<%-- 
+CodeSmith DBDocumenter Templates
+Author:  Jason Alexander (jason@ngallery.org), Eric J. Smith
+Website: http://www.ngallery.org/dbdocumenter/
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" Description="Generates a set of HTML-based database documentation." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="Database that the documentation should be based on." %>
+<%@ Property Name="ServerName" Type="System.String" Category="Output" Description="The name of the actual database server that is being documented." %>
+<%@ Property Name="DocumentationTitle" Type="System.String" Default="Database Documentation" Category="Output" Description="Defines what the title of the HTML page that will be generated will be." %>
+<%@ Register Name="TableSummaryTemplate" Template="table_summary.cst" MergeProperties="false" %>
+<%@ Register Name="TableDetailTemplate" Template="table_details.cst" MergeProperties="false" %>
+<%@ Register Name="HeaderTemplate" Template="header.cst" %>
+<%@ Register Name="FooterTemplate" Template="footer.cst" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Design" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<script runat="template">
+// Override the render method so that we can output seperate files for each table.
+public override void Render(System.IO.TextWriter writer)
+{
+	this.Progress.MaximumValue = SourceDatabase.Tables.Count + 2;
+	this.Progress.Step = 1;
+	
+	// render the summary list of tables file.
+	Trace.WriteLine("Building tables summary list (table_summary.html)...");
+	TableSummaryTemplate tableSummaryTemplate = this.Create<TableSummaryTemplate>();
+	this.CopyPropertiesTo(tableSummaryTemplate);
+	tableSummaryTemplate.RenderToFile(this.OutputDirectory + "table_summary.html", true);
+	this.Progress.PerformStep();
+	
+	TableSchemaCollection tables = new TableSchemaCollection(SourceDatabase.Tables);
+	tables.Sort(new PropertyComparer("Name"));
+	
+	for (int i = 0; i < tables.Count; i++)
+	{
+		// render the table details file.
+		Trace.WriteLine("Building table details (table_details_" + i + ".html) for " + tables[i].Name + "...");
+		TableDetailTemplate tableDetailTemplate = this.Create<TableDetailTemplate>();
+		this.CopyPropertiesTo(tableDetailTemplate);
+		tableDetailTemplate.SetProperty("SourceTable", tables[i]);
+		tableDetailTemplate.RenderToFile(this.OutputDirectory + "table_details_" + i + ".html", true);
+		this.Progress.PerformStep();
+	}
+	
+	base.Render(writer);
+	this.Progress.PerformStep();
+}
+</script>
+<%
+HeaderTemplate headerTemplate = this.Create<HeaderTemplate>();
+headerTemplate.SelectedTabIndex = 1;
+this.OutputTemplate(headerTemplate);
+%>
+<img src="images/arrow.gif" border="0"/>&nbsp;&nbsp;<span class="header">Tables (<%= SourceDatabase.Tables.Count %> Total)</span><br/>
+<hr width="100%" size="1" />
+<iframe src="table_summary.html" name="tablesummary" frameborder="0" height="145" width="100%"></iframe>
+<br/>
+<img src="images/arrow.gif" border="0">&nbsp;&nbsp;<span class="header">Tables Details</span><br>
+<hr width="100%" size="1" />
+<iframe src="table_details_0.html" name="tabledetails" frameborder="0" height="300" width="100%"></iframe>
+<% this.OutputTemplate(this.Create<FooterTemplate>()); %>

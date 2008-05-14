@@ -1,0 +1,160 @@
+<%--
+	Author: Chris Lasater
+		
+	
+	Description: Runs project Build for DataLayer
+		
+	Remarks:
+		
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Src="../Utility/ProjectHelper.cs" Inherits="Utility.ProjectHelper" Description="Scripts DatabaseObjects" Debug="True" %>
+
+<%@ XmlProperty Name="ProcedureMap" Schema="../ProceduresToMap.xsd" Default="../ProceduresToMap.xml" Category="Context" Description="The procedure map XML file." %>
+
+<%@ Register Name="RecordInterfaceTemplate" Template="DL/InterfaceRecord.cst" %>
+<%@ Register Name="RecordConcreteClassTemplate" Template="DL/Impl/ConcreteRecord.cst" %>
+<%@ Register Name="CollectionConcreteClassTemplate" Template="DL/Impl/ConcreteCollection.cst" %>
+<%@ Register Name="InterfaceCollectionTemplate" Template="DL/InterfaceCollection.cst" %>
+
+<%@ Register Name="DALBaseTemplate" Template="Base/DALBase.cst" %>
+<%@ Register Name="DBPropertyInfoAttributeTemplate" Template="Base/DBPropertyInfoAttribute.cst" %>
+<%@ Register Name="IDataTemplateTemplate" Template="Base/IDataTemplate.cst" %>
+<%@ Register Name="InsertStoredProcedureNameAttributeTemplate" Template="Base/InsertStoredProcedureNameAttribute.cst" %>
+<%@ Register Name="ModifyDBPropertyInfoAttributeTemplate" Template="Base/ModifyDBPropertyInfoAttribute.cst" %>
+<%@ Register Name="SelectDBPropertyInfoAttributeTemplate" Template="Base/SelectDBPropertyInfoAttribute.cst" %>
+<%@ Register Name="SelectStoredProcedureNameAttributeTemplate" Template="Base/SelectStoredProcedureNameAttribute.cst" %>
+<%@ Register Name="TransactionTypeTemplate" Template="Base/TransactionType.cst" %>
+<%@ Register Name="AssemblyInfoTemplate" Template="Properties/AssemblyInfo.cst" %>
+<%@ Register Name="DataLayerProjectTemplate" Template="DataLayer.cst" %>
+
+<%@ Assembly Name="System.Design" %>
+<%@ Import NameSpace="System.IO" %>
+<%@ Import NameSpace="System.Text.RegularExpressions" %>
+<%@ Import NameSpace="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import NameSpace="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import NameSpace="CodeSmith.CustomProperties" %>
+
+<% BuildProject(); %>
+
+<script runat="template">
+public void BuildProject()
+{
+	try
+	{
+		this.Response.WriteLine("Begin CodeSmith Build of DL...");
+		
+		PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Programmer)", "C#");
+		// instantiate the sub-template
+		AssemblyInfoTemplate asm = this.Create<AssemblyInfoTemplate>();	
+		asm.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, asm,strategy,string.Format("DataLayer{0}Properties{1}AssemblyInfo.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+		
+		// instantiate the sub-template
+		DALBaseTemplate dal = this.Create<DALBaseTemplate>();	
+		dal.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, dal,strategy,string.Format("DataLayer{0}Base{1}DALBase.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+			
+		// instantiate the sub-template
+		DBPropertyInfoAttributeTemplate db = this.Create<DBPropertyInfoAttributeTemplate>();	
+		db.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, db,strategy,string.Format("DataLayer{0}Base{1}DBPropertyInfoAttribute.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+					
+		// instantiate the sub-template
+		IDataTemplateTemplate it = this.Create<IDataTemplateTemplate>();	
+		it.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, it,strategy,string.Format("DataLayer{0}Base{1}IDataTemplate.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+					
+		// instantiate the sub-template
+		InsertStoredProcedureNameAttributeTemplate isp = this.Create<InsertStoredProcedureNameAttributeTemplate>();	
+		isp.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, isp,strategy,string.Format("DataLayer{0}Base{1}InsertStoredProcedureNameAttribute.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+			
+		// instantiate the sub-template
+		ModifyDBPropertyInfoAttributeTemplate mdp = this.Create<ModifyDBPropertyInfoAttributeTemplate>();	
+		mdp.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, mdp,strategy,string.Format("DataLayer{0}Base{1}ModifyDBPropertyInfoAttribute.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+				
+		// instantiate the sub-template
+		SelectDBPropertyInfoAttributeTemplate sdp = this.Create<SelectDBPropertyInfoAttributeTemplate>();	
+		sdp.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, sdp,strategy,string.Format("DataLayer{0}Base{1}SelectDBPropertyInfoAttribute.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+				
+		// instantiate the sub-template
+		SelectStoredProcedureNameAttributeTemplate ssp = this.Create<SelectStoredProcedureNameAttributeTemplate>();	
+		ssp.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, ssp,strategy,string.Format("DataLayer{0}Base{1}SelectStoredProcedureNameAttribute.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+			
+		// instantiate the sub-template
+		TransactionTypeTemplate ttt = this.Create<TransactionTypeTemplate>();	
+		ttt.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, ttt,strategy,string.Format("DataLayer{0}Base{1}TransactionType.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+			
+		this.Response.WriteLine(string.Empty);		
+		for(int i = 0;i < ProcedureMap.RecordSets.Count; i++)
+		{
+			this.Response.WriteLine("Generating source (" + GetSingularName(ProcedureMap.RecordSets[i].Name) + ") ...");				
+				
+			//set the connection string
+			//this.TargetDatabase.ConnectionString = ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.ConnectionString;
+			
+			// instantiate the sub-template
+			RecordInterfaceTemplate ri = this.Create<RecordInterfaceTemplate>();
+			ri.RecordSetName = ProcedureMap.RecordSets[i].Name;
+			if(!string.IsNullOrEmpty(ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Name))
+				ri.UpdateStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Owner,DateTime.Now);
+			if(!string.IsNullOrEmpty(ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Name))
+				ri.SelectStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Owner,DateTime.Now);
+			ri.SelectCollectionStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Owner,DateTime.Now);
+			ri.RegisterOutput(this.OutputFile);
+			BuildSubTemplate(this, ri,strategy,string.Format("DataLayer{0}DL{1}I{2}DL.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,GetSingularName(ProcedureMap.RecordSets[i].Name)), OutPutDirectory);
+						
+			// instantiate the sub-template
+			RecordConcreteClassTemplate rcc = this.Create<RecordConcreteClassTemplate>();	
+			rcc.RecordSetName = ProcedureMap.RecordSets[i].Name;
+			if(!string.IsNullOrEmpty(ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Name))
+				rcc.UpdateStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Owner,DateTime.Now);
+			if(!string.IsNullOrEmpty(ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Name))
+				rcc.SelectStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Owner,DateTime.Now);
+			rcc.SelectCollectionStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Owner,DateTime.Now);
+			rcc.RegisterOutput(this.OutputFile);
+			BuildSubTemplate(this, rcc,strategy,string.Format("DataLayer{0}DL{1}Impl{2}{3}DL.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,GetSingularName(ProcedureMap.RecordSets[i].Name)), OutPutDirectory);
+			
+			// instantiate the sub-template
+			CollectionConcreteClassTemplate ccc = this.Create<CollectionConcreteClassTemplate>();			
+			ccc.RecordSetName = ProcedureMap.RecordSets[i].Name;
+			ccc.SelectCollectionStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Owner,DateTime.Now);
+			ccc.RegisterOutput(this.OutputFile);
+			BuildSubTemplate(this, ccc,strategy,string.Format("DataLayer{0}DL{1}Impl{2}{3}DL.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,GetPluralName(ProcedureMap.RecordSets[i].Name)), OutPutDirectory);
+			
+			// instantiate the sub-template
+			InterfaceCollectionTemplate icc = this.Create<InterfaceCollectionTemplate>();
+			icc.RecordSetName = ProcedureMap.RecordSets[i].Name;
+			icc.SelectCollectionStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Owner,DateTime.Now);
+			icc.RegisterOutput(this.OutputFile);
+			BuildSubTemplate(this, icc,strategy,string.Format("DataLayer{0}DL{1}I{2}DL.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,GetPluralName(ProcedureMap.RecordSets[i].Name)), OutPutDirectory);
+			
+		}
+		PreserveRegionsMergeStrategy projectstrategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:SCC)", "C#");
+		DataLayerProjectTemplate dlp = this.Create<DataLayerProjectTemplate>();	
+		dlp.DataLayerProjectGuid = this.ProjectGuid;
+		dlp.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, dlp, projectstrategy, string.Format("DataLayer{0}{1}.{2}.DataLayer.csproj",Path.DirectorySeparatorChar, CompanyNameSpace, ProjectNameSpace), OutPutDirectory);
+			
+	}
+	catch(Exception ex)
+	{
+		this.Response.WriteLine(string.Format("Exception Message: {0}",ex.Message));
+		this.Response.WriteLine(string.Format("Exception Body: {0}",ex.ToString()));
+		
+	}
+	finally
+	{
+		
+	}
+}
+
+
+
+</script>

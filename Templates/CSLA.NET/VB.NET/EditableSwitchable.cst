@@ -1,0 +1,255 @@
+<%@ CodeTemplate src="TemplateBase.vb" Inherits="CodeSmith.Csla.TemplateBase" Language="VB" TargetLanguage="VB" Description="Generates a CSLA Editable Switchable Object." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="ObjectName" Type="System.String" Optional="True" Category="1. Object" Description="Required - The Name of the Business Object Class to Generate." %>
+<%@ Property Name="ParentName" Type="System.String" Optional="True" Default="" Category="1. Object" Description="The Name of parent Business object belongs." %>
+<%@ Property Name="RootCommand" Type="CommandSchema" Optional="True" Category="2. Data Source" Description="Required - The stored procedure that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootTable" Type="TableSchema" Optional="True" Category="2. Data Source" Description="Required - The Root Table that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootView" Type="ViewSchema" Optional="True" Category="2. Data Source" Description="Required - The Root View that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="ResultSetIndex" Type="System.Int32" Default="0" Optional="True" Category="2. Data Source" Description="Result set index indicates which result set to use from the stored procedure. Required when using RootCommand." %>
+<%@ Property Name="UniqueColumnNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="True" Category="2. Data Source" Description="Unique columns. Required when using RootView." %>
+<%@ Property Name="ChildCollectionNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="True" Category="1a. Child Collection Object" Description="The Child Collection's Name. Used for the memeber variable and collection name." %>
+<%@ Property Name="ChildPropertyNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="True" Category="1a. Child Collection Object" Description="The Child Collection's member variable name." %>
+
+<%-- Generic Variables for code to use  --%>
+<% 
+   Dim i As integer  = BaseIndentLevel
+   Dim objInfo As ObjectInfo = new ObjectInfo(Me)
+%>
+<!-- #INCLUDE FILE="AutoGenWarning.inc" -->
+Imports System
+Imports System.Data
+Imports System.Data.SqlClient
+Imports Csla
+Imports Csla.Data
+Imports Csla.Validation
+
+<% If Not ClassNamespace Is Nothing AndAlso ClassNamespace.Length > 0 Then %>Namespace <%= ClassNamespace %>
+<% i+=1 %>
+<% End If %> 
+<% If Not objInfo.IsUserPartial Then %>
+<%=Indent(i)%><Serializable()> _
+<% End If %>
+<%=Indent(i)%><%= objInfo.Modifiers %> Class <%=objInfo.NameAndSuffix%>
+<%=Indent(i+1)%>Inherits <%=objInfo.Inherits%>
+<% i+=1 %>
+<!-- #INCLUDE FILE="PropertiesMethods.inc" -->
+<!-- #INCLUDE FILE="ValidationRules.inc" -->
+<!-- #INCLUDE FILE="AuthorizationRules.inc" -->
+<!-- #INCLUDE FILE="ObjectFactoryMethods.inc" -->
+<%=Indent(0, true)%>#Region " Child Factory Methods "
+<% If objInfo.IsGeneratedClass Then %>
+<%=Indent(i, True)%>Friend Shared Function <%=objInfo.NewMethodName%>Child(<%=GetFactoryNewDeclarationArguments(objInfo)%>) As <%=objInfo.Type%>
+<% i+=1 %>
+<% If objInfo.IsGeneratedBase Then 'abstract-child cannot use constructor %>
+<%=Indent(i)%>Dim child As <%=objInfo.Type%> = DataPortal.Create(Of <%=objInfo.Type%>)(<% Dim cPars As String = GetFactoryNewCallArguments(objInfo): If cPars.Length > 0 Then%>New Criteria(<%=cPars%>)<%End If%>)
+<% Else %>
+<%=Indent(i)%>Dim child As <%=objInfo.Type%> = New <%=objInfo.Name%>(<%=GetFactoryNewCallArguments(objInfo)%>)
+<% End If %>
+<%=Indent(i)%>child.MarkAsChild()
+<%=Indent(i)%>Return child
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+
+<%=Indent(i)%>Friend Shared Function <%=objInfo.GetMethodName%>(ByVal dr As SafeDataReader) As <%=objInfo.Type%>
+<% i+=1 %>
+<% If objInfo.IsGeneratedBase Then %>
+<%=Indent(i)%>Dim child As <%=objInfo.Type%> = DataPortal.Create(Of <%=objInfo.Type%>)()
+<% Else %>
+<%=Indent(i)%>Dim child As <%=objInfo.Type%> = New <%=objInfo.Name%>()
+<% End If %>
+<%=Indent(i)%>child.MarkAsChild()
+<%=Indent(i)%>child.Fetch(dr)
+<%=Indent(i)%>Return child
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<% End If %>
+
+<%=Indent(0)%>#End Region 'Child Factory Methods
+<%=Indent(0, true)%>#Region " Data Access "
+<% If objInfo.IsGeneratedClass Then %>
+<!-- #INCLUDE FILE="ObjectCriteria.inc" -->
+<!-- #INCLUDE FILE="DataPortalCreate.inc" -->
+<!-- #INCLUDE FILE="DataPortalFetch.inc" -->
+<!-- #INCLUDE FILE="DataPortalUpdate.inc" -->
+<!-- #INCLUDE FILE="DataPortalDelete.inc" -->
+<!-- #INCLUDE FILE="Fetch.inc" -->
+<!-- #INCLUDE FILE="Update.inc" -->
+<!-- #INCLUDE FILE="Delete.inc" -->
+<% End If %>
+
+<%=Indent(0)%>#End Region 'Data Access
+<% If objInfo.IsGeneratedPartial Then %>
+<%=Indent(0, true)%>#Region " Delegation Methods "
+<%=Indent(i, True)%>Private delegate Function predicateEx(Of U, V)(ByVal obj1 As U, ByVal obj2 As V) As boolean
+<%=Indent(i)%>Private delegate Sub actionEx(Of U, V)(ByVal obj1 As U, ByVal obj2 As V)
+<%=Indent(i)%>Private delegate Sub rulesAction()
+<%=Indent(i, True)%>' Business Rules
+<%=Indent(i)%><NonSerialized()> _
+<%=Indent(i)%>Private addCustomRulesDelegate As rulesAction = Nothing
+<%=Indent(i, True)%>Private Sub OnAddCustomRules()
+<% i+=1 %>
+<%=Indent(i)%>If Not addCustomRulesDelegate Is Nothing Then
+<%=Indent(i+1)%>AddCustomRulesDelegate()
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(i, True)%>' Fetch
+<%=Indent(i)%><NonSerialized()> _
+<%=Indent(i)%>Private executeFetchDelegate As predicateEx(Of <%If (objInfo.UseAdoTransaction) Then%>SqlTransaction<%else%>SqlConnection<%End If%>, Criteria) = Nothing
+<%=Indent(i, True)%>Private function OnExecuteFetch(<%If (objInfo.UseAdoTransaction) Then%>ByVal tr As SqlTransaction<%else%>ByVal cn As SqlConnection<%End If%>, ByVal criteria As Criteria ) As boolean
+<% i+=1 %>
+<%=Indent(i)%>If Not executeFetchDelegate Is Nothing Then
+<%=Indent(i+1)%>Return executeFetchDelegate(<% If objInfo.UseAdoTransaction Then %>tr<% Else %>cn<% End If %>, criteria)
+<%=Indent(i)%>End If
+<%=Indent(i)%>Return True
+<% i-=1 %>
+<%=Indent(i)%>End Function
+<%=Indent(i, True)%><NonSerialized()> _
+<%=Indent(i)%>Private executeFetchCompleteDelegate As actionEx(Of SqlCommand, Criteria) = Nothing
+<%=Indent(i, True)%>Private Sub OnExecuteFetchComplete(ByVal cm As SqlCommand , ByVal criteria As Criteria)
+<% i+=1 %>
+<%=Indent(i)%>If Not executeFetchCompleteDelegate Is Nothing Then
+<%=Indent(i+1)%>executeFetchCompleteDelegate(cm, criteria)
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(i, True)%><NonSerialized()> _
+<%=Indent(i)%>Private fetchObjectCompleteDelegate As Action(Of SafeDataReader) = Nothing
+<%=Indent(i)%>Private Sub OnFetchObjectComplete(ByVal dr As SafeDataReader)
+<% i+=1 %>
+<%=Indent(i)%>If Not fetchObjectCompleteDelegate Is Nothing Then
+<%=Indent(i+1)%>fetchObjectCompleteDelegate(dr)
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(i)%><NonSerialized()> _
+<%=Indent(i)%>Private fetchChildrenCompleteDelegate As Action(Of SafeDataReader) = Nothing
+<%=Indent(i)%>Private Sub OnFetchChildrenComplete(ByVal dr As SafeDataReader)
+<% i+=1 %>
+<%=Indent(i)%>If Not fetchChildrenCompleteDelegate Is Nothing Then
+<%=Indent(i+1)%>fetchChildrenCompleteDelegate(dr)
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(i, True)%>' Insert
+<%=Indent(i)%><NonSerialized()> _
+<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>
+<%=Indent(i)%>Private executeInsertDelegate As predicateEx(Of <% If objInfo.UseAdoTransaction Then %>SqlTransaction<% Else %>SqlConnection<% End If %>, <%=objInfo.ParentType%>) = Nothing
+<% Else %>
+<%=Indent(i)%>Private executeInsertDelegate As Predicate(Of <% If objInfo.UseAdoTransaction Then %>SqlTransaction<% Else %>SqlConnection<% End If %>) = Nothing
+<% End If %>
+<%=Indent(i, True)%>Private Function OnExecuteInsert(<% If objInfo.UseAdoTransaction Then %>ByVal tr As SqlTransaction<% Else %>ByVal cn As SqlConnection<% End If %><% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>, ByVal parent As <%=objInfo.ParentType%><% End If %>) As Boolean
+<% i+=1 %>
+<%=Indent(i)%>If Not executeInsertDelegate Is Nothing Then
+<%=Indent(i+1)%>Return executeInsertDelegate(<% If objInfo.UseAdoTransaction Then %>tr<% Else %>cn<% End If %><% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>, parent<% End If %>)
+<%=Indent(i)%>End If
+<%=Indent(i)%>Return True
+<% i-=1 %>
+<%=Indent(i)%>End Function
+<%=Indent(i, True)%><NonSerialized()> _
+<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>
+<%=Indent(i)%>Private executeInsertCompleteDelegate As actionEx(Of SqlCommand, <%=objInfo.ParentType%>) = Nothing
+<% Else %>
+<%=Indent(i)%>Private executeInsertCompleteDelegate As Action(Of SqlCommand) = Nothing
+<% End If %>
+<%=Indent(i)%>Private Sub OnExecuteInsertComplete(ByVal cm As SqlCommand<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>, <%=objInfo.ParentType%> parent<% End If %>)
+<% i+=1 %>
+<%=Indent(i)%>If Not executeInsertCompleteDelegate Is Nothing Then
+<%=Indent(i+1)%>executeInsertCompleteDelegate(cm<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>, parent<% End If %>)
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(i, True)%><NonSerialized()> _
+<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>
+<%=Indent(i)%>Private addInsertParamatersCompleteDelegate As actionEx(Of SqlCommand, <%=objInfo.ParentType%>) = Nothing
+<% Else %>
+<%=Indent(i)%>Private addInsertParamatersCompleteDelegate As Action(Of SqlCommand) = Nothing
+<% End If %>
+<%=Indent(i)%>Private Sub OnAddInsertParametersComplete(ByVal cm As SqlCommand<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>, ByVal parent As <%=objInfo.ParentType%><% End If %>)
+<% i+=1 %>
+<%=Indent(i)%>If Not addInsertParamatersCompleteDelegate Is Nothing Then
+<%=Indent(i+1)%>addInsertParamatersCompleteDelegate(cm<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>, parent<% End If %>)
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(i, True)%>' Update
+<%=Indent(i)%><NonSerialized()> _
+<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>
+<%=Indent(i)%>Private executeUpdateDelegate As predicateEx(Of <% If objInfo.UseAdoTransaction Then %>SqlTransaction<% Else %>SqlConnection<% End If %>, <%=objInfo.ParentType%>) = Nothing
+<% Else %>
+<%=Indent(i)%>Private executeUpdateDelegate As Predicate(Of <%If objInfo.UseAdoTransaction Then %>SqlTransaction<% Else %>SqlConnection<% End If %>) = Nothing
+<% End If %>
+<%=Indent(i, True)%>Private Function OnExecuteUpdate(<% If objInfo.UseAdoTransaction Then %>ByVal tr As SqlTransaction<% Else %>ByVal cn As SqlConnection<% End If %><% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>, ByVal parent As <%=objInfo.ParentType%><% End If %>) As Boolean
+<% i+=1 %>
+<%=Indent(i)%>If Not executeUpdateDelegate Is Nothing Then
+<%=Indent(i+1)%>Return executeUpdateDelegate(<% If objInfo.UseAdoTransaction Then %>tr<% Else %>cn<% End If %><%If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>, parent<% End If %>)
+<%=Indent(i)%>End If
+<%=Indent(i)%>Return True
+<% i-=1 %>
+<%=Indent(i)%>End Function
+<%=Indent(i, True)%><NonSerialized()> _
+<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>
+<%=Indent(i)%>Private executeUpdateCompleteDelegate As actionEx(Of SqlCommand, <%=objInfo.ParentType%>) = Nothing
+<% Else %>
+<%=Indent(i)%>Private executeUpdateCompleteDelegate As Action(Of SqlCommand) = Nothing
+<% End If %>
+<%=Indent(i, True)%>Private Sub OnExecuteUpdateComplete(ByVal cm As SqlCommand<%If (objInfo.IsChild AndAlso objInfo.ParentType.Length>0) Then%>, ByVal parent As <%=objInfo.ParentType%><% End If %>)
+<% i+=1 %>
+<%=Indent(i)%>If Not executeUpdateCompleteDelegate Is Nothing Then
+<%=Indent(i+1)%>executeUpdateCompleteDelegate(cm<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>, parent<% End If %>)
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(i, True)%><NonSerialized()> _
+<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>
+<%=Indent(i)%>Private addUpdateParamatersCompleteDelegate As actionEx(Of SqlCommand, <%=objInfo.ParentType%>) = Nothing
+<% Else %>
+<%=Indent(i)%>Private addUpdateParamatersCompleteDelegate As Action(Of SqlCommand) = Nothing
+<% End If %>
+<%=Indent(i, True)%>Private Sub OnAddUpdateParametersComplete(ByVal cm As SqlCommand<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>, ByVal parent As <%=objInfo.ParentType%><% End If %>)
+<% i+=1 %>
+<%=Indent(i)%>If Not addUpdateParamatersCompleteDelegate Is Nothing Then
+<%=Indent(i+1)%>addUpdateParamatersCompleteDelegate(cm<% If objInfo.IsChild AndAlso objInfo.ParentType.Length > 0 Then %>, parent<% End If %>)
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(i, True)%><NonSerialized()> _
+<%=Indent(i)%>Private updateChildrenCompleteDelegate As Action(Of <%If objInfo.UseAdoTransaction Then %>SqlTransaction<% Else %>SqlConnection<% End If %>) = Nothing
+<%=Indent(i, True)%>Private Sub OnUpdateChildrenComplete(<% If objInfo.UseAdoTransaction Then %>ByVal tr As SqlTransaction<% Else %>ByVal cn As SqlConnection<% End If %>)
+<% i+=1 %>
+<%=Indent(i)%>If Not updateChildrenCompleteDelegate Is Nothing Then
+<%=Indent(i+1)%>updateChildrenCompleteDelegate(<% If objInfo.UseAdoTransaction Then%>tr<%else%>cn<%End If%>)
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>End Function
+<%=Indent(i, True)%>' Delete
+<%=Indent(i)%><NonSerialized()> _
+<%=Indent(i)%>Private executeDeleteDelegate As predicateEx(Of <% If objInfo.UseAdoTransaction Then %>SqlTransaction<% Else %>SqlConnection<% End If %>, Criteria) = Nothing
+<%=Indent(i, True)%>Private Function OnExecuteDelete(<% If objInfo.UseAdoTransaction Then %>ByVal tr As SqlTransaction<% Else %>ByVal cn As SqlConnection<% End If %>, ByVal criteria As Criteria) As Boolean
+<% i+=1 %>
+<%=Indent(i)%>If Not executeDeleteDelegate Is Nothing Then
+<%=Indent(i+1)%>Return executeDeleteDelegate(<%If objInfo.UseAdoTransaction Then %>tr<% Else %>cn<% End If %>, criteria)
+<%=Indent(i)%>End If
+<%=Indent(i)%>Return True
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(i, True)%><NonSerialized()> _
+<%=Indent(i)%>Private executeDeleteCompleteDelegate As actionEx(Of SqlCommand, Criteria) = Nothing
+<%=Indent(i, True)%>Private Sub OnExecuteDeleteComplete(ByVal cm As SqlCommand, ByVal criteria As Criteria)
+<% i+=1 %>
+<%=Indent(i)%>If Not executeDeleteCompleteDelegate Is Nothing Then
+<%=Indent(i+1)%>executeDeleteCompleteDelegate(cm, criteria)
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+
+#End Region 'Delegation Methods
+<% End If %>
+<% i-=1 %>
+<%=Indent(i, True)%>End Class
+<% If Not ClassNamespace Is Nothing AndAlso ClassNamespace.Length > 0 Then %>
+
+End Namespace
+<% End If %>

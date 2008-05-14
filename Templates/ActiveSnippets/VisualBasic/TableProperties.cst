@@ -1,0 +1,25 @@
+<%-- 
+Name: Database Table Properties
+Author: Paul Welter
+Description: Create a list of properties from database table
+--%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="False" Description="Create a list of properties from database table." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table that the object is based on." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+
+<% For Each column As ColumnSchema In SourceTable.Columns %>
+Private _<%= StringUtil.ToCamelCase(column.Name) %> As <%= column.SystemType %>
+
+Public Property <%= StringUtil.ToPascalCase(column.Name) %>() As <%= column.SystemType %>
+    Get
+        Return _<%= StringUtil.ToCamelCase(column.Name) %>
+    End Get
+    Set(ByVal value As <%= column.SystemType %>)
+        _<%= StringUtil.ToCamelCase(column.Name) %> = value
+    End Set
+End Property
+
+<% Next %>

@@ -1,0 +1,1406 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates a strongly typed Hashtable collection." %>
+<%@ Property Name="Accessibility" Type="AccessibilityEnum" Category="Options" Description="The accessibility of the collection class." %>
+<%@ Property Name="ClassName" Type="System.String" Optional="True" Category="Context" Description="The name of the collection class." %>
+<%@ Property Name="TargetNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of the collection class." %>
+<%@ Property Name="ImportNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of a collection interface." %>
+<%@ Property Name="KeyType" Type="System.String" Category="Context" Description="The key type of the collection." %>
+<%@ Property Name="KeyNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of the key type." %>
+<%@ Property Name="KeyValueType" Type="System.Boolean" Category="Context" Default="false" Description="Indicates whether KeyType is a value type." %>
+<%@ Property Name="KeyCustomSearch" Type="System.Boolean" Category="Options" Default="false" Description="Use custom search routines for KeyType." %>
+<%@ Property Name="ItemType" Type="System.String" Category="Context" Description="The element type of the collection." %>
+<%@ Property Name="ItemNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of the element type." %>
+<%@ Property Name="ItemValueType" Type="System.Boolean" Category="Context" Default="false" Description="Indicates whether ItemType is a value type." %>
+<%@ Property Name="ItemCustomSearch" Type="System.Boolean" Category="Options" Default="false" Description="Use custom search routines for ItemType." %>
+<%@ Property Name="PairType" Type="System.String" Optional="True" Category="Context" Description="The key-and-value pair type of the collection." %>
+<%@ Property Name="DeepCopy" Type="System.Boolean" Optional="True" Category="Deep Copy" Default="false" Description="Generate deep copy method for the collection." %>
+<%@ Property Name="DeepCopyItem" Type="System.String" Optional="True" Category="Deep Copy" Default="Clone" Description="The ItemType method that creates a deep copy." %>
+<%@ Property Name="IncludeInterfaces" Type="System.Boolean" Optional="True" Category="Options" Default="true" Description="Generate required interface definitions." %>
+<%@ Property Name="IncludeNamespaces" Type="System.Boolean" Optional="True" Category="Namespaces" Default="true" Description="Generate using and namespace statements." %>
+<script runat="template">
+<!-- #include file="CommonScript.cs" -->
+
+public override string GetFileName() {
+    ValidateClassName("Dictionary");
+    return ClassName + ".cs";
+}
+
+public void ValidateClassName(string suffix) {
+    if (ClassName == null || ClassName.Length == 0)
+        ClassName = KeyType + ItemType + suffix;
+}
+
+public void ValidatePairType() {
+    if (PairType == null || PairType.Length == 0)
+        PairType = KeyType + ItemType + "Entry";
+}
+
+</script>
+<% ValidateClassName("Dictionary"); %>
+<% ValidatePairType(); %>
+<% UsingNamespace("System"); %>
+<% UsingNamespace("System.Collections"); %>
+<% UsingNamespace(KeyNamespace); %>
+<% UsingNamespace(ItemNamespace); %>
+<% UsingNamespace(ImportNamespace); %>
+<% StartNamespace(TargetNamespace); %>
+    <% if (IncludeInterfaces) GenerateInterfaces("IDictionary.cst"); %>
+    #region Class <%= ClassName %>
+
+    /// <summary>
+    /// Implements a strongly typed collection of <see cref="<%= PairType %>"/>
+    /// key-and-value pairs that are organized based on the hash code of the key.
+    /// </summary>
+    /// <remarks>
+    /// <b><%= ClassName %></b> provides a <see cref="Hashtable"/> that is strongly typed
+    /// for <see cref="<%= KeyType %>"/> keys and <see cref="<%= ItemType %>"/> values.
+    /// </remarks>
+
+    [Serializable]
+    <%= GetAccessModifier(Accessibility) %> class <%= ClassName %>:
+        I<%= KeyType %><%= ItemType %>Dictionary, IDictionary, ICloneable {
+        #region Private Fields
+
+        private Hashtable _innerHash;
+        private KeyList _keyList;
+        private ValueList _valueList;
+
+        #endregion
+        #region Private Constructors
+
+        // helper type to identify private ctor
+        private enum Tag { Default }
+
+        private <%= ClassName %>(Tag tag) { }
+
+        #endregion
+        #region Public Constructors
+        #region <%= ClassName %>()
+
+        /// <overloads>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class.
+        /// </overloads>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class
+        /// that is empty and has the default initial capacity, the default load factor,
+        /// the default hash code provider and the default comparer.
+        /// </summary>
+        /// <remarks>Please refer to <see cref="Hashtable()"/> for details.</remarks>
+
+        public <%= ClassName %>() {
+            this._innerHash = new Hashtable();
+        }
+
+        #endregion
+        #region <%= ClassName %>(IHashCodeProvider, IComparer)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class
+        /// that is empty and has the default initial capacity, the default load factor,
+        /// the specified hash code provider and the specified comparer.
+        /// </summary>
+        /// <param name="provider">
+        /// <para>The <see cref="IHashCodeProvider"/> that supplies the hash codes
+        /// for all keys in the <see cref="<%= ClassName %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference to use the default hash code provider, which is each key's
+        /// implementation of <see cref="Object.GetHashCode"/>.</para></param>
+        /// <param name="comparer">
+        /// <para>The <see cref="IComparer"/> to use to determine whether two keys are equal.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference to use the default comparer, which is each key's
+        /// implementation of <see cref="Object.Equals"/>.</para></param>
+        /// <remarks>
+        /// Please refer to <see cref="Hashtable(IHashCodeProvider, IComparer)"/> for details.
+        /// </remarks>
+
+        public <%= ClassName %>(IHashCodeProvider provider, IComparer comparer) {
+            this._innerHash = new Hashtable(provider, comparer);
+        }
+
+        #endregion
+        #region <%= ClassName %>(Int32)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class
+        /// that is empty and has the specified initial capacity, the default load factor,
+        /// the default hash code provider and the default comparer.
+        /// </summary>
+        /// <param name="capacity">The approximate number of elements that the new
+        /// <see cref="<%= ClassName %>"/> is initially capable of storing.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="capacity"/> is less than zero.</exception>
+        /// <remarks>Please refer to <see cref="Hashtable(Int32)"/> for details.</remarks>
+
+        public <%= ClassName %>(int capacity) {
+            this._innerHash = new Hashtable(capacity);
+        }
+
+        #endregion
+        #region <%= ClassName %>(Int32, IHashCodeProvider, IComparer)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class
+        /// that is empty and has the specified initial capacity, the default load factor,
+        /// the specified hash code provider and the specified comparer.
+        /// </summary>
+        /// <param name="capacity">The approximate number of elements that the new
+        /// <see cref="<%= ClassName %>"/> is initially capable of storing.</param>
+        /// <param name="provider">
+        /// <para>The <see cref="IHashCodeProvider"/> that supplies the hash codes
+        /// for all keys in the <see cref="<%= ClassName %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference to use the default hash code provider, which is each key's
+        /// implementation of <see cref="Object.GetHashCode"/>.</para></param>
+        /// <param name="comparer">
+        /// <para>The <see cref="IComparer"/> to use to determine whether two keys are equal.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference to use the default comparer, which is each key's
+        /// implementation of <see cref="Object.Equals"/>.</para></param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="capacity"/> is less than zero.</exception>
+        /// <remarks>
+        /// Please refer to <see cref="Hashtable(Int32, IHashCodeProvider, IComparer)"/> for details.
+        /// </remarks>
+
+        public <%= ClassName %>(int capacity,
+            IHashCodeProvider provider, IComparer comparer) {
+
+            this._innerHash = new Hashtable(capacity, provider, comparer);
+        }
+
+        #endregion
+        #region <%= ClassName %>(Int32, Single)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class
+        /// that is empty and has the specified initial capacity, the specified load factor,
+        /// the default hash code provider and the default comparer.
+        /// </summary>
+        /// <param name="capacity">The approximate number of elements that the new
+        /// <see cref="<%= ClassName %>"/> is initially capable of storing.</param>
+        /// <param name="loadFactor">A number in the range from 0.1 through 1.0
+        /// indicating the maximum ratio of elements to buckets.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <para><paramref name="capacity"/> is less than zero.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="loadFactor"/> is less than 0.1.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="loadFactor"/> is greater than 1.0.</para></exception>
+        /// <remarks>Please refer to <see cref="Hashtable(Int32, Single)"/> for details.</remarks>
+
+        public <%= ClassName %>(int capacity, float loadFactor) {
+            this._innerHash = new Hashtable(capacity, loadFactor);
+        }
+
+        #endregion
+        #region <%= ClassName %>(Int32, Single, IHashCodeProvider, IComparer)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class
+        /// that is empty and has the specified initial capacity, the specified load factor,
+        /// the specified hash code provider and the specified comparer.
+        /// </summary>
+        /// <param name="capacity">The approximate number of elements that the new
+        /// <see cref="<%= ClassName %>"/> is initially capable of storing.</param>
+        /// <param name="loadFactor">A number in the range from 0.1 through 1.0
+        /// indicating the maximum ratio of elements to buckets.</param>
+        /// <param name="provider">
+        /// <para>The <see cref="IHashCodeProvider"/> that supplies the hash codes
+        /// for all keys in the <see cref="<%= ClassName %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference to use the default hash code provider, which is each key's
+        /// implementation of <see cref="Object.GetHashCode"/>.</para></param>
+        /// <param name="comparer">
+        /// <para>The <see cref="IComparer"/> to use to determine whether two keys are equal.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference to use the default comparer, which is each key's
+        /// implementation of <see cref="Object.Equals"/>.</para></param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <para><paramref name="capacity"/> is less than zero.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="loadFactor"/> is less than 0.1.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="loadFactor"/> is greater than 1.0.</para></exception>
+        /// <remarks>
+        /// Please refer to <see cref="Hashtable(Int32, Single, IHashCodeProvider, IComparer)"/>
+        /// for details.</remarks>
+
+        public <%= ClassName %>(int capacity, float loadFactor,
+            IHashCodeProvider provider, IComparer comparer) {
+
+            this._innerHash = new Hashtable(capacity, loadFactor, provider, comparer);
+        }
+
+        #endregion
+        #region <%= ClassName %>(<%= ClassName %>)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class
+        /// that contains elements copied from the specified dictionary and
+        /// that has the same initial capacity as the number of elements copied, the
+        /// default load factor, the default hash code provider and the default comparer.
+        /// </summary>
+        /// <param name="dictionary">The <see cref="<%= ClassName %>"/>
+        /// whose elements are copied to the new collection.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="dictionary"/> is a null reference.</exception>
+        /// <remarks>Please refer to <see cref="Hashtable(IDictionary)"/> for details.</remarks>
+
+        public <%= ClassName %>(<%= ClassName %> dictionary) {
+            if (dictionary == null)
+                throw new ArgumentNullException("dictionary");
+
+            this._innerHash = new Hashtable(dictionary._innerHash);
+        }
+
+        #endregion
+        #region <%= ClassName %>(IDictionary)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class
+        /// that contains elements copied from the specified <see cref="IDictionary"/>
+        /// and that has the same initial capacity as the number of elements copied, the
+        /// default load factor, the default hash code provider and the default comparer.
+        /// </summary>
+        /// <param name="dictionary">The <see cref="IDictionary"/>
+        /// whose elements are copied to the new collection.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="dictionary"/> is a null reference.</exception>
+        /// <remarks>Please refer to <see cref="Hashtable(IDictionary)"/> for details.</remarks>
+
+        public <%= ClassName %>(IDictionary dictionary) {
+            this._innerHash = new Hashtable(dictionary);
+        }
+
+        #endregion
+        #region <%= ClassName %>(IDictionary, IHashCodeProvider, IComparer)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class
+        /// that contains elements copied from the specified <see cref="IDictionary"/>
+        /// and that has the same initial capacity as the number of elements copied, the
+        /// default load factor, the specified hash code provider and the specified comparer.
+        /// </summary>
+        /// <param name="dictionary">The <see cref="IDictionary"/>
+        /// whose elements are copied to the new collection.</param>
+        /// <param name="provider">
+        /// <para>The <see cref="IHashCodeProvider"/> that supplies the hash codes
+        /// for all keys in the <see cref="<%= ClassName %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference to use the default hash code provider, which is each key's
+        /// implementation of <see cref="Object.GetHashCode"/>.</para></param>
+        /// <param name="comparer">
+        /// <para>The <see cref="IComparer"/> to use to determine whether two keys are equal.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference to use the default comparer, which is each key's
+        /// implementation of <see cref="Object.Equals"/>.</para></param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="dictionary"/> is a null reference.</exception>
+        /// <remarks>
+        /// Please refer to <see cref="Hashtable(IDictionary, IHashCodeProvider, IComparer)"/>
+        /// for details.</remarks>
+
+        public <%= ClassName %>(IDictionary dictionary,
+            IHashCodeProvider provider, IComparer comparer) {
+
+            this._innerHash = new Hashtable(dictionary, provider, comparer);
+        }
+
+        #endregion
+        #region <%= ClassName %>(IDictionary, Single)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class
+        /// that contains elements copied from the specified <see cref="IDictionary"/>
+        /// and that has the same initial capacity as the number of elements copied, the
+        /// specified load factor, the default hash code provider and the default comparer.
+        /// </summary>
+        /// <param name="dictionary">The <see cref="IDictionary"/>
+        /// whose elements are copied to the new collection.</param>
+        /// <param name="loadFactor">A number in the range from 0.1 through 1.0
+        /// indicating the maximum ratio of elements to buckets.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="dictionary"/> is a null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <para><paramref name="loadFactor"/> is less than 0.1.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="loadFactor"/> is greater than 1.0.</para></exception>
+        /// <remarks>
+        /// Please refer to <see cref="Hashtable(IDictionary, Single)"/> for details.
+        /// </remarks>
+
+        public <%= ClassName %>(IDictionary dictionary, float loadFactor) {
+            this._innerHash = new Hashtable(dictionary, loadFactor);
+        }
+
+        #endregion
+        #region <%= ClassName %>(IDictionary, Single, IHashCodeProvider, IComparer)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class
+        /// that contains elements copied from the specified <see cref="IDictionary"/>
+        /// and that has the same initial capacity as the number of elements copied, the
+        /// specified load factor, the specified hash code provider and the specified comparer.
+        /// </summary>
+        /// <param name="dictionary">The <see cref="IDictionary"/>
+        /// whose elements are copied to the new collection.</param>
+        /// <param name="loadFactor">A number in the range from 0.1 through 1.0
+        /// indicating the maximum ratio of elements to buckets.</param>
+        /// <param name="provider">
+        /// <para>The <see cref="IHashCodeProvider"/> that supplies the hash codes
+        /// for all keys in the <see cref="<%= ClassName %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference to use the default hash code provider, which is each key's
+        /// implementation of <see cref="Object.GetHashCode"/>.</para></param>
+        /// <param name="comparer">
+        /// <para>The <see cref="IComparer"/> to use to determine whether two keys are equal.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference to use the default comparer, which is each key's
+        /// implementation of <see cref="Object.Equals"/>.</para></param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="dictionary"/> is a null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <para><paramref name="loadFactor"/> is less than 0.1.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="loadFactor"/> is greater than 1.0.</para></exception>
+        /// <remarks>
+        /// Please refer to <see cref="Hashtable(IDictionary, Single, IHashCodeProvider, IComparer)"/>
+        /// for details.</remarks>
+
+        public <%= ClassName %>(IDictionary dictionary,
+            float loadFactor, IHashCodeProvider provider, IComparer comparer) {
+
+            this._innerHash = new Hashtable(dictionary, loadFactor, provider, comparer);
+        }
+
+        #endregion
+        #endregion
+        #region Public Properties
+        #region Count
+
+        /// <summary>
+        /// Gets the number of key-and-value pairs contained in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>
+        /// The number of key-and-value pairs contained in the <see cref="<%= ClassName %>"/>.
+        /// </value>
+        /// <remarks>Please refer to <see cref="Hashtable.Count"/> for details.</remarks>
+
+        public int Count {
+            get { return this._innerHash.Count; }
+        }
+
+        #endregion
+        #region IsFixedSize
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="<%= ClassName %>"/> has a fixed size.
+        /// </summary>
+        /// <value><c>true</c> if the <see cref="<%= ClassName %>"/> has a fixed size;
+        /// otherwise, <c>false</c>. The default is <c>false</c>.</value>
+        /// <remarks>Please refer to <see cref="Hashtable.IsFixedSize"/> for details.</remarks>
+
+        public virtual bool IsFixedSize {
+            get { return this._innerHash.IsFixedSize; }
+        }
+
+        #endregion
+        #region IsReadOnly
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="<%= ClassName %>"/> is read-only.
+        /// </summary>
+        /// <value><c>true</c> if the <see cref="<%= ClassName %>"/> is read-only;
+        /// otherwise, <c>false</c>. The default is <c>false</c>.</value>
+        /// <remarks>Please refer to <see cref="Hashtable.IsReadOnly"/> for details.</remarks>
+
+        public virtual bool IsReadOnly {
+            get { return this._innerHash.IsReadOnly; }
+        }
+
+        #endregion
+        #region IsSynchronized
+
+        /// <summary>
+        /// Gets a value indicating whether access to the <see cref="<%= ClassName %>"/>
+        /// is synchronized (thread-safe).
+        /// </summary>
+        /// <value><c>true</c> if access to the <see cref="<%= ClassName %>"/> is
+        /// synchronized (thread-safe); otherwise, <c>false</c>. The default is <c>false</c>.</value>
+        /// <remarks>Please refer to <see cref="Hashtable.IsSynchronized"/> for details.</remarks>
+
+        public bool IsSynchronized {
+            get { return this._innerHash.IsSynchronized; }
+        }
+
+        #endregion
+        #region Item[<%= KeyType %>]: <%= ItemType %>
+
+        /// <summary>
+        /// Gets or sets the <see cref="<%= ItemType %>"/> value
+        /// associated with the specified <see cref="<%= KeyType %>"/> key.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key
+        /// whose value to get or set.</param>
+        /// <value>The <see cref="<%= ItemType %>"/> value associated with the specified
+        /// <paramref name="key"/>. If the specified <paramref name="key"/> is not found,
+        /// attempting to get it returns
+        <% if (ItemValueType) { %>
+        /// a default-initialized <b><%= ItemType %></b> value,
+        <% } else { %>
+        /// a null reference,
+        <% } %>
+        /// and attempting to set it creates a new element using the specified
+        /// <paramref name="key"/>.</value>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="NotSupportedException">
+        /// <para>The property is set and the <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The property is set, <paramref name="key"/> does not exist in the collection,
+        /// and the <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="Hashtable.this"/> for details.</remarks>
+
+        public virtual <%= ItemType %> this[<%= KeyType %> key] {
+            get {
+            <% if (ItemValueType) { %>
+                object obj = this._innerHash[key];
+                if (obj == null) return new <%= ItemType %>();
+                return (<%= ItemType %>) obj;
+            <% } else { %>
+                return (<%= ItemType %>) this._innerHash[key];
+            <% } %>
+            }
+            set { this._innerHash[key] = value; }
+        }
+
+        #endregion
+        #region IDictionary.Item[Object]: Object
+
+        /// <summary>
+        /// Gets or sets the value associated with the specified key.
+        /// </summary>
+        /// <param name="key">The key whose value to get or set.
+        /// This argument must be compatible with <see cref="<%= KeyType %>"/>.</param>
+        /// <value>
+        /// The value associated with the specified <paramref name="key"/>. If the specified
+        /// <paramref name="key"/> is not found, attempting to get it returns
+        <% if (ItemValueType) { %>
+        /// a default-initialized <see cref="<%= ItemType %>"/> object,
+        <% } else { %>
+        /// a null reference,
+        <% } %>
+        /// and attempting to set it creates a new element using the specified <paramref name="key"/>.
+        /// When set, this value must be compatible with <see cref="<%= ItemType %>"/>.
+        /// </value>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        /// <exception cref="InvalidCastException">
+        /// <para><paramref name="key"/> is not compatible with <see cref="<%= KeyType %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para>The property is set to a value that is not compatible with
+        /// <see cref="<%= ItemType %>"/>.</para></exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The property is set and the <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The property is set, <paramref name="key"/> does not exist in the collection,
+        /// and the <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="Hashtable.this"/> for details.</remarks>
+
+        object IDictionary.this[object key] {
+            get { return this[(<%= KeyType %>) key]; }
+            set { this[(<%= KeyType %>) key] = (<%= ItemType %>) value; }
+        }
+
+        #endregion
+        #region Keys: I<%= KeyType %>Collection
+
+        /// <summary>
+        /// Gets an <see cref="I<%= KeyType %>Collection"/> containing
+        /// the keys in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>An <see cref="I<%= KeyType %>Collection"/> containing
+        /// the keys in the <see cref="<%= ClassName %>"/>.</value>
+        /// <remarks>Please refer to <see cref="Hashtable.Keys"/> for details.</remarks>
+
+        public I<%= KeyType %>Collection Keys {
+            get {
+                if (this._keyList == null)
+                    this._keyList = new KeyList(this);
+                return this._keyList;
+            }
+        }
+
+        #endregion
+        #region IDictionary.Keys: ICollection
+
+        /// <summary>
+        /// Gets an <see cref="ICollection"/> containing
+        /// the keys in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>An <see cref="ICollection"/> containing
+        /// the keys in the <see cref="<%= ClassName %>"/>.</value>
+        /// <remarks>Please refer to <see cref="Hashtable.Keys"/> for details.</remarks>
+
+        ICollection IDictionary.Keys {
+            get { return (ICollection) Keys; }
+        }
+
+        #endregion
+        #region SyncRoot
+
+        /// <summary>
+        /// Gets an object that can be used to synchronize
+        /// access to the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>An object that can be used to synchronize
+        /// access to the <see cref="<%= ClassName %>"/>.</value>
+        /// <remarks>Please refer to <see cref="Hashtable.SyncRoot"/> for details.</remarks>
+
+        public object SyncRoot {
+            get { return this._innerHash.SyncRoot; }
+        }
+
+        #endregion
+        #region Values: I<%= ItemType %>Collection
+
+        /// <summary>
+        /// Gets an <see cref="I<%= ItemType %>Collection"/> containing
+        /// the values in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>An <see cref="I<%= ItemType %>Collection"/> containing
+        /// the values in the <see cref="<%= ClassName %>"/>.</value>
+        /// <remarks>Please refer to <see cref="Hashtable.Values"/> for details.</remarks>
+
+        public I<%= ItemType %>Collection Values {
+            get {
+                if (this._valueList == null)
+                    this._valueList = new ValueList(this);
+                return this._valueList;
+            }
+        }
+
+        #endregion
+        #region IDictionary.Values: ICollection
+
+        /// <summary>
+        /// Gets an <see cref="ICollection"/> containing
+        /// the values in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>An <see cref="ICollection"/> containing
+        /// the values in the <see cref="<%= ClassName %>"/>.</value>
+        /// <remarks>Please refer to <see cref="Hashtable.Values"/> for details.</remarks>
+
+        ICollection IDictionary.Values {
+            get { return (ICollection) Values; }
+        }
+
+        #endregion
+        #endregion
+        #region Public Methods
+        #region Add(<%= KeyType %>, <%= ItemType %>)
+
+        /// <summary>
+        /// Adds an element with the specified <see cref="<%= KeyType %>"/> key and
+        /// <see cref="<%= ItemType %>"/> value to the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key of the element
+        /// to add to the <see cref="<%= ClassName %>"/>.</param>
+        /// <param name="value">The <see cref="<%= ItemType %>"/> value of the element
+        /// to add to the <see cref="<%= ClassName %>"/>.
+        <% if (!ItemValueType) { %>
+        /// This argument can be a null reference.
+        <% } %>
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// An element with the specified <paramref name="key"/>
+        /// already exists in the <see cref="<%= ClassName %>"/>.</exception>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="Hashtable.Add"/> for details.</remarks>
+
+        public virtual void Add(<%= KeyType %> key, <%= ItemType %> value) {
+            this._innerHash.Add(key, value);
+        }
+
+        #endregion
+        #region IDictionary.Add(Object, Object)
+
+        /// <summary>
+        /// Adds an element with the specified key and value
+        /// to the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="key">The key of the element to add to the <see cref="<%= ClassName %>"/>.
+        /// This argument must be compatible with <see cref="<%= KeyType %>"/>.</param>
+        /// <param name="value">The value of the element to add to the <see cref="<%= ClassName %>"/>.
+        /// This argument must be compatible with <see cref="<%= ItemType %>"/>.
+        <% if (!ItemValueType) { %>
+        /// This argument can be a null reference.
+        <% } %>
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// An element with the specified <paramref name="key"/>
+        /// already exists in the <see cref="<%= ClassName %>"/>.</exception>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        /// <exception cref="InvalidCastException">
+        /// <para><paramref name="key"/> is not compatible with <see cref="<%= KeyType %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="value"/> is not compatible with <see cref="<%= ItemType %>"/>.</para>
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="Hashtable.Add"/> for details.</remarks>
+
+        void IDictionary.Add(object key, object value) {
+            Add((<%= KeyType %>) key, (<%= ItemType %>) value);
+        }
+
+        #endregion
+        #region Clear
+
+        /// <summary>
+        /// Removes all elements from the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="Hashtable.Clear"/> for details.</remarks>
+
+        public virtual void Clear() {
+            this._innerHash.Clear();
+        }
+
+        #endregion
+        #region Clone
+
+        /// <summary>
+        /// Creates a shallow copy of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>A shallow copy of the <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="Hashtable.Clone"/> for details.</remarks>
+
+        public virtual object Clone() {
+            <%= ClassName %> dictionary = new <%= ClassName %>(Tag.Default);
+            dictionary._innerHash = (Hashtable) this._innerHash.Clone();
+            return dictionary;
+        }
+
+        #endregion
+        #region Contains(<%= KeyType %>)
+
+        /// <summary>
+        /// Determines whether the <see cref="<%= ClassName %>"/>
+        /// contains the specified <see cref="<%= KeyType %>"/> key.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key
+        /// to locate in the <see cref="<%= ClassName %>"/>.</param>
+        /// <returns><c>true</c> if the <see cref="<%= ClassName %>"/> contains an element
+        /// with the specified <paramref name="key"/>; otherwise, <c>false</c>.</returns>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <remarks>Please refer to <see cref="Hashtable.Contains"/> for details.</remarks>
+
+        public bool Contains(<%= KeyType %> key) {
+            return this._innerHash.Contains(key);
+        }
+
+        #endregion
+        #region IDictionary.Contains(Object)
+
+        /// <summary>
+        /// Determines whether the <see cref="<%= ClassName %>"/> contains the specified key.
+        /// </summary>
+        /// <param name="key">The key to locate in the <see cref="<%= ClassName %>"/>.
+        /// This argument must be compatible with <see cref="<%= KeyType %>"/>.</param>
+        /// <returns><c>true</c> if the <see cref="<%= ClassName %>"/> contains an element
+        /// with the specified <paramref name="key"/>; otherwise, <c>false</c>.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        /// <exception cref="InvalidCastException"><paramref name="key"/>
+        /// is not compatible with <see cref="<%= KeyType %>"/>.</exception>
+        /// <remarks>Please refer to <see cref="Hashtable.Contains"/> for details.</remarks>
+
+        bool IDictionary.Contains(object key) {
+            return Contains((<%= KeyType %>) key);
+        }
+
+        #endregion
+        #region ContainsKey
+
+        /// <summary>
+        /// Determines whether the <see cref="<%= ClassName %>"/>
+        /// contains the specified <see cref="<%= KeyType %>"/> key.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key
+        /// to locate in the <see cref="<%= ClassName %>"/>.</param>
+        /// <returns><c>true</c> if the <see cref="<%= ClassName %>"/> contains an element
+        /// with the specified <paramref name="key"/>; otherwise, <c>false</c>.</returns>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <remarks>Please refer to <see cref="Hashtable.ContainsKey"/> for details.</remarks>
+
+        public bool ContainsKey(<%= KeyType %> key) {
+            return this._innerHash.ContainsKey(key);
+        }
+
+        #endregion
+        #region ContainsValue
+
+        /// <summary>
+        /// Determines whether the <see cref="<%= ClassName %>"/>
+        /// contains the specified <see cref="<%= ItemType %>"/> value.
+        /// </summary>
+        /// <param name="value">The <see cref="<%= ItemType %>"/> value
+        /// to locate in the <see cref="<%= ClassName %>"/>.
+        <% if (!ItemValueType) { %>
+        /// This argument can be a null reference.
+        <% } %>
+        /// </param>
+        /// <returns><c>true</c> if the <see cref="<%= ClassName %>"/> contains an element
+        /// with the specified <paramref name="value"/>; otherwise, <c>false</c>.</returns>
+        /// <remarks>Please refer to <see cref="Hashtable.ContainsValue"/> for details.</remarks>
+
+        public bool ContainsValue(<%= ItemType %> value) {
+            return this._innerHash.ContainsValue(value);
+        }
+
+        #endregion
+        <% if (DeepCopy) { %>
+        #region Copy
+        
+        /// <summary>
+        /// Creates a deep copy of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>A deep copy of the <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks><para>
+        <% if (ItemValueType) { %>
+        /// <b>Copy</b> has the same effect as <see cref="Clone"/> 
+        /// because <see cref="<%= ItemType %>"/> is a value type.
+        <% } else if (IsString(ItemType)) { %>
+        /// <b>Copy</b> has the same effect as <see cref="Clone"/> 
+        /// because strings are immutable in the .NET Framework.
+        <% } else { %>
+        /// <b>Copy</b> is similar to <see cref="Clone"/> but creates a deep copy of
+        /// every <see cref="<%= ItemType %>"/> value in the <see cref="<%= ClassName %>"/>
+        /// by invoking its <see cref="<%= ItemType %>.<%= DeepCopyItem %>"/> method.
+        /// The <see cref="<%= KeyType %>"/> keys are duplicated by a shallow copy.
+        <% } %>
+        /// </para><para>
+        /// <b>Copy</b> never returns a <b><%= ClassName %></b> with a read-only
+        /// or synchronized wrapper, whereas <b>Clone</b> preserves any present
+        /// wrappers around this <b><%= ClassName %></b>.
+        /// </para></remarks>
+
+        public <%= ClassName %> Copy() {
+            <%= ClassName %> dictionary = new <%= ClassName %>(Tag.Default);
+
+            if (IsSynchronized)
+                lock (SyncRoot) PerformDeepCopy(dictionary);
+            else
+                PerformDeepCopy(dictionary);
+
+            return dictionary;
+        }
+        
+        #endregion
+        <% } %>
+        #region CopyTo(<%= PairType %>[], Int32)
+
+        /// <summary>
+        /// Copies the entire <see cref="<%= ClassName %>"/> to a one-dimensional <see cref="Array"/> of
+        /// <see cref="<%= PairType %>"/> elements, starting at the specified index of the target array.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the
+        /// <see cref="<%= PairType %>"/> elements copied from the <see cref="<%= ClassName %>"/>.
+        /// The <b>Array</b> must have zero-based indexing.</param>
+        /// <param name="arrayIndex">The zero-based index in <paramref name="array"/>
+        /// at which copying begins.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="array"/> is a null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="arrayIndex"/> is less than zero.</exception>
+        /// <exception cref="ArgumentException"><para>
+        /// <paramref name="arrayIndex"/> is equal to or greater than the length of <paramref name="array"/>.
+        /// </para><para>-or-</para><para>
+        /// The number of elements in the source <see cref="<%= ClassName %>"/> is greater than
+        /// the available space from <paramref name="arrayIndex"/> to the end of the destination
+        /// <paramref name="array"/>.</para></exception>
+        /// <remarks>Please refer to <see cref="Hashtable.CopyTo"/> for details.</remarks>
+
+        public void CopyTo(<%= PairType %>[] array, int arrayIndex) {
+            CheckTargetArray(array, arrayIndex);
+
+            if (IsSynchronized)
+                lock (SyncRoot) PerformCopyTo(array, arrayIndex);
+            else
+                PerformCopyTo(array, arrayIndex);
+        }
+
+        #endregion
+        #region ICollection.CopyTo(Array, Int32)
+
+        /// <summary>
+        /// Copies the entire <see cref="<%= ClassName %>"/> to a one-dimensional <see cref="Array"/>,
+        /// starting at the specified index of the target array.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the
+        /// <see cref="<%= PairType %>"/> elements copied from the <see cref="<%= ClassName %>"/>.
+        /// The <b>Array</b> must have zero-based indexing.</param>
+        /// <param name="arrayIndex">The zero-based index in <paramref name="array"/>
+        /// at which copying begins.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="array"/> is a null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="arrayIndex"/> is less than zero.</exception>
+        /// <exception cref="ArgumentException"><para>
+        /// <paramref name="array"/> is multidimensional.
+        /// </para><para>-or-</para><para>
+        /// <paramref name="arrayIndex"/> is equal to or greater than the length of <paramref name="array"/>.
+        /// </para><para>-or-</para><para>
+        /// The number of elements in the source <see cref="<%= ClassName %>"/> is greater than
+        /// the available space from <paramref name="arrayIndex"/> to the end of the destination
+        /// <paramref name="array"/>.</para></exception>
+        /// <exception cref="InvalidCastException">
+        /// The <see cref="<%= PairType %>"/> type cannot be cast automatically
+        /// to the type of the destination <paramref name="array"/>.</exception>
+        /// <remarks>Please refer to <see cref="Hashtable.CopyTo"/> for details.</remarks>
+
+        void ICollection.CopyTo(Array array, int arrayIndex) {
+            CheckTargetArray(array, arrayIndex);
+            CopyTo((<%= PairType %>[]) array, arrayIndex);
+        }
+
+        #endregion
+        #region GetEnumerator: I<%= KeyType %><%= ItemType %>Enumerator
+
+        /// <summary>
+        /// Returns an <see cref="I<%= KeyType %><%= ItemType %>Enumerator"/>
+        /// that can iterate through the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>An <see cref="I<%= KeyType %><%= ItemType %>Enumerator"/>
+        /// for the entire <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="Hashtable.GetEnumerator"/> for details.</remarks>
+
+        public I<%= KeyType %><%= ItemType %>Enumerator GetEnumerator() {
+            return new Enumerator(this);
+        }
+
+        #endregion
+        #region IDictionary.GetEnumerator: IDictionaryEnumerator
+
+        /// <summary>
+        /// Returns an <see cref="IDictionaryEnumerator"/> that can
+        /// iterate through the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>An <see cref="IDictionaryEnumerator"/>
+        /// for the entire <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="Hashtable.GetEnumerator"/> for details.</remarks>
+
+        IDictionaryEnumerator IDictionary.GetEnumerator() {
+            return (IDictionaryEnumerator) GetEnumerator();
+        }
+
+        #endregion
+        #region IEnumerable.GetEnumerator: IEnumerator
+
+        /// <summary>
+        /// Returns an <see cref="IEnumerator"/> that can
+        /// iterate through the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerator"/>
+        /// for the entire <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="Hashtable.GetEnumerator"/> for details.</remarks>
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return (IEnumerator) GetEnumerator();
+        }
+
+        #endregion
+        #region Remove(<%= KeyType %>)
+
+        /// <summary>
+        /// Removes the element with the specified <see cref="<%= KeyType %>"/> key
+        /// from the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key of the element
+        /// to remove from the <see cref="<%= ClassName %>"/>.</param>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="Hashtable.Remove"/> for details.</remarks>
+
+        public virtual void Remove(<%= KeyType %> key) {
+            this._innerHash.Remove(key);
+        }
+
+        #endregion
+        #region IDictionary.Remove(Object)
+
+        /// <summary>
+        /// Removes the element with the specified key
+        /// from the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="key">The key of the element to remove from the <see cref="<%= ClassName %>"/>.
+        /// This argument must be compatible with <see cref="<%= KeyType %>"/>.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        /// <exception cref="InvalidCastException"><paramref name="key"/>
+        /// is not compatible with <see cref="<%= KeyType %>"/>.</exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="Hashtable.Remove"/> for details.</remarks>
+
+        void IDictionary.Remove(object key) {
+            Remove((<%= KeyType %>) key);
+        }
+
+        #endregion
+        #region ReadOnly
+
+        /// <summary>
+        /// Returns a read-only wrapper for the specified <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="dictionary">The <see cref="<%= ClassName %>"/> to wrap.</param>
+        /// <returns>A read-only wrapper around <paramref name="dictionary"/>.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="dictionary"/> is a null reference.</exception>
+        /// <remarks>
+        /// <b>ReadOnly</b> has the same effect as the <see cref="ArrayList.ReadOnly"/>
+        /// method of the <see cref="ArrayList"/> class.
+        /// </remarks>
+
+        public static <%= ClassName %> ReadOnly(<%= ClassName %> dictionary) {
+            if (dictionary == null)
+                throw new ArgumentNullException("dictionary");
+
+            <%= ClassName %> readOnly = new ReadOnlyDictionary();
+
+            readOnly._innerHash = dictionary._innerHash;
+            readOnly._keyList = dictionary._keyList;
+            readOnly._valueList = dictionary._valueList;
+            
+            return readOnly;
+        }
+
+        #endregion
+        #region Synchronized
+
+        /// <summary>
+        /// Returns a synchronized (thread-safe) wrapper
+        /// for the specified <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="dictionary">The <see cref="<%= ClassName %>"/> to synchronize.</param>
+        /// <returns>A synchronized (thread-safe) wrapper around <paramref name="dictionary"/>.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="dictionary"/> is a null reference.</exception>
+        /// <remarks>Please refer to <see cref="Hashtable.Synchronized"/> for details.</remarks>
+
+        public static <%= ClassName %> Synchronized(<%= ClassName %> dictionary) {
+            if (dictionary == null)
+                throw new ArgumentNullException("dictionary");
+
+            <%= ClassName %> sync = new <%= ClassName %>(Tag.Default);
+            sync._innerHash = Hashtable.Synchronized(dictionary._innerHash);
+
+            // preserve custom read-only wrapper if present
+            if (dictionary.IsReadOnly && !dictionary._innerHash.IsReadOnly)
+                sync = <%= ClassName %>.ReadOnly(sync);
+
+            return sync;
+        }
+
+        #endregion
+        #endregion
+        #region Private Methods
+        #region CheckTargetArray
+
+        private void CheckTargetArray(Array array, int arrayIndex) {
+            if (array == null)
+                throw new ArgumentNullException("array");
+            if (array.Rank > 1)
+                throw new ArgumentException(
+                    "Argument cannot be multidimensional.", "array");
+
+            if (arrayIndex < 0)
+                throw new ArgumentOutOfRangeException("arrayIndex",
+                    arrayIndex, "Argument cannot be negative.");
+            if (arrayIndex >= array.Length)
+                throw new ArgumentException(
+                    "Argument must be less than array length.", "arrayIndex");
+
+            if (this._innerHash.Count > array.Length - arrayIndex)
+                throw new ArgumentException(
+                    "Argument section must be large enough for collection.", "array");
+        }
+
+        #endregion
+        #region PerformCopyTo
+
+        private void PerformCopyTo(<%= PairType %>[] array, int index) {
+            /*
+             * We cannot use _innerHash.CopyTo here because this method does not
+             * auto-convert array elements from DictionaryEntry to PairType.
+             */
+            foreach (DictionaryEntry entry in this._innerHash)
+                array[index++] = new <%= PairType %>(
+                    (<%= KeyType %>) entry.Key, (<%= ItemType %>) entry.Value);
+        }
+
+        #endregion
+        <% if (DeepCopy) { %>
+        #region PerformDeepCopy
+
+        private void PerformDeepCopy(<%= ClassName %> dictionary) {
+        <% if (ItemValueType || IsString(ItemType)) { %>
+            dictionary._innerHash = (Hashtable) this._innerHash.Clone();
+        <% } else { %>
+            dictionary._innerHash = new Hashtable(this._innerHash.Count);
+            foreach (DictionaryEntry entry in this._innerHash) {
+                if ((object) entry.Value == null)
+                    dictionary._innerHash.Add(entry.Key, null);
+                else
+                    dictionary._innerHash.Add(entry.Key, 
+                        ((<%= ItemType %>) entry.Value).<%= DeepCopyItem %>());
+                }
+        <% } %>
+        }
+
+        #endregion
+        <% } %>
+        #endregion
+        #region Class Enumerator
+
+        private sealed class Enumerator:
+            I<%= KeyType %><%= ItemType %>Enumerator, IDictionaryEnumerator {
+            #region Private Fields
+
+            private readonly IDictionaryEnumerator _innerEnumerator;
+
+            #endregion
+            #region Internal Constructors
+
+            internal Enumerator(<%= ClassName %> dictionary) {
+                this._innerEnumerator = dictionary._innerHash.GetEnumerator();
+            }
+
+            #endregion
+            #region Public Properties
+
+            public <%= PairType %> Current {
+                get { return new <%= PairType %>(Key, Value); }
+            }
+
+            object IEnumerator.Current {
+                get { return this._innerEnumerator.Current; }
+            }
+
+            public <%= PairType %> Entry {
+                get { return new <%= PairType %>(Key, Value); }
+            }
+
+            DictionaryEntry IDictionaryEnumerator.Entry {
+                get { return this._innerEnumerator.Entry; }
+            }
+
+            public <%= KeyType %> Key {
+                get { return (<%= KeyType %>) this._innerEnumerator.Key; }
+            }
+
+            object IDictionaryEnumerator.Key {
+                get { return this._innerEnumerator.Key; }
+            }
+
+            public <%= ItemType %> Value {
+                get { return (<%= ItemType %>) this._innerEnumerator.Value; }
+            }
+
+            object IDictionaryEnumerator.Value {
+                get { return this._innerEnumerator.Value; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public bool MoveNext() {
+                return this._innerEnumerator.MoveNext();
+            }
+
+            public void Reset() {
+                this._innerEnumerator.Reset();
+            }
+
+            #endregion
+        }
+
+        #endregion
+        #region Class KeyList
+
+        [Serializable]
+        private sealed class KeyList:
+            I<%= KeyType %>Collection, ICollection {
+            #region Private Fields
+
+            private <%= ClassName %> _dictionary;
+
+            #endregion
+            #region Internal Constructors
+
+            internal KeyList(<%= ClassName %> dictionary) {
+                this._dictionary = dictionary;
+            }
+
+            #endregion
+            #region Public Properties
+
+            public int Count {
+                get { return this._dictionary.Count; }
+            }
+
+            public bool IsSynchronized {
+                get { return this._dictionary.IsSynchronized; }
+            }
+
+            public object SyncRoot {
+                get { return this._dictionary.SyncRoot; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public void CopyTo(<%= KeyType %>[] array, int arrayIndex) {
+                this._dictionary.CheckTargetArray(array, arrayIndex);
+                foreach (<%= PairType %> pair in this._dictionary)
+                    array[arrayIndex++] = pair.Key;
+            }
+
+            void ICollection.CopyTo(Array array, int arrayIndex) {
+                this._dictionary.CheckTargetArray(array, arrayIndex);
+                CopyTo((<%= KeyType %>[]) array, arrayIndex);
+            }
+
+            public I<%= KeyType %>Enumerator GetEnumerator() {
+                return new KeyEnumerator(this._dictionary);
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() {
+                return (IEnumerator) GetEnumerator();
+            }
+
+            #endregion
+        }
+
+        #endregion
+        #region Class KeyEnumerator
+
+        [Serializable]
+        private sealed class KeyEnumerator:
+            I<%= KeyType %>Enumerator, IEnumerator {
+            #region Private Fields
+
+            private readonly IEnumerator _innerEnumerator;
+
+            #endregion
+            #region Internal Constructors
+
+            internal KeyEnumerator(<%= ClassName %> dictionary) {
+                this._innerEnumerator = dictionary._innerHash.Keys.GetEnumerator();
+            }
+
+            #endregion
+            #region Public Properties
+
+            public <%= KeyType %> Current {
+                get { return (<%= KeyType %>) this._innerEnumerator.Current; }
+            }
+
+            object IEnumerator.Current {
+                get { return this._innerEnumerator.Current; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public bool MoveNext() {
+                return this._innerEnumerator.MoveNext();
+            }
+
+            public void Reset() {
+                this._innerEnumerator.Reset();
+            }
+
+            #endregion
+        }
+
+        #endregion
+        #region Class ValueList
+
+        [Serializable]
+        private sealed class ValueList:
+            I<%= ItemType %>Collection, ICollection {
+            #region Private Fields
+
+            private <%= ClassName %> _dictionary;
+
+            #endregion
+            #region Internal Constructors
+
+            internal ValueList(<%= ClassName %> dictionary) {
+                this._dictionary = dictionary;
+            }
+
+            #endregion
+            #region Public Properties
+
+            public int Count {
+                get { return this._dictionary.Count; }
+            }
+
+            public bool IsSynchronized {
+                get { return this._dictionary.IsSynchronized; }
+            }
+
+            public object SyncRoot {
+                get { return this._dictionary.SyncRoot; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public void CopyTo(<%= ItemType %>[] array, int arrayIndex) {
+                this._dictionary.CheckTargetArray(array, arrayIndex);
+                foreach (<%= PairType %> pair in this._dictionary)
+                    array[arrayIndex++] = pair.Value;
+            }
+
+            void ICollection.CopyTo(Array array, int arrayIndex) {
+                this._dictionary.CheckTargetArray(array, arrayIndex);
+                CopyTo((<%= ItemType %>[]) array, arrayIndex);
+            }
+
+            public I<%= ItemType %>Enumerator GetEnumerator() {
+                return new ValueEnumerator(this._dictionary);
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() {
+                return (IEnumerator) GetEnumerator();
+            }
+
+            #endregion
+        }
+
+        #endregion
+        #region Class ValueEnumerator
+
+        [Serializable]
+        private sealed class ValueEnumerator:
+            I<%= ItemType %>Enumerator, IEnumerator {
+            #region Private Fields
+
+            private readonly IEnumerator _innerEnumerator;
+
+            #endregion
+            #region Internal Constructors
+
+            internal ValueEnumerator(<%= ClassName %> dictionary) {
+                this._innerEnumerator = dictionary._innerHash.Values.GetEnumerator();
+            }
+
+            #endregion
+            #region Public Properties
+
+            public <%= ItemType %> Current {
+                get { return (<%= ItemType %>) this._innerEnumerator.Current; }
+            }
+
+            object IEnumerator.Current {
+                get { return this._innerEnumerator.Current; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public bool MoveNext() {
+                return this._innerEnumerator.MoveNext();
+            }
+
+            public void Reset() {
+                this._innerEnumerator.Reset();
+            }
+
+            #endregion
+        }
+
+        #endregion
+        #region Class ReadOnlyDictionary
+
+        [Serializable]
+        private sealed class ReadOnlyDictionary: <%= ClassName %> {
+            #region Public Properties
+
+            public override bool IsFixedSize {
+                get { return true; }
+            }
+
+            public override bool IsReadOnly {
+                get { return true; }
+            }
+
+            public override <%= ItemType %> this[<%= KeyType %> key] {
+                get { return base[key]; }
+                set { throw new NotSupportedException(
+                        "Read-only dictionaries cannot be modified."); }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public override void Add(<%= KeyType %> key, <%= ItemType %> value) {
+                throw new NotSupportedException(
+                    "Read-only dictionaries cannot be modified.");
+            }
+
+            public override void Clear() {
+                throw new NotSupportedException(
+                    "Read-only dictionaries cannot be modified.");
+            }
+
+            public override object Clone() {
+                return <%= ClassName %>.ReadOnly((<%= ClassName %>) base.Clone());
+            }
+
+            public override void Remove(<%= KeyType %> key) {
+                throw new NotSupportedException(
+                    "Read-only dictionaries cannot be modified.");
+            }
+
+            #endregion
+        }
+
+        #endregion
+    }
+
+    #endregion
+<% EndNamespace(TargetNamespace); %>

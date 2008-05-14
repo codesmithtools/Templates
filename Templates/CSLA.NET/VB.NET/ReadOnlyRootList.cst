@@ -1,0 +1,100 @@
+<%@ CodeTemplate Src="TemplateBase.vb" Inherits="CodeSmith.Csla.TemplateBase" Language="VB" TargetLanguage="VB" Description="Generates a CSLA Editable Root Collection Object." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="ObjectName" Type="System.String" Optional="true" Category="1. Object" Description="Required - The Name of the Business Object Collection Class to Generate." %>
+<%@ Property Name="ChildName" Type="System.String" Optional="true" Category="1. Object" Description="Required - The Name of the Business Object Element of the Collection." %>
+<%@ Property Name="RootCommand" Type="CommandSchema" Optional="true" Category="2. Data Source" Description="Required - The stored procedure that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootTable" Type="TableSchema" Optional="true" Category="2. Data Source" Description="Required - The Root Table that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootView" Type="ViewSchema" Optional="true" Category="2. Data Source" Description="Required - The Root View that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="ResultSetIndex" Type="System.Int32" Default="0" Optional="true" Category="2. Data Source" Description="Result set index indicates which result set to use from the stored procedure. Required when using RootCommand." %>
+<%@ Property Name="FilterColumnNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="2. Data Source" Description="Filter columns used as get criteria. Required when using RootView." %>
+<%-- Generic Variables for code to use  --%>
+<% Dim i As Integer = BaseIndentLevel
+   Dim objInfo As ObjectInfo = New ObjectInfo(Me) %>
+<!-- #INCLUDE FILE="AutoGenWarning.inc" -->
+<%=Indent(0, True)%>Imports System
+<%=Indent(0)%>Imports System.Data
+<%=Indent(0)%>Imports System.Data.SqlClient
+<%=Indent(0)%>Imports Csla
+<%=Indent(0)%>Imports Csla.Data
+<% If Not ClassNamespace Is Nothing AndAlso ClassNamespace.Length > 0 Then %>
+<%=Indent(0, True)%>Namespace <%= ClassNamespace %>
+<% i+=1 %>
+<% end If %> 
+<% If Not objInfo.IsUserPartial Then%>
+<%=Indent(i, True)%><Serializable()> _
+<%=Indent(i)%><%= objInfo.Modifiers %> Class <%=objInfo.NameAndSuffix%>
+<% Else %>
+<%=Indent(i, True)%><%= objInfo.Modifiers %> Class <%=objInfo.NameAndSuffix%>
+<% End If %>
+<% i+=1 %>
+<%=Indent(i)%>Inherits <%=objInfo.Inherits%>
+<% If objInfo.IsUserPartial Then %>
+<%=Indent(0, True)%>#Region " Initialize "
+<%=Indent(i, True)%>Protected Overrides Sub Initialize()
+<%=Indent(i+1)%>'executeFetchDelegate = executeFetch
+<%=Indent(i+1)%>'executeFetchCompleteDelegate = executeFetchComplete
+<%=Indent(i)%>End Sub
+<%=Indent(0, True)%>#End Region ' Initialize
+<% End If %>
+<!-- #INCLUDE FILE="AuthorizationRules.inc" -->
+<%=Indent(0, True)%>#Region " Factory Methods "
+<% If objInfo.IsSingle OrElse objInfo.IsGeneratedPartial OrElse objInfo.IsUserBase Then %>
+
+<%=Indent(i)%>Private Sub New()
+<%=Indent(i+1)%>'require use of factory method
+<%=Indent(i)%>End Sub
+<% End If %>
+<% 'all in generated class except when base class with authorization turned on
+	If objInfo.IsSingle OrElse objInfo.IsGeneratedPartial OrElse (objInfo.IsGeneratedBase AndAlso Not objInfo.UseSecurity) OrElse (objInfo.IsUserBase AndAlso objInfo.UseSecurity) Then %>
+<%=Indent(i, True)%>Public Shared Function <%=objInfo.GetMethodName%>(<%=GetFactoryFilterDeclarationArguments(objInfo)%>) As <%=objInfo.Type%> 
+<% i+=1 %>
+<% If objInfo.UseSecurity Then %>
+<%=Indent(i)%>If Not CanGetObject() Then
+<%=Indent(i+1)%>throw new System.Security.SecurityException("User not authorized to view a <%=objInfo.Name%>")
+<%=Indent(i)%>End If
+<% End If %>
+<%=Indent(i)%>Return DataPortal.Fetch(Of <%=objInfo.Type%>)(New FilterCriteria(<%=GetFactoryFilterCallArguments(objInfo)%>))
+<% i-=1 %>
+<%=Indent(i)%>End Function
+<% End If %>
+<%=Indent(0, True)%>#End Region ' Factory Methods
+<% If objInfo.IsGeneratedClass Then %>
+<%=Indent(0, True)%>#Region " Data Access "
+<!-- #INCLUDE FILE="FilterCriteria.inc" -->
+<% If objInfo.IsGeneratedBase AndAlso Not objInfo.UseSecurity Then %>
+<!-- #INCLUDE FILE="DataPortalCreate.inc" -->
+<% End If %>
+<!-- #INCLUDE FILE="DataPortalFetchList.inc" -->
+<%=Indent(0, True)%>#End Region ' Data Access
+<% End If %>
+<% If objInfo.IsGeneratedPartial Then %>
+<%=Indent(0, True)%>#Region " Delegation Methods "
+<%=Indent(i, True)%>Private Delegate Function predicateEx(Of U, V)(ByVal obj1 As U, ByVal obj2 As V) As Boolean
+<%=Indent(i)%>Private Delegate Sub actionEx(Of U, V)(ByVal obj1 As U, ByVal obj2 As V)
+<%=Indent(i, True)%><NonSerialized()> _
+<%=Indent(i)%>Private executeFetchDelegate As predicateEx(Of <%If objInfo.UseAdoTransaction Then%>SqlTransaction<%Else%>SqlConnection<%End If%>, FilterCriteria) = Nothing
+<%=Indent(i)%>Private Function OnExecuteFetch(<%If objInfo.UseAdoTransaction Then%>ByVal tr As SqlTransaction<%Else%>ByVal cn As SqlConnection<%End If%>, ByVal criteria As FilterCriteria) As Boolean
+<% i+=1 %>
+<%=Indent(i)%>If Not executeFetchDelegate Is Nothing Then
+<%=Indent(i+1)%>Return executeFetchDelegate(<%If objInfo.UseAdoTransaction Then%>tr<%Else%>cn<%End If%>, criteria)
+<%=Indent(i)%>End If
+<%=Indent(i)%>Return True
+<% i-=1 %>
+<%=Indent(i)%>End Function
+<%=Indent(i, True)%><NonSerialized()> _
+<%=Indent(i)%>Private executeFetchCompleteDelegate As actionEx(Of SqlCommand, FilterCriteria) = Nothing
+<%=Indent(i)%>Private Sub OnExecuteFetchComplete(ByVal cm As SqlCommand, ByVal criteria As FilterCriteria)
+<% i+=1 %>
+<%=Indent(i)%>If Not executeFetchCompleteDelegate Is Nothing Then
+<%=Indent(i+1)%>executeFetchCompleteDelegate(cm, criteria)
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(0, True)%>#End Region ' Delegation Methods
+<% End If %>
+<% i-=1 %>
+<%=Indent(i, True)%>End Class
+<% If not ClassNamespace Is Nothing AndAlso ClassNamespace.Length > 0 Then%>
+<%=Indent(0, True)%>End Namespace<%End If%>

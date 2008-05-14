@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <defaultTemplate path="ProjectCompile.cst" />
+  <propertySets>
+    <propertySet>
+      <property name="ProcedureMap">ProceduresToMap.xml</property>
+      <property name="TypeOfUserInterface">MDIForm</property>
+      <property name="GenerateSolution">True</property>
+      <property name="CompanyNameSpace">APOSA</property>
+      <property name="FormsUIComponentProjectGuid">0e1b985b-ea82-4a26-b33d-be421d07487f</property>
+      <property name="CompanyName">Your Company Name</property>
+      <property name="TargetDatabase">
+        <connectionString>SERVER=SQLTEST;DATABASE=APOSA;UID=testUser;PASSWORD=test;</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="CleanDirectories">False</property>
+      <property name="OutPutDirectory">..\MDIForms Generated 3 Tier Example Nullable Primitives\</property>
+      <property name="CanHaveNullablePrimitives">True</property>
+      <property name="SolutionProjectGuid">a78e5bbf-eb6a-4d1f-8adb-790c587bb119</property>
+      <property name="DataLayerProjectGuid">3d392fac-aca6-4a88-b629-f37add97cdf5</property>
+      <property name="ProjectVersion">1.0.0.1</property>
+      <property name="ProjectNameSpace">Test</property>
+      <property name="GenerateUI">True</property>
+      <property name="ProjectDescription">Test Project Template</property>
+      <property name="UserInterfaceProjectGuid">697299bb-a1ea-4046-88e0-80ff83888148</property>
+      <property name="OutputFile">..\MDIForms Generated 3 Tier Example Nullable Primitives\ProjectCompile.log</property>
+      <property name="BusinessLayerProjectGuid">cb57e133-9b48-4af3-b893-586052181321</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

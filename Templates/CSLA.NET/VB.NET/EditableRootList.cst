@@ -1,0 +1,175 @@
+<%@ CodeTemplate Src="TemplateBase.vb" Inherits="CodeSmith.Csla.TemplateBase" Language="VB" TargetLanguage="VB" Description="Generates a CSLA Editable Root Collection Object." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="ObjectName" Type="System.String" Optional="true" Category="1. Object" Description="Required - The Name of the Business Object Collection Class to Generate." %>
+<%@ Property Name="ChildName" Type="System.String" Optional="true" Category="1. Object" Description="Required - The Name of the Business Object Element of the Collection." %>
+<%@ Property Name="RootCommand" Type="CommandSchema" Optional="true" Category="2. Data Source" Description="Required - The stored procedure that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootTable" Type="TableSchema" Optional="true" Category="2. Data Source" Description="Required - The Root Table that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootView" Type="ViewSchema" Optional="true" Category="2. Data Source" Description="Required - The Root View that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="ResultSetIndex" Type="System.Int32" Default="0" Optional="true" Category="2. Data Source" Description="Result set index indicates which result set to use from the stored procedure. Required when using RootCommand." %>
+<%@ Property Name="FilterColumnNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="2. Data Source" Description="Filter columns used as get criteria. Required when using RootView." %>
+<%-- Generic Variables for code to use  --%>
+<% 	Dim i as integer = BaseIndentLevel
+   	Dim objInfo as ObjectInfo = new ObjectInfo(Me) %>
+<!-- #INCLUDE FILE="AutoGenWarning.inc" -->
+<%=Indent(0, True)%>Imports System
+<%=Indent(0)%>Imports System.Data
+<%=Indent(0)%>Imports System.Data.SqlClient
+<%=Indent(0)%>Imports Csla
+<%=Indent(0)%>Imports Csla.Data
+<% If Not ClassNamespace Is Nothing AndAlso ClassNamespace.Length > 0 Then %>
+<%=Indent(0, True)%>Namespace <%= ClassNamespace %>
+<% i+=1 %>
+<% End If %> 
+<% If Not objInfo.IsUserPartial Then %>
+<%=Indent(i, True)%><Serializable()> _
+<%=Indent(i)%><%= objInfo.Modifiers %> Class <%=objInfo.NameAndSuffix%>
+<% Else %>
+<%=Indent(i, True)%><%= objInfo.Modifiers %> Class <%=objInfo.NameAndSuffix%>
+<% End If %>
+<% i+=1 %>
+<%=Indent(i)%>Inherits <%=objInfo.Inherits%>
+<% If objInfo.IsUserPartial Then %>
+<%=Indent(0, True)%>#Region " Initialize "
+<%=Indent(i, True)%>Protected Overrides Sub Initialize()
+<%=Indent(i+1)%>'executeFetchDelegate = executeFetch
+<%=Indent(i+1)%>'executeFetchCompleteDelegate = executeFetchComplete
+<%=Indent(i)%>End Sub
+<%=Indent(0, True)%>#End Region ' Initialize
+<% End If %>
+<% If objInfo.IsGeneratedClass AndAlso (objInfo.HasIdentity OrElse objInfo.HasObjectGeneratedKey) Then %>
+<%=Indent(0, True)%>#Region " BindingList Overrides "
+<%=Indent(i, True)%>Protected Overrides Function AddNewCore() as Object
+<% i+=1 %>
+<%=Indent(i)%>Dim item As <%=objInfo.ChildType%> = <%=objInfo.ChildNameAndSuffix%>.<%=objInfo.NewChildMethodName%>()
+<%=Indent(i)%>Me.Add(item)
+<%=Indent(i)%>Return item
+<% i-=1 %>
+<%=Indent(i)%>End Function
+<%=Indent(0, True)%>#End Region ' BindingList Overrides
+<% End If %>
+<!--  #INCLUDE FILE="AuthorizationRules.inc" -->
+<%=Indent(0, True)%>#Region " Factory Methods "
+<% If objInfo.IsSingle OrElse objInfo.IsGeneratedPartial OrElse objInfo.IsUserBase Then %>
+<%=Indent(i)%>Private Sub New()
+<%=Indent(i+1)%>' require use of factory method 
+<%=Indent(i)%>End Sub
+<% End If %>
+<% 'all in generated class except when base class with authorization turned on
+	If (objInfo.IsSingle OrElse objInfo.IsGeneratedPartial _
+	    OrElse (objInfo.IsGeneratedBase AndAlso Not objInfo.UseSecurity) _
+	    OrElse (objInfo.IsUserBase AndAlso objInfo.UseSecurity)) Then %>
+<%=Indent(i, True)%>Public Shared Function <%=objInfo.NewMethodName%>() As <%=objInfo.Type%>
+<% i+=1 %>
+<% If objInfo.UseSecurity Then %>
+<%=Indent(i)%>If Not CanAddObject() Then
+<%=Indent(i+1)%>Throw New System.Security.SecurityException("User Not authorized to add a <%=objInfo.Name%>")
+<%=Indent(i)%>End If
+<% End If %>
+<% If objInfo.IsGeneratedBase Then ' abstract-child cannot use constructor %>
+<%=Indent(i)%>Return DataPortal.Create(Of <%=objInfo.Type%>)()
+<% Else %>
+<%=Indent(i)%>Return New <%=objInfo.Name%>()
+<% End If %>
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(i, True)%>Public Shared Function <%=objInfo.GetMethodName%>(<%=GetFactoryFilterDeclarationArguments(objInfo)%>) As <%=objInfo.Type%>
+<% i+=1 %>
+<% If objInfo.UseSecurity Then %>
+<%=Indent(i)%>If Not CanGetObject() Then
+<%=Indent(i+1)%>Throw New System.Security.SecurityException("User Not authorized to view a <%=objInfo.Name%>")
+<%=Indent(i)%>End If
+<% End If %>
+<%=Indent(i)%>Return DataPortal.Fetch(Of <%=objInfo.Type%>)(New FilterCriteria(<%=GetFactoryFilterCallArguments(objInfo)%>))
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<% End If 'all in generated class except when base class with authorization turned on%>
+<%=Indent(0, True)%>#End Region ' Factory Methods
+<% If objInfo.IsGeneratedClass Then %>
+<%=Indent(0, True)%>#Region " Data Access "
+<!-- #INCLUDE FILE="FilterCriteria.inc" -->
+<% If (objInfo.IsGeneratedBase AndAlso Not objInfo.UseSecurity) Then %>
+<!-- #INCLUDE FILE="DataPortalCreate.inc" -->
+<% End If %>
+<!-- #INCLUDE FILE="DataPortalFetchList.inc" -->
+<%=Indent(0, True)%>#Region " Data Access - Update "
+<% If objInfo.UseTransactionalAttribute Then %>
+<%=Indent(i, True)%><Transactional(TransactionalTypes.<%=objInfo.TransactionType.ToString()%>)> _ 
+<%=Indent(i)%>Protected Overrides Sub DataPortal_Update()
+<% Else %>
+<%=Indent(i, True)%>Protected Overrides Sub DataPortal_Update()
+<% End If %>
+<% i+=1 %>
+<%=Indent(i)%>RaiseListChangedEvents = False
+<% If objInfo.UseAdoTransaction Then %>
+<%=Indent(i)%>Dim tr As SqlTransaction
+<% End If %>
+<%=Indent(i)%>Using cn As SqlConnection = New SqlConnection(<%=objInfo.DbConnection%>)
+<% i+=1 %>
+<%=Indent(i)%>cn.Open()
+<% If objInfo.UseAdoTransaction Then %>
+<%=Indent(i)%>tr = cn.BeginTransaction()
+<%=Indent(i)%>Try
+<% i+=1 %>
+<% End If %>
+<%=Indent(i)%>' loop through each deleted child object
+<%=Indent(i)%>For Each deletedChild As <%=objInfo.ChildType%> in DeletedList
+<%=Indent(i+1)%>deletedChild.DeleteSelf(<% If objInfo.UseAdoTransaction Then %>tr<% Else %>cn<% End If %>)
+<%=Indent(i)%>Next
+<%=Indent(i)%>DeletedList.Clear()
+<%=Indent(i, True)%>' loop through each non-deleted child object
+<%=Indent(i)%>For Each child As <%=objInfo.ChildType%> in Me
+<% i+=1 %>
+<%=Indent(i)%>If child.IsNew Then
+<%=Indent(i+1)%>child.Insert(<% If objInfo.UseAdoTransaction Then %>tr<% Else %>cn<% End If %>)
+<%=Indent(i)%>Else
+<%=Indent(i+1)%>child.Update(<% If objInfo.UseAdoTransaction Then %>tr<% Else %>cn<% End If %>)
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>Next
+<% If objInfo.UseAdoTransaction Then %>
+<%=Indent(i)%>tr.Commit()
+<% i-=1 %>
+<%=Indent(i)%>Catch
+<%=Indent(i+1)%>tr.Rollback()
+<%=Indent(i+1)%>Throw
+<%=Indent(i)%>End Try
+<% End If %>
+<% i-=1 %>
+<%=Indent(i)%>End Using
+<%=Indent(i)%>RaiseListChangedEvents = True
+<% i-=1 %>
+<%=Indent(i)%>End Sub
+<%=Indent(0, True)%>#End Region ' Data Access - Update
+<%=Indent(0, True)%>#End Region ' Data Access
+<% End If %>
+<% If objInfo.IsGeneratedPartial Then %>
+<%=Indent(0, True)%>#Region " Delegation Methods "
+<%=Indent(i, True)%>Private Delegate Function predicateEx(Of U, V)(ByVal obj1 As U, ByVal obj2 As V) As Boolean
+<%=Indent(i)%>Private Delegate Sub actionEx(Of U, V)(ByVal obj1 As U, ByVal obj2 As V)
+<%=Indent(i, True)%><NonSerialized()> _
+<%=Indent(i)%>Private executeFetchDelegate as predicateEx(Of <%If(objInfo.UseAdoTransaction) Then%>SqlTransaction<%Else%>SqlConnection<%End If%>, FilterCriteria) = Nothing
+<%=Indent(i)%>Private Function OnExecuteFetch(<%If(objInfo.UseAdoTransaction) Then%>ByVal tr As SqlTransaction<%Else%>ByVal cn As SqlConnection<%End If%>, ByVal criteria As FilterCriteria) As Boolean
+<% i+=1 %>
+<%=Indent(i)%>If Not executeFetchDelegate Is Nothing Then
+<%=Indent(i+1)%>Return executeFetchDelegate(<%If(objInfo.UseAdoTransaction) Then%>tr<%Else%>cn<%End If%>, criteria)
+<%=Indent(i)%>End If
+<%=Indent(i)%>Return True
+<% i-=1 %>
+<%=Indent(i)%>End Function
+<%=Indent(i, True)%><NonSerialized()> _
+<%=Indent(i)%>Private executeFetchCompleteDelegate As actionEx(Of SqlCommand, FilterCriteria) = Nothing
+<%=Indent(i)%>Private Sub onExecuteFetchComplete(ByVal cm As SqlCommand, ByVal criteria As FilterCriteria )
+<% i+=1 %>
+<%=Indent(i)%>If Not executeFetchDelegate Is Nothing Then
+<%=Indent(i+1)%>executeFetchCompleteDelegate(cm, criteria)
+<%=Indent(i)%>End If
+<% i-=1 %>
+<%=Indent(i)%>End sub
+<%=Indent(0, True)%>#End Region ' Delegation Methods
+<% End If %>
+<% i-=1 %>
+<%=Indent(i, True)%>End Class
+<% If Not ClassNamespace Is Nothing AndAlso ClassNamespace.Length > 0 Then%>
+<%=Indent(0, True)%>End Namespace<%End If%>
