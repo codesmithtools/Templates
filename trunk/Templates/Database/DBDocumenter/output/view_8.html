@@ -1,0 +1,37 @@
+<html>
+<head>
+	<title>Product Sales for 1997</title>
+<link href="dbdocs.css" type="text/css" rel="stylesheet" />	
+</head>
+<body>
+
+<center>
+<table width="80%">
+	<tr>
+		<td class="sprocheaderbar" width="85%">
+			dbo.Product Sales for 1997
+		</td>
+		<td class="sprocheaderbar" align="center">
+			[<a href="view_details_8.html">Back to Details</a>]
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<pre>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">create</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">view</span> "Product Sales <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">for</span> 1997" <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">SELECT</span> Categories.CategoryName, Products.ProductName, 
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Sum</span>(<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">CONVERT</span>(<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">money</span>,("<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Order</span> Details".UnitPrice*Quantity*(1-Discount)/100))*100) <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span> ProductSales
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">FROM</span> (Categories <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">INNER</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">JOIN</span> Products <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">ON</span> Categories.CategoryID = Products.CategoryID) 
+	<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">INNER</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">JOIN</span> (Orders 
+		<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">INNER</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">JOIN</span> "<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Order</span> Details" <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">ON</span> Orders.OrderID = "<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Order</span> Details".OrderID) 
+	<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">ON</span> Products.ProductID = "<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Order</span> Details".ProductID
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">WHERE</span> (((Orders.ShippedDate) <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Between</span> <span style="color: Red; font-family: Courier New; font-size: 11px; background-color: White">'19970101'</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">And</span> <span style="color: Red; font-family: Courier New; font-size: 11px; background-color: White">'19971231'</span>))
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">GROUP</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">BY</span> Categories.CategoryName, Products.ProductName
+			</pre>
+		</td>
+	</tr>
+</table>
+</center>
+
+</body>
+</html>

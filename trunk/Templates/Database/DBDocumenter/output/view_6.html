@@ -1,0 +1,32 @@
+<html>
+<head>
+	<title>Order Subtotals</title>
+<link href="dbdocs.css" type="text/css" rel="stylesheet" />	
+</head>
+<body>
+
+<center>
+<table width="80%">
+	<tr>
+		<td class="sprocheaderbar" width="85%">
+			dbo.Order Subtotals
+		</td>
+		<td class="sprocheaderbar" align="center">
+			[<a href="view_details_6.html">Back to Details</a>]
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<pre>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">create</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">view</span> "<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Order</span> Subtotals" <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">SELECT</span> "<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Order</span> Details".OrderID, <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Sum</span>(<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">CONVERT</span>(<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">money</span>,("<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Order</span> Details".UnitPrice*Quantity*(1-Discount)/100))*100) <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span> Subtotal
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">FROM</span> "<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Order</span> Details"
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">GROUP</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">BY</span> "<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Order</span> Details".OrderID
+			</pre>
+		</td>
+	</tr>
+</table>
+</center>
+
+</body>
+</html>

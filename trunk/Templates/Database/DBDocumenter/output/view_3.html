@@ -1,0 +1,34 @@
+<html>
+<head>
+	<title>Customer and Suppliers by City</title>
+<link href="dbdocs.css" type="text/css" rel="stylesheet" />	
+</head>
+<body>
+
+<center>
+<table width="80%">
+	<tr>
+		<td class="sprocheaderbar" width="85%">
+			dbo.Customer and Suppliers by City
+		</td>
+		<td class="sprocheaderbar" align="center">
+			[<a href="view_details_3.html">Back to Details</a>]
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<pre>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">create</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">view</span> "Customer <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">and</span> Suppliers <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">by</span> City" <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">SELECT</span> City, CompanyName, ContactName, <span style="color: Red; font-family: Courier New; font-size: 11px; background-color: White">'Customers'</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span> Relationship 
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">FROM</span> Customers
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">UNION</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">SELECT</span> City, CompanyName, ContactName, <span style="color: Red; font-family: Courier New; font-size: 11px; background-color: White">'Suppliers'</span>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">FROM</span> Suppliers
+--ORDER <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">BY</span> City, CompanyName
+			</pre>
+		</td>
+	</tr>
+</table>
+</center>
+
+</body>
+</html>

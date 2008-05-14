@@ -1,0 +1,34 @@
+<html>
+<head>
+	<title>Alphabetical list of products</title>
+<link href="dbdocs.css" type="text/css" rel="stylesheet" />	
+</head>
+<body>
+
+<center>
+<table width="80%">
+	<tr>
+		<td class="sprocheaderbar" width="85%">
+			dbo.Alphabetical list of products
+		</td>
+		<td class="sprocheaderbar" align="center">
+			[<a href="view_details_0.html">Back to Details</a>]
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<pre>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">CREATE</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">VIEW</span> dbo.[Alphabetical list <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">of</span> products]
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">SELECT</span>     dbo.Products.*, dbo.Categories.CategoryName <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span> CategoryName
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">FROM</span>         dbo.Categories <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">INNER</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">JOIN</span>
+                      dbo.Products <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">ON</span> dbo.Categories.CategoryID = dbo.Products.CategoryID
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">WHERE</span>     (dbo.Products.Discontinued = 0)
+			</pre>
+		</td>
+	</tr>
+</table>
+</center>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<html>
+<head>
+	<title>CustOrdersDetail</title>
+<link href="dbdocs.css" type="text/css" rel="stylesheet" />	
+</head>
+<body>
+
+<center>
+<table border="0" width="80%">
+	<tr>
+		<td class="sprocheaderbar" width="85%">
+			dbo.CustOrdersDetail
+		</td>
+		<td class="sprocheaderbar" align="center">
+			[<a href="sproc_details_1.html">Back to Details</a>]
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<pre>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">CREATE</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">PROCEDURE</span> CustOrdersDetail @OrderID <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">int</span>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">SELECT</span> ProductName,
+    UnitPrice=ROUND(Od.UnitPrice, 2),
+    Quantity,
+    Discount=<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">CONVERT</span>(<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">int</span>, Discount * 100), 
+    ExtendedPrice=ROUND(<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">CONVERT</span>(<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">money</span>, Quantity * (1 - Discount) * Od.UnitPrice), 2)
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">FROM</span> Products P, [<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Order</span> Details] Od
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">WHERE</span> Od.ProductID = P.ProductID <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">and</span> Od.OrderID = @OrderID
+			</pre>
+		</td>
+	</tr>
+</table>
+</center>
+
+</body>
+</html>

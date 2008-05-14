@@ -1,0 +1,32 @@
+<html>
+<head>
+	<title>Category Sales for 1997</title>
+<link href="dbdocs.css" type="text/css" rel="stylesheet" />	
+</head>
+<body>
+
+<center>
+<table width="80%">
+	<tr>
+		<td class="sprocheaderbar" width="85%">
+			dbo.Category Sales for 1997
+		</td>
+		<td class="sprocheaderbar" align="center">
+			[<a href="view_details_1.html">Back to Details</a>]
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<pre>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">create</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">view</span> "Category Sales <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">for</span> 1997" <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">SELECT</span> "Product Sales <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">for</span> 1997".CategoryName, <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Sum</span>("Product Sales <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">for</span> 1997".ProductSales) <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span> CategorySales
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">FROM</span> "Product Sales <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">for</span> 1997"
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">GROUP</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">BY</span> "Product Sales <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">for</span> 1997".CategoryName
+			</pre>
+		</td>
+	</tr>
+</table>
+</center>
+
+</body>
+</html>
