@@ -1,5 +1,4 @@
 PLINQO, which stands for Professional LINQ to Objects, is a collection of CodeSmith templates that are meant to replace and extend the LINQ to SQL designers that are included with Visual Studio 2008.
-
 ===Features===
   * Generate or update a LINQ to SQL dbml file from a database schema.
   * Includes all tables, stored procedures, functions, and views with the ability to exclude objects based on regex patterns. 
