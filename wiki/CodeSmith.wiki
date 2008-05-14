@@ -1,4 +1,4 @@
-==What is CodeSmith?==
+==What is !CodeSmith?==
  
 !CodeSmith is a software development tool to help you get your job done faster. Technically speaking it is a template driven source code generator that automates the creation of common application source code for any language (C#, Java, VB, PHP, ASP.NET, SQL, etc.).
 
