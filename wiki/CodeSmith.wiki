@@ -7,4 +7,4 @@
 !CodeSmith can help you produce higher-quality, more consistent code in less time. Read More
 
 ==Join Our Community==
-!CodeSmith has an active community with thousands of users sharing tips and tricks, tutorials, templates, schema providers, addins and a wealth of knowledge about !CodeSmith. [http://community.codesmithtools.com/|Join Now!]
+!CodeSmith has an active community with thousands of users sharing tips and tricks, tutorials, templates, schema providers, addins and a wealth of knowledge about !CodeSmith. [http://community.codesmithtools.com/ Join Now!]
