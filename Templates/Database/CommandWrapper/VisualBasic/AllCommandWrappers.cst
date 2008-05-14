@@ -1,0 +1,101 @@
+<%------------------------------------------------------------------------------------------
+* Author: Eric J. Smith 
+* Description: This template will generate wrappers for all stored procedures in a database.
+------------------------------------------------------------------------------------------%>
+<%@ CodeTemplate Language="VB" TargetLanguage="Text" Description="Generates stored procedure wrappers for all stored procedures in a database" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="Database that the stored procedures wrappers should be based on." %>
+<%@ Property Name="Accessibility" Type="CommandWrapperTemplate.AccessibilityEnum" Default="Public" Category="Context" Description="The accessibility of the generated classes." %>
+<%@ Property Name="ResultSchema" Type="CommandWrapperTemplate.ResultSchemaEnum" Case Else="StronglyTyped" Category="Context" Description="Determines what type of result schema should be used for the wrapper class." %>
+<%@ Property Name="ExcludedCommands" Type="StringCollection" Default="" Optional="True" Category="Options"
+	Description="If supplied, any matching commands will not get wrappers generated. (* is treated as a wildcard)" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%-- Register the StoredProcedures template and have it's properties merged into this template.  --%>
+<%@ Register Template="CommandWrapperClass.cst" Name="CommandWrapperTemplate" MergeProperties="True" ExcludeProperties="SourceCommand,BatchMode,CommandClassName,ResultRowClassName,Accessibility" %>
+<script runat="template">
+Private _outputDirectory As String = [String].Empty
+
+<Editor(GetType(System.Windows.Forms.Design.FolderNameEditor), GetType(System.Drawing.Design.UITypeEditor))> _
+<[Optional]()> _
+<Category("Output")> _
+<Description("The directory to output the results to.")> _
+Public Property OutputDirectory() As String
+	Get
+		' default to the directory that the template is located in
+		If _outputDirectory.Length = 0 Then
+			Return Me.CodeTemplateInfo.DirectoryName + "output\"
+		End If
+
+		Return _outputDirectory
+	End Get
+	Set
+		_outputDirectory = value
+		If _outputDirectory.EndsWith("\") = False Then
+			_outputDirectory += "\"
+		End If
+	End Set
+End Property
+
+Private excludedCommandRegex As Regex = Nothing
+
+Public Function CommandIsExcluded(ByVal command As CommandSchema) As Boolean
+	If excludedCommandRegex Is Nothing Then
+		If Not ExcludedCommands Is Nothing AndAlso ExcludedCommands.Count > 0 Then
+			Dim excluded As String = [String].Empty
+			Dim i As Integer = 0
+			While i < ExcludedCommands.Count
+				If ExcludedCommands(i).Trim().Length > 0 Then
+					excluded += "(" + Regex.Escape(ExcludedCommands(i)).Replace("\*", ".*?") + ")|"
+				End If
+				System.Math.Max(System.Threading.Interlocked.Increment(i),i - 1)
+			End While
+
+			If excluded.Length > 0 Then
+				excluded = excluded.Substring(0, excluded.Length - 1)
+				excludedCommandRegex = New Regex(excluded, RegexOptions.IgnoreCase)
+			End If
+		End If
+	End If
+
+	If Not excludedCommandRegex Is Nothing AndAlso excludedCommandRegex.IsMatch(command.Name) Then
+		Return True
+	End If
+
+	Return False
+End Function
+
+Public Overloads Overrides Sub Render(ByVal writer As System.IO.TextWriter)
+	Me.Progress.MaximumValue = SourceDatabase.Commands.Count
+	Me.Progress.[Step] = 1
+
+	Dim outputDirectory As String = Path.Combine(Me.CodeTemplateInfo.DirectoryName, Me.OutputDirectory)
+	If Not Directory.Exists(outputDirectory) Then
+		Directory.CreateDirectory(outputDirectory)
+	End If
+
+	Dim i As Integer = 0
+	While i < SourceDatabase.Commands.Count
+		If Not CommandIsExcluded(SourceDatabase.Commands(i)) Then
+			Trace.WriteLine("Generating wrapper for " + SourceDatabase.Commands(i).FullName + "...")
+			Try
+				Dim commandWrapperTemplate As New CommandWrapperTemplate()
+				Me.CopyPropertiesTo(commandWrapperTemplate)
+				commandWrapperTemplate.SourceCommand = SourceDatabase.Commands(i)
+				Dim outputPath As String = outputDirectory + commandWrapperTemplate.GetFileName()
+				commandWrapperTemplate.RenderToFile(outputPath, True)
+			Catch e As Exception
+				Trace.WriteLine("Unable to generate wrapper for " + SourceDatabase.Commands(i).FullName + "" & Chr(13) & "" & Chr(10) & "" + e.ToString() + "" & Chr(13) & "" & Chr(10) & "")
+			End Try
+		End If
+
+		Me.Progress.PerformStep()
+		System.Math.Max(System.Threading.Interlocked.Increment(i),i - 1)
+	End While
+End Sub
+</script>

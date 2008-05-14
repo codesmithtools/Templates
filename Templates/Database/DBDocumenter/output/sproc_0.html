@@ -1,0 +1,35 @@
+<html>
+<head>
+	<title>CustOrderHist</title>
+<link href="dbdocs.css" type="text/css" rel="stylesheet" />	
+</head>
+<body>
+
+<center>
+<table border="0" width="80%">
+	<tr>
+		<td class="sprocheaderbar" width="85%">
+			dbo.CustOrderHist
+		</td>
+		<td class="sprocheaderbar" align="center">
+			[<a href="sproc_details_0.html">Back to Details</a>]
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<pre>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">CREATE</span>  <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">PROCEDURE</span> CustOrderHist @CustomerID <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">nchar</span>(5) = <span style="color: Red; font-family: Courier New; font-size: 11px; background-color: White">'blah'</span>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">SELECT</span> ProductName, Total=<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">SUM</span>(Quantity)
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">FROM</span> Products P, [<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">Order</span> Details] OD, Orders O, Customers C
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">WHERE</span> C.CustomerID = @CustomerID
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AND</span> C.CustomerID = O.CustomerID <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AND</span> O.OrderID = OD.OrderID <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AND</span> OD.ProductID = P.ProductID
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">GROUP</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">BY</span> ProductName
+			</pre>
+		</td>
+	</tr>
+</table>
+</center>
+
+</body>
+</html>
