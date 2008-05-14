@@ -1,0 +1,60 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace CodeSmith.Data.Rules.Assign
+{
+    /// <summary>
+    /// Assign a default value to a property.
+    /// </summary>
+    /// <typeparam name="T">The type of the property.</typeparam>
+    public class DefaultValueRule<T> : PropertyRuleBase
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultValueRule&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <param name="defaultValue">The default value.</param>
+        public DefaultValueRule(string property, T defaultValue)
+            : this(property, defaultValue, EntityState.New)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultValueRule&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <param name="assignState">State of the object that can be assigned.</param>
+        public DefaultValueRule(string property, T defaultValue, EntityState assignState)
+            : base(property, assignState)
+        {
+            DefaultValue = defaultValue;
+            // lower priority because we need to assign before validate
+            Priority = 10;
+        }
+
+        /// <summary>
+        /// Gets or sets the default value.
+        /// </summary>
+        /// <value>The default value.</value>
+        public T DefaultValue { get; private set; }
+
+        /// <summary>
+        /// Runs this rule.
+        /// </summary>
+        /// <param name="context">The rule context.</param>
+        public override void Run(RuleContext context)
+        {
+            context.Message = ErrorMessage;
+            context.Success = true;
+
+            object current = context.TrackedObject.Current;
+
+            T value = GetPropertyValue<T>(current);
+
+            if (default(T).Equals(value) || CanRun(context.TrackedObject))
+                SetPropertyValue(current, DefaultValue);
+        }
+    }
+}

@@ -1,0 +1,9 @@
+<%-- 
+Name: MasterTemplate.cst
+Author: Eric J. Smith
+Description: Demonstrates the use of a sub-template.
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Debug="True" Description="Demonstrates the use of a sub-template." %>
+<%@ Register Name="SubTemplate" Template="SubTemplate.cst" %>
+My master template content here.
+<% new SubTemplate().Render(this.Response); %>

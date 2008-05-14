@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.Targets"/>
+
+  <Target Name="Build">
+
+    <!--
+    ********************************************************************************
+    
+    This is an example of using the MSBuild task's batch mode.  The batch mode can
+    be used to render an unlimited number of files at once.  And is MUCH faster than
+    rendering them one at a time via the command line client.
+    
+    ********************************************************************************
+    -->
+    <CodeSmith ProjectFiles="BatchModeSample.csp" />
+
+  </Target>
+
+</Project>

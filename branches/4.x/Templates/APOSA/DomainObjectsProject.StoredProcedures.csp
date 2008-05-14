@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <defaultTemplate path="StoredProcedures\GenerateAllProcs.cst" />
+  <propertySets>
+    <propertySet>
+      <property name="IncludeDropStatements">True</property>
+      <property name="ProcedurePrefix">aposa_</property>
+      <property name="AutoExecuteScript">True</property>
+      <property name="SourceTable">
+        <connectionString>SERVER=SQLTEST;DATABASE=APOSA;UID=testUser;PASSWORD=test;</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+          <owner>dbo</owner>
+          <name>User</name>
+        </table>
+      </property>
+      <property name="ProcedureDescription">User Table</property>
+      <property name="KeyColumns">
+        <stringList>
+          <string>IsActive</string>
+        </stringList>
+      </property>
+      <property name="OutPutDirectory">..\SQL Scripts For Example Tables\</property>
+    </propertySet>
+    <propertySet>
+      <property name="IncludeDropStatements">True</property>
+      <property name="ProcedurePrefix">aposa_</property>
+      <property name="AutoExecuteScript">True</property>
+      <property name="SourceTable">
+        <connectionString>SERVER=SQLTEST;DATABASE=APOSA;UID=testUser;PASSWORD=test;</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+          <owner>dbo</owner>
+          <name>Product</name>
+        </table>
+      </property>
+      <property name="ProcedureDescription">Product Table</property>
+      <property name="OutPutDirectory">..\SQL Scripts For Example Tables\</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

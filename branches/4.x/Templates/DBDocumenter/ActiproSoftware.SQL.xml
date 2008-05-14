@@ -1,0 +1,204 @@
+<SyntaxLanguage Key="SQL" LanguageDefinitionVersion="4.0" Secure="True" WordContainsAdditionalCharacters="@_"
+				xmlns="http://ActiproSoftware/SyntaxEditor/4.0/LanguageDefinition">
+
+	<!-- String Properties -->
+	<Properties>
+		<Property Key="Creator" Value="Actipro Software LLC" />
+		<Property Key="Copyright" Value="Copyright (c) 2001-2006 Actipro Software LLC.  All rights reserved." />
+	</Properties>
+
+	<!-- Highlighting Styles -->	
+	<Styles>
+		<Style Key="ReservedWordStyle" ForeColor="Blue" />
+		<Style Key="FunctionStyle" ForeColor="Magenta" />
+		<Style Key="OperatorStyle" ForeColor="Gray" />
+		<Style Key="DataTypeStyle" ForeColor="Black" Bold="True" />
+		<Style Key="VariableStyle" ForeColor="Green" />
+		<Style Key="SystemVariableStyle" ForeColor="Green" Bold="True" />
+		<Style Key="NumberStyle" ForeColor="Maroon" Bold="True" />
+		<Style Key="StringDelimiterStyle" ForeColor="Red" />
+		<Style Key="StringDefaultStyle" ForeColor="Red" />
+		<Style Key="SquareStringDelimiterStyle" ForeColor="Black" />
+		<Style Key="SquareStringDefaultStyle" ForeColor="Black" />
+		<Style Key="CommentDelimiterStyle" ForeColor="Teal" />
+		<Style Key="CommentDefaultStyle" ForeColor="Teal" />
+	</Styles>
+	
+	<!-- States -->
+	<States>
+		<!-- Code -->
+		<State Key="DefaultState">
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<!-- Whitespace -->
+				<RegexPatternGroup TokenKey="WhitespaceToken" PatternValue="{WhitespaceMacro}+" IsWhitespace="True" />
+				<!-- Line Terminators -->
+				<RegexPatternGroup TokenKey="LineTerminatorToken" PatternValue="{LineTerminatorMacro}" IsWhitespace="True" />
+				<!-- Brackets -->
+				<ExplicitPatternGroup Key="OpenParenthesisPatternGroup" TokenKey="OpenParenthesisToken" PatternValue="(" EndBracket="CloseParenthesisPatternGroup" />
+				<ExplicitPatternGroup Key="CloseParenthesisPatternGroup" TokenKey="CloseParenthesisToken" PatternValue=")" StartBracket="OpenParenthesisPatternGroup" />
+				<!-- Reserved Words -->
+				<ExplicitPatternGroup TokenKey="ReservedWordToken" Style="ReservedWordStyle" LookAhead="{NonWordMacro}|\z">
+					<ExplicitPatterns>
+						ADD ALTER AS ASC AUTHORIZATION BACKUP BEGIN BREAK BROWSE BULK BY CASCADE CHECK CHECKPOINT CLOSE CLUSTERED 
+						COLUMN COMMIT COMMITTED COMPUTE CONFIRM CONSTRAINT CONTAINS CONTINUE CONTROLROW CREATE CROSS CURRENT CURRENT_DATE 
+						CURRENT_TIME CURSOR DATABASE DBCC DEALLOCATE DECLARE DEFAULT DELETE DENY DESC DISK DISTINCT DISTRIBUTED 
+						DROP DUMMY DUMP ELSE END ERRLVL ERROREXIT ESCAPE EXCEPT EXEC EXECUTE EXIT FETCH FILE FILLFACTOR FLOPPY 
+						FOR FOREIGN FREETEXT FROM FULL FUNCTION GO GOTO GRANT GROUP HAVING HOLDLOCK IDENTITY_INSERT IDENTITYCOL IF INDEX 
+						INNER INSERT INTERSECT INTO IS ISOLATION JOIN KEY KILL LEVEL LINENO LOAD MIRROREXIT NEXT NOCHECK NONCLUSTERED 
+						NULL OF OFF OFFSETS ON ONCE ONLY OPEN OPENDATASOURCE OPTION ORDER OUTER OVER PERCENT PERM PERMANENT PIPE 
+						PLAN PREPARE PRIMARY PRINT PRIVILEGES PROC PROCEDURE PROCESSEXIT PUBLIC RAISERROR READ READTEXT RECONFIGURE 
+						REFERENCES REPEATABLE REPLICATION RESTORE RESTRICT RETURNS RETURN REVOKE ROLLBACK ROWCOUNT ROWGUIDCOL RULE SAVE SCHEMA 
+						SELECT SERIALIZABLE SET SETUSER SHUTDOWN STATISTICS TABLE TAPE TEMP TEMPORARY TEXTSIZE THEN TO TOP TRAN 
+						TRANSACTION TRIGGER TRUNCATE TSEQUAL UNCOMMITTED UNION UNIQUE UPDATE UPDATETEXT USE VALUES VIEW WAITFOR 
+						WHEN WHERE WHILE WITH WORK WRITETEXT 
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- Functions -->
+				<ExplicitPatternGroup TokenKey="FunctionToken" Style="FunctionStyle" LookAhead="{NonWordMacro}|\z">
+					<ExplicitPatterns>
+						ABS ACOS APP_NAME ASCII ASIN ATAN ATN2 AVG CASE CAST CEILING CHARINDEX COALESCE COL_LENGTH 
+						COL_NAME COLUMNPROPERTY CONTAINSTABLE CONVERT COS COT COUNT CURRENT_TIMESTAMP CURRENT_USER CURSOR_STATUS 
+						DATABASEPROPERTY DATALENGTH DATEADD DATEDIFF DATENAME DATEPART DAY DB_ID DB_NAME DEGREES DIFFERENCE 
+						EXP FILE_ID FILE_NAME FILEGROUP_ID FILEGROUP_NAME FILEGROUPPROPERTY FILEPROPERTY FLOOR FORMATMESSAGE 
+						FREETEXTTABLE FULLTEXTCATALOGPROPERTY FULLTEXTSERVICEPROPERTY GETANSINULL GETDATE GROUPING HOST_ID 
+						HOST_NAME IDENT_INCR IDENT_SEED IDENTITY INDEX_COL INDEXPROPERTY IS_MEMBER IS_SRVROLEMEMBER ISDATE 
+						ISNULL ISNUMERIC LEFT LEN LOG LOG10 LOWER LTRIM MAX MIN MONTH NEWID NULLIF OBJECT_ID OBJECT_NAME 
+						OBJECTPROPERTY OPENQUERY OPENROWSET PARSENAME PATINDEX PERMISSIONS PI POWER QUOTENAME RADIANS RAND 
+						REPLACE REPLICATE REVERSE RIGHT ROUND RTRIM SCOPE_IDENTITY SESSION_USER SIGN SIN SOUNDEX SPACE SQRT SQUARE STATS_DATE 
+						STDEV STDEVP STR STUFF SUBSTRING SUM SUSER_ID SUSER_NAME SUSER_SID SUSER_SNAME SYSTEM_USER TAN 
+						TEXTPTR TEXTVALID TYPEPROPERTY UNICODE UPPER USER USER_ID USER_NAME VAR VARP YEAR 
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- Operators -->
+				<ExplicitPatternGroup TokenKey="OperatorToken" Style="OperatorStyle">
+					<ExplicitPatterns>
+						+ - * / % ~ &amp; | ^ = &gt; &lt; &gt;= &lt;= &lt;&gt; != !&gt; !&lt; 
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<ExplicitPatternGroup TokenKey="OperatorToken" Style="OperatorStyle" LookAhead="{NonWordMacro}|\z">
+					<ExplicitPatterns>
+						ALL AND ANY BETWEEN EXISTS IN LIKE NOT OR SOME 
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- Data Types -->
+				<ExplicitPatternGroup TokenKey="DataTypeToken" Style="DataTypeStyle" LookAhead="{NonWordMacro}|\z">
+					<ExplicitPatterns>
+						bigint binary bit char character datetime dec decimal double float int integer image long money national nchar ntext 
+						number nvarchar precision raw real single smalldatetime smallint smallmoney text timestamp tinyint 
+						uniqueidentifier varbinary varchar varchar2 varying 
+					</ExplicitPatterns>
+				</ExplicitPatternGroup>
+				<!-- Identifier -->
+				<RegexPatternGroup TokenKey="IdentifierToken" PatternValue="{AlphaMacro}({WordMacro})*" />
+				<!-- Variables -->
+				<RegexPatternGroup TokenKey="VariableToken" Style="VariableStyle" PatternValue="@ {WordMacro}+" LookAhead="{NonWordMacro}|\z" />
+				<!-- System Variables -->
+				<RegexPatternGroup TokenKey="SystemVariableToken" Style="SystemVariableStyle" PatternValue="@@ {WordMacro}+" LookAhead="{NonWordMacro}|\z" />
+				<!-- Numbers -->
+				<RegexPatternGroup TokenKey="NumberToken" Style="NumberStyle" PatternValue="{DigitMacro}+ (\. {DigitMacro}+)?" LookAhead="{NonWordMacro}|\z" />
+				<RegexPatternGroup TokenKey="HexNumberToken" Style="NumberStyle" PatternValue="0 [x | X] {HexDigitMacro}+" LookAhead="{NonWordMacro}|\z" />
+			</PatternGroups>
+			<!-- Child States -->
+			<ChildStates>
+				<ChildState Key="StringState" />
+				<ChildState Key="SquareStringState" />
+				<ChildState Key="CommentState" />
+				<ChildState Key="MultiLineCommentState" />
+			</ChildStates>
+		</State>
+		
+		<!-- Strings -->
+		<State Key="StringState" TokenKey="StringDefaultToken" Style="StringDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="StringStartToken" Style="StringDelimiterStyle" PatternValue="'" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="StringEndToken" Style="StringDelimiterStyle" PatternValue="'" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="StringDefaultToken" PatternValue="[^']+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- Square Strings -->
+		<State Key="SquareStringState" TokenKey="SquareStringDefaultToken" Style="StringDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="SquareStringStartToken" Style="StringDelimiterStyle" PatternValue="[" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="SquareStringEndToken" Style="StringDelimiterStyle" PatternValue="]" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="SquareStringDefaultToken" PatternValue="[^\]]+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- Comments -->
+		<State Key="CommentState" TokenKey="CommentDefaultToken" Style="CommentDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope>
+					<RegexPatternGroup Type="StartScope" TokenKey="RegionStartToken" Style="CommentDelimiterStyle" PatternValue="-- {WhitespaceMacro}* Region" LookAhead="{NonWordMacro}|\z" />
+					<RegexPatternGroup Type="EndScope" TokenKey="CommentStringEndToken" Style="CommentDelimiterStyle" PatternValue="{LineTerminatorMacro}" />	
+				</Scope>
+				<Scope>
+					<RegexPatternGroup Type="StartScope" TokenKey="EndRegionStartToken" Style="CommentDelimiterStyle" PatternValue="-- {WhitespaceMacro}* End {WhitespaceMacro}? Region" LookAhead="{NonWordMacro}|\z" />
+					<RegexPatternGroup Type="EndScope" TokenKey="CommentStringEndToken" Style="CommentDelimiterStyle" PatternValue="{LineTerminatorMacro}" />	
+				</Scope>
+				<Scope>
+					<ExplicitPatternGroup Type="StartScope" TokenKey="CommentStartToken" Style="CommentDelimiterStyle" PatternValue="--" />
+					<RegexPatternGroup Type="EndScope" TokenKey="CommentStringEndToken" Style="CommentDelimiterStyle" PatternValue="{LineTerminatorMacro}" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="CommentDefaultToken" PatternValue="{NonLineTerminatorMacro}+" />
+			</PatternGroups>
+		</State>
+		
+		<!-- MultiLine Comments -->
+		<State Key="MultiLineCommentState" TokenKey="MultiLineCommentDefaultToken" Style="CommentDefaultStyle">
+			<!-- Scopes -->
+			<Scopes>
+				<Scope BracketHighlight="True">
+					<ExplicitPatternGroup Type="StartScope" TokenKey="MultiLineCommentStartToken" Style="CommentDelimiterStyle" PatternValue="/*" />
+					<ExplicitPatternGroup Type="EndScope" TokenKey="MultiLineCommentEndToken" Style="CommentDelimiterStyle" PatternValue="*/" />	
+				</Scope>
+			</Scopes>
+			<!-- Patterns Groups -->
+			<PatternGroups>
+				<RegexPatternGroup TokenKey="MultiLineCommentDefaultToken" PatternValue="[^\*]+" />
+			</PatternGroups>
+		</State>
+	</States>
+
+	<!-- Example Text -->
+	<ExampleText>
+		<![CDATA[
+/* 
+ * Stored Procedure 
+ */		
+CREATE PROCEDURE titles_sum
+	@TITLE varchar(40) = '%',
+	@SUM money OUTPUT
+AS
+
+-- Region Variable Declarations
+declare @Unused int
+-- End Region
+
+-- Select records
+SELECT @SUM = SUM(price)
+FROM [book titles]
+WHERE title LIKE @TITLE
+IF @@ERROR <> 0
+	PRINT 'An error occurred'
+		]]>
+	</ExampleText>
+			
+</SyntaxLanguage>

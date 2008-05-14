@@ -1,0 +1,48 @@
+<%-- 
+Name: Map Sample
+Author: Eric J. Smith
+Description: Shows how to use the Map directive.
+--%>
+
+<%@ CodeTemplate Language="C#" Description="Shows how to use the Map directive." %>
+
+<%-- Register SampleMap.csmap for usage using the Map directive using a relative path
+value for the Src attribute.  We are also specifying a default value that should be
+returned when the specified key does not exist. --%>
+<%@ Map Name="SampleMap" Src="MapSample.csmap" Default="DefaultValue" Description="Sample map file." %>
+
+<%-- This map directive uses one of the included maps called Sql-CSharp which translates SQL
+data types to C# data types.  You don't need to specify the extension for the map file src
+attribute and if you don't specify a path, it will search in the current directory for a file
+with the specified name and .csmap extension, it will then check in your
+"My Documents\CodeSmith\Maps" folder. --%>
+<%@ Map Name="SqlCSharp" Src="Sql-CSharp" Description="System to C# Type Map" %>
+
+
+
+<%-- Do a lookup on a value that exists in the map.  Should return "value1". --%>
+<%= SampleMap["key1"] %>
+
+<%-- Do a lookup on a value that does not exist in the map.  Since the key doesn't exist,
+it should return the default value. --%>
+<%= SampleMap["unknown"] %>
+
+<%-- Do a lookup on a value that does not exist in the map overriding the default value.
+Since the key doesn't exist, it should return the new default value. --%>
+<%= SampleMap["unknown", "NewDefault"] %>
+
+
+
+<%-- Do a lookup on a value that exists in the map.  Should output "string". --%>
+<%= SqlCSharp["varchar"] %>
+
+<%-- Do a lookup on a value that does not exist in the map, but specify a default value
+for this specific lookup.  Since the key doesn't exist, it should return the default value. --%>
+<%= SqlCSharp["unknown", "default"] %>
+
+<%-- Do a lookup on a value that does not exist in the map.  This will result in a
+KeyNotFoundException being thrown. --%>
+<% try { %>
+<%= SqlCSharp["unknown"] %>
+<% } catch (Exception e) { Response.WriteLine(e.ToString()); } %>
+

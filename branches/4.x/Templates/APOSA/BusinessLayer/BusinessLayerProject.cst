@@ -1,0 +1,239 @@
+<%--
+	Author: Chris Lasater
+		
+	
+	Description: Runs project Build for DataLayer
+		
+	Remarks:
+		
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Src="../Utility/ProjectHelper.cs" Inherits="Utility.ProjectHelper"  Description="Scripts BusinessObjects" Debug="True" %>
+
+<%@ XmlProperty Name="ProcedureMap" Schema="../ProceduresToMap.xsd" Default="../ProceduresToMap.xml" Category="Context" Description="The procedure map XML file." %>
+
+<%@ Register Name="RecordInterfaceTemplate" Template="InterfaceRecord.cst" %>
+<%@ Register Name="RecordConcreteClassTemplate" Template="BL/ConcreteClass.cst" %>
+<%@ Register Name="CollectionConcreteClassTemplate" Template="BL/Collections/ConcreteCollection.cst" %>
+<%@ Register Name="InterfaceCollectionTemplate" Template="InterfaceCollection.cst" %>
+<%@ Register Name="ConcreteClassUpdateRuleTemplate" Template="BL/Rules/ConcreteClassUpdateRule.cst" %>
+<%@ Register Name="ConcreteClassSelectRuleTemplate" Template="BL/Rules/ConcreteClassSelectRule.cst" %>
+<%@ Register Name="ConcreteCollectionSelectRuleTemplate" Template="BL/Rules/ConcreteCollectionSelectRule.cst" %>
+<%@ Register Name="FacadeFactoryTemplate" Template="Factory/FacadeFactory.cst" %>
+
+<%@ Register Name="RuleBaseTemplate" Template="Base/RuleBase.cst" %>
+<%@ Register Name="IBLBaseTemplate" Template="Base/IBLBase.cst" %>
+<%@ Register Name="BLBaseTemplate" Template="Base/BLBase.cst" %>
+<%@ Register Name="ValidationLevelTemplate" Template="Base/Validation/ValidationLevel.cst" %>
+<%@ Register Name="ValidationMessageTemplate" Template="Base/Validation/ValidationMessage.cst" %>
+<%@ Register Name="ValidationMessagesTemplate" Template="Base/Validation/ValidationMessages.cst" %>
+<%@ Register Name="CollectionsBaseTemplate" Template="Base/Collections/CollectionsBase.cst" %>
+<%@ Register Name="ICollectionsBaseTemplate" Template="Base/Collections/ICollectionsBase.cst" %>
+<%@ Register Name="RulesTemplate" Template="Base/Collections/Rules.cst" %>
+
+<%@ Register Name="AssemblyInfoTemplate" Template="AssemblyInfo.cst" %>
+<%@ Register Name="BusinessLayerProjectTemplate" Template="BusinessLayer.cst" %>
+
+<%@ Assembly Name="System.Design" %>
+<%@ Import NameSpace="System.IO" %>
+<%@ Import NameSpace="System.Text.RegularExpressions" %>
+<%@ Import NameSpace="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import NameSpace="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import NameSpace="CodeSmith.CustomProperties" %>
+
+<% BuildProject(); %>
+
+<script runat="template">
+public void BuildProject()
+{
+	try
+	{
+		this.Response.WriteLine("Begin CodeSmith Build of BL...");
+		
+		PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Programmer)", "C#");
+		// instantiate the sub-template
+		AssemblyInfoTemplate asm = this.Create<AssemblyInfoTemplate>();	
+		asm.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, asm,strategy,string.Format("BusinessLayer{0}AssemblyInfo.cs",Path.DirectorySeparatorChar), OutPutDirectory);
+		
+		#region Base Class Template Instantiation
+		// instantiate the sub-template
+		RuleBaseTemplate rb = this.Create<RuleBaseTemplate>();	
+		rb.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, rb,strategy,string.Format("BusinessLayer{0}Base{1}RuleBase.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+		
+		// instantiate the sub-template
+		IBLBaseTemplate ibl = this.Create<IBLBaseTemplate>();	
+		ibl.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, ibl,strategy,string.Format("BusinessLayer{0}Base{1}IBLBase.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+		
+		// instantiate the sub-template
+		BLBaseTemplate blb = this.Create<BLBaseTemplate>();	
+		blb.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, blb,strategy,string.Format("BusinessLayer{0}Base{1}BLBase.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+		
+		// instantiate the sub-template
+		ValidationLevelTemplate vll = this.Create<ValidationLevelTemplate>();	
+		vll.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, vll,strategy,string.Format("BusinessLayer{0}Base{1}Validation{2}ValidationLevel.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+		
+		// instantiate the sub-template
+		ValidationMessageTemplate vmt = this.Create<ValidationMessageTemplate>();	
+		vmt.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, vmt,strategy,string.Format("BusinessLayer{0}Base{1}Validation{2}ValidationMessage.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+		
+		// instantiate the sub-template
+		ValidationMessagesTemplate vms = this.Create<ValidationMessagesTemplate>();	
+		vms.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, vms,strategy,string.Format("BusinessLayer{0}Base{1}Validation{2}ValidationMessages.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+		
+		// instantiate the sub-template
+		CollectionsBaseTemplate cbt = this.Create<CollectionsBaseTemplate>();	
+		cbt.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, cbt,strategy,string.Format("BusinessLayer{0}Base{1}Collections{2}CollectionsBase.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+		
+		// instantiate the sub-template
+		ICollectionsBaseTemplate icb = this.Create<ICollectionsBaseTemplate>();	
+		icb.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, icb,strategy,string.Format("BusinessLayer{0}Base{1}Collections{2}ICollectionsBase.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+		
+		// instantiate the sub-template
+		RulesTemplate rt = this.Create<RulesTemplate>();	
+		rt.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, rt,strategy,string.Format("BusinessLayer{0}Base{1}Collections{2}Rules.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,Path.DirectorySeparatorChar), OutPutDirectory);
+		#endregion
+		
+		this.Response.WriteLine(string.Empty);		
+		for(int i = 0;i < ProcedureMap.RecordSets.Count; i++)
+		{
+			this.Response.WriteLine("Generating source (" + GetSingularName(ProcedureMap.RecordSets[i].Name) + ") ...");				
+			
+			#region Record Interface Template Instantiation
+			// instantiate the sub-template
+			RecordInterfaceTemplate ri = this.Create<RecordInterfaceTemplate>();
+			ri.RecordSetName = ProcedureMap.RecordSets[i].Name;
+			if(!string.IsNullOrEmpty(ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Name))
+			{
+				//this.TargetDatabase.ConnectionString = ProcedureMap.RecordSets[i].UpdateStoredProcedure.ConnectionString;
+				ri.UpdateStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Owner,DateTime.Now);
+			}
+			if(!string.IsNullOrEmpty(ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Name))
+			{
+				//this.TargetDatabase.ConnectionString = ProcedureMap.RecordSets[i].SelectStoredProcedure.ConnectionString;
+				ri.SelectStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Owner,DateTime.Now);
+			}			
+			//this.TargetDatabase.ConnectionString = ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.ConnectionString;
+			ri.SelectCollectionStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Owner,DateTime.Now);
+			ri.RegisterOutput(this.OutputFile);
+			BuildSubTemplate(this, ri,strategy,string.Format("BusinessLayer{0}I{1}BL.cs",Path.DirectorySeparatorChar,GetSingularName(ProcedureMap.RecordSets[i].Name)), OutPutDirectory);
+					
+			#endregion
+			
+			#region Record Class Template Instantiation
+			// instantiate the sub-template
+			RecordConcreteClassTemplate rcc = this.Create<RecordConcreteClassTemplate>();	
+			rcc.RecordSetName = ProcedureMap.RecordSets[i].Name;
+			if(!string.IsNullOrEmpty(ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Name))
+			{
+				//this.TargetDatabase.ConnectionString = ProcedureMap.RecordSets[i].UpdateStoredProcedure.ConnectionString;				
+				rcc.UpdateStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Owner,DateTime.Now);
+			}
+			if(!string.IsNullOrEmpty(ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Name))
+			{
+				//this.TargetDatabase.ConnectionString = ProcedureMap.RecordSets[i].SelectStoredProcedure.ConnectionString;
+				rcc.SelectStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Owner,DateTime.Now);
+			}
+			//this.TargetDatabase.ConnectionString = ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.ConnectionString;
+			rcc.SelectCollectionStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Owner,DateTime.Now);
+			rcc.RegisterOutput(this.OutputFile);
+			BuildSubTemplate(this, rcc,strategy,string.Format("BusinessLayer{0}BL{1}{2}BL.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,GetSingularName(ProcedureMap.RecordSets[i].Name)), OutPutDirectory);
+			#endregion
+			
+			#region Record Rule Template Instantiation
+			// instantiate the sub-template
+			ConcreteClassUpdateRuleTemplate rcr = this.Create<ConcreteClassUpdateRuleTemplate>();	
+			rcr.RecordSetName = ProcedureMap.RecordSets[i].Name;
+			if(!string.IsNullOrEmpty(ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Name))
+			{
+				rcr.ExcludedFromRules = ProcedureMap.RecordSets[i].UpdateStoredProcedure.ExcludedFromRules;
+				//this.TargetDatabase.ConnectionString = ProcedureMap.RecordSets[i].UpdateStoredProcedure.ConnectionString;				
+				rcr.UpdateStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].UpdateStoredProcedure.Command.Owner,DateTime.Now);
+			}
+			rcr.RegisterOutput(this.OutputFile);
+			BuildSubTemplate(this, rcr,strategy,string.Format("BusinessLayer{0}BL{1}Rules{2}{3}UpdateRule.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,GetSingularName(ProcedureMap.RecordSets[i].Name)), OutPutDirectory);
+			
+			// instantiate the sub-template
+			ConcreteClassSelectRuleTemplate csr = this.Create<ConcreteClassSelectRuleTemplate>();	
+			csr.RecordSetName = ProcedureMap.RecordSets[i].Name;
+			if(!string.IsNullOrEmpty(ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Name))
+			{
+				csr.ExcludedFromRules = ProcedureMap.RecordSets[i].SelectStoredProcedure.ExcludedFromRules;
+				//this.TargetDatabase.ConnectionString = ProcedureMap.RecordSets[i].SelectStoredProcedure.ConnectionString;
+				csr.SelectStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectStoredProcedure.Command.Owner,DateTime.Now);
+			}
+			csr.RegisterOutput(this.OutputFile);
+			BuildSubTemplate(this, csr,strategy,string.Format("BusinessLayer{0}BL{1}Rules{2}{3}SelectRule.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,GetSingularName(ProcedureMap.RecordSets[i].Name)), OutPutDirectory);
+			#endregion
+			
+			#region Record Collection Template Instantiation
+			// instantiate the sub-template
+			CollectionConcreteClassTemplate ccc = this.Create<CollectionConcreteClassTemplate>();			
+			ccc.RecordSetName = ProcedureMap.RecordSets[i].Name;
+			//set the connection string
+			//this.TargetDatabase.ConnectionString = ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.ConnectionString;
+			
+			ccc.SelectCollectionStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Owner,DateTime.Now);
+			ccc.RegisterOutput(this.OutputFile);
+			BuildSubTemplate(this, ccc,strategy,string.Format("BusinessLayer{0}BL{1}Collections{2}{3}BL.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,GetPluralName(ProcedureMap.RecordSets[i].Name)), OutPutDirectory);
+			
+			// instantiate the sub-template
+			ConcreteCollectionSelectRuleTemplate ccs = this.Create<ConcreteCollectionSelectRuleTemplate>();			
+			ccs.RecordSetName = ProcedureMap.RecordSets[i].Name;
+			ccs.ExcludedFromRules = ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.ExcludedFromRules;
+			ccs.SelectCollectionStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Owner,DateTime.Now);
+			ccs.RegisterOutput(this.OutputFile);
+			BuildSubTemplate(this, ccs,strategy,string.Format("BusinessLayer{0}BL{1}Rules{2}{3}SelectRule.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,GetPluralName(ProcedureMap.RecordSets[i].Name)), OutPutDirectory);
+			
+			// instantiate the sub-template
+			InterfaceCollectionTemplate icc = this.Create<InterfaceCollectionTemplate>();
+			icc.RecordSetName = ProcedureMap.RecordSets[i].Name;
+			icc.SelectCollectionStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Owner,DateTime.Now);
+			icc.RegisterOutput(this.OutputFile);
+			BuildSubTemplate(this, icc,strategy,string.Format("BusinessLayer{0}I{1}BL.cs",Path.DirectorySeparatorChar,GetPluralName(ProcedureMap.RecordSets[i].Name)), OutPutDirectory);
+			
+			// instantiate the sub-template
+			FacadeFactoryTemplate ff = this.Create<FacadeFactoryTemplate>();			
+			ff.RecordSetName = ProcedureMap.RecordSets[i].Name;
+			ff.SelectCollectionStoredProcedure = new SchemaExplorer.CommandSchema(this.TargetDatabase,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Name,ProcedureMap.RecordSets[i].SelectCollectionStoredProcedure.Command.Owner,DateTime.Now);
+			ff.RegisterOutput(this.OutputFile);
+			BuildSubTemplate(this, ff,strategy,string.Format("BusinessLayer{0}Factory{1}{2}Factory.cs",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar,GetSingularName(ProcedureMap.RecordSets[i].Name)), OutPutDirectory);
+			#endregion
+		}
+		PreserveRegionsMergeStrategy projectstrategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:SCC)", "C#");
+		BusinessLayerProjectTemplate blp = this.Create<BusinessLayerProjectTemplate>();
+		blp.BusinessLayerProjectGuid = this.ProjectGuid;
+		blp.RegisterOutput(this.OutputFile);
+		BuildSubTemplate(this, blp, projectstrategy, string.Format("BusinessLayer{0}{1}.{2}.BusinessLayer.csproj",Path.DirectorySeparatorChar,CompanyNameSpace, ProjectNameSpace), OutPutDirectory);
+		
+		string pathFrom = Path.Combine(Path.GetDirectoryName(this.CodeTemplateInfo.FullPath),"Resources");
+		string pathTo = Path.Combine(this.OutPutDirectory,string.Format("BusinessLayer{0}Resources{1}",Path.DirectorySeparatorChar,Path.DirectorySeparatorChar));
+		this.Response.WriteLine(string.Format("Moving Resource Files From : {0}",pathFrom));
+		this.Response.WriteLine(string.Format("Moving Resource Files to : {0}",pathTo));
+		this.Response.WriteLine(MoveFiles(pathFrom,"*.*",pathTo));
+		
+	}
+	catch(Exception ex)
+	{
+		this.Response.WriteLine(string.Format("Exception Message: {0}",ex.Message));
+		this.Response.WriteLine(string.Format("Exception Body: {0}",ex.ToString()));
+		
+	}
+	finally
+	{
+		
+	}
+}
+
+
+</script>

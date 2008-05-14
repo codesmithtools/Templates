@@ -1,0 +1,160 @@
+<%--
+	Author: Chris Lasater
+		
+	
+	Description: Runs project Build for Stored Procedures
+		
+	Remarks:
+		
+--%>
+<%@ CodeTemplate Debug="True" Language="C#" OutputType="None" 	
+	Description="Generates standard CRUD UPDATE/INSERT procedures based on a database table schema." %>
+<%-- Context --%>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="1. Context"
+	Description="Table that the stored procedures should be based on." %>
+<%-- Options --%>
+<%@ Property Name="IncludeDropStatements" Type="System.Boolean" Default="True" Category="2. Options"
+	Description="If true drop statements will be generated to drop existing stored procedures." %>
+
+<%@ Property Name="TablePrefix" Type="System.String" Default="" Category="2. Options" Optional="True"
+	Description="If this prefix is found at the start of a table name, it will be stripped off." %>
+<%@ Property Name="ProcedurePrefix" Type="System.String" Default="usp_" Category="2. Options" Optional="True"
+	Description="Prefix to use for all generated procedure names." %>
+<%@ Property Name="ProcedureDescription" Type="System.String" Category="2. Options"
+	Description="Description to be included in stored procedure notes." %>
+	
+<%@ Property Name="AutoExecuteScript" Type="System.Boolean" Default="False" Category="2. Options"
+	Description="Whether or not to immediately execute the script on the target database." %>
+<%@ Property Name="KeyColumns" Type="StringCollection" Default="" Optional="True" Category="2. Options"
+	Description="Any columns in this list will be used to pull data from the source table." %>
+<%@ Property Name="ExcludedColumns" Type="StringCollection" Default="" Optional="True" Category="2. Options"
+	Description="If supplied, any columns in this list will be excluded from all stored procedures unless the column is part of the primary key. (* is treated as a wildcard)" %>
+
+<%@ Register Name="SelectTemplate" Template="SelectStoredProcedure.cst" %>
+<%@ Register Name="SelectByIDTemplate" Template="SelectByPrimaryKeyStoredProcedure.cst" %>
+<%@ Register Name="UpdateInsertTemplate" Template="UpdateInsertStoredProcedure.cst" %>
+
+<%-- Assembly References --%>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%-- Namespace Imports --%>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import NameSpace="System.IO" %>
+<%@ Import NameSpace="System.Text.RegularExpressions" %>
+<%@ Import NameSpace="CodeSmith.CustomProperties" %>
+<%@ Import NameSpace="CodeSmith.BaseTemplates" %>
+<%@ Import NameSpace="CodeSmith.CustomProperties" %>
+
+	
+<% BuildProject(); %>
+
+<script runat="template">
+public void BuildProject()
+{
+	try
+	{
+		this.Response.WriteLine("Begin CodeSmith Build of Stored Procedures...");		
+		
+		this.OutPutDirectory = Path.Combine(this.CodeTemplateInfo.DirectoryName, this.OutPutDirectory);
+		if (!Directory.Exists(this.OutPutDirectory)) Directory.CreateDirectory(this.OutPutDirectory);
+		
+		PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:RevisionLog)", "T-SQL");
+		
+		// instantiate the sub-template
+		SelectTemplate sel = this.Create<SelectTemplate>();	
+		
+		this.CopyPropertiesTo(sel);	
+		sel.Render(this.Response);
+		BuildSubTemplate(this, sel,strategy,
+			string.Format("DataBase{0}Create Scripts{1}Stored Procedures{2}{3}.sql",
+				Path.DirectorySeparatorChar,
+				Path.DirectorySeparatorChar,
+				Path.DirectorySeparatorChar,
+				SourceTable.Database.Name + "." + sel.GetSelectByProcedureName()), OutPutDirectory);
+				
+		// instantiate the sub-template
+		SelectByIDTemplate sid = this.Create<SelectByIDTemplate>();	
+		
+		this.CopyPropertiesTo(sid);	
+		sid.Render(this.Response);
+		BuildSubTemplate(this, sid,strategy,
+			string.Format("DataBase{0}Create Scripts{1}Stored Procedures{2}{3}.sql",
+				Path.DirectorySeparatorChar,
+				Path.DirectorySeparatorChar,
+				Path.DirectorySeparatorChar,
+				SourceTable.Database.Name + "." + sid.GetSelectByProcedureName()), OutPutDirectory);
+				
+				
+		// instantiate the sub-template
+		UpdateInsertTemplate uit = this.Create<UpdateInsertTemplate>();	
+		
+		this.CopyPropertiesTo(uit);		
+		uit.Render(this.Response);
+		BuildSubTemplate(this, uit,strategy,
+			string.Format("DataBase{0}Create Scripts{1}Stored Procedures{2}{3}.sql",
+				Path.DirectorySeparatorChar,
+				Path.DirectorySeparatorChar,
+				Path.DirectorySeparatorChar,
+				SourceTable.Database.Name + "." + uit.GetInsertUpdateProcedureName()), OutPutDirectory);
+		
+		
+	}
+	catch(Exception ex)
+	{
+		this.Response.WriteLine(string.Format("Exception Message: {0}",ex.Message));
+		this.Response.WriteLine(string.Format("Exception Body: {0}",ex.ToString()));
+		
+	}
+	finally
+	{
+		
+	}
+}
+
+#region Output Directory
+private string _outputDirectory = String.Empty;
+[Editor(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))] 
+[Optional]
+[Category("2. Output")]
+[Description("The directory to output the results to.")]
+public string OutPutDirectory 
+{
+	get
+	{
+		// default to the directory that the template is located in
+		if (_outputDirectory.Length == 0) return this.CodeTemplateInfo.DirectoryName + "output\\";
+		
+		return _outputDirectory;
+	}
+	set
+	{
+		if (value != null && !value.EndsWith("\\")) value += "\\";
+		_outputDirectory = value;
+	} 
+}
+#endregion		
+
+#region Template Helper Methods
+public static void BuildSubTemplate(CodeTemplate parent, CodeTemplate template, IMergeStrategy strategy, string pathAndFile, string outputDir)
+{
+	// instantiate the sub-template	
+		
+		parent.Response.WriteLine(string.Format("Begin Build SubTemplate for file {0}...",Path.GetFileName(pathAndFile)));
+		// Set up the DL project  	
+		parent.CopyPropertiesTo(template);
+		
+		//Render the file
+		if(strategy == null)
+			template.RenderToFile(Path.Combine(outputDir,pathAndFile), true);
+		else
+			template.RenderToFile(Path.Combine(outputDir,pathAndFile), strategy);
+			
+		parent.Response.WriteLine(string.Format("Build of {0} Complete.",Path.GetFileName(pathAndFile)));	
+}
+
+#endregion				
+</script>

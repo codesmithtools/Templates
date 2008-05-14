@@ -1,0 +1,839 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates strongly typed IDictionary, IDictionaryEnumerator, and DictionaryEntry types." %>
+<%@ Property Name="Accessibility" Type="AccessibilityEnum" Category="Options" Description="The accessibility of the dictionary types." %>
+<%@ Property Name="TargetNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of the dictionary types." %>
+<%@ Property Name="ImportNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of a collection interface." %>
+<%@ Property Name="KeyType" Type="System.String" Category="Context" Description="The key type of the dictionary." %>
+<%@ Property Name="KeyNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of the key type." %>
+<%@ Property Name="KeyValueType" Type="System.Boolean" Category="Context" Default="false" Description="Indicates whether KeyType is a value type." %>
+<%@ Property Name="ItemType" Type="System.String" Category="Context" Description="The element type of the dictionary." %>
+<%@ Property Name="ItemNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of the element type." %>
+<%@ Property Name="ItemValueType" Type="System.Boolean" Category="Context" Default="false" Description="Indicates whether ItemType is a value type." %>
+<%@ Property Name="PairType" Type="System.String" Optional="True" Category="Context" Description="The key-and-value pair type of the dictionary." %>
+<%@ Property Name="IncludeInterfaces" Type="System.Boolean" Optional="True" Category="Options" Default="true" Description="Generate required interface definitions." %>
+<%@ Property Name="IncludeNamespaces" Type="System.Boolean" Optional="True" Category="Namespaces" Default="true" Description="Generate using and namespace statements." %>
+<script runat="template">
+<!-- #include file="CommonScript.cs" -->
+
+public override string GetFileName() {
+    return String.Format("I{0}{1}Dictionary.cs", KeyType, ItemType);
+}
+
+public void GenerateDictionaryInterfaces() {
+    CodeTemplate template = GenerateInterfaces("IList.cst");
+    if (template == null) return;
+
+    if (KeyType != ItemType) {
+        template.SetProperty("ItemType", KeyType);
+        template.SetProperty("ItemNamespace", KeyNamespace);
+        template.SetProperty("ItemValueType", KeyValueType);
+        template.Render(Response);
+    }
+}
+
+public void ValidatePairType() {
+    if (PairType == null || PairType.Length == 0)
+        PairType = KeyType + ItemType + "Entry";
+}
+
+</script>
+<% ValidatePairType(); %>
+<% UsingNamespace("System"); %>
+<% UsingNamespace("System.Collections"); %>
+<% UsingNamespace(KeyNamespace); %>
+<% UsingNamespace(ItemNamespace); %>
+<% UsingNamespace(ImportNamespace); %>
+<% StartNamespace(TargetNamespace); %>
+    <% if (IncludeInterfaces) GenerateDictionaryInterfaces(); %>
+    #region Interface I<%= KeyType %><%= ItemType %>Collection
+
+    /// <summary>
+    /// Defines size, enumerators, and synchronization methods for strongly
+    /// typed collections of <see cref="<%= PairType %>"/> elements.
+    /// </summary>
+    /// <remarks>
+    /// <b>I<%= KeyType %><%= ItemType %>Collection</b> provides an <see cref="ICollection"/>
+    /// that is strongly typed for <see cref="<%= PairType %>"/> elements.
+    /// </remarks>
+
+    <%= GetAccessModifier(Accessibility) %> interface I<%= KeyType %><%= ItemType %>Collection {
+        #region Properties
+        #region Count
+
+        /// <summary>
+        /// Gets the number of elements contained in the
+        /// <see cref="I<%= KeyType %><%= ItemType %>Collection"/>.
+        /// </summary>
+        /// <value>The number of elements contained in the
+        /// <see cref="I<%= KeyType %><%= ItemType %>Collection"/>.</value>
+        /// <remarks>Please refer to <see cref="ICollection.Count"/> for details.</remarks>
+
+        int Count { get; }
+
+        #endregion
+        #region IsSynchronized
+
+        /// <summary>
+        /// Gets a value indicating whether access to the
+        /// <see cref="I<%= KeyType %><%= ItemType %>Collection"/> is synchronized (thread-safe).
+        /// </summary>
+        /// <value><c>true</c> if access to the <see cref="I<%= KeyType %><%= ItemType %>Collection"/>
+        /// is synchronized (thread-safe); otherwise, <c>false</c>. The default is <c>false</c>.</value>
+        /// <remarks>Please refer to <see cref="ICollection.IsSynchronized"/> for details.</remarks>
+
+        bool IsSynchronized { get; }
+
+        #endregion
+        #region SyncRoot
+
+        /// <summary>
+        /// Gets an object that can be used to synchronize access
+        /// to the <see cref="I<%= KeyType %><%= ItemType %>Collection"/>.
+        /// </summary>
+        /// <value>An object that can be used to synchronize access to the
+        /// <see cref="I<%= KeyType %><%= ItemType %>Collection"/>.</value>
+        /// <remarks>Please refer to <see cref="ICollection.SyncRoot"/> for details.</remarks>
+
+        object SyncRoot { get; }
+
+        #endregion
+        #endregion
+        #region Methods
+        #region CopyTo
+
+        /// <summary>
+        /// Copies the entire <see cref="I<%= KeyType %><%= ItemType %>Collection"/>
+        /// to a one-dimensional <see cref="Array"/> of <see cref="<%= PairType %>"/> elements,
+        /// starting at the specified index of the target array.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="Array"/> that is the
+        /// destination of the <see cref="<%= PairType %>"/> elements copied from the
+        /// <see cref="I<%= KeyType %><%= ItemType %>Collection"/>.
+        /// The <b>Array</b> must have zero-based indexing.</param>
+        /// <param name="arrayIndex">The zero-based index in <paramref name="array"/>
+        /// at which copying begins.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="array"/> is a null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="arrayIndex"/> is less than zero.</exception>
+        /// <exception cref="ArgumentException"><para>
+        /// <paramref name="arrayIndex"/> is equal to or greater than the length of <paramref name="array"/>.
+        /// </para><para>-or-</para><para>
+        /// The number of elements in the source <see cref="I<%= KeyType %><%= ItemType %>Collection"/>
+        /// is greater than the available space from <paramref name="arrayIndex"/> to the end of the
+        /// destination <paramref name="array"/>.</para></exception>
+        /// <remarks>Please refer to <see cref="ICollection.CopyTo"/> for details.</remarks>
+
+        void CopyTo(<%= PairType %>[] array, int arrayIndex);
+
+        #endregion
+        #region GetEnumerator
+
+        /// <summary>
+        /// Returns an <see cref="I<%= KeyType %><%= ItemType %>Enumerator"/> that can
+        /// iterate through the <see cref="I<%= KeyType %><%= ItemType %>Collection"/>.
+        /// </summary>
+        /// <returns>An <see cref="I<%= KeyType %><%= ItemType %>Enumerator"/>
+        /// for the entire <see cref="I<%= KeyType %><%= ItemType %>Collection"/>.</returns>
+        /// <remarks>Please refer to <see cref="IEnumerable.GetEnumerator"/> for details.</remarks>
+
+        I<%= KeyType %><%= ItemType %>Enumerator GetEnumerator();
+
+        #endregion
+        #endregion
+    }
+
+    #endregion
+    #region Interface I<%= KeyType %><%= ItemType %>Dictionary
+
+    /// <summary>
+    /// Represents a strongly typed collection of
+    /// <see cref="<%= PairType %>"/> key-and-value pairs.
+    /// </summary>
+    /// <remarks>
+    /// <b>I<%= KeyType %><%= ItemType %>Dictionary</b> provides an
+    /// <see cref="IDictionary"/> that is strongly typed for
+    /// <see cref="<%= KeyType %>"/> keys and <see cref="<%= ItemType %>"/> values.
+    /// </remarks>
+
+    <%= GetAccessModifier(Accessibility) %> interface
+        I<%= KeyType %><%= ItemType %>Dictionary: I<%= KeyType %><%= ItemType %>Collection {
+        #region Properties
+        #region IsFixedSize
+
+        /// <summary>
+        /// Gets a value indicating whether the
+        /// <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/> has a fixed size.
+        /// </summary>
+        /// <value><c>true</c> if the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>
+        /// has a fixed size; otherwise, <c>false</c>. The default is <c>false</c>.</value>
+        /// <remarks>Please refer to <see cref="IDictionary.IsFixedSize"/> for details.</remarks>
+
+        bool IsFixedSize { get; }
+
+        #endregion
+        #region IsReadOnly
+
+        /// <summary>
+        /// Gets a value indicating whether the
+        /// <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/> is read-only.
+        /// </summary>
+        /// <value><c>true</c> if the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>
+        /// is read-only; otherwise, <c>false</c>. The default is <c>false</c>.</value>
+        /// <remarks>Please refer to <see cref="IDictionary.IsReadOnly"/> for details.</remarks>
+
+        bool IsReadOnly { get; }
+
+        #endregion
+        #region Item
+
+        /// <summary>
+        /// Gets or sets the <see cref="<%= ItemType %>"/> value
+        /// associated with the specified <see cref="<%= KeyType %>"/> key.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key
+        /// whose value to get or set.</param>
+        /// <value>The <see cref="<%= ItemType %>"/> value associated with the specified
+        /// <paramref name="key"/>. If the specified <paramref name="key"/> is not found,
+        /// attempting to get it returns
+        <% if (ItemValueType) { %>
+        /// a default-initialized <b><%= ItemType %></b> value,
+        <% } else { %>
+        /// a null reference,
+        <% } %>
+        /// and attempting to set it creates a new element using the specified
+        /// <paramref name="key"/>.</value>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="NotSupportedException">
+        /// <para>The property is set and the
+        /// <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The property is set, <paramref name="key"/> does not exist in the collection,
+        /// and the <b>I<%= KeyType %><%= ItemType %>Dictionary</b> has a fixed size.</para>
+        /// </exception>
+        /// <remarks>Please refer to <see cref="IDictionary.this"/> for details.</remarks>
+
+        <%= ItemType %> this[<%= KeyType %> key] { get; set; }
+
+        #endregion
+        #region Keys
+
+        /// <summary>
+        /// Gets an <see cref="I<%= KeyType %>Collection"/> containing the keys
+        /// in the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>.
+        /// </summary>
+        /// <value>An <see cref="I<%= KeyType %>Collection"/> containing the keys
+        /// in the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>.</value>
+        /// <remarks>Please refer to <see cref="IDictionary.Keys"/> for details.</remarks>
+
+        I<%= KeyType %>Collection Keys { get; }
+
+        #endregion
+        #region Values
+
+        /// <summary>
+        /// Gets an <see cref="I<%= ItemType %>Collection"/> containing the values
+        /// in the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>.
+        /// </summary>
+        /// <value>An <see cref="I<%= ItemType %>Collection"/> containing the values
+        /// in the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>.</value>
+        /// <remarks>Please refer to <see cref="IDictionary.Values"/> for details.</remarks>
+
+        I<%= ItemType %>Collection Values { get; }
+
+        #endregion
+        #endregion
+        #region Methods
+        #region Add
+
+        /// <summary>
+        /// Adds an element with the specified <see cref="<%= KeyType %>"/>
+        /// key and <see cref="<%= ItemType %>"/> value to the
+        /// <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key of the element
+        /// to add to the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>.</param>
+        /// <param name="value">The <see cref="<%= ItemType %>"/> value of the element
+        /// to add to the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>.
+        <% if (!ItemValueType) { %>
+        /// This argument can be a null reference.
+        <% } %>
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// <para>An element with the specified <paramref name="key"/> already exists
+        /// in the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>.</para>
+        /// <para>-or-</para>
+        /// <para>The <b>I<%= KeyType %><%= ItemType %>Dictionary</b> is set to use the
+        /// <see cref="IComparable"/> interface, and <paramref name="key"/> does not
+        /// implement the <b>IComparable</b> interface.</para></exception>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="InvalidOperationException">
+        /// The comparer throws an exception.</exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/> is read-only.
+        /// </para><para>-or-</para>
+        /// <para>The <b>I<%= KeyType %><%= ItemType %>Dictionary</b> has a fixed size.
+        /// </para></exception>
+        /// <remarks>Please refer to <see cref="IDictionary.Add"/> for details.</remarks>
+
+        void Add(<%= KeyType %> key, <%= ItemType %> value);
+
+        #endregion
+        #region Clear
+
+        /// <summary>
+        /// Removes all elements from the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>.
+        /// </summary>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/> is read-only.
+        /// </para><para>-or-</para>
+        /// <para>The <b>I<%= KeyType %><%= ItemType %>Dictionary</b> has a fixed size.
+        /// </para></exception>
+        /// <remarks>Please refer to <see cref="IDictionary.Clear"/> for details.</remarks>
+
+        void Clear();
+
+        #endregion
+        #region Contains
+
+        /// <summary>
+        /// Determines whether the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>
+        /// contains the specified <see cref="<%= KeyType %>"/> key.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key to locate
+        /// in the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>.</param>
+        /// <returns><c>true</c> if the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>
+        /// contains an element with the specified <paramref name="key"/>; otherwise, <c>false</c>.
+        /// </returns>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="InvalidOperationException">
+        /// The comparer throws an exception.</exception>
+        /// <remarks>Please refer to <see cref="IDictionary.Contains"/> for details.</remarks>
+
+        bool Contains(<%= KeyType %> key);
+
+        #endregion
+        #region Remove
+
+        /// <summary>
+        /// Removes the element with the specified <see cref="<%= KeyType %>"/> key
+        /// from the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key of the element to remove
+        /// from the <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/>.</param>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="InvalidOperationException">
+        /// The comparer throws an exception.</exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="I<%= KeyType %><%= ItemType %>Dictionary"/> is read-only.
+        /// </para><para>-or-</para>
+        /// <para>The <b>I<%= KeyType %><%= ItemType %>Dictionary</b> has a fixed size.
+        /// </para></exception>
+        /// <remarks>Please refer to <see cref="IDictionary.Remove"/> for details.</remarks>
+
+        void Remove(<%= KeyType %> key);
+
+        #endregion
+        #endregion
+    }
+
+    #endregion
+    #region Interface I<%= KeyType%><%= ItemType%>List
+
+    /// <summary>
+    /// Represents a strongly typed collection of <see cref="<%= PairType %>"/>
+    /// objects that can be individually accessed by index.
+    /// </summary>
+    /// <remarks>
+    /// <b>I<%= KeyType%><%= ItemType%>List</b> provides an <see cref="IList"/>
+    /// that is strongly typed for <see cref="<%= PairType %>"/> elements.
+    /// </remarks>
+
+    <%= GetAccessModifier(Accessibility) %> interface
+        I<%= KeyType%><%= ItemType%>List: I<%= KeyType%><%= ItemType%>Collection {
+        #region Properties
+        #region IsFixedSize
+
+        /// <summary>
+        /// Gets a value indicating whether the
+        /// <see cref="I<%= KeyType %><%= ItemType %>List"/> has a fixed size.
+        /// </summary>
+        /// <value><c>true</c> if the <see cref="I<%= KeyType %><%= ItemType %>List"/>
+        /// has a fixed size; otherwise, <c>false</c>. The default is <c>false</c>.</value>
+        /// <remarks>Please refer to <see cref="IList.IsFixedSize"/> for details.</remarks>
+
+        bool IsFixedSize { get; }
+
+        #endregion
+        #region IsReadOnly
+
+        /// <summary>
+        /// Gets a value indicating whether the
+        /// <see cref="I<%= KeyType %><%= ItemType %>List"/> is read-only.
+        /// </summary>
+        /// <value><c>true</c> if the <see cref="I<%= KeyType %><%= ItemType %>List"/>
+        /// is read-only; otherwise, <c>false</c>. The default is <c>false</c>.</value>
+        /// <remarks>Please refer to <see cref="IList.IsReadOnly"/> for details.</remarks>
+
+        bool IsReadOnly { get; }
+
+        #endregion
+        #region Item
+
+        /// <summary>
+        /// Gets or sets the <see cref="<%= PairType %>"/> element at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index of the
+        /// <see cref="<%= PairType %>"/> element to get or set.</param>
+        /// <value>
+        /// The <see cref="<%= PairType %>"/> element at the specified <paramref name="index"/>.
+        /// </value>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <para><paramref name="index"/> is less than zero.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="index"/> is equal to or greater than
+        /// <see cref="I<%= KeyType %><%= ItemType %>Collection.Count"/>.</para>
+        /// </exception>
+        /// <exception cref="NotSupportedException">The property is set and the
+        /// <see cref="I<%= KeyType %><%= ItemType %>List"/> is read-only.</exception>
+        /// <remarks>Please refer to <see cref="IList.this"/> for details.</remarks>
+
+        <%= PairType %> this[int index] { get; set; }
+
+        #endregion
+        #endregion
+        #region Methods
+        #region Add
+
+        /// <summary>
+        /// Adds a <see cref="<%= PairType %>"/> to the end
+        /// of the <see cref="I<%= KeyType %><%= ItemType %>List"/>.
+        /// </summary>
+        /// <param name="entry">The <see cref="<%= PairType %>"/> object
+        /// to be added to the end of the <see cref="I<%= KeyType %><%= ItemType %>List"/>.
+        /// </param>
+        /// <returns>The <see cref="I<%= KeyType %><%= ItemType %>List"/> index at which
+        /// the <paramref name="entry"/> has been added.</returns>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="I<%= KeyType %><%= ItemType %>List"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b>I<%= KeyType %><%= ItemType %>List</b> has a fixed size.</para>
+        /// </exception>
+        /// <remarks>Please refer to <see cref="IList.Add"/> for details.</remarks>
+
+        int Add(<%= PairType %> entry);
+
+        #endregion
+        #region Clear
+
+        /// <summary>
+        /// Removes all elements from the <see cref="I<%= KeyType %><%= ItemType %>List"/>.
+        /// </summary>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="I<%= KeyType %><%= ItemType %>List"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b>I<%= KeyType %><%= ItemType %>List</b> has a fixed size.</para>
+        /// </exception>
+        /// <remarks>Please refer to <see cref="IList.Clear"/> for details.</remarks>
+
+        void Clear();
+
+        #endregion
+        #region Contains
+
+        /// <summary>
+        /// Determines whether the <see cref="I<%= KeyType %><%= ItemType %>List"/>
+        /// contains the specified <see cref="<%= PairType %>"/> element.
+        /// </summary>
+        /// <param name="entry">The <see cref="<%= PairType %>"/> object
+        /// to locate in the <see cref="I<%= KeyType %><%= ItemType %>List"/>.</param>
+        /// <returns><c>true</c> if <paramref name="entry"/> is found in the
+        /// <see cref="I<%= KeyType %><%= ItemType %>List"/>; otherwise, <c>false</c>.</returns>
+        /// <remarks>Please refer to <see cref="IList.Contains"/> for details.</remarks>
+
+        bool Contains(<%= PairType %> entry);
+
+        #endregion
+        #region IndexOf
+
+        /// <summary>
+        /// Returns the zero-based index of the first occurrence of the specified
+        /// <see cref="<%= PairType %>"/> in the <see cref="I<%= KeyType %><%= ItemType %>List"/>.
+        /// </summary>
+        /// <param name="entry">The <see cref="<%= PairType %>"/> object
+        /// to locate in the <see cref="I<%= KeyType %><%= ItemType %>List"/>.</param>
+        /// <returns>
+        /// The zero-based index of the first occurrence of <paramref name="entry"/>
+        /// in the <see cref="I<%= KeyType %><%= ItemType %>List"/>, if found; otherwise, -1.
+        /// </returns>
+        /// <remarks>Please refer to <see cref="IList.IndexOf"/> for details.</remarks>
+
+        int IndexOf(<%= PairType %> entry);
+
+        #endregion
+        #region Insert
+
+        /// <summary>
+        /// Inserts a <see cref="<%= PairType %>"/> element into the
+        /// <see cref="I<%= KeyType %><%= ItemType %>List"/> at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index at which
+        /// <paramref name="entry"/> should be inserted.</param>
+        /// <param name="entry">The <see cref="<%= PairType %>"/> object to insert
+        /// into the <see cref="I<%= KeyType %><%= ItemType %>List"/>.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <para><paramref name="index"/> is less than zero.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="index"/> is greater than
+        /// <see cref="I<%= KeyType %><%= ItemType %>Collection.Count"/>.</para>
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="I<%= KeyType %><%= ItemType %>List"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b>I<%= KeyType %><%= ItemType %>List</b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="IList.Insert"/> for details.</remarks>
+
+        void Insert(int index, <%= PairType %> entry);
+
+        #endregion
+        #region Remove
+
+        /// <summary>
+        /// Removes the first occurrence of the specified <see cref="<%= PairType %>"/>
+        /// from the <see cref="I<%= KeyType %><%= ItemType %>List"/>.
+        /// </summary>
+        /// <param name="entry">The <see cref="<%= PairType %>"/> object to remove
+        /// from the <see cref="I<%= KeyType %><%= ItemType %>List"/>.</param>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="I<%= KeyType %><%= ItemType %>List"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b>I<%= KeyType %><%= ItemType %>List</b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="IList.Remove"/> for details.</remarks>
+
+        void Remove(<%= PairType %> entry);
+
+        #endregion
+        #region RemoveAt
+
+        /// <summary>
+        /// Removes the element at the specified index of the
+        /// <see cref="I<%= KeyType %><%= ItemType %>List"/>.
+        /// </summary>
+        /// <param name="index">The zero-based index of the element to remove.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <para><paramref name="index"/> is less than zero.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="index"/> is equal to or greater than
+        /// <see cref="I<%= KeyType %><%= ItemType %>Collection.Count"/>.</para>
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="I<%= KeyType %><%= ItemType %>List"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b>I<%= KeyType %><%= ItemType %>List</b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="IList.RemoveAt"/> for details.</remarks>
+
+        void RemoveAt(int index);
+
+        #endregion
+        #endregion
+    }
+
+    #endregion
+    #region Interface I<%= KeyType %><%= ItemType %>Enumerator
+
+    /// <summary>
+    /// Supports type-safe iteration over a dictionary that
+    /// contains <see cref="<%= PairType %>"/> elements.
+    /// </summary>
+    /// <remarks>
+    /// <b>I<%= KeyType %><%= ItemType %>Enumerator</b> provides an
+    /// <see cref="IDictionaryEnumerator"/> that is strongly typed for
+    /// <see cref="<%= KeyType %>"/> keys and <see cref="<%= ItemType %>"/> values.
+    /// </remarks>
+
+    <%= GetAccessModifier(Accessibility) %> interface I<%= KeyType %><%= ItemType %>Enumerator {
+        #region Properties
+        #region Current
+
+        /// <summary>
+        /// Gets the current <see cref="<%= PairType %>"/> element in the collection.
+        /// </summary>
+        /// <value>The current <see cref="<%= PairType %>"/> element in the collection.</value>
+        /// <exception cref="InvalidOperationException"><para>The enumerator is positioned
+        /// before the first element of the collection or after the last element.</para>
+        /// <para>-or-</para>
+        /// <para>The collection was modified after the enumerator was created.</para></exception>
+        /// <remarks>Please refer to <see cref="IEnumerator.Current"/> for details, but note
+        /// that <b>Current</b> fails if the collection was modified since the last successful
+        /// call to <see cref="MoveNext"/> or <see cref="Reset"/>.</remarks>
+
+        <%= PairType %> Current { get; }
+
+        #endregion
+        #region Entry
+
+        /// <summary>
+        /// Gets a <see cref="<%= PairType %>"/> containing both
+        /// the key and the value of the current dictionary entry.
+        /// </summary>
+        /// <value>A <see cref="<%= PairType %>"/> containing both
+        /// the key and the value of the current dictionary entry.</value>
+        /// <exception cref="InvalidOperationException"><para>The enumerator is positioned
+        /// before the first element of the dictionary or after the last element.</para>
+        /// <para>-or-</para>
+        /// <para>The dictionary was modified after the enumerator was created.</para></exception>
+        /// <remarks>Please refer to <see cref="IDictionaryEnumerator.Entry"/> for details, but
+        /// note that <b>Entry</b> fails if the collection was modified since the last successful
+        /// call to <see cref="MoveNext"/> or <see cref="Reset"/>.</remarks>
+
+        <%= PairType %> Entry { get; }
+
+        #endregion
+        #region Key
+
+        /// <summary>
+        /// Gets the <see cref="<%= KeyType %>"/> key of the current dictionary entry.
+        /// </summary>
+        /// <value>The <see cref="<%= KeyType %>"/> key
+        /// of the current element of the enumeration.</value>
+        /// <exception cref="InvalidOperationException"><para>The enumerator is positioned
+        /// before the first element of the dictionary or after the last element.</para>
+        /// <para>-or-</para>
+        /// <para>The dictionary was modified after the enumerator was created.</para></exception>
+        /// <remarks>Please refer to <see cref="IDictionaryEnumerator.Key"/> for details, but
+        /// note that <b>Key</b> fails if the collection was modified since the last successful
+        /// call to <see cref="MoveNext"/> or <see cref="Reset"/>.</remarks>
+
+        <%= KeyType %> Key { get; }
+
+        #endregion
+        #region Value
+
+        /// <summary>
+        /// Gets the <see cref="<%= ItemType %>"/> value of the current dictionary entry.
+        /// </summary>
+        /// <value>The <see cref="<%= ItemType %>"/> value
+        /// of the current element of the enumeration.</value>
+        /// <exception cref="InvalidOperationException"><para>The enumerator is positioned
+        /// before the first element of the dictionary or after the last element.</para>
+        /// <para>-or-</para>
+        /// <para>The dictionary was modified after the enumerator was created.</para></exception>
+        /// <remarks>Please refer to <see cref="IDictionaryEnumerator.Value"/> for details, but
+        /// note that <b>Value</b> fails if the collection was modified since the last successful
+        /// call to <see cref="MoveNext"/> or <see cref="Reset"/>.</remarks>
+
+        <%= ItemType %> Value { get; }
+
+        #endregion
+        #endregion
+        #region Methods
+        #region MoveNext
+
+        /// <summary>
+        /// Advances the enumerator to the next element of the collection.
+        /// </summary>
+        /// <returns><c>true</c> if the enumerator was successfully advanced to the next element;
+        /// <c>false</c> if the enumerator has passed the end of the collection.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// The collection was modified after the enumerator was created.</exception>
+        /// <remarks>Please refer to <see cref="IEnumerator.MoveNext"/> for details.</remarks>
+
+        bool MoveNext();
+
+        #endregion
+        #region Reset
+
+        /// <summary>
+        /// Sets the enumerator to its initial position,
+        /// which is before the first element in the collection.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// The collection was modified after the enumerator was created.</exception>
+        /// <remarks>Please refer to <see cref="IEnumerator.Reset"/> for details.</remarks>
+
+        void Reset();
+
+        #endregion
+        #endregion
+    }
+
+    #endregion
+    #region Struct <%= PairType %>
+
+    /// <summary>
+    /// Implements a strongly typed pair of one <see cref="<%= KeyType %>"/>
+    /// key and one <see cref="<%= ItemType %>"/> value.
+    /// </summary>
+    /// <remarks>
+    /// <b><%= PairType %></b> provides a <see cref="DictionaryEntry"/> that is strongly
+    /// typed for <see cref="<%= KeyType %>"/> keys and <see cref="<%= ItemType %>"/> values.
+    /// </remarks>
+
+    [Serializable]
+    <%= GetAccessModifier(Accessibility) %> struct <%= PairType %> {
+        #region Private Fields
+
+        private <%= KeyType %> _key;
+        private <%= ItemType %> _value;
+
+        #endregion
+        #region Public Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= PairType %>"/>
+        /// class with the specified key and value.
+        /// </summary>
+        /// <param name="key">
+        /// The <see cref="<%= KeyType %>"/> key in the key-and-value pair.</param>
+        /// <param name="value">
+        /// The <see cref="<%= ItemType %>"/> value in the key-and-value pair.
+        <% if (!ItemValueType) { %>
+        /// This argument can be a null reference.
+        <% } %>
+        /// </param>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+
+        public <%= PairType %>(<%= KeyType %> key, <%= ItemType %> value) {
+        <% if (!KeyValueType) { %>
+            if ((object) key == null)
+                throw new ArgumentNullException("key");
+        <% } %>
+
+            this._key = key;
+            this._value = value;
+        }
+
+        #endregion
+        #region Public Properties
+        #region Key
+
+        /// <summary>
+        /// Gets or sets the <see cref="<%= KeyType %>"/> key in the key-and-value pair.
+        /// </summary>
+        /// <value>
+        /// The <see cref="<%= KeyType %>"/> key in the key-and-value pair.
+        <% if (!KeyValueType) { %>
+        /// The default is a null reference.
+        <% } %>
+        /// </value>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <b>Key</b> is set to a null reference.</exception>
+        /// <remarks>
+        /// <see cref="<%= PairType %>"/> is a value type and therefore has an implicit default
+        /// constructor that zeroes all data members. This means that the <b>Key</b> property of
+        /// a default-constructed <b><%= PairType %></b> contains a null reference by default,
+        /// even though it is not possible to explicitly set <b>Key</b> to a null reference.
+        /// </remarks>
+        <% } %>
+
+        public <%= KeyType %> Key {
+            get { return this._key; }
+            set {
+            <% if (!KeyValueType) { %>
+                if ((object) value == null)
+                    throw new ArgumentNullException("value");
+            <% } %>
+                this._key = value;
+            }
+        }
+
+        #endregion
+        #region Value
+
+        /// <summary>
+        /// Gets or sets the <see cref="<%= ItemType %>"/> value in the key-and-value pair.
+        /// </summary>
+        /// <value>
+        /// The <see cref="<%= ItemType %>"/> value in the key-and-value pair.
+        <% if (!ItemValueType) { %>
+        /// This value can be a null reference, which is also the default.
+        <% } %>
+        /// </value>
+
+        public <%= ItemType %> Value {
+            get { return this._value; }
+            set { this._value = value; }
+        }
+
+        #endregion
+        #endregion
+        #region Public Operators
+        #region <%= PairType %>(DictionaryEntry)
+
+        /// <summary>
+        /// Converts a <see cref="DictionaryEntry"/> to a <see cref="<%= PairType %>"/>.
+        /// </summary>
+        /// <param name="entry">A <see cref="DictionaryEntry"/> object to convert.</param>
+        /// <returns>A <see cref="<%= PairType %>"/> object that represents
+        /// the converted <paramref name="entry"/>.</returns>
+        /// <exception cref="InvalidCastException">
+        /// <para><paramref name="entry"/> contains a key that is not compatible
+        /// with <see cref="<%= KeyType %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="entry"/> contains a value that is not compatible
+        /// with <see cref="<%= ItemType %>"/>.</para>
+        /// </exception>
+        <% if (KeyValueType || ItemValueType) { %>
+        /// <remarks>
+        <% if (KeyValueType) { %>
+        /// <para>If the specified <paramref name="entry"/> contains a key that is a null
+        /// reference, the returned <see cref="<%= PairType %>"/> will contain a key
+        /// that is a default-initialized <see cref="<%= KeyType %>"/> object.</para>
+        <% } %>
+        <% if (ItemValueType) { %>
+        /// <para>If the specified <paramref name="entry"/> contains a value that is a null
+        /// reference, the returned <see cref="<%= PairType %>"/> will contain a value
+        /// that is a default-initialized <see cref="<%= ItemType %>"/> object.</para>
+        <% } %>
+        /// </remarks>
+        <% } %>
+
+        public static implicit operator <%= PairType %>(DictionaryEntry entry) {
+            <%= PairType %> pair = new <%= PairType %>();
+            if (entry.Key != null) pair.Key = (<%= KeyType %>) entry.Key;
+            if (entry.Value != null) pair.Value = (<%= ItemType %>) entry.Value;
+            return pair;
+        }
+
+        #endregion
+        #region DictionaryEntry(<%= PairType %>)
+
+        /// <summary>
+        /// Converts a <see cref="<%= PairType %>"/> to a <see cref="DictionaryEntry"/>.
+        /// </summary>
+        /// <param name="pair">A <see cref="<%= PairType %>"/> object to convert.</param>
+        /// <returns>A <see cref="DictionaryEntry"/> object that
+        /// represents the converted <paramref name="pair"/>.</returns>
+
+        public static implicit operator DictionaryEntry(<%= PairType %> pair) {
+        <% if (KeyValueType) { %>
+            return new DictionaryEntry(pair.Key, pair.Value);
+        <% } else { %>
+            DictionaryEntry entry = new DictionaryEntry();
+            if (pair.Key != null) entry.Key = pair.Key;
+            entry.Value = pair.Value;
+            return entry;
+        <% } %>
+        }
+
+        #endregion
+        #endregion
+    }
+
+    #endregion
+<% EndNamespace(TargetNamespace); %>
