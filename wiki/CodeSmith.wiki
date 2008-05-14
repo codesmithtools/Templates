@@ -1,0 +1,10 @@
+=What is CodeSmith?=
+ 
+CodeSmith is a software development tool to help you get your job done faster. Technically speaking it is a template driven source code generator that automates the creation of common application source code for any language (C#, Java, VB, PHP, ASP.NET, SQL, etc.).
+
+CodeSmith includes many useful templates as well as entire sets of templates for generating proven architectures (.netTiers, CSLA, NHibernate, PLINQO, Wilson's ORMapper, APOSA, and more). You can easily modify any templates or write your own to generate your code exactly the way you want it.
+
+CodeSmith can help you produce higher-quality, more consistent code in less time. Read More
+
+=Join Our Community=
+CodeSmith has an active community with thousands of users sharing tips and tricks, tutorials, templates, schema providers, addins and a wealth of knowledge about CodeSmith. [http://community.codesmithtools.com/|Join Now!]
