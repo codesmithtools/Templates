@@ -1,0 +1,264 @@
+<%------------------------------------------------------------------------------------------
+* CodeSmith 3.0 template that will generate token and state id types for a given 
+*   XML language definition used with Actipro Software's SyntaxEditor 3.0 control.
+*
+* Author: Eric J. Smith 
+* 
+* More Information on Actipro SyntaxEditor at:
+*   http://www.actiprosoftware.com/Products/DotNet/SyntaxEditor/
+*
+* More Information on CodeSmith at:
+*   http://www.codesmithtools.com/
+------------------------------------------------------------------------------------------%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Description="Generates token and state id types for a given language definition." %>
+<%@ XmlProperty Name="Language" Schema="ActiproSoftware.SyntaxEditor.LanguageDefinition.xsd" Default="CSharp.xml" Category="Context" %>
+<%@ Property Name="TargetNamespace" Type="System.String" Optional="True" Category="Overrides" %>
+<%@ Property Name="TokenIDTypeName" Type="System.String" Optional="True" Category="Overrides" %>
+<%@ Property Name="StateIDTypeName" Type="System.String" Optional="True" Category="Overrides" %>
+<%@ Property Name="StripEndingToken" Type="System.Boolean" Default="True" Category="Options" %>
+<%@ Property Name="StripEndingState" Type="System.Boolean" Default="True" Category="Options" %>
+<%@ Property Name="UseConstants" Type="System.Boolean" Default="True" Category="Options" %>
+<%@ Import Namespace="System.Collections.Specialized" %>
+<%@ Import Namespace="System.Text" %>
+using System;
+
+namespace <%= GetTargetNamespace() %>
+{
+	public <%= UseConstants ? "class" : "enum" %> <%= GetTokenIDTypeName() %>
+	{
+<%= BuildTokenNames() %>
+	}
+	
+	public <%= UseConstants ? "class" : "enum" %> <%= GetStateIDTypeName() %>
+	{
+<%= BuildStateNames() %>
+	}
+}
+<script runat="template">
+private StringCollection _tokenKeys = new StringCollection();
+private StringCollection _stateKeys = new StringCollection();
+public int _currentTokenId = 1;
+public int _currentStateId = 1;
+
+public string GetTokenIDTypeName()
+{
+	if (this.TokenIDTypeName != null && this.TokenIDTypeName.Length > 0)
+	{
+		return this.TokenIDTypeName;
+	}
+	else
+	{
+		if (Language.TokenIDTypeName != null && Language.TokenIDTypeName.Length > 0)
+		{
+			string typeName = GetTypeName(Language.TokenIDTypeName);
+			int index = typeName.LastIndexOf('.');
+			return typeName.Substring(index + 1);
+		}
+		else
+		{
+			return "Tokens";
+		}
+	}
+}
+
+public string GetStateIDTypeName()
+{
+	if (this.StateIDTypeName != null && this.StateIDTypeName.Length > 0)
+	{
+		return this.StateIDTypeName;
+	}
+	else
+	{
+		if (Language.StateIDTypeName != null && Language.StateIDTypeName.Length > 0)
+		{
+			string typeName = GetTypeName(Language.StateIDTypeName);
+			int index = typeName.LastIndexOf('.');
+			return typeName.Substring(index + 1);
+		}
+		else
+		{
+			return "States";
+		}
+	}
+}
+
+public string GetTargetNamespace()
+{
+	if (this.TargetNamespace != null && this.TargetNamespace.Length > 0)
+	{
+		return this.TargetNamespace;
+	}
+	else
+	{
+		if (Language.TokenIDTypeName != null && Language.TokenIDTypeName.Length > 0)
+		{
+			string typeName = GetTypeName(Language.TokenIDTypeName);
+			Trace.WriteLine(typeName);
+			int index = typeName.LastIndexOf('.');
+			return typeName.Substring(0, index);
+		}
+		else
+		{
+			return "MyNamespace";
+		}
+	}
+}
+
+public string GetTypeName(string fullyQualifiedTypeName)
+{
+	int index = fullyQualifiedTypeName.IndexOf(',');
+	if (index >= 0)
+	{
+		return fullyQualifiedTypeName.Substring(0, index);
+	}
+	else
+	{
+		return fullyQualifiedTypeName;
+	}
+}
+
+public string BuildTokenNames()
+{
+	StringBuilder tokenBuilder = new StringBuilder();
+	tokenBuilder.Append(GetTokenDeclaration("DefaultToken"));
+	
+	for (int i = 0; i < Language.States.Items.Count; i++)
+	{
+		SyntaxLanguageStatesState state = Language.States.Items[i];
+		tokenBuilder.Append(GetTokenDeclaration(state.TokenKey));
+		
+		for (int x = 0; x < state.PatternGroups.Count; x++)
+		{
+			if (state.PatternGroups[x] is RegexPatternGroup)
+			{
+				RegexPatternGroup regexPatternGroup = (RegexPatternGroup)state.PatternGroups[x];
+				tokenBuilder.Append(GetTokenDeclaration(regexPatternGroup.TokenKey));
+			}
+			else if (state.PatternGroups[x] is ExplicitPatternGroup)
+			{
+				ExplicitPatternGroup explicitPatternGroup = (ExplicitPatternGroup)state.PatternGroups[x];
+				tokenBuilder.Append(GetTokenDeclaration(explicitPatternGroup.TokenKey));
+			}
+		}
+		
+		for (int x = 0; x < state.Scopes.Count; x++)
+		{
+			for (int y = 0; y < state.Scopes[x].Items.Count; y++)
+			{
+				if (state.Scopes[x].Items[y] is ScopeRegexPatternGroup)
+				{
+					ScopeRegexPatternGroup regexPatternGroup = (ScopeRegexPatternGroup)state.Scopes[x].Items[y];
+					tokenBuilder.Append(GetTokenDeclaration(regexPatternGroup.TokenKey));
+				}
+				else if (state.Scopes[x].Items[y] is ScopeExplicitPatternGroup)
+				{
+					ScopeExplicitPatternGroup explicitPatternGroup = (ScopeExplicitPatternGroup)state.Scopes[x].Items[y];
+					tokenBuilder.Append(GetTokenDeclaration(explicitPatternGroup.TokenKey));
+				}
+			}
+		}
+	}
+	
+	string tokenDeclarations = tokenBuilder.ToString();
+	if (!UseConstants)
+	{
+		tokenDeclarations = tokenDeclarations.Substring(0, tokenDeclarations.Length - 3);
+	}
+	else
+	{
+		tokenDeclarations = tokenDeclarations.Substring(0, tokenDeclarations.Length - 2);
+	}
+	
+	return tokenDeclarations;
+}
+
+public string BuildStateNames()
+{
+	StringBuilder stateBuilder = new StringBuilder();
+	stateBuilder.Append(GetStateDeclaration("DefaultState"));
+	
+	for (int i = 0; i < Language.States.Items.Count; i++)
+	{
+		SyntaxLanguageStatesState state = Language.States.Items[i];
+		stateBuilder.Append(GetStateDeclaration(state.Key));
+	}
+	
+	string stateDeclarations = stateBuilder.ToString();
+	if (!UseConstants)
+	{
+		stateDeclarations = stateDeclarations.Substring(0, stateDeclarations.Length - 3);
+	}
+	else
+	{
+		stateDeclarations = stateDeclarations.Substring(0, stateDeclarations.Length - 2);
+	}
+	
+	return stateDeclarations;
+}
+
+public string GetTokenDeclaration(string tokenKey)
+{
+	string tokenDeclaration = String.Empty;
+	
+	if (tokenKey != null && tokenKey.Length > 0 && !_tokenKeys.Contains(tokenKey))
+	{
+		if (UseConstants)
+		{
+			tokenDeclaration = "\t\tpublic const int " + GetTokenName(tokenKey) + " = " + _currentTokenId.ToString() + ";\r\n";
+		}
+		else
+		{
+			tokenDeclaration = "\t\t" + GetTokenName(tokenKey) + " = " + _currentTokenId.ToString() + ",\r\n";
+		}
+		_tokenKeys.Add(tokenKey);
+		_currentTokenId++;
+	}
+	
+	return tokenDeclaration;
+}
+
+public string GetStateDeclaration(string stateKey)
+{
+	string stateDeclaration = String.Empty;
+	
+	if (stateKey != null && stateKey.Length > 0 && !_stateKeys.Contains(stateKey))
+	{
+		if (UseConstants)
+		{
+			stateDeclaration = "\t\tpublic const int " + GetTokenName(stateKey) + " = " + _currentStateId.ToString() + ";\r\n";
+		}
+		else
+		{
+			stateDeclaration = "\t\t" + GetTokenName(stateKey) + " = " + _currentStateId.ToString() + ",\r\n";
+		}
+		_stateKeys.Add(stateKey);
+		_currentStateId++;
+	}
+	
+	return stateDeclaration;
+}
+
+public string GetTokenName(string tokenKey)
+{
+	if (StripEndingToken && tokenKey.EndsWith("Token"))
+	{
+		return tokenKey.Substring(0, tokenKey.Length - 5);
+	}
+	else
+	{
+		return tokenKey;
+	}
+}
+
+public string GetStateName(string stateKey)
+{
+	if (StripEndingState && stateKey.EndsWith("State"))
+	{
+		return stateKey.Substring(0, stateKey.Length - 5);
+	}
+	else
+	{
+		return stateKey;
+	}
+}
+</script>

@@ -1,0 +1,1 @@
+..\CodeSmithConsole /template:PurchaseOrderXml.cst /properties:properties.xml /out:test.txt

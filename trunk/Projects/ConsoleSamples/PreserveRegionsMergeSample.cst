@@ -1,0 +1,21 @@
+<%-- This is a sample template that shows how to use the preserve regions merge strategy. --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="T-SQL" %>
+
+<%--
+This is a marker region so that the merge strategy knows where to insert the content
+from the source file with the same region name.  You can insert as many marker regions
+as you want to allow for inserting custom code in the generated output and having that
+code preserved during re-generation.
+--%>
+--region Custom Header Code
+--endregion
+
+SELECT
+	*
+FROM 
+	Match_4.dbo.Users
+WHERE 
+	UserID = @UserID
+
+--region Custom Footer Code
+--endregion

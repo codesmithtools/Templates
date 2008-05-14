@@ -1,0 +1,104 @@
+<%@ CodeTemplate Src="CSLAHelper.vb" Inherits="CSLAHelper" Debug="False" Language="VB" TargetLanguage="VB" Description="Generates a CSLA Editable Root Object." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %><%-- Generic Variables for code to use  --%><% Dim Col As ColumnSchema %><% Dim PKs As ColumnSchemaCollection = RootTable.primarykey.membercolumns %><% Dim NPKs As ColumnSchemaCollection = RootTable.NonPrimaryKeyColumns %>
+<% Dim PKOrd As integer = PKs.Count - 1 %><% Dim OrdinalColCount as Integer = RootTable.columns.count - 1 %>
+<%=Level(0,True)%>Option Strict On
+<%=Level(0,False)%>Option Explicit On
+<%=Level(0,False)%>Option Compare Text
+
+<%=Level(0,False)%>Imports CSLA
+<%=Level(0,False)%>Imports CSLA.Data
+<%=Level(0,False)%>Imports System.Data.SQLClient
+<% If Not ClassNamespace Is Nothing AndAlso ClassNamespace.Length > 0 Then %>Namespace <%= ClassNamespace %>
+<% End If %>
+   ''' <summary>
+   ''' This business object represents the custom properties and methods of the <%= RootTable.Database.Name %>.<%= RootTable %> Table.
+   ''' It corresponds to the Custom Code Class as outlined in the CSLA Newsgroup(s) to support the BaseClass -> Class Framework."
+   ''' Object was generated on <%= Now() %> - By <%=Environment.UserName %>
+   ''' </summary>
+   ''' <remarks>
+   ''' Parameters used to generate this class.
+   ''' Business Object
+   '''	ClassNamespace      = <%= ClassNamespace %>
+   '''	CollectionName      = <%= CollectionName %>
+   '''	ObjectName          = <%= ObjectName %>
+   '''	RootTable           = <%= RootTable.Database.Name %>.<%= RootTable %>
+   '''  BaseClassExt        = <%= BaseClassExt %>
+   '''
+   '''Options
+   '''	MemberPrefix        = <%= MemberPrefix %>
+   '''	Accessibility       = <%= Accessibility.ToString %>
+   '''	Serializable        = <%= Serializable %>
+   '''	MustBeInherited     = <%= MustBeInherited %>
+   '''	TransactionType     = <%= TransactionType.ToString %>
+   '''
+   '''Business Object's Parent
+   '''	ParentName          = <%= ParentName %>
+   '''	ParentObjectType    = <%= ParentType %>
+   '''
+   '''Business Object's Child Collection
+   '''	ChildCollectionName = <%= ChildCollectionName %>
+   '''	ChildMemberName     = <%= ChildMemberName %>
+   '''
+   '''Stored Procedure Style
+   '''	GeneralSPPrefix     = <%= GeneralSPPrefix %>
+   '''	InsertPrefix        = <%= InsertPrefix %>
+   '''	UpdatePrefix        = <%= UpdatePrefix %>
+   '''	DeletePrefix        = <%= DeletePrefix %>
+   '''	SelectPrefix        = <%= SelectPrefix %>
+   ''' </remarks>
+<%=Level(0,False)%><% If Serializable = True Then %><Serializable()> _<% End If %>
+<%=Level(0,False)%><%= GetAccessModifier(Accessibility) %> Class <%If IsCollectionCode Then %><%= GetCustomCollectionName %><%Else%><%= GetCustomClassName() %><% End If%>
+<%=Level(1,False)%>Inherits <%If IsCollectionCode Then %><%= GetBaseCollectionName %><%Else%><%= GetBaseClassName %><% End If%>
+
+#Region " Constructors "
+
+<%=Level(1,False)%>Friend Sub New()
+<%=Level(2,False)%>'prevent direct creation
+<%=Level(2,False)%><% If AllowSort And IsCollectionCode Then %>AllowSort = True<% End If %><% If AllowFind And IsCollectionCode Then %><%=Level(2,True)%>AllowFind = True<% End If %>
+<%=Level(1,False)%>End Sub
+
+<% If Not ObjectTemplate.ToString = "NameValueList" Then %>
+<%If Not IsCollectionCode Then %><%=Level(1,False)%>Friend Sub New(<% For Each col in PKs %>ByVal <%= col.name %> As <%= GetVBVariableType(col) %><% IF PKs.Item(PKOrd).name <> col.name Then %>, <% END IF%><% Next %>)<% For Each col in PKs %>
+<%=Level(2,False)%><%= GetMemberVariableName(col) %> = <%= col.name %><% Next %>
+<%=Level(1,False)%>End Sub<%End If%>
+
+<% If IsSwitchable Then %><%=Level(1,False)%>Friend Sub New(ByVal IsChild as Boolean,<% For Each col in PKs %>ByVal <%= col.name %> As <%= GetVBVariableType(col) %><% IF PKs.Item(PKOrd).name <> col.name Then %>, <% END IF%><% Next %>)<% For Each col in PKs %>
+<%=Level(2,False)%><%= GetMemberVariableName(col) %> = <%= col.name %><% Next %>
+<%=Level(2,False)%>If IsChild then
+<%=Level(3,False)%>MarkAsChild()
+<%=Level(2,False)%>End If
+<%=Level(1,False)%>End Sub<% End IF %>
+<% End IF %>
+#End Region ' Constructors 
+
+#Region "Class Level Private/Protected Variables ......"
+
+#End Region ' Class Level Private Variables
+
+#Region " Business Properties and Methods "	
+
+#End Region ' Business Properties and Methods
+
+#Region "Field Level Concurency Tracking"
+
+#End Region 'Field Level Concurency Tracking
+
+#Region " System.Object Overrides "
+
+#End Region ' System.Object Overrides
+
+#Region " Shared Methods "
+
+#End Region ' Shared Methods 
+
+#Region " Criteria Class (identifies the Individual Object/ Primary Key) "
+
+#End Region ' Criteria
+
+#Region " Data Access "
+
+#End Region ' Data Access 
+
+<%=Level(0,False)%>End Class
+<%=Level(0,False)%>End Namespace

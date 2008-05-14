@@ -1,0 +1,13 @@
+<%@ CodeTemplate 
+	Language="C#" 
+	TargetLanguage="C#" 
+	Description="This Template Generates C# Business Objects for the ORMapper" 
+	Debug="true" %>
+
+<%@ Register Name="MappingCommon" Template="mapping.common.cst" MergeProperties="True" ExcludeProperties="MappingObject" %>
+	
+<%@ Property Category="2.Class" Name="ImplementHelper" Type="System.Boolean" Default="true" Optional="false" Description="Implement the IObjectHelper interface." %>
+<%@ Property Category="2.Class" Name="ImplementNotification" Type="System.Boolean" Default="false" Optional="false" Description="Implement the IObjectNotification interface." %>
+
+<%@ Property Name="ClassNamespace" Type="System.String" Optional="False" %>
+<%@ Property Name="MappingEntity" Type="entity" Optional="True" %>

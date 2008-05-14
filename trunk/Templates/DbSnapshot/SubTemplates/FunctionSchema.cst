@@ -1,0 +1,148 @@
+<%--
+	Author: 
+		Todd Carrico
+	
+	Description:
+		DBSnaptshot will create a file for every database object 
+		and if configured will attempt to script your database.
+	Remarks:
+		Only tested with Sql2000, Sql2005, SqlExpress
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="T-SQL" Description="Create a drop and create script for a stored Function" Debug="True" %>
+<%@ Property Name="ServerName"        Type="String"                       Category="New"      Optional="True" Description="Name of the server.   it will go into the check syntax tag" %>
+<%@ Property Name="DBName"            Type="String"                       Category="New"      Optional="True" Description="Name of the Dev Database.  Used by syntax check tag, also used in the 'USE' statement" %>
+<%@ Property Name="FunctionName"      Type="String"                       Category="New"      Optional="True" Description="Name of the User Defined Function" %>
+<%@ Property Name="SourceDB"          Type="SchemaExplorer.DatabaseSchema" Category="New"      Optional="True" Description="Database that the function resides in" %>
+<%@ Property Name="ExistingFunction" Type="SchemaExplorer.CommandSchema" Category="Existing" Optional="True" Description="Existing stored Function." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+
+<%
+
+        this.FunctionName = this.ExistingFunction.Name;
+        this.DBName = this.ExistingFunction.Database.Name;
+        this.ServerName = this.ParseServerName();
+
+%>
+/*** dbo.<%= FunctionName %> ***
+ * SC Header, do not delete!
+ *
+ * $Revision: $
+ * $Date: <%= DateTime.Now.ToShortDateString() %> $
+ * $Author: <%= Environment.UserName %> $
+ * $Archive: $
+ *
+ */
+GO
+USE <%= DBName %>
+GO
+IF EXISTS (SELECT [Name] FROM Dbo.SysObjects WHERE [Name] = '<%= FunctionName %>' AND  xtype = 'FN')
+BEGIN
+    DROP FUNCTION dbo.<%= FunctionName %>
+END
+/*
+Description: 
+<%= ParseOldComments() %>
+HISTORY:
+*/
+
+-- Indexed view prerequisites
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+SET ARITHABORT ON
+SET CONCAT_NULL_YIELDS_NULL ON
+SET QUOTED_IDENTIFIER ON
+SET NUMERIC_ROUNDABORT OFF
+GO
+<%= this.FunctionTextWithoutLeadingComments() %>
+GO
+<% foreach ( ExtendedProperty prop in this.ExistingFunction.ExtendedProperties ) { %>
+    <% if (!prop.Name.StartsWith("CS_")) { %>
+EXEC dbo.sp_addextendedproperty N'<%= prop.Name %>', N'<%= prop.Value %>', N'user', N'dbo', N'Function', N'<%= ExistingFunction.Name %>'
+GO
+    <% } %>
+<% } %>
+
+<% foreach ( ParameterSchema parm in this.ExistingFunction.Parameters ) { %>
+    <% foreach ( ExtendedProperty prop in parm.ExtendedProperties ) { %>
+        <% if (!prop.Name.StartsWith("CS_")) { %>
+EXEC dbo.sp_addextendedproperty N'<%= prop.Name %>', N'<%= prop.Value %>', N'user', N'dbo', N'Function', N'<%= ExistingFunction.Name %>', N'PARAMETER', N'<%= parm.Name %>'
+GO
+        <% } %>
+    <% } %>
+<% } %>
+
+-- Check SQL Syntax
+-- ServerName = <%= this.ParseServerName() %>
+-- DBName     = <%= this.ExistingFunction.Database.Name %>
+GRANT EXECUTE ON Dbo.<%= FunctionName %> TO [Role: Website Access Match]
+GO
+
+<script runat="template">
+
+public string ParseServerName()
+{
+    string _serverName = "";
+    string _scratch = "";
+
+    System.Text.RegularExpressions.Regex regExp = new Regex(@"Data Source=\w*;", RegexOptions.IgnoreCase);
+    System.Text.RegularExpressions.Match m = regExp.Match(this.ExistingFunction.Database.ConnectionString);
+
+    if ( m.Success )
+    {
+        _scratch = m.ToString();
+        _serverName = _scratch.Substring(_scratch.IndexOf('=') + 1).TrimEnd(';') ;
+    }
+    return _serverName;
+}
+
+public override string GetFileName()
+{
+    if ( this.FunctionName.Length > 0 )
+    {
+        return this.FunctionName + ".SQL";
+    }
+    else
+    {
+        return base.GetFileName();
+    }
+}
+
+public string ParseOldComments()
+{
+    Regex _regEx = new Regex(@"\W.*?CREATE *FUNCION", RegexOptions.IgnoreCase|RegexOptions.Compiled|RegexOptions.Singleline);
+    Match _match;
+    string _com = "";
+
+    _match = _regEx.Match( this.ExistingFunction.CommandText );
+    if ( _match.Success )
+    {
+        _com = _match.ToString();
+        _com = Regex.Replace(_com, "CREATE *FUNCION", "", RegexOptions.IgnoreCase);
+        _com = Regex.Replace(_com, @"--VSS.*\$Revision:.*\$", "", RegexOptions.IgnoreCase);
+        _com = Regex.Replace(_com, @"--VSS.*\$", "", RegexOptions.IgnoreCase);
+        _com = _com.Replace("/*", "").Replace("*/", "").Trim();
+    }
+
+    return _com;
+}
+
+public string FunctionTextWithoutLeadingComments()
+{
+    Regex _regEx = new Regex(@"CREATE *FUNCTION.*", RegexOptions.IgnoreCase|RegexOptions.Compiled|RegexOptions.Singleline);
+    Match _match;
+    string _com = "";
+
+    _match = _regEx.Match( this.ExistingFunction.CommandText );
+    if ( _match.Success )
+    {
+        _com = _match.ToString();
+        _com = _com.Trim();
+    }
+
+    return _com;
+}
+
+</script>

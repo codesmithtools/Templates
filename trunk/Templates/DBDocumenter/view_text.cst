@@ -1,0 +1,49 @@
+<%-- 
+CodeSmith DBDocumenter Templates
+Author:  Jason Alexander (jason@ngallery.org), Eric J. Smith
+Website: http://www.ngallery.org/dbdocumenter/
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates a set of HTML-based database documentation." %>
+<%@ Property Name="SourceView" Type="SchemaExplorer.ViewSchema" Category="Context" Description="View that the documentation should be based on." %>
+<%@ Property Name="ViewIndex" Type="System.Int32" Category="Context" Description="The index of the view in the overall collection." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="ActiproSoftware.CodeHighlighter.Net20" %>
+<%@ Assembly Name="ActiproSoftware.Shared.Net20" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="ActiproSoftware.CodeHighlighter" %>
+<%@ Import Namespace="ActiproSoftware.SyntaxEditor.Addons.Dynamic" %>
+<script runat="template">
+public string HighlightSQL(string sql)
+{
+	CodeHighlighterEngine e = new CodeHighlighterEngine();
+	e.LineNumberMarginVisible = true;
+	return e.GenerateHtmlInline("CommandText", sql, DynamicSyntaxLanguage.LoadFromXml(this.CodeTemplateInfo.DirectoryName + "ActiproSoftware.SQL.xml", 0));
+}
+</script>
+<html>
+<head>
+	<title><%= SourceView.Name %></title>
+	<link href="dbdocs.css" type="text/css" rel="stylesheet" />	
+</head>
+<body>
+<center>
+<table width="90%">
+<tr>
+	<td class="tableheaderbar" width="100%">
+	      <img src="images/tables_icon.gif" border="0">&nbsp;&nbsp;<%= SourceView.Name %>&nbsp;&nbsp;<i>(Created <%= SourceView.DateCreated %>)</i>
+	</td>
+	<td class="tableheaderbar" align="center" nowrap="1">
+		&nbsp;[ <a href="view_details_<%= ViewIndex %>.html">Details</a> | <a href="view_<%= ViewIndex %>.html">Source</a> ]&nbsp;
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+		<pre>
+<%= this.HighlightSQL(SourceView.ViewText) %>
+		</pre>
+	</td>
+</tr>
+</table>
+</center>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="This template demonstrates using properties defined in external assemblies." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="The table to use for this sample." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%-- 
+This template demonstrates using properties defined in external assemblies.
+
+CodeSmith is 100% extensible.  A property can be any .NET type that has designer support.
+This includes all of the standard .NET data types and most other standard .NET types as well.
+
+You can also create your own custom property types or you can use one any of the custom types
+included in CodeSmith.  This template uses the included SchemaExplorer.TableSchema type and is
+defined in the SchemaExplorer assembly.  This type provides access to nearly all possible schema
+information about a particular database table.
+--%>
+
+This is some static content (just like the static HTML in a ASP page).
+
+<%= "Table: " + this.SourceTable.Name %>
+<% foreach (ColumnSchema column in this.SourceTable.Columns) { %>
+	<%= column.Name %>
+<% } %>
+
+This is more static content.

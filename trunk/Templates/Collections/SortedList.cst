@@ -1,0 +1,1930 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates a strongly typed SortedList collection." %>
+<%@ Property Name="Accessibility" Type="AccessibilityEnum" Category="Options" Description="The accessibility of the collection class." %>
+<%@ Property Name="ClassName" Type="System.String" Optional="True" Category="Context" Description="The name of the collection class." %>
+<%@ Property Name="TargetNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of the collection class." %>
+<%@ Property Name="ImportNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of a collection interface." %>
+<%@ Property Name="KeyType" Type="System.String" Category="Context" Description="The key type of the collection." %>
+<%@ Property Name="KeyNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of the key type." %>
+<%@ Property Name="KeyValueType" Type="System.Boolean" Category="Context" Default="false" Description="Indicates whether KeyType is a value type." %>
+<%@ Property Name="KeyCustomSearch" Type="System.Boolean" Category="Options" Default="false" Description="Use custom search routines for KeyType." %>
+<%@ Property Name="ItemType" Type="System.String" Category="Context" Description="The element type of the collection." %>
+<%@ Property Name="ItemNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of the element type." %>
+<%@ Property Name="ItemValueType" Type="System.Boolean" Category="Context" Default="false" Description="Indicates whether ItemType is a value type." %>
+<%@ Property Name="ItemCustomSearch" Type="System.Boolean" Category="Options" Default="false" Description="Use custom search routines for ItemType." %>
+<%@ Property Name="PairType" Type="System.String" Optional="True" Category="Context" Description="The key-and-value pair type of the collection." %>
+<%@ Property Name="DeepCopy" Type="System.Boolean" Optional="True" Category="Deep Copy" Default="false" Description="Generate deep copy method for the collection." %>
+<%@ Property Name="DeepCopyItem" Type="System.String" Optional="True" Category="Deep Copy" Default="Clone" Description="The ItemType method that creates a deep copy." %>
+<%@ Property Name="IncludeInterfaces" Type="System.Boolean" Optional="True" Category="Options" Default="true" Description="Generate required interface definitions." %>
+<%@ Property Name="IncludeNamespaces" Type="System.Boolean" Optional="True" Category="Namespaces" Default="true" Description="Generate using and namespace statements." %>
+<script runat="template">
+<!-- #include file="CommonScript.cs" -->
+
+public override string GetFileName() {
+    ValidateClassName("Dictionary");
+    return ClassName + ".cs";
+}
+
+public void ValidateClassName(string suffix) {
+    if (ClassName == null || ClassName.Length == 0)
+        ClassName = KeyType + ItemType + suffix;
+}
+
+public void ValidatePairType() {
+    if (PairType == null || PairType.Length == 0)
+        PairType = KeyType + ItemType + "Entry";
+}
+
+</script>
+<% ValidateClassName("Dictionary"); %>
+<% ValidatePairType(); %>
+<% UsingNamespace("System"); %>
+<% UsingNamespace("System.Collections"); %>
+<% UsingNamespace(KeyNamespace); %>
+<% UsingNamespace(ItemNamespace); %>
+<% UsingNamespace(ImportNamespace); %>
+<% StartNamespace(TargetNamespace); %>
+    <% if (IncludeInterfaces) GenerateInterfaces("IDictionary.cst"); %>
+    #region Class <%= ClassName %>
+
+    /// <summary>
+    /// Implements a strongly typed collection of <see cref="<%= PairType %>"/>
+    /// key-and-value pairs that are sorted by the keys and are accessible by key and by index.
+    /// </summary>
+    /// <remarks>
+    /// <b><%= ClassName %></b> provides a <see cref="SortedList"/> that is strongly typed
+    /// for <see cref="<%= KeyType %>"/> keys and <see cref="<%= ItemType %>"/> values.
+    /// </remarks>
+
+    [Serializable]
+    <%= GetAccessModifier(Accessibility) %> class <%= ClassName %>:
+        I<%= KeyType %><%= ItemType %>Dictionary, IDictionary, ICloneable {
+        #region Private Fields
+
+        private const int _defaultCapacity = 16;
+
+        private <%= KeyType %>[] _keys;
+        private <%= ItemType %>[] _values;
+        private IComparer _comparer;
+        private int _count;
+
+        [NonSerialized]
+        private int _version;
+        private KeyList _keyList;
+        private ValueList _valueList;
+
+        #endregion
+        #region Private Constructors
+
+        // helper type to identify private ctor
+        private enum Tag { Default }
+
+        private <%= ClassName %>(Tag tag) { }
+
+        #endregion
+        #region Public Constructors
+        #region <%= ClassName %>()
+
+        /// <overloads>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class.
+        /// </overloads>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class that is empty,
+        /// has the default initial capacity and is sorted according to the <see cref="IComparable"/>
+        /// interface implemented by each key added to the <b><%= ClassName %></b>.
+        /// </summary>
+        /// <remarks>Please refer to <see cref="SortedList()"/> for details.</remarks>
+
+        public <%= ClassName %>() {
+            this._keys = new <%= KeyType %>[_defaultCapacity];
+            this._values = new <%= ItemType %>[_defaultCapacity];
+            this._comparer = Comparer.Default;
+        }
+
+        #endregion
+        #region <%= ClassName %>(IComparer)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class that is empty,
+        /// has the default initial capacity and is sorted according to the specified
+        /// <see cref="IComparer"/> interface.
+        /// </summary>
+        /// <param name="comparer">
+        /// <para>The <see cref="IComparer"/> implementation to use when comparing keys.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference, to use the <see cref="IComparable"/> implementation of each key.
+        /// </para></param>
+        /// <remarks>Please refer to <see cref="SortedList(IComparer)"/> for details.</remarks>
+
+        public <%= ClassName %>(IComparer comparer): this() {
+            if (comparer != null) this._comparer = comparer;
+        }
+
+        #endregion
+        #region <%= ClassName %>(IDictionary)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class that contains
+        /// elements copied from the specified dictionary, has the same initial capacity as the
+        /// number of elements copied and is sorted according to the <see cref="IComparable"/>
+        /// interface implemented by each key.
+        /// </summary>
+        /// <param name="dictionary">The <see cref="IDictionary"/>
+        /// whose elements are copied to the new collection.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="dictionary"/> is a null reference.</exception>
+        /// <exception cref="InvalidCastException">
+        /// <para>One or more elements in <paramref name="dictionary"/> do not implement the
+        /// <see cref="IComparable"/> interface.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="dictionary"/> contains keys that are not compatible
+        /// with <see cref="<%= KeyType %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="dictionary"/> contains values that are not compatible
+        /// with <see cref="<%= ItemType %>"/>.</para>
+        /// </exception>
+        /// <remarks>Please refer to <see cref="SortedList(IDictionary)"/> for details.</remarks>
+
+        public <%= ClassName %>(IDictionary dictionary): this(dictionary, null) { }
+
+        #endregion
+        #region <%= ClassName %>(Int32)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class that is empty,
+        /// has the specified initial capacity and is sorted according to the <see cref="IComparable"/>
+        /// interface implemented by each key added to the <b><%= ClassName %></b>.
+        /// </summary>
+        /// <param name="capacity">The initial number of elements that the
+        /// <see cref="<%= ClassName %>"/> can contain.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="capacity"/> is less than zero.</exception>
+        /// <remarks>Please refer to <see cref="SortedList(Int32)"/> for details.</remarks>
+
+        public <%= ClassName %>(int capacity) {
+            if (capacity < 0)
+                throw new ArgumentOutOfRangeException("capacity",
+                    capacity, "Argument cannot be negative.");
+
+            this._keys = new <%= KeyType %>[capacity];
+            this._values = new <%= ItemType %>[capacity];
+            this._comparer = Comparer.Default;
+        }
+
+        #endregion
+        #region <%= ClassName %>(IComparer, Int32)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class that is empty,
+        /// has the specified initial capacity and is sorted according to the specified
+        /// <see cref="IComparer"/> interface.
+        /// </summary>
+        /// <param name="comparer">
+        /// <para>The <see cref="IComparer"/> implementation to use when comparing keys.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference to use the <see cref="IComparable"/> implementation of each key.
+        /// </para></param>
+        /// <param name="capacity">The initial number of elements that the
+        /// <see cref="<%= ClassName %>"/> can contain.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="capacity"/> is less than zero.</exception>
+        /// <remarks>
+        /// Please refer to <see cref="SortedList(IComparer, Int32)"/> for details.
+        /// </remarks>
+
+        public <%= ClassName %>(IComparer comparer, int capacity) : this(capacity) {
+            if (comparer != null) this._comparer = comparer;
+        }
+
+        #endregion
+        #region <%= ClassName %>(IDictionary, IComparer)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class that contains
+        /// elements copied from the specified dictionary, has the same initial capacity as the
+        /// number of elements copied and is sorted according to the specified <see cref="IComparer"/>
+        /// interface.
+        /// </summary>
+        /// <param name="dictionary">The <see cref="IDictionary"/>
+        /// whose elements are copied to the new collection.</param>
+        /// <param name="comparer">
+        /// <para>The <see cref="IComparer"/> implementation to use when comparing keys.</para>
+        /// <para>-or-</para>
+        /// <para>A null reference, to use the <see cref="IComparable"/> implementation of each key.
+        /// </para></param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="dictionary"/> is a null reference.</exception>
+        /// <exception cref="InvalidCastException">
+        /// <para>One or more elements in <paramref name="dictionary"/> do not implement the
+        /// <see cref="IComparable"/> interface.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="dictionary"/> contains keys that are not compatible
+        /// with <see cref="<%= KeyType %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="dictionary"/> contains values that are not compatible
+        /// with <see cref="<%= ItemType %>"/>.</para>
+        /// </exception>
+        /// <remarks>
+        /// Please refer to <see cref="SortedList(IDictionary, IComparer)"/> for details.
+        /// </remarks>
+
+        public <%= ClassName %>(IDictionary dictionary, IComparer comparer):
+            this(comparer, (dictionary == null ? 0 : dictionary.Count)) {
+
+            if (dictionary == null)
+                throw new ArgumentNullException("dictionary");
+
+            dictionary.Keys.CopyTo(this._keys, 0);
+            dictionary.Values.CopyTo(this._values, 0);
+            Array.Sort(this._keys, this._values, this._comparer);
+            this._count = dictionary.Count;
+        }
+
+        #endregion
+        #endregion
+        #region Public Properties
+        #region Capacity
+
+        /// <summary>
+        /// Gets or sets the capacity of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>The number of elements that the
+        /// <see cref="<%= ClassName %>"/> can contain.</value>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <b>Capacity</b> is set to a value that is less than <see cref="Count"/>.</exception>
+        /// <remarks>Please refer to <see cref="SortedList.Capacity"/> for details.</remarks>
+
+        public virtual int Capacity {
+            get { return this._keys.Length; }
+            set {
+                if (value == this._keys.Length) return;
+
+                if (value < this._count)
+                    throw new ArgumentOutOfRangeException("Capacity",
+                        value, "Value cannot be less than Count.");
+
+                if (value == 0) {
+                    this._keys = new <%= KeyType %>[_defaultCapacity];
+                    this._values = new <%= ItemType %>[_defaultCapacity];
+                    return;
+                }
+
+                <%= KeyType %>[] newKeys = new <%= KeyType %>[value];
+                <%= ItemType %>[] newValues = new <%= ItemType %>[value];
+
+                Array.Copy(this._keys, 0, newKeys, 0, this._count);
+                Array.Copy(this._values, 0, newValues, 0, this._count);
+
+                this._keys = newKeys;
+                this._values = newValues;
+            }
+        }
+
+        #endregion
+        #region Count
+
+        /// <summary>
+        /// Gets the number of key-and-value pairs contained
+        /// in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>The number of key-and-value pairs contained
+        /// in the <see cref="<%= ClassName %>"/>.</value>
+        /// <remarks>Please refer to <see cref="SortedList.Count"/> for details.</remarks>
+
+        public virtual int Count {
+            get { return this._count; }
+        }
+
+        #endregion
+        #region IsFixedSize
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="<%= ClassName %>"/> has a fixed size.
+        /// </summary>
+        /// <value><c>true</c> if the <see cref="<%= ClassName %>"/> has a fixed size;
+        /// otherwise, <c>false</c>. The default is <c>false</c>.</value>
+        /// <remarks>Please refer to <see cref="SortedList.IsFixedSize"/> for details.</remarks>
+
+        public virtual bool IsFixedSize {
+            get { return false; }
+        }
+
+        #endregion
+        #region IsReadOnly
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="<%= ClassName %>"/> is read-only.
+        /// </summary>
+        /// <value><c>true</c> if the <see cref="<%= ClassName %>"/> is read-only;
+        /// otherwise, <c>false</c>. The default is <c>false</c>.</value>
+        /// <remarks>Please refer to <see cref="SortedList.IsReadOnly"/> for details.</remarks>
+
+        public virtual bool IsReadOnly {
+            get { return false; }
+        }
+
+        #endregion
+        #region IsSynchronized
+
+        /// <summary>
+        /// Gets a value indicating whether access to the <see cref="<%= ClassName %>"/>
+        /// is synchronized (thread-safe).
+        /// </summary>
+        /// <value><c>true</c> if access to the <see cref="<%= ClassName %>"/> is
+        /// synchronized (thread-safe); otherwise, <c>false</c>. The default is <c>false</c>.</value>
+        /// <remarks>Please refer to <see cref="SortedList.IsSynchronized"/> for details.</remarks>
+
+        public virtual bool IsSynchronized {
+            get { return false; }
+        }
+
+        #endregion
+        #region Item[<%= KeyType %>]: <%= ItemType %>
+
+        /// <summary>
+        /// Gets or sets the <see cref="<%= ItemType %>"/> value
+        /// associated with the specified <see cref="<%= KeyType %>"/> key.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key
+        /// whose value to get or set.</param>
+        /// <value>The <see cref="<%= ItemType %>"/> value associated with the specified
+        /// <paramref name="key"/>. If the specified <paramref name="key"/> is not found,
+        /// attempting to get it returns
+        <% if (ItemValueType) { %>
+        /// a default-initialized <b><%= ItemType %></b> object,
+        <% } else { %>
+        /// a null reference,
+        <% } %>
+        /// and attempting to set it creates a new element using the specified
+        /// <paramref name="key"/>.</value>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="NotSupportedException">
+        /// <para>The property is set and the <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The property is set, <paramref name="key"/> does not exist in the collection,
+        /// and the <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="SortedList.this"/> for details.</remarks>
+
+        public virtual <%= ItemType %> this[<%= KeyType %> key] {
+            get {
+            <% if (!KeyValueType) { %>
+                if ((object) key == null)
+                    throw new ArgumentNullException("key");
+            <% } %>
+
+                int index = BinaryKeySearch(key);
+                if (index >= 0) return this._values[index];
+            <% if (ItemValueType) { %>
+                return new <%= ItemType %>();
+            <% } else { %>
+                return null;
+            <% } %>
+            }
+            set {
+            <% if (!KeyValueType) { %>
+                if ((object) key == null)
+                    throw new ArgumentNullException("key");
+
+            <% } %>
+                int index = BinaryKeySearch(key);
+
+                if (index >= 0) {
+                    ++this._version;
+                    this._values[index] = value;
+                    return;
+                }
+
+                Insert(~index, key, value);
+            }
+        }
+
+        #endregion
+        #region IDictionary.Item[Object]: Object
+
+        /// <summary>
+        /// Gets or sets the value associated with the specified key.
+        /// </summary>
+        /// <param name="key">The key whose value to get or set.
+        /// This argument must be compatible with <see cref="<%= KeyType %>"/>.</param>
+        /// <value>
+        /// The value associated with the specified <paramref name="key"/>. If the specified
+        /// <paramref name="key"/> is not found, attempting to get it returns
+        <% if (ItemValueType) { %>
+        /// a default-initialized <see cref="<%= ItemType %>"/> object,
+        <% } else { %>
+        /// a null reference,
+        <% } %>
+        /// and attempting to set it creates a new element using the specified <paramref name="key"/>.
+        /// When set, this value must be compatible with <see cref="<%= ItemType %>"/>.
+        /// </value>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        /// <exception cref="InvalidCastException">
+        /// <para><paramref name="key"/> is not compatible with <see cref="<%= KeyType %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para>The property is set to a value that is not compatible with
+        /// <see cref="<%= ItemType %>"/>.</para></exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The property is set and the <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The property is set, <paramref name="key"/> does not exist in the collection,
+        /// and the <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="SortedList.this"/> for details.</remarks>
+
+        object IDictionary.this[object key] {
+            get { return this[(<%= KeyType %>) key]; }
+            set { this[(<%= KeyType %>) key] = (<%= ItemType %>) value; }
+        }
+
+        #endregion
+        #region Keys: I<%= KeyType %>Collection
+
+        /// <summary>
+        /// Gets an <see cref="I<%= KeyType %>Collection"/> containing
+        /// the keys in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>An <see cref="I<%= KeyType %>Collection"/> containing
+        /// the keys in the <see cref="<%= ClassName %>"/>.</value>
+        /// <remarks>Please refer to <see cref="SortedList.Keys"/> for details.</remarks>
+
+        public virtual I<%= KeyType %>Collection Keys {
+            get { return GetKeyList(); }
+        }
+
+        #endregion
+        #region IDictionary.Keys: ICollection
+
+        /// <summary>
+        /// Gets an <see cref="ICollection"/> containing
+        /// the keys in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>An <see cref="ICollection"/> containing
+        /// the keys in the <see cref="<%= ClassName %>"/>.</value>
+        /// <remarks>Please refer to <see cref="SortedList.Keys"/> for details.</remarks>
+
+        ICollection IDictionary.Keys {
+            get { return (ICollection) Keys; }
+        }
+
+        #endregion
+        #region SyncRoot
+
+        /// <summary>
+        /// Gets an object that can be used to synchronize
+        /// access to the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>An object that can be used to synchronize
+        /// access to the <see cref="<%= ClassName %>"/>.</value>
+        /// <remarks>Please refer to <see cref="SortedList.SyncRoot"/> for details.</remarks>
+
+        public virtual object SyncRoot {
+            get { return this; }
+        }
+
+        #endregion
+        #region Values: I<%= ItemType %>Collection
+
+        /// <summary>
+        /// Gets an <see cref="I<%= ItemType %>Collection"/> containing
+        /// the values in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>An <see cref="I<%= ItemType %>Collection"/> containing
+        /// the values in the <see cref="<%= ClassName %>"/>.</value>
+        /// <remarks>Please refer to <see cref="SortedList.Values"/> for details.</remarks>
+
+        public virtual I<%= ItemType %>Collection Values {
+            get { return GetValueList(); }
+        }
+
+        #endregion
+        #region IDictionary.Values: ICollection
+
+        /// <summary>
+        /// Gets an <see cref="ICollection"/> containing
+        /// the values in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>An <see cref="ICollection"/> containing
+        /// the values in the <see cref="<%= ClassName %>"/>.</value>
+        /// <remarks>Please refer to <see cref="SortedList.Values"/> for details.</remarks>
+
+        ICollection IDictionary.Values {
+            get { return (ICollection) Values; }
+        }
+
+        #endregion
+        #endregion
+        #region Public Methods
+        #region Add(<%= KeyType %>, <%= ItemType %>)
+
+        /// <summary>
+        /// Adds an element with the specified <see cref="<%= KeyType %>"/> key and
+        /// <see cref="<%= ItemType %>"/> value to the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key of the element
+        /// to add to the <see cref="<%= ClassName %>"/>.</param>
+        /// <param name="value">The <see cref="<%= ItemType %>"/> value of the element
+        /// to add to the <see cref="<%= ClassName %>"/>.
+        <% if (!ItemValueType) { %>
+        /// This argument can be a null reference.
+        <% } %>
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// <para>An element with the specified <paramref name="key"/>
+        /// already exists in the <see cref="<%= ClassName %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> is set to use the <see cref="IComparable"/> interface,
+        /// and <paramref name="key"/> does not implement the <b>IComparable</b> interface.</para>
+        /// </exception>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="InvalidOperationException">
+        /// The comparer throws an exception.</exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="SortedList.Add"/> for details.</remarks>
+
+        public virtual void Add(<%= KeyType %> key, <%= ItemType %> value) {
+        <% if (!KeyValueType) { %>
+            if ((object) key == null)
+                throw new ArgumentNullException("key");
+        <% } %>
+
+            int index = BinaryKeySearch(key);
+
+            if (index >= 0)
+                throw new ArgumentException(
+                    "Argument already exists in collection.", "key");
+
+            Insert(~index, key, value);
+        }
+
+        #endregion
+        #region IDictionary.Add(Object, Object)
+
+        /// <summary>
+        /// Adds an element with the specified key and value
+        /// to the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="key">The key of the element to add to the <see cref="<%= ClassName %>"/>.
+        /// This argument must be compatible with <see cref="<%= KeyType %>"/>.</param>
+        /// <param name="value">The value of the element to add to the <see cref="<%= ClassName %>"/>.
+        /// This argument must be compatible with <see cref="<%= ItemType %>"/>.
+        <% if (!ItemValueType) { %>
+        /// This argument can be a null reference.
+        <% } %>
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// <para>An element with the specified <paramref name="key"/>
+        /// already exists in the <see cref="<%= ClassName %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> is set to use the <see cref="IComparable"/> interface,
+        /// and <paramref name="key"/> does not implement the <b>IComparable</b> interface.</para>
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        /// <exception cref="InvalidCastException">
+        /// <para><paramref name="key"/> is not compatible with <see cref="<%= KeyType %>"/>.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="value"/> is not compatible with <see cref="<%= ItemType %>"/>.</para>
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// The comparer throws an exception.</exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="SortedList.Add"/> for details.</remarks>
+
+        void IDictionary.Add(object key, object value) {
+            Add((<%= KeyType %>) key, (<%= ItemType %>) value);
+        }
+
+        #endregion
+        #region Clear
+
+        /// <summary>
+        /// Removes all elements from the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="SortedList.Clear"/> for details.</remarks>
+
+        public virtual void Clear() {
+            if (this._count == 0) return;
+
+            ++this._version;
+            Array.Clear(this._keys, 0, this._count);
+            Array.Clear(this._values, 0, this._count);
+            this._count = 0;
+        }
+
+        #endregion
+        #region Clone
+
+        /// <summary>
+        /// Creates a shallow copy of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>A shallow copy of the <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="SortedList.Clone"/> for details.</remarks>
+
+        public virtual object Clone() {
+            <%= ClassName %> dictionary = new <%= ClassName %>(this._count);
+
+            Array.Copy(this._keys, 0, dictionary._keys, 0, this._count);
+            Array.Copy(this._values, 0, dictionary._values, 0, this._count);
+
+            dictionary._count = this._count;
+            dictionary._comparer = this._comparer;
+            dictionary._version = this._version;
+
+            return dictionary;
+        }
+
+        #endregion
+        #region Contains(<%= KeyType %>)
+
+        /// <summary>
+        /// Determines whether the <see cref="<%= ClassName %>"/>
+        /// contains the specified <see cref="<%= KeyType %>"/> key.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key
+        /// to locate in the <see cref="<%= ClassName %>"/>.</param>
+        /// <returns><c>true</c> if the <see cref="<%= ClassName %>"/> contains an element
+        /// with the specified <paramref name="key"/>; otherwise, <c>false</c>.</returns>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="InvalidOperationException">
+        /// The comparer throws an exception.</exception>
+        /// <remarks>Please refer to <see cref="SortedList.Contains"/> for details.</remarks>
+
+        public bool Contains(<%= KeyType %> key) {
+            return (IndexOfKey(key) >= 0);
+        }
+
+        #endregion
+        #region IDictionary.Contains(Object)
+
+        /// <summary>
+        /// Determines whether the <see cref="<%= ClassName %>"/> contains the specified key.
+        /// </summary>
+        /// <param name="key">The key to locate in the <see cref="<%= ClassName %>"/>.
+        /// This argument must be compatible with <see cref="<%= KeyType %>"/>.</param>
+        /// <returns><c>true</c> if the <see cref="<%= ClassName %>"/> contains an element
+        /// with the specified <paramref name="key"/>; otherwise, <c>false</c>.</returns>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="InvalidCastException"><paramref name="key"/>
+        /// is not compatible with <see cref="<%= KeyType %>"/>.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// The comparer throws an exception.</exception>
+        /// <remarks>Please refer to <see cref="SortedList.Contains"/> for details.</remarks>
+
+        bool IDictionary.Contains(object key) {
+            return (IndexOfKey((<%= KeyType %>) key) >= 0);
+        }
+
+        #endregion
+        #region ContainsKey
+
+        /// <summary>
+        /// Determines whether the <see cref="<%= ClassName %>"/>
+        /// contains the specified <see cref="<%= KeyType %>"/> key.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key
+        /// to locate in the <see cref="<%= ClassName %>"/>.</param>
+        /// <returns><c>true</c> if the <see cref="<%= ClassName %>"/> contains an element
+        /// with the specified <paramref name="key"/>; otherwise, <c>false</c>.</returns>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="InvalidOperationException">
+        /// The comparer throws an exception.</exception>
+        /// <remarks>Please refer to <see cref="SortedList.ContainsKey"/> for details.</remarks>
+
+        public bool ContainsKey(<%= KeyType %> key) {
+            return (IndexOfKey(key) >= 0);
+        }
+
+        #endregion
+        #region ContainsValue
+
+        /// <summary>
+        /// Determines whether the <see cref="<%= ClassName %>"/>
+        /// contains the specified <see cref="<%= ItemType %>"/> value.
+        /// </summary>
+        /// <param name="value">The <see cref="<%= ItemType %>"/> value
+        /// to locate in the <see cref="<%= ClassName %>"/>.
+        <% if (!ItemValueType) { %>
+        /// This argument can be a null reference.
+        <% } %>
+        /// </param>
+        /// <returns><c>true</c> if the <see cref="<%= ClassName %>"/> contains an element
+        /// with the specified <paramref name="value"/>; otherwise, <c>false</c>.</returns>
+        /// <remarks>Please refer to <see cref="SortedList.ContainsValue"/> for details.</remarks>
+
+        public bool ContainsValue(<%= ItemType %> value) {
+            return (IndexOfValue(value) >= 0);
+        }
+
+        #endregion
+        <% if (DeepCopy) { %>
+        #region Copy
+        
+        /// <summary>
+        /// Creates a deep copy of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>A deep copy of the <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks><para>
+        <% if (ItemValueType) { %>
+        /// <b>Copy</b> has the same effect as <see cref="Clone"/> 
+        /// because <see cref="<%= ItemType %>"/> is a value type.
+        <% } else if (IsString(ItemType)) { %>
+        /// <b>Copy</b> has the same effect as <see cref="Clone"/> 
+        /// because strings are immutable in the .NET Framework.
+        <% } else { %>
+        /// <b>Copy</b> is similar to <see cref="Clone"/> but creates a deep copy of
+        /// every <see cref="<%= ItemType %>"/> value in the <see cref="<%= ClassName %>"/>
+        /// by invoking its <see cref="<%= ItemType %>.<%= DeepCopyItem %>"/> method.
+        /// The <see cref="<%= KeyType %>"/> keys are duplicated by a shallow copy.
+        <% } %>
+        /// </para><para>
+        /// <b>Copy</b> never returns a <b><%= ClassName %></b> with a synchronized
+        /// wrapper whereas <b>Clone</b> preserves any present wrapper around this 
+        /// <b><%= ClassName %></b>.
+        /// </para></remarks>
+
+        public virtual <%= ClassName %> Copy() {
+            <%= ClassName %> dictionary = new <%= ClassName %>(this._count);
+
+            Array.Copy(this._keys, 0, dictionary._keys, 0, this._count);
+        <% if (ItemValueType || IsString(ItemType)) { %>
+            Array.Copy(this._values, 0, dictionary._values, 0, this._count);
+        <% } else { %>
+            for (int i = 0; i < this._count; i++)
+                if ((object) this._values[i] != null)
+                    dictionary._values[i] = (<%= ItemType %>) this._values[i].<%= DeepCopyItem %>();
+        <% } %>
+
+            dictionary._count = this._count;
+            dictionary._comparer = this._comparer;
+            dictionary._version = this._version;
+
+            return dictionary;
+        }
+        
+        #endregion
+        <% } %>
+        #region CopyTo(<%= PairType %>[], Int32)
+
+        /// <summary>
+        /// Copies the entire <see cref="<%= ClassName %>"/> to a one-dimensional <see cref="Array"/> of
+        /// <see cref="<%= PairType %>"/> elements, starting at the specified index of the target array.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the
+        /// <see cref="<%= PairType %>"/> elements copied from the <see cref="<%= ClassName %>"/>.
+        /// The <b>Array</b> must have zero-based indexing.</param>
+        /// <param name="arrayIndex">The zero-based index in <paramref name="array"/>
+        /// at which copying begins.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="array"/> is a null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="arrayIndex"/> is less than zero.</exception>
+        /// <exception cref="ArgumentException"><para>
+        /// <paramref name="arrayIndex"/> is equal to or greater than the length of <paramref name="array"/>.
+        /// </para><para>-or-</para><para>
+        /// The number of elements in the source <see cref="<%= ClassName %>"/> is greater than
+        /// the available space from <paramref name="arrayIndex"/> to the end of the destination
+        /// <paramref name="array"/>.</para></exception>
+        /// <remarks>Please refer to <see cref="SortedList.CopyTo"/> for details.</remarks>
+
+        public virtual void CopyTo(<%= PairType %>[] array, int arrayIndex) {
+            CheckTargetArray(array, arrayIndex);
+
+            for (int i = 0; i < this._count; i++)
+                array[arrayIndex + i] = 
+                    new <%= PairType %>(this._keys[i], this._values[i]);
+        }
+
+        #endregion
+        #region ICollection.CopyTo(Array, Int32)
+
+        /// <summary>
+        /// Copies the entire <see cref="<%= ClassName %>"/> to a one-dimensional <see cref="Array"/>,
+        /// starting at the specified index of the target array.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the
+        /// <see cref="<%= PairType %>"/> elements copied from the <see cref="<%= ClassName %>"/>.
+        /// The <b>Array</b> must have zero-based indexing.</param>
+        /// <param name="arrayIndex">The zero-based index in <paramref name="array"/>
+        /// at which copying begins.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="array"/> is a null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="arrayIndex"/> is less than zero.</exception>
+        /// <exception cref="ArgumentException"><para>
+        /// <paramref name="array"/> is multidimensional.
+        /// </para><para>-or-</para><para>
+        /// <paramref name="arrayIndex"/> is equal to or greater than the length of <paramref name="array"/>.
+        /// </para><para>-or-</para><para>
+        /// The number of elements in the source <see cref="<%= ClassName %>"/> is greater than
+        /// the available space from <paramref name="arrayIndex"/> to the end of the destination
+        /// <paramref name="array"/>.</para></exception>
+        /// <exception cref="InvalidCastException">
+        /// The <see cref="<%= PairType %>"/> type cannot be cast automatically
+        /// to the type of the destination <paramref name="array"/>.</exception>
+        /// <remarks>Please refer to <see cref="SortedList.CopyTo"/> for details.</remarks>
+
+        void ICollection.CopyTo(Array array, int arrayIndex) {
+            CheckTargetArray(array, arrayIndex);
+            CopyTo((<%= PairType %>[]) array, arrayIndex);
+        }
+
+        #endregion
+        #region GetByIndex
+
+        /// <summary>
+        /// Gets the <see cref="<%= ItemType %>"/> value at the
+        /// specified index of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="index">The zero-based index of the
+        /// <see cref="<%= ItemType %>"/> value to get.</param>
+        /// <returns>The <see cref="<%= ItemType %>"/> value at the specified
+        /// <paramref name="index"/> of the <see cref="<%= ClassName %>"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <para><paramref name="index"/> is less than zero.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
+        /// </exception>
+        /// <remarks>Please refer to <see cref="SortedList.GetByIndex"/> for details.</remarks>
+
+        public virtual <%= ItemType %> GetByIndex(int index) {
+            ValidateIndex(index);
+            return this._values[index];
+        }
+
+        #endregion
+        #region GetEnumerator: I<%= KeyType %><%= ItemType %>Enumerator
+
+        /// <summary>
+        /// Returns an <see cref="I<%= KeyType %><%= ItemType %>Enumerator"/> that can
+        /// iterate through the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>An <see cref="I<%= KeyType %><%= ItemType %>Enumerator"/>
+        /// for the entire <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="SortedList.GetEnumerator"/> for details.</remarks>
+
+        public virtual I<%= KeyType %><%= ItemType %>Enumerator GetEnumerator() {
+            return new Enumerator(this);
+        }
+
+        #endregion
+        #region IDictionary.GetEnumerator: IDictionaryEnumerator
+
+        /// <summary>
+        /// Returns an <see cref="IDictionaryEnumerator"/> that can
+        /// iterate through the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>An <see cref="IDictionaryEnumerator"/>
+        /// for the entire <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="SortedList.GetEnumerator"/> for details.</remarks>
+
+        IDictionaryEnumerator IDictionary.GetEnumerator() {
+            return (IDictionaryEnumerator) GetEnumerator();
+        }
+
+        #endregion
+        #region IEnumerable.GetEnumerator: IEnumerator
+
+        /// <summary>
+        /// Returns an <see cref="IEnumerator"/> that can
+        /// iterate through the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerator"/>
+        /// for the entire <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="SortedList.GetEnumerator"/> for details.</remarks>
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return (IEnumerator) GetEnumerator();
+        }
+
+        #endregion
+        #region GetKey
+
+        /// <summary>
+        /// Gets the <see cref="<%= KeyType %>"/> key at the
+        /// specified index of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="index">The zero-based index of the
+        /// <see cref="<%= KeyType %>"/> key to get.</param>
+        /// <returns>The <see cref="<%= KeyType %>"/> key at the specified
+        /// <paramref name="index"/> of the <see cref="<%= ClassName %>"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <para><paramref name="index"/> is less than zero.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
+        /// </exception>
+        /// <remarks>Please refer to <see cref="SortedList.GetKey"/> for details.</remarks>
+
+        public virtual <%= KeyType %> GetKey(int index) {
+            ValidateIndex(index);
+            return this._keys[index];
+        }
+
+        #endregion
+        #region GetKeyList
+
+        /// <summary>
+        /// Gets the keys in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>An <see cref="I<%= KeyType %>List"/> containing the keys
+        /// in the <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="SortedList.GetKeyList"/> for details.</remarks>
+
+        public virtual I<%= KeyType %>List GetKeyList() {
+            if (this._keyList == null)
+                this._keyList = new KeyList(this);
+            return this._keyList;
+        }
+
+        #endregion
+        #region GetValueList
+
+        /// <summary>
+        /// Gets the values in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>An <see cref="I<%= ItemType %>List"/> containing the values
+        /// in the <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="SortedList.GetValueList"/> for details.</remarks>
+
+        public virtual I<%= ItemType %>List GetValueList() {
+            if (this._valueList == null)
+                this._valueList = new ValueList(this);
+            return this._valueList;
+        }
+
+        #endregion
+        #region IndexOfKey
+
+        /// <summary>
+        /// Returns the zero-based index of the specified <see cref="<%= KeyType %>"/>
+        /// key in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key
+        /// to locate in the <see cref="<%= ClassName %>"/>.</param>
+        /// <returns>The zero-based index of <paramref name="key"/> in the
+        /// <see cref="<%= ClassName %>"/>, if found; otherwise, -1.</returns>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="InvalidOperationException">
+        /// The comparer throws an exception.</exception>
+        /// <remarks>Please refer to <see cref="SortedList.IndexOfKey"/> for details.</remarks>
+
+        public virtual int IndexOfKey(<%= KeyType %> key) {
+        <% if (!KeyValueType) { %>
+            if ((object) key == null)
+                throw new ArgumentNullException("key");
+        <% } %>
+
+            int index = BinaryKeySearch(key);
+            return (index >= 0 ? index : -1);
+        }
+
+        #endregion
+        #region IndexOfValue
+
+        /// <summary>
+        /// Returns the zero-based index of the specified <see cref="<%= ItemType %>"/>
+        /// value in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="value">The <see cref="<%= ItemType %>"/> value
+        /// to locate in the <see cref="<%= ClassName %>"/>.
+        <% if (!ItemValueType) { %>
+        /// This argument can be a null reference.
+        <% } %>
+        /// </param>
+        /// <returns>The zero-based index of <paramref name="value"/> in the
+        /// <see cref="<%= ClassName %>"/>, if found; otherwise, -1.</returns>
+        /// <remarks>Please refer to <see cref="SortedList.IndexOfValue"/> for details.</remarks>
+
+        public virtual int IndexOfValue(<%= ItemType %> value) {
+        <% if (ItemCustomSearch) { %>
+
+        <% if (!ItemValueType) { %>
+            if ((object) value == null) {
+                for (int i = 0; i < this._count; i++)
+                    if ((object) this._values[i] == null)
+                        return i;
+
+                return -1;
+            }
+        <% } %>
+
+            for (int i = 0; i < this._count; i++)
+                if (value.Equals(this._values[i]))
+                    return i;
+
+            return -1;
+        <% } else { %>
+            return Array.IndexOf(this._values, value, 0, this._count);
+        <% } %>
+        }
+
+        #endregion
+        #region Remove(<%= KeyType %>)
+
+        /// <summary>
+        /// Removes the element with the specified <see cref="<%= KeyType %>"/> key
+        /// from the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="key">The <see cref="<%= KeyType %>"/> key of the element
+        /// to remove from the <see cref="<%= ClassName %>"/>.</param>
+        <% if (!KeyValueType) { %>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        <% } %>
+        /// <exception cref="InvalidOperationException">
+        /// The comparer throws an exception.</exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="SortedList.Remove"/> for details.</remarks>
+
+        public virtual void Remove(<%= KeyType %> key) {
+            int index = IndexOfKey(key);
+            if (index >= 0) RemoveAt(index);
+        }
+
+        #endregion
+        #region IDictionary.Remove(Object)
+
+        /// <summary>
+        /// Removes the element with the specified key from the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="key">The key of the element to remove from the <see cref="<%= ClassName %>"/>.
+        /// This argument must be compatible with <see cref="<%= KeyType %>"/>.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="key"/> is a null reference.</exception>
+        /// <exception cref="InvalidCastException"><paramref name="key"/>
+        /// is not compatible with <see cref="<%= KeyType %>"/>.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// The comparer throws an exception.</exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="SortedList.Remove"/> for details.</remarks>
+
+        void IDictionary.Remove(object key) {
+            Remove((<%= KeyType %>) key);
+        }
+
+        #endregion
+        #region RemoveAt
+
+        /// <summary>
+        /// Removes the element at the specified index of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="index">The zero-based index of the element to remove.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <para><paramref name="index"/> is less than zero.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="SortedList.RemoveAt"/> for details.</remarks>
+
+        public virtual void RemoveAt(int index) {
+            ValidateIndex(index);
+
+            ++this._version;
+            if (index < --this._count) {
+                Array.Copy(this._keys, index + 1,
+                    this._keys, index, this._count - index);
+
+                Array.Copy(this._values, index + 1,
+                    this._values, index, this._count - index);
+            }
+
+        <% if (KeyValueType) { %>
+            this._keys[this._count] = new <%= KeyType %>();
+        <% } else { %>
+            this._keys[this._count] = null;
+        <% } %>
+        <% if (ItemValueType) { %>
+            this._values[this._count] = new <%= ItemType %>();
+        <% } else { %>
+            this._values[this._count] = null;
+        <% } %>
+        }
+
+        #endregion
+        #region SetByIndex
+
+        /// <summary>
+        /// Sets the <see cref="<%= ItemType %>"/> value at the
+        /// specified index of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="index">The zero-based index of the
+        /// <see cref="<%= ItemType %>"/> value to set.</param>
+        /// <param name="value">The <see cref="<%= ItemType %>"/> object to store
+        /// at the specified <paramref name="index"/> of the <see cref="<%= ClassName %>"/>.
+        <% if (!ItemValueType) { %>
+        /// This argument can be a null reference.
+        <% } %>
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <para><paramref name="index"/> is less than zero.</para>
+        /// <para>-or-</para>
+        /// <para><paramref name="index"/> is equal to or greater than <see cref="Count"/>.</para>
+        /// </exception>
+        /// <remarks>Please refer to <see cref="SortedList.SetByIndex"/> for details.</remarks>
+
+        public virtual void SetByIndex(int index, <%= ItemType %> value) {
+            ValidateIndex(index);
+            ++this._version;
+            this._values[index] = value;
+        }
+
+        #endregion
+        #region Synchronized
+
+        /// <summary>
+        /// Returns a synchronized (thread-safe) wrapper
+        /// for the specified <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="dictionary">The <see cref="<%= ClassName %>"/> to synchronize.</param>
+        /// <returns>
+        /// A synchronized (thread-safe) wrapper around <paramref name="dictionary"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="collection"/> is a null reference.</exception>
+        /// <remarks>Please refer to <see cref="SortedList.Synchronized"/> for details.</remarks>
+
+        public static <%= ClassName %> Synchronized(<%= ClassName %> dictionary) {
+            if (dictionary == null)
+                throw new ArgumentNullException("dictionary");
+
+            return new SyncDictionary(dictionary);
+        }
+
+        #endregion
+        #region TrimToSize
+
+        /// <summary>
+        /// Sets the capacity to the actual number of elements in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="SortedList.TrimToSize"/> for details.</remarks>
+
+        public virtual void TrimToSize() {
+            Capacity = this._count;
+        }
+
+        #endregion
+        #endregion
+        #region Private Methods
+        #region BinaryKeySearch
+
+        private int BinaryKeySearch(<%= KeyType %> key) {
+        <% if (KeyCustomSearch) { %>
+            if (this._count == 0) return ~0;
+            int index, left = 0, right = this._count - 1;
+
+            if (this._comparer == Comparer.Default) {
+                do {
+                    index = (left + right) / 2;
+                    int result = key.CompareTo(this._keys[index]);
+
+                    if (result == 0)
+                        return index;
+                    else if (result < 0)
+                        right = index - 1;
+                    else
+                        left = index + 1;
+                } while (left <= right);
+            }
+            else {
+                do {
+                    index = (left + right) / 2;
+                    int result = this._comparer.Compare(key, this._keys[index]);
+
+                    if (result == 0)
+                        return index;
+                    else if (result < 0)
+                        right = index - 1;
+                    else
+                        left = index + 1;
+                } while (left <= right);
+            }
+
+            return ~left;
+        <% } else { %>
+            return Array.BinarySearch(this._keys, 0,
+                this._count, key, this._comparer);
+        <% } %>
+        }
+
+        #endregion
+        #region CheckEnumIndex
+
+        private void CheckEnumIndex(int index) {
+            if (index < 0 || index >= this._count)
+                throw new InvalidOperationException(
+                    "Enumerator is not on a collection element.");
+        }
+
+        #endregion
+        #region CheckEnumVersion
+
+        private void CheckEnumVersion(int version) {
+            if (version != this._version)
+                throw new InvalidOperationException(
+                    "Enumerator invalidated by modification to collection.");
+        }
+
+        #endregion
+        #region CheckTargetArray
+
+        private void CheckTargetArray(Array array, int arrayIndex) {
+            if (array == null)
+                throw new ArgumentNullException("array");
+            if (array.Rank > 1)
+                throw new ArgumentException(
+                    "Argument cannot be multidimensional.", "array");
+
+            if (arrayIndex < 0)
+                throw new ArgumentOutOfRangeException("arrayIndex",
+                    arrayIndex, "Argument cannot be negative.");
+            if (arrayIndex >= array.Length)
+                throw new ArgumentException(
+                    "Argument must be less than array length.", "arrayIndex");
+
+            if (this._count > array.Length - arrayIndex)
+                throw new ArgumentException(
+                    "Argument section must be large enough for collection.", "array");
+        }
+
+        #endregion
+        #region EnsureCapacity
+
+        private void EnsureCapacity(int minimum) {
+            int newCapacity = (this._keys.Length == 0 ?
+                _defaultCapacity : this._keys.Length * 2);
+
+            if (newCapacity < minimum) newCapacity = minimum;
+            Capacity = newCapacity;
+        }
+
+        #endregion
+        #region Insert
+
+        private void Insert(int index,
+            <%= KeyType %> key, <%= ItemType %> value) {
+
+            if (this._count == this._keys.Length)
+                EnsureCapacity(this._count + 1);
+
+            ++this._version;
+            if (index < this._count) {
+                Array.Copy(this._keys, index,
+                    this._keys, index + 1, this._count - index);
+
+                Array.Copy(this._values, index,
+                    this._values, index + 1, this._count - index);
+            }
+
+            this._keys[index] = key;
+            this._values[index] = value;
+            ++this._count;
+        }
+
+        #endregion
+        #region ValidateIndex
+
+        private void ValidateIndex(int index) {
+            if (index < 0)
+                throw new ArgumentOutOfRangeException("index",
+                    index, "Argument cannot be negative.");
+
+            if (index >= this._count)
+                throw new ArgumentOutOfRangeException("index",
+                    index, "Argument must be less than Count.");
+        }
+
+        #endregion
+        #endregion
+        #region Class Enumerator
+
+        [Serializable]
+        private sealed class Enumerator:
+            I<%= KeyType %><%= ItemType %>Enumerator, IDictionaryEnumerator {
+            #region Private Fields
+
+            private readonly <%= ClassName %> _dictionary;
+            private readonly int _version;
+            private int _index;
+
+            #endregion
+            #region Internal Constructors
+
+            internal Enumerator(<%= ClassName %> dictionary) {
+                this._dictionary = dictionary;
+                this._version = dictionary._version;
+                this._index = -1;
+            }
+
+            #endregion
+            #region Public Properties
+
+            public <%= PairType %> Current {
+                get { return Entry; }
+            }
+
+            object IEnumerator.Current {
+                <%-- see DictionaryList.IList.Item --%>
+                get { return (DictionaryEntry) Entry; }
+            }
+
+            public <%= PairType %> Entry {
+                get {
+                    this._dictionary.CheckEnumIndex(this._index);
+                    this._dictionary.CheckEnumVersion(this._version);
+
+                    return new <%= PairType %>(
+                        this._dictionary._keys[this._index],
+                        this._dictionary._values[this._index]);
+                }
+            }
+
+            DictionaryEntry IDictionaryEnumerator.Entry {
+                get { return Entry; }
+            }
+
+            public <%= KeyType %> Key {
+                get {
+                    this._dictionary.CheckEnumIndex(this._index);
+                    this._dictionary.CheckEnumVersion(this._version);
+                    return this._dictionary._keys[this._index];
+                }
+            }
+
+            object IDictionaryEnumerator.Key {
+                get { return Key; }
+            }
+
+            public <%= ItemType %> Value {
+                get {
+                    this._dictionary.CheckEnumIndex(this._index);
+                    this._dictionary.CheckEnumVersion(this._version);
+                    return this._dictionary._values[this._index];
+                }
+            }
+
+            object IDictionaryEnumerator.Value {
+                get { return Value; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public bool MoveNext() {
+                this._dictionary.CheckEnumVersion(this._version);
+                return (++this._index < this._dictionary.Count);
+            }
+
+            public void Reset() {
+                this._dictionary.CheckEnumVersion(this._version);
+                this._index = -1;
+            }
+
+            #endregion
+        }
+
+        #endregion
+        #region Class KeyList
+
+        [Serializable]
+        private sealed class KeyList: I<%= KeyType %>List, IList {
+            #region Private Fields
+
+            private <%= ClassName %> _dictionary;
+
+            #endregion
+            #region Internal Constructors
+
+            internal KeyList(<%= ClassName %> dictionary) {
+                this._dictionary = dictionary;
+            }
+
+            #endregion
+            #region Public Properties
+
+            public int Count {
+                get { return this._dictionary.Count; }
+            }
+
+            public bool IsReadOnly {
+                get { return true; }
+            }
+
+            public bool IsFixedSize {
+                get { return true; }
+            }
+
+            public bool IsSynchronized {
+                get { return this._dictionary.IsSynchronized; }
+            }
+
+            public <%= KeyType %> this[int index] {
+                get { return this._dictionary.GetKey(index); }
+                set { throw new NotSupportedException(
+                        "Read-only collections cannot be modified."); }
+            }
+
+            object IList.this[int index] {
+                get { return this[index]; }
+                set { throw new NotSupportedException(
+                        "Read-only collections cannot be modified."); }
+            }
+
+            public object SyncRoot {
+                get { return this._dictionary.SyncRoot; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public int Add(<%= KeyType %> key) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            int IList.Add(object key) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            public void Clear() {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            public bool Contains(<%= KeyType %> key) {
+                return this._dictionary.Contains(key);
+            }
+
+            bool IList.Contains(object key) {
+                return Contains((<%= KeyType %>) key);
+            }
+
+            public void CopyTo(<%= KeyType %>[] array, int arrayIndex) {
+                this._dictionary.CheckTargetArray(array, arrayIndex);
+                Array.Copy(this._dictionary._keys, 0,
+                    array, arrayIndex, this._dictionary.Count);
+            }
+
+            void ICollection.CopyTo(Array array, int arrayIndex) {
+                this._dictionary.CheckTargetArray(array, arrayIndex);
+                CopyTo((<%= KeyType %>[]) array, arrayIndex);
+            }
+
+            public I<%= KeyType %>Enumerator GetEnumerator() {
+                return new KeyEnumerator(this._dictionary);
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() {
+                return (IEnumerator) GetEnumerator();
+            }
+
+            public int IndexOf(<%= KeyType %> key) {
+                return this._dictionary.IndexOfKey(key);
+            }
+
+            int IList.IndexOf(object key) {
+                return IndexOf((<%= KeyType %>) key);
+            }
+
+            public void Insert(int index, <%= KeyType %> key) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            void IList.Insert(int index, object key) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            public void Remove(<%= KeyType %> key) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            void IList.Remove(object key) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            public void RemoveAt(int index) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            #endregion
+        }
+
+        #endregion
+        #region Class KeyEnumerator
+
+        [Serializable]
+        private sealed class KeyEnumerator:
+            I<%= KeyType %>Enumerator, IEnumerator {
+            #region Private Fields
+
+            private readonly <%= ClassName %> _dictionary;
+            private readonly int _version;
+            private int _index;
+
+            #endregion
+            #region Internal Constructors
+
+            internal KeyEnumerator(<%= ClassName %> dictionary) {
+                this._dictionary = dictionary;
+                this._version = dictionary._version;
+                this._index = -1;
+            }
+
+            #endregion
+            #region Public Properties
+
+            public <%= KeyType %> Current {
+                get {
+                    this._dictionary.CheckEnumIndex(this._index);
+                    this._dictionary.CheckEnumVersion(this._version);
+                    return this._dictionary._keys[this._index];
+                }
+            }
+
+            object IEnumerator.Current {
+                get { return Current; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public bool MoveNext() {
+                this._dictionary.CheckEnumVersion(this._version);
+                return (++this._index < this._dictionary.Count);
+            }
+
+            public void Reset() {
+                this._dictionary.CheckEnumVersion(this._version);
+                this._index = -1;
+            }
+
+            #endregion
+        }
+
+        #endregion
+        #region Class ValueList
+
+        [Serializable]
+        private sealed class ValueList: I<%= ItemType %>List, IList {
+            #region Private Fields
+
+            private <%= ClassName %> _dictionary;
+
+            #endregion
+            #region Internal Constructors
+
+            internal ValueList(<%= ClassName %> dictionary) {
+                this._dictionary = dictionary;
+            }
+
+            #endregion
+            #region Public Properties
+
+            public int Count {
+                get { return this._dictionary.Count; }
+            }
+
+            public bool IsReadOnly {
+                get { return true; }
+            }
+
+            public bool IsFixedSize {
+                get { return true; }
+            }
+
+            public bool IsSynchronized {
+                get { return this._dictionary.IsSynchronized; }
+            }
+
+            public <%= ItemType %> this[int index] {
+                get { return this._dictionary.GetByIndex(index); }
+                set { throw new NotSupportedException(
+                        "Read-only collections cannot be modified."); }
+            }
+
+            object IList.this[int index] {
+                get { return this[index]; }
+                set { throw new NotSupportedException(
+                        "Read-only collections cannot be modified."); }
+            }
+
+            public object SyncRoot {
+                get { return this._dictionary.SyncRoot; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public int Add(<%= ItemType %> value) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            int IList.Add(object value) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            public void Clear() {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            public bool Contains(<%= ItemType %> value) {
+                return this._dictionary.ContainsValue(value);
+            }
+
+            bool IList.Contains(object value) {
+                return Contains((<%= ItemType %>) value);
+            }
+
+            public void CopyTo(<%= ItemType %>[] array, int arrayIndex) {
+                this._dictionary.CheckTargetArray(array, arrayIndex);
+                Array.Copy(this._dictionary._values, 0,
+                    array, arrayIndex, this._dictionary.Count);
+            }
+
+            void ICollection.CopyTo(Array array, int arrayIndex) {
+                this._dictionary.CheckTargetArray(array, arrayIndex);
+                CopyTo((<%= ItemType %>[]) array, arrayIndex);
+            }
+
+            public I<%= ItemType %>Enumerator GetEnumerator() {
+                return new ValueEnumerator(this._dictionary);
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() {
+                return (IEnumerator) GetEnumerator();
+            }
+
+            public int IndexOf(<%= ItemType %> value) {
+                return this._dictionary.IndexOfValue(value);
+            }
+
+            int IList.IndexOf(object value) {
+                return IndexOf((<%= ItemType %>) value);
+            }
+
+            public void Insert(int index, <%= ItemType %> value) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            void IList.Insert(int index, object value) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            public void Remove(<%= ItemType %> value) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            void IList.Remove(object value) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            public void RemoveAt(int index) {
+                throw new NotSupportedException(
+                    "Read-only collections cannot be modified.");
+            }
+
+            #endregion
+        }
+
+        #endregion
+        #region Class ValueEnumerator
+
+        [Serializable]
+        private sealed class ValueEnumerator:
+            I<%= ItemType %>Enumerator, IEnumerator {
+            #region Private Fields
+
+            private readonly <%= ClassName %> _dictionary;
+            private readonly int _version;
+            private int _index;
+
+            #endregion
+            #region Internal Constructors
+
+            internal ValueEnumerator(<%= ClassName %> dictionary) {
+                this._dictionary = dictionary;
+                this._version = dictionary._version;
+                this._index = -1;
+            }
+
+            #endregion
+            #region Public Properties
+
+            public <%= ItemType %> Current {
+                get {
+                    this._dictionary.CheckEnumIndex(this._index);
+                    this._dictionary.CheckEnumVersion(this._version);
+                    return this._dictionary._values[this._index];
+                }
+            }
+
+            object IEnumerator.Current {
+                get { return Current; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public bool MoveNext() {
+                this._dictionary.CheckEnumVersion(this._version);
+                return (++this._index < this._dictionary.Count);
+            }
+
+            public void Reset() {
+                this._dictionary.CheckEnumVersion(this._version);
+                this._index = -1;
+            }
+
+            #endregion
+        }
+
+        #endregion
+        #region Class SyncDictionary
+
+        [Serializable]
+        private sealed class SyncDictionary: <%= ClassName %> {
+            #region Private Fields
+
+            private <%= ClassName %> _dictionary;
+            private object _root;
+
+            #endregion
+            #region Internal Constructors
+
+            internal SyncDictionary(<%= ClassName %> dictionary):
+                base(Tag.Default) {
+
+                this._dictionary = dictionary;
+                this._root = dictionary.SyncRoot;
+            }
+
+            #endregion
+            #region Public Properties
+
+            public override int Capacity {
+                get { lock (this._root) return this._dictionary.Capacity; }
+            }
+
+            public override int Count {
+                get { lock (this._root) return this._dictionary.Count; }
+            }
+
+            public override bool IsFixedSize {
+                get { return this._dictionary.IsFixedSize; }
+            }
+
+            public override bool IsReadOnly {
+                get { return this._dictionary.IsReadOnly; }
+            }
+
+            public override bool IsSynchronized {
+                get { return true; }
+            }
+
+            public override <%= ItemType %> this[<%= KeyType %> key] {
+                get { lock (this._root) return this._dictionary[key]; }
+                set { lock (this._root) this._dictionary[key] = value; }
+            }
+
+            public override I<%= KeyType %>Collection Keys {
+                get { lock (this._root) return this._dictionary.Keys; }
+            }
+
+            public override object SyncRoot {
+                get { return this._root; }
+            }
+
+            public override I<%= ItemType %>Collection Values {
+                get { lock (this._root) return this._dictionary.Values; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public override void Add(<%= KeyType %> key, <%= ItemType %> value) {
+                lock (this._root) this._dictionary.Add(key, value);
+            }
+
+            public override void Clear() {
+                lock (this._root) this._dictionary.Clear();
+            }
+
+            public override object Clone() {
+                lock (this._root)
+                    return new SyncDictionary((<%= ClassName %>) this._dictionary.Clone());
+            }
+            <% if (DeepCopy) { %>
+
+            public override <%= ClassName %> Copy() {
+                lock (this._root) return this._dictionary.Copy();
+            }
+            <% } %>
+
+            public override void CopyTo(<%= PairType %>[] array, int index) {
+                lock (this._root) this._dictionary.CopyTo(array, index);
+            }
+
+            public override <%= ItemType %> GetByIndex(int index) {
+                lock (this._root) return this._dictionary.GetByIndex(index);
+            }
+
+            public override I<%= KeyType %><%= ItemType %>Enumerator GetEnumerator() {
+                lock (this._root) return this._dictionary.GetEnumerator();
+            }
+
+            public override <%= KeyType %> GetKey(int index) {
+                lock (this._root) return this._dictionary.GetKey(index);
+            }
+
+            public override I<%= KeyType %>List GetKeyList() {
+                lock (this._root) return this._dictionary.GetKeyList();
+            }
+
+            public override I<%= ItemType %>List GetValueList() {
+                lock (this._root) return this._dictionary.GetValueList();
+            }
+
+            public override int IndexOfKey(<%= KeyType %> key) {
+                lock (this._root) return this._dictionary.IndexOfKey(key);
+            }
+
+            public override int IndexOfValue(<%= ItemType %> value) {
+                lock (this._root) return this._dictionary.IndexOfValue(value);
+            }
+
+            public override void Remove(<%= KeyType %> key) {
+                lock (this._root) this._dictionary.Remove(key);
+            }
+
+            public override void RemoveAt(int index) {
+                lock (this._root) this._dictionary.RemoveAt(index);
+            }
+
+            public override void SetByIndex(int index, <%= ItemType %> value) {
+                lock (this._root) this._dictionary.SetByIndex(index, value);
+            }
+
+            public override void TrimToSize() {
+                lock (this._root) this._dictionary.TrimToSize();
+            }
+
+            #endregion
+        }
+
+        #endregion
+    }
+
+    #endregion
+<% EndNamespace(TargetNamespace); %>

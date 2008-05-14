@@ -1,0 +1,256 @@
+<%@ CodeTemplate Language="C#" 
+	TargetLanguage="C#" 
+	Debug="True" 
+	Description="Generate a Custom Exception." %>
+<%@ Property Name="Accessibility" 
+	Type="AccessibilityEnum" 
+	Default="Public" 
+	Category="1. Class Definition" 
+	Description="The accessibility of the class to be generated." %>
+<%@ Property Name="Arguments" 
+	Type="NameValueCollection" 
+	Optional="True" 
+	Category="1. Class Definition" 
+	Description="List of exception arguments. Enter as Name=DataType, Example FileName=string" %>
+<%@ Property Name="ArgumentMessage" 
+	Type="System.String" 
+	Default="" 
+	Optional="True" 
+	Category="1. Class Definition" 
+	Description="The string format message to use in the ToString method of this exception when there are custom arguments. Example: File '{0}' Not Found." %>
+<%@ Property Name="BaseClass" 
+	Type="System.String" 
+	Default="Exception" 
+	Optional="False" 
+	Category="1. Class Definition" 
+	Description="The name of the Exception class to subclass." %>
+<%@ Property Name="ClassName" 
+	Type="System.String" 
+	Default="CustomException" 
+	Optional="False" 
+	Category="1. Class Definition" 
+	Description="The name of the Exception class to be generated." %>
+<%@ Property Name="ClassNamespace" 
+	Type="System.String" 
+	Default="" 
+	Optional="True" 
+	Category="1. Class Definition" 
+	Description="The namespace to contain this class." %>
+<%@ Property Name="ErrorCode" 
+	Type="System.Int32" 
+	Default="-2146232832" 
+	Category="2. Internals" 
+	Description="The HResult Error Code this exception represents.  (Default is same used by ApplicationException)" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="System.Text" %>
+
+<script runat="template">
+	public enum AccessibilityEnum
+	{
+		Public,
+		Protected,
+		Internal,
+		ProtectedInternal,
+		Private
+	}
+	
+	public override string GetFileName()
+	{
+		return this.ClassName + ".cs";
+	}
+	
+	public string GetAccessModifier(AccessibilityEnum accessibility)
+	{
+		switch (accessibility)
+		{
+			case AccessibilityEnum.Public: return "public";
+			case AccessibilityEnum.Protected: return "protected";
+			case AccessibilityEnum.Internal: return "internal";
+			case AccessibilityEnum.ProtectedInternal: return "protected internal";
+			case AccessibilityEnum.Private: return "private";
+			default: return "public";
+		}
+	}
+	
+	public string GetConstructorArgs()
+	{
+		if (this.Arguments == null)
+			return string.Empty;
+			
+		StringBuilder builder = new StringBuilder();
+		foreach(NameValueEntry entry in this.Arguments)
+		{
+			builder.AppendFormat("{0} {1}, ", entry.Value, StringUtil.ToCamelCase(entry.Key.ToString()));
+		}
+		if (builder.Length > 2)
+			builder.Remove(builder.Length - 2, 2);
+		
+		return builder.ToString();
+	}
+	
+	public string GetFormatArgs()
+	{
+		if (this.Arguments == null)
+			return string.Empty;
+		
+		StringBuilder builder = new StringBuilder();
+		foreach(NameValueEntry entry in this.Arguments)
+		{
+			builder.AppendFormat("_{0}, ", StringUtil.ToCamelCase(entry.Key.ToString()));
+		}
+		if (builder.Length > 2)
+			builder.Remove(builder.Length - 2, 2);
+		
+		return builder.ToString();
+	}
+
+	public void CreateArgumentMessage()
+	{
+		if (this.Arguments == null 
+			|| this.Arguments.Count == 0 
+			|| !string.IsNullOrEmpty(this.ArgumentMessage))
+		{
+			return;
+		}
+			
+		StringBuilder builder = new StringBuilder();
+		for(int x = 0; x < this.Arguments.Count; x++)
+		{
+			builder.Append(this.Arguments[x].Key);
+			builder.Append(" = {");
+			builder.Append(x);
+			builder.Append("} ");
+		}
+		_argumentMessage = builder.ToString();
+	}
+</script>
+<%  CreateArgumentMessage(); %>
+<% if (!string.IsNullOrEmpty(this.ClassNamespace)) { %>
+namespace <%= this.ClassNamespace %>
+{
+	using System;
+	using System.Text;
+	using System.Runtime.Serialization;
+<% } %>
+	[Serializable]
+	public class <%= this.ClassName %> : <%= this.BaseClass %>
+	{
+
+		#region "Member Variables"
+		const string _className = "<%= this.ClassName %>";
+		const int _hresult = <%= this.ErrorCode %>;
+		#endregion	
+	
+		#region "Constructors"
+		public <%= this.ClassName %>() : base()
+		{
+			base.HResult = _hresult;
+		}
+		
+		public <%= this.ClassName %>(string message) 
+			: base(message)
+		{
+			base.HResult = _hresult;
+		}
+		
+		public <%= this.ClassName %>(string message, Exception innerException) 
+			: base(message, innerException)
+		{
+			base.HResult = _hresult;
+		}
+		
+		<% if (this.Arguments != null && this.Arguments.Count > 0) { %>
+        public <%= this.ClassName %>(string message, <%= GetConstructorArgs() %>) 
+			: base(message)
+        {
+			base.HResult = _hresult;
+			<% foreach(NameValueEntry entry in this.Arguments) { %>
+			_<%= StringUtil.ToCamelCase(entry.Key) %> = <%= StringUtil.ToCamelCase(entry.Key.ToString()) %>;
+			<% } %>
+        }
+
+        public <%= this.ClassName %>(string message, <%= GetConstructorArgs() %>, Exception innerException) 
+			: base(message, innerException)
+        {
+			base.HResult = _hresult;
+			<% foreach(NameValueEntry entry in this.Arguments) { %>
+			_<%= StringUtil.ToCamelCase(entry.Key) %> = <%= StringUtil.ToCamelCase(entry.Key.ToString()) %>;
+			<% } %>
+        }
+
+		<% } // if Arguments %>
+		protected <%= this.ClassName %>(SerializationInfo info, StreamingContext context) 
+			: base(info, context)
+		{
+			<% if (this.Arguments != null && this.Arguments.Count > 0) { %>
+       		<% foreach(NameValueEntry entry in this.Arguments) { %>
+			this._<%= StringUtil.ToCamelCase(entry.Key)%> = info.GetString("<%= this.ClassName %>_<%= StringUtil.ToPascalCase(entry.Key) %>");
+			<% } %>
+			<% } // if Arguments %>		
+			base.HResult = _hresult;
+		}
+		#endregion		
+		
+		#region "Properties & Operators"
+		<% if (this.Arguments != null && this.Arguments.Count > 0) { %>
+       	<% foreach(NameValueEntry entry in this.Arguments) { %>
+		private <%= entry.Value %> _<%= StringUtil.ToCamelCase(entry.Key) %>;
+		
+		public <%= entry.Value %> <%= StringUtil.ToPascalCase(entry.Key) %>
+		{
+			get { return _<%= StringUtil.ToCamelCase(entry.Key) %>; }
+		}
+		
+		<% } %>
+		<% } // if Arguments %>
+		public static implicit operator string(<%= this.ClassName %> ex)
+		{
+			return ex.ToString();
+		}
+		#endregion
+		
+		#region "Methods"
+		public override string ToString()
+		{
+			StringBuilder sb = new StringBuilder();
+
+			sb.AppendFormat("{0}: {1}", _className, this.Message);
+			<% if (!string.IsNullOrEmpty(this.ArgumentMessage) 
+				&& this.Arguments != null 
+				&& this.Arguments.Count > 0) { %>
+			sb.AppendFormat(" <%= this.ArgumentMessage %>", <%= GetFormatArgs() %>);
+			
+			<% } // if arguments %>
+			if (this.InnerException != null)
+			{
+				sb.AppendFormat(" ---> {0} <---", base.InnerException.ToString());
+			}
+	
+			if (this.StackTrace != null)
+			{
+				sb.Append(Environment.NewLine);
+				sb.Append(base.StackTrace);
+			}
+
+			return sb.ToString();
+		}
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context) 
+		{ 
+			base.GetObjectData (info, context); 
+			<% if (this.Arguments != null && this.Arguments.Count > 0) { %>
+       		<% foreach(NameValueEntry entry in this.Arguments) { %>
+			info.AddValue("<%= this.ClassName %>_<%= StringUtil.ToPascalCase(entry.Key) %>", this._<%= StringUtil.ToCamelCase(entry.Key)%>, typeof(<%= entry.Value %>));
+			<% } %>
+			<% } // if Arguments %>
+		} 
+
+		#endregion
+		
+	}
+<% if (!string.IsNullOrEmpty(this.ClassNamespace)) { %>
+}
+<% } %>
+
