@@ -19,4 +19,12 @@ PLINQO, which stands for Professional LINQ to Objects, is a collection of CodeSm
     * Common queries are exposed as IQueryable so they can be extended. 
   * All templates can be customized to meet your needs. 
 
-http://community.codesmithtools.com/blogs/pwelter/archive/2007/08/08/plinqo.aspx
+===Reasons to use PLINQO===
+  * Remove the designer black box and allow for customization of the ouput while still retaining the ability to use the .dbml designer to make customizations inside of Visual Studio.
+  * Ability to easily generate your entire .dbml file for a database and then the ability to regenerate that .dbml file as the schema changes. The regeneration preserves any customizations you may have made such as entity, property and relationship names. With the designer, if you make a database change, you need to drop the entity and re-add it to get any new columns or data type changes, which would cause you to lose any customizations you may have made. Also, using the templates allows you to exclude unwanted tables, stored procedures and views using filter expressions and automatically strip / clean entity and property names of things like prefixes and suffixes that your database schema may be using (ie. tbl_Customer to Customer).
+  * A business rules engine that allows you to enforce things like property length rules, required field rules, regex data validation rules as well as several other built in rules including authorization rules. The SubmitChanges method on the data context object will automatically run the rules against any entities in your change set. If all rules are not met, a BrokenRulesException will be thrown that contains a list of the broken rules.
+  * A manager class is generated for each entity that encapsulates all actions taken on an entity. Known common actions like retrieving entities by primary key, indexes, and foreign keys are generated. Any custom actions can be added and will be preserved during regeneration. While LINQ makes it easy to sprinkle your data access logic throughout your entire application, we still believe its poor design to do so and that is why we have included the manager classes.
+
+===More Information===
+  * CodeProject article: [http://www.codeproject.com/KB/cs/PLINQO.aspx PLINQO - Supercharge LINQ to SQL]
+  * [http://weblogs.asp.net/pwelter34/ Paul's Blog]
