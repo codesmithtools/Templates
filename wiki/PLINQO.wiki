@@ -1,3 +1,4 @@
+#labels Featured
 PLINQO, which stands for Professional LINQ to Objects, is a collection of CodeSmith templates that are meant to replace and extend the LINQ to SQL designers that are included with Visual Studio 2008.
 
 ===Features===
