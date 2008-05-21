@@ -1,7 +1,7 @@
 <%-- 
 Name: TemplateScript.cst
 Author: Tom DuPont
-Description: Demonstrates 
+Description: Demonstrates the most basic template using scripts.
 --%>
 
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Description="Demonstrates the most basic template." %>
