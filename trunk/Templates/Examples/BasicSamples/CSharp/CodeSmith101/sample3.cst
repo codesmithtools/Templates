@@ -1,0 +1,11 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="This template demonstrates using properties in your template." %>
+<%@ Property Name="Person" Type="System.String" Description="This will show up at the bottom of the property grid when the property is selected." %>
+<%-- 
+This template demonstrates using properties in your template.
+--%>
+
+This is some static content (just like the static HTML in a ASP page).
+
+<%= "Hello " + this.Person + "!" %>
+
+This is more static content.
