@@ -1,0 +1,262 @@
+<%-- 
+Name: CustomException
+Author: Tom DuPont
+Description: Active Snippet example for how to create a Custom Exception in Visual Basic with CodeSmith.
+--%>
+
+<%@ CodeTemplate Language="VB" 
+	TargetLanguage="VB" 
+	Debug="True" 
+	Description="Generate a Custom Exception." %>
+<%@ Property Name="Accessibility" 
+	Type="AccessibilityEnum" 
+	Default="Public" 
+	Category="1. Class Definition" 
+	Description="The accessibility of the class to be generated." %>
+<%@ Property Name="Arguments" 
+	Type="NameValueCollection" 
+	Optional="True" 
+	Category="1. Class Definition" 
+	Description="List of exception arguments. Enter as Name=DataType, Example FileName=string" %>
+<%@ Property Name="ArgumentMessage" 
+	Type="System.String" 
+	Default="" 
+	Optional="True" 
+	Category="1. Class Definition" 
+	Description="The string format message to use in the ToString method of this exception when there are custom arguments. Example: File '{0}' Not Found." %>
+<%@ Property Name="BaseClass" 
+	Type="System.String" 
+	Default="Exception" 
+	Optional="False" 
+	Category="1. Class Definition" 
+	Description="The name of the Exception class to subclass." %>
+<%@ Property Name="ClassName" 
+	Type="System.String" 
+	Default="CustomException" 
+	Optional="False" 
+	Category="1. Class Definition" 
+	Description="The name of the Exception class to be generated." %>
+<%@ Property Name="ClassNamespace" 
+	Type="System.String" 
+	Default="" 
+	Optional="True" 
+	Category="1. Class Definition" 
+	Description="The namespace to contain this class." %>
+<%@ Property Name="ErrorCode" 
+	Type="System.Int32" 
+	Default="-2146232832" 
+	Category="2. Internals" 
+	Description="The HResult Error Code this exception represents.  (Default is same used by ApplicationException)" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="System.Text" %>
+
+<script runat="template">
+	Public Enum AccessibilityEnum
+        [Public]
+        [Protected]
+        Internal
+        ProtectedInternal
+        [Private]
+    End Enum
+
+    Public Overloads Overrides Function GetFileName() As String
+        Return Me.ClassName + ".vb"
+    End Function
+
+    Public Function GetAccessModifier(ByVal accessibility As AccessibilityEnum) As String
+        Select Case accessibility
+            Case AccessibilityEnum.[Public]
+                Return "public"
+            Case AccessibilityEnum.[Protected]
+                Return "protected"
+            Case AccessibilityEnum.Internal
+                Return "internal"
+            Case AccessibilityEnum.ProtectedInternal
+                Return "protected internal"
+            Case AccessibilityEnum.[Private]
+                Return "private"
+            Case Else
+                Return "public"
+        End Select
+    End Function
+
+    Public Function GetConstructorArgs() As String
+        If IsNothing(Me.Arguments) Then 'If Me.Arguments = Nothing Then
+            Return String.Empty
+        End If
+
+        Dim builder As New StringBuilder()
+        For Each entry As NameValueEntry In Me.Arguments
+            builder.AppendFormat("ByVal {1} As {0}, ", entry.Value, StringUtil.ToCamelCase(entry.Key.ToString()))
+        Next
+        If builder.Length > 2 Then
+            builder.Remove(builder.Length - 2, 2)
+        End If
+
+        Return builder.ToString()
+    End Function
+
+    Public Function GetFormatArgs() As String
+        If IsNothing(Me.Arguments) Then 'If Me.Arguments = Nothing Then
+            Return String.Empty
+        End If
+
+        Dim builder As New StringBuilder()
+        For Each entry As NameValueEntry In Me.Arguments
+            builder.AppendFormat("_{0}, ", StringUtil.ToCamelCase(entry.Key.ToString()))
+        Next
+        If builder.Length > 2 Then
+            builder.Remove(builder.Length - 2, 2)
+        End If
+
+        Return builder.ToString()
+    End Function
+
+    Public Sub CreateArgumentMessage()
+        'If Me.Arguments = Nothing OrElse Me.Arguments.Count = 0 OrElse Not String.IsNullOrEmpty(Me.ArgumentMessage) Then
+		If IsNothing(Me.Arguments) OrElse Me.Arguments.Count = 0 OrElse Not String.IsNullOrEmpty(Me.ArgumentMessage) Then
+			Return
+        End If
+
+        Dim builder As New StringBuilder()
+        Dim x As Integer = 0
+        While x < Me.Arguments.Count
+            builder.Append(Me.Arguments(x).Key)
+            builder.Append(" = {")
+            builder.Append(x)
+            builder.Append("} ")
+            System.Math.Max(System.Threading.Interlocked.Increment(x), x - 1)
+        End While
+        _argumentMessage = builder.ToString()
+    End Sub
+</script>
+
+<% CreateArgumentMessage() %>
+<% If Not String.IsNullOrEmpty(Me.ClassNamespace) Then %>
+
+Imports System
+Imports System.Text
+Imports System.Runtime.Serialization
+Namespace <%= Me.ClassNamespace %>
+
+<% End If %>
+
+	<Serializable()> _
+    Public Class <%= Me.ClassName %>
+        Inherits <%= Me.BaseClass %>
+
+#Region "Member Variables"
+        Const _className As String = "<%= Me.ClassName %>"
+        Const _hresult As Integer = <%= Me.ErrorCode %>
+#End Region
+
+#Region "Constructors"
+        Public Sub New()
+            MyBase.New()
+            MyBase.HResult = _hresult
+        End Sub
+
+        Public Sub New(ByVal message As String)
+            MyBase.New(message)
+            MyBase.HResult = _hresult
+        End Sub
+
+        Public Sub New(ByVal message As String, ByVal innerException As Exception)
+            MyBase.New(message, innerException)
+            MyBase.HResult = _hresult
+        End Sub
+
+		<% If Not IsNothing(Me.Arguments) AndAlso Me.Arguments.Count > 0 Then %>
+        Public Sub New(ByVal message As String, <%= GetConstructorArgs() %>)
+            MyBase.New(message)
+            MyBase.HResult = _hresult
+			
+			<% For Each entry As NameValueEntry in Me.Arguments %>
+			_<%= StringUtil.ToCamelCase(entry.Key) %> = <%= StringUtil.ToCamelCase(entry.Key) %>
+			<% Next %>
+			
+        End Sub
+
+        Public Sub New(ByVal message As String, <%= GetConstructorArgs() %>, ByVal innerException As Exception)
+            MyBase.New(message, innerException)
+            MyBase.HResult = _hresult
+			
+			<% For Each entry As NameValueEntry in Me.Arguments %>
+			_<%= StringUtil.ToCamelCase(entry.Key) %> = <%= StringUtil.ToCamelCase(entry.Key) %>
+			<% Next %>
+			
+        End Sub
+		<% End If %>
+
+        Protected Sub New(ByVal info As SerializationInfo, ByVal context As StreamingContext)
+            MyBase.New(info, context)
+			
+			<% If Not IsNothing(Me.Arguments) AndAlso Me.Arguments.Count > 0 Then %>
+			<% For Each entry As NameValueEntry In Me.Arguments %>
+			Me._<%= StringUtil.ToCamelCase(entry.Key) %> = info.GetString("<%= Me.ClassName %>_<%= StringUtil.ToPascalCase(entry.Key) %>")
+			<% Next %>
+			<% End If %>
+			
+            MyBase.HResult = _hresult
+        End Sub
+#End Region
+
+#Region "Properties & Operators"
+<% If Not IsNothing(Me.Arguments) AndAlso Me.Arguments.Count > 0 Then %>
+
+		<% For Each entry As NameValueEntry in Me.Arguments %>
+		Private _<%= StringUtil.ToCamelCase(entry.Key) %> As <%= entry.Value %>
+		
+		Public ReadOnly Property <%= StringUtil.ToPascalCase(entry.Key) %>() As <%= entry.Value %>
+			Get
+				Return _<%= StringUtil.ToCamelCase(entry.Key) %>
+			End Get
+		End Property
+		<% Next %>
+			
+        Public Shared Widening Operator CType(ByVal ex As <%= Me.ClassName %>) As String
+            Return ex.ToString()
+        End Operator
+<% End If %>
+#End Region
+
+#Region "Methods"
+        Public Overloads Overrides Function ToString() As String
+            Dim sb As New StringBuilder()
+
+            sb.AppendFormat("{0}: {1}", _className, Me.Message)
+			<% If Not String.IsNullOrEmpty(Me.ArgumentMessage) AndAlso Not IsNothing(Me.Arguments) AndAlso Me.Arguments.Count > 0 Then %>
+            sb.AppendFormat(" <%  %>", _testArgName)
+			<% End If %>
+			
+            If IsNothing(Me.InnerException) Then ' If Me.InnerException <> Nothing Then
+                sb.AppendFormat(" ---> {0} <---", MyBase.InnerException.ToString())
+            End If
+
+            If Me.StackTrace <> Nothing Then
+                sb.Append(Environment.NewLine)
+                sb.Append(MyBase.StackTrace)
+            End If
+
+            Return sb.ToString()
+        End Function
+
+        Public Overloads Overrides Sub GetObjectData(ByVal info As SerializationInfo, ByVal context As StreamingContext)
+            MyBase.GetObjectData(info, context)
+			
+			<% If Not IsNothing(Me.Arguments) AndAlso Me.Arguments.Count > 0 Then %>
+			<% For Each entry As NameValueEntry in Me.Arguments %>
+			info.AddValue("<%= Me.ClassName %>_<%= StringUtil.ToPascalCase(entry.Key) %>", Me._<%= StringUtil.ToCamelCase(entry.Key) %>, GetType(<%= entry.Value %>))
+			<% Next %>
+			<% End If %>
+			
+        End Sub
+#End Region
+
+    End Class
+
+<% If Not String.IsNullOrEmpty(Me.ClassNamespace) Then %>
+End Namespace
+<% End If %>

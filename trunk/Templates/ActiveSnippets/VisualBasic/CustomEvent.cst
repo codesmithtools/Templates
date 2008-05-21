@@ -1,0 +1,133 @@
+<%-- 
+Name: CustomEvent.cst
+Author: Tom DuPont
+Description: Active SNippet example for how to create a Custom Event in Visual Basic with CodeSmith.
+--%>
+
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True" Description="Generate an Event." %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Property Name="EventName" Type="System.String" Default="MyEvent" Optional="False" Category="Event" Description="The name of the event." %>
+<%@ Property Name="Explicit" Type="System.Boolean" Default="False" Optional="False" Category="Event" Description="Generate explicit implementation code." %>
+<%@ Property Name="Arguments" Type="NameValueCollection" Optional="True" Description="List of event arguments. Enter as Name=DataType" %>
+
+<script runat="template">
+Private ReadOnly Property EventClass() As String
+	Get
+		If IsNothing(Me.Arguments) OrElse Me.Arguments.Count = 0 Then
+			Return "System.EventArgs"
+		End If
+
+		Return Me.EventName + "EventArgs"
+	End Get
+End Property
+
+Public Function GetConstructorArgs() As String
+	If IsNothing(Me.Arguments) OrElse Me.Arguments.Count = 0 Then
+		Return String.Empty
+	End If
+
+	Dim builder As New StringBuilder()
+	For Each entry As NameValueEntry In Me.Arguments
+		builder.AppendFormat("ByVal {1} As {0}, ", entry.Value, StringUtil.ToCamelCase(entry.Key.ToString()))
+	Next
+	If builder.Length > 2 Then
+		builder.Remove(builder.Length - 2, 2)
+	End If
+
+	Return builder.ToString()
+End Function
+</script>
+
+#Region "<%= EventClass %> event definition code"
+
+<% If Not IsNothing(Me.Arguments) AndAlso Me.Arguments.Count > 0 Then %>
+''' <summary>
+'''     EventArgs derived type which holds the custom event fields
+''' </summary>
+<Serializable()> _
+Public Class <%= EventClass %>
+    Inherits System.EventArgs
+    ''' <summary>
+    '''     Use this constructor to initialize the event arguments
+    '''     object with the custom event fields
+    ''' </summary>
+    Public Sub New(<%= GetConstructorArgs() %>)
+        
+		<% For Each entry As NameValueEntry in Me.Arguments %>
+		_<%= StringUtil.ToCamelCase(entry.Key) %> = <%= StringUtil.ToCamelCase(entry.Key) %>
+		<% Next %>
+
+    End Sub
+
+	<% For Each entry As NameValueEntry in Me.Arguments %>
+	Private _<%= StringUtil.ToCamelCase(entry.Key) %> As <%= entry.Value %>
+	
+	Public Property <%= StringUtil.ToPascalCase(entry.Key) %>() As <%= entry.Value %>
+		Get
+			Return _<%= StringUtil.ToCamelCase(entry.Key) %>
+		End Get
+		Set(ByVal value As <%= entry.Value %>)
+			_<%= StringUtil.ToCamelCase(entry.Key) %> = value
+		End Set
+	End Property
+	<% Next %>
+
+End Class
+<% End If 'if arguments %> 
+
+''' <summary>
+'''     This represents the delegate method prototype that
+'''     event receivers must implement
+''' </summary>
+Public Delegate Sub <%= EventName %>EventHandler(ByVal sender As Object, ByVal e As <%= EventClass %>)
+
+<% If  Me.Explicit Then %>
+
+' Private delegate linked list (explicitly defined)
+Private <%= EventName %>EventHandlerDelegate As <%= EventName %>EventHandler
+
+''' <summary>
+'''     TODO: Describe the purpose of this event here
+''' </summary>
+Public Custom Event <%= EventName %> As <%= EventName %>EventHandler
+    AddHandler(ByVal value As <%= EventName %>EventHandler)
+        ' Explicit event definition with accessor methods
+        <%= EventName %>EventHandlerDelegate = DirectCast([Delegate].Combine(<%= EventName %>EventHandlerDelegate, value), <%= EventName %>EventHandler)
+    End AddHandler
+    RemoveHandler(ByVal value As <%= EventName %>EventHandler)
+        <%= EventName %>EventHandlerDelegate = DirectCast([Delegate].Remove(<%= EventName %>EventHandlerDelegate, value), <%= EventName %>EventHandler)
+    End RemoveHandler
+    RaiseEvent(ByVal sender As Object, ByVal e As <%= EventName %>EventArgs)
+    End RaiseEvent
+End Event
+
+''' <summary>
+'''     This is the method that is responsible for notifying
+'''     receivers that the event occurred
+''' </summary>
+Protected Overridable Sub On<%= EventName %>(ByVal e As <%= EventClass %>)
+    If <%= EventName %>EventHandlerDelegate <> Nothing Then
+        <%= EventName %>EventHandlerDelegate(Me, e)
+    End If
+End Sub
+
+<% Else ' this.Explicit %>
+
+''' <summary>
+'''     TODO: Describe the purpose of <%= EventName %> here
+''' </summary>
+Public Event <%= EventName %> As <%= EventName %>EventHandler
+
+''' <summary>
+'''     This is the method that is responsible for notifying
+'''     receivers that the event occurred
+''' </summary>
+Protected Overridable Sub On<%= EventName %>(ByVal e As <%= EventClass %>)
+    RaiseEvent <%= EventName %>(Me, e)
+End Sub
+
+<% End If 'else this.Explicit %>
+
+#End Region '<%= EventName %> event definition code
