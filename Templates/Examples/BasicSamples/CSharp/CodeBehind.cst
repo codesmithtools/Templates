@@ -10,7 +10,7 @@ public class SimpleTemplate
 	{
 	}
 <% for (int i = 0; i < SampleStringCollection.Count; i++) { %>
-<%= SampleStringCollection[i] %>
+//<%= SampleStringCollection[i] %>
 <% } %>
 <% if (SampleBooleanProperty) { %>
 	

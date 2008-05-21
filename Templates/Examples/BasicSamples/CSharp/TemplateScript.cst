@@ -22,7 +22,7 @@ public class SimpleTemplate
 		// Do something
 	}
 <% } %>
-<% WriteStuff(); %>
+//<% WriteStuff(); %>
 }
 <script runat="template">
 private bool _propertyFromScript = false;
