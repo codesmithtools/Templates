@@ -23,7 +23,7 @@
 		{
 			SqlService sql = new SqlService();
 			sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) %>, id);
-			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM <%= SourceTable.Name %> WHERE <%= SourceTable.PrimaryKey.MemberColumns[0].Name %> = '" + id.ToString() + "'");
+			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM <%= SourceTable.Name %> WHERE <%= SourceTable.PrimaryKey.MemberColumns[0].Name %> = @<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>");
 			
 			if (reader.Read()) 
 			{
@@ -51,6 +51,63 @@
 				<%= GetReaderAssignmentStatement(SourceTable.Columns[i], i) %>
 				<% } %>
 			}
+		}
+		
+		public void Delete()
+		{
+			SqlService sql = new SqlService();
+			sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) %>, _id);
+	
+			SqlDataReader reader = sql.ExecuteSqlReader("Delete <%= SourceTable.Name %> Where <%= SourceTable.PrimaryKey.MemberColumns[0].Name %> =@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>");
+		}
+		
+		public void Update()
+		{
+			SqlService sql = new SqlService();
+			StringBuilder queryParameters = new StringBuilder();
+
+			sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) %>, Id);
+			queryParameters.Append("<%= SourceTable.PrimaryKey.MemberColumns[0].Name %> = @<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>");
+
+			<% for (int i = 0; i < SourceTable.NonPrimaryKeyColumns.Count; i++) { %>
+			sql.AddParameter("@<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %>", SqlDbType.<%= GetSqlDbType(SourceTable.NonPrimaryKeyColumns[i]) %>, <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %>);
+			queryParameters.Append(", <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %> = @<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %>");
+			<% } %>
+
+			string query = String.Format("Update <%= SourceTable.Name %> Set {0} Where <%= SourceTable.PrimaryKey.MemberColumns[0].Name %> = @<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>", queryParameters.ToString());
+			SqlDataReader reader = sql.ExecuteSqlReader(query);
+		}
+		
+		protected void Create()
+		{
+			SqlService sql = new SqlService();
+			StringBuilder queryParameters = new StringBuilder();
+
+			sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) %>, Id);
+			queryParameters.Append("@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>");
+
+			<% for (int i = 0; i < SourceTable.NonPrimaryKeyColumns.Count; i++) { %>
+			sql.AddParameter("@<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %>", SqlDbType.<%= GetSqlDbType(SourceTable.NonPrimaryKeyColumns[i]) %>, <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %>);
+			queryParameters.Append(", @<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %>");
+			<% } %>
+
+			string query = String.Format("Insert Into <%= SourceTable.Name %> ({0}) Values ({1})", queryParameters.ToString().Replace("@", ""), queryParameters.ToString());
+			SqlDataReader reader = sql.ExecuteSqlReader(query);
+		}
+		
+		public static Product CreateProduct(string id, string name, string categoryId, string descn, string image)
+		{
+			Product newProduct = new Product();
+
+			newProduct._id = id;
+			newProduct._name = name;
+			newProduct._categoryId = categoryId;
+			newProduct._descn = descn;
+			newProduct._image = image;
+
+			newProduct.Create();
+
+			return newProduct;
 		}
 		
 		#region Public Properties
