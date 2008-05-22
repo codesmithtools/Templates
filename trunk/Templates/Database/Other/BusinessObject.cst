@@ -58,7 +58,7 @@
 			SqlService sql = new SqlService();
 			sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) %>, _id);
 	
-			SqlDataReader reader = sql.ExecuteSqlReader("Delete <%= SourceTable.Name %> Where <%= SourceTable.PrimaryKey.MemberColumns[0].Name %> =@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>");
+			SqlDataReader reader = sql.ExecuteSqlReader("Delete <%= SourceTable.Name %> Where <%= SourceTable.PrimaryKey.MemberColumns[0].Name %> = @<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>");
 		}
 		
 		public void Update()
@@ -78,7 +78,7 @@
 			SqlDataReader reader = sql.ExecuteSqlReader(query);
 		}
 		
-		protected void Create()
+		public void Create()
 		{
 			SqlService sql = new SqlService();
 			StringBuilder queryParameters = new StringBuilder();
@@ -95,17 +95,10 @@
 			SqlDataReader reader = sql.ExecuteSqlReader(query);
 		}
 		
-		public static <%= SourceTable.Name %> Create<%= SourceTable.Name %>(string id, string name, string categoryId, string descn, string image)
+		public static <%= SourceTable.Name %> New<%= SourceTable.Name %>(<%= GetPrimaryKeyType(SourceTable) %> id)
 		{
 			<%= SourceTable.Name %> newEntity = new <%= SourceTable.Name %>();
-
 			newEntity._id = id;
-			newEntity._name = name;
-			newEntity._categoryId = categoryId;
-			newEntity._descn = descn;
-			newEntity._image = image;
-
-			newEntity.Create();
 
 			return newEntity;
 		}
