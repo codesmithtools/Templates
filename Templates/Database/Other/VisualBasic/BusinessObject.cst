@@ -247,63 +247,6 @@ End Function
 
 Public Function GetSqlDbType(ByVal column As ColumnSchema) As String
 	Return column.NativeType.ToString()
-	
-	Select Case column.NativeType
-		Case "bigint"
-			Return "BigInt"
-		Case "binary"
-			Return "Binary"
-		Case "bit"
-			Return "Bit"
-		Case "char"
-			Return "Char"
-		Case "datetime"
-			Return "DateTime"
-		Case "decimal"
-			Return "Decimal"
-		Case "float"
-			Return "Float"
-		Case "image"
-			Return "Image"
-		Case "int"
-			Return "Int"
-		Case "money"
-			Return "Money"
-		Case "nchar"
-			Return "NChar"
-		Case "ntext"
-			Return "NText"
-		Case "numeric"
-			Return "Decimal"
-		Case "nvarchar"
-			Return "NVarChar"
-		Case "real"
-			Return "Real"
-		Case "smalldatetime"
-			Return "SmallDateTime"
-		Case "smallint"
-			Return "SmallInt"
-		Case "smallmoney"
-			Return "SmallMoney"
-		Case "sql_variant"
-			Return "Variant"
-		Case "sysname"
-			Return "NChar"
-		Case "text"
-			Return "Text"
-		Case "timestamp"
-			Return "Timestamp"
-		Case "tinyint"
-			Return "TinyInt"
-		Case "uniqueidentifier"
-			Return "UniqueIdentifier"
-		Case "varbinary"
-			Return "VarBinary"
-		Case "varchar"
-			Return "VarChar"
-		Case Else
-			Return "__UNKNOWN__" + column.NativeType
-	End Select
 End Function
 
 Public Function GetPrimaryKeyType(ByVal table As TableSchema) As String
