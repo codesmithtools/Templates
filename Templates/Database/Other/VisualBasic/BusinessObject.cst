@@ -1,0 +1,317 @@
+<%-- 
+Name: VbBusinessObject.cst
+Author: Tom DuPont
+Description: Generates a very simple business object.
+--%>
+
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Description="Generates a very simple business object." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table that the object is based on." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+
+#Region "<%= GetClassName(SourceTable) %>"
+''' <summary>
+''' This object represents the properties and methods of a <%= SourceTable.Name %>.
+''' </summary>
+Public Class <%= GetClassName(SourceTable) %>
+	Protected _id As <%= GetPrimaryKeyType(SourceTable) %>
+	<% For Each column As  ColumnSchema In SourceTable.NonPrimaryKeyColumns %>
+	<%= GetMemberVariableDeclarationStatement(column) %>
+	<% Next %>
+
+    Public Sub New()
+    End Sub
+
+    Public Sub New(ByVal id As <%= GetPrimaryKeyType(SourceTable) %>)
+        Dim sql As New SqlService()
+        sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.VarChar, id)
+        Dim reader As SqlDataReader = sql.ExecuteSqlReader("SELECT * FROM <%= SourceTable.Name %> WHERE <%= SourceTable.PrimaryKey.MemberColumns(0).Name %> = @<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>")
+
+        If reader.Read() Then
+            Me.LoadFromReader(reader)
+            reader.Close()
+        Else
+            If Not reader.IsClosed Then
+                reader.Close()
+            End If
+            Throw New ApplicationException("<%= SourceTable.Name %> does not exist.")
+        End If
+    End Sub
+
+    Public Sub New(ByVal reader As SqlDataReader)
+        Me.LoadFromReader(reader)
+    End Sub
+
+    Protected Sub LoadFromReader(ByVal reader As SqlDataReader)
+        If IsNothing(reader) AndAlso Not reader.IsClosed Then
+            _id = reader.<%= GetReaderMethod(SourceTable.PrimaryKey.MemberColumns(0)) %>(0)
+			<% For i As Integer = 1 To SourceTable.Columns.Count - 1 %>
+			If Not reader.IsDBNull(<%= i %>) Then
+				<% If SourceTable.Columns(i).Name.EndsWith("TypeCode") Then %>
+				<%= GetMemberVariableName(SourceTable.Columns(i)) %> = (<%= SourceTable.Columns(i).Name %>)reader.<% GetReaderMethod(SourceTable.Columns(i)) %>(<%= i %>)
+				<% Else %>
+                <%= GetMemberVariableName(SourceTable.Columns(i)) %> = reader.<%= GetReaderMethod(SourceTable.Columns(i)) %>(<%= i %>)
+				<% End If %>
+            End If
+'			<%= GetReaderAssignmentStatement(SourceTable.Columns(i), i) %>
+			<% Next i %>
+        End If
+    End Sub
+
+    Public Sub Delete()
+        Dim sql As New SqlService()
+        sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns(0)) %>, _id)
+
+        Dim reader As SqlDataReader = sql.ExecuteSqlReader("Delete <%= SourceTable.Name %> Where <%= SourceTable.PrimaryKey.MemberColumns(0).Name %> = @<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>")
+    End Sub
+
+    Public Sub Update()
+        Dim sql As New SqlService()
+        Dim queryParameters As New StringBuilder()
+
+        sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns(0)) %>, Id)
+        queryParameters.Append("<%= SourceTable.PrimaryKey.MemberColumns(0).Name %> = @<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>")
+
+		<% For i As Integer = 0 To SourceTable.NonPrimaryKeyColumns.Count - 1 %>
+		sql.AddParameter("@<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>", SqlDbType.<%= GetSqlDbType(SourceTable.NonPrimaryKeyColumns(i)) %>, <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>)
+        queryParameters.Append(", <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %> = @<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>")
+		<% Next i %>
+
+        Dim query As String = [String].Format("Update <%= SourceTable.Name %> Set {0} Where <%= SourceTable.PrimaryKey.MemberColumns(0).Name %> = @<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", queryParameters.ToString())
+        Dim reader As SqlDataReader = sql.ExecuteSqlReader(query)
+    End Sub
+
+    Public Sub Create()
+        Dim sql As New SqlService()
+        Dim queryParameters As New StringBuilder()
+
+        sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns(0)) %>, Id)
+        queryParameters.Append("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>")
+
+		<% For i As Integer = 0 To SourceTable.NonPrimaryKeyColumns.Count - 1 %>
+		sql.AddParameter("@<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>", SqlDbType.<%= GetSqlDbType(SourceTable.NonPrimaryKeyColumns(i)) %>, <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>)
+        queryParameters.Append(", @<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>")
+		<% Next i %>
+
+        Dim query As String = [String].Format("Insert Into <%= SourceTable.Name %> ({0}) Values ({1})", queryParameters.ToString().Replace("@", ""), queryParameters.ToString())
+        Dim reader As SqlDataReader = sql.ExecuteSqlReader(query)
+    End Sub
+
+    Public Shared Function New<%= SourceTable.Name %>(ByVal id As <%= GetPrimaryKeyType(SourceTable) %>) As <%= SourceTable.Name %>
+        Dim newEntity As New <%= SourceTable.Name %>()
+        newEntity._id = id
+
+        Return newEntity
+    End Function
+
+#Region "Public Properties"
+    Public ReadOnly Property Id() As  <%= GetPrimaryKeyType(SourceTable) %>
+        Get
+            Return _id
+        End Get
+    End Property
+	
+	<% For i As Integer = 0 To SourceTable.NonPrimaryKeyColumns.Count - 1 %>
+	Public Property <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>() As <%= SourceTable.NonPrimaryKeyColumns(i).SystemType %>
+        Get
+            Return <%= GetMemberVariableName(SourceTable.NonPrimaryKeyColumns(i)) %>
+        End Get
+        Set(ByVal value As <%= SourceTable.NonPrimaryKeyColumns(i).SystemType %>)
+            <%= GetMemberVariableName(SourceTable.NonPrimaryKeyColumns(i)) %> = value
+        End Set
+    End Property
+	
+	<% Next i %>
+#End Region
+
+    Public Shared Function Get<%= SourceTable.Name %>(ByVal id As String) As <%= SourceTable.Name %>
+        Return New <%= SourceTable.Name %>(id)
+    End Function
+End Class
+#End Region
+
+<script runat="template">
+
+Public Function GetMemberVariableDeclarationStatement(ByVal column As ColumnSchema) As String
+	Return GetMemberVariableDeclarationStatement("protected", column)
+End Function
+
+Public Function GetMemberVariableDeclarationStatement(ByVal protectionLevel As String, ByVal column As ColumnSchema) As String
+	Dim statement As String = protectionLevel + " Dim "
+	statement += GetMemberVariableName(column) + " As " + column.SystemType.ToString()
+
+	Dim defaultValue As String = GetMemberVariableDefaultValue(column)
+	If defaultValue <> "" Then
+		statement += " = " + defaultValue
+	End If
+
+	Return statement
+End Function
+
+Public Function GetReaderAssignmentStatement(ByVal column As ColumnSchema, ByVal index As Integer) As String
+	Dim statement As String = "If Not Reader.IsDBNull(" + index.ToString() + ") Then "
+	statement += GetMemberVariableName(column) + " = "
+
+	If column.Name.EndsWith("TypeCode") Then
+		statement += "(" + column.Name + ")"
+	End If
+
+	statement += "reader." + GetReaderMethod(column) + "(" + index.ToString() + ") End If"
+
+	Return statement
+End Function
+
+Public Function GetCamelCaseName(ByVal value As String) As String
+	Return value.Substring(0, 1).ToLower() + value.Substring(1)
+End Function
+
+Public Function GetMemberVariableName(ByVal column As ColumnSchema) As String
+	Dim propertyName As String = GetPropertyName(column)
+	Dim memberVariableName As String = "_" + GetCamelCaseName(propertyName)
+
+	Return memberVariableName
+End Function
+
+Public Function GetPropertyName(ByVal column As ColumnSchema) As String
+	Dim propertyName As String = column.Name
+
+	If propertyName = column.Table.Name + "Name" Then
+		Return "Name"
+	End If
+	If propertyName = column.Table.Name + "Description" Then
+		Return "Description"
+	End If
+
+	If propertyName.EndsWith("TypeCode") Then
+		propertyName = propertyName.Substring(0, propertyName.Length - 4)
+	End If
+
+	Return propertyName
+End Function
+
+Public Function GetMemberVariableDefaultValue(ByVal column As ColumnSchema) As String
+	Select Case column.DataType
+		Case DbType.Guid
+			Return "Guid.Empty"
+		Case DbType.AnsiString, DbType.AnsiStringFixedLength, DbType.[String], DbType.StringFixedLength
+			Return "String.Empty"
+		Case Else
+			Return ""
+	End Select
+End Function
+
+Public Function GetReaderMethod(ByVal column As ColumnSchema) As String
+	Select Case column.DataType
+		Case DbType.[Byte]
+			Return "GetByte"
+		Case DbType.Int16
+			Return "GetInt16"
+		Case DbType.Int32
+			Return "GetInt32"
+		Case DbType.Int64
+			Return "GetInt64"
+		Case DbType.AnsiStringFixedLength, DbType.AnsiString, DbType.[String], DbType.StringFixedLength
+			Return "GetString"
+		Case DbType.[Boolean]
+			Return "GetBoolean"
+		Case DbType.Guid
+			Return "GetGuid"
+		Case DbType.Currency, DbType.[Decimal]
+			Return "GetDecimal"
+		Case DbType.DateTime, DbType.[Date]
+			Return "GetDateTime"
+		Case DbType.Binary
+			Return "GetBytes"
+		Case Else
+			Return "__SQL__" + column.DataType
+	End Select
+End Function
+
+Public Function GetClassName(ByVal table As TableSchema) As String
+	If table.Name.EndsWith("s") Then
+		Return table.Name.Substring(0, table.Name.Length - 1)
+	Else
+		Return table.Name
+	End If
+End Function
+
+Public Function GetSqlDbType(ByVal column As ColumnSchema) As String
+	Return column.NativeType.ToString()
+	
+	Select Case column.NativeType
+		Case "bigint"
+			Return "BigInt"
+		Case "binary"
+			Return "Binary"
+		Case "bit"
+			Return "Bit"
+		Case "char"
+			Return "Char"
+		Case "datetime"
+			Return "DateTime"
+		Case "decimal"
+			Return "Decimal"
+		Case "float"
+			Return "Float"
+		Case "image"
+			Return "Image"
+		Case "int"
+			Return "Int"
+		Case "money"
+			Return "Money"
+		Case "nchar"
+			Return "NChar"
+		Case "ntext"
+			Return "NText"
+		Case "numeric"
+			Return "Decimal"
+		Case "nvarchar"
+			Return "NVarChar"
+		Case "real"
+			Return "Real"
+		Case "smalldatetime"
+			Return "SmallDateTime"
+		Case "smallint"
+			Return "SmallInt"
+		Case "smallmoney"
+			Return "SmallMoney"
+		Case "sql_variant"
+			Return "Variant"
+		Case "sysname"
+			Return "NChar"
+		Case "text"
+			Return "Text"
+		Case "timestamp"
+			Return "Timestamp"
+		Case "tinyint"
+			Return "TinyInt"
+		Case "uniqueidentifier"
+			Return "UniqueIdentifier"
+		Case "varbinary"
+			Return "VarBinary"
+		Case "varchar"
+			Return "VarChar"
+		Case Else
+			Return "__UNKNOWN__" + column.NativeType
+	End Select
+End Function
+
+Public Function GetPrimaryKeyType(ByVal table As TableSchema) As String
+	If Not IsNothing(table.PrimaryKey) Then
+		If table.PrimaryKey.MemberColumns.Count = 1 Then
+			Return table.PrimaryKey.MemberColumns(0).SystemType.ToString()
+		Else
+			Throw New ApplicationException("This template will not work on primary keys with more than one member column.")
+		End If
+	Else
+		Throw New ApplicationException("This template will only work on tables with a primary key.")
+	End If
+End Function
+
+Public Overloads Overrides Function GetFileName() As String
+	Return Me.GetClassName(Me.SourceTable) + ".cs"
+End Function
+
+</script>
