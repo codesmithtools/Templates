@@ -95,19 +95,19 @@
 			SqlDataReader reader = sql.ExecuteSqlReader(query);
 		}
 		
-		public static Product CreateProduct(string id, string name, string categoryId, string descn, string image)
+		public static <%= SourceTable.Name %> Create<%= SourceTable.Name %>(string id, string name, string categoryId, string descn, string image)
 		{
-			Product newProduct = new Product();
+			<%= SourceTable.Name %> newEntity = new <%= SourceTable.Name %>();
 
-			newProduct._id = id;
-			newProduct._name = name;
-			newProduct._categoryId = categoryId;
-			newProduct._descn = descn;
-			newProduct._image = image;
+			newEntity._id = id;
+			newEntity._name = name;
+			newEntity._categoryId = categoryId;
+			newEntity._descn = descn;
+			newEntity._image = image;
 
-			newProduct.Create();
+			newEntity.Create();
 
-			return newProduct;
+			return newEntity;
 		}
 		
 		#region Public Properties
