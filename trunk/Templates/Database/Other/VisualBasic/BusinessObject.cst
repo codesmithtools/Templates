@@ -16,7 +16,7 @@ Description: Generates a very simple business object.
 ''' This object represents the properties and methods of a <%= SourceTable.Name %>.
 ''' </summary>
 Public Class <%= GetClassName(SourceTable) %>
-	Protected _id As <%= GetPrimaryKeyType(SourceTable) %>
+	Private _id As <%= GetPrimaryKeyType(SourceTable) %>
 	<% For Each column As  ColumnSchema In SourceTable.NonPrimaryKeyColumns %>
 	<%= GetMemberVariableDeclarationStatement(column) %>
 	<% Next %>
@@ -61,10 +61,7 @@ Public Class <%= GetClassName(SourceTable) %>
     End Sub
 
     Public Sub Delete()
-        Dim sql As New SqlService()
-        sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns(0)) %>, _id)
-
-        Dim reader As SqlDataReader = sql.ExecuteSqlReader("Delete <%= SourceTable.Name %> Where <%= SourceTable.PrimaryKey.MemberColumns(0).Name %> = @<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>")
+        <%= GetClassName(SourceTable) %>.Delete(Id)
     End Sub
 
     Public Sub Update()
@@ -107,10 +104,13 @@ Public Class <%= GetClassName(SourceTable) %>
     End Function
 
 #Region "Public Properties"
-    Public ReadOnly Property Id() As  <%= GetPrimaryKeyType(SourceTable) %>
+    Public Property Id() As  <%= GetPrimaryKeyType(SourceTable) %>
         Get
             Return _id
         End Get
+		Set(ByVal value As <%= GetPrimaryKeyType(SourceTable) %>)
+            _id = value
+        End Set
     End Property
 	
 	<% For i As Integer = 0 To SourceTable.NonPrimaryKeyColumns.Count - 1 %>
@@ -129,13 +129,21 @@ Public Class <%= GetClassName(SourceTable) %>
     Public Shared Function Get<%= SourceTable.Name %>(ByVal id As String) As <%= SourceTable.Name %>
         Return New <%= SourceTable.Name %>(id)
     End Function
+	
+	Public Shared Sub Delete(ByVal id As <%= GetPrimaryKeyType(SourceTable) %>)
+        Dim sql As New SqlService()
+        sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns(0)) %>, id)
+
+        Dim reader As SqlDataReader = sql.ExecuteSqlReader("Delete <%= SourceTable.Name %> Where <%= SourceTable.PrimaryKey.MemberColumns(0).Name %> = @<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>")
+    End Sub
+	
 End Class
 #End Region
 
 <script runat="template">
 
 Public Function GetMemberVariableDeclarationStatement(ByVal column As ColumnSchema) As String
-	Return GetMemberVariableDeclarationStatement("protected", column)
+	Return GetMemberVariableDeclarationStatement("Private", column)
 End Function
 
 Public Function GetMemberVariableDeclarationStatement(ByVal protectionLevel As String, ByVal column As ColumnSchema) As String
