@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <propertySets>
+    <propertySet template="EntityMaster.cst">
+      <property name="EntityMap">NorthwindMap.xml</property>
+      <property name="OutputDirectory">output\</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>
