@@ -33,7 +33,7 @@ Public Class SimpleTemplate
 		' Do something
 	End Sub
 <% End If %>
-}
+End Class
 
 
 
