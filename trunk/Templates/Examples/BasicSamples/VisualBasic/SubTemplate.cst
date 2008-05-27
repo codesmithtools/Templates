@@ -6,7 +6,6 @@ Description: Demonstrates the use of a sub-template.
 
 <%@ CodeTemplate Language="VB" TargetLanguage="Text" Debug="False" Description="Demonstrates the use of a sub-template." %>
 
-<% Debugger.Break() %>
 My sub template content here.
 <% If True Then %>
 True
