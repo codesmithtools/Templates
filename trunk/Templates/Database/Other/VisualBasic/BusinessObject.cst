@@ -11,6 +11,14 @@ Description: Generates a very simple business object.
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 
+<%-- This map directive uses one of the included maps called Sql-CSharp which translates SQL
+data types to C# data types.  You don't need to specify the extension for the map file src
+attribute and if you don't specify a path, it will search in the current directory for a file
+with the specified name and .csmap extension, it will then check in your
+"My Documents\CodeSmith\Maps" folder. --%>
+<%@ Map Name="DbDataReader" Src="DbType-DataReaderMethod" Description="DbType to DataReader Method Map" %>
+<%@ Map Name="SqlNativeSqlDb" Src="SqlNativeType-SqlDbType" Description="SqlNativeType to SqlDbType Map" %>
+
 #Region "<%= GetClassName(SourceTable) %>"
 ''' <summary>
 ''' This object represents the properties and methods of a <%= SourceTable.Name %>.
@@ -211,30 +219,7 @@ Public Function GetMemberVariableDefaultValue(ByVal column As ColumnSchema) As S
 End Function
 
 Public Function GetReaderMethod(ByVal column As ColumnSchema) As String
-	Select Case column.DataType
-		Case DbType.[Byte]
-			Return "GetByte"
-		Case DbType.Int16
-			Return "GetInt16"
-		Case DbType.Int32
-			Return "GetInt32"
-		Case DbType.Int64
-			Return "GetInt64"
-		Case DbType.AnsiStringFixedLength, DbType.AnsiString, DbType.[String], DbType.StringFixedLength
-			Return "GetString"
-		Case DbType.[Boolean]
-			Return "GetBoolean"
-		Case DbType.Guid
-			Return "GetGuid"
-		Case DbType.Currency, DbType.[Decimal]
-			Return "GetDecimal"
-		Case DbType.DateTime, DbType.[Date]
-			Return "GetDateTime"
-		Case DbType.Binary
-			Return "GetBytes"
-		Case Else
-			Return "__SQL__" + column.DataType
-	End Select
+	Return DbDataReader(column.DataType.ToString())
 End Function
 
 Public Function GetClassName(ByVal table As TableSchema) As String
@@ -246,7 +231,7 @@ Public Function GetClassName(ByVal table As TableSchema) As String
 End Function
 
 Public Function GetSqlDbType(ByVal column As ColumnSchema) As String
-	Return column.NativeType.ToString()
+	Return SqlNativeSqlDb(column.NativeType.ToString())
 End Function
 
 Public Function GetPrimaryKeyType(ByVal table As TableSchema) As String
