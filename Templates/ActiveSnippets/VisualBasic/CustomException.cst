@@ -56,9 +56,9 @@ Description: Active Snippet example for how to create a Custom Exception in Visu
 	Public Enum AccessibilityEnum
         [Public]
         [Protected]
-        Internal
-        ProtectedInternal
-        [Private]
+		[Friend]
+        [ProtectedFriend]
+		[Private]
     End Enum
 
     Public Overloads Overrides Function GetFileName() As String
@@ -68,22 +68,22 @@ Description: Active Snippet example for how to create a Custom Exception in Visu
     Public Function GetAccessModifier(ByVal accessibility As AccessibilityEnum) As String
         Select Case accessibility
             Case AccessibilityEnum.[Public]
-                Return "public"
+                Return "Public"
             Case AccessibilityEnum.[Protected]
-                Return "protected"
-            Case AccessibilityEnum.Internal
-                Return "internal"
-            Case AccessibilityEnum.ProtectedInternal
-                Return "protected internal"
+                Return "Protected"
+            Case AccessibilityEnum.[Friend]
+                Return "Friend"
+            Case AccessibilityEnum.[ProtectedFriend]
+                Return "Protected Friend"
             Case AccessibilityEnum.[Private]
-                Return "private"
+                Return "Private"
             Case Else
-                Return "public"
+                Return "Public"
         End Select
     End Function
 
     Public Function GetConstructorArgs() As String
-        If IsNothing(Me.Arguments) Then 'If Me.Arguments = Nothing Then
+        If IsNothing(Me.Arguments) Then
             Return String.Empty
         End If
 
@@ -99,7 +99,7 @@ Description: Active Snippet example for how to create a Custom Exception in Visu
     End Function
 
     Public Function GetFormatArgs() As String
-        If IsNothing(Me.Arguments) Then 'If Me.Arguments = Nothing Then
+        If IsNothing(Me.Arguments) Then
             Return String.Empty
         End If
 
@@ -115,7 +115,6 @@ Description: Active Snippet example for how to create a Custom Exception in Visu
     End Function
 
     Public Sub CreateArgumentMessage()
-        'If Me.Arguments = Nothing OrElse Me.Arguments.Count = 0 OrElse Not String.IsNullOrEmpty(Me.ArgumentMessage) Then
 		If IsNothing(Me.Arguments) OrElse Me.Arguments.Count = 0 OrElse Not String.IsNullOrEmpty(Me.ArgumentMessage) Then
 			Return
         End If
@@ -228,7 +227,7 @@ Namespace <%= Me.ClassNamespace %>
 
             sb.AppendFormat("{0}: {1}", _className, Me.Message)
 			<% If Not String.IsNullOrEmpty(Me.ArgumentMessage) AndAlso Not IsNothing(Me.Arguments) AndAlso Me.Arguments.Count > 0 Then %>
-            sb.AppendFormat(" <%  %>", _testArgName)
+            sb.AppendFormat(" <%= Me.ArgumentMessage %>", <%= GetFormatArgs() %>)
 			<% End If %>
 			
             If IsNothing(Me.InnerException) Then ' If Me.InnerException <> Nothing Then
