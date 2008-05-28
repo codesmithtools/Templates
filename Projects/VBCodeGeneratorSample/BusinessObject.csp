@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <propertySets>
+    <propertySet output="Product.vb" template="BusinessObject.cst">
+      <property name="SourceTable">
+        <connectionString>Data Source=TDUPONT-LT;Initial Catalog=Petshop;Integrated Security=True</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+          <owner>dbo</owner>
+          <name>Product</name>
+        </table>
+      </property>
+    </propertySet>
+    <propertySet output="Orders.vfb" template="BusinessObject.cst">
+      <property name="SourceTable">
+        <connectionString>Data Source=TDUPONT-LT;Initial Catalog=Petshop;Integrated Security=True</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+      <owner>dbo</owner>
+      <name>Orders</name>
+    </table>
+      </property>
+    </propertySet>
+    <propertySet output="Profiles.vb" template="BusinessObject.cst">
+      <property name="SourceTable">
+        <connectionString>Data Source=TDUPONT-LT;Initial Catalog=Petshop;Integrated Security=True</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+      <owner>dbo</owner>
+      <name>Profiles</name>
+    </table>
+      </property>
+    </propertySet>
+    <propertySet output="Supplier.vb" template="BusinessObject.cst">
+      <property name="SourceTable">
+        <connectionString>Data Source=TDUPONT-LT;Initial Catalog=Petshop;Integrated Security=True</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+      <owner>dbo</owner>
+      <name>Supplier</name>
+    </table>
+      </property>
+    </propertySet>
+  </propertySets>
+</codeSmith>
