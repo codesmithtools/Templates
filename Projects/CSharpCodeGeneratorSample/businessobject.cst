@@ -5,22 +5,26 @@
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
+<%@ Map Name="SqlCSharp" Src="Sql-CSharp" Description="System to C# Type Map" %>
+<%@ Map Name="DbDataReader" Src="DbType-DataReaderMethod" Description="DbType to DataReader Method Map" %>
+<%@ Map Name="SqlNativeSqlDb" Src="SqlNativeType-SqlDbType" Description="SqlNativeType to SqlDbType Map" %>
+<%@ Map Name="DbTypeCSharp" Src="DbType-CSharp" Description="DbType to CSharp Map" %>
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 
 <% if (!string.IsNullOrEmpty(ClassNamespace)) { %>
 namespace <%= ClassNamespace %>
 {
 <% } %>
-
 	#region <%= GetClassName(SourceTable) %>
 	/// <summary>
 	/// This object represents the properties and methods of a <%= GetClassName(SourceTable) %>.
 	/// </summary>
 	public class <%= GetClassName(SourceTable) %>
 	{
-		protected <%= GetPrimaryKeyType(SourceTable) %> _id;
+		private <%= GetPrimaryKeyType(SourceTable) %> _id;
 		<% foreach (ColumnSchema column in SourceTable.NonPrimaryKeyColumns) { %>
 		<%= GetMemberVariableDeclarationStatement(column) %>
 		<% } %>
@@ -33,7 +37,7 @@ namespace <%= ClassNamespace %>
 		{
 			SqlService sql = new SqlService();
 			sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) %>, id);
-			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM <%= SourceTable.Name %> WHERE <%= SourceTable.PrimaryKey.MemberColumns[0].Name %> = '" + id.ToString() + "'");
+			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM <%= SourceTable.Name %> WHERE <%= SourceTable.PrimaryKey.MemberColumns[0].Name %> = @<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>");
 			
 			if (reader.Read()) 
 			{
@@ -63,10 +67,58 @@ namespace <%= ClassNamespace %>
 			}
 		}
 		
+		public void Delete()
+		{
+			<%= GetClassName(SourceTable) %>.Delete(_id);
+		}
+		
+		public void Update()
+		{
+			SqlService sql = new SqlService();
+			StringBuilder queryParameters = new StringBuilder();
+
+			sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) %>, Id);
+			queryParameters.Append("<%= SourceTable.PrimaryKey.MemberColumns[0].Name %> = @<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>");
+
+			<% for (int i = 0; i < SourceTable.NonPrimaryKeyColumns.Count; i++) { %>
+			sql.AddParameter("@<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %>", SqlDbType.<%= GetSqlDbType(SourceTable.NonPrimaryKeyColumns[i]) %>, <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %>);
+			queryParameters.Append(", <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %> = @<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %>");
+			<% } %>
+
+			string query = String.Format("Update <%= SourceTable.Name %> Set {0} Where <%= SourceTable.PrimaryKey.MemberColumns[0].Name %> = @<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>", queryParameters.ToString());
+			SqlDataReader reader = sql.ExecuteSqlReader(query);
+		}
+		
+		public void Create()
+		{
+			SqlService sql = new SqlService();
+			StringBuilder queryParameters = new StringBuilder();
+
+			sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) %>, Id);
+			queryParameters.Append("@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>");
+
+			<% for (int i = 0; i < SourceTable.NonPrimaryKeyColumns.Count; i++) { %>
+			sql.AddParameter("@<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %>", SqlDbType.<%= GetSqlDbType(SourceTable.NonPrimaryKeyColumns[i]) %>, <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %>);
+			queryParameters.Append(", @<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns[i]) %>");
+			<% } %>
+
+			string query = String.Format("Insert Into <%= SourceTable.Name %> ({0}) Values ({1})", queryParameters.ToString().Replace("@", ""), queryParameters.ToString());
+			SqlDataReader reader = sql.ExecuteSqlReader(query);
+		}
+		
+		public static <%= GetClassName(SourceTable) %> New<%= GetClassName(SourceTable) %>(<%= GetPrimaryKeyType(SourceTable) %> id)
+		{
+			<%= GetClassName(SourceTable) %> newEntity = new <%= GetClassName(SourceTable) %>();
+			newEntity._id = id;
+
+			return newEntity;
+		}
+		
 		#region Public Properties
 		public <%= GetPrimaryKeyType(SourceTable) %> Id
 		{
 			get {return _id;}
+			set {_id = value;}
 		}
 		
 		<% for (int i = 0; i < SourceTable.NonPrimaryKeyColumns.Count; i++) { %>
@@ -83,6 +135,14 @@ namespace <%= ClassNamespace %>
 		{
 			return new <%= GetClassName(SourceTable) %>(id);
 		}
+		
+		public static void Delete(<%= GetPrimaryKeyType(SourceTable) %> id)
+		{
+			SqlService sql = new SqlService();
+			sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) %>, id);
+	
+			SqlDataReader reader = sql.ExecuteSqlReader("Delete <%= SourceTable.Name %> Where <%= SourceTable.PrimaryKey.MemberColumns[0].Name %> = @<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>");
+		}
 	}
 	#endregion
 <% if (!string.IsNullOrEmpty(ClassNamespace)) { %>
@@ -92,7 +152,7 @@ namespace <%= ClassNamespace %>
 <script runat="template">
 public string GetMemberVariableDeclarationStatement(ColumnSchema column)
 {
-	return GetMemberVariableDeclarationStatement("protected", column);
+	return GetMemberVariableDeclarationStatement("private", column);
 }
 
 public string GetMemberVariableDeclarationStatement(string protectionLevel, ColumnSchema column)
@@ -173,90 +233,13 @@ public string GetMemberVariableDefaultValue(ColumnSchema column)
 public string GetCSharpVariableType(ColumnSchema column)
 {
 	if (column.Name.EndsWith("TypeCode")) return column.Name;
-	
-	switch (column.DataType)
-	{
-		case DbType.AnsiString: return "string";
-		case DbType.AnsiStringFixedLength: return "string";
-		case DbType.Binary: return "byte[]";
-		case DbType.Boolean: return "bool";
-		case DbType.Byte: return "byte";
-		case DbType.Currency: return "decimal";
-		case DbType.Date: return "DateTime";
-		case DbType.DateTime: return "DateTime";
-		case DbType.Decimal: return "decimal";
-		case DbType.Double: return "double";
-		case DbType.Guid: return "Guid";
-		case DbType.Int16: return "short";
-		case DbType.Int32: return "int";
-		case DbType.Int64: return "long";
-		case DbType.Object: return "object";
-		case DbType.SByte: return "sbyte";
-		case DbType.Single: return "float";
-		case DbType.String: return "string";
-		case DbType.StringFixedLength: return "string";
-		case DbType.Time: return "TimeSpan";
-		case DbType.UInt16: return "ushort";
-		case DbType.UInt32: return "uint";
-		case DbType.UInt64: return "ulong";
-		case DbType.VarNumeric: return "decimal";
-		default:
-		{
-			return "__UNKNOWN__" + column.NativeType;
-		}
-	}
+
+	return DbTypeCSharp[column.DataType.ToString()];	
 }
 
 public string GetReaderMethod(ColumnSchema column)
 {
-	switch (column.DataType)
-	{
-		case DbType.Byte:
-		{
-			return "GetByte";
-		}
-		case DbType.Int16:
-		{
-			return "GetInt16";
-		}
-		case DbType.Int32:
-		{
-			return "GetInt32";
-		}
-		case DbType.Int64:
-		{
-			return "GetInt64";
-		}
-		case DbType.AnsiStringFixedLength:
-		case DbType.AnsiString:
-		case DbType.String:
-		case DbType.StringFixedLength:
-		{
-			return "GetString";
-		}
-		case DbType.Boolean:
-		{
-			return "GetBoolean";
-		}
-		case DbType.Guid:
-		{
-			return "GetGuid";
-		}
-		case DbType.Currency:
-		case DbType.Decimal:
-		{
-			return "GetDecimal";
-		}
-		case DbType.DateTime:
-		case DbType.Date:
-		{
-			return "GetDateTime";
-		}
-		default:
-		{
-			return "__SQL__" + column.DataType;
-		}
-	}
+	return DbDataReader[column.DataType.ToString()];
 }
 
 public string GetClassName(TableSchema table)
@@ -273,36 +256,7 @@ public string GetClassName(TableSchema table)
 
 public string GetSqlDbType(ColumnSchema column)
 {
-	switch (column.NativeType)
-	{
-		case "bigint": return "BigInt";
-		case "binary": return "Binary";
-		case "bit": return "Bit";
-		case "char": return "Char";
-		case "datetime": return "DateTime";
-		case "decimal": return "Decimal";
-		case "float": return "Float";
-		case "image": return "Image";
-		case "int": return "Int";
-		case "money": return "Money";
-		case "nchar": return "NChar";
-		case "ntext": return "NText";
-		case "numeric": return "Decimal";
-		case "nvarchar": return "NVarChar";
-		case "real": return "Real";
-		case "smalldatetime": return "SmallDateTime";
-		case "smallint": return "SmallInt";
-		case "smallmoney": return "SmallMoney";
-		case "sql_variant": return "Variant";
-		case "sysname": return "NChar";
-		case "text": return "Text";
-		case "timestamp": return "Timestamp";
-		case "tinyint": return "TinyInt";
-		case "uniqueidentifier": return "UniqueIdentifier";
-		case "varbinary": return "VarBinary";
-		case "varchar": return "VarChar";
-		default: return "__UNKNOWN__" + column.NativeType;
-	}
+	return SqlNativeSqlDb[column.NativeType.ToString()];
 }
 
 public string GetPrimaryKeyType(TableSchema table)
@@ -322,5 +276,10 @@ public string GetPrimaryKeyType(TableSchema table)
 	{
 		throw new ApplicationException("This template will only work on tables with a primary key.");
 	}
+}
+
+public override string GetFileName()
+{
+	return this.GetClassName(this.SourceTable) + ".cs";
 }
 </script>

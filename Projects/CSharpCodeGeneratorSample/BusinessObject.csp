@@ -7,7 +7,7 @@
   <propertySets>
     <propertySet output="Product.cs">
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\Petshop.mdf;Initial Catalog=Petshop;Integrated Security=True;Connect Timeout=30;User Instance=True;</connectionString>
+        <connectionString>Data Source=TDUPONT-LT;Initial Catalog=Petshop;Integrated Security=True</connectionString>
 <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
@@ -17,7 +17,7 @@
     </propertySet>
     <propertySet output="Order.cs">
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\Petshop.mdf;Initial Catalog=Petshop;Integrated Security=True;Connect Timeout=30;User Instance=True;</connectionString>
+        <connectionString>Data Source=TDUPONT-LT;Initial Catalog=Petshop;Integrated Security=True</connectionString>
 <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
@@ -27,7 +27,7 @@
     </propertySet>
     <propertySet output="Supplier.cs">
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\Petshop.mdf;Initial Catalog=Petshop;Integrated Security=True;Connect Timeout=30;User Instance=True;</connectionString>
+        <connectionString>Data Source=TDUPONT-LT;Initial Catalog=Petshop;Integrated Security=True</connectionString>
 <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
@@ -37,7 +37,7 @@
     </propertySet>
     <propertySet output="Profile.cs">
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\Petshop.mdf;Initial Catalog=Petshop;Integrated Security=True;Connect Timeout=30;User Instance=True;</connectionString>
+        <connectionString>Data Source=TDUPONT-LT;Initial Catalog=Petshop;Integrated Security=True</connectionString>
 <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>

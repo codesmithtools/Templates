@@ -1,21 +1,21 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace CSharpCodeGeneratorSample
 {
-
 	#region Product
 	/// <summary>
 	/// This object represents the properties and methods of a Product.
 	/// </summary>
 	public class Product
 	{
-		protected string _id;
-		protected string _categoryId = String.Empty;
-		protected string _name = String.Empty;
-		protected string _descn = String.Empty;
-		protected string _image = String.Empty;
+		private string _id;
+		private string _categoryId = String.Empty;
+		private string _name = String.Empty;
+		private string _descn = String.Empty;
+		private string _image = String.Empty;
 		
 		public Product()
 		{
@@ -25,7 +25,7 @@ namespace CSharpCodeGeneratorSample
 		{
 			SqlService sql = new SqlService();
 			sql.AddParameter("@ProductId", SqlDbType.VarChar, id);
-			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM Product WHERE ProductId = '" + id.ToString() + "'");
+			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM Product WHERE ProductId = @ProductId");
 			
 			if (reader.Read()) 
 			{
@@ -56,10 +56,66 @@ namespace CSharpCodeGeneratorSample
 			}
 		}
 		
+		public void Delete()
+		{
+			Product.Delete(_id);
+		}
+		
+		public void Update()
+		{
+			SqlService sql = new SqlService();
+			StringBuilder queryParameters = new StringBuilder();
+
+			sql.AddParameter("@ProductId", SqlDbType.VarChar, Id);
+			queryParameters.Append("ProductId = @ProductId");
+
+			sql.AddParameter("@CategoryId", SqlDbType.VarChar, CategoryId);
+			queryParameters.Append(", CategoryId = @CategoryId");
+			sql.AddParameter("@Name", SqlDbType.VarChar, Name);
+			queryParameters.Append(", Name = @Name");
+			sql.AddParameter("@Descn", SqlDbType.VarChar, Descn);
+			queryParameters.Append(", Descn = @Descn");
+			sql.AddParameter("@Image", SqlDbType.VarChar, Image);
+			queryParameters.Append(", Image = @Image");
+
+			string query = String.Format("Update Product Set {0} Where ProductId = @ProductId", queryParameters.ToString());
+			SqlDataReader reader = sql.ExecuteSqlReader(query);
+		}
+		
+		public void Create()
+		{
+			SqlService sql = new SqlService();
+			StringBuilder queryParameters = new StringBuilder();
+
+			sql.AddParameter("@ProductId", SqlDbType.VarChar, Id);
+			queryParameters.Append("@ProductId");
+
+			sql.AddParameter("@CategoryId", SqlDbType.VarChar, CategoryId);
+			queryParameters.Append(", @CategoryId");
+			sql.AddParameter("@Name", SqlDbType.VarChar, Name);
+			queryParameters.Append(", @Name");
+			sql.AddParameter("@Descn", SqlDbType.VarChar, Descn);
+			queryParameters.Append(", @Descn");
+			sql.AddParameter("@Image", SqlDbType.VarChar, Image);
+			queryParameters.Append(", @Image");
+
+			string query = String.Format("Insert Into Product ({0}) Values ({1})", queryParameters.ToString().Replace("@", ""), queryParameters.ToString());
+			SqlDataReader reader = sql.ExecuteSqlReader(query);
+		}
+		
+		public static Product NewProduct(string id)
+		{
+			Product newEntity = new Product();
+			newEntity._id = id;
+
+			return newEntity;
+		}
+		
 		#region Public Properties
 		public string Id
 		{
 			get {return _id;}
+			set {_id = value;}
 		}
 		
 		public string CategoryId
@@ -90,6 +146,14 @@ namespace CSharpCodeGeneratorSample
 		public static Product GetProduct(string id)
 		{
 			return new Product(id);
+		}
+		
+		public static void Delete(string id)
+		{
+			SqlService sql = new SqlService();
+			sql.AddParameter("@ProductId", SqlDbType.VarChar, id);
+	
+			SqlDataReader reader = sql.ExecuteSqlReader("Delete Product Where ProductId = @ProductId");
 		}
 	}
 	#endregion
