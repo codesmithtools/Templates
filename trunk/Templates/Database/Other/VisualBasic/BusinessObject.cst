@@ -53,7 +53,7 @@ Public Class <%= GetClassName(SourceTable) %>
     End Sub
 
     Protected Sub LoadFromReader(ByVal reader As SqlDataReader)
-        If IsNothing(reader) AndAlso Not reader.IsClosed Then
+        If Not IsNothing(reader) AndAlso Not reader.IsClosed Then
             _id = reader.<%= GetReaderMethod(SourceTable.PrimaryKey.MemberColumns(0)) %>(0)
 			<% For i As Integer = 1 To SourceTable.Columns.Count - 1 %>
 			If Not reader.IsDBNull(<%= i %>) Then
@@ -63,7 +63,6 @@ Public Class <%= GetClassName(SourceTable) %>
                 <%= GetMemberVariableName(SourceTable.Columns(i)) %> = reader.<%= GetReaderMethod(SourceTable.Columns(i)) %>(<%= i %>)
 				<% End If %>
             End If
-'			<%= GetReaderAssignmentStatement(SourceTable.Columns(i), i) %>
 			<% Next i %>
         End If
     End Sub
@@ -104,8 +103,8 @@ Public Class <%= GetClassName(SourceTable) %>
         Dim reader As SqlDataReader = sql.ExecuteSqlReader(query)
     End Sub
 
-    Public Shared Function New<%= SourceTable.Name %>(ByVal id As <%= GetPrimaryKeyType(SourceTable) %>) As <%= SourceTable.Name %>
-        Dim newEntity As New <%= SourceTable.Name %>()
+    Public Shared Function New<%= GetClassName(SourceTable) %>(ByVal id As <%= GetPrimaryKeyType(SourceTable) %>) As <%= GetClassName(SourceTable) %>
+        Dim newEntity As New <%= GetClassName(SourceTable) %>()
         newEntity._id = id
 
         Return newEntity
@@ -134,8 +133,8 @@ Public Class <%= GetClassName(SourceTable) %>
 	<% Next i %>
 #End Region
 
-    Public Shared Function Get<%= SourceTable.Name %>(ByVal id As String) As <%= SourceTable.Name %>
-        Return New <%= SourceTable.Name %>(id)
+    Public Shared Function Get<%= GetClassName(SourceTable) %>(ByVal id As String) As <%= GetClassName(SourceTable) %>
+        Return New <%= GetClassName(SourceTable) %>(id)
     End Function
 	
 	Public Shared Sub Delete(ByVal id As <%= GetPrimaryKeyType(SourceTable) %>)
@@ -162,19 +161,6 @@ Public Function GetMemberVariableDeclarationStatement(ByVal protectionLevel As S
 	If defaultValue <> "" Then
 		statement += " = " + defaultValue
 	End If
-
-	Return statement
-End Function
-
-Public Function GetReaderAssignmentStatement(ByVal column As ColumnSchema, ByVal index As Integer) As String
-	Dim statement As String = "If Not Reader.IsDBNull(" + index.ToString() + ") Then "
-	statement += GetMemberVariableName(column) + " = "
-
-	If column.Name.EndsWith("TypeCode") Then
-		statement += "(" + column.Name + ")"
-	End If
-
-	statement += "reader." + GetReaderMethod(column) + "(" + index.ToString() + ") End If"
 
 	Return statement
 End Function
