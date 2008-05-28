@@ -97,17 +97,35 @@
     <Compile Include="IntegerHashtable.vb">
       <DependentUpon>Hashtable.csp</DependentUpon>
     </Compile>
+    <Compile Include="Product.vb">
+      <DependentUpon>BusinessObject.csp</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles.vb">
+      <DependentUpon>BusinessObject.csp</DependentUpon>
+    </Compile>
+    <Compile Include="SqlService.vb" />
     <Compile Include="StringHashtable.vb">
       <DependentUpon>Hashtable.csp</DependentUpon>
     </Compile>
     <Compile Include="StringIntegerHashtable.vb">
       <DependentUpon>Hashtable.csp</DependentUpon>
     </Compile>
+    <Compile Include="Supplier.vb">
+      <DependentUpon>BusinessObject.csp</DependentUpon>
+    </Compile>
     <Generate Include="Hashtable.csp">
       <HideOutputs>True</HideOutputs>
       <IncludeOutputs>True</IncludeOutputs>
     </Generate>
+    <Generate Include="BusinessObject.csp">
+      <HideOutputs>True</HideOutputs>
+    </Generate>
+    <None Include="app.config" />
+    <None Include="BusinessObject.cst" />
     <None Include="hashtable.cst" />
+    <None Include="Orders.vfb">
+      <DependentUpon>BusinessObject.csp</DependentUpon>
+    </None>
     <None Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>

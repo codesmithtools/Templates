@@ -1,0 +1,8 @@
+C:\Code\CodeSmith\CodeSmith\trunk\Samples\Projects\VBCodeGeneratorSample\bin\VBCodeGeneratorSample.exe.config
+C:\Code\CodeSmith\CodeSmith\trunk\Samples\Projects\VBCodeGeneratorSample\obj\Debug\ResolveAssemblyReference.cache
+C:\Code\CodeSmith\CodeSmith\trunk\Samples\Projects\VBCodeGeneratorSample\bin\VBCodeGeneratorSample.exe
+C:\Code\CodeSmith\CodeSmith\trunk\Samples\Projects\VBCodeGeneratorSample\bin\VBCodeGeneratorSample.pdb
+C:\Code\CodeSmith\CodeSmith\trunk\Samples\Projects\VBCodeGeneratorSample\bin\VBCodeGeneratorSample.xml
+C:\Code\CodeSmith\CodeSmith\trunk\Samples\Projects\VBCodeGeneratorSample\obj\Debug\VBCodeGeneratorSample.exe
+C:\Code\CodeSmith\CodeSmith\trunk\Samples\Projects\VBCodeGeneratorSample\obj\Debug\VBCodeGeneratorSample.xml
+C:\Code\CodeSmith\CodeSmith\trunk\Samples\Projects\VBCodeGeneratorSample\obj\Debug\VBCodeGeneratorSample.pdb
