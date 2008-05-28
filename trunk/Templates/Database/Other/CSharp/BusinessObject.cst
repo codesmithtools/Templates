@@ -103,9 +103,9 @@ with the specified name and .csmap extension, it will then check in your
 			SqlDataReader reader = sql.ExecuteSqlReader(query);
 		}
 		
-		public static <%= SourceTable.Name %> New<%= SourceTable.Name %>(<%= GetPrimaryKeyType(SourceTable) %> id)
+		public static <%=GetClassName(SourceTable) %> New<%= GetClassName(SourceTable) %>(<%= GetPrimaryKeyType(SourceTable) %> id)
 		{
-			<%= SourceTable.Name %> newEntity = new <%= SourceTable.Name %>();
+			<%= GetClassName(SourceTable) %> newEntity = new <%= GetClassName(SourceTable) %>();
 			newEntity._id = id;
 
 			return newEntity;
