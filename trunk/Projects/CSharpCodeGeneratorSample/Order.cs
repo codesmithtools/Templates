@@ -1,39 +1,39 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace CSharpCodeGeneratorSample
 {
-
 	#region Order
 	/// <summary>
 	/// This object represents the properties and methods of a Order.
 	/// </summary>
 	public class Order
 	{
-		protected int _id;
-		protected string _userId = String.Empty;
-		protected DateTime _orderDate;
-		protected string _shipAddr1 = String.Empty;
-		protected string _shipAddr2 = String.Empty;
-		protected string _shipCity = String.Empty;
-		protected string _shipState = String.Empty;
-		protected string _shipZip = String.Empty;
-		protected string _shipCountry = String.Empty;
-		protected string _billAddr1 = String.Empty;
-		protected string _billAddr2 = String.Empty;
-		protected string _billCity = String.Empty;
-		protected string _billState = String.Empty;
-		protected string _billZip = String.Empty;
-		protected string _billCountry = String.Empty;
-		protected string _courier = String.Empty;
-		protected decimal _totalPrice;
-		protected string _billToFirstName = String.Empty;
-		protected string _billToLastName = String.Empty;
-		protected string _shipToFirstName = String.Empty;
-		protected string _shipToLastName = String.Empty;
-		protected int _authorizationNumber;
-		protected string _locale = String.Empty;
+		private int _id;
+		private string _userId = String.Empty;
+		private DateTime _orderDate;
+		private string _shipAddr1 = String.Empty;
+		private string _shipAddr2 = String.Empty;
+		private string _shipCity = String.Empty;
+		private string _shipState = String.Empty;
+		private string _shipZip = String.Empty;
+		private string _shipCountry = String.Empty;
+		private string _billAddr1 = String.Empty;
+		private string _billAddr2 = String.Empty;
+		private string _billCity = String.Empty;
+		private string _billState = String.Empty;
+		private string _billZip = String.Empty;
+		private string _billCountry = String.Empty;
+		private string _courier = String.Empty;
+		private decimal _totalPrice;
+		private string _billToFirstName = String.Empty;
+		private string _billToLastName = String.Empty;
+		private string _shipToFirstName = String.Empty;
+		private string _shipToLastName = String.Empty;
+		private int _authorizationNumber;
+		private string _locale = String.Empty;
 		
 		public Order()
 		{
@@ -43,7 +43,7 @@ namespace CSharpCodeGeneratorSample
 		{
 			SqlService sql = new SqlService();
 			sql.AddParameter("@OrderId", SqlDbType.Int, id);
-			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM Orders WHERE OrderId = '" + id.ToString() + "'");
+			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM Orders WHERE OrderId = @OrderId");
 			
 			if (reader.Read()) 
 			{
@@ -92,10 +92,138 @@ namespace CSharpCodeGeneratorSample
 			}
 		}
 		
+		public void Delete()
+		{
+			Order.Delete(_id);
+		}
+		
+		public void Update()
+		{
+			SqlService sql = new SqlService();
+			StringBuilder queryParameters = new StringBuilder();
+
+			sql.AddParameter("@OrderId", SqlDbType.Int, Id);
+			queryParameters.Append("OrderId = @OrderId");
+
+			sql.AddParameter("@UserId", SqlDbType.VarChar, UserId);
+			queryParameters.Append(", UserId = @UserId");
+			sql.AddParameter("@OrderDate", SqlDbType.DateTime, OrderDate);
+			queryParameters.Append(", OrderDate = @OrderDate");
+			sql.AddParameter("@ShipAddr1", SqlDbType.VarChar, ShipAddr1);
+			queryParameters.Append(", ShipAddr1 = @ShipAddr1");
+			sql.AddParameter("@ShipAddr2", SqlDbType.VarChar, ShipAddr2);
+			queryParameters.Append(", ShipAddr2 = @ShipAddr2");
+			sql.AddParameter("@ShipCity", SqlDbType.VarChar, ShipCity);
+			queryParameters.Append(", ShipCity = @ShipCity");
+			sql.AddParameter("@ShipState", SqlDbType.VarChar, ShipState);
+			queryParameters.Append(", ShipState = @ShipState");
+			sql.AddParameter("@ShipZip", SqlDbType.VarChar, ShipZip);
+			queryParameters.Append(", ShipZip = @ShipZip");
+			sql.AddParameter("@ShipCountry", SqlDbType.VarChar, ShipCountry);
+			queryParameters.Append(", ShipCountry = @ShipCountry");
+			sql.AddParameter("@BillAddr1", SqlDbType.VarChar, BillAddr1);
+			queryParameters.Append(", BillAddr1 = @BillAddr1");
+			sql.AddParameter("@BillAddr2", SqlDbType.VarChar, BillAddr2);
+			queryParameters.Append(", BillAddr2 = @BillAddr2");
+			sql.AddParameter("@BillCity", SqlDbType.VarChar, BillCity);
+			queryParameters.Append(", BillCity = @BillCity");
+			sql.AddParameter("@BillState", SqlDbType.VarChar, BillState);
+			queryParameters.Append(", BillState = @BillState");
+			sql.AddParameter("@BillZip", SqlDbType.VarChar, BillZip);
+			queryParameters.Append(", BillZip = @BillZip");
+			sql.AddParameter("@BillCountry", SqlDbType.VarChar, BillCountry);
+			queryParameters.Append(", BillCountry = @BillCountry");
+			sql.AddParameter("@Courier", SqlDbType.VarChar, Courier);
+			queryParameters.Append(", Courier = @Courier");
+			sql.AddParameter("@TotalPrice", SqlDbType.Decimal, TotalPrice);
+			queryParameters.Append(", TotalPrice = @TotalPrice");
+			sql.AddParameter("@BillToFirstName", SqlDbType.VarChar, BillToFirstName);
+			queryParameters.Append(", BillToFirstName = @BillToFirstName");
+			sql.AddParameter("@BillToLastName", SqlDbType.VarChar, BillToLastName);
+			queryParameters.Append(", BillToLastName = @BillToLastName");
+			sql.AddParameter("@ShipToFirstName", SqlDbType.VarChar, ShipToFirstName);
+			queryParameters.Append(", ShipToFirstName = @ShipToFirstName");
+			sql.AddParameter("@ShipToLastName", SqlDbType.VarChar, ShipToLastName);
+			queryParameters.Append(", ShipToLastName = @ShipToLastName");
+			sql.AddParameter("@AuthorizationNumber", SqlDbType.Int, AuthorizationNumber);
+			queryParameters.Append(", AuthorizationNumber = @AuthorizationNumber");
+			sql.AddParameter("@Locale", SqlDbType.VarChar, Locale);
+			queryParameters.Append(", Locale = @Locale");
+
+			string query = String.Format("Update Orders Set {0} Where OrderId = @OrderId", queryParameters.ToString());
+			SqlDataReader reader = sql.ExecuteSqlReader(query);
+		}
+		
+		public void Create()
+		{
+			SqlService sql = new SqlService();
+			StringBuilder queryParameters = new StringBuilder();
+
+			sql.AddParameter("@OrderId", SqlDbType.Int, Id);
+			queryParameters.Append("@OrderId");
+
+			sql.AddParameter("@UserId", SqlDbType.VarChar, UserId);
+			queryParameters.Append(", @UserId");
+			sql.AddParameter("@OrderDate", SqlDbType.DateTime, OrderDate);
+			queryParameters.Append(", @OrderDate");
+			sql.AddParameter("@ShipAddr1", SqlDbType.VarChar, ShipAddr1);
+			queryParameters.Append(", @ShipAddr1");
+			sql.AddParameter("@ShipAddr2", SqlDbType.VarChar, ShipAddr2);
+			queryParameters.Append(", @ShipAddr2");
+			sql.AddParameter("@ShipCity", SqlDbType.VarChar, ShipCity);
+			queryParameters.Append(", @ShipCity");
+			sql.AddParameter("@ShipState", SqlDbType.VarChar, ShipState);
+			queryParameters.Append(", @ShipState");
+			sql.AddParameter("@ShipZip", SqlDbType.VarChar, ShipZip);
+			queryParameters.Append(", @ShipZip");
+			sql.AddParameter("@ShipCountry", SqlDbType.VarChar, ShipCountry);
+			queryParameters.Append(", @ShipCountry");
+			sql.AddParameter("@BillAddr1", SqlDbType.VarChar, BillAddr1);
+			queryParameters.Append(", @BillAddr1");
+			sql.AddParameter("@BillAddr2", SqlDbType.VarChar, BillAddr2);
+			queryParameters.Append(", @BillAddr2");
+			sql.AddParameter("@BillCity", SqlDbType.VarChar, BillCity);
+			queryParameters.Append(", @BillCity");
+			sql.AddParameter("@BillState", SqlDbType.VarChar, BillState);
+			queryParameters.Append(", @BillState");
+			sql.AddParameter("@BillZip", SqlDbType.VarChar, BillZip);
+			queryParameters.Append(", @BillZip");
+			sql.AddParameter("@BillCountry", SqlDbType.VarChar, BillCountry);
+			queryParameters.Append(", @BillCountry");
+			sql.AddParameter("@Courier", SqlDbType.VarChar, Courier);
+			queryParameters.Append(", @Courier");
+			sql.AddParameter("@TotalPrice", SqlDbType.Decimal, TotalPrice);
+			queryParameters.Append(", @TotalPrice");
+			sql.AddParameter("@BillToFirstName", SqlDbType.VarChar, BillToFirstName);
+			queryParameters.Append(", @BillToFirstName");
+			sql.AddParameter("@BillToLastName", SqlDbType.VarChar, BillToLastName);
+			queryParameters.Append(", @BillToLastName");
+			sql.AddParameter("@ShipToFirstName", SqlDbType.VarChar, ShipToFirstName);
+			queryParameters.Append(", @ShipToFirstName");
+			sql.AddParameter("@ShipToLastName", SqlDbType.VarChar, ShipToLastName);
+			queryParameters.Append(", @ShipToLastName");
+			sql.AddParameter("@AuthorizationNumber", SqlDbType.Int, AuthorizationNumber);
+			queryParameters.Append(", @AuthorizationNumber");
+			sql.AddParameter("@Locale", SqlDbType.VarChar, Locale);
+			queryParameters.Append(", @Locale");
+
+			string query = String.Format("Insert Into Orders ({0}) Values ({1})", queryParameters.ToString().Replace("@", ""), queryParameters.ToString());
+			SqlDataReader reader = sql.ExecuteSqlReader(query);
+		}
+		
+		public static Order NewOrder(int id)
+		{
+			Order newEntity = new Order();
+			newEntity._id = id;
+
+			return newEntity;
+		}
+		
 		#region Public Properties
 		public int Id
 		{
 			get {return _id;}
+			set {_id = value;}
 		}
 		
 		public string UserId
@@ -234,6 +362,14 @@ namespace CSharpCodeGeneratorSample
 		public static Order GetOrder(int id)
 		{
 			return new Order(id);
+		}
+		
+		public static void Delete(int id)
+		{
+			SqlService sql = new SqlService();
+			sql.AddParameter("@OrderId", SqlDbType.Int, id);
+	
+			SqlDataReader reader = sql.ExecuteSqlReader("Delete Orders Where OrderId = @OrderId");
 		}
 	}
 	#endregion

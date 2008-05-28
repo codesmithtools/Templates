@@ -1,22 +1,22 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace CSharpCodeGeneratorSample
 {
-
 	#region Profile
 	/// <summary>
 	/// This object represents the properties and methods of a Profile.
 	/// </summary>
 	public class Profile
 	{
-		protected int _id;
-		protected string _username = String.Empty;
-		protected string _applicationName = String.Empty;
-		protected bool _isAnonymous;
-		protected DateTime _lastActivityDate;
-		protected DateTime _lastUpdatedDate;
+		private int _id;
+		private string _username = String.Empty;
+		private string _applicationName = String.Empty;
+		private bool _isAnonymous;
+		private DateTime _lastActivityDate;
+		private DateTime _lastUpdatedDate;
 		
 		public Profile()
 		{
@@ -26,7 +26,7 @@ namespace CSharpCodeGeneratorSample
 		{
 			SqlService sql = new SqlService();
 			sql.AddParameter("@UniqueID", SqlDbType.Int, id);
-			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM Profiles WHERE UniqueID = '" + id.ToString() + "'");
+			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM Profiles WHERE UniqueID = @UniqueID");
 			
 			if (reader.Read()) 
 			{
@@ -58,10 +58,70 @@ namespace CSharpCodeGeneratorSample
 			}
 		}
 		
+		public void Delete()
+		{
+			Profile.Delete(_id);
+		}
+		
+		public void Update()
+		{
+			SqlService sql = new SqlService();
+			StringBuilder queryParameters = new StringBuilder();
+
+			sql.AddParameter("@UniqueID", SqlDbType.Int, Id);
+			queryParameters.Append("UniqueID = @UniqueID");
+
+			sql.AddParameter("@Username", SqlDbType.VarChar, Username);
+			queryParameters.Append(", Username = @Username");
+			sql.AddParameter("@ApplicationName", SqlDbType.VarChar, ApplicationName);
+			queryParameters.Append(", ApplicationName = @ApplicationName");
+			sql.AddParameter("@IsAnonymous", SqlDbType.Bit, IsAnonymous);
+			queryParameters.Append(", IsAnonymous = @IsAnonymous");
+			sql.AddParameter("@LastActivityDate", SqlDbType.DateTime, LastActivityDate);
+			queryParameters.Append(", LastActivityDate = @LastActivityDate");
+			sql.AddParameter("@LastUpdatedDate", SqlDbType.DateTime, LastUpdatedDate);
+			queryParameters.Append(", LastUpdatedDate = @LastUpdatedDate");
+
+			string query = String.Format("Update Profiles Set {0} Where UniqueID = @UniqueID", queryParameters.ToString());
+			SqlDataReader reader = sql.ExecuteSqlReader(query);
+		}
+		
+		public void Create()
+		{
+			SqlService sql = new SqlService();
+			StringBuilder queryParameters = new StringBuilder();
+
+			sql.AddParameter("@UniqueID", SqlDbType.Int, Id);
+			queryParameters.Append("@UniqueID");
+
+			sql.AddParameter("@Username", SqlDbType.VarChar, Username);
+			queryParameters.Append(", @Username");
+			sql.AddParameter("@ApplicationName", SqlDbType.VarChar, ApplicationName);
+			queryParameters.Append(", @ApplicationName");
+			sql.AddParameter("@IsAnonymous", SqlDbType.Bit, IsAnonymous);
+			queryParameters.Append(", @IsAnonymous");
+			sql.AddParameter("@LastActivityDate", SqlDbType.DateTime, LastActivityDate);
+			queryParameters.Append(", @LastActivityDate");
+			sql.AddParameter("@LastUpdatedDate", SqlDbType.DateTime, LastUpdatedDate);
+			queryParameters.Append(", @LastUpdatedDate");
+
+			string query = String.Format("Insert Into Profiles ({0}) Values ({1})", queryParameters.ToString().Replace("@", ""), queryParameters.ToString());
+			SqlDataReader reader = sql.ExecuteSqlReader(query);
+		}
+		
+		public static Profile NewProfile(int id)
+		{
+			Profile newEntity = new Profile();
+			newEntity._id = id;
+
+			return newEntity;
+		}
+		
 		#region Public Properties
 		public int Id
 		{
 			get {return _id;}
+			set {_id = value;}
 		}
 		
 		public string Username
@@ -98,6 +158,14 @@ namespace CSharpCodeGeneratorSample
 		public static Profile GetProfile(int id)
 		{
 			return new Profile(id);
+		}
+		
+		public static void Delete(int id)
+		{
+			SqlService sql = new SqlService();
+			sql.AddParameter("@UniqueID", SqlDbType.Int, id);
+	
+			SqlDataReader reader = sql.ExecuteSqlReader("Delete Profiles Where UniqueID = @UniqueID");
 		}
 	}
 	#endregion

@@ -3,6 +3,9 @@
 <%@ Property Name="ItemType" Type="System.String" Category="Context" Description="The type to use as an item in the collection." %>
 <%@ Property Name="ClassName" Type="System.String" Category="Context" Description="The name of the class to be generated." %>
 <%@ Property Name="Accessibility" Type="AccessibilityEnum" Category="Options" Description="The accessibility of the class to be generated." %>
+using System;
+using System.Collections;
+
 	#region <%= ClassName %>
 	<%= GetAccessModifier(Accessibility) %> class <%= ClassName %> : IDictionary, ICollection, IEnumerable, ICloneable
 	{

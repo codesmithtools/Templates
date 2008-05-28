@@ -23,8 +23,8 @@ namespace CSharpCodeGeneratorSample
 			StringHashtable stringhashtable = new StringHashtable();
             StringIntegerHashtable stringinthashtable = new StringIntegerHashtable();
             IntegerHashtable inthashtable = new IntegerHashtable();
-			
-			Product product = new Product("1");
+
+            Product product = new Product("BG-01");
             Supplier supplier = new Supplier();
 		}
 	}

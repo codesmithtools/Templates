@@ -1,25 +1,25 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace CSharpCodeGeneratorSample
 {
-
 	#region Supplier
 	/// <summary>
 	/// This object represents the properties and methods of a Supplier.
 	/// </summary>
 	public class Supplier
 	{
-		protected int _id;
-		protected string _name = String.Empty;
-		protected string _status = String.Empty;
-		protected string _addr1 = String.Empty;
-		protected string _addr2 = String.Empty;
-		protected string _city = String.Empty;
-		protected string _state = String.Empty;
-		protected string _zip = String.Empty;
-		protected string _phone = String.Empty;
+		private int _id;
+		private string _name = String.Empty;
+		private string _status = String.Empty;
+		private string _addr1 = String.Empty;
+		private string _addr2 = String.Empty;
+		private string _city = String.Empty;
+		private string _state = String.Empty;
+		private string _zip = String.Empty;
+		private string _phone = String.Empty;
 		
 		public Supplier()
 		{
@@ -29,7 +29,7 @@ namespace CSharpCodeGeneratorSample
 		{
 			SqlService sql = new SqlService();
 			sql.AddParameter("@SuppId", SqlDbType.Int, id);
-			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM Supplier WHERE SuppId = '" + id.ToString() + "'");
+			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM Supplier WHERE SuppId = @SuppId");
 			
 			if (reader.Read()) 
 			{
@@ -64,10 +64,82 @@ namespace CSharpCodeGeneratorSample
 			}
 		}
 		
+		public void Delete()
+		{
+			Supplier.Delete(_id);
+		}
+		
+		public void Update()
+		{
+			SqlService sql = new SqlService();
+			StringBuilder queryParameters = new StringBuilder();
+
+			sql.AddParameter("@SuppId", SqlDbType.Int, Id);
+			queryParameters.Append("SuppId = @SuppId");
+
+			sql.AddParameter("@Name", SqlDbType.VarChar, Name);
+			queryParameters.Append(", Name = @Name");
+			sql.AddParameter("@Status", SqlDbType.VarChar, Status);
+			queryParameters.Append(", Status = @Status");
+			sql.AddParameter("@Addr1", SqlDbType.VarChar, Addr1);
+			queryParameters.Append(", Addr1 = @Addr1");
+			sql.AddParameter("@Addr2", SqlDbType.VarChar, Addr2);
+			queryParameters.Append(", Addr2 = @Addr2");
+			sql.AddParameter("@City", SqlDbType.VarChar, City);
+			queryParameters.Append(", City = @City");
+			sql.AddParameter("@State", SqlDbType.VarChar, State);
+			queryParameters.Append(", State = @State");
+			sql.AddParameter("@Zip", SqlDbType.VarChar, Zip);
+			queryParameters.Append(", Zip = @Zip");
+			sql.AddParameter("@Phone", SqlDbType.VarChar, Phone);
+			queryParameters.Append(", Phone = @Phone");
+
+			string query = String.Format("Update Supplier Set {0} Where SuppId = @SuppId", queryParameters.ToString());
+			SqlDataReader reader = sql.ExecuteSqlReader(query);
+		}
+		
+		public void Create()
+		{
+			SqlService sql = new SqlService();
+			StringBuilder queryParameters = new StringBuilder();
+
+			sql.AddParameter("@SuppId", SqlDbType.Int, Id);
+			queryParameters.Append("@SuppId");
+
+			sql.AddParameter("@Name", SqlDbType.VarChar, Name);
+			queryParameters.Append(", @Name");
+			sql.AddParameter("@Status", SqlDbType.VarChar, Status);
+			queryParameters.Append(", @Status");
+			sql.AddParameter("@Addr1", SqlDbType.VarChar, Addr1);
+			queryParameters.Append(", @Addr1");
+			sql.AddParameter("@Addr2", SqlDbType.VarChar, Addr2);
+			queryParameters.Append(", @Addr2");
+			sql.AddParameter("@City", SqlDbType.VarChar, City);
+			queryParameters.Append(", @City");
+			sql.AddParameter("@State", SqlDbType.VarChar, State);
+			queryParameters.Append(", @State");
+			sql.AddParameter("@Zip", SqlDbType.VarChar, Zip);
+			queryParameters.Append(", @Zip");
+			sql.AddParameter("@Phone", SqlDbType.VarChar, Phone);
+			queryParameters.Append(", @Phone");
+
+			string query = String.Format("Insert Into Supplier ({0}) Values ({1})", queryParameters.ToString().Replace("@", ""), queryParameters.ToString());
+			SqlDataReader reader = sql.ExecuteSqlReader(query);
+		}
+		
+		public static Supplier NewSupplier(int id)
+		{
+			Supplier newEntity = new Supplier();
+			newEntity._id = id;
+
+			return newEntity;
+		}
+		
 		#region Public Properties
 		public int Id
 		{
 			get {return _id;}
+			set {_id = value;}
 		}
 		
 		public string Name
@@ -122,6 +194,14 @@ namespace CSharpCodeGeneratorSample
 		public static Supplier GetSupplier(int id)
 		{
 			return new Supplier(id);
+		}
+		
+		public static void Delete(int id)
+		{
+			SqlService sql = new SqlService();
+			sql.AddParameter("@SuppId", SqlDbType.Int, id);
+	
+			SqlDataReader reader = sql.ExecuteSqlReader("Delete Supplier Where SuppId = @SuppId");
 		}
 	}
 	#endregion

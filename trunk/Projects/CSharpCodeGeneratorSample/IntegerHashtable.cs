@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 
-namespace CSharpCodeGeneratorSample
-{
 	#region IntegerHashtable
 	public class IntegerHashtable : IDictionary, ICollection, IEnumerable, ICloneable
 	{
@@ -320,5 +318,4 @@ namespace CSharpCodeGeneratorSample
 		#endregion
 	}
 	#endregion
-}
 
