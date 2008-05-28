@@ -1,5 +1,7 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates a very simple business object." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table that the object is based on." %>
+<%@ Property Name="SingleFileMode" Type="System.Boolean" Category="Options" Default="False" Description="Generate content for a complete cs file instead of just a class." %>
+<%@ Property Name="Namespace" Type="System.String" Category="Options" Default="BusinessObjects" Description="Namespace your class is in. Only used if SingleFileMode is true!" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
@@ -14,6 +16,17 @@ with the specified name and .csmap extension, it will then check in your
 <%@ Map Name="DbDataReader" Src="DbType-DataReaderMethod" Description="DbType to DataReader Method Map" %>
 <%@ Map Name="SqlNativeSqlDb" Src="SqlNativeType-SqlDbType" Description="SqlNativeType to SqlDbType Map" %>
 <%@ Map Name="DbTypeCSharp" Src="DbType-CSharp" Description="DbType to CSharp Map" %>
+
+<% if(this.SingleFileMode) { %>
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Data;
+using System.Data.SqlClient;
+
+namespace <%= this.Namespace %>
+{
+<% } %>
 
 	#region <%= GetClassName(SourceTable) %>
 	/// <summary>
@@ -142,6 +155,11 @@ with the specified name and .csmap extension, it will then check in your
 		}
 	}
 	#endregion
+	
+<% if(this.SingleFileMode) { %>
+}
+<% } %>
+
 <script runat="template">
 public string GetMemberVariableDeclarationStatement(ColumnSchema column)
 {
