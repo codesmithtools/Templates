@@ -1,8 +1,10 @@
 Imports System
+Imports System.Collections.Generic
+Imports System.Text
 Imports System.Data
 Imports System.Data.SqlClient
-Imports System.Text
 
+Namespace VBCodeGeneratorSample
 #Region "Supplier"
 ''' <summary>
 ''' This object represents the properties and methods of a Supplier.
@@ -235,4 +237,5 @@ Public Class Supplier
 	
 End Class
 #End Region
+End Namespace
 
