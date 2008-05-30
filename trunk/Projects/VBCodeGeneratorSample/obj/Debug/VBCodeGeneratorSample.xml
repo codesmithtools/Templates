@@ -6,15 +6,15 @@ VBCodeGeneratorSample
 </name>
 </assembly>
 <members>
-<member name="T:VBCodeGeneratorSample.Profile">
+<member name="T:VBCodeGeneratorSample.VBCodeGeneratorSample.Profile">
 	<summary>
  This object represents the properties and methods of a Profiles.
  </summary>
-</member><member name="T:VBCodeGeneratorSample.Supplier">
+</member><member name="T:VBCodeGeneratorSample.VBCodeGeneratorSample.Supplier">
 	<summary>
  This object represents the properties and methods of a Supplier.
  </summary>
-</member><member name="T:VBCodeGeneratorSample.Product">
+</member><member name="T:VBCodeGeneratorSample.VBCodeGeneratorSample.Product">
 	<summary>
  This object represents the properties and methods of a Product.
  </summary>
