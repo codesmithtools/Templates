@@ -4,21 +4,23 @@ Author: Tom DuPont
 Description: Generates a very simple business object.
 --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Description="Generates a very simple business object." %>
-<%@ Property Name="ClassNamespace" Type="System.String" Default="" Optional="True" Category="Context" Description="The namespace to contain this class." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table that the object is based on." %>
+<%@ Property Name="SingleFileMode" Type="System.Boolean" Category="Options" Default="True" Description="Generate content for a complete cs file instead of just a class." %>
+<%@ Property Name="ClassNamespace" Type="System.String" Category="Options" Default="VBCodeGeneratorSample" Description="Namespace your class is in. Only used if SingleFileMode is true!" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Map Name="DbDataReader" Src="DbType-DataReaderMethod" Description="DbType to DataReader Method Map" %>
 <%@ Map Name="SqlNativeSqlDb" Src="SqlNativeType-SqlDbType" Description="SqlNativeType to SqlDbType Map" %>
+<% If Me.SingleFileMode Then %>
 Imports System
+Imports System.Collections.Generic
+Imports System.Text
 Imports System.Data
 Imports System.Data.SqlClient
-Imports System.Text
 
-<% If Not String.IsNullOrEmpty(ClassNamespace) Then %>
-Namespace <%= ClassNamespace %>
+Namespace <%= Me.ClassNamespace %>
 <% End If %>
 #Region "<%= GetClassName(SourceTable) %>"
 ''' <summary>
@@ -147,7 +149,7 @@ Public Class <%= GetClassName(SourceTable) %>
 	
 End Class
 #End Region
-<% If Not String.IsNullOrEmpty(ClassNamespace) Then %>
+<% If Me.SingleFileMode Then %>
 End Namespace
 <% End If %>
 
