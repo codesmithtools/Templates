@@ -1,7 +1,7 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates a very simple business object." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table that the object is based on." %>
 <%@ Property Name="SingleFileMode" Type="System.Boolean" Category="Options" Default="True" Description="Generate content for a complete cs file instead of just a class." %>
-<%@ Property Name="ClassNamespace" Type="System.String" Category="Options" Default="BusinessObjects" Description="Namespace your class is in. Only used if SingleFileMode is true!" %>
+<%@ Property Name="ClassNamespace" Type="System.String" Category="Options" Default="CSharpCodeGeneratorSample" Description="Namespace your class is in. Only used if SingleFileMode is true!" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
