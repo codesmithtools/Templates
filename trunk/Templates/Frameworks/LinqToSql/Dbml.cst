@@ -67,6 +67,7 @@
 
     public void Generate()
     {
+        Stopwatch watch = Stopwatch.StartNew();
         string filePath = Path.GetFullPath(DbmlFile);
         string outputDirectory = Path.GetDirectoryName(filePath);
         
@@ -100,11 +101,11 @@
         DbmlGenerator generator = new DbmlGenerator(settings);
         generator.SchemaItemProcessed += new EventHandler<SchemaItemProcessedEventArgs>(OnSchemaItemProcessed);
         Database db = generator.Create(SourceDatabase);
-		
-		OutputFile outputFile = new OutputFile(this.DbmlFile);
-		outputFile.Metadata.Add("CustomTool", string.Empty);
-		
-		this.RegisterOutput(outputFile);
+        
+        this.RegisterOutput(this.DbmlFile);
+        
+        watch.Stop();
+        Response.WriteLine("Generate Time: " + watch.ElapsedMilliseconds + " ms");
     }
     
     private void OnSchemaItemProcessed(object sender, SchemaItemProcessedEventArgs e)
@@ -112,7 +113,7 @@
         this.Progress.PerformStep();
         Response.WriteLine(e.Name);
     }
-    
+
     private void OnSourceDatabaseChanged(object sender, EventArgs e)
     {
         if (SourceDatabase == null)
@@ -122,7 +123,7 @@
             DbmlFile = Path.Combine(CodeTemplateInfo.DirectoryName, SourceDatabase.Database.Name + ".dbml");
 
         if (string.IsNullOrEmpty(ContextNamespace))
-            ContextNamespace = SourceDatabase.Database.Name + ".Data";;
+            ContextNamespace = SourceDatabase.Database.Name + ".Data";
 
     }
     private void OnEntityNamespaceChanged(object sender, EventArgs e)
