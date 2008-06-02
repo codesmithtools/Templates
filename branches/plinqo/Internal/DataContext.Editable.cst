@@ -1,0 +1,29 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" 
+    Description="Linq to Sql Entity Class." %>
+
+<%@ Assembly Src="Schema.cs" %>
+<%@ Import Namespace="DbmlSchema" %>
+
+<%@ Property Category="1.Mapping" Name="Database" 
+    Type="DbmlSchema.Database" Optional="False" 
+    Description="Database schema instance. Must be set by parent template" %>
+
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+
+namespace <%= Database.ContextNamespace %>
+{
+    <%= Naming.GetModifier(Database.AccessModifier, Database.ClassModifier) %> partial class <%= Database.Class %>
+    {
+        #region Extensibility Method Definitions
+        //TODO: Uncomment and implement partial method
+        //partial void OnCreated()
+        //{
+        //    
+        //}
+        #endregion
+        
+    }
+}
