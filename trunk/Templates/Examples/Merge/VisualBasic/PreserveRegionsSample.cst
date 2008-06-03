@@ -26,7 +26,7 @@ Public Class PreserveRegionsSample
 
 #Region "Custom Region 2"
 
-    ' The contents of this region will also be preserved
+    ' The contentsill also be preserved
     ' during generation.
 
 #End Region
