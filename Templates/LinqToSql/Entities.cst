@@ -98,15 +98,10 @@
         CreateDataContextClass(database);
         CreateEntityClasses(database);
         
-        if (database.Connection != null)
-        {
-            Project.AddConnectionStringSetting(
-                database.Connection.SettingsPropertyName,
-                database.Connection.ConnectionString);
-        }
-        
         Project.AddNoneItem(DbmlFile);
+        Project.AddReferenceItem("System.Configuration", false);
         Project.AddReferenceItem("System.Data.Linq", false);
+		Project.AddReferenceItem("System.Runtime.Serialization", false);		
         Project.SaveProject();
     }
         
@@ -136,14 +131,6 @@
         p.Database = database;
         
         string contextClass = CommonUtility.GetClassName(database.Class);
-        string fileName = contextClass + ".Generated.cs";
-        fileName = Path.Combine(OutputDirectory, fileName);
-        
-        Debug.WriteLine(string.Format("Creating DataContext Class '{0}' ...", 
-            contextClass));
-        
-        Response.WriteLine(fileName);
-        t.RenderToFile(fileName, true);
         
         string parentFileName = contextClass + ".cs";
         parentFileName = Path.Combine(OutputDirectory, parentFileName);
@@ -153,6 +140,15 @@
             Response.WriteLine(parentFileName);
             p.RenderToFile(parentFileName, true);
         }
+
+        string fileName = contextClass + ".Generated.cs";
+        fileName = Path.Combine(OutputDirectory, fileName);
+        
+        Debug.WriteLine(string.Format("Creating DataContext Class '{0}' ...", 
+            contextClass));
+        
+        Response.WriteLine(fileName);
+        t.RenderToFile(fileName, true);
                 
         Project.AddCompileItem(parentFileName, fileName);
         
@@ -213,12 +209,6 @@
         DbmlSchema.Type type)
     {
         string className = type.Name;
-        string fileName = className + ".Generated.cs";
-        fileName = Path.Combine(OutputDirectory, fileName);
-        
-        Response.WriteLine(fileName);
-        entityClass.Type = type;
-        entityClass.RenderToFile(fileName, true);
         
         string parentFileName = className + ".cs";
         parentFileName = Path.Combine(OutputDirectory, parentFileName);
@@ -229,6 +219,13 @@
             Response.WriteLine(parentFileName);
             partialClass.RenderToFile(parentFileName, false);
         }
+        
+        string fileName = className + ".Generated.cs";
+        fileName = Path.Combine(OutputDirectory, fileName);
+        
+        Response.WriteLine(fileName);
+        entityClass.Type = type;
+        entityClass.RenderToFile(fileName, true);
         
         Project.AddCompileItem(parentFileName, fileName);
         

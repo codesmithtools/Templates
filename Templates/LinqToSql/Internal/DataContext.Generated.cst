@@ -31,6 +31,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
@@ -51,6 +52,53 @@ namespace <%= Database.ContextNamespace %>
     {
         private static MappingSource mappingCache = new AttributeMappingSource();
         
+        #region ConnectionString
+        private const string CONNECTION_NAME = "<%= Database.Connection.SettingsPropertyName %>";
+        private static volatile string _connectionString;
+        private static object _connectionLock = new Object();
+
+        /// <summary>The application connection string read from web.config or app.config</summary>
+        /// <example>
+        /// Add the following key to the "connectionStrings" section of your config:
+        /// <code><![CDATA[
+        /// <configuration>
+        ///     <connectionStrings>
+        ///         <add name="<%= Database.Connection.SettingsPropertyName %>" 
+        ///             connectionString="Data Source=(local);Initial Catalog=DATABASE;Integrated Security=True"
+        ///             providerName="System.Data.SqlClient" />
+        ///     </connectionStrings>
+        /// </configuration>
+        /// ]]></code>
+        /// </example>
+        public static string ConnectionString
+        {
+            get
+            {
+                if (_connectionString == null)
+                {
+                    lock (_connectionLock)
+                    {
+                        if (_connectionString == null)
+                            _connectionString = GetDefaultConnectionString();
+                    }
+                }
+                return _connectionString;
+            }
+        }
+
+        private static string GetDefaultConnectionString()
+        {
+            ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings[CONNECTION_NAME];
+            if (settings == null)
+            {
+                string message = string.Format("Could not find the connection string '{0}' in the configuration file.  " +
+                       "Please add an entry to connectionStrings section named '{0}'.", CONNECTION_NAME);
+                throw new ConfigurationErrorsException(message);
+            }
+            return settings.ConnectionString;
+        } 
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Initializes the <see cref="<%= Database.Class %>"/> class.
@@ -59,7 +107,6 @@ namespace <%= Database.ContextNamespace %>
         static <%= Database.Class %>()
         { }
 <% if (Database.Connection.Mode == ConnectionMode.AppSettings
-    && !string.IsNullOrEmpty(Database.Connection.SettingsObjectName) 
     && !string.IsNullOrEmpty(Database.Connection.SettingsPropertyName)) { %>
         
         /// <summary>
@@ -67,18 +114,7 @@ namespace <%= Database.ContextNamespace %>
         /// </summary>
         [DebuggerNonUserCodeAttribute]
         <%= Naming.GetModifier(Database.AccessModifier) %> <%= Database.Class %>()
-            : base(<%= Database.Connection.SettingsObjectName %>.Default.<%= Database.Connection.SettingsPropertyName %>, mappingCache)
-        {
-            OnCreated();
-        }
-<% } else if (!string.IsNullOrEmpty(Database.Connection.ConnectionString)) { %>
-        
-        /// <summary>
-        /// Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
-        /// </summary>
-        [DebuggerNonUserCodeAttribute]
-        <%= Naming.GetModifier(Database.AccessModifier) %> <%= Database.Class %>()
-            : base("<%= Database.Connection.ConnectionString %>", mappingCache)
+            : base(ConnectionString, mappingCache)
         {
             OnCreated();
         }
