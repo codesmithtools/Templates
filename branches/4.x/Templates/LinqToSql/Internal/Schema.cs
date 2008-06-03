@@ -91,17 +91,13 @@ namespace DbmlSchema
             XmlSerializerNamespaces xsn = new XmlSerializerNamespaces();
             xsn.Add("", DbmlConstant.DbmlNamespace);
 
-            StringBuilder sb = new StringBuilder();
-            using (StringWriter sw = new StringWriter(sb))
+            Debug.WriteLine("Saving Dbml File:" + fileName);
+            using (XmlWriter w = XmlWriter.Create(fileName, ws))
             {
-                XmlWriter w = XmlWriter.Create(sw, ws);
                 _serializer.Serialize(w, db, xsn);
                 w.Flush();
                 w.Close();
             }
-
-            Debug.WriteLine("Saving Dbml File:" + fileName);
-            File.WriteAllText(fileName, sb.ToString(), Encoding.UTF8);
         }
 
         public static Database Load(string fileName)
