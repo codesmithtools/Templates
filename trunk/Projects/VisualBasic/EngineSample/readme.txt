@@ -1,0 +1,1 @@
+This project contains a sample of using the CodeSmith.Engine.dll programatically.
