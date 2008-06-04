@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <defaultTemplate path="hashtable.cst" />
+  <defaultProperties>
+    <property name="Accessibility">Public</property>
+  </defaultProperties>
+  <propertySets>
+    <propertySet output="StringHashtable.vb">
+      <property name="KeyType">String</property>
+      <property name="ItemType">String</property>
+      <property name="ClassName">StringHashtable</property>
+    </propertySet>
+    <propertySet output="StringIntegerHashtable.vb">
+      <property name="KeyType">String</property>
+      <property name="ItemType">Integer</property>
+      <property name="ClassName">StringIntegerHashtable</property>
+    </propertySet>
+    <propertySet output="IntegerHashtable.vb">
+      <property name="KeyType">Integer</property>
+      <property name="ItemType">Integer</property>
+      <property name="ClassName">IntegerHashtable</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>
