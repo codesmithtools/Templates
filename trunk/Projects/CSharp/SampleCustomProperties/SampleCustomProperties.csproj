@@ -75,6 +75,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CodeSmith.CustomProperties, Version=4.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.Engine, Version=4.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -138,16 +140,6 @@
     <Content Include="properties.xml" />
     <Content Include="readme.txt" />
     <Content Include="testpo.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Source\CustomProperties\CustomProperties.csproj">
-      <Project>{D0D36B8C-463B-4261-9D28-EF3EA0C90897}</Project>
-      <Name>CustomProperties</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Source\Engine\Engine.csproj">
-      <Project>{36A72D8C-19D2-46F2-A452-01AE44A5C86F}</Project>
-      <Name>Engine</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
