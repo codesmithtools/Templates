@@ -120,7 +120,6 @@
     <None Include="PurchaseOrderXml.csp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IService1.vb" />
     <Compile Include="ModalEditorPropertyEditorForm.Designer.vb">
       <DependentUpon>ModalEditorPropertyEditorForm.vb</DependentUpon>
     </Compile>
@@ -144,7 +143,6 @@
     <Content Include="readme.txt" />
     <Content Include="testpo.xml" />
     <None Include="GenerateCode.bat" />
-    <None Include="App.config" />
     <None Include="PurchaseOrderXml.cst" />
     <None Include="SampleCustomProperties.csp" />
     <None Include="SampleCustomProperties.cst" />
