@@ -29,8 +29,8 @@ namespace ConsoleSample
 			{
 				CodeTemplate template = compiler.CreateInstance();
 				
-				DatabaseSchema database = new DatabaseSchema(new SqlSchemaProvider(), @"Server=(local)\NetSDK;Database=Northwind;Integrated Security=true;");
-				TableSchema table = database.Tables["Customers"];
+				DatabaseSchema database = new DatabaseSchema(new SqlSchemaProvider(), @"Server=(local);Database=Petshop;Integrated Security=true;");
+				TableSchema table = database.Tables["Inventory"];
 				
 				template.SetProperty("SourceTable", table);
 				template.SetProperty("IncludeDrop", false);
