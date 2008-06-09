@@ -53,10 +53,10 @@ Namespace CodeSmith.Samples
         End Property
 
 
-        '/ <summary>
-        '/ The value that we return here will be shown in the property grid.
-        '/ </summary>
-        '/ <returns></returns>
+        ''' <summary>
+        ''' The value that we return here will be shown in the property grid.
+        ''' </summary>
+        ''' <returns></returns>
         Public Overrides Function ToString() As String
             Return SampleString + ": " + SampleBoolean
         End Function

@@ -20,16 +20,16 @@ Imports System.Windows.Forms
 Imports System.Windows.Forms.Design
 
 Namespace CodeSmith.Samples
-    '/ <summary>
-    '/ Summary description for DropDownEditorPropertyEditorControl.
-    '/ </summary>
+    ''' <summary>
+    ''' Summary description for DropDownEditorPropertyEditorControl.
+    ''' </summary>
     Public Class DropDownEditorPropertyEditorControl
         Inherits System.Windows.Forms.UserControl
         Public SampleStringTextBox As System.Windows.Forms.TextBox
         Public SampleBooleanCheckBox As System.Windows.Forms.CheckBox
-        '/ <summary> 
-        '/ Required designer variable.
-        '/ </summary>
+        ''' <summary> 
+        ''' Required designer variable.
+        ''' </summary>
         Dim components As System.ComponentModel.Container
 
         Public Sub New()
@@ -48,9 +48,9 @@ Namespace CodeSmith.Samples
             End If
         End Sub
 
-        '/ <summary> 
-        '/ Clean up any resources being used.
-        '/ </summary>
+        ''' <summary> 
+        ''' Clean up any resources being used.
+        ''' </summary>
         Protected Overrides Sub Dispose(ByVal disposing As Boolean)
             If Not IsNothing(disposing) Then
                 If Not IsNothing(components) Then
@@ -61,10 +61,10 @@ Namespace CodeSmith.Samples
         End Sub
 
 #Region "Component Designer generated code"
-        '/ <summary> 
-        '/ Required method for Designer support - do not modify 
-        '/ the contents of this method with the code editor.
-        '/ </summary>
+        ''' <summary> 
+        ''' Required method for Designer support - do not modify 
+        ''' the contents of this method with the code editor.
+        ''' </summary>
         Private Sub InitializeComponent()
             Me.SampleStringTextBox = New System.Windows.Forms.TextBox()
             Me.SampleBooleanCheckBox = New System.Windows.Forms.CheckBox()
