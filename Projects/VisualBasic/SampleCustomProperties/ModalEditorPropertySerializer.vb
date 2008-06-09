@@ -19,34 +19,34 @@ Imports System.Xml
 Imports CodeSmith.Engine.Schema
 
 Namespace CodeSmith.Samples
-    '/ <summary>
-    '/ This class provides CodeSmith serialization support for ModalEditorProperty.
-    '/ </summary>
+    ''' <summary>
+    ''' This class provides CodeSmith serialization support for ModalEditorProperty.
+    ''' </summary>
     Public Class ModalEditorPropertySerializer
         Implements IPropertySerializer
 
         Public Sub New()
 
         End Sub
-        
-        '/ <summary>
-        '/ This method will be used to restore the property value after a template has been compiled.
-        '/ </summary>
-        '/ <param name="propertyInfo">Information about the target property.</param>
-        '/ <param name="propertyValue">The property to be loaded.</param>
-        '/ <returns>The value to be assigned to the template property after it has been compiled.</returns>
+
+        ''' <summary>
+        ''' This method will be used to restore the property value after a template has been compiled.
+        ''' </summary>
+        ''' <param name="propertyInfo">Information about the target property.</param>
+        ''' <param name="propertyValue">The property to be loaded.</param>
+        ''' <returns>The value to be assigned to the template property after it has been compiled.</returns>
         Public Function LoadProperty(ByVal context As PropertySerializerContext, ByVal propertyValue As Object) As Object Implements IPropertySerializer.LoadProperty
             ' Nothing special needs to be done to load this property so we just return the unmodified property value.
             Return propertyValue
         End Function
 
-        '/ <summary>
-        '/ This method will be used to parse a default value for a property when a template is being instantiated.
-        '/ </summary>
-        '/ <param name="propertyInfo">Information about the target property.</param>
-        '/ <param name="defaultValue">The default value.</param>
-        '/ <param name="basePath">The path to use for resolving file references.</param>
-        '/ <returns>An object that will be assigned to the template property.</returns>
+        ''' <summary>
+        ''' This method will be used to parse a default value for a property when a template is being instantiated.
+        ''' </summary>
+        ''' <param name="propertyInfo">Information about the target property.</param>
+        ''' <param name="defaultValue">The default value.</param>
+        ''' <param name="basePath">The path to use for resolving file references.</param>
+        ''' <returns>An object that will be assigned to the template property.</returns>
         Public Function ParseDefaultValue(ByVal context As PropertySerializerContext, ByVal defaultValue As String) As Object Implements IPropertySerializer.ParseDefaultValue
             If context.PropertyInfo.PropertyType Is GetType(ModalEditorProperty) Then
                 Dim modalEditorPropertyValue As ModalEditorProperty
@@ -65,13 +65,13 @@ Namespace CodeSmith.Samples
             End If
         End Function
 
-        '/ <summary>
-        '/ This method will be used when deserializing the property from an XML property set.
-        '/ </summary>
-        '/ <param name="propertyInfo">Information about the target property.</param>
-        '/ <param name="propertyValue">The XML node to read the property value from.</param>
-        '/ <param name="basePath">The path to use for resolving file references.</param>
-        '/ <returns>The value to be assigned to the template property.</returns>
+        ''' <summary>
+        ''' This method will be used when deserializing the property from an XML property set.
+        ''' </summary>
+        ''' <param name="propertyInfo">Information about the target property.</param>
+        ''' <param name="propertyValue">The XML node to read the property value from.</param>
+        ''' <param name="basePath">The path to use for resolving file references.</param>
+        ''' <returns>The value to be assigned to the template property.</returns>
         Public Function ReadPropertyXml(ByVal context As PropertySerializerContext, ByVal propertyValue As System.Xml.XmlNode) As Object Implements IPropertySerializer.ReadPropertyXml
             If Not context.PropertyInfo.PropertyType Is GetType(ModalEditorProperty) Then
                 Return Nothing
@@ -108,23 +108,23 @@ Namespace CodeSmith.Samples
             Return ModalEditorPropertyValue
         End Function
 
-        '/ <summary>
-        '/ This method will be used to save the property value when a template is being compiled.
-        '/ </summary>
-        '/ <param name="propertyInfo">Information about the target property.</param>
-        '/ <param name="propertyValue">The property to be saved.</param>
-        '/ <returns>An object that will be stored in a Hashtable during template compilation.</returns>
+        ''' <summary>
+        ''' This method will be used to save the property value when a template is being compiled.
+        ''' </summary>
+        ''' <param name="propertyInfo">Information about the target property.</param>
+        ''' <param name="propertyValue">The property to be saved.</param>
+        ''' <returns>An object that will be stored in a Hashtable during template compilation.</returns>
         Public Function SaveProperty(ByVal context As PropertySerializerContext, ByVal propertyValue As Object) As Object Implements IPropertySerializer.SaveProperty
             ' Nothing special needs to be done to save this property so we just return the unmodified property value.
             Return propertyValue
         End Function
 
-        '/ <summary>
-        '/ This method will be used when serializing the property value to an XML property set.
-        '/ </summary>
-        '/ <param name="propertyInfo">Information about the target property.</param>
-        '/ <param name="writer">The XML writer that the property value will be written to.</param>
-        '/ <param name="propertyValue">The property to be serialized.</param>
+        ''' <summary>
+        ''' This method will be used when serializing the property value to an XML property set.
+        ''' </summary>
+        ''' <param name="propertyInfo">Information about the target property.</param>
+        ''' <param name="writer">The XML writer that the property value will be written to.</param>
+        ''' <param name="propertyValue">The property to be serialized.</param>
         Public Sub WritePropertyXml(ByVal context As PropertySerializerContext, ByVal writer As System.Xml.XmlWriter, ByVal propertyValue As Object) Implements IPropertySerializer.WritePropertyXml
             If IsNothing(propertyValue) Then
                 Return

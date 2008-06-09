@@ -19,17 +19,17 @@ Imports System.Windows.Forms
 Imports System.Windows.Forms.Design
 
 Namespace CodeSmith.Samples
-    '/ <summary>
-    '/ Summary description for ModalEditorPropertyEditorForm.
-    '/ </summary>
+    ''' <summary>
+    ''' Summary description for ModalEditorPropertyEditorForm.
+    ''' </summary>
     Public Class ModalEditorPropertyEditorForm
         Inherits System.Windows.Forms.Form
         Private button1 As System.Windows.Forms.Button
         Public SampleBooleanCheckBox As System.Windows.Forms.CheckBox
         Public SampleStringTextBox As System.Windows.Forms.TextBox
-        '/ <summary>
-        '/ Required designer variable.
-        '/ </summary>
+        ''' <summary>
+        ''' Required designer variable.
+        ''' </summary>
         Private components As System.ComponentModel.Container
 
         Public Sub New()
@@ -39,7 +39,7 @@ Namespace CodeSmith.Samples
             InitializeComponent()
             '
             ' TODO: Add any constructor code after InitializeComponent call
-            '
+            ''
         End Sub
 
         Public Sub Start(ByVal editorService As IWindowsFormsEditorService, ByVal value As Object)
@@ -49,9 +49,9 @@ Namespace CodeSmith.Samples
             End If
         End Sub
 
-        '/ <summary>
-        '/ Clean up any resources being used.
-        '/ </summary>
+        ''' <summary>
+        ''' Clean up any resources being used.
+        ''' </summary>
         Protected Overrides Sub Dispose(ByVal disposing As Boolean)
             If Not IsNothing(disposing) Then
                 If Not IsNothing(components) Then
@@ -62,10 +62,10 @@ Namespace CodeSmith.Samples
         End Sub
 
 #Region "Windows Form Designer generated code"
-        '/ <summary>
-        '/ Required method for Designer support - do not modify
-        '/ the contents of this method with the code editor.
-        '/ </summary>
+        ''' <summary>
+        ''' Required method for Designer support - do not modify
+        ''' the contents of this method with the code editor.
+        ''' </summary>
         Private Sub InitializeComponent()
             Me.button1 = New System.Windows.Forms.Button()
             Me.SampleBooleanCheckBox = New System.Windows.Forms.CheckBox()
