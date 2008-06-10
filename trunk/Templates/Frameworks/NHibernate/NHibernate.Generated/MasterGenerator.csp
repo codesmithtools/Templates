@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <propertySets>
+    <propertySet template="Templates\NHibernateMaster.cst">
+      <property name="AssemblyName">NHibernate.Generated</property>
+      <property name="ProjectNamespace">NHibernate.Generated</property>
+      <property name="ManagerNamespace">NHibernate.Generated.ManagerObjects</property>
+      <property name="BusinessNamespace">NHibernate.Generated.BusinessObjects</property>
+      <property name="BaseNamespace">NHibernate.Base</property>
+      <property name="ManagerObjectFolder">ManagerObjects\</property>
+      <property name="BusinessObjectFolder">BusinessObjects\</property>
+      <property name="HbmMapFolder">Resources\</property>
+      <property name="ProjectFile">C:\Code\Experimental\NHibernateResearch\CsNHibernate\CsNHibernate\NHibernate.Generated.csproj</property>
+      <property name="SourceDatabase">
+        <connectionString>Data Source=TDUPONT-LT;Initial Catalog=Petshop;Integrated Security=True</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+    </propertySet>
+  </propertySets>
+</codeSmith>
