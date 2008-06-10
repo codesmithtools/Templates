@@ -1,0 +1,160 @@
+<%-- 
+Name: CsNHibernateManager.cst
+Author: Tom DuPont
+Description: Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file.
+--%>
+<%@ CodeTemplate Language="C#" Src="NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="C#" OutputType="None" Debug="False" Description="Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file." %>
+
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="1. Source Database" Description="The source database to generate from." %>
+
+<%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2. Assemblies and Namespaces" Description="The name of the Assembly that will contain these objects." %>
+<%@ Property Name="ProjectNamespace" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2. Assemblies and Namespaces" Description="The default Namespace of the Project that will contain these objects." %>
+<%@ Property Name="ManagerNamespace" Type="System.String" Default="NHibernate.Generated.ManagerObjects" Optional="False" Category="2. Assemblies and Namespaces" Description="The desired Namespace for the Manager Objects." %>
+<%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2. Assemblies and Namespaces" Description="The desired Namespace for the Business Objects." %>
+<%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Base" Optional="False" Category="2. Assemblies and Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
+
+<%@ Property Name="ManagerObjectFolder" Type="System.String" Default="ManagerObjects\" Optional="True" Category="3. Output Structure" Description="The folder where the Manager objects will be generated." %>
+<%@ Property Name="BusinessObjectFolder" Type="System.String" Default="BusinessObjects\" Optional="True" Category="3. Output Structure" Description="The folder where the Business objects will be generated." %>
+<%@ Property Name="HbmMapFolder" Type="System.String" Default="Resources\" Optional="True" Category="3. Output Structure" Description="The folder where the HBM maps will be generated. (We recommend Resources.)" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="Microsoft.Build.Engine" %>
+<%@ Assembly Name="Microsoft.Build.Utilities" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Src="Project.cs" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import NameSpace="System.IO" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+
+<%@ Register Name="HbmMapTemplate" Template="Hbm.cst" %>
+<%@ Register Name="BusinessObjectTemplate" Template="BusinessObject.cst" %>
+<%@ Register Name="ManagerObjectTemplate" Template="ManagerObject.cst" %>
+<%@ Register Name="EditableManagerObjectTemplate" Template="EditableManagerObject.cst" %>
+<%@ Register Name="ManagerFactoryTemplate" Template="ManagerFactory.cst" %>
+
+<script runat="template">
+#region ProjectUpdater
+
+private ProjectUpdater _project = null;
+    
+internal ProjectUpdater Project
+{
+    get
+    {
+        if (_project == null)
+            _project = new ProjectUpdater(ProjectFile);
+        
+        return _project;
+    }
+}
+
+private string _projectFile;
+
+[Category("3. Output Structure")]
+[Description("Select the Visual Studio project file to update.")]
+[FileDialog(FileDialogType.Open, Title="Select Project File", Filter="Project Files (*.csproj)|*.csproj|All Files (*.*)|*.*", DefaultExtension=".csproj")]
+[Editor(typeof(CodeSmith.CustomProperties.FileNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
+[CodeSmith.Engine.Optional()]
+public string ProjectFile
+{
+    get {return _projectFile;}
+    set {_projectFile = value;}
+}
+
+#endregion
+
+public override void Render(TextWriter writer)
+{
+	foreach(TableSchema table in SourceDatabase.Tables)
+		if(!IsManyToMany(table))
+		{
+			RenderHbmMaps(table);
+			RenderBusinessObjects(table);
+			RenderEditableManagerObjects(table);
+		}
+	RenderManagerFactory();
+	
+	Project.SaveProject();
+}
+
+private void RenderHbmMaps(TableSchema table)
+{
+	HbmMapTemplate hbmMap = new HbmMapTemplate();
+	
+	hbmMap.AssemblyName = this.AssemblyName;
+	hbmMap.BusinessNamespace = this.BusinessNamespace;
+	hbmMap.SourceTable = table;
+	
+	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
+	string fileName = String.Format("{0}{1}.hbm.xml", GetFolder(HbmMapFolder), GetClassName(table.Name));
+	hbmMap.RenderToFile(fileName, strategy);
+	
+	Project.AddEmbeddedResource(fileName);
+}
+private void RenderBusinessObjects(TableSchema table)
+{
+	BusinessObjectTemplate businessObject = new BusinessObjectTemplate();
+	
+	businessObject.BusinessNamespace = this.BusinessNamespace;
+	businessObject.SourceTable = table;
+
+	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
+	string fileName = String.Format("{0}{1}.cs", GetFolder(BusinessObjectFolder), GetClassName(table.Name));
+	businessObject.RenderToFile(fileName, strategy);
+	
+	Project.AddCompileItem(fileName);
+}
+private void RenderEditableManagerObjects(TableSchema table)
+{
+	string fileName = String.Format("{0}{1}Manager.Generated.cs", GetFolder(ManagerObjectFolder), GetClassName(table.Name));
+	string editableFileName = String.Format("{0}{1}Manager.cs", GetFolder(ManagerObjectFolder), GetClassName(table.Name));
+	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
+	
+	if(!File.Exists(editableFileName))
+	{
+		EditableManagerObjectTemplate editableManagerObject = new EditableManagerObjectTemplate();
+		editableManagerObject.ManagerNamespace = this.ManagerNamespace;
+		editableManagerObject.BusinessNamespace = this.BusinessNamespace;
+		editableManagerObject.SourceTable = table;
+		editableManagerObject.RenderToFile(editableFileName, strategy);
+	}
+
+	ManagerObjectTemplate managerObject = new ManagerObjectTemplate();
+	managerObject.ManagerNamespace = this.ManagerNamespace;
+	managerObject.BusinessNamespace = this.BusinessNamespace;
+	managerObject.SourceTable = table;
+	managerObject.RenderToFile(fileName, strategy);
+	
+	Project.AddCompileItem(editableFileName, fileName);
+}
+private void RenderManagerFactory()
+{
+	ManagerFactoryTemplate managerFactory = new ManagerFactoryTemplate();
+	
+	managerFactory.SourceDatabase = this.SourceDatabase;
+	managerFactory.ProjectNamespace = this.ProjectNamespace;
+	managerFactory.ManagerNamespace = this.ManagerNamespace;
+	
+	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
+	string fileName = "ManagerFactory.cs";
+	managerFactory.RenderToFile(fileName, strategy);
+	
+	Project.AddCompileItem(fileName);
+}
+
+private string GetFolder(string entry)
+{
+	string folder;
+	if(String.IsNullOrEmpty(entry))
+		folder = String.Empty;
+	else
+	{
+		if (!Directory.Exists(entry))
+            Directory.CreateDirectory(entry);
+		folder = entry.EndsWith("\\") ? entry : String.Format("{0}\\", entry);
+	}
+	return folder;
+}
+</script>

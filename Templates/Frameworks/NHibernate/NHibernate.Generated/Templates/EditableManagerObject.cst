@@ -1,0 +1,34 @@
+<%-- 
+Name: EditableManagerObject.cst
+Author: Tom DuPont
+Description: Generates an editable Manager Object for NHibernate.
+--%>
+<%@ CodeTemplate Language="C#" Src="NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="C#" Debug="False" Description="Generates an editable Manager Object for NHibernate." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1. Source Database" Description="The source table to generate from." %>
+<%@ Property Name="ManagerNamespace" Type="System.String" Default="NHibernate.Generated.ManagerObjects" Optional="False" Category="2. Assemblies and Namespaces" Description="The desired Namespace for the Manager Objects." %>
+<%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernateGenerated..BusinessObjects" Optional="False" Category="2. Assemblies and Namespaces" Description="The desired Namespace for the Business Objects." %>
+<%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Base" Optional="False" Category="2. Assemblies and Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Map Name="SystemCSharp" Src="System-CSharpAlias" %>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using NHibernate;
+using <%= BusinessNamespace %>;
+using <%= BaseNamespace %>;
+
+namespace <%= ManagerNamespace %>
+{
+    public partial interface I<%= GetClassName(SourceTable.Name) %>Manager : IManagerBase<<%= GetClassName(SourceTable.Name) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable)] %>>
+    {
+	}
+	
+	partial class <%= GetClassName(SourceTable.Name) %>Manager : ManagerBase<<%= GetClassName(SourceTable.Name) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable)] %>>, I<%= GetClassName(SourceTable.Name) %>Manager
+    {
+	}
+}

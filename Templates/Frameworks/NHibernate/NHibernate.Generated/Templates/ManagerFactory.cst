@@ -1,0 +1,55 @@
+<%-- 
+Name: ManagerFactory.cst
+Author: Tom DuPont
+Description: Generates a Manager Factory class for NHibernate.
+--%>
+<%@ CodeTemplate Language="C#" Src="NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="C#" Debug="False" Description="Generates a Manager Factory class for NHibernate." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="1. Source Database" Description="The source database to generate from." %>
+<%@ Property Name="ProjectNamespace" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2. Assemblies and Namespaces" Description="The default Namespace of the Project that will contain these objects." %>
+<%@ Property Name="ManagerNamespace" Type="System.String" Default="NHibernate.Generated.ManagerObjects" Optional="False" Category="2. Assemblies and Namespaces" Description="The desired Namespace for the Manager Objects." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+using <%= ManagerNamespace %>;
+
+namespace <%= ProjectNamespace %>
+{
+    public interface IManagerFactory
+    {
+		// Get Methods
+        <% foreach(TableSchema table in SourceDatabase.Tables) { %>
+		<% if(!IsManyToMany(table)) { %>
+		I<%= GetClassName(table.Name) %>Manager Get<%= GetClassName(table.Name) %>Manager();
+		<% } %>
+		<% } %>
+    }
+
+    public class ManagerFactory : IManagerFactory
+    {
+        #region Constructors
+
+        public ManagerFactory()
+        {
+        }
+
+        #endregion
+
+        #region Get Methods
+
+ 		<% foreach(TableSchema table in SourceDatabase.Tables) { %>
+		<% if(!IsManyToMany(table)) { %>
+		public I<%= GetClassName(table.Name) %>Manager Get<%= GetClassName(table.Name) %>Manager()
+        {
+            return new <%= GetClassName(table.Name) %>Manager();
+        }
+		<% } %>
+		<% } %>
+        
+        #endregion
+    }
+}
