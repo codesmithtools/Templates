@@ -993,6 +993,7 @@ namespace TypedDataSetTester
 		#endregion AddParameter
 		
 		#region Fill Methods
+		
 		public DataTable[] FillSchema(DataSet dataSet, SchemaType schemaType)
 		{
 			DataTable[] dataTables;
@@ -1078,6 +1079,56 @@ namespace TypedDataSetTester
 			}
 		}
 		
+		public int Fill(ProductDataSet dataSet, string[] columns, string[] values, DbType[] types)
+		{
+			try
+			{
+				int recordcount = 0;
+				_command = this.GetCommand();
+				_command.CommandText = @"
+					SELECT
+						[ProductId],
+						[CategoryId],
+						[Name],
+						[Descn],
+						[Image]
+					FROM
+						[Product]
+					WHERE ";
+				
+				for(int i = 0;i < columns.Length; i++)
+				{
+					_command.CommandText += columns[i] + " = " + (types[i] == DbType.AnsiString ? "'" + values[i] + "'" : values[i]);
+					if(i < columns.Length - 1)
+						_command.CommandText += " AND ";
+				}
+				for(int i = 0;i < columns.Length; i++)
+					_command.Parameters.Add(this.CreateParameter("@" + columns[i], types[i], columns[i]));
+				this.OpenConnection();
+				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult);
+				while (_reader.Read())
+				{
+					ProductDataSet.ProductRow row = dataSet.Product.NewProductRow();
+					this.PopulateProductDataRow(_reader, row);
+					dataSet.Product.AddProductRow(row);
+					
+					recordcount++;
+				}
+				dataSet.AcceptChanges();
+				
+				return recordcount;
+			}
+			catch (Exception e)
+			{
+				System.Diagnostics.Debug.WriteLine(e.ToString());
+				return 0;
+			}
+			finally
+			{
+				this.Cleanup();
+			}
+		}
+		
 		public int Fill(ProductDataSet dataSet)
 		{
 			try
@@ -1117,7 +1168,6 @@ namespace TypedDataSetTester
 				this.Cleanup();
 			}
 		}
-		
 		public int FillByProductId(ProductDataSet dataSet, string productId)
 		{
 			try
@@ -1162,7 +1212,6 @@ namespace TypedDataSetTester
 				this.Cleanup();
 			}
 		}
-		
 		public int FillByName(ProductDataSet dataSet, string name)
 		{
 			try
@@ -1207,7 +1256,6 @@ namespace TypedDataSetTester
 				this.Cleanup();
 			}
 		}
-		
 		public int FillByCategoryId(ProductDataSet dataSet, string categoryId)
 		{
 			try
@@ -1252,7 +1300,6 @@ namespace TypedDataSetTester
 				this.Cleanup();
 			}
 		}
-		
 		public int FillByCategoryIdAndName(ProductDataSet dataSet, string categoryId, string name)
 		{
 			try
@@ -1299,7 +1346,6 @@ namespace TypedDataSetTester
 				this.Cleanup();
 			}
 		}
-		
 		public int FillByCategoryIdAndProductIdAndName(ProductDataSet dataSet, string categoryId, string productId, string name)
 		{
 			try

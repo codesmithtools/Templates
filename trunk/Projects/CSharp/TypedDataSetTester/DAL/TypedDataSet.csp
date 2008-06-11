@@ -4,23 +4,23 @@
     <propertySet output="OrdersDataSet.cs" template="..\Template\TypedDataSet.cst">
       <property name="ClassNamespace">TypedDataSetTester</property>
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\Petshop.mdf;Initial Catalog=Petshop;Integrated Security=True;Connect Timeout=30;User Instance=True;</connectionString>
+        <connectionString>Server=(local);Database=Petshop;Integrated Security=true;</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-      <owner>dbo</owner>
-      <name>Orders</name>
-    </table>
+          <owner>dbo</owner>
+          <name>Orders</name>
+        </table>
       </property>
     </propertySet>
     <propertySet output="ProductDataSet.cs" template="..\Template\TypedDataSet.cst">
       <property name="ClassNamespace">TypedDataSetTester</property>
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\Petshop.mdf;Initial Catalog=Petshop;Integrated Security=True;Connect Timeout=30;User Instance=True;</connectionString>
+        <connectionString>Server=(local);Database=Petshop;Integrated Security=true;</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-      <owner>dbo</owner>
-      <name>Product</name>
-    </table>
+          <owner>dbo</owner>
+          <name>Product</name>
+        </table>
       </property>
     </propertySet>
   </propertySets>
