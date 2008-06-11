@@ -7,9 +7,9 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{2CF6CB31-0765-4A9A-B304-AB859BC6AD78}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>SampleCustomProperties.DropDownEditorProperty</StartupObject>
-    <RootNamespace>SampleCustomProperties</RootNamespace>
-    <AssemblyName>SampleCustomProperties</AssemblyName>
+    <StartupObject>CustomPropertiesSample.DropDownEditorProperty</StartupObject>
+    <RootNamespace>CustomPropertiesSample</RootNamespace>
+    <AssemblyName>CustomPropertiesSample</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Console</MyType>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -24,7 +24,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>SampleCustomProperties.xml</DocumentationFile>
+    <DocumentationFile>CustomPropertiesSample.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -37,8 +37,8 @@
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeSmith.CustomProperties, Version=4.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
-    <Reference Include="CodeSmith.Engine, Version=4.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.CustomProperties, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
+    <Reference Include="CodeSmith.Engine, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -144,8 +144,8 @@
     <Content Include="testpo.xml" />
     <None Include="GenerateCode.bat" />
     <None Include="PurchaseOrderXml.cst" />
-    <None Include="SampleCustomProperties.csp" />
-    <None Include="SampleCustomProperties.cst" />
+    <None Include="CustomPropertiesSample.csp" />
+    <None Include="CustomPropertiesSample.cst" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

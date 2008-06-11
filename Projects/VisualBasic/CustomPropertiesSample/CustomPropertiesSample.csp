@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <propertySets>
-    <propertySet output="SampleCustomProperties.cs" template="SampleCustomProperties.cst">
+    <propertySet output="CustomPropertiesSample.cs" template="CustomPropertiesSample.cst">
       <property name="DropDownEditorProperty">
         <SampleBoolean>False</SampleBoolean>
         <SampleString>Hello World!</SampleString>

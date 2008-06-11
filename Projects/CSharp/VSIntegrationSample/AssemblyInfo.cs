@@ -19,7 +19,7 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("CSharpCodeGeneratorSample.exe")]
+[assembly: AssemblyTitle("VSIntegrationSample.exe")]
 [assembly: AssemblyDescription("CodeSmith is a template-based code generation system.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CodeSmith Tools, LLC")]
@@ -39,7 +39,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("4.0.0.0")]
+[assembly: AssemblyVersion("5.0.0.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
