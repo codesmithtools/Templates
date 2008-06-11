@@ -12,6 +12,9 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Data;
+using System.Data.Common;
+using System.Collections;
 
 namespace TypedDataSetTester
 {
@@ -20,16 +23,79 @@ namespace TypedDataSetTester
 		[STAThread]
 		static void Main(string[] args)
 		{
-			// Northwind
+			// PetShop
             OrdersDataSet cds = new OrdersDataSet();
-            OrdersDataAdapter cda = new OrdersDataAdapter("ConnectionString");
-			
-			// fill all the records from the permission table.
-			cda.Fill(cds);
-			
+            OrdersDataAdapter cda = new OrdersDataAdapter();
+            //ProductDataSet pds = new ProductDataSet();
+            //ProductDataAdapter pda = new ProductDataAdapter();
+
+            //pda.FillByCategoryId(pds, "BIRDS");
+            //Console.Out.WriteLine(cds.Orders.Rows.Count);
+            //IEnumerator en = pds.Product.GetEnumerator();
+            //while (en.MoveNext())
+            //{
+            //    ProductDataSet.ProductRow row = (ProductDataSet.ProductRow)en.Current;
+            //    Console.Out.WriteLine(row.ProductId + " " + row.CategoryId + " " + row.Name + " " + row.Descn);
+            //}
+
+            //// fill all the records from the permission table.
+            //string[] columns = { "ShipCity", "Courier" };
+            //string[] values = { "Nowhere", "Me" };
+            //DbType[] types = { DbType.AnsiString, DbType.AnsiString };
+            //cda.Fill(cds, columns, values, types);
+
+
+            //Console.Out.WriteLine(cds.Orders.Rows.Count);
+            //Console.Out.WriteLine(cds.Orders.FindByOrderId(1) != null ? cds.Orders.FindByOrderId(1).OrderId.ToString() : "Nope");
+            //Console.Out.WriteLine(cds.Orders.FindByOrderId(4) != null ? cds.Orders.FindByOrderId(4).OrderId.ToString() : "Nope");
+            //Console.In.Read();
+
+            //cds.Clear();
+            cda.Fill(cds);
+            
+            OrdersDataSet.OrdersRow newRow = cds.Orders.NewOrdersRow();
+            newRow.OrderDate = DateTime.Now;
+            newRow.ShipAddr1 = "2001 Nowhere";
+            newRow.ShipCity = "Nowhere";
+            newRow.ShipState = "Tx";
+            newRow.ShipZip = "12345";
+            newRow.OrderId = 200;
+            newRow.UserId = "joe";
+            newRow.ShipCountry = "USA";
+            newRow.BillAddr1 = "2001 UHUH";
+            newRow.BillCity = "Nowhere";
+            newRow.BillState = "Tx";
+            newRow.BillZip = "12345";
+            newRow.UserId = "yoyDu";
+            newRow.BillCountry = "USA";
+            newRow.Courier = "Me";
+            newRow.TotalPrice = 12.12M;
+            newRow.BillToFirstName = "Yaba";
+            newRow.BillToLastName = "Daba";
+            newRow.ShipToFirstName = "Yoko";
+            newRow.ShipToLastName = "Ono";
+            newRow.AuthorizationNumber = 123;
+            newRow.Locale = "Here";
+            cds.Orders.AddOrdersRow(newRow);
+                
+            Console.In.Read();
 			// make some changes and save
-			
-			// reset changes and save
+            //OrdersDataSet.OrdersRow editRow = cds.Orders.FindByOrderId(/*Pick a Valid Number For Test*/);
+            //editRow.BillZip = "33333";
+            //editRow.Courier = "USPS";
+            cda.Update(cds);
+
+            //Console.In.Read();
+            //// reset changes and save
+            //editRow.RejectChanges();
+            //cda.Update(cds);
+
+            //Console.In.Read();
+            //// Delete row and update
+            //OrdersDataSet.OrdersRow deleteRow = cds.Orders.FindByOrderId(/*Pick a Valid Number For Test*/);
+            //deleteRow.Delete();
+            //cda.Update(cds);
+            //Console.In.Read();
 			
 		}
 	}

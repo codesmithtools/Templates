@@ -721,13 +721,11 @@ namespace TypedDataSetTester
 				_columnTotalPrice = new DataColumn("TotalPrice", typeof(decimal), "", MappingType.Element);
 				_columnTotalPrice.AllowDBNull = false;
 				_columnTotalPrice.Caption = "Total Price";
-				_columnTotalPrice.MaxLength = 9;
 				_columnTotalPrice.Unique = false;
 				_columnTotalPrice.DefaultValue = Convert.DBNull;
 				_columnTotalPrice.ExtendedProperties.Add("IsKey", "false");
 				_columnTotalPrice.ExtendedProperties.Add("ReadOnly", "false");
 				_columnTotalPrice.ExtendedProperties.Add("Description", "Total Price");
-				_columnTotalPrice.ExtendedProperties.Add("Length", "9");
 				_columnTotalPrice.ExtendedProperties.Add("Decimals", "0");
 				_columnTotalPrice.ExtendedProperties.Add("AllowDBNulls", "false");
 				this.Columns.Add(_columnTotalPrice);
@@ -2031,6 +2029,7 @@ namespace TypedDataSetTester
 		#endregion AddParameter
 		
 		#region Fill Methods
+		
 		public DataTable[] FillSchema(DataSet dataSet, SchemaType schemaType)
 		{
 			DataTable[] dataTables;
@@ -2152,6 +2151,74 @@ namespace TypedDataSetTester
 			}
 		}
 		
+		public int Fill(OrdersDataSet dataSet, string[] columns, string[] values, DbType[] types)
+		{
+			try
+			{
+				int recordcount = 0;
+				_command = this.GetCommand();
+				_command.CommandText = @"
+					SELECT
+						[OrderId],
+						[UserId],
+						[OrderDate],
+						[ShipAddr1],
+						[ShipAddr2],
+						[ShipCity],
+						[ShipState],
+						[ShipZip],
+						[ShipCountry],
+						[BillAddr1],
+						[BillAddr2],
+						[BillCity],
+						[BillState],
+						[BillZip],
+						[BillCountry],
+						[Courier],
+						[TotalPrice],
+						[BillToFirstName],
+						[BillToLastName],
+						[ShipToFirstName],
+						[ShipToLastName],
+						[AuthorizationNumber],
+						[Locale]
+					FROM
+						[Orders]
+					WHERE ";
+				
+				for(int i = 0;i < columns.Length; i++)
+				{
+					_command.CommandText += columns[i] + " = " + (types[i] == DbType.AnsiString ? "'" + values[i] + "'" : values[i]);
+					if(i < columns.Length - 1)
+						_command.CommandText += " AND ";
+				}
+				for(int i = 0;i < columns.Length; i++)
+					_command.Parameters.Add(this.CreateParameter("@" + columns[i], types[i], columns[i]));
+				this.OpenConnection();
+				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult);
+				while (_reader.Read())
+				{
+					OrdersDataSet.OrdersRow row = dataSet.Orders.NewOrdersRow();
+					this.PopulateOrdersDataRow(_reader, row);
+					dataSet.Orders.AddOrdersRow(row);
+					
+					recordcount++;
+				}
+				dataSet.AcceptChanges();
+				
+				return recordcount;
+			}
+			catch (Exception e)
+			{
+				System.Diagnostics.Debug.WriteLine(e.ToString());
+				return 0;
+			}
+			finally
+			{
+				this.Cleanup();
+			}
+		}
+		
 		public int Fill(OrdersDataSet dataSet)
 		{
 			try
@@ -2209,7 +2276,6 @@ namespace TypedDataSetTester
 				this.Cleanup();
 			}
 		}
-		
 		public int FillByOrderId(OrdersDataSet dataSet, int orderId)
 		{
 			try
@@ -2312,7 +2378,6 @@ namespace TypedDataSetTester
 								_command = this.GetCommand();
 								_command.CommandText = @"
 									INSERT INTO [Orders] (
-										[OrderId],
 										[UserId],
 										[OrderDate],
 										[ShipAddr1],
@@ -2336,7 +2401,6 @@ namespace TypedDataSetTester
 										[AuthorizationNumber],
 										[Locale]
 									) VALUES (
-										@OrderId,
 										@UserId,
 										@OrderDate,
 										@ShipAddr1,
@@ -2360,7 +2424,6 @@ namespace TypedDataSetTester
 										@AuthorizationNumber,
 										@Locale
 									)";
-								_command.Parameters.Add(this.CreateParameter("@OrderId", DbType.Int32, row.IsOrderIdNull() ? (object)DBNull.Value : (object)row.OrderId));
 								_command.Parameters.Add(this.CreateParameter("@UserId", DbType.AnsiString, row.IsUserIdNull() ? (object)DBNull.Value : (object)row.UserId));
 								_command.Parameters.Add(this.CreateParameter("@OrderDate", DbType.DateTime, row.IsOrderDateNull() ? (object)DBNull.Value : (object)row.OrderDate));
 								_command.Parameters.Add(this.CreateParameter("@ShipAddr1", DbType.AnsiString, row.IsShipAddr1Null() ? (object)DBNull.Value : (object)row.ShipAddr1));

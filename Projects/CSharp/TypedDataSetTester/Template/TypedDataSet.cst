@@ -1,10 +1,13 @@
 <%@ CodeTemplate Language="C#" Src="TypedDataSet.cst.cs" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" TargetLanguage="C#" Description="Generates a typed DataSet class based on a database table schema." %>
 <%@ Property Name="ClassNamespace" Type="String" Optional="true" Category="Context" Description="The namespace for the generated classes." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table that the typed DataSet should contain." %>
+<%@ Map Name="SqlToC" src="Sql-CSharp.csmap" Description="A Mapping of SQL Server data types to CSharp data types" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="System" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Collections" %>
 using System;
 using System.IO;
 using System.Collections;
@@ -262,7 +265,7 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 				_column<%= SourceTable.Columns[i].Name %> = new DataColumn("<%= SourceTable.Columns[i].Name %>", typeof(<%= GetCSharpVariableType(SourceTable.Columns[i]) %>), "", MappingType.Element);
 				_column<%= SourceTable.Columns[i].Name %>.AllowDBNull = <% if (SourceTable.Columns[i].AllowDBNull) { %>true<% } else { %>false<% } %>;
 				_column<%= SourceTable.Columns[i].Name %>.Caption = "<%= GetSpacedName(SourceTable.Columns[i].Name) %>";
-				<% if (SizeMatters(SourceTable.Columns[i])) { %>
+				<% if (SizeMatters(SourceTable.Columns[i])&& GetCSharpVariableType(SourceTable.Columns[i]) == "string") { %>
 				_column<%= SourceTable.Columns[i].Name %>.MaxLength = <%= SourceTable.Columns[i].Size %>;
 				<% } %>
 				_column<%= SourceTable.Columns[i].Name %>.Unique = <% if (SourceTable.PrimaryKey.MemberColumns.Count == 1 && SourceTable.Columns[i].IsPrimaryKeyMember) { %>true<% } else { %>false<% } %>;
@@ -270,7 +273,7 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 				_column<%= SourceTable.Columns[i].Name %>.ExtendedProperties.Add("IsKey", "<% if (SourceTable.Columns[i].IsPrimaryKeyMember) { %>true<% } else { %>false<% } %>");
 				_column<%= SourceTable.Columns[i].Name %>.ExtendedProperties.Add("ReadOnly", "false");
 				_column<%= SourceTable.Columns[i].Name %>.ExtendedProperties.Add("Description", "<%= GetSpacedName(SourceTable.Columns[i].Name) %>");
-				<% if (SizeMatters(SourceTable.Columns[i])) { %>
+				<% if (SizeMatters(SourceTable.Columns[i]) && GetCSharpVariableType(SourceTable.Columns[i]) == "string"){ %>
 				_column<%= SourceTable.Columns[i].Name %>.ExtendedProperties.Add("Length", "<%= SourceTable.Columns[i].Size %>");
 				<% } %>
 				_column<%= SourceTable.Columns[i].Name %>.ExtendedProperties.Add("Decimals", "0");
@@ -795,6 +798,8 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 		#endregion AddParameter
 		
 		#region Fill Methods
+		<% ArrayList methods = new ArrayList();%>
+		
 		public DataTable[] FillSchema(DataSet dataSet, SchemaType schemaType)
 		{
 			DataTable[] dataTables;
@@ -880,6 +885,54 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 			}
 		}
 		
+		public int Fill(<%= GetClassName(SourceTable.Name) %>DataSet dataSet, string[] columns, string[] values, DbType[] types)
+		{
+			try
+			{
+				int recordcount = 0;
+				_command = this.GetCommand();
+				_command.CommandText = @"
+					SELECT
+						<% for (int x = 0; x < SourceTable.Columns.Count; x++) { %>
+						[<%= SourceTable.Columns[x].Name %>]<% if (x < SourceTable.Columns.Count - 1) { %>,<% } %>
+						<% } %>
+					FROM
+						[<%= GetClassName(SourceTable.Name) %>]
+					WHERE ";
+				
+				for(int i = 0;i < columns.Length; i++)
+				{
+					_command.CommandText += columns[i] + " = " + (types[i] == DbType.AnsiString ? "'" + values[i] + "'" : values[i]);
+					if(i < columns.Length - 1)
+						_command.CommandText += " AND ";
+				}
+				for(int i = 0;i < columns.Length; i++)
+					_command.Parameters.Add(this.CreateParameter("@" + columns[i], types[i], columns[i]));
+				this.OpenConnection();
+				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult);
+				while (_reader.Read())
+				{
+					<%= GetClassName(SourceTable.Name) %>DataSet.<%= GetClassName(SourceTable.Name) %>Row row = dataSet.<%= GetClassName(SourceTable.Name) %>.New<%= GetClassName(SourceTable.Name) %>Row();
+					this.Populate<%= GetClassName(SourceTable.Name) %>DataRow(_reader, row);
+					dataSet.<%= GetClassName(SourceTable.Name) %>.Add<%= GetClassName(SourceTable.Name) %>Row(row);
+					
+					recordcount++;
+				}
+				dataSet.AcceptChanges();
+				
+				return recordcount;
+			}
+			catch (Exception e)
+			{
+				System.Diagnostics.Debug.WriteLine(e.ToString());
+				return 0;
+			}
+			finally
+			{
+				this.Cleanup();
+			}
+		}
+		
 		public int Fill(<%= GetClassName(SourceTable.Name) %>DataSet dataSet)
 		{
 			try
@@ -918,7 +971,8 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 			}
 		}
 		<% for (int i = 0; i < SourceTable.Indexes.Count; i++) { %>
-		
+		<% if(!methods.Contains(GetFillByIndexName(SourceTable.Indexes[i]))) { %>
+		<% methods.Add(GetFillByIndexName(SourceTable.Indexes[i])); %>
 		public int <%= GetFillByIndexName(SourceTable.Indexes[i]) %>(<%= GetClassName(SourceTable.Name) %>DataSet dataSet, <%= GetFillByIndexParameters(SourceTable.Indexes[i]) %>)
 		{
 			try
@@ -966,6 +1020,58 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 			}
 		}
 		<% } %>
+		<% } %>
+		<% for (int i = 0; i < SourceTable.ForeignKeys.Count; i++) { %>
+		<% if (!methods.Contains("FillBy" + SourceTable.ForeignKeyColumns[i].Name)) { %> 
+		<% methods.Add("FillBy" + SourceTable.ForeignKeyColumns[i].Name); %>
+		public int FillBy<%=SourceTable.ForeignKeyColumns[i].Name %> (<%= GetClassName(SourceTable.Name) %>DataSet dataSet, <%= SqlToC[SourceTable.ForeignKeyColumns[i].NativeType]%> <%=SourceTable.ForeignKeyColumns[i].Name%>)
+		{
+			try
+			{
+				int recordcount = 0;
+				_command = this.GetCommand();
+				_command.CommandText = @"
+					SELECT
+						<% for (int x = 0; x < SourceTable.Columns.Count; x++) { %>
+						[<%= SourceTable.Columns[x].Name %>]<% if (x < SourceTable.Columns.Count - 1) { %>,<% } %>
+						<% } %>
+					FROM
+						[<%= GetClassName(SourceTable.Name) %>]
+					WHERE
+						<% for (int x = 0; x < SourceTable.ForeignKeys[i].ForeignKeyMemberColumns.Count; x++) { %>
+						<% if (x > 0) { %>AND <% } %>[<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[x].Name %>] = @<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[x].Name %>
+						<% } %>
+						";
+				
+				<% for (int x = 0; x < SourceTable.ForeignKeys[i].ForeignKeyMemberColumns.Count; x++) { %>
+				_command.Parameters.Add(this.CreateParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[x].Name %>", DbType.<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[x].NativeType %>, <%= GetCamelCaseName(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[x].Name) %>));
+				<% } %>
+				this.OpenConnection();
+				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult);
+				while (_reader.Read())
+				{
+					<%= GetClassName(SourceTable.Name) %>DataSet.<%= GetClassName(SourceTable.Name) %>Row row = dataSet.<%= GetClassName(SourceTable.Name) %>.New<%= GetClassName(SourceTable.Name) %>Row();
+					this.Populate<%= GetClassName(SourceTable.Name) %>DataRow(_reader, row);
+					dataSet.<%= GetClassName(SourceTable.Name) %>.Add<%= GetClassName(SourceTable.Name) %>Row(row);
+					
+					recordcount++;
+				}
+				dataSet.AcceptChanges();
+				
+				return recordcount;
+			}
+			catch (Exception e)
+			{
+				System.Diagnostics.Debug.WriteLine(e.ToString());
+				return 0;
+			}
+			finally
+			{
+				this.Cleanup();
+			}
+		}
+		<% } %>
+		<% } %>
 		
 		public IDataParameter[] GetFillParameters()
 		{
@@ -1007,15 +1113,21 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 								_command.CommandText = @"
 									INSERT INTO [<%= GetClassName(SourceTable.Name) %>] (
 										<% for (int i = 0; i < SourceTable.Columns.Count; i++) { %>
+										<% if ((bool)SourceTable.Columns[i].ExtendedProperties["CS_IsIdentity"].Value == false) { %>
 										[<%= SourceTable.Columns[i].Name %>]<% if (i < SourceTable.Columns.Count - 1) { %>,<% } %>
+										<% } %>
 										<% } %>
 									) VALUES (
 										<% for (int i = 0; i < SourceTable.Columns.Count; i++) { %>
+										<% if ((bool)SourceTable.Columns[i].ExtendedProperties["CS_IsIdentity"].Value == false) { %>
 										@<%= SourceTable.Columns[i].Name %><% if (i < SourceTable.Columns.Count - 1) { %>,<% } %>
+										<% } %>
 										<% } %>
 									)";
 								<% for (int i = 0; i < SourceTable.Columns.Count; i++) { %>
+								<% if ((bool)SourceTable.Columns[i].ExtendedProperties["CS_IsIdentity"].Value == false) { %>
 								_command.Parameters.Add(this.CreateParameter("@<%= SourceTable.Columns[i].Name %>", DbType.<%= SourceTable.Columns[i].DataType %>, row.Is<%= SourceTable.Columns[i].Name %>Null() ? (object)DBNull.Value : (object)row.<%= SourceTable.Columns[i].Name %>));
+								<% } %>
 								<% } %>
 								this.OpenConnection();
 								_command.ExecuteNonQuery();
