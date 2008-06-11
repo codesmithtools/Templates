@@ -1,1 +1,1 @@
-cs PurchaseOrderXml.csp SampleCustomProperties.csp
+cs PurchaseOrderXml.csp CustomPropertiesSample.csp
