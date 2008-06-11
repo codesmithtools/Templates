@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("VBCodeGeneratorSample.exe")> 
+<Assembly: AssemblyTitle("VSIntegrationSample.exe")> 
 <Assembly: AssemblyDescription("CodeSmith is a template-based code generation system.")> 
 <Assembly: AssemblyCompany("CodeSmith Tools, LLC")> 
 <Assembly: AssemblyProduct("CodeSmith")> 
-<Assembly: AssemblyCopyright("Copyright (c) 2002-2006 CodeSmith Tools, LLC.  All rights reserved.")> 
+<Assembly: AssemblyCopyright("Copyright (c) 2002-2008 CodeSmith Tools, LLC.  All rights reserved.")> 
 <Assembly: AssemblyTrademark("")> 
 <Assembly: CLSCompliant(True)> 
 
