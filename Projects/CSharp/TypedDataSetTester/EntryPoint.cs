@@ -26,31 +26,31 @@ namespace TypedDataSetTester
 			// PetShop
             OrdersDataSet cds = new OrdersDataSet();
             OrdersDataAdapter cda = new OrdersDataAdapter();
-            //ProductDataSet pds = new ProductDataSet();
-            //ProductDataAdapter pda = new ProductDataAdapter();
+            ProductDataSet pds = new ProductDataSet();
+            ProductDataAdapter pda = new ProductDataAdapter();
 
-            //pda.FillByCategoryId(pds, "BIRDS");
-            //Console.Out.WriteLine(cds.Orders.Rows.Count);
-            //IEnumerator en = pds.Product.GetEnumerator();
-            //while (en.MoveNext())
-            //{
-            //    ProductDataSet.ProductRow row = (ProductDataSet.ProductRow)en.Current;
-            //    Console.Out.WriteLine(row.ProductId + " " + row.CategoryId + " " + row.Name + " " + row.Descn);
-            //}
+            pda.FillByCategoryId(pds, "BIRDS");
+            Console.Out.WriteLine(cds.Orders.Rows.Count);
+            IEnumerator en = pds.Product.GetEnumerator();
+            while (en.MoveNext())
+            {
+                ProductDataSet.ProductRow row = (ProductDataSet.ProductRow)en.Current;
+                Console.Out.WriteLine(row.ProductId + " " + row.CategoryId + " " + row.Name + " " + row.Descn);
+            }
 
-            //// fill all the records from the permission table.
-            //string[] columns = { "ShipCity", "Courier" };
-            //string[] values = { "Nowhere", "Me" };
-            //DbType[] types = { DbType.AnsiString, DbType.AnsiString };
-            //cda.Fill(cds, columns, values, types);
+            // fill all the records from the permission table.
+            string[] columns = { "ShipCity", "Courier" };
+            string[] values = { "Nowhere", "Me" };
+            DbType[] types = { DbType.AnsiString, DbType.AnsiString };
+            cda.Fill(cds, columns, values, types);
 
 
-            //Console.Out.WriteLine(cds.Orders.Rows.Count);
-            //Console.Out.WriteLine(cds.Orders.FindByOrderId(1) != null ? cds.Orders.FindByOrderId(1).OrderId.ToString() : "Nope");
-            //Console.Out.WriteLine(cds.Orders.FindByOrderId(4) != null ? cds.Orders.FindByOrderId(4).OrderId.ToString() : "Nope");
-            //Console.In.Read();
+            Console.Out.WriteLine(cds.Orders.Rows.Count);
+            Console.Out.WriteLine(cds.Orders.FindByOrderId(1) != null ? cds.Orders.FindByOrderId(1).OrderId.ToString() : "Nope");
+            Console.Out.WriteLine(cds.Orders.FindByOrderId(4) != null ? cds.Orders.FindByOrderId(4).OrderId.ToString() : "Nope");
+            Console.In.Read();
 
-            //cds.Clear();
+            cds.Clear();
             cda.Fill(cds);
             
             OrdersDataSet.OrdersRow newRow = cds.Orders.NewOrdersRow();

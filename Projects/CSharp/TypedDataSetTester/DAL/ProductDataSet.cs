@@ -235,7 +235,6 @@ namespace TypedDataSetTester
 			{
 				this.Rows.Add(row);
 			}
-			
 			public ProductRow AddProductRow(
 					string productId,
 					string categoryId,
@@ -425,6 +424,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of ProductId property
 			/// </summary>
+			
 			public string ProductId
 			{
 				get
@@ -457,6 +457,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of CategoryId property
 			/// </summary>
+			
 			public string CategoryId
 			{
 				get
@@ -489,6 +490,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of Name property
 			/// </summary>
+			
 			public string Name
 			{
 				get
@@ -521,6 +523,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of Descn property
 			/// </summary>
+			
 			public string Descn
 			{
 				get
@@ -553,6 +556,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of Image property
 			/// </summary>
+			
 			public string Image
 			{
 				get
@@ -1168,50 +1172,6 @@ namespace TypedDataSetTester
 				this.Cleanup();
 			}
 		}
-		public int FillByProductId(ProductDataSet dataSet, string productId)
-		{
-			try
-			{
-				int recordcount = 0;
-				_command = this.GetCommand();
-				_command.CommandText = @"
-					SELECT
-						[ProductId],
-						[CategoryId],
-						[Name],
-						[Descn],
-						[Image]
-					FROM
-						[Product]
-					WHERE
-						[ProductId] = @ProductId
-						";
-				
-				_command.Parameters.Add(this.CreateParameter("@ProductId", DbType.AnsiString, productId));
-				this.OpenConnection();
-				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult);
-				while (_reader.Read())
-				{
-					ProductDataSet.ProductRow row = dataSet.Product.NewProductRow();
-					this.PopulateProductDataRow(_reader, row);
-					dataSet.Product.AddProductRow(row);
-					
-					recordcount++;
-				}
-				dataSet.AcceptChanges();
-				
-				return recordcount;
-			}
-			catch (Exception e)
-			{
-				System.Diagnostics.Debug.WriteLine(e.ToString());
-				return 0;
-			}
-			finally
-			{
-				this.Cleanup();
-			}
-		}
 		public int FillByName(ProductDataSet dataSet, string name)
 		{
 			try
@@ -1370,6 +1330,50 @@ namespace TypedDataSetTester
 				_command.Parameters.Add(this.CreateParameter("@CategoryId", DbType.AnsiString, categoryId));
 				_command.Parameters.Add(this.CreateParameter("@ProductId", DbType.AnsiString, productId));
 				_command.Parameters.Add(this.CreateParameter("@Name", DbType.AnsiString, name));
+				this.OpenConnection();
+				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult);
+				while (_reader.Read())
+				{
+					ProductDataSet.ProductRow row = dataSet.Product.NewProductRow();
+					this.PopulateProductDataRow(_reader, row);
+					dataSet.Product.AddProductRow(row);
+					
+					recordcount++;
+				}
+				dataSet.AcceptChanges();
+				
+				return recordcount;
+			}
+			catch (Exception e)
+			{
+				System.Diagnostics.Debug.WriteLine(e.ToString());
+				return 0;
+			}
+			finally
+			{
+				this.Cleanup();
+			}
+		}
+		public int FillByProductId(ProductDataSet dataSet, string productId)
+		{
+			try
+			{
+				int recordcount = 0;
+				_command = this.GetCommand();
+				_command.CommandText = @"
+					SELECT
+						[ProductId],
+						[CategoryId],
+						[Name],
+						[Descn],
+						[Image]
+					FROM
+						[Product]
+					WHERE
+						[ProductId] = @ProductId
+						";
+				
+				_command.Parameters.Add(this.CreateParameter("@ProductId", DbType.AnsiString, productId));
 				this.OpenConnection();
 				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult);
 				while (_reader.Read())
