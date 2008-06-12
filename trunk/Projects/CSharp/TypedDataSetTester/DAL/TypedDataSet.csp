@@ -7,9 +7,9 @@
         <connectionString>Server=(local);Database=Petshop;Integrated Security=true;</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-          <owner>dbo</owner>
-          <name>Orders</name>
-        </table>
+      <owner>dbo</owner>
+      <name>Orders</name>
+    </table>
       </property>
     </propertySet>
     <propertySet output="ProductDataSet.cs" template="..\Template\TypedDataSet.cst">
@@ -18,9 +18,9 @@
         <connectionString>Server=(local);Database=Petshop;Integrated Security=true;</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-          <owner>dbo</owner>
-          <name>Product</name>
-        </table>
+      <owner>dbo</owner>
+      <name>Product</name>
+    </table>
       </property>
     </propertySet>
   </propertySets>

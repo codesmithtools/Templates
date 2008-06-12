@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" Src="TypedDataSet.cst.cs" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" TargetLanguage="C#" Description="Generates a typed DataSet class based on a database table schema." %>
+<%@ CodeTemplate Language="C#" Src="TypedDataSet.cst.cs" Debug="true" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" TargetLanguage="C#" Description="Generates a typed DataSet class based on a database table schema." %>
 <%@ Property Name="ClassNamespace" Type="String" Optional="true" Category="Context" Description="The namespace for the generated classes." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table that the typed DataSet should contain." %>
 <%@ Map Name="SqlToC" src="Sql-CSharp.csmap" Description="A Mapping of SQL Server data types to CSharp data types" %>
@@ -218,10 +218,9 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 			{
 				this.Rows.Add(row);
 			}
-			
 			public <%= GetClassName(SourceTable.Name) %>Row Add<%= GetClassName(SourceTable.Name) %>Row(
 					<% for (int i = 0; i < SourceTable.Columns.Count; i++) { %>
-					<%= GetCSharpVariableType(SourceTable.Columns[i]) %> <%= GetCamelCaseName(SourceTable.Columns[i].Name) %><% if (i < SourceTable.Columns.Count - 1) { %>,<% } %>
+					<%= SqlToC[SourceTable.Columns[i].NativeType.ToString()] %> <%= GetCamelCaseName(SourceTable.Columns[i].Name) %><% if (i < SourceTable.Columns.Count - 1) { %>,<% } %>
 					<% } %>
 				)
 			{
@@ -234,7 +233,7 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 			}
 			
 			<% if (SourceTable.PrimaryKey.MemberColumns.Count == 1) { %>
-			public <%= GetClassName(SourceTable.Name) %>Row FindBy<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>(<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[0]) %> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>)
+			public <%= GetClassName(SourceTable.Name) %>Row FindBy<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>(<%= SqlToC[SourceTable.PrimaryKey.MemberColumns[0].NativeType.ToString()] %> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>)
 			{
 				return ((<%= GetClassName(SourceTable.Name) %>Row)(this.Rows.Find(new object[] {<%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[0].Name) %>})));
 			}
@@ -262,10 +261,10 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 			public void InitClass()
 			{
 				<% for (int i = 0; i < SourceTable.Columns.Count; i++) { %>
-				_column<%= SourceTable.Columns[i].Name %> = new DataColumn("<%= SourceTable.Columns[i].Name %>", typeof(<%= GetCSharpVariableType(SourceTable.Columns[i]) %>), "", MappingType.Element);
+				_column<%= SourceTable.Columns[i].Name %> = new DataColumn("<%= SourceTable.Columns[i].Name %>", typeof(<%= SqlToC[SourceTable.Columns[i].NativeType.ToString()] %>), "", MappingType.Element);
 				_column<%= SourceTable.Columns[i].Name %>.AllowDBNull = <% if (SourceTable.Columns[i].AllowDBNull) { %>true<% } else { %>false<% } %>;
 				_column<%= SourceTable.Columns[i].Name %>.Caption = "<%= GetSpacedName(SourceTable.Columns[i].Name) %>";
-				<% if (SizeMatters(SourceTable.Columns[i])&& GetCSharpVariableType(SourceTable.Columns[i]) == "string") { %>
+				<% if (SizeMatters(SourceTable.Columns[i])&& SqlToC[SourceTable.Columns[i].NativeType.ToString()] == "string") { %>
 				_column<%= SourceTable.Columns[i].Name %>.MaxLength = <%= SourceTable.Columns[i].Size %>;
 				<% } %>
 				_column<%= SourceTable.Columns[i].Name %>.Unique = <% if (SourceTable.PrimaryKey.MemberColumns.Count == 1 && SourceTable.Columns[i].IsPrimaryKeyMember) { %>true<% } else { %>false<% } %>;
@@ -273,7 +272,7 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 				_column<%= SourceTable.Columns[i].Name %>.ExtendedProperties.Add("IsKey", "<% if (SourceTable.Columns[i].IsPrimaryKeyMember) { %>true<% } else { %>false<% } %>");
 				_column<%= SourceTable.Columns[i].Name %>.ExtendedProperties.Add("ReadOnly", "false");
 				_column<%= SourceTable.Columns[i].Name %>.ExtendedProperties.Add("Description", "<%= GetSpacedName(SourceTable.Columns[i].Name) %>");
-				<% if (SizeMatters(SourceTable.Columns[i]) && GetCSharpVariableType(SourceTable.Columns[i]) == "string"){ %>
+				<% if (SizeMatters(SourceTable.Columns[i]) && SqlToC[SourceTable.Columns[i].NativeType.ToString()] == "string"){ %>
 				_column<%= SourceTable.Columns[i].Name %>.ExtendedProperties.Add("Length", "<%= SourceTable.Columns[i].Size %>");
 				<% } %>
 				_column<%= SourceTable.Columns[i].Name %>.ExtendedProperties.Add("Decimals", "0");
@@ -357,13 +356,14 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 			/// <summary>
 			/// Gets or sets the value of <%= SourceTable.Columns[i].Name %> property
 			/// </summary>
-			public <%= GetCSharpVariableType(SourceTable.Columns[i]) %> <%= SourceTable.Columns[i].Name %>
+			
+			public <%= SqlToC[SourceTable.Columns[i].NativeType.ToString()] %> <%= SourceTable.Columns[i].Name %>
 			{
 				get
 				{
 					try
 					{
-						return ((<%= GetCSharpVariableType(SourceTable.Columns[i]) %>)(this[_table<%= GetClassName(SourceTable.Name) %>.<%= SourceTable.Columns[i].Name %>Column]));
+						return ((<%= SqlToC[SourceTable.Columns[i].NativeType.ToString()] %>)(this[_table<%= GetClassName(SourceTable.Name) %>.<%= SourceTable.Columns[i].Name %>Column]));
 					}
 					catch (InvalidCastException exception)
 					{
@@ -810,15 +810,15 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 		
 		public int Fill(<%= GetClassName(SourceTable.Name) %>DataSet dataSet, IDataRecord dataRecord)
 		{
-			return Fill(dataSet, <% for (int i = 0; i < SourceTable.PrimaryKey.MemberColumns.Count; i++) { %>((<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[i]) %>)(dataRecord["<%= SourceTable.PrimaryKey.MemberColumns[i].Name %>"]))<% if (i < SourceTable.PrimaryKey.MemberColumns.Count - 1) { %>, <% } %><% } %>);
+			return Fill(dataSet, <% for (int i = 0; i < SourceTable.PrimaryKey.MemberColumns.Count; i++) { %>((<%= SqlToC[SourceTable.PrimaryKey.MemberColumns[i].NativeType.ToString()] %>)(dataRecord["<%= SourceTable.PrimaryKey.MemberColumns[i].Name %>"]))<% if (i < SourceTable.PrimaryKey.MemberColumns.Count - 1) { %>, <% } %><% } %>);
 		}
 		
 		public int Fill(<%= GetClassName(SourceTable.Name) %>DataSet dataSet, DataRow dataRecord)
 		{
-			return Fill(dataSet, <% for (int i = 0; i < SourceTable.PrimaryKey.MemberColumns.Count; i++) { %>((<%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[i]) %>)(dataRecord["<%= SourceTable.PrimaryKey.MemberColumns[i].Name %>"]))<% if (i < SourceTable.PrimaryKey.MemberColumns.Count - 1) { %>, <% } %><% } %>);
+			return Fill(dataSet, <% for (int i = 0; i < SourceTable.PrimaryKey.MemberColumns.Count; i++) { %>((<%= SqlToC[SourceTable.PrimaryKey.MemberColumns[i].NativeType.ToString()] %>)(dataRecord["<%= SourceTable.PrimaryKey.MemberColumns[i].Name %>"]))<% if (i < SourceTable.PrimaryKey.MemberColumns.Count - 1) { %>, <% } %><% } %>);
 		}
 		
-		public int Fill(<%= GetClassName(SourceTable.Name) %>DataSet dataSet, <% for (int i = 0; i < SourceTable.PrimaryKey.MemberColumns.Count; i++) { %><%= GetCSharpVariableType(SourceTable.PrimaryKey.MemberColumns[i]) %> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[i].Name) %><% if (i < SourceTable.PrimaryKey.MemberColumns.Count - 1) { %>, <% } %><% } %>)
+		public int Fill(<%= GetClassName(SourceTable.Name) %>DataSet dataSet, <% for (int i = 0; i < SourceTable.PrimaryKey.MemberColumns.Count; i++) { %><%= SqlToC[SourceTable.PrimaryKey.MemberColumns[i].NativeType.ToString()] %> <%= GetCamelCaseName(SourceTable.PrimaryKey.MemberColumns[i].Name) %><% if (i < SourceTable.PrimaryKey.MemberColumns.Count - 1) { %>, <% } %><% } %>)
 		{
 			try
 			{

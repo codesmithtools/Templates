@@ -397,7 +397,6 @@ namespace TypedDataSetTester
 			{
 				this.Rows.Add(row);
 			}
-			
 			public OrdersRow AddOrdersRow(
 					int orderId,
 					string userId,
@@ -885,6 +884,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of OrderId property
 			/// </summary>
+			
 			public int OrderId
 			{
 				get
@@ -917,6 +917,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of UserId property
 			/// </summary>
+			
 			public string UserId
 			{
 				get
@@ -949,6 +950,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of OrderDate property
 			/// </summary>
+			
 			public DateTime OrderDate
 			{
 				get
@@ -981,6 +983,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of ShipAddr1 property
 			/// </summary>
+			
 			public string ShipAddr1
 			{
 				get
@@ -1013,6 +1016,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of ShipAddr2 property
 			/// </summary>
+			
 			public string ShipAddr2
 			{
 				get
@@ -1045,6 +1049,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of ShipCity property
 			/// </summary>
+			
 			public string ShipCity
 			{
 				get
@@ -1077,6 +1082,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of ShipState property
 			/// </summary>
+			
 			public string ShipState
 			{
 				get
@@ -1109,6 +1115,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of ShipZip property
 			/// </summary>
+			
 			public string ShipZip
 			{
 				get
@@ -1141,6 +1148,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of ShipCountry property
 			/// </summary>
+			
 			public string ShipCountry
 			{
 				get
@@ -1173,6 +1181,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of BillAddr1 property
 			/// </summary>
+			
 			public string BillAddr1
 			{
 				get
@@ -1205,6 +1214,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of BillAddr2 property
 			/// </summary>
+			
 			public string BillAddr2
 			{
 				get
@@ -1237,6 +1247,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of BillCity property
 			/// </summary>
+			
 			public string BillCity
 			{
 				get
@@ -1269,6 +1280,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of BillState property
 			/// </summary>
+			
 			public string BillState
 			{
 				get
@@ -1301,6 +1313,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of BillZip property
 			/// </summary>
+			
 			public string BillZip
 			{
 				get
@@ -1333,6 +1346,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of BillCountry property
 			/// </summary>
+			
 			public string BillCountry
 			{
 				get
@@ -1365,6 +1379,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of Courier property
 			/// </summary>
+			
 			public string Courier
 			{
 				get
@@ -1397,6 +1412,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of TotalPrice property
 			/// </summary>
+			
 			public decimal TotalPrice
 			{
 				get
@@ -1429,6 +1445,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of BillToFirstName property
 			/// </summary>
+			
 			public string BillToFirstName
 			{
 				get
@@ -1461,6 +1478,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of BillToLastName property
 			/// </summary>
+			
 			public string BillToLastName
 			{
 				get
@@ -1493,6 +1511,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of ShipToFirstName property
 			/// </summary>
+			
 			public string ShipToFirstName
 			{
 				get
@@ -1525,6 +1544,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of ShipToLastName property
 			/// </summary>
+			
 			public string ShipToLastName
 			{
 				get
@@ -1557,6 +1577,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of AuthorizationNumber property
 			/// </summary>
+			
 			public int AuthorizationNumber
 			{
 				get
@@ -1589,6 +1610,7 @@ namespace TypedDataSetTester
 			/// <summary>
 			/// Gets or sets the value of Locale property
 			/// </summary>
+			
 			public string Locale
 			{
 				get
