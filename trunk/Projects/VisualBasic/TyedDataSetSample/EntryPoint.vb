@@ -55,11 +55,10 @@ Namespace TypedDataSetTester
 
             Dim newRow As OrdersDataSet.OrdersRow = cds.Orders.NewOrdersRow()
             newRow.OrderDate = DateTime.Now
-            newRow.ShipAddr1 = "2001 Nowhere"
+            newRow.ShipAddr1 = "1002 Nowhere"
             newRow.ShipCity = "Nowhere"
             newRow.ShipState = "Tx"
             newRow.ShipZip = "12345"
-            newRow.OrderId = 200
             newRow.UserId = "joe"
             newRow.ShipCountry = "USA"
             newRow.BillAddr1 = "2001 UHUH"
@@ -78,19 +77,19 @@ Namespace TypedDataSetTester
             newRow.Locale = "Here"
             cds.Orders.AddOrdersRow(newRow)
 
-            Console.In.Read()
-            ' make some changes and save 
-            Dim editRow As OrdersDataSet.OrdersRow = cds.Orders.FindByOrderId(19)
-            editRow.BillZip = "11111"
-            editRow.Courier = "Fedex"
+            'Console.In.Read()
+            '' make some changes and save 
+            'Dim editRow As OrdersDataSet.OrdersRow = cds.Orders.FindByOrderId(19)
+            'editRow.BillZip = "11111"
+            'editRow.Courier = "Fedex"
             cda.Update(cds)
 
             Console.In.ReadLine()
             ' Delete row and update 
-            Dim deleteRow As OrdersDataSet.OrdersRow = cds.Orders.FindByOrderId(22)
-            deleteRow.Delete()
-            cda.Update(cds)
-            Console.In.ReadLine()
+            'Dim deleteRow As OrdersDataSet.OrdersRow = cds.Orders.FindByOrderId(22)
+            'deleteRow.Delete()
+            'cda.Update(cds)
+            'Console.In.ReadLine()
 
         End Sub
     End Class
