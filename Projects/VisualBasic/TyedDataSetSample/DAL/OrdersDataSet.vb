@@ -427,7 +427,7 @@ Public Class OrdersDataSet
 				_columnOrderId.AllowDBNull = false
 				_columnOrderId.Caption = "Order Id"
 				_columnOrderId.Unique = true
-				_columnOrderId.DefaultValue = Convert.DBNull
+				_columnOrderId.DefaultValue =  Int32.MinValue 
 				_columnOrderId.ExtendedProperties.Add("IsKey", "true")
 				_columnOrderId.ExtendedProperties.Add("ReadOnly", "false")
 				_columnOrderId.ExtendedProperties.Add("Description", "Order Id")
@@ -440,7 +440,7 @@ Public Class OrdersDataSet
 				_columnUserId.Caption = "User Id"
 				_columnUserId.MaxLength = 20
 				_columnUserId.Unique = false
-				_columnUserId.DefaultValue = Convert.DBNull
+				_columnUserId.DefaultValue =  Convert.DBNull 
 				_columnUserId.ExtendedProperties.Add("IsKey", "false")
 				_columnUserId.ExtendedProperties.Add("ReadOnly", "false")
 				_columnUserId.ExtendedProperties.Add("Description", "User Id")
@@ -453,7 +453,7 @@ Public Class OrdersDataSet
 				_columnOrderDate.AllowDBNull = false
 				_columnOrderDate.Caption = "Order Date"
 				_columnOrderDate.Unique = false
-				_columnOrderDate.DefaultValue = Convert.DBNull
+				_columnOrderDate.DefaultValue =  Convert.DBNull 
 				_columnOrderDate.ExtendedProperties.Add("IsKey", "false")
 				_columnOrderDate.ExtendedProperties.Add("ReadOnly", "false")
 				_columnOrderDate.ExtendedProperties.Add("Description", "Order Date")
@@ -466,7 +466,7 @@ Public Class OrdersDataSet
 				_columnShipAddr1.Caption = "Ship Addr1"
 				_columnShipAddr1.MaxLength = 80
 				_columnShipAddr1.Unique = false
-				_columnShipAddr1.DefaultValue = Convert.DBNull
+				_columnShipAddr1.DefaultValue =  Convert.DBNull 
 				_columnShipAddr1.ExtendedProperties.Add("IsKey", "false")
 				_columnShipAddr1.ExtendedProperties.Add("ReadOnly", "false")
 				_columnShipAddr1.ExtendedProperties.Add("Description", "Ship Addr1")
@@ -480,7 +480,7 @@ Public Class OrdersDataSet
 				_columnShipAddr2.Caption = "Ship Addr2"
 				_columnShipAddr2.MaxLength = 80
 				_columnShipAddr2.Unique = false
-				_columnShipAddr2.DefaultValue = Convert.DBNull
+				_columnShipAddr2.DefaultValue =  Convert.DBNull 
 				_columnShipAddr2.ExtendedProperties.Add("IsKey", "false")
 				_columnShipAddr2.ExtendedProperties.Add("ReadOnly", "false")
 				_columnShipAddr2.ExtendedProperties.Add("Description", "Ship Addr2")
@@ -494,7 +494,7 @@ Public Class OrdersDataSet
 				_columnShipCity.Caption = "Ship City"
 				_columnShipCity.MaxLength = 80
 				_columnShipCity.Unique = false
-				_columnShipCity.DefaultValue = Convert.DBNull
+				_columnShipCity.DefaultValue =  Convert.DBNull 
 				_columnShipCity.ExtendedProperties.Add("IsKey", "false")
 				_columnShipCity.ExtendedProperties.Add("ReadOnly", "false")
 				_columnShipCity.ExtendedProperties.Add("Description", "Ship City")
@@ -508,7 +508,7 @@ Public Class OrdersDataSet
 				_columnShipState.Caption = "Ship State"
 				_columnShipState.MaxLength = 80
 				_columnShipState.Unique = false
-				_columnShipState.DefaultValue = Convert.DBNull
+				_columnShipState.DefaultValue =  Convert.DBNull 
 				_columnShipState.ExtendedProperties.Add("IsKey", "false")
 				_columnShipState.ExtendedProperties.Add("ReadOnly", "false")
 				_columnShipState.ExtendedProperties.Add("Description", "Ship State")
@@ -522,7 +522,7 @@ Public Class OrdersDataSet
 				_columnShipZip.Caption = "Ship Zip"
 				_columnShipZip.MaxLength = 20
 				_columnShipZip.Unique = false
-				_columnShipZip.DefaultValue = Convert.DBNull
+				_columnShipZip.DefaultValue =  Convert.DBNull 
 				_columnShipZip.ExtendedProperties.Add("IsKey", "false")
 				_columnShipZip.ExtendedProperties.Add("ReadOnly", "false")
 				_columnShipZip.ExtendedProperties.Add("Description", "Ship Zip")
@@ -536,7 +536,7 @@ Public Class OrdersDataSet
 				_columnShipCountry.Caption = "Ship Country"
 				_columnShipCountry.MaxLength = 20
 				_columnShipCountry.Unique = false
-				_columnShipCountry.DefaultValue = Convert.DBNull
+				_columnShipCountry.DefaultValue =  Convert.DBNull 
 				_columnShipCountry.ExtendedProperties.Add("IsKey", "false")
 				_columnShipCountry.ExtendedProperties.Add("ReadOnly", "false")
 				_columnShipCountry.ExtendedProperties.Add("Description", "Ship Country")
@@ -550,7 +550,7 @@ Public Class OrdersDataSet
 				_columnBillAddr1.Caption = "Bill Addr1"
 				_columnBillAddr1.MaxLength = 80
 				_columnBillAddr1.Unique = false
-				_columnBillAddr1.DefaultValue = Convert.DBNull
+				_columnBillAddr1.DefaultValue =  Convert.DBNull 
 				_columnBillAddr1.ExtendedProperties.Add("IsKey", "false")
 				_columnBillAddr1.ExtendedProperties.Add("ReadOnly", "false")
 				_columnBillAddr1.ExtendedProperties.Add("Description", "Bill Addr1")
@@ -564,7 +564,7 @@ Public Class OrdersDataSet
 				_columnBillAddr2.Caption = "Bill Addr2"
 				_columnBillAddr2.MaxLength = 80
 				_columnBillAddr2.Unique = false
-				_columnBillAddr2.DefaultValue = Convert.DBNull
+				_columnBillAddr2.DefaultValue =  Convert.DBNull 
 				_columnBillAddr2.ExtendedProperties.Add("IsKey", "false")
 				_columnBillAddr2.ExtendedProperties.Add("ReadOnly", "false")
 				_columnBillAddr2.ExtendedProperties.Add("Description", "Bill Addr2")
@@ -578,7 +578,7 @@ Public Class OrdersDataSet
 				_columnBillCity.Caption = "Bill City"
 				_columnBillCity.MaxLength = 80
 				_columnBillCity.Unique = false
-				_columnBillCity.DefaultValue = Convert.DBNull
+				_columnBillCity.DefaultValue =  Convert.DBNull 
 				_columnBillCity.ExtendedProperties.Add("IsKey", "false")
 				_columnBillCity.ExtendedProperties.Add("ReadOnly", "false")
 				_columnBillCity.ExtendedProperties.Add("Description", "Bill City")
@@ -592,7 +592,7 @@ Public Class OrdersDataSet
 				_columnBillState.Caption = "Bill State"
 				_columnBillState.MaxLength = 80
 				_columnBillState.Unique = false
-				_columnBillState.DefaultValue = Convert.DBNull
+				_columnBillState.DefaultValue =  Convert.DBNull 
 				_columnBillState.ExtendedProperties.Add("IsKey", "false")
 				_columnBillState.ExtendedProperties.Add("ReadOnly", "false")
 				_columnBillState.ExtendedProperties.Add("Description", "Bill State")
@@ -606,7 +606,7 @@ Public Class OrdersDataSet
 				_columnBillZip.Caption = "Bill Zip"
 				_columnBillZip.MaxLength = 20
 				_columnBillZip.Unique = false
-				_columnBillZip.DefaultValue = Convert.DBNull
+				_columnBillZip.DefaultValue =  Convert.DBNull 
 				_columnBillZip.ExtendedProperties.Add("IsKey", "false")
 				_columnBillZip.ExtendedProperties.Add("ReadOnly", "false")
 				_columnBillZip.ExtendedProperties.Add("Description", "Bill Zip")
@@ -620,7 +620,7 @@ Public Class OrdersDataSet
 				_columnBillCountry.Caption = "Bill Country"
 				_columnBillCountry.MaxLength = 20
 				_columnBillCountry.Unique = false
-				_columnBillCountry.DefaultValue = Convert.DBNull
+				_columnBillCountry.DefaultValue =  Convert.DBNull 
 				_columnBillCountry.ExtendedProperties.Add("IsKey", "false")
 				_columnBillCountry.ExtendedProperties.Add("ReadOnly", "false")
 				_columnBillCountry.ExtendedProperties.Add("Description", "Bill Country")
@@ -634,7 +634,7 @@ Public Class OrdersDataSet
 				_columnCourier.Caption = "Courier"
 				_columnCourier.MaxLength = 80
 				_columnCourier.Unique = false
-				_columnCourier.DefaultValue = Convert.DBNull
+				_columnCourier.DefaultValue =  Convert.DBNull 
 				_columnCourier.ExtendedProperties.Add("IsKey", "false")
 				_columnCourier.ExtendedProperties.Add("ReadOnly", "false")
 				_columnCourier.ExtendedProperties.Add("Description", "Courier")
@@ -647,7 +647,7 @@ Public Class OrdersDataSet
 				_columnTotalPrice.AllowDBNull = false
 				_columnTotalPrice.Caption = "Total Price"
 				_columnTotalPrice.Unique = false
-				_columnTotalPrice.DefaultValue = Convert.DBNull
+				_columnTotalPrice.DefaultValue =  Convert.DBNull 
 				_columnTotalPrice.ExtendedProperties.Add("IsKey", "false")
 				_columnTotalPrice.ExtendedProperties.Add("ReadOnly", "false")
 				_columnTotalPrice.ExtendedProperties.Add("Description", "Total Price")
@@ -660,7 +660,7 @@ Public Class OrdersDataSet
 				_columnBillToFirstName.Caption = "Bill To First Name"
 				_columnBillToFirstName.MaxLength = 80
 				_columnBillToFirstName.Unique = false
-				_columnBillToFirstName.DefaultValue = Convert.DBNull
+				_columnBillToFirstName.DefaultValue =  Convert.DBNull 
 				_columnBillToFirstName.ExtendedProperties.Add("IsKey", "false")
 				_columnBillToFirstName.ExtendedProperties.Add("ReadOnly", "false")
 				_columnBillToFirstName.ExtendedProperties.Add("Description", "Bill To First Name")
@@ -674,7 +674,7 @@ Public Class OrdersDataSet
 				_columnBillToLastName.Caption = "Bill To Last Name"
 				_columnBillToLastName.MaxLength = 80
 				_columnBillToLastName.Unique = false
-				_columnBillToLastName.DefaultValue = Convert.DBNull
+				_columnBillToLastName.DefaultValue =  Convert.DBNull 
 				_columnBillToLastName.ExtendedProperties.Add("IsKey", "false")
 				_columnBillToLastName.ExtendedProperties.Add("ReadOnly", "false")
 				_columnBillToLastName.ExtendedProperties.Add("Description", "Bill To Last Name")
@@ -688,7 +688,7 @@ Public Class OrdersDataSet
 				_columnShipToFirstName.Caption = "Ship To First Name"
 				_columnShipToFirstName.MaxLength = 80
 				_columnShipToFirstName.Unique = false
-				_columnShipToFirstName.DefaultValue = Convert.DBNull
+				_columnShipToFirstName.DefaultValue =  Convert.DBNull 
 				_columnShipToFirstName.ExtendedProperties.Add("IsKey", "false")
 				_columnShipToFirstName.ExtendedProperties.Add("ReadOnly", "false")
 				_columnShipToFirstName.ExtendedProperties.Add("Description", "Ship To First Name")
@@ -702,7 +702,7 @@ Public Class OrdersDataSet
 				_columnShipToLastName.Caption = "Ship To Last Name"
 				_columnShipToLastName.MaxLength = 80
 				_columnShipToLastName.Unique = false
-				_columnShipToLastName.DefaultValue = Convert.DBNull
+				_columnShipToLastName.DefaultValue =  Convert.DBNull 
 				_columnShipToLastName.ExtendedProperties.Add("IsKey", "false")
 				_columnShipToLastName.ExtendedProperties.Add("ReadOnly", "false")
 				_columnShipToLastName.ExtendedProperties.Add("Description", "Ship To Last Name")
@@ -715,7 +715,7 @@ Public Class OrdersDataSet
 				_columnAuthorizationNumber.AllowDBNull = false
 				_columnAuthorizationNumber.Caption = "Authorization Number"
 				_columnAuthorizationNumber.Unique = false
-				_columnAuthorizationNumber.DefaultValue = Convert.DBNull
+				_columnAuthorizationNumber.DefaultValue =  Convert.DBNull 
 				_columnAuthorizationNumber.ExtendedProperties.Add("IsKey", "false")
 				_columnAuthorizationNumber.ExtendedProperties.Add("ReadOnly", "false")
 				_columnAuthorizationNumber.ExtendedProperties.Add("Description", "Authorization Number")
@@ -728,7 +728,7 @@ Public Class OrdersDataSet
 				_columnLocale.Caption = "Locale"
 				_columnLocale.MaxLength = 20
 				_columnLocale.Unique = false
-				_columnLocale.DefaultValue = Convert.DBNull
+				_columnLocale.DefaultValue =  Convert.DBNull 
 				_columnLocale.ExtendedProperties.Add("IsKey", "false")
 				_columnLocale.ExtendedProperties.Add("ReadOnly", "false")
 				_columnLocale.ExtendedProperties.Add("Description", "Locale")

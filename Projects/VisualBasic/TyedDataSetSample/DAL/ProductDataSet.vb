@@ -248,7 +248,7 @@ Public Class ProductDataSet
 				_columnProductId.Caption = "Product Id"
 				_columnProductId.MaxLength = 10
 				_columnProductId.Unique = true
-				_columnProductId.DefaultValue = Convert.DBNull
+				_columnProductId.DefaultValue =  Convert.DBNull 
 				_columnProductId.ExtendedProperties.Add("IsKey", "true")
 				_columnProductId.ExtendedProperties.Add("ReadOnly", "false")
 				_columnProductId.ExtendedProperties.Add("Description", "Product Id")
@@ -262,7 +262,7 @@ Public Class ProductDataSet
 				_columnCategoryId.Caption = "Category Id"
 				_columnCategoryId.MaxLength = 10
 				_columnCategoryId.Unique = false
-				_columnCategoryId.DefaultValue = Convert.DBNull
+				_columnCategoryId.DefaultValue =  Convert.DBNull 
 				_columnCategoryId.ExtendedProperties.Add("IsKey", "false")
 				_columnCategoryId.ExtendedProperties.Add("ReadOnly", "false")
 				_columnCategoryId.ExtendedProperties.Add("Description", "Category Id")
@@ -276,7 +276,7 @@ Public Class ProductDataSet
 				_columnName.Caption = "Name"
 				_columnName.MaxLength = 80
 				_columnName.Unique = false
-				_columnName.DefaultValue = Convert.DBNull
+				_columnName.DefaultValue =  Convert.DBNull 
 				_columnName.ExtendedProperties.Add("IsKey", "false")
 				_columnName.ExtendedProperties.Add("ReadOnly", "false")
 				_columnName.ExtendedProperties.Add("Description", "Name")
@@ -290,7 +290,7 @@ Public Class ProductDataSet
 				_columnDescn.Caption = "Descn"
 				_columnDescn.MaxLength = 255
 				_columnDescn.Unique = false
-				_columnDescn.DefaultValue = Convert.DBNull
+				_columnDescn.DefaultValue =  Convert.DBNull 
 				_columnDescn.ExtendedProperties.Add("IsKey", "false")
 				_columnDescn.ExtendedProperties.Add("ReadOnly", "false")
 				_columnDescn.ExtendedProperties.Add("Description", "Descn")
@@ -304,7 +304,7 @@ Public Class ProductDataSet
 				_columnImage.Caption = "Image"
 				_columnImage.MaxLength = 80
 				_columnImage.Unique = false
-				_columnImage.DefaultValue = Convert.DBNull
+				_columnImage.DefaultValue =  Convert.DBNull 
 				_columnImage.ExtendedProperties.Add("IsKey", "false")
 				_columnImage.ExtendedProperties.Add("ReadOnly", "false")
 				_columnImage.ExtendedProperties.Add("Description", "Image")

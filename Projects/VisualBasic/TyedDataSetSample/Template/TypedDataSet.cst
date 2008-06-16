@@ -238,7 +238,7 @@ Public Class <%= GetClassName(SourceTable.Name) %>DataSet
 				_column<%= SourceTable.Columns(i).Name %>.MaxLength = <%= SourceTable.Columns(i).Size %>
 				<% END IF %>
 				_column<%= SourceTable.Columns(i).Name %>.Unique = <% IF (SourceTable.PrimaryKey.MemberColumns.Count = 1 AND SourceTable.Columns(i).IsPrimaryKeyMember) THEN %>true<% Else %>false<% END IF %>
-				_column<%= SourceTable.Columns(i).Name %>.DefaultValue = Convert.DBNull
+				_column<%= SourceTable.Columns(i).Name %>.DefaultValue = <%IF Not (DirectCast(SourceTable.Columns(i).ExtendedProperties("CS_IsIdentity").value,Boolean)) THEN %> Convert.DBNull <% ELSE %> Int32.MinValue <% END IF %>
 				_column<%= SourceTable.Columns(i).Name %>.ExtendedProperties.Add("IsKey", "<% IF (SourceTable.Columns(i).IsPrimaryKeyMember) THEN %>true<%  Else %>false<% END IF %>")
 				_column<%= SourceTable.Columns(i).Name %>.ExtendedProperties.Add("ReadOnly", "false")
 				_column<%= SourceTable.Columns(i).Name %>.ExtendedProperties.Add("Description", "<%= GetSpacedName(SourceTable.Columns(i).Name) %>")
