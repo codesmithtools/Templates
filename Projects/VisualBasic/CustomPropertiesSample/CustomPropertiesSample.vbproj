@@ -139,7 +139,6 @@
     <Compile Include="PurchaseOrder.vb" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="properties.xml" />
     <Content Include="readme.txt" />
     <Content Include="testpo.xml" />
     <None Include="GenerateCode.bat" />
