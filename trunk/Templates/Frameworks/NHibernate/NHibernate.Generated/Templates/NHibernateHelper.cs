@@ -161,7 +161,7 @@ public class NHibernateHelper : CodeTemplate
 		return result;
 	}
 
-	/* REMOVE US
+	/* REMOVE ME
 	public string GetPrimaryKeyMethodParameters(MemberColumnSchemaCollection mcsc)
 	{
 		StringBuilder result = new StringBuilder();
@@ -227,6 +227,17 @@ public class NHibernateHelper : CodeTemplate
 		result.Append("(");
 		result.Append(GetMethodParameters(sc.Items, true));
 		result.Append(")");
+		return result.ToString();
+	}
+	public string GetPrimaryKeyCallParameters(List<MemberColumnSchema> mcsList)
+	{
+		System.Text.StringBuilder result = new System.Text.StringBuilder();
+		for(int x=0; x<mcsList.Count; x++)
+		{
+			if(x>0)
+				result.Append(", ");
+			result.Append(String.Format("{0}.Parse(keys[{1}])", mcsList[x].SystemType, x));
+		}
 		return result.ToString();
 	}
 	
