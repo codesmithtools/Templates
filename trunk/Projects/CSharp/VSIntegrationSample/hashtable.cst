@@ -3,9 +3,15 @@
 <%@ Property Name="ItemType" Type="System.String" Category="Context" Description="The type to use as an item in the collection." %>
 <%@ Property Name="ClassName" Type="System.String" Category="Context" Description="The name of the class to be generated." %>
 <%@ Property Name="Accessibility" Type="AccessibilityEnum" Category="Options" Description="The accessibility of the class to be generated." %>
+<%@ Property Name="SingleFileMode" Type="System.Boolean" Category="Options" Default="True" Description="Generate content for a complete cs file instead of just a class." %>
+<%@ Property Name="ClassNamespace" Type="System.String" Category="Options" Default="VSIntergationSample" Description="Namespace your class is in. Only used if SingleFileMode is true!" %>
+<% if(!this.SingleFileMode) { %>
 using System;
 using System.Collections;
 
+namespace <%= this.ClassNamespace %>
+{
+<% } %>
 	#region <%= ClassName %>
 	<%= GetAccessModifier(Accessibility) %> class <%= ClassName %> : IDictionary, ICollection, IEnumerable, ICloneable
 	{
@@ -323,7 +329,9 @@ using System.Collections;
 		#endregion
 	}
 	#endregion
-
+<% if(!this.SingleFileMode) { %>
+}
+<% } %>
 <script runat="template">
 public enum AccessibilityEnum
 {
