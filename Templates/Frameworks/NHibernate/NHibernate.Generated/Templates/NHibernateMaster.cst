@@ -17,6 +17,8 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Property Name="BusinessObjectFolder" Type="System.String" Default="BusinessObjects\" Optional="True" Category="3. Output Structure" Description="The folder where the Business objects will be generated." %>
 <%@ Property Name="HbmMapFolder" Type="System.String" Default="Resources\" Optional="True" Category="3. Output Structure" Description="The folder where the HBM maps will be generated. (We recommend Resources.)" %>
 
+<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="OnePointTwo" Optional="False" Category="4. NHibernate" Description="The version of NHibernate to generate for." %>
+
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="Microsoft.Build.Engine" %>
@@ -125,6 +127,7 @@ private void RenderEditableManagerObjects(TableSchema table)
 	managerObject.ManagerNamespace = this.ManagerNamespace;
 	managerObject.BusinessNamespace = this.BusinessNamespace;
 	managerObject.SourceTable = table;
+	managerObject.NHibernateVersion = this.NHibernateVersion;
 	managerObject.RenderToFile(fileName, strategy);
 	
 	Project.AddCompileItem(editableFileName, fileName);

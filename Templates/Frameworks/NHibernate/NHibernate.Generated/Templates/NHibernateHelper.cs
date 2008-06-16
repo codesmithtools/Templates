@@ -7,8 +7,30 @@ using System.Text;
 using CodeSmith.Engine;
 using SchemaExplorer;
 
+public enum NHibernateVersion
+{
+    OnePointTwo,
+    TwoPointZero
+}
+
 public class NHibernateHelper : CodeTemplate
 {
+	public string GetCriterionNamespace(NHibernateVersion version)
+	{
+		switch(version)
+		{
+			case NHibernateVersion.OnePointTwo:
+				return "NHibernate.Expression";
+					
+			case NHibernateVersion.TwoPointZero:
+				return "NHibernate.Criterion";
+				
+			default:
+				throw new Exception("Invalid NHibernateVersion");
+			
+		}
+	}
+	
 	#region Variable Name Methods
 	
 	public string GetPropertyName(string name)
