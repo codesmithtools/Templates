@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Data;
+using System.Collections.Generic;
 
 using CodeSmith.Engine;
 using SchemaExplorer;
@@ -185,4 +186,126 @@ public class NHibernateHelper : CodeTemplate
 	}
 	
 	#endregion
+}
+
+public class SearchCriteriaHelper
+{
+	TableSchema table;
+    Dictionary<string, List<MemberColumnSchema>> map;
+
+    public List<List<MemberColumnSchema>> GetAllSearchCriteria(TableSchema sourceTable)
+    {
+        table = sourceTable;
+        map = new Dictionary<string, List<MemberColumnSchema>>();
+
+        GetPrimaryKeySearchCriteria();
+        GetForeignKeySearchCriteria();
+        GetIndexSearchCriteria();
+        GetDependentCriteria();
+
+        return GetResultsFromMap();
+    }
+    public List<List<MemberColumnSchema>> GetPrimaryKeySearchCriteria(TableSchema sourceTable)
+    {
+        table = sourceTable;
+        map = new Dictionary<string, List<MemberColumnSchema>>();
+
+        GetPrimaryKeySearchCriteria();
+
+        return GetResultsFromMap();
+    }
+    public List<List<MemberColumnSchema>> GetForeignKeySearchCriteria(TableSchema sourceTable)
+    {
+        table = sourceTable;
+        map = new Dictionary<string, List<MemberColumnSchema>>();
+
+        GetForeignKeySearchCriteria();
+
+        return GetResultsFromMap();
+    }
+    public List<List<MemberColumnSchema>> GetIndexSearchCriteria(TableSchema sourceTable)
+    {
+        table = sourceTable;
+        map = new Dictionary<string, List<MemberColumnSchema>>();
+
+        GetIndexSearchCriteria();
+
+        return GetResultsFromMap();
+    }
+    public List<List<MemberColumnSchema>> GetDependentCriteria(TableSchema sourceTable)
+    {
+        table = sourceTable;
+        map = new Dictionary<string, List<MemberColumnSchema>>();
+
+        GetDependentCriteria();
+
+        return GetResultsFromMap();
+    }
+
+    protected void GetPrimaryKeySearchCriteria()
+    {
+        AddToMap(new List<MemberColumnSchema>(table.PrimaryKey.MemberColumns.ToArray()));
+    }
+    protected void GetForeignKeySearchCriteria()
+    {
+        foreach (TableKeySchema tks in table.ForeignKeys)
+        {
+            List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>();
+            foreach (MemberColumnSchema mcs in tks.ForeignKeyMemberColumns)
+                mcsList.Add(mcs);
+            AddToMap(mcsList);
+        }
+    }
+    protected void GetIndexSearchCriteria()
+    {
+		foreach (IndexSchema indexSchema in table.Indexes)
+        {
+            List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>();
+            foreach (MemberColumnSchema mcs in indexSchema.MemberColumns)
+                mcsList.Add(mcs);
+            AddToMap(mcsList);
+        }
+    }
+    protected void GetDependentCriteria()
+    {
+        foreach (TableKeySchema tks in table.PrimaryKeys)
+        {
+            List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>();
+            foreach (MemberColumnSchema mcs in tks.ForeignKeyMemberColumns)
+                mcsList.Add(mcs);
+            AddToMap(mcsList);
+        }
+    }
+
+    protected bool AddToMap(List<MemberColumnSchema> mcsList)
+    {
+        string key = GetKey(mcsList);
+        bool result = (mcsList.Count > 0 && !map.ContainsKey(key));
+
+        if (result)
+            map.Add(key, mcsList);
+
+        return result;
+    }
+    protected string GetKey(List<MemberColumnSchema> mcsList)
+    {
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        foreach (MemberColumnSchema mcs in mcsList)
+        {
+			sb.Append(mcs.Table.Name);
+			sb.Append(".");
+            sb.Append(mcs.Name);
+            sb.Append("|");
+        }
+        return sb.ToString();
+    }
+    protected List<List<MemberColumnSchema>> GetResultsFromMap()
+    {
+		List<List<MemberColumnSchema>> result = new List<List<MemberColumnSchema>>();
+        foreach (KeyValuePair<string, List<MemberColumnSchema>> kvp in map)
+        {
+            result.Add(kvp.Value);
+        }
+        return result;
+    }
 }
