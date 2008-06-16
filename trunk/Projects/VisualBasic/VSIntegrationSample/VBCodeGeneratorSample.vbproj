@@ -94,17 +94,13 @@
     <Compile Include="EntryPoint.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IntegerHashtable.vb">
-    </Compile>
+    <Compile Include="Hashtable.vb" />
+    <Compile Include="Orders.vb" />
     <Compile Include="Product.vb">
     </Compile>
     <Compile Include="Profiles.vb">
     </Compile>
     <Compile Include="SqlService.vb" />
-    <Compile Include="StringHashtable.vb">
-    </Compile>
-    <Compile Include="StringIntegerHashtable.vb">
-    </Compile>
     <Compile Include="Supplier.vb">
     </Compile>
     <Generate Include="Hashtable.csp">
