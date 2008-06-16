@@ -3,7 +3,7 @@
   <map caseSensitive="false" returnKeyWhenNotFound="true" description="SQL native type to SqlDbType map">
     <item>
       <key>bigint</key>
-      <value>BigInt</value>
+      <value>Int64</value>
     </item>
     <item>
       <key>binary</key>
@@ -11,11 +11,11 @@
     </item>
     <item>
       <key>bit</key>
-      <value>Bit</value>
+      <value>Boolean</value>
     </item>
     <item>
       <key>char</key>
-      <value>Char</value>
+      <value>StringFixedLength</value>
     </item>
     <item>
       <key>decimal</key>
@@ -27,11 +27,11 @@
     </item>
     <item>
       <key>float</key>
-      <value>Float</value>
+      <value>Single</value>
     </item>
     <item>
       <key>int</key>
-      <value>Int</value>
+      <value>Int32</value>
     </item>
     <item>
       <key>datetime</key>
@@ -39,71 +39,71 @@
     </item>
     <item>
       <key>image</key>
-      <value>Image</value>
+      <value>Object</value>
     </item>
     <item>
       <key>money</key>
-      <value>Money</value>
+      <value>Currency</value>
     </item>
     <item>
       <key>nchar</key>
-      <value>NChar</value>
+      <value>StringFixedLength</value>
     </item>
     <item>
       <key>ntext</key>
-      <value>NText</value>
+      <value>String</value>
     </item>
     <item>
       <key>numeric</key>
-      <value>Decimal</value>
+      <value>VarNumeric</value>
     </item>
     <item>
       <key>nvarchar</key>
-      <value>NVarChar</value>
+      <value>String</value>
     </item>
     <item>
       <key>real</key>
-      <value>Real</value>
+      <value>Double</value>
     </item>
     <item>
       <key>smalldatetime</key>
-      <value>SmallDateTime</value>
+      <value>DateTime</value>
     </item>
     <item>
       <key>smallint</key>
-      <value>SmallInt</value>
+      <value>Int16</value>
     </item>
     <item>
       <key>smallmoney</key>
-      <value>SmallMoney</value>
+      <value>Currency</value>
     </item>
     <item>
       <key>sql_variant</key>
-      <value>Variant</value>
+      <value>Object</value>
     </item>
     <item>
       <key>text</key>
-      <value>Text</value>
+      <value>String</value>
     </item>
     <item>
       <key>timestamp</key>
-      <value>Timestamp</value>
+      <value>Int16</value>
     </item>
     <item>
       <key>tinyint</key>
-      <value>TinyInt</value>
+      <value>SByte</value>
     </item>
     <item>
       <key>uniqueidentifier</key>
-      <value>UniqueIdentifier</value>
+      <value>Object</value>
     </item>
     <item>
       <key>varbinary</key>
-      <value>VarBinary</value>
+      <value>Binary</value>
     </item>
     <item>
       <key>varchar</key>
-      <value>VarChar</value>
+      <value>String</value>
     </item>
     <item>
       <key>xml</key>
