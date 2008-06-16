@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 
 using NHibernate;
-using NHibernate.Criterion;
+using NHibernate.Expression;    // For NHibernate v1.2
+//using NHibernate.Criterion;   // For NHibernate v2.0
 
 namespace NHibernate.Base
 {
@@ -28,14 +29,14 @@ namespace NHibernate.Base
         bool CommitTransaction();
         bool RollbackTransaction();
 
-        // Commit/Flush
+        // Commit Methods
         void CommitChanges();
 
         // Properties
         System.Type Type { get; }
     }
 
-    public abstract class ManagerBase<T, IdT> : IManagerBase<T, IdT>
+    public abstract partial class ManagerBase<T, IdT> : IManagerBase<T, IdT>
     {
         #region Get Methods
 
@@ -113,14 +114,23 @@ namespace NHibernate.Base
 
         #endregion
 
-        // Commit/Flush
+        #region Commit Methods
+
         public void CommitChanges()
         {
+            OnCommittingChanges();
+
             if (HasOpenTransaction)
                 CommitTransaction();
             else
                 Session.Flush();
+
+            OnCommittedChanges();
         }
+        partial void OnCommittingChanges();
+        partial void OnCommittedChanges();
+
+        #endregion
 
         #region Properties
 
