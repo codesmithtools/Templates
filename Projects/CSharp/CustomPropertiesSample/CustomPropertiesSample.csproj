@@ -137,7 +137,6 @@
     <None Include="PurchaseOrderXml.cst" />
     <None Include="CustomPropertiesSample.csp" />
     <None Include="CustomPropertiesSample.cst" />
-    <Content Include="properties.xml" />
     <Content Include="readme.txt" />
     <Content Include="testpo.xml" />
   </ItemGroup>

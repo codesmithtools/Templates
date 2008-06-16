@@ -20,7 +20,7 @@ using System.Runtime.CompilerServices;
 // associated with an assembly.
 //
 
-[assembly: AssemblyTitle("SampleCustomProperties.dll")]
+[assembly: AssemblyTitle("CustomPropertiesSample.dll")]
 [assembly: AssemblyDescription("CodeSmith is a template-based code generation system.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CodeSmith Tools, LLC")]
