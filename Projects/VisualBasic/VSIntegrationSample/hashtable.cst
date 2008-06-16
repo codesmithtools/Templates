@@ -3,9 +3,12 @@
 <%@ Property Name="ItemType" Type="System.String" Category="Context" Description="The type to use as an item in the collection." %>
 <%@ Property Name="ClassName" Type="System.String" Category="Context" Description="The name of the class to be generated." %>
 <%@ Property Name="Accessibility" Type="AccessibilityEnum" Category="Options" Description="The accessibility of the class to be generated." %>
+<%@ Property Name="SingleFileMode" Type="System.Boolean" Category="Options" Default="True" Description="Generate content for a complete cs file instead of just a class." %>
+<% If Not Me.SingleFileMode Then %>
 Imports System
 Imports System.Collections
 
+<% End If %>
 	#Region "<%= ClassName %>"
     <%= GetAccessModifier(Accessibility) %> Class <%= ClassName %>
         Implements IDictionary
