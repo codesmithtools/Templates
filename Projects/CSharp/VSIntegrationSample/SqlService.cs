@@ -24,7 +24,7 @@ using System.Text;
 using System.Globalization;
 using System.Collections.Specialized;
 
-namespace CSharpCodeGeneratorSample
+namespace VSIntegrationSample
 {
 	//[DebuggerStepThrough]
     public class SqlService

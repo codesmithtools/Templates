@@ -13,7 +13,7 @@
 
 using System;
 
-namespace CSharpCodeGeneratorSample
+namespace VSIntegrationSample
 {
 	public class EntryPoint
 	{

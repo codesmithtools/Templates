@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
 
-namespace CSharpCodeGeneratorSample
-{
-	#region StringHashtable
+namespace VSIntegrationSample
+{	#region StringHashtable
 	public class StringHashtable : IDictionary, ICollection, IEnumerable, ICloneable
 	{
 		protected Hashtable innerHash;
@@ -320,7 +319,6 @@ namespace CSharpCodeGeneratorSample
 		#endregion
 	}
 	#endregion
-
 	#region StringIntegerHashtable
 	public class StringIntegerHashtable : IDictionary, ICollection, IEnumerable, ICloneable
 	{
@@ -638,7 +636,6 @@ namespace CSharpCodeGeneratorSample
 		#endregion
 	}
 	#endregion
-
 	#region IntegerHashtable
 	public class IntegerHashtable : IDictionary, ICollection, IEnumerable, ICloneable
 	{
@@ -956,5 +953,4 @@ namespace CSharpCodeGeneratorSample
 		#endregion
 	}
 	#endregion
-
 }
