@@ -46,7 +46,6 @@ namespace <%= ManagerNamespace %>
 		<% foreach(SearchCriteria sc in scList) { %>
 		<% if(sc.IsAllPrimaryKeys) { %>
 		<% if(sc.Items.Count > 1) { // Override GetById%>
-		<%= GetClassName(SourceTable.Name) %> GetById(<%= GetMethodParameters(sc.Items, true) %>);
 		public override <%= GetClassName(SourceTable.Name) %> GetById(string id)
 		{
 			string[] keys = id.Split('^');
@@ -54,7 +53,7 @@ namespace <%= ManagerNamespace %>
 			if(keys.Length != <%= sc.Items.Count %>)
 				throw new Exception("Invalid Id for <%= GetClassName(SourceTable.Name) %>Manager.GetById");
 			
-			return GetById(<%= GetMethodParameters(sc.Items, false) %>);
+			return GetById(<%= GetPrimaryKeyCallParameters(sc.Items) %>);
 		}
 		public <%= GetClassName(SourceTable.Name) %> GetById(<%= GetMethodParameters(sc.Items, true) %>)
 		{
@@ -78,7 +77,7 @@ namespace <%= ManagerNamespace %>
 			ICriteria <%= GetVariableName(GetForeignTableName(mcs, SourceTable)) %>Criteria = <%= GetVariableName(SourceTable.Name) %>Criteria.CreateCriteria("<%= GetPropertyName(GetForeignTableName(mcs, SourceTable)) %>");
             <%= GetVariableName(GetForeignTableName(mcs, SourceTable)) %>Criteria.Add(NHibernate.Criterion.Expression.Eq("Id", <%= GetVariableName(mcs.Name) %>));
 			<% } else { %>
-			criteria.Add(NHibernate.Criterion.Expression.Eq("<%= GetPropertyName(mcs.Name) %>", <%= GetVariableName(mcs.Name) %>));
+			<%= GetVariableName(SourceTable.Name) %>Criteria.Add(NHibernate.Criterion.Expression.Eq("<%= GetPropertyName(mcs.Name) %>", <%= GetVariableName(mcs.Name) %>));
 			<% } %>
 			<% } %>
 			
