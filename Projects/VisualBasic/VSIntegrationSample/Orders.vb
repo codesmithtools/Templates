@@ -4,7 +4,7 @@ Imports System.Text
 Imports System.Data
 Imports System.Data.SqlClient
 
-Namespace VBCodeGeneratorSample
+Namespace VSIntegrationSample
 #Region "Order"
 ''' <summary>
 ''' This object represents the properties and methods of a Orders.
