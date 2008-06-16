@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
-  <singleOutput enabled="true" path="Hashtable.cs">
+  <singleOutput enabled="true" path="HashTable.cs">
     <header>using System;
 using System.Collections;
 
-namespace CSharpCodeGeneratorSample
-{
-</header>
+namespace VSIntegrationSample
+{</header>
     <footer>}</footer>
   </singleOutput>
   <defaultTemplate path="hashtable.cst" />
@@ -15,17 +14,17 @@ namespace CSharpCodeGeneratorSample
     <property name="Accessibility">Public</property>
   </defaultProperties>
   <propertySets>
-    <propertySet name="StringHashtable" output="StringHashtable.cs">
+    <propertySet name="StringHashtable.cs" output="StringHashtable.cs">
       <property name="KeyType">string</property>
       <property name="ItemType">string</property>
       <property name="ClassName">StringHashtable</property>
     </propertySet>
-    <propertySet name="StringIntegerHashtable" output="StringIntegerHashtable.cs">
+    <propertySet name="StringIntegerHashtable.cs" output="StringIntegerHashtable.cs">
       <property name="KeyType">string</property>
       <property name="ItemType">int</property>
       <property name="ClassName">StringIntegerHashtable</property>
     </propertySet>
-    <propertySet name="IntegerHashtable" output="IntegerHashtable.cs">
+    <propertySet name="IntegerHashtable.cs" output="IntegerHashtable.cs">
       <property name="KeyType">int</property>
       <property name="ItemType">int</property>
       <property name="ClassName">IntegerHashtable</property>

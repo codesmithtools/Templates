@@ -129,12 +129,6 @@
     <Compile Include="EntryPoint.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Hashtable.cs">
-      <DependentUpon>Hashtable.csp</DependentUpon>
-    </Compile>
-    <Compile Include="IntegerHashtable.cs">
-      <DependentUpon>Hashtable.csp</DependentUpon>
-    </Compile>
     <Compile Include="Order.cs">
       <DependentUpon>BusinessObject.csp</DependentUpon>
     </Compile>
@@ -146,12 +140,6 @@
     </Compile>
     <Compile Include="SqlService.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="StringHashtable.cs">
-      <DependentUpon>Hashtable.csp</DependentUpon>
-    </Compile>
-    <Compile Include="StringIntegerHashtable.cs">
-      <DependentUpon>Hashtable.csp</DependentUpon>
     </Compile>
     <Compile Include="Supplier.cs">
       <DependentUpon>BusinessObject.csp</DependentUpon>
