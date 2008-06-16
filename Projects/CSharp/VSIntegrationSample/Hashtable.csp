@@ -5,8 +5,10 @@
 using System.Collections;
 
 namespace VSIntegrationSample
-{</header>
-    <footer>}</footer>
+{
+</header>
+    <footer>
+}</footer>
   </singleOutput>
   <defaultTemplate path="hashtable.cst" />
   <defaultProperties>
