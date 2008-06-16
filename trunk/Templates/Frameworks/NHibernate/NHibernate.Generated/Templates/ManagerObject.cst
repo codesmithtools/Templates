@@ -14,6 +14,7 @@ Description: Generates a Manager Object for NHibernate.
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Map Name="SystemCSharp" Src="System-CSharpAlias" %>
+<% List<SearchCriteria> scList = SearchCriteria.GetAllSearchCriteria(SourceTable); %>
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,127 +29,62 @@ namespace <%= ManagerNamespace %>
     public partial interface I<%= GetClassName(SourceTable.Name) %>Manager : IManagerBase<<%= GetClassName(SourceTable.Name) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable)] %>>
     {
 		// Get Methods
-		<% // Primary Keys %>
-		<% if(IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) { %>
-		<%= GetClassName(SourceTable.Name) %> GetById(<%= GetPrimaryKeyMethodParameters(SourceTable.PrimaryKey.MemberColumns) %>);
+		<% foreach(SearchCriteria sc in scList) { // foreach(MemberColumnSchema mcs in sc.Items) { %>
+		<% if(sc.IsAllPrimaryKeys) { %>
+		<% if(sc.Items.Count > 1) { // Override GetById%>
+		<%= GetClassName(SourceTable.Name) %> GetById(<%= GetMethodParameters(sc.Items, true) %>);
 		<% } %>
-		<% // Primitives %>
-		<% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-		IList<<%= GetClassName(SourceTable.Name) %>> GetBy<%= GetPropertyName(column.Name) %>(<%= SystemCSharp[column.SystemType.ToString()] %> <%= GetVariableName(column.Name) %>);
-		<% if(column.SystemType.Equals(typeof(String))) { %>
-		IList<<%= GetClassName(SourceTable.Name) %>> GetBy<%= GetPropertyName(column.Name) %>(<%= SystemCSharp[column.SystemType.ToString()] %> <%= GetVariableName(column.Name) %>, NHibernate.Criterion.MatchMode matchMode);
-		<% } %>
-		<% } %>
-		<% // Many-To-One %>
-		<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
-		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if(mcs.Table.Equals(SourceTable) && !IsPrimaryKeyColumn(mcs, SourceTable)) { %>
-		IList<<%= GetClassName(SourceTable.Name) %>> GetBy<%= GetClassName(tks.PrimaryKeyTable.Name) %>Id(<%= SystemCSharp[mcs.SystemType.ToString()] %> <%= GetVariableName(tks.PrimaryKeyTable.Name) %>Id);
-		<% } %>
-		<% } %>
-		<% } %>
-		<% // One-To-Many & Many-To-Many %>
-		<% foreach(TableKeySchema tks in SourceTable.PrimaryKeys) { %>
-		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if (!IsPrimaryKeyColumn(mcs, SourceTable)) { %>
-		<% if (!IsManyToMany(mcs.Table)) { %>
-		IList<<%= GetClassName(SourceTable.Name) %>> GetBy<%= GetClassName(mcs.Table.Name) %>Id(<%= SystemCSharp[mcs.SystemType.ToString()] %> <%= GetVariableName(mcs.Table.Name) %>Id);
 		<% } else { %>
-		<% TableSchema foreignTable = GetToManyTable(mcs.Table, SourceTable); %>
-		IList<<%= GetClassName(SourceTable.Name) %>> GetBy<%= GetClassName(foreignTable.Name) %>Id(<%= SystemCSharp[mcs.SystemType.ToString()] %> <%= GetVariableName(foreignTable.Name) %>Id);
-		<% } %>
-		<% } %>
-		<% } %>
-		<% } %>
+		IList<<%= GetClassName(SourceTable.Name) %>> <%= GetMethodDeclaration(sc) %>;
+		<% } } %>
     }
 
     partial class <%= GetClassName(SourceTable.Name) %>Manager : ManagerBase<<%= GetClassName(SourceTable.Name) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable)] %>>, I<%= GetClassName(SourceTable.Name) %>Manager
     {
         #region Get Methods
 
-		<% // Primary Keys %>
-		<% if(IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) { %>
+		<% foreach(SearchCriteria sc in scList) { %>
+		<% if(sc.IsAllPrimaryKeys) { %>
+		<% if(sc.Items.Count > 1) { // Override GetById%>
+		<%= GetClassName(SourceTable.Name) %> GetById(<%= GetMethodParameters(sc.Items, true) %>);
 		public override <%= GetClassName(SourceTable.Name) %> GetById(string id)
 		{
 			string[] keys = id.Split('^');
 			
-			if(keys.Length != <%= SourceTable.PrimaryKey.MemberColumns.Count %>)
+			if(keys.Length != <%= sc.Items.Count %>)
 				throw new Exception("Invalid Id for <%= GetClassName(SourceTable.Name) %>Manager.GetById");
 			
-			return GetById(<%= GetPrimaryKeyCallParameters(SourceTable.PrimaryKey.MemberColumns) %>);
+			return GetById(<%= GetMethodParameters(sc.Items, false) %>);
 		}
-		public <%= GetClassName(SourceTable.Name) %> GetById(<%= GetPrimaryKeyMethodParameters(SourceTable.PrimaryKey.MemberColumns) %>)
+		public <%= GetClassName(SourceTable.Name) %> GetById(<%= GetMethodParameters(sc.Items, true) %>)
 		{
 			ICriteria criteria = Session.CreateCriteria(typeof(<%= GetClassName(SourceTable.Name) %>));
 			
-			<% for(int x=0; x<SourceTable.PrimaryKey.MemberColumns.Count; x++) { %>
-			criteria.Add(NHibernate.Criterion.Expression.Eq("<%= SourceTable.PrimaryKey.MemberColumns[x].Name %>", <%= StringUtil.ToCamelCase(SourceTable.PrimaryKey.MemberColumns[x].Name) %>));
+			<% foreach(MemberColumnSchema mcs in sc.Items) { %>
+			criteria.Add(NHibernate.Criterion.Expression.Eq("<%= mcs.Name %>", <%= GetVariableName(mcs.Name) %>));
 			<% } %>
-            
+			
             return (<%= GetClassName(SourceTable.Name) %>)criteria.UniqueResult();
 		}
-		<% } %>
-
-		<% // Primitives %>
-		<% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-		public IList<<%= GetClassName(SourceTable.Name) %>> GetBy<%= GetPropertyName(column.Name) %>(<%= SystemCSharp[column.SystemType.ToString()] %> <%= GetVariableName(column.Name) %>)
-		{
-			return GetByCriteria(NHibernate.Criterion.Expression.Eq("<%= GetPropertyName(column.Name) %>", <%= GetVariableName(column.Name) %>));
-		}
-		<% if(column.SystemType.Equals(typeof(String))) { %>
-		public IList<<%= GetClassName(SourceTable.Name) %>> GetBy<%= GetPropertyName(column.Name) %>(<%= SystemCSharp[column.SystemType.ToString()] %> <%= GetVariableName(column.Name) %>, NHibernate.Criterion.MatchMode matchMode)
-		{
-			return GetByCriteria(NHibernate.Criterion.Expression.Like("<%= GetPropertyName(column.Name) %>", <%= GetVariableName(column.Name) %>, matchMode));
-		}
-		<% } %>
-		<% } %>
 		
-		<% // Many-To-One %>
-		<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
-		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if(mcs.Table.Equals(SourceTable) && !IsPrimaryKeyColumn(mcs, SourceTable)) { %>
-		public IList<<%= GetClassName(SourceTable.Name) %>> GetBy<%= GetClassName(tks.PrimaryKeyTable.Name) %>Id(<%= SystemCSharp[mcs.SystemType.ToString()] %> <%= GetVariableName(tks.PrimaryKeyTable.Name) %>Id)
-        {
-            ICriteria <%= GetVariableName(SourceTable.Name) %>Criteria = Session.CreateCriteria(typeof(<%= GetClassName(SourceTable.Name) %>));
-
-            ICriteria <%= GetVariableName(tks.PrimaryKeyTable.Name) %>Criteria = <%= GetVariableName(SourceTable.Name) %>Criteria.CreateCriteria("<%= GetPropertyName(tks.PrimaryKeyTable.Name) %>");
-            <%= GetVariableName(tks.PrimaryKeyTable.Name) %>Criteria.Add(NHibernate.Criterion.Expression.Eq("Id", <%= GetVariableName(tks.PrimaryKeyTable.Name) %>Id));
-
-            return <%= GetVariableName(SourceTable.Name) %>Criteria.List<<%= GetClassName(SourceTable.Name) %>>();
-        }
 		<% } %>
-		<% } %>
-		<% } %>
-		
-		<% // One-To-Many & Many-To-Many %>
-		<% foreach(TableKeySchema tks in SourceTable.PrimaryKeys) { %>
-		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if (!IsPrimaryKeyColumn(mcs, SourceTable)) { %>
-		<% if (!IsManyToMany(mcs.Table)) { %>
-		public IList<<%= GetClassName(SourceTable.Name) %>> GetBy<%= GetClassName(mcs.Table.Name) %>Id(<%= SystemCSharp[mcs.SystemType.ToString()] %> <%= GetVariableName(mcs.Table.Name) %>Id)
-        {
-            ICriteria <%= GetVariableName(SourceTable.Name) %>Criteria = Session.CreateCriteria(typeof(<%= GetClassName(SourceTable.Name) %>));
-
-            ICriteria <%= GetVariableName(tks.PrimaryKeyTable.Name) %>Criteria = <%= GetVariableName(SourceTable.Name) %>Criteria.CreateCriteria("<%= GetPropertyNamePlural(tks.PrimaryKeyTable.Name) %>");
-            <%= GetVariableName(tks.PrimaryKeyTable.Name) %>Criteria.Add(NHibernate.Criterion.Expression.Eq("Id", <%= GetVariableName(mcs.Table.Name) %>Id));
-
-            return <%= GetVariableName(SourceTable.Name) %>Criteria.List<<%= GetClassName(SourceTable.Name) %>>();
-        }
 		<% } else { %>
-		<% TableSchema foreignTable = GetToManyTable(mcs.Table, SourceTable); %>
-		public IList<<%= GetClassName(SourceTable.Name) %>> GetBy<%= GetClassName(foreignTable.Name) %>Id(<%= SystemCSharp[mcs.SystemType.ToString()] %> <%= GetVariableName(foreignTable.Name) %>Id)
+		public IList<<%= GetClassName(SourceTable.Name) %>> <%= GetMethodDeclaration(sc) %>
         {
             ICriteria <%= GetVariableName(SourceTable.Name) %>Criteria = Session.CreateCriteria(typeof(<%= GetClassName(SourceTable.Name) %>));
-
-            ICriteria <%= GetVariableName(tks.PrimaryKeyTable.Name) %>Criteria = <%= GetVariableName(SourceTable.Name) %>Criteria.CreateCriteria("<%= GetPropertyNamePlural(foreignTable.Name) %>");
-            <%= GetVariableName(tks.PrimaryKeyTable.Name) %>Criteria.Add(NHibernate.Criterion.Expression.Eq("Id", <%= GetVariableName(foreignTable.Name) %>Id));
-
+			
+			<% foreach(MemberColumnSchema mcs in sc.Items) { %>
+			<% if(mcs.IsForeignKeyMember) { %>
+			ICriteria <%= GetVariableName(GetForeignTableName(mcs, SourceTable)) %>Criteria = <%= GetVariableName(SourceTable.Name) %>Criteria.CreateCriteria("<%= GetPropertyName(GetForeignTableName(mcs, SourceTable)) %>");
+            <%= GetVariableName(GetForeignTableName(mcs, SourceTable)) %>Criteria.Add(NHibernate.Criterion.Expression.Eq("Id", <%= GetVariableName(mcs.Name) %>));
+			<% } else { %>
+			criteria.Add(NHibernate.Criterion.Expression.Eq("<%= GetPropertyName(mcs.Name) %>", <%= GetVariableName(mcs.Name) %>));
+			<% } %>
+			<% } %>
+			
             return <%= GetVariableName(SourceTable.Name) %>Criteria.List<<%= GetClassName(SourceTable.Name) %>>();
         }
-		<% } %>
-		<% } %>
-		<% } %>
-		<% } %>
+		<% } } %>
 		
 		#endregion
     }

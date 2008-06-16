@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Data;
 using System.Collections.Generic;
+using System.Text;
 
 using CodeSmith.Engine;
 using SchemaExplorer;
@@ -160,9 +161,10 @@ public class NHibernateHelper : CodeTemplate
 		return result;
 	}
 
+	/* REMOVE US
 	public string GetPrimaryKeyMethodParameters(MemberColumnSchemaCollection mcsc)
 	{
-		System.Text.StringBuilder result = new System.Text.StringBuilder();
+		StringBuilder result = new StringBuilder();
 		for(int x=0; x<mcsc.Count; x++)
 		{
 			if(x>0)
@@ -184,128 +186,279 @@ public class NHibernateHelper : CodeTemplate
 		}
 		return result.ToString();
 	}
+	*/
+
+	#endregion
+	
+	#region Method Creation Methods
+	
+	public string GetMethodParameters(List<MemberColumnSchema> mcsList, bool isDeclaration)
+	{
+		StringBuilder result = new StringBuilder();
+		bool isFirst = true;
+		foreach(MemberColumnSchema mcs in mcsList)
+		{
+			if(isFirst)
+				isFirst = false;
+			else
+				result.Append(", ");
+			if(isDeclaration)
+			{
+				result.Append(mcs.SystemType.ToString());
+				result.Append(" ");
+			}
+			result.Append(GetVariableName(mcs.Name));
+		}
+		return result.ToString();
+	}
+	public string GetMethodParameters(MemberColumnSchemaCollection mcsc, bool isDeclaration)
+	{
+		List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>();
+        for (int x = 0; x < mcsc.Count; x++)
+            mcsList.Add(mcsc[x]);
+        return GetMethodParameters(mcsList, isDeclaration);
+	}
+	public string GetMethodDeclaration(SearchCriteria sc)
+	{
+		StringBuilder result = new StringBuilder();
+		result.Append("GetBy");
+		foreach(MemberColumnSchema mcs in sc.Items)
+			result.Append(GetPropertyName(mcs.Name));
+		result.Append("(");
+		result.Append(GetMethodParameters(sc.Items, true));
+		result.Append(")");
+		return result.ToString();
+	}
 	
 	#endregion
+	
+	public string GetForeignTableName(MemberColumnSchema mcs, TableSchema table)
+	{
+		foreach(TableKeySchema tks in table.ForeignKeys)
+			if(tks.ForeignKeyMemberColumns.Contains(mcs))
+				return tks.PrimaryKeyTable.Name;
+		throw new Exception(String.Format("Could not find Column {0} in Table {1}'s ForeignKeys.", mcs.Name, table.Name));
+	}
 }
 
-public class SearchCriteriaHelper
+#region TableSearchCriteria
+
+public class SearchCriteria
 {
-	TableSchema table;
-    Dictionary<string, List<MemberColumnSchema>> map;
+    #region Static Content
 
-    public List<List<MemberColumnSchema>> GetAllSearchCriteria(TableSchema sourceTable)
+    public static List<SearchCriteria> GetAllSearchCriteria(TableSchema table)
     {
-        table = sourceTable;
-        map = new Dictionary<string, List<MemberColumnSchema>>();
-
-        GetPrimaryKeySearchCriteria();
-        GetForeignKeySearchCriteria();
-        GetIndexSearchCriteria();
-        GetDependentCriteria();
-
-        return GetResultsFromMap();
+        TableSearchCriteria tsc = new TableSearchCriteria(table);
+        return tsc.GetAllSearchCriteria();
     }
-    public List<List<MemberColumnSchema>> GetPrimaryKeySearchCriteria(TableSchema sourceTable)
+    public static List<SearchCriteria> GetPrimaryKeySearchCriteria(TableSchema table)
     {
-        table = sourceTable;
-        map = new Dictionary<string, List<MemberColumnSchema>>();
-
-        GetPrimaryKeySearchCriteria();
-
-        return GetResultsFromMap();
+        TableSearchCriteria tsc = new TableSearchCriteria(table);
+        return tsc.GetPrimaryKeySearchCriteria();
     }
-    public List<List<MemberColumnSchema>> GetForeignKeySearchCriteria(TableSchema sourceTable)
+    public static List<SearchCriteria> GetForeignKeySearchCriteria(TableSchema table)
     {
-        table = sourceTable;
-        map = new Dictionary<string, List<MemberColumnSchema>>();
-
-        GetForeignKeySearchCriteria();
-
-        return GetResultsFromMap();
+        TableSearchCriteria tsc = new TableSearchCriteria(table);
+        return tsc.GetForeignKeySearchCriteria();
     }
-    public List<List<MemberColumnSchema>> GetIndexSearchCriteria(TableSchema sourceTable)
+    public static List<SearchCriteria> GetIndexSearchCriteria(TableSchema table)
     {
-        table = sourceTable;
-        map = new Dictionary<string, List<MemberColumnSchema>>();
-
-        GetIndexSearchCriteria();
-
-        return GetResultsFromMap();
-    }
-    public List<List<MemberColumnSchema>> GetDependentCriteria(TableSchema sourceTable)
-    {
-        table = sourceTable;
-        map = new Dictionary<string, List<MemberColumnSchema>>();
-
-        GetDependentCriteria();
-
-        return GetResultsFromMap();
+        TableSearchCriteria tsc = new TableSearchCriteria(table);
+        return tsc.GetIndexSearchCriteria();
     }
 
-    protected void GetPrimaryKeySearchCriteria()
+    #endregion
+
+    #region Declarations
+
+    protected List<MemberColumnSchema> mcsList;
+
+    #endregion
+
+    #region Constructors
+
+    protected SearchCriteria()
     {
-        AddToMap(new List<MemberColumnSchema>(table.PrimaryKey.MemberColumns.ToArray()));
+        mcsList = new List<MemberColumnSchema>();
     }
-    protected void GetForeignKeySearchCriteria()
+    protected SearchCriteria(List<MemberColumnSchema> mcsList)
     {
-        foreach (TableKeySchema tks in table.ForeignKeys)
-        {
-            List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>();
-            foreach (MemberColumnSchema mcs in tks.ForeignKeyMemberColumns)
-                mcsList.Add(mcs);
-            AddToMap(mcsList);
-        }
-    }
-    protected void GetIndexSearchCriteria()
-    {
-		foreach (IndexSchema indexSchema in table.Indexes)
-        {
-            List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>();
-            foreach (MemberColumnSchema mcs in indexSchema.MemberColumns)
-                mcsList.Add(mcs);
-            AddToMap(mcsList);
-        }
-    }
-    protected void GetDependentCriteria()
-    {
-        foreach (TableKeySchema tks in table.PrimaryKeys)
-        {
-            List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>();
-            foreach (MemberColumnSchema mcs in tks.ForeignKeyMemberColumns)
-                mcsList.Add(mcs);
-            AddToMap(mcsList);
-        }
+        this.mcsList = mcsList;
     }
 
-    protected bool AddToMap(List<MemberColumnSchema> mcsList)
+    #endregion
+
+    #region Methods
+
+    protected void Add(MemberColumnSchema item)
     {
-        string key = GetKey(mcsList);
-        bool result = (mcsList.Count > 0 && !map.ContainsKey(key));
-
-        if (result)
-            map.Add(key, mcsList);
-
-        return result;
+        mcsList.Add(item);
     }
-    protected string GetKey(List<MemberColumnSchema> mcsList)
+    public override string ToString()
     {
-        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        StringBuilder sb = new StringBuilder();
+        bool isFirst = true;
+
         foreach (MemberColumnSchema mcs in mcsList)
         {
-			sb.Append(mcs.Table.Name);
-			sb.Append(".");
             sb.Append(mcs.Name);
-            sb.Append("|");
+            if (isFirst)
+                isFirst = false;
+            else
+                sb.Append("|");
         }
+
         return sb.ToString();
     }
-    protected List<List<MemberColumnSchema>> GetResultsFromMap()
+
+    #endregion
+
+    #region Properties
+
+    public List<MemberColumnSchema> Items
     {
-		List<List<MemberColumnSchema>> result = new List<List<MemberColumnSchema>>();
-        foreach (KeyValuePair<string, List<MemberColumnSchema>> kvp in map)
-        {
-            result.Add(kvp.Value);
-        }
-        return result;
+        get { return mcsList; }
     }
+    public bool IsAllPrimaryKeys
+    {
+        get
+        {
+            bool result = true;
+            foreach (MemberColumnSchema msc in mcsList)
+                if (!msc.IsPrimaryKeyMember)
+                {
+                    result = false;
+                    break;
+                }
+            return result;
+        }
+    }
+    protected string Key
+    {
+        get { return this.ToString(); }
+    }
+
+    #endregion
+
+    #region Internal Classes
+
+    internal class TableSearchCriteria
+    {
+        #region Declarations
+
+        protected TableSchema table;
+
+        #endregion
+
+        #region Constructor
+
+        public TableSearchCriteria(TableSchema sourceTable)
+        {
+            this.table = sourceTable;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public List<SearchCriteria> GetAllSearchCriteria()
+        {
+            Dictionary<string, SearchCriteria> map = new Dictionary<string, SearchCriteria>();
+
+            GetPrimaryKeySearchCriteria(map);
+            GetForeignKeySearchCriteria(map);
+            GetIndexSearchCriteria(map);
+
+            return GetResultsFromMap(map);
+        }
+        public List<SearchCriteria> GetPrimaryKeySearchCriteria()
+        {
+            Dictionary<string, SearchCriteria> map = new Dictionary<string, SearchCriteria>();
+
+            GetPrimaryKeySearchCriteria(map);
+
+            return GetResultsFromMap(map);
+        }
+        public List<SearchCriteria> GetForeignKeySearchCriteria()
+        {
+            Dictionary<string, SearchCriteria> map = new Dictionary<string, SearchCriteria>();
+
+            GetForeignKeySearchCriteria(map);
+
+            return GetResultsFromMap(map);
+        }
+        public List<SearchCriteria> GetIndexSearchCriteria()
+        {
+            Dictionary<string, SearchCriteria> map = new Dictionary<string, SearchCriteria>();
+
+            GetIndexSearchCriteria(map);
+
+            return GetResultsFromMap(map);
+        }
+
+        protected void GetPrimaryKeySearchCriteria(Dictionary<string, SearchCriteria> map)
+        {
+            List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>(table.PrimaryKey.MemberColumns.ToArray());
+            SearchCriteria searchCriteria = new SearchCriteria(mcsList);
+            AddToMap(map, searchCriteria);
+        }
+        protected void GetForeignKeySearchCriteria(Dictionary<string, SearchCriteria> map)
+        {
+            foreach (TableKeySchema tks in table.ForeignKeys)
+            {
+                SearchCriteria searchCriteria = new SearchCriteria();
+                foreach (MemberColumnSchema mcs in tks.ForeignKeyMemberColumns)
+                    if (mcs.Table.Equals(table))
+                        searchCriteria.Add(mcs);
+                AddToMap(map, searchCriteria);
+            }
+        }
+        protected void GetIndexSearchCriteria(Dictionary<string, SearchCriteria> map)
+        {
+            foreach (IndexSchema indexSchema in table.Indexes)
+            {
+                SearchCriteria searchCriteria = new SearchCriteria();
+                foreach (MemberColumnSchema mcs in indexSchema.MemberColumns)
+                    if (mcs.Table.Equals(table))
+                        searchCriteria.Add(mcs);
+                AddToMap(map, searchCriteria);
+            }
+        }
+
+        protected bool AddToMap(Dictionary<string, SearchCriteria> map, SearchCriteria searchCriteria)
+        {
+            string key = searchCriteria.Key;
+            bool result = (searchCriteria.Items.Count > 0 && !map.ContainsKey(key));
+
+            if (result)
+                map.Add(key, searchCriteria);
+
+            return result;
+        }
+        protected List<SearchCriteria> GetResultsFromMap(Dictionary<string, SearchCriteria> map)
+        {
+            List<SearchCriteria> result = new List<SearchCriteria>();
+            foreach (KeyValuePair<string, SearchCriteria> kvp in map)
+            {
+                result.Add(kvp.Value);
+            }
+            return result;
+        }
+
+        #endregion
+
+        #region Properties
+
+        public TableSchema Table
+        {
+            get { return table; }
+        }
+
+        #endregion
+    }
+
+    #endregion
 }
+
+#endregion
