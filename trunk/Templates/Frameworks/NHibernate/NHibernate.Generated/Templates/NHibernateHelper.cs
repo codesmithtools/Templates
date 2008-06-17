@@ -346,6 +346,16 @@ public class SearchCriteria
 
         return sb.ToString();
     }
+	
+	public bool ContainsForeignKey(TableSchemaCollection tsc)
+    {
+        foreach (TableSchema ts in tsc)
+            foreach(TableKeySchema tks in ts.PrimaryKeys)
+                foreach (MemberColumnSchema mcs in mcsList)
+                    if (tks.PrimaryKeyMemberColumns.Contains(mcs))
+                        return true;
+        return false;
+    }
 
     #endregion
 
