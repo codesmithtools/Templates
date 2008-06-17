@@ -7,10 +7,12 @@ Description: Generates a HBM Map for NHibernate.
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1. Source Database" Description="The source table to generate from." %>
 <%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2. Assemblies and Namespaces" Description="The name of the Assembly that will contain these objects." %>
 <%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2. Assemblies and Namespaces" Description="The desired Namespace for the Business Objects." %>
+<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="5. NEW" Description="A prefix that will be stripped from table names when class names are generated." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
+<% this.tablePrefix = TablePrefix; %>
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="<%= BusinessNamespace %>" assembly="<%= AssemblyName %>">
 	<class name="<%= BusinessNamespace %>.<%= GetClassName(SourceTable.Name) %>, <%= AssemblyName %>" table="<%= GetClassName(SourceTable.Name) %>" lazy="true">

@@ -18,6 +18,8 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Property Name="HbmMapFolder" Type="System.String" Default="Resources\" Optional="True" Category="3. Output Structure" Description="The folder where the HBM maps will be generated. (We recommend Resources.)" %>
 
 <%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="OnePointTwo" Optional="False" Category="4. NHibernate" Description="The version of NHibernate to generate for." %>
+<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="5. NEW" Description="A prefix that will be stripped from table names when class names are generated." %>
+<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="5. NEW" Description="A collection of tables to be excluded during generation." %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
@@ -70,7 +72,7 @@ public string ProjectFile
 public override void Render(TextWriter writer)
 {
 	foreach(TableSchema table in SourceDatabase.Tables)
-		if(!IsManyToMany(table))
+		if(!ExcludedTables.Contains(table) && !IsManyToMany(table))
 		{
 			RenderHbmMaps(table);
 			RenderBusinessObjects(table);
@@ -88,6 +90,7 @@ private void RenderHbmMaps(TableSchema table)
 	hbmMap.AssemblyName = this.AssemblyName;
 	hbmMap.BusinessNamespace = this.BusinessNamespace;
 	hbmMap.SourceTable = table;
+	hbmMap.TablePrefix = this.TablePrefix;
 	
 	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
 	string fileName = String.Format("{0}{1}.hbm.xml", GetFolder(HbmMapFolder), GetClassName(table.Name));
@@ -101,6 +104,7 @@ private void RenderBusinessObjects(TableSchema table)
 	
 	businessObject.BusinessNamespace = this.BusinessNamespace;
 	businessObject.SourceTable = table;
+	businessObject.TablePrefix = this.TablePrefix;
 
 	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
 	string fileName = String.Format("{0}{1}.cs", GetFolder(BusinessObjectFolder), GetClassName(table.Name));
@@ -120,6 +124,7 @@ private void RenderEditableManagerObjects(TableSchema table)
 		editableManagerObject.ManagerNamespace = this.ManagerNamespace;
 		editableManagerObject.BusinessNamespace = this.BusinessNamespace;
 		editableManagerObject.SourceTable = table;
+		editableManagerObject.TablePrefix = this.TablePrefix;
 		editableManagerObject.RenderToFile(editableFileName, strategy);
 	}
 
@@ -128,6 +133,7 @@ private void RenderEditableManagerObjects(TableSchema table)
 	managerObject.BusinessNamespace = this.BusinessNamespace;
 	managerObject.SourceTable = table;
 	managerObject.NHibernateVersion = this.NHibernateVersion;
+	managerObject.TablePrefix = this.TablePrefix;
 	managerObject.RenderToFile(fileName, strategy);
 	
 	Project.AddCompileItem(editableFileName, fileName);
@@ -139,6 +145,8 @@ private void RenderManagerFactory()
 	managerFactory.SourceDatabase = this.SourceDatabase;
 	managerFactory.ProjectNamespace = this.ProjectNamespace;
 	managerFactory.ManagerNamespace = this.ManagerNamespace;
+	managerFactory.ExcludedTables = this.ExcludedTables;
+	managerFactory.TablePrefix = this.TablePrefix;
 	
 	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
 	string fileName = "ManagerFactory.cs";

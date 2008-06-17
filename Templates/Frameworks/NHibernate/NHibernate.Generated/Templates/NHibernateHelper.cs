@@ -135,15 +135,17 @@ public class NHibernateHelper : CodeTemplate
 	
 	public string GetClassName(String tableName)
 	{
-		string result;
+		if (!String.IsNullOrEmpty(tablePrefix) && tableName.StartsWith(tablePrefix))
+            tableName = tableName.Remove(0, tablePrefix.Length);
+				
 		if(tableName.EndsWith("es"))
-			result = tableName.Substring(0, tableName.Length-2);
+			tableName = tableName.Substring(0, tableName.Length-2);
 		else if(tableName.EndsWith("s") && !tableName.EndsWith("ss"))
-			result = tableName.Substring(0, tableName.Length-1);
-		else
-			result = tableName;
-		return StringUtil.ToPascalCase(result);
+			tableName = tableName.Substring(0, tableName.Length-1);
+			
+		return StringUtil.ToPascalCase(tableName);
 	}
+	protected string tablePrefix = String.Empty;
 	
 	#region PrimaryKey Methods
 	
@@ -274,7 +276,7 @@ public class NHibernateHelper : CodeTemplate
 	}
 }
 
-#region TableSearchCriteria
+#region SearchCriteria Class
 
 public class SearchCriteria
 {
