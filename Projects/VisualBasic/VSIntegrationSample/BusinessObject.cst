@@ -12,7 +12,7 @@ Description: Generates a very simple business object.
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Map Name="DbDataReader" Src="DbType-DataReaderMethod" Description="DbType to DataReader Method Map" %>
-<%@ Map Name="SqlNativeSqlDb" Src="SqlNativeType-SqlDbType" Description="SqlNativeType to SqlDbType Map" %>
+<%@ Map Name="NativetoSqlDb" Src="SqlNativeType-SqlDbType" Description="SqlNativeType to SqlDbType Map" %>
 <% If Not Me.SingleFileMode Then %>
 Imports System
 Imports System.Collections.Generic
@@ -78,11 +78,11 @@ Public Class <%= GetClassName(SourceTable) %>
         Dim sql As New SqlService()
         Dim queryParameters As New StringBuilder()
 
-        sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns(0)) %>, Id)
+        sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.<%= NativeToSqlDB(SourceTable.PrimaryKey.MemberColumns(0).NativeType) %>, Id)
         queryParameters.Append("<%= SourceTable.PrimaryKey.MemberColumns(0).Name %> = @<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>")
 
 		<% For i As Integer = 0 To SourceTable.NonPrimaryKeyColumns.Count - 1 %>
-		sql.AddParameter("@<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>", SqlDbType.<%= GetSqlDbType(SourceTable.NonPrimaryKeyColumns(i)) %>, <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>)
+		sql.AddParameter("@<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>", SqlDbType.<%= NativeToSqlDB(SourceTable.NonPrimaryKeyColumns(i).NativeType) %>, <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>)
         queryParameters.Append(", <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %> = @<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>")
 		<% Next i %>
 
@@ -94,11 +94,11 @@ Public Class <%= GetClassName(SourceTable) %>
         Dim sql As New SqlService()
         Dim queryParameters As New StringBuilder()
 
-        sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns(0)) %>, Id)
+        sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.<%= NativeToSqlDB(SourceTable.PrimaryKey.MemberColumns(0).NativeType) %>, Id)
         queryParameters.Append("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>")
 
 		<% For i As Integer = 0 To SourceTable.NonPrimaryKeyColumns.Count - 1 %>
-		sql.AddParameter("@<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>", SqlDbType.<%= GetSqlDbType(SourceTable.NonPrimaryKeyColumns(i)) %>, <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>)
+		sql.AddParameter("@<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>", SqlDbType.<%= NativeToSqlDB(SourceTable.NonPrimaryKeyColumns(i).NativeType) %>, <%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>)
         queryParameters.Append(", @<%= GetPropertyName(SourceTable.NonPrimaryKeyColumns(i)) %>")
 		<% Next i %>
 
@@ -142,7 +142,7 @@ Public Class <%= GetClassName(SourceTable) %>
 	
 	Public Shared Sub Delete(ByVal id As <%= GetPrimaryKeyType(SourceTable) %>)
         Dim sql As New SqlService()
-        sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns(0)) %>, id)
+        sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.<%=NativeToSqlDB(SourceTable.PrimaryKey.MemberColumns(0).NativeType) %>, id)
 
         Dim reader As SqlDataReader = sql.ExecuteSqlReader("Delete <%= SourceTable.Name %> Where <%= SourceTable.PrimaryKey.MemberColumns(0).Name %> = @<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>")
     End Sub
@@ -220,10 +220,6 @@ Public Function GetClassName(ByVal table As TableSchema) As String
 	Else
 		Return table.Name
 	End If
-End Function
-
-Public Function GetSqlDbType(ByVal column As ColumnSchema) As String
-	Return SqlNativeSqlDb(column.NativeType.ToString())
 End Function
 
 Public Function GetPrimaryKeyType(ByVal table As TableSchema) As String

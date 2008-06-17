@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <propertySets>
-    <propertySet output="Product.vb" template="BusinessObject.cst">
+    <propertySet name="Product.vb" output="Product.vb" template="BusinessObject.cst">
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
+        <connectionString>Data Source=(local);Initial Catalog=PetShop;Integrated Security=True;Connect Timeout=30</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
@@ -11,34 +11,34 @@
         </table>
       </property>
     </propertySet>
-    <propertySet output="Orders.vb" template="BusinessObject.cst">
+    <propertySet name="Orders.vb" output="Orders.vb" template="BusinessObject.cst">
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
+        <connectionString>Data Source=(local);Initial Catalog=PetShop;Integrated Security=True;Connect Timeout=30</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-      <owner>dbo</owner>
-      <name>Orders</name>
-    </table>
+          <owner>dbo</owner>
+          <name>Orders</name>
+        </table>
       </property>
     </propertySet>
-    <propertySet output="Profiles.vb" template="BusinessObject.cst">
+    <propertySet name="Profiles.vb" output="Profiles.vb" template="BusinessObject.cst">
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
+        <connectionString>Data Source=(local);Initial Catalog=PetShop;Integrated Security=True;Connect Timeout=30</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-      <owner>dbo</owner>
-      <name>Profiles</name>
-    </table>
+          <owner>dbo</owner>
+          <name>Profiles</name>
+        </table>
       </property>
     </propertySet>
-    <propertySet output="Supplier.vb" template="BusinessObject.cst">
+    <propertySet name="Supplier.vb" output="Supplier.vb" template="BusinessObject.cst">
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
+        <connectionString>Data Source=(local);Initial Catalog=PetShop;Integrated Security=True;Connect Timeout=30</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-      <owner>dbo</owner>
-      <name>Supplier</name>
-    </table>
+          <owner>dbo</owner>
+          <name>Supplier</name>
+        </table>
       </property>
     </propertySet>
   </propertySets>
