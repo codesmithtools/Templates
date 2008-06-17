@@ -65,16 +65,16 @@ Public Class Product
         Dim sql As New SqlService()
         Dim queryParameters As New StringBuilder()
 
-        sql.AddParameter("@ProductId", SqlDbType.String, Id)
+        sql.AddParameter("@ProductId", SqlDbType.VarChar, Id)
         queryParameters.Append("ProductId = @ProductId")
 
-		sql.AddParameter("@CategoryId", SqlDbType.String, CategoryId)
+		sql.AddParameter("@CategoryId", SqlDbType.VarChar, CategoryId)
         queryParameters.Append(", CategoryId = @CategoryId")
-		sql.AddParameter("@Name", SqlDbType.String, Name)
+		sql.AddParameter("@Name", SqlDbType.VarChar, Name)
         queryParameters.Append(", Name = @Name")
-		sql.AddParameter("@Descn", SqlDbType.String, Descn)
+		sql.AddParameter("@Descn", SqlDbType.VarChar, Descn)
         queryParameters.Append(", Descn = @Descn")
-		sql.AddParameter("@Image", SqlDbType.String, Image)
+		sql.AddParameter("@Image", SqlDbType.VarChar, Image)
         queryParameters.Append(", Image = @Image")
 
         Dim query As String = [String].Format("Update Product Set {0} Where ProductId = @ProductId", queryParameters.ToString())
@@ -85,16 +85,16 @@ Public Class Product
         Dim sql As New SqlService()
         Dim queryParameters As New StringBuilder()
 
-        sql.AddParameter("@ProductId", SqlDbType.String, Id)
+        sql.AddParameter("@ProductId", SqlDbType.VarChar, Id)
         queryParameters.Append("@ProductId")
 
-		sql.AddParameter("@CategoryId", SqlDbType.String, CategoryId)
+		sql.AddParameter("@CategoryId", SqlDbType.VarChar, CategoryId)
         queryParameters.Append(", @CategoryId")
-		sql.AddParameter("@Name", SqlDbType.String, Name)
+		sql.AddParameter("@Name", SqlDbType.VarChar, Name)
         queryParameters.Append(", @Name")
-		sql.AddParameter("@Descn", SqlDbType.String, Descn)
+		sql.AddParameter("@Descn", SqlDbType.VarChar, Descn)
         queryParameters.Append(", @Descn")
-		sql.AddParameter("@Image", SqlDbType.String, Image)
+		sql.AddParameter("@Image", SqlDbType.VarChar, Image)
         queryParameters.Append(", @Image")
 
         Dim query As String = [String].Format("Insert Into Product ({0}) Values ({1})", queryParameters.ToString().Replace("@", ""), queryParameters.ToString())
@@ -162,7 +162,7 @@ Public Class Product
 	
 	Public Shared Sub Delete(ByVal id As System.String)
         Dim sql As New SqlService()
-        sql.AddParameter("@ProductId", SqlDbType.String, id)
+        sql.AddParameter("@ProductId", SqlDbType.VarChar, id)
 
         Dim reader As SqlDataReader = sql.ExecuteSqlReader("Delete Product Where ProductId = @ProductId")
     End Sub
