@@ -15,7 +15,7 @@ namespace NHibernate.Base
     /// This is heavely based on 'NHibernate Best Practices with ASP.NET' By Billy McCafferty.
     /// http://www.codeproject.com/KB/architecture/NHibernateBestPractices.aspx
     /// </summary>
-    public sealed class NHibernateSessionManager : IDisposable
+    public class NHibernateSessionManager : IDisposable
     {
         #region Static Content
 
@@ -30,9 +30,7 @@ namespace NHibernate.Base
         #region Declarations
 
         private ISessionFactory _sessionFactory = null;
-
-        private const string _sessionContextKey = "CsNHibernate-SessionContextKey";
-        private const string _transactionContextKey = "CsNHibernate-TransactionContextKey";
+        private const string _sessionContextKey = "NHibernateSession-ContextKey";
 
         #endregion
 
@@ -79,17 +77,25 @@ namespace NHibernate.Base
 
         #region Methods
 
-        public ISession GetSession()
+        public INHibernateSession GetNewSession()
         {
-            ISession session = ContextSession;
+            NHibernateSession session;
+
+            lock (_sessionFactory)
+            {
+                session = new NHibernateSession(_sessionFactory.OpenSession());
+            }
+
+            return session;
+        }
+        public INHibernateSession GetContextSession()
+        {
+            INHibernateSession session = ContextSession;
 
             // If the thread does not yet have a session, create one.
             if (session == null)
             {
-                lock (_sessionFactory)
-                {
-                    session = _sessionFactory.OpenSession();
-                }
+                session = GetNewSession();
 
                 // Save to CallContext.
                 ContextSession = session;
@@ -97,111 +103,31 @@ namespace NHibernate.Base
 
             return session;
         }
-        public void CloseSession()
-        {
-            ISession session = ContextSession;
-
-            CloseSession(session);
-
-            // Remove from CallContext.
-            ContextSession = null;
-        }
-        private void CloseSession(ISession session)
-        {
-            if (session != null && session.IsOpen)
-            {
-                session.Flush();
-                session.Close();
-            }
-        }
-
-        public bool BeginTransaction()
-        {
-            bool noPreviousTransaction = (ContextTransaction == null);
-
-            if (noPreviousTransaction)
-                ContextTransaction = GetSession().BeginTransaction();
-
-            return noPreviousTransaction;
-            
-        }
-        public bool CommitTransaction()
-        {
-            ITransaction transaction = ContextTransaction;
-            bool hasOpenTransaction = IsOpenTransaction(transaction);
-
-            if (hasOpenTransaction)
-            {
-                try
-                {
-                    transaction.Commit();
-                    ContextTransaction = null;
-                }
-                catch(HibernateException)
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
-
-            return hasOpenTransaction;
-        }
-        public bool RollbackTransaction()
-        {
-            ITransaction transaction = ContextTransaction;
-            bool hasOpenTransaction = IsOpenTransaction(transaction);
-
-            if (hasOpenTransaction)
-            {
-                transaction.Rollback();
-                ContextTransaction = null;
-            }
-
-            return hasOpenTransaction;
-        }
-        private bool IsOpenTransaction(ITransaction transaction)
-        {
-            return (transaction != null && !transaction.WasCommitted && !transaction.WasRolledBack);
-
-        }
-
-        private void SetContextObject(string key, object value)
-        {
-            if (IsWebContext)
-                System.Web.HttpContext.Current.Items[key] = value;
-            else
-                System.Runtime.Remoting.Messaging.CallContext.SetData(key, value);
-        }
-        private object GetContextOject(string key)
-        {
-            if (IsWebContext)
-                return System.Web.HttpContext.Current.Items[key];
-            else
-                return System.Runtime.Remoting.Messaging.CallContext.GetData(key);
-        }
 
         #endregion
 
         #region Properties
 
-        private ISession ContextSession
+        private INHibernateSession ContextSession
         {
-            get { return (ISession)GetContextOject(_sessionContextKey); }
-            set { SetContextObject(_sessionContextKey, value); }
-        }
-        private ITransaction ContextTransaction
-        {
-            get { return (ITransaction)GetContextOject(_transactionContextKey); }
-            set { SetContextObject(_transactionContextKey, value); }
+            get
+            {
+                if (IsWebContext)
+                    return (NHibernateSession)System.Web.HttpContext.Current.Items[_sessionContextKey];
+                else
+                    return (NHibernateSession)System.Runtime.Remoting.Messaging.CallContext.GetData(_sessionContextKey);
+            }
+            set
+            {
+                if (IsWebContext)
+                    System.Web.HttpContext.Current.Items[_sessionContextKey] = value;
+                else
+                    System.Runtime.Remoting.Messaging.CallContext.SetData(_sessionContextKey, value);
+            }
         }
         private bool IsWebContext
         {
             get { return (System.Web.HttpContext.Current != null); }
-        }
-
-        public bool HasOpenTransaction
-        {
-            get { return IsOpenTransaction(ContextTransaction); }
         }
 
         #endregion
