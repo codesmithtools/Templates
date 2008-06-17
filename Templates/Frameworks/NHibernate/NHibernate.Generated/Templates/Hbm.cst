@@ -8,6 +8,7 @@ Description: Generates a HBM Map for NHibernate.
 <%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2. Assemblies and Namespaces" Description="The name of the Assembly that will contain these objects." %>
 <%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2. Assemblies and Namespaces" Description="The desired Namespace for the Business Objects." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="5. NEW" Description="A prefix that will be stripped from table names when class names are generated." %>
+<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="5. NEW" Description="A collection of tables to be excluded during generation." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
@@ -41,7 +42,7 @@ Description: Generates a HBM Map for NHibernate.
 		<% // Many-To-One %>
 		<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if(mcs.Table.Equals(SourceTable) && !IsPrimaryKeyColumn(mcs, SourceTable)) { %>
+		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !IsPrimaryKeyColumn(mcs, SourceTable)) { %>
 		<many-to-one name="<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>" column="<%= mcs.Name %>" class="<%= GetClassName(tks.PrimaryKeyTable.Name) %>" />
 		<% } %>
 		<% } %>
@@ -51,16 +52,20 @@ Description: Generates a HBM Map for NHibernate.
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
 		<% if (!IsPrimaryKeyColumn(mcs, SourceTable)) { %>
 		<% if (!IsManyToMany(mcs.Table)) { %>
+		<% if (!ExcludedTables.Contains(mcs.Table)) { %>
 		<bag name="<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>" lazy="true" cascade="<%= GetCascade(mcs) %>"  inverse="true" >
 			<key column="<%= GetPrimaryKeyColumn(tks.PrimaryKey).Name %>"></key>
 			<one-to-many class="<%= GetClassName(mcs.Table.Name) %>"></one-to-many>
 		</bag>
+		<% } %>
 		<% } else { %>
 		<% TableSchema foreignTable = GetToManyTable(mcs.Table, SourceTable); %>
+		<% if (!ExcludedTables.Contains(foreignTable)) { %>
 		<bag name="<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>" table="<%= mcs.Table.Name %>" lazy="true" cascade="all"  inverse="true" >
 			<key column="<%= GetPrimaryKeyColumn(SourceTable.PrimaryKey).Name %>"></key>
 			<many-to-many column="<%= GetPrimaryKeyColumn(foreignTable.PrimaryKey).Name %>" class="<%= GetClassName(foreignTable.Name) %>" />
     	</bag>
+		<% } %>
 		<% } %>
 		<% } %>
 		<% } %>

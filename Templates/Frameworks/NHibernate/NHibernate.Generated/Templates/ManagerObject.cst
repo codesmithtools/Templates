@@ -10,6 +10,7 @@ Description: Generates a Manager Object for NHibernate.
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Base" Optional="False" Category="2. Assemblies and Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="OnePointTwo" Optional="False" Category="4. NHibernate" Description="The version of NHibernate to generate for." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="5. NEW" Description="A prefix that will be stripped from table names when class names are generated." %>
+<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="5. NEW" Description="A collection of tables to be excluded during generation." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
@@ -32,12 +33,12 @@ namespace <%= ManagerNamespace %>
     public partial interface I<%= GetClassName(SourceTable.Name) %>Manager : IManagerBase<<%= GetClassName(SourceTable.Name) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable)] %>>
     {
 		// Get Methods
-		<% foreach(SearchCriteria sc in scList) { // foreach(MemberColumnSchema mcs in sc.Items) { %>
+		<% foreach(SearchCriteria sc in scList) { %>
 		<% if(sc.IsAllPrimaryKeys) { %>
 		<% if(sc.Items.Count > 1) { // Override GetById%>
 		<%= GetClassName(SourceTable.Name) %> GetById(<%= GetMethodParameters(sc.Items, true) %>);
 		<% } %>
-		<% } else { %>
+		<% } else if(!sc.ContainsForeignKey(ExcludedTables)) { %>
 		IList<<%= GetClassName(SourceTable.Name) %>> <%= GetMethodDeclaration(sc) %>;
 		<% } } %>
     }
@@ -70,7 +71,7 @@ namespace <%= ManagerNamespace %>
 		}
 		
 		<% } %>
-		<% } else { %>
+		<% } else if(!sc.ContainsForeignKey(ExcludedTables)) { %>
 		public IList<<%= GetClassName(SourceTable.Name) %>> <%= GetMethodDeclaration(sc) %>
         {
             ICriteria <%= GetVariableName(SourceTable.Name) %>Criteria = Session.CreateCriteria(typeof(<%= GetClassName(SourceTable.Name) %>));
