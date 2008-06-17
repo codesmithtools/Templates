@@ -5,40 +5,40 @@
     <property name="ClassNamespace">CSharpCodeGeneratorSample</property>
   </defaultProperties>
   <propertySets>
-    <propertySet output="Product.cs">
+    <propertySet name="Product.cs" output="Product.cs">
       <property name="SourceTable">
         <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
-<providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
           <name>Product</name>
         </table>
       </property>
     </propertySet>
-    <propertySet output="Order.cs">
+    <propertySet name="Order.cs" output="Order.cs">
       <property name="SourceTable">
         <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
-<providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
           <name>Orders</name>
         </table>
       </property>
     </propertySet>
-    <propertySet output="Supplier.cs">
+    <propertySet name="Supplier.cs" output="Supplier.cs">
       <property name="SourceTable">
         <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
-<providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
           <name>Supplier</name>
         </table>
       </property>
     </propertySet>
-    <propertySet output="Profile.cs">
+    <propertySet name="Profile.cs" output="Profile.cs">
       <property name="SourceTable">
         <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
-<providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
           <name>Profiles</name>

@@ -2,7 +2,8 @@ using System;
 using System.Collections;
 
 namespace VSIntegrationSample
-{	#region StringHashtable
+{
+	#region StringHashtable
 	public class StringHashtable : IDictionary, ICollection, IEnumerable, ICloneable
 	{
 		protected Hashtable innerHash;
@@ -953,4 +954,5 @@ namespace VSIntegrationSample
 		#endregion
 	}
 	#endregion
+
 }

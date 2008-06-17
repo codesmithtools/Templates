@@ -129,6 +129,9 @@
     <Compile Include="EntryPoint.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HashTable.cs">
+      <DependentUpon>Hashtable.csp</DependentUpon>
+    </Compile>
     <Compile Include="Order.cs">
       <DependentUpon>BusinessObject.csp</DependentUpon>
     </Compile>

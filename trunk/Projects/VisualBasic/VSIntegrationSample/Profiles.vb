@@ -69,14 +69,14 @@ Public Class Profile
         Dim sql As New SqlService()
         Dim queryParameters As New StringBuilder()
 
-        sql.AddParameter("@UniqueID", SqlDbType.Int, Id)
+        sql.AddParameter("@UniqueID", SqlDbType.Int32, Id)
         queryParameters.Append("UniqueID = @UniqueID")
 
-		sql.AddParameter("@Username", SqlDbType.VarChar, Username)
+		sql.AddParameter("@Username", SqlDbType.String, Username)
         queryParameters.Append(", Username = @Username")
-		sql.AddParameter("@ApplicationName", SqlDbType.VarChar, ApplicationName)
+		sql.AddParameter("@ApplicationName", SqlDbType.String, ApplicationName)
         queryParameters.Append(", ApplicationName = @ApplicationName")
-		sql.AddParameter("@IsAnonymous", SqlDbType.Bit, IsAnonymous)
+		sql.AddParameter("@IsAnonymous", SqlDbType.Boolean, IsAnonymous)
         queryParameters.Append(", IsAnonymous = @IsAnonymous")
 		sql.AddParameter("@LastActivityDate", SqlDbType.DateTime, LastActivityDate)
         queryParameters.Append(", LastActivityDate = @LastActivityDate")
@@ -91,14 +91,14 @@ Public Class Profile
         Dim sql As New SqlService()
         Dim queryParameters As New StringBuilder()
 
-        sql.AddParameter("@UniqueID", SqlDbType.Int, Id)
+        sql.AddParameter("@UniqueID", SqlDbType.Int32, Id)
         queryParameters.Append("@UniqueID")
 
-		sql.AddParameter("@Username", SqlDbType.VarChar, Username)
+		sql.AddParameter("@Username", SqlDbType.String, Username)
         queryParameters.Append(", @Username")
-		sql.AddParameter("@ApplicationName", SqlDbType.VarChar, ApplicationName)
+		sql.AddParameter("@ApplicationName", SqlDbType.String, ApplicationName)
         queryParameters.Append(", @ApplicationName")
-		sql.AddParameter("@IsAnonymous", SqlDbType.Bit, IsAnonymous)
+		sql.AddParameter("@IsAnonymous", SqlDbType.Boolean, IsAnonymous)
         queryParameters.Append(", @IsAnonymous")
 		sql.AddParameter("@LastActivityDate", SqlDbType.DateTime, LastActivityDate)
         queryParameters.Append(", @LastActivityDate")
@@ -179,7 +179,7 @@ Public Class Profile
 	
 	Public Shared Sub Delete(ByVal id As System.Int32)
         Dim sql As New SqlService()
-        sql.AddParameter("@UniqueID", SqlDbType.Int, id)
+        sql.AddParameter("@UniqueID", SqlDbType.Int32, id)
 
         Dim reader As SqlDataReader = sql.ExecuteSqlReader("Delete Profiles Where UniqueID = @UniqueID")
     End Sub

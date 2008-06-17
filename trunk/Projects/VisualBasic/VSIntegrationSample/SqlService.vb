@@ -42,7 +42,7 @@ Public Class SqlService
 
 #Region "Contructors"
     Public Sub New()
-        _connectionString = ConfigurationSettings.AppSettings("ConnectionString")
+        _connectionString = "ConnectionString"
     End Sub
 
     Public Sub New(ByVal connectionString As String)
