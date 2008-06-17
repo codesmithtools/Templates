@@ -185,33 +185,6 @@ public class NHibernateHelper : CodeTemplate
 		return result;
 	}
 
-	/* REMOVE ME
-	public string GetPrimaryKeyMethodParameters(MemberColumnSchemaCollection mcsc)
-	{
-		StringBuilder result = new StringBuilder();
-		for(int x=0; x<mcsc.Count; x++)
-		{
-			if(x>0)
-				result.Append(", ");
-			result.Append(mcsc[x].SystemType.ToString());
-			result.Append(" ");
-			result.Append(StringUtil.ToCamelCase(mcsc[x].Name));
-		}
-		return result.ToString();
-	}
-	public string GetPrimaryKeyCallParameters(MemberColumnSchemaCollection mcsc)
-	{
-		System.Text.StringBuilder result = new System.Text.StringBuilder();
-		for(int x=0; x<mcsc.Count; x++)
-		{
-			if(x>0)
-				result.Append(", ");
-			result.Append(String.Format("{0}.Parse(keys[{1}])", mcsc[x].SystemType, x));
-		}
-		return result.ToString();
-	}
-	*/
-
 	#endregion
 	
 	#region Method Creation Methods
@@ -346,7 +319,6 @@ public class SearchCriteria
 
         return sb.ToString();
     }
-	
 	public bool ContainsForeignKey(TableSchemaCollection tsc)
     {
         foreach (TableSchema ts in tsc)
