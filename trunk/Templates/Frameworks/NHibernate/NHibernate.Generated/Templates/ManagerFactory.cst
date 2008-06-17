@@ -7,10 +7,13 @@ Description: Generates a Manager Factory class for NHibernate.
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="1. Source Database" Description="The source database to generate from." %>
 <%@ Property Name="ProjectNamespace" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2. Assemblies and Namespaces" Description="The default Namespace of the Project that will contain these objects." %>
 <%@ Property Name="ManagerNamespace" Type="System.String" Default="NHibernate.Generated.ManagerObjects" Optional="False" Category="2. Assemblies and Namespaces" Description="The desired Namespace for the Manager Objects." %>
+<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="5. NEW" Description="A collection of tables to be excluded during generation." %>
+<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="5. NEW" Description="A prefix that will be stripped from table names when class names are generated." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
+<% this.tablePrefix = TablePrefix; %>
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +26,7 @@ namespace <%= ProjectNamespace %>
     {
 		// Get Methods
         <% foreach(TableSchema table in SourceDatabase.Tables) { %>
-		<% if(!IsManyToMany(table)) { %>
+		<% if(!ExcludedTables.Contains(table) && !IsManyToMany(table)) { %>
 		I<%= GetClassName(table.Name) %>Manager Get<%= GetClassName(table.Name) %>Manager();
 		<% } %>
 		<% } %>
@@ -42,7 +45,7 @@ namespace <%= ProjectNamespace %>
         #region Get Methods
 
  		<% foreach(TableSchema table in SourceDatabase.Tables) { %>
-		<% if(!IsManyToMany(table)) { %>
+		<% if(!ExcludedTables.Contains(table) && !IsManyToMany(table)) { %>
 		public I<%= GetClassName(table.Name) %>Manager Get<%= GetClassName(table.Name) %>Manager()
         {
             return new <%= GetClassName(table.Name) %>Manager();
