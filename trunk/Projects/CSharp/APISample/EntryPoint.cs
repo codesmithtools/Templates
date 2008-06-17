@@ -28,8 +28,8 @@ namespace ConsoleSample
 			if (compiler.Errors.Count == 0)
 			{
 				CodeTemplate template = compiler.CreateInstance();
-				
-				DatabaseSchema database = new DatabaseSchema(new SqlSchemaProvider(), @"Server=(local);Database=Petshop;Integrated Security=true;");
+
+                DatabaseSchema database = new DatabaseSchema(new SqlSchemaProvider(), @"Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True;");
 				TableSchema table = database.Tables["Inventory"];
 				
 				template.SetProperty("SourceTable", table);

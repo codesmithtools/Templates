@@ -3,7 +3,7 @@
   <propertySets>
     <propertySet name="Product.vb" output="Product.vb" template="BusinessObject.cst">
       <property name="SourceTable">
-        <connectionString>Data Source=(local);Initial Catalog=PetShop;Integrated Security=True;Connect Timeout=30</connectionString>
+        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
@@ -13,7 +13,7 @@
     </propertySet>
     <propertySet name="Orders.vb" output="Orders.vb" template="BusinessObject.cst">
       <property name="SourceTable">
-        <connectionString>Data Source=(local);Initial Catalog=PetShop;Integrated Security=True;Connect Timeout=30</connectionString>
+        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
@@ -23,7 +23,7 @@
     </propertySet>
     <propertySet name="Profiles.vb" output="Profiles.vb" template="BusinessObject.cst">
       <property name="SourceTable">
-        <connectionString>Data Source=(local);Initial Catalog=PetShop;Integrated Security=True;Connect Timeout=30</connectionString>
+        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
@@ -33,7 +33,7 @@
     </propertySet>
     <propertySet name="Supplier.vb" output="Supplier.vb" template="BusinessObject.cst">
       <property name="SourceTable">
-        <connectionString>Data Source=(local);Initial Catalog=PetShop;Integrated Security=True;Connect Timeout=30</connectionString>
+        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
