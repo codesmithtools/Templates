@@ -72,6 +72,8 @@ public string ProjectFile
 public override void Render(TextWriter writer)
 {
 	this.tablePrefix = this.TablePrefix;
+	if(ExcludedTables == null)
+		ExcludedTables = new TableSchemaCollection();
 	
 	foreach(TableSchema table in SourceDatabase.Tables)
 		if(!ExcludedTables.Contains(table) && !IsManyToMany(table))
