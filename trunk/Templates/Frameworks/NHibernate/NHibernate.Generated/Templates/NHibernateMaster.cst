@@ -5,21 +5,18 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 --%>
 <%@ CodeTemplate Language="C#" Src="NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="C#" OutputType="None" Debug="False" Description="Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file." %>
 
-<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="1. Source Database" Description="The source database to generate from." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="1a. Source Database" Description="The source database to generate from." %>
 
-<%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2. Assemblies and Namespaces" Description="The name of the Assembly that will contain these objects." %>
-<%@ Property Name="ProjectNamespace" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2. Assemblies and Namespaces" Description="The default Namespace of the Project that will contain these objects." %>
-<%@ Property Name="ManagerNamespace" Type="System.String" Default="NHibernate.Generated.ManagerObjects" Optional="False" Category="2. Assemblies and Namespaces" Description="The desired Namespace for the Manager Objects." %>
-<%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2. Assemblies and Namespaces" Description="The desired Namespace for the Business Objects." %>
-<%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Base" Optional="False" Category="2. Assemblies and Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
+<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
+<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 
-<%@ Property Name="ManagerObjectFolder" Type="System.String" Default="ManagerObjects\" Optional="True" Category="3. Output Structure" Description="The folder where the Manager objects will be generated." %>
-<%@ Property Name="BusinessObjectFolder" Type="System.String" Default="BusinessObjects\" Optional="True" Category="3. Output Structure" Description="The folder where the Business objects will be generated." %>
-<%@ Property Name="HbmMapFolder" Type="System.String" Default="Resources\" Optional="True" Category="3. Output Structure" Description="The folder where the HBM maps will be generated. (We recommend Resources.)" %>
+<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="OnePointTwo" Optional="False" Category="2. NHibernate" Description="The version of NHibernate to generate for." %>
 
-<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="OnePointTwo" Optional="False" Category="4. NHibernate" Description="The version of NHibernate to generate for." %>
-<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="5. NEW" Description="A prefix that will be stripped from table names when class names are generated." %>
-<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="5. NEW" Description="A collection of tables to be excluded during generation." %>
+<%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="3a. Assembly" Description="The name of the Assembly that will contain the business objects." %>
+
+<%@ Property Name="ManagerNamespace" Type="System.String" Default="NHibernate.Generated.ManagerObjects" Optional="False" Category="3b. Namespaces" Description="The desired Namespace for the Manager Objects." %>
+<%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="3b. Namespaces" Description="The desired Namespace for the Business Objects." %>
+<%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Base" Optional="False" Category="3b. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
@@ -56,7 +53,7 @@ internal ProjectUpdater Project
 
 private string _projectFile;
 
-[Category("3. Output Structure")]
+[Category("X. Output Structure")]
 [Description("Select the Visual Studio project file to update.")]
 [FileDialog(FileDialogType.Open, Title="Select Project File", Filter="Project Files (*.csproj)|*.csproj|All Files (*.*)|*.*", DefaultExtension=".csproj")]
 [Editor(typeof(CodeSmith.CustomProperties.FileNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
@@ -98,7 +95,7 @@ private void RenderHbmMaps(TableSchema table)
 	hbmMap.ExcludedTables = this.ExcludedTables;
 	
 	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
-	string fileName = String.Format("{0}{1}.hbm.xml", GetFolder(HbmMapFolder), GetClassName(table.Name));
+	string fileName = String.Format("{0}{1}.hbm.xml", GetFolder("HbmMaps"), GetClassName(table.Name));
 	hbmMap.RenderToFile(fileName, strategy);
 	
 	Project.AddEmbeddedResource(fileName);
@@ -113,15 +110,15 @@ private void RenderBusinessObjects(TableSchema table)
 	businessObject.ExcludedTables = this.ExcludedTables;
 
 	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
-	string fileName = String.Format("{0}{1}.cs", GetFolder(BusinessObjectFolder), GetClassName(table.Name));
+	string fileName = String.Format("{0}{1}.cs", GetFolder(BusinessNamespace), GetClassName(table.Name));
 	businessObject.RenderToFile(fileName, strategy);
 	
 	Project.AddCompileItem(fileName);
 }
 private void RenderEditableManagerObjects(TableSchema table)
 {
-	string fileName = String.Format("{0}{1}Manager.Generated.cs", GetFolder(ManagerObjectFolder), GetClassName(table.Name));
-	string editableFileName = String.Format("{0}{1}Manager.cs", GetFolder(ManagerObjectFolder), GetClassName(table.Name));
+	string fileName = String.Format("{0}{1}Manager.Generated.cs", GetFolder(ManagerNamespace), GetClassName(table.Name));
+	string editableFileName = String.Format("{0}{1}Manager.cs", GetFolder(ManagerNamespace), GetClassName(table.Name));
 	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
 	
 	if(!File.Exists(editableFileName))
@@ -150,7 +147,6 @@ private void RenderManagerFactory()
 	ManagerFactoryTemplate managerFactory = new ManagerFactoryTemplate();
 	
 	managerFactory.SourceDatabase = this.SourceDatabase;
-	managerFactory.ProjectNamespace = this.ProjectNamespace;
 	managerFactory.ManagerNamespace = this.ManagerNamespace;
 	managerFactory.ExcludedTables = this.ExcludedTables;
 	managerFactory.TablePrefix = this.TablePrefix;
@@ -162,16 +158,20 @@ private void RenderManagerFactory()
 	Project.AddCompileItem(fileName);
 }
 
-private string GetFolder(string entry)
+private string GetFolder(string folder)
 {
-	string folder;
-	if(String.IsNullOrEmpty(entry))
+	if (folder.Contains(".") && !folder.EndsWith("."))
+        folder = folder.Substring(folder.LastIndexOf('.')+1);
+		
+	if(String.IsNullOrEmpty(folder))
 		folder = String.Empty;
 	else
 	{
-		if (!Directory.Exists(entry))
-            Directory.CreateDirectory(entry);
-		folder = entry.EndsWith("\\") ? entry : String.Format("{0}\\", entry);
+		if (!Directory.Exists(folder))
+            Directory.CreateDirectory(folder);
+			
+		if (!folder.EndsWith("\\"))
+			folder = String.Format("{0}\\", folder);
 	}
 	return folder;
 }
