@@ -16,7 +16,7 @@ Namespace APISample
                 template = compiler.CreateInstance()
 
                 Dim database As DatabaseSchema
-                database = New DatabaseSchema(New SqlSchemaProvider(), "Server=(local);Database=Petshop;Integrated Security=true;")
+                database = New DatabaseSchema(New SqlSchemaProvider(), "Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True")
                 Dim table As TableSchema
                 table = database.Tables("Inventory")
 
