@@ -7,43 +7,51 @@
   <propertySets>
     <propertySet name="Product.cs" output="Product.cs">
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
+        <connectionString>Data Source=(local);Initial Catalog=Petshop;Integrated Security=True;Connect Timeout=30</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
           <owner>dbo</owner>
           <name>Product</name>
         </table>
       </property>
+      <property name="SingleFileMode">False</property>
+      <property name="ClassNamespace">VSIntegrationSample</property>
     </propertySet>
     <propertySet name="Order.cs" output="Order.cs">
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
+        <connectionString>Data Source=(local);Initial Catalog=Petshop;Integrated Security=True;Connect Timeout=30</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-          <owner>dbo</owner>
-          <name>Orders</name>
-        </table>
+      <owner>dbo</owner>
+      <name>Orders</name>
+    </table>
       </property>
+      <property name="SingleFileMode">False</property>
+      <property name="ClassNamespace">VSIntegrationSample</property>
     </propertySet>
     <propertySet name="Supplier.cs" output="Supplier.cs">
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
+        <connectionString>Data Source=(local);Initial Catalog=Petshop;Integrated Security=True;Connect Timeout=30</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-          <owner>dbo</owner>
-          <name>Supplier</name>
-        </table>
+      <owner>dbo</owner>
+      <name>Supplier</name>
+    </table>
       </property>
+      <property name="SingleFileMode">False</property>
+      <property name="ClassNamespace">VSIntegrationSample</property>
     </propertySet>
     <propertySet name="Profile.cs" output="Profile.cs">
       <property name="SourceTable">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True</connectionString>
+        <connectionString>Data Source=(local);Initial Catalog=Petshop;Integrated Security=True;Connect Timeout=30</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-          <owner>dbo</owner>
-          <name>Profiles</name>
-        </table>
+      <owner>dbo</owner>
+      <name>Profiles</name>
+    </table>
       </property>
+      <property name="SingleFileMode">False</property>
+      <property name="ClassNamespace">VSIntegrationSample</property>
     </propertySet>
   </propertySets>
 </codeSmith>

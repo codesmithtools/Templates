@@ -2,7 +2,7 @@
 <%@ Property Name="ClassNamespace" Type="String" Optional="true" Category="Context" Description="The namespace for the generated classes." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table that the typed DataSet should contain." %>
 <%@ Map Name="DBTOVB" src="DbType-VB.csmap" Description="A Mapping of Db types to VB data types" %>
-<%@ Map Name="NativeToDB" Src="SqlNativeType-SqlDbType.csmap" Description="A Mapping from NativeDBTypes to DbTypes" %>
+<%@ Map Name="NativeToDB" Src="SqlNativeType-DbType.csmap" Description="A Mapping from NativeDBTypes to DbTypes" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="System" %>

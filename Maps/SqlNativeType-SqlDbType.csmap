@@ -11,7 +11,7 @@
     </item>
     <item>
       <key>bit</key>
-      <value>Boolean</value>
+      <value>Bit</value>
     </item>
     <item>
       <key>char</key>

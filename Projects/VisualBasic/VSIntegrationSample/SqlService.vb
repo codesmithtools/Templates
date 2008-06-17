@@ -42,7 +42,7 @@ Public Class SqlService
 
 #Region "Contructors"
     Public Sub New()
-        _connectionString = "ConnectionString"
+        _connectionString = ConfigurationSettings.AppSettings("ConnectionString")
     End Sub
 
     Public Sub New(ByVal connectionString As String)
@@ -736,7 +736,7 @@ Public Class SqlService
                     End If
                 Next
 
-                _connection = New SqlConnection(connectionString.ToString())
+                _connection = New SqlConnection(_connectionString.ToString())
                 _connection.Open()
 
                 If initStatements.Length > 0 Then
