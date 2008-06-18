@@ -37,6 +37,8 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Register Name="ManagerFactoryTemplate" Template="ManagerFactory.cst" %>
 
 <script runat="template">
+protected PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
+
 public override void Render(TextWriter writer)
 {
 	this.tablePrefix = this.TablePrefix;
@@ -55,25 +57,22 @@ public override void Render(TextWriter writer)
 
 private void RenderHbmMaps(TableSchema table)
 {
-	HbmMapTemplate hbmMap = new HbmMapTemplate();
+	string fileName = String.Format("{0}{1}.hbm.xml", GetFolder("HbmMaps"), GetClassName(table.Name));
 	
+	HbmMapTemplate hbmMap = new HbmMapTemplate();
 	hbmMap.AssemblyName = this.AssemblyName;
 	hbmMap.BusinessNamespace = this.BusinessNamespace;
 	hbmMap.SourceTable = table;
 	hbmMap.TablePrefix = this.TablePrefix;
 	hbmMap.ExcludedTables = this.ExcludedTables;
 	
-	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
-	string fileName = String.Format("{0}{1}.hbm.xml", GetFolder("HbmMaps"), GetClassName(table.Name));
 	hbmMap.RenderToFile(fileName, strategy);
-	
 	RegisterOutputFile(fileName, null, "BuildAction", 3);
 }
 private void RenderBusinessObjects(TableSchema table)
 {
 	string fileName = String.Format("{0}{1}.generated.cs", GetFolder(BusinessNamespace), GetClassName(table.Name));
 	string editableFileName = String.Format("{0}{1}.cs", GetFolder(BusinessNamespace), GetClassName(table.Name));
-	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
 	
 	if(!File.Exists(editableFileName))
 	{
@@ -99,7 +98,6 @@ private void RenderEditableManagerObjects(TableSchema table)
 {
 	string fileName = String.Format("{0}{1}Manager.Generated.cs", GetFolder(ManagerNamespace), GetClassName(table.Name));
 	string editableFileName = String.Format("{0}{1}Manager.cs", GetFolder(ManagerNamespace), GetClassName(table.Name));
-	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
 	
 	if(!File.Exists(editableFileName))
 	{
@@ -127,7 +125,6 @@ private void RenderEditableManagerObjects(TableSchema table)
 private void RenderManagerFactory()
 {
 	string fileName = "ManagerFactory.cs";
-	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
 
 	ManagerFactoryTemplate managerFactory = new ManagerFactoryTemplate();
 	managerFactory.SourceDatabase = this.SourceDatabase;
