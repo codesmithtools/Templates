@@ -1,0 +1,47 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates a single entity business class." Debug="True" %>
+<%@ Property Name="TablePrefixes" Type="String" Default="" Optional="True" Category="Context" Description="The table prefix to be cut from the class name" %>
+<%@ Property Name="Namespace" Type="String" Default="Domain" Optional="False" Category="Context" Description="The namespace for the business objects" %>
+<%@ Property Name="DomainNamespace" Type="String" Default="Business" Optional="False" Category="1. Setup" Description="The namespace to be added to the root namespace for the business objects" %>
+<%@ Property Name="DomainGuid" Type="Guid" Default="" Optional="False" Category="Context" Description="" %>
+<%@ Property Name="DatabaseGuid" Type="Guid" Default="" Optional="False" Category="Context" Description="" %>
+<%@ Property Name="SQLType" Type="SqlType" Default="StoredProcedures" Optional="False" Category="Context" Description="Use stored procedures or generated SQL" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%
+string solutionFolderGuid = "2150E333-8FDC-42A3-9474-1A3956D46DE8";
+%>
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{<%= System.Guid.NewGuid().ToString() %>}") = "<%= Namespace %>.<%= DomainNamespace %>", "<%= DomainNamespace %>\<%= Namespace %>.<%= DomainNamespace %>.csproj", "{<%= DomainGuid.ToString() %>}"
+EndProject
+<% if (SQLType == SqlType.StoredProcedures) { %>
+Project("{<%= System.Guid.NewGuid().ToString() %>}") = "<%= Namespace %>.Database", "Database\<%= Namespace %>.Database.dbp", "{<%= DatabaseGuid.ToString() %>}"
+EndProject
+<% } %>
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{<%= DomainGuid.ToString() %>}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{<%= DomainGuid.ToString() %>}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{<%= DomainGuid.ToString() %>}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{<%= DomainGuid.ToString() %>}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
+<script runat="template">
+public enum SqlType
+{
+	StoredProcedures,
+	Dynamic
+}
+
+<!-- #include file="Utilities.cs" -->
+</script>

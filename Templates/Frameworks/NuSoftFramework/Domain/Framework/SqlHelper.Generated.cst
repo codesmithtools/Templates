@@ -1,0 +1,19 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates a single entity business class." Debug="True" %>
+<%@ Property Name="Namespace" Type="String" Default="Domain" Optional="False" Category="Context" Description="The namespace for the utility class" %>
+<%@ Property Name="DomainNamespace" Type="String" Default="Business" Optional="False" Category="1. Setup" Description="The namespace to be added to the root namespace for the business objects" %>
+<%@ Property Name="ConnectionStringKey" Type="String" Default="ConnString" Optional="False" Category="1. Setup" Description="The configuration file key for the connection string"%>
+<script runat="template"><!--#include file="..\..\Global.cs"--></script><%= GetDefaultCommentHeader() %>
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+
+namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
+{
+    /// <summary>
+    /// Summary description for SqlHelper
+    /// </summary>
+    public partial class SqlHelper
+    {
+    }
+}

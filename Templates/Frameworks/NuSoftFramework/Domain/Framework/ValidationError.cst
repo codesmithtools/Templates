@@ -1,0 +1,85 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates a single entity finder." Debug="True" %>
+<%@ Property Name="Namespace" Type="String" Default="Domain" Optional="False" Category="Context" Description="The namespace for the utility class" %>
+<%@ Property Name="DomainNamespace" Type="String" Default="Business" Optional="False" Category="1. Setup" Description="The namespace to be added to the root namespace for the business objects" %>
+<script runat="template"><!--#include file="..\..\Global.cs"--></script><%= GetDefaultCommentHeader() %>
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
+{
+    /// <summary>
+    /// An error for a validation 
+    /// </summary>
+    [Serializable()]
+    public class ValidationError
+    {
+        private string _errorMessage;
+        /// <summary>
+        /// The error message for the validation exception
+        /// </summary>
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set { _errorMessage = value; }
+        }
+
+        private EntityBase _entity;
+        /// <summary>
+        /// The entity that is invalid
+        /// </summary>
+        public EntityBase Entity
+        {
+            get { return _entity; }
+            set { _entity = value; }
+        }
+
+        private string _validationGroup;
+        /// <summary>
+        /// The ruleset that was violated
+        /// </summary>
+        public string ValidationGroup
+        {
+            get { return _validationGroup; }
+            set { _validationGroup = value; }
+        }
+
+        private string _propertyName;
+        /// <summary>
+        /// The property that is invalid
+        /// </summary>
+        public string PropertyName
+        {
+            get { return _propertyName; }
+            set { _propertyName = value; }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ValidationError class.
+        /// </summary>
+        /// <param name="errorMessage">The error message.</param>
+        /// <param name="entity">The invalid entity.</param>
+        /// <param name="property">The invalid property.</param>
+        public ValidationError(string errorMessage, EntityBase entity, string propertyName)
+        {
+            _errorMessage = errorMessage;
+            _entity = entity;
+            _propertyName = propertyName;
+        }
+		
+		/// <summary>
+        /// Initializes a new instance of the ValidationError class.
+        /// </summary>
+        /// <param name="errorMessage">The error message.</param>
+        /// <param name="entity">The invalid entity.</param>
+        /// <param name="property">The invalid property.</param>
+		/// <param name="validationGroup">The validation group this error violates.</param>
+        public ValidationError(string errorMessage, EntityBase entity, string propertyName, string validationGroup)
+        {
+            _errorMessage = errorMessage;
+            _entity = entity;
+            _propertyName = propertyName;
+			_validationGroup = validationGroup;
+        }
+    }
+}
