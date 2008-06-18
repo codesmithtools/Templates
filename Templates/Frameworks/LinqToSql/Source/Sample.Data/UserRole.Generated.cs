@@ -117,12 +117,12 @@ namespace Sample.Data
                     if (previousValue != null)
                     {
                         _role.Entity = null;
-                        previousValue.UserRoleList = null;
+                        previousValue.UserRoleList.Remove(this);
                     }
                     _role.Entity = value;
                     if (value != null)
                     {
-                        value.UserRoleList = this;
+                        value.UserRoleList.Add(this);
                         _roleID = value.RoleID;
                     }
                     else
@@ -153,12 +153,12 @@ namespace Sample.Data
                     if (previousValue != null)
                     {
                         _user.Entity = null;
-                        previousValue.UserRoleList = null;
+                        previousValue.UserRoleList.Remove(this);
                     }
                     _user.Entity = value;
                     if (value != null)
                     {
-                        value.UserRoleList = this;
+                        value.UserRoleList.Add(this);
                         _userID = value.UserID;
                     }
                     else

@@ -85,6 +85,16 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dbml\Dbml.csproj">
+      <Project>{FE25E33F-95B9-453C-98DC-82DF44CED946}</Project>
+      <Name>Dbml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Generator\Generator.csproj">
+      <Project>{2BDB103C-9F65-41AA-A86D-77BD0F9839B4}</Project>
+      <Name>Generator</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

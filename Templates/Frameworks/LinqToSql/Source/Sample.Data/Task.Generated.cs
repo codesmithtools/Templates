@@ -353,12 +353,12 @@ namespace Sample.Data
                     if (previousValue != null)
                     {
                         _priority.Entity = null;
-                        previousValue.TaskList = null;
+                        previousValue.TaskList.Remove(this);
                     }
                     _priority.Entity = value;
                     if (value != null)
                     {
-                        value.TaskList = this;
+                        value.TaskList.Add(this);
                         _priorityID = value.PriorityID;
                     }
                     else
@@ -389,12 +389,12 @@ namespace Sample.Data
                     if (previousValue != null)
                     {
                         _status.Entity = null;
-                        previousValue.TaskList = null;
+                        previousValue.TaskList.Remove(this);
                     }
                     _status.Entity = value;
                     if (value != null)
                     {
-                        value.TaskList = this;
+                        value.TaskList.Add(this);
                         _statusID = value.StatusID;
                     }
                     else
@@ -425,12 +425,12 @@ namespace Sample.Data
                     if (previousValue != null)
                     {
                         _createdUser.Entity = null;
-                        previousValue.CreatedTaskList = null;
+                        previousValue.CreatedTaskList.Remove(this);
                     }
                     _createdUser.Entity = value;
                     if (value != null)
                     {
-                        value.CreatedTaskList = this;
+                        value.CreatedTaskList.Add(this);
                         _assignedID = value.UserID;
                     }
                     else
