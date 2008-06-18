@@ -13,11 +13,11 @@ namespace NHibernate.Base
         bool BeginTransaction();
         bool CommitTransaction();
         bool RollbackTransaction();
+        ISession GetISession();
 
         // Properties
         bool HasOpenTransaction { get; }
         bool IsOpen { get; }
-        ISession ISession { get; }
     }
 
     class NHibernateSession : INHibernateSession
@@ -25,7 +25,7 @@ namespace NHibernate.Base
         #region Declarations
 
         protected ITransaction transaction = null;
-        protected ISession session;
+        protected ISession iSession;
 
         #endregion
 
@@ -33,7 +33,7 @@ namespace NHibernate.Base
 
         internal NHibernateSession(ISession session)
         {
-            this.session = session;
+            this.iSession = session;
         }
         ~NHibernateSession()
         {
@@ -72,15 +72,14 @@ namespace NHibernate.Base
             if (HasOpenTransaction)
                 CommitTransaction();
             else
-                session.Flush();
+                iSession.Flush();
         }
-
         public void Close()
         {
-            if (session.IsOpen)
+            if (iSession.IsOpen)
             {
-                session.Flush();
-                session.Close();
+                iSession.Flush();
+                iSession.Close();
             }
         }
 
@@ -88,7 +87,7 @@ namespace NHibernate.Base
         {
             bool result = !HasOpenTransaction;
             if (result)
-                transaction = session.BeginTransaction();
+                transaction = iSession.BeginTransaction();
             return result;
         }
         public bool CommitTransaction()
@@ -121,6 +120,11 @@ namespace NHibernate.Base
             return result;
         }
 
+        public ISession GetISession()
+        {
+            return iSession;
+        }
+
         #endregion
 
         #region Properties
@@ -134,11 +138,7 @@ namespace NHibernate.Base
         }
         public bool IsOpen
         {
-            get { return session.IsOpen; }
-        }
-        public ISession ISession
-        {
-            get { return session; }
+            get { return iSession.IsOpen; }
         }
 
         #endregion
