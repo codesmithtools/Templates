@@ -8,6 +8,15 @@ using NHibernate.Cfg;
 
 namespace NHibernate.Base
 {
+    public interface INHibernateSessionManager : IDisposable
+    {
+        // Methods
+        INHibernateSession CreateSession();
+
+        // Properties
+        INHibernateSession Session { get; }
+    }
+
     /// <summary>
     /// A Singleton that creates and persits a single SessionFactory for the to program to access globally.
     /// This uses the .Net CallContext to store a session for each thread.
@@ -15,14 +24,29 @@ namespace NHibernate.Base
     /// This is heavely based on 'NHibernate Best Practices with ASP.NET' By Billy McCafferty.
     /// http://www.codeproject.com/KB/architecture/NHibernateBestPractices.aspx
     /// </summary>
-    public class NHibernateSessionManager : IDisposable
+    public class NHibernateSessionManager : INHibernateSessionManager
     {
         #region Static Content
 
-        private static NHibernateSessionManager _nHibernateSessionManager = new NHibernateSessionManager();
-        public static NHibernateSessionManager Instance
+        private static INHibernateSessionManager _nHibernateSessionManager = null;
+        /// <summary>
+        /// Set method is exposed so that the INHibernateSessionManager can be swapped out for Unit Testing.
+        /// NOTE: Cannot set Instance after it has been initialized, and calling Get will automatically intialize the Instance.
+        /// </summary>
+        public static INHibernateSessionManager Instance
         {
-            get { return _nHibernateSessionManager; }
+            get
+            {
+                if(_nHibernateSessionManager == null)
+                    _nHibernateSessionManager = new NHibernateSessionManager();
+                return _nHibernateSessionManager;
+            }
+            set
+            {
+                if (_nHibernateSessionManager != null)
+                    throw new Exception("Cannot set Instance after it has been initialized.");
+                _nHibernateSessionManager = value;
+            }
         }
 
         #endregion
@@ -77,7 +101,7 @@ namespace NHibernate.Base
 
         #region Methods
 
-        public INHibernateSession GetNewSession()
+        public INHibernateSession CreateSession()
         {
             NHibernateSession session;
 
@@ -88,26 +112,29 @@ namespace NHibernate.Base
 
             return session;
         }
-        public INHibernateSession GetContextSession()
-        {
-            INHibernateSession session = ContextSession;
-
-            // If the thread does not yet have a session, create one.
-            if (session == null)
-            {
-                session = GetNewSession();
-
-                // Save to CallContext.
-                ContextSession = session;
-            }
-
-            return session;
-        }
 
         #endregion
 
         #region Properties
 
+        public INHibernateSession Session
+        {
+            get
+            {
+                INHibernateSession session = ContextSession;
+
+                // If the thread does not yet have a session, create one.
+                if (session == null)
+                {
+                    session = CreateSession();
+
+                    // Save to CallContext.
+                    ContextSession = session;
+                }
+
+                return session;
+            }
+        }
         private INHibernateSession ContextSession
         {
             get

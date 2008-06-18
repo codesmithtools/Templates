@@ -41,7 +41,7 @@ namespace NHibernate.Base
 
         public ManagerBase()
         {
-            session = NHibernateSessionManager.Instance.GetContextSession();
+            session = NHibernateSessionManager.Instance.Session;
         }
         public ManagerBase(INHibernateSession session)
         {
