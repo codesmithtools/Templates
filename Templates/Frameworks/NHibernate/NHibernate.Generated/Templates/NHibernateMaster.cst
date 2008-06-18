@@ -51,8 +51,6 @@ public override void Render(TextWriter writer)
 			RenderEditableManagerObjects(table);
 		}
 	RenderManagerFactory();
-	
-	//Project.SaveProject();
 }
 
 private void RenderHbmMaps(TableSchema table)
@@ -70,10 +68,6 @@ private void RenderHbmMaps(TableSchema table)
 	hbmMap.RenderToFile(fileName, strategy);
 	
 	RegisterOutputFile(fileName, null, "BuildAction", 3);
-	
-	//OutputFile outputFile = new OutputFile(fileName);
-  	//outputFile.Metadata.Add("BuildAction", 3);
-    //this.RegisterOutput(outputFile);
 }
 private void RenderBusinessObjects(TableSchema table)
 {
