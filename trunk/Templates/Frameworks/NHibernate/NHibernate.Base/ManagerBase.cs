@@ -54,7 +54,7 @@ namespace NHibernate.Base
 
         public virtual T GetById(IdT id)
         {
-            return (T)Session.ISession.Get(typeof(T), id);
+            return (T)Session.GetISession().Get(typeof(T), id);
         }
         public IList<T> GetAll()
         {
@@ -62,7 +62,7 @@ namespace NHibernate.Base
         }
         public IList<T> GetByCriteria(params ICriterion[] criterionList)
         {
-            ICriteria criteria = Session.ISession.CreateCriteria(typeof(T));
+            ICriteria criteria = Session.GetISession().CreateCriteria(typeof(T));
 
             foreach (ICriterion criterion in criterionList)
                 criteria.Add(criterion);
@@ -71,7 +71,7 @@ namespace NHibernate.Base
         }
         public IList<T> GetByExample(T exampleObject, params string[] excludePropertyList)
         {
-            ICriteria criteria = Session.ISession.CreateCriteria(typeof(T));
+            ICriteria criteria = Session.GetISession().CreateCriteria(typeof(T));
             Example example = Example.Create(exampleObject);
 
             foreach (string excludeProperty in excludePropertyList)
@@ -88,23 +88,23 @@ namespace NHibernate.Base
 
         public object Save(T entity)
         {
-            return Session.ISession.Save(entity);
+            return Session.GetISession().Save(entity);
         }
         public void SaveOrUpdate(T entity)
         {
-            Session.ISession.SaveOrUpdate(entity);
+            Session.GetISession().SaveOrUpdate(entity);
         }
         public void Delete(T entity)
         {
-            Session.ISession.Delete(entity);
+            Session.GetISession().Delete(entity);
         }
         public void Update(T entity)
         {
-            Session.ISession.Update(entity);
+            Session.GetISession().Update(entity);
         }
         public void Refresh(T entity)
         {
-            Session.ISession.Refresh(entity);
+            Session.GetISession().Refresh(entity);
         }
         
         #endregion
