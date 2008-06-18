@@ -20,7 +20,7 @@ namespace NHibernate.Base
         bool IsOpen { get; }
     }
 
-    class NHibernateSession : INHibernateSession
+    public class NHibernateSession : INHibernateSession
     {
         #region Declarations
 
@@ -31,7 +31,7 @@ namespace NHibernate.Base
 
         #region Constructor & Destructor
 
-        internal NHibernateSession(ISession session)
+        public NHibernateSession(ISession session)
         {
             this.iSession = session;
         }
