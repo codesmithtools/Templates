@@ -1,5 +1,5 @@
 <%-- 
-Name: CsNHibernateManager.cst
+Name: NHibernateMaster.cst
 Author: Tom DuPont
 Description: Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file.
 --%>
