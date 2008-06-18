@@ -23,7 +23,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Assembly Name="Microsoft.Build.Engine" %>
 <%@ Assembly Name="Microsoft.Build.Utilities" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
-<%@ Assembly Src="Project.cs" %>
+
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import NameSpace="System.IO" %>
@@ -31,41 +31,12 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 
 <%@ Register Name="HbmMapTemplate" Template="Hbm.cst" %>
 <%@ Register Name="BusinessObjectTemplate" Template="BusinessObject.cst" %>
+<%@ Register Name="EditableBusinessObjectTemplate" Template="EditableBusinessObject.cst" %>
 <%@ Register Name="ManagerObjectTemplate" Template="ManagerObject.cst" %>
 <%@ Register Name="EditableManagerObjectTemplate" Template="EditableManagerObject.cst" %>
 <%@ Register Name="ManagerFactoryTemplate" Template="ManagerFactory.cst" %>
 
 <script runat="template">
-#region ProjectUpdater
-
-private ProjectUpdater _project = null;
-    
-internal ProjectUpdater Project
-{
-    get
-    {
-        if (_project == null)
-            _project = new ProjectUpdater(ProjectFile);
-        
-        return _project;
-    }
-}
-
-private string _projectFile;
-
-[Category("X. Output Structure")]
-[Description("Select the Visual Studio project file to update.")]
-[FileDialog(FileDialogType.Open, Title="Select Project File", Filter="Project Files (*.csproj)|*.csproj|All Files (*.*)|*.*", DefaultExtension=".csproj")]
-[Editor(typeof(CodeSmith.CustomProperties.FileNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
-[CodeSmith.Engine.Optional()]
-public string ProjectFile
-{
-    get {return _projectFile;}
-    set {_projectFile = value;}
-}
-
-#endregion
-
 public override void Render(TextWriter writer)
 {
 	this.tablePrefix = this.TablePrefix;
@@ -81,7 +52,7 @@ public override void Render(TextWriter writer)
 		}
 	RenderManagerFactory();
 	
-	Project.SaveProject();
+	//Project.SaveProject();
 }
 
 private void RenderHbmMaps(TableSchema table)
@@ -98,22 +69,33 @@ private void RenderHbmMaps(TableSchema table)
 	string fileName = String.Format("{0}{1}.hbm.xml", GetFolder("HbmMaps"), GetClassName(table.Name));
 	hbmMap.RenderToFile(fileName, strategy);
 	
-	Project.AddEmbeddedResource(fileName);
+	RegisterOutputFile(fileName, null, "BuildAction", 3);
 }
 private void RenderBusinessObjects(TableSchema table)
 {
-	BusinessObjectTemplate businessObject = new BusinessObjectTemplate();
+	string fileName = String.Format("{0}{1}.generated.cs", GetFolder(BusinessNamespace), GetClassName(table.Name));
+	string editableFileName = String.Format("{0}{1}.cs", GetFolder(BusinessNamespace), GetClassName(table.Name));
+	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
 	
+	if(!File.Exists(editableFileName))
+	{
+		EditableBusinessObjectTemplate editableBusinessObject = new EditableBusinessObjectTemplate();
+		editableBusinessObject.BusinessNamespace = this.BusinessNamespace;
+		editableBusinessObject.SourceTable = table;
+		editableBusinessObject.TablePrefix = this.TablePrefix;
+		
+		editableBusinessObject.RenderToFile(editableFileName, strategy);
+		RegisterOutputFile(editableFileName, null);
+	}
+	
+	BusinessObjectTemplate businessObject = new BusinessObjectTemplate();
 	businessObject.BusinessNamespace = this.BusinessNamespace;
 	businessObject.SourceTable = table;
 	businessObject.TablePrefix = this.TablePrefix;
 	businessObject.ExcludedTables = this.ExcludedTables;
 
-	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
-	string fileName = String.Format("{0}{1}.cs", GetFolder(BusinessNamespace), GetClassName(table.Name));
 	businessObject.RenderToFile(fileName, strategy);
-	
-	Project.AddCompileItem(fileName);
+	RegisterOutputFile(fileName, editableFileName);
 }
 private void RenderEditableManagerObjects(TableSchema table)
 {
@@ -128,7 +110,9 @@ private void RenderEditableManagerObjects(TableSchema table)
 		editableManagerObject.BusinessNamespace = this.BusinessNamespace;
 		editableManagerObject.SourceTable = table;
 		editableManagerObject.TablePrefix = this.TablePrefix;
+		
 		editableManagerObject.RenderToFile(editableFileName, strategy);
+		RegisterOutputFile(editableFileName, null);
 	}
 
 	ManagerObjectTemplate managerObject = new ManagerObjectTemplate();
@@ -138,26 +122,39 @@ private void RenderEditableManagerObjects(TableSchema table)
 	managerObject.NHibernateVersion = this.NHibernateVersion;
 	managerObject.TablePrefix = this.TablePrefix;
 	managerObject.ExcludedTables = this.ExcludedTables;
+
 	managerObject.RenderToFile(fileName, strategy);
-	
-	Project.AddCompileItem(editableFileName, fileName);
+	RegisterOutputFile(fileName, editableFileName);
 }
 private void RenderManagerFactory()
 {
+	string fileName = "ManagerFactory.cs";
+	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
+
 	ManagerFactoryTemplate managerFactory = new ManagerFactoryTemplate();
-	
 	managerFactory.SourceDatabase = this.SourceDatabase;
 	managerFactory.ManagerNamespace = this.ManagerNamespace;
 	managerFactory.ExcludedTables = this.ExcludedTables;
 	managerFactory.TablePrefix = this.TablePrefix;
 	
-	PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
-	string fileName = "ManagerFactory.cs";
 	managerFactory.RenderToFile(fileName, strategy);
-	
-	Project.AddCompileItem(fileName);
+	RegisterOutputFile(fileName, null);
 }
 
+private void RegisterOutputFile(string fileName, string dependentUpon, params object[] metaData)
+{
+	OutputFile outputFile = new OutputFile(fileName);
+	
+	if(!String.IsNullOrEmpty(dependentUpon))
+		outputFile.DependentUpon = dependentUpon;
+	
+	if(metaData.Length % 2 != 0)
+		throw new Exception("Invalid Metadata: Provide 2 objects per entry, a String (key) followed by an Object.");
+	for(int x=0; x<metaData.Length; x+=2)
+    	outputFile.Metadata.Add(metaData[x].ToString(), metaData[x+1]);
+		
+    this.RegisterOutput(outputFile);
+}
 private string GetFolder(string folder)
 {
 	if (folder.Contains(".") && !folder.EndsWith("."))

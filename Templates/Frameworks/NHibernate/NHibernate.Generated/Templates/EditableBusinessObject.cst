@@ -1,0 +1,30 @@
+<%-- 
+Name: EditableBusinessObject.cst
+Author: Tom DuPont
+Description: Generates an editable Business Object for NHibernate.
+--%>
+<%@ CodeTemplate Language="C#" Src="NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="C#" Debug="False" Description="Generates an editable Business Object for NHibernate." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1. Source Database" Description="The source table to generate from." %>
+<%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernateGenerated..BusinessObjects" Optional="False" Category="2. Assemblies and Namespaces" Description="The desired Namespace for the Business Objects." %>
+<%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Base" Optional="False" Category="2. Assemblies and Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
+<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="5. NEW" Description="A prefix that will be stripped from table names when class names are generated." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Map Name="SystemCSharp" Src="System-CSharpAlias" %>
+<% this.tablePrefix = TablePrefix; %>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using NHibernate;
+using <%= BaseNamespace %>;
+
+namespace <%= BusinessNamespace %>
+{
+	public partial class <%= GetClassName(SourceTable.Name) %> : BusinessBase<<%= SystemCSharp[GetBusinessBaseIdType(SourceTable)] %>>
+    {
+	}
+}
