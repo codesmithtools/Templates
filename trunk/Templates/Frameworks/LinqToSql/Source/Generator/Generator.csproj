@@ -50,6 +50,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchemaItemProcessedEventArgs.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dbml\Dbml.csproj">
+      <Project>{FE25E33F-95B9-453C-98DC-82DF44CED946}</Project>
+      <Name>Dbml</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

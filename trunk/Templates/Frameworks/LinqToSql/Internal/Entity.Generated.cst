@@ -369,8 +369,14 @@ namespace <%= Database.EntityNamespace %>
         if (info.AssignColumns == null || info.AssignColumns.Count == 0)
             throw new Exception("Invaild ThisKey for Association: " + a.Name);
 
-        info.IsOneToOne = (a.Cardinality == Cardinality.One || 
-            (info.HasOtherAssociation && info.OtherAssociation.Cardinality == Cardinality.One));
+        info.IsOneToOne = (a.IsForeignKey == true 
+            && a.Cardinality == Cardinality.One 
+            && info.OtherAssociation.IsForeignKey == false
+            && info.OtherAssociation.Cardinality == Cardinality.One) 
+            || (a.IsForeignKey == false 
+            && a.Cardinality == Cardinality.One 
+            && info.OtherAssociation.IsForeignKey == true
+            && info.OtherAssociation.Cardinality == Cardinality.One);
         
         if (info.IsOneToOne)
         {

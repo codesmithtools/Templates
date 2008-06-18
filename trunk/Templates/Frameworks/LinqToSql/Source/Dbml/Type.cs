@@ -84,7 +84,7 @@ namespace LinqToSqlShared.DbmlObjectModel
             {
                 foreach (Association a in Associations)
                 {
-                    if (a.IsForeignKey == false && a.Cardinality == Cardinality.Many)
+                    if ((!a.IsForeignKey.HasValue || a.IsForeignKey == false) && a.Cardinality == Cardinality.Many)
                         yield return a;
                 }
             }
