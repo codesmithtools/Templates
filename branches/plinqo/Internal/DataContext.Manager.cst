@@ -2,14 +2,14 @@
     Description="Linq to Sql Entity Class." %>
 
 <%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Src="Common.cs" %>
-<%@ Assembly Src="Schema.cs" %>
+<%@ Assembly Name="Dbml" %>
+<%@ Assembly Name="Generator" %>
 <%@ Assembly Src="Manager.cs" %>
 
-<%@ Import Namespace="DbmlSchema" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 
 <%@ Property Category="2.Mapping" Name="Database" 
-    Type="DbmlSchema.Database" Optional="False" 
+    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
     Description="Database schema instance. Must be set by parent template" %>
 
 <%@ Property Category="3.Manager" Name="ManagerNamespace" 
@@ -43,7 +43,7 @@ namespace <%= Database.ContextNamespace %>
     /// <summary>
     /// The DataContext manager class for the <%= Database.Name %> database.
     /// </summary>
-    <%= Naming.GetModifier(Database.AccessModifier, Database.ClassModifier) %> partial class <%= Database.Class %>
+    <%= Naming.GetModifier(Database.AccessModifier) %> partial class <%= Database.Class %>
     {
         
         private <%= DataManager.DataManagerName %> _manager = null;

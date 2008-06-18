@@ -1,19 +1,20 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" 
     Description="Linq to Sql Entity Class." %>
 
-<%@ Assembly Src="Schema.cs" %>
-<%@ Assembly Src="Common.cs" %>
+<%@ Assembly Name="Dbml" %>
+<%@ Assembly Name="Generator" %>
 
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.Text" %>
-<%@ Import Namespace="DbmlSchema" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
 
 <%@ Property Category="1.Mapping" Name="Database" 
-    Type="DbmlSchema.Database" Optional="False" 
+    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
     Description="Database instance. Must be set by parent template" %>
 
 <%@ Property Category="1.Mapping" Name="Type" 
-    Type="DbmlSchema.Type" Optional="False" 
+    Type="LinqToSqlShared.DbmlObjectModel.Type" Optional="False" 
     Description="The Type instance for this entity. Must be set by parent template" %>
 
 <%@ Property Category="1.Mapping" Name="TableName" 
@@ -98,13 +99,13 @@ namespace <%= Database.EntityNamespace %>
     string fieldType = column.Type;
     string storageAssign = column.Storage;
     
-    if (column.IsDelayLoaded && !column.IsPrimaryKey)
+    if (column.IsDelayLoaded == true && column.IsPrimaryKey == false)
     {
         dataType = CSharpAlias[dataType];
         fieldType = string.Format("Link<{0}>", dataType);
         storageAssign = storageAssign + ".Value";
     }
-    else if (column.CanBeNull && CommonUtility.IsNullableType(dataType))
+    else if (column.CanBeNull == true && CommonUtility.IsNullableType(dataType))
     {
         dataType = string.Format("Nullable<{0}>", CSharpAlias[dataType]);
         fieldType = dataType;
@@ -118,21 +119,21 @@ namespace <%= Database.EntityNamespace %>
     Association a = Type.GetForeignKeyAssociation(column);
 %>
         
-<% if (column.IsDbGenerated) { %>
+<% if (column.IsDbGenerated == true) { %>
         private <%= fieldType %> <%= column.Storage %> = default(<%= fieldType %>);
 <% } else { %>
         private <%= fieldType %> <%= column.Storage %>;
 <% } %>
 
         /// <summary>
-<% if (!column.IsDbGenerated && !column.IsReadOnly) { %>
+<% if (!column.IsDbGenerated == true && column.IsReadOnly == false) { %>
         /// Gets or sets the <%= column.Name %> column value.
 <% } else { %>
         /// Gets the <%= column.Name %> column value.
 <% } %>
         /// </summary>
         <%= CreateAttribute(column) %>
-<% if (column.IsVersion) { %>
+<% if (column.IsVersion == true) { %>
         [EditorBrowsable(EditorBrowsableState.Never)]
 <% } // if IsVersion %>
 <% if (IncludeDataContract) { %>
@@ -141,7 +142,7 @@ namespace <%= Database.EntityNamespace %>
         <%= Naming.GetModifier(column.AccessModifier, column.Modifier) %> <%= dataType %> <%= column.Member %>
         {
             get { return <%= storageAssign %>; }
-<% if (!column.IsReadOnly) { %>
+<% if (!column.IsReadOnly == true) { %>
             set
             {
                 if (<%= storageAssign %> != value)
@@ -271,7 +272,7 @@ namespace <%= Database.EntityNamespace %>
 <% foreach(Column column in Type.Columns) { 
     string dataType = CSharpAlias[column.Type];
     
-    if (column.CanBeNull && CommonUtility.IsNullableType(column.Type))
+    if (column.CanBeNull == true && CommonUtility.IsNullableType(column.Type))
         dataType = string.Format("Nullable<{0}>", dataType);
 %>
         /// <summary>Called when <%= column.Member %> is changing.</summary>
@@ -290,7 +291,7 @@ namespace <%= Database.EntityNamespace %>
     {
         string dataType = column.Type;
         
-        if (column.CanBeNull && CommonUtility.IsNullableType(dataType))
+        if (column.CanBeNull == true && CommonUtility.IsNullableType(dataType))
             dataType = string.Format("Nullable<{0}>", CSharpAlias[dataType]);
         else
             dataType = CSharpAlias[dataType];
@@ -310,12 +311,12 @@ namespace <%= Database.EntityNamespace %>
         return s.ToString();
     }
     
-    private void AppendInheritanceAttribute(DbmlSchema.Type t, StringBuilder s)
+    private void AppendInheritanceAttribute(LinqToSqlShared.DbmlObjectModel.Type t, StringBuilder s)
     {
         if (!string.IsNullOrEmpty(t.InheritanceCode))
         {
             s.AppendLine();
-            if (t.IsInheritanceDefault)
+            if (t.IsInheritanceDefault == true)
                 s.AppendFormat(
                     "    [InheritanceMapping(Code=\"{0}\", Type=typeof({1}), IsDefault=true)]",
                     t.InheritanceCode, t.Name);
@@ -325,7 +326,7 @@ namespace <%= Database.EntityNamespace %>
                     t.InheritanceCode, t.Name);
         }
         
-        foreach(DbmlSchema.Type d in t.DerivedTypes)
+        foreach(LinqToSqlShared.DbmlObjectModel.Type d in t.SubTypes)
             AppendInheritanceAttribute(d, s);
     }
     
@@ -392,15 +393,15 @@ namespace <%= Database.EntityNamespace %>
         s.AppendFormat("Name=\"{0}\"", c.Name);
         s.AppendFormat(", Storage=\"{0}\"", c.Storage);
         s.AppendFormat(", DbType=\"{0}\"", c.DbType);
-        if (c.IsPrimaryKey)
+        if (c.IsPrimaryKey == true)
             s.Append(", IsPrimaryKey=true");
-        if (c.IsDbGenerated)
+        if (c.IsDbGenerated == true)
             s.Append(", IsDbGenerated=true");
-        if (c.IsVersion)
+        if (c.IsVersion == true)
             s.Append(", IsVersion=true");
-        if (c.IsDiscriminator)
+        if (c.IsDiscriminator == true)
             s.Append(", IsDiscriminator=true");
-        if (!c.CanBeNull)
+        if (c.CanBeNull == false)
             s.Append(", CanBeNull=false");
         if (c.UpdateCheck != UpdateCheck.Always)
             s.AppendFormat(", UpdateCheck=UpdateCheck.{0}", c.UpdateCheck.ToString());
@@ -423,9 +424,9 @@ namespace <%= Database.EntityNamespace %>
             s.AppendFormat(", OtherKey=\"{0}\"", a.OtherKey);
         if (a.Cardinality == Cardinality.One)
             s.Append(", IsUnique=true");
-        if (a.IsForeignKey)
+        if (a.IsForeignKey == true)
             s.Append(", IsForeignKey=true");
-        if (a.DeleteOnNull)
+        if (a.DeleteOnNull == true)
             s.Append(", DeleteOnNull=true");
         if (!string.IsNullOrEmpty(a.DeleteRule))
             s.AppendFormat(", DeleteRule=\"{0}\"", a.DeleteRule);
@@ -440,7 +441,7 @@ namespace <%= Database.EntityNamespace %>
         public bool HasOtherAssociation;
         public Association OtherAssociation;
         
-        public DbmlSchema.Type OtherType;
+        public LinqToSqlShared.DbmlObjectModel.Type OtherType;
         
         public List<Column> OtherColumns;
         public List<Column> AssignColumns;
