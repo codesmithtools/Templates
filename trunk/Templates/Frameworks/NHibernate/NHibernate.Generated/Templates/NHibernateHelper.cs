@@ -310,11 +310,11 @@ public class SearchCriteria
 
         foreach (MemberColumnSchema mcs in mcsList)
         {
-            sb.Append(mcs.Name);
             if (isFirst)
                 isFirst = false;
             else
                 sb.Append("|");
+			sb.Append(mcs.Name);
         }
 
         return sb.ToString();
