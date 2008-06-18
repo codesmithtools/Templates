@@ -8,19 +8,18 @@
 <%@ Assembly Name="Microsoft.Build.Utilities" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Src="Internal\Common.cs" %>
-<%@ Assembly Src="Internal\Schema.cs" %>
-<%@ Assembly Src="Internal\Manager.cs" %>
-<%@ Assembly Src="Internal\Project.cs" %>
+<%@ Assembly Name="Dbml" Path="Internal" %>
+<%@ Assembly Name="Generator" Path="Internal" %>
 
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="SchemaExplorer" %>
-<%@ Import Namespace="DbmlSchema" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
 <%@ Import Namespace="Manager" %>
 
-<%@ Property Category="1.Database" Name="SourceDatabase" 
+<%@ Property Category="1.Database" Name="SourceDatabase" DeepLoad="true"
     Type="SchemaExplorer.DatabaseSchema"  Optional="False"
     Description="The source database for Linq to Sql." %>
 
@@ -33,6 +32,11 @@
     Type="System.String" Default="" Optional="false" 
     Description="The folder to save the generated manager files." 
     Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Category="3.Manager" Name="DataContextFile" 
+    Type="System.String" Default="" Optional="True" 
+    Description="The path to the DataContext file to add managers to." 
+    Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
 
 <%@ Register Name="EntityManagerEditableClass" 
@@ -53,32 +57,6 @@
 
 
 <script runat="template">
-    private ProjectUpdater _project = null;
-    
-    internal ProjectUpdater Project
-    {
-        get
-        {
-            if (_project == null)
-                _project = new ProjectUpdater(ProjectFile);
-            
-            return _project;
-        }
-    }
-
-    private string _projectFile;
-    
-    [Category("4.Project")]
-    [Description("Select the Visual Studio project file to update.")]
-    [FileDialog(FileDialogType.Open, Title="Select Project File", Filter="Project Files (*.csproj)|*.csproj|All Files (*.*)|*.*", DefaultExtension=".csproj")]
-    [Editor(typeof(CodeSmith.CustomProperties.FileNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
-    [CodeSmith.Engine.Optional()]
-    public string ProjectFile
-    {
-        get {return _projectFile;}
-        set {_projectFile = value;}
-    }
-    
     public void Generate()
     {
         if (!Directory.Exists(this.ManagerDirectory))
@@ -94,17 +72,17 @@
             this.Progress.Step = 1;
         }
         
-        Database database = DbmlSchema.DbmlFile.Load(this.DbmlFile);
+        Database database = Dbml.FromFile(this.DbmlFile);
         if (database == null)
             throw new Exception("Error loading Dbml file.");
-
+            
+        Dbml.FillInDefaults(database);
+        
         DataManager databaseManager = ManagerGenerator.Create(SourceDatabase, database);
         
         CreateDataManagerClass(database, databaseManager);
         CreateDataContextManagerClass(database, databaseManager);
         CreateEntityManagerClasses(database, databaseManager);
-
-        Project.SaveProject();
     }
     
     public void CreateEntityManagerClasses(Database database, DataManager dataManager)
@@ -123,15 +101,6 @@
             Stopwatch watch = Stopwatch.StartNew();
 
             string className = manager.ManagerName;
-            string fileName = className + ".Generated.cs";
-            fileName = Path.Combine(ManagerDirectory, fileName);
-            
-            Table table = database.Tables[manager.TableName];
-            
-            Debug.WriteLine(string.Format("Creating Entity Manager Class '{0}' ...", className));
-            t.EntityManager = manager;
-            t.Table = table;
-            t.RenderToFile(fileName, true);
             
             string parentFileName = className + ".cs";
             parentFileName = Path.Combine(ManagerDirectory, parentFileName);
@@ -143,8 +112,16 @@
                 p.RenderToFile(parentFileName, false);
             }
             
-            Project.AddCompileItem(parentFileName, fileName);
-
+            string fileName = className + ".Generated.cs";
+            fileName = Path.Combine(ManagerDirectory, fileName);
+            
+            Table table = database.Tables[manager.TableName];
+            
+            Debug.WriteLine(string.Format("Creating Entity Manager Class '{0}' ...", className));
+            t.EntityManager = manager;
+            t.Table = table;
+            t.RenderToFile(fileName, parentFileName, true);
+            
             Debug.WriteLine(string.Format("Created '{0}' in {1} ms.", 
                 className,
                 watch.Elapsed.TotalMilliseconds.ToString()));
@@ -165,43 +142,34 @@
         
         t.RenderToFile(fileName, true);
         
-        Project.AddCompileItem(fileName);
-        
         this.Progress.PerformStep();
-
     }
     
     public void CreateDataContextManagerClass(Database database, DataManager dataManager)
     {
         string fileName = database.Class + ".Manager.cs";
-        string parentFile = Project.FindFile(database.Class + ".cs", "Compile");
+        string parentFile = DataContextFile;
         
         string dataFolder;
         
         if (string.IsNullOrEmpty(parentFile))
         {
+            parentFile = Path.Combine(ManagerDirectory, database.Class + ".cs");
             dataFolder = ManagerDirectory;
         }
         else
         {
-            parentFile = Path.Combine(Project.ProjectDirectory, parentFile);
             dataFolder = Path.GetDirectoryName(parentFile);
         }
         
         fileName = Path.Combine(dataFolder, fileName);
-        
         
         DataContextManagerClass t = this.Create<DataContextManagerClass>();
         this.CopyPropertiesTo(t);
         t.DataManager = dataManager;
         t.Database = database;
         
-        t.RenderToFile(fileName, true);
-        
-        if (string.IsNullOrEmpty(parentFile))
-            Project.AddCompileItem(fileName);
-        else
-            Project.AddCompileItem(parentFile, fileName);
+        t.RenderToFile(fileName, parentFile, true);
         
         this.Progress.PerformStep();
 

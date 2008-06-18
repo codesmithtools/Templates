@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30428</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E09D88E0-BA7E-4351-A7FE-4EC73ACFD107}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sample.Data</RootNamespace>
+    <AssemblyName>Sample.Data</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActiveUser.cs" />
+    <Compile Include="ActiveUser.Generated.cs">
+      <DependentUpon>ActiveUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Blah\Sample.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Sample.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="GetMyTasksResult.cs" />
+    <Compile Include="GetMyTasksResult.Generated.cs">
+      <DependentUpon>GetMyTasksResult.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LinqEntityBase.cs" />
+    <Compile Include="Managers\ActiveUserManager.cs" />
+    <Compile Include="Managers\ActiveUserManager.Generated.cs">
+      <DependentUpon>ActiveUserManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\PriorityManager.cs" />
+    <Compile Include="Managers\PriorityManager.Generated.cs">
+      <DependentUpon>PriorityManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\RoleManager.cs" />
+    <Compile Include="Managers\RoleManager.Generated.cs">
+      <DependentUpon>RoleManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\SampleDataManager.cs" />
+    <Compile Include="Managers\StatusManager.cs" />
+    <Compile Include="Managers\StatusManager.Generated.cs">
+      <DependentUpon>StatusManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\TaskExtendedManager.cs" />
+    <Compile Include="Managers\TaskExtendedManager.Generated.cs">
+      <DependentUpon>TaskExtendedManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\TaskManager.cs" />
+    <Compile Include="Managers\TaskManager.Generated.cs">
+      <DependentUpon>TaskManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\UserManager.cs" />
+    <Compile Include="Managers\UserManager.Generated.cs">
+      <DependentUpon>UserManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\UserRoleManager.cs" />
+    <Compile Include="Managers\UserRoleManager.Generated.cs">
+      <DependentUpon>UserRoleManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Priority.cs" />
+    <Compile Include="Priority.Generated.cs">
+      <DependentUpon>Priority.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Role.cs" />
+    <Compile Include="Role.Generated.cs">
+      <DependentUpon>Role.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SampleDataContext.cs" />
+    <Compile Include="SampleDataContext.Generated.cs">
+      <DependentUpon>SampleDataContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SampleDataContext.Manager.cs">
+      <DependentUpon>SampleDataContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Status.cs" />
+    <Compile Include="Status.Generated.cs">
+      <DependentUpon>Status.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Task.cs" />
+    <Compile Include="Task.Generated.cs">
+      <DependentUpon>Task.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TaskExtended.cs" />
+    <Compile Include="TaskExtended.Generated.cs">
+      <DependentUpon>TaskExtended.cs</DependentUpon>
+    </Compile>
+    <Compile Include="User.cs" />
+    <Compile Include="User.Generated.cs">
+      <DependentUpon>User.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserRole.cs" />
+    <Compile Include="UserRole.Generated.cs">
+      <DependentUpon>UserRole.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Sample.csp" />
+    <None Include="Sample.dbml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Blah\Sample.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>Sample.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Sample.dbml.layout">
+      <DependentUpon>Sample.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CodeSmith.Data\CodeSmith.Data.csproj">
+      <Project>{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}</Project>
+      <Name>CodeSmith.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Blah\Sample.dbml.layout">
+      <DependentUpon>Sample.dbml</DependentUpon>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

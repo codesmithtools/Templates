@@ -4,8 +4,8 @@
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="Microsoft.Build.Engine" %>
 <%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Src="Common.cs" %>
-<%@ Assembly Src="Schema.cs" %>
+<%@ Assembly Name="Dbml" %>
+<%@ Assembly Name="Generator" %>
 <%@ Assembly Src="Manager.cs" %>
 
 <%@ Import Namespace="System.Text" %>
@@ -13,7 +13,8 @@
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="SchemaExplorer" %>
-<%@ Import Namespace="DbmlSchema" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
 <%@ Import Namespace="Manager" %>
 
 <%@ Property Category="4.Manager" Name="ManagerNamespace" 
@@ -29,11 +30,11 @@
     Description="Must be set by parent template" %>
 
 <%@ Property Category="3.Mapping" Name="Database" 
-    Type="DbmlSchema.Database" Optional="False" 
+    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
     Description="Database instance. Must be set by parent template" %>
 
 <%@ Property Category="3.Mapping" Name="Table" 
-    Type="DbmlSchema.Table" Optional="False" 
+    Type="LinqToSqlShared.DbmlObjectModel.Table" Optional="False" 
     Description="Must be set by parent template" %>
 
 <%@ Map Name="CSharpKeyWordEscape" 
@@ -93,7 +94,7 @@ int indent = Response.IndentLevel;
 Response.IndentLevel = 3;
 foreach(Column c in Table.Type.Columns) { 
     
-    if (!c.CanBeNull && !c.IsDbGenerated)
+    if (!c.CanBeNull == true && c.IsDbGenerated == false)
     {
         if (c.Type.Contains("String"))
         {
@@ -302,7 +303,7 @@ Response.IndentLevel = indent;
             string paramName = CommonUtility.GetParameterName(column.Member);
             
             string typeName = CSharpAlias[column.Type];
-            if (column.CanBeNull && CommonUtility.IsNullableType(column.Type))
+            if (column.CanBeNull == true && CommonUtility.IsNullableType(column.Type))
                 typeName += "?";
                 
             args.AppendFormat("{0} {1}",
@@ -337,7 +338,7 @@ Response.IndentLevel = indent;
                 args.Append(", ");
             
             string typeName = CSharpAlias[column.Type];
-            if (column.CanBeNull && CommonUtility.IsNullableType(column.Type))
+            if (column.CanBeNull == true && CommonUtility.IsNullableType(column.Type))
                 typeName += "?";
             
             args.Append(typeName);
