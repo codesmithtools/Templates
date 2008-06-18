@@ -4,13 +4,13 @@
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="Microsoft.Build.Engine" %>
 <%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Src="Common.cs" %>
-<%@ Assembly Src="Schema.cs" %>
+<%@ Assembly Name="Dbml" %>
+<%@ Assembly Name="Generator" %>
 <%@ Assembly Src="Manager.cs" %>
 
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
-<%@ Import Namespace="DbmlSchema" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="Manager" %>
 
 <%@ Property Category="3.Manager" Name="ManagerNamespace" 
@@ -22,7 +22,7 @@
     Description="DatabaseMapping instance. Must be set by parent template" %>
 
 <%@ Property Category="1.Mapping" Name="Database" 
-    Type="DbmlSchema.Database" Optional="False" 
+    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
     Description="Database instance. Must be set by parent template" %>
 
 //------------------------------------------------------------------------------

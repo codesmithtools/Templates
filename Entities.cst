@@ -8,15 +8,14 @@
 <%@ Assembly Name="Microsoft.Build.Utilities" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Src="Internal\Common.cs" %>
-<%@ Assembly Src="Internal\Schema.cs" %>
-<%@ Assembly Src="Internal\Project.cs" %>
+<%@ Assembly Name="Dbml" Path="Internal" %>
+<%@ Assembly Name="Generator" Path="Internal" %>
 
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="SchemaExplorer" %>
-<%@ Import Namespace="DbmlSchema" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
 
 <%@ Property Category="2.Class" Name="OutputDirectory" 
     Type="System.String" Default="" Optional="True" 
@@ -55,41 +54,18 @@
 
 
 <script runat="template">
-    private ProjectUpdater _project = null;
-    
-    internal ProjectUpdater Project
-    {
-        get
-        {
-            if (_project == null)
-                _project = new ProjectUpdater(ProjectFile);
-            
-            return _project;
-        }
-    }
-    
-    private string _projectFile;
-    
-    [Category("3.Project")]
-    [Description("Select the Visual Studio project file to update.")]
-    [FileDialog(FileDialogType.Open, Title="Select Project File", Filter="Project Files (*.csproj)|*.csproj|All Files (*.*)|*.*", DefaultExtension=".csproj")]
-    [Editor(typeof(CodeSmith.CustomProperties.FileNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
-    [CodeSmith.Engine.Optional()]
-    public string ProjectFile
-    {
-        get {return _projectFile;}
-        set {_projectFile = value;}
-    }
+    private List<string> generatedEntities = new List<string>();
     
     public void Generate()
     {
         if (!Directory.Exists(this.OutputDirectory))
             Directory.CreateDirectory(this.OutputDirectory);
 
-        Database database = DbmlSchema.DbmlFile.Load(this.DbmlFile);
+        Database database = Dbml.FromFile(this.DbmlFile);
         if (database == null)
             throw new Exception("Error loading Dbml file.");
             
+        Dbml.FillInDefaults(database);
         
         this.Progress.MaximumValue = (database.Tables.Count + 1) * 2;
         this.Progress.Step = 1;
@@ -97,17 +73,6 @@
         CreateEntityBaseClass(database);
         CreateDataContextClass(database);
         CreateEntityClasses(database);
-        
-        //if (database.Connection != null)
-        //{
-        //    Project.AddConnectionStringSetting(
-        //        database.Connection.SettingsPropertyName,
-        //        database.Connection.ConnectionString);
-        //}
-        
-        //Project.AddNoneItem(DbmlFile);
-        //Project.AddReferenceItem("System.Data.Linq", false);
-        //Project.SaveProject();
     }
         
     public void CreateEntityBaseClass(Database database)
@@ -122,13 +87,10 @@
         t.ClassNamespace = database.EntityNamespace;
         t.ClassName = database.EntityBase;
         t.RenderToFile(fileName, true);
-        
-        //Project.AddCompileItem(fileName);
     }
     
     public void CreateDataContextClass(Database database)
     {
-        Stopwatch watch = Stopwatch.StartNew();
         DataContextGeneratedClass t = this.Create<DataContextGeneratedClass>();
         t.Database = database;
         
@@ -137,7 +99,7 @@
         
         string contextClass = CommonUtility.GetClassName(database.Class);
         
-		string parentFileName = contextClass + ".cs";
+        string parentFileName = contextClass + ".cs";
         parentFileName = Path.Combine(OutputDirectory, parentFileName);
         
         if (!File.Exists(parentFileName))
@@ -146,7 +108,7 @@
             p.RenderToFile(parentFileName, true);
         }
 
-		string fileName = contextClass + ".Generated.cs";
+        string fileName = contextClass + ".Generated.cs";
         fileName = Path.Combine(OutputDirectory, fileName);
         
         Debug.WriteLine(string.Format("Creating DataContext Class '{0}' ...", 
@@ -154,13 +116,7 @@
         
         Response.WriteLine(fileName);
         t.RenderToFile(fileName, parentFileName, true);        
-                
-        //Project.AddCompileItem(parentFileName, fileName);
-        
-        Debug.WriteLine(string.Format("Created '{0}' in {1} ms.", 
-            contextClass,
-            watch.Elapsed.TotalMilliseconds.ToString()));
-            
+                    
         this.Progress.PerformStep();
     }
     
@@ -196,9 +152,9 @@
         
         foreach(Function function in database.Functions)
         {
-            foreach(DbmlSchema.Type resultType in function.ElementTypes)
+            foreach(LinqToSqlShared.DbmlObjectModel.Type resultType in function.Types)
             {
-                if (string.IsNullOrEmpty(resultType.IdRef))
+                if (!generatedEntities.Contains(resultType.Name))
                 {
                     t.TableName = string.Empty;
                     t.EntityBase = string.Empty;
@@ -211,11 +167,12 @@
     public void CreateEntity(
         EntityGeneratedClass entityClass, 
         EntityEditableClass partialClass, 
-        DbmlSchema.Type type)
+        LinqToSqlShared.DbmlObjectModel.Type type)
     {
         string className = type.Name;
+        generatedEntities.Add(className);
         
-		string parentFileName = className + ".cs";
+        string parentFileName = className + ".cs";
         parentFileName = Path.Combine(OutputDirectory, parentFileName);
 
         if (!File.Exists(parentFileName))
@@ -225,16 +182,14 @@
             partialClass.RenderToFile(parentFileName, false);
         }
         
-		string fileName = className + ".Generated.cs";
+        string fileName = className + ".Generated.cs";
         fileName = Path.Combine(OutputDirectory, fileName);
         
         Response.WriteLine(fileName);
         entityClass.Type = type;
         entityClass.RenderToFile(fileName, parentFileName, true);
-        
-        //Project.AddCompileItem(parentFileName, fileName);
-        
-        foreach(DbmlSchema.Type childType in type.DerivedTypes)
+                
+        foreach(LinqToSqlShared.DbmlObjectModel.Type childType in type.SubTypes)
         {
             entityClass.TableName = string.Empty;
             entityClass.EntityBase = type.Name;
