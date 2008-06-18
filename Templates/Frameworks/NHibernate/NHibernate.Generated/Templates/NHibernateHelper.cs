@@ -313,7 +313,7 @@ public class SearchCriteria
             if (isFirst)
                 isFirst = false;
             else
-                sb.Append("|");
+                sb.Append(" & ");
 			sb.Append(mcs.Name);
         }
 
