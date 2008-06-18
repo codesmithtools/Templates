@@ -6,20 +6,20 @@
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Src="Internal\Common.cs" %>
-<%@ Assembly Src="Internal\Schema.cs" %>
-<%@ Assembly Src="Internal\Generator.cs" %>
+<%@ Assembly Name="Dbml" Path="Internal" %>
+<%@ Assembly Name="Generator" Path="Internal" %>
 
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="SchemaExplorer" %>
-<%@ Import Namespace="DbmlSchema" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
 
 <%@ Property Category="1.Database" Name="SourceDatabase"
     Type="SchemaExplorer.DatabaseSchema" Optional="False"
-    OnChanged="OnSourceDatabaseChanged"
+    OnChanged="OnSourceDatabaseChanged" DeepLoad="true"
     Description="The source database for Linq to Sql." %>
 
 <%@ Property Category="1.Database" Name="IncludeViews"
@@ -102,7 +102,10 @@
         generator.SchemaItemProcessed += new EventHandler<SchemaItemProcessedEventArgs>(OnSchemaItemProcessed);
         Database db = generator.Create(SourceDatabase);
         
-        this.RegisterOutput(this.DbmlFile);
+        OutputFile outputFile = new OutputFile(this.DbmlFile);
+        outputFile.Metadata.Add("CustomTool", string.Empty);
+        
+        this.RegisterOutput(outputFile);
         
         watch.Stop();
         Response.WriteLine("Generate Time: " + watch.ElapsedMilliseconds + " ms");

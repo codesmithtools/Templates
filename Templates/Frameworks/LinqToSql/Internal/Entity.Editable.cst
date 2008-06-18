@@ -1,18 +1,17 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" 
     Description="Linq to Sql Entity Class." %>
     
-<%@ Assembly Src="Schema.cs" %>
-<%@ Assembly Src="Common.cs" %>
+<%@ Assembly Name="Dbml" %>
 
 <%@ Import Namespace="System.Text" %>
-<%@ Import Namespace="DbmlSchema" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 
 <%@ Property Category="1.Mapping" Name="Database" 
-    Type="DbmlSchema.Database" Optional="False" 
+    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
     Description="Database instance. Must be set by parent template" %>
 
 <%@ Property Category="1.Mapping" Name="Type" 
-    Type="DbmlSchema.Type" Optional="False" 
+    Type="LinqToSqlShared.DbmlObjectModel.Type" Optional="False" 
     Description="The Type instance for this entity. Must be set by parent template" %>
 
 using System;
