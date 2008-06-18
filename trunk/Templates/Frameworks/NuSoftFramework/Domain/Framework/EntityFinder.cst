@@ -1,0 +1,28 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates a single entity finder." Debug="True" %>
+<%@ Property Name="Namespace" Type="String" Default="Domain" Optional="False" Category="Context" Description="The namespace for the utility class" %>
+<%@ Property Name="DomainNamespace" Type="String" Default="Business" Optional="False" Category="1. Setup" Description="The namespace to be added to the root namespace for the business objects" %>
+<script runat="template"><!--#include file="..\..\Global.cs"--></script><%= GetDefaultCommentHeader() %>
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
+{
+    public class EntityFinder : System.Collections.Specialized.NameObjectCollectionBase
+    {
+        public void Add(string propertyName, object propertyValue)
+        {
+            this.BaseAdd(propertyName, propertyValue);
+        }
+
+        public string GetKey(int index)
+        {
+            return base.BaseGetKey(index);
+        }
+
+        public object GetValue(int index)
+        {
+            return base.BaseGet(index);
+        }
+    }
+}

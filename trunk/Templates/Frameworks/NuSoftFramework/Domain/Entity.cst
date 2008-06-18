@@ -1,0 +1,33 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates a single entity business class." Debug="True" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Database table that this entity should be based on." %>
+<%@ Property Name="TablePrefixes" Type="String" Default="" Optional="True" Category="Context" Description="The table prefix to be cut from the class name" %>
+<%@ Property Name="Namespace" Type="String" Default="Domain" Optional="False" Category="Context" Description="The namespace for the business objects" %>
+<%@ Property Name="DomainNamespace" Type="String" Default="Business" Optional="False" Category="1. Setup" Description="The namespace to be added to the root namespace for the business objects" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<script runat="template"><!--#include file="..\Global.cs"--></script><%= GetDefaultCommentHeader(false) %>
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.Text;
+
+using <%= Namespace %>.<%= DomainNamespace %>.Framework;
+
+namespace <%= Namespace %>.<%= DomainNamespace %>
+{
+	/// <summary>
+	/// This object represents the properties and methods of a <%= GetClassName(SourceTable) %>.
+	/// </summary>
+	public partial class <%= GetClassName(SourceTable) %> : EntityBase<% if(IsReadOnlyEntity(SourceTable)) { %>ReadOnly<% } %>
+	{	
+
+	}
+}
+<script runat="template">
+<!-- #include file="..\Utilities.cs" -->
+</script>

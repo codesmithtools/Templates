@@ -1,0 +1,112 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates a single entity business class." Debug="True" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="Database that entities should be based on." %>
+<%@ Property Name="TablePrefixes" Type="String" Default="" Optional="True" Category="Context" Description="The table prefix to be cut from the class name" %>
+<%@ Property Name="Namespace" Type="String" Default="Domain" Optional="False" Category="Context" Description="The namespace for the business objects" %>
+<%@ Property Name="DomainNamespace" Type="String" Default="Business" Optional="False" Category="1. Setup" Description="The namespace to be added to the root namespace for the business objects" %>
+<%@ Property Name="DomainGuid" Type="Guid" Default="" Optional="False" Category="Context" Description="" %>
+<%@ Property Name="ExcludedTables" Type="TableSchemaCollection" Default="" Optional="True" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{<%= DomainGuid.ToString() %>}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace><%= Namespace %>.<%= DomainNamespace %></RootNamespace>
+    <AssemblyName><%= Namespace %>.<%= DomainNamespace %></AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+<% foreach(TableSchema table in SourceDatabase.Tables) { 
+	if(table.Name != "" && ShouldUseTable(table, ExcludedTables)) { %>
+    <Compile Include="<%= GetClassName(table) %>.cs" />
+    <Compile Include="Generated.<%= GetClassName(table) %>.cs">
+      <DependentUpon><%= GetClassName(table) %>.cs</DependentUpon>
+    </Compile>
+<% } } %>
+    <Compile Include="Framework\SqlHelperBase.cs" />
+    <Compile Include="Framework\SqlHelper.cs" />
+    <Compile Include="Framework\Generated.SqlHelper.cs">
+	  <DependentUpon>SqlHelper.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Framework\EntityBase.cs" /> 
+    <Compile Include="Framework\Generated.EntityBase.cs">
+	  <DependentUpon>EntityBase.cs</DependentUpon>
+	</Compile>
+    <Compile Include="Framework\EntityBaseReadOnly.cs" /> 
+    <Compile Include="Framework\Generated.EntityBaseReadOnly.cs">
+	  <DependentUpon>EntityBaseReadOnly.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Framework\DatabaseColumnAttribute.cs" />
+    <Compile Include="Framework\EntityComparer.cs" />
+	<Compile Include="Framework\EntityEventArgs.cs" />
+	<Compile Include="Framework\EntityCancelEventArgs.cs" />
+	<Compile Include="Framework\EntityValidationEventArgs.cs" />
+	<Compile Include="Framework\EntityValidationCancelEventArgs.cs" />
+	<Compile Include="Framework\EntityException.cs" />
+	<Compile Include="Framework\EntityFinder.cs" />
+	<Compile Include="Framework\EntityListBase.cs" />
+	<Compile Include="Framework\Generated.EntityListBase.cs" >
+	  <DependentUpon>EntityListBase.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Framework\EntityList.cs" />
+	<Compile Include="Framework\Generated.EntityList.cs" >
+	  <DependentUpon>EntityList.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Framework\EntityListReadOnly.cs" />	
+	<Compile Include="Framework\Generated.EntityListReadOnly.cs" >	
+	  <DependentUpon>EntityListReadOnly.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Framework\ISavable.cs" />	
+	<Compile Include="Framework\ISearchable.cs" />
+	<Compile Include="Framework\MinToEmptyTypeConverter.cs" />
+	<Compile Include="Framework\ColumnInfo.cs" />
+	<Compile Include="Framework\ValidationError.cs" />
+	<Compile Include="Framework\ValidationGroup.cs" />
+	<Compile Include="Framework\Generated.ValidationGroup.cs" >	
+	  <DependentUpon>ValidationGroup.cs</DependentUpon>
+	</Compile>
+	<Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
+<script runat="template">
+<!-- #include file="..\Utilities.cs" -->
+</script>

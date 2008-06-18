@@ -1,0 +1,46 @@
+<%@ CodeTemplate Language="C#" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" TargetLanguage="T-SQL" Description="Generates SELECT/INSERT/UPDATE/DELETE stored procedure based on a database table schema." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table that the stored procedures should be based on." %>
+<%@ Property Name="IncludeDrop" Type="System.Boolean" Default="True" Category="Drop Options" Description="If true drop statements will be generated to drop INSERT stored procedures." %>
+<%@ Property Name="IsolationLevel" Type="TransactionIsolationLevelEnum" Default="ReadCommitted" Category="Options" Description="Isolation level to use in generated procedures." %>
+<%@ Property Name="TablePrefixes" Type="String" Default="" Optional="True" Category="Context" Description="The table prefix to be cut from the class name" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<% if (SourceTable.PrimaryKey == null) throw new ApplicationException("SourceTable does not contain a primary key."); %>
+<% if (IncludeDrop) { %>
+/****** Object:  Stored Procedure <%= GetStoredProcedureName(SourceTable) %> - Script Date: <%= DateTime.Now.ToLongDateString() %> ******/
+if exists (select * from sysobjects where id = object_id(N'[<%= GetStoredProcedureName(SourceTable) %>]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [<%= GetStoredProcedureName(SourceTable) %>]
+GO
+<% } %>
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+<script runat="template"><!--#include file="..\Global.cs"--></script><%= GetDefaultCommentHeader() %>
+CREATE PROCEDURE [<%= GetStoredProcedureName(SourceTable) %>]
+
+AS
+
+<%= GetSetTransactionIsolationLevelStatement() %>
+
+<%= GetGetAllSql(SourceTable) %>
+
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+<script runat="template">
+<!-- #include file="..\Utilities.cs" -->
+<!-- #include file="DbUtilities.cs" -->
+public string GetStoredProcedureName(TableSchema table)
+{
+	return GetClassName(table) + "GetAll";	
+}
+</script>
