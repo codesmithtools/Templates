@@ -72,7 +72,7 @@ namespace <%= ManagerNamespace %>
 		}
 		public <%= GetClassName(SourceTable.Name) %> GetById(<%= GetMethodParameters(sc.Items, true) %>)
 		{
-			ICriteria criteria = Session.ISession.CreateCriteria(typeof(<%= GetClassName(SourceTable.Name) %>));
+			ICriteria criteria = Session.GetISession().CreateCriteria(typeof(<%= GetClassName(SourceTable.Name) %>));
 			
 			<% foreach(MemberColumnSchema mcs in sc.Items) { %>
 			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= GetVariableName(mcs.Name) %>));
@@ -85,7 +85,7 @@ namespace <%= ManagerNamespace %>
 		<% } else if(!sc.ContainsForeignKey(ExcludedTables)) { %>
 		public IList<<%= GetClassName(SourceTable.Name) %>> <%= GetMethodDeclaration(sc) %>
         {
-            ICriteria <%= GetVariableName(SourceTable.Name) %>Criteria = Session.ISession.CreateCriteria(typeof(<%= GetClassName(SourceTable.Name) %>));
+            ICriteria <%= GetVariableName(SourceTable.Name) %>Criteria = Session.GetISession().CreateCriteria(typeof(<%= GetClassName(SourceTable.Name) %>));
 			
 			<% foreach(MemberColumnSchema mcs in sc.Items) { %>
 			<% if(mcs.IsForeignKeyMember) { %>
