@@ -4,11 +4,11 @@ Author: Tom DuPont
 Description: Generates a HBM Map for NHibernate.
 --%>
 <%@ CodeTemplate Language="C#" Src="NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="XML" Debug="False" Description="Generates a HBM Map for NHibernate." %>
-<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1. Source Database" Description="The source table to generate from." %>
-<%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2. Assemblies and Namespaces" Description="The name of the Assembly that will contain these objects." %>
-<%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2. Assemblies and Namespaces" Description="The desired Namespace for the Business Objects." %>
-<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="5. NEW" Description="A prefix that will be stripped from table names when class names are generated." %>
-<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="5. NEW" Description="A collection of tables to be excluded during generation." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
+<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
+<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
+<%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2a. Assembly" Description="The name of the Assembly that will contain the business objects." %>
+<%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2b. Namespaces" Description="The desired Namespace for the Business Objects." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
