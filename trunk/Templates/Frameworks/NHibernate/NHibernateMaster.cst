@@ -122,8 +122,8 @@ private void RenderBusinessObjects(TableSchema table)
 	string fileName = String.Format("{0}{1}.generated.cs", GetFolder(BusinessNamespace), GetClassName(table.Name));
 	string editableFileName = String.Format("{0}{1}.cs", GetFolder(BusinessNamespace), GetClassName(table.Name));
 	
-	//if(!File.Exists(editableFileName))
-	//{
+	if(!File.Exists(editableFileName))
+	{
 		EditableBusinessObjectTemplate editableBusinessObject = new EditableBusinessObjectTemplate();
 		editableBusinessObject.BusinessNamespace = this.BusinessNamespace;
 		editableBusinessObject.BaseNamespace = this.BaseNamespace;
@@ -132,7 +132,7 @@ private void RenderBusinessObjects(TableSchema table)
 		
 		editableBusinessObject.RenderToFile(editableFileName, strategy);
 		RegisterOutputFile(editableFileName, null);
-	//}
+	}
 	
 	BusinessObjectTemplate businessObject = new BusinessObjectTemplate();
 	businessObject.BusinessNamespace = this.BusinessNamespace;
@@ -149,8 +149,8 @@ private void RenderManagerObjects(TableSchema table)
 	string fileName = String.Format("{0}{1}Manager.Generated.cs", GetFolder(ManagerNamespace), GetClassName(table.Name));
 	string editableFileName = String.Format("{0}{1}Manager.cs", GetFolder(ManagerNamespace), GetClassName(table.Name));
 	
-	//if(!File.Exists(editableFileName))
-	//{
+	if(!File.Exists(editableFileName))
+	{
 		EditableManagerObjectTemplate editableManagerObject = new EditableManagerObjectTemplate();
 		editableManagerObject.ManagerNamespace = this.ManagerNamespace;
 		editableManagerObject.BusinessNamespace = this.BusinessNamespace;
@@ -160,7 +160,7 @@ private void RenderManagerObjects(TableSchema table)
 		
 		editableManagerObject.RenderToFile(editableFileName, strategy);
 		RegisterOutputFile(editableFileName, null);
-	//}
+	}
 
 	ManagerObjectTemplate managerObject = new ManagerObjectTemplate();
 	managerObject.ManagerNamespace = this.ManagerNamespace;
