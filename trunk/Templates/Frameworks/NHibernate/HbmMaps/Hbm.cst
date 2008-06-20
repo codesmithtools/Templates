@@ -54,7 +54,7 @@ Description: Generates a HBM Map for NHibernate.
 		<% if (!IsManyToMany(mcs.Table)) { %>
 		<% if (!ExcludedTables.Contains(mcs.Table)) { %>
 		<bag name="<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>" lazy="true" cascade="<%= GetCascade(mcs) %>"  inverse="true" >
-			<key column="<%= GetPrimaryKeyColumn(tks.PrimaryKey).Name %>"></key>
+			<key column="<%= mcs.Name %>"></key>
 			<one-to-many class="<%= GetClassName(mcs.Table.Name) %>"></one-to-many>
 		</bag>
 		<% } %>
@@ -62,8 +62,8 @@ Description: Generates a HBM Map for NHibernate.
 		<% TableSchema foreignTable = GetToManyTable(mcs.Table, SourceTable); %>
 		<% if (!ExcludedTables.Contains(foreignTable)) { %>
 		<bag name="<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>" table="<%= mcs.Table.Name %>" lazy="true" cascade="all"  inverse="true" >
-			<key column="<%= GetPrimaryKeyColumn(SourceTable.PrimaryKey).Name %>"></key>
-			<many-to-many column="<%= GetPrimaryKeyColumn(foreignTable.PrimaryKey).Name %>" class="<%= GetClassName(foreignTable.Name) %>" />
+			<key column="<%= mcs.Name %>"></key>
+			<many-to-many column="<%= GetToManyTableKey(mcs.Table, foreignTable).Name %>" class="<%= GetClassName(foreignTable.Name) %>" />
     	</bag>
 		<% } %>
 		<% } %>

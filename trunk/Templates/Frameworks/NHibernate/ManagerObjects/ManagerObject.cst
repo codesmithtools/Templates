@@ -78,7 +78,12 @@ namespace <%= ManagerNamespace %>
 			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= GetVariableName(mcs.Name) %>));
 			<% } %>
 			
-            return (<%= GetClassName(SourceTable.Name) %>)criteria.UniqueResult();
+			<%= GetClassName(SourceTable.Name) %> result = (<%= GetClassName(SourceTable.Name) %>)criteria.UniqueResult();
+
+            if (result == null)
+                throw new NHibernate.ObjectDeletedException("", null, null);
+
+            return result;
 		}
 		
 		<% } %>

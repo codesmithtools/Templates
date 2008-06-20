@@ -88,6 +88,17 @@ public class NHibernateHelper : CodeTemplate
 			}
 		return result;
 	}
+	public static MemberColumnSchema GetToManyTableKey(TableSchema manyToTable, TableSchema foreignTable)
+    {
+        MemberColumnSchema result = null;
+        foreach (TableKeySchema key in manyToTable.ForeignKeys)
+            if (key.PrimaryKeyTable.Equals(foreignTable))
+            {
+                result = key.ForeignKeyMemberColumns[0];
+                break;
+            }
+        return result;
+    }
 	public bool IsManyToMany(TableSchema table)
 	{
 		// If there are 2 ForeignKeyColumns AND...
