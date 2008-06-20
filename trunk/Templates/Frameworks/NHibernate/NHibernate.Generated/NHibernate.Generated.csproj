@@ -31,9 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NHibernate, Version=2.0.0.1001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="NHibernate, Version=1.2.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\JunkYard\NHibernate\bin\net-2.0\NHibernate.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\JunkYard\NHibernate\Nhibernate 1.2\bin\net-2.0\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -49,6 +49,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessObjects\Leash.cs" />
+    <Compile Include="BusinessObjects\Leash.generated.cs">
+      <DependentUpon>Leash.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\Person.cs" />
+    <Compile Include="BusinessObjects\Person.generated.cs">
+      <DependentUpon>Person.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\Pet.cs" />
+    <Compile Include="BusinessObjects\Pet.generated.cs">
+      <DependentUpon>Pet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\WalkRecord.cs" />
+    <Compile Include="BusinessObjects\WalkRecord.generated.cs">
+      <DependentUpon>WalkRecord.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerFactory.cs" />
+    <Compile Include="ManagerObjects\LeashManager.cs" />
+    <Compile Include="ManagerObjects\LeashManager.Generated.cs">
+      <DependentUpon>LeashManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\PersonManager.cs" />
+    <Compile Include="ManagerObjects\PersonManager.Generated.cs">
+      <DependentUpon>PersonManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\PetManager.cs" />
+    <Compile Include="ManagerObjects\PetManager.Generated.cs">
+      <DependentUpon>PetManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\WalkRecordManager.cs" />
+    <Compile Include="ManagerObjects\WalkRecordManager.Generated.cs">
+      <DependentUpon>WalkRecordManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +92,18 @@
       <Project>{6BC7D08E-C15C-41CF-8A65-8378F8B42A19}</Project>
       <Name>NHibernate.Base</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\Leash.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\Person.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\Pet.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\WalkRecord.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
