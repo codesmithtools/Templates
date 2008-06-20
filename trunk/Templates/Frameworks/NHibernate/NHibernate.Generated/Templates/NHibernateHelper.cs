@@ -247,6 +247,23 @@ public class NHibernateHelper : CodeTemplate
 				return tks.PrimaryKeyTable.Name;
 		throw new Exception(String.Format("Could not find Column {0} in Table {1}'s ForeignKeys.", mcs.Name, table.Name));
 	}
+	
+	public string GetUnitTestInitialization(Type type)
+	{
+		string result;
+		
+		if(type.Equals(typeof(String)))
+			result = "\"ABC\"";
+		else if(type.Equals(typeof(DateTime)))
+			result = "DateTime.Now";
+		else if(type.Equals(typeof(Decimal)))
+			result = "default(Decimal)";
+		else if(type.IsPrimitive)
+			result = String.Format("default({0})", type.Name.ToString());
+		else
+			result = "null";
+		return result;
+	}
 }
 
 #region SearchCriteria Class
