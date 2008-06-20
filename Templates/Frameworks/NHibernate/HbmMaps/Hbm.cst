@@ -3,7 +3,7 @@ Name: Hbm.cst
 Author: Tom DuPont
 Description: Generates a HBM Map for NHibernate.
 --%>
-<%@ CodeTemplate Language="C#" Src="NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="XML" Debug="False" Description="Generates a HBM Map for NHibernate." %>
+<%@ CodeTemplate Language="C#" Src="..\NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="XML" Debug="False" Description="Generates a HBM Map for NHibernate." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>

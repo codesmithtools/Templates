@@ -30,19 +30,19 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Import NameSpace="System.IO" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 
-<%@ Register Name="BusinessBaseTemplate" Template="BusinessBase.cst" %>
-<%@ Register Name="BusinessObjectTemplate" Template="BusinessObject.cst" %>
-<%@ Register Name="EditableBusinessObjectTemplate" Template="EditableBusinessObject.cst" %>
-<%@ Register Name="EditableManagerObjectTemplate" Template="EditableManagerObject.cst" %>
-<%@ Register Name="EditableUnitTestsTemplate" Template="EditableUnitTests.cst" %>
-<%@ Register Name="HbmMapTemplate" Template="Hbm.cst" %>
-<%@ Register Name="ManagerBaseTemplate" Template="ManagerBase.cst" %>
-<%@ Register Name="ManagerFactoryTemplate" Template="ManagerFactory.cst" %>
-<%@ Register Name="ManagerObjectTemplate" Template="ManagerObject.cst" %>
-<%@ Register Name="SessionTemplate" Template="Session.cst" %>
-<%@ Register Name="SessionManagerTemplate" Template="SessionManager.cst" %>
-<%@ Register Name="UnitTestsTemplate" Template="UnitTests.cst" %>
-<%@ Register Name="UnitTestsBaseTemplate" Template="UnitTestsBase.cst" %>
+<%@ Register Name="BusinessBaseTemplate" Template="BaseClasses\BusinessBase.cst" %>
+<%@ Register Name="ManagerBaseTemplate" Template="BaseClasses\ManagerBase.cst" %>
+<%@ Register Name="SessionTemplate" Template="BaseClasses\Session.cst" %>
+<%@ Register Name="SessionManagerTemplate" Template="BaseClasses\SessionManager.cst" %>
+<%@ Register Name="UnitTestsBaseTemplate" Template="BaseClasses\UnitTestsBase.cst" %>
+<%@ Register Name="BusinessObjectTemplate" Template="BusinessObjects\BusinessObject.cst" %>
+<%@ Register Name="EditableBusinessObjectTemplate" Template="BusinessObjects\EditableBusinessObject.cst" %>
+<%@ Register Name="HbmMapTemplate" Template="HbmMaps\Hbm.cst" %>
+<%@ Register Name="EditableManagerObjectTemplate" Template="ManagerObjects\EditableManagerObject.cst" %>
+<%@ Register Name="ManagerFactoryTemplate" Template="ManagerObjects\ManagerFactory.cst" %>
+<%@ Register Name="ManagerObjectTemplate" Template="ManagerObjects\ManagerObject.cst" %>
+<%@ Register Name="UnitTestsTemplate" Template="UnitTests\UnitTests.cst" %>
+<%@ Register Name="EditableUnitTestsTemplate" Template="UnitTests\EditableUnitTests.cst" %>
 
 <script runat="template">
 protected PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
