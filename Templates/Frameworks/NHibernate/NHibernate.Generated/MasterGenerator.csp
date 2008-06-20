@@ -2,19 +2,17 @@
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <propertySets>
     <propertySet name="NHibernateMaster" template="Templates\NHibernateMaster.cst">
+      <property name="NHibernateVersion">OnePointTwo</property>
       <property name="AssemblyName">NHibernate.Generated</property>
-      <property name="ProjectNamespace">NHibernate.Generated</property>
       <property name="ManagerNamespace">NHibernate.Generated.ManagerObjects</property>
       <property name="BusinessNamespace">NHibernate.Generated.BusinessObjects</property>
       <property name="BaseNamespace">NHibernate.Base</property>
-      <property name="ManagerObjectFolder">ManagerObjects\</property>
-      <property name="BusinessObjectFolder">BusinessObjects\</property>
-      <property name="HbmMapFolder">Resources\</property>
-      <property name="ProjectFile">..\NHibernate.Generated.csproj</property>
       <property name="SourceDatabase">
-        <connectionString>Data Source=TDUPONT-LT;Initial Catalog=Petshop;Integrated Security=True</connectionString>
+        <connectionString>Data Source=TDUPONT-LT;Initial Catalog=Simple;Integrated Security=True</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
       </property>
+      <property name="TablePrefix" />
+      <property name="ExcludedTables" />
     </propertySet>
   </propertySets>
 </codeSmith>

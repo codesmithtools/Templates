@@ -14,7 +14,9 @@ namespace NHibernate.Base
         // Get Methods
         T GetById(IdT Id);
         IList<T> GetAll();
+        IList<T> GetAll(int maxResults);
         IList<T> GetByCriteria(params ICriterion[] criterionList);
+        IList<T> GetByCriteria(int maxResults, params ICriterion[] criterionList);
         IList<T> GetByExample(T exampleObject, params string[] excludePropertyList);
 
         // CRUD Methods
@@ -34,6 +36,7 @@ namespace NHibernate.Base
         #region Declarations
 
         protected INHibernateSession session;
+        protected const int defaultMaxResults = 100;
 
         #endregion
 
@@ -58,11 +61,19 @@ namespace NHibernate.Base
         }
         public IList<T> GetAll()
         {
-            return GetByCriteria();
+            return GetByCriteria(defaultMaxResults);
+        }
+        public IList<T> GetAll(int maxResults)
+        {
+            return GetByCriteria(maxResults);
         }
         public IList<T> GetByCriteria(params ICriterion[] criterionList)
         {
-            ICriteria criteria = Session.GetISession().CreateCriteria(typeof(T));
+            return GetByCriteria(defaultMaxResults, criterionList);
+        }
+        public IList<T> GetByCriteria(int maxResults, params ICriterion[] criterionList)
+        {
+            ICriteria criteria = Session.GetISession().CreateCriteria(typeof(T)).SetMaxResults(maxResults);
 
             foreach (ICriterion criterion in criterionList)
                 criteria.Add(criterion);

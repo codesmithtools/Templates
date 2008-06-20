@@ -12,24 +12,45 @@ namespace NHibernate.Demo
     class Program
     {
         static ManagerFactory ManagerFactory = new ManagerFactory();
+        static MockManagerFactory MockManagerFactory = new MockManagerFactory();
 
         static void Main(string[] args)
         {
-            NHibernateExample();
+            MockUnitTester();
 
             Console.Out.WriteLine("Done");
             Console.In.ReadLine();
         }
 
-        /// <summary>
-        /// This method was written to show what your code would look like if you had a Person table with a Name column.
-        /// </summary>
-        static void NHibernateExample()
+        static void MockUnitTester()
         {
-        //    ManagerFactory managerFactory = new ManagerFactory();
-        //    IPersonManager personManager = managerFactory.GetPersonManager();
-        //    Person person = personManager.GetById(1);
-        //    Console.Out.WriteLine("Person {0}'s name is {1}.", person.Id, person.Name);
+            IPersonManager pm = MockManagerFactory.GetPersonManager();
+
+            //Person p = new Person();
+            //p.Name = "Testie McTester";
+            //p.Id = 1;
+            //pm.Save(p);
+
+            Person p1 = pm.GetById(1);
+            Person p2 = pm.GetById(2);
+            IList<Person> pList = pm.GetByCriteria();
+
+        }
+
+        static void UnitTester()
+        {
+            NHibernate.Base.NHibernateSessionManager.Instance = new UnitTestSessionManager();
+
+            IPersonManager pm = ManagerFactory.GetPersonManager();
+            IList<Person> pList = pm.GetAll();
+
+            Person p = new Person();
+            p.Name = "Testie McTester";
+
+            pm.Save(p);
+            pm.Session.CommitChanges();
+
+            pList = pm.GetAll();
         }
     }
 }
