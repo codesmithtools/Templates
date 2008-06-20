@@ -149,9 +149,7 @@ public class NHibernateHelper : CodeTemplate
 		if (!String.IsNullOrEmpty(tablePrefix) && tableName.StartsWith(tablePrefix))
             tableName = tableName.Remove(0, tablePrefix.Length);
 				
-		if(tableName.EndsWith("es"))
-			tableName = tableName.Substring(0, tableName.Length-2);
-		else if(tableName.EndsWith("s") && !tableName.EndsWith("ss"))
+		if (tableName.EndsWith("s") && !tableName.EndsWith("ss"))
 			tableName = tableName.Substring(0, tableName.Length-1);
 			
 		return StringUtil.ToPascalCase(tableName);
