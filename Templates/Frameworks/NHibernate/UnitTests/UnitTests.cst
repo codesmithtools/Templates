@@ -41,6 +41,11 @@ namespace <%= UnitTestNamespace %>
 		{
 			<%= GetClassName(SourceTable.Name) %> entity = new <%= GetClassName(SourceTable.Name) %>();
 			
+			<% if(!IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) && SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties.Contains("CS_IsIdentity") && ((bool)SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties["CS_IsIdentity"].Value) == false) { %>
+			// You may need to maually enter this key if there is a constraint violation.
+			entity.Id = <%= GetUnitTestInitialization(GetBusinessBaseIdType(SourceTable)) %>;
+			<% } %>
+			
 			<% // Primitives %>
 			<% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
 			entity.<%= GetPropertyName(column.Name) %> = <%= GetUnitTestInitialization(column.SystemType) %>;
@@ -48,16 +53,27 @@ namespace <%= UnitTestNamespace %>
 			<% // Many-To-One %>
 			<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
 			<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-			<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !IsPrimaryKeyColumn(mcs, SourceTable)) { %>
+			<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && (!IsPrimaryKeyColumn(mcs, SourceTable) || IsMutliColumnPrimaryKey(SourceTable.PrimaryKey))) { %>
 			
 			I<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager = managerFactory.Get<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager();
+			<% if(!IsPrimaryKeyColumn(mcs, SourceTable)) { %>
 			entity.<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)[0];
+			<% } else { %>
+			entity.<%= GetPropertyName(mcs.Name) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)[0].Id;
+			<% } %>
 			<% } %>
 			<% } %>
 			<% } %>
 			
 			return entity;
 		}
+		protected <%= GetClassName(SourceTable.Name) %> GetFirst<%= GetClassName(SourceTable.Name) %>()
+        {
+            IList<<%= GetClassName(SourceTable.Name) %>> entityList = manager.GetAll(1);
+            if (entityList.Count == 0)
+                Assert.Fail("All tables must have at least one row for unit tests to succeed.");
+            return entityList[0];
+        }
 		
 		[Test]
         public void Create()
@@ -98,7 +114,7 @@ namespace <%= UnitTestNamespace %>
         {
             try
             {
-                <%= GetClassName(SourceTable.Name) %> entityA = manager.GetAll(1)[0];
+                <%= GetClassName(SourceTable.Name) %> entityA = GetFirst<%= GetClassName(SourceTable.Name) %>();
 				entityA.<%= GetPropertyName(SourceTable.NonKeyColumns[0].Name) %> = <%= GetUnitTestInitialization(SourceTable.NonKeyColumns[0].SystemType) %>;
 				
 				manager.Update(entityA);
@@ -118,7 +134,7 @@ namespace <%= UnitTestNamespace %>
         {
             try
             {
-                <%= GetClassName(SourceTable.Name) %> entity = manager.GetAll(1)[0];
+                <%= GetClassName(SourceTable.Name) %> entity = GetFirst<%= GetClassName(SourceTable.Name) %>();
 				
                 manager.Delete(entity);
 

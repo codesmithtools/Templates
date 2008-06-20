@@ -123,12 +123,12 @@ public class NHibernateHelper : CodeTemplate
 			result = "null";
 		return result;
 	}
-	public string GetBusinessBaseIdType(TableSchema table)
+	public Type GetBusinessBaseIdType(TableSchema table)
 	{
 		if(IsMutliColumnPrimaryKey(table.PrimaryKey))
-			return "string";
+			return typeof(string);
 		else
-			return GetPrimaryKeyColumn(table.PrimaryKey).SystemType.ToString();
+			return GetPrimaryKeyColumn(table.PrimaryKey).SystemType;
 	}
 	
 	#endregion

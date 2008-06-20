@@ -23,7 +23,7 @@ using <%= BaseNamespace %>;
 
 namespace <%= BusinessNamespace %>
 {
-    public partial class <%= GetClassName(SourceTable.Name) %> : BusinessBase<<%= SystemCSharp[GetBusinessBaseIdType(SourceTable)] %>>
+    public partial class <%= GetClassName(SourceTable.Name) %> : BusinessBase<<%= SystemCSharp[GetBusinessBaseIdType(SourceTable).ToString()] %>>
     {
         #region Declarations
 

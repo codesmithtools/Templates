@@ -190,8 +190,8 @@ private void RenderManagerFactory()
 }
 private void RenderUnitTests(TableSchema table)
 {
-	string fileName = String.Format("{0}{1}.generated.cs", GetFolder(UnitTestNamespace), GetClassName(table.Name));
-	string editableFileName = String.Format("{0}{1}.cs", GetFolder(UnitTestNamespace), GetClassName(table.Name));
+	string fileName = String.Format("{0}{1}Tests.generated.cs", GetFolder(UnitTestNamespace), GetClassName(table.Name));
+	string editableFileName = String.Format("{0}{1}Tests.cs", GetFolder(UnitTestNamespace), GetClassName(table.Name));
 	
 	if(!File.Exists(editableFileName))
 	{

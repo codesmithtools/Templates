@@ -125,7 +125,15 @@ namespace <%= BaseNamespace %>
             if (result)
             {
                 transaction.Rollback();
+                transaction.Dispose();
                 transaction = null;
+
+                // I dont know why, but it seems that after you rollback a transaction you need to reset the session.
+                // Personally, I dislike this; I find it inefficent, and it means that I have to expose a method to
+                // get an ISession from the NHibernateSessionManager...does anyone know how to get around this problem?
+                iSession.Close();
+                iSession.Dispose();
+                iSession = NHibernateSessionManager.Instance.CreateISession();
             }
             return result;
         }
