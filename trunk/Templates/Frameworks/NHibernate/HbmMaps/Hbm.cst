@@ -16,7 +16,7 @@ Description: Generates a HBM Map for NHibernate.
 <% this.tablePrefix = TablePrefix; %>
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="<%= BusinessNamespace %>" assembly="<%= AssemblyName %>">
-	<class name="<%= BusinessNamespace %>.<%= GetClassName(SourceTable.Name) %>, <%= AssemblyName %>" table="<%= GetClassName(SourceTable.Name) %>" lazy="true">
+	<class name="<%= BusinessNamespace %>.<%= GetClassName(SourceTable.Name) %>, <%= AssemblyName %>" table="<%= SourceTable.Name %>" lazy="true">
 		<% // Primary Key %>
 		<% if(SourceTable.HasPrimaryKey) { %>
 		<% if(IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) { %>

@@ -23,6 +23,7 @@ namespace <%= BaseNamespace %>
     {
         // Methods
         INHibernateSession CreateSession();
+		ISession CreateISession();
 
         // Properties
         INHibernateSession Session { get; }
@@ -114,14 +115,16 @@ namespace <%= BaseNamespace %>
 
         public INHibernateSession CreateSession()
         {
-            NHibernateSession session;
-
+            return new NHibernateSession(CreateISession());
+        }
+        public ISession CreateISession()
+        {
+            ISession iSession;
             lock (_sessionFactory)
             {
-                session = new NHibernateSession(_sessionFactory.OpenSession());
+                iSession = _sessionFactory.OpenSession();
             }
-
-            return session;
+            return iSession;
         }
 
         #endregion
