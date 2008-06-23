@@ -90,11 +90,11 @@ Namespace NHibernate.Generated.BusinessObjects
 
         #End Region
 
-        #region Properties
+        #region "Properties"
 
 		<% 'Primary Keys %>
 		<% If IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) Then %>
-		Public Overloads Overrides ReadOnly Property Id() As String
+		Public Overloads Overrides Property Id() As String
 			Get
 				Dim uniqueId As New System.Text.StringBuilder()
 		
@@ -103,12 +103,14 @@ Namespace NHibernate.Generated.BusinessObjects
 				<%	If x > 0 Then %>
 				uniqueId.Append("^")
 				<%	End If %>
-				uniqueId.Append(<%= GetPrivateVariableName(SourceTable.PrimaryKey.MemberColumns(x).Name) %>.ToString());
+				uniqueId.Append(<%= GetPrivateVariableName(SourceTable.PrimaryKey.MemberColumns(x).Name) %>.ToString())
 				<% System.Math.Max(System.Threading.Interlocked.Increment(x),x - 1) %>
 				<% End While %>
 		
 				Return uniqueId.ToString()
 			End Get
+			Set(ByVal value As String)
+            End Set
 		End Property
 		
 		<% For Each mcs As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns %>
@@ -122,9 +124,9 @@ Namespace NHibernate.Generated.BusinessObjects
 				On<%= GetPropertyName(mcs.Name) %>Changed()
 			End Set
 		End Property
-		Partial Sub On<%= GetPropertyName(mcs.Name) %>Changing()
+		Partial Private Sub On<%= GetPropertyName(mcs.Name) %>Changing()
 		End Sub
-		Partial Sub On<%= GetPropertyName(mcs.Name) %>Changed()
+		Partial Private Sub On<%= GetPropertyName(mcs.Name) %>Changed()
 		End Sub
 		
 		<% Next %>
@@ -142,9 +144,9 @@ Namespace NHibernate.Generated.BusinessObjects
 				On<%= GetPropertyName(mcs.Name) %>Changed()
 			End Set
 		End Property
-		Partial Sub On<%= GetPropertyName(mcs.Name) %>Changing()
+		Partial Private Sub On<%= GetPropertyName(mcs.Name) %>Changing()
 		End Sub
-		Partial Sub On<%= GetPropertyName(mcs.Name) %>Changed()
+		Partial Private Sub On<%= GetPropertyName(mcs.Name) %>Changed()
 		End Sub
 		<% Next %>
 		
@@ -162,9 +164,9 @@ Namespace NHibernate.Generated.BusinessObjects
 				On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed()
 			End Set
 		End Property
-		Partial Sub On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing()
+		Partial Private Sub On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing()
 		End Sub
-		Partial Sub On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed()
+		Partial Private Sub On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed()
 		End Sub
 		<% End If %>
 		<% Next %>
@@ -187,9 +189,9 @@ Namespace NHibernate.Generated.BusinessObjects
 				On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed()
 			End Set
 		End Property
-		Partial Sub On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing()
+		Partial Private Sub On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing()
 		End Sub
-		Partial Sub On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed()
+		Partial Private Sub On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed()
 		End Sub
 		
 		<% End If %>
@@ -206,9 +208,9 @@ Namespace NHibernate.Generated.BusinessObjects
 				On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed()
 			End Set
 		End Property
-		Partial Sub On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing()
+		Partial Private Sub On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing()
 		End Sub
-		Partial Sub On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed()
+		Partial Private Sub On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed()
 		End Sub
 		
 		<% End If %>
