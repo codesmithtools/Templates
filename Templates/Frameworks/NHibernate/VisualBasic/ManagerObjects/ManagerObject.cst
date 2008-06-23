@@ -1,0 +1,150 @@
+<%-- 
+Name: ManagerObject.cst
+Author: Tom DuPont
+Description: Generates a Manager Object for NHibernate.
+--%>
+<%@ CodeTemplate Language="VB" Src="..\NHibernateHelper.vb" Inherits="NHibernateHelper" TargetLanguage="VB" Debug="False" Description="Generates a Manager Object for NHibernate." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
+<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
+<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
+<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="OnePointTwo" Optional="False" Category="2. NHibernate" Description="The version of NHibernate to generate for." %>
+<%@ Property Name="ManagerNamespace" Type="System.String" Default="NHibernate.Generated.ManagerObjects" Optional="False" Category="3. Namespaces" Description="The desired Namespace for the Manager Objects." %>
+<%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="3. Namespaces" Description="The desired Namespace for the Business Objects." %>
+<%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="3. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<% Dim scList As List(Of SearchCriteria) = SearchCriteria.GetAllSearchCriteria(SourceTable) %>
+<% Me._tablePrefix = TablePrefix %>
+Imports System
+Imports System.Collections.Generic
+Imports System.Text
+
+Imports NHibernate
+Imports <%= BusinessNamespace %>
+Imports <%= BaseNamespace %>
+
+Namespace <%= ManagerNamespace %>
+	Public Partial Interface IProductManager
+		Inherits IManagerBase(Of Product, String)
+		
+		' Get Methods
+		<% For Each sc As SearchCriteria In scList %>
+		<% If sc.IsAllPrimaryKeys Then %>
+		<% If sc.Items.Count > 1 Then ' Override GetById %>
+		Function GetById(<%= GetMethodParameters(sc.Items, true) %>) As <%= GetClassName(SourceTable.Name) %>
+		<% End If %>
+		<% Else If Not sc.ContainsForeignKey(ExcludedTables) Then %>
+		Function <%= GetMethodDeclaration(sc) %> As IList(<%= GetClassName(SourceTable.Name) %>)
+		<% End If %>
+		<% Next %>
+		
+	End Interface
+
+	Partial Class ProductManager
+		Inherits ManagerBase(Of Product, String)
+		Implements IProductManager
+#region "Constructors"
+
+		Public Sub New()
+			MyBase.New()
+		End Sub
+		Public Sub New(ByVal session As INHibernateSession)
+			MyBase.New(session)
+		End Sub
+#End Region
+
+#region "Get Methods"
+
+		Public Function GetByCategoryId(ByVal categoryId As String) As IList(Of Product)
+			Dim productCriteria As ICriteria = Session.GetISession().CreateCriteria(GetType(Product))
+
+			Dim categoryCriteria As ICriteria = productCriteria.CreateCriteria("Category")
+			categoryCriteria.Add(NHibernate.Expression.Expression.Eq("Id", categoryId))
+
+			Return productCriteria.List(Of Product)()
+		End Function
+		Public Function GetByName(ByVal name As String) As IList(Of Product)
+			Dim productCriteria As ICriteria = Session.GetISession().CreateCriteria(GetType(Product))
+
+			productCriteria.Add(NHibernate.Expression.Expression.Eq("Name", name))
+
+			Return productCriteria.List(Of Product)()
+		End Function
+		Public Function GetByCategoryIdName(ByVal categoryId As String, ByVal name As String) As IList(Of Product)
+			Dim productCriteria As ICriteria = Session.GetISession().CreateCriteria(GetType(Product))
+
+			Dim categoryCriteria As ICriteria = productCriteria.CreateCriteria("Category")
+			categoryCriteria.Add(NHibernate.Expression.Expression.Eq("Id", categoryId))
+			productCriteria.Add(NHibernate.Expression.Expression.Eq("Name", name))
+
+			Return productCriteria.List(Of Product)()
+		End Function
+		Public Function GetByCategoryIdProductIdName(ByVal categoryId As String, ByVal productId As String, ByVal name As String) As IList(Of Product)
+			Dim productCriteria As ICriteria = Session.GetISession().CreateCriteria(GetType(Product))
+
+			Dim categoryCriteria As ICriteria = productCriteria.CreateCriteria("Category")
+			categoryCriteria.Add(NHibernate.Expression.Expression.Eq("Id", categoryId))
+			productCriteria.Add(NHibernate.Expression.Expression.Eq("ProductId", productId))
+			productCriteria.Add(NHibernate.Expression.Expression.Eq("Name", name))
+
+			Return productCriteria.List(Of Product)()
+		End Function
+		
+		
+		<% For Each sc As SearchCriteria In scList %>
+		<% If sc.IsAllPrimaryKeys Then %>
+		<% if sc.Items.Count > 1 Then ' Override GetById %>
+		Public Overloads Overrides Function GetById(ByVal id As String) As <%= GetClassName(SourceTable.Name) %>
+			Dim keys As String() = id.Split("^"C)
+		
+			If keys.Length <> <%= sc.Items.Count %> Then
+				Throw New Exception("Invalid Id for <%= GetClassName(SourceTable.Name) %>Manager.GetById")
+			End If
+		
+			Return GetById(<%= GetPrimaryKeyCallParameters(sc.Items) %>)
+		End Function
+		Public Function GetById(<%= GetMethodParameters(sc.Items, true) %>) As <%= GetClassName(SourceTable.Name) %>
+			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(<%= GetClassName(SourceTable.Name) %>))
+		
+			<% For Each mcs As MemberColumnSchema In sc.Items %>
+			criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= GetVariableName(mcs.Name) %>))
+			<% Next %>
+			
+			Dim result As <%= GetClassName(SourceTable.Name) %> = DirectCast(criteria.UniqueResult(), <%= GetClassName(SourceTable.Name) %>)
+		
+			If result Is Nothing Then
+				Throw New NHibernate.ObjectDeletedException("", Nothing, Nothing)
+			End If
+		
+			Return result
+		End Function
+		<% End If %>
+		<% Else If Not sc.ContainsForeignKey(ExcludedTables) Then %>
+		Public Function <%= GetMethodDeclaration(sc) %> As IList(Of <%= GetClassName(SourceTable.Name) %>)
+        {
+            Dim <%= GetVariableName(SourceTable.Name) %>Criteria As ICriteria = Session.GetISession().CreateCriteria(typeof(<%= GetClassName(SourceTable.Name) %>))
+			
+			<% For Each mcs As MemberColumnSchema In sc.Items %>
+			<% If mcs.IsForeignKeyMember %>
+			Dim <%= GetVariableName(GetForeignTableName(mcs, SourceTable)) %>Criteria As ICriteria = <%= GetVariableName(SourceTable.Name) %>Criteria.CreateCriteria("<%= GetPropertyName(GetForeignTableName(mcs, SourceTable)) %>")
+            <%= GetVariableName(GetForeignTableName(mcs, SourceTable)) %>Criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("Id", <%= GetVariableName(mcs.Name) %>));
+			<% Else %>
+			<%= GetVariableName(SourceTable.Name) %>Criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= GetPropertyName(mcs.Name) %>", <%= GetVariableName(mcs.Name) %>));
+			<% End If %>
+			<% Next %>
+			
+            return <%= GetVariableName(SourceTable.Name) %>Criteria.List(Of <%= GetClassName(SourceTable.Name) %>)();
+        }
+		<% End If %>
+		<% Next %>
+		
+		
+		
+		
+		
+#End Region
+	End Class
+End Namespace

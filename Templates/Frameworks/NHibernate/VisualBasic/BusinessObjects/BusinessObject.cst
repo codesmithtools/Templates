@@ -1,0 +1,222 @@
+<%-- 
+Name: BusinessObject.cst
+Author: Tom DuPont
+Description: Generates a Business Object for NHibernate.
+--%>
+<%@ CodeTemplate Language="VB" Src="..\NHibernateHelper.vb" Inherits="NHibernateHelper" TargetLanguage="VB" Debug="False" Description="Generates a Business Object for NHibernate." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
+<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
+<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
+<%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2. Namespaces" Description="The desired Namespace for the Business Objects." %>
+<%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="2. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<% Me._tablePrefix = TablePrefix %>
+Imports System
+Imports System.Collections
+Imports System.Collections.Generic
+
+Imports <%= BaseNamespace %>
+
+Namespace NHibernate.Generated.BusinessObjects
+	Public Partial Class <%= GetClassName(SourceTable.Name) %>
+		Inherits BusinessBase(Of <%= GetBusinessBaseIdType(SourceTable) %>)
+
+		#region "Declarations"
+
+		<% 'Primary Keys %>
+		<% If IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) Then %>
+		<% For Each mcs As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns %>
+		Private <%= GetPrivateVariableName(mcs.Name) %> As <%= mcs.SystemType %> = <%= GetInitialization(mcs.SystemType) %>
+		<% Next %>
+		<% End If %>
+		
+		<% 'Primitives %>
+		<% For Each column As ColumnSchema In SourceTable.NonKeyColumns %>
+		Private <%= GetPrivateVariableName(column.Name) %> As <%= column.SystemType %> = <%= GetInitialization(column.SystemType) %>
+		<% Next %>
+		
+		<% 'Many-To-One %>
+		<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
+		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
+		<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso Not IsPrimaryKeyColumn(mcs, SourceTable) Then %>
+		Private <%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %> As <%= GetClassName(tks.PrimaryKeyTable.Name) %> = Nothing
+		<% End If %>
+		<% Next %>
+		<% Next %>
+		
+		<% 'One-To-Many & Many-To-Many %>
+		<% For Each tks As TableKeySchema In SourceTable.PrimaryKeys %>
+		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
+		<% If Not IsPrimaryKeyColumn(mcs, SourceTable) Then %>
+		<% If Not IsManyToMany(mcs.Table) Then %>
+		<% If Not ExcludedTables.Contains(mcs.Table) Then %>
+		Private <%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %> As IList(Of <%= GetClassName(mcs.Table.Name) %>) = New List(Of <%= GetClassName(mcs.Table.Name) %>)()
+		<% End If %>
+		<% Else %>
+		<% Dim foreignTable As TableSchema = GetToManyTable(mcs.Table, SourceTable) %>
+		<% If Not ExcludedTables.Contains(foreignTable) Then %>
+		Private <%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %> As IList(Of <%= GetClassName(foreignTable.Name) %>) = New List(Of <%= GetClassName(foreignTable.Name) %>)()
+		<% End If %>
+		<% End If %>
+		<% End If %>
+		<% Next %>
+		<% Next %>
+				
+        #End Region
+
+        #region "Constructors"
+
+        Public Sub New()
+		End Sub
+
+        #End Region
+
+        #region "Methods"
+
+		Public Overloads Overrides Function GetHashCode() As Integer
+			Dim sb As New System.Text.StringBuilder()
+
+			sb.Append(Me.[GetType]().FullName)
+			
+			<% For Each column As ColumnSchema In SourceTable.NonKeyColumns %>
+			sb.Append(<%= GetPrivateVariableName(column.Name) %>)
+			<% Next %>
+			
+			Return sb.ToString().GetHashCode()
+		End Function
+
+        #End Region
+
+        #region Properties
+
+		<% 'Primary Keys %>
+		<% If IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) Then %>
+		Public Overloads Overrides ReadOnly Property Id() As String
+			Get
+				Dim uniqueId As New System.Text.StringBuilder()
+		
+				<% Dim x As Integer = 0 %>
+				<% While x < SourceTable.PrimaryKey.MemberColumns.Count %>
+				<%	If x > 0 Then %>
+				uniqueId.Append("^")
+				<%	End If %>
+				uniqueId.Append(<%= GetPrivateVariableName(SourceTable.PrimaryKey.MemberColumns(x).Name) %>.ToString());
+				<% System.Math.Max(System.Threading.Interlocked.Increment(x),x - 1) %>
+				<% End While %>
+		
+				Return uniqueId.ToString()
+			End Get
+		End Property
+		
+		<% For Each mcs As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns %>
+		Public Overridable Property <%= GetPropertyName(mcs.Name) %>() As <%= mcs.SystemType %>
+			Get
+				Return <%= GetPrivateVariableName(mcs.Name) %>
+			End Get
+			Set
+				On<%= GetPropertyName(mcs.Name) %>Changing()
+				<%= GetPrivateVariableName(mcs.Name) %> = value
+				On<%= GetPropertyName(mcs.Name) %>Changed()
+			End Set
+		End Property
+		Partial Sub On<%= GetPropertyName(mcs.Name) %>Changing()
+		End Sub
+		Partial Sub On<%= GetPropertyName(mcs.Name) %>Changed()
+		End Sub
+		
+		<% Next %>
+		<% End If %>
+		
+		<% 'Primitives %>
+		<% For Each mcs As ColumnSchema In SourceTable.NonKeyColumns %>
+		Public Overridable Property <%= GetPropertyName(mcs.Name) %>() As <%= mcs.SystemType %>
+			Get
+				Return <%= GetPrivateVariableName(mcs.Name) %>
+			End Get
+			Set
+				On<%= GetPropertyName(mcs.Name) %>Changing()
+				<%= GetPrivateVariableName(mcs.Name) %> = value
+				On<%= GetPropertyName(mcs.Name) %>Changed()
+			End Set
+		End Property
+		Partial Sub On<%= GetPropertyName(mcs.Name) %>Changing()
+		End Sub
+		Partial Sub On<%= GetPropertyName(mcs.Name) %>Changed()
+		End Sub
+		<% Next %>
+		
+		<% 'Many-To-One %>
+		<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
+		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
+		<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso Not IsPrimaryKeyColumn(mcs, SourceTable) Then %>
+		Public Overridable Property <%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>() As <%= GetClassName(tks.PrimaryKeyTable.Name) %>
+			Get
+				Return <%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>
+			End Get
+			Set
+				On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing()
+				<%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %> = value
+				On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed()
+			End Set
+		End Property
+		Partial Sub On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing()
+		End Sub
+		Partial Sub On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed()
+		End Sub
+		<% End If %>
+		<% Next %>
+		<% Next %>
+		
+		
+		<% 'One-To-Many & Many-To-Many %>
+		<% For Each tks As TableKeySchema In SourceTable.PrimaryKeys %>
+		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
+		<% If Not IsPrimaryKeyColumn(mcs, SourceTable) Then %>
+		<% If Not IsManyToMany(mcs.Table) Then %>
+		<% If Not ExcludedTables.Contains(mcs.Table) Then %>
+		Public Overridable Property <%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>() As <%= GetClassName(mcs.Table.Name) %>
+			Get
+				Return <%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %>
+			End Get
+			Set
+				On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing()
+				<%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %> = value
+				On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed()
+			End Set
+		End Property
+		Partial Sub On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing()
+		End Sub
+		Partial Sub On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed()
+		End Sub
+		
+		<% End If %>
+		<% Else %>
+		<% Dim foreignTable As TableSchema = GetToManyTable(mcs.Table, SourceTable) %>
+		<% If Not ExcludedTables.Contains(foreignTable) Then %>
+		Public Overridable Property <%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>() As <%= GetClassName(foreignTable.Name) %>
+			Get
+				Return <%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %>
+			End Get
+			Set
+				On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing()
+				<%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %> = value
+				On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed()
+			End Set
+		End Property
+		Partial Sub On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing()
+		End Sub
+		Partial Sub On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed()
+		End Sub
+		
+		<% End If %>
+		<% End If %>
+		<% End If %>
+		<% Next %>
+		<% Next %>
+        #End Region
+
+	End Class
+End Namespace

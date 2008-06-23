@@ -1,0 +1,133 @@
+<%-- 
+Name: UnitTests.cst
+Author: Tom DuPont
+Description: Generates Unit Tests for NHibernate.
+--%>
+<%@ CodeTemplate Language="VB" Src="..\NHibernateHelper.vb" Inherits="NHibernateHelper" TargetLanguage="VB" Debug="False" Description="Generates Unit Tests for NHibernate." %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
+<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
+<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
+<%@ Property Name="ManagerNamespace" Type="System.String" Default="NHibernate.Generated.ManagerObjects" Optional="False" Category="2. Namespaces" Description="The desired Namespace for the Manager Objects." %>
+<%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2. Namespaces" Description="The desired Namespace for the Business Objects." %>
+<%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="2. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
+<%@ Property Name="UnitTestNamespace" Type="System.String" Default="NHibernate.Generated.UnitTests" Optional="False" Category="2. Namespaces" Description="The desired Namespace for the UnitTests." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<% Me._tablePrefix = TablePrefix %>
+Imports System
+Imports System.Collections.Generic
+Imports System.Text
+Imports NUnit.Framework
+Imports <%= ManagerNamespace %>
+Imports <%= BusinessNamespace %>
+Imports <%= BaseNamespace %>
+
+Namespace <%= UnitTestNamespace %>
+	<TestFixture()> _
+	Public Partial Class <%= GetClassName(SourceTable.Name) %>Tests
+		Inherits UNuitTestBase
+		
+		Protected manager As I<%= GetClassName(SourceTable.Name) %>Manager
+
+		Public Sub New()
+			manager = managerFactory.GetAccountManager()
+		End Sub
+
+		Protected Function CreateNew<%= GetClassName(SourceTable.Name) %>() As <%= GetClassName(SourceTable.Name) %>
+			Dim entity As New <%= GetClassName(SourceTable.Name) %>()
+
+			<% If Not IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) AndAlso SourceTable.PrimaryKey.MemberColumns(0).ExtendedProperties.Contains("CS_IsIdentity") AndAlso DirectCast(SourceTable.PrimaryKey.MemberColumns(0).ExtendedProperties("CS_IsIdentity").Value, Boolean) Then %>
+			' You may need to maually enter this key if there is a constraint violation.
+			entity.Id = <%= GetUnitTestInitialization(GetBusinessBaseIdType(SourceTable)) %>
+			<% End If %>
+			
+			<% ' Primitives %>
+			<% For Each column As ColumnSchema In SourceTable.NonKeyColumns %>
+			entity.<%= GetPropertyName(column.Name) %> = <%= GetUnitTestInitialization(column.SystemType) %>
+			<% Next %>
+			<% ' Many-To-One %>
+			<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
+			<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
+			<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso (Not IsPrimaryKeyColumn(mcs, SourceTable) Or IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) Then %>
+			
+			Dim <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager As I<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager = managerFactory.Get<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager()
+			<% If Not IsPrimaryKeyColumn(mcs, SourceTable) Then %>
+			entity.<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)[0];
+			<% Else %>
+			entity.<%= GetPropertyName(mcs.Name) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)(0).Id;
+			<% End If %>
+			<% End If %>
+			<% Next %>
+			<% Next %>
+
+			Return entity
+		End Function
+		Protected Function GetFirst<%= GetClassName(SourceTable.Name) %>() As <%= GetClassName(SourceTable.Name) %>
+			Dim entityList As IList(Of <%= GetClassName(SourceTable.Name) %>) = manager.GetAll(1)
+			If entityList.Count = 0 Then
+				Assert.Fail("All tables must have at least one row for unit tests to succeed.")
+			End If
+			Return entityList(0)
+		End Function
+
+		<Test()> _
+		Public Sub Create()
+			Try
+				Dim entity As <%= GetClassName(SourceTable.Name) %> = CreateNew<%= GetClassName(SourceTable.Name) %>()
+
+				Dim result As Object = manager.Save(entity)
+
+				Assert.IsNotNull(result)
+			Catch ex As Exception
+				Assert.Fail(ex.ToString())
+			End Try
+		End Sub
+		<Test()> _
+		Public Sub Read()
+			Try
+				Dim entityA As <%= GetClassName(SourceTable.Name) %> = CreateNew<%= GetClassName(SourceTable.Name) %>()
+				manager.Save(entityA)
+
+				Dim entityB As <%= GetClassName(SourceTable.Name) %> = manager.GetById(entityA.Id)
+
+				Assert.AreEqual(entityA, entityB)
+			Catch ex As Exception
+				Assert.Fail(ex.ToString())
+			End Try
+		End Sub
+		<Test()> _
+		Public Sub Update()
+			Try
+				Dim entityA As <%= GetClassName(SourceTable.Name) %> = GetFirst<%= GetClassName(SourceTable.Name) %>()
+				entityA.Email = "ABC"
+
+				manager.Update(entityA)
+
+				Dim entityB As <%= GetClassName(SourceTable.Name) %> = manager.GetById(entityA.Id)
+
+				Assert.AreEqual(entityA.Email, entityB.Email)
+			Catch ex As Exception
+				Assert.Fail(ex.ToString())
+			End Try
+		End Sub
+		<Test()> _
+		Public Sub Delete()
+			Try
+				Dim entity As <%= GetClassName(SourceTable.Name) %> = GetFirst<%= GetClassName(SourceTable.Name) %>()
+
+				manager.Delete(entity)
+
+				Try
+					entity = manager.GetById(entity.Id)
+					Assert.Fail("Object should have been deleted!")
+				Catch ex As Exception
+					Assert.IsInstanceOfType(GetType(NHibernate.ObjectDeletedException), ex)
+				End Try
+			Catch ex As Exception
+				Assert.Fail(ex.ToString())
+			End Try
+		End Sub
+	End Class
+End Namespace
