@@ -64,19 +64,19 @@ Namespace <%= BaseNamespace %>
 
 #region "Get Methods"
 
-		Public Overridable Function GetById(ByVal id As IdT) As T
+		Public Overridable Function GetById(ByVal id As IdT) As T Implements IManagerBase(Of T, IdT).GetById
 			Return DirectCast(Session.GetISession().[Get](GetType(T), id), T)
 		End Function
-		Public Function GetAll() As IList(Of T)
+		Public Function GetAll() As IList(Of T) Implements IManagerBase(Of T, IdT).GetAll
 			Return GetByCriteria(defaultMaxResults)
 		End Function
-		Public Function GetAll(ByVal maxResults As Integer) As IList(Of T)
+		Public Function GetAll(ByVal maxResults As Integer) As IList(Of T) Implements IManagerBase(Of T, IdT).GetAll
 			Return GetByCriteria(maxResults)
 		End Function
-		Public Function GetByCriteria(ParamArray criterionList As ICriterion()) As IList(Of T)
+		Public Function GetByCriteria(ParamArray criterionList As ICriterion()) As IList(Of T) Implements IManagerBase(Of T, IdT).GetByCriteria
 			Return GetByCriteria(defaultMaxResults, criterionList)
 		End Function
-		Public Function GetByCriteria(ByVal maxResults As Integer, ParamArray criterionList As ICriterion()) As IList(Of T)
+		Public Function GetByCriteria(ByVal maxResults As Integer, ParamArray criterionList As ICriterion()) As IList(Of T) Implements IManagerBase(Of T, IdT).GetByCriteria
 			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(T)).SetMaxResults(maxResults)
 
 			For Each criterion As ICriterion In criterionList
@@ -85,7 +85,7 @@ Namespace <%= BaseNamespace %>
 
 			Return criteria.List(Of T)()
 		End Function
-		Public Function GetByExample(ByVal exampleObject As T, ParamArray excludePropertyList As String()) As IList(Of T)
+		Public Function GetByExample(ByVal exampleObject As T, ParamArray excludePropertyList As String()) As IList(Of T) Implements IManagerBase(Of T, IdT).GetByExample
 			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(T))
 			Dim example As Example = Example.Create(exampleObject)
 
@@ -101,19 +101,19 @@ Namespace <%= BaseNamespace %>
 
 #region "CRUD Methods"
 
-		Public Function Save(ByVal entity As T) As Object
+		Public Function Save(ByVal entity As T) As Object Implements IManagerBase(Of T, IdT).Save
 			Return Session.GetISession().Save(entity)
 		End Function
-		Public Sub SaveOrUpdate(ByVal entity As T)
+		Public Sub SaveOrUpdate(ByVal entity As T) Implements IManagerBase(Of T, IdT).SaveOrUpdate
 			Session.GetISession().SaveOrUpdate(entity)
 		End Sub
-		Public Sub Delete(ByVal entity As T)
+		Public Sub Delete(ByVal entity As T) Implements IManagerBase(Of T, IdT).Delete
 			Session.GetISession().Delete(entity)
 		End Sub
-		Public Sub Update(ByVal entity As T)
+		Public Sub Update(ByVal entity As T) Implements IManagerBase(Of T, IdT).Update
 			Session.GetISession().Update(entity)
 		End Sub
-		Public Sub Refresh(ByVal entity As T)
+		Public Sub Refresh(ByVal entity As T) Implements IManagerBase(Of T, IdT).Refresh
 			Session.GetISession().Refresh(entity)
 		End Sub
 #End Region
@@ -126,12 +126,12 @@ Namespace <%= BaseNamespace %>
 		''' ...use the the NHibernateSession methods to control Transactions (unless you specifically want nested transactions).
 		''' ...do not directly expose the Flush method (to prevent open transactions from locking your DB).
 		''' </summary>
-		Public ReadOnly Property Type() As System.Type
+		Public ReadOnly Property Type() As System.Type Implements IManagerBase(Of T, IdT).Type
 			Get
 				Return GetType(T)
 			End Get
 		End Property
-		Public ReadOnly Property Session() As INHibernateSession
+		Public ReadOnly Property Session() As INHibernateSession Implements IManagerBase(Of T, IdT).Session
 			Get
 				Return session
 			End Get

@@ -111,12 +111,8 @@ Public Class NHibernateHelper
             result = "String.Empty"
         ElseIf type.Equals(GetType(DateTime)) Then
             result = "new DateTime()"
-        ElseIf type.Equals(GetType(Decimal)) Then
-            result = "default(Decimal)"
-        ElseIf type.IsPrimitive Then
-            result = [String].Format("default({0})", type.Name.ToString())
         Else
-            result = "null"
+            result = "Nothing"
         End If
         Return result
     End Function
@@ -191,10 +187,13 @@ Public Class NHibernateHelper
                 result.Append(", ")
             End If
             If isDeclaration Then
-                result.Append(mcs.SystemType.ToString())
-                result.Append(" ")
+                result.Append("ByVal ")
             End If
             result.Append(GetVariableName(mcs.Name))
+			If isDeclaration Then
+				result.Append(" As ")
+                result.Append(mcs.SystemType.ToString())
+            End If
         Next
         Return result.ToString()
     End Function
@@ -209,15 +208,20 @@ Public Class NHibernateHelper
     End Function
     Public Function GetMethodDeclaration(ByVal sc As SearchCriteria) As String
         Dim result As New StringBuilder()
-        result.Append("GetBy")
-        For Each mcs As MemberColumnSchema In sc.Items
-            result.Append(GetPropertyName(mcs.Name))
-        Next
+        result.Append(GetMethodName(sc))
         result.Append("(")
         result.Append(GetMethodParameters(sc.Items, True))
         result.Append(")")
         Return result.ToString()
     End Function
+	Public Function GetMethodName(ByVal sc As SearchCriteria) As String
+		Dim result As New StringBuilder()
+        result.Append("GetBy")
+        For Each mcs As MemberColumnSchema In sc.Items
+            result.Append(GetPropertyName(mcs.Name))
+        Next
+		Return result.ToString()
+	End Function
     Public Function GetPrimaryKeyCallParameters(ByVal mcsList As List(Of MemberColumnSchema)) As String
         Dim result As New System.Text.StringBuilder()
         Dim x As Integer = 0
@@ -248,12 +252,8 @@ Public Class NHibernateHelper
             result = """ABC"""
         ElseIf type.Equals(GetType(DateTime)) Then
             result = "DateTime.Now"
-        ElseIf type.Equals(GetType(Decimal)) Then
-            result = "default(Decimal)"
-        ElseIf type.IsPrimitive Then
-            result = [String].Format("default({0})", type.Name.ToString())
         Else
-            result = "null"
+            result = "Nothing"
         End If
         Return result
     End Function

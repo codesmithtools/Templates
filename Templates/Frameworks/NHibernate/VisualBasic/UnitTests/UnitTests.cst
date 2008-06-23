@@ -50,7 +50,7 @@ Namespace <%= UnitTestNamespace %>
 			<% ' Many-To-One %>
 			<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
 			<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
-			<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso (Not IsPrimaryKeyColumn(mcs, SourceTable) Or IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) Then %>
+			<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso (Not IsPrimaryKeyColumn(mcs, SourceTable) OrElse IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) Then %>
 			
 			Dim <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager As I<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager = managerFactory.Get<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager()
 			<% If Not IsPrimaryKeyColumn(mcs, SourceTable) Then %>

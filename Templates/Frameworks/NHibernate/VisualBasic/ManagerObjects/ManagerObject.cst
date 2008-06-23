@@ -27,8 +27,8 @@ Imports <%= BusinessNamespace %>
 Imports <%= BaseNamespace %>
 
 Namespace <%= ManagerNamespace %>
-	Public Partial Interface IProductManager
-		Inherits IManagerBase(Of Product, String)
+	Public Partial Interface I<%= GetClassName(SourceTable.Name) %>Manager
+		Inherits IManagerBase(Of <%= GetClassName(SourceTable.Name) %>, String)
 		
 		' Get Methods
 		<% For Each sc As SearchCriteria In scList %>
@@ -43,9 +43,9 @@ Namespace <%= ManagerNamespace %>
 		
 	End Interface
 
-	Partial Class ProductManager
-		Inherits ManagerBase(Of Product, String)
-		Implements IProductManager
+	Partial Class <%= GetClassName(SourceTable.Name) %>Manager
+		Inherits ManagerBase(Of <%= GetClassName(SourceTable.Name) %>, String)
+		Implements I<%= GetClassName(SourceTable.Name) %>Manager
 #region "Constructors"
 
 		Public Sub New()
@@ -58,42 +58,6 @@ Namespace <%= ManagerNamespace %>
 
 #region "Get Methods"
 
-		Public Function GetByCategoryId(ByVal categoryId As String) As IList(Of Product)
-			Dim productCriteria As ICriteria = Session.GetISession().CreateCriteria(GetType(Product))
-
-			Dim categoryCriteria As ICriteria = productCriteria.CreateCriteria("Category")
-			categoryCriteria.Add(NHibernate.Expression.Expression.Eq("Id", categoryId))
-
-			Return productCriteria.List(Of Product)()
-		End Function
-		Public Function GetByName(ByVal name As String) As IList(Of Product)
-			Dim productCriteria As ICriteria = Session.GetISession().CreateCriteria(GetType(Product))
-
-			productCriteria.Add(NHibernate.Expression.Expression.Eq("Name", name))
-
-			Return productCriteria.List(Of Product)()
-		End Function
-		Public Function GetByCategoryIdName(ByVal categoryId As String, ByVal name As String) As IList(Of Product)
-			Dim productCriteria As ICriteria = Session.GetISession().CreateCriteria(GetType(Product))
-
-			Dim categoryCriteria As ICriteria = productCriteria.CreateCriteria("Category")
-			categoryCriteria.Add(NHibernate.Expression.Expression.Eq("Id", categoryId))
-			productCriteria.Add(NHibernate.Expression.Expression.Eq("Name", name))
-
-			Return productCriteria.List(Of Product)()
-		End Function
-		Public Function GetByCategoryIdProductIdName(ByVal categoryId As String, ByVal productId As String, ByVal name As String) As IList(Of Product)
-			Dim productCriteria As ICriteria = Session.GetISession().CreateCriteria(GetType(Product))
-
-			Dim categoryCriteria As ICriteria = productCriteria.CreateCriteria("Category")
-			categoryCriteria.Add(NHibernate.Expression.Expression.Eq("Id", categoryId))
-			productCriteria.Add(NHibernate.Expression.Expression.Eq("ProductId", productId))
-			productCriteria.Add(NHibernate.Expression.Expression.Eq("Name", name))
-
-			Return productCriteria.List(Of Product)()
-		End Function
-		
-		
 		<% For Each sc As SearchCriteria In scList %>
 		<% If sc.IsAllPrimaryKeys Then %>
 		<% if sc.Items.Count > 1 Then ' Override GetById %>
@@ -106,7 +70,7 @@ Namespace <%= ManagerNamespace %>
 		
 			Return GetById(<%= GetPrimaryKeyCallParameters(sc.Items) %>)
 		End Function
-		Public Function GetById(<%= GetMethodParameters(sc.Items, true) %>) As <%= GetClassName(SourceTable.Name) %>
+		Public Function GetById(<%= GetMethodParameters(sc.Items, true) %>) As <%= GetClassName(SourceTable.Name) %> 
 			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(<%= GetClassName(SourceTable.Name) %>))
 		
 			<% For Each mcs As MemberColumnSchema In sc.Items %>
@@ -123,7 +87,7 @@ Namespace <%= ManagerNamespace %>
 		End Function
 		<% End If %>
 		<% Else If Not sc.ContainsForeignKey(ExcludedTables) Then %>
-		Public Function <%= GetMethodDeclaration(sc) %> As IList(Of <%= GetClassName(SourceTable.Name) %>)
+		Public Function <%= GetMethodDeclaration(sc) %> As IList(Of <%= GetClassName(SourceTable.Name) %>) Implements I<%= GetClassName(SourceTable.Name) %>Manager.<%= GetMethodName(sc) %>
         {
             Dim <%= GetVariableName(SourceTable.Name) %>Criteria As ICriteria = Session.GetISession().CreateCriteria(typeof(<%= GetClassName(SourceTable.Name) %>))
 			
@@ -140,10 +104,6 @@ Namespace <%= ManagerNamespace %>
         }
 		<% End If %>
 		<% Next %>
-		
-		
-		
-		
 		
 #End Region
 	End Class
