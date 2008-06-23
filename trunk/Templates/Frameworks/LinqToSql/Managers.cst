@@ -83,6 +83,8 @@
         CreateDataManagerClass(database, databaseManager);
         CreateDataContextManagerClass(database, databaseManager);
         CreateEntityManagerClasses(database, databaseManager);
+        
+        this.RegisterReference("CodeSmith.Data");
     }
     
     public void CreateEntityManagerClasses(Database database, DataManager dataManager)
