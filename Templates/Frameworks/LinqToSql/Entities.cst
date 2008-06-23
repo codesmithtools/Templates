@@ -73,6 +73,12 @@
         CreateEntityBaseClass(database);
         CreateDataContextClass(database);
         CreateEntityClasses(database);
+        
+        this.RegisterReference("System.Data.Linq");
+        this.RegisterReference("System.Configuration");
+        if (this.IncludeDataContract)
+            this.RegisterReference("System.Runtime.Serialization");
+
     }
         
     public void CreateEntityBaseClass(Database database)
