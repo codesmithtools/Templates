@@ -12,6 +12,11 @@ public enum NHibernateVersion
 	v1_2,
 	v2_0
 }
+public enum VisualStudioVersion
+{
+	VS_2005,
+	VS_2008
+}
 
 public class NHibernateHelper : CodeTemplate
 {
@@ -20,10 +25,10 @@ public class NHibernateHelper : CodeTemplate
 		switch(version)
 		{
 			case NHibernateVersion.v1_2:
-				return "NHibernate.Criterion";
+				return "NHibernate.Expression";
 					
 			case NHibernateVersion.v2_0:
-				return "NHibernate.Expression";
+				return "NHibernate.Criterion";
 				
 			default:
 				throw new Exception("Invalid NHibernateVersion");

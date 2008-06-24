@@ -13,7 +13,6 @@ Description: Generates the Manager base class for NHibernate.
 <%@ Import Namespace="System.Collections.Generic" %>
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using NHibernate;
 using <%= GetCriterionNamespace(NHibVersion) %>;

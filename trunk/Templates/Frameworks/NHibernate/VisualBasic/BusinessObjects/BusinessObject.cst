@@ -7,8 +7,9 @@ Description: Generates a Business Object for NHibernate.
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
-<%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2. Namespaces" Description="The desired Namespace for the Business Objects." %>
-<%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="2. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
+<%@ Property Name="VsVersion" Type="VisualStudioVersion" Default="VS_2008" Optional="False" Category="2. Versions" Description="The version of Visual Studio to generate for." %>
+<%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="3. Namespaces" Description="The desired Namespace for the Business Objects." %>
+<%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="3. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
@@ -119,15 +120,17 @@ Namespace NHibernate.Generated.BusinessObjects
 				Return <%= GetPrivateVariableName(mcs.Name) %>
 			End Get
 			Set
-				On<%= GetPropertyName(mcs.Name) %>Changing()
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs.Name) %>Changing()<% End If %>
 				<%= GetPrivateVariableName(mcs.Name) %> = value
-				On<%= GetPropertyName(mcs.Name) %>Changed()
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs.Name) %>Changed()<% End If %>
 			End Set
 		End Property
+		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
 		Partial Private Sub On<%= GetPropertyName(mcs.Name) %>Changing()
 		End Sub
 		Partial Private Sub On<%= GetPropertyName(mcs.Name) %>Changed()
 		End Sub
+		<% End If %>
 		
 		<% Next %>
 		<% End If %>
@@ -139,15 +142,17 @@ Namespace NHibernate.Generated.BusinessObjects
 				Return <%= GetPrivateVariableName(mcs.Name) %>
 			End Get
 			Set
-				On<%= GetPropertyName(mcs.Name) %>Changing()
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs.Name) %>Changing()<% End If %>
 				<%= GetPrivateVariableName(mcs.Name) %> = value
-				On<%= GetPropertyName(mcs.Name) %>Changed()
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs.Name) %>Changed()<% End If %>
 			End Set
 		End Property
+		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
 		Partial Private Sub On<%= GetPropertyName(mcs.Name) %>Changing()
 		End Sub
 		Partial Private Sub On<%= GetPropertyName(mcs.Name) %>Changed()
 		End Sub
+		<% End If %>
 		<% Next %>
 		
 		<% 'Many-To-One %>
@@ -159,15 +164,17 @@ Namespace NHibernate.Generated.BusinessObjects
 				Return <%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>
 			End Get
 			Set
-				On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing()
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing()<% End If %>
 				<%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %> = value
-				On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed()
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed()<% End If %>
 			End Set
 		End Property
+		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
 		Partial Private Sub On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing()
 		End Sub
 		Partial Private Sub On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed()
 		End Sub
+		<% End If %>
 		<% End If %>
 		<% Next %>
 		<% Next %>
@@ -184,15 +191,17 @@ Namespace NHibernate.Generated.BusinessObjects
 				Return <%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %>
 			End Get
 			Set
-				On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing()
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing()<% End If %>
 				<%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %> = value
-				On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed()
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed()<% End If %>
 			End Set
 		End Property
+		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
 		Partial Private Sub On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing()
 		End Sub
 		Partial Private Sub On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed()
 		End Sub
+		<% End If %>
 		
 		<% End If %>
 		<% Else %>
@@ -203,15 +212,17 @@ Namespace NHibernate.Generated.BusinessObjects
 				Return <%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %>
 			End Get
 			Set
-				On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing()
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing()<% End If %>
 				<%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %> = value
-				On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed()
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed()<% End If %>
 			End Set
 		End Property
+		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
 		Partial Private Sub On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing()
 		End Sub
 		Partial Private Sub On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed()
 		End Sub
+		<% End If %>
 		
 		<% End If %>
 		<% End If %>

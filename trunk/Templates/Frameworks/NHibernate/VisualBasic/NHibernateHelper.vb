@@ -10,6 +10,10 @@ Public Enum NHibernateVersion
     v1_2
     v2_0
 End Enum
+Public Enum VisualStudioVersion
+	VS_2005
+	VS_2008
+End Enum
 
 Public Class NHibernateHelper
     Inherits CodeTemplate
