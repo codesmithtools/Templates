@@ -10,7 +10,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 
-<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="OnePointTwo" Optional="False" Category="2. NHibernate" Description="The version of NHibernate to generate for." %>
+<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v1_2" Optional="False" Category="2. NHibernate" Description="The version of NHibernate to generate for." %>
 
 <%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="3a. Assembly" Description="The name of the Assembly that will contain the business objects." %>
 
@@ -138,7 +138,7 @@ Private Sub RenderBusinessObjects(ByVal table As TableSchema)
 	businessObject.ExcludedTables = Me.ExcludedTables
 
 	businessObject.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, editableFileName)
+	RegisterOutputFile(fileName, Nothing)
 End Sub
 Private Sub RenderManagerObjects(ByVal table As TableSchema)
 	Dim fileName As String = [String].Format("{0}{1}Manager.Generated.vb", GetFolder(ManagerNamespace), GetClassName(table.Name))
@@ -166,7 +166,7 @@ Private Sub RenderManagerObjects(ByVal table As TableSchema)
 	managerObject.ExcludedTables = Me.ExcludedTables
 
 	managerObject.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, editableFileName)
+	RegisterOutputFile(fileName, Nothing)
 End Sub
 Private Sub RenderManagerFactory()
 	Dim fileName As String = [String].Format("{0}ManagerFactory.vb", GetFolder(ManagerNamespace))
@@ -209,7 +209,7 @@ Private Sub RenderUnitTests(ByVal table As TableSchema)
 	unitTests.UnitTestNamespace = Me.UnitTestNamespace
 
 	unitTests.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, editableFileName)
+	RegisterOutputFile(fileName, Nothing)
 End Sub
 
 Private Sub RegisterOutputFile(ByVal fileName As String, ByVal dependentUpon As String, ParamArray metaData As Object())

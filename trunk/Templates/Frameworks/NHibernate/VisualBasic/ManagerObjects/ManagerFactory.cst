@@ -35,19 +35,19 @@ Namespace <%= ManagerNamespace %>
 	Public Class ManagerFactory
 		Implements IManagerFactory
 		
-#region Constructors
+#region "Constructors"
 		Public Sub New()
 		End Sub
 #End Region
 
-#region Get Methods
+#region "Get Methods"
 
 		<% For Each table As TableSchema In SourceDatabase.Tables %>
 		<% If Not ExcludedTables.Contains(table) AndAlso Not IsManyToMany(table) Then %>
-		Public Function Get<%= GetClassName(table.Name) %>Manager() As I<%= GetClassName(table.Name) %>Manager
+		Public Function Get<%= GetClassName(table.Name) %>Manager() As I<%= GetClassName(table.Name) %>Manager Implements IManagerFactory.Get<%= GetClassName(table.Name) %>Manager
 			Return New <%= GetClassName(table.Name) %>Manager()
 		End Function
-		Public Function Get<%= GetClassName(table.Name) %>Manager(ByVal session As INHibernateSession) As I<%= GetClassName(table.Name) %>Manager
+		Public Function Get<%= GetClassName(table.Name) %>Manager(ByVal session As INHibernateSession) As I<%= GetClassName(table.Name) %>Manager Implements IManagerFactory.Get<%= GetClassName(table.Name) %>Manager
 			Return New <%= GetClassName(table.Name) %>Manager(session)
 		End Function
 		<% End If %>

@@ -37,7 +37,7 @@ Namespace <%= BaseNamespace %>
 	''' </summary>
 	Public Class NHibernateSessionManager
 		Implements INHibernateSessionManager
-		#region Static Content
+		#region "Static Content"
 
 		Private Shared _nHibernateSessionManager As INHibernateSessionManager = Nothing
 		''' <summary>
@@ -46,13 +46,13 @@ Namespace <%= BaseNamespace %>
 		''' </summary>
 		Public Shared Property Instance() As INHibernateSessionManager
 			Get
-				If _nHibernateSessionManager = Nothing Then
+				If _nHibernateSessionManager Is Nothing Then
 					_nHibernateSessionManager = New NHibernateSessionManager()
 				End If
 				Return _nHibernateSessionManager
 			End Get
 			Set
-				If _nHibernateSessionManager <> Nothing Then
+				If _nHibernateSessionManager IsNot Nothing Then
 					Throw New Exception("Cannot set Instance after it has been initialized.")
 				End If
 				_nHibernateSessionManager = value
@@ -60,20 +60,20 @@ Namespace <%= BaseNamespace %>
 		End Property
 #End Region
 
-		#region Declarations
+		#region "Declarations"
 
 		Private _sessionFactory As ISessionFactory = Nothing
 		Private Const _sessionContextKey As String = "NHibernateSession-ContextKey"
 #End Region
 
-		#region Constructors & Finalizers
+		#region "Constructors & Finalizers"
 
 		''' <summary>
 		''' This will load the NHibernate settings from the App.config.
 		''' Note: This can/should be expanded to support multiple databases.
 		''' </summary>
 		Private Sub New()
-			_sessionFactory = New NHibernate.Cfg.Configuration().Configure().BuildSessionFactory()
+			_sessionFactory = New Configuration().Configure().BuildSessionFactory()
 		End Sub
 		Protected Overrides Sub Finalize()
 			Try
@@ -84,10 +84,10 @@ Namespace <%= BaseNamespace %>
 		End Sub
 #End Region
 
-		#region IDisposable
+		#region "IDisposable"
 
 		Private _isDisposed As Boolean = False
-		Public Sub Dispose()
+		Public Sub Dispose() Implements IDisposable.Dispose
 			Dispose(False)
 		End Sub
 		Private Sub Dispose(ByVal finalizing As Boolean)
@@ -105,12 +105,12 @@ Namespace <%= BaseNamespace %>
 		End Sub
 #End Region
 
-		#region Methods
+		#region "Methods"
 
-		Public Function CreateSession() As INHibernateSession
+		Public Function CreateSession() As INHibernateSession Implements INHibernateSessionManager.CreateSession
 			Return New NHibernateSession(CreateISession())
 		End Function
-		Public Function CreateISession() As ISession
+		Public Function CreateISession() As ISession Implements INHibernateSessionManager.CreateISession
 			Dim iSession As ISession
 			SyncLock _sessionFactory
 				iSession = _sessionFactory.OpenSession()
@@ -119,21 +119,21 @@ Namespace <%= BaseNamespace %>
 		End Function
 #End Region
 
-		#region Properties
+		#region "Properties"
 
-		Public ReadOnly Property Session() As INHibernateSession
+		Public ReadOnly Property Session() As INHibernateSession Implements INHibernateSessionManager.Session
 			Get
-				Dim session As INHibernateSession = ContextSession
+				Dim cSession As INHibernateSession = ContextSession
 
 				' If the thread does not yet have a session, create one.
-				If session = Nothing Then
-					session = CreateSession()
+				If cSession Is Nothing Then
+					cSession = CreateSession()
 
 					' Save to CallContext.
-					ContextSession = session
+					ContextSession = cSession
 				End If
 
-				Return session
+				Return cSession
 			End Get
 		End Property
 		Private Property ContextSession() As INHibernateSession
@@ -154,7 +154,7 @@ Namespace <%= BaseNamespace %>
 		End Property
 		Private ReadOnly Property IsWebContext() As Boolean
 			Get
-				Return (System.Web.HttpContext.Current <> Nothing)
+				Return (System.Web.HttpContext.Current IsNot Nothing)
 			End Get
 		End Property
 #End Region

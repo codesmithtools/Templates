@@ -9,8 +9,8 @@ using SchemaExplorer;
 
 public enum NHibernateVersion
 {
-    OnePointTwo,
-    TwoPointZero
+	v1_2,
+	v2_0
 }
 
 public class NHibernateHelper : CodeTemplate
@@ -19,15 +19,14 @@ public class NHibernateHelper : CodeTemplate
 	{
 		switch(version)
 		{
-			case NHibernateVersion.OnePointTwo:
-				return "NHibernate.Expression";
-					
-			case NHibernateVersion.TwoPointZero:
+			case NHibernateVersion.v1_2:
 				return "NHibernate.Criterion";
+					
+			case NHibernateVersion.v2_0:
+				return "NHibernate.Expression";
 				
 			default:
 				throw new Exception("Invalid NHibernateVersion");
-			
 		}
 	}
 	

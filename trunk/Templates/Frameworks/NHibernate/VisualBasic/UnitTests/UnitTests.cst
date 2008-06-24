@@ -32,7 +32,7 @@ Namespace <%= UnitTestNamespace %>
 		Protected manager As I<%= GetClassName(SourceTable.Name) %>Manager
 
 		Public Sub New()
-			manager = managerFactory.GetAccountManager()
+			manager = managerFactory.Get<%= GetClassName(SourceTable.Name) %>Manager()
 		End Sub
 
 		Protected Function CreateNew<%= GetClassName(SourceTable.Name) %>() As <%= GetClassName(SourceTable.Name) %>
@@ -54,9 +54,9 @@ Namespace <%= UnitTestNamespace %>
 			
 			Dim <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager As I<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager = managerFactory.Get<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager()
 			<% If Not IsPrimaryKeyColumn(mcs, SourceTable) Then %>
-			entity.<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)[0];
+			entity.<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)(0)
 			<% Else %>
-			entity.<%= GetPropertyName(mcs.Name) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)(0).Id;
+			entity.<%= GetPropertyName(mcs.Name) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)(0).Id
 			<% End If %>
 			<% End If %>
 			<% Next %>
@@ -101,13 +101,13 @@ Namespace <%= UnitTestNamespace %>
 		Public Sub Update()
 			Try
 				Dim entityA As <%= GetClassName(SourceTable.Name) %> = GetFirst<%= GetClassName(SourceTable.Name) %>()
-				entityA.Email = "ABC"
+				entityA.<%= GetPropertyName(SourceTable.NonKeyColumns(0).Name) %> = "ABC"
 
 				manager.Update(entityA)
 
 				Dim entityB As <%= GetClassName(SourceTable.Name) %> = manager.GetById(entityA.Id)
 
-				Assert.AreEqual(entityA.Email, entityB.Email)
+				Assert.AreEqual(entityA.<%= GetPropertyName(SourceTable.NonKeyColumns(0).Name) %>, entityB.<%= GetPropertyName(SourceTable.NonKeyColumns(0).Name) %>)
 			Catch ex As Exception
 				Assert.Fail(ex.ToString())
 			End Try
