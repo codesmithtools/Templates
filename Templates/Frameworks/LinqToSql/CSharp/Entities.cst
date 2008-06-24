@@ -8,8 +8,8 @@
 <%@ Assembly Name="Microsoft.Build.Utilities" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Name="Dbml" Path="Internal" %>
-<%@ Assembly Name="Generator" Path="Internal" %>
+<%@ Assembly Name="Dbml" Path="..\Common" %>
+<%@ Assembly Name="Generator" Path="..\Common" %>
 
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.IO" %>

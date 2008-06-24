@@ -1,7 +1,7 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" 
     Description="Linq to Sql Entity Class." %>
     
-<%@ Assembly Name="Dbml" %>
+<%@ Assembly Name="Dbml" Path="..\..\Common" %>
 
 <%@ Import Namespace="System.Text" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
