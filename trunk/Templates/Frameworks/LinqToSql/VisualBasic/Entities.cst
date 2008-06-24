@@ -1,0 +1,184 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="XML" 
+    Description="Generate Linq to Sql Class File" 
+    Debug="True" OutputType="None" %>
+
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="Microsoft.Build.Engine" %>
+<%@ Assembly Name="Microsoft.Build.Utilities" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Dbml" Path="Internal" %>
+<%@ Assembly Name="Generator" Path="Internal" %>
+
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
+
+<%@ Property Category="2.Class" Name="OutputDirectory" 
+    Type="System.String" Default="" Optional="True" 
+    Description="The folder to save the generated files." 
+    Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Category="1.Mapping" Name="DbmlFile" 
+    Type="System.String" Default="Database.dbml" Optional="False" 
+    Description="The full path to the mapping file." 
+    Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Category="2.Class" Name="IncludeDataContract"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Include WCF DataContract attributes." %>
+
+<%@ Register Name="DataContextGeneratedClass" 
+    Template="Internal\DataContext.Generated.cst" 
+    MergeProperties="False" %>
+
+<%@ Register Name="DataContextEditableClass" 
+    Template="Internal\DataContext.Editable.cst" 
+    MergeProperties="False" %>
+
+<%@ Register Name="EntityBaseClass" 
+    Template="Internal\Entity.Base.cst" 
+    MergeProperties="False" %>
+
+<%@ Register Name="EntityGeneratedClass" 
+    Template="Internal\Entity.Generated.cst" 
+    MergeProperties="False" %>
+
+<%@ Register Name="EntityEditableClass" 
+    Template="Internal\Entity.Editable.cst" 
+    MergeProperties="False" %>
+
+
+
+<script runat="template">
+    Private generatedEntities As New List(Of String)()
+Public Sub Generate()
+
+    If Not Directory.Exists(Me.OutputDirectory) Then
+        Directory.CreateDirectory(Me.OutputDirectory)
+    End If
+    
+    Dim database As Database = Dbml.FromFile(Me.DbmlFile)
+    If database Is Nothing Then
+        Throw New Exception("Error loading Dbml file.")
+    End If
+    
+    Dbml.FillInDefaults(database)
+    
+    Me.Progress.MaximumValue = (database.Tables.Count + 1) * 2
+    Me.Progress.[Step] = 1
+    
+    CreateEntityBaseClass(database)
+    CreateDataContextClass(database)
+    CreateEntityClasses(database)
+End Sub
+
+Public Sub CreateEntityBaseClass(ByVal database As Database)
+    Dim fileName As String = database.EntityBase + ".vb"
+    fileName = Path.Combine(OutputDirectory, fileName)
+    
+    If File.Exists(fileName) Then
+        Return
+    End If
+    
+    Dim t As EntityBaseClass = Me.Create(Of EntityBaseClass)()
+    t.ClassNamespace = database.EntityNamespace
+    t.ClassName = database.EntityBase
+    t.RenderToFile(fileName, True)
+End Sub
+
+Public Sub CreateDataContextClass(ByVal database As Database)
+    Dim t As DataContextGeneratedClass = Me.Create(Of DataContextGeneratedClass)()
+    t.Database = database
+    
+    Dim p As DataContextEditableClass = Me.Create(Of DataContextEditableClass)()
+    p.Database = database
+    
+    Dim contextClass As String = CommonUtility.GetClassName(database.[Class])
+    
+    Dim parentFileName As String = contextClass + ".vb"
+    parentFileName = Path.Combine(OutputDirectory, parentFileName)
+    
+    If Not File.Exists(parentFileName) Then
+        Response.WriteLine(parentFileName)
+        p.RenderToFile(parentFileName, True)
+    End If
+    
+    Dim fileName As String = contextClass + ".Generated.vb"
+    fileName = Path.Combine(OutputDirectory, fileName)
+    
+    Debug.WriteLine(String.Format("Creating DataContext Class '{0}' ...", contextClass))
+    
+    Response.WriteLine(fileName)
+    t.RenderToFile(fileName, parentFileName, True)
+    
+    Me.Progress.PerformStep()
+End Sub
+
+Public Sub CreateEntityClasses(ByVal database As Database)
+    Dim t As EntityGeneratedClass = Me.Create(Of EntityGeneratedClass)()
+    t.Database = database
+    t.IncludeDataContract = Me.IncludeDataContract
+    
+    Dim p As EntityEditableClass = Me.Create(Of EntityEditableClass)()
+    p.Database = database
+    
+    For Each tableMap As Table In database.Tables
+        Dim watch As Stopwatch = Stopwatch.StartNew()
+        
+        Debug.WriteLine(String.Format("Creating Entity Class '{0}' ...", tableMap.Type.Name))
+        
+        t.TableName = tableMap.Name
+        t.EntityBase = database.EntityBase
+        
+        CreateEntity(t, p, tableMap.Type)
+        
+        Debug.WriteLine(String.Format("Created '{0}' in {1} ms.", tableMap.Type.Name, watch.Elapsed.TotalMilliseconds.ToString()))
+        
+        Me.Progress.PerformStep()
+    Next
+    
+    For Each [function] As [Function] In database.Functions
+        For Each resultType As LinqToSqlShared.DbmlObjectModel.Type In [function].Types
+            If Not generatedEntities.Contains(resultType.Name) Then
+                t.TableName = String.Empty
+                t.EntityBase = String.Empty
+                CreateEntity(t, p, resultType)
+            End If
+        Next
+    Next
+End Sub
+
+Public Sub CreateEntity(ByVal entityClass As EntityGeneratedClass, ByVal partialClass As EntityEditableClass, ByVal type As LinqToSqlShared.DbmlObjectModel.Type)
+    Dim className As String = type.Name
+    generatedEntities.Add(className)
+    
+    Dim parentFileName As String = className + ".vb"
+    parentFileName = Path.Combine(OutputDirectory, parentFileName)
+    
+    If Not File.Exists(parentFileName) Then
+        partialClass.Type = type
+        Response.WriteLine(parentFileName)
+        partialClass.RenderToFile(parentFileName, False)
+    End If
+    
+    Dim fileName As String = className + ".Generated.vb"
+    fileName = Path.Combine(OutputDirectory, fileName)
+    
+    Response.WriteLine(fileName)
+    entityClass.Type = type
+    entityClass.RenderToFile(fileName, parentFileName, True)
+    
+    For Each childType As LinqToSqlShared.DbmlObjectModel.Type In type.SubTypes
+        entityClass.TableName = String.Empty
+        entityClass.EntityBase = type.Name
+        CreateEntity(entityClass, partialClass, childType)
+    Next
+End Sub
+
+</script>
+Generating Linq to Sql Entities ...
+<% Generate() %>
