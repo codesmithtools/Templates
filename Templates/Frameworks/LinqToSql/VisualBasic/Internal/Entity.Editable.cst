@@ -1,0 +1,41 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True" 
+    Description="Linq to Sql Entity Class." %>
+    
+<%@ Assembly Name="Dbml" %>
+
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
+
+<%@ Property Category="1.Mapping" Name="Database" 
+    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
+    Description="Database instance. Must be set by parent template" %>
+
+<%@ Property Category="1.Mapping" Name="Type" 
+    Type="LinqToSqlShared.DbmlObjectModel.Type" Optional="False" 
+    Description="The Type instance for this entity. Must be set by parent template" %>
+
+Imports System
+Imports System.Linq
+Imports System.Collections.Generic
+Imports System.Text
+
+Namespace <%= Database.EntityNamespace %>
+    <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>
+        #Region "Extensibility Method Definitions"
+        'Partial Sub OnLoaded()
+        '
+        '    
+        'End Sub
+        
+        'Partial Sub OnValidate()
+        '
+        '    
+        'End Sub
+        
+        'Partial Sub OnCreated()
+        '
+        '    
+        'End Sub
+        #End region
+    End Class
+End Namespace

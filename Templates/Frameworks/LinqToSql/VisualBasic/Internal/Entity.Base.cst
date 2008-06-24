@@ -1,0 +1,61 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True" 
+    Description="Linq to Sql Entity Class." %>
+
+<%@ Property Category="2.Class" Name="ClassNamespace" 
+    Type="System.String" Default="Project.Core.Data" Optional="False" 
+    Description="The namespace to use for the generated class files."%>
+
+<%@ Property Category="2.Class" Name="ClassName" 
+    Type="System.String" Default="LinqEntityBase" Optional="False" 
+    Description="The names of the class."%>
+
+Imports System
+Imports System.ComponentModel
+
+Namespace <%= ClassNamespace %>
+    ''' <summary>
+    ''' A base class for Linq entities that implements notification events.
+    ''' </summary>
+    <Serializable> _
+    Public MustInherit Class <%= ClassName %> 
+       Implements INotifyPropertyChanging
+       Implements INotifyPropertyChanged
+        ''' <summary>
+        ''' Initializes a new instance of the <see cref="<%= ClassName %>"/> class.
+        ''' </summary>
+        Protected Sub New()
+        End Sub
+
+        #Region "Notification Events"
+
+        ''' <summary>
+        ''' Implements a PropertyChanged event.
+        ''' </summary>
+        Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
+
+        ''' <summary>
+        ''' Raise the PropertyChanged event for a specific property.
+        ''' </summary>
+        ''' <param name="propertyName">Name of the property that has changed.</param>
+        <EditorBrowsable(EditorBrowsableState.Advanced)> _
+        Protected Sub OnPropertyChanged(ByVal propertyName As String)
+            RaiseEvent    PropertyChanged(Me, new PropertyChangedEventArgs(propertyName))
+        END Sub
+
+
+        ''' <summary>
+        ''' Implements a PropertyChanging event.
+        ''' </summary>
+        Public Event PropertyChanging As PropertyChangingEventHandler Implements INotifyPropertyChanging.PropertyChanging
+
+        ''' <summary>
+        ''' Raise the PropertyChanging event for a specific property.
+        ''' </summary>
+        ''' <param name="propertyName">Name of the property that is changing.</param>
+        <EditorBrowsable(EditorBrowsableState.Advanced)> _
+        Protected Sub OnPropertyChanging(ByVal propertyName AS String)
+            RaiseEvent PropertyChanging(Me, new PropertyChangingEventArgs(propertyName))
+        End Sub
+        #End Region
+    END Class
+End Namespace
