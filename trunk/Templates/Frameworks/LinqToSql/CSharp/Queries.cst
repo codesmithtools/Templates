@@ -30,7 +30,7 @@
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
 <%@ Property Category="3.Query" Name="QueryDirectory" 
-    Type="System.String" Default="" Optional="false" 
+    Type="System.String" Default="Queries" Optional="false" 
     Description="The folder to save the generated query extension files." 
     Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
@@ -61,6 +61,8 @@
         Database database = Dbml.FromFile(this.DbmlFile);
         if (database == null)
             throw new Exception("Error loading Dbml file.");
+        
+        Dbml.FillInDefaults(database);
 
         DataManager mgrMap = ManagerGenerator.Create(SourceDatabase, database);
         
