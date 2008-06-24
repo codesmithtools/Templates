@@ -3,7 +3,7 @@ Name: NHibernateMaster.cst
 Author: Tom DuPont
 Description: Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file.
 --%>
-<%@ CodeTemplate Language="C#" Src="NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="C#" OutputType="None" Debug="False" Description="Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file." %>
+<%@ CodeTemplate Language="C#" Src="Helpers\NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="C#" OutputType="None" Debug="False" Description="Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file." %>
 
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="1a. Source Database" Description="The source database to generate from." %>
 
