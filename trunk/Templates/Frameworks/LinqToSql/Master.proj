@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Zip" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
-  
+
   <PropertyGroup>
     <Major>1</Major>
     <Minor>3</Minor>
@@ -9,9 +9,13 @@
     <Revision>1</Revision>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <BuildConfiguration>Release</BuildConfiguration>
+  </PropertyGroup>
+
   <ItemGroup>
     <SvnExclude Include="**\.svn\**" />
-    
+
     <DefaultExclude Include="@(SvnExclude)" />
     <DefaultExclude Include="**\obj\**" />
     <DefaultExclude Include="**\bin\**" />
@@ -19,10 +23,11 @@
     <DefaultExclude Include="*.proj" />
     <DefaultExclude Include="*.dbml" />
     <DefaultExclude Include="*.zip" />
-    
+    <DefaultExclude Include="*.resharper" />
+    <DefaultExclude Include="*.user" />
     <ZipFiles Include="**\*.*" Exclude="@(DefaultExclude)" />
   </ItemGroup>
-  
+
   <Target Name="Version">
     <SvnVersion LocalPath="$(MSBuildProjectDirectory)">
       <Output TaskParameter="Revision" PropertyName="Revision" />
@@ -31,8 +36,13 @@
     <Message Text="CodeSmith Revision: $(Revision)"/>
   </Target>
 
-  <Target Name="Zip" DependsOnTargets="Version">
-    <Zip Files="@(ZipFiles)" 
+  <Target Name="Compile">
+    <MSBuild Projects="Source\Plinqo.sln"
+             Properties="Configuration=$(BuildConfiguration)"/>
+  </Target>
+
+  <Target Name="Zip" DependsOnTargets="Version;Compile">
+    <Zip Files="@(ZipFiles)"
          ZipFileName="plinqo-v$(Major).$(Minor).$(Revision).zip" />
   </Target>
 </Project>
