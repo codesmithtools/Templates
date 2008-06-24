@@ -84,7 +84,9 @@
         CreateDataContextManagerClass(database, databaseManager);
         CreateEntityManagerClasses(database, databaseManager);
         
-        this.RegisterReference("CodeSmith.Data");
+        this.RegisterReference(Path.Combine(
+            this.CodeTemplateInfo.DirectoryName,
+            @"CodeSmith.Data\bin\Debug\CodeSmith.Data.dll"));
     }
     
     public void CreateEntityManagerClasses(Database database, DataManager dataManager)
