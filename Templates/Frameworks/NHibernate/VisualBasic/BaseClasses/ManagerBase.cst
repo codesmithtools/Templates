@@ -4,7 +4,7 @@ Author: Tom DuPont
 Description: Generates the Manager base class for NHibernate.
 --%>
 <%@ CodeTemplate Language="VB" Src="..\NHibernateHelper.vb" Inherits="NHibernateHelper" TargetLanguage="VB" Debug="False" Description="Generates the Manager base class for NHibernate." %>
-<%@ Property Name="NHibVersion" Type="NHibernateVersion" Default="OnePointTwo" Optional="False" Category="1. NHibernate" Description="The version of NHibernate to generate for." %>
+<%@ Property Name="NHibVersion" Type="NHibernateVersion" Default="v1_2" Optional="False" Category="1. NHibernate" Description="The version of NHibernate to generate for." %>
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="2. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
@@ -16,16 +16,12 @@ Imports System.Collections.Generic
 Imports System.Linq
 Imports System.Text
 Imports NHibernate
-<% If Me.NHibVersion = NHibernateVersion.OnePointTwo Then %>
-Imports NHibernate.Expression
-<% Else %>
-Imports NHibernate.Criterion
-<% End If %>
+Imports <%= GetCriterionNamespace(NHibVersion) %>
 
 Namespace <%= BaseNamespace %>
-	Public Interface IManagerBase(Of T, IdT)
+	Public Interface IManagerBase(Of T, TKey)
 		' Get Methods
-		Function GetById(ByVal Id As IdT) As T
+		Function GetById(ByVal Id As TKey) As T
 		Function GetAll() As IList(Of T)
 		Function GetAll(ByVal maxResults As Integer) As IList(Of T)
 		Function GetByCriteria(ParamArray criterionList As ICriterion()) As IList(Of T)
@@ -44,39 +40,39 @@ Namespace <%= BaseNamespace %>
 		ReadOnly Property Session() As INHibernateSession
 	End Interface
 
-	Public MustInherit Partial Class ManagerBase(Of T, IdT)
-		Implements IManagerBase(Of T, IdT)
+	Public MustInherit Partial Class ManagerBase(Of T, TKey)
+		Implements IManagerBase(Of T, TKey)
 #region "Declarations"
 
-		Protected session As INHibernateSession
+		Protected _session As INHibernateSession
 		Protected Const defaultMaxResults As Integer = 100
 #End Region
 
 #region "Constructors"
 
 		Public Sub New()
-			session = NHibernateSessionManager.Instance.Session
+			_session = NHibernateSessionManager.Instance.Session
 		End Sub
 		Public Sub New(ByVal session As INHibernateSession)
-			Me.session = session
+			Me._session = session
 		End Sub
 #End Region
 
 #region "Get Methods"
 
-		Public Overridable Function GetById(ByVal id As IdT) As T Implements IManagerBase(Of T, IdT).GetById
+		Public Overridable Function GetById(ByVal id As TKey) As T Implements IManagerBase(Of T, TKey).GetById
 			Return DirectCast(Session.GetISession().[Get](GetType(T), id), T)
 		End Function
-		Public Function GetAll() As IList(Of T) Implements IManagerBase(Of T, IdT).GetAll
+		Public Function GetAll() As IList(Of T) Implements IManagerBase(Of T, TKey).GetAll
 			Return GetByCriteria(defaultMaxResults)
 		End Function
-		Public Function GetAll(ByVal maxResults As Integer) As IList(Of T) Implements IManagerBase(Of T, IdT).GetAll
+		Public Function GetAll(ByVal maxResults As Integer) As IList(Of T) Implements IManagerBase(Of T, TKey).GetAll
 			Return GetByCriteria(maxResults)
 		End Function
-		Public Function GetByCriteria(ParamArray criterionList As ICriterion()) As IList(Of T) Implements IManagerBase(Of T, IdT).GetByCriteria
+		Public Function GetByCriteria(ParamArray criterionList As ICriterion()) As IList(Of T) Implements IManagerBase(Of T, TKey).GetByCriteria
 			Return GetByCriteria(defaultMaxResults, criterionList)
 		End Function
-		Public Function GetByCriteria(ByVal maxResults As Integer, ParamArray criterionList As ICriterion()) As IList(Of T) Implements IManagerBase(Of T, IdT).GetByCriteria
+		Public Function GetByCriteria(ByVal maxResults As Integer, ParamArray criterionList As ICriterion()) As IList(Of T) Implements IManagerBase(Of T, TKey).GetByCriteria
 			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(T)).SetMaxResults(maxResults)
 
 			For Each criterion As ICriterion In criterionList
@@ -85,7 +81,7 @@ Namespace <%= BaseNamespace %>
 
 			Return criteria.List(Of T)()
 		End Function
-		Public Function GetByExample(ByVal exampleObject As T, ParamArray excludePropertyList As String()) As IList(Of T) Implements IManagerBase(Of T, IdT).GetByExample
+		Public Function GetByExample(ByVal exampleObject As T, ParamArray excludePropertyList As String()) As IList(Of T) Implements IManagerBase(Of T, TKey).GetByExample
 			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(T))
 			Dim example As Example = Example.Create(exampleObject)
 
@@ -101,19 +97,19 @@ Namespace <%= BaseNamespace %>
 
 #region "CRUD Methods"
 
-		Public Function Save(ByVal entity As T) As Object Implements IManagerBase(Of T, IdT).Save
+		Public Function Save(ByVal entity As T) As Object Implements IManagerBase(Of T, TKey).Save
 			Return Session.GetISession().Save(entity)
 		End Function
-		Public Sub SaveOrUpdate(ByVal entity As T) Implements IManagerBase(Of T, IdT).SaveOrUpdate
+		Public Sub SaveOrUpdate(ByVal entity As T) Implements IManagerBase(Of T, TKey).SaveOrUpdate
 			Session.GetISession().SaveOrUpdate(entity)
 		End Sub
-		Public Sub Delete(ByVal entity As T) Implements IManagerBase(Of T, IdT).Delete
+		Public Sub Delete(ByVal entity As T) Implements IManagerBase(Of T, TKey).Delete
 			Session.GetISession().Delete(entity)
 		End Sub
-		Public Sub Update(ByVal entity As T) Implements IManagerBase(Of T, IdT).Update
+		Public Sub Update(ByVal entity As T) Implements IManagerBase(Of T, TKey).Update
 			Session.GetISession().Update(entity)
 		End Sub
-		Public Sub Refresh(ByVal entity As T) Implements IManagerBase(Of T, IdT).Refresh
+		Public Sub Refresh(ByVal entity As T) Implements IManagerBase(Of T, TKey).Refresh
 			Session.GetISession().Refresh(entity)
 		End Sub
 #End Region
@@ -126,14 +122,14 @@ Namespace <%= BaseNamespace %>
 		''' ...use the the NHibernateSession methods to control Transactions (unless you specifically want nested transactions).
 		''' ...do not directly expose the Flush method (to prevent open transactions from locking your DB).
 		''' </summary>
-		Public ReadOnly Property Type() As System.Type Implements IManagerBase(Of T, IdT).Type
+		Public ReadOnly Property Type() As System.Type Implements IManagerBase(Of T, TKey).Type
 			Get
 				Return GetType(T)
 			End Get
 		End Property
-		Public ReadOnly Property Session() As INHibernateSession Implements IManagerBase(Of T, IdT).Session
+		Public ReadOnly Property Session() As INHibernateSession Implements IManagerBase(Of T, TKey).Session
 			Get
-				Return session
+				Return _session
 			End Get
 		End Property
 #End Region

@@ -4,7 +4,7 @@ Author: Tom DuPont
 Description: Generates the Manager base class for NHibernate.
 --%>
 <%@ CodeTemplate Language="C#" Src="..\NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="C#" Debug="False" Description="Generates the Manager base class for NHibernate." %>
-<%@ Property Name="NHibVersion" Type="NHibernateVersion" Default="OnePointTwo" Optional="False" Category="1. NHibernate" Description="The version of NHibernate to generate for." %>
+<%@ Property Name="NHibVersion" Type="NHibernateVersion" Default="v1_2" Optional="False" Category="1. NHibernate" Description="The version of NHibernate to generate for." %>
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="2. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
@@ -16,18 +16,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NHibernate;
-<% if(this.NHibVersion == NHibernateVersion.OnePointTwo) { %>
-using NHibernate.Expression;
-<% } else { %>
-using NHibernate.Criterion;
-<% } %>
+using <%= GetCriterionNamespace(NHibVersion) %>;
 
 namespace <%= BaseNamespace %>
 {
-    public interface IManagerBase<T, IdT>
+    public interface IManagerBase<T, TKey>
     {
         // Get Methods
-        T GetById(IdT Id);
+        T GetById(TKey Id);
         IList<T> GetAll();
         IList<T> GetAll(int maxResults);
         IList<T> GetByCriteria(params ICriterion[] criterionList);
@@ -46,7 +42,7 @@ namespace <%= BaseNamespace %>
         INHibernateSession Session { get; }
     }
 
-    public abstract partial class ManagerBase<T, IdT> : IManagerBase<T, IdT>
+    public abstract partial class ManagerBase<T, TKey> : IManagerBase<T, TKey>
     {
         #region Declarations
 
@@ -70,7 +66,7 @@ namespace <%= BaseNamespace %>
 
         #region Get Methods
 
-        public virtual T GetById(IdT id)
+        public virtual T GetById(TKey id)
         {
             return (T)Session.GetISession().Get(typeof(T), id);
         }

@@ -7,21 +7,21 @@ Imports CodeSmith.Engine
 Imports SchemaExplorer
 
 Public Enum NHibernateVersion
-    OnePointTwo
-    TwoPointZero
+    v1_2
+    v2_0
 End Enum
 
 Public Class NHibernateHelper
     Inherits CodeTemplate
     Public Function GetCriterionNamespace(ByVal version As NHibernateVersion) As String
         Select Case version
-            Case NHibernateVersion.OnePointTwo
+            Case NHibernateVersion.v1_2
                 Return "NHibernate.Expression"
-            Case NHibernateVersion.TwoPointZero
-
-                Return "NHibernate.Criterion"
+				
+            Case NHibernateVersion.v2_0
+				Return "NHibernate.Criterion"
+				
             Case Else
-
                 Throw New Exception("Invalid NHibernateVersion")
 
         End Select
@@ -37,14 +37,14 @@ Public Class NHibernateHelper
     End Function
 
     Public Function GetPrivateVariableName(ByVal name As String) As String
-        Return "_" + GetVariableName(name)
+        Return "p_" + GetVariableName(name)
     End Function
     Public Function GetPrivateVariableNamePlural(ByVal name As String) As String
         Return GetPrivateVariableName(GetNamePlural(name))
     End Function
 
     Public Function GetVariableName(ByVal name As String) As String
-        Return StringUtil.ToCamelCase(name)
+        Return "_" + StringUtil.ToCamelCase(name)
     End Function
     Public Function GetVariableNamePlural(ByVal name As String) As String
         Return GetVariableName(GetNamePlural(name))
@@ -229,7 +229,7 @@ Public Class NHibernateHelper
             If x > 0 Then
                 result.Append(", ")
             End If
-            result.Append([String].Format("{0}.Parse(keys[{1}])", mcsList(x).SystemType, x))
+            result.Append([String].Format("{0}.Parse(keys({1}))", mcsList(x).SystemType, x))
             System.Math.Max(System.Threading.Interlocked.Increment(x), x - 1)
         End While
         Return result.ToString()
