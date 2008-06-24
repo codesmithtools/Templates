@@ -64,6 +64,8 @@ public override void Render(TextWriter writer)
 		}
 	RenderBaseClasses();
 	RenderManagerFactory();
+	
+	RegisterReferences();
 }
 
 private void RenderBaseClasses()
@@ -225,7 +227,9 @@ private void RenderUnitTests(TableSchema table)
 }
 private void RegisterReferences()
 {
-	
+	this.RegisterReference(@"Resouces\NHibernate\NHibernate.dll");
+	this.RegisterReference(@"Resouces\NUnit\NUnit.Framework.dll");
+	this.RegisterReference(@"System.Web");
 }
 
 private void RegisterOutputFile(string fileName, string dependentUpon, params object[] metaData)
