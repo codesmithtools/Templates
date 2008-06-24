@@ -223,6 +223,10 @@ private void RenderUnitTests(TableSchema table)
 	unitTests.RenderToFile(fileName, strategy);
 	RegisterOutputFile(fileName, editableFileName);
 }
+private void RegisterReferences()
+{
+	
+}
 
 private void RegisterOutputFile(string fileName, string dependentUpon, params object[] metaData)
 {
