@@ -7,6 +7,7 @@ Description: Generates a Business Object for NHibernate.
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
+<%@ Property Name="VsVersion" Type="VisualStudioVersion" Default="VS_2008" Optional="False" Category="2. Versions" Description="The version of Visual Studio to generate for." %>
 <%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2. Namespaces" Description="The desired Namespace for the Business Objects." %>
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="2. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
@@ -115,13 +116,16 @@ namespace <%= BusinessNamespace %>
             get { return <%= GetPrivateVariableName(mcs.Name) %>; }
 			set
 			{
-				On<%= GetPropertyName(mcs.Name) %>Changing();
+				
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(mcs.Name) %>Changing();<% } %>
 				<%= GetPrivateVariableName(mcs.Name) %> = value;
-				On<%= GetPropertyName(mcs.Name) %>Changed();
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(mcs.Name) %>Changed();<% } %>
 			}
         }
+		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
 		partial void On<%= GetPropertyName(mcs.Name) %>Changing();
 		partial void On<%= GetPropertyName(mcs.Name) %>Changed();
+		<% } %>
 		
 		<% } %>
 		<% } %>
@@ -132,13 +136,15 @@ namespace <%= BusinessNamespace %>
             get { return <%= GetPrivateVariableName(column.Name) %>; }
 			set
 			{
-				On<%= GetPropertyName(column.Name) %>Changing();
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(column.Name) %>Changing();<% } %>
 				<%= GetPrivateVariableName(column.Name) %> = value;
-				On<%= GetPropertyName(column.Name) %>Changed();
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(column.Name) %>Changed();<% } %>
 			}
         }
+		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
 		partial void On<%= GetPropertyName(column.Name) %>Changing();
 		partial void On<%= GetPropertyName(column.Name) %>Changed();
+		<% } %>
 		
 		<% } %>
 		<% // Many-To-One %>
@@ -151,13 +157,15 @@ namespace <%= BusinessNamespace %>
             get { return <%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>; }
 			set
 			{
-				On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing();
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing();<% } %>
 				<%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %> = value;
-				On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed();
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed();<% } %>
 			}
         }
+		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
 		partial void On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing();
 		partial void On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed();
+		<% } %>
 		
 		<% } %>
 		<% } %>
@@ -174,13 +182,15 @@ namespace <%= BusinessNamespace %>
             get { return <%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %>; }
             set
 			{
-				On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing();
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing();<% } %>
 				<%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %> = value;
-				On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed();
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed();<% } %>
 			}
         }
+		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
 		partial void On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing();
 		partial void On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed();
+		<% } %>
 		
 		<% } %>
 		<% } else { %>
@@ -191,13 +201,15 @@ namespace <%= BusinessNamespace %>
             get { return <%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %>; }
             set
 			{
-				On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing();
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing();<% } %>
 				<%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %> = value;
-				On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed();
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed();<% } %>
 			}
         }
+		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
 		partial void On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing();
 		partial void On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed();
+		<% } %>
 		
 		<% } %>
 		<% } %>

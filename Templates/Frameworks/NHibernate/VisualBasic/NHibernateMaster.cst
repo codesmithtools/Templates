@@ -10,7 +10,8 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 
-<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v1_2" Optional="False" Category="2. NHibernate" Description="The version of NHibernate to generate for." %>
+<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v1_2" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
+<%@ Property Name="VsVersion" Type="VisualStudioVersion" Default="VS_2008" Optional="False" Category="2. Versions" Description="The version of Visual Studio to generate for." %>
 
 <%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="3a. Assembly" Description="The name of the Assembly that will contain the business objects." %>
 
@@ -133,6 +134,7 @@ Private Sub RenderBusinessObjects(ByVal table As TableSchema)
 	Dim businessObject As New BusinessObjectTemplate()
 	businessObject.BusinessNamespace = Me.BusinessNamespace
 	businessObject.BaseNamespace = Me.BaseNamespace
+	businessObject.VsVersion = Me.VsVersion
 	businessObject.SourceTable = table
 	businessObject.TablePrefix = Me.TablePrefix
 	businessObject.ExcludedTables = Me.ExcludedTables
@@ -203,6 +205,7 @@ Private Sub RenderUnitTests(ByVal table As TableSchema)
 	unitTests.SourceTable = table
 	unitTests.ExcludedTables = Me.ExcludedTables
 	unitTests.TablePrefix = Me.TablePrefix
+	unitTests.NHibVersion = Me.NHibernateVersion
 	unitTests.ManagerNamespace = Me.ManagerNamespace
 	unitTests.BaseNamespace = Me.BaseNamespace
 	unitTests.BusinessNamespace = Me.BusinessNamespace

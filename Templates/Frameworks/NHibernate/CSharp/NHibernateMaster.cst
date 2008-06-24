@@ -10,7 +10,8 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 
-<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v1_2" Optional="False" Category="2. NHibernate" Description="The version of NHibernate to generate for." %>
+<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v2_0" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
+<%@ Property Name="VsVersion" Type="VisualStudioVersion" Default="VS_2008" Optional="False" Category="2. Versions" Description="The version of Visual Studio to generate for." %>
 
 <%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="3a. Assembly" Description="The name of the Assembly that will contain the business objects." %>
 
@@ -137,6 +138,7 @@ private void RenderBusinessObjects(TableSchema table)
 	BusinessObjectTemplate businessObject = new BusinessObjectTemplate();
 	businessObject.BusinessNamespace = this.BusinessNamespace;
 	businessObject.BaseNamespace = this.BaseNamespace;
+	businessObject.VsVersion = this.VsVersion;
 	businessObject.SourceTable = table;
 	businessObject.TablePrefix = this.TablePrefix;
 	businessObject.ExcludedTables = this.ExcludedTables;
@@ -212,6 +214,7 @@ private void RenderUnitTests(TableSchema table)
 	unitTests.SourceTable = table;
 	unitTests.ExcludedTables = this.ExcludedTables;
 	unitTests.TablePrefix = this.TablePrefix;
+	unitTests.NHibVersion = this.NHibernateVersion;
 	unitTests.ManagerNamespace = this.ManagerNamespace;
 	unitTests.BaseNamespace = this.BaseNamespace;
 	unitTests.BusinessNamespace = this.BusinessNamespace;
