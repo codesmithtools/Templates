@@ -3,7 +3,7 @@ Name: ManagerFactory.cst
 Author: Tom DuPont
 Description: Generates a Manager Factory class for NHibernate.
 --%>
-<%@ CodeTemplate Language="C#" Src="..\NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="C#" Debug="False" Description="Generates a Manager Factory class for NHibernate." %>
+<%@ CodeTemplate Language="C#" Src="..\Helpers\NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="C#" Debug="False" Description="Generates a Manager Factory class for NHibernate." %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="1a. Source Database" Description="The source database to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
