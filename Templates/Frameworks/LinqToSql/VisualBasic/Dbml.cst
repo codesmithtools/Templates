@@ -1,0 +1,157 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="XML"
+    Description="Generate Linq to Sql Dbml File"
+    Debug="true" OutputType="None" %>
+
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Dbml" Path="Internal" %>
+<%@ Assembly Name="Generator" Path="Internal" %>
+
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
+
+<%@ Property Category="1.Database" Name="SourceDatabase"
+    Type="SchemaExplorer.DatabaseSchema" Optional="False"
+    OnChanged="OnSourceDatabaseChanged" DeepLoad="true"
+    Description="The source database for Linq to Sql." %>
+
+<%@ Property Category="1.Database" Name="IncludeViews"
+    Type="System.Boolean" Default="false" Optional="False"
+    Description="Include views in mapping." %>
+
+<%@ Property Category="1.Database" Name="IncludeFunctions"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Include stored procedures and user functions in mapping." %>
+
+<%@ Property Category="1.Database" Name="IgnoreList"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of regular expressions to ignore tables and views when generating mapping."
+    Default="^sysdiagrams$" %>
+
+<%@ Property Category="1.Database" Name="CleanExpression"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of regular expressions to clean table, view and column names."
+    Default="^\\w+_" %>
+
+<%@ Property Category="2.Class" Name="EntityBase"
+    Type="System.String" Default="LinqEntityBase" Optional="True"
+    Description="The base class for the entity." %>
+
+<%@ Property Category="2.Class" Name="EntityNamespace"
+    Type="System.String" Default="" Optional="False"
+    OnChanged="OnEntityNamespaceChanged"
+    Description="The namespace to use for the entity class files."%>
+
+<%@ Property Category="2.Class" Name="ContextNamespace"
+    Type="System.String" Default="" Optional="False"
+    OnChanged="OnContextNamespaceChanged"
+    Description="The namespace to use for the context class files."%>
+
+<%@ Property Category="2.Class" Name="DisableRenaming"
+    Type="System.Boolean" Default="false" Optional="true"
+    Description="Disable the automatic renaming.of class, property and function names." %>
+
+<%@ Property Category="3.Mapping" Name="DbmlFile"
+    Type="System.String" Default="Database.dbml" Optional="False"
+    Description="The full path to the dbml file."
+    Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<script runat="template">
+
+    Public Sub Generate()
+    Dim watch As Stopwatch = Stopwatch.StartNew()
+    Dim filePath As String = Path.GetFullPath(DbmlFile)
+    Dim outputDirectory As String = Path.GetDirectoryName(filePath)
+    
+    If Not Directory.Exists(outputDirectory) Then
+        Directory.CreateDirectory(outputDirectory)
+    End If
+    
+    If SourceDatabase IsNot Nothing Then
+        Me.Progress.MaximumValue = (SourceDatabase.Tables.Count + 1)
+        If IncludeViews Then
+            Me.Progress.MaximumValue += SourceDatabase.Views.Count
+        End If
+        If IncludeFunctions Then
+            Me.Progress.MaximumValue += SourceDatabase.Commands.Count
+        End If
+        Me.Progress.[Step] = 1
+    End If
+    
+    Dim settings As New GeneratorSettings()
+    settings.MappingFile = filePath
+    settings.ContextNamespace = ContextNamespace
+    settings.EntityNamespace = EntityNamespace
+    settings.EntityBase = EntityBase
+    settings.IncludeViews = IncludeViews
+    settings.IncludeFunctions = IncludeFunctions
+    settings.DisableRenaming = DisableRenaming
+    
+    For Each clean As String In CleanExpression
+        settings.CleanExpressions.Add(New Regex(clean))
+    Next
+    For Each ignore As String In IgnoreList
+        settings.IgnoreExpressions.Add(New Regex(ignore))
+    Next
+    
+    Dim generator As New DbmlGenerator(settings)
+    AddHandler generator.SchemaItemProcessed, AddressOf OnSchemaItemProcessed
+    Dim db As Database = generator.Create(SourceDatabase)
+    
+    Dim outputFile As New OutputFile(Me.DbmlFile)
+    outputFile.Metadata.Add("CustomTool", String.Empty)
+    
+    Me.RegisterOutput(outputFile)
+    
+    watch.[Stop]()
+    Response.WriteLine("Generate Time: " + watch.ElapsedMilliseconds.ToString() + " ms")
+End Sub
+
+Private Sub OnSchemaItemProcessed(ByVal sender As Object, ByVal e As SchemaItemProcessedEventArgs)
+    Me.Progress.PerformStep()
+    Response.WriteLine(e.Name)
+End Sub
+
+Private Sub OnSourceDatabaseChanged(ByVal sender As Object, ByVal e As EventArgs)
+    If SourceDatabase Is Nothing Then
+        Return
+    End If
+    
+    If String.IsNullOrEmpty(DbmlFile) OrElse DbmlFile.Equals("Database.dbml") Then
+        DbmlFile = Path.Combine(CodeTemplateInfo.DirectoryName, SourceDatabase.Database.Name + ".dbml")
+    End If
+    
+    If String.IsNullOrEmpty(ContextNamespace) Then
+        ContextNamespace = SourceDatabase.Database.Name + ".Data"
+    End If
+    
+End Sub
+Private Sub OnEntityNamespaceChanged(ByVal sender As Object, ByVal e As EventArgs)
+    If String.IsNullOrEmpty(EntityNamespace) Then
+        Return
+    End If
+    
+    If String.IsNullOrEmpty(ContextNamespace) Then
+        ContextNamespace = EntityNamespace
+    End If
+End Sub
+Private Sub OnContextNamespaceChanged(ByVal sender As Object, ByVal e As EventArgs)
+    If String.IsNullOrEmpty(ContextNamespace) Then
+        Return
+    End If
+    
+    If String.IsNullOrEmpty(EntityNamespace) Then
+        EntityNamespace = ContextNamespace
+    End If
+End Sub
+
+</script>
+Generating Linq to Sql Dbml File ...
+<% Generate() %>

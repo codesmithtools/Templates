@@ -1,0 +1,140 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="XML" 
+    Description="Generate Linq to Sql Query Extension Class File" 
+    Debug="true" OutputType="None" %>
+
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="Microsoft.Build.Engine" %>
+<%@ Assembly Name="Microsoft.Build.Utilities" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Src="Internal\Common.cs" %>
+<%@ Assembly Src="Internal\Schema.cs" %>
+<%@ Assembly Src="Internal\Manager.cs" %>
+<%@ Assembly Src="Internal\Project.cs" %>
+
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="DbmlSchema" %>
+<%@ Import Namespace="Manager" %>
+
+<%@ Property Category="1.Database" Name="SourceDatabase" 
+    Type="SchemaExplorer.DatabaseSchema"  Optional="False"
+    Description="The source database for Linq to Sql." %>
+
+<%@ Property Category="2.Mapping" Name="DbmlFile" 
+    Type="System.String" Default="Database.dbml" Optional="False" 
+    Description="The full path to the mapping file." 
+    Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Category="3.Query" Name="QueryDirectory" 
+    Type="System.String" Default="" Optional="false" 
+    Description="The folder to save the generated query extension files." 
+    Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+
+<%@ Register Name="QueryExtensionEditableClass" 
+    Template="Internal\QueryExtension.Editable.cst" 
+    MergeProperties="False" %>
+
+<%@ Register Name="QueryExtensionGeneratedClass" 
+    Template="Internal\QueryExtension.Generated.cst" 
+    MergeProperties="False" %>
+
+
+
+<script runat="template">
+    private ProjectUpdater _project = null;
+        
+    internal ProjectUpdater Project
+    {
+        get
+        {
+            if (_project == null)
+                _project = new ProjectUpdater(ProjectFile);
+            
+            return _project;
+        }
+    }
+
+    private string _projectFile;
+    
+    [Category("4.Project")]
+    [Description("Select the Visual Studio project file to update.")]
+    [FileDialog(FileDialogType.Open, Title="Select Project File", Filter="Project Files (*.csproj)|*.csproj|All Files (*.*)|*.*", DefaultExtension=".csproj")]
+    [Editor(typeof(CodeSmith.CustomProperties.FileNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
+    [CodeSmith.Engine.Optional()]
+    public string ProjectFile
+    {
+        get {return _projectFile;}
+        set {_projectFile = value;}
+    }
+    
+    public void Generate()
+    {        
+        if (!Directory.Exists(this.QueryDirectory))
+            Directory.CreateDirectory(this.QueryDirectory);
+
+        if (SourceDatabase != null)
+        {    
+            this.Progress.MaximumValue = (SourceDatabase.Tables.Count + 2);
+                
+            this.Progress.Step = 1;
+        }
+        
+        Database database = DbmlSchema.DbmlFile.Load(this.DbmlFile);
+        if (database == null)
+            throw new Exception("Error loading Dbml file.");
+
+        DataManager mgrMap = ManagerGenerator.Create(SourceDatabase, database);
+        
+        CreateQueryClasses(database, mgrMap);
+        
+        Project.SaveProject();
+    }
+    
+    public void CreateQueryClasses(Database databaseMap, DataManager dataManager)
+    {
+        QueryExtensionGeneratedClass t = this.Create<QueryExtensionGeneratedClass>();
+        t.DataManager = dataManager;
+        t.Database = databaseMap;
+        
+        QueryExtensionEditableClass p = this.Create<QueryExtensionEditableClass>();
+        p.ClassNamespace = databaseMap.ContextNamespace;
+        
+        foreach(EntityManager manager in dataManager.Managers)
+        {
+            Stopwatch watch = Stopwatch.StartNew();
+
+            string className = manager.EntityName + "QueryExtension";
+            string fileName = className + ".Generated.cs";
+            fileName = Path.Combine(QueryDirectory, fileName);
+            
+            Debug.WriteLine(string.Format("Creating Entity Query Extension Class '{0}' ...", className));
+            t.EntityManager = manager;
+            t.RenderToFile(fileName, true);
+            
+            string parentFileName = className + ".cs";
+            parentFileName = Path.Combine(QueryDirectory, parentFileName);
+
+            if (!File.Exists(parentFileName))
+            {
+                p.ClassName = className;
+                Response.WriteLine(parentFileName);
+                p.RenderToFile(parentFileName, false);
+            }
+            
+            Project.AddCompileItem(parentFileName, fileName);
+
+            Debug.WriteLine(string.Format("Created '{0}' in {1} ms.", 
+                className,
+                watch.Elapsed.TotalMilliseconds.ToString()));
+            
+            this.Progress.PerformStep();
+        }
+    }
+</script>
+Generating Linq to Sql Entities ...
+<% Generate(); %>
