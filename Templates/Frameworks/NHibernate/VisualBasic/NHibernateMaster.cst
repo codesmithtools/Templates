@@ -64,6 +64,8 @@ Public Overloads Overrides Sub Render(ByVal writer As TextWriter)
 	Next
 	RenderBaseClasses()
 	RenderManagerFactory()
+	
+	RegisterReferences()
 End Sub
 
 Private Sub RenderBaseClasses()
@@ -213,6 +215,11 @@ Private Sub RenderUnitTests(ByVal table As TableSchema)
 
 	unitTests.RenderToFile(fileName, strategy)
 	RegisterOutputFile(fileName, Nothing)
+End Sub
+Private Sub RegisterReferences()
+	Me.RegisterReference(Me.CodeTemplateInfo.DirectoryName + "Resources\NHibernate\NHibernate.dll")
+	Me.RegisterReference(Me.CodeTemplateInfo.DirectoryName + "Resources\NUnit\NUnit.Framework.dll")
+	Me.RegisterReference("System.Web")
 End Sub
 
 Private Sub RegisterOutputFile(ByVal fileName As String, ByVal dependentUpon As String, ParamArray metaData As Object())
