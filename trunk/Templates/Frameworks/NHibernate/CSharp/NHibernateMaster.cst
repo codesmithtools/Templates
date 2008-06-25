@@ -46,8 +46,6 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Register Name="EditableUnitTestsTemplate" Template="UnitTests\EditableUnitTests.cst" %>
 
 <script runat="template">
-protected PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy("^[ \t]*(?i:Custom)", "C#");
-
 public override void Render(TextWriter writer)
 {
 	this.tablePrefix = this.TablePrefix;
@@ -74,56 +72,44 @@ private void RenderBaseClasses()
 	string folderName = GetFolder(BaseNamespace);
 	
 	fileName = String.Format("{0}{1}.cs", folderName, "BusinessBase");
-	BusinessBaseTemplate businessBase = new BusinessBaseTemplate();
+	BusinessBaseTemplate businessBase = this.Create<BusinessBaseTemplate>();
 	businessBase.BaseNamespace = this.BaseNamespace;
-	//businessBase.RenderToFile(fileName, strategy);
-	//RegisterOutputFile(fileName, null);
 	businessBase.RenderToFile(GetOutputFile(fileName, null), true);
 	
 	fileName = String.Format("{0}{1}.cs", folderName, "ManagerBase");
-	ManagerBaseTemplate managerBase = new ManagerBaseTemplate();
+	ManagerBaseTemplate managerBase = this.Create<ManagerBaseTemplate>();
 	managerBase.BaseNamespace = this.BaseNamespace;
 	managerBase.NHibVersion = this.NHibernateVersion;
-	//managerBase.RenderToFile(fileName, strategy);
-	//RegisterOutputFile(fileName, null);
 	managerBase.RenderToFile(GetOutputFile(fileName, null), true);
 	
 	fileName = String.Format("{0}{1}.cs", folderName, "NHibernateSession");
-	SessionTemplate session = new SessionTemplate();
+	SessionTemplate session = this.Create<SessionTemplate>();
 	session.BaseNamespace = this.BaseNamespace;
-	//session.RenderToFile(fileName, strategy);
-	//RegisterOutputFile(fileName, null);
 	session.RenderToFile(GetOutputFile(fileName, null), true);
 	
 	fileName = String.Format("{0}{1}.cs", folderName, "NHibernateSessionManager");
-	SessionManagerTemplate sessionManager = new SessionManagerTemplate();
+	SessionManagerTemplate sessionManager = this.Create<SessionManagerTemplate>();
 	sessionManager.BaseNamespace = this.BaseNamespace;
-	//sessionManager.RenderToFile(fileName, strategy);
-	//RegisterOutputFile(fileName, null);
 	sessionManager.RenderToFile(GetOutputFile(fileName, null), true);
 	
 	fileName = String.Format("{0}{1}.cs", folderName, "UnitTestsBase");
-	UnitTestsBaseTemplate unitTestsBase = new UnitTestsBaseTemplate();
+	UnitTestsBaseTemplate unitTestsBase = this.Create<UnitTestsBaseTemplate>();
 	unitTestsBase.BaseNamespace = this.BaseNamespace;
 	unitTestsBase.ManagerNamespace = this.ManagerNamespace;
 	unitTestsBase.BusinessNamespace = this.BusinessNamespace;
-	//unitTestsBase.RenderToFile(fileName, strategy);
-	//RegisterOutputFile(fileName, null);
 	unitTestsBase.RenderToFile(GetOutputFile(fileName, null), true);
 }
 private void RenderHbmMaps(TableSchema table)
 {
 	string fileName = String.Format("{0}{1}.hbm.xml", GetFolder("HbmMaps"), GetClassName(table.Name));
 	
-	HbmMapTemplate hbmMap = new HbmMapTemplate();
+	HbmMapTemplate hbmMap = this.Create<HbmMapTemplate>();
 	hbmMap.AssemblyName = this.AssemblyName;
 	hbmMap.BusinessNamespace = this.BusinessNamespace;
 	hbmMap.SourceTable = table;
 	hbmMap.TablePrefix = this.TablePrefix;
 	hbmMap.ExcludedTables = this.ExcludedTables;
 	
-	//hbmMap.RenderToFile(fileName, strategy);
-	//RegisterOutputFile(fileName, null, "BuildAction", 3);
 	hbmMap.RenderToFile(GetOutputFile(fileName, null, "BuildAction", 3), true);
 }
 private void RenderBusinessObjects(TableSchema table)
@@ -133,18 +119,16 @@ private void RenderBusinessObjects(TableSchema table)
 	
 	if(!File.Exists(editableFileName))
 	{
-		EditableBusinessObjectTemplate editableBusinessObject = new EditableBusinessObjectTemplate();
+		EditableBusinessObjectTemplate editableBusinessObject = this.Create<EditableBusinessObjectTemplate>();
 		editableBusinessObject.BusinessNamespace = this.BusinessNamespace;
 		editableBusinessObject.BaseNamespace = this.BaseNamespace;
 		editableBusinessObject.SourceTable = table;
 		editableBusinessObject.TablePrefix = this.TablePrefix;
 		
-		//editableBusinessObject.RenderToFile(editableFileName, strategy);
-		//RegisterOutputFile(editableFileName, null);
 		editableBusinessObject.RenderToFile(GetOutputFile(editableFileName, null), true);
 	}
 	
-	BusinessObjectTemplate businessObject = new BusinessObjectTemplate();
+	BusinessObjectTemplate businessObject = this.Create<BusinessObjectTemplate>();
 	businessObject.BusinessNamespace = this.BusinessNamespace;
 	businessObject.BaseNamespace = this.BaseNamespace;
 	businessObject.VsVersion = this.VsVersion;
@@ -152,8 +136,6 @@ private void RenderBusinessObjects(TableSchema table)
 	businessObject.TablePrefix = this.TablePrefix;
 	businessObject.ExcludedTables = this.ExcludedTables;
 
-	//businessObject.RenderToFile(fileName, strategy);
-	//RegisterOutputFile(fileName, editableFileName);
 	businessObject.RenderToFile(GetOutputFile(fileName, editableFileName), true);
 }
 private void RenderManagerObjects(TableSchema table)
@@ -163,19 +145,17 @@ private void RenderManagerObjects(TableSchema table)
 	
 	if(!File.Exists(editableFileName))
 	{
-		EditableManagerObjectTemplate editableManagerObject = new EditableManagerObjectTemplate();
+		EditableManagerObjectTemplate editableManagerObject = this.Create<EditableManagerObjectTemplate>();
 		editableManagerObject.ManagerNamespace = this.ManagerNamespace;
 		editableManagerObject.BusinessNamespace = this.BusinessNamespace;
 		editableManagerObject.BaseNamespace = this.BaseNamespace;
 		editableManagerObject.SourceTable = table;
 		editableManagerObject.TablePrefix = this.TablePrefix;
 		
-		//editableManagerObject.RenderToFile(editableFileName, strategy);
-		//RegisterOutputFile(editableFileName, null);
 		editableManagerObject.RenderToFile(GetOutputFile(editableFileName, null), true);
 	}
 
-	ManagerObjectTemplate managerObject = new ManagerObjectTemplate();
+	ManagerObjectTemplate managerObject = this.Create<ManagerObjectTemplate>();
 	managerObject.ManagerNamespace = this.ManagerNamespace;
 	managerObject.BusinessNamespace = this.BusinessNamespace;
 	managerObject.BaseNamespace = this.BaseNamespace;
@@ -184,23 +164,19 @@ private void RenderManagerObjects(TableSchema table)
 	managerObject.TablePrefix = this.TablePrefix;
 	managerObject.ExcludedTables = this.ExcludedTables;
 
-	//managerObject.RenderToFile(fileName, strategy);
-	//RegisterOutputFile(fileName, editableFileName);
 	managerObject.RenderToFile(GetOutputFile(fileName, editableFileName), true);
 }
 private void RenderManagerFactory()
 {
 	string fileName = String.Format("{0}ManagerFactory.cs", GetFolder(ManagerNamespace));
 
-	ManagerFactoryTemplate managerFactory = new ManagerFactoryTemplate();
+	ManagerFactoryTemplate managerFactory = this.Create<ManagerFactoryTemplate>();
 	managerFactory.SourceDatabase = this.SourceDatabase;
 	managerFactory.ManagerNamespace = this.ManagerNamespace;
 	managerFactory.BaseNamespace = this.BaseNamespace;
 	managerFactory.ExcludedTables = this.ExcludedTables;
 	managerFactory.TablePrefix = this.TablePrefix;
 	
-	//managerFactory.RenderToFile(fileName, strategy);
-	//RegisterOutputFile(fileName, null);
 	managerFactory.RenderToFile(GetOutputFile(fileName, null), true);
 }
 private void RenderUnitTests(TableSchema table)
@@ -210,7 +186,7 @@ private void RenderUnitTests(TableSchema table)
 	
 	if(!File.Exists(editableFileName))
 	{
-		EditableUnitTestsTemplate editableUnitTests = new EditableUnitTestsTemplate();
+		EditableUnitTestsTemplate editableUnitTests = this.Create<EditableUnitTestsTemplate>();
 		editableUnitTests.SourceTable = table;
 		editableUnitTests.ExcludedTables = this.ExcludedTables;
 		editableUnitTests.TablePrefix = this.TablePrefix;
@@ -219,12 +195,10 @@ private void RenderUnitTests(TableSchema table)
 		editableUnitTests.BusinessNamespace = this.BusinessNamespace;
 		editableUnitTests.UnitTestNamespace = this.UnitTestNamespace;
 		
-		//editableUnitTests.RenderToFile(editableFileName, strategy);
-		//RegisterOutputFile(editableFileName, null);
 		editableUnitTests.RenderToFile(GetOutputFile(editableFileName, null), true);
 	}
 	
-	UnitTestsTemplate unitTests = new UnitTestsTemplate();
+	UnitTestsTemplate unitTests = this.Create<UnitTestsTemplate>();
 	unitTests.SourceTable = table;
 	unitTests.ExcludedTables = this.ExcludedTables;
 	unitTests.TablePrefix = this.TablePrefix;
@@ -234,12 +208,6 @@ private void RenderUnitTests(TableSchema table)
 	unitTests.BusinessNamespace = this.BusinessNamespace;
 	unitTests.UnitTestNamespace = this.UnitTestNamespace;
 
-	//GetOutputFile(fileName, editableFileName);
-	//unitTests.RenderToFile(fileName, strategy);
-	
-	//OutputFile file = GetOutputFile(fileName, editableFileName);
-	//unitTests.RenderToFile(file, file.OutputFileName, strategy);
-	
 	unitTests.RenderToFile(GetOutputFile(fileName, editableFileName), true);
 }
 private void RegisterReferences()
@@ -254,14 +222,13 @@ private OutputFile GetOutputFile(string fileName, string dependentUpon, params o
 	OutputFile outputFile = new OutputFile(fileName);
 	
 	if(!String.IsNullOrEmpty(dependentUpon))
-		outputFile.DependentUpon = dependentUpon;
+		outputFile.DependentUpon = Path.GetFullPath(dependentUpon);
 	
 	if(metaData.Length % 2 != 0)
 		throw new Exception("Invalid Metadata: Provide 2 objects per entry, a String (key) followed by an Object.");
 	for(int x=0; x<metaData.Length; x+=2)
     	outputFile.Metadata.Add(metaData[x].ToString(), metaData[x+1]);
 		
-    //this.RegisterOutput(outputFile);
 	return outputFile;
 }
 private string GetFolder(string folder)
