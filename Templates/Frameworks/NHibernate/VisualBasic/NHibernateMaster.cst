@@ -217,8 +217,8 @@ Private Sub RenderUnitTests(ByVal table As TableSchema)
 	'RegisterOutputFile(fileName, Nothing)
 End Sub
 Private Sub RegisterReferences()
-	Me.RegisterReference(Me.CodeTemplateInfo.DirectoryName + "Resources\NHibernate\NHibernate.dll")
-	Me.RegisterReference(Me.CodeTemplateInfo.DirectoryName + "Resources\NUnit\NUnit.Framework.dll")
+	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "Resources\NHibernate\NHibernate.dll"))
+	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "Resources\NUnit\NUnit.Framework.dll"))
 	Me.RegisterReference("System.Web")
 End Sub
 
