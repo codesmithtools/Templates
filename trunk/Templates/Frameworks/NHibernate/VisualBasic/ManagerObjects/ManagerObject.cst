@@ -36,7 +36,7 @@ Namespace <%= ManagerNamespace %>
 		<% If sc.Items.Count > 1 Then ' Override GetById %>
 		Overloads Function GetById(<%= GetMethodParameters(sc.Items, true) %>) As <%= GetClassName(SourceTable.Name) %>
 		<% End If %>
-		<% Else If Not sc.ContainsForeignKey(ExcludedTables) Then %>
+		<% Else If Not ContainsForeignKey(sc, ExcludedTables) Then %>
 		Function <%= GetMethodDeclaration(sc) %> As IList(Of <%= GetClassName(SourceTable.Name) %>)
 		<% End If %>
 		<% Next %>
@@ -86,8 +86,8 @@ Namespace <%= ManagerNamespace %>
 			Return result
 		End Function
 		<% End If %>
-		<% Else If Not sc.ContainsForeignKey(ExcludedTables) Then %>
-		Public Function <%= GetMethodDeclaration(sc) %> As IList(Of <%= GetClassName(SourceTable.Name) %>) Implements I<%= GetClassName(SourceTable.Name) %>Manager.<%= GetMethodName(sc) %>
+		<% Else If Not ContainsForeignKey(sc, ExcludedTables) Then %>
+		Public Function <%= GetMethodDeclaration(sc) %> As IList(Of <%= GetClassName(SourceTable.Name) %>) Implements I<%= GetClassName(SourceTable.Name) %>Manager.<%= sc.MethodName %>
             Dim <%= GetVariableName(SourceTable.Name) %>Criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(<%= GetClassName(SourceTable.Name) %>))
 			
 			<% For Each mcs As MemberColumnSchema In sc.Items %>

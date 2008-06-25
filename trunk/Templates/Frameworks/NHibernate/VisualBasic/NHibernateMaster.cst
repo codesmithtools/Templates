@@ -10,7 +10,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 
-<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v1_2" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
+<%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v2_0" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
 <%@ Property Name="VsVersion" Type="VisualStudioVersion" Default="VS_2008" Optional="False" Category="2. Versions" Description="The version of Visual Studio to generate for." %>
 
 <%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="3a. Assembly" Description="The name of the Assembly that will contain the business objects." %>
@@ -76,26 +76,26 @@ Private Sub RenderBaseClasses()
 	Dim businessBase As New BusinessBaseTemplate()
 	businessBase.BaseNamespace = Me.BaseNamespace
 	businessBase.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, Nothing)
+	'RegisterOutputFile(fileName, Nothing)
 
 	fileName = [String].Format("{0}{1}.vb", folderName, "ManagerBase")
 	Dim managerBase As New ManagerBaseTemplate()
 	managerBase.BaseNamespace = Me.BaseNamespace
 	managerBase.NHibVersion = Me.NHibernateVersion
 	managerBase.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, Nothing)
+	'RegisterOutputFile(fileName, Nothing)
 
 	fileName = [String].Format("{0}{1}.vb", folderName, "NHibernateSession")
 	Dim session As New SessionTemplate()
 	session.BaseNamespace = Me.BaseNamespace
 	session.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, Nothing)
+	'RegisterOutputFile(fileName, Nothing)
 
 	fileName = [String].Format("{0}{1}.vb", folderName, "NHibernateSessionManager")
 	Dim sessionManager As New SessionManagerTemplate()
 	sessionManager.BaseNamespace = Me.BaseNamespace
 	sessionManager.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, Nothing)
+	'RegisterOutputFile(fileName, Nothing)
 
 	fileName = [String].Format("{0}{1}.vb", folderName, "UnitTestsBase")
 	Dim unitTestsBase As New UnitTestsBaseTemplate()
@@ -103,7 +103,7 @@ Private Sub RenderBaseClasses()
 	unitTestsBase.ManagerNamespace = Me.ManagerNamespace
 	unitTestsBase.BusinessNamespace = Me.BusinessNamespace
 	unitTestsBase.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, Nothing)
+	'RegisterOutputFile(fileName, Nothing)
 End Sub
 Private Sub RenderHbmMaps(ByVal table As TableSchema)
 	Dim fileName As String = [String].Format("{0}{1}.hbm.xml", GetFolder("HbmMaps"), GetClassName(table.Name))
@@ -130,7 +130,7 @@ Private Sub RenderBusinessObjects(ByVal table As TableSchema)
 		editableBusinessObject.TablePrefix = Me.TablePrefix
 
 		editableBusinessObject.RenderToFile(editableFileName, strategy)
-		RegisterOutputFile(editableFileName, Nothing)
+		'RegisterOutputFile(editableFileName, Nothing)
 	End If
 
 	Dim businessObject As New BusinessObjectTemplate()
@@ -142,7 +142,7 @@ Private Sub RenderBusinessObjects(ByVal table As TableSchema)
 	businessObject.ExcludedTables = Me.ExcludedTables
 
 	businessObject.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, Nothing)
+	'RegisterOutputFile(fileName, Nothing)
 End Sub
 Private Sub RenderManagerObjects(ByVal table As TableSchema)
 	Dim fileName As String = [String].Format("{0}{1}Manager.Generated.vb", GetFolder(ManagerNamespace), GetClassName(table.Name))
@@ -157,7 +157,7 @@ Private Sub RenderManagerObjects(ByVal table As TableSchema)
 		editableManagerObject.TablePrefix = Me.TablePrefix
 
 		editableManagerObject.RenderToFile(editableFileName, strategy)
-		RegisterOutputFile(editableFileName, Nothing)
+		'RegisterOutputFile(editableFileName, Nothing)
 	End If
 
 	Dim managerObject As New ManagerObjectTemplate()
@@ -170,7 +170,7 @@ Private Sub RenderManagerObjects(ByVal table As TableSchema)
 	managerObject.ExcludedTables = Me.ExcludedTables
 
 	managerObject.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, Nothing)
+	'RegisterOutputFile(fileName, Nothing)
 End Sub
 Private Sub RenderManagerFactory()
 	Dim fileName As String = [String].Format("{0}ManagerFactory.vb", GetFolder(ManagerNamespace))
@@ -183,7 +183,7 @@ Private Sub RenderManagerFactory()
 	managerFactory.TablePrefix = Me.TablePrefix
 
 	managerFactory.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, Nothing)
+	'RegisterOutputFile(fileName, Nothing)
 End Sub
 Private Sub RenderUnitTests(ByVal table As TableSchema)
 	Dim fileName As String = [String].Format("{0}{1}Tests.generated.vb", GetFolder(UnitTestNamespace), GetClassName(table.Name))
@@ -200,7 +200,7 @@ Private Sub RenderUnitTests(ByVal table As TableSchema)
 		editableUnitTests.UnitTestNamespace = Me.UnitTestNamespace
 
 		editableUnitTests.RenderToFile(editableFileName, strategy)
-		RegisterOutputFile(editableFileName, Nothing)
+		'RegisterOutputFile(editableFileName, Nothing)
 	End If
 
 	Dim unitTests As New UnitTestsTemplate()
@@ -214,7 +214,7 @@ Private Sub RenderUnitTests(ByVal table As TableSchema)
 	unitTests.UnitTestNamespace = Me.UnitTestNamespace
 
 	unitTests.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, Nothing)
+	'RegisterOutputFile(fileName, Nothing)
 End Sub
 Private Sub RegisterReferences()
 	Me.RegisterReference(Me.CodeTemplateInfo.DirectoryName + "Resources\NHibernate\NHibernate.dll")
