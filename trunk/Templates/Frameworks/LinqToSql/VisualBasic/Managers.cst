@@ -55,7 +55,6 @@
     Template="Internal\EntityManager.Generated.cst" 
     MergeProperties="True" ExcludeProperties="Database, DataManager,EntityManager,Table" %>
 
-
 <script runat="template">
     Public Sub Generate()
     If Not Directory.Exists(Me.ManagerDirectory) Then
