@@ -46,7 +46,9 @@ Namespace <%= UnitTestNamespace %>
 			<% End If %>
 			<% Else %>
 			<% For Each mcs As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns %>
+			<% If Not mcs.IsForeignKeyMember Then %>
 			entity.<%= GetPropertyName(mcs.Name) %> = <%= GetUnitTestInitialization(mcs.Column) %>
+			<% End If %>
 			<% Next %>
 			<% End If %>
 			
@@ -59,10 +61,10 @@ Namespace <%= UnitTestNamespace %>
 			<% ' Many-To-One %>
 			<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
 			<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
-			<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso (Not IsPrimaryKeyColumn(mcs, SourceTable) OrElse IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) Then %>
+			<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso (Not mcs.IsPrimaryKeyMember OrElse IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) Then %>
 			
 			Dim <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager As I<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager = managerFactory.Get<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager()
-			<% If Not IsPrimaryKeyColumn(mcs, SourceTable) Then %>
+			<% If Not mcs.IsPrimaryKeyMember Then %>
 			entity.<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)(0)
 			<% Else %>
 			entity.<%= GetPropertyName(mcs.Name) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)(0).Id

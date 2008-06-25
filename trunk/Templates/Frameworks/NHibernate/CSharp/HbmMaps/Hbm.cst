@@ -42,7 +42,7 @@ Description: Generates a HBM Map for NHibernate.
 		<% // Many-To-One %>
 		<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !IsPrimaryKeyColumn(mcs, SourceTable)) { %>
+		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !mcs.IsPrimaryKeyMember) { %>
 		<many-to-one name="<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>" column="<%= mcs.Name %>" class="<%= GetClassName(tks.PrimaryKeyTable.Name) %>" />
 		<% } %>
 		<% } %>
@@ -50,7 +50,7 @@ Description: Generates a HBM Map for NHibernate.
 		<% // One-To-Many & Many-To-Many %>
 		<% foreach(TableKeySchema tks in SourceTable.PrimaryKeys) { %>
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if (!IsPrimaryKeyColumn(mcs, SourceTable)) { %>
+		<% if (!mcs.IsPrimaryKeyMember) { %>
 		<% if (!IsManyToMany(mcs.Table)) { %>
 		<% if (!ExcludedTables.Contains(mcs.Table)) { %>
 		<bag name="<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>" lazy="true" cascade="<%= GetCascade(mcs) %>"  inverse="true" >

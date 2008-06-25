@@ -41,14 +41,14 @@ Public Class NHibernateHelper
 	End Function
 
 	Public Function GetPrivateVariableName(ByVal name As String) As String
-		Return "_" + GetVariableName(name)
+		Return "p" + GetVariableName(name)
 	End Function
 	Public Function GetPrivateVariableNamePlural(ByVal name As String) As String
 		Return GetPrivateVariableName(GetNamePlural(name))
 	End Function
 
 	Public Function GetVariableName(ByVal name As String) As String
-		Return StringUtil.ToCamelCase(name)
+		Return "_" + StringUtil.ToCamelCase(name)
 	End Function
 	Public Function GetVariableNamePlural(ByVal name As String) As String
 		Return GetVariableName(GetNamePlural(name))
@@ -113,14 +113,10 @@ Public Class NHibernateHelper
 
 		If type.Equals(GetType(String)) Then
 			result = "String.Empty"
-ElseIf type.Equals(GetType(DateTime)) Then
+		ElseIf type.Equals(GetType(DateTime)) Then
 			result = "new DateTime()"
-ElseIf type.Equals(GetType(Decimal)) Then
-			result = "default(Decimal)"
-ElseIf type.IsPrimitive Then
-			result = [String].Format("default({0})", type.Name.ToString())
 		Else
-			result = "null"
+			result = "Nothing"
 		End If
 		Return result
 	End Function
@@ -171,16 +167,6 @@ ElseIf type.IsPrimitive Then
 		Next
 		Return result
 	End Function
-	Public Function IsPrimaryKeyColumn(ByVal mcs As MemberColumnSchema, ByVal table As TableSchema) As Boolean
-		Dim result As Boolean = False
-		For Each primaryKeyColumn As MemberColumnSchema In table.PrimaryKey.MemberColumns
-			If primaryKeyColumn.Equals(mcs) Then
-				result = True
-				Exit For
-			End If
-		Next
-		Return result
-	End Function
 #End Region
 
 	#region "Method Creation Methods"
@@ -195,10 +181,13 @@ ElseIf type.IsPrimitive Then
 				result.Append(", ")
 			End If
 			If isDeclaration Then
-				result.Append(mcs.SystemType.ToString())
-				result.Append(" ")
+				result.Append("ByVal ")
 			End If
 			result.Append(GetVariableName(mcs.Name))
+			If isDeclaration Then
+				result.Append(" As ")
+				result.Append(mcs.SystemType.ToString())
+			End If
 		Next
 		Return result.ToString()
 	End Function
@@ -226,7 +215,7 @@ ElseIf type.IsPrimitive Then
 			If x > 0 Then
 				result.Append(", ")
 			End If
-			result.Append([String].Format("{0}.Parse(keys[{1}])", mcsList(x).SystemType, x))
+			result.Append([String].Format("{0}.Parse(keys({1}))", mcsList(x).SystemType, x))
 			System.Math.Max(System.Threading.Interlocked.Increment(x),x - 1)
 		End While
 		Return result.ToString()
