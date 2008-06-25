@@ -42,14 +42,22 @@ namespace <%= UnitTestNamespace %>
 		{
 			<%= GetClassName(SourceTable.Name) %> entity = new <%= GetClassName(SourceTable.Name) %>();
 			
-			<% if(!IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) && SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties.Contains("CS_IsIdentity") && ((bool)SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties["CS_IsIdentity"].Value) == false) { %>
+			<% if(!IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) { %>
+			<% if(SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties.Contains("CS_IsIdentity") && ((bool)SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties["CS_IsIdentity"].Value) == false) { %>
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = <%= GetUnitTestInitialization(GetBusinessBaseIdType(SourceTable)) %>;
+			entity.Id = <%= GetUnitTestInitialization(SourceTable.PrimaryKey.MemberColumns[0].Column) %>;
+			<% } %>
+			<% } else { %>
+			<% foreach(MemberColumnSchema mcs in SourceTable.PrimaryKey.MemberColumns) { %>
+			entity.<%= GetPropertyName(mcs.Name) %> = <%= GetUnitTestInitialization(mcs.Column) %>;
+			<% } %>
 			<% } %>
 			
 			<% // Primitives %>
 			<% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-			entity.<%= GetPropertyName(column.Name) %> = <%= GetUnitTestInitialization(column.SystemType) %>;
+			<% if(!column.AllowDBNull) { %>
+			entity.<%= GetPropertyName(column.Name) %> = <%= GetUnitTestInitialization(column) %>;
+			<% } %>
 			<% } %>
 			<% // Many-To-One %>
 			<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
@@ -116,7 +124,7 @@ namespace <%= UnitTestNamespace %>
             try
             {
                 <%= GetClassName(SourceTable.Name) %> entityA = GetFirst<%= GetClassName(SourceTable.Name) %>();
-				entityA.<%= GetPropertyName(SourceTable.NonKeyColumns[0].Name) %> = <%= GetUnitTestInitialization(SourceTable.NonKeyColumns[0].SystemType) %>;
+				entityA.<%= GetPropertyName(SourceTable.NonKeyColumns[0].Name) %> = <%= GetUnitTestInitialization(SourceTable.NonKeyColumns[0]) %>;
 				
 				manager.Update(entityA);
 

@@ -234,11 +234,12 @@ private void RenderUnitTests(TableSchema table)
 	unitTests.BusinessNamespace = this.BusinessNamespace;
 	unitTests.UnitTestNamespace = this.UnitTestNamespace;
 
+	//GetOutputFile(fileName, editableFileName);
 	//unitTests.RenderToFile(fileName, strategy);
-	//RegisterOutputFile(fileName, editableFileName);
 	
 	//OutputFile file = GetOutputFile(fileName, editableFileName);
 	//unitTests.RenderToFile(file, file.OutputFileName, strategy);
+	
 	unitTests.RenderToFile(GetOutputFile(fileName, editableFileName), true);
 }
 private void RegisterReferences()
@@ -260,7 +261,7 @@ private OutputFile GetOutputFile(string fileName, string dependentUpon, params o
 	for(int x=0; x<metaData.Length; x+=2)
     	outputFile.Metadata.Add(metaData[x].ToString(), metaData[x+1]);
 		
-    this.RegisterOutput(outputFile);
+    //this.RegisterOutput(outputFile);
 	return outputFile;
 }
 private string GetFolder(string folder)

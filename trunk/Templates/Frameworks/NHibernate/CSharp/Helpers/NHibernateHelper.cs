@@ -259,20 +259,52 @@ public class NHibernateHelper : CodeTemplate
 		throw new Exception(String.Format("Could not find Column {0} in Table {1}'s ForeignKeys.", mcs.Name, table.Name));
 	}
 	
-	public string GetUnitTestInitialization(Type type)
+	protected Random random = new Random();
+	public string GetUnitTestInitialization(ColumnSchema column)
 	{
 		string result;
 		
-		if(type.Equals(typeof(String)))
-			result = "\"ABC\"";
-		else if(type.Equals(typeof(DateTime)))
+		if(column.SystemType.Equals(typeof(String)))
+		{
+			StringBuilder sb = new StringBuilder();
+			
+            int size = random.Next(1, column.Size);
+			
+			sb.Append("\"");
+			for(int x=0; x<size; x++)
+			{
+				switch(x % 5)
+				{
+					case 0:
+						sb.Append("T");
+						break;
+					case 1:
+						sb.Append("e");
+						break;
+					case 2:
+						sb.Append("s");
+						break;
+					case 3:
+						sb.Append("t");
+						break;
+					case 4:
+						sb.Append(" ");
+						break;
+				}
+			}
+			sb.Append("\"");
+			
+			result = sb.ToString();
+		}
+		else if(column.SystemType.Equals(typeof(DateTime)))
 			result = "DateTime.Now";
-		else if(type.Equals(typeof(Decimal)))
+		else if(column.SystemType.Equals(typeof(Decimal)))
 			result = "default(Decimal)";
-		else if(type.IsPrimitive)
-			result = String.Format("default({0})", type.Name.ToString());
+		else if(column.SystemType.IsPrimitive)
+			result = String.Format("default({0})", column.SystemType.Name.ToString());
 		else
 			result = "null";
+		
 		return result;
 	}
 	
