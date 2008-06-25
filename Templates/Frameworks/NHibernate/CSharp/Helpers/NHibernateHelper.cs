@@ -231,9 +231,7 @@ public class NHibernateHelper : CodeTemplate
 	public string GetMethodDeclaration(SearchCriteria sc)
 	{
 		StringBuilder result = new StringBuilder();
-		result.Append("GetBy");
-		foreach(MemberColumnSchema mcs in sc.Items)
-			result.Append(GetPropertyName(mcs.Name));
+		result.Append(sc.MethodName);
 		result.Append("(");
 		result.Append(GetMethodParameters(sc.Items, true));
 		result.Append(")");
@@ -277,6 +275,16 @@ public class NHibernateHelper : CodeTemplate
 			result = "null";
 		return result;
 	}
+	
+	public bool ContainsForeignKey(SearchCriteria sc, TableSchemaCollection tsc)
+    {
+        foreach (TableSchema ts in tsc)
+            foreach (TableKeySchema tks in ts.PrimaryKeys)
+                foreach (MemberColumnSchema mcs in sc.Items)
+                    if (tks.PrimaryKeyMemberColumns.Contains(mcs))
+                        return true;
+        return false;
+    }
 }
 
 #region SearchCriteria Class
@@ -285,20 +293,43 @@ public class SearchCriteria
 {
     #region Static Content
 
+    public static List<SearchCriteria> GetAllSearchCriteria(TableSchema table, string extendedProperty)
+    {
+        TableSearchCriteria tsc = new TableSearchCriteria(table, extendedProperty);
+        return tsc.GetAllSearchCriteria();
+    }
     public static List<SearchCriteria> GetAllSearchCriteria(TableSchema table)
     {
         TableSearchCriteria tsc = new TableSearchCriteria(table);
         return tsc.GetAllSearchCriteria();
+    }
+
+    public static List<SearchCriteria> GetPrimaryKeySearchCriteria(TableSchema table, string extendedProperty)
+    {
+        TableSearchCriteria tsc = new TableSearchCriteria(table, extendedProperty);
+        return tsc.GetPrimaryKeySearchCriteria();
     }
     public static List<SearchCriteria> GetPrimaryKeySearchCriteria(TableSchema table)
     {
         TableSearchCriteria tsc = new TableSearchCriteria(table);
         return tsc.GetPrimaryKeySearchCriteria();
     }
+
+    public static List<SearchCriteria> GetForeignKeySearchCriteria(TableSchema table, string extendedProperty)
+    {
+        TableSearchCriteria tsc = new TableSearchCriteria(table, extendedProperty);
+        return tsc.GetForeignKeySearchCriteria();
+    }
     public static List<SearchCriteria> GetForeignKeySearchCriteria(TableSchema table)
     {
         TableSearchCriteria tsc = new TableSearchCriteria(table);
         return tsc.GetForeignKeySearchCriteria();
+    }
+
+    public static List<SearchCriteria> GetIndexSearchCriteria(TableSchema table, string extendedProperty)
+    {
+        TableSearchCriteria tsc = new TableSearchCriteria(table, extendedProperty);
+        return tsc.GetIndexSearchCriteria();
     }
     public static List<SearchCriteria> GetIndexSearchCriteria(TableSchema table)
     {
@@ -311,6 +342,8 @@ public class SearchCriteria
     #region Declarations
 
     protected List<MemberColumnSchema> mcsList;
+    protected MethodNameGenerationMode methodNameGenerationMode = MethodNameGenerationMode.Default;
+    protected string methodName = String.Empty;
 
     #endregion
 
@@ -329,36 +362,69 @@ public class SearchCriteria
 
     #region Methods
 
+    /// <summary>
+    /// Sets MethodName to default generation: "GetBy{0}{1}{n}"
+    /// </summary>
+    public void SetMethodNameGeneration()
+    {
+        methodNameGenerationMode = MethodNameGenerationMode.Default;
+
+        GenerateMethodName("GetBy", String.Empty, String.Empty);
+    }
+    /// <summary>
+    /// Sets MethodName to be value of the specified Extended Property from the database.
+    /// </summary>
+    /// <param name="extendedProperty">Value of the Extended Property.</param>
+    public void SetMethodNameGeneration(string extendedProperty)
+    {
+        methodNameGenerationMode = MethodNameGenerationMode.ExtendedProperty;
+
+        methodName = extendedProperty;
+    }
+    /// <summary>
+    /// Sets MethodName to custom generation: "{prefix}{0}{delimeter}{1}{suffix}"
+    /// </summary>
+    /// <param name="prefix">Method Prefix</param>
+    /// <param name="delimeter">Column Delimeter</param>
+    /// <param name="suffix">Method Suffix</param>
+    public void SetMethodNameGeneration(string prefix, string delimeter, string suffix)
+    {
+        methodNameGenerationMode = MethodNameGenerationMode.Custom;
+
+        GenerateMethodName(prefix, delimeter, suffix);
+    }
+
+    public override string ToString()
+    {
+        if (String.IsNullOrEmpty(methodName))
+            SetMethodNameGeneration();
+
+        return methodName;
+    }
+
     protected void Add(MemberColumnSchema item)
     {
         mcsList.Add(item);
     }
-    public override string ToString()
+    protected void GenerateMethodName(string prefix, string delimeter, string suffix)
     {
         StringBuilder sb = new StringBuilder();
         bool isFirst = true;
 
+        sb.Append(prefix);
         foreach (MemberColumnSchema mcs in mcsList)
         {
             if (isFirst)
                 isFirst = false;
             else
-                sb.Append(" & ");
-			sb.Append(mcs.Name);
+                sb.Append(delimeter);
+            sb.Append(mcs.Name);
         }
+        sb.Append(suffix);
 
-        return sb.ToString();
+        methodName = sb.ToString();
     }
-	public bool ContainsForeignKey(TableSchemaCollection tsc)
-    {
-        foreach (TableSchema ts in tsc)
-            foreach(TableKeySchema tks in ts.PrimaryKeys)
-                foreach (MemberColumnSchema mcs in mcsList)
-                    if (tks.PrimaryKeyMemberColumns.Contains(mcs))
-                        return true;
-        return false;
-    }
-
+    
     #endregion
 
     #region Properties
@@ -381,20 +447,45 @@ public class SearchCriteria
             return result;
         }
     }
-    protected string Key
+    public string MethodName
     {
         get { return this.ToString(); }
+    }
+    public MethodNameGenerationMode MethodNameGeneration
+    {
+        get { return methodNameGenerationMode; }
+    }
+
+    protected string Key
+    {
+        get
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (MemberColumnSchema mcs in mcsList)
+                sb.Append(mcs.Name);
+
+            return sb.ToString();
+        }
     }
 
     #endregion
 
-    #region Internal Classes
+    #region Enums & Classes
+
+    public enum MethodNameGenerationMode
+    {
+        Default,
+        ExtendedProperty,
+        Custom
+    }
 
     internal class TableSearchCriteria
     {
         #region Declarations
 
         protected TableSchema table;
+        protected string extendedProperty = "cs_CriteriaName";
 
         #endregion
 
@@ -403,6 +494,10 @@ public class SearchCriteria
         public TableSearchCriteria(TableSchema sourceTable)
         {
             this.table = sourceTable;
+        }
+        public TableSearchCriteria(TableSchema sourceTable, string extendedProperty) : this(sourceTable)
+        {
+            this.extendedProperty = extendedProperty;
         }
 
         #endregion
@@ -448,6 +543,11 @@ public class SearchCriteria
         {
             List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>(table.PrimaryKey.MemberColumns.ToArray());
             SearchCriteria searchCriteria = new SearchCriteria(mcsList);
+
+            if (table.PrimaryKey.ExtendedProperties.Contains(extendedProperty))
+                if (!String.IsNullOrEmpty(extendedProperty) && table.PrimaryKey.ExtendedProperties.Contains(extendedProperty) && table.PrimaryKey.ExtendedProperties[extendedProperty].Value != null)
+                    searchCriteria.SetMethodNameGeneration(table.PrimaryKey.ExtendedProperties[extendedProperty].Value.ToString());
+
             AddToMap(map, searchCriteria);
         }
         protected void GetForeignKeySearchCriteria(Dictionary<string, SearchCriteria> map)
@@ -458,6 +558,10 @@ public class SearchCriteria
                 foreach (MemberColumnSchema mcs in tks.ForeignKeyMemberColumns)
                     if (mcs.Table.Equals(table))
                         searchCriteria.Add(mcs);
+
+                if (!String.IsNullOrEmpty(extendedProperty) && tks.ExtendedProperties.Contains(extendedProperty) && tks.ExtendedProperties[extendedProperty].Value != null)
+                    searchCriteria.SetMethodNameGeneration(tks.ExtendedProperties[extendedProperty].Value.ToString());
+
                 AddToMap(map, searchCriteria);
             }
         }
@@ -469,6 +573,10 @@ public class SearchCriteria
                 foreach (MemberColumnSchema mcs in indexSchema.MemberColumns)
                     if (mcs.Table.Equals(table))
                         searchCriteria.Add(mcs);
+
+                if (!String.IsNullOrEmpty(extendedProperty) && indexSchema.ExtendedProperties.Contains(extendedProperty) && indexSchema.ExtendedProperties[extendedProperty].Value != null)
+                    searchCriteria.SetMethodNameGeneration(indexSchema.ExtendedProperties[extendedProperty].Value.ToString());
+
                 AddToMap(map, searchCriteria);
             }
         }

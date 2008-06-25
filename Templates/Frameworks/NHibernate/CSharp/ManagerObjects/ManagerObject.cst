@@ -37,7 +37,7 @@ namespace <%= ManagerNamespace %>
 		<% if(sc.Items.Count > 1) { // Override GetById%>
 		<%= GetClassName(SourceTable.Name) %> GetById(<%= GetMethodParameters(sc.Items, true) %>);
 		<% } %>
-		<% } else if(!sc.ContainsForeignKey(ExcludedTables)) { %>
+		<% } else if(!ContainsForeignKey(sc, ExcludedTables)) { %>
 		IList<<%= GetClassName(SourceTable.Name) %>> <%= GetMethodDeclaration(sc) %>;
 		<% } } %>
     }
@@ -86,7 +86,7 @@ namespace <%= ManagerNamespace %>
 		}
 		
 		<% } %>
-		<% } else if(!sc.ContainsForeignKey(ExcludedTables)) { %>
+		<% } else if(!ContainsForeignKey(sc, ExcludedTables)) { %>
 		public IList<<%= GetClassName(SourceTable.Name) %>> <%= GetMethodDeclaration(sc) %>
         {
             ICriteria <%= GetVariableName(SourceTable.Name) %>Criteria = Session.GetISession().CreateCriteria(typeof(<%= GetClassName(SourceTable.Name) %>));
