@@ -1962,39 +1962,20 @@ Public Class OrdersDataAdapter
             Me.Cleanup() 
         End Try 
     End Function 
-		Public Function FillByOrderId(ByVal dataSet As OrdersDataSet, orderId AS Integer) AS Integer
+	
+		Public Function FillByOrderId(ByVal dataSet As OrdersDataSet, _
+		ByVal orderId As Integer  _
+		) AS Integer
 			Try
 				DIM recordcount AS INTEGER = 0
 				_command = Me.GetCommand()
 				_command.CommandText = _
 					"SELECT " & _
-						"[OrderId]," & _
-						"[UserId]," & _
-						"[OrderDate]," & _
-						"[ShipAddr1]," & _
-						"[ShipAddr2]," & _
-						"[ShipCity]," & _
-						"[ShipState]," & _
-						"[ShipZip]," & _
-						"[ShipCountry]," & _
-						"[BillAddr1]," & _
-						"[BillAddr2]," & _
-						"[BillCity]," & _
-						"[BillState]," & _
-						"[BillZip]," & _
-						"[BillCountry]," & _
-						"[Courier]," & _
-						"[TotalPrice]," & _
-						"[BillToFirstName]," & _
-						"[BillToLastName]," & _
-						"[ShipToFirstName]," & _
-						"[ShipToLastName]," & _
-						"[AuthorizationNumber]," & _
-						"[Locale]" & _
+						"[OrderId] " & _
 					"FROM " & _
 						"[Orders] " & _
 					" WHERE" & _
-						"[OrderId] = @OrderId" & _
+						" [OrderId] = @OrderId" & _
 					" "
 				_command.Parameters.Add(Me.CreateParameter("@OrderId", DbType.Int32, orderId))
 				Me.OpenConnection()

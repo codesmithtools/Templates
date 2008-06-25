@@ -832,28 +832,30 @@ Public Class <%=GetClassName(SourceTable.Name)%>DataAdapter
             Me.Cleanup() 
         End Try 
     End Function 
-	<% Dim j AS Integer %>
-    <% For i = 0 To SourceTable.Indexes.Count - 1  %>
-		<% IF  NOT methods.Contains(GetFillByIndexName(SourceTable.Indexes(i))) THEN %>
-		<% methods.Add(GetFillByIndexName(SourceTable.Indexes(i))) %>
-		Public Function <%= GetFillByIndexName(SourceTable.Indexes(i)) %>(ByVal dataSet As <%= GetClassName(SourceTable.Name) %>DataSet, <%= GetFillByIndexParameters(SourceTable.Indexes(i)) %>) AS Integer
+	
+	<% For each method As SearchCriteria in SearchCriteria.GetAllSearchCriteria(SourceTable) %>
+	<% method.SetMethodNameGeneration("FillBy","And","") %> 
+		Public Function <%= method.ToString()%>(ByVal dataSet As <%= GetClassName(SourceTable.Name) %>DataSet, _
+		<%For Each item As MemberColumnSchema in method.Items %> 
+		ByVal <%=GetCamelCaseName(item.Name)%> As <%= DBTOVB(NativeToDB(item.NativeType)) %> <%= IIf(method.Items.IndexOf(item) = method.Items.Count - 1,"",",") %> _
+		<% Next %>) AS Integer
 			Try
 				DIM recordcount AS INTEGER = 0
 				_command = Me.GetCommand()
 				_command.CommandText = _
 					"SELECT " & _
-						<% FOR j = 0 TO SourceTable.Columns.Count - 1 %>
-						"[<%= SourceTable.Columns(j).Name %>]<% IF (j < SourceTable.Columns.Count - 1) THEN %>,<% END IF %>" & _
-						<% NEXT %>
+						<%For Each item As MemberColumnSchema in method.Items %> 
+						"[<%= item.Name %>]<%= IIf(method.Items.IndexOf(item) = method.Items.Count - 1," ",", ") %>" & _
+						<% Next %>
 					"FROM " & _
 						"[<%= GetClassName(SourceTable.Name) %>] " & _
 					" WHERE" & _
-						<% FOR j = 0 TO SourceTable.Indexes(i).MemberColumns.Count - 1 %>
-						"<% IF (j > 0) THEN %> AND <% END IF %>[<%= SourceTable.Indexes(i).MemberColumns(j).Name %>] = @<%= SourceTable.Indexes(i).MemberColumns(j).Name %>" & _
-						<% NEXT %>
+						<%For Each item As MemberColumnSchema in method.Items %> 
+						" <% If Not method.Items.IndexOf(item) = method.Items.Count ANDALSO Not method.Items.IndexOf(item) = 0 THEN %>AND <% END IF %>[<%= item.Name %>] = @<%= item.Name %>" & _
+						<% Next %>
 					" "
-				<% FOR j = 0 TO SourceTable.Indexes(i).MemberColumns.Count - 1%>
-				_command.Parameters.Add(Me.CreateParameter("@<%= SourceTable.Indexes(i).MemberColumns(j).Name %>", DbType.<%= NativeToDB(SourceTable.Indexes(i).MemberColumns(j).NativeType) %>, <%= GetCamelCaseName(SourceTable.Indexes(i).MemberColumns(j).Name) %>))
+				<%For Each  item As MemberColumnSchema in method.Items %>
+				_command.Parameters.Add(Me.CreateParameter("@<%= item.Name %>", DbType.<%= NativeToDB(item.NativeType) %>, <%= GetCamelCaseName(item.Name) %>))
 				<% NEXT %>
 				Me.OpenConnection()
 				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection OR CommandBehavior.SingleResult)
@@ -877,55 +879,8 @@ Public Class <%=GetClassName(SourceTable.Name)%>DataAdapter
 				Me.Cleanup()
 			END TRY
 		END FUNCTION
-		<% END IF %>
-		<% NEXT %>
+	<% NEXT %>
 		
-		<% FOR i = 0 TO SourceTable.ForeignKeys.Count - 1 %>
-		<% IF  NOT methods.Contains("FillBy" + SourceTable.ForeignKeyColumns(i).Name) THEN %> 
-		<% methods.Add("FillBy" + SourceTable.ForeignKeyColumns(i).Name) %>
-		PUBLIC FUNCTION FillBy<%=SourceTable.ForeignKeyColumns(i).Name %> (ByVal dataSet AS <%= GetClassName(SourceTable.Name) %>DataSet, <%= DBTOVB(NativeToDB(SourceTable.ForeignKeyColumns(i).NativeType))%> <%=SourceTable.ForeignKeyColumns(i).Name%>) AS INTEGER
-			TRY
-				int recordcount = 0
-				_command = Me.GetCommand()
-				_command.CommandText = _
-					"SELECT " &_
-						<% FOR j = 0 TO SourceTable.Columns.Count - 1 %>
-						"[<%= SourceTable.Columns(j).Name %>]<% if (j < SourceTable.Columns.Count - 1) THEN %>,<% END IF %>" & _
-						<% NEXT %>
-					"FROM " & _
-						"[<%= GetClassName(SourceTable.Name) %>]" & _
-					" WHERE " & _
-						<% FOR j = 0 TO SourceTable.ForeignKeys(i).ForeignKeyMemberColumns.Count - 1 %>
-						"<% if (j > 0) THEN %>AND <% END IF %>[<%= SourceTable.ForeignKeys(i).ForeignKeyMemberColumns(j).Name %>] = @<%= SourceTable.ForeignKeys(i).ForeignKeyMemberColumns(j).Name %>" & _
-						<% NEXT %>
-				
-				<% FOR j = 0 TO SourceTable.ForeignKeys(i).ForeignKeyMemberColumns.Count - 1%>
-				_command.Parameters.Add(Me.CreateParameter("@<%= SourceTable.ForeignKeys(i).ForeignKeyMemberColumns(j).Name %>", DbType.<%= SourceTable.ForeignKeys(i).ForeignKeyMemberColumns(j).NativeType %>, <%= GetCamelCaseName(SourceTable.ForeignKeys(i).ForeignKeyMemberColumns(j).Name) %>)) _
-				<% NEXT %>
-				Me.OpenConnection()
-				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult)
-				while (_reader.Read())
-				{
-					<%= GetClassName(SourceTable.Name) %>DataSet.<%= GetClassName(SourceTable.Name) %>Row row = dataSet.<%= GetClassName(SourceTable.Name) %>.New<%= GetClassName(SourceTable.Name) %>Row()
-					Me.Populate<%= GetClassName(SourceTable.Name) %>DataRow(_reader, row)
-					dataSet.<%= GetClassName(SourceTable.Name) %>.Add<%= GetClassName(SourceTable.Name) %>Row(row)
-					
-					recordcount++
-				}
-				dataSet.AcceptChanges()
-				
-				return recordcount
-			END TRY
-			CATCH (Exception e)
-				System.Diagnostics.Debug.WriteLine(e.ToString())
-				return 0
-			END CATCH
-			FINALLY
-				Me.Cleanup()
-			END FINALLY
-		FUNCTION
-		<% END IF %>
-    	<% NEXT %>
     Public Function GetFillParameters() As IDataParameter() Implements IDataAdapter.GetFillParameters
         ' not sure if I should create a <%=GetClassName(SourceTable.Name)%>Id parameter here or not. 
         Return Nothing 

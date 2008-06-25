@@ -4,7 +4,7 @@
     <propertySet name="OrdersDataSet.cs" output="OrdersDataSet.cs" template="..\Template\TypedDataSet.cst">
       <property name="ClassNamespace">TypedDataSetSample</property>
       <property name="SourceTable">
-        <connectionString>Server=(local);Database=Petshop;Integrated Security=true;</connectionString>
+        <connectionString>Data Source=(local);Initial Catalog=Petshop;Integrated Security=True;Connect Timeout=30</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
       <owner>dbo</owner>
@@ -18,9 +18,9 @@
         <connectionString>Server=(local);Database=Petshop;Integrated Security=true;</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <table>
-          <owner>dbo</owner>
-          <name>Product</name>
-        </table>
+      <owner>dbo</owner>
+      <name>Product</name>
+    </table>
       </property>
     </propertySet>
   </propertySets>

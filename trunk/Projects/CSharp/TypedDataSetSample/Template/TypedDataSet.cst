@@ -970,117 +970,68 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 				this.Cleanup();
 			}
 		}
-		<% for (int i = 0; i < SourceTable.Indexes.Count; i++) { %>
-		<% if(!methods.Contains(GetFillByIndexName(SourceTable.Indexes[i]))) { %>
-		<% methods.Add(GetFillByIndexName(SourceTable.Indexes[i])); %>
-		public int <%= GetFillByIndexName(SourceTable.Indexes[i]) %>(<%= GetClassName(SourceTable.Name) %>DataSet dataSet, <%= GetFillByIndexParameters(SourceTable.Indexes[i]) %>)
+		
+		<% foreach(SearchCriteria method in SearchCriteria.GetAllSearchCriteria(SourceTable)) { %>
+		<% method.SetMethodNameGeneration("FillBy","And",""); %> 
+		public int <%= method.ToString()%>(<%= GetClassName(SourceTable.Name) %>DataSet dataSet,
+		<%foreach(MemberColumnSchema item in method.Items){ %> 
+		<%= SqlToC[item.NativeType] %> <%=GetCamelCaseName(item.Name)%><%= method.Items.IndexOf(item) == method.Items.Count - 1 ? " " : "," %> 
+		<% } %>)
 		{
 			try
 			{
 				int recordcount = 0;
 				_command = this.GetCommand();
 				_command.CommandText = @"
-					SELECT
-						<% for (int x = 0; x < SourceTable.Columns.Count; x++) { %>
-						[<%= SourceTable.Columns[x].Name %>]<% if (x < SourceTable.Columns.Count - 1) { %>,<% } %>
-						<% } %>
-					FROM
-						[<%= GetClassName(SourceTable.Name) %>]
-					WHERE
-						<% for (int x = 0; x < SourceTable.Indexes[i].MemberColumns.Count; x++) { %>
-						<% if (x > 0) { %>AND <% } %>[<%= SourceTable.Indexes[i].MemberColumns[x].Name %>] = @<%= SourceTable.Indexes[i].MemberColumns[x].Name %>
-						<% } %>
-						";
-				
-				<% for (int x = 0; x < SourceTable.Indexes[i].MemberColumns.Count; x++) { %>
-				_command.Parameters.Add(this.CreateParameter("@<%= SourceTable.Indexes[i].MemberColumns[x].Name %>", DbType.<%= SourceTable.Indexes[i].MemberColumns[x].DataType %>, <%= GetCamelCaseName(SourceTable.Indexes[i].MemberColumns[x].Name) %>));
-				<% } %>
-				this.OpenConnection();
-				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult);
-				while (_reader.Read())
-				{
-					<%= GetClassName(SourceTable.Name) %>DataSet.<%= GetClassName(SourceTable.Name) %>Row row = dataSet.<%= GetClassName(SourceTable.Name) %>.New<%= GetClassName(SourceTable.Name) %>Row();
-					this.Populate<%= GetClassName(SourceTable.Name) %>DataRow(_reader, row);
-					dataSet.<%= GetClassName(SourceTable.Name) %>.Add<%= GetClassName(SourceTable.Name) %>Row(row);
-					
-					recordcount++;
-				}
-				dataSet.AcceptChanges();
-				
-				return recordcount;
-			}
-			catch (Exception e)
+				SELECT
+					<%foreach(MemberColumnSchema item in method.Items){ %> 
+					[<%= item.Name %>]<%= method.Items.IndexOf(item) == method.Items.Count - 1 ? " " : "," %> 
+					<% } %>
+				FROM
+					[<%= GetClassName(SourceTable.Name) %>]
+				WHERE
+					<%foreach(MemberColumnSchema item in method.Items){ %> 
+					<% if (method.Items.IndexOf(item) != method.Items.Count && method.Items.IndexOf(item) != 0) { %>AND <% } %>[<%= item.Name %>] = @<%= item.Name %>
+					<% } %>
+					";
+			
+			<%foreach(MemberColumnSchema item in method.Items){ %> 
+			_command.Parameters.Add(this.CreateParameter("@<%= item.Name %>", DbType.<%= item.DataType %>, <%= GetCamelCaseName(item.Name) %>));
+			<% } %>
+			this.OpenConnection();
+			_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult);
+			while (_reader.Read())
 			{
-				System.Diagnostics.Debug.WriteLine(e.ToString());
-				return 0;
+				<%= GetClassName(SourceTable.Name) %>DataSet.<%= GetClassName(SourceTable.Name) %>Row row = dataSet.<%= GetClassName(SourceTable.Name) %>.New<%= GetClassName(SourceTable.Name) %>Row();
+				this.Populate<%= GetClassName(SourceTable.Name) %>DataRow(_reader, row);
+				dataSet.<%= GetClassName(SourceTable.Name) %>.Add<%= GetClassName(SourceTable.Name) %>Row(row);
+				
+				recordcount++;
 			}
-			finally
-			{
-				this.Cleanup();
-			}
+			dataSet.AcceptChanges();
+				
+			return recordcount;
 		}
-		<% } %>
-		<% } %>
-		<% for (int i = 0; i < SourceTable.ForeignKeys.Count; i++) { %>
-		<% if (!methods.Contains("FillBy" + SourceTable.ForeignKeyColumns[i].Name)) { %> 
-		<% methods.Add("FillBy" + SourceTable.ForeignKeyColumns[i].Name); %>
-		public int FillBy<%=SourceTable.ForeignKeyColumns[i].Name %> (<%= GetClassName(SourceTable.Name) %>DataSet dataSet, <%= SqlToC[SourceTable.ForeignKeyColumns[i].NativeType]%> <%=SourceTable.ForeignKeyColumns[i].Name%>)
+		catch (Exception e)
 		{
-			try
-			{
-				int recordcount = 0;
-				_command = this.GetCommand();
-				_command.CommandText = @"
-					SELECT
-						<% for (int x = 0; x < SourceTable.Columns.Count; x++) { %>
-						[<%= SourceTable.Columns[x].Name %>]<% if (x < SourceTable.Columns.Count - 1) { %>,<% } %>
-						<% } %>
-					FROM
-						[<%= GetClassName(SourceTable.Name) %>]
-					WHERE
-						<% for (int x = 0; x < SourceTable.ForeignKeys[i].ForeignKeyMemberColumns.Count; x++) { %>
-						<% if (x > 0) { %>AND <% } %>[<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[x].Name %>] = @<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[x].Name %>
-						<% } %>
-						";
-				
-				<% for (int x = 0; x < SourceTable.ForeignKeys[i].ForeignKeyMemberColumns.Count; x++) { %>
-				_command.Parameters.Add(this.CreateParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[x].Name %>", DbType.<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[x].NativeType %>, <%= GetCamelCaseName(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[x].Name) %>));
-				<% } %>
-				this.OpenConnection();
-				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult);
-				while (_reader.Read())
-				{
-					<%= GetClassName(SourceTable.Name) %>DataSet.<%= GetClassName(SourceTable.Name) %>Row row = dataSet.<%= GetClassName(SourceTable.Name) %>.New<%= GetClassName(SourceTable.Name) %>Row();
-					this.Populate<%= GetClassName(SourceTable.Name) %>DataRow(_reader, row);
-					dataSet.<%= GetClassName(SourceTable.Name) %>.Add<%= GetClassName(SourceTable.Name) %>Row(row);
-					
-					recordcount++;
-				}
-				dataSet.AcceptChanges();
-				
-				return recordcount;
-			}
-			catch (Exception e)
-			{
-				System.Diagnostics.Debug.WriteLine(e.ToString());
-				return 0;
-			}
-			finally
-			{
-				this.Cleanup();
-			}
+			System.Diagnostics.Debug.WriteLine(e.ToString());
+			return 0;
 		}
-		<% } %>
-		<% } %>
-		
-		public IDataParameter[] GetFillParameters()
+		finally
 		{
-			// not sure if I should create a <%= GetClassName(SourceTable.Name) %>Id parameter here or not.
-			return null; //_fillDataParameters;
+			this.Cleanup();
 		}
-		#endregion
+	}
+	<% } %>
+	
+	public IDataParameter[] GetFillParameters()
+	{
+		// not sure if I should create a <%= GetClassName(SourceTable.Name) %>Id parameter here or not.
+		return null; //_fillDataParameters;
+	}
+	#endregion
 		
-		#region Update Methods
+	#region Update Methods
 		public int Update(DataSet dataSet)
 		{
 			<%= GetClassName(SourceTable.Name) %>DataSet pageDataSet = dataSet as <%= GetClassName(SourceTable.Name) %>DataSet;
@@ -1203,9 +1154,9 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 				throw new ArgumentException("DataSet null");
 			}
 		}
-		#endregion
+	#endregion
 		
-		#region Events
+	#region Events
 		public delegate void <%= GetClassName(SourceTable.Name) %>UpdateEventHandler(object sender, <%= GetClassName(SourceTable.Name) %>EventArgs e);
 		
 		public event <%= GetClassName(SourceTable.Name) %>UpdateEventHandler <%= GetClassName(SourceTable.Name) %>Updated;
@@ -1251,7 +1202,7 @@ if (!string.IsNullOrEmpty(this.ClassNamespace))
 		}
 		#endregion
 		
-		#region Custom Exceptions
+	#region Custom Exceptions
 		[Serializable()]
 		public class <%= GetClassName(SourceTable.Name) %>NotFoundException: ApplicationException
 		{
