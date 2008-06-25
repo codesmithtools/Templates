@@ -1,8 +1,8 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="False" 
     Description="Linq to Sql DataContext Class." %>
 
-<%@ Assembly Name="Dbml" %>
-<%@ Assembly Name="Generator" %>
+<%@ Assembly Name="Dbml" Path="..\..\Common" %>
+<%@ Assembly Name="Generator" Path="..\..\Common" %>
 
 <%@ Import Namespace="System.Text" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>

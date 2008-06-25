@@ -4,8 +4,8 @@
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="Microsoft.Build.Engine" %>
 <%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Name="Dbml" %>
-<%@ Assembly Name="Generator" %>
+<%@ Assembly Name="Dbml" Path="..\..\Common"%>
+<%@ Assembly Name="Generator" Path="..\..\Common"%>
 <%@ Assembly Src="Manager.vb" %>
 
 <%@ Import Namespace="System.Data" %>

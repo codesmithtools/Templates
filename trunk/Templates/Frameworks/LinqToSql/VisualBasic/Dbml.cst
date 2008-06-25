@@ -1,7 +1,7 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="XML"
     Description="Generate Linq to Sql Dbml File"
     Debug="true" OutputType="None" %>
-
+<%--VB Version Synced with C# Revision: 191 --%>
 <%@ Assembly Name="System.Design" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
