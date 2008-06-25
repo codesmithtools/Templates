@@ -46,8 +46,6 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Register Name="EditableUnitTestsTemplate" Template="UnitTests\EditableUnitTests.cst" %>
 
 <script runat="template">
-Protected strategy As New PreserveRegionsMergeStrategy("^[ " & Chr(9) & "]*(?i:Custom)", "C#")
-
 Public Overloads Overrides Sub Render(ByVal writer As TextWriter)
 	Me.tablePrefix = Me.TablePrefix
 	If ExcludedTables Is Nothing Then
@@ -64,7 +62,7 @@ Public Overloads Overrides Sub Render(ByVal writer As TextWriter)
 	Next
 	RenderBaseClasses()
 	RenderManagerFactory()
-	
+
 	RegisterReferences()
 End Sub
 
@@ -72,68 +70,61 @@ Private Sub RenderBaseClasses()
 	Dim fileName As String
 	Dim folderName As String = GetFolder(BaseNamespace)
 
-	fileName = [String].Format("{0}{1}.vb", folderName, "BusinessBase")
-	Dim businessBase As New BusinessBaseTemplate()
+	fileName = [String].Format("{0}{1}.cs", folderName, "BusinessBase")
+	Dim businessBase As BusinessBaseTemplate = Me.Create(Of BusinessBaseTemplate)()
 	businessBase.BaseNamespace = Me.BaseNamespace
-	businessBase.RenderToFile(fileName, strategy)
-	'RegisterOutputFile(fileName, Nothing)
+	businessBase.RenderToFile(GetOutputFile(fileName, Nothing), True)
 
-	fileName = [String].Format("{0}{1}.vb", folderName, "ManagerBase")
-	Dim managerBase As New ManagerBaseTemplate()
+	fileName = [String].Format("{0}{1}.cs", folderName, "ManagerBase")
+	Dim managerBase As ManagerBaseTemplate = Me.Create(Of ManagerBaseTemplate)()
 	managerBase.BaseNamespace = Me.BaseNamespace
 	managerBase.NHibVersion = Me.NHibernateVersion
-	managerBase.RenderToFile(fileName, strategy)
-	'RegisterOutputFile(fileName, Nothing)
+	managerBase.RenderToFile(GetOutputFile(fileName, Nothing), True)
 
-	fileName = [String].Format("{0}{1}.vb", folderName, "NHibernateSession")
-	Dim session As New SessionTemplate()
+	fileName = [String].Format("{0}{1}.cs", folderName, "NHibernateSession")
+	Dim session As SessionTemplate = Me.Create(Of SessionTemplate)()
 	session.BaseNamespace = Me.BaseNamespace
-	session.RenderToFile(fileName, strategy)
-	'RegisterOutputFile(fileName, Nothing)
+	session.RenderToFile(GetOutputFile(fileName, Nothing), True)
 
-	fileName = [String].Format("{0}{1}.vb", folderName, "NHibernateSessionManager")
-	Dim sessionManager As New SessionManagerTemplate()
+	fileName = [String].Format("{0}{1}.cs", folderName, "NHibernateSessionManager")
+	Dim sessionManager As SessionManagerTemplate = Me.Create(Of SessionManagerTemplate)()
 	sessionManager.BaseNamespace = Me.BaseNamespace
-	sessionManager.RenderToFile(fileName, strategy)
-	'RegisterOutputFile(fileName, Nothing)
+	sessionManager.RenderToFile(GetOutputFile(fileName, Nothing), True)
 
-	fileName = [String].Format("{0}{1}.vb", folderName, "UnitTestsBase")
-	Dim unitTestsBase As New UnitTestsBaseTemplate()
+	fileName = [String].Format("{0}{1}.cs", folderName, "UnitTestsBase")
+	Dim unitTestsBase As UnitTestsBaseTemplate = Me.Create(Of UnitTestsBaseTemplate)()
 	unitTestsBase.BaseNamespace = Me.BaseNamespace
 	unitTestsBase.ManagerNamespace = Me.ManagerNamespace
 	unitTestsBase.BusinessNamespace = Me.BusinessNamespace
-	unitTestsBase.RenderToFile(fileName, strategy)
-	'RegisterOutputFile(fileName, Nothing)
+	unitTestsBase.RenderToFile(GetOutputFile(fileName, Nothing), True)
 End Sub
 Private Sub RenderHbmMaps(ByVal table As TableSchema)
 	Dim fileName As String = [String].Format("{0}{1}.hbm.xml", GetFolder("HbmMaps"), GetClassName(table.Name))
 
-	Dim hbmMap As New HbmMapTemplate()
+	Dim hbmMap As HbmMapTemplate = Me.Create(Of HbmMapTemplate)()
 	hbmMap.AssemblyName = Me.AssemblyName
 	hbmMap.BusinessNamespace = Me.BusinessNamespace
 	hbmMap.SourceTable = table
 	hbmMap.TablePrefix = Me.TablePrefix
 	hbmMap.ExcludedTables = Me.ExcludedTables
 
-	hbmMap.RenderToFile(fileName, strategy)
-	RegisterOutputFile(fileName, Nothing, "BuildAction", 3)
+	hbmMap.RenderToFile(GetOutputFile(fileName, Nothing, "BuildAction", 3), True)
 End Sub
 Private Sub RenderBusinessObjects(ByVal table As TableSchema)
-	Dim fileName As String = [String].Format("{0}{1}.generated.vb", GetFolder(BusinessNamespace), GetClassName(table.Name))
-	Dim editableFileName As String = [String].Format("{0}{1}.vb", GetFolder(BusinessNamespace), GetClassName(table.Name))
+	Dim fileName As String = [String].Format("{0}{1}.generated.cs", GetFolder(BusinessNamespace), GetClassName(table.Name))
+	Dim editableFileName As String = [String].Format("{0}{1}.cs", GetFolder(BusinessNamespace), GetClassName(table.Name))
 
 	If Not File.Exists(editableFileName) Then
-		Dim editableBusinessObject As New EditableBusinessObjectTemplate()
+		Dim editableBusinessObject As EditableBusinessObjectTemplate = Me.Create(Of EditableBusinessObjectTemplate)()
 		editableBusinessObject.BusinessNamespace = Me.BusinessNamespace
 		editableBusinessObject.BaseNamespace = Me.BaseNamespace
 		editableBusinessObject.SourceTable = table
 		editableBusinessObject.TablePrefix = Me.TablePrefix
 
-		editableBusinessObject.RenderToFile(editableFileName, strategy)
-		'RegisterOutputFile(editableFileName, Nothing)
+		editableBusinessObject.RenderToFile(GetOutputFile(editableFileName, Nothing), True)
 	End If
 
-	Dim businessObject As New BusinessObjectTemplate()
+	Dim businessObject As BusinessObjectTemplate = Me.Create(Of BusinessObjectTemplate)()
 	businessObject.BusinessNamespace = Me.BusinessNamespace
 	businessObject.BaseNamespace = Me.BaseNamespace
 	businessObject.VsVersion = Me.VsVersion
@@ -141,26 +132,24 @@ Private Sub RenderBusinessObjects(ByVal table As TableSchema)
 	businessObject.TablePrefix = Me.TablePrefix
 	businessObject.ExcludedTables = Me.ExcludedTables
 
-	businessObject.RenderToFile(fileName, strategy)
-	'RegisterOutputFile(fileName, Nothing)
+	businessObject.RenderToFile(GetOutputFile(fileName, editableFileName), True)
 End Sub
 Private Sub RenderManagerObjects(ByVal table As TableSchema)
-	Dim fileName As String = [String].Format("{0}{1}Manager.Generated.vb", GetFolder(ManagerNamespace), GetClassName(table.Name))
-	Dim editableFileName As String = [String].Format("{0}{1}Manager.vb", GetFolder(ManagerNamespace), GetClassName(table.Name))
+	Dim fileName As String = [String].Format("{0}{1}Manager.Generated.cs", GetFolder(ManagerNamespace), GetClassName(table.Name))
+	Dim editableFileName As String = [String].Format("{0}{1}Manager.cs", GetFolder(ManagerNamespace), GetClassName(table.Name))
 
 	If Not File.Exists(editableFileName) Then
-		Dim editableManagerObject As New EditableManagerObjectTemplate()
+		Dim editableManagerObject As EditableManagerObjectTemplate = Me.Create(Of EditableManagerObjectTemplate)()
 		editableManagerObject.ManagerNamespace = Me.ManagerNamespace
 		editableManagerObject.BusinessNamespace = Me.BusinessNamespace
 		editableManagerObject.BaseNamespace = Me.BaseNamespace
 		editableManagerObject.SourceTable = table
 		editableManagerObject.TablePrefix = Me.TablePrefix
 
-		editableManagerObject.RenderToFile(editableFileName, strategy)
-		'RegisterOutputFile(editableFileName, Nothing)
+		editableManagerObject.RenderToFile(GetOutputFile(editableFileName, Nothing), True)
 	End If
 
-	Dim managerObject As New ManagerObjectTemplate()
+	Dim managerObject As ManagerObjectTemplate = Me.Create(Of ManagerObjectTemplate)()
 	managerObject.ManagerNamespace = Me.ManagerNamespace
 	managerObject.BusinessNamespace = Me.BusinessNamespace
 	managerObject.BaseNamespace = Me.BaseNamespace
@@ -169,28 +158,26 @@ Private Sub RenderManagerObjects(ByVal table As TableSchema)
 	managerObject.TablePrefix = Me.TablePrefix
 	managerObject.ExcludedTables = Me.ExcludedTables
 
-	managerObject.RenderToFile(fileName, strategy)
-	'RegisterOutputFile(fileName, Nothing)
+	managerObject.RenderToFile(GetOutputFile(fileName, editableFileName), True)
 End Sub
 Private Sub RenderManagerFactory()
-	Dim fileName As String = [String].Format("{0}ManagerFactory.vb", GetFolder(ManagerNamespace))
+	Dim fileName As String = [String].Format("{0}ManagerFactory.cs", GetFolder(ManagerNamespace))
 
-	Dim managerFactory As New ManagerFactoryTemplate()
+	Dim managerFactory As ManagerFactoryTemplate = Me.Create(Of ManagerFactoryTemplate)()
 	managerFactory.SourceDatabase = Me.SourceDatabase
 	managerFactory.ManagerNamespace = Me.ManagerNamespace
 	managerFactory.BaseNamespace = Me.BaseNamespace
 	managerFactory.ExcludedTables = Me.ExcludedTables
 	managerFactory.TablePrefix = Me.TablePrefix
 
-	managerFactory.RenderToFile(fileName, strategy)
-	'RegisterOutputFile(fileName, Nothing)
+	managerFactory.RenderToFile(GetOutputFile(fileName, Nothing), True)
 End Sub
 Private Sub RenderUnitTests(ByVal table As TableSchema)
-	Dim fileName As String = [String].Format("{0}{1}Tests.generated.vb", GetFolder(UnitTestNamespace), GetClassName(table.Name))
-	Dim editableFileName As String = [String].Format("{0}{1}Tests.vb", GetFolder(UnitTestNamespace), GetClassName(table.Name))
+	Dim fileName As String = [String].Format("{0}{1}Tests.generated.cs", GetFolder(UnitTestNamespace), GetClassName(table.Name))
+	Dim editableFileName As String = [String].Format("{0}{1}Tests.cs", GetFolder(UnitTestNamespace), GetClassName(table.Name))
 
 	If Not File.Exists(editableFileName) Then
-		Dim editableUnitTests As New EditableUnitTestsTemplate()
+		Dim editableUnitTests As EditableUnitTestsTemplate = Me.Create(Of EditableUnitTestsTemplate)()
 		editableUnitTests.SourceTable = table
 		editableUnitTests.ExcludedTables = Me.ExcludedTables
 		editableUnitTests.TablePrefix = Me.TablePrefix
@@ -199,11 +186,10 @@ Private Sub RenderUnitTests(ByVal table As TableSchema)
 		editableUnitTests.BusinessNamespace = Me.BusinessNamespace
 		editableUnitTests.UnitTestNamespace = Me.UnitTestNamespace
 
-		editableUnitTests.RenderToFile(editableFileName, strategy)
-		'RegisterOutputFile(editableFileName, Nothing)
+		editableUnitTests.RenderToFile(GetOutputFile(editableFileName, Nothing), True)
 	End If
 
-	Dim unitTests As New UnitTestsTemplate()
+	Dim unitTests As UnitTestsTemplate = Me.Create(Of UnitTestsTemplate)()
 	unitTests.SourceTable = table
 	unitTests.ExcludedTables = Me.ExcludedTables
 	unitTests.TablePrefix = Me.TablePrefix
@@ -213,8 +199,7 @@ Private Sub RenderUnitTests(ByVal table As TableSchema)
 	unitTests.BusinessNamespace = Me.BusinessNamespace
 	unitTests.UnitTestNamespace = Me.UnitTestNamespace
 
-	unitTests.RenderToFile(fileName, strategy)
-	'RegisterOutputFile(fileName, Nothing)
+	unitTests.RenderToFile(GetOutputFile(fileName, editableFileName), True)
 End Sub
 Private Sub RegisterReferences()
 	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "Resources\NHibernate\NHibernate.dll"))
@@ -222,11 +207,11 @@ Private Sub RegisterReferences()
 	Me.RegisterReference("System.Web")
 End Sub
 
-Private Sub RegisterOutputFile(ByVal fileName As String, ByVal dependentUpon As String, ParamArray metaData As Object())
+Private Function GetOutputFile(ByVal fileName As String, ByVal dependentUpon As String, ParamArray metaData As Object()) As OutputFile
 	Dim outputFile As New OutputFile(fileName)
 
 	If Not [String].IsNullOrEmpty(dependentUpon) Then
-		outputFile.DependentUpon = dependentUpon
+		outputFile.DependentUpon = Path.GetFullPath(dependentUpon)
 	End If
 
 	If metaData.Length Mod 2 <> 0 Then
@@ -238,8 +223,8 @@ Private Sub RegisterOutputFile(ByVal fileName As String, ByVal dependentUpon As 
 		x += 2
 	End While
 
-	Me.RegisterOutput(outputFile)
-End Sub
+	Return outputFile
+End Function
 Private Function GetFolder(ByVal folder As String) As String
 	If folder.Contains(".") AndAlso Not folder.EndsWith(".") Then
 		folder = folder.Substring(folder.LastIndexOf("."C) + 1)

@@ -3,12 +3,13 @@ Imports System.ComponentModel
 Imports System.Data
 Imports System.Collections.Generic
 Imports System.Text
+
 Imports CodeSmith.Engine
 Imports SchemaExplorer
 
 Public Enum NHibernateVersion
-    v1_2
-    v2_0
+	v1_2
+	v2_0
 End Enum
 Public Enum VisualStudioVersion
 	VS_2005
@@ -16,257 +17,294 @@ Public Enum VisualStudioVersion
 End Enum
 
 Public Class NHibernateHelper
-    Inherits CodeTemplate
-    Public Function GetCriterionNamespace(ByVal version As NHibernateVersion) As String
-        Select Case version
-            Case NHibernateVersion.v1_2
-                Return "NHibernate.Expression"
-				
-            Case NHibernateVersion.v2_0
+	Inherits CodeTemplate
+	Public Function GetCriterionNamespace(ByVal version As NHibernateVersion) As String
+		Select Case version
+			Case NHibernateVersion.v1_2
+				Return "NHibernate.Expression"
+			Case NHibernateVersion.v2_0
+
 				Return "NHibernate.Criterion"
-				
-            Case Else
-                Throw New Exception("Invalid NHibernateVersion")
+			Case Else
 
-        End Select
-    End Function
+				Throw New Exception("Invalid NHibernateVersion")
+		End Select
+	End Function
 
-#Region "Variable Name Methods"
+	#region "Variable Name Methods"
 
-    Public Function GetPropertyName(ByVal name As String) As String
-        Return StringUtil.ToPascalCase(name)
-    End Function
-    Public Function GetPropertyNamePlural(ByVal name As String) As String
-        Return GetPropertyName(GetNamePlural(name))
-    End Function
+	Public Function GetPropertyName(ByVal name As String) As String
+		Return StringUtil.ToPascalCase(name)
+	End Function
+	Public Function GetPropertyNamePlural(ByVal name As String) As String
+		Return GetPropertyName(GetNamePlural(name))
+	End Function
 
-    Public Function GetPrivateVariableName(ByVal name As String) As String
-        Return "p_" + GetVariableName(name)
-    End Function
-    Public Function GetPrivateVariableNamePlural(ByVal name As String) As String
-        Return GetPrivateVariableName(GetNamePlural(name))
-    End Function
+	Public Function GetPrivateVariableName(ByVal name As String) As String
+		Return "_" + GetVariableName(name)
+	End Function
+	Public Function GetPrivateVariableNamePlural(ByVal name As String) As String
+		Return GetPrivateVariableName(GetNamePlural(name))
+	End Function
 
-    Public Function GetVariableName(ByVal name As String) As String
-        Return "_" + StringUtil.ToCamelCase(name)
-    End Function
-    Public Function GetVariableNamePlural(ByVal name As String) As String
-        Return GetVariableName(GetNamePlural(name))
-    End Function
+	Public Function GetVariableName(ByVal name As String) As String
+		Return StringUtil.ToCamelCase(name)
+	End Function
+	Public Function GetVariableNamePlural(ByVal name As String) As String
+		Return GetVariableName(GetNamePlural(name))
+	End Function
 
-    Private Function GetNamePlural(ByVal name As String) As String
-        Dim result As New System.Text.StringBuilder()
-        result.Append(name)
+	Private Function GetNamePlural(ByVal name As String) As String
+		Dim result As New System.Text.StringBuilder()
+		result.Append(name)
 
-        If Not name.EndsWith("es") AndAlso name.EndsWith("s") Then
-            result.Append("es")
-        Else
-            result.Append("s")
-        End If
+		If Not name.EndsWith("es") AndAlso name.EndsWith("s") Then
+			result.Append("es")
+		Else
+			result.Append("s")
+		End If
 
-        Return result.ToString()
-    End Function
+		Return result.ToString()
+	End Function
 #End Region
 
-#Region "ManyToMany Table Methods"
+	#region "ManyToMany Table Methods"
 
-    Public Function GetToManyTable(ByVal manyToTable As TableSchema, ByVal sourceTable As TableSchema) As TableSchema
-        Dim result As TableSchema = Nothing
-        For Each key As TableKeySchema In manyToTable.ForeignKeys
-            If Not key.PrimaryKeyTable.Equals(sourceTable) Then
-                result = key.PrimaryKeyTable
-                Exit For
-            End If
-        Next
-        Return result
-    End Function
-    Public Shared Function GetToManyTableKey(ByVal manyToTable As TableSchema, ByVal foreignTable As TableSchema) As MemberColumnSchema
-        Dim result As MemberColumnSchema = Nothing
-        For Each key As TableKeySchema In manyToTable.ForeignKeys
-            If key.PrimaryKeyTable.Equals(foreignTable) Then
-                result = key.ForeignKeyMemberColumns(0)
-                Exit For
-            End If
-        Next
-        Return result
-    End Function
-    Public Function IsManyToMany(ByVal table As TableSchema) As Boolean
-        ' If there are 2 ForeignKeyColumns AND...
-        ' ...there are only two columns OR
-        '    there are 3 columns and 1 is a primary key.
-        Return (table.ForeignKeyColumns.Count = 2 AndAlso ((table.Columns.Count = 2) OrElse (table.Columns.Count = 3 AndAlso table.PrimaryKey IsNot Nothing)))
-    End Function
+	Public Function GetToManyTable(ByVal manyToTable As TableSchema, ByVal sourceTable As TableSchema) As TableSchema
+		Dim result As TableSchema = Nothing
+		For Each key As TableKeySchema In manyToTable.ForeignKeys
+			If Not key.PrimaryKeyTable.Equals(sourceTable) Then
+				result = key.PrimaryKeyTable
+				Exit For
+			End If
+		Next
+		Return result
+	End Function
+	Public Shared Function GetToManyTableKey(ByVal manyToTable As TableSchema, ByVal foreignTable As TableSchema) As MemberColumnSchema
+		Dim result As MemberColumnSchema = Nothing
+		For Each key As TableKeySchema In manyToTable.ForeignKeys
+			If key.PrimaryKeyTable.Equals(foreignTable) Then
+				result = key.ForeignKeyMemberColumns(0)
+				Exit For
+			End If
+		Next
+		Return result
+	End Function
+	Public Function IsManyToMany(ByVal table As TableSchema) As Boolean
+		' If there are 2 ForeignKeyColumns AND...
+		' ...there are only two columns OR
+		'    there are 3 columns and 1 is a primary key.
+		Return (table.ForeignKeyColumns.Count = 2 AndAlso ((table.Columns.Count = 2) OrElse (table.Columns.Count = 3 AndAlso table.PrimaryKey IsNot Nothing)))
+	End Function
 #End Region
 
-    Public Function GetCascade(ByVal column As MemberColumnSchema) As String
+	Public Function GetCascade(ByVal column As MemberColumnSchema) As String
 		If column.AllowDBNull Then
 			Return "all"
 		Else
 			Return "all-delete-orphan"
 		End If
-    End Function
-
-#Region "BusinessObject Methods"
-
-    Public Function GetInitialization(ByVal type As Type) As String
-        Dim result As String
-
-        If type.Equals(GetType(String)) Then
-            result = "String.Empty"
-        ElseIf type.Equals(GetType(DateTime)) Then
-            result = "new DateTime()"
-        Else
-            result = "Nothing"
-        End If
-        Return result
-    End Function
-    Public Function GetBusinessBaseIdType(ByVal table As TableSchema) As Type
-        If IsMutliColumnPrimaryKey(table.PrimaryKey) Then
-            Return GetType(String)
-        Else
-            Return GetPrimaryKeyColumn(table.PrimaryKey).SystemType
-        End If
-    End Function
-#End Region
-
-    Public Function GetClassName(ByVal tableName As String) As String
-        If Not [String].IsNullOrEmpty(_tablePrefix) AndAlso tableName.StartsWith(_tablePrefix) Then
-            tableName = tableName.Remove(0, _tablePrefix.Length)
-        End If
-
-        If tableName.EndsWith("s") AndAlso Not tableName.EndsWith("ss") Then
-            tableName = tableName.Substring(0, tableName.Length - 1)
-        End If
-
-        Return StringUtil.ToPascalCase(tableName)
-    End Function
-    Protected _tablePrefix As String = [String].Empty
-
-#Region "PrimaryKey Methods"
-
-    Public Function GetPrimaryKeyColumn(ByVal primaryKey As PrimaryKeySchema) As MemberColumnSchema
-        If primaryKey.MemberColumns.Count <> 1 Then
-            Throw New System.ApplicationException("This method will only work on primary keys with exactly one member column.")
-        End If
-        Return primaryKey.MemberColumns(0)
-    End Function
-    Public Function IsMutliColumnPrimaryKey(ByVal primaryKey As PrimaryKeySchema) As Boolean
-        If primaryKey.MemberColumns.Count = 0 Then
-            Throw New System.ApplicationException("This template will only work on primary keys with exactly one member column.")
-        End If
-
-        Return (primaryKey.MemberColumns.Count > 1)
-    End Function
-    Public Function GetForeignKeyColumnClassName(ByVal mcs As MemberColumnSchema, ByVal table As TableSchema) As String
-        Dim result As String = [String].Empty
-        For Each tks As TableKeySchema In table.ForeignKeys
-            If tks.ForeignKeyMemberColumns.Contains(mcs) Then
-                result = GetPropertyName(tks.PrimaryKeyTable.Name)
-                Exit For
-            End If
-        Next
-        Return result
-    End Function
-    Public Function IsPrimaryKeyColumn(ByVal mcs As MemberColumnSchema, ByVal table As TableSchema) As Boolean
-        Dim result As Boolean = False
-        For Each primaryKeyColumn As MemberColumnSchema In table.PrimaryKey.MemberColumns
-            If primaryKeyColumn.Equals(mcs) Then
-                result = True
-                Exit For
-            End If
-        Next
-        Return result
-    End Function
-#End Region
-
-#Region "Method Creation Methods"
-
-    Public Function GetMethodParameters(ByVal mcsList As List(Of MemberColumnSchema), ByVal isDeclaration As Boolean) As String
-        Dim result As New StringBuilder()
-        Dim isFirst As Boolean = True
-        For Each mcs As MemberColumnSchema In mcsList
-            If isFirst Then
-                isFirst = False
-            Else
-                result.Append(", ")
-            End If
-            If isDeclaration Then
-                result.Append("ByVal ")
-            End If
-            result.Append(GetVariableName(mcs.Name))
-			If isDeclaration Then
-				result.Append(" As ")
-                result.Append(mcs.SystemType.ToString())
-            End If
-        Next
-        Return result.ToString()
-    End Function
-    Public Function GetMethodParameters(ByVal mcsc As MemberColumnSchemaCollection, ByVal isDeclaration As Boolean) As String
-        Dim mcsList As New List(Of MemberColumnSchema)()
-        Dim x As Integer = 0
-        While x < mcsc.Count
-            mcsList.Add(mcsc(x))
-            System.Math.Max(System.Threading.Interlocked.Increment(x), x - 1)
-        End While
-        Return GetMethodParameters(mcsList, isDeclaration)
-    End Function
-    Public Function GetMethodDeclaration(ByVal sc As SearchCriteria) As String
-        Dim result As New StringBuilder()
-        result.Append(sc.MethodName)
-        result.Append("(")
-        result.Append(GetMethodParameters(sc.Items, True))
-        result.Append(")")
-        Return result.ToString()
-    End Function
-    Public Function GetPrimaryKeyCallParameters(ByVal mcsList As List(Of MemberColumnSchema)) As String
-        Dim result As New System.Text.StringBuilder()
-        Dim x As Integer = 0
-        While x < mcsList.Count
-            If x > 0 Then
-                result.Append(", ")
-            End If
-            result.Append([String].Format("{0}.Parse(keys({1}))", mcsList(x).SystemType, x))
-            System.Math.Max(System.Threading.Interlocked.Increment(x), x - 1)
-        End While
-        Return result.ToString()
-    End Function
-#End Region
-
-    Public Function GetForeignTableName(ByVal mcs As MemberColumnSchema, ByVal table As TableSchema) As String
-        For Each tks As TableKeySchema In table.ForeignKeys
-            If tks.ForeignKeyMemberColumns.Contains(mcs) Then
-                Return tks.PrimaryKeyTable.Name
-            End If
-        Next
-        Throw New Exception([String].Format("Could not find Column {0} in Table {1}'s ForeignKeys.", mcs.Name, table.Name))
-    End Function
-
-    Public Function GetUnitTestInitialization(ByVal type As Type) As String
-        Dim result As String
-
-        If type.Equals(GetType(String)) Then
-            result = """ABC"""
-        ElseIf type.Equals(GetType(DateTime)) Then
-            result = "DateTime.Now"
-        Else
-            result = "Nothing"
-        End If
-        Return result
-    End Function
-	
-	Public Function ContainsForeignKey(ByVal sc As SearchCriteria, ByVal tsc As TableSchemaCollection) As Boolean
-	For Each ts As TableSchema In tsc
-		For Each tks As TableKeySchema In ts.PrimaryKeys
-			For Each mcs As MemberColumnSchema In sc.Items
-				If tks.PrimaryKeyMemberColumns.Contains(mcs) Then
-					Return True
-				End If
-			Next
-		Next
-	Next
-	Return False
 	End Function
 
+	#region "BusinessObject Methods"
+
+	Public Function GetInitialization(ByVal type As Type) As String
+		Dim result As String
+
+		If type.Equals(GetType(String)) Then
+			result = "String.Empty"
+ElseIf type.Equals(GetType(DateTime)) Then
+			result = "new DateTime()"
+ElseIf type.Equals(GetType(Decimal)) Then
+			result = "default(Decimal)"
+ElseIf type.IsPrimitive Then
+			result = [String].Format("default({0})", type.Name.ToString())
+		Else
+			result = "null"
+		End If
+		Return result
+	End Function
+	Public Function GetBusinessBaseIdType(ByVal table As TableSchema) As Type
+		If IsMutliColumnPrimaryKey(table.PrimaryKey) Then
+			Return GetType(String)
+		Else
+			Return GetPrimaryKeyColumn(table.PrimaryKey).SystemType
+		End If
+	End Function
+#End Region
+
+	Public Function GetClassName(ByVal tableName As String) As String
+		If Not [String].IsNullOrEmpty(tablePrefix) AndAlso tableName.StartsWith(tablePrefix) Then
+			tableName = tableName.Remove(0, tablePrefix.Length)
+		End If
+
+		If tableName.EndsWith("s") AndAlso Not tableName.EndsWith("ss") Then
+			tableName = tableName.Substring(0, tableName.Length - 1)
+		End If
+
+		Return StringUtil.ToPascalCase(tableName)
+	End Function
+	Protected tablePrefix As String = [String].Empty
+
+	#region "PrimaryKey Methods"
+
+	Public Function GetPrimaryKeyColumn(ByVal primaryKey As PrimaryKeySchema) As MemberColumnSchema
+		If primaryKey.MemberColumns.Count <> 1 Then
+			Throw New System.ApplicationException("This method will only work on primary keys with exactly one member column.")
+		End If
+		Return primaryKey.MemberColumns(0)
+	End Function
+	Public Function IsMutliColumnPrimaryKey(ByVal primaryKey As PrimaryKeySchema) As Boolean
+		If primaryKey.MemberColumns.Count = 0 Then
+			Throw New System.ApplicationException("This template will only work on primary keys with exactly one member column.")
+		End If
+
+		Return (primaryKey.MemberColumns.Count > 1)
+	End Function
+	Public Function GetForeignKeyColumnClassName(ByVal mcs As MemberColumnSchema, ByVal table As TableSchema) As String
+		Dim result As String = [String].Empty
+		For Each tks As TableKeySchema In table.ForeignKeys
+			If tks.ForeignKeyMemberColumns.Contains(mcs) Then
+				result = GetPropertyName(tks.PrimaryKeyTable.Name)
+				Exit For
+			End If
+		Next
+		Return result
+	End Function
+	Public Function IsPrimaryKeyColumn(ByVal mcs As MemberColumnSchema, ByVal table As TableSchema) As Boolean
+		Dim result As Boolean = False
+		For Each primaryKeyColumn As MemberColumnSchema In table.PrimaryKey.MemberColumns
+			If primaryKeyColumn.Equals(mcs) Then
+				result = True
+				Exit For
+			End If
+		Next
+		Return result
+	End Function
+#End Region
+
+	#region "Method Creation Methods"
+
+	Public Function GetMethodParameters(ByVal mcsList As List(Of MemberColumnSchema), ByVal isDeclaration As Boolean) As String
+		Dim result As New StringBuilder()
+		Dim isFirst As Boolean = True
+		For Each mcs As MemberColumnSchema In mcsList
+			If isFirst Then
+				isFirst = False
+			Else
+				result.Append(", ")
+			End If
+			If isDeclaration Then
+				result.Append(mcs.SystemType.ToString())
+				result.Append(" ")
+			End If
+			result.Append(GetVariableName(mcs.Name))
+		Next
+		Return result.ToString()
+	End Function
+	Public Function GetMethodParameters(ByVal mcsc As MemberColumnSchemaCollection, ByVal isDeclaration As Boolean) As String
+		Dim mcsList As New List(Of MemberColumnSchema)()
+		Dim x As Integer = 0
+		While x < mcsc.Count
+			mcsList.Add(mcsc(x))
+			System.Math.Max(System.Threading.Interlocked.Increment(x),x - 1)
+		End While
+		Return GetMethodParameters(mcsList, isDeclaration)
+	End Function
+	Public Function GetMethodDeclaration(ByVal sc As SearchCriteria) As String
+		Dim result As New StringBuilder()
+		result.Append(sc.MethodName)
+		result.Append("(")
+		result.Append(GetMethodParameters(sc.Items, True))
+		result.Append(")")
+		Return result.ToString()
+	End Function
+	Public Function GetPrimaryKeyCallParameters(ByVal mcsList As List(Of MemberColumnSchema)) As String
+		Dim result As New System.Text.StringBuilder()
+		Dim x As Integer = 0
+		While x < mcsList.Count
+			If x > 0 Then
+				result.Append(", ")
+			End If
+			result.Append([String].Format("{0}.Parse(keys[{1}])", mcsList(x).SystemType, x))
+			System.Math.Max(System.Threading.Interlocked.Increment(x),x - 1)
+		End While
+		Return result.ToString()
+	End Function
+#End Region
+
+	Public Function GetForeignTableName(ByVal mcs As MemberColumnSchema, ByVal table As TableSchema) As String
+		For Each tks As TableKeySchema In table.ForeignKeys
+			If tks.ForeignKeyMemberColumns.Contains(mcs) Then
+				Return tks.PrimaryKeyTable.Name
+			End If
+		Next
+		Throw New Exception([String].Format("Could not find Column {0} in Table {1}'s ForeignKeys.", mcs.Name, table.Name))
+	End Function
+
+	Protected random As New Random()
+	Public Function GetUnitTestInitialization(ByVal column As ColumnSchema) As String
+		Dim result As String
+
+		If column.SystemType.Equals(GetType(String)) Then
+			Dim sb As New StringBuilder()
+
+			Dim size As Integer = random.[Next](1, column.Size)
+
+			sb.Append("""")
+			Dim x As Integer = 0
+			While x < size
+				Select Case x Mod 5
+					Case 0
+						sb.Append("T")
+						Exit Select
+					Case 1
+						sb.Append("e")
+						Exit Select
+					Case 2
+						sb.Append("s")
+						Exit Select
+					Case 3
+						sb.Append("t")
+						Exit Select
+					Case 4
+						sb.Append(" ")
+						Exit Select
+				End Select
+				System.Math.Max(System.Threading.Interlocked.Increment(x),x - 1)
+			End While
+			sb.Append("""")
+
+			result = sb.ToString()
+ElseIf column.SystemType.Equals(GetType(DateTime)) Then
+			result = "DateTime.Now"
+ElseIf column.SystemType.Equals(GetType(Decimal)) Then
+			result = Convert.ToDecimal(random.[Next](1, 100)).ToString()
+ElseIf column.SystemType.Equals(GetType(Int32)) Then
+			result = random.[Next](1, 100).ToString()
+ElseIf column.SystemType.Equals(GetType(Boolean)) Then
+			result = (random.[Next](1, 2).Equals(1)).ToString()
+ElseIf column.SystemType.IsPrimitive Then
+			result = [String].Format("default({0})", column.SystemType.Name.ToString())
+		Else
+			result = "null"
+		End If
+
+		Return result
+	End Function
+
+	Public Function ContainsForeignKey(ByVal sc As SearchCriteria, ByVal tsc As TableSchemaCollection) As Boolean
+		For Each ts As TableSchema In tsc
+			For Each tks As TableKeySchema In ts.PrimaryKeys
+				For Each mcs As MemberColumnSchema In sc.Items
+					If tks.PrimaryKeyMemberColumns.Contains(mcs) Then
+						Return True
+					End If
+				Next
+			Next
+		Next
+		Return False
+	End Function
 End Class
 
 #region "SearchCriteria Class"
@@ -496,7 +534,7 @@ Public Class SearchCriteria
 			Dim searchCriteria As New SearchCriteria(mcsList)
 
 			If table.PrimaryKey.ExtendedProperties.Contains(extendedProperty) Then
-				If Not [String].IsNullOrEmpty(extendedProperty) AndAlso table.PrimaryKey.ExtendedProperties.Contains(extendedProperty) AndAlso table.PrimaryKey.ExtendedProperties(extendedProperty).Value IsNot Nothing Then
+				If Not [String].IsNullOrEmpty(extendedProperty) AndAlso table.PrimaryKey.ExtendedProperties.Contains(extendedProperty) AndAlso table.PrimaryKey.ExtendedProperties(extendedProperty).Value <> Nothing Then
 					searchCriteria.SetMethodNameGeneration(table.PrimaryKey.ExtendedProperties(extendedProperty).Value.ToString())
 				End If
 			End If
@@ -512,7 +550,7 @@ Public Class SearchCriteria
 					End If
 				Next
 
-				If Not [String].IsNullOrEmpty(extendedProperty) AndAlso tks.ExtendedProperties.Contains(extendedProperty) AndAlso tks.ExtendedProperties(extendedProperty).Value IsNot Nothing Then
+				If Not [String].IsNullOrEmpty(extendedProperty) AndAlso tks.ExtendedProperties.Contains(extendedProperty) AndAlso tks.ExtendedProperties(extendedProperty).Value <> Nothing Then
 					searchCriteria.SetMethodNameGeneration(tks.ExtendedProperties(extendedProperty).Value.ToString())
 				End If
 
@@ -528,7 +566,7 @@ Public Class SearchCriteria
 					End If
 				Next
 
-				If Not [String].IsNullOrEmpty(extendedProperty) AndAlso indexSchema.ExtendedProperties.Contains(extendedProperty) AndAlso indexSchema.ExtendedProperties(extendedProperty).Value IsNot Nothing Then
+				If Not [String].IsNullOrEmpty(extendedProperty) AndAlso indexSchema.ExtendedProperties.Contains(extendedProperty) AndAlso indexSchema.ExtendedProperties(extendedProperty).Value <> Nothing Then
 					searchCriteria.SetMethodNameGeneration(indexSchema.ExtendedProperties(extendedProperty).Value.ToString())
 				End If
 
@@ -567,5 +605,3 @@ Public Class SearchCriteria
 #End Region
 End Class
 #End Region
-
-

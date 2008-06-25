@@ -39,14 +39,22 @@ Namespace <%= UnitTestNamespace %>
 		Protected Function CreateNew<%= GetClassName(SourceTable.Name) %>() As <%= GetClassName(SourceTable.Name) %>
 			Dim entity As New <%= GetClassName(SourceTable.Name) %>()
 
-			<% If Not IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) AndAlso SourceTable.PrimaryKey.MemberColumns(0).ExtendedProperties.Contains("CS_IsIdentity") AndAlso DirectCast(SourceTable.PrimaryKey.MemberColumns(0).ExtendedProperties("CS_IsIdentity").Value, Boolean) Then %>
+			<% If Not IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) Then %>
+			<% If SourceTable.PrimaryKey.MemberColumns(0).ExtendedProperties.Contains("CS_IsIdentity") AndAlso (DirectCast(SourceTable.PrimaryKey.MemberColumns(0).ExtendedProperties("CS_IsIdentity").Value, Boolean)) = False Then %>
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = <%= GetUnitTestInitialization(GetBusinessBaseIdType(SourceTable)) %>
+			entity.Id = <%= GetUnitTestInitialization(SourceTable.PrimaryKey.MemberColumns(0).Column) %>
+			<% End If %>
+			<% Else %>
+			<% For Each mcs As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns %>
+			entity.<%= GetPropertyName(mcs.Name) %> = <%= GetUnitTestInitialization(mcs.Column) %>
+			<% Next %>
 			<% End If %>
 			
 			<% ' Primitives %>
 			<% For Each column As ColumnSchema In SourceTable.NonKeyColumns %>
-			entity.<%= GetPropertyName(column.Name) %> = <%= GetUnitTestInitialization(column.SystemType) %>
+			<% If Not column.AllowDBNull Then %>
+			entity.<%= GetPropertyName(column.Name) %> = <%= GetUnitTestInitialization(column) %>
+			<% End If %>
 			<% Next %>
 			<% ' Many-To-One %>
 			<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
