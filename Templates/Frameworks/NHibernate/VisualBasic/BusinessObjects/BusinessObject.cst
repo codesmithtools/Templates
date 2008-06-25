@@ -42,7 +42,7 @@ Namespace NHibernate.Generated.BusinessObjects
 		<% 'Many-To-One %>
 		<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
 		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
-		<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso Not IsPrimaryKeyColumn(mcs, SourceTable) Then %>
+		<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso Not mcs.IsPrimaryKeyMember Then %>
 		Private <%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %> As <%= GetClassName(tks.PrimaryKeyTable.Name) %> = Nothing
 		<% End If %>
 		<% Next %>
@@ -51,7 +51,7 @@ Namespace NHibernate.Generated.BusinessObjects
 		<% 'One-To-Many & Many-To-Many %>
 		<% For Each tks As TableKeySchema In SourceTable.PrimaryKeys %>
 		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
-		<% If Not IsPrimaryKeyColumn(mcs, SourceTable) Then %>
+		<% If Not mcs.IsPrimaryKeyMember Then %>
 		<% If Not IsManyToMany(mcs.Table) Then %>
 		<% If Not ExcludedTables.Contains(mcs.Table) Then %>
 		Private <%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %> As IList(Of <%= GetClassName(mcs.Table.Name) %>) = New List(Of <%= GetClassName(mcs.Table.Name) %>)()
@@ -158,7 +158,7 @@ Namespace NHibernate.Generated.BusinessObjects
 		<% 'Many-To-One %>
 		<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
 		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
-		<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso Not IsPrimaryKeyColumn(mcs, SourceTable) Then %>
+		<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso Not mcs.IsPrimaryKeyMember Then %>
 		Public Overridable Property <%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>() As <%= GetClassName(tks.PrimaryKeyTable.Name) %>
 			Get
 				Return <%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>
@@ -183,7 +183,7 @@ Namespace NHibernate.Generated.BusinessObjects
 		<% 'One-To-Many & Many-To-Many %>
 		<% For Each tks As TableKeySchema In SourceTable.PrimaryKeys %>
 		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
-		<% If Not IsPrimaryKeyColumn(mcs, SourceTable) Then %>
+		<% If Not mcs.IsPrimaryKeyMember Then %>
 		<% If Not IsManyToMany(mcs.Table) Then %>
 		<% If Not ExcludedTables.Contains(mcs.Table) Then %>
 		Public Overridable Property <%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>() As <%= GetClassName(mcs.Table.Name) %>

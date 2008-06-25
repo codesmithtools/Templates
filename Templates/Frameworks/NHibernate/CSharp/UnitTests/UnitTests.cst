@@ -49,7 +49,9 @@ namespace <%= UnitTestNamespace %>
 			<% } %>
 			<% } else { %>
 			<% foreach(MemberColumnSchema mcs in SourceTable.PrimaryKey.MemberColumns) { %>
+			<% if(!mcs.IsForeignKeyMember) { %>
 			entity.<%= GetPropertyName(mcs.Name) %> = <%= GetUnitTestInitialization(mcs.Column) %>;
+			<% } %>
 			<% } %>
 			<% } %>
 			
@@ -62,10 +64,10 @@ namespace <%= UnitTestNamespace %>
 			<% // Many-To-One %>
 			<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
 			<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-			<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && (!IsPrimaryKeyColumn(mcs, SourceTable) || IsMutliColumnPrimaryKey(SourceTable.PrimaryKey))) { %>
+			<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && (!mcs.IsPrimaryKeyMember || IsMutliColumnPrimaryKey(SourceTable.PrimaryKey))) { %>
 			
 			I<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager = managerFactory.Get<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager();
-			<% if(!IsPrimaryKeyColumn(mcs, SourceTable)) { %>
+			<% if(!mcs.IsPrimaryKeyMember) { %>
 			entity.<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)[0];
 			<% } else { %>
 			entity.<%= GetPropertyName(mcs.Name) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)[0].Id;
@@ -159,7 +161,7 @@ namespace <%= UnitTestNamespace %>
                 }
 				<% } else { %>
                 entity = manager.GetById(entity.Id);
-                Assert.IsNull(entity );
+                Assert.IsNull(entity);
 				<% } %>
             }
             catch (Exception ex)

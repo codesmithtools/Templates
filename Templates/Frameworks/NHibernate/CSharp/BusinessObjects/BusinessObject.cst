@@ -43,7 +43,7 @@ namespace <%= BusinessNamespace %>
 		<% // Many-To-One %>
 		<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !IsPrimaryKeyColumn(mcs, SourceTable)) { %>
+		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !mcs.IsPrimaryKeyMember) { %>
 		private <%= GetClassName(tks.PrimaryKeyTable.Name) %> <%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %> = null;
 		<% } %>
 		<% } %>
@@ -52,7 +52,7 @@ namespace <%= BusinessNamespace %>
 		<% // One-To-Many & Many-To-Many %>
 		<% foreach(TableKeySchema tks in SourceTable.PrimaryKeys) { %>
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if (!IsPrimaryKeyColumn(mcs, SourceTable)) { %>
+		<% if (!mcs.IsPrimaryKeyMember) { %>
 		<% if (!IsManyToMany(mcs.Table)) { %>
 		<% if (!ExcludedTables.Contains(mcs.Table)) { %>
 		private IList<<%= GetClassName(mcs.Table.Name) %>> <%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %> = new List<<%= GetClassName(mcs.Table.Name) %>>();
@@ -150,8 +150,8 @@ namespace <%= BusinessNamespace %>
 		<% // Many-To-One %>
 		<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if (!IsPrimaryKeyColumn(mcs, SourceTable)) { %>
-		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !IsPrimaryKeyColumn(mcs, SourceTable)) { %>
+		<% if (!mcs.IsPrimaryKeyMember) { %>
+		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !mcs.IsPrimaryKeyMember) { %>
 		public virtual <%= GetClassName(tks.PrimaryKeyTable.Name) %> <%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>
         {
             get { return <%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>; }
@@ -174,7 +174,7 @@ namespace <%= BusinessNamespace %>
 		<% // One-To-Many & Many-To-Many %>
 		<% foreach(TableKeySchema tks in SourceTable.PrimaryKeys) { %>
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if (!IsPrimaryKeyColumn(mcs, SourceTable)) { %>
+		<% if (!mcs.IsPrimaryKeyMember) { %>
 		<% if (!IsManyToMany(mcs.Table)) { %>
 		<% if (!ExcludedTables.Contains(mcs.Table)) { %>
 		public virtual IList<<%= GetClassName(mcs.Table.Name) %>> <%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>

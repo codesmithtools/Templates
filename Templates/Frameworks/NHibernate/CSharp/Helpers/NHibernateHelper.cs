@@ -186,17 +186,6 @@ public class NHibernateHelper : CodeTemplate
 			}
 		return result;
 	}
-	public bool IsPrimaryKeyColumn(MemberColumnSchema mcs, TableSchema table)
-	{
-		bool result = false;
-		foreach(MemberColumnSchema primaryKeyColumn in table.PrimaryKey.MemberColumns)
-			if(primaryKeyColumn.Equals(mcs))
-			{
-				result = true;
-				break;
-			}
-		return result;
-	}
 
 	#endregion
 	
@@ -303,7 +292,7 @@ public class NHibernateHelper : CodeTemplate
 		else if(column.SystemType.Equals(typeof(Int32)))
 			result = random.Next(1, 100).ToString();
 		else if(column.SystemType.Equals(typeof(Boolean)))
-			result = (random.Next(1, 2).Equals(1)).ToString();
+			result = (random.Next(1, 2).Equals(1)).ToString().ToLower();
 		else if(column.SystemType.IsPrimitive)
 			result = String.Format("default({0})", column.SystemType.Name.ToString());
 		else
