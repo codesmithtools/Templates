@@ -28,7 +28,7 @@ namespace TypedDataSetSample
             OrdersDataAdapter cda = new OrdersDataAdapter();
             ProductDataSet pds = new ProductDataSet();
             ProductDataAdapter pda = new ProductDataAdapter();
-
+            
             pda.FillByCategoryId(pds, "BIRDS");
             Console.Out.WriteLine(cds.Orders.Rows.Count);
             IEnumerator en = pds.Product.GetEnumerator();

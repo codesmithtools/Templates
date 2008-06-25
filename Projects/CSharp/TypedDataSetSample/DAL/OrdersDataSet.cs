@@ -2298,77 +2298,58 @@ namespace TypedDataSetSample
 				this.Cleanup();
 			}
 		}
-		public int FillByOrderId(OrdersDataSet dataSet, int orderId)
+		
+		public int FillByOrderId(OrdersDataSet dataSet,
+		int orderId  
+		)
 		{
 			try
 			{
 				int recordcount = 0;
 				_command = this.GetCommand();
 				_command.CommandText = @"
-					SELECT
-						[OrderId],
-						[UserId],
-						[OrderDate],
-						[ShipAddr1],
-						[ShipAddr2],
-						[ShipCity],
-						[ShipState],
-						[ShipZip],
-						[ShipCountry],
-						[BillAddr1],
-						[BillAddr2],
-						[BillCity],
-						[BillState],
-						[BillZip],
-						[BillCountry],
-						[Courier],
-						[TotalPrice],
-						[BillToFirstName],
-						[BillToLastName],
-						[ShipToFirstName],
-						[ShipToLastName],
-						[AuthorizationNumber],
-						[Locale]
-					FROM
-						[Orders]
-					WHERE
-						[OrderId] = @OrderId
-						";
-				
-				_command.Parameters.Add(this.CreateParameter("@OrderId", DbType.Int32, orderId));
-				this.OpenConnection();
-				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult);
-				while (_reader.Read())
-				{
-					OrdersDataSet.OrdersRow row = dataSet.Orders.NewOrdersRow();
-					this.PopulateOrdersDataRow(_reader, row);
-					dataSet.Orders.AddOrdersRow(row);
-					
-					recordcount++;
-				}
-				dataSet.AcceptChanges();
-				
-				return recordcount;
-			}
-			catch (Exception e)
+				SELECT
+					[OrderId]  
+				FROM
+					[Orders]
+				WHERE
+					[OrderId] = @OrderId
+					";
+			
+			_command.Parameters.Add(this.CreateParameter("@OrderId", DbType.Int32, orderId));
+			this.OpenConnection();
+			_reader = _command.ExecuteReader(CommandBehavior.CloseConnection | CommandBehavior.SingleResult);
+			while (_reader.Read())
 			{
-				System.Diagnostics.Debug.WriteLine(e.ToString());
-				return 0;
+				OrdersDataSet.OrdersRow row = dataSet.Orders.NewOrdersRow();
+				this.PopulateOrdersDataRow(_reader, row);
+				dataSet.Orders.AddOrdersRow(row);
+				
+				recordcount++;
 			}
-			finally
-			{
-				this.Cleanup();
-			}
+			dataSet.AcceptChanges();
+				
+			return recordcount;
 		}
-		
-		public IDataParameter[] GetFillParameters()
+		catch (Exception e)
 		{
-			// not sure if I should create a OrdersId parameter here or not.
-			return null; //_fillDataParameters;
+			System.Diagnostics.Debug.WriteLine(e.ToString());
+			return 0;
 		}
-		#endregion
+		finally
+		{
+			this.Cleanup();
+		}
+	}
+	
+	public IDataParameter[] GetFillParameters()
+	{
+		// not sure if I should create a OrdersId parameter here or not.
+		return null; //_fillDataParameters;
+	}
+	#endregion
 		
-		#region Update Methods
+	#region Update Methods
 		public int Update(DataSet dataSet)
 		{
 			OrdersDataSet pageDataSet = dataSet as OrdersDataSet;
@@ -2575,9 +2556,9 @@ namespace TypedDataSetSample
 				throw new ArgumentException("DataSet null");
 			}
 		}
-		#endregion
+	#endregion
 		
-		#region Events
+	#region Events
 		public delegate void OrdersUpdateEventHandler(object sender, OrdersEventArgs e);
 		
 		public event OrdersUpdateEventHandler OrdersUpdated;
@@ -2623,7 +2604,7 @@ namespace TypedDataSetSample
 		}
 		#endregion
 		
-		#region Custom Exceptions
+	#region Custom Exceptions
 		[Serializable()]
 		public class OrdersNotFoundException: ApplicationException
 		{

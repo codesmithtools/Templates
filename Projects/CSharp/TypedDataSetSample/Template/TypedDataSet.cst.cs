@@ -4,22 +4,12 @@ using System.ComponentModel;
 using CodeSmith.Engine;
 using System.Data;
 using SchemaExplorer;
+using System.Collections.Generic;
 
 namespace CodeSmith.BaseTemplates
 {
 	public class SqlCodeTemplate : CodeTemplate
 	{
-		public string GetSqlParameterStatements(string statementPrefix, ColumnSchema column)
-		{
-			return GetSqlParameterStatements(statementPrefix, column, "sql");
-		}
-		
-		public string GetSqlParameterStatements(string statementPrefix, ColumnSchema column, string sqlObjectName)
-		{
-			string statements = "\r\n" + statementPrefix + sqlObjectName + ".AddParameter(\"@" + column.Name + "\", SqlDbType." + GetSqlDbType(column) + ", this." + GetPropertyName(column) + GetSqlParameterExtraParams(statementPrefix, column);
-			
-			return statements.Substring(statementPrefix.Length + 2);
-		}
 		
 		public string GetCamelCaseName(string value)
 		{
@@ -47,64 +37,12 @@ namespace CodeSmith.BaseTemplates
 			return value.Replace(" ", "");
 		}
 		
-		public string GetFillByIndexName(IndexSchema index)
-		{
-			StringBuilder fillByIndexName = new StringBuilder();
-			
-			fillByIndexName.Append("FillBy");
-			
-			for (int i = 0; i < index.MemberColumns.Count; i++)
-			{
-				fillByIndexName.Append(index.MemberColumns[i].Name.Replace(" ", ""));
-				if (i < index.MemberColumns.Count - 1)
-				{
-					fillByIndexName.Append("And");
-				}
-			}
-			
-			return fillByIndexName.ToString();
-		}
-		
-		public string GetFillByIndexParameters(IndexSchema index)
-		{
-			StringBuilder fillByIndexParameters = new StringBuilder();
-			
-			for (int i = 0; i < index.MemberColumns.Count; i++)
-			{
-				fillByIndexParameters.Append(GetCSharpVariableType(index.MemberColumns[i]));
-				fillByIndexParameters.Append(" ");
-				fillByIndexParameters.Append(GetCamelCaseName(index.MemberColumns[i].Name));
-				
-				if (i < index.MemberColumns.Count - 1)
-				{
-					fillByIndexParameters.Append(", ");
-				}
-			}
-			
-			return fillByIndexParameters.ToString();
-		}
 		
 		public string GetMemberVariableName(string value)
 		{
 			string memberVariableName = "_" + GetCamelCaseName(value);
 			
 			return memberVariableName;
-		}
-		
-		public string GetSqlParameterExtraParams(string statementPrefix, ColumnSchema column)
-		{
-			if (SizeMatters(column) && PrecisionMatters(column))
-			{
-				return ");\r\n" + statementPrefix + "prm.Scale = " + column.Scale + ";\r\n" + statementPrefix + "prm.Precision = " + column.Precision + ";";
-			}
-			else if (SizeMatters(column))
-			{
-				return ", " + column.Size + ");";
-			}
-			else
-			{
-				return ");";
-			}
 		}
 		
 		public bool SizeMatters(ColumnSchema column)
@@ -140,26 +78,6 @@ namespace CodeSmith.BaseTemplates
 			}
 		}
 		
-		public string GetMemberVariableDeclarationStatement(ColumnSchema column)
-		{
-			return GetMemberVariableDeclarationStatement("protected", column);
-		}
-		
-		public string GetMemberVariableDeclarationStatement(string protectionLevel, ColumnSchema column)
-		{
-			string statement = protectionLevel + " ";
-			statement += GetCSharpVariableType(column) + " " + GetMemberVariableName(column.Name);
-			
-			string defaultValue = GetMemberVariableDefaultValue(column);
-			if (defaultValue != "")
-			{
-				statement += " = " + defaultValue;
-			}
-			
-			statement += ";";	
-			
-			return statement;
-		}
 		
 		public string GetSqlReaderAssignmentStatement(ColumnSchema column, int index)
 		{
@@ -204,42 +122,7 @@ namespace CodeSmith.BaseTemplates
 			return propertyName;
 		}
 		
-		public string GetCSharpVariableType(ColumnSchema column)
-		{
-			if (column.Name.EndsWith("TypeCode")) return column.Name;
-			
-			switch (column.DataType)
-			{
-				case DbType.AnsiString: return "string";
-				case DbType.AnsiStringFixedLength: return "string";
-				case DbType.Binary: return "byte[]";
-				case DbType.Boolean: return "bool";
-				case DbType.Byte: return "byte";
-				case DbType.Currency: return "decimal";
-				case DbType.Date: return "DateTime";
-				case DbType.DateTime: return "DateTime";
-				case DbType.Decimal: return "decimal";
-				case DbType.Double: return "double";
-				case DbType.Guid: return "Guid";
-				case DbType.Int16: return "short";
-				case DbType.Int32: return "int";
-				case DbType.Int64: return "long";
-				case DbType.Object: return "object";
-				case DbType.SByte: return "sbyte";
-				case DbType.Single: return "float";
-				case DbType.String: return "string";
-				case DbType.StringFixedLength: return "string";
-				case DbType.Time: return "TimeSpan";
-				case DbType.UInt16: return "ushort";
-				case DbType.UInt32: return "uint";
-				case DbType.UInt64: return "ulong";
-				case DbType.VarNumeric: return "decimal";
-				default:
-				{
-					return "__UNKNOWN__" + column.NativeType;
-				}
-			}
-		}
+		
 		
 		public string GetReaderMethod(ColumnSchema column)
 		{
@@ -293,39 +176,7 @@ namespace CodeSmith.BaseTemplates
 			}
 		}
 		
-		public string GetSqlDbType(ColumnSchema column)
-		{
-			switch (column.NativeType)
-			{
-				case "bigint": return "BigInt";
-				case "binary": return "Binary";
-				case "bit": return "Bit";
-				case "char": return "Char";
-				case "datetime": return "DateTime";
-				case "decimal": return "Decimal";
-				case "float": return "Float";
-				case "image": return "Image";
-				case "int": return "Int";
-				case "money": return "Money";
-				case "nchar": return "NChar";
-				case "ntext": return "NText";
-				case "numeric": return "Decimal";
-				case "nvarchar": return "NVarChar";
-				case "real": return "Real";
-				case "smalldatetime": return "SmallDateTime";
-				case "smallint": return "SmallInt";
-				case "smallmoney": return "SmallMoney";
-				case "sql_variant": return "Variant";
-				case "sysname": return "NChar";
-				case "text": return "Text";
-				case "timestamp": return "Timestamp";
-				case "tinyint": return "TinyInt";
-				case "uniqueidentifier": return "UniqueIdentifier";
-				case "varbinary": return "VarBinary";
-				case "varchar": return "VarChar";
-				default: return "__UNKNOWN__" + column.NativeType;
-			}
-		}
+		
 		
 		public string GetMemberVariableDefaultValue(ColumnSchema column)
 		{
@@ -427,5 +278,338 @@ namespace CodeSmith.BaseTemplates
 			
 			return param;
 		}
+
+        #region SearchCriteria Class
+
+        public class SearchCriteria
+        {
+            #region Static Content
+
+            public static List<SearchCriteria> GetAllSearchCriteria(TableSchema table, string extendedProperty)
+            {
+                TableSearchCriteria tsc = new TableSearchCriteria(table, extendedProperty);
+                return tsc.GetAllSearchCriteria();
+            }
+            public static List<SearchCriteria> GetAllSearchCriteria(TableSchema table)
+            {
+                TableSearchCriteria tsc = new TableSearchCriteria(table);
+                return tsc.GetAllSearchCriteria();
+            }
+
+            public static List<SearchCriteria> GetPrimaryKeySearchCriteria(TableSchema table, string extendedProperty)
+            {
+                TableSearchCriteria tsc = new TableSearchCriteria(table, extendedProperty);
+                return tsc.GetPrimaryKeySearchCriteria();
+            }
+            public static List<SearchCriteria> GetPrimaryKeySearchCriteria(TableSchema table)
+            {
+                TableSearchCriteria tsc = new TableSearchCriteria(table);
+                return tsc.GetPrimaryKeySearchCriteria();
+            }
+
+            public static List<SearchCriteria> GetForeignKeySearchCriteria(TableSchema table, string extendedProperty)
+            {
+                TableSearchCriteria tsc = new TableSearchCriteria(table, extendedProperty);
+                return tsc.GetForeignKeySearchCriteria();
+            }
+            public static List<SearchCriteria> GetForeignKeySearchCriteria(TableSchema table)
+            {
+                TableSearchCriteria tsc = new TableSearchCriteria(table);
+                return tsc.GetForeignKeySearchCriteria();
+            }
+
+            public static List<SearchCriteria> GetIndexSearchCriteria(TableSchema table, string extendedProperty)
+            {
+                TableSearchCriteria tsc = new TableSearchCriteria(table, extendedProperty);
+                return tsc.GetIndexSearchCriteria();
+            }
+            public static List<SearchCriteria> GetIndexSearchCriteria(TableSchema table)
+            {
+                TableSearchCriteria tsc = new TableSearchCriteria(table);
+                return tsc.GetIndexSearchCriteria();
+            }
+
+            #endregion
+
+            #region Declarations
+
+            protected List<MemberColumnSchema> mcsList;
+            protected MethodNameGenerationMode methodNameGenerationMode = MethodNameGenerationMode.Default;
+            protected string methodName = String.Empty;
+
+            #endregion
+
+            #region Constructors
+
+            protected SearchCriteria()
+            {
+                mcsList = new List<MemberColumnSchema>();
+            }
+            protected SearchCriteria(List<MemberColumnSchema> mcsList)
+            {
+                this.mcsList = mcsList;
+            }
+
+            #endregion
+
+            #region Methods
+
+            /// <summary>
+            /// Sets MethodName to default generation: "GetBy{0}{1}{n}"
+            /// </summary>
+            public void SetMethodNameGeneration()
+            {
+                methodNameGenerationMode = MethodNameGenerationMode.Default;
+
+                GenerateMethodName("GetBy", String.Empty, String.Empty);
+            }
+            /// <summary>
+            /// Sets MethodName to be value of the specified Extended Property from the database.
+            /// </summary>
+            /// <param name="extendedProperty">Value of the Extended Property.</param>
+            public void SetMethodNameGeneration(string extendedProperty)
+            {
+                methodNameGenerationMode = MethodNameGenerationMode.ExtendedProperty;
+
+                methodName = extendedProperty;
+            }
+            /// <summary>
+            /// Sets MethodName to custom generation: "{prefix}{0}{delimeter}{1}{suffix}"
+            /// </summary>
+            /// <param name="prefix">Method Prefix</param>
+            /// <param name="delimeter">Column Delimeter</param>
+            /// <param name="suffix">Method Suffix</param>
+            public void SetMethodNameGeneration(string prefix, string delimeter, string suffix)
+            {
+                methodNameGenerationMode = MethodNameGenerationMode.Custom;
+
+                GenerateMethodName(prefix, delimeter, suffix);
+            }
+
+            public override string ToString()
+            {
+                if (String.IsNullOrEmpty(methodName))
+                    SetMethodNameGeneration();
+
+                return methodName;
+            }
+
+            protected void Add(MemberColumnSchema item)
+            {
+                mcsList.Add(item);
+            }
+            protected void GenerateMethodName(string prefix, string delimeter, string suffix)
+            {
+                StringBuilder sb = new StringBuilder();
+                bool isFirst = true;
+
+                sb.Append(prefix);
+                foreach (MemberColumnSchema mcs in mcsList)
+                {
+                    if (isFirst)
+                        isFirst = false;
+                    else
+                        sb.Append(delimeter);
+                    sb.Append(mcs.Name);
+                }
+                sb.Append(suffix);
+
+                methodName = sb.ToString();
+            }
+
+            #endregion
+
+            #region Properties
+
+            public List<MemberColumnSchema> Items
+            {
+                get { return mcsList; }
+            }
+            public bool IsAllPrimaryKeys
+            {
+                get
+                {
+                    bool result = true;
+                    foreach (MemberColumnSchema msc in mcsList)
+                        if (!msc.IsPrimaryKeyMember)
+                        {
+                            result = false;
+                            break;
+                        }
+                    return result;
+                }
+            }
+            public string MethodName
+            {
+                get { return this.ToString(); }
+            }
+            public MethodNameGenerationMode MethodNameGeneration
+            {
+                get { return methodNameGenerationMode; }
+            }
+
+            protected string Key
+            {
+                get
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    foreach (MemberColumnSchema mcs in mcsList)
+                        sb.Append(mcs.Name);
+
+                    return sb.ToString();
+                }
+            }
+
+            #endregion
+
+            #region Enums & Classes
+
+            public enum MethodNameGenerationMode
+            {
+                Default,
+                ExtendedProperty,
+                Custom
+            }
+
+            internal class TableSearchCriteria
+            {
+                #region Declarations
+
+                protected TableSchema table;
+                protected string extendedProperty = "cs_CriteriaName";
+
+                #endregion
+
+                #region Constructor
+
+                public TableSearchCriteria(TableSchema sourceTable)
+                {
+                    this.table = sourceTable;
+                }
+                public TableSearchCriteria(TableSchema sourceTable, string extendedProperty)
+                    : this(sourceTable)
+                {
+                    this.extendedProperty = extendedProperty;
+                }
+
+                #endregion
+
+                #region Methods
+
+                public List<SearchCriteria> GetAllSearchCriteria()
+                {
+                    Dictionary<string, SearchCriteria> map = new Dictionary<string, SearchCriteria>();
+
+                    GetPrimaryKeySearchCriteria(map);
+                    GetForeignKeySearchCriteria(map);
+                    GetIndexSearchCriteria(map);
+
+                    return GetResultsFromMap(map);
+                }
+                public List<SearchCriteria> GetPrimaryKeySearchCriteria()
+                {
+                    Dictionary<string, SearchCriteria> map = new Dictionary<string, SearchCriteria>();
+
+                    GetPrimaryKeySearchCriteria(map);
+
+                    return GetResultsFromMap(map);
+                }
+                public List<SearchCriteria> GetForeignKeySearchCriteria()
+                {
+                    Dictionary<string, SearchCriteria> map = new Dictionary<string, SearchCriteria>();
+
+                    GetForeignKeySearchCriteria(map);
+
+                    return GetResultsFromMap(map);
+                }
+                public List<SearchCriteria> GetIndexSearchCriteria()
+                {
+                    Dictionary<string, SearchCriteria> map = new Dictionary<string, SearchCriteria>();
+
+                    GetIndexSearchCriteria(map);
+
+                    return GetResultsFromMap(map);
+                }
+
+                protected void GetPrimaryKeySearchCriteria(Dictionary<string, SearchCriteria> map)
+                {
+                    List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>(table.PrimaryKey.MemberColumns.ToArray());
+                    SearchCriteria searchCriteria = new SearchCriteria(mcsList);
+
+                    if (table.PrimaryKey.ExtendedProperties.Contains(extendedProperty))
+                        if (!String.IsNullOrEmpty(extendedProperty) && table.PrimaryKey.ExtendedProperties.Contains(extendedProperty) && table.PrimaryKey.ExtendedProperties[extendedProperty].Value != null)
+                            searchCriteria.SetMethodNameGeneration(table.PrimaryKey.ExtendedProperties[extendedProperty].Value.ToString());
+
+                    AddToMap(map, searchCriteria);
+                }
+                protected void GetForeignKeySearchCriteria(Dictionary<string, SearchCriteria> map)
+                {
+                    foreach (TableKeySchema tks in table.ForeignKeys)
+                    {
+                        SearchCriteria searchCriteria = new SearchCriteria();
+                        foreach (MemberColumnSchema mcs in tks.ForeignKeyMemberColumns)
+                            if (mcs.Table.Equals(table))
+                                searchCriteria.Add(mcs);
+
+                        if (!String.IsNullOrEmpty(extendedProperty) && tks.ExtendedProperties.Contains(extendedProperty) && tks.ExtendedProperties[extendedProperty].Value != null)
+                            searchCriteria.SetMethodNameGeneration(tks.ExtendedProperties[extendedProperty].Value.ToString());
+
+                        AddToMap(map, searchCriteria);
+                    }
+                }
+                protected void GetIndexSearchCriteria(Dictionary<string, SearchCriteria> map)
+                {
+                    foreach (IndexSchema indexSchema in table.Indexes)
+                    {
+                        SearchCriteria searchCriteria = new SearchCriteria();
+                        foreach (MemberColumnSchema mcs in indexSchema.MemberColumns)
+                            if (mcs.Table.Equals(table))
+                                searchCriteria.Add(mcs);
+
+                        if (!String.IsNullOrEmpty(extendedProperty) && indexSchema.ExtendedProperties.Contains(extendedProperty) && indexSchema.ExtendedProperties[extendedProperty].Value != null)
+                            searchCriteria.SetMethodNameGeneration(indexSchema.ExtendedProperties[extendedProperty].Value.ToString());
+
+                        AddToMap(map, searchCriteria);
+                    }
+                }
+
+                protected bool AddToMap(Dictionary<string, SearchCriteria> map, SearchCriteria searchCriteria)
+                {
+                    string key = searchCriteria.Key;
+                    bool result = (searchCriteria.Items.Count > 0 && !map.ContainsKey(key));
+
+                    if (result)
+                        map.Add(key, searchCriteria);
+
+                    return result;
+                }
+                protected List<SearchCriteria> GetResultsFromMap(Dictionary<string, SearchCriteria> map)
+                {
+                    List<SearchCriteria> result = new List<SearchCriteria>();
+                    foreach (KeyValuePair<string, SearchCriteria> kvp in map)
+                    {
+                        result.Add(kvp.Value);
+                    }
+                    return result;
+                }
+
+                #endregion
+
+                #region Properties
+
+                public TableSchema Table
+                {
+                    get { return table; }
+                }
+
+                #endregion
+            }
+
+            #endregion
+        }
+
+        #endregion
+
 	}
 }

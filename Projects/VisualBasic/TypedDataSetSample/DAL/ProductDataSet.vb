@@ -998,23 +998,22 @@ Public Class ProductDataAdapter
             Me.Cleanup() 
         End Try 
     End Function 
-		Public Function FillByName(ByVal dataSet As ProductDataSet, name AS String) AS Integer
+	
+		Public Function FillByProductId(ByVal dataSet As ProductDataSet, _
+		ByVal productId As String  _
+		) AS Integer
 			Try
 				DIM recordcount AS INTEGER = 0
 				_command = Me.GetCommand()
 				_command.CommandText = _
 					"SELECT " & _
-						"[ProductId]," & _
-						"[CategoryId]," & _
-						"[Name]," & _
-						"[Descn]," & _
-						"[Image]" & _
+						"[ProductId] " & _
 					"FROM " & _
 						"[Product] " & _
 					" WHERE" & _
-						"[Name] = @Name" & _
+						" [ProductId] = @ProductId" & _
 					" "
-				_command.Parameters.Add(Me.CreateParameter("@Name", DbType.String, name))
+				_command.Parameters.Add(Me.CreateParameter("@ProductId", DbType.String, productId))
 				Me.OpenConnection()
 				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection OR CommandBehavior.SingleResult)
 				while (_reader.Read())
@@ -1037,21 +1036,19 @@ Public Class ProductDataAdapter
 				Me.Cleanup()
 			END TRY
 		END FUNCTION
-		Public Function FillByCategoryId(ByVal dataSet As ProductDataSet, categoryId AS String) AS Integer
+		Public Function FillByCategoryId(ByVal dataSet As ProductDataSet, _
+		ByVal categoryId As String  _
+		) AS Integer
 			Try
 				DIM recordcount AS INTEGER = 0
 				_command = Me.GetCommand()
 				_command.CommandText = _
 					"SELECT " & _
-						"[ProductId]," & _
-						"[CategoryId]," & _
-						"[Name]," & _
-						"[Descn]," & _
-						"[Image]" & _
+						"[CategoryId] " & _
 					"FROM " & _
 						"[Product] " & _
 					" WHERE" & _
-						"[CategoryId] = @CategoryId" & _
+						" [CategoryId] = @CategoryId" & _
 					" "
 				_command.Parameters.Add(Me.CreateParameter("@CategoryId", DbType.String, categoryId))
 				Me.OpenConnection()
@@ -1076,21 +1073,58 @@ Public Class ProductDataAdapter
 				Me.Cleanup()
 			END TRY
 		END FUNCTION
-		Public Function FillByCategoryIdAndName(ByVal dataSet As ProductDataSet, categoryId AS String, name AS String) AS Integer
+		Public Function FillByName(ByVal dataSet As ProductDataSet, _
+		ByVal name As String  _
+		) AS Integer
 			Try
 				DIM recordcount AS INTEGER = 0
 				_command = Me.GetCommand()
 				_command.CommandText = _
 					"SELECT " & _
-						"[ProductId]," & _
-						"[CategoryId]," & _
-						"[Name]," & _
-						"[Descn]," & _
-						"[Image]" & _
+						"[Name] " & _
 					"FROM " & _
 						"[Product] " & _
 					" WHERE" & _
-						"[CategoryId] = @CategoryId" & _
+						" [Name] = @Name" & _
+					" "
+				_command.Parameters.Add(Me.CreateParameter("@Name", DbType.String, name))
+				Me.OpenConnection()
+				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection OR CommandBehavior.SingleResult)
+				while (_reader.Read())
+					Dim row AS ProductDataSet.ProductRow = dataSet.Product.NewProductRow()
+					Me.PopulateProductDataRow(_reader, row)
+					dataSet.Product.AddProductRow(row)
+					
+					recordcount += 1
+				END While
+	
+				dataSet.AcceptChanges()
+				
+				return recordcount
+			
+			CATCH e AS Exception
+				System.Diagnostics.Debug.WriteLine(e.ToString())
+				return 0
+			
+			FINALLY
+				Me.Cleanup()
+			END TRY
+		END FUNCTION
+		Public Function FillByCategoryIdAndName(ByVal dataSet As ProductDataSet, _
+		ByVal categoryId As String , _
+				ByVal name As String  _
+		) AS Integer
+			Try
+				DIM recordcount AS INTEGER = 0
+				_command = Me.GetCommand()
+				_command.CommandText = _
+					"SELECT " & _
+						"[CategoryId], " & _
+						"[Name] " & _
+					"FROM " & _
+						"[Product] " & _
+					" WHERE" & _
+						" [CategoryId] = @CategoryId" & _
 						" AND [Name] = @Name" & _
 					" "
 				_command.Parameters.Add(Me.CreateParameter("@CategoryId", DbType.String, categoryId))
@@ -1117,66 +1151,29 @@ Public Class ProductDataAdapter
 				Me.Cleanup()
 			END TRY
 		END FUNCTION
-		Public Function FillByCategoryIdAndProductIdAndName(ByVal dataSet As ProductDataSet, categoryId AS String, productId AS String, name AS String) AS Integer
+		Public Function FillByCategoryIdAndProductIdAndName(ByVal dataSet As ProductDataSet, _
+		ByVal categoryId As String , _
+				ByVal productId As String , _
+				ByVal name As String  _
+		) AS Integer
 			Try
 				DIM recordcount AS INTEGER = 0
 				_command = Me.GetCommand()
 				_command.CommandText = _
 					"SELECT " & _
-						"[ProductId]," & _
-						"[CategoryId]," & _
-						"[Name]," & _
-						"[Descn]," & _
-						"[Image]" & _
+						"[CategoryId], " & _
+						"[ProductId], " & _
+						"[Name] " & _
 					"FROM " & _
 						"[Product] " & _
 					" WHERE" & _
-						"[CategoryId] = @CategoryId" & _
+						" [CategoryId] = @CategoryId" & _
 						" AND [ProductId] = @ProductId" & _
 						" AND [Name] = @Name" & _
 					" "
 				_command.Parameters.Add(Me.CreateParameter("@CategoryId", DbType.String, categoryId))
 				_command.Parameters.Add(Me.CreateParameter("@ProductId", DbType.String, productId))
 				_command.Parameters.Add(Me.CreateParameter("@Name", DbType.String, name))
-				Me.OpenConnection()
-				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection OR CommandBehavior.SingleResult)
-				while (_reader.Read())
-					Dim row AS ProductDataSet.ProductRow = dataSet.Product.NewProductRow()
-					Me.PopulateProductDataRow(_reader, row)
-					dataSet.Product.AddProductRow(row)
-					
-					recordcount += 1
-				END While
-	
-				dataSet.AcceptChanges()
-				
-				return recordcount
-			
-			CATCH e AS Exception
-				System.Diagnostics.Debug.WriteLine(e.ToString())
-				return 0
-			
-			FINALLY
-				Me.Cleanup()
-			END TRY
-		END FUNCTION
-		Public Function FillByProductId(ByVal dataSet As ProductDataSet, productId AS String) AS Integer
-			Try
-				DIM recordcount AS INTEGER = 0
-				_command = Me.GetCommand()
-				_command.CommandText = _
-					"SELECT " & _
-						"[ProductId]," & _
-						"[CategoryId]," & _
-						"[Name]," & _
-						"[Descn]," & _
-						"[Image]" & _
-					"FROM " & _
-						"[Product] " & _
-					" WHERE" & _
-						"[ProductId] = @ProductId" & _
-					" "
-				_command.Parameters.Add(Me.CreateParameter("@ProductId", DbType.String, productId))
 				Me.OpenConnection()
 				_reader = _command.ExecuteReader(CommandBehavior.CloseConnection OR CommandBehavior.SingleResult)
 				while (_reader.Read())
