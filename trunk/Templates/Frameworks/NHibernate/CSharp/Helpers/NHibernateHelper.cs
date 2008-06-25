@@ -299,7 +299,11 @@ public class NHibernateHelper : CodeTemplate
 		else if(column.SystemType.Equals(typeof(DateTime)))
 			result = "DateTime.Now";
 		else if(column.SystemType.Equals(typeof(Decimal)))
-			result = Convert.ToDecimal(random.Next(1, 100)).ToString();//"default(Decimal)";
+			result = Convert.ToDecimal(random.Next(1, 100)).ToString();
+		else if(column.SystemType.Equals(typeof(Int32)))
+			result = random.Next(1, 100).ToString();
+		else if(column.SystemType.Equals(typeof(Boolean)))
+			result = (random.Next(1, 2).Equals(1)).ToString();
 		else if(column.SystemType.IsPrimitive)
 			result = String.Format("default({0})", column.SystemType.Name.ToString());
 		else
