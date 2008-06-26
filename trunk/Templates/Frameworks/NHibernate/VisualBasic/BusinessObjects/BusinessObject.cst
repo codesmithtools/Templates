@@ -186,7 +186,7 @@ Namespace NHibernate.Generated.BusinessObjects
 		<% If Not mcs.IsPrimaryKeyMember Then %>
 		<% If Not IsManyToMany(mcs.Table) Then %>
 		<% If Not ExcludedTables.Contains(mcs.Table) Then %>
-		Public Overridable Property <%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>() As <%= GetClassName(mcs.Table.Name) %>
+		Public Overridable Property <%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>() As IList(Of <%= GetClassName(mcs.Table.Name) %>)
 			Get
 				Return <%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %>
 			End Get
@@ -207,7 +207,7 @@ Namespace NHibernate.Generated.BusinessObjects
 		<% Else %>
 		<% Dim foreignTable As TableSchema = GetToManyTable(mcs.Table, SourceTable) %>
 		<% If Not ExcludedTables.Contains(foreignTable) Then %>
-		Public Overridable Property <%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>() As <%= GetClassName(foreignTable.Name) %>
+		Public Overridable Property <%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>() As IList(Of <%= GetClassName(foreignTable.Name) %>)
 			Get
 				Return <%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %>
 			End Get
