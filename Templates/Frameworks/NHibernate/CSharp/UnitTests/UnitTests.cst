@@ -57,9 +57,7 @@ namespace <%= UnitTestNamespace %>
 			
 			<% // Primitives %>
 			<% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-			<% if(!column.AllowDBNull) { %>
 			entity.<%= GetPropertyName(column.Name) %> = <%= GetUnitTestInitialization(column) %>;
-			<% } %>
 			<% } %>
 			<% // Many-To-One %>
 			<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
