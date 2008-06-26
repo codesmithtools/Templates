@@ -213,6 +213,10 @@ private void RenderUnitTests(TableSchema table)
 private void RegisterReferences()
 {
 	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"Resources\NHibernate\NHibernate.dll"));
+	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"Resources\NHibernate\Castle.Core.dll"));
+	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"Resources\NHibernate\Castle.DynamicProxy2.dll"));
+	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"Resources\NHibernate\Iesi.Collections.dll"));
+	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"Resources\NHibernate\log4net.dll"));
 	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"Resources\NUnit\NUnit.Framework.dll"));
 	this.RegisterReference(@"System.Web");
 }

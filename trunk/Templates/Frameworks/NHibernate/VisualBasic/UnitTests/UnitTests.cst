@@ -54,9 +54,7 @@ Namespace <%= UnitTestNamespace %>
 			
 			<% ' Primitives %>
 			<% For Each column As ColumnSchema In SourceTable.NonKeyColumns %>
-			<% If Not column.AllowDBNull Then %>
 			entity.<%= GetPropertyName(column.Name) %> = <%= GetUnitTestInitialization(column) %>
-			<% End If %>
 			<% Next %>
 			<% ' Many-To-One %>
 			<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
