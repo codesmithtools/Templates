@@ -103,7 +103,7 @@ Namespace <%= UnitTestNamespace %>
 
 				Dim entityB As <%= GetClassName(SourceTable.Name) %> = manager.GetById(entityA.Id)
 
-				Assert.AreEqual(entityA, entityB)
+				Assert.IsTrue(entityA.Equals(entityB))
 			Catch ex As Exception
 				Assert.Fail(ex.ToString())
 			End Try
@@ -112,7 +112,7 @@ Namespace <%= UnitTestNamespace %>
 		Public Sub Update()
 			Try
 				Dim entityA As <%= GetClassName(SourceTable.Name) %> = GetFirst<%= GetClassName(SourceTable.Name) %>()
-				entityA.<%= GetPropertyName(SourceTable.NonKeyColumns(0).Name) %> = "ABC"
+				entityA.<%= GetPropertyName(SourceTable.NonKeyColumns(0).Name) %> = <%= GetUnitTestInitialization(SourceTable.NonKeyColumns(0)) %>
 
 				manager.Update(entityA)
 
