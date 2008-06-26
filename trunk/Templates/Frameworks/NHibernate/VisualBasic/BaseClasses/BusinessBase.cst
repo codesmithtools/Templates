@@ -43,13 +43,13 @@ Namespace <%= BaseNamespace %>
 		Public Overloads Overrides Function Equals(ByVal obj As Object) As Boolean Implements IBusinessBase(Of T).Equals
 				' 1) Object is not null.
 				' 2) Object is of same Type.
-			Return (obj <> Nothing) AndAlso (obj.[GetType]().Equals(Me.[GetType]())) AndAlso (MatchingIds(DirectCast(obj, BusinessBase(Of T))) OrElse MatchingHashCodes(obj))
+			Return (obj IsNot Nothing) AndAlso (obj.[GetType]().Equals(Me.[GetType]())) AndAlso (MatchingIds(DirectCast(obj, BusinessBase(Of T))) OrElse MatchingHashCodes(obj))
 			' 3) Ids or Hashcodes match.
 		End Function
 		Private Function MatchingIds(ByVal obj As BusinessBase(Of T)) As Boolean
 				' 1) this.Id is not null/default.
 				' 1.5) obj.Id is not null/default.
-			Return (Me.Id IsNot Nothing AndAlso Not Me.Id.Equals(Nothing)) AndAlso (obj.Id IsNot Nothing AndAlso Not obj.Id.Equals(Nothing)) AndAlso (Me.Id.Equals(obj.Id))
+			Return (Me.Id IsNot Nothing) AndAlso (obj.Id IsNot Nothing) AndAlso (Me.Id.Equals(obj.Id))
 			' 2) Ids match.
 		End Function
 		Private Function MatchingHashCodes(ByVal obj As Object) As Boolean
