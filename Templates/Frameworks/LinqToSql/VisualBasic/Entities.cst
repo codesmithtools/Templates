@@ -74,6 +74,12 @@ Public Sub Generate()
     CreateEntityBaseClass(database)
     CreateDataContextClass(database)
     CreateEntityClasses(database)
+	
+	Me.RegisterReference("System.Data.Linq")
+    Me.RegisterReference("System.Configuration")
+    If Me.IncludeDataContract Then
+        Me.RegisterReference("System.Runtime.Serialization")
+	End If
 End Sub
 
 Public Sub CreateEntityBaseClass(ByVal database As Database)

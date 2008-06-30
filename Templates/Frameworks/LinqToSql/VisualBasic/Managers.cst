@@ -82,6 +82,10 @@
     CreateDataManagerClass(database, databaseManager)
     CreateDataContextManagerClass(database, databaseManager)
     CreateEntityManagerClasses(database, databaseManager)
+	
+	Me.RegisterReference(Path.GetFullPath(Path.Combine( _
+            Me.CodeTemplateInfo.DirectoryName, _
+            "..\Common\CodeSmith.Data.dll")))
 End Sub
 
 Public Sub CreateEntityManagerClasses(ByVal database As Database, ByVal dataManager As DataManager)

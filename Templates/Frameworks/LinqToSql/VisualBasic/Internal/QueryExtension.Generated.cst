@@ -72,7 +72,7 @@ Namespace <%= Database.ContextNamespace %>
             If entity.Context.LoadOptions Is Nothing Then 
                 Return Query.GetByKey.Invoke(DirectCast(entity.Context,<%= DataManager.DataContextName %>), <%= GetParametersNames(method) %>)
             Else
-<% END IF ' column count%>
+<% End If ' column count%>
                 Return entity.FirstOrDefault(<%= GetLamba(method, 5) %>)
 <% If (method.Columns.Count < 4) Then %>
 			End If
@@ -104,7 +104,7 @@ Namespace <%= Database.ContextNamespace %>
 		
 		#End Region
 
-        #region "Query"
+        #Region "Query"
         ''' <summary>
         ''' A private class for lazy loading static compiled queries.
         ''' </summary>
