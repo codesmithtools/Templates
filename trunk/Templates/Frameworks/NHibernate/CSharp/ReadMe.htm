@@ -49,7 +49,12 @@ These templates are designed to produce 5 major things...
 <p><ol>
 <li>Create a new VisualStudio project.</li>
 <li>Add a new CodeSmith Project (CSP) to your project.</li>
-<li>Add NHibernateMaster.cst to your CSP's output.</li>
+<li>Add NHibernateMaster.cst to your CSP's output.
+<ol>
+<li>Right click on the project.</i>
+<li>Select "Add new item..."</i>
+<li>In Common Items there will be a CodeSmith Project.</i>
+</ol></li>
 <li>Configure NHibernateMaster as desired.
 <ol>
 <li>Don't forget to update your Assembly name!</i>
@@ -67,7 +72,7 @@ These templates are designed to produce 5 major things...
 
 <h2><a title="SampleAppConfig" name="SampleAppConfig"></a>Sample App.Config</h2>
 <p>
-&lt;? xml version="1.0" encoding="utf-8" ?&gt;<br>
+&lt;?xml version="1.0" encoding="utf-8" ?&gt;<br>
 &lt;configuration&gt;<br>
 &nbsp; &lt;configSections&gt;<br>
 &nbsp; &nbsp; &lt;section name="hibernate-configuration" type="NHibernate.Cfg.ConfigurationSectionHandler, NHibernate" /&gt;<br>
@@ -77,7 +82,7 @@ These templates are designed to produce 5 major things...
 &nbsp; &nbsp; &nbsp; &lt;property name="connection.provider"&gt;NHibernate.Connection.DriverConnectionProvider&lt;/property&gt;<br>
 &nbsp; &nbsp; &nbsp; &lt;property name="dialect"&gt;NHibernate.Dialect.MsSql2005Dialect&lt;/property&gt;<br>
 &nbsp; &nbsp; &nbsp; &lt;property name="connection.driver_class"&gt;NHibernate.Driver.SqlClientDriver&lt;/property&gt;<br>
-&nbsp; &nbsp; &nbsp; &lt;property name="connection.connection_string"&gt;Server=TDUPONT-LT;initial catalog=PetShop;Integrated Security=SSPI;Min Pool Size=10&lt;/property&gt;<br>
+&nbsp; &nbsp; &nbsp; &lt;property name="connection.connection_string"&gt;&lt;/property&gt;<br>
 &nbsp; &nbsp; &nbsp; &lt;mapping assembly="NHibernate.Generated"/&gt;<br>
 &nbsp; &nbsp; &lt;/session-factory&gt;<br>
 &nbsp; &lt;/hibernate-configuration&gt;<br>
