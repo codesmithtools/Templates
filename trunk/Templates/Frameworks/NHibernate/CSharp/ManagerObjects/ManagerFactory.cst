@@ -27,8 +27,8 @@ namespace <%= ManagerNamespace %>
 		// Get Methods
         <% foreach(TableSchema table in SourceDatabase.Tables) { %>
 		<% if(!ExcludedTables.Contains(table) && !IsManyToMany(table)) { %>
-		I<%= GetClassName(table.Name) %>Manager Get<%= GetClassName(table.Name) %>Manager();
-		I<%= GetClassName(table.Name) %>Manager Get<%= GetClassName(table.Name) %>Manager(INHibernateSession session);
+		I<%= GetClassName(table) %>Manager Get<%= GetClassName(table) %>Manager();
+		I<%= GetClassName(table) %>Manager Get<%= GetClassName(table) %>Manager(INHibernateSession session);
 		<% } %>
 		<% } %>
     }
@@ -47,13 +47,13 @@ namespace <%= ManagerNamespace %>
 
  		<% foreach(TableSchema table in SourceDatabase.Tables) { %>
 		<% if(!ExcludedTables.Contains(table) && !IsManyToMany(table)) { %>
-		public I<%= GetClassName(table.Name) %>Manager Get<%= GetClassName(table.Name) %>Manager()
+		public I<%= GetClassName(table) %>Manager Get<%= GetClassName(table) %>Manager()
         {
-            return new <%= GetClassName(table.Name) %>Manager();
+            return new <%= GetClassName(table) %>Manager();
         }
-		public I<%= GetClassName(table.Name) %>Manager Get<%= GetClassName(table.Name) %>Manager(INHibernateSession session)
+		public I<%= GetClassName(table) %>Manager Get<%= GetClassName(table) %>Manager(INHibernateSession session)
         {
-            return new <%= GetClassName(table.Name) %>Manager(session);
+            return new <%= GetClassName(table) %>Manager(session);
         }
 		<% } %>
 		<% } %>

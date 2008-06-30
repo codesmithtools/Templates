@@ -16,13 +16,13 @@ Description: Generates a HBM Map for NHibernate.
 <% this.tablePrefix = TablePrefix; %>
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="<%= BusinessNamespace %>" assembly="<%= AssemblyName %>">
-	<class name="<%= BusinessNamespace %>.<%= GetClassName(SourceTable.Name) %>, <%= AssemblyName %>" table="<%= SourceTable.Name %>" lazy="true">
+	<class name="<%= BusinessNamespace %>.<%= GetClassName(SourceTable) %>, <%= AssemblyName %>" table="<%= SourceTable.Name %>" lazy="true">
 		<% // Primary Key %>
 		<% if(SourceTable.HasPrimaryKey) { %>
 		<% if(IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) { %>
 		<composite-id>
 			<% foreach(MemberColumnSchema mcs in SourceTable.PrimaryKey.MemberColumns) { %>
-			<key-property name="<%= GetPropertyName(mcs.Name) %>" column="<%= mcs.Name %>" /> 
+			<key-property name="<%= GetPropertyName(mcs) %>" column="<%= mcs.Name %>" /> 
 			<% } %>
 		</composite-id>
 		<% } else { %>
@@ -37,13 +37,13 @@ Description: Generates a HBM Map for NHibernate.
 		<% } %>
 		<% // Properties %>
 		<% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-		<property name="<%= GetPropertyName(column.Name) %>" column="<%= column.Name %>" />
+		<property name="<%= GetPropertyName(column) %>" column="<%= column.Name %>" />
 		<% } %>
 		<% // Many-To-One %>
 		<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
 		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !mcs.IsPrimaryKeyMember) { %>
-		<many-to-one name="<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>" column="<%= mcs.Name %>" class="<%= GetClassName(tks.PrimaryKeyTable.Name) %>" />
+		<many-to-one name="<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>" column="<%= mcs.Name %>" class="<%= GetClassName(tks.PrimaryKeyTable) %>" />
 		<% } %>
 		<% } %>
 		<% } %>
@@ -53,17 +53,17 @@ Description: Generates a HBM Map for NHibernate.
 		<% if (!mcs.IsPrimaryKeyMember) { %>
 		<% if (!IsManyToMany(mcs.Table)) { %>
 		<% if (!ExcludedTables.Contains(mcs.Table)) { %>
-		<bag name="<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>" lazy="true" cascade="<%= GetCascade(mcs) %>"  inverse="true" >
+		<bag name="<%= GetPropertyNamePlural(mcs.Table, mcs) %>" lazy="true" cascade="<%= GetCascade(mcs) %>"  inverse="true" >
 			<key column="<%= mcs.Name %>"></key>
-			<one-to-many class="<%= GetClassName(mcs.Table.Name) %>"></one-to-many>
+			<one-to-many class="<%= GetClassName(mcs.Table) %>"></one-to-many>
 		</bag>
 		<% } %>
 		<% } else { %>
 		<% TableSchema foreignTable = GetToManyTable(mcs.Table, SourceTable); %>
 		<% if (!ExcludedTables.Contains(foreignTable)) { %>
-		<bag name="<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>" table="<%= mcs.Table.Name %>" lazy="true" cascade="all"  inverse="true" >
+		<bag name="<%= GetPropertyNamePlural(foreignTable, mcs) %>" table="<%= mcs.Table.Name %>" lazy="true" cascade="all"  inverse="true" >
 			<key column="<%= mcs.Name %>"></key>
-			<many-to-many column="<%= GetToManyTableKey(mcs.Table, foreignTable).Name %>" class="<%= GetClassName(foreignTable.Name) %>" />
+			<many-to-many column="<%= GetToManyTableKey(mcs.Table, foreignTable).Name %>" class="<%= GetClassName(foreignTable) %>" />
     	</bag>
 		<% } %>
 		<% } %>
