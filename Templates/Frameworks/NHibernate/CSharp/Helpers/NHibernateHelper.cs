@@ -257,7 +257,7 @@ public class NHibernateHelper : CodeTemplate
 		{
 			StringBuilder sb = new StringBuilder();
 			
-            int size = random.Next(1, column.Size);
+            int size = (column.Size > 0 && column.Size < 100) ? random.Next(1, column.Size) : 10;
 			
 			sb.Append("\"");
 			for(int x=0; x<size; x++)
