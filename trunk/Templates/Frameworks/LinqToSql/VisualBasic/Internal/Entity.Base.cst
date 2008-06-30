@@ -39,8 +39,8 @@ Namespace <%= ClassNamespace %>
         ''' <param name="propertyName">Name of the property that has changed.</param>
         <EditorBrowsable(EditorBrowsableState.Advanced)> _
         Protected Sub OnPropertyChanged(ByVal propertyName As String)
-            RaiseEvent    PropertyChanged(Me, new PropertyChangedEventArgs(propertyName))
-        END Sub
+            RaiseEvent    PropertyChanged(Me, New PropertyChangedEventArgs(propertyName))
+        End Sub
 
 
         ''' <summary>
@@ -53,9 +53,9 @@ Namespace <%= ClassNamespace %>
         ''' </summary>
         ''' <param name="propertyName">Name of the property that is changing.</param>
         <EditorBrowsable(EditorBrowsableState.Advanced)> _
-        Protected Sub OnPropertyChanging(ByVal propertyName AS String)
-            RaiseEvent PropertyChanging(Me, new PropertyChangingEventArgs(propertyName))
+        Protected Sub OnPropertyChanging(ByVal propertyName As String)
+            RaiseEvent PropertyChanging(Me, New PropertyChangingEventArgs(propertyName))
         End Sub
         #End Region
-    END Class
+    End Class
 End Namespace

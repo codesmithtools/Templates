@@ -65,5 +65,9 @@
       <key>System.DateTime</key>
       <value>Date</value>
     </item>
+    <item>
+      <key>System.Byte()</key>
+      <value>Byte()</value>
+    </item>
   </map>
 </codeSmith>

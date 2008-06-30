@@ -64,12 +64,12 @@ Imports CodeSmith.Data
 Imports CodeSmith.Data.Rules
 Imports CodeSmith.Data.Rules.Assign
 Imports CodeSmith.Data.Rules.Validation
-<% IF Not Database.ContextNamespace = ManagerNamespace Then %>
+<% If Not Database.ContextNamespace = ManagerNamespace Then %>
 Imports <%= Database.ContextNamespace %>
-<% END IF %>
-<% IF NOT Database.ContextNamespace = Database.EntityNamespace THEN %>
+<% End If %>
+<% If Not Database.ContextNamespace = Database.EntityNamespace Then %>
 Imports <%= Database.EntityNamespace %>
-<% END IF %>
+<% End If %>
 
 Namespace <%= ManagerNamespace %>
     ''' <summary>
@@ -117,7 +117,7 @@ Response.IndentLevel = indent
 
 %>
             AddRules()
-        END Sub
+        End Sub
 
         ''' <summary>
         ''' Initializes the <see cref="<%= EntityManager.ManagerName %>"/> class.
@@ -126,7 +126,7 @@ Response.IndentLevel = indent
         Public Sub New(ByVal manager As <%= DataManager.DataManagerName %>) 
 			MyBase.New(manager)
             OnCreated()
-        END Sub
+        End Sub
 
         ''' <summary>
         ''' Gets the current context.
@@ -143,22 +143,22 @@ Response.IndentLevel = indent
         Protected ReadOnly Property Entity As Table(Of <%= EntityManager.EntityName %>)
             Get 
 				return Manager.Context.<%= EntityManager.EntityName %>
-			END Get
+			End Get
         End Property
         
-<% For Each method As ManagerMethod in EntityManager.Methods 
+<% For Each method As ManagerMethod In EntityManager.Methods 
      	Dim parameters As String = GetParameters(method)
  		Dim paramNames As String = GetParametersNames(method)
  		Dim paramTypes As String = GetParametersTypes(method)
 %>
-<% IF method.IsKey THEN %>
-<% IF method.Columns.Count < 5 THEN %>
+<% If method.IsKey Then %>
+<% If method.Columns.Count < 5 Then %>
         
         ''' <summary>
         ''' Creates the key for this entity.
         ''' </summary>
-        Public Shared Function CreateKey(<%= parameters %>) AS IEntityKey(Of <%= paramTypes %>)
-            return new EntityKey(Of <%= paramTypes %>)(<%= paramNames %>)
+        Public Shared Function CreateKey(<%= parameters %>) As IEntityKey(Of <%= paramTypes %>)
+            Return New EntityKey(Of <%= paramTypes %>)(<%= paramNames %>)
         End Function
         
         ''' <summary>
@@ -217,7 +217,7 @@ Response.IndentLevel = indent
                 Return Entity.FirstOrDefault(<%= GetLamba(method, 5) %>)
 <% If (method.Columns.Count < 4) Then %>
 			End If
-<% END IF %>
+<% End If %>
         END Function
 <% Else  %>
         ''' <summary>
@@ -262,7 +262,7 @@ Response.IndentLevel = indent
 
             Friend Shared Readonly GetByKey As Func(Of <%= DataManager.DataContextName %>, <%= paramTypes %>, <%= EntityManager.EntityName %>) = _
                 CompiledQuery.Compile( _
-                     Function(db AS <%= DataManager.DataContextName %>, <%= parameters %>) _
+                     Function(db As <%= DataManager.DataContextName %>, <%= parameters %>) _
                         db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>))
 <% Else If method.IsUnique Then %>
 
@@ -276,8 +276,8 @@ Response.IndentLevel = indent
                 CompiledQuery.Compile( _
                     Function( db As <%= DataManager.DataContextName %> , <%= parameters %>) _
                         db.<%= EntityManager.EntityName %>.Where(<%= GetLamba(method, 7) %>))
-<% END IF ' if is key%>
-<% END IF ' column count%>
+<% End If ' if is key%>
+<% End If ' column count%>
 <% Next ' foreach method%>
 
         End Class
