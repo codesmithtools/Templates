@@ -238,7 +238,10 @@ Public Class NHibernateHelper
 		If column.SystemType.Equals(GetType(String)) Then
 			Dim sb As New StringBuilder()
 
-			Dim size As Integer = random.[Next](1, column.Size)
+			Dim size As Integer = 10
+			If (column.Size > 0 AndAlso column.Size < 100) Then
+				size = random.[Next](1, column.Size)
+			End If
 
 			sb.Append("""")
 			Dim x As Integer = 0
