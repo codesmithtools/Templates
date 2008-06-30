@@ -22,7 +22,7 @@ Imports System.Collections.Generic
 Imports <%= BaseNamespace %>
 
 Namespace NHibernate.Generated.BusinessObjects
-	Public Partial Class <%= GetClassName(SourceTable.Name) %>
+	Public Partial Class <%= GetClassName(SourceTable) %>
 		Inherits BusinessBase(Of <%= GetBusinessBaseIdType(SourceTable) %>)
 
 		#region "Declarations"
@@ -30,20 +30,20 @@ Namespace NHibernate.Generated.BusinessObjects
 		<% 'Primary Keys %>
 		<% If IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) Then %>
 		<% For Each mcs As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns %>
-		Private <%= GetPrivateVariableName(mcs.Name) %> As <%= mcs.SystemType %> = <%= GetInitialization(mcs.SystemType) %>
+		Private <%= GetPrivateVariableName(mcs) %> As <%= mcs.SystemType %> = <%= GetInitialization(mcs.SystemType) %>
 		<% Next %>
 		<% End If %>
 		
 		<% 'Primitives %>
 		<% For Each column As ColumnSchema In SourceTable.NonKeyColumns %>
-		Private <%= GetPrivateVariableName(column.Name) %> As <%= column.SystemType %> = <%= GetInitialization(column.SystemType) %>
+		Private <%= GetPrivateVariableName(column) %> As <%= column.SystemType %> = <%= GetInitialization(column.SystemType) %>
 		<% Next %>
 		
 		<% 'Many-To-One %>
 		<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
 		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
 		<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso Not mcs.IsPrimaryKeyMember Then %>
-		Private <%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %> As <%= GetClassName(tks.PrimaryKeyTable.Name) %> = Nothing
+		Private <%= GetPrivateVariableName(tks.PrimaryKeyTable, mcs) %> As <%= GetClassName(tks.PrimaryKeyTable) %> = Nothing
 		<% End If %>
 		<% Next %>
 		<% Next %>
@@ -54,12 +54,12 @@ Namespace NHibernate.Generated.BusinessObjects
 		<% If Not mcs.IsPrimaryKeyMember Then %>
 		<% If Not IsManyToMany(mcs.Table) Then %>
 		<% If Not ExcludedTables.Contains(mcs.Table) Then %>
-		Private <%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %> As IList(Of <%= GetClassName(mcs.Table.Name) %>) = New List(Of <%= GetClassName(mcs.Table.Name) %>)()
+		Private <%= GetPrivateVariableNamePlural(mcs.Table, mcs) %> As IList(Of <%= GetClassName(mcs.Table) %>) = New List(Of <%= GetClassName(mcs.Table) %>)()
 		<% End If %>
 		<% Else %>
 		<% Dim foreignTable As TableSchema = GetToManyTable(mcs.Table, SourceTable) %>
 		<% If Not ExcludedTables.Contains(foreignTable) Then %>
-		Private <%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %> As IList(Of <%= GetClassName(foreignTable.Name) %>) = New List(Of <%= GetClassName(foreignTable.Name) %>)()
+		Private <%= GetPrivateVariableNamePlural(foreignTable, mcs) %> As IList(Of <%= GetClassName(foreignTable) %>) = New List(Of <%= GetClassName(foreignTable) %>)()
 		<% End If %>
 		<% End If %>
 		<% End If %>
@@ -83,7 +83,7 @@ Namespace NHibernate.Generated.BusinessObjects
 			sb.Append(Me.[GetType]().FullName)
 			
 			<% For Each column As ColumnSchema In SourceTable.NonKeyColumns %>
-			sb.Append(<%= GetPrivateVariableName(column.Name) %>)
+			sb.Append(<%= GetPrivateVariableName(column) %>)
 			<% Next %>
 			
 			Return sb.ToString().GetHashCode()
@@ -104,7 +104,7 @@ Namespace NHibernate.Generated.BusinessObjects
 				<%	If x > 0 Then %>
 				uniqueId.Append("^")
 				<%	End If %>
-				uniqueId.Append(<%= GetPrivateVariableName(SourceTable.PrimaryKey.MemberColumns(x).Name) %>.ToString())
+				uniqueId.Append(<%= GetPrivateVariableName(SourceTable.PrimaryKey.MemberColumns(x)) %>.ToString())
 				<% System.Math.Max(System.Threading.Interlocked.Increment(x),x - 1) %>
 				<% End While %>
 		
@@ -115,20 +115,20 @@ Namespace NHibernate.Generated.BusinessObjects
 		End Property
 		
 		<% For Each mcs As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns %>
-		Public Overridable Property <%= GetPropertyName(mcs.Name) %>() As <%= mcs.SystemType %>
+		Public Overridable Property <%= GetPropertyName(mcs) %>() As <%= mcs.SystemType %>
 			Get
-				Return <%= GetPrivateVariableName(mcs.Name) %>
+				Return <%= GetPrivateVariableName(mcs) %>
 			End Get
 			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs.Name) %>Changing()<% End If %>
-				<%= GetPrivateVariableName(mcs.Name) %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs.Name) %>Changed()<% End If %>
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs) %>Changing()<% End If %>
+				<%= GetPrivateVariableName(mcs) %> = value
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs) %>Changed()<% End If %>
 			End Set
 		End Property
 		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
-		Partial Private Sub On<%= GetPropertyName(mcs.Name) %>Changing()
+		Partial Private Sub On<%= GetPropertyName(mcs) %>Changing()
 		End Sub
-		Partial Private Sub On<%= GetPropertyName(mcs.Name) %>Changed()
+		Partial Private Sub On<%= GetPropertyName(mcs) %>Changed()
 		End Sub
 		<% End If %>
 		
@@ -137,20 +137,20 @@ Namespace NHibernate.Generated.BusinessObjects
 		
 		<% 'Primitives %>
 		<% For Each mcs As ColumnSchema In SourceTable.NonKeyColumns %>
-		Public Overridable Property <%= GetPropertyName(mcs.Name) %>() As <%= mcs.SystemType %>
+		Public Overridable Property <%= GetPropertyName(mcs) %>() As <%= mcs.SystemType %>
 			Get
-				Return <%= GetPrivateVariableName(mcs.Name) %>
+				Return <%= GetPrivateVariableName(mcs) %>
 			End Get
 			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs.Name) %>Changing()<% End If %>
-				<%= GetPrivateVariableName(mcs.Name) %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs.Name) %>Changed()<% End If %>
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs) %>Changing()<% End If %>
+				<%= GetPrivateVariableName(mcs) %> = value
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs) %>Changed()<% End If %>
 			End Set
 		End Property
 		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
-		Partial Private Sub On<%= GetPropertyName(mcs.Name) %>Changing()
+		Partial Private Sub On<%= GetPropertyName(mcs) %>Changing()
 		End Sub
-		Partial Private Sub On<%= GetPropertyName(mcs.Name) %>Changed()
+		Partial Private Sub On<%= GetPropertyName(mcs) %>Changed()
 		End Sub
 		<% End If %>
 		<% Next %>
@@ -159,20 +159,20 @@ Namespace NHibernate.Generated.BusinessObjects
 		<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
 		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
 		<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso Not mcs.IsPrimaryKeyMember Then %>
-		Public Overridable Property <%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>() As <%= GetClassName(tks.PrimaryKeyTable.Name) %>
+		Public Overridable Property <%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>() As <%= GetClassName(tks.PrimaryKeyTable) %>
 			Get
-				Return <%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>
+				Return <%= GetPrivateVariableName(tks.PrimaryKeyTable, mcs) %>
 			End Get
 			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing()<% End If %>
-				<%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed()<% End If %>
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changing()<% End If %>
+				<%= GetPrivateVariableName(tks.PrimaryKeyTable, mcs) %> = value
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changed()<% End If %>
 			End Set
 		End Property
 		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
-		Partial Private Sub On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing()
+		Partial Private Sub On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changing()
 		End Sub
-		Partial Private Sub On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed()
+		Partial Private Sub On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changed()
 		End Sub
 		<% End If %>
 		<% End If %>
@@ -186,20 +186,20 @@ Namespace NHibernate.Generated.BusinessObjects
 		<% If Not mcs.IsPrimaryKeyMember Then %>
 		<% If Not IsManyToMany(mcs.Table) Then %>
 		<% If Not ExcludedTables.Contains(mcs.Table) Then %>
-		Public Overridable Property <%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>() As IList(Of <%= GetClassName(mcs.Table.Name) %>)
+		Public Overridable Property <%= GetPropertyNamePlural(mcs.Table, mcs) %>() As IList(Of <%= GetClassName(mcs.Table) %>)
 			Get
-				Return <%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %>
+				Return <%= GetPrivateVariableNamePlural(mcs.Table, mcs) %>
 			End Get
 			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing()<% End If %>
-				<%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed()<% End If %>
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changing()<% End If %>
+				<%= GetPrivateVariableNamePlural(mcs.Table, mcs) %> = value
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changed()<% End If %>
 			End Set
 		End Property
 		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
-		Partial Private Sub On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing()
+		Partial Private Sub On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changing()
 		End Sub
-		Partial Private Sub On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed()
+		Partial Private Sub On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changed()
 		End Sub
 		<% End If %>
 		
@@ -207,20 +207,20 @@ Namespace NHibernate.Generated.BusinessObjects
 		<% Else %>
 		<% Dim foreignTable As TableSchema = GetToManyTable(mcs.Table, SourceTable) %>
 		<% If Not ExcludedTables.Contains(foreignTable) Then %>
-		Public Overridable Property <%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>() As IList(Of <%= GetClassName(foreignTable.Name) %>)
+		Public Overridable Property <%= GetPropertyNamePlural(foreignTable, mcs) %>() As IList(Of <%= GetClassName(foreignTable) %>)
 			Get
-				Return <%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %>
+				Return <%= GetPrivateVariableNamePlural(foreignTable, mcs) %>
 			End Get
 			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing()<% End If %>
-				<%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed()<% End If %>
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changing()<% End If %>
+				<%= GetPrivateVariableNamePlural(foreignTable, mcs) %> = value
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changed()<% End If %>
 			End Set
 		End Property
 		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
-		Partial Private Sub On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing()
+		Partial Private Sub On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changing()
 		End Sub
-		Partial Private Sub On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed()
+		Partial Private Sub On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changed()
 		End Sub
 		<% End If %>
 		

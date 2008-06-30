@@ -99,7 +99,7 @@ Private Sub RenderBaseClasses()
 	unitTestsBase.RenderToFile(GetOutputFile(fileName, Nothing), True)
 End Sub
 Private Sub RenderHbmMaps(ByVal table As TableSchema)
-	Dim fileName As String = [String].Format("{0}{1}.hbm.xml", GetFolder("HbmMaps"), GetClassName(table.Name))
+	Dim fileName As String = [String].Format("{0}{1}.hbm.xml", GetFolder("HbmMaps"), GetClassName(table))
 
 	Dim hbmMap As HbmMapTemplate = Me.Create(Of HbmMapTemplate)()
 	hbmMap.AssemblyName = Me.AssemblyName
@@ -111,8 +111,8 @@ Private Sub RenderHbmMaps(ByVal table As TableSchema)
 	hbmMap.RenderToFile(GetOutputFile(fileName, Nothing, "BuildAction", 3), True)
 End Sub
 Private Sub RenderBusinessObjects(ByVal table As TableSchema)
-	Dim fileName As String = [String].Format("{0}{1}.generated.vb", GetFolder(BusinessNamespace), GetClassName(table.Name))
-	Dim editableFileName As String = [String].Format("{0}{1}.vb", GetFolder(BusinessNamespace), GetClassName(table.Name))
+	Dim fileName As String = [String].Format("{0}{1}.generated.vb", GetFolder(BusinessNamespace), GetClassName(table))
+	Dim editableFileName As String = [String].Format("{0}{1}.vb", GetFolder(BusinessNamespace), GetClassName(table))
 
 	If Not File.Exists(editableFileName) Then
 		Dim editableBusinessObject As EditableBusinessObjectTemplate = Me.Create(Of EditableBusinessObjectTemplate)()
@@ -135,8 +135,8 @@ Private Sub RenderBusinessObjects(ByVal table As TableSchema)
 	businessObject.RenderToFile(GetOutputFile(fileName, editableFileName), True)
 End Sub
 Private Sub RenderManagerObjects(ByVal table As TableSchema)
-	Dim fileName As String = [String].Format("{0}{1}Manager.Generated.vb", GetFolder(ManagerNamespace), GetClassName(table.Name))
-	Dim editableFileName As String = [String].Format("{0}{1}Manager.vb", GetFolder(ManagerNamespace), GetClassName(table.Name))
+	Dim fileName As String = [String].Format("{0}{1}Manager.Generated.vb", GetFolder(ManagerNamespace), GetClassName(table))
+	Dim editableFileName As String = [String].Format("{0}{1}Manager.vb", GetFolder(ManagerNamespace), GetClassName(table))
 
 	If Not File.Exists(editableFileName) Then
 		Dim editableManagerObject As EditableManagerObjectTemplate = Me.Create(Of EditableManagerObjectTemplate)()
@@ -173,8 +173,8 @@ Private Sub RenderManagerFactory()
 	managerFactory.RenderToFile(GetOutputFile(fileName, Nothing), True)
 End Sub
 Private Sub RenderUnitTests(ByVal table As TableSchema)
-	Dim fileName As String = [String].Format("{0}{1}Tests.generated.vb", GetFolder(UnitTestNamespace), GetClassName(table.Name))
-	Dim editableFileName As String = [String].Format("{0}{1}Tests.vb", GetFolder(UnitTestNamespace), GetClassName(table.Name))
+	Dim fileName As String = [String].Format("{0}{1}Tests.generated.vb", GetFolder(UnitTestNamespace), GetClassName(table))
+	Dim editableFileName As String = [String].Format("{0}{1}Tests.vb", GetFolder(UnitTestNamespace), GetClassName(table))
 
 	If Not File.Exists(editableFileName) Then
 		Dim editableUnitTests As EditableUnitTestsTemplate = Me.Create(Of EditableUnitTestsTemplate)()

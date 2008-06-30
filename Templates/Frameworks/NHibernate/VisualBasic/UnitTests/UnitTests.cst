@@ -27,17 +27,17 @@ Imports <%= BaseNamespace %>
 
 Namespace <%= UnitTestNamespace %>
 	<TestFixture()> _
-	Public Partial Class <%= GetClassName(SourceTable.Name) %>Tests
+	Public Partial Class <%= GetClassName(SourceTable) %>Tests
 		Inherits UNuitTestBase
 		
-		Protected manager As I<%= GetClassName(SourceTable.Name) %>Manager
+		Protected manager As I<%= GetClassName(SourceTable) %>Manager
 
 		Public Sub New()
-			manager = managerFactory.Get<%= GetClassName(SourceTable.Name) %>Manager()
+			manager = managerFactory.Get<%= GetClassName(SourceTable) %>Manager()
 		End Sub
 
-		Protected Function CreateNew<%= GetClassName(SourceTable.Name) %>() As <%= GetClassName(SourceTable.Name) %>
-			Dim entity As New <%= GetClassName(SourceTable.Name) %>()
+		Protected Function CreateNew<%= GetClassName(SourceTable) %>() As <%= GetClassName(SourceTable) %>
+			Dim entity As New <%= GetClassName(SourceTable) %>()
 
 			<% If Not IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) Then %>
 			<% If SourceTable.PrimaryKey.MemberColumns(0).ExtendedProperties.Contains("CS_IsIdentity") AndAlso (DirectCast(SourceTable.PrimaryKey.MemberColumns(0).ExtendedProperties("CS_IsIdentity").Value, Boolean)) = False Then %>
@@ -47,25 +47,25 @@ Namespace <%= UnitTestNamespace %>
 			<% Else %>
 			<% For Each mcs As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns %>
 			<% If Not mcs.IsForeignKeyMember Then %>
-			entity.<%= GetPropertyName(mcs.Name) %> = <%= GetUnitTestInitialization(mcs.Column) %>
+			entity.<%= GetPropertyName(mcs) %> = <%= GetUnitTestInitialization(mcs.Column) %>
 			<% End If %>
 			<% Next %>
 			<% End If %>
 			
 			<% ' Primitives %>
 			<% For Each column As ColumnSchema In SourceTable.NonKeyColumns %>
-			entity.<%= GetPropertyName(column.Name) %> = <%= GetUnitTestInitialization(column) %>
+			entity.<%= GetPropertyName(column) %> = <%= GetUnitTestInitialization(column) %>
 			<% Next %>
 			<% ' Many-To-One %>
 			<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
 			<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
 			<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso (Not mcs.IsPrimaryKeyMember OrElse IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) Then %>
 			
-			Dim <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager As I<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager = managerFactory.Get<%= GetClassName(tks.PrimaryKeyTable.Name) %>Manager()
+			Dim <%= GetVariableName(tks.PrimaryKeyTable, mcs) %>Manager As I<%= GetClassName(tks.PrimaryKeyTable) %>Manager = managerFactory.Get<%= GetClassName(tks.PrimaryKeyTable) %>Manager()
 			<% If Not mcs.IsPrimaryKeyMember Then %>
-			entity.<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)(0)
+			entity.<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %> = <%= GetVariableName(tks.PrimaryKeyTable, mcs) %>Manager.GetAll(1)(0)
 			<% Else %>
-			entity.<%= GetPropertyName(mcs.Name) %> = <%= GetVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>Manager.GetAll(1)(0).Id
+			entity.<%= GetPropertyName(mcs) %> = <%= GetVariableName(tks.PrimaryKeyTable, mcs) %>Manager.GetAll(1)(0).Id
 			<% End If %>
 			<% End If %>
 			<% Next %>
@@ -73,8 +73,8 @@ Namespace <%= UnitTestNamespace %>
 
 			Return entity
 		End Function
-		Protected Function GetFirst<%= GetClassName(SourceTable.Name) %>() As <%= GetClassName(SourceTable.Name) %>
-			Dim entityList As IList(Of <%= GetClassName(SourceTable.Name) %>) = manager.GetAll(1)
+		Protected Function GetFirst<%= GetClassName(SourceTable) %>() As <%= GetClassName(SourceTable) %>
+			Dim entityList As IList(Of <%= GetClassName(SourceTable) %>) = manager.GetAll(1)
 			If entityList.Count = 0 Then
 				Assert.Fail("All tables must have at least one row for unit tests to succeed.")
 			End If
@@ -84,7 +84,7 @@ Namespace <%= UnitTestNamespace %>
 		<Test()> _
 		Public Sub Create()
 			Try
-				Dim entity As <%= GetClassName(SourceTable.Name) %> = CreateNew<%= GetClassName(SourceTable.Name) %>()
+				Dim entity As <%= GetClassName(SourceTable) %> = CreateNew<%= GetClassName(SourceTable) %>()
 
 				Dim result As Object = manager.Save(entity)
 
@@ -96,10 +96,10 @@ Namespace <%= UnitTestNamespace %>
 		<Test()> _
 		Public Sub Read()
 			Try
-				Dim entityA As <%= GetClassName(SourceTable.Name) %> = CreateNew<%= GetClassName(SourceTable.Name) %>()
+				Dim entityA As <%= GetClassName(SourceTable) %> = CreateNew<%= GetClassName(SourceTable) %>()
 				manager.Save(entityA)
 
-				Dim entityB As <%= GetClassName(SourceTable.Name) %> = manager.GetById(entityA.Id)
+				Dim entityB As <%= GetClassName(SourceTable) %> = manager.GetById(entityA.Id)
 
 				Assert.IsTrue(entityA.Equals(entityB))
 			Catch ex As Exception
@@ -109,14 +109,14 @@ Namespace <%= UnitTestNamespace %>
 		<Test()> _
 		Public Sub Update()
 			Try
-				Dim entityA As <%= GetClassName(SourceTable.Name) %> = GetFirst<%= GetClassName(SourceTable.Name) %>()
-				entityA.<%= GetPropertyName(SourceTable.NonKeyColumns(0).Name) %> = <%= GetUnitTestInitialization(SourceTable.NonKeyColumns(0)) %>
+				Dim entityA As <%= GetClassName(SourceTable) %> = GetFirst<%= GetClassName(SourceTable) %>()
+				entityA.<%= GetPropertyName(SourceTable.NonKeyColumns(0)) %> = <%= GetUnitTestInitialization(SourceTable.NonKeyColumns(0)) %>
 
 				manager.Update(entityA)
 
-				Dim entityB As <%= GetClassName(SourceTable.Name) %> = manager.GetById(entityA.Id)
+				Dim entityB As <%= GetClassName(SourceTable) %> = manager.GetById(entityA.Id)
 
-				Assert.AreEqual(entityA.<%= GetPropertyName(SourceTable.NonKeyColumns(0).Name) %>, entityB.<%= GetPropertyName(SourceTable.NonKeyColumns(0).Name) %>)
+				Assert.AreEqual(entityA.<%= GetPropertyName(SourceTable.NonKeyColumns(0)) %>, entityB.<%= GetPropertyName(SourceTable.NonKeyColumns(0)) %>)
 			Catch ex As Exception
 				Assert.Fail(ex.ToString())
 			End Try
@@ -124,7 +124,7 @@ Namespace <%= UnitTestNamespace %>
 		<Test()> _
 		Public Sub Delete()
 			Try
-				Dim entity As <%= GetClassName(SourceTable.Name) %> = GetFirst<%= GetClassName(SourceTable.Name) %>()
+				Dim entity As <%= GetClassName(SourceTable) %> = GetFirst<%= GetClassName(SourceTable) %>()
 
 				manager.Delete(entity)
 
