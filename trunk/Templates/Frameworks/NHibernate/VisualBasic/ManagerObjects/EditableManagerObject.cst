@@ -24,12 +24,12 @@ Imports <%= BusinessNamespace %>
 Imports <%= BaseNamespace %>
 
 Namespace <%= ManagerNamespace %>
-	'Public Partial Interface I<%= GetClassName(SourceTable.Name) %>Manager
-	'	Inherits IManagerBase(Of <%= GetClassName(SourceTable.Name) %>, <%= GetBusinessBaseIdType(SourceTable) %>)
+	'Public Partial Interface I<%= GetClassName(SourceTable) %>Manager
+	'	Inherits IManagerBase(Of <%= GetClassName(SourceTable) %>, <%= GetBusinessBaseIdType(SourceTable) %>)
 	'End Interface
 
-	Partial Class <%= GetClassName(SourceTable.Name) %>Manager
-		Inherits ManagerBase(Of <%= GetClassName(SourceTable.Name) %>, <%= GetBusinessBaseIdType(SourceTable) %>)
-		Implements I<%= GetClassName(SourceTable.Name) %>Manager
+	Partial Class <%= GetClassName(SourceTable) %>Manager
+		Inherits ManagerBase(Of <%= GetClassName(SourceTable) %>, <%= GetBusinessBaseIdType(SourceTable) %>)
+		Implements I<%= GetClassName(SourceTable) %>Manager
 	End Class
 End Namespace

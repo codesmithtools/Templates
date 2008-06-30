@@ -22,7 +22,7 @@ Imports NHibernate
 Imports <%= BaseNamespace %>
 
 Namespace <%= BusinessNamespace %>
-	Public Partial Class <%= GetClassName(SourceTable.Name) %>
+	Public Partial Class <%= GetClassName(SourceTable) %>
 		Inherits BusinessBase(Of <%= GetBusinessBaseIdType(SourceTable) %>)
 	End Class
 End Namespace

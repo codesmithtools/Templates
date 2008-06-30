@@ -27,25 +27,25 @@ Imports <%= BusinessNamespace %>
 Imports <%= BaseNamespace %>
 
 Namespace <%= ManagerNamespace %>
-	Public Interface I<%= GetClassName(SourceTable.Name) %>Manager
-		Inherits IManagerBase(Of <%= GetClassName(SourceTable.Name) %>, <%= GetBusinessBaseIdType(SourceTable) %>)
+	Public Interface I<%= GetClassName(SourceTable) %>Manager
+		Inherits IManagerBase(Of <%= GetClassName(SourceTable) %>, <%= GetBusinessBaseIdType(SourceTable) %>)
 		
 		' Get Methods
 		<% For Each sc As SearchCriteria In scList %>
 		<% If sc.IsAllPrimaryKeys Then %>
 		<% If sc.Items.Count > 1 Then ' Override GetById %>
-		Overloads Function GetById(<%= GetMethodParameters(sc.Items, true) %>) As <%= GetClassName(SourceTable.Name) %>
+		Overloads Function GetById(<%= GetMethodParameters(sc.Items, true) %>) As <%= GetClassName(SourceTable) %>
 		<% End If %>
 		<% Else If Not ContainsForeignKey(sc, ExcludedTables) Then %>
-		Function <%= GetMethodDeclaration(sc) %> As IList(Of <%= GetClassName(SourceTable.Name) %>)
+		Function <%= GetMethodDeclaration(sc) %> As IList(Of <%= GetClassName(SourceTable) %>)
 		<% End If %>
 		<% Next %>
 		
 	End Interface
 
-	Partial Class <%= GetClassName(SourceTable.Name) %>Manager
-		Inherits ManagerBase(Of <%= GetClassName(SourceTable.Name) %>, <%= GetBusinessBaseIdType(SourceTable) %>)
-		Implements I<%= GetClassName(SourceTable.Name) %>Manager
+	Partial Class <%= GetClassName(SourceTable) %>Manager
+		Inherits ManagerBase(Of <%= GetClassName(SourceTable) %>, <%= GetBusinessBaseIdType(SourceTable) %>)
+		Implements I<%= GetClassName(SourceTable) %>Manager
 #region "Constructors"
 
 		Public Sub New()
@@ -61,23 +61,23 @@ Namespace <%= ManagerNamespace %>
 		<% For Each sc As SearchCriteria In scList %>
 		<% If sc.IsAllPrimaryKeys Then %>
 		<% if sc.Items.Count > 1 Then ' Override GetById %>
-		Public Overloads Overrides Function GetById(ByVal id As String) As <%= GetClassName(SourceTable.Name) %>
+		Public Overloads Overrides Function GetById(ByVal id As String) As <%= GetClassName(SourceTable) %>
 			Dim keys As String() = id.Split("^"C)
 		
 			If keys.Length <> <%= sc.Items.Count %> Then
-				Throw New Exception("Invalid Id for <%= GetClassName(SourceTable.Name) %>Manager.GetById")
+				Throw New Exception("Invalid Id for <%= GetClassName(SourceTable) %>Manager.GetById")
 			End If
 		
 			Return GetById(<%= GetPrimaryKeyCallParameters(sc.Items) %>)
 		End Function
-		Public Overloads Function GetById(<%= GetMethodParameters(sc.Items, true) %>) As <%= GetClassName(SourceTable.Name) %>  Implements I<%= GetClassName(SourceTable.Name) %>Manager.GetById
-			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(<%= GetClassName(SourceTable.Name) %>))
+		Public Overloads Function GetById(<%= GetMethodParameters(sc.Items, true) %>) As <%= GetClassName(SourceTable) %>  Implements I<%= GetClassName(SourceTable) %>Manager.GetById
+			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(<%= GetClassName(SourceTable) %>))
 		
 			<% For Each mcs As MemberColumnSchema In sc.Items %>
-			criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= GetVariableName(mcs.Name) %>))
+			criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= GetVariableName(mcs) %>))
 			<% Next %>
 			
-			Dim result As <%= GetClassName(SourceTable.Name) %> = DirectCast(criteria.UniqueResult(), <%= GetClassName(SourceTable.Name) %>)
+			Dim result As <%= GetClassName(SourceTable) %> = DirectCast(criteria.UniqueResult(), <%= GetClassName(SourceTable) %>)
 		
 			If result Is Nothing Then
 				Throw New NHibernate.ObjectDeletedException("", Nothing, Nothing)
@@ -87,19 +87,19 @@ Namespace <%= ManagerNamespace %>
 		End Function
 		<% End If %>
 		<% Else If Not ContainsForeignKey(sc, ExcludedTables) Then %>
-		Public Function <%= GetMethodDeclaration(sc) %> As IList(Of <%= GetClassName(SourceTable.Name) %>) Implements I<%= GetClassName(SourceTable.Name) %>Manager.<%= sc.MethodName %>
-            Dim <%= GetVariableName(SourceTable.Name) %>Criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(<%= GetClassName(SourceTable.Name) %>))
+		Public Function <%= GetMethodDeclaration(sc) %> As IList(Of <%= GetClassName(SourceTable) %>) Implements I<%= GetClassName(SourceTable) %>Manager.<%= sc.MethodName %>
+            Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(<%= GetClassName(SourceTable) %>))
 			
 			<% For Each mcs As MemberColumnSchema In sc.Items %>
 			<% If mcs.IsForeignKeyMember %>
-			Dim <%= GetVariableName(GetForeignTableName(mcs, SourceTable)) %>Criteria As ICriteria = <%= GetVariableName(SourceTable.Name) %>Criteria.CreateCriteria("<%= GetPropertyName(GetForeignTableName(mcs, SourceTable)) %>")
-            <%= GetVariableName(GetForeignTableName(mcs, SourceTable)) %>Criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("Id", <%= GetVariableName(mcs.Name) %>))
+			Dim <%= GetVariableName(GetForeignTable(mcs, SourceTable), mcs) %>Criteria As ICriteria = criteria.CreateCriteria("<%= GetPropertyName(GetForeignTable(mcs, SourceTable), mcs) %>")
+            <%= GetVariableName(GetForeignTable(mcs, SourceTable), mcs) %>Criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("Id", <%= GetVariableName(mcs) %>))
 			<% Else %>
-			<%= GetVariableName(SourceTable.Name) %>Criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= GetPropertyName(mcs.Name) %>", <%= GetVariableName(mcs.Name) %>))
+			criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= GetPropertyName(mcs) %>", <%= GetVariableName(mcs) %>))
 			<% End If %>
 			<% Next %>
 			
-            return <%= GetVariableName(SourceTable.Name) %>Criteria.List(Of <%= GetClassName(SourceTable.Name) %>)()
+            return criteria.List(Of <%= GetClassName(SourceTable) %>)()
         End Function
 		<% End If %>
 		<% Next %>

@@ -31,41 +31,119 @@ Public Class NHibernateHelper
 		End Select
 	End Function
 
-	#region "Variable Name Methods"
+	#region "Variable & Class Name Methods"
 
-	Public Function GetPropertyName(ByVal name As String) As String
-		Return StringUtil.ToPascalCase(name)
-	End Function
-	Public Function GetPropertyNamePlural(ByVal name As String) As String
-		Return GetPropertyName(GetNamePlural(name))
-	End Function
-
-	Public Function GetPrivateVariableName(ByVal name As String) As String
-		Return "p" + GetVariableName(name)
-	End Function
-	Public Function GetPrivateVariableNamePlural(ByVal name As String) As String
-		Return GetPrivateVariableName(GetNamePlural(name))
-	End Function
-
-	Public Function GetVariableName(ByVal name As String) As String
-		Return "_" + StringUtil.ToCamelCase(name)
-	End Function
-	Public Function GetVariableNamePlural(ByVal name As String) As String
-		Return GetVariableName(GetNamePlural(name))
-	End Function
-
-	Private Function GetNamePlural(ByVal name As String) As String
-		Dim result As New System.Text.StringBuilder()
-		result.Append(name)
-
-		If Not name.EndsWith("es") AndAlso name.EndsWith("s") Then
-			result.Append("es")
+	Public Function GetPropertyName(ByVal table As TableSchema, ByVal column As ColumnSchema) As String
+		If ColumnHasAlias(column) Then
+			Return GetPropertyName(GetNameFromColumn(column))
 		Else
-			result.Append("s")
+			Return GetPropertyName(GetClassName(table))
+		End If
+	End Function
+	Public Function GetPropertyName(ByVal column As ColumnSchema) As String
+		Return GetPropertyName(GetNameFromColumn(column))
+	End Function
+	Private Function GetPropertyName(ByVal name As String) As String
+		Return StringUtil.ToSingular(StringUtil.ToPascalCase(name))
+	End Function
+
+	Public Function GetPropertyNamePlural(ByVal table As TableSchema, ByVal column As ColumnSchema) As String
+		If ColumnHasAlias(column) Then
+			Return GetPropertyNamePlural(GetNameFromColumn(column))
+		Else
+			Return GetPropertyNamePlural(GetClassName(table))
+		End If
+	End Function
+	Public Function GetPropertyNamePlural(ByVal column As ColumnSchema) As String
+		Return GetPropertyNamePlural(GetNameFromColumn(column))
+	End Function
+	Private Function GetPropertyNamePlural(ByVal name As String) As String
+		Return StringUtil.ToPlural(StringUtil.ToPascalCase(name))
+	End Function
+
+	Public Function GetPrivateVariableName(ByVal table As TableSchema, ByVal column As ColumnSchema) As String
+		If ColumnHasAlias(column) Then
+			Return GetPrivateVariableName(GetNameFromColumn(column))
+		Else
+			Return GetPrivateVariableName(GetClassName(table))
+		End If
+	End Function
+	Public Function GetPrivateVariableName(ByVal column As ColumnSchema) As String
+		Return GetPrivateVariableName(GetNameFromColumn(column))
+	End Function
+	Private Function GetPrivateVariableName(ByVal name As String) As String
+		Return "p_" + GetVariableName(name)
+	End Function
+
+	Public Function GetPrivateVariableNamePlural(ByVal table As TableSchema, ByVal column As ColumnSchema) As String
+		If ColumnHasAlias(column) Then
+			Return GetPrivateVariableNamePlural(GetNameFromColumn(column))
+		Else
+			Return GetPrivateVariableNamePlural(GetClassName(table))
+		End If
+	End Function
+	Public Function GetPrivateVariableNamePlural(ByVal column As ColumnSchema) As String
+		Return GetPrivateVariableNamePlural(GetNameFromColumn(column))
+	End Function
+	Private Function GetPrivateVariableNamePlural(ByVal name As String) As String
+		Return "p_" + GetVariableNamePlural(name)
+	End Function
+
+	Public Function GetVariableName(ByVal table As TableSchema, ByVal column As ColumnSchema) As String
+		If ColumnHasAlias(column) Then
+			Return GetVariableName(GetNameFromColumn(column))
+		Else
+			Return GetVariableName(GetClassName(table))
+		End If
+	End Function
+	Public Function GetVariableName(ByVal column As ColumnSchema) As String
+		Return GetVariableName(GetNameFromColumn(column))
+	End Function
+	Private Function GetVariableName(ByVal name As String) As String
+		Return "_" + StringUtil.ToSingular(StringUtil.ToCamelCase(name))
+	End Function
+
+	Public Function GetVariableNamePlural(ByVal table As TableSchema, ByVal column As ColumnSchema) As String
+		If ColumnHasAlias(column) Then
+			Return GetVariableNamePlural(GetNameFromColumn(column))
+		Else
+			Return GetVariableNamePlural(GetClassName(table))
+		End If
+	End Function
+	Public Function GetVariableNamePlural(ByVal column As ColumnSchema) As String
+		Return GetVariableNamePlural(GetNameFromColumn(column))
+	End Function
+	Private Function GetVariableNamePlural(ByVal name As String) As String
+		Return "_" + StringUtil.ToPlural(StringUtil.ToCamelCase(name))
+	End Function
+
+	Public Function GetClassName(ByVal table As TableSchema) As String
+		Dim className As String
+		If table.ExtendedProperties.Contains(extendedPropertyName) Then
+			className = table.ExtendedProperties(extendedPropertyName).Value.ToString()
+		Else
+			className = table.Name
+
+			If Not [String].IsNullOrEmpty(tablePrefix) AndAlso className.StartsWith(tablePrefix) Then
+				className = className.Remove(0, tablePrefix.Length)
+			End If
 		End If
 
-		Return result.ToString()
+		Return StringUtil.ToSingular(StringUtil.ToPascalCase(className))
 	End Function
+	Protected tablePrefix As String = [String].Empty
+
+	Private Function ColumnHasAlias(ByVal column As ColumnSchema) As Boolean
+		Return column.ExtendedProperties.Contains(extendedPropertyName)
+	End Function
+	Private Function GetNameFromColumn(ByVal column As ColumnSchema) As String
+		If ColumnHasAlias(column) Then
+			Return column.ExtendedProperties(extendedPropertyName).Value.ToString()
+		Else
+			Return column.Name
+		End IF
+	End Function
+	Private Const extendedPropertyName As String = "cs_alias"
 #End Region
 
 	#region "ManyToMany Table Methods"
@@ -129,19 +207,6 @@ Public Class NHibernateHelper
 	End Function
 #End Region
 
-	Public Function GetClassName(ByVal tableName As String) As String
-		If Not [String].IsNullOrEmpty(tablePrefix) AndAlso tableName.StartsWith(tablePrefix) Then
-			tableName = tableName.Remove(0, tablePrefix.Length)
-		End If
-
-		If tableName.EndsWith("s") AndAlso Not tableName.EndsWith("ss") Then
-			tableName = tableName.Substring(0, tableName.Length - 1)
-		End If
-
-		Return StringUtil.ToPascalCase(tableName)
-	End Function
-	Protected tablePrefix As String = [String].Empty
-
 	#region "PrimaryKey Methods"
 
 	Public Function GetPrimaryKeyColumn(ByVal primaryKey As PrimaryKeySchema) As MemberColumnSchema
@@ -183,7 +248,7 @@ Public Class NHibernateHelper
 			If isDeclaration Then
 				result.Append("ByVal ")
 			End If
-			result.Append(GetVariableName(mcs.Name))
+			result.Append(GetVariableName(mcs))
 			If isDeclaration Then
 				result.Append(" As ")
 				result.Append(mcs.SystemType.ToString())
@@ -222,10 +287,10 @@ Public Class NHibernateHelper
 	End Function
 #End Region
 
-	Public Function GetForeignTableName(ByVal mcs As MemberColumnSchema, ByVal table As TableSchema) As String
+	Public Function GetForeignTable(ByVal mcs As MemberColumnSchema, ByVal table As TableSchema) As TableSchema
 		For Each tks As TableKeySchema In table.ForeignKeys
 			If tks.ForeignKeyMemberColumns.Contains(mcs) Then
-				Return tks.PrimaryKeyTable.Name
+				Return tks.PrimaryKeyTable
 			End If
 		Next
 		Throw New Exception([String].Format("Could not find Column {0} in Table {1}'s ForeignKeys.", mcs.Name, table.Name))
@@ -346,14 +411,17 @@ Public Class SearchCriteria
 	Protected mcsList As List(Of MemberColumnSchema)
 	Protected _methodNameGenerationMode As MethodNameGenerationMode = MethodNameGenerationMode.[Default]
 	Protected _methodName As String = [String].Empty
+	Protected _extendedProperty As String
 #End Region
 
 	#region "Constructors"
 
-	Protected Sub New()
+	Protected Sub New(ByVal _extendedProperty As String)
+		Me._extendedProperty = _extendedProperty
 		mcsList = New List(Of MemberColumnSchema)()
 	End Sub
-	Protected Sub New(ByVal mcsList As List(Of MemberColumnSchema))
+	Protected Sub New(ByVal _extendedProperty As String, ByVal mcsList As List(Of MemberColumnSchema))
+		Me._extendedProperty = _extendedProperty
 		Me.mcsList = mcsList
 	End Sub
 #End Region
@@ -371,11 +439,11 @@ Public Class SearchCriteria
 	''' <summary>
 	''' Sets MethodName to be value of the specified Extended Property from the database.
 	''' </summary>
-	''' <param name="extendedProperty">Value of the Extended Property.</param>
-	Public Sub SetMethodNameGeneration(ByVal extendedProperty As String)
+	''' <param name="_extendedProperty">Value of the Extended Property.</param>
+	Public Sub SetMethodNameGeneration(ByVal _extendedProperty As String)
 		_methodNameGenerationMode = MethodNameGenerationMode.ExtendedProperty
 
-		_methodName = extendedProperty
+		_methodName = _extendedProperty
 	End Sub
 	''' <summary>
 	''' Sets MethodName to custom generation: "{prefix}{0}{delimeter}{1}{suffix}"
@@ -411,7 +479,12 @@ Public Class SearchCriteria
 			Else
 				sb.Append(delimeter)
 			End If
-			sb.Append(mcs.Name)
+
+			If mcs.ExtendedProperties.Contains(_extendedProperty) Then
+				sb.Append(mcs.ExtendedProperties(_extendedProperty).Value.ToString())
+			Else
+				sb.Append(mcs.Name)
+			End If
 		Next
 		sb.Append(suffix)
 
@@ -474,7 +547,8 @@ Public Class SearchCriteria
 		#region "Declarations"
 
 		Protected _table As TableSchema
-		Protected extendedProperty As String = "cs_CriteriaName"
+		Protected _extendedProperty As String = [String].Empty
+		Protected Const defaultExtendedProperty As String = "cs_alias"
 #End Region
 
 		#region "Constructor"
@@ -482,9 +556,9 @@ Public Class SearchCriteria
 		Public Sub New(ByVal sourceTable As TableSchema)
 			Me._table = sourceTable
 		End Sub
-		Public Sub New(ByVal sourceTable As TableSchema, ByVal extendedProperty As String)
+		Public Sub New(ByVal sourceTable As TableSchema, ByVal _extendedProperty As String)
 			Me.New(sourceTable)
-			Me.extendedProperty = extendedProperty
+			Me._extendedProperty = _extendedProperty
 		End Sub
 #End Region
 
@@ -522,44 +596,44 @@ Public Class SearchCriteria
 		End Function
 
 		Protected Sub GetPrimaryKeySearchCriteria(ByVal map As Dictionary(Of String, SearchCriteria))
-			Dim mcsList As New List(Of MemberColumnSchema)(table.PrimaryKey.MemberColumns.ToArray())
-			Dim searchCriteria As New SearchCriteria(mcsList)
+			Dim mcsList As New List(Of MemberColumnSchema)(_table.PrimaryKey.MemberColumns.ToArray())
+			Dim searchCriteria As New SearchCriteria(ExtendedProperty, mcsList)
 
-			If table.PrimaryKey.ExtendedProperties.Contains(extendedProperty) Then
-				If Not [String].IsNullOrEmpty(extendedProperty) AndAlso table.PrimaryKey.ExtendedProperties.Contains(extendedProperty) AndAlso table.PrimaryKey.ExtendedProperties(extendedProperty).Value <> Nothing Then
-					searchCriteria.SetMethodNameGeneration(table.PrimaryKey.ExtendedProperties(extendedProperty).Value.ToString())
+			If _table.PrimaryKey.ExtendedProperties.Contains(ExtendedProperty) Then
+				If Not [String].IsNullOrEmpty(ExtendedProperty) AndAlso _table.PrimaryKey.ExtendedProperties.Contains(ExtendedProperty) AndAlso _table.PrimaryKey.ExtendedProperties(ExtendedProperty).Value <> Nothing Then
+					searchCriteria.SetMethodNameGeneration(_table.PrimaryKey.ExtendedProperties(ExtendedProperty).Value.ToString())
 				End If
 			End If
 
 			AddToMap(map, searchCriteria)
 		End Sub
 		Protected Sub GetForeignKeySearchCriteria(ByVal map As Dictionary(Of String, SearchCriteria))
-			For Each tks As TableKeySchema In table.ForeignKeys
-				Dim searchCriteria As New SearchCriteria()
+			For Each tks As TableKeySchema In _table.ForeignKeys
+				Dim searchCriteria As New SearchCriteria(ExtendedProperty)
 				For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns
-					If mcs.Table.Equals(table) Then
+					If mcs.Table.Equals(_table) Then
 						searchCriteria.Add(mcs)
 					End If
 				Next
 
-				If Not [String].IsNullOrEmpty(extendedProperty) AndAlso tks.ExtendedProperties.Contains(extendedProperty) AndAlso tks.ExtendedProperties(extendedProperty).Value <> Nothing Then
-					searchCriteria.SetMethodNameGeneration(tks.ExtendedProperties(extendedProperty).Value.ToString())
+				If Not [String].IsNullOrEmpty(ExtendedProperty) AndAlso tks.ExtendedProperties.Contains(ExtendedProperty) AndAlso tks.ExtendedProperties(ExtendedProperty).Value <> Nothing Then
+					searchCriteria.SetMethodNameGeneration(tks.ExtendedProperties(ExtendedProperty).Value.ToString())
 				End If
 
 				AddToMap(map, searchCriteria)
 			Next
 		End Sub
 		Protected Sub GetIndexSearchCriteria(ByVal map As Dictionary(Of String, SearchCriteria))
-			For Each indexSchema As IndexSchema In table.Indexes
-				Dim searchCriteria As New SearchCriteria()
+			For Each indexSchema As IndexSchema In _table.Indexes
+				Dim searchCriteria As New SearchCriteria(ExtendedProperty)
 				For Each mcs As MemberColumnSchema In indexSchema.MemberColumns
-					If mcs.Table.Equals(table) Then
+					If mcs.Table.Equals(_table) Then
 						searchCriteria.Add(mcs)
 					End If
 				Next
 
-				If Not [String].IsNullOrEmpty(extendedProperty) AndAlso indexSchema.ExtendedProperties.Contains(extendedProperty) AndAlso indexSchema.ExtendedProperties(extendedProperty).Value <> Nothing Then
-					searchCriteria.SetMethodNameGeneration(indexSchema.ExtendedProperties(extendedProperty).Value.ToString())
+				If Not [String].IsNullOrEmpty(ExtendedProperty) AndAlso indexSchema.ExtendedProperties.Contains(ExtendedProperty) AndAlso indexSchema.ExtendedProperties(ExtendedProperty).Value <> Nothing Then
+					searchCriteria.SetMethodNameGeneration(indexSchema.ExtendedProperties(ExtendedProperty).Value.ToString())
 				End If
 
 				AddToMap(map, searchCriteria)
@@ -587,6 +661,15 @@ Public Class SearchCriteria
 
 		#region "Properties"
 
+		Public ReadOnly Property ExtendedProperty() As String
+			Get
+				If [String].IsNullOrEmpty(_extendedProperty) Then
+					Return defaultExtendedProperty
+				Else
+					Return _extendedProperty
+				End If
+			End Get
+		End Property
 		Public ReadOnly Property Table() As TableSchema
 			Get
 				Return _table

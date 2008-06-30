@@ -26,8 +26,8 @@ Namespace <%= ManagerNamespace %>
 		' Get Methods
 		<% For Each table As TableSchema In SourceDatabase.Tables %>
 		<% If Not ExcludedTables.Contains(table) AndAlso Not IsManyToMany(table) Then %>
-		Function Get<%= GetClassName(table.Name) %>Manager() As I<%= GetClassName(table.Name) %>Manager
-		Function Get<%= GetClassName(table.Name) %>Manager(ByVal session As INHibernateSession) As I<%= GetClassName(table.Name) %>Manager
+		Function Get<%= GetClassName(table) %>Manager() As I<%= GetClassName(table) %>Manager
+		Function Get<%= GetClassName(table) %>Manager(ByVal session As INHibernateSession) As I<%= GetClassName(table) %>Manager
 		<% End If %>
 		<% Next %>
 	End Interface
@@ -44,11 +44,11 @@ Namespace <%= ManagerNamespace %>
 
 		<% For Each table As TableSchema In SourceDatabase.Tables %>
 		<% If Not ExcludedTables.Contains(table) AndAlso Not IsManyToMany(table) Then %>
-		Public Function Get<%= GetClassName(table.Name) %>Manager() As I<%= GetClassName(table.Name) %>Manager Implements IManagerFactory.Get<%= GetClassName(table.Name) %>Manager
-			Return New <%= GetClassName(table.Name) %>Manager()
+		Public Function Get<%= GetClassName(table) %>Manager() As I<%= GetClassName(table) %>Manager Implements IManagerFactory.Get<%= GetClassName(table) %>Manager
+			Return New <%= GetClassName(table) %>Manager()
 		End Function
-		Public Function Get<%= GetClassName(table.Name) %>Manager(ByVal session As INHibernateSession) As I<%= GetClassName(table.Name) %>Manager Implements IManagerFactory.Get<%= GetClassName(table.Name) %>Manager
-			Return New <%= GetClassName(table.Name) %>Manager(session)
+		Public Function Get<%= GetClassName(table) %>Manager(ByVal session As INHibernateSession) As I<%= GetClassName(table) %>Manager Implements IManagerFactory.Get<%= GetClassName(table) %>Manager
+			Return New <%= GetClassName(table) %>Manager(session)
 		End Function
 		<% End If %>
 		<% Next %>
