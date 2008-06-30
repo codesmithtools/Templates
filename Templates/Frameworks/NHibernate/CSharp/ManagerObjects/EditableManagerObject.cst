@@ -25,11 +25,11 @@ using <%= BaseNamespace %>;
 
 namespace <%= ManagerNamespace %>
 {
-    public partial interface I<%= GetClassName(SourceTable.Name) %>Manager : IManagerBase<<%= GetClassName(SourceTable.Name) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable).ToString()] %>>
+    public partial interface I<%= GetClassName(SourceTable) %>Manager : IManagerBase<<%= GetClassName(SourceTable) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable).ToString()] %>>
     {
 	}
 	
-	partial class <%= GetClassName(SourceTable.Name) %>Manager : ManagerBase<<%= GetClassName(SourceTable.Name) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable).ToString()] %>>, I<%= GetClassName(SourceTable.Name) %>Manager
+	partial class <%= GetClassName(SourceTable) %>Manager : ManagerBase<<%= GetClassName(SourceTable) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable).ToString()] %>>, I<%= GetClassName(SourceTable) %>Manager
     {
 	}
 }

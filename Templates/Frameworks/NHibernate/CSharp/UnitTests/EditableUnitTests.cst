@@ -27,7 +27,7 @@ using <%= BaseNamespace %>;
 
 namespace <%= UnitTestNamespace %>
 {
-    public partial class <%= GetClassName(SourceTable.Name) %>Tests : UNuitTestBase
+    public partial class <%= GetClassName(SourceTable) %>Tests : UNuitTestBase
     {
 	}
 }

@@ -101,7 +101,7 @@ private void RenderBaseClasses()
 }
 private void RenderHbmMaps(TableSchema table)
 {
-	string fileName = String.Format("{0}{1}.hbm.xml", GetFolder("HbmMaps"), GetClassName(table.Name));
+	string fileName = String.Format("{0}{1}.hbm.xml", GetFolder("HbmMaps"), GetClassName(table));
 	
 	HbmMapTemplate hbmMap = this.Create<HbmMapTemplate>();
 	hbmMap.AssemblyName = this.AssemblyName;
@@ -114,8 +114,8 @@ private void RenderHbmMaps(TableSchema table)
 }
 private void RenderBusinessObjects(TableSchema table)
 {
-	string fileName = String.Format("{0}{1}.generated.cs", GetFolder(BusinessNamespace), GetClassName(table.Name));
-	string editableFileName = String.Format("{0}{1}.cs", GetFolder(BusinessNamespace), GetClassName(table.Name));
+	string fileName = String.Format("{0}{1}.generated.cs", GetFolder(BusinessNamespace), GetClassName(table));
+	string editableFileName = String.Format("{0}{1}.cs", GetFolder(BusinessNamespace), GetClassName(table));
 	
 	if(!File.Exists(editableFileName))
 	{
@@ -140,8 +140,8 @@ private void RenderBusinessObjects(TableSchema table)
 }
 private void RenderManagerObjects(TableSchema table)
 {
-	string fileName = String.Format("{0}{1}Manager.Generated.cs", GetFolder(ManagerNamespace), GetClassName(table.Name));
-	string editableFileName = String.Format("{0}{1}Manager.cs", GetFolder(ManagerNamespace), GetClassName(table.Name));
+	string fileName = String.Format("{0}{1}Manager.Generated.cs", GetFolder(ManagerNamespace), GetClassName(table));
+	string editableFileName = String.Format("{0}{1}Manager.cs", GetFolder(ManagerNamespace), GetClassName(table));
 	
 	if(!File.Exists(editableFileName))
 	{
@@ -181,8 +181,8 @@ private void RenderManagerFactory()
 }
 private void RenderUnitTests(TableSchema table)
 {
-	string fileName = String.Format("{0}{1}Tests.generated.cs", GetFolder(UnitTestNamespace), GetClassName(table.Name));
-	string editableFileName = String.Format("{0}{1}Tests.cs", GetFolder(UnitTestNamespace), GetClassName(table.Name));
+	string fileName = String.Format("{0}{1}Tests.generated.cs", GetFolder(UnitTestNamespace), GetClassName(table));
+	string editableFileName = String.Format("{0}{1}Tests.cs", GetFolder(UnitTestNamespace), GetClassName(table));
 	
 	if(!File.Exists(editableFileName))
 	{

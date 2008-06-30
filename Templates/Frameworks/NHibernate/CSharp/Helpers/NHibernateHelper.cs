@@ -35,47 +35,130 @@ public class NHibernateHelper : CodeTemplate
 		}
 	}
 	
-	#region Variable Name Methods
+	#region Variable & Class Name Methods
 	
-	public string GetPropertyName(string name)
+	public string GetPropertyName(TableSchema table, ColumnSchema column)
 	{
-		return StringUtil.ToPascalCase(name);
+		if(ColumnHasAlias(column))
+			return GetPropertyName(GetNameFromColumn(column));
+		else
+			return GetPropertyName(GetClassName(table));
 	}
-	public string GetPropertyNamePlural(String name)
+	public string GetPropertyName(ColumnSchema column)
 	{
-		return GetPropertyName(GetNamePlural(name));
+		return GetPropertyName(GetNameFromColumn(column));
+	}
+	private string GetPropertyName(string name)
+	{
+		return StringUtil.ToSingular(StringUtil.ToPascalCase(name));
 	}
 	
-	public string GetPrivateVariableName(string name)
+	public string GetPropertyNamePlural(TableSchema table, ColumnSchema column)
+	{
+		if(ColumnHasAlias(column))
+			return GetPropertyNamePlural(GetNameFromColumn(column));
+		else
+			return GetPropertyNamePlural(GetClassName(table));
+	}
+	public string GetPropertyNamePlural(ColumnSchema column)
+	{
+		return GetPropertyNamePlural(GetNameFromColumn(column));
+	}
+	private string GetPropertyNamePlural(string name)
+	{
+		return StringUtil.ToPlural(StringUtil.ToPascalCase(name));
+	}
+	
+	public string GetPrivateVariableName(TableSchema table, ColumnSchema column)
+	{
+		if(ColumnHasAlias(column))
+			return GetPrivateVariableName(GetNameFromColumn(column));
+		else
+			return GetPrivateVariableName(GetClassName(table));
+	}
+	public string GetPrivateVariableName(ColumnSchema column)
+	{
+		return GetPrivateVariableName(GetNameFromColumn(column));
+	}
+	private string GetPrivateVariableName(string name)
 	{
 		return "_" + GetVariableName(name);
 	}
-	public string GetPrivateVariableNamePlural(string name)
-	{
-		return GetPrivateVariableName(GetNamePlural(name));
-	}
 	
-	public string GetVariableName(string name)
+	public string GetPrivateVariableNamePlural(TableSchema table, ColumnSchema column)
 	{
-		return StringUtil.ToCamelCase(name);
-	}
-	public string GetVariableNamePlural(string name)
-	{
-		return GetVariableName(GetNamePlural(name));
-	}
-	
-	private string GetNamePlural(string name)
-	{
-		System.Text.StringBuilder result = new System.Text.StringBuilder();
-		result.Append(name);
-		
-		if(!name.EndsWith("es") && name.EndsWith("s"))
-			result.Append("es");
+		if(ColumnHasAlias(column))
+			return GetPrivateVariableNamePlural(GetNameFromColumn(column));
 		else
-			result.Append("s");
-			
-		return result.ToString();
+			return GetPrivateVariableNamePlural(GetClassName(table));
 	}
+	public string GetPrivateVariableNamePlural(ColumnSchema column)
+	{
+		return GetPrivateVariableNamePlural(GetNameFromColumn(column));
+	}
+	private string GetPrivateVariableNamePlural(string name)
+	{
+		return "_" + GetVariableNamePlural(name);
+	}
+	
+	public string GetVariableName(TableSchema table, ColumnSchema column)
+	{
+		if(ColumnHasAlias(column))
+			return GetVariableName(GetNameFromColumn(column));
+		else
+			return GetVariableName(GetClassName(table));
+	}
+	public string GetVariableName(ColumnSchema column)
+	{
+		return GetVariableName(GetNameFromColumn(column));
+	}
+	private string GetVariableName(string name)
+	{
+		return StringUtil.ToSingular(StringUtil.ToCamelCase(name));
+	}
+	
+	public string GetVariableNamePlural(TableSchema table, ColumnSchema column)
+	{
+		if(ColumnHasAlias(column))
+			return GetVariableNamePlural(GetNameFromColumn(column));
+		else
+			return GetVariableNamePlural(GetClassName(table));
+	}
+	public string GetVariableNamePlural(ColumnSchema column)
+	{
+		return GetVariableNamePlural(GetNameFromColumn(column));
+	}
+	private string GetVariableNamePlural(string name)
+	{
+		return StringUtil.ToPlural(StringUtil.ToCamelCase(name));
+	}
+	
+	public string GetClassName(TableSchema table)
+	{
+		string className;
+		if(table.ExtendedProperties.Contains(extendedPropertyName))
+			className = table.ExtendedProperties[extendedPropertyName].Value.ToString();
+		else
+		{
+			className = table.Name;
+			
+			if (!String.IsNullOrEmpty(tablePrefix) && className.StartsWith(tablePrefix))
+            	className = className.Remove(0, tablePrefix.Length);
+		}
+
+		return StringUtil.ToSingular(StringUtil.ToPascalCase(className));
+	}
+	protected string tablePrefix = String.Empty;
+	
+	private bool ColumnHasAlias(ColumnSchema column)
+	{
+		return column.ExtendedProperties.Contains(extendedPropertyName);
+	}
+	private string GetNameFromColumn(ColumnSchema column)
+	{
+		return ColumnHasAlias(column) ? column.ExtendedProperties[extendedPropertyName].Value.ToString() : column.Name;
+	}
+	private const string extendedPropertyName = "cs_alias";
 	
 	#endregion
 	
@@ -148,18 +231,6 @@ public class NHibernateHelper : CodeTemplate
 	
 	#endregion
 	
-	public string GetClassName(String tableName)
-	{
-		if (!String.IsNullOrEmpty(tablePrefix) && tableName.StartsWith(tablePrefix))
-            tableName = tableName.Remove(0, tablePrefix.Length);
-				
-		if (tableName.EndsWith("s") && !tableName.EndsWith("ss"))
-			tableName = tableName.Substring(0, tableName.Length-1);
-			
-		return StringUtil.ToPascalCase(tableName);
-	}
-	protected string tablePrefix = String.Empty;
-	
 	#region PrimaryKey Methods
 	
 	public MemberColumnSchema GetPrimaryKeyColumn(PrimaryKeySchema primaryKey)
@@ -206,7 +277,7 @@ public class NHibernateHelper : CodeTemplate
 				result.Append(mcs.SystemType.ToString());
 				result.Append(" ");
 			}
-			result.Append(GetVariableName(mcs.Name));
+			result.Append(GetVariableName(mcs));
 		}
 		return result.ToString();
 	}
@@ -240,11 +311,11 @@ public class NHibernateHelper : CodeTemplate
 	
 	#endregion
 	
-	public string GetForeignTableName(MemberColumnSchema mcs, TableSchema table)
+	public TableSchema GetForeignTable(MemberColumnSchema mcs, TableSchema table)
 	{
 		foreach(TableKeySchema tks in table.ForeignKeys)
 			if(tks.ForeignKeyMemberColumns.Contains(mcs))
-				return tks.PrimaryKeyTable.Name;
+				return tks.PrimaryKeyTable;
 		throw new Exception(String.Format("Could not find Column {0} in Table {1}'s ForeignKeys.", mcs.Name, table.Name));
 	}
 	
@@ -369,17 +440,20 @@ public class SearchCriteria
     protected List<MemberColumnSchema> mcsList;
     protected MethodNameGenerationMode methodNameGenerationMode = MethodNameGenerationMode.Default;
     protected string methodName = String.Empty;
+	protected string extendedProperty;
 
     #endregion
 
     #region Constructors
 
-    protected SearchCriteria()
+    protected SearchCriteria(string extendedProperty)
     {
+		this.extendedProperty = extendedProperty;
         mcsList = new List<MemberColumnSchema>();
     }
-    protected SearchCriteria(List<MemberColumnSchema> mcsList)
+    protected SearchCriteria(string extendedProperty, List<MemberColumnSchema> mcsList)
     {
+		this.extendedProperty = extendedProperty;
         this.mcsList = mcsList;
     }
 
@@ -443,7 +517,11 @@ public class SearchCriteria
                 isFirst = false;
             else
                 sb.Append(delimeter);
-            sb.Append(mcs.Name);
+			
+			if(mcs.ExtendedProperties.Contains(extendedProperty))
+				sb.Append(mcs.ExtendedProperties[extendedProperty].Value.ToString());
+			else
+            	sb.Append(mcs.Name);
         }
         sb.Append(suffix);
 
@@ -510,7 +588,8 @@ public class SearchCriteria
         #region Declarations
 
         protected TableSchema table;
-        protected string extendedProperty = "cs_CriteriaName";
+        protected string extendedProperty = String.Empty;
+		protected const string defaultExtendedProperty = "cs_alias";
 
         #endregion
 
@@ -567,11 +646,11 @@ public class SearchCriteria
         protected void GetPrimaryKeySearchCriteria(Dictionary<string, SearchCriteria> map)
         {
             List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>(table.PrimaryKey.MemberColumns.ToArray());
-            SearchCriteria searchCriteria = new SearchCriteria(mcsList);
+            SearchCriteria searchCriteria = new SearchCriteria(ExtendedProperty, mcsList);
 
-            if (table.PrimaryKey.ExtendedProperties.Contains(extendedProperty))
-                if (!String.IsNullOrEmpty(extendedProperty) && table.PrimaryKey.ExtendedProperties.Contains(extendedProperty) && table.PrimaryKey.ExtendedProperties[extendedProperty].Value != null)
-                    searchCriteria.SetMethodNameGeneration(table.PrimaryKey.ExtendedProperties[extendedProperty].Value.ToString());
+            if (table.PrimaryKey.ExtendedProperties.Contains(ExtendedProperty))
+                if (!String.IsNullOrEmpty(ExtendedProperty) && table.PrimaryKey.ExtendedProperties.Contains(ExtendedProperty) && table.PrimaryKey.ExtendedProperties[ExtendedProperty].Value != null)
+                    searchCriteria.SetMethodNameGeneration(table.PrimaryKey.ExtendedProperties[ExtendedProperty].Value.ToString());
 
             AddToMap(map, searchCriteria);
         }
@@ -579,13 +658,13 @@ public class SearchCriteria
         {
             foreach (TableKeySchema tks in table.ForeignKeys)
             {
-                SearchCriteria searchCriteria = new SearchCriteria();
+                SearchCriteria searchCriteria = new SearchCriteria(ExtendedProperty);
                 foreach (MemberColumnSchema mcs in tks.ForeignKeyMemberColumns)
                     if (mcs.Table.Equals(table))
                         searchCriteria.Add(mcs);
 
-                if (!String.IsNullOrEmpty(extendedProperty) && tks.ExtendedProperties.Contains(extendedProperty) && tks.ExtendedProperties[extendedProperty].Value != null)
-                    searchCriteria.SetMethodNameGeneration(tks.ExtendedProperties[extendedProperty].Value.ToString());
+                if (!String.IsNullOrEmpty(ExtendedProperty) && tks.ExtendedProperties.Contains(ExtendedProperty) && tks.ExtendedProperties[ExtendedProperty].Value != null)
+                    searchCriteria.SetMethodNameGeneration(tks.ExtendedProperties[ExtendedProperty].Value.ToString());
 
                 AddToMap(map, searchCriteria);
             }
@@ -594,13 +673,13 @@ public class SearchCriteria
         {
             foreach (IndexSchema indexSchema in table.Indexes)
             {
-                SearchCriteria searchCriteria = new SearchCriteria();
+                SearchCriteria searchCriteria = new SearchCriteria(ExtendedProperty);
                 foreach (MemberColumnSchema mcs in indexSchema.MemberColumns)
                     if (mcs.Table.Equals(table))
                         searchCriteria.Add(mcs);
 
-                if (!String.IsNullOrEmpty(extendedProperty) && indexSchema.ExtendedProperties.Contains(extendedProperty) && indexSchema.ExtendedProperties[extendedProperty].Value != null)
-                    searchCriteria.SetMethodNameGeneration(indexSchema.ExtendedProperties[extendedProperty].Value.ToString());
+                if (!String.IsNullOrEmpty(ExtendedProperty) && indexSchema.ExtendedProperties.Contains(ExtendedProperty) && indexSchema.ExtendedProperties[ExtendedProperty].Value != null)
+                    searchCriteria.SetMethodNameGeneration(indexSchema.ExtendedProperties[ExtendedProperty].Value.ToString());
 
                 AddToMap(map, searchCriteria);
             }
@@ -630,6 +709,10 @@ public class SearchCriteria
 
         #region Properties
 
+		public string ExtendedProperty
+		{
+			get { return (String.IsNullOrEmpty(extendedProperty)) ? defaultExtendedProperty : extendedProperty; }
+		}
         public TableSchema Table
         {
             get { return table; }

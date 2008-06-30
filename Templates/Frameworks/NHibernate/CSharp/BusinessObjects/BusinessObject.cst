@@ -24,27 +24,27 @@ using <%= BaseNamespace %>;
 
 namespace <%= BusinessNamespace %>
 {
-    public partial class <%= GetClassName(SourceTable.Name) %> : BusinessBase<<%= SystemCSharp[GetBusinessBaseIdType(SourceTable).ToString()] %>>
+    public partial class <%= GetClassName(SourceTable) %> : BusinessBase<<%= SystemCSharp[GetBusinessBaseIdType(SourceTable).ToString()] %>>
     {
         #region Declarations
 
 		<% // Primary Keys %>
 		<% if(IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) { %>
 		<% foreach(MemberColumnSchema mcs in SourceTable.PrimaryKey.MemberColumns) { %>
-		private <%= SystemCSharp[mcs.SystemType.ToString()] %> <%= GetPrivateVariableName(mcs.Name) %> = <%= GetInitialization(mcs.SystemType) %>;
+		private <%= SystemCSharp[mcs.SystemType.ToString()] %> <%= GetPrivateVariableName(mcs) %> = <%= GetInitialization(mcs.SystemType) %>;
 		<% } %>
 		<% } %>
 		
 		<% // Primitives %>
 		<% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-		private <%= SystemCSharp[column.SystemType.ToString()] %> <%= GetPrivateVariableName(column.Name) %> = <%= GetInitialization(column.SystemType) %>;
+		private <%= SystemCSharp[column.SystemType.ToString()] %> <%= GetPrivateVariableName(column) %> = <%= GetInitialization(column.SystemType) %>;
 		<% } %>
 		
 		<% // Many-To-One %>
 		<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
 		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !mcs.IsPrimaryKeyMember) { %>
-		private <%= GetClassName(tks.PrimaryKeyTable.Name) %> <%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %> = null;
+		private <%= GetClassName(tks.PrimaryKeyTable) %> <%= GetPrivateVariableName(tks.PrimaryKeyTable, mcs) %> = null;
 		<% } %>
 		<% } %>
 		<% } %>
@@ -55,12 +55,12 @@ namespace <%= BusinessNamespace %>
 		<% if (!mcs.IsPrimaryKeyMember) { %>
 		<% if (!IsManyToMany(mcs.Table)) { %>
 		<% if (!ExcludedTables.Contains(mcs.Table)) { %>
-		private IList<<%= GetClassName(mcs.Table.Name) %>> <%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %> = new List<<%= GetClassName(mcs.Table.Name) %>>();
+		private IList<<%= GetClassName(mcs.Table) %>> <%= GetPrivateVariableNamePlural(mcs.Table, mcs) %> = new List<<%= GetClassName(mcs.Table) %>>();
 		<% } %>
 		<% } else { %>
 		<% TableSchema foreignTable = GetToManyTable(mcs.Table, SourceTable); %>
 		<% if (!ExcludedTables.Contains(foreignTable)) { %>
-		private IList<<%= GetClassName(foreignTable.Name) %>> <%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %> = new List<<%= GetClassName(foreignTable.Name) %>>();
+		private IList<<%= GetClassName(foreignTable) %>> <%= GetPrivateVariableNamePlural(foreignTable, mcs) %> = new List<<%= GetClassName(foreignTable) %>>();
 		<% } %>
 		<% } %>
 		<% } %>
@@ -71,7 +71,7 @@ namespace <%= BusinessNamespace %>
 
         #region Constructors
 
-        public <%= GetClassName(SourceTable.Name) %>() { }
+        public <%= GetClassName(SourceTable) %>() { }
 
         #endregion
 
@@ -83,7 +83,7 @@ namespace <%= BusinessNamespace %>
             
             sb.Append(this.GetType().FullName);
             <% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-			sb.Append(<%= GetPrivateVariableName(column.Name) %>);
+			sb.Append(<%= GetPrivateVariableName(column) %>);
 			<% } %>
 
             return sb.ToString().GetHashCode();
@@ -104,46 +104,46 @@ namespace <%= BusinessNamespace %>
 				<% if(x>0) { %>
 				uniqueId.Append("^");
 				<% } %>
-				uniqueId.Append(<%= GetPrivateVariableName(SourceTable.PrimaryKey.MemberColumns[x].Name) %>.ToString());
+				uniqueId.Append(<%= GetPrivateVariableName(SourceTable.PrimaryKey.MemberColumns[x]) %>.ToString());
 				<% } %>
 				return uniqueId.ToString();
 			}
 		}
 		
 		<% foreach(MemberColumnSchema mcs in SourceTable.PrimaryKey.MemberColumns) { %>
-		public virtual <%= SystemCSharp[mcs.SystemType.ToString()] %> <%= GetPropertyName(mcs.Name) %>
+		public virtual <%= SystemCSharp[mcs.SystemType.ToString()] %> <%= GetPropertyName(mcs) %>
         {
-            get { return <%= GetPrivateVariableName(mcs.Name) %>; }
+            get { return <%= GetPrivateVariableName(mcs) %>; }
 			set
 			{
 				
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(mcs.Name) %>Changing();<% } %>
-				<%= GetPrivateVariableName(mcs.Name) %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(mcs.Name) %>Changed();<% } %>
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(mcs) %>Changing();<% } %>
+				<%= GetPrivateVariableName(mcs) %> = value;
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(mcs) %>Changed();<% } %>
 			}
         }
 		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
-		partial void On<%= GetPropertyName(mcs.Name) %>Changing();
-		partial void On<%= GetPropertyName(mcs.Name) %>Changed();
+		partial void On<%= GetPropertyName(mcs) %>Changing();
+		partial void On<%= GetPropertyName(mcs) %>Changed();
 		<% } %>
 		
 		<% } %>
 		<% } %>
 		<% // Primitives %>
 		<% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-		public virtual <%= SystemCSharp[column.SystemType.ToString()] %> <%= GetPropertyName(column.Name) %>
+		public virtual <%= SystemCSharp[column.SystemType.ToString()] %> <%= GetPropertyName(column) %>
         {
-            get { return <%= GetPrivateVariableName(column.Name) %>; }
+            get { return <%= GetPrivateVariableName(column) %>; }
 			set
 			{
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(column.Name) %>Changing();<% } %>
-				<%= GetPrivateVariableName(column.Name) %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(column.Name) %>Changed();<% } %>
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(column) %>Changing();<% } %>
+				<%= GetPrivateVariableName(column) %> = value;
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(column) %>Changed();<% } %>
 			}
         }
 		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
-		partial void On<%= GetPropertyName(column.Name) %>Changing();
-		partial void On<%= GetPropertyName(column.Name) %>Changed();
+		partial void On<%= GetPropertyName(column) %>Changing();
+		partial void On<%= GetPropertyName(column) %>Changed();
 		<% } %>
 		
 		<% } %>
@@ -152,19 +152,19 @@ namespace <%= BusinessNamespace %>
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
 		<% if (!mcs.IsPrimaryKeyMember) { %>
 		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !mcs.IsPrimaryKeyMember) { %>
-		public virtual <%= GetClassName(tks.PrimaryKeyTable.Name) %> <%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>
+		public virtual <%= GetClassName(tks.PrimaryKeyTable) %> <%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>
         {
-            get { return <%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %>; }
+            get { return <%= GetPrivateVariableName(tks.PrimaryKeyTable, mcs) %>; }
 			set
 			{
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing();<% } %>
-				<%= GetPrivateVariableName(GetClassName(tks.PrimaryKeyTable.Name)) %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed();<% } %>
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changing();<% } %>
+				<%= GetPrivateVariableName(tks.PrimaryKeyTable, mcs) %> = value;
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changed();<% } %>
 			}
         }
 		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
-		partial void On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changing();
-		partial void On<%= GetPropertyName(GetClassName(tks.PrimaryKeyTable.Name)) %>Changed();
+		partial void On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changing();
+		partial void On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changed();
 		<% } %>
 		
 		<% } %>
@@ -177,38 +177,38 @@ namespace <%= BusinessNamespace %>
 		<% if (!mcs.IsPrimaryKeyMember) { %>
 		<% if (!IsManyToMany(mcs.Table)) { %>
 		<% if (!ExcludedTables.Contains(mcs.Table)) { %>
-		public virtual IList<<%= GetClassName(mcs.Table.Name) %>> <%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>
+		public virtual IList<<%= GetClassName(mcs.Table) %>> <%= GetPropertyNamePlural(mcs.Table, mcs) %>
         {
-            get { return <%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %>; }
+            get { return <%= GetPrivateVariableNamePlural(mcs.Table, mcs) %>; }
             set
 			{
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing();<% } %>
-				<%= GetPrivateVariableNamePlural(GetClassName(mcs.Table.Name)) %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed();<% } %>
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changing();<% } %>
+				<%= GetPrivateVariableNamePlural(mcs.Table, mcs) %> = value;
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changed();<% } %>
 			}
         }
 		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
-		partial void On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changing();
-		partial void On<%= GetPropertyNamePlural(GetClassName(mcs.Table.Name)) %>Changed();
+		partial void On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changing();
+		partial void On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changed();
 		<% } %>
 		
 		<% } %>
 		<% } else { %>
 		<% TableSchema foreignTable = GetToManyTable(mcs.Table, SourceTable); %>
 		<% if (!ExcludedTables.Contains(foreignTable)) { %>
-		public virtual IList<<%= GetClassName(foreignTable.Name) %>> <%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>
+		public virtual IList<<%= GetClassName(foreignTable) %>> <%= GetPropertyNamePlural(foreignTable, mcs) %>
         {
-            get { return <%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %>; }
+            get { return <%= GetPrivateVariableNamePlural(foreignTable, mcs) %>; }
             set
 			{
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing();<% } %>
-				<%= GetPrivateVariableNamePlural(GetClassName(foreignTable.Name)) %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed();<% } %>
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changing();<% } %>
+				<%= GetPrivateVariableNamePlural(foreignTable, mcs) %> = value;
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changed();<% } %>
 			}
         }
 		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
-		partial void On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changing();
-		partial void On<%= GetPropertyNamePlural(GetClassName(foreignTable.Name)) %>Changed();
+		partial void On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changing();
+		partial void On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changed();
 		<% } %>
 		
 		<% } %>
