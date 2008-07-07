@@ -107,9 +107,7 @@ namespace <%= Database.ContextNamespace %>
         [DebuggerNonUserCodeAttribute]
         static <%= Database.Class %>()
         { }
-<% if (Database.Connection.Mode == ConnectionMode.AppSettings
-    && !string.IsNullOrEmpty(Database.Connection.SettingsPropertyName)) { %>
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         /// </summary>
@@ -119,7 +117,6 @@ namespace <%= Database.ContextNamespace %>
         {
             OnCreated();
         }
-<% } %>
         
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
