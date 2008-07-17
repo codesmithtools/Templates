@@ -1,0 +1,160 @@
+<%--
+Author:
+    Milan Negovan
+    milan@aspnetresources.com
+    
+Description:
+    An implementation of a client-side control with the Microsoft AJAX Library
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="JavaScript" Description="An implementation of a client-side control with the Microsoft AJAX Library" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Property Name="Namespace" Type="System.String" Optional="False" Category="1. Namespace and class name" %>
+<%@ Property Name="ClassName" Type="System.String" Optional="False" Category="1. Namespace and class name" %>
+<%@ Property Name="Properties" Type="CodeSmith.CustomProperties.StringCollection" Optional="True" Category="2. Members" %>
+<%@ Property Name="Events" Type="CodeSmith.CustomProperties.StringCollection" Optional="True" Category="2. Members" %>
+Type.registerNamespace ('<%= Namespace %>');
+
+<%= Namespace %>.<%= ClassName %> = function (element) {
+    <%= Namespace %>.<%= ClassName %>.initializeBase (this, [element]);
+
+    <% if (Events != null && Events.Count > 0) 
+    {
+       int count = Events.Count;
+    
+       for (int i=0; i < count; i++) 
+       {
+    %>
+    this._<%= Events[i] %>Delegate = null;
+    <% } } %>
+    <% if (Properties != null) {
+
+       int count = Properties.Count;
+    
+       for (int i=0; i < count; i++) 
+       {
+         string p = Properties[i];
+         string p_camel = TurnToCamelCase (p);
+    %>
+    this._<%= p_camel %> = <%= p_camel %>;
+    <% } %>
+    <% } %>    
+}
+
+<%= Namespace %>.<%= ClassName %>.prototype = {
+
+    <% if (Properties != null && Properties.Count > 0) { %>
+    // ------------- Properties -------------
+    <%    
+       int count = Properties.Count;
+    
+       for (int i=0; i < count; i++) 
+       {
+         string p = Properties[i];
+         string p_camel = TurnToCamelCase (p);
+    %>
+    get_<%= p_camel %> : function () {
+        return this._<%= p_camel %>;
+    },
+
+    set_<%= p_camel %> : function () {
+        if (this._<%= p_camel %> !== value) {
+            this._<%= p_camel %> = value;
+            this.raisePropertyChanged ('<%= p_camel %>');
+        }
+    },
+    
+    <% } %>
+    <% } %>
+    <% if (Events != null && Events.Count > 0) 
+    {
+       int count = Events.Count;
+    
+       for (int i=0; i < count; i++) 
+       {
+          string ev = Events[i];
+    %>
+    // Bind and unbind to the <%= ev %> event.
+    add_<%= ev %> : function (handler) {
+        this.get_events().addHandler ('<%= ev %>', handler);
+    },
+    
+    remove_<%= ev %> : function (handler) {
+        this.get_events().removeHandler ('<%= ev %>', handler);
+    },
+    
+<% } %>
+<% } %>
+    // Release resources before control is disposed.
+    dispose: function() {
+        $clearHandlers (this.get_element());
+        
+    <% if (Events != null && Events.Count > 0) 
+    {
+        int count = Events.Count;
+        
+        for (int i=0; i < count; i++) 
+        {
+            string ev = Events[i];
+            string delegateName = "_" + ev + "Delegate";
+        %>
+        delete this.<%= delegateName %>;
+        <% } %>
+        
+    <% } %>
+        <%= Namespace %>.<%= ClassName %>.callBaseMethod (this, 'dispose');
+    },
+
+    initialize: function() {
+        var element = this.get_element();
+        
+    <% if (Events != null && Events.Count > 0) 
+    {
+        int count = Events.Count;
+        
+        for (int i=0; i < count; i++) 
+        {
+            string ev = Events[i];
+            string delegateName = "_" + ev + "Delegate";
+            string handlerName = "_" + ev + "Handler";
+        %>
+        this.<%= delegateName %> = Function.createDelegate (this, this.<%= handlerName %>);
+        $addHandler (element, '<%= ev %>', this.<%= delegateName %>);
+        
+        <% }
+    } %>
+        <%= Namespace %>.<%= ClassName %>.callBaseMethod (this, 'initialize');
+    },
+    <% if (Events != null && Events.Count > 0) 
+    {
+        int count = Events.Count;
+        
+        for (int i=0; i < count; i++) 
+        {
+            string ev = Events[i];
+            string delegateName = "_" + ev + "Delegate";
+            string handlerName = "_" + ev + "Handler";
+        %>
+        
+    <%= handlerName %>: function (event) {
+        var handler = this.get_events ().getHandler ('<%= ev %>');
+        
+        if (handler)
+            handler (this, Sys.EventArgs.Empty);
+    }<% if (i != count - 1) { %>,
+<% } %>
+<% } %>
+<% }%>
+
+}
+
+<%= Namespace %>.<%= ClassName %>.registerClass ('<%= Namespace %>.<%= ClassName %>', Sys.UI.Control);
+
+<script runat="template">
+public string TurnToCamelCase (string s) 
+{
+    if (string.IsNullOrEmpty (s))
+        return s;
+        
+    return s.Substring (0, 1).ToLower() + s.Substring (1);
+}
+</script>

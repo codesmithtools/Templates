@@ -1,0 +1,117 @@
+<%--
+Author:
+    Milan Negovan
+    milan@aspnetresources.com
+    
+Description:
+    An implementation of a non-visual component with the Microsoft AJAX Library
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="JavaScript" Description="An implementation of a non-visual component with the Microsoft AJAX Library" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Property Name="Namespace" Type="System.String" Optional="False" Category="1. Namespace and class name" %>
+<%@ Property Name="ClassName" Type="System.String" Optional="False" Category="1. Namespace and class name" %>
+<%@ Property Name="Properties" Type="CodeSmith.CustomProperties.StringCollection" Optional="True" Category="2. Members" %>
+<%@ Property Name="Events" Type="CodeSmith.CustomProperties.StringCollection" Optional="True" Category="2. Members" %>
+Type.registerNamespace ('<%= Namespace %>');
+
+<%= Namespace %>.<%= ClassName %> = function () {
+    <%= Namespace %>.<%= ClassName %>.initializeBase (this);
+   
+    <% if (Properties != null && Properties.Count > 0) 
+    {
+       int count = Properties.Count;
+    
+       for (int i=0; i < count; i++) 
+       {
+         string p = Properties[i];
+         string p_camel = TurnToCamelCase (p);
+    %>
+    this._<%= p_camel %> = <%= p_camel %>;
+    <% } } %>
+}
+
+<%= Namespace %>.<%= ClassName %>.prototype = {
+    <% if (Properties != null && Properties.Count > 0) { %>
+    
+    // ------------- Properties -------------
+    <%    
+       int count = Properties.Count;
+    
+       for (int i=0; i < count; i++) 
+       {
+         string p = Properties[i];
+         string p_camel = TurnToCamelCase (p);
+    %>
+    get_<%= p_camel %> : function () {
+        return this._<%= p_camel %>;
+    },
+
+    set_<%= p_camel %> : function () {
+        if (this._<%= p_camel %> !== value) {
+            this._<%= p_camel %> = value;
+            this.raisePropertyChanged ('<%= p_camel %>');
+        }
+    }<% if (i != count - 1) { %>,
+    
+<% } %>
+<% } %>, 
+<% }%><% if (Events != null) { %>
+
+    // ------------- Events -------------
+    _raiseEvent : function (eventName, eventArgs) {
+    
+        var handler = this.get_events().getHandler (eventName);
+        
+        if (handler)
+            handler (this, eventArgs | Sys.EventArgs.Empty);
+    },
+    
+   <%
+       int count = Events.Count;
+    
+       for (int i=0; i < count; i++) 
+       {
+         string ev = Events[i];
+         string ev_camel = TurnToCamelCase (ev);
+         string ev_pascal = TurnToPascalCase (ev);
+   %>
+    add_<%= ev_camel %> : function (handler) {
+        this.get_events ().addHandler ('<%= ev_camel %>', handler);
+    },
+
+    remove_<%= ev_camel %> : function (handler) {
+        this.get_events ().removeHandler ('<%= ev_camel %>', handler);
+    },
+
+    /*
+    _on<%= ev_pascal %>: function() {
+        this._raiseEvent ('<%= ev_camel %>');
+    }
+    */
+<% } } %>
+
+    dispose: function() {
+       // Clean-up code goes here
+       <%= Namespace %>.<%= ClassName %>.callBaseMethod (this, 'dispose');
+    }
+}
+
+<%= Namespace %>.<%= ClassName %>.registerClass ('<%= Namespace %>.<%= ClassName %>', Sys.Component);
+    
+<script runat="template">
+public string TurnToCamelCase (string s) 
+{
+    if (string.IsNullOrEmpty (s))
+        return s;
+        
+    return s.Substring (0, 1).ToLower() + s.Substring (1);
+}
+
+public string TurnToPascalCase (string s) 
+{
+    if (string.IsNullOrEmpty (s))
+        return s;
+        
+    return s.Substring (0, 1).ToUpper () + s.Substring (1);
+}
+</script>
