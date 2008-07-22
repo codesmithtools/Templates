@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 namespace LinqToSqlShared.DbmlObjectModel
 {
     [Serializable]
-    public class AssociationCollection : KeyedCollection<AssociationKey, Association>, IProcessed
+    public class AssociationCollection : KeyedCollection<string, Association>, IProcessed
     {
-        protected override AssociationKey GetKeyForItem(Association item)
+        protected override string GetKeyForItem(Association item)
         {
             return item.ToKey();
         }

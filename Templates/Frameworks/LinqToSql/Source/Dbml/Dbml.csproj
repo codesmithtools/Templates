@@ -41,7 +41,6 @@
     <Compile Include="AccessModifier.cs" />
     <Compile Include="Association.cs" />
     <Compile Include="AssociationCollection.cs" />
-    <Compile Include="AssociationKey.cs" />
     <Compile Include="AutoSync.cs" />
     <Compile Include="Cardinality.cs" />
     <Compile Include="ClassModifier.cs" />
