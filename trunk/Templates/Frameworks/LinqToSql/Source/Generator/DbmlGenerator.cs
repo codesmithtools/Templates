@@ -249,7 +249,7 @@ namespace LinqToSqlShared.Generator
             string primaryMembers = GetKeyMembers(primaryTable,
                 tableKeySchema.PrimaryKeyMemberColumns, tableKeySchema.Name);
 
-            AssociationKey key = AssociationKey.CreateForeignKey(name);
+            string key = Association.ToKey(primaryClass, foreignMembers, primaryMembers, true);
             bool isNew = !foreignTable.Type.Associations.Contains(key);
 
             Association foreignAssociation;
@@ -278,7 +278,9 @@ namespace LinqToSqlShared.Generator
             }
 
             // add reverse association
-            key = AssociationKey.CreatePrimaryKey(name);
+            key = Association.ToKey(foreignClass, foreignAssociation.OtherKey, 
+                foreignAssociation.ThisKey, false);
+
             isNew = !primaryTable.Type.Associations.Contains(key);
 
             Association primaryAssociation;

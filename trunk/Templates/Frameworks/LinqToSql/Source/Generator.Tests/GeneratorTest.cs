@@ -98,6 +98,19 @@ namespace LinqToSqlShared.Generator.Tests
             Assert.IsNotNull(database);
         }
 
+        [Test]
+        public void CreateTester()
+        {
+            GeneratorSettings settings = new GeneratorSettings();
+            settings.MappingFile = "Tester.dbml";
+
+            DbmlGenerator generator = new DbmlGenerator(settings);
+            DatabaseSchema databaseSchema = GetDatabaseSchema("Tester");
+            Database database = generator.Create(databaseSchema);
+
+            Assert.IsNotNull(database);
+        }
+
         private DatabaseSchema GetDatabaseSchema(string name)
         {
             return DatabaseSchemaSerializer.GetDatabaseSchemaFromName(name);

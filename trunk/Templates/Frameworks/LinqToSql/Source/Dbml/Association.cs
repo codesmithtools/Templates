@@ -1,6 +1,8 @@
+using System;
+
 namespace LinqToSqlShared.DbmlObjectModel
 {
-    public class Association : Node
+    public class Association : Node, IEquatable<Association>
     {
         private string name;
         public string OtherKey { get; set; }
@@ -70,14 +72,40 @@ namespace LinqToSqlShared.DbmlObjectModel
                     KeyValue("DeleteOnNull", DeleteOnNull) + KeyValue("DeleteRule", DeleteRule));
         }
 
-        public AssociationKey ToKey()
+        public override bool Equals(object obj)
         {
-            return new AssociationKey(Name, IsForeignKey.HasValue ? IsForeignKey.Value : false);
+            if (obj is Association)
+                return Equals((Association)obj);
+
+            return base.Equals(obj);
         }
 
-        public AssociationKey ToOtherKey()
+        public override int GetHashCode()
         {
-            return new AssociationKey(Name, IsForeignKey.HasValue ? !IsForeignKey.Value : false);
+            return ToKey().GetHashCode();
         }
+
+        public bool Equals(Association other)
+        {
+            if (other == null)
+                return false;
+
+            return (this.GetHashCode() == other.GetHashCode());
+        }
+
+        public string ToKey()
+        {
+            return ToKey(Type, ThisKey, OtherKey,
+                IsForeignKey.HasValue ? IsForeignKey.Value : false);
+        }
+
+        public static string ToKey(string type, string thisKey, string otherKey, bool isForeignKey)
+        {
+            return KeyValue("Type", type) + 
+                KeyValue("ThisKey", thisKey) + 
+                KeyValue("OtherKey", otherKey) + 
+                KeyValue("IsForeignKey", isForeignKey);
+        }
+
     }
 }
