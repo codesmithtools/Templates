@@ -337,12 +337,9 @@ namespace <%= Database.EntityNamespace %>
         if (info.OtherType == null)
             throw new Exception("Invaild Type for Association: " + a.Name);
             
-        string key = Association.ToKey(this.Type.Name, a.OtherKey, a.ThisKey, 
-            a.IsForeignKey == true ? false : true);
-            
-        info.HasOtherAssociation = info.OtherType.Associations.Contains(key);
+        info.HasOtherAssociation = info.OtherType.Associations.Contains(a.ToOtherKey());
         if (info.HasOtherAssociation)
-            info.OtherAssociation = info.OtherType.Associations[key];
+            info.OtherAssociation = info.OtherType.Associations[a.ToOtherKey()];
         else
             return info; // no more work needed
         
