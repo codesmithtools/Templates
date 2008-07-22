@@ -54,6 +54,13 @@ namespace LinqToSqlShared.Generator
             get { return _functionNames; }
         }
 
+        private List<string> _associationNames = new List<string>();
+
+        internal List<string> AssociationNames
+        {
+            get { return _associationNames; }
+        }
+
         private Dictionary<string, List<string>> _propertyNames = new Dictionary<string, List<string>>();
 
         internal Dictionary<string, List<string>> PropertyNames
@@ -242,6 +249,7 @@ namespace LinqToSqlShared.Generator
             string foreignClass = foreignTable.Type.Name;
 
             string name = string.Format("{0}_{1}", primaryClass, foreignClass);
+            name = MakeUnique(AssociationNames, name);
 
             string foreignMembers = GetKeyMembers(foreignTable,
                 tableKeySchema.ForeignKeyMemberColumns, tableKeySchema.Name);
@@ -249,7 +257,7 @@ namespace LinqToSqlShared.Generator
             string primaryMembers = GetKeyMembers(primaryTable,
                 tableKeySchema.PrimaryKeyMemberColumns, tableKeySchema.Name);
 
-            string key = Association.ToKey(primaryClass, foreignMembers, primaryMembers, true);
+            AssociationKey key = AssociationKey.CreateForeignKey(name);
             bool isNew = !foreignTable.Type.Associations.Contains(key);
 
             Association foreignAssociation;
@@ -278,9 +286,7 @@ namespace LinqToSqlShared.Generator
             }
 
             // add reverse association
-            key = Association.ToKey(foreignClass, foreignAssociation.OtherKey, 
-                foreignAssociation.ThisKey, false);
-
+            key = AssociationKey.CreatePrimaryKey(name);
             isNew = !primaryTable.Type.Associations.Contains(key);
 
             Association primaryAssociation;
