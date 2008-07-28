@@ -1,7 +1,6 @@
 <%-- 
 CodeSmith DBDocumenter Templates
-Author:  Jason Alexander (jason@ngallery.org), Eric J. Smith
-Website: http://www.ngallery.org/dbdocumenter/
+Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" Description="Generates a set of HTML-based database documentation." OutputType="None" %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="Database that the documentation should be based on." %>

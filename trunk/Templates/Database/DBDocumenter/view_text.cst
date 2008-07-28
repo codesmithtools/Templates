@@ -1,7 +1,6 @@
 <%-- 
 CodeSmith DBDocumenter Templates
-Author:  Jason Alexander (jason@ngallery.org), Eric J. Smith
-Website: http://www.ngallery.org/dbdocumenter/
+Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="HTML" Description="Generates a set of HTML-based database documentation." %>
 <%@ Property Name="SourceView" Type="SchemaExplorer.ViewSchema" Category="Context" Description="View that the documentation should be based on." %>
@@ -17,7 +16,7 @@ public string HighlightSQL(string sql)
 {
 	CodeHighlighterEngine e = new CodeHighlighterEngine();
 	e.LineNumberMarginVisible = true;
-	return e.GenerateHtmlInline("CommandText", sql, DynamicSyntaxLanguage.LoadFromXml(this.CodeTemplateInfo.DirectoryName + "ActiproSoftware.SQL.xml", 0));
+	return e.GenerateHtmlInline("CommandText", sql, DynamicSyntaxLanguage.LoadFromXml(this.CodeTemplateInfo.DirectoryName + "\\ActiproSoftware.SQL.xml", 0));
 }
 </script>
 <html>

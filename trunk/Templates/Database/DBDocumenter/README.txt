@@ -1,7 +1,6 @@
 -------------------------------------------------------------
 CodeSmith DBDocumenter Templates v3.0
-Author:  Jason Alexander (jason@ngallery.org), Eric J. Smith
-Website: http://www.ngallery.org/dbdocumenter/
+Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 -------------------------------------------------------------
 
 Requirements:
