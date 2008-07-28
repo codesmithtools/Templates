@@ -1,7 +1,6 @@
 <%-- 
 CodeSmith DBDocumenter Templates
-Author:  Jason Alexander (jason@ngallery.org), Eric J. Smith
-Website: http://www.ngallery.org/dbdocumenter/
+Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" Description="Generates a set of HTML-based database documentation." %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="Database that the documentation should be based on." %>
@@ -29,7 +28,7 @@ public override void Render(System.IO.TextWriter writer)
 	this.Progress.PerformStep();
 	
 	TableSchemaCollection tables = new TableSchemaCollection(SourceDatabase.Tables);
-	tables.Sort(new PropertyComparer("Name"));
+	tables.Sort(new PropertyComparer("FullName"));
 	
 	for (int i = 0; i < tables.Count; i++)
 	{

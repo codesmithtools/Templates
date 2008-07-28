@@ -1,7 +1,6 @@
 <%-- 
 CodeSmith DBDocumenter Templates
-Author:  Jason Alexander (jason@ngallery.org), Eric J. Smith
-Website: http://www.ngallery.org/dbdocumenter/
+Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="HTML" Src="DBDocumenterTemplate.cs" Inherits="DBDocumenterTemplate" Description="Template description here." %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="Database that the documentation should be based on." %>
@@ -17,7 +16,7 @@ Website: http://www.ngallery.org/dbdocumenter/
 <%
 int currentColumn = 1;
 ViewSchemaCollection views = new ViewSchemaCollection(SourceDatabase.Views);
-views.Sort(new PropertyComparer("Name"));
+views.Sort(new PropertyComparer("FullName"));
 int cellWidth = 100 / NUM_OF_COLUMNS;
 %>
 <center>

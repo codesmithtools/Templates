@@ -1,3 +1,8 @@
+//-------------------------------------------------------------
+// CodeSmith DBDocumenter Templates v3.0
+// Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
+//-------------------------------------------------------------
+
 using System;
 using System.IO;
 using System.Data;
