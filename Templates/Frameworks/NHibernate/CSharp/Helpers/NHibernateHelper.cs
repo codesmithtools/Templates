@@ -532,7 +532,21 @@ public class SearchCriteria
 
     #region Properties
 
-    public List<MemberColumnSchema> Items
+	public bool IsAllUnique
+    {
+        get
+        {
+            bool result = false;
+            foreach (MemberColumnSchema msc in mcsList)
+                if (msc.IsUnique)
+                {
+                    result = true;
+                    break;
+                }
+            return result;
+        }
+    }
+	public List<MemberColumnSchema> Items
     {
         get { return mcsList; }
     }

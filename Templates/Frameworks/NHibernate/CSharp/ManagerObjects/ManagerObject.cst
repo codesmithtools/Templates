@@ -38,8 +38,11 @@ namespace <%= ManagerNamespace %>
 		<%= GetClassName(SourceTable) %> GetById(<%= GetMethodParameters(sc.Items, true) %>);
 		<% } %>
 		<% } else if(!ContainsForeignKey(sc, ExcludedTables)) { %>
+		<% if(sc.IsAllUnique) { %>
+		<%= GetClassName(SourceTable) %> <%= GetMethodDeclaration(sc) %>;
+		<% } else { %>
 		IList<<%= GetClassName(SourceTable) %>> <%= GetMethodDeclaration(sc) %>;
-		<% } } %>
+		<% } } } %>
     }
 
     partial class <%= GetClassName(SourceTable) %>Manager : ManagerBase<<%= GetClassName(SourceTable) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable).ToString()] %>>, I<%= GetClassName(SourceTable) %>Manager
@@ -87,7 +90,12 @@ namespace <%= ManagerNamespace %>
 		
 		<% } %>
 		<% } else if(!ContainsForeignKey(sc, ExcludedTables)) { %>
+		
+		<% if(sc.IsAllUnique) { %>
+		public <%= GetClassName(SourceTable) %> <%= GetMethodDeclaration(sc) %>
+		<% } else { %>
 		public IList<<%= GetClassName(SourceTable) %>> <%= GetMethodDeclaration(sc) %>
+		<% } %>
         {
             ICriteria criteria = Session.GetISession().CreateCriteria(typeof(<%= GetClassName(SourceTable) %>));
 			
@@ -100,7 +108,12 @@ namespace <%= ManagerNamespace %>
 			<% } %>
 			<% } %>
 			
-            return criteria.List<<%= GetClassName(SourceTable) %>>();
+			<% if(sc.IsAllUnique) { %>
+			IList<<%= GetClassName(SourceTable) %>> result = criteria.List<<%= GetClassName(SourceTable) %>>();
+			return (result.Count > 0) ? result[0] : null;
+			<% } else { %>
+			return criteria.List<<%= GetClassName(SourceTable) %>>();
+			<% } %>
         }
 		<% } } %>
 		
