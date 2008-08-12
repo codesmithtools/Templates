@@ -7,10 +7,7 @@
       <property name="ComponentLayerNameSpace">Services</property>
       <property name="WebServiceOutputPath">Petshop\WebServices</property>
       <property name="WebServiceUrl">http://localhost/PetshopServices</property>
-      <property name="ChooseSourceDatabase">
-        <connectionString>Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\Petshop.mdf;Initial Catalog=Petshop;Integrated Security=True;Connect Timeout=30;</connectionString>
-<providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-      </property>
+      <property name="ChooseSourceDatabase">PetShop</property>
       <property name="ExecuteSql">False</property>
       <property name="SQLFolderName">SQL</property>
       <property name="ViewReport">True</property>
