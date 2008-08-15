@@ -33,5 +33,11 @@
       <key>tooth</key>
       <value>teeth</value>
     </item>
+
+    <item>
+      <key>status</key>
+      <value>status</value>
+    </item>
+
   </map>
 </codeSmith>
