@@ -1,0 +1,117 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="SQL" Debug="False" Description="Generate SQL Insert Statements from table data." %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="System.Data" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text" %>
+
+<%@ Property Category="1.Database" Name="Tables" Optional="False"
+    Type="SchemaExplorer.TableSchemaCollection" 
+    Description="Database to create SQLite DDL from." %>
+<%@ Property Category="2.Script" Name="IncludeColumns" Optional="False" Default="True"
+    Type="Boolean" Description="Inclue the column names in the insert statement." %>
+<%@ Property Category="2.Script" Name="IncludeDatabase" Optional="False" Default="False"
+    Type="Boolean" Description="Inclue the database name with table name." %>
+<%@ Property Category="2.Script" Name="IncludeOwner" Optional="False" Default="False"
+    Type="Boolean" Description="Inclue table owner/schema if available." %>
+<%@ Property Category="2.Script" Name="EscapeFormat" Optional="False" Default="[{0}]"
+    Type="String" Description="String format to escape names." %>
+<%@ Property Category="2.Script" Name="DateTimeFormat" Optional="False" Default="u"
+    Type="String" Description="DateTime string format. Default is Universal sortable. 2008-04-10 13:30:00Z" %>
+
+<% foreach (TableSchema table in Tables) { %>
+-- Table <%= string.Format(EscapeFormat, table.Name) %> data
+<% string columnDefinition = BuildColumns(table); %>
+<% string tableName = BuildTableName(table); %>
+<% DataTable data = table.GetTableData(); %>
+<% foreach (DataRow row in data.Rows) { %>
+INSERT INTO <%= tableName %><%= columnDefinition %> VALUES (<%= BuildInsert(row) %>);
+<% } // for each row%>
+
+<% } // for each table%>
+<script runat="template">
+public string BuildColumns(TableSchema table)
+{
+    if (!IncludeColumns)
+        return string.Empty;
+        
+    StringBuilder s = new StringBuilder();
+    s.Append(" (");
+    for(int i = 0; i < table.Columns.Count; i++)
+    {
+        s.AppendFormat(EscapeFormat, table.Columns[i].Name);
+        if (i < table.Columns.Count - 1)
+            s.Append(", ");
+    }
+    s.Append(")");
+    return s.ToString();
+}
+public string BuildInsert(DataRow row)
+{    
+    StringBuilder s = new StringBuilder();
+    for(int i = 0; i < row.ItemArray.Length; i++)
+    {
+        object value = row[i];
+        string stringValue = GetValue(row[i]);
+        if(value != null && NeedQuote(row.Table.Columns[i].DataType))
+            s.AppendFormat("'{0}'", stringValue.Replace("'", "''"));
+        else
+            s.Append(stringValue);
+        
+        if (i < row.ItemArray.Length - 1)
+            s.Append(", ");
+    }
+    return s.ToString();
+}
+public bool NeedQuote(Type type)
+{
+    if (type == typeof(string))
+        return true;
+    if (type == typeof(DateTime))
+        return true;
+    
+    return false;
+}
+public string GetValue(object value)
+{
+    
+    if (value == null)
+        return "null";
+    
+    Type type = value.GetType();
+    if (type == typeof(string))
+        return (string)value;
+    if (type == typeof(DateTime))
+        return ((DateTime)value).ToString(DateTimeFormat);
+    if (type == typeof(byte[]))
+        return ToHex((byte[])value);
+    if (type == typeof(bool))
+        return Convert.ToString(Convert.ToInt32((bool)value));
+    
+    return Convert.ToString(value);
+}
+public string BuildTableName(TableSchema table)
+{
+    StringBuilder s = new StringBuilder();
+    string format = EscapeFormat + ".";
+    
+    if (IncludeDatabase)
+        s.AppendFormat(format, table.Database.Name);
+    if (IncludeOwner && !string.IsNullOrEmpty(table.Owner))
+        s.AppendFormat(format, table.Owner);
+    
+    s.AppendFormat(EscapeFormat, table.Name);
+    return s.ToString();
+}
+public string ToHex(byte[] bytes)
+{
+    StringBuilder s = new StringBuilder();
+    for (int i = 0; i < bytes.Length; i++)
+        s.Append(bytes[i].ToString("x2"));
+    
+    return s.ToString();
+}
+</script>
