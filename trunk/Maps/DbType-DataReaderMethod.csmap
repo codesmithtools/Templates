@@ -65,5 +65,9 @@
       <key>Xml</key>
       <value>GetString</value>
     </item>
+    <item>
+      <key>Double</key>
+      <value>GetDouble</value>
+    </item>
   </map>
 </codeSmith>
