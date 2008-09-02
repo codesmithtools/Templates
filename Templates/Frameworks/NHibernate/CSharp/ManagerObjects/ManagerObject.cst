@@ -77,7 +77,7 @@ namespace <%= ManagerNamespace %>
 			ICriteria criteria = Session.GetISession().CreateCriteria(typeof(<%= GetClassName(SourceTable) %>));
 			
 			<% foreach(MemberColumnSchema mcs in sc.Items) { %>
-			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= GetVariableName(mcs) %>));
+			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= KeyWords[GetVariableName(mcs)] %>));
 			<% } %>
 			
 			<%= GetClassName(SourceTable) %> result = (<%= GetClassName(SourceTable) %>)criteria.UniqueResult();
@@ -102,9 +102,9 @@ namespace <%= ManagerNamespace %>
 			<% foreach(MemberColumnSchema mcs in sc.Items) { %>
 			<% if(mcs.IsForeignKeyMember) { %>
 			ICriteria <%= GetVariableName(GetForeignTable(mcs, SourceTable), mcs) %>Criteria = criteria.CreateCriteria("<%= GetPropertyName(GetForeignTable(mcs, SourceTable), mcs) %>");
-            <%= GetVariableName(GetForeignTable(mcs, SourceTable), mcs) %>Criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("Id", <%= GetVariableName(mcs) %>));
+            <%= GetVariableName(GetForeignTable(mcs, SourceTable), mcs) %>Criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("Id", <%= KeyWords[GetVariableName(mcs)] %>));
 			<% } else { %>
-			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= GetPropertyName(mcs) %>", <%= GetVariableName(mcs) %>));
+			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= GetPropertyName(mcs) %>", <%= KeyWords[GetVariableName(mcs)] %>));
 			<% } %>
 			<% } %>
 			
