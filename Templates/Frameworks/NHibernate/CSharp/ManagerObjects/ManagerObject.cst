@@ -33,7 +33,7 @@ namespace <%= ManagerNamespace %>
     {
 		// Get Methods
 		<% foreach(SearchCriteria sc in scList) { %>
-		<% if(sc.IsAllPrimaryKeys) { %>
+		<% if(sc.IsPrimaryKey) { %>
 		<% if(sc.Items.Count > 1) { // Override GetById%>
 		<%= GetClassName(SourceTable) %> GetById(<%= GetMethodParameters(sc.Items, true) %>);
 		<% } %>
@@ -61,7 +61,7 @@ namespace <%= ManagerNamespace %>
         #region Get Methods
 
 		<% foreach(SearchCriteria sc in scList) { %>
-		<% if(sc.IsAllPrimaryKeys) { %>
+		<% if(sc.IsPrimaryKey) { %>
 		<% if(sc.Items.Count > 1) { // Override GetById%>
 		public override <%= GetClassName(SourceTable) %> GetById(string id)
 		{
