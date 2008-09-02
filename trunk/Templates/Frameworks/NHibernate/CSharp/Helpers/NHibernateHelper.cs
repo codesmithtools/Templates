@@ -208,72 +208,79 @@ public class NHibernateHelper : CodeTemplate
             }
         return result;
     }
-    public bool IsManyToMany(TableSchema table)
-    {
-        // If there are 2 ForeignKeyColumns AND...
-        // ...there are only two columns OR
-        //    there are 3 columns and 1 is a primary key.
-        return (table.ForeignKeyColumns.Count == 2
-            && ((table.Columns.Count == 2)
-                || (table.Columns.Count == 3 && table.PrimaryKey != null)));
-    }
-
-    #endregion
-
-    public string GetCascade(MemberColumnSchema column)
-    {
-        return column.AllowDBNull ? "all" : "all-delete-orphan";
-    }
-
-    #region BusinessObject Methods
-
-    public string GetInitialization(Type type)
-    {
-        string result;
-
-        if (type.Equals(typeof(String)))
-            result = "String.Empty";
-        else
-            result = string.Format("default({0})", type.FullName);
-
-        return result;
-    }
-    public Type GetBusinessBaseIdType(TableSchema table)
-    {
-        if (IsMutliColumnPrimaryKey(table.PrimaryKey))
-            return typeof(string);
-        else
-            return GetPrimaryKeyColumn(table.PrimaryKey).SystemType;
-    }
-
-    #endregion
-
-    #region PrimaryKey Methods
-
-    public MemberColumnSchema GetPrimaryKeyColumn(PrimaryKeySchema primaryKey)
-    {
-        if (primaryKey.MemberColumns.Count != 1)
-            throw new System.ApplicationException("This method will only work on primary keys with exactly one member column.");
-        return primaryKey.MemberColumns[0];
-    }
-    public bool IsMutliColumnPrimaryKey(PrimaryKeySchema primaryKey)
-    {
-        if (primaryKey.MemberColumns.Count == 0)
-            throw new System.ApplicationException("This template will only work on primary keys with exactly one member column.");
-
-        return (primaryKey.MemberColumns.Count > 1);
-    }
-    public string GetForeignKeyColumnClassName(MemberColumnSchema mcs, TableSchema table)
-    {
-        string result = String.Empty;
-        foreach (TableKeySchema tks in table.ForeignKeys)
-            if (tks.ForeignKeyMemberColumns.Contains(mcs))
-            {
-                result = GetPropertyName(tks.PrimaryKeyTable.Name);
-                break;
-            }
-        return result;
-    }
+	public bool IsManyToMany(TableSchema table)
+	{
+		// If there are 2 ForeignKeyColumns AND...
+		// ...there are only two columns OR
+		//    there are 3 columns and 1 is a primary key.
+		return (table.ForeignKeyColumns.Count == 2
+			&& ((table.Columns.Count == 2)
+				|| (table.Columns.Count == 3 && table.PrimaryKey != null)));
+	}
+	
+	#endregion
+	
+	public string GetCascade(MemberColumnSchema column)
+	{
+		return column.AllowDBNull ? "all" : "all-delete-orphan";
+	}
+	
+	#region BusinessObject Methods
+	
+	public string GetInitialization(Type type)
+	{
+		string result;
+		
+		if(type.Equals(typeof(String)))
+			result = "String.Empty";
+		else if(type.Equals(typeof(DateTime)))
+			result = "new DateTime()";
+		else if(type.Equals(typeof(Decimal)))
+			result = "default(Decimal)";
+		else if(type.Equals(typeof(Guid)))
+			result = "Guid.Empty";
+		else if(type.IsPrimitive)
+			result = String.Format("default({0})", type.Name.ToString());
+		else
+			result = "null";
+		return result;
+	}
+	public Type GetBusinessBaseIdType(TableSchema table)
+	{
+		if(IsMutliColumnPrimaryKey(table.PrimaryKey))
+			return typeof(string);
+		else
+			return GetPrimaryKeyColumn(table.PrimaryKey).SystemType;
+	}
+	
+	#endregion
+	
+	#region PrimaryKey Methods
+	
+	public MemberColumnSchema GetPrimaryKeyColumn(PrimaryKeySchema primaryKey)
+	{
+		if(primaryKey.MemberColumns.Count != 1)
+			throw new System.ApplicationException("This method will only work on primary keys with exactly one member column.");
+		return primaryKey.MemberColumns[0];
+	}
+	public bool IsMutliColumnPrimaryKey(PrimaryKeySchema primaryKey)
+	{
+		if(primaryKey.MemberColumns.Count == 0)
+			throw new System.ApplicationException("This template will only work on primary keys with exactly one member column.");
+			
+		return (primaryKey.MemberColumns.Count > 1);
+	}
+	public string GetForeignKeyColumnClassName(MemberColumnSchema mcs, TableSchema table)
+	{
+		string result = String.Empty;
+		foreach(TableKeySchema tks in table.ForeignKeys)
+			if(tks.ForeignKeyMemberColumns.Contains(mcs))
+			{
+				result = GetPropertyName(tks.PrimaryKeyTable.Name);
+				break;
+			}
+		return result;
+	}
 
     #endregion
 
@@ -304,94 +311,100 @@ public class NHibernateHelper : CodeTemplate
         for (int x = 0; x < mcsc.Count; x++)
             mcsList.Add(mcsc[x]);
         return GetMethodParameters(mcsList, isDeclaration);
-    }
-    public string GetMethodDeclaration(SearchCriteria sc)
-    {
-        StringBuilder result = new StringBuilder();
-        result.Append(sc.MethodName);
-        result.Append("(");
-        result.Append(GetMethodParameters(sc.Items, true));
-        result.Append(")");
-        return result.ToString();
-    }
-    public string GetPrimaryKeyCallParameters(List<MemberColumnSchema> mcsList)
+	}
+	public string GetMethodDeclaration(SearchCriteria sc)
+	{
+		StringBuilder result = new StringBuilder();
+		result.Append(sc.MethodName);
+		result.Append("(");
+		result.Append(GetMethodParameters(sc.Items, true));
+		result.Append(")");
+		return result.ToString();
+	}
+	public string GetPrimaryKeyCallParameters(List<MemberColumnSchema> mcsList)
     {
         System.Text.StringBuilder result = new System.Text.StringBuilder();
         for (int x = 0; x < mcsList.Count; x++)
         {
             if (x > 0)
                 result.Append(", ");
-            result.Append(String.Format("{0}.Parse(keys[{1}])", mcsList[x].SystemType, x));
+
+            if(mcsList[x].SystemType == typeof(Guid))
+                result.AppendFormat("new {0}(keys[{1}])", mcsList[x].SystemType, x);
+            else if (mcsList[x].SystemType == typeof(string))
+                result.AppendFormat("keys[{0}]", x);
+            else
+                result.AppendFormat("{0}.Parse(keys[{1}])", mcsList[x].SystemType, x);
         }
         return result.ToString();
     }
-
-    #endregion
-
-    public TableSchema GetForeignTable(MemberColumnSchema mcs, TableSchema table)
-    {
-        foreach (TableKeySchema tks in table.ForeignKeys)
-            if (tks.ForeignKeyMemberColumns.Contains(mcs))
-                return tks.PrimaryKeyTable;
-        throw new Exception(String.Format("Could not find Column {0} in Table {1}'s ForeignKeys.", mcs.Name, table.Name));
-    }
-
-    protected Random random = new Random();
-    public string GetUnitTestInitialization(ColumnSchema column)
-    {
-        string result;
-
-        if (column.SystemType.Equals(typeof(String)))
-        {
-            StringBuilder sb = new StringBuilder();
-
+	
+	#endregion
+	
+	public TableSchema GetForeignTable(MemberColumnSchema mcs, TableSchema table)
+	{
+		foreach(TableKeySchema tks in table.ForeignKeys)
+			if(tks.ForeignKeyMemberColumns.Contains(mcs))
+				return tks.PrimaryKeyTable;
+		throw new Exception(String.Format("Could not find Column {0} in Table {1}'s ForeignKeys.", mcs.Name, table.Name));
+	}
+	
+	protected Random random = new Random();
+	public string GetUnitTestInitialization(ColumnSchema column)
+	{
+		string result;
+		
+		if(column.SystemType.Equals(typeof(String)))
+		{
+			StringBuilder sb = new StringBuilder();
+			
             int size = (column.Size > 0 && column.Size < 100) ? random.Next(1, column.Size) : 10;
-
-            sb.Append("\"");
-            for (int x = 0; x < size; x++)
-            {
-                switch (x % 5)
-                {
-                    case 0:
-                        sb.Append("T");
-                        break;
-                    case 1:
-                        sb.Append("e");
-                        break;
-                    case 2:
-                        sb.Append("s");
-                        break;
-                    case 3:
-                        sb.Append("t");
-                        break;
-                    case 4:
-                        sb.Append(" ");
-                        break;
-                }
-            }
-            sb.Append("\"");
-
-            result = sb.ToString();
-        }
-        else if (column.SystemType.Equals(typeof(DateTime)))
-            result = "DateTime.Now";
-        else if (column.SystemType.Equals(typeof(Decimal)))
-            result = Convert.ToDecimal(random.Next(1, 100)).ToString();
-        else if (column.SystemType.Equals(typeof(Int32)))
-            result = random.Next(1, 100).ToString();
-        else if (column.SystemType.Equals(typeof(Boolean)))
-            result = (random.Next(1, 2).Equals(1)).ToString().ToLower();
-        else if (column.SystemType.IsPrimitive)
-            result = String.Format("default({0})", column.SystemType.Name.ToString());
-        else if (column.SystemType.Equals(typeof(Guid)))
-            result = "Guid.NewGuid()";
-        else
-            result = "null";
-
-        return result;
-    }
-
-    public bool ContainsForeignKey(SearchCriteria sc, TableSchemaCollection tsc)
+			
+			sb.Append("\"");
+			for(int x=0; x<size; x++)
+			{
+				switch(x % 5)
+				{
+					case 0:
+						sb.Append("T");
+						break;
+					case 1:
+						sb.Append("e");
+						break;
+					case 2:
+						sb.Append("s");
+						break;
+					case 3:
+						sb.Append("t");
+						break;
+					case 4:
+						sb.Append(" ");
+						break;
+				}
+			}
+			sb.Append("\"");
+			
+			result = sb.ToString();
+		}
+		else if(column.SystemType.Equals(typeof(DateTime)))
+			result = "DateTime.Now";
+		else if(column.SystemType.Equals(typeof(Decimal)))
+			result = Convert.ToDecimal(random.Next(1, 100)).ToString();
+		else if(column.SystemType.Equals(typeof(Int32)))
+			result = random.Next(1, 100).ToString();
+		else if(column.SystemType.Equals(typeof(Boolean)))
+			result = (random.Next(1, 2).Equals(1)).ToString().ToLower();
+		else if(column.SystemType.Equals(typeof(Guid)))
+			result = "Guid.Empty";
+		else if(column.SystemType.IsPrimitive)
+			result = String.Format("default({0})", column.SystemType.Name.ToString());
+		else
+			result = "null";
+		
+		return result;
+	}
+	
+	public bool ContainsForeignKey(SearchCriteria sc, TableSchemaCollection tsc)
     {
         foreach (TableSchema ts in tsc)
             foreach (TableKeySchema tks in ts.PrimaryKeys)
@@ -460,20 +473,27 @@ public class SearchCriteria
     protected MethodNameGenerationMode methodNameGenerationMode = MethodNameGenerationMode.Default;
     protected string methodName = String.Empty;
     protected string extendedProperty;
+	protected bool isPrimaryKey;
 
     #endregion
 
     #region Constructors
 
     protected SearchCriteria(string extendedProperty)
+        : this(extendedProperty, new List<MemberColumnSchema>(), false)
     {
-        this.extendedProperty = extendedProperty;
-        mcsList = new List<MemberColumnSchema>();
+
+
     }
     protected SearchCriteria(string extendedProperty, List<MemberColumnSchema> mcsList)
+        : this(extendedProperty, mcsList, false)
+    {
+    }
+    protected SearchCriteria(string extendedProperty, List<MemberColumnSchema> mcsList, bool isPrimaryKey)
     {
         this.extendedProperty = extendedProperty;
         this.mcsList = mcsList;
+        this.isPrimaryKey = isPrimaryKey;
     }
 
     #endregion
@@ -569,19 +589,9 @@ public class SearchCriteria
     {
         get { return mcsList; }
     }
-    public bool IsAllPrimaryKeys
+    public bool IsPrimaryKey
     {
-        get
-        {
-            bool result = true;
-            foreach (MemberColumnSchema msc in mcsList)
-                if (!msc.IsPrimaryKeyMember)
-                {
-                    result = false;
-                    break;
-                }
-            return result;
-        }
+        get { return isPrimaryKey; }
     }
     public string MethodName
     {
@@ -680,11 +690,13 @@ public class SearchCriteria
         protected void GetPrimaryKeySearchCriteria(Dictionary<string, SearchCriteria> map)
         {
             List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>(table.PrimaryKey.MemberColumns.ToArray());
-            SearchCriteria searchCriteria = new SearchCriteria(ExtendedProperty, mcsList);
+            SearchCriteria searchCriteria = new SearchCriteria(ExtendedProperty, mcsList, true);
 
-            if (table.PrimaryKey.ExtendedProperties.Contains(ExtendedProperty))
-                if (!String.IsNullOrEmpty(ExtendedProperty) && table.PrimaryKey.ExtendedProperties.Contains(ExtendedProperty) && table.PrimaryKey.ExtendedProperties[ExtendedProperty].Value != null)
-                    searchCriteria.SetMethodNameGeneration(table.PrimaryKey.ExtendedProperties[ExtendedProperty].Value.ToString());
+            if(!String.IsNullOrEmpty(ExtendedProperty)
+               && table.PrimaryKey.ExtendedProperties.Contains(ExtendedProperty)
+               && table.PrimaryKey.ExtendedProperties[ExtendedProperty].Value != null
+              )
+                searchCriteria.SetMethodNameGeneration(table.PrimaryKey.ExtendedProperties[ExtendedProperty].Value.ToString());
 
             AddToMap(map, searchCriteria);
         }
@@ -732,10 +744,8 @@ public class SearchCriteria
         protected List<SearchCriteria> GetResultsFromMap(Dictionary<string, SearchCriteria> map)
         {
             List<SearchCriteria> result = new List<SearchCriteria>();
-            foreach (KeyValuePair<string, SearchCriteria> kvp in map)
-            {
-                result.Add(kvp.Value);
-            }
+            foreach (SearchCriteria sc in map.Values)
+                result.Add(sc);
             return result;
         }
 
