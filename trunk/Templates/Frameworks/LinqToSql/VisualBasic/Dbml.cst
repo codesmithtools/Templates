@@ -85,6 +85,8 @@
         Me.Progress.[Step] = 1
     End If
     
+    OnPreOutputWritten(Me.DbmlFile)
+    
     Dim settings As New GeneratorSettings()
     settings.MappingFile = filePath
     settings.ContextNamespace = ContextNamespace

@@ -83,7 +83,9 @@
                 this.Progress.MaximumValue += SourceDatabase.Commands.Count;
             this.Progress.Step = 1;
         }
-       
+        
+        OnPreOutputWritten(this.DbmlFile);
+        
         GeneratorSettings settings = new GeneratorSettings();
         settings.MappingFile = filePath;
         settings.ContextNamespace = ContextNamespace;        
