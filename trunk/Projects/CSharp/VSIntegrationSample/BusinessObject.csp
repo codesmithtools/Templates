@@ -6,22 +6,22 @@
   </defaultProperties>
   <propertySets>
     <propertySet name="Product.cs" output="Product.cs">
-      <property name="SourceTable">PetShop.dbo.Product</property>
+      <property name="SourceTable">VistaDBPetShop.dbo.Product</property>
       <property name="SingleFileMode">False</property>
       <property name="ClassNamespace">VSIntegrationSample</property>
     </propertySet>
     <propertySet name="Order.cs" output="Order.cs">
-      <property name="SourceTable">PetShop.dbo.Orders</property>
+      <property name="SourceTable">VistaDBPetShop.dbo.Orders</property>
       <property name="SingleFileMode">False</property>
       <property name="ClassNamespace">VSIntegrationSample</property>
     </propertySet>
     <propertySet name="Supplier.cs" output="Supplier.cs">
-      <property name="SourceTable">PetShop.dbo.Supplier</property>
+      <property name="SourceTable">VistaDBPetShop.dbo.Supplier</property>
       <property name="SingleFileMode">False</property>
       <property name="ClassNamespace">VSIntegrationSample</property>
     </propertySet>
     <propertySet name="Profile.cs" output="Profile.cs">
-      <property name="SourceTable">PetShop.dbo.Profiles</property>
+      <property name="SourceTable">VistaDBPetShop.dbo.Profiles</property>
       <property name="SingleFileMode">False</property>
       <property name="ClassNamespace">VSIntegrationSample</property>
     </propertySet>

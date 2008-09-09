@@ -18,7 +18,7 @@
       <property name="NullDefaults">False</property>
       <property name="SingleTense">False</property>
       <property name="ShortenName">False</property>
-      <property name="SourceDatabase">PetShop</property>
+      <property name="SourceDatabase">VistaDBPetShop</property>
     </propertySet>
     <propertySet template="CSharp.ClassGenerator.cst">
       <property name="MappingFile">Petshop\Petshop.Core\Mapping.config</property>

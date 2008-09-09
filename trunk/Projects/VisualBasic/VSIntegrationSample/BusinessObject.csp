@@ -2,17 +2,17 @@
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <propertySets>
     <propertySet name="Product.vb" output="Product.vb" template="BusinessObject.cst">
-      <property name="SourceTable">PetShop.dbo.Product</property>
+      <property name="SourceTable">VistaDBPetShop.dbo.Product</property>
     </propertySet>
     <propertySet name="Orders.vb" output="Orders.vb" template="BusinessObject.cst">
-      <property name="SourceTable">PetShop.dbo.Orders</property>
+      <property name="SourceTable">VistaDBPetShop.dbo.Orders</property>
     </propertySet>
     <propertySet name="Profiles.vb" output="Profiles.vb" template="BusinessObject.cst">
-      <property name="SourceTable">PetShop.dbo.Profiles</table>
+      <property name="SourceTable">VistaDBPetShop.dbo.Profiles</table>
       </property>
     </propertySet>
     <propertySet name="Supplier.vb" output="Supplier.vb" template="BusinessObject.cst">
-      <property name="SourceTable">PetShop.dbo.Supplier</property>
+      <property name="SourceTable">VistaDBPetShop.dbo.Supplier</property>
     </propertySet>
   </propertySets>
 </codeSmith>
