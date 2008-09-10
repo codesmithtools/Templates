@@ -105,5 +105,13 @@
       <key>sql_variant</key>
       <value>System.Object</value>
     </item>
+    <item>
+      <key>datetime2</key>
+      <value>System.DateTime2</value>
+    </item>
+    <item>
+      <key>datetimeoffset</key>
+      <value>System.DateTimeOffset</value>
+    </item>
   </map>
 </codeSmith>

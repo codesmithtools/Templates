@@ -1,9 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csmap.xsd">
-  <map caseSensitive="true" returnKeyWhenNotFound="false" description="DbType to IDataReader method name">
+  <map caseSensitive="false" returnKeyWhenNotFound="false" description="DbType to IDataReader method name">
+    <item>
+      <key>AnsiString</key>
+      <value>GetString</value>
+    </item>
+    <item>
+      <key>AnsiStringFixedLength</key>
+      <value>GetString</value>
+    </item>
+    <item>
+      <key>Binary</key>
+      <value>GetBytes</value>
+    </item>
+    <item>
+      <key>Boolean</key>
+      <value>GetBoolean</value>
+    </item>
     <item>
       <key>Byte</key>
       <value>GetByte</value>
+    </item>
+    <item>
+      <key>Currency</key>
+      <value>GetDecimal</value>
+    </item>
+    <item>
+      <key>Date</key>
+      <value>GetDateTime</value>
+    </item>
+    <item>
+      <key>DateTime</key>
+      <value>GetDateTime</value>
+    </item>
+    <item>
+      <key>Decimal</key>
+      <value>GetDecimal</value>
+    </item>
+    <item>
+      <key>Guid</key>
+      <value>GetGuid</value>
     </item>
     <item>
       <key>Int16</key>
@@ -18,14 +54,6 @@
       <value>GetInt64</value>
     </item>
     <item>
-      <key>AnsiStringFixedLength</key>
-      <value>GetString</value>
-    </item>
-    <item>
-      <key>AnsiString</key>
-      <value>GetString</value>
-    </item>
-    <item>
       <key>String</key>
       <value>GetString</value>
     </item>
@@ -34,40 +62,8 @@
       <value>GetString</value>
     </item>
     <item>
-      <key>Boolean</key>
-      <value>GetBoolean</value>
-    </item>
-    <item>
-      <key>Guid</key>
-      <value>GetGuid</value>
-    </item>
-    <item>
-      <key>Currency</key>
-      <value>GetDecimal</value>
-    </item>
-    <item>
-      <key>Decimal</key>
-      <value>GetDecimal</value>
-    </item>
-    <item>
-      <key>DateTime</key>
-      <value>GetDateTime</value>
-    </item>
-    <item>
-      <key>Date</key>
-      <value>GetDateTime</value>
-    </item>
-    <item>
-      <key>Binary</key>
-      <value>GetBytes</value>
-    </item>
-    <item>
       <key>Xml</key>
       <value>GetString</value>
-    </item>
-    <item>
-      <key>Double</key>
-      <value>GetDouble</value>
     </item>
   </map>
 </codeSmith>

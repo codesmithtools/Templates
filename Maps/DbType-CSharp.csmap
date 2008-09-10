@@ -97,5 +97,13 @@
       <key>VarNumeric</key>
       <value>decimal</value>
     </item>
+    <item>
+      <key>DateTime2</key>
+      <value>DateTime</value>
+    </item>
+    <item>
+      <key>DateTimeOffset</key>
+      <value>DateTimeOffset</value>
+    </item>
   </map>
 </codeSmith>

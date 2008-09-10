@@ -109,5 +109,13 @@
       <key>xml</key>
       <value>Xml</value>
     </item>
+    <item>
+      <key>datetime2</key>
+      <value>DateTime2</value>
+    </item>
+    <item>
+      <key>datetimeoffset</key>
+      <value>DateTimeOffset</value>
+    </item>
   </map>
 </codeSmith>

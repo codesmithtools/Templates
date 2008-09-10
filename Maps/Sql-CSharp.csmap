@@ -105,5 +105,13 @@
       <key>sql_variant</key>
       <value>object</value>
     </item>
+    <item>
+      <key>datetime2</key>
+      <value>DateTime</value>
+    </item>
+    <item>
+      <key>datetimeoffset</key>
+      <value>DateTimeOffset</value>
+    </item>
   </map>
 </codeSmith>
