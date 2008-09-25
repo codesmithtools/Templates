@@ -1,29 +1,57 @@
 <?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <defaultTemplate path="businessobject.cst" />
+  <variables>
+    <add key="ConnectionString1" value="Server=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|PetShop.mdf;Integrated Security=True;Connect Timeout=30;User Instance=False" />
+  </variables>
   <defaultProperties>
     <property name="ClassNamespace">CSharpCodeGeneratorSample</property>
   </defaultProperties>
   <propertySets>
     <propertySet name="Product.cs" output="Product.cs">
-      <property name="SourceTable">VistaDBPetShop.dbo.Product</property>
       <property name="SingleFileMode">False</property>
-      <property name="ClassNamespace">VSIntegrationSample</property>
+      <property name="ClassNamespace">VSIntergationSample</property>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+          <owner>dbo</owner>
+          <name>Product</name>
+        </table>
+      </property>
     </propertySet>
     <propertySet name="Order.cs" output="Order.cs">
-      <property name="SourceTable">VistaDBPetShop.dbo.Orders</property>
       <property name="SingleFileMode">False</property>
-      <property name="ClassNamespace">VSIntegrationSample</property>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+      <owner>dbo</owner>
+      <name>Orders</name>
+    </table>
+      </property>
     </propertySet>
     <propertySet name="Supplier.cs" output="Supplier.cs">
-      <property name="SourceTable">VistaDBPetShop.dbo.Supplier</property>
       <property name="SingleFileMode">False</property>
-      <property name="ClassNamespace">VSIntegrationSample</property>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+      <owner>dbo</owner>
+      <name>Supplier</name>
+    </table>
+      </property>
     </propertySet>
     <propertySet name="Profile.cs" output="Profile.cs">
-      <property name="SourceTable">VistaDBPetShop.dbo.Profiles</property>
       <property name="SingleFileMode">False</property>
-      <property name="ClassNamespace">VSIntegrationSample</property>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+      <owner>dbo</owner>
+      <name>Profiles</name>
+    </table>
+      </property>
     </propertySet>
   </propertySets>
 </codeSmith>
