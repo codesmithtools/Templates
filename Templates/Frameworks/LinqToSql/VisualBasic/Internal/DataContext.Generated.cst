@@ -111,7 +111,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' </summary>
         <DebuggerNonUserCodeAttribute> _
         <%= Naming.GetModifier(Database.AccessModifier) %> Sub New()
-            MyBase.New("<%= Database.Connection.ConnectionString %>", mappingCache)
+            MyBase.New(ConnectionString, mappingCache)
             OnCreated()
         End Sub
 <% End If %>
