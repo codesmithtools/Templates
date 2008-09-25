@@ -120,6 +120,9 @@ Visual Studio 2005 Differences:
 <p>
 <ul>
 <li>UnitTests require that each table in the database have at least valid row.</li>
+<li>Columns will the same name as their table will cause issues at compile time.
+<ul><li>Solution: Adding a "cs_alias" extended property to any column or table will override it's name with the specified value.</li></ul>
+</li>
 </ul>
 </p>
 
