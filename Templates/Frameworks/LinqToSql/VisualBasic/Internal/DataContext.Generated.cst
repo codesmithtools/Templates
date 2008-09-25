@@ -103,9 +103,7 @@ Namespace <%= Database.ContextNamespace %>
         <DebuggerNonUserCodeAttribute> _
         Shared Sub New()
         End Sub
-<% If (Database.Connection.Mode.Value = ConnectionMode.AppSettings) _
-    AndAlso Not String.IsNullOrEmpty(Database.Connection.SettingsPropertyName.ToString()) Then %>
-        
+
         ''' <summary>
         ''' Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         ''' </summary>
@@ -114,7 +112,6 @@ Namespace <%= Database.ContextNamespace %>
             MyBase.New(ConnectionString, mappingCache)
             OnCreated()
         End Sub
-<% End If %>
 
         
         ''' <summary>
