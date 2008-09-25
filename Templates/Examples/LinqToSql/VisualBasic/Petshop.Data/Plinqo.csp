@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <variables>
+    <add key="ConnectionString1" value="Data Source=TDUPONT-LT;Initial Catalog=Petshop;Integrated Security=True" />
+  </variables>
+  <propertySets>
+    <propertySet name="Dbml" template="..\..\..\..\Frameworks\LinqToSql\VisualBasic\Dbml.cst">
+      <property name="IncludeViews">False</property>
+      <property name="IncludeFunctions">True</property>
+      <property name="IgnoreList">
+        <stringList>
+          <string>^sysdiagrams$</string>
+        </stringList>
+      </property>
+      <property name="CleanExpression">
+        <stringList>
+          <string>^\\w+_</string>
+        </stringList>
+      </property>
+      <property name="EntityBase">LinqEntityBase</property>
+      <property name="DisableRenaming">False</property>
+      <property name="DbmlFile">Petshop.dbml</property>
+      <property name="SourceDatabase">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="EntityNamespace">Petshop.Data</property>
+      <property name="ContextNamespace">Petshop.Data</property>
+    </propertySet>
+    <propertySet name="Entities" template="..\..\..\..\Frameworks\LinqToSql\VisualBasic\Entities.cst">
+      <property name="DbmlFile">Petshop.dbml</property>
+      <property name="IncludeDataContract">True</property>
+      <property name="OutputDirectory">Entities</property>
+    </propertySet>
+    <propertySet name="Managers" template="..\..\..\..\Frameworks\LinqToSql\VisualBasic\Managers.cst">
+      <property name="DbmlFile">Petshop.dbml</property>
+      <property name="SourceDatabase">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="ManagerDirectory">Managers</property>
+      <property name="DataContextFile">C:\Code\CodeSmith\GoogleCode\trunk\Templates\Examples\LinqToSql\VisualBasic\Petshop.Data\Entities\PetshopDataContext.vb</property>
+      <property name="ManagerNamespace">Petshop.Data.Managers</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

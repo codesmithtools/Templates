@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3C5C43C2-95A7-4039-8181-A85B58D24EF2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Petshop.Data</RootNamespace>
+    <AssemblyName>Petshop.Data</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CodeSmith.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Frameworks\LinqToSql\Common\CodeSmith.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\Account.cs" />
+    <Compile Include="Entities\Account.Generated.cs">
+      <DependentUpon>Account.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Cart.cs" />
+    <Compile Include="Entities\Cart.Generated.cs">
+      <DependentUpon>Cart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Category.cs" />
+    <Compile Include="Entities\Category.Generated.cs">
+      <DependentUpon>Category.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Inventory.cs" />
+    <Compile Include="Entities\Inventory.Generated.cs">
+      <DependentUpon>Inventory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Item.cs" />
+    <Compile Include="Entities\Item.Generated.cs">
+      <DependentUpon>Item.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\LineItem.cs" />
+    <Compile Include="Entities\LineItem.Generated.cs">
+      <DependentUpon>LineItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\LinqEntityBase.cs" />
+    <Compile Include="Entities\Orders.cs" />
+    <Compile Include="Entities\Orders.Generated.cs">
+      <DependentUpon>Orders.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\OrderStatus.cs" />
+    <Compile Include="Entities\OrderStatus.Generated.cs">
+      <DependentUpon>OrderStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\PetshopDataContext.cs" />
+    <Compile Include="Entities\PetshopDataContext.Generated.cs">
+      <DependentUpon>PetshopDataContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\PetshopDataContext.Manager.cs">
+      <DependentUpon>PetshopDataContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Product.cs" />
+    <Compile Include="Entities\Product.Generated.cs">
+      <DependentUpon>Product.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Profiles.cs" />
+    <Compile Include="Entities\Profiles.Generated.cs">
+      <DependentUpon>Profiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Supplier.cs" />
+    <Compile Include="Entities\Supplier.Generated.cs">
+      <DependentUpon>Supplier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\AccountManager.cs" />
+    <Compile Include="Managers\AccountManager.Generated.cs">
+      <DependentUpon>AccountManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\CartManager.cs" />
+    <Compile Include="Managers\CartManager.Generated.cs">
+      <DependentUpon>CartManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\CategoryManager.cs" />
+    <Compile Include="Managers\CategoryManager.Generated.cs">
+      <DependentUpon>CategoryManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\InventoryManager.cs" />
+    <Compile Include="Managers\InventoryManager.Generated.cs">
+      <DependentUpon>InventoryManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\ItemManager.cs" />
+    <Compile Include="Managers\ItemManager.Generated.cs">
+      <DependentUpon>ItemManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\LineItemManager.cs" />
+    <Compile Include="Managers\LineItemManager.Generated.cs">
+      <DependentUpon>LineItemManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\OrdersManager.cs" />
+    <Compile Include="Managers\OrdersManager.Generated.cs">
+      <DependentUpon>OrdersManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\OrderStatusManager.cs" />
+    <Compile Include="Managers\OrderStatusManager.Generated.cs">
+      <DependentUpon>OrderStatusManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\PetshopDataManager.cs" />
+    <Compile Include="Managers\ProductManager.cs" />
+    <Compile Include="Managers\ProductManager.Generated.cs">
+      <DependentUpon>ProductManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\ProfilesManager.cs" />
+    <Compile Include="Managers\ProfilesManager.Generated.cs">
+      <DependentUpon>ProfilesManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\SupplierManager.cs" />
+    <Compile Include="Managers\SupplierManager.Generated.cs">
+      <DependentUpon>SupplierManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Petshop.dbml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Plinqo.csp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Petshop.dbml.layout">
+      <DependentUpon>Petshop.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
