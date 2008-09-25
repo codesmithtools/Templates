@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petshop.Data", "Petshop.Data\Petshop.Data.csproj", "{3C5C43C2-95A7-4039-8181-A85B58D24EF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petshop.App", "Petshop.App\Petshop.App.csproj", "{239B2B02-BC43-42B8-B3B1-729AF53E7D99}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C5C43C2-95A7-4039-8181-A85B58D24EF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C5C43C2-95A7-4039-8181-A85B58D24EF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C5C43C2-95A7-4039-8181-A85B58D24EF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C5C43C2-95A7-4039-8181-A85B58D24EF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{239B2B02-BC43-42B8-B3B1-729AF53E7D99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{239B2B02-BC43-42B8-B3B1-729AF53E7D99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{239B2B02-BC43-42B8-B3B1-729AF53E7D99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{239B2B02-BC43-42B8-B3B1-729AF53E7D99}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
