@@ -2,8 +2,6 @@
 
 Module Module1
 
-    Dim ConnectionString As String = "Data Source=TDUPONT-LT;Initial Catalog=Petshop;Integrated Security=True"
-
     Sub Main()
 
         GetTopFiveProducts()
@@ -16,7 +14,7 @@ Module Module1
 
     Sub GetTopFiveProducts()
 
-        Dim context As New PetshopDataContext(ConnectionString)
+        Dim context As New PetshopDataContext()
         Dim products As List(Of Product) = context.Product.Take(5).ToList()
 
         Console.Out.WriteLine("Top 5 Products")
@@ -32,7 +30,7 @@ Module Module1
     Sub GetPenguin()
         Dim key As String = "BD-02"
 
-        Dim context As New PetshopDataContext(ConnectionString)
+        Dim context As New PetshopDataContext()
         Dim product As Product = context.Manager.Product.GetByKey(key)
 
         If product Is Nothing Then

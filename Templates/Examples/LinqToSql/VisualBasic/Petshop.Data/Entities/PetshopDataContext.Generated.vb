@@ -80,6 +80,15 @@ Namespace Petshop.Data
         Shared Sub New()
         End Sub
 
+        ''' <summary>
+        ''' Initializes a new instance of the <see cref="PetshopDataContext"/> class.
+        ''' </summary>
+        <DebuggerNonUserCodeAttribute> _
+        public Sub New()
+            MyBase.New(ConnectionString, mappingCache)
+            OnCreated()
+        End Sub
+
         
         ''' <summary>
         ''' Initializes a new instance of the <see cref="PetshopDataContext"/> class.
