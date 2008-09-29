@@ -326,12 +326,6 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 		internal EntityBase(IDataReader reader) : base(reader) { }
 
         /// <summary>
-		/// Constructor that initializes an Entity from a data row
-		/// </summary>
-		/// <param name="row">The reader containing the data row to load</param>
-        internal EntityBase(DataRowView row) : base(row) { } 
-		
-        /// <summary>
         /// Constructor that initializes an Entity with a parent list
         /// </summary>
         /// <param name="list">The parent list</param>
@@ -452,7 +446,6 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 		#endregion
 	
 		#region Non-Public Properties
-		<% if (SQLType == SqlType.Dynamic) { %>
 		/// <summary>
 		/// Gets the SQL statement for an insert
 		/// </summary>
@@ -479,34 +472,6 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 		{
 			get;	
 		}
-		<%} else {%>
-		/// <summary>
-		/// Gets the SQL statement for an insert
-		/// </summary>
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		protected abstract string InsertSPName
-		{
-			get;
-		}
-		
-		/// <summary>
-		/// Gets the SQL statement for an update by key
-		/// </summary>
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		protected abstract string UpdateSPName
-		{
-			get;	
-		}
-		
-		/// <summary>
-		/// Gets the SQL statement for a delete by key
-		/// </summary>
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
-		protected abstract string DeleteSPName
-		{
-			get;	
-		}
-		<% } %>
 		#endregion
 		
 		#region Public Methods
@@ -522,9 +487,9 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <summary>
         /// Gets a list of validation errors.
         /// </summary>
-        /// <param name="helper">The current SqlHelper</param>
+        /// <param name="helper">The current Data Helper</param>
         /// <returns>the list of errors</returns>
-        public virtual List<ValidationError> GetValidationErrors(SqlHelper helper)
+        public virtual List<ValidationError> GetValidationErrors(IDataHelper helper)
         {
             return GetValidationErrors(helper, String.Empty);
         }
@@ -532,7 +497,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <summary>
         /// Gets a list of validation errors.
         /// </summary>
-        /// <param name="validationGroup">The validation group to validate. There are constants for this value in <%= Namespace %>.<%= DomainNamespace %>.Framework.ValidationGroup</param>
+        /// <param name="validationGroup">The validation group to validate. There are constants for this value in RossCode.NFLPicks.Domain.Framework.ValidationGroup</param>
         /// <returns>the list of errors</returns>
         public virtual List<ValidationError> GetValidationErrors(string validationGroup)
         {
@@ -542,10 +507,10 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <summary>
         /// Gets a list of validation errors
         /// </summary>
-        /// <param name="helper">The current SqlHelper</param>
-        /// <param name="validationGroup">The validation group to validate. There are constants for this value in <%= Namespace %>.<%= DomainNamespace %>.Framework.ValidationGroup</param>
+        /// <param name="helper">The current Data Helper</param>
+        /// <param name="validationGroup">The validation group to validate. There are constants for this value in RossCode.NFLPicks.Domain.Framework.ValidationGroup</param>
         /// <returns>the list of errors</returns>
-        public virtual List<ValidationError> GetValidationErrors(SqlHelper helper, string validationGroup)
+        public virtual List<ValidationError> GetValidationErrors(IDataHelper helper, string validationGroup)
         {
             List<ValidationError> validationErrors = new List<ValidationError>();
 
@@ -573,7 +538,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <summary>
         /// Gets a list of validation errors for a property.
         /// </summary>
-        /// <param name="propertyName">The property to check. There are constants for the properties at <%= Namespace %>.<%= DomainNamespace %>.[EntityName].[EntityName]Properties</param>
+        /// <param name="propertyName">The property to check. There are constants for the properties at RossCode.NFLPicks.Domain.[EntityName].[EntityName]Properties</param>
         /// <returns>the list of errors.</returns>
         public virtual List<ValidationError> GetValidationErrorsByProperty(string propertyName)
         {
@@ -583,10 +548,10 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <summary>
         /// Gets a list of validation errors for a property.
         /// </summary>
-        /// <param name="propertyName">The property to check. There are constants for the properties at <%= Namespace %>.<%= DomainNamespace %>.[EntityName].[EntityName]Properties</param>
-        /// <param name="helper">The current SqlHelper</param>
+        /// <param name="propertyName">The property to check. There are constants for the properties at RossCode.NFLPicks.Domain.[EntityName].[EntityName]Properties</param>
+        /// <param name="helper">The current Data Helper</param>
         /// <returns>the list of errors</returns>
-        public virtual List<ValidationError> GetValidationErrorsByProperty(string propertyName, SqlHelper helper)
+        public virtual List<ValidationError> GetValidationErrorsByProperty(string propertyName, IDataHelper helper)
         {
             return GetValidationErrorsByProperty(propertyName, helper, String.Empty);
         }
@@ -594,8 +559,8 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <summary>
         /// Gets a list of validation errors for a property.
         /// </summary>
-        /// <param name="propertyName">The property to check. There are constants for the properties at <%= Namespace %>.<%= DomainNamespace %>.[EntityName].[EntityName]Properties</param>
-        /// <param name="validationGroup">The validation group to validate. There are constants for this value in <%= Namespace %>.<%= DomainNamespace %>.Framework.ValidationGroup</param>
+        /// <param name="propertyName">The property to check. There are constants for the properties at RossCode.NFLPicks.Domain.[EntityName].[EntityName]Properties</param>
+        /// <param name="validationGroup">The validation group to validate. There are constants for this value in RossCode.NFLPicks.Domain.Framework.ValidationGroup</param>
         /// <returns>the list of errors</returns>
         public virtual List<ValidationError> GetValidationErrorsByProperty(string propertyName, string validationGroup)
         {
@@ -605,10 +570,10 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <summary>
         /// Gets a list of validation errors for a property.
         /// </summary>
-        /// <param name="propertyName">The property to check. There are constants for the properties at <%= Namespace %>.<%= DomainNamespace %>.[EntityName].[EntityName]Properties</param>
-        /// <param name="validationGroup">The validation group to validate. There are constants for this value in <%= Namespace %>.<%= DomainNamespace %>.Framework.ValidationGroup</param>
+        /// <param name="propertyName">The property to check. There are constants for the properties at RossCode.NFLPicks.Domain.[EntityName].[EntityName]Properties</param>
+        /// <param name="validationGroup">The validation group to validate. There are constants for this value in RossCode.NFLPicks.Domain.Framework.ValidationGroup</param>
         /// <returns>the list of errors</returns>
-        public virtual List<ValidationError> GetValidationErrorsByProperty(string propertyName, SqlHelper helper, string validationGroup)
+        public virtual List<ValidationError> GetValidationErrorsByProperty(string propertyName, IDataHelper helper, string validationGroup)
         {
             List<ValidationError> validationErrors = new List<ValidationError>();
 
@@ -646,7 +611,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// </summary>
         public virtual void Delete() 
 		{
-			using (SqlHelper helper = new SqlHelper())
+			using (IDataHelper helper = ServiceLocator.GetHelper())
 			{
 				try 
 				{
@@ -713,7 +678,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// internal, and is used for recursive saves within a transaction.
         /// </summary>
         /// <param name="helper">The data connection helper</param>
-        public override void Save(SqlHelper helper)
+        public override void Save(IDataHelper helper)
         {
             EntityCancelEventArgs e = new EntityCancelEventArgs(this, helper);
 
@@ -824,7 +789,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 		/// <summary>
 		/// Validates an entity.
 		/// </summary>
-        private void Validate(SqlHelper helper)
+        private void Validate(IDataHelper helper)
 		{
 			this.ValidationErrors.Clear();
 			this.ValidationErrors = GetValidationErrors(helper);
@@ -858,7 +823,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
             {
                 // Check for maximum length
                 object propertyValue = property.GetValue(this, null);
-                if (propertyValue != null && propertyValue.ToString().Length > column.MaximumLength)
+                if ((propertyValue != null) && (column.MaximumLength != -1) && (propertyValue.ToString().Length > column.MaximumLength))
                 {
                     validationErrors.Add(new ValidationError(String.Format("{0} must be less than {1} characters.", column.FriendlyName, column.MaximumLength), this, column.ColumnName));
                 }
@@ -1158,31 +1123,27 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         }
 
         /// <summary>
-        /// Inserts the data associated with a custom business object into the database. Accepts an existing SqlHelper object as input
+        /// Inserts the data associated with a custom business object into the database. Accepts an existing IDataHelper object as input
         /// to allow the Insert to participate in a transaction.
         /// </summary>
-        /// <param name="sqlHelper">The current database connection</param>
-        protected void Insert(SqlHelper helper)
+        /// <param name="helper">The current database connection</param>
+        protected void Insert(IDataHelper helper)
         {
             EntityCancelEventArgs e = new EntityCancelEventArgs(this, helper);
             OnInserting(e);
 
             if (!e.Cancel)
             {
-				<% if(SQLType == SqlType.StoredProcedures) { %>
-                string commandText = this.InsertSPName;
-				<% } else { %>
-				string commandText = this.InsertSqlStatement;
-				<% } %>
-				
-                System.Collections.Generic.List<SqlParameter> parameters = GetParameterList(ColumnType.DatabaseColumnNoIdentity);
+                string commandText = this.InsertSqlStatement;
 
-                using (IDataReader reader = helper.ExecuteDataReader(commandText, <%= GetCommandType() %>, parameters))
-				{
-                	if (reader.Read())
-                	{
-                    	this.Initialize(reader);
-                	}
+                List<IDataParameter> parameters = GetParameterList(ColumnType.DatabaseColumnNoIdentity);
+
+                using (IDataReader reader = helper.ExecuteDataReader(commandText, CommandType.Text, parameters))
+                {
+                    if (reader.Read())
+                    {
+                        this.Initialize(reader);
+                    }
                 }
 
                 OnInserted(new EntityEventArgs(this, helper));
@@ -1194,22 +1155,18 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// internal, and is used for deletes within a transaction.
         /// </summary>
         /// <param name="helper">The data connection helper</param>
-        protected internal void Delete(SqlHelper helper)
+        protected internal void Delete(IDataHelper helper)
         {
             EntityCancelEventArgs e = new EntityCancelEventArgs(this, helper);
             OnDeleting(e);
 
             if (!e.Cancel)
             {
-				<% if(SQLType == SqlType.StoredProcedures) { %>
-                string commandText = this.DeleteSPName;
-				<% } else { %>
-				string commandText = this.DeleteSqlStatement;
-				<% } %>
-				
-                System.Collections.Generic.List<SqlParameter> parameters = GetParameterList(ColumnType.PrimaryKeyColumn);
+                string commandText = this.DeleteSqlStatement;
 
-                helper.Execute(commandText, <%= GetCommandType() %>, parameters);
+                List<IDataParameter> parameters = GetParameterList(ColumnType.PrimaryKeyColumn);
+
+                helper.Execute(commandText, CommandType.Text, parameters);
 
                 OnDeleted(new EntityEventArgs(this, helper));
             }
@@ -1220,27 +1177,23 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         ///// protected, and is used for updates within a transaction.
         ///// </summary>
         ///// <param name="helper">The data connection helper</param>
-        protected void Update(SqlHelper helper)
+        protected void Update(IDataHelper helper)
         {
             EntityCancelEventArgs e = new EntityCancelEventArgs(this, helper);
             OnUpdating(e);
 
             if (!e.Cancel)
             {
-				<% if(SQLType == SqlType.StoredProcedures) { %>
-                string commandText = this.UpdateSPName;
-				<% } else { %>
-				string commandText = this.UpdateSqlStatement;
-				<% } %>
+                string commandText = this.UpdateSqlStatement;
 
-                System.Collections.Generic.List<SqlParameter> parameters = GetParameterList(ColumnType.DatabaseColumn);
+                List<IDataParameter> parameters = GetParameterList(ColumnType.DatabaseColumn);
 
-                using (IDataReader reader = helper.ExecuteDataReader(commandText, <%= GetCommandType() %>, parameters))
-				{
-					if (reader.Read())
-					{
-						this.Initialize(reader);
-					}
+                using (IDataReader reader = helper.ExecuteDataReader(commandText, CommandType.Text, parameters))
+                {
+                    if (reader.Read())
+                    {
+                        this.Initialize(reader);
+                    }
                 }
 
                 OnUpdated(new EntityEventArgs(this, helper));
