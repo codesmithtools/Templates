@@ -53,6 +53,9 @@
       <DependentUpon><%= GetClassName(table) %>.cs</DependentUpon>
     </Compile>
 <% } } %>
+	<Compile Include="Framework\IDataHelper.cs" />
+	<Compile Include="Framework\IDataFactory.cs" />
+	<Compile Include="Framework\ServiceLocator.cs" />
     <Compile Include="Framework\SqlHelperBase.cs" />
     <Compile Include="Framework\SqlHelper.cs" />
     <Compile Include="Framework\Generated.SqlHelper.cs">

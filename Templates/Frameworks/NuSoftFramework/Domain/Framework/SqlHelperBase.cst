@@ -7,17 +7,16 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Collections.Generic;
 
 namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 {
     /// <summary>
     /// Summary description for SqlHelper
     /// </summary>
-    public partial class SqlHelperBase : IDisposable
+    public partial class SqlHelperBase : IDisposable, IDataHelper
     {
-        public static string ConnectionString = string.Empty;
-
-		protected SqlConnection _cnnSql;
+        protected SqlConnection _cnnSql;
         protected SqlTransaction _trnSql;
         protected SqlCommand _cmdSql;
         protected SqlDataAdapter _daSql;
@@ -27,7 +26,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// </summary>
         public SqlHelperBase()
         {
-            _cnnSql = new SqlConnection(ConnectionString != string.Empty ? ConnectionString : ConfigurationManager.ConnectionStrings["<%= ConnectionStringKey %>"].ConnectionString);
+            _cnnSql = new SqlConnection(ServiceLocator.ConnectionString != string.Empty ? ServiceLocator.ConnectionString : ConfigurationManager.ConnectionStrings["ConnString"].ConnectionString);
         }
 
         /// <summary>
@@ -51,7 +50,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <summary>
         /// Close the database connection and free the resources.
         /// </summary>
-        public void Close()
+        private void Close()
         {
             if (_cnnSql.State != ConnectionState.Closed) _cnnSql.Close();
             _cnnSql.Dispose();
@@ -82,7 +81,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <param name="CommandType">The type of command (text, stored procedure, etc.)</param>
         /// <param name="ParameterList">A list of SqlParameters</param>
         /// <returns>Rows affected</returns>
-        public int Execute(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList)
+        public int Execute(string command, CommandType commandType, List<IDataParameter> parameterList)
         {
             return Execute(command, commandType, parameterList, 30);
         }
@@ -95,7 +94,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <param name="parameterList">A list of SqlParameters</param>
         /// <param name="timeout">The command timeout value</param>
         /// <returns>Rows affected</returns>
-        public int Execute(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList, int timeout)
+        private int Execute(string command, CommandType commandType, List<IDataParameter> parameterList, int timeout)
         {
             int result;
 
@@ -114,95 +113,13 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         }
 
         /// <summary>
-        /// Execute a Sql command and return the results in a dataset.
-        /// </summary>
-        /// <param name="command">The Sql command</param>
-        /// <param name="commandType">The type of the Sql command (text, stored procedure, etc.)</param>
-        /// <param name="parameterList">A list of SqlParameters</param>
-        /// <returns>Results of the Sql command in a dataset</returns>
-        public DataSet ExecuteDataSet(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList)
-        {
-            return ExecuteDataSet(command, commandType, parameterList, 30);
-        }
-
-        /// <summary>
-        /// Execute a Sql command and return the results in a dataset.
-        /// </summary>
-        /// <param name="command">The Sql command</param>
-        /// <param name="commandType">The type of the Sql command (text, stored procedure, etc.)</param>
-        /// <param name="parameterList">A list of SqlParameters</param>
-        /// <param name="timeout">The command timeout value</param>
-        /// <returns>Results of the Sql command in a dataset</returns>
-        public DataSet ExecuteDataSet(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList, int timeout)
-        {
-            DataSet ds = new DataSet();
-
-            BuildCommand(command, commandType, parameterList);
-            _cmdSql.CommandTimeout = timeout;
-
-            _daSql = new SqlDataAdapter();
-            _daSql.SelectCommand = _cmdSql;
-
-            if (_cnnSql.State != ConnectionState.Open) _cnnSql.Open();
-            OnExecuting();
-            _daSql.Fill(ds);
-
-            _cmdSql.Parameters.Clear();
-            _cmdSql = null;
-
-            OnExecuted();
-            return ds;
-        }
-
-        /// <summary>
-        /// Execute a Sql command and return the results in a dataset.
-        /// </summary>
-        /// <param name="command">The Sql command</param>
-        /// <param name="commandType">The type of the Sql command (text, stored procedure, etc.)</param>
-        /// <param name="parameterList">A list of SqlParameters</param>
-        /// <returns>Results of the Sql command in a datatable</returns>
-        public DataTable ExecuteDataTable(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList)
-        {
-            return ExecuteDataTable(command, commandType, parameterList, 30);
-        }
-
-        /// <summary>
-        /// Execute a Sql command and return the results in a dataset.
-        /// </summary>
-        /// <param name="command">The Sql command</param>
-        /// <param name="commandType">The type of the Sql command (text, stored procedure, etc.)</param>
-        /// <param name="parameterList">A list of SqlParameters</param>
-        /// <param name="timeout">The command timeout value</param>
-        /// <returns>Results of the Sql command in a datatable</returns>
-        public DataTable ExecuteDataTable(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList, int timeout)
-        {
-            DataTable dt = new DataTable();
-
-            BuildCommand(command, commandType, parameterList);
-            _cmdSql.CommandTimeout = timeout;
-
-            _daSql = new SqlDataAdapter();
-            _daSql.SelectCommand = _cmdSql;
-
-            if (_cnnSql.State != ConnectionState.Open) _cnnSql.Open();
-            OnExecuting();
-            _daSql.Fill(dt);
-
-            _cmdSql.Parameters.Clear();
-            _cmdSql = null;
-
-            OnExecuted();
-            return dt;
-        }
-
-        /// <summary>
         /// Execute a Sql command and return the results in a datareader.
         /// </summary>
         /// <param name="command">The Sql command</param>
         /// <param name="commandType">The type of the Sql command (text, stored procedure, etc.)</param>
         /// <param name="parameterList">A list of SqlParameters</param>
         /// <returns>Results of a Sql command in a datareader</returns>
-        public SqlDataReader ExecuteDataReader(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList)
+        public IDataReader ExecuteDataReader(string command, CommandType commandType, List<IDataParameter> parameterList)
         {
             return ExecuteDataReader(command, commandType, parameterList, CommandBehavior.Default, 30);
         }
@@ -215,7 +132,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <param name="parameterList">A list of SqlParameters</param>
         /// <param name="behavior">The command behavior value</param>
         /// <returns>Results of a Sql command in a datareader</returns>
-        public SqlDataReader ExecuteDataReader(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList, CommandBehavior behavior)
+        private IDataReader ExecuteDataReader(string command, CommandType commandType, List<IDataParameter> parameterList, CommandBehavior behavior)
         {
             return ExecuteDataReader(command, commandType, parameterList, behavior, 30);
         }
@@ -228,7 +145,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <param name="parameterList">A list of SqlParameters</param>
         /// <param name="timeout">The command timeout value</param>
         /// <returns>Results of a Sql command in a datareader</returns>
-        public SqlDataReader ExecuteDataReader(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList, int timeout)
+        private IDataReader ExecuteDataReader(string command, CommandType commandType, List<IDataParameter> parameterList, int timeout)
         {
             return ExecuteDataReader(command, commandType, parameterList, CommandBehavior.Default, timeout);
         }
@@ -242,9 +159,9 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <param name="behavior">The command behavior value</param>
         /// <param name="timeout">The command timeout value</param>
         /// <returns>Results of a Sql command in a datareader</returns>
-        public SqlDataReader ExecuteDataReader(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList, CommandBehavior behavior, int timeout)
+        private IDataReader ExecuteDataReader(string command, CommandType commandType, List<IDataParameter> parameterList, CommandBehavior behavior, int timeout)
         {
-            SqlDataReader dr;
+            IDataReader dr;
 
             BuildCommand(command, commandType, parameterList);
             _cmdSql.CommandTimeout = timeout;
@@ -261,95 +178,19 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         }
 
         /// <summary>
-        /// Execute a Sql command that returns a one row, one column result.
-        /// </summary>
-        /// <param name="command">The Sql command</param>
-        /// <param name="commandType">The type of the Sql command (text, stored procedure, etc.)</param>
-        /// <param name="parameterList">A list of SqlParameters</param>
-        /// <returns>Result of the Sql command</returns>
-        public Object ExecuteScalar(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList)
-        {
-            return ExecuteScalar(command, commandType, parameterList, 30);
-        }
-
-        /// <summary>
-        /// Execute a Sql command that returns a one row, one column result.
-        /// </summary>
-        /// <param name="command">The Sql command</param>
-        /// <param name="commandType">The type of the Sql command (text, stored procedure, etc.)</param>
-        /// <param name="parameterList">A list of SqlParameters</param>
-        /// <param name="timeout">The command timeout value</param>
-        /// <returns>Result of the Sql command</returns>
-        public Object ExecuteScalar(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList, int timeout)
-        {
-            Object result;
-
-            BuildCommand(command, commandType, parameterList);
-            _cmdSql.CommandTimeout = timeout;
-
-            if (_cnnSql.State != ConnectionState.Open) _cnnSql.Open();
-            OnExecuting();
-            result = _cmdSql.ExecuteScalar();
-
-            _cmdSql.Parameters.Clear();
-            _cmdSql = null;
-
-            OnExecuted();
-            return result;
-        }
-
-        /// <summary>
-        /// Execute a Sql command and return the results in an XML reader.
-        /// </summary>
-        /// <param name="command">The Sql command</param>
-        /// <param name="commandType">The type of the Sql command (text, stored procedure, etc.)</param>
-        /// <param name="parameterList">A list of SqlParameters</param>
-        /// <returns>Results of a Sql command in an XML reader</returns>
-        public System.Xml.XmlReader ExecuteXmlReader(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList)
-        {
-            return ExecuteXmlReader(command, commandType, parameterList, 30);
-        }
-
-        /// <summary>
-        /// Execute a Sql command and return the results in an XML reader.
-        /// </summary>
-        /// <param name="command">The Sql command</param>
-        /// <param name="commandType">The type of the Sql command (text, stored procedure, etc.)</param>
-        /// <param name="parameterList">A list of SqlParameters</param>
-        /// <param name="timeout">The command timeout value</param>
-        /// <returns>Results of a Sql command in an XML reader</returns>
-        public System.Xml.XmlReader ExecuteXmlReader(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList, int timeout)
-        {
-            System.Xml.XmlReader xr;
-
-            BuildCommand(command, commandType, parameterList);
-            _cmdSql.CommandTimeout = timeout;
-
-            if (_cnnSql.State != ConnectionState.Open) _cnnSql.Open();
-            OnExecuting();
-            xr = _cmdSql.ExecuteXmlReader();
-
-            _cmdSql.Parameters.Clear();
-            _cmdSql = null;
-
-            OnExecuted();
-            return xr;
-        }
-
-        /// <summary>
         /// Construct a Sql Command object.
         /// </summary>
         /// <param name="command">The Sql command to be executed</param>
         /// <param name="commandType">The type of the Sql command (text, stored procedure, etc.)</param>
         /// <param name="parameterList">A list of SqlParameters</param>
-        private void BuildCommand(string command, CommandType commandType, System.Collections.Generic.List<SqlParameter> parameterList)
+        private void BuildCommand(string command, CommandType commandType, List<IDataParameter> parameterList)
         {
             _cmdSql = new SqlCommand();
             _cmdSql.Connection = _cnnSql;
             _cmdSql.CommandText = command;
             _cmdSql.CommandType = commandType;
 
-            foreach (SqlParameter p in parameterList)
+            foreach (IDataParameter p in parameterList)
             {
                 _cmdSql.Parameters.Add(p);
             }
@@ -413,6 +254,5 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
                 Executed(this, EventArgs.Empty);
             }
         }
-
     }
 }
