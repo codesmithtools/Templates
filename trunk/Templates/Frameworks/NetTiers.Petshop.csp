@@ -7,7 +7,7 @@
       <property name="ComponentLayerNameSpace">Services</property>
       <property name="WebServiceOutputPath">Petshop\WebServices</property>
       <property name="WebServiceUrl">http://localhost/PetshopServices</property>
-      <property name="ChooseSourceDatabase">VistaDBPetShop</property>
+      <property name="ChooseSourceDatabase">PetShop</property>
       <property name="ExecuteSql">False</property>
       <property name="SQLFolderName">SQL</property>
       <property name="ViewReport">True</property>
