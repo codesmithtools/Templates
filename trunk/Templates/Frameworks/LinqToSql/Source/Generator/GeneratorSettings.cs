@@ -104,5 +104,20 @@ namespace LinqToSqlShared.Generator
 
             return name;
         }
+
+        public enum SerializationModeEnum
+        {
+            None = 0,
+            Net_3_0 = 1,
+            Net_3_5_SP1 = 2
+        }
+
+        private SerializationModeEnum _serializationMode = SerializationModeEnum.None;
+
+        public SerializationModeEnum SerializationMode
+        {
+            get { return _serializationMode; }
+            set { _serializationMode = value; }
+        }
     }
 }
