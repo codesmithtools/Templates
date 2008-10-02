@@ -112,7 +112,7 @@ namespace LinqToSqlShared.Generator
             Net_3_5_SP1 = 2
         }
 
-        private SerializationModeEnum _serializationMode = SerializationModeEnum.None;
+        private SerializationModeEnum _serializationMode = SerializationModeEnum.Net_3_5_SP1;
 
         public SerializationModeEnum SerializationMode
         {
