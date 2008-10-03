@@ -39,8 +39,12 @@
     Template="Internal\DataContext.Editable.cst" 
     MergeProperties="False" %>
 
-<%@ Register Name="EntityBaseClass" 
-    Template="Internal\Entity.Base.cst" 
+<%@ Register Name="EntityBaseGeneratedClass" 
+    Template="Internal\Entity.Base.Generated.cst" 
+    MergeProperties="False" %>
+
+<%@ Register Name="EntityBaseEditableClass" 
+    Template="Internal\Entity.Base.Editable.cst" 
     MergeProperties="False" %>
 
 <%@ Register Name="EntityGeneratedClass" 
@@ -83,16 +87,28 @@
         
     public void CreateEntityBaseClass(Database database)
     {
-        string fileName = database.EntityBase + ".cs";
-        fileName = Path.Combine(OutputDirectory, fileName);
-        
-        if (File.Exists(fileName))
-            return;
-        
-        EntityBaseClass t = this.Create<EntityBaseClass>();
+		EntityBaseGeneratedClass t = this.Create<EntityBaseGeneratedClass>();
         t.ClassNamespace = database.EntityNamespace;
         t.ClassName = database.EntityBase;
-        t.RenderToFile(fileName, true);
+		
+		EntityBaseEditableClass p = this.Create<EntityBaseEditableClass>();
+		p.ClassNamespace = database.EntityNamespace;
+        p.ClassName = database.EntityBase;
+		
+		string parentFileName = database.EntityBase + ".cs";
+        parentFileName = Path.Combine(OutputDirectory, parentFileName);
+
+        if (!File.Exists(parentFileName))
+        {
+            Response.WriteLine(parentFileName);
+            p.RenderToFile(parentFileName, false);
+        }
+		
+		string fileName = database.EntityBase + ".Generated.cs";
+        fileName = Path.Combine(OutputDirectory, fileName);
+        
+        Response.WriteLine(fileName);
+        t.RenderToFile(fileName, parentFileName, true);
     }
     
     public void CreateDataContextClass(Database database)
