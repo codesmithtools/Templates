@@ -323,8 +323,64 @@ namespace LinqToSqlShared.Generator
                 PropertyNames[primaryTable.Type.Name].Add(primaryAssociation.Member);
             }
 
+            if (IsTableKeySchemaCascadeDelete(tableKeySchema))
+            {
+                foreignAssociation.DeleteRule = "CASCADE";
+            }
+
+            if (IsTableDeleteOnNull(tableKeySchema))
+            {
+                foreignAssociation.DeleteOnNull = true;
+            }
+            
             foreignAssociation.IsProcessed = true;
             primaryAssociation.IsProcessed = true;
+        }
+
+        private bool IsTableKeySchemaCascadeDelete(TableKeySchema tableKeySchema)
+        {
+            return (tableKeySchema.ExtendedProperties.Contains("CS_CascadeDelete")
+                && tableKeySchema.ExtendedProperties["CS_CascadeDelete"].Value != null
+                && tableKeySchema.ExtendedProperties["CS_CascadeDelete"].Value is Boolean
+                && (bool)tableKeySchema.ExtendedProperties["CS_CascadeDelete"].Value);
+        }
+
+        /// <summary>
+        /// DeleteOnNull deletes an entity when a Associated Property on that entity is
+        /// set to null and the Foreign Key for that association does not allow nulls.
+        /// 
+        /// Should return true when all of the following conditions are met...
+        /// A) A Foreign Key column on the entity does not allow null values.
+        /// B) All dependancies on that entity will do a cascade delete.
+        /// </summary>
+        /// <param name="tableKeySchema">TableKeySchema.ForeignKeyTable is the table being analyzed.</param>
+        /// <returns>Value of AssociationAttribute DeleteOnNull Property</returns>
+        private bool IsTableDeleteOnNull(TableKeySchema tableKeySchema)
+        {
+            bool foreignTableForeignKeyColumnAllowDBNull = (tableKeySchema.ForeignKeyMemberColumns.Count == 0);
+            foreach (MemberColumnSchema foreignColumn in tableKeySchema.ForeignKeyMemberColumns)
+            {
+                if (foreignColumn.AllowDBNull)
+                {
+                    foreignTableForeignKeyColumnAllowDBNull = true;
+                    break;
+                }
+            }
+
+            if (foreignTableForeignKeyColumnAllowDBNull)
+                return false;
+
+            bool foreignTablePrimaryKeysCascadeDelete = true;
+            foreach (TableKeySchema foreignTableKeySchema in tableKeySchema.ForeignKeyTable.PrimaryKeys)
+            {
+                if(IsTableKeySchemaCascadeDelete(foreignTableKeySchema))
+                {
+                    foreignTablePrimaryKeysCascadeDelete = false;
+                    break;
+                }
+            }
+
+            return foreignTablePrimaryKeysCascadeDelete;
         }
 
         private string GetKeyMembers(Table table, MemberColumnSchemaCollection members, string name)
