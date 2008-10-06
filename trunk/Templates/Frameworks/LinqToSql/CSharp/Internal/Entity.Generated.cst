@@ -89,6 +89,13 @@ namespace <%= Database.EntityNamespace %>
         <%= Naming.GetModifier(Type.AccessModifier) %> <%= Type.Name %>()
         {
             OnCreated();
+<% if (SerializationMode != 0) { %>
+			Initialize();
+		}
+		
+		private void Initialize()
+		{
+<% } %>
 <% foreach(Association a in Type.EntityRefAssociations) { %>
             <%= a.Storage %> = default(EntityRef<<%= a.Type %>>);
 <% } // foreach Association%>
@@ -177,7 +184,16 @@ namespace <%= Database.EntityNamespace %>
         #endregion
         
         #region Association Mapped Properties
-<% foreach(Association a in Type.EntityRefAssociations) {
+<%	bool needsOnSerialize = false;
+	if(SerializationMode != 0)
+		foreach(Association a in Type.Associations)
+			if(a.IsForeignKey.HasValue && !a.IsForeignKey.Value)
+			{
+				needsOnSerialize = true;
+				break;
+			}
+
+	foreach(Association a in Type.EntityRefAssociations) {
         AssociationInfo info = GetAssociationInfo(a);
 %>
         
@@ -192,7 +208,18 @@ namespace <%= Database.EntityNamespace %>
 <% } %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> <%= a.Type %> <%= a.Member %>
         {
+<% if (needsOnSerialize) { %>
+            get
+			{
+				if (serializing && !<%= a.Storage %>.HasLoadedOrAssignedValue)
+				{
+					return null;
+				}
+				return <%= a.Storage %>.Entity;
+			}
+<% } else { %>
             get { return <%= a.Storage %>.Entity; }
+<% } %>
             set
             {
 <% if (info.HasOtherAssociation) { %>
@@ -290,6 +317,34 @@ namespace <%= Database.EntityNamespace %>
 <% } // foreach %>
         #endregion
         
+<% if (SerializationMode != 0) { %>
+		#region Serialization
+		
+<% if(needsOnSerialize) { %>
+		private bool serializing;
+		
+		[OnSerializing()]
+		[EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnSerializing(StreamingContext context) {
+			serializing = true;
+		}
+		
+		[OnSerialized()]
+		[EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnSerialized(StreamingContext context) {
+			serializing = false;
+		}
+		
+<% } %>		
+		[OnDeserializing()]
+		[EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnDeserializing(StreamingContext context) {
+			Initialize();
+		}
+		
+		#endregion
+		
+<% } %>
     }
 }
 
