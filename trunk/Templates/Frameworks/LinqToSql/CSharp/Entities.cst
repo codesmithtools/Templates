@@ -27,14 +27,14 @@
     Description="The full path to the mapping file." 
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
-<%@ Property Category="2.Class" Name="SerializationMode"
-    Type="LinqToSqlShared.Generator.GeneratorSettings.SerializationModeEnum" Default="Net_3_5_SP1" Optional="False"
-    Description="Include which WCF DataContract attributes." %>
+<%@ Property Category="2.Class" Name="Framework"
+    Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v35_SP1" Optional="False"
+    Description="Which version of the .Net Framework is being generated for." %>
 	
-<%@ Property Category="2.Class" Name="IncludeDeleteOnNull"
+<%@ Property Category="2.Class" Name="IncludeDataContract"
     Type="System.Boolean" Default="true" Optional="False"
-    Description="Templates will generated DeleteOnNull Attribute for Associations." %>
-
+    Description="Include WCF DataContract attributes." %>
+	
 <%@ Register Name="DataContextGeneratedClass" 
     Template="Internal\DataContext.Generated.cst" 
     MergeProperties="False" %>
@@ -84,7 +84,7 @@
         
         this.RegisterReference("System.Data.Linq");
         this.RegisterReference("System.Configuration");
-        if(this.SerializationMode != GeneratorSettings.SerializationModeEnum.None)
+        if(this.IncludeDataContract)
 		    this.RegisterReference("System.Runtime.Serialization");
 
     }
@@ -150,7 +150,8 @@
     {
         EntityGeneratedClass t = this.Create<EntityGeneratedClass>();
         t.Database = database;
-        t.SerializationMode = this.SerializationMode;
+        t.IncludeDataContract = this.IncludeDataContract;
+		t.Framework = this.Framework;
         
         EntityEditableClass p = this.Create<EntityEditableClass>();
         p.Database = database;

@@ -57,6 +57,10 @@
 <%@ Property Category="2.Class" Name="DisableRenaming"
     Type="System.Boolean" Default="false" Optional="true"
     Description="Disable the automatic renaming.of class, property and function names." %>
+	
+<%@ Property Category="2.Class" Name="IncludeDeleteOnNull"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Templates will generated DeleteOnNull Attribute for Associations." %>
 
 <%@ Property Category="3.Mapping" Name="DbmlFile"
     Type="System.String" Default="" Optional="False"
