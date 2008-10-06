@@ -6,7 +6,6 @@ namespace LinqToSqlShared.Generator
     public class GeneratorSettings
     {
         private string mappingFile;
-
         public string MappingFile
         {
             get { return mappingFile; }
@@ -14,7 +13,6 @@ namespace LinqToSqlShared.Generator
         }
 
         private string _contextNamespace;
-
         public string ContextNamespace
         {
             get { return _contextNamespace; }
@@ -22,7 +20,6 @@ namespace LinqToSqlShared.Generator
         }
 
         private string _entityBase;
-
         public string EntityBase
         {
             get { return _entityBase; }
@@ -30,7 +27,6 @@ namespace LinqToSqlShared.Generator
         }
 
         private string _entityNamespace;
-
         public string EntityNamespace
         {
             get { return _entityNamespace; }
@@ -38,7 +34,6 @@ namespace LinqToSqlShared.Generator
         }
 
         private bool includeViews;
-
         public bool IncludeViews
         {
             get { return includeViews; }
@@ -46,7 +41,6 @@ namespace LinqToSqlShared.Generator
         }
 
         private bool includeFunctions;
-
         public bool IncludeFunctions
         {
             get { return includeFunctions; }
@@ -54,21 +48,18 @@ namespace LinqToSqlShared.Generator
         }
 
         private List<Regex> _ignoreExpressions = new List<Regex>();
-
         public List<Regex> IgnoreExpressions
         {
             get { return _ignoreExpressions; }
         }
 
         private List<Regex> _cleanExpressions = new List<Regex>();
-
         public List<Regex> CleanExpressions
         {
             get { return _cleanExpressions; }
         }
 
         private bool _disableRenaming = false;
-
         public bool DisableRenaming
         {
             get { return _disableRenaming; }
@@ -140,5 +131,11 @@ namespace LinqToSqlShared.Generator
             set { _includeDeleteOnNull = value; }
         }
 
+        private bool _includeDataContract = true;
+        public bool IncludeDataContract
+        {
+            get { return _includeDataContract; }
+            set { _includeDataContract = value; }
+        }
     }
 }
