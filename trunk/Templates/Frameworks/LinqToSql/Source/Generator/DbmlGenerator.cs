@@ -312,7 +312,12 @@ namespace LinqToSqlShared.Generator
             {
                 string propertyName = prefix + foreignClass;
                 if (!isOneToOne)
-                    propertyName += "List";
+                {
+                    if (settings.PluralizationMode == GeneratorSettings.PluralizationModeEnum.ListSuffix)
+                        propertyName += "List";
+                    else if (settings.PluralizationMode == GeneratorSettings.PluralizationModeEnum.ProperPlural)
+                        propertyName = StringUtil.ToPlural(propertyName);
+                }
 
                 primaryAssociation.Member = ToPropertyName(primaryTable.Type.Name, propertyName);
                 primaryAssociation.Storage = CommonUtility.GetFieldName(primaryAssociation.Member);

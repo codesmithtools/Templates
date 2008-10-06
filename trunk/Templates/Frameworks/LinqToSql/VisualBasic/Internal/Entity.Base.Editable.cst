@@ -17,9 +17,6 @@ Namespace <%= ClassNamespace %>
     ''' A base class for Linq entities that implements notification events.
     ''' </summary>
     Public Partial MustInherit Class <%= ClassName %> 
-      #Region "User Content"
-	
-	
-	  #End Region
+      'Add Custom Base Level Functionality to your Entities here
     End Class
 End Namespace
