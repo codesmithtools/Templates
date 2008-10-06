@@ -313,9 +313,9 @@ namespace LinqToSqlShared.Generator
                 string propertyName = prefix + foreignClass;
                 if (!isOneToOne)
                 {
-                    if (settings.PluralizationMode == GeneratorSettings.PluralizationModeEnum.ListSuffix)
+                    if (settings.AssociationNaming == AssociationNamingEnum.ListSuffix)
                         propertyName += "List";
-                    else if (settings.PluralizationMode == GeneratorSettings.PluralizationModeEnum.ProperPlural)
+                    else if (settings.AssociationNaming == AssociationNamingEnum.Plural)
                         propertyName = StringUtil.ToPlural(propertyName);
                 }
 
@@ -333,7 +333,7 @@ namespace LinqToSqlShared.Generator
                 foreignAssociation.DeleteRule = "CASCADE";
             }
 
-            if (IsTableDeleteOnNull(tableKeySchema))
+            if (settings.IncludeDeleteOnNull && IsTableDeleteOnNull(tableKeySchema))
             {
                 foreignAssociation.DeleteOnNull = true;
             }

@@ -105,34 +105,40 @@ namespace LinqToSqlShared.Generator
             return name;
         }
 
-        public enum SerializationModeEnum
+        private FrameworkEnum _framework = FrameworkEnum.v35_SP1;
+        public FrameworkEnum Framework
         {
-            None = 0,
-            Net_3_0 = 1,
-            Net_3_5_SP1 = 2
+            get { return _framework; }
+            set { _framework = value; }
         }
 
-        private SerializationModeEnum _serializationMode = SerializationModeEnum.Net_3_5_SP1;
-
-        public SerializationModeEnum SerializationMode
+        private TableNamingEnum _tableNaming = TableNamingEnum.Singluar;
+        public TableNamingEnum TableNaming
         {
-            get { return _serializationMode; }
-            set { _serializationMode = value; }
+            get { return _tableNaming; }
+            set { _tableNaming = value; }
         }
 
-        public enum PluralizationModeEnum
+        private EntityNamingEnum _entityNaming = EntityNamingEnum.Singular;
+        public EntityNamingEnum EntityName
         {
-            None = 0,
-            ListSuffix = 1,
-            ProperPlural = 2
+            get { return _entityNaming; }
+            set { _entityNaming = value; }
         }
 
-        private PluralizationModeEnum _pluralizationMode = PluralizationModeEnum.ListSuffix;
-
-        public PluralizationModeEnum PluralizationMode
+        private AssociationNamingEnum _associationNaming = AssociationNamingEnum.ListSuffix;
+        public AssociationNamingEnum AssociationNaming
         {
-            get { return _pluralizationMode; }
-            set { _pluralizationMode = value; }
-        } 
+            get { return _associationNaming; }
+            set { _associationNaming = value; }
+        }
+    
+        private bool _includeDeleteOnNull = true;
+        public bool IncludeDeleteOnNull
+        {
+            get { return _includeDeleteOnNull; }
+            set { _includeDeleteOnNull = value; }
+        }
+
     }
 }
