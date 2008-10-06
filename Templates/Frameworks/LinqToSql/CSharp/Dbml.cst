@@ -98,6 +98,7 @@
         settings.IncludeViews = IncludeViews;
         settings.IncludeFunctions = IncludeFunctions;
         settings.DisableRenaming = DisableRenaming;
+		settings.IncludeDeleteOnNull = IncludeDeleteOnNull;
         
         foreach(string clean in CleanExpression)
             settings.CleanExpressions.Add(new Regex(clean));
