@@ -62,14 +62,22 @@
     Type="System.Boolean" Default="true" Optional="False"
     Description="Templates will generate DeleteOnNull Attribute for Associations." %>
 	
-<%@ Property Category="2.Class" Name="PluralizationMode"
-    Type="GeneratorSettings.PluralizationModeEnum" Default="ListSuffix" Optional="false"
-    Description="Pluralize Collection Associations as Proper Plural or List Suffix." %>
-
 <%@ Property Category="3.Mapping" Name="DbmlFile"
     Type="System.String" Default="Database.dbml" Optional="False"
     Description="The full path to the dbml file."
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+	
+<%@ Property Category="x.Class" Name="TableNaming"
+    Type="LinqToSqlShared.Generator.TableNamingEnum" Default="Singular" Optional="False"
+    Description="Table naming convention used in the database." %>
+	
+<%@ Property Category="x.Class" Name="EntityNaming"
+    Type="LinqToSqlShared.Generator.EntityNamingEnum" Default="Singular" Optional="False"
+    Description="Desired naming naming convention to be used by generator." %>
+	
+<%@ Property Category="x.Class" Name="AssociationNaming"
+    Type="LinqToSqlShared.Generator.AssociationNamingEnum" Default="ListSuffix" Optional="False"
+    Description="Desired association naming convention to be used by generator." %>
 
 <script runat="template">
 
@@ -103,7 +111,10 @@
     settings.IncludeViews = IncludeViews
     settings.IncludeFunctions = IncludeFunctions
     settings.DisableRenaming = DisableRenaming
-	settings.PluralizationMode = PluralizationMode
+	settings.IncludeDeleteOnNull = IncludeDeleteOnNull
+	settings.TableNaming = TableNaming
+	settings.EntityNaming = EntityNaming
+	settings.AssociationNaming = AssociationNaming
     
     For Each clean As String In CleanExpression
         settings.CleanExpressions.Add(New Regex(clean))
