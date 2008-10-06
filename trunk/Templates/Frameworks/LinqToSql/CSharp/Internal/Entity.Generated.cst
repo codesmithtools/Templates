@@ -28,6 +28,10 @@
 <%@ Property Category="2.Class" Name="SerializationMode"
     Type="LinqToSqlShared.Generator.GeneratorSettings.SerializationModeEnum" Default="Net_3_5_SP1" Optional="False"
     Description="Include which WCF DataContract attributes." %>
+	
+<%@ Property Category="2.Class" Name="IncludeDeleteOnNull"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Templates will generated DeleteOnNull Attribute for Associations." %>
 
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
@@ -435,7 +439,7 @@ namespace <%= Database.EntityNamespace %>
             s.Append(", IsUnique=true");
         if (a.IsForeignKey == true)
             s.Append(", IsForeignKey=true");
-        if (a.DeleteOnNull == true)
+        if (a.DeleteOnNull == true && IncludeDeleteOnNull)
             s.Append(", DeleteOnNull=true");
         if (!string.IsNullOrEmpty(a.DeleteRule))
             s.AppendFormat(", DeleteRule=\"{0}\"", a.DeleteRule);
