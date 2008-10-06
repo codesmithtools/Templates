@@ -216,7 +216,14 @@ namespace LinqToSqlShared.Generator
         private Table CreateTable(TableSchema tableSchema)
         {
             Type type = new Type(ToClassName(tableSchema.Name));
-            Table t = new Table(tableSchema.FullName, type);
+
+            string tableName = tableSchema.FullName;
+            if (settings.TableNaming != TableNamingEnum.Plural  && settings.EntityNaming == EntityNamingEnum.Plural)
+                tableName = StringUtil.ToPlural(tableName);
+            else if(settings.TableNaming != TableNamingEnum.Singular && settings.EntityNaming == EntityNamingEnum.Singular)
+                tableName = StringUtil.ToSingular(tableName);
+
+            Table t = new Table(tableName, type);
             t.Member = t.Type.Name;
 
             if (Array.BinarySearch(ExistingContextProperties, t.Type.Name) >= 1)

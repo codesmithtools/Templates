@@ -103,7 +103,7 @@ namespace LinqToSqlShared.Generator
             set { _framework = value; }
         }
 
-        private TableNamingEnum _tableNaming = TableNamingEnum.Singluar;
+        private TableNamingEnum _tableNaming = TableNamingEnum.Singular;
         public TableNamingEnum TableNaming
         {
             get { return _tableNaming; }

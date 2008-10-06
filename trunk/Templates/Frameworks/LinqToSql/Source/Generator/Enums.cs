@@ -14,7 +14,7 @@ namespace LinqToSqlShared.Generator
     {
         Mixed = 0,
         Plural = 1,
-        Singluar = 2
+        Singular = 2
     }
 
     public enum EntityNamingEnum
