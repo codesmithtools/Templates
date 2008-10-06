@@ -12,9 +12,9 @@ namespace LinqToSqlShared.Generator
 
     public enum TableNamingEnum
     {
+        Mixed = 0,
         Plural = 1,
-        Singluar = 2,
-        Mixed = 3
+        Singluar = 2
     }
 
     public enum EntityNamingEnum
