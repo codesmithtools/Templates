@@ -111,7 +111,7 @@ namespace LinqToSqlShared.Generator
         }
 
         private EntityNamingEnum _entityNaming = EntityNamingEnum.Singular;
-        public EntityNamingEnum EntityName
+        public EntityNamingEnum EntityNaming
         {
             get { return _entityNaming; }
             set { _entityNaming = value; }
