@@ -25,14 +25,14 @@
     Type="System.String" Default="LinqEntityBase" Optional="True" 
     Description="The base class for the entity." %>
 
-<%@ Property Category="2.Class" Name="SerializationMode"
-    Type="LinqToSqlShared.Generator.GeneratorSettings.SerializationModeEnum" Default="Net_3_5_SP1" Optional="False"
-    Description="Include which WCF DataContract attributes." %>
+<%@ Property Category="2.Class" Name="Framework"
+    Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v35_SP1" Optional="False"
+    Description="Which version of the .Net Framework is being generated for." %>
 	
-<%@ Property Category="2.Class" Name="IncludeDeleteOnNull"
+<%@ Property Category="2.Class" Name="IncludeDataContract"
     Type="System.Boolean" Default="true" Optional="False"
-    Description="Templates will generated DeleteOnNull Attribute for Associations." %>
-
+    Description="Include WCF DataContract attributes." %>
+	
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
     Description="Mapping to escape c# keywords" %>
@@ -56,7 +56,7 @@ using System.ComponentModel;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Diagnostics;
-<% if (SerializationMode != 0) { %>
+<% if (IncludeDataContract) { %>
 using System.Runtime.Serialization;
 <% } %>
 
@@ -70,10 +70,12 @@ namespace <%= Database.EntityNamespace %>
 <% } %>
     /// </summary>
     <%= GetClassAttributes() %>
-<% if (SerializationMode == GeneratorSettings.SerializationModeEnum.Net_3_0) { %>
+<% if (IncludeDataContract) { %>
+<% if (Framework == FrameworkEnum.v35) { %>
     [DataContract]
-<% } else if (SerializationMode == GeneratorSettings.SerializationModeEnum.Net_3_5_SP1) { %>
+<% } else  { %>
 	[DataContract(IsReference=true)]
+<% } %>
 <% } %>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
@@ -89,7 +91,7 @@ namespace <%= Database.EntityNamespace %>
         <%= Naming.GetModifier(Type.AccessModifier) %> <%= Type.Name %>()
         {
             OnCreated();
-<% if (SerializationMode != 0) { %>
+<% if (IncludeDataContract) { %>
 			Initialize();
 		}
 		
@@ -150,7 +152,7 @@ namespace <%= Database.EntityNamespace %>
 <% if (column.IsVersion == true) { %>
         [EditorBrowsable(EditorBrowsableState.Never)]
 <% } // if IsVersion %>
-<% if (SerializationMode != 0) { %>
+<% if (IncludeDataContract) { %>
         [DataMember(Order=<%= ++DataMemberOrderId %>)]
 <% } %>
         <%= Naming.GetModifier(column.AccessModifier, column.Modifier) %> <%= dataType %> <%= column.Member %>
@@ -185,7 +187,7 @@ namespace <%= Database.EntityNamespace %>
         
         #region Association Mapped Properties
 <%	bool needsOnSerialize = false;
-	if(SerializationMode != 0)
+	if(IncludeDataContract)
 		foreach(Association a in Type.Associations)
 			if(a.IsForeignKey.HasValue && !a.IsForeignKey.Value)
 			{
@@ -203,7 +205,7 @@ namespace <%= Database.EntityNamespace %>
         /// Gets or sets the <%= a.Type %> association.
         /// </summary>
         <%= CreateAttribute(a) %>
-<% if (SerializationMode != 0) { %>
+<% if (IncludeDataContract) { %>
         [DataMember(Order=<%= ++DataMemberOrderId %>, EmitDefaultValue=false)]
 <% } %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> <%= a.Type %> <%= a.Member %>
@@ -269,7 +271,7 @@ namespace <%= Database.EntityNamespace %>
         /// Gets or sets the <%= a.Type %> association.
         /// </summary>
         <%= CreateAttribute(a) %>
-<% if (SerializationMode != 0) { %>
+<% if (IncludeDataContract) { %>
         [DataMember]
 <% } %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> EntitySet<<%= a.Type %>> <%= a.Member %>
@@ -317,7 +319,7 @@ namespace <%= Database.EntityNamespace %>
 <% } // foreach %>
         #endregion
         
-<% if (SerializationMode != 0) { %>
+<% if (IncludeDataContract) { %>
 		#region Serialization
 		
 <% if(needsOnSerialize) { %>
@@ -494,7 +496,7 @@ namespace <%= Database.EntityNamespace %>
             s.Append(", IsUnique=true");
         if (a.IsForeignKey == true)
             s.Append(", IsForeignKey=true");
-        if (a.DeleteOnNull == true && IncludeDeleteOnNull)
+        if (a.DeleteOnNull == true)
             s.Append(", DeleteOnNull=true");
         if (!string.IsNullOrEmpty(a.DeleteRule))
             s.AppendFormat(", DeleteRule=\"{0}\"", a.DeleteRule);
