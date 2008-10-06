@@ -119,5 +119,20 @@ namespace LinqToSqlShared.Generator
             get { return _serializationMode; }
             set { _serializationMode = value; }
         }
+
+        public enum PluralizationModeEnum
+        {
+            None = 0,
+            ListSuffix = 1,
+            ProperPlural = 2
+        }
+
+        private PluralizationModeEnum _pluralizationMode = PluralizationModeEnum.ListSuffix;
+
+        public PluralizationModeEnum PluralizationMode
+        {
+            get { return _pluralizationMode; }
+            set { _pluralizationMode = value; }
+        } 
     }
 }

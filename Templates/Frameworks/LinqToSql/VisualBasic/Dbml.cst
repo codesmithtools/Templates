@@ -57,6 +57,14 @@
 <%@ Property Category="2.Class" Name="DisableRenaming"
     Type="System.Boolean" Default="false" Optional="true"
     Description="Disable the automatic renaming.of class, property and function names." %>
+	
+<%@ Property Category="2.Class" Name="IncludeDeleteOnNull"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Templates will generate DeleteOnNull Attribute for Associations." %>
+	
+<%@ Property Category="2.Class" Name="PluralizationMode"
+    Type="GeneratorSettings.PluralizationModeEnum" Default="ListSuffix" Optional="false"
+    Description="Pluralize Collection Associations as Proper Plural or List Suffix." %>
 
 <%@ Property Category="3.Mapping" Name="DbmlFile"
     Type="System.String" Default="Database.dbml" Optional="False"
@@ -95,6 +103,7 @@
     settings.IncludeViews = IncludeViews
     settings.IncludeFunctions = IncludeFunctions
     settings.DisableRenaming = DisableRenaming
+	settings.PluralizationMode = PluralizationMode
     
     For Each clean As String In CleanExpression
         settings.CleanExpressions.Add(New Regex(clean))

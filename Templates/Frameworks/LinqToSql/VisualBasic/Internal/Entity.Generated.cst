@@ -68,9 +68,9 @@ Namespace <%= Database.EntityNamespace %>
 <% End If %>
     ''' </summary>
     <%= GetClassAttributes() %>
-<% If (SerializationMode = GeneratorSettings.SerializationModeEnum.Net_3_0) Then %>
+<% If (SerializationMode = GeneratorSettings.SerializationModeEnum.Net30) Then %>
     <System.Runtime.Serialization.DataContractAttribute()> _
-<% Else If (SerializationMode = GeneratorSettings.SerializationModeEnum.Net_3_5_SP1) Then%>
+<% Else If (SerializationMode = GeneratorSettings.SerializationModeEnum.Net35SP1) Then%>
 	<DataContract(IsReference:=True)> _
 <% End If %>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>
@@ -237,8 +237,8 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
                     OnPropertyChanged("<%= a.Member %>")
                 End If
 <% End If ' HasOtherAssociation %>
-            End SET
-        End PROPERTY
+            End Set
+        End Property
 <% Next %>
 <% For Each a As Association in Type.EntitySetAssociations
         Dim info As AssociationInfo = GetAssociationInfo(a)
@@ -261,10 +261,10 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 				End If
 			<%End If%>	
 				return <%= a.Storage %>
-			End GET
+			End Get
             Set
 				<%= a.Storage %>.Assign(value)
-			End SET
+			End Set
         End Property
         
         <DebuggerNonUserCodeAttribute()> _
