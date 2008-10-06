@@ -24,14 +24,14 @@
 <%@ Property Category="2.Class" Name="EntityBase" 
     Type="System.String" Default="LinqEntityBase" Optional="True" 
     Description="The base class for the entity." %>
-
-<%@ Property Category="2.Class" Name="SerializationMode"
-	Type="GeneratorSettings.SerializationModeEnum" Default="Net_3_5_SP1" Optional="false"
-    Description="Include Serialization attributes and what kind." %>
 	
-<%@ Property Category="2.Class" Name="IncludeDeleteOnNull"
-    Type="System.Boolean" Default="true" Optional="False"
-    Description="Templates will generated DeleteOnNull Attribute for Associations." %>
+<%@ Property Category="2.Class" Name="IncludeDataContract"
+?? 	Type="System.Boolean" Default="true" Optional="False"
+?? 	Description="Include WCF DataContract attributes." %>
+
+<%@ Property Category="2.Class" Name="Framework"
+	Type="FrameworkEnum" Default="V35_SP1" Optional="False"
+    Description="Include Serialization attributes and what kind." %>
 
 <%@ Map Name="VBKeywordEscape" 
     Src="VBKeywordEscape.csmap" Reverse="False" 
@@ -55,7 +55,7 @@ Imports System.ComponentModel
 Imports System.Data.Linq
 Imports System.Data.Linq.Mapping
 Imports System.Diagnostics
-<% If (SerializationMode <> GeneratorSettings.SerializationModeEnum.None) Then %>
+<% If (IncludeDataContract) Then %>
 Imports System.Runtime.Serialization
 <% End If %>
 
@@ -68,9 +68,9 @@ Namespace <%= Database.EntityNamespace %>
 <% End If %>
     ''' </summary>
     <%= GetClassAttributes() %>
-<% If (SerializationMode = GeneratorSettings.SerializationModeEnum.Net30) Then %>
+<% If (IncludeDataContract ANDALSO Framework = FrameworkEnum.V35) Then %>
     <System.Runtime.Serialization.DataContractAttribute()> _
-<% Else If (SerializationMode = GeneratorSettings.SerializationModeEnum.Net35SP1) Then%>
+<% Else If (IncludeDataContract ANDALSO Framework = FrameworkEnum.V35_SP1) Then%>
 	<DataContract(IsReference:=True)> _
 <% End If %>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>
@@ -85,7 +85,7 @@ Namespace <%= Database.EntityNamespace %>
         <DebuggerNonUserCodeAttribute()> _
         <%= Naming.GetModifier(Type.AccessModifier) %>  Sub New()
       		OnCreated()
-	<% If (SerializationMode <> GeneratorSettings.SerializationModeEnum.None) Then%>	
+	<% If (IncludeDataContract) Then%>	
 			Initialize()
 		End Sub
 		
@@ -141,7 +141,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 <% If c.IsVersion.value = True Then %>
         <EditorBrowsable(EditorBrowsableState.Never)> _
 <% End If ' if IsVersion %>
-<% If (SerializationMode <> GeneratorSettings.SerializationModeEnum.None) Then %>
+<% If (IncludeDataContract) Then %>
         <DataMember(Order:=<%= dataMemberIndex %>)> _
 <% 		dataMemberIndex += 1
    End If %>
@@ -176,7 +176,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         #Region "Association Mapped Properties"
 		
 <% 		Dim needsOnSerialize As Boolean = False
-		If Me.SerializationMode <> GeneratorSettings.SerializationModeEnum.None Then
+		If IncludeDataContract Then
 			For Each a As Association in Type.Associations
 				If Not a.IsForeignKey.Value Then
 					needsOnSerialize = true
@@ -194,7 +194,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         ''' Gets or sets the <%= a.Type %> association.
         ''' </summary>
         <%= CreateAttribute(a) %>
-<% If (SerializationMode <> GeneratorSettings.SerializationModeEnum.None) Then %>
+<% If (IncludeDataContract) Then %>
         <DataMember(Order:=<%=dataMemberIndex%>, EmitDefaultValue:=False)> _
 <%dataMemberIndex += 1 
 	End If %>
@@ -250,7 +250,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         ''' Gets or sets the <%= a.Type %> association.
         ''' </summary>
         <%= CreateAttribute(a) %>
-<% If (SerializationMode <> GeneratorSettings.SerializationModeEnum.None) Then %>
+<% If (IncludeDataContract) Then %>
         <DataMember()> _
 <% End If %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= a.Member %> As EntitySet(Of <%= a.Type %>)
@@ -311,7 +311,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         #End Region
 		
 		
-	<%If Me.SerializationMode <> GeneratorSettings.SerializationModeEnum.None Then%>
+	<%If IncludeDataContract Then%>
 		#Region "Serialization"
 		
 		<%If (needsOnSerialize) Then%>
@@ -478,7 +478,7 @@ Public Function CreateAttribute(ByVal a As Association) As String
     If a.IsForeignKey Then
         s.Append(", IsForeignKey:=true")
     End If
-    If a.DeleteOnNull.Value And IncludeDeleteOnNull Then
+    If a.DeleteOnNull Then
         s.Append(", DeleteOnNull:=true")
     End If
     If Not String.IsNullOrEmpty(a.DeleteRule) Then
