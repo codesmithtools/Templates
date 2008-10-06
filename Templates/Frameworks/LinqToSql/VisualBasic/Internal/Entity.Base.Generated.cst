@@ -17,7 +17,7 @@ Namespace <%= ClassNamespace %>
     ''' A base class for Linq entities that implements notification events.
     ''' </summary>
     <Serializable> _
-    Public MustInherit Class <%= ClassName %> 
+    Public Partial MustInherit Class <%= ClassName %> 
        Implements INotifyPropertyChanging
        Implements INotifyPropertyChanged
         ''' <summary>
