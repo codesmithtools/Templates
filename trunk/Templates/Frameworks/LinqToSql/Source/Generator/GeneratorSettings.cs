@@ -137,5 +137,12 @@ namespace LinqToSqlShared.Generator
             get { return _includeDataContract; }
             set { _includeDataContract = value; }
         }
+
+        private bool _generateMetaData = true;
+        public bool GenerateMetaData
+        {
+            get { return _generateMetaData; }
+            set { _generateMetaData = value; }
+        }
     }
 }

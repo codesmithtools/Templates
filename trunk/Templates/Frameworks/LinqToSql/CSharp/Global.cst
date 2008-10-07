@@ -1,0 +1,43 @@
+<%-- 
+Name:
+Author: 
+Description: 
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" OutputType="None" Debug="False" Description="Generates the Global Parent and Child files for Dynamic Data" %>
+<%@ Property Name="ClassNamespace" Type="System.String" Default="" Optional="false" Description="Namspace of the generated class"%> 
+<%@ Property Name="InlineEditing" Type="System.Boolean" Default="false" Optional="false" Description="Default to Inline Grid Editing for Webpages" %>
+<%@ Property Name="ScaffoldAllTables" Type="System.Boolean" Default="true" Optional="false" Description="Add Scaffolding to all tables" %>
+<%@ Property Name="ContextNamespace" Type="System.String" Default="" Optional="false" Description="The namespace where the Data Context is found"%>
+<%@ Property Name="DataContextName" Type="System.String" Default="" Optional="False" Description="Name of the Data Context"%>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="System.Data" %>
+
+<%@ Register Name="GlobalParentClass" 
+    Template="C:\Users\Reggie\Documents\CodeSmith\Templates\Global.Parent.cst"
+    MergeProperties="False" %>
+
+<%@ Register Name="GlobalChildClass" 
+    Template="C:\Users\Reggie\Documents\CodeSmith\Templates\Global.Child.cst"
+    MergeProperties="False" %>
+	
+<%
+	GlobalChildClass t = this.Create<GlobalChildClass>();
+	t.ClassNamespace = ClassNamespace;
+	t.InlineEditing = InlineEditing;
+	t.ScaffoldAllTables = ScaffoldAllTables;
+	t.ContextNamespace = ContextNamespace;
+	t.DataContextName = DataContextName;
+	
+	GlobalParentClass p = this.Create<GlobalParentClass>();
+	p.ClassNamespace = ClassNamespace;
+	
+	string parentFileName = "Global.asax";
+	
+    Response.WriteLine(parentFileName);
+    p.RenderToFile(parentFileName, true);
+	
+	string fileName = "Global.asax.cs";
+    
+    Response.WriteLine(fileName);
+    t.RenderToFile(fileName, parentFileName, true);
+%>
