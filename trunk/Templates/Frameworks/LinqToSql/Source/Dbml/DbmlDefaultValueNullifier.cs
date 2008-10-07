@@ -80,9 +80,6 @@ namespace LinqToSqlShared.DbmlObjectModel
                 if (association.Cardinality.HasValue && association.Cardinality.Value == Cardinality.One && association.IsForeignKey == true)
                     association.Cardinality = null;
                 
-                if (association.DeleteOnNull == false)
-                    association.DeleteOnNull = null;
-                
                 if (association.Cardinality.HasValue && association.Cardinality.Value == Cardinality.Many && association.IsForeignKey != true)
                     association.Cardinality = null;
                 

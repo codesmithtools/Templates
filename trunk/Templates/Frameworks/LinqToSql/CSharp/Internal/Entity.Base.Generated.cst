@@ -1,5 +1,8 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" 
     Description="Linq to Sql Entity Class." %>
+	
+<%@ Assembly Name="Generator" Path="..\..\Common"%>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
 
 <%@ Property Category="2.Class" Name="ClassNamespace" 
     Type="System.String" Default="Project.Core.Data" Optional="False" 
@@ -8,16 +11,29 @@
 <%@ Property Category="2.Class" Name="ClassName" 
     Type="System.String" Default="LinqEntityBase" Optional="False" 
     Description="The names of the class."%>
+	
+<%@ Property Category="2.Class" Name="IncludeDataContract"
+ 	Type="System.Boolean" Default="true" Optional="False"
+ 	Description="Include WCF DataContract attributes." %>
+
+<%@ Property Category="2.Class" Name="Framework"
+	Type="FrameworkEnum" Default="v35_SP1" Optional="False"
+    Description="Include Serialization attributes and what kind." %>
 
 using System;
 using System.ComponentModel;
+<%if(IncludeDataContract)%>
+using System.Runtime.Serialization;
 
 namespace <%= ClassNamespace %>
 {
     /// <summary>
     /// A base class for Linq entities that implements notification events.
     /// </summary>
+    <%if (IncludeDataContract) { %>
     [Serializable]
+	[DataContract(<%if (Framework == FrameworkEnum.v35_SP1) { %> IsReference=true <%}%>)]
+	<%}%>
     public abstract partial class <%= ClassName %> :
         INotifyPropertyChanging,
         INotifyPropertyChanged

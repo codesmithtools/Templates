@@ -26,11 +26,11 @@
     Description="The base class for the entity." %>
 	
 <%@ Property Category="2.Class" Name="IncludeDataContract"
-?? 	Type="System.Boolean" Default="true" Optional="False"
-?? 	Description="Include WCF DataContract attributes." %>
+ 	Type="System.Boolean" Default="True" Optional="False"
+ 	Description="Include WCF DataContract attributes." %>
 
 <%@ Property Category="2.Class" Name="Framework"
-	Type="FrameworkEnum" Default="V35_SP1" Optional="False"
+	Type="FrameworkEnum" Default="v35_SP1" Optional="False"
     Description="Include Serialization attributes and what kind." %>
 
 <%@ Map Name="VBKeywordEscape" 
@@ -68,9 +68,9 @@ Namespace <%= Database.EntityNamespace %>
 <% End If %>
     ''' </summary>
     <%= GetClassAttributes() %>
-<% If (IncludeDataContract ANDALSO Framework = FrameworkEnum.V35) Then %>
+<% If (IncludeDataContract ANDALSO Framework = FrameworkEnum.v35) Then %>
     <System.Runtime.Serialization.DataContractAttribute()> _
-<% Else If (IncludeDataContract ANDALSO Framework = FrameworkEnum.V35_SP1) Then%>
+<% Else If (IncludeDataContract ANDALSO Framework = FrameworkEnum.v35_SP1) Then%>
 	<DataContract(IsReference:=True)> _
 <% End If %>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>

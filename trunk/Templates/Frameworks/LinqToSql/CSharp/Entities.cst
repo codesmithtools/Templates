@@ -32,7 +32,7 @@
     Description="Which version of the .Net Framework is being generated for." %>
 	
 <%@ Property Category="2.Class" Name="IncludeDataContract"
-    Type="System.Boolean" Default="true" Optional="False"
+    Type="System.Boolean" Default="False" Optional="False"
     Description="Include WCF DataContract attributes." %>
 	
 <%@ Register Name="DataContextGeneratedClass" 
