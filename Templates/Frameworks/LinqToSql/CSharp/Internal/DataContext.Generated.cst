@@ -40,6 +40,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Web.DynamicData;
 <% if (Database.ContextNamespace != Database.EntityNamespace) { %>
 using <%= Database.EntityNamespace %>;
 <% } %>
@@ -99,7 +100,23 @@ namespace <%= Database.ContextNamespace %>
             return settings.ConnectionString;
         } 
         #endregion
-
+		
+		#region Model
+        private static System.Web.DynamicData.MetaModel _model = null;
+        public static System.Web.DynamicData.MetaModel Model
+		{
+            get
+			{
+                if (_model == null) 
+				{
+                    _model = new System.Web.DynamicData.MetaModel();
+                    _model.RegisterContext(typeof(<%= Database.Class %>));
+                }
+                return _model;
+            } 
+        }
+		#endregion
+		
         #region Constructors
         /// <summary>
         /// Initializes the <see cref="<%= Database.Class %>"/> class.

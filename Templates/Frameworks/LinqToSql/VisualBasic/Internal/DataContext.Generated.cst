@@ -95,6 +95,18 @@ Namespace <%= Database.ContextNamespace %>
 		End Function
 		#End Region
 
+		#Region "Model"
+        Private Shared _model As Web.DynamicData.MetaModel = Nothing
+        Public Shared ReadOnly Property Model() As Web.DynamicData.MetaModel
+            Get
+                If (_model Is Nothing) Then
+                    _model = New Web.DynamicData.MetaModel()
+                    _model.RegisterContext(GetType(<%= Database.Class %>))
+                End If
+                Return _model
+            End Get
+        End Property
+		#End Region
 
         #Region "Constructors"
         ''' <summary>

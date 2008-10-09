@@ -13,13 +13,21 @@
 <%@ Property Category="1.Mapping" Name="Type" 
     Type="LinqToSqlShared.DbmlObjectModel.Type" Optional="False" 
     Description="The Type instance for this entity. Must be set by parent template" %>
+	
+<%@ Property Category="1.Mapping" Name="DynamicData" 
+    Type="System.Boolean" Default="true" Optional="False" 
+    Description="Generate Metadata information for each Entity, Defined by parent template" 
+    Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
 Imports System
 Imports System.Linq
 Imports System.Collections.Generic
 Imports System.Text
+<%If(DynamicData)Then%>Imports System.ComponentModel.DataAnnotations<%End If%>
 
 Namespace <%= Database.EntityNamespace %>
+
+	<%If(DynamicData)Then%> <MetadataType(typeof(<%= Type.Name %>MetaData))> _<%End If%>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>
         #Region "Extensibility Method Definitions"
         'Partial Sub OnLoaded()
@@ -38,4 +46,14 @@ Namespace <%= Database.EntityNamespace %>
         'End Sub
         #End region
     End Class
+	
+	<%If(DynamicData)Then%>
+	<%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Class <%= Type.Name %>MetaData
+		
+		<%For Each col As Column In Type.Columns %>
+		Public Object <%=col.Name%> { Get; Set; }
+		<% Next %>
+		
+	End Class
+	<%End If%>
 End Namespace

@@ -13,11 +13,11 @@ Description:
 <%@ Import Namespace="System.Data" %>
 
 <%@ Register Name="GlobalParentClass" 
-    Template="C:\Users\Reggie\Documents\CodeSmith\Templates\Global.Parent.cst"
+    Template="Internal\Global.Parent.cst"
     MergeProperties="False" %>
 
 <%@ Register Name="GlobalChildClass" 
-    Template="C:\Users\Reggie\Documents\CodeSmith\Templates\Global.Child.cst"
+    Template="Internal\Global.Child.cst"
     MergeProperties="False" %>
 	
 <%
