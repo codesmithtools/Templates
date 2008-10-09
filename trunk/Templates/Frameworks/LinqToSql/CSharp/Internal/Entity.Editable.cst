@@ -14,20 +14,20 @@
     Type="LinqToSqlShared.DbmlObjectModel.Type" Optional="False" 
     Description="The Type instance for this entity. Must be set by parent template" %>
 	
-<%@ Property Category="1.Mapping" Name="GenerateMetaData" 
+<%@ Property Category="1.Mapping" Name="DynamicData" 
     Type="System.Boolean" Default="true" Optional="False" 
-    Description="Generate Metadata information for each Entity" 
+    Description="Generate Metadata information for each Entity, Defined by parent template" 
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-<%if(GenerateMetaData){%>using System.ComponentModel.DataAnnotations;<%}%>
+<%if(DynamicData){%>using System.ComponentModel.DataAnnotations;<%}%>
 
 namespace <%= Database.EntityNamespace %>
 {
-	<%if(GenerateMetaData){%> [MetadataType(typeof(<%= Type.Name %>MetaData))]<%}%>
+	<%if(DynamicData && Type.GetType().ToString() != "Function"){%> [MetadataType(typeof(<%= Type.Name %>MetaData))]<%}%>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
     {
         #region Extensibility Method Definitions
@@ -48,7 +48,7 @@ namespace <%= Database.EntityNamespace %>
         #endregion
     }
 	
-	<%if(GenerateMetaData){%>
+	<%if(DynamicData){%>
 	<%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> class <%= Type.Name %>MetaData
 	{
 		<%foreach(Column column in Type.Columns) { %>

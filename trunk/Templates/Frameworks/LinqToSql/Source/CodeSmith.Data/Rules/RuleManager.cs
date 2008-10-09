@@ -2,9 +2,13 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Web.DynamicData;
 using CodeSmith.Data;
 using System.Data.Linq;
+using System.Reflection;
+using CodeSmith.Data.Rules.Validation;
+using System.Data.SqlTypes;
+using CodeSmith.Data.Rules.Assign;
 
 namespace CodeSmith.Data.Rules
 {
@@ -60,6 +64,26 @@ namespace CodeSmith.Data.Rules
                 _sharedBusinessRules[typeof(EntityType)].Add(rule);
             else
                 _sharedBusinessRules.Add(typeof(EntityType), new List<IRule> { rule });
+        }
+
+        public static void AddShared<EntityType>(MetaModel model)
+        {
+            foreach (MetaColumn col in model.GetTable(typeof(EntityType)).Columns)
+            {
+                if (col.MaxLength > 0)
+                    RuleManager.AddShared<EntityType>(new LengthRule(col.Name, col.MaxLength));
+                if (col.IsRequired)
+                    RuleManager.AddShared<EntityType>(new RequiredRule(col.Name));
+                if (col.TypeCode == TypeCode.DateTime)
+                {
+                    if (col.Name.Contains("Create"))
+                        RuleManager.AddShared<EntityType>(new NowRule(col.Name, EntityState.New));
+                    else if (col.Name.Contains("Modify"))
+                        RuleManager.AddShared<EntityType>(new NowRule(col.Name, EntityState.Dirty));
+                    else
+                        RuleManager.AddShared<EntityType>(new RangeRule<DateTime>(col.Name, SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value));
+                }
+            }
         }
 
         /// <summary>
