@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Master.proj = ..\Master.proj
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsertClassMerge", "InsertClassMerge\InsertClassMerge.csproj", "{3FFDCBFA-77B9-4801-849F-10BF70B38B94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FFDCBFA-77B9-4801-849F-10BF70B38B94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FFDCBFA-77B9-4801-849F-10BF70B38B94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FFDCBFA-77B9-4801-849F-10BF70B38B94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FFDCBFA-77B9-4801-849F-10BF70B38B94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -214,12 +214,17 @@
         string parentFileName = className + ".cs";
         parentFileName = Path.Combine(OutputDirectory, parentFileName);
 
-        if (!File.Exists(parentFileName))
+
+		if (File.Exists(parentFileName))
         {
-            partialClass.Type = type;
-            Response.WriteLine(parentFileName);
-            partialClass.RenderToFile(parentFileName, false);
-        }
+			partialClass.ExistingFile = CodeSmithParser.Create(parentFileName);
+			partialClass.ExistingFile.ParseMethodBodies = false;
+			partialClass.ExistingFile.Parse();
+		}
+		InsertClassMerge insertClassMerge = new InsertClassMerge("C#", String.Concat(className, "MetaData"));
+        partialClass.Type = type;
+        Response.WriteLine(parentFileName);
+        partialClass.RenderToFile(parentFileName, insertClassMerge);
         
         string fileName = className + ".Generated.cs";
         fileName = Path.Combine(OutputDirectory, fileName);
