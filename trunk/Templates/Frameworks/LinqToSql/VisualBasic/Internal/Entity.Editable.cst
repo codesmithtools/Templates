@@ -27,7 +27,7 @@ Imports System.Text
 
 Namespace <%= Database.EntityNamespace %>
 
-	<%If(DynamicData)Then%> <MetadataType(typeof(<%= Type.Name %>MetaData))> _<%End If%>
+	<%If(DynamicData)Then%> <MetadataType(GetType(<%= Type.Name %>MetaData))> _<%End If%>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>
         #Region "Extensibility Method Definitions"
         'Partial Sub OnLoaded()
@@ -51,7 +51,7 @@ Namespace <%= Database.EntityNamespace %>
 	<%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Class <%= Type.Name %>MetaData
 		
 		<%For Each col As Column In Type.Columns %>
-		Public Object <%=col.Name%> { Get; Set; }
+		Public <%=col.Name%> As Object
 		<% Next %>
 		
 	End Class

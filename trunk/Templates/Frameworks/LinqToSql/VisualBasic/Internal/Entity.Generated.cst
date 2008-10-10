@@ -64,7 +64,7 @@ Imports System.Diagnostics
 Imports System.Runtime.Serialization
 <% End If %>
 <% If (DynamicData) Then %>
-Imports System.ComponentModel.DataAnnotations;
+Imports System.ComponentModel.DataAnnotations
 <% End If %>
 
 Namespace <%= Database.EntityNamespace %>

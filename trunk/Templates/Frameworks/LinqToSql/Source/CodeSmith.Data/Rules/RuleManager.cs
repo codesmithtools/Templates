@@ -9,6 +9,7 @@ using System.Reflection;
 using CodeSmith.Data.Rules.Validation;
 using System.Data.SqlTypes;
 using CodeSmith.Data.Rules.Assign;
+using System.ComponentModel.DataAnnotations;
 
 namespace CodeSmith.Data.Rules
 {
@@ -74,6 +75,8 @@ namespace CodeSmith.Data.Rules
                     RuleManager.AddShared<EntityType>(new LengthRule(col.Name, col.MaxLength));
                 if (col.IsRequired)
                     RuleManager.AddShared<EntityType>(new RequiredRule(col.Name));
+                if (col.Attributes[typeof(RegularExpressionAttribute)] != null)
+                    RuleManager.AddShared<EntityType>(new RegexRule(col.Name, ((RegularExpressionAttribute)col.Attributes[typeof(RegularExpressionAttribute)]).ErrorMessage,((RegularExpressionAttribute)col.Attributes[typeof(RegularExpressionAttribute)]).Pattern));
                 if (col.TypeCode == TypeCode.DateTime)
                 {
                     if (col.Name.Contains("Create"))
@@ -82,6 +85,15 @@ namespace CodeSmith.Data.Rules
                         RuleManager.AddShared<EntityType>(new NowRule(col.Name, EntityState.Dirty));
                     else
                         RuleManager.AddShared<EntityType>(new RangeRule<DateTime>(col.Name, SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value));
+                }
+                if (col.Attributes[typeof(RangeAttribute)] != null)
+                {
+                    if (col.IsInteger)
+                        RuleManager.AddShared<EntityType>(new RangeRule<int>(col.Name, (int)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Minimum, (int)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Maximum));
+                    else if (col.IsFloatingPoint)
+                        RuleManager.AddShared<EntityType>(new RangeRule<Decimal>(col.Name, Convert.ToDecimal(((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Minimum), Convert.ToDecimal(((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Maximum)));
+                    else
+                        RuleManager.AddShared<EntityType>(new RangeRule<DateTime>(col.Name, (DateTime)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Minimum, (DateTime)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Maximum));
                 }
             }
         }
