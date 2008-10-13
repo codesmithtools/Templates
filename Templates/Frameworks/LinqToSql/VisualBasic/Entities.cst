@@ -94,6 +94,7 @@ Public Sub Generate()
         Me.RegisterReference("System.Runtime.Serialization")
 	End If
 	If(DynamicData)
+			Me.RegisterReference("System.Web.DynamicData")
 			Me.RegisterReference("System.ComponentModel.DataAnnotations")
 	End If
 End Sub
