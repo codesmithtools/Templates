@@ -189,7 +189,7 @@
                 {
                     t.TableName = string.Empty;
                     t.EntityBase = string.Empty;
-					t.DynamicData = false;
+					t.Framework = this.Framework;
                     CreateEntity(t, p, resultType);
                 }
             }
