@@ -38,7 +38,10 @@ namespace <%= Database.EntityNamespace %>
 {
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
     {
-        // Comment /w Link Here
+		// For more information about the features contained in this class, please visit our GoogleCode Wiki at...
+		// http://code.google.com/p/codesmith/wiki/PLINQO
+		// Also, you can watch our Video Tutorials at...
+		// http://community.codesmithtools.com/
         
 <%      if(Framework == FrameworkEnum.v35_SP1) { %>
         #region Metadata
