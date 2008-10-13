@@ -2,12 +2,13 @@
     Description="Linq to Sql Entity Class." %>
 
 <%@ Assembly Name="ICSharpCode.NRefactory" Path="..\..\Common" %>
-<%@ Assembly Name="InsertClassMerge" Path="..\..\Common" %>
+<%@ Assembly Name="InsertClassMergeStrategy" Path="..\..\Common" %>
+<%@ Assembly Name="Generator" Path="..\..\Common" %>
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
 
 <%@ Import Namespace="System.Text" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
-<%@ Import Namespace="InsertClassMerge" %>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
 
 <%@ Property Category="1.Mapping" Name="Database" 
     Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
@@ -16,63 +17,55 @@
 <%@ Property Category="1.Mapping" Name="Type" 
     Type="LinqToSqlShared.DbmlObjectModel.Type" Optional="False" 
     Description="The Type instance for this entity. Must be set by parent template" %>
-	
-<%@ Property Category="1.Mapping" Name="DynamicData" 
-    Type="System.Boolean" Default="true" Optional="False" 
-    Description="Generate Metadata information for each Entity, Defined by parent template" 
-    Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
-<%@ Property Name="ExistingFile" Type="CodeSmithParser" Optional="True" Category="x" %>
+<%@ Property Category="2.Class" Name="Framework"
+    Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v35_SP1" Optional="False"
+    Description="Which version of the .Net Framework is being generated for." %>
 
+<%@ Property Category="2.Class" Name="ExistingFile"
+    Type="CodeFileParser" Optional="True" %>
+
+<%@ Map Name="CSharpAlias" 
+    Src="System-CSharpAlias.csmap" Reverse="False" 
+    Description="Convert system data types to c# alias" %>
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-<%if(DynamicData){%>using System.ComponentModel.DataAnnotations;<%}%>
+<%if(Framework == FrameworkEnum.v35_SP1){%>using System.ComponentModel.DataAnnotations;<%}%>
 
 namespace <%= Database.EntityNamespace %>
 {
-	<%if(DynamicData && Type.GetType().ToString() != "Function"){%> [MetadataType(typeof(<%= Type.Name %>MetaData))]<%}%>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
     {
-        #region Extensibility Method Definitions
-        //partial void OnLoaded()
-        //{
-        //    
-        //}
+        // Comment /w Link Here
         
-        //partial void OnValidate()
-        //{
-        //    
-        //}
+<%      if(Framework == FrameworkEnum.v35_SP1) { %>
+        #region Metadata
         
-        //partial void OnCreated()
-        //{
-        //    
-        //}
+        private class Metadata
+        {
+            // Only Attributes in the class will be preserved.
+<%          AttributeSectionVisitor sourceAttributes = new AttributeSectionVisitor();
+            if(ExistingFile!=null)
+            {
+                ExistingFile.CompilationUnit.AcceptVisitor(sourceAttributes, String.Concat(Type.Name, "MetaData"));
+            } 
+            foreach(Column column in Type.Columns)
+            {
+                if(sourceAttributes.PropertyMap.ContainsKey(column.Name))
+                {
+                    foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[column.Name].Attributes)
+                    { %>
+            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
+<%                  }
+                } %>
+
+            public <%= CSharpAlias[column.Type] %> <%=column.Name%> { get; set; }
+<%          } %>
+        }
+        
         #endregion
+<%      } %>
     }
-	
-	<%if(DynamicData){%>
-	<%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> class <%= Type.Name %>MetaData
-	{
-<%		AttributeSectionVisitor sourceAttributes = new AttributeSectionVisitor();
-		if(ExistingFile!=null)
-		{
-			ExistingFile.CompilationUnit.AcceptVisitor(sourceAttributes, String.Concat(Type.Name, "MetaData"));
-		} 
-		foreach(Column column in Type.Columns)
-		{
-			if(sourceAttributes.PropertyMap.ContainsKey(column.Name))
-			{
-				foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[column.Name].Attributes)
-				{ %>
-		<%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
-<%   			}
-			} %>
-		public object <%=column.Name%> { get; set; }
-		
-<% 		} %>
-	}
-	<% } %>
 }
