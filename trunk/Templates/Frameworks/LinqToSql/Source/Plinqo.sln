@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Master.proj = ..\Master.proj
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsertClassMerge", "InsertClassMerge\InsertClassMerge.csproj", "{3FFDCBFA-77B9-4801-849F-10BF70B38B94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsertClassMergeStrategy", "InsertClassMergeStrategy\InsertClassMergeStrategy.csproj", "{3FFDCBFA-77B9-4801-849F-10BF70B38B94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
