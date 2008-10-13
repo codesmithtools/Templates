@@ -221,7 +221,7 @@
 			partialClass.ExistingFile.ParseMethodBodies = false;
 			partialClass.ExistingFile.Parse();
 		}
-		InsertClassMerge insertClassMerge = new InsertClassMerge("C#", String.Concat(className, "MetaData"));
+		InsertClassMerge insertClassMerge = new InsertClassMerge("C#", String.Concat(className, "MetaData"), true);
         partialClass.Type = type;
         Response.WriteLine(parentFileName);
         partialClass.RenderToFile(parentFileName, insertClassMerge);
