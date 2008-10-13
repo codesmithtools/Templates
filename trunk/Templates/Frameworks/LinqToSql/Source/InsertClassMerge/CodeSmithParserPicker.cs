@@ -53,7 +53,7 @@ namespace InsertClassMerge
 
                         _openFileDialog.DefaultExt = ".cs";
                         _openFileDialog.Title = "Select a Code file:";
-                        _openFileDialog.Filter = "C# files (*.cs)|*.cs|VB files (*.vb)|*.vb|All files (*.*)|*.*";
+                        _openFileDialog.Filter = "C# files (*.cs)|*.cs|VB files (*.vb)|*.vb";
                     }
                     DialogResult result = _openFileDialog.ShowDialog(editorControl);
                     if (result == DialogResult.OK)
