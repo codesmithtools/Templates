@@ -54,10 +54,6 @@
     OnChanged="OnContextNamespaceChanged"
     Description="The namespace to use for the context class files."%>
 
-<%@ Property Category="2.Class" Name="DisableRenaming"
-    Type="System.Boolean" Default="false" Optional="true"
-    Description="Disable the automatic renaming.of class, property and function names." %>
-	
 <%@ Property Category="2.Class" Name="IncludeDeleteOnNull"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Templates will generated DeleteOnNull Attribute for Associations." %>
@@ -109,7 +105,7 @@
         settings.EntityBase = EntityBase;
         settings.IncludeViews = IncludeViews;
         settings.IncludeFunctions = IncludeFunctions;
-        settings.DisableRenaming = DisableRenaming;
+        settings.DisableRenaming = NamingConventions.DisableRenaming;
 		settings.IncludeDeleteOnNull = IncludeDeleteOnNull;
 		settings.TableNaming = this.NamingConventions.TableNaming;
 		settings.EntityNaming = this.NamingConventions.EntityNaming;
