@@ -66,11 +66,11 @@ namespace InsertClassMerge
             StringBuilder mergeResult = new StringBuilder();
 
             // Add Pre-Class Text To Output
-            mergeResult.Append(sourceParser.GetSectionFromStart(CorrectedTypeStart(sourceVisitor.Type)));
+            mergeResult.Append(sourceParser.GetSectionFromStart(sourceVisitor.Type.StartLocation));
 
             // Add Merged Class to Output
             mergeResult.Append(templateParser.GetSection(
-                CorrectedTypeStart(templateVisitor.Type),
+                templateVisitor.Type.StartLocation,
                 templateVisitor.Type.EndLocation));
 
             // Add Post-Class Text To Output
