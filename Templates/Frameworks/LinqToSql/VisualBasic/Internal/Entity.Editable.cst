@@ -51,7 +51,7 @@ Namespace <%= Database.EntityNamespace %>
 	<%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Class <%= Type.Name %>MetaData
 		
 		<%For Each col As Column In Type.Columns %>
-		Public <%=col.Name%> As Object
+		Public <%=col.Member%> As Object
 		<% Next %>
 		
 	End Class
