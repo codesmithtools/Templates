@@ -84,12 +84,13 @@
         
         this.RegisterReference("System.Data.Linq");
         this.RegisterReference("System.Configuration");
-		this.RegisterReference("System.Web.DynamicData");
-        if(this.IncludeDataContract)
+		if(this.IncludeDataContract)
 		    this.RegisterReference("System.Runtime.Serialization");
 		if(this.Framework == FrameworkEnum.v35_SP1)
+		{
+			this.RegisterReference("System.Web.DynamicData");
 			this.RegisterReference("System.ComponentModel.DataAnnotations");
-
+		}
     }
         
     public void CreateEntityBaseClass(Database database)
@@ -97,6 +98,8 @@
 		EntityBaseGeneratedClass t = this.Create<EntityBaseGeneratedClass>();
         t.ClassNamespace = database.EntityNamespace;
         t.ClassName = database.EntityBase;
+		t.IncludeDataContract = IncludeDataContract;
+    	t.Framework = Framework;
 		
 		EntityBaseEditableClass p = this.Create<EntityBaseEditableClass>();
 		p.ClassNamespace = database.EntityNamespace;
@@ -158,7 +161,7 @@
         
         EntityEditableClass p = this.Create<EntityEditableClass>();
         p.Database = database;
-		p.Framework = this.Framework;
+		p.Framework = Framework;
 
         foreach(Table tableMap in database.Tables)
         {
@@ -213,6 +216,7 @@
 			partialClass.ExistingFile.ParseMethodBodies = false;
 			partialClass.ExistingFile.Parse();
 		}
+		
 		InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy("C#", String.Concat(className, "MetaData"), true);
         partialClass.Type = type;
         Response.WriteLine(parentFileName);
@@ -229,6 +233,7 @@
         {
             entityClass.TableName = string.Empty;
             entityClass.EntityBase = type.Name;
+			entityClass.Framework = Framework;
             CreateEntity(entityClass, partialClass, childType);
         }
     }

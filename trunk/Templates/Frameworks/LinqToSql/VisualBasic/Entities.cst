@@ -27,18 +27,13 @@
     Description="The full path to the mapping file." 
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
-<%@ Property Category="1.Mapping" Name="DynamicData" 
-    Type="System.Boolean" Default="true" Optional="False" 
-    Description="Generate dynamic data information for each Entity" 
-    Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
-	
+<%@ Property Category="2.Class" Name="Framework"
+	Type="FrameworkEnum" Default="v35_SP1" Optional="False"
+    Description="Which version of the .Net Framework is being generated for." %>
+
 <%@ Property Category="2.Class" Name="IncludeDataContract"
  	Type="System.Boolean" Default="True" Optional="False"
  	Description="Include WCF DataContract attributes." %>
-
-<%@ Property Category="2.Class" Name="Framework"
-	Type="FrameworkEnum" Default="v35_SP1" Optional="False"
-    Description="Include Serialization attributes and what kind." %>
 
 <%@ Register Name="DataContextGeneratedClass" 
     Template="Internal\DataContext.Generated.cst" 
@@ -90,22 +85,16 @@ Public Sub Generate()
 	
 	Me.RegisterReference("System.Data.Linq")
     Me.RegisterReference("System.Configuration")
-    If (IncludeDataContract) Then
+	If (IncludeDataContract) Then
         Me.RegisterReference("System.Runtime.Serialization")
 	End If
-	If(DynamicData)
-			Me.RegisterReference("System.Web.DynamicData")
-			Me.RegisterReference("System.ComponentModel.DataAnnotations")
+	If(Me.Framework = FrameworkEnum.v35_SP1)
+		Me.RegisterReference("System.Web.DynamicData")
+		Me.RegisterReference("System.ComponentModel.DataAnnotations")
 	End If
 End Sub
 
 Public Sub CreateEntityBaseClass(ByVal database As Database)
-    Dim parentFileName As String = database.EntityBase + ".vb"
-    parentFileName = Path.Combine(OutputDirectory, parentFileName)
-	
-	Dim fileName As String = database.EntityBase + ".Generated.vb"
-    fileName = Path.Combine(OutputDirectory, fileName)
-    
     Dim t As EntityBaseGeneratedClass = Me.Create(Of EntityBaseGeneratedClass)()
     t.ClassNamespace = database.EntityNamespace
     t.ClassName = database.EntityBase
@@ -116,13 +105,19 @@ Public Sub CreateEntityBaseClass(ByVal database As Database)
     p.ClassNamespace = database.EntityNamespace
     p.ClassName = database.EntityBase
 	
+	Dim parentFileName As String = database.EntityBase + ".vb"
+    parentFileName = Path.Combine(OutputDirectory, parentFileName)
+	
 	If Not File.Exists(parentFileName) Then
         Response.WriteLine(parentFileName)
         p.RenderToFile(parentFileName, True)
     End If
 	
-    t.RenderToFile(fileName,parentFileName, True)
+	Dim fileName As String = database.EntityBase + ".Generated.vb"
+    fileName = Path.Combine(OutputDirectory, fileName)
 	
+	Response.WriteLine(fileName)
+    t.RenderToFile(fileName,parentFileName, True)
 End Sub
 
 Public Sub CreateDataContextClass(ByVal database As Database)
@@ -158,11 +153,10 @@ Public Sub CreateEntityClasses(ByVal database As Database)
     t.Database = database
 	t.IncludeDataContract = IncludeDataContract
     t.Framework = Framework
-	t.DynamicData = DynamicData
     
     Dim p As EntityEditableClass = Me.Create(Of EntityEditableClass)()
     p.Database = database
-	p.DynamicData = DynamicData
+	p.Framework = Framework
     
     For Each tableMap As Table In database.Tables
         Dim watch As Stopwatch = Stopwatch.StartNew()
@@ -184,8 +178,7 @@ Public Sub CreateEntityClasses(ByVal database As Database)
             If Not generatedEntities.Contains(resultType.Name) Then
                 t.TableName = String.Empty
                 t.EntityBase = String.Empty
-				t.DynamicData = False
-				p.DynamicData = False
+				t.Framework = Framework
                 CreateEntity(t, p, resultType)
             End If
         Next
@@ -199,12 +192,17 @@ Public Sub CreateEntity(ByVal entityClass As EntityGeneratedClass, ByVal partial
     Dim parentFileName As String = className + ".vb"
     parentFileName = Path.Combine(OutputDirectory, parentFileName)
     
-    If Not File.Exists(parentFileName) Then
-        partialClass.Type = type
-        Response.WriteLine(parentFileName)
-        partialClass.RenderToFile(parentFileName, False)
-    End If
-    
+	If File.Exists(parentFileName) Then
+		partialClass.ExistingFile = CodeFileParser.Create(parentFileName)
+		partialClass.ExistingFile.ParseMethodBodies = False
+		partialClass.ExistingFile.Parse()
+	End If
+	
+	Dim insertClassMergeStrategy As InsertClassMergeStrategy = new InsertClassMergeStrategy("C#", String.Concat(className, "MetaData"), True)
+    partialClass.Type = type
+    Response.WriteLine(parentFileName)
+    partialClass.RenderToFile(parentFileName, insertClassMergeStrategy)
+	
     Dim fileName As String = className + ".Generated.vb"
     fileName = Path.Combine(OutputDirectory, fileName)
     
@@ -215,6 +213,7 @@ Public Sub CreateEntity(ByVal entityClass As EntityGeneratedClass, ByVal partial
     For Each childType As LinqToSqlShared.DbmlObjectModel.Type In type.SubTypes
         entityClass.TableName = String.Empty
         entityClass.EntityBase = type.Name
+		entityClass.Framework = Framework
         CreateEntity(entityClass, partialClass, childType)
     Next
 End Sub
