@@ -49,6 +49,7 @@ namespace <%= Database.EntityNamespace %>
         private class Metadata
         {
             // Only Attributes in the class will be preserved.
+			
 <%          AttributeSectionVisitor sourceAttributes = new AttributeSectionVisitor();
             if(ExistingFile!=null)
             {
@@ -63,8 +64,8 @@ namespace <%= Database.EntityNamespace %>
             <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
 <%                  }
                 } %>
-
             public <%= CSharpAlias[column.Type] %> <%=column.Member%> { get; set; }
+			
 <%          } %>
         }
         
