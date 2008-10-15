@@ -17,6 +17,10 @@
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 <%@ Import Namespace="Manager" %>
 
+<%@ Property Category="2.Class" Name="Framework"
+	Type="FrameworkEnum" Default="v35_SP1" Optional="False"
+    Description="Include Serialization attributes and what kind." %>
+	
 <%@ Property Category="4.Manager" Name="ManagerNamespace" 
     Type="System.String" Default="" Optional="True" 
     Description="The namespace to use for the generated manager class files."%>
@@ -83,8 +87,51 @@ namespace <%= ManagerNamespace %>
         /// </summary>
         static <%= EntityManager.ManagerName %>()
         {
-			RuleManager.AddShared<%= "<" + EntityManager.EntityName%>>(<%= DataManager.DataContextName%>.Model);
-            AddRules();
+			<%if(Framework == FrameworkEnum.v35_SP1) { %>
+			RuleManager.AddShared<%= "<" + EntityManager.EntityName%>>(typeof(<%= DataManager.DataContextName%>));
+            <% } else {
+				const string lengthFormat = "RuleManager.AddShared<{0}>(new LengthRule(\"{1}\", {2}));";
+				const string requiredFormat = "RuleManager.AddShared<{0}>(new RequiredRule(\"{1}\"));";
+				const string sqlDateFormat = "RuleManager.AddShared<{0}>(new RangeRule<DateTime>(\"{1}\", SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value));";
+				const string createDateFormat = "RuleManager.AddShared<{0}>(new NowRule(\"{1}\", EntityState.New));";
+				const string modifyDateFormat = "RuleManager.AddShared<{0}>(new NowRule(\"{1}\", EntityState.Dirty));";
+				
+				int indent = Response.IndentLevel;
+				Response.IndentLevel = 3;
+				foreach(Column c in Table.Type.Columns) { 
+					
+					if (!c.CanBeNull == true && c.IsDbGenerated == false)
+					{
+						if (c.Type.Contains("String"))
+						{
+							Response.WriteLine(string.Format(requiredFormat, 
+								EntityManager.EntityName, c.Member));
+						}
+						else if (c.Type.Contains("DateTime"))
+						{
+							if (c.Member.Contains("Create"))
+								Response.WriteLine(string.Format(createDateFormat, 
+									EntityManager.EntityName, c.Member));
+							else if (c.Member.Contains("Modify") || c.Member.Contains("Modified"))
+								Response.WriteLine(string.Format(modifyDateFormat, 
+									EntityManager.EntityName, c.Member));
+							else
+								Response.WriteLine(string.Format(sqlDateFormat, 
+									EntityManager.EntityName, c.Member));
+						}
+					}
+					
+					if (c.Type.Contains("String"))
+					{
+						int size = GetSize(c.DbType);
+						if (0 < size && size < 8000)
+							Response.WriteLine(string.Format(lengthFormat, 
+								EntityManager.EntityName, c.Member, size));    
+					}
+				} 
+				Response.IndentLevel = indent;
+				}%>
+			AddRules();
         }
 
         /// <summary>

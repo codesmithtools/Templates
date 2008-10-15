@@ -61,6 +61,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\IpAddress.cs" />
+    <Compile Include="Attributes\UserName.cs" />
+    <Compile Include="Attributes\GuidAttribute.cs" />
+    <Compile Include="Attributes\NowAttribute.cs" />
     <Compile Include="EntityKey.cs" />
     <Compile Include="DataManagerBase.cs" />
     <Compile Include="EntityManagerBase.cs" />

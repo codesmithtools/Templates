@@ -24,6 +24,10 @@
     Type="SchemaExplorer.DatabaseSchema"  Optional="False"
     Description="The source database for Linq to Sql." %>
 
+<%@ Property Category="2.Class" Name="Framework"
+	Type="FrameworkEnum" Default="v35_SP1" Optional="False"
+    Description="Include Serialization attributes and what kind." %>
+	
 <%@ Property Category="2.Mapping" Name="DbmlFile" 
     Type="System.String" Default="Database.dbml" Optional="False" 
     Description="The full path to the mapping file." 
@@ -101,6 +105,7 @@
         this.CopyPropertiesTo(t);
         t.DataManager = dataManager;
         t.Database = database;
+		t.Framework = Framework;
         
         EntityManagerEditableClass p = this.Create<EntityManagerEditableClass>();
         this.CopyPropertiesTo(p);

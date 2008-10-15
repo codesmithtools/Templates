@@ -6,7 +6,6 @@ Description: Used to generate the Global.asax file for a Dynamic Data project
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="" Inherits="" Debug="False" Description="" %>
 <%@ Property Name="ClassNamespace" Type="System.String" Default="" Optional="false" Description="Namspace of the generated class"%> 
 <%@ Property Name="InlineEditing" Type="System.Boolean" Default="false" Optional="false" Description="Default to Inline Grid Editing for Webpages" %>
-<%@ Property Name="ScaffoldAllTables" Type="System.Boolean" Default="true" Optional="false" Description="Add Scaffolding to all tables" %>
 <%@ Property Name="ContextNamespace" Type="System.String" Default="" Optional="false" Description="The namespace where the Data Context is found"%>
 <%@ Property Name="DataContextName" Type="System.String" Default="" Optional="False" Description="Name of the Data Context"%>
 <%@ Assembly Name="System.Data" %>
@@ -33,7 +32,7 @@ namespace <%=ClassNamespace%>
             MetaModel model = new MetaModel();
 
             
-            model.RegisterContext(typeof(<%=DataContextName%>DataContext), new ContextConfiguration() { ScaffoldAllTables = <%=ScaffoldAllTables.ToString().ToLower()%>});
+            model.RegisterContext(typeof(<%=DataContextName%>), new ContextConfiguration() { ScaffoldAllTables = false});
 
             <%if(!InlineEditing) { %>
             routes.Add(new DynamicDataRoute("{table}/{action}.aspx")

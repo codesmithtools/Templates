@@ -22,6 +22,10 @@
 <%@ Property Category="1.Database" Name="SourceDatabase" DeepLoad="true"
     Type="SchemaExplorer.DatabaseSchema"  Optional="False"
     Description="The source database for Linq to Sql." %>
+	
+<%@ Property Category="2.Class" Name="Framework"
+	Type="FrameworkEnum" Default="v35_SP1" Optional="False"
+    Description="Include Serialization attributes and what kind." %>
 
 <%@ Property Category="2.Mapping" Name="DbmlFile" 
     Type="System.String" Default="Database.dbml" Optional="False" 
@@ -93,6 +97,7 @@ Public Sub CreateEntityManagerClasses(ByVal database As Database, ByVal dataMana
     Me.CopyPropertiesTo(t)
     t.DataManager = dataManager
     t.Database = database
+	t.Framework = framework
     
     Dim p As EntityManagerEditableClass = Me.Create(Of EntityManagerEditableClass)()
     Me.CopyPropertiesTo(p)
