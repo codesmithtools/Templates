@@ -10,6 +10,7 @@ using CodeSmith.Data.Rules.Validation;
 using System.Data.SqlTypes;
 using CodeSmith.Data.Rules.Assign;
 using System.ComponentModel.DataAnnotations;
+using CodeSmith.Data.Attributes;
 
 namespace CodeSmith.Data.Rules
 {
@@ -67,33 +68,87 @@ namespace CodeSmith.Data.Rules
                 _sharedBusinessRules.Add(typeof(EntityType), new List<IRule> { rule });
         }
 
-        public static void AddShared<EntityType>(MetaModel model)
+        public static void AddShared<EntityType>(Type context)
         {
+            MetaModel model = null;
+            try
+            {
+                model = MetaModel.GetModel(context);
+            }
+            catch
+            {
+                model = new MetaModel();
+                model.RegisterContext(context);
+            }
+            
             foreach (MetaColumn col in model.GetTable(typeof(EntityType)).Columns)
             {
                 if (col.MaxLength > 0)
                     RuleManager.AddShared<EntityType>(new LengthRule(col.Name, col.MaxLength));
                 if (col.IsRequired)
-                    RuleManager.AddShared<EntityType>(new RequiredRule(col.Name));
-                if (col.Attributes[typeof(RegularExpressionAttribute)] != null)
-                    RuleManager.AddShared<EntityType>(new RegexRule(col.Name, ((RegularExpressionAttribute)col.Attributes[typeof(RegularExpressionAttribute)]).ErrorMessage,((RegularExpressionAttribute)col.Attributes[typeof(RegularExpressionAttribute)]).Pattern));
-                if (col.TypeCode == TypeCode.DateTime)
                 {
-                    if (col.Name.Contains("Create"))
-                        RuleManager.AddShared<EntityType>(new NowRule(col.Name, EntityState.New));
-                    else if (col.Name.Contains("Modify"))
-                        RuleManager.AddShared<EntityType>(new NowRule(col.Name, EntityState.Dirty));
+                    if(col.RequiredErrorMessage != null)
+                        RuleManager.AddShared<EntityType>(new RequiredRule(col.Name,col.RequiredErrorMessage));
                     else
-                        RuleManager.AddShared<EntityType>(new RangeRule<DateTime>(col.Name, SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value));
+                        RuleManager.AddShared<EntityType>(new RequiredRule(col.Name));
                 }
+                if (col.Attributes[typeof(RegularExpressionAttribute)] != null)
+                {
+                    if(((RegularExpressionAttribute)col.Attributes[typeof(RegularExpressionAttribute)]).ErrorMessage != null)
+                        RuleManager.AddShared<EntityType>(new RegexRule(col.Name, ((RegularExpressionAttribute)col.Attributes[typeof(RegularExpressionAttribute)]).ErrorMessage, ((RegularExpressionAttribute)col.Attributes[typeof(RegularExpressionAttribute)]).Pattern));
+                    else
+                        RuleManager.AddShared<EntityType>(new RegexRule(col.Name, ((RegularExpressionAttribute)col.Attributes[typeof(RegularExpressionAttribute)]).Pattern));
+                }
+                if (col.Attributes[typeof(NowAttribute)] != null)
+                {
+                    if (((NowAttribute)col.Attributes[typeof(NowAttribute)]).IsStateSet)
+                        RuleManager.AddShared<EntityType>(new NowRule(col.Name, ((NowAttribute)col.Attributes[typeof(NowAttribute)]).State));
+                    else
+                        RuleManager.AddShared<EntityType>(new NowRule(col.Name));
+                }
+                if (col.TypeCode == TypeCode.DateTime)
+                    RuleManager.AddShared<EntityType>(new RangeRule<DateTime>(col.Name, SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value));
                 if (col.Attributes[typeof(RangeAttribute)] != null)
                 {
-                    if (col.IsInteger)
-                        RuleManager.AddShared<EntityType>(new RangeRule<int>(col.Name, (int)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Minimum, (int)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Maximum));
-                    else if (col.IsFloatingPoint)
-                        RuleManager.AddShared<EntityType>(new RangeRule<Decimal>(col.Name, Convert.ToDecimal(((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Minimum), Convert.ToDecimal(((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Maximum)));
+                    if (((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).ErrorMessage != null)
+                    {
+                        if (col.IsInteger)
+                            RuleManager.AddShared<EntityType>(new RangeRule<int>(col.Name, ((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).ErrorMessage, (int)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Minimum, (int)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Maximum));
+                        else if (col.IsFloatingPoint)
+                            RuleManager.AddShared<EntityType>(new RangeRule<Decimal>(col.Name, ((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).ErrorMessage, Convert.ToDecimal(((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Minimum), Convert.ToDecimal(((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Maximum)));
+                        else
+                            RuleManager.AddShared<EntityType>(new RangeRule<DateTime>(col.Name, ((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).ErrorMessage, (DateTime)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Minimum, (DateTime)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Maximum));
+                    }
                     else
-                        RuleManager.AddShared<EntityType>(new RangeRule<DateTime>(col.Name, (DateTime)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Minimum, (DateTime)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Maximum));
+                    {
+                        if (col.IsInteger)
+                            RuleManager.AddShared<EntityType>(new RangeRule<int>(col.Name, (int)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Minimum, (int)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Maximum));
+                        else if (col.IsFloatingPoint)
+                            RuleManager.AddShared<EntityType>(new RangeRule<Decimal>(col.Name, Convert.ToDecimal(((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Minimum), Convert.ToDecimal(((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Maximum)));
+                        else
+                            RuleManager.AddShared<EntityType>(new RangeRule<DateTime>(col.Name, (DateTime)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Minimum, (DateTime)((RangeAttribute)col.Attributes[typeof(RangeAttribute)]).Maximum));
+                    }
+                }
+                if (col.Attributes[typeof(GuidAttribute)] != null)
+                {
+                    if (((GuidAttribute)col.Attributes[typeof(GuidAttribute)]).IsStateSet)
+                        RuleManager.AddShared<EntityType>(new GuidRule(col.Name, ((GuidAttribute)col.Attributes[typeof(GuidAttribute)]).State));
+                    else
+                        RuleManager.AddShared<EntityType>(new GuidRule(col.Name));
+                }
+                if (col.Attributes[typeof(UserName)] != null)
+                {
+                    if (((UserName)col.Attributes[typeof(UserName)]).IsStateSet)
+                        RuleManager.AddShared<EntityType>(new UseNamerRule(col.Name, ((UserName)col.Attributes[typeof(UserName)]).State));
+                    else
+                        RuleManager.AddShared<EntityType>(new UseNamerRule(col.Name));
+                }
+                if (col.Attributes[typeof(IpAddress)] != null)
+                {
+                    if(((IpAddress)col.Attributes[typeof(IpAddress)]).IsStateSet)
+                        RuleManager.AddShared<EntityType>(new IpAddressRule(col.Name, ((IpAddress)col.Attributes[typeof(IpAddress)]).State));
+                    else
+                        RuleManager.AddShared<EntityType>(new IpAddressRule(col.Name));
                 }
             }
         }
