@@ -100,23 +100,23 @@ namespace <%= Database.ContextNamespace %>
             return settings.ConnectionString;
         } 
         #endregion
-		
-		#region Model
+        
+        #region Model
         private static System.Web.DynamicData.MetaModel _model = null;
         public static System.Web.DynamicData.MetaModel Model
-		{
+        {
             get
-			{
+            {
                 if (_model == null) 
-				{
+                {
                     _model = new System.Web.DynamicData.MetaModel();
                     _model.RegisterContext(typeof(<%= Database.Class %>));
                 }
                 return _model;
             } 
         }
-		#endregion
-		
+        #endregion
+        
         #region Constructors
         /// <summary>
         /// Initializes the <see cref="<%= Database.Class %>"/> class.

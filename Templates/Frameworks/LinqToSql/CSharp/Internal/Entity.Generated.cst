@@ -20,7 +20,7 @@
 <%@ Property Category="1.Mapping" Name="TableName" 
     Type="System.String" Default="" Optional="True" 
     Description="The name of the table this class is mapped to." %>
-	
+    
 <%@ Property Category="2.Class" Name="EntityBase" 
     Type="System.String" Default="LinqEntityBase" Optional="True" 
     Description="The base class for the entity." %>
@@ -28,11 +28,11 @@
 <%@ Property Category="2.Class" Name="Framework"
     Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v35_SP1" Optional="False"
     Description="Which version of the .Net Framework is being generated for." %>
-	
+    
 <%@ Property Category="2.Class" Name="IncludeDataContract"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include WCF DataContract attributes." %>
-	
+    
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
     Description="Mapping to escape c# keywords" %>
@@ -73,8 +73,8 @@ namespace <%= Database.EntityNamespace %>
     [DataContract(<% if (Framework == FrameworkEnum.v35_SP1) { %>IsReference=true<% } %>)]
 <% } %>
 <% if (this.Framework == FrameworkEnum.v35_SP1) { %>
-	[ScaffoldTable(true)]
-	[MetadataType(typeof(Metadata))]
+    [ScaffoldTable(true)]
+    [MetadataType(typeof(Metadata))]
 <%}%>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
@@ -91,11 +91,11 @@ namespace <%= Database.EntityNamespace %>
         {
             OnCreated();
 <% if (IncludeDataContract) { %>
-			Initialize();
-		}
-		
-		private void Initialize()
-		{
+            Initialize();
+        }
+        
+        private void Initialize()
+        {
 <% } %>
 <% foreach(Association a in Type.EntityRefAssociations) { %>
             <%= a.Storage %> = default(EntityRef<<%= a.Type %>>);
@@ -110,7 +110,7 @@ namespace <%= Database.EntityNamespace %>
         
         #region Column Mapped Properties
 <% int DataMemberOrderId = 0;
-	foreach(Column column in Type.Columns) { 
+    foreach(Column column in Type.Columns) { 
     string dataType = column.Type;
     string fieldType = column.Type;
     string storageAssign = column.Storage;
@@ -186,16 +186,16 @@ namespace <%= Database.EntityNamespace %>
         #endregion
         
         #region Association Mapped Properties
-<%	bool needsOnSerialize = false;
-	if(IncludeDataContract)
-		foreach(Association a in Type.Associations)
-			if(a.IsForeignKey.HasValue && !a.IsForeignKey.Value)
-			{
-				needsOnSerialize = true;
-				break;
-			}
+<%    bool needsOnSerialize = false;
+    if(IncludeDataContract)
+        foreach(Association a in Type.Associations)
+            if(a.IsForeignKey.HasValue && !a.IsForeignKey.Value)
+            {
+                needsOnSerialize = true;
+                break;
+            }
 
-	foreach(Association a in Type.EntityRefAssociations) {
+    foreach(Association a in Type.EntityRefAssociations) {
         AssociationInfo info = GetAssociationInfo(a);
 %>
         
@@ -212,13 +212,13 @@ namespace <%= Database.EntityNamespace %>
         {
 <% if (needsOnSerialize) { %>
             get
-			{
-				if (serializing && !<%= a.Storage %>.HasLoadedOrAssignedValue)
-				{
-					return null;
-				}
-				return <%= a.Storage %>.Entity;
-			}
+            {
+                if (serializing && !<%= a.Storage %>.HasLoadedOrAssignedValue)
+                {
+                    return null;
+                }
+                return <%= a.Storage %>.Entity;
+            }
 <% } else { %>
             get { return <%= a.Storage %>.Entity; }
 <% } %>
@@ -320,32 +320,32 @@ namespace <%= Database.EntityNamespace %>
         #endregion
         
 <% if (IncludeDataContract) { %>
-		#region Serialization
-		
+        #region Serialization
+        
 <% if(needsOnSerialize) { %>
-		private bool serializing;
-		
-		[OnSerializing()]
-		[EditorBrowsableAttribute(EditorBrowsableState.Never)]
-		public void OnSerializing(StreamingContext context) {
-			serializing = true;
-		}
-		
-		[OnSerialized()]
-		[EditorBrowsableAttribute(EditorBrowsableState.Never)]
-		public void OnSerialized(StreamingContext context) {
-			serializing = false;
-		}
-		
-<% } %>		
-		[OnDeserializing()]
-		[EditorBrowsableAttribute(EditorBrowsableState.Never)]
-		public void OnDeserializing(StreamingContext context) {
-			Initialize();
-		}
-		
-		#endregion
-		
+        private bool serializing;
+        
+        [OnSerializing()]
+        [EditorBrowsableAttribute(EditorBrowsableState.Never)]
+        public void OnSerializing(StreamingContext context) {
+            serializing = true;
+        }
+        
+        [OnSerialized()]
+        [EditorBrowsableAttribute(EditorBrowsableState.Never)]
+        public void OnSerialized(StreamingContext context) {
+            serializing = false;
+        }
+        
+<% } %>        
+        [OnDeserializing()]
+        [EditorBrowsableAttribute(EditorBrowsableState.Never)]
+        public void OnDeserializing(StreamingContext context) {
+            Initialize();
+        }
+        
+        #endregion
+        
 <% } %>
     }
 }

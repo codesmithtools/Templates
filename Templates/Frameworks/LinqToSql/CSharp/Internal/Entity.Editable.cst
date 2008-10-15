@@ -38,10 +38,10 @@ namespace <%= Database.EntityNamespace %>
 {
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
     {
-		// For more information about the features contained in this class, please visit our GoogleCode Wiki at...
-		// http://code.google.com/p/codesmith/wiki/PLINQO
-		// Also, you can watch our Video Tutorials at...
-		// http://community.codesmithtools.com/
+        // For more information about the features contained in this class, please visit our GoogleCode Wiki at...
+        // http://code.google.com/p/codesmith/wiki/PLINQO
+        // Also, you can watch our Video Tutorials at...
+        // http://community.codesmithtools.com/
         
 <%      if(Framework == FrameworkEnum.v35_SP1) { %>
         #region Metadata
@@ -49,7 +49,7 @@ namespace <%= Database.EntityNamespace %>
         private class Metadata
         {
             // Only Attributes in the class will be preserved.
-			
+            
 <%          AttributeSectionVisitor sourceAttributes = new AttributeSectionVisitor();
             if(ExistingFile!=null)
             {
@@ -65,7 +65,7 @@ namespace <%= Database.EntityNamespace %>
 <%                  }
                 } %>
             public <%= CSharpAlias[column.Type] %> <%=column.Member%> { get; set; }
-			
+            
 <%          } %>
         }
         

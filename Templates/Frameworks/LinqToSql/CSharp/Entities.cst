@@ -30,11 +30,11 @@
 <%@ Property Category="2.Class" Name="Framework"
     Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v35_SP1" Optional="False"
     Description="Which version of the .Net Framework is being generated for." %>
-	
+    
 <%@ Property Category="2.Class" Name="IncludeDataContract"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include WCF DataContract attributes." %>
-	
+    
 <%@ Register Name="DataContextGeneratedClass" 
     Template="Internal\DataContext.Generated.cst" 
     MergeProperties="False" %>
@@ -84,28 +84,28 @@
         
         this.RegisterReference("System.Data.Linq");
         this.RegisterReference("System.Configuration");
-		if(this.IncludeDataContract)
-		    this.RegisterReference("System.Runtime.Serialization");
-		if(this.Framework == FrameworkEnum.v35_SP1)
-		{
-			this.RegisterReference("System.Web.DynamicData");
-			this.RegisterReference("System.ComponentModel.DataAnnotations");
-		}
+        if(this.IncludeDataContract)
+            this.RegisterReference("System.Runtime.Serialization");
+        if(this.Framework == FrameworkEnum.v35_SP1)
+        {
+            this.RegisterReference("System.Web.DynamicData");
+            this.RegisterReference("System.ComponentModel.DataAnnotations");
+        }
     }
         
     public void CreateEntityBaseClass(Database database)
     {
-		EntityBaseGeneratedClass t = this.Create<EntityBaseGeneratedClass>();
+        EntityBaseGeneratedClass t = this.Create<EntityBaseGeneratedClass>();
         t.ClassNamespace = database.EntityNamespace;
         t.ClassName = database.EntityBase;
-		t.IncludeDataContract = IncludeDataContract;
-    	t.Framework = Framework;
-		
-		EntityBaseEditableClass p = this.Create<EntityBaseEditableClass>();
-		p.ClassNamespace = database.EntityNamespace;
+        t.IncludeDataContract = IncludeDataContract;
+        t.Framework = Framework;
+        
+        EntityBaseEditableClass p = this.Create<EntityBaseEditableClass>();
+        p.ClassNamespace = database.EntityNamespace;
         p.ClassName = database.EntityBase;
-		
-		string parentFileName = database.EntityBase + ".cs";
+        
+        string parentFileName = database.EntityBase + ".cs";
         parentFileName = Path.Combine(OutputDirectory, parentFileName);
 
         if (!File.Exists(parentFileName))
@@ -113,8 +113,8 @@
             Response.WriteLine(parentFileName);
             p.RenderToFile(parentFileName, false);
         }
-		
-		string fileName = database.EntityBase + ".Generated.cs";
+        
+        string fileName = database.EntityBase + ".Generated.cs";
         fileName = Path.Combine(OutputDirectory, fileName);
         
         Response.WriteLine(fileName);
@@ -157,11 +157,11 @@
         EntityGeneratedClass t = this.Create<EntityGeneratedClass>();
         t.Database = database;
         t.IncludeDataContract = this.IncludeDataContract;
-		t.Framework = this.Framework;
+        t.Framework = this.Framework;
         
         EntityEditableClass p = this.Create<EntityEditableClass>();
         p.Database = database;
-		p.Framework = Framework;
+        p.Framework = Framework;
 
         foreach(Table tableMap in database.Tables)
         {
@@ -192,7 +192,7 @@
                 {
                     t.TableName = string.Empty;
                     t.EntityBase = string.Empty;
-					t.Framework = this.Framework;
+                    t.Framework = this.Framework;
                     CreateEntity(t, p, resultType);
                 }
             }
@@ -210,14 +210,14 @@
         string parentFileName = className + ".cs";
         parentFileName = Path.Combine(OutputDirectory, parentFileName);
 
-		if (File.Exists(parentFileName))
+        if (File.Exists(parentFileName))
         {
-			partialClass.ExistingFile = CodeFileParser.Create(parentFileName);
-			partialClass.ExistingFile.ParseMethodBodies = false;
-			partialClass.ExistingFile.Parse();
-		}
-		
-		InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy("C#", String.Concat(className, "MetaData"), true);
+            partialClass.ExistingFile = CodeFileParser.Create(parentFileName);
+            partialClass.ExistingFile.ParseMethodBodies = false;
+            partialClass.ExistingFile.Parse();
+        }
+        
+        InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy("C#", String.Concat(className, "MetaData"), true);
         partialClass.Type = type;
         Response.WriteLine(parentFileName);
         partialClass.RenderToFile(parentFileName, insertClassMergeStrategy);
@@ -233,7 +233,7 @@
         {
             entityClass.TableName = string.Empty;
             entityClass.EntityBase = type.Name;
-			entityClass.Framework = Framework;
+            entityClass.Framework = Framework;
             CreateEntity(entityClass, partialClass, childType);
         }
     }
