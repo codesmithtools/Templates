@@ -151,7 +151,7 @@ Namespace <%= ManagerNamespace %>
         ''' </summary>
         Protected ReadOnly Property Entity As Table(Of <%= EntityManager.EntityName %>)
             Get 
-				return Manager.Context.<%= EntityManager.EntityName %>
+				return Manager.Context.<%= EntityManager.PropertyName %>
 			End Get
         End Property
         

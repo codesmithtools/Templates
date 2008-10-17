@@ -156,7 +156,7 @@ namespace <%= ManagerNamespace %>
         /// </summary>
         protected Table<<%= EntityManager.EntityName %>> Entity
         {
-            get { return Manager.Context.<%= EntityManager.EntityName %>; }
+            get { return Manager.Context.<%= EntityManager.PropertyName %>; }
         }
         
 <% foreach(ManagerMethod method in EntityManager.Methods) { 
