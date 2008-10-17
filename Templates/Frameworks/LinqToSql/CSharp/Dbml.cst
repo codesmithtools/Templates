@@ -112,9 +112,11 @@
         settings.AssociationNaming = this.NamingConventions.AssociationNaming;
         
         foreach(string clean in CleanExpression)
-            settings.CleanExpressions.Add(new Regex(clean));
+            if (!string.IsNullOrEmpty(clean))
+                settings.CleanExpressions.Add(new Regex(clean));
         foreach(string ignore in IgnoreList)
-            settings.IgnoreExpressions.Add(new Regex(ignore));
+            if (!string.IsNullOrEmpty(ignore))
+                settings.IgnoreExpressions.Add(new Regex(ignore));
         
         DbmlGenerator generator = new DbmlGenerator(settings);
         generator.SchemaItemProcessed += new EventHandler<SchemaItemProcessedEventArgs>(OnSchemaItemProcessed);

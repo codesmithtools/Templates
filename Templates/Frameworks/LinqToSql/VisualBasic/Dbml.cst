@@ -130,10 +130,14 @@
 	settings.AssociationNaming = NamingConventions.AssociationNaming
     
     For Each clean As String In CleanExpression
-        settings.CleanExpressions.Add(New Regex(clean))
+        If Not String.IsNullOrEmpty(clean)
+            settings.CleanExpressions.Add(New Regex(clean))
+        End If
     Next
     For Each ignore As String In IgnoreList
-        settings.IgnoreExpressions.Add(New Regex(ignore))
+        If Not String.IsNullOrEmpty(ignore)
+            settings.IgnoreExpressions.Add(New Regex(ignore))
+        End If
     Next
     
     Dim generator As New DbmlGenerator(settings)
