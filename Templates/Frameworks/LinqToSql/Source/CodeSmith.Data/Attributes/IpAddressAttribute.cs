@@ -8,14 +8,14 @@ using CodeSmith.Data.Rules;
 namespace CodeSmith.Data.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple= false)]
-    sealed public class IpAddress : ValidationAttribute
+    sealed public class IpAddressAttribute : ValidationAttribute
     {
-        public IpAddress()
+        public IpAddressAttribute()
         {
             IsStateSet = false;
         }
 
-        public IpAddress(EntityState state)
+        public IpAddressAttribute(EntityState state)
         {
             State = state;
             IsStateSet = true;
