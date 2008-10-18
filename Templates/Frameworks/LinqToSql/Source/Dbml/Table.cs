@@ -1,5 +1,8 @@
+using System.Diagnostics;
+
 namespace LinqToSqlShared.DbmlObjectModel
 {
+    [DebuggerDisplay("Name = {Name}")]
     public class Table : Node
     {
         private string name;

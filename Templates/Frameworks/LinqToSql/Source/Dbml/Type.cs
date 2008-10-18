@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace LinqToSqlShared.DbmlObjectModel
 {
+    [DebuggerDisplay("Name = {Name}")]
     public class Type : Node
     {
         private readonly AssociationCollection associations;
