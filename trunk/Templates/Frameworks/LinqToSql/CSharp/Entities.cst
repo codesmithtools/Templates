@@ -217,7 +217,7 @@
             partialClass.ExistingFile.Parse();
         }
         
-        InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy("C#", String.Concat(className, "MetaData"), true);
+        InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy("C#", "Metadata", true);
         partialClass.Type = type;
         Response.WriteLine(parentFileName);
         partialClass.RenderToFile(parentFileName, insertClassMergeStrategy);

@@ -8,15 +8,15 @@ using CodeSmith.Data.Rules;
 namespace CodeSmith.Data.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple= false)]
-    sealed public class UserName : ValidationAttribute
+    sealed public class UserNameAttribute : ValidationAttribute
     {
 
-        public UserName()
+        public UserNameAttribute()
         {
             IsStateSet = false;
         }
 
-        public UserName(EntityState state)
+        public UserNameAttribute(EntityState state)
         {
             State = state;
             IsStateSet = true;
