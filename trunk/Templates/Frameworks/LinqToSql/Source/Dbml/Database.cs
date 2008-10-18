@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace LinqToSqlShared.DbmlObjectModel
 {
+    [DebuggerDisplay("Name = {Name}, Class = {Class}")]
     public class Database : Node
     {
         private readonly FunctionCollection functions = new FunctionCollection();
