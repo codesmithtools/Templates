@@ -7,6 +7,7 @@
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
 
 <%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 
@@ -32,7 +33,11 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-<%if(Framework == FrameworkEnum.v35_SP1){%>using System.ComponentModel.DataAnnotations;<%}%>
+<%if(Framework == FrameworkEnum.v35_SP1){%>
+using System.ComponentModel.DataAnnotations;
+using CodeSmith.Data.Attributes;
+using CodeSmith.Data.Rules;
+<%}%>
 
 namespace <%= Database.EntityNamespace %>
 {
@@ -57,19 +62,75 @@ namespace <%= Database.EntityNamespace %>
             } 
             foreach(Column column in Type.Columns)
             {
-                if(sourceAttributes.PropertyMap.ContainsKey(column.Name))
+                if(sourceAttributes.PropertyMap.ContainsKey(column.Member))
                 {
                     foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[column.Name].Attributes)
-                    { %>
+                    {
+%>
             <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
-<%                  }
-                } %>
+<%                  } // for each attribute
+                } // if property
+                else 
+                {
+                    if (!column.CanBeNull == true && column.IsDbGenerated == false)
+                    {
+                        if (column.Type.Contains("String"))
+                        {
+                            Response.WriteLine("            [Required]");
+                        }
+                        else if (column.Type.Contains("DateTime"))
+                        {
+                            if (column.Member.Contains("Create"))
+                                Response.WriteLine("            [Now(EntityState.New)]");
+                            else if (column.Member.Contains("Modify") || column.Member.Contains("Modified"))
+                                Response.WriteLine("            [Now(EntityState.Dirty)]");
+                        }
+                    }
+                    
+                    if (column.Type.Contains("String"))
+                    {
+                        int size = GetSize(column.DbType);
+                        if (0 < size && size < 8000)
+                            Response.WriteLine(string.Format("            [StringLength({0})]", size));
+                        
+                        if (size > 1000 || size == -1)
+                            Response.WriteLine("            [DataType(DataType.MultilineText)]");
+                        else if (column.Member.Contains("Email"))
+                            Response.WriteLine("            [DataType(DataType.EmailAddress)]");
+                        else if (column.Member.Contains("Url") || column.Member.Contains("Uri"))
+                            Response.WriteLine("            [DataType(DataType.Url)]");
+                        else if (column.Member.Contains("Phone"))
+                            Response.WriteLine("            [DataType(DataType.PhoneNumber)]");
+                        else if (column.Member.Contains("Password"))
+                            Response.WriteLine("            [DataType(DataType.Password)]");
+                        else if (column.Member.Contains("Html"))
+                            Response.WriteLine("            [DataType(DataType.Html)]");
+                    }
+                }
+%>
             public <%= CSharpAlias[column.Type] %> <%=column.Member%> { get; set; }
             
-<%          } %>
+<%          } // for each column %>
         }
         
         #endregion
 <%      } %>
     }
 }
+
+<script runat="template">
+    private static readonly Regex _sizeRegex = new Regex(@"(?<Size>\d+)", RegexOptions.Compiled);
+    
+    public int GetSize(string s)
+    {
+        int size = 0;
+        
+        Match m = _sizeRegex.Match(s);
+        if (!m.Success)
+            return size;
+        
+        string temp = m.Groups["Size"].Value;
+        int.TryParse(temp, out size);
+        return size;            
+    }
+</script>
