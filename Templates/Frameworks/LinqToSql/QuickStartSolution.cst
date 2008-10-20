@@ -1,0 +1,68 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." %>
+<%@ Property Name="VisualStudioVersion" Type="VisualStudioVersionEnum" Optional="False" Category="Solution" Description="" %>
+<%@ Property Name="Projects" Type="List<SolutionItem>" Optional="False" Category="Projects" Description="" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+
+Microsoft Visual Studio Solution File, Format Version 10.00
+<% switch(VisualStudioVersion)
+{
+	case VisualStudioVersionEnum.VS08: %>
+# Visual Studio 2008
+<%		break;
+	case VisualStudioVersionEnum.VS05: %>
+# Visual Studio 2005
+<%		break;
+}
+Guid solutionGuid = Guid.NewGuid();
+foreach(SolutionItem solutionItem in Projects) { %>
+Project("{<%= solutionGuid %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Directory %>", "{<%= solutionItem.Guid %>}"
+EndProject
+<% } %>
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+<% foreach(SolutionItem solutionItem in Projects) { %>
+		{<%= solutionItem.Guid %>}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{<%= solutionItem.Guid %>}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{<%= solutionItem.Guid %>}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{<%= solutionItem.Guid %>}.Release|Any CPU.Build.0 = Release|Any CPU
+<% } %>
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
+
+<script runat="template">
+public enum VisualStudioVersionEnum
+{
+	VS08,
+	VS05
+}
+public class SolutionItem
+{
+	private string _name;
+	public string Name
+	{
+		get { return _name; }
+		set { _name = value; }
+	}
+	
+	private string _directory;
+	public string Directory
+	{
+		get { return _directory; }
+		set { _directory = value; }
+	}
+	
+	private Guid _guid;
+	public Guid Guid
+	{
+		get { return _guid; }
+		set { _guid = value; }
+	}
+}
+</script>
