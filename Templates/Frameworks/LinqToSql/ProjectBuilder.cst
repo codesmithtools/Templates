@@ -5,8 +5,8 @@ Description: Used to Quick Start Visual Studio Projects
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." %>
 <%@ Assembly Name="System" %>
-<%@ Assembly Name="ICSharpCode.SharpZipLib" Path="C:\Users\Reggie\Documents\SharpZipLib_0855_Bin\net-20" %>
-<%@ Assembly Name="QuickStartUtils" Path="C:\Users\Reggie\Documents\Visual Studio 2008\Projects\QuickStartUtils\bin\Debug"%>
+<%@ Assembly Name="ICSharpCode.SharpZipLib" Path="Common" %>
+<%@ Assembly Name="QuickStartUtils" Path="Common"%>
 <%@ Import Namespace="ICSharpCode.SharpZipLib.Zip" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="QuickStartUtils" %>
