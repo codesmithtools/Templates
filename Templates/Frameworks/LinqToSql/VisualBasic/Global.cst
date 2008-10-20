@@ -1,0 +1,39 @@
+<%-- 
+Name:
+Author: 
+Description: 
+--%>
+<%@ CodeTemplate Language="VB" TargetLanguage="Text" OutputType="None" Debug="False" Description="Generates the Global Parent and Child files for Dynamic Data" %>
+<%@ Property Name="ClassNamespace" Type="System.String" Default="" Optional="false" Description="Namspace of the generated class"%> 
+<%@ Property Name="InlineEditing" Type="System.Boolean" Default="false" Optional="false" Description="Default to Inline Grid Editing for Webpages" %>
+<%@ Property Name="ContextNamespace" Type="System.String" Default="" Optional="false" Description="The namespace where the Data Context is found"%>
+<%@ Property Name="DataContextName" Type="System.String" Default="" Optional="False" Description="Name of the Data Context"%>
+
+<%@ Register Name="GlobalParentClass" 
+    Template="Internal\Global.Parent.cst"
+    MergeProperties="False" %>
+
+<%@ Register Name="GlobalChildClass" 
+    Template="Internal\Global.Child.cst"
+    MergeProperties="False" %>
+	
+<%
+	Dim t As GlobalChildClass = Me.Create(Of GlobalChildClass)()
+	t.ClassNamespace = ClassNamespace
+	t.InlineEditing = InlineEditing
+	t.ContextNamespace = ContextNamespace
+	t.DataContextName = DataContextName
+	
+	Dim p As GlobalParentClass = Me.Create(Of GlobalParentClass)()
+	p.ClassNamespace = ClassNamespace
+	
+	Dim parentFileName As String = "Global.asax"
+	
+    Response.WriteLine(parentFileName)
+    p.RenderToFile(parentFileName, true)
+	
+	Dim fileName As String = "Global.asax.cs"
+    
+    Response.WriteLine(fileName)
+    t.RenderToFile(fileName, parentFileName, true)
+%>

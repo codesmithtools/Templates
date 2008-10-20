@@ -1,0 +1,57 @@
+<%-- 
+Name: DynamicGlobal
+Author: Reggie Bradshaw
+Description: Used to generate the Global.asax file for a Dynamic Data project
+--%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Src="" Inherits="" Debug="False" Description="" %>
+<%@ Property Name="ClassNamespace" Type="System.String" Default="" Optional="false" Description="Namspace of the generated class"%> 
+<%@ Property Name="InlineEditing" Type="System.Boolean" Default="false" Optional="false" Description="Default to Inline Grid Editing for Webpages" %>
+<%@ Property Name="ContextNamespace" Type="System.String" Default="" Optional="false" Description="The namespace where the Data Context is found"%>
+<%@ Property Name="DataContextName" Type="System.String" Default="" Optional="False" Description="Name of the Data Context"%>
+Imports System
+Imports System.Collections
+Imports System.Configuration
+Imports System.Data
+Imports System.Linq
+Imports System.Web
+Imports System.Web.Security
+Imports System.Web.SessionState
+Imports System.Xml.Linq
+Imports System.Web.Routing
+Imports System.Web.DynamicData
+Imports <%=ContextNamespace%>
+
+Namespace <%=ClassNamespace%>
+
+    Public Class Global 
+		Inherits System.Web.HttpApplication
+    
+        Public Shared Sub RegisterRoutes(ByVal routes As RouteCollection)
+    		Dim model As New MetaModel
+            Dim model As MetaModel = New MetaModel()
+
+            model.RegisterContext(GetType(<%=DataContextName%>), New ContextConfiguration() With {.ScaffoldAllTables = False})
+
+            <%If Not InlineEditing Then %>
+            routes.Add(New DynamicDataRoute("{table}/{action}.aspx") With { _
+        		.Constraints = New RouteValueDictionary(New With {.Action = "List|Details|Edit|Insert"}), _
+        		.Model = model})
+			<% Else  %>
+            routes.Add(New DynamicDataRoute("{table}/ListDetails.aspx") With { _
+    		    .Action = PageAction.List, _
+    		    .ViewName = "ListDetails", _
+    		    .Model = model})
+
+    		routes.Add(New DynamicDataRoute("{table}/ListDetails.aspx") With { _
+    		    .Action = PageAction.Details, _
+    		    .ViewName = "ListDetails", _
+    		    .Model = model})
+			<% End If %>
+        End Sub
+
+        Private Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)
+    		RegisterRoutes(RouteTable.Routes)
+		End Sub
+
+    End Class
+End Namespace
