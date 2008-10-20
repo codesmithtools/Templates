@@ -198,7 +198,7 @@ Public Sub CreateEntity(ByVal entityClass As EntityGeneratedClass, ByVal partial
 		partialClass.ExistingFile.Parse()
 	End If
 	
-	Dim insertClassMergeStrategy As InsertClassMergeStrategy = new InsertClassMergeStrategy("C#", String.Concat(className, "MetaData"), True)
+	Dim insertClassMergeStrategy As InsertClassMergeStrategy = new InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.VBNet, "Metadata", true, true, InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent, type.Name)
     partialClass.Type = type
     Response.WriteLine(parentFileName)
     partialClass.RenderToFile(parentFileName, insertClassMergeStrategy)

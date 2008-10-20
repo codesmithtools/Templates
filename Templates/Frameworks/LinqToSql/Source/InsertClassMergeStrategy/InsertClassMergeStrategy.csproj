@@ -58,6 +58,7 @@
     <Compile Include="AttributeSectionVisitor.cs" />
     <Compile Include="CodeFileParser.cs" />
     <Compile Include="InsertClassMergeStrategy.cs" />
+    <Compile Include="ParentVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CodeFileParserPicker.cs" />
   </ItemGroup>

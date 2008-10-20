@@ -9,17 +9,20 @@ namespace CodeSmith.Engine
 {
     public class AttributeSectionVisitor : AbstractAstVisitor
     {
-        #region Declarations
-
-        private Dictionary<string, PropertyDeclaration> _propertyMap = new Dictionary<string, PropertyDeclaration>();
-
-        #endregion
-
         #region AbstractAstVisitor Overrides
 
+        public override object VisitNamespaceDeclaration(NamespaceDeclaration namespaceDeclaration, object data)
+        {
+            if (Namespace == null)
+            {
+                Namespace = namespaceDeclaration;
+            }
+
+            return base.VisitNamespaceDeclaration(namespaceDeclaration, data);
+        }
         public override object VisitTypeDeclaration(TypeDeclaration typeDeclaration, object data)
         {
-            if (typeDeclaration.Name.Equals(data))
+            if (Type == null && typeDeclaration.Name.Equals(data))
             {
                 Type = typeDeclaration;
             }
@@ -41,11 +44,25 @@ namespace CodeSmith.Engine
 
         #region Properties
 
-        public TypeDeclaration Type { get; set; }
+        private NamespaceDeclaration _namespace = null;
+        public NamespaceDeclaration Namespace
+        {
+            get { return _namespace; }
+            private set { _namespace = value; }
+        }
+
+        private TypeDeclaration _type = null;
+        public TypeDeclaration Type
+        {
+            get { return _type; }
+            private set { _type = value; }
+        }
+
+        private Dictionary<string, PropertyDeclaration> _propertyMap = new Dictionary<string, PropertyDeclaration>();
         public Dictionary<string, PropertyDeclaration> PropertyMap
         {
             get { return _propertyMap; }
-            set { _propertyMap = value; }
+            private set { _propertyMap = value; }
         }
 
         #endregion

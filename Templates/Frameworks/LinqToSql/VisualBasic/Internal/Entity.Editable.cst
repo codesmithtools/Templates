@@ -45,22 +45,27 @@ Namespace <%= Database.EntityNamespace %>
 		
 		<%If(Framework = FrameworkEnum.v35_SP1)Then%>
 		#Region "Metadata"
-
 		
 		Protected Friend Class Metadata
 			' Only Attributes in the class will be preserved.
 			
 <%          Dim sourceAttributes As AttributeSectionVisitor = new AttributeSectionVisitor()
             If ExistingFile IsNot Nothing Then
-                ExistingFile.CompilationUnit.AcceptVisitor(sourceAttributes, String.Concat(Type.Name, "MetaData"))
+                ExistingFile.CompilationUnit.AcceptVisitor(sourceAttributes, "Metadata")
             End If 
             For Each column As Column In Type.Columns
                 If sourceAttributes.PropertyMap.ContainsKey(column.Name) Then
                     For Each attributeSection As ICSharpCode.NRefactory.Ast.AttributeSection In sourceAttributes.PropertyMap(column.Name).Attributes %>
-			<%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
+			<%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %> _
 <%					Next
 				End If %>
-			Public <%=column.Name%> As <%= VBAlias(column.Type) %>
+			Public Property <%=column.Name%>() As Object
+				Get
+					Return Nothing
+				End Get
+				Set(ByVal value As Object)
+				End Set
+			End Property
 			
 <% 			Next %>
 		End Class

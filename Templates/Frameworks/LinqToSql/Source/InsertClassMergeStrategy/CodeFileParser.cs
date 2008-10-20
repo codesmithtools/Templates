@@ -109,6 +109,11 @@ namespace CodeSmith.Engine
 
         #region Methods
 
+        public Location SourceEnd
+        {
+            get { return new Location(SourceContents[SourceContents.Length - 1].Length + 1, SourceContents.Length); }
+        }
+
         public string GetSectionFromStart(Location end)
         {
             return GetSection(
@@ -120,7 +125,7 @@ namespace CodeSmith.Engine
         {
             return GetSection(
                 start,
-                new Location(SourceContents[SourceContents.Length - 1].Length + 1, SourceContents.Length));
+                SourceEnd);
         }
         public string GetSection(Location start, Location end)
         {

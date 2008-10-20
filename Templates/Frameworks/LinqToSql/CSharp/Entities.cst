@@ -212,12 +212,12 @@
 
         if (File.Exists(parentFileName))
         {
-            partialClass.ExistingFile = CodeFileParser.Create(parentFileName);
-            partialClass.ExistingFile.ParseMethodBodies = false;
-            partialClass.ExistingFile.Parse();
-        }
-        
-        InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy("C#", "Metadata", true);
+			partialClass.ExistingFile = CodeFileParser.Create(parentFileName);
+			partialClass.ExistingFile.ParseMethodBodies = false;
+			partialClass.ExistingFile.Parse();
+		}
+		
+		InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata", true, true, InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent, type.Name);
         partialClass.Type = type;
         Response.WriteLine(parentFileName);
         partialClass.RenderToFile(parentFileName, insertClassMergeStrategy);
