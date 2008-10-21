@@ -7,9 +7,11 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Assembly Name="System" %>
 <%@ Assembly Name="ICSharpCode.SharpZipLib" Path="Common" %>
 <%@ Assembly Name="QuickStartUtils" Path="Common"%>
+<%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="ICSharpCode.SharpZipLib.Zip" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="QuickStartUtils" %>
+<%@ Register Name="QuickStartSolution" Template="QuickStartSolution.cst" %>
 <%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="1.Project" Description="This is the path to the project location." %>
 <%@ Property Name="CodeSmithSamplesLocation" Type="System.String" Default="" Optional="True" Category="" Description="" %>
 <%@ Property Name="ProjectName" Type="System.String" Default="" Optional="False" Category="1.Project" Description="Name of the project to be generated." %>
@@ -17,8 +19,7 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Property Name="ProjectType" Type="QuickStartUtils.ProjectTypeEnum" Default="DynamicData" Optional="False" Category="" Description="Type of Project to be created" %>
 <%@ Property Name="DataContext" Type="System.String" Default="" Optional="False" Category="2.Data" Description="Name Space for the Data Project." %>
 <%@ Property Name="IncludePlinqoFiles" Type="System.Boolean" Default="False" Optional="False" Category="2.Data" Description="Include a copy of the LinqToSql Templates in the project directory" %>
-<%@ Property Name="DatabaseName" Type="System.String" Default="" Optional="False" Category="3.Database" Description="Name of the Database." %>
-<%@ Property Name="ConnectionString" Type="System.String" Default="" Optional="False" Category="3.Database" Description="Connection String for the Database." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Default="" Optional="False" Category="3.Database" Description="Source Database" %>
 
 <% CreateDirectoryStructure(); %>
 <script runat="template">
@@ -48,9 +49,9 @@ Description: Used to Quick Start Visual Studio Projects
         }
         
         //This is the location where web projects zip files should be found
-        string zipFileLocation = @".";
+        string zipFileLocation = @"Common";
 			
-		//zipFileLocation = zipFileLocation + @"\" + languageFolder;
+		zipFileLocation = zipFileLocation + @"\" + languageFolder;
         //A different zip file exists for each project type
         string fileName = null;
         switch (ProjectType)
@@ -73,23 +74,32 @@ Description: Used to Quick Start Visual Studio Projects
 		string vstemplate = QuickStartUtils.FindFileInDirectory(".vstemplate",Location);
         File.Delete(vstemplate);
         //Rename 
+		QuickStartSolution.SolutionItem solutionItem = new QuickStartSolution.SolutionItem();
+		solutionItem.Name = ProjectName;
+		solutionItem.Directory = Location;
+		solutionItem.Guid = Guid.NewGuid();
         File.Move(Location + @"\" + fileName + @".csproj", Location + @"\" + ProjectName + @"." +languageAppendage + @"proj");
         QuickStartUtils.ReplaceAllInDirectory(Location, @"\$safeprojectname\$", ProjectName);
-        QuickStartUtils.ReplaceAllInDirectory(Location, @"\$guid1\$", @"{" + Guid.NewGuid().ToString() + @"}");
+        QuickStartUtils.ReplaceAllInDirectory(Location, @"\$guid1\$", @"{" + solutionItem.Guid.ToString() + @"}");
         QuickStartUtils.ReplaceAllInDirectory(Location, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", " ");
         QuickStartUtils.ReplaceAllInDirectory(Location, @"\$endif\$", " ");
         QuickStartUtils.FindAndReplace(Location + @"\web.config", @"<connectionStrings/>",
             @"<connectionStrings>
-	            <add name=""" + DatabaseName + @"ConnectionString"" connectionString=""" + ConnectionString + @""" providerName=""System.Data.SqlClient""/>
+	            <add name=""" + SourceDatabase.Name + @"ConnectionString"" connectionString=""" + SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
               </connectionStrings>");
 
-
+		// Create Solution
+		QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
+		quickStartSolution.VisualStudioVersion = QuickStartSolution.VisualStudioVersionEnum.VS08;
+		quickStartSolution.SolutionItems = new List<QuickStartSolution.SolutionItem>();
+		quickStartSolution.SolutionItems.Add(solutionItem);
+		//quickStartSolution.RenderToFile(Location, true);
 
         File.Copy(@"C:\Users\Reggie\Documents\CodeSmith\Samples\v5.0\Templates\Frameworks\LinqToSql\Common\WebProject.csp", Location + @"\WebProject.csp");
-        QuickStartUtils.FindAndReplace(Location + @"\WebProject.csp", @"\$connectionString\$",ConnectionString);
-        QuickStartUtils.FindAndReplace(Location + @"\WebProject.csp", @"\$myDatabase\$", DatabaseName);
+        QuickStartUtils.FindAndReplace(Location + @"\WebProject.csp", @"\$connectionString\$", SourceDatabase.ConnectionString);
+        QuickStartUtils.FindAndReplace(Location + @"\WebProject.csp", @"\$myDatabase\$", SourceDatabase.Name);
         QuickStartUtils.FindAndReplace(Location + @"\WebProject.csp", @"\$myContextNamespace\$", DataContext);
-        QuickStartUtils.FindAndReplace(Location + @"\WebProject.csp", @"\$connectionString\$", ConnectionString);
+        QuickStartUtils.FindAndReplace(Location + @"\WebProject.csp", @"\$connectionString\$", SourceDatabase.ConnectionString);
 
 //            FindAndReplace(location + @"\" + projectName + @"." + languageAppendage + @"proj", projectInsertLocation,
 //                @"<ItemGroup>
@@ -102,7 +112,7 @@ Description: Used to Quick Start Visual Studio Projects
                 <Import Project=""$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.targets"" />");
 
         if(IncludePlinqoFiles)
-            QuickStartUtils.CopyDirectory(@"C:\Users\Reggie\Documents\CodeSmith\Samples\v5.0\Templates\Frameworks\LinqToSql",Location + @"\LinqToSql",0);
+            QuickStartUtils.CopyDirectory(@".",Location + @"\LinqToSql",0);
 
 
         Console.In.Read();
