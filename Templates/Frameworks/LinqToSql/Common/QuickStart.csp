@@ -4,7 +4,7 @@
     <add key="ConnectionString1" value="$connectionString$" />
   </variables>
   <propertySets>
-    <propertySet name="DBML" template="LinqToSql\$language$\Dbml.cst">
+    <propertySet name="DBML" template="$linqToSql$\$language$\Dbml.cst">
       <property name="IncludeViews">False</property>
       <property name="IncludeFunctions">False</property>
       <property name="IgnoreList">
@@ -33,17 +33,17 @@
       </property>
       <property name="EntityNamespace">$myContextNamespace$</property>
       <property name="ContextNamespace">$myContextNamespace$</property>
-      <property name="DbmlFile">$myDatabase$.dbml</property>
+      <property name="DbmlFile">App_Data\$myDatabase$.dbml</property>
     </propertySet>
-    <propertySet name="Entities" template="LinqToSql\$language$\Entities.cst">
-      <property name="DbmlFile">$myDatabase$.dbml</property>
+    <propertySet name="Entities" template="$linqToSql$\$language$\Entities.cst">
+      <property name="DbmlFile">App_Data\$myDatabase$.dbml</property>
       <property name="Framework">v35_SP1</property>
       <property name="IncludeDataContract">True</property>
       <property name="OutputDirectory">Entities</property>
     </propertySet>
-    <propertySet name="Managers" template="LinqToSql\$language$\Managers.cst">
+    <propertySet name="Managers" template="$linqToSql$\$language$\Managers.cst">
       <property name="Framework">v35_SP1</property>
-      <property name="DbmlFile">$myDatabase$.dbml</property>
+      <property name="DbmlFile">App_Data\$myDatabase$.dbml</property>
       <property name="ManagerDirectory">Managers</property>
       <property name="SourceDatabase">
         <connectionString>$(ConnectionString1)</connectionString>
@@ -53,7 +53,7 @@
       <property name="DataManagerName">$myDatabase$DataManager</property>
       <property name="ManagerNamespace">$myContextNamespace$</property>
     </propertySet>
-    <propertySet name="Global" template="LinqToSql\$language$\Global.cst">
+    <propertySet name="Global" template="$linqToSql$\$language$\Global.cst">
       <property name="InlineEditing">False</property>
       <property name="ClassNamespace">$safeprojectname$</property>
       <property name="ContextNamespace">$myContextNamespace$</property>

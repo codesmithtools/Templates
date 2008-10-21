@@ -27,6 +27,7 @@ Description: Used to Quick Start Visual Studio Projects
 
 	public void CreateDirectoryStructure()
     {   
+		
 		// Prep Directories
 		if(!Directory.Exists(Location))
 			Directory.CreateDirectory(Location);
@@ -40,6 +41,7 @@ Description: Used to Quick Start Visual Studio Projects
 		// Copy Plinqo Templates
 		if(IncludePlinqoFiles)
             QuickStartUtils.CopyDirectory(@"..\LinqToSql",Location + @"\LinqToSql",0);
+			
 		
 		// Create Solution
 		CreateSolution(solutionItems);
@@ -113,6 +115,10 @@ Description: Used to Quick Start Visual Studio Projects
 	}
 	private void CreateWebsiteProject_ReplaceVariables(string projectDirectoryAboslute, string projectGuid)
 	{
+		string linqToSqlPath = null; //Needs Normal Path here
+		if(this.IncludePlinqoFiles)
+			linqToSqlPath = @"..\LinqToSql";
+		
 		QuickStartUtils.ReplaceAllInDirectory(projectDirectoryAboslute, @"\$safeprojectname\$", ProjectName);
         QuickStartUtils.ReplaceAllInDirectory(projectDirectoryAboslute, @"\$guid1\$", @"{" + projectGuid + @"}");
         QuickStartUtils.ReplaceAllInDirectory(projectDirectoryAboslute, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", " ");
@@ -127,6 +133,7 @@ Description: Used to Quick Start Visual Studio Projects
     	QuickStartUtils.FindAndReplace(quickStartPath, @"\$myDatabase\$", SourceDatabase.Database.Name);
         QuickStartUtils.FindAndReplace(quickStartPath, @"\$myContextNamespace\$", DataContext);
 		QuickStartUtils.FindAndReplace(quickStartPath, @"\$language\$", LanguageFolder);
+		QuickStartUtils.FindAndReplace(quickStartPath, @"\$linqToSql\$", linqToSqlPath);
 		
 		UpdateProjectFile(projectDirectoryAboslute);
 	}
