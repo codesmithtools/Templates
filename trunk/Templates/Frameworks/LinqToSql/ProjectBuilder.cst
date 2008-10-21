@@ -33,11 +33,23 @@ Description: Used to Quick Start Visual Studio Projects
         
         //This is the location where web projects zip files should be found
         string zipFileLocation = String.Concat("Common\\", LanguageFolder);
-        
-        //QuickStartUtils.ExtractFile(zipFileLocation, Location);
-		//Unzip the corrct file
+			
+		zipFileLocation = zipFileLocation + @"\" + languageFolder;
+        //A different zip file exists for each project type
+        string fileName = null;
+        switch (ProjectType)
+        {
+            case QuickStartUtils.ProjectTypeEnum.DynamicData:
+                fileName = "DynamicDataLinqToSqlWebApplication";
+                break;
+            case QuickStartUtils.ProjectTypeEnum.MVC:
+                fileName = "MvcWebApplicationProjectTemplateP5";
+                break;
+        }
+
+		//Unzip the correct file
         FastZip fz = new FastZip();
-        fz.ExtractZip(zipFileLocation, Location, "");
+        fz.ExtractZip(zipFileLocation + @"\" + fileName + @"." +languageAppendage + @".zip", Location, "");
 		
         //Delete the vstempllate file b/c we will not be using it
 		string vstemplate = QuickStartUtils.FindFileInDirectory(".vstemplate",Location);
@@ -64,11 +76,10 @@ Description: Used to Quick Start Visual Studio Projects
 		quickStartSolution.SolutionItems.Add(solutionItem);
 		//quickStartSolution.RenderToFile(Location, true);
 
-        File.Copy(@"C:\Users\Reggie\Documents\CodeSmith\Samples\v5.0\Templates\Frameworks\LinqToSql\Common\WebProject.csp", Location + @"\WebProject.csp");
-        QuickStartUtils.FindAndReplace(Location + @"\WebProject.csp", @"\$connectionString\$", SourceDatabase.ConnectionString);
-        QuickStartUtils.FindAndReplace(Location + @"\WebProject.csp", @"\$myDatabase\$", SourceDatabase.Name);
-        QuickStartUtils.FindAndReplace(Location + @"\WebProject.csp", @"\$myContextNamespace\$", DataContext);
-        QuickStartUtils.FindAndReplace(Location + @"\WebProject.csp", @"\$connectionString\$", SourceDatabase.ConnectionString);
+        File.Copy(@".\Common\QuickStart.csp", Location + @"\QuickStart.csp");
+        QuickStartUtils.FindAndReplace(Location + @"\QuickStart.csp", @"\$connectionString\$",SourceDatabase.ConnectionString);
+        QuickStartUtils.FindAndReplace(Location + @"\QuickStart.csp", @"\$myDatabase\$", SourceDatabase.Database.Name);
+        QuickStartUtils.FindAndReplace(Location + @"\QuickStart.csp", @"\$myContextNamespace\$", DataContext);
 
 //            FindAndReplace(location + @"\" + projectName + @"." + languageAppendage + @"proj", projectInsertLocation,
 //                @"<ItemGroup>
