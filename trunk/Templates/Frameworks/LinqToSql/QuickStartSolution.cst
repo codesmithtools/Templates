@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." CompilerVersion="v3.5" %>
 <%@ Assembly Name="QuickStartUtils" Path="Common"%>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="QuickStartUtils" %>
@@ -54,19 +54,8 @@ public class SolutionItem
 		Language = language;
 	}
 	
-	private string _name;
-	public string Name
-	{
-		get { return _name; }
-		set { _name = value; }
-	}
-	
-	private string _path;
-	public string Path
-	{
-		get { return _path; }
-		set { _path = value; }
-	}
+	public string Name { get; set; }
+	public string Path { get; set; }
 	
 	private Guid _guid = Guid.NewGuid();
 	public Guid Guid
@@ -79,12 +68,7 @@ public class SolutionItem
 		get { return _guid.ToString().ToUpper(); }
 	}
 	
-	private QuickStartUtils.LanguageEnum _language;
-	public QuickStartUtils.LanguageEnum Language
-	{
-		get { return _language; }
-		set { _language = value; }
-	}
+	public QuickStartUtils.LanguageEnum Language { get; set; }
 	public string LanguageGuidString
 	{
 		get
