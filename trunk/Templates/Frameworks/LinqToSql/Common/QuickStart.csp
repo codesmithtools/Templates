@@ -4,7 +4,7 @@
     <add key="ConnectionString1" value="$connectionString$" />
   </variables>
   <propertySets>
-    <propertySet name="DBML" template="$myDatabase$.dbml">
+    <propertySet name="DBML" template="LinqToSql\$language$\Dbml.cst">
       <property name="IncludeViews">False</property>
       <property name="IncludeFunctions">False</property>
       <property name="IgnoreList">
@@ -35,13 +35,13 @@
       <property name="ContextNamespace">$myContextNamespace$</property>
       <property name="DbmlFile">$myDatabase$.dbml</property>
     </propertySet>
-    <propertySet name="Entities" template="LinqToSql\CSharp\Entities.cst">
+    <propertySet name="Entities" template="LinqToSql\$language$\Entities.cst">
       <property name="DbmlFile">$myDatabase$.dbml</property>
       <property name="Framework">v35_SP1</property>
       <property name="IncludeDataContract">True</property>
       <property name="OutputDirectory">Entities</property>
     </propertySet>
-    <propertySet name="Managers" template="LinqToSql\CSharp\Managers.cst">
+    <propertySet name="Managers" template="LinqToSql\$language$\Managers.cst">
       <property name="Framework">v35_SP1</property>
       <property name="DbmlFile">$myDatabase$.dbml</property>
       <property name="ManagerDirectory">Managers</property>
@@ -49,11 +49,11 @@
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
       </property>
-      <property name="DataContextFile">Entites\$myDatabase$DataContext.cs</property>
+      <property name="DataContextFile">Entities\$myDatabase$DataContext.cs</property>
       <property name="DataManagerName">$myDatabase$DataManager</property>
       <property name="ManagerNamespace">$myContextNamespace$</property>
     </propertySet>
-    <propertySet name="Global" template="LinqToSql\CSharp\Global.cst">
+    <propertySet name="Global" template="LinqToSql\$language$\Global.cst">
       <property name="InlineEditing">False</property>
       <property name="ClassNamespace">$safeprojectname$</property>
       <property name="ContextNamespace">$myContextNamespace$</property>
