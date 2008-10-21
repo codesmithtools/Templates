@@ -48,9 +48,9 @@ Description: Used to Quick Start Visual Studio Projects
         }
         
         //This is the location where web projects zip files should be found
-        string zipFileLocation = @"C:\Users\Reggie\Documents\CodeSmith\Samples\v5.0\Data";
+        string zipFileLocation = @".";
 			
-		zipFileLocation = zipFileLocation + @"\" + languageFolder;
+		//zipFileLocation = zipFileLocation + @"\" + languageFolder;
         //A different zip file exists for each project type
         string fileName = null;
         switch (ProjectType)
@@ -62,6 +62,7 @@ Description: Used to Quick Start Visual Studio Projects
                 fileName = "MvcWebApplicationProjectTemplateP5." + languageAppendage + @"zip";
                 break;
         }
+
 
         //QuickStartUtils.ExtractFile(zipFileLocation, Location);
 		//Unzip the corrct file
@@ -81,6 +82,8 @@ Description: Used to Quick Start Visual Studio Projects
             @"<connectionStrings>
 	            <add name=""" + DatabaseName + @"ConnectionString"" connectionString=""" + ConnectionString + @""" providerName=""System.Data.SqlClient""/>
               </connectionStrings>");
+
+
 
         File.Copy(@"C:\Users\Reggie\Documents\CodeSmith\Samples\v5.0\Templates\Frameworks\LinqToSql\Common\WebProject.csp", Location + @"\WebProject.csp");
         QuickStartUtils.FindAndReplace(Location + @"\WebProject.csp", @"\$connectionString\$",ConnectionString);
