@@ -24,16 +24,12 @@ Description: Used to Quick Start Visual Studio Projects
 <% CreateDirectoryStructure(); %>
 <script runat="template">
 	void CreateDirectoryStructure()
-    {
-        //The location in the csproj file directly below where we want to insert the csp include
-        string projectInsertLocation = @"<ItemGroup>
-                        <Folder Include=""App_Data\"" />
-                        <Folder Include=""DynamicData\CustomPages\"" />
-                    </ItemGroup>";
-        
+    {   
         //This is the location where web projects zip files should be found
         string zipFileLocation = String.Concat("Common\\", LanguageFolder);
 			
+		if(!Directory.Exists(Location))
+		 Directory.CreateDirectory(Location);
 		//Unzip the correct file
         FastZip fz = new FastZip();
         fz.ExtractZip(zipFileLocation + @"\" + FileName + @"." + LanguageAppendage + @".zip", Location, "");
@@ -41,7 +37,9 @@ Description: Used to Quick Start Visual Studio Projects
         //Delete the vstempllate file b/c we will not be using it
 		string vstemplate = QuickStartUtils.FindFileInDirectory(".vstemplate",Location);
         File.Delete(vstemplate);
-        //Rename 
+        
+		File.Copy(@".\Common\QuickStart.csp", Location + @"\QuickStart.csp");
+		
 		QuickStartSolution.SolutionItem solutionItem = new QuickStartSolution.SolutionItem();
 		solutionItem.Name = ProjectName;
 		solutionItem.Directory = Location;
@@ -63,26 +61,15 @@ Description: Used to Quick Start Visual Studio Projects
 		quickStartSolution.SolutionItems.Add(solutionItem);
 		quickStartSolution.RenderToFile(Path.Combine(Location, "Solution.sln"), true);
 
-        File.Copy(@".\Common\QuickStart.csp", Location + @"\QuickStart.csp");
+		if(IncludePlinqoFiles)
+            QuickStartUtils.CopyDirectory(@"..\LinqToSql",Location + @"\LinqToSql",0);
+			
         QuickStartUtils.FindAndReplace(Location + @"\QuickStart.csp", @"\$connectionString\$",SourceDatabase.ConnectionString);
         QuickStartUtils.FindAndReplace(Location + @"\QuickStart.csp", @"\$myDatabase\$", SourceDatabase.Database.Name);
         QuickStartUtils.FindAndReplace(Location + @"\QuickStart.csp", @"\$myContextNamespace\$", DataContext);
-
-//            FindAndReplace(location + @"\" + projectName + @"." + languageAppendage + @"proj", projectInsertLocation,
-//                @"<ItemGroup>
-//                    <Generate Include=""WebProject.csp"" />
-//                </ItemGroup>
-//                " + projectInsertLocation);
-
-        QuickStartUtils.FindAndReplace(Location + @"\" + ProjectName + @"." + LanguageAppendage + @"proj", @"</ProjectExtensions>",
-            @"</ProjectExtensions>
-                <Import Project=""$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.targets"" />");
-
-        if(IncludePlinqoFiles)
-            QuickStartUtils.CopyDirectory(@".",Location + @"\LinqToSql",0);
-
-
-        Console.In.Read();
+		QuickStartUtils.FindAndReplace(Location + @"\QuickStart.csp", @"\$language\$", LanguageFolder);
+		
+		UpdateProjectFile();
     }
 	
 	//Folder in vs web projects where the correct zip file is located
@@ -113,5 +100,21 @@ Description: Used to Quick Start Visual Studio Projects
 			}
 			return projectTypeFileName;
 		}
+	}
+	
+	void UpdateProjectFile()
+	{
+		//The location in the csproj file directly below where we want to insert the csp include
+        string projectInsertLocation = @"<Import Project=""\$\(MSBuildBinPath\)\\Microsoft\." + LanguageFolder + @"\.targets"" />";
+		string reinsertString = @"<Import Project=""$(MSBuildBinPath)\Microsoft." + LanguageFolder + @".targets"" />";
+        QuickStartUtils.FindAndReplace(Location + @"\" + ProjectName + @"." + LanguageAppendage + @"proj", projectInsertLocation,
+                @"<ItemGroup>
+                    <Generate Include=""QuickStart.csp"" />
+                </ItemGroup>
+                " + reinsertString);
+
+        QuickStartUtils.FindAndReplace(Location + @"\" + ProjectName + @"." + LanguageAppendage + @"proj", @"</Project>",
+            @"	<Import Project=""$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.targets"" />
+</Project>");
 	}
 </script>
