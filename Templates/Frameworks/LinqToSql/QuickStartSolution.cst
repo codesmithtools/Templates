@@ -1,6 +1,6 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." %>
 <%@ Property Name="VisualStudioVersion" Type="VisualStudioVersionEnum" Optional="False" Category="Solution" Description="" %>
-<%@ Property Name="Projects" Type="List<SolutionItem>" Optional="False" Category="Projects" Description="" %>
+<%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="Projects" Description="" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 
 Microsoft Visual Studio Solution File, Format Version 10.00
@@ -14,7 +14,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 <%		break;
 }
 Guid solutionGuid = Guid.NewGuid();
-foreach(SolutionItem solutionItem in Projects) { %>
+foreach(SolutionItem solutionItem in SolutionItems) { %>
 Project("{<%= solutionGuid %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Directory %>", "{<%= solutionItem.Guid %>}"
 EndProject
 <% } %>
@@ -24,7 +24,7 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-<% foreach(SolutionItem solutionItem in Projects) { %>
+<% foreach(SolutionItem solutionItem in SolutionItems) { %>
 		{<%= solutionItem.Guid %>}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{<%= solutionItem.Guid %>}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{<%= solutionItem.Guid %>}.Release|Any CPU.ActiveCfg = Release|Any CPU
