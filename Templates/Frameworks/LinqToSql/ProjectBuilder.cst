@@ -34,21 +34,9 @@ Description: Used to Quick Start Visual Studio Projects
         //This is the location where web projects zip files should be found
         string zipFileLocation = String.Concat("Common\\", LanguageFolder);
 			
-        //A different zip file exists for each project type
-        string fileName = null;
-        switch (ProjectType)
-        {
-            case QuickStartUtils.ProjectTypeEnum.DynamicData:
-                fileName = "DynamicDataLinqToSqlWebApplication";
-                break;
-            case QuickStartUtils.ProjectTypeEnum.MVC:
-                fileName = "MvcWebApplicationProjectTemplateP5";
-                break;
-        }
-
 		//Unzip the correct file
         FastZip fz = new FastZip();
-        fz.ExtractZip(zipFileLocation + @"\" + fileName + @"." + LanguageAppendage + @".zip", Location, "");
+        fz.ExtractZip(zipFileLocation + @"\" + FileName + @"." + LanguageAppendage + @".zip", Location, "");
 		
         //Delete the vstempllate file b/c we will not be using it
 		string vstemplate = QuickStartUtils.FindFileInDirectory(".vstemplate",Location);
@@ -73,7 +61,7 @@ Description: Used to Quick Start Visual Studio Projects
 		quickStartSolution.VisualStudioVersion = QuickStartSolution.VisualStudioVersionEnum.VS08;
 		quickStartSolution.SolutionItems = new List<QuickStartSolution.SolutionItem>();
 		quickStartSolution.SolutionItems.Add(solutionItem);
-		//quickStartSolution.RenderToFile(Location, true);
+		quickStartSolution.RenderToFile(Path.Combine(Location, "Solution.sln"), true);
 
         File.Copy(@".\Common\QuickStart.csp", Location + @"\QuickStart.csp");
         QuickStartUtils.FindAndReplace(Location + @"\QuickStart.csp", @"\$connectionString\$",SourceDatabase.ConnectionString);
