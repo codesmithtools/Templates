@@ -31,40 +31,9 @@ Description: Used to Quick Start Visual Studio Projects
                         <Folder Include=""DynamicData\CustomPages\"" />
                     </ItemGroup>";
         
-        //Folder in vs web projects where the correct zip file is located
-        string languageFolder = null;
-        //Some file names in the VS zip files hava an appendage that should be removed
-        string languageAppendage = null;
-
-        switch (Language)
-        {
-            case QuickStartUtils.LanguageEnum.CSharp:
-                languageFolder = "CSharp";
-                languageAppendage = "cs";
-                break;
-            case QuickStartUtils.LanguageEnum.VB:
-                languageFolder = "VisualBasic";
-                languageAppendage = "vb";
-                break;
-        }
-        
         //This is the location where web projects zip files should be found
-        string zipFileLocation = @"Common";
-			
-		zipFileLocation = zipFileLocation + @"\" + languageFolder;
-        //A different zip file exists for each project type
-        string fileName = null;
-        switch (ProjectType)
-        {
-            case QuickStartUtils.ProjectTypeEnum.DynamicData:
-                fileName = "DynamicDataLinqToSqlWebApplication." + languageAppendage + @".zip";
-                break;
-            case QuickStartUtils.ProjectTypeEnum.MVC:
-                fileName = "MvcWebApplicationProjectTemplateP5." + languageAppendage + @"zip";
-                break;
-        }
-
-
+        string zipFileLocation = String.Concat("Common\\", LanguageFolder);
+        
         //QuickStartUtils.ExtractFile(zipFileLocation, Location);
 		//Unzip the corrct file
         FastZip fz = new FastZip();
@@ -78,7 +47,7 @@ Description: Used to Quick Start Visual Studio Projects
 		solutionItem.Name = ProjectName;
 		solutionItem.Directory = Location;
 		solutionItem.Guid = Guid.NewGuid();
-        File.Move(Location + @"\" + fileName + @".csproj", Location + @"\" + ProjectName + @"." +languageAppendage + @"proj");
+        File.Move(Location + @"\" + FileName + @".csproj", Location + @"\" + ProjectName + @"." + LanguageAppendage + @"proj");
         QuickStartUtils.ReplaceAllInDirectory(Location, @"\$safeprojectname\$", ProjectName);
         QuickStartUtils.ReplaceAllInDirectory(Location, @"\$guid1\$", @"{" + solutionItem.Guid.ToString() + @"}");
         QuickStartUtils.ReplaceAllInDirectory(Location, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", " ");
@@ -107,7 +76,7 @@ Description: Used to Quick Start Visual Studio Projects
 //                </ItemGroup>
 //                " + projectInsertLocation);
 
-        QuickStartUtils.FindAndReplace(Location + @"\" + ProjectName + @"." + languageAppendage + @"proj", @"</ProjectExtensions>",
+        QuickStartUtils.FindAndReplace(Location + @"\" + ProjectName + @"." + LanguageAppendage + @"proj", @"</ProjectExtensions>",
             @"</ProjectExtensions>
                 <Import Project=""$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.targets"" />");
 
@@ -117,4 +86,34 @@ Description: Used to Quick Start Visual Studio Projects
 
         Console.In.Read();
     }
+	
+	//Folder in vs web projects where the correct zip file is located
+	protected string LanguageFolder
+	{
+		get { return (this.Language == QuickStartUtils.LanguageEnum.CSharp)	? "CSharp" : "VisualBasic"; }
+	}
+	//Some file names in the VS zip files hava an appendage that should be removed
+	protected string LanguageAppendage 
+	{
+		get { return (this.Language == QuickStartUtils.LanguageEnum.CSharp) ? "cs" : "vb"; }
+	}
+	//A different zip file exists for each project type
+	protected string FileName
+	{
+		get
+		{
+			string projectTypeFileName;
+			switch (ProjectType)
+			{
+				default:
+				case QuickStartUtils.ProjectTypeEnum.DynamicData:
+					projectTypeFileName = "DynamicDataLinqToSqlWebApplication";
+					break;
+				case QuickStartUtils.ProjectTypeEnum.MVC:
+					projectTypeFileName = "MvcWebApplicationProjectTemplateP5";
+					break;
+			}
+			return String.Format("{0}{1}.zip", projectTypeFileName,  LanguageAppendage);
+		}
+	}
 </script>
