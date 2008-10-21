@@ -12,6 +12,7 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="QuickStartUtils" %>
 <%@ Register Name="QuickStartSolution" Template="QuickStartSolution.cst" %>
+<%@ Property Name="VisualStudioVersion" Type="QuickStartSolution.VisualStudioVersionEnum" Optional="False" Category="1.Project" Description="Version of Visual Studio to Generate for." %>
 <%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="1.Project" Description="This is the path to the project location." %>
 <%@ Property Name="CodeSmithSamplesLocation" Type="System.String" Default="" Optional="True" Category="" Description="" %>
 <%@ Property Name="ProjectName" Type="System.String" Default="" Optional="False" Category="1.Project" Description="Name of the project to be generated." %>
@@ -23,54 +24,131 @@ Description: Used to Quick Start Visual Studio Projects
 
 <% CreateDirectoryStructure(); %>
 <script runat="template">
-	void CreateDirectoryStructure()
+
+	public void CreateDirectoryStructure()
     {   
-        //This is the location where web projects zip files should be found
-        string zipFileLocation = String.Concat("Common\\", LanguageFolder);
-			
+		// Prep Directories
 		if(!Directory.Exists(Location))
-		 Directory.CreateDirectory(Location);
-		//Unzip the correct file
+			Directory.CreateDirectory(Location);
+		
+		// Create SolutionItems
+		List<QuickStartSolution.SolutionItem> solutionItems = new List<QuickStartSolution.SolutionItem>();
+		
+		// Create Website Project
+		solutionItems.Add(CreateWebsiteProject());
+		
+		// Copy Plinqo Templates
+		if(IncludePlinqoFiles)
+            QuickStartUtils.CopyDirectory(@"..\LinqToSql",Location + @"\LinqToSql",0);
+		
+		// Create Solution
+		CreateSolution(solutionItems);
+    }
+	
+	private void CreateSolution(List<QuickStartSolution.SolutionItem> solutionItems)
+	{
+		QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
+		quickStartSolution.VisualStudioVersion = VisualStudioVersion;
+		quickStartSolution.SolutionItems = solutionItems;
+		
+		string filePathAboslute = Path.Combine(Location, String.Concat(ProjectName, ".sln"));
+		quickStartSolution.RenderToFile(filePathAboslute, true);
+	}
+	private void UnzipFile(string zipFileName, string targetDirectory, params string[] renameFiles)
+	{
+		// Unzip Files
         FastZip fz = new FastZip();
-        fz.ExtractZip(zipFileLocation + @"\" + FileName + @"." + LanguageAppendage + @".zip", Location, "");
+		string zipFilePath = Path.Combine(ZipFileFolder, zipFileName);
+        fz.ExtractZip(zipFilePath, targetDirectory, "");
 		
-        //Delete the vstempllate file b/c we will not be using it
-		string vstemplate = QuickStartUtils.FindFileInDirectory(".vstemplate",Location);
+		// Delete the vstempllate file b/c we will not be using it
+		string vstemplate = QuickStartUtils.FindFileInDirectory(".vstemplate", targetDirectory);
         File.Delete(vstemplate);
-        
-		File.Copy(@".\Common\QuickStart.csp", Location + @"\QuickStart.csp");
 		
-		QuickStartSolution.SolutionItem solutionItem = new QuickStartSolution.SolutionItem();
-		solutionItem.Name = ProjectName;
-		solutionItem.Directory = Location;
-		solutionItem.Guid = Guid.NewGuid();
-        File.Move(Location + @"\" + FileName + @".csproj", Location + @"\" + ProjectName + @"." + LanguageAppendage + @"proj");
-        QuickStartUtils.ReplaceAllInDirectory(Location, @"\$safeprojectname\$", ProjectName);
-        QuickStartUtils.ReplaceAllInDirectory(Location, @"\$guid1\$", @"{" + solutionItem.Guid.ToString() + @"}");
-        QuickStartUtils.ReplaceAllInDirectory(Location, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", " ");
-        QuickStartUtils.ReplaceAllInDirectory(Location, @"\$endif\$", " ");
-        QuickStartUtils.FindAndReplace(Location + @"\web.config", @"<connectionStrings/>",
+		// Rename Files
+		if(renameFiles.Length % 2 != 0)
+			throw new Exception("UnzipFile() needs an even number of params: SourceFile, DestinationFile");
+		for(int x=0; x<renameFiles.Length; x+=2)
+		{
+			string sourFile = Path.Combine(targetDirectory, renameFiles[x]);
+			string destFile = Path.Combine(targetDirectory, renameFiles[x+1]);
+			File.Move(sourFile, destFile);
+		}
+	}
+
+	#region CreateWebsiteProject
+	
+	private QuickStartSolution.SolutionItem CreateWebsiteProject()
+	{
+		// Prep
+		string projectFileName = String.Format("{0}.{1}proj", ProjectName, LanguageAppendage);
+		string projectDirectoryAboslute = Path.Combine(Location, ProjectName);
+		string projectPathRelative = Path.Combine(ProjectName, projectFileName);
+		string projectPathAboslute = Path.Combine(Location, projectPathRelative);
+		
+		// Create TargetDirectory
+		if(!Directory.Exists(projectDirectoryAboslute))
+			Directory.CreateDirectory(projectDirectoryAboslute);
+		
+		// Create SolutionItem
+		QuickStartSolution.SolutionItem solutionItem = new QuickStartSolution.SolutionItem(ProjectName, projectPathRelative, Language);
+		
+		// Get Files
+		CreateWebsiteProject_GetFiles(projectDirectoryAboslute, projectFileName);
+		
+		// Replace Variables In Files
+		CreateWebsiteProject_ReplaceVariables(projectDirectoryAboslute, solutionItem.GuidString);
+
+		// Return Solution Item
+		return solutionItem;
+	}
+	
+	private void CreateWebsiteProject_GetFiles(string projectDirectoryAboslute, string projectFileName)
+	{
+		string zipFilePath = String.Format("{0}.{1}.zip", FileName, LanguageAppendage);
+		string zipProjFileName = String.Format("{0}.{1}proj", FileName, LanguageAppendage);
+		UnzipFile(zipFilePath, projectDirectoryAboslute, zipProjFileName, projectFileName);
+		
+		File.Copy(@".\Common\QuickStart.csp", Path.Combine(projectDirectoryAboslute, "QuickStart.csp"));
+	}
+	private void CreateWebsiteProject_ReplaceVariables(string projectDirectoryAboslute, string projectGuid)
+	{
+		QuickStartUtils.ReplaceAllInDirectory(projectDirectoryAboslute, @"\$safeprojectname\$", ProjectName);
+        QuickStartUtils.ReplaceAllInDirectory(projectDirectoryAboslute, @"\$guid1\$", @"{" + projectGuid + @"}");
+        QuickStartUtils.ReplaceAllInDirectory(projectDirectoryAboslute, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", " ");
+        QuickStartUtils.ReplaceAllInDirectory(projectDirectoryAboslute, @"\$endif\$", " ");
+        QuickStartUtils.FindAndReplace(Path.Combine(projectDirectoryAboslute, "web.config"), @"<connectionStrings/>",
             @"<connectionStrings>
 	            <add name=""" + SourceDatabase.Name + @"ConnectionString"" connectionString=""" + SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
               </connectionStrings>");
-
-		// Create Solution
-		QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
-		quickStartSolution.VisualStudioVersion = QuickStartSolution.VisualStudioVersionEnum.VS08;
-		quickStartSolution.SolutionItems = new List<QuickStartSolution.SolutionItem>();
-		quickStartSolution.SolutionItems.Add(solutionItem);
-		quickStartSolution.RenderToFile(Path.Combine(Location, "Solution.sln"), true);
-
-		if(IncludePlinqoFiles)
-            QuickStartUtils.CopyDirectory(@"..\LinqToSql",Location + @"\LinqToSql",0);
 			
-        QuickStartUtils.FindAndReplace(Location + @"\QuickStart.csp", @"\$connectionString\$",SourceDatabase.ConnectionString);
-        QuickStartUtils.FindAndReplace(Location + @"\QuickStart.csp", @"\$myDatabase\$", SourceDatabase.Database.Name);
-        QuickStartUtils.FindAndReplace(Location + @"\QuickStart.csp", @"\$myContextNamespace\$", DataContext);
-		QuickStartUtils.FindAndReplace(Location + @"\QuickStart.csp", @"\$language\$", LanguageFolder);
+		string quickStartPath = Path.Combine(projectDirectoryAboslute, "QuickStart.csp");
+		QuickStartUtils.FindAndReplace(quickStartPath, @"\$connectionString\$",SourceDatabase.ConnectionString);
+    	QuickStartUtils.FindAndReplace(quickStartPath, @"\$myDatabase\$", SourceDatabase.Database.Name);
+        QuickStartUtils.FindAndReplace(quickStartPath, @"\$myContextNamespace\$", DataContext);
+		QuickStartUtils.FindAndReplace(quickStartPath, @"\$language\$", LanguageFolder);
 		
-		UpdateProjectFile();
-    }
+		UpdateProjectFile(projectDirectoryAboslute);
+	}
+	private void UpdateProjectFile(string projectDirectoryAboslute)
+	{
+		//The location in the csproj file directly below where we want to insert the csp include
+        string projectInsertLocation = @"<Import Project=""\$\(MSBuildBinPath\)\\Microsoft\." + LanguageFolder + @"\.targets"" />";
+		string reinsertString = @"<Import Project=""$(MSBuildBinPath)\Microsoft." + LanguageFolder + @".targets"" />";
+        QuickStartUtils.FindAndReplace(projectDirectoryAboslute + @"\" + ProjectName + @"." + LanguageAppendage + @"proj", projectInsertLocation,
+                @"<ItemGroup>
+                    <Generate Include=""QuickStart.csp"" />
+                </ItemGroup>
+                " + reinsertString);
+
+        QuickStartUtils.FindAndReplace(projectDirectoryAboslute + @"\" + ProjectName + @"." + LanguageAppendage + @"proj", @"</Project>",
+            @"	<Import Project=""$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.targets"" />
+				</Project>");
+	}
+	
+	#endregion
+	
+	#region Properties
 	
 	//Folder in vs web projects where the correct zip file is located
 	protected string LanguageFolder
@@ -101,20 +179,11 @@ Description: Used to Quick Start Visual Studio Projects
 			return projectTypeFileName;
 		}
 	}
-	
-	void UpdateProjectFile()
+	protected string ZipFileFolder
 	{
-		//The location in the csproj file directly below where we want to insert the csp include
-        string projectInsertLocation = @"<Import Project=""\$\(MSBuildBinPath\)\\Microsoft\." + LanguageFolder + @"\.targets"" />";
-		string reinsertString = @"<Import Project=""$(MSBuildBinPath)\Microsoft." + LanguageFolder + @".targets"" />";
-        QuickStartUtils.FindAndReplace(Location + @"\" + ProjectName + @"." + LanguageAppendage + @"proj", projectInsertLocation,
-                @"<ItemGroup>
-                    <Generate Include=""QuickStart.csp"" />
-                </ItemGroup>
-                " + reinsertString);
-
-        QuickStartUtils.FindAndReplace(Location + @"\" + ProjectName + @"." + LanguageAppendage + @"proj", @"</Project>",
-            @"	<Import Project=""$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.targets"" />
-</Project>");
+		get { return Path.Combine("Common", LanguageFolder); }
 	}
+	
+	#endregion
+	
 </script>

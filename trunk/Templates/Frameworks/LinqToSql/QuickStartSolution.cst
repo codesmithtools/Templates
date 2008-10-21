@@ -1,21 +1,15 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." %>
+<%@ Assembly Name="QuickStartUtils" Path="Common"%>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="QuickStartUtils" %>
 <%@ Property Name="VisualStudioVersion" Type="VisualStudioVersionEnum" Optional="False" Category="Solution" Description="" %>
 <%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="Projects" Description="" %>
-<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Property Name="Language" Type="QuickStartUtils.LanguageEnum" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in" %>
 
 Microsoft Visual Studio Solution File, Format Version 10.00
-<% switch(VisualStudioVersion)
-{
-	case VisualStudioVersionEnum.VS08: %>
-# Visual Studio 2008
-<%		break;
-	case VisualStudioVersionEnum.VS05: %>
-# Visual Studio 2005
-<%		break;
-}
-Guid solutionGuid = Guid.NewGuid();
-foreach(SolutionItem solutionItem in SolutionItems) { %>
-Project("{<%= solutionGuid %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Directory %>", "{<%= solutionItem.Guid %>}"
+# <%= VisualStudioVersionString %>
+<% foreach(SolutionItem solutionItem in SolutionItems) { %>
+Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Path %>", "{<%= solutionItem.GuidString %>}"
 EndProject
 <% } %>
 Global
@@ -25,10 +19,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 <% foreach(SolutionItem solutionItem in SolutionItems) { %>
-		{<%= solutionItem.Guid %>}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{<%= solutionItem.Guid %>}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{<%= solutionItem.Guid %>}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{<%= solutionItem.Guid %>}.Release|Any CPU.Build.0 = Release|Any CPU
+		{<%= solutionItem.GuidString %>}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{<%= solutionItem.GuidString %>}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{<%= solutionItem.GuidString %>}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{<%= solutionItem.GuidString %>}.Release|Any CPU.Build.0 = Release|Any CPU
 <% } %>
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
@@ -42,8 +36,24 @@ public enum VisualStudioVersionEnum
 	VS08,
 	VS05
 }
+protected string VisualStudioVersionString
+{
+	get
+	{
+		return (VisualStudioVersion == VisualStudioVersionEnum.VS08)
+			? "Visual Studio 2008"
+			: "Visual Studio 2005";
+	}
+}
 public class SolutionItem
 {
+	public SolutionItem(string name, string path, QuickStartUtils.LanguageEnum language)
+	{
+		Name = name;
+		Path = path;
+		Language = language;
+	}
+	
 	private string _name;
 	public string Name
 	{
@@ -51,18 +61,38 @@ public class SolutionItem
 		set { _name = value; }
 	}
 	
-	private string _directory;
-	public string Directory
+	private string _path;
+	public string Path
 	{
-		get { return _directory; }
-		set { _directory = value; }
+		get { return _path; }
+		set { _path = value; }
 	}
 	
-	private Guid _guid;
+	private Guid _guid = Guid.NewGuid();
 	public Guid Guid
 	{
 		get { return _guid; }
 		set { _guid = value; }
+	}
+	public string GuidString
+	{
+		get { return _guid.ToString().ToUpper(); }
+	}
+	
+	private QuickStartUtils.LanguageEnum _language;
+	public QuickStartUtils.LanguageEnum Language
+	{
+		get { return _language; }
+		set { _language = value; }
+	}
+	public string LanguageGuidString
+	{
+		get
+		{
+			return (Language == QuickStartUtils.LanguageEnum.CSharp)
+				? "FAE04EC0-301F-11D3-BF4B-00C04F79EFBC"
+				: "F184B08F-C81C-45F6-A57F-5ABD9991F28F";
+		}
 	}
 }
 </script>
