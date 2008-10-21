@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <variables>
+    <add key="ConnectionString1" value="$connectionString$" />
+  </variables>
+  <propertySets>
+    <propertySet name="DBML" template="$myDatabase$.dbml">
+      <property name="IncludeViews">False</property>
+      <property name="IncludeFunctions">False</property>
+      <property name="IgnoreList">
+        <stringList>
+          <string>^sysdiagrams$</string>
+        </stringList>
+      </property>
+      <property name="CleanExpression">
+        <stringList>
+          <string>^\\w+_</string>
+        </stringList>
+      </property>
+      <property name="EntityBase">LinqEntityBase</property>
+      <property name="DisableRenaming">False</property>
+      <property name="IncludeDeleteOnNull">True</property>
+      <property name="NamingConventions">
+        <NamingProperty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="">
+          <TableNaming>Singular</TableNaming>
+          <EntityNaming>Singular</EntityNaming>
+          <AssociationNaming>ListSuffix</AssociationNaming>
+        </NamingProperty>
+      </property>
+      <property name="SourceDatabase">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="EntityNamespace">$myContextNamespace$</property>
+      <property name="ContextNamespace">$myContextNamespace$</property>
+      <property name="DbmlFile">$myDatabase$.dbml</property>
+    </propertySet>
+    <propertySet name="Entities" template="LinqToSql\CSharp\Entities.cst">
+      <property name="DbmlFile">$myDatabase$.dbml</property>
+      <property name="Framework">v35_SP1</property>
+      <property name="IncludeDataContract">True</property>
+      <property name="OutputDirectory">Entities</property>
+    </propertySet>
+    <propertySet name="Managers" template="LinqToSql\CSharp\Managers.cst">
+      <property name="Framework">v35_SP1</property>
+      <property name="DbmlFile">$myDatabase$.dbml</property>
+      <property name="ManagerDirectory">Managers</property>
+      <property name="SourceDatabase">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="DataContextFile">Entites\$myDatabase$DataContext.cs</property>
+      <property name="DataManagerName">$myDatabase$DataManager</property>
+      <property name="ManagerNamespace">$myContextNamespace$</property>
+    </propertySet>
+    <propertySet name="Global" template="LinqToSql\CSharp\Global.cst">
+      <property name="InlineEditing">False</property>
+      <property name="ClassNamespace">$safeprojectname$</property>
+      <property name="ContextNamespace">$myContextNamespace$</property>
+      <property name="DataContextName">$myDatabase$DataContext</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>
