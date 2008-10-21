@@ -34,7 +34,6 @@ Description: Used to Quick Start Visual Studio Projects
         //This is the location where web projects zip files should be found
         string zipFileLocation = String.Concat("Common\\", LanguageFolder);
 			
-		zipFileLocation = zipFileLocation + @"\" + languageFolder;
         //A different zip file exists for each project type
         string fileName = null;
         switch (ProjectType)
@@ -49,7 +48,7 @@ Description: Used to Quick Start Visual Studio Projects
 
 		//Unzip the correct file
         FastZip fz = new FastZip();
-        fz.ExtractZip(zipFileLocation + @"\" + fileName + @"." +languageAppendage + @".zip", Location, "");
+        fz.ExtractZip(zipFileLocation + @"\" + fileName + @"." + LanguageAppendage + @".zip", Location, "");
 		
         //Delete the vstempllate file b/c we will not be using it
 		string vstemplate = QuickStartUtils.FindFileInDirectory(".vstemplate",Location);
@@ -124,7 +123,7 @@ Description: Used to Quick Start Visual Studio Projects
 					projectTypeFileName = "MvcWebApplicationProjectTemplateP5";
 					break;
 			}
-			return String.Format("{0}{1}.zip", projectTypeFileName,  LanguageAppendage);
+			return projectTypeFileName;
 		}
 	}
 </script>
