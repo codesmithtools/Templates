@@ -109,14 +109,14 @@ Description: Used to Quick Start Visual Studio Projects
 		public WebsiteProjectCreator(ProjectBuilder_cst projectBuilder)
 			: base(projectBuilder) { }
 		
-		protected override void GetFiles(string directoryPath, string projectFileName)
+		protected override void GetFiles(PathHelper projectPath)
 		{
-			GetVsProject(directoryPath, projectFileName, ProjectBuilder.FileName);
+			GetVsProject(projectPath.DirectoryPath, projectPath.FileName, ProjectBuilder.FileName);
 		}
-		protected override void ReplaceVariables(string directoryPath, string projectGuid, string projectName)
+		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
-			VariableUpdateDirectory(directoryPath, projectGuid, projectName);
-			UpdateWebConfig(directoryPath);
+			VariableUpdateDirectory(projectPath.DirectoryPath, projectGuid, projectName);
+			UpdateWebConfig(projectPath.DirectoryPath);
 		}
 	}
 	
@@ -129,21 +129,21 @@ Description: Used to Quick Start Visual Studio Projects
 		public DataProjectCreator(ProjectBuilder_cst projectBuilder)
 			: base(projectBuilder) { }
 		
-		protected override void GetFiles(string directoryPath, string projectFileName)
+		protected override void GetFiles(PathHelper projectPath)
 		{
-			GetVsProject(directoryPath, projectFileName, ProjectBuilder.FileName);
-			File.Copy(@".\Common\QuickStart.csp", Path.Combine(directoryPath, "QuickStart.csp"));
+			GetVsProject(projectPath.DirectoryPath, projectPath.FileName, "ClassLibrary");
+			File.Copy(@".\Common\QuickStart.csp", Path.Combine(projectPath.DirectoryPath, "QuickStart.csp"));
 		}
-		protected override void ReplaceVariables(string directoryPath, string projectGuid, string projectName)
+		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
-			VariableUpdateDirectory(directoryPath, projectGuid, projectName);
-			VariableUpdateQuickStartCsp(directoryPath, projectName);
+			VariableUpdateDirectory(projectPath.DirectoryPath, projectGuid, projectName);
+			VariableUpdateQuickStartCsp(projectPath, projectName);
 		}
 		
-		private void VariableUpdateQuickStartCsp(string directoryPath, string projectName)
+		private void VariableUpdateQuickStartCsp(PathHelper projectPath, string projectName)
 		{
-			string linqToSqlPath = (ProjectBuilder.IncludePlinqoFiles) ? @"..\LinqToSql" : String.Empty; //Needs Normal Path here
-			string quickStartPath = Path.Combine(directoryPath, "QuickStart.csp");
+			string linqToSqlPath = (ProjectBuilder.IncludePlinqoFiles) ? @"..\LinqToSql" : String.Empty; // Needs Normal Path here
+			string quickStartPath = Path.Combine(projectPath.DirectoryPath, "QuickStart.csp");
 	
 			QuickStartUtils.FindAndReplace(quickStartPath, @"\$connectionString\$", ProjectBuilder.SourceDatabase.ConnectionString);
 			QuickStartUtils.FindAndReplace(quickStartPath, @"\$myDatabase\$", ProjectBuilder.SourceDatabase.Database.Name);
@@ -152,17 +152,11 @@ Description: Used to Quick Start Visual Studio Projects
 			QuickStartUtils.FindAndReplace(quickStartPath, @"\$linqToSql\$", linqToSqlPath);
 			
 			//The location in the csproj file directly below where we want to insert the csp include
-			string projectInsertLocation = @"<Import Project=""\$\(MSBuildBinPath\)\\Microsoft\." + ProjectBuilder.LanguageFolder + @"\.targets"" />";
-			string reinsertString = @"<Import Project=""$(MSBuildBinPath)\Microsoft." + ProjectBuilder.LanguageFolder + @".targets"" />";
-			QuickStartUtils.FindAndReplace(directoryPath + @"\" + projectName + @"." + ProjectBuilder.LanguageAppendage + @"proj", projectInsertLocation,
-					@"<ItemGroup>
-						<Generate Include=""QuickStart.csp"" />
-					</ItemGroup>
-					" + reinsertString);
-	
-			QuickStartUtils.FindAndReplace(directoryPath + @"\" + projectName + @"." + ProjectBuilder.LanguageAppendage + @"proj", @"</Project>",
-				@"	<Import Project=""$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.targets"" />
-					</Project>");
+			string projectInsertLocation = "<Import Project";
+			QuickStartUtils.FindAndReplace(projectPath.FilePath, projectInsertLocation,
+				String.Format("<ItemGroup>{0}\t\t<Generate Include=\"QuickStart.csp\" />{0}\t</ItemGroup>{0}\t{1}", Environment.NewLine, projectInsertLocation));
+			QuickStartUtils.FindAndReplace(projectPath.FilePath, "</Project>",
+				String.Format("\t<Import Project=\"$(MSBuildExtensionsPath)\\CodeSmith\\CodeSmith.targets\" />{0}</Project>", Environment.NewLine));
 		}
 	}
 	
@@ -175,13 +169,13 @@ Description: Used to Quick Start Visual Studio Projects
 		public UnitTestProjectCreator(ProjectBuilder_cst projectBuilder)
 			: base(projectBuilder) { }
 		
-		protected override void GetFiles(string directoryPath, string projectFileName)
+		protected override void GetFiles(PathHelper projectPath)
 		{
-			GetVsProject(directoryPath, projectFileName, "TestProject");
+			GetVsProject(projectPath.DirectoryPath, projectPath.FileName, "TestProject");
 		}
-		protected override void ReplaceVariables(string directoryPath, string projectGuid, string projectName)
+		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
-			VariableUpdateDirectory(directoryPath, projectGuid, projectName);
+			VariableUpdateDirectory(projectPath.DirectoryPath, projectGuid, projectName);
 		}
 	}
 	
@@ -227,27 +221,27 @@ Description: Used to Quick Start Visual Studio Projects
 		public virtual QuickStartSolution.SolutionItem CreateProject(string projectName)
 		{
 			// Create Path Helper
-			PathHelper pathHelper = new PathHelper(String.Format("{0}.{1}proj", projectName, ProjectBuilder.LanguageAppendage), projectName, ProjectBuilder.Location);
+			PathHelper projectPath = new PathHelper(String.Format("{0}.{1}proj", projectName, ProjectBuilder.LanguageAppendage), projectName, ProjectBuilder.Location);
 		
 			// Create TargetDirectory
-			if(!Directory.Exists(pathHelper.DirectoryPath))
-				Directory.CreateDirectory(pathHelper.DirectoryPath);
+			if(!Directory.Exists(projectPath.DirectoryPath))
+				Directory.CreateDirectory(projectPath.DirectoryPath);
 				
 			// Create SolutionItem
-			QuickStartSolution.SolutionItem solutionItem = new QuickStartSolution.SolutionItem(projectName, pathHelper.DirectoryFile, ProjectBuilder.Language);
+			QuickStartSolution.SolutionItem solutionItem = new QuickStartSolution.SolutionItem(projectName, projectPath.DirectoryFile, ProjectBuilder.Language);
 			
 			// Get Files
-			GetFiles(pathHelper.DirectoryPath, pathHelper.FileName);
+			GetFiles(projectPath);
 			
 			// Replace Variables In Files
-			ReplaceVariables(pathHelper.DirectoryPath, solutionItem.GuidString, projectName);
+			ReplaceVariables(projectPath, solutionItem.GuidString, projectName);
 			
 			// Return Solution Item
 			return solutionItem;
 		}
 		
-		protected abstract void GetFiles(string directoryPath, string projectFileName);
-		protected abstract void ReplaceVariables(string directoryPath, string projectGuid, string projectName);
+		protected abstract void GetFiles(PathHelper projectPath);
+		protected abstract void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName);
 		
 		protected void GetVsProject(string directoryPath, string projectFileName, string fileName)
 		{
