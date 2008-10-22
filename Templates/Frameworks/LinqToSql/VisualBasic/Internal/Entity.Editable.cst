@@ -7,6 +7,7 @@
 <%@ Assembly Name="Dbml" Path="..\..\Common"%>
 
 <%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 
@@ -17,7 +18,7 @@
 <%@ Property Category="1.Mapping" Name="Type" 
     Type="LinqToSqlShared.DbmlObjectModel.Type" Optional="False" 
     Description="The Type instance for this entity. Must be set by parent template" %>
-	
+    
 <%@ Property Category="2.Class" Name="Framework"
     Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v35_SP1" Optional="False"
     Description="Which version of the .Net Framework is being generated for." %>
@@ -32,47 +33,100 @@ Imports System
 Imports System.Linq
 Imports System.Collections.Generic
 Imports System.Text
-<%If(Framework = FrameworkEnum.v35_SP1)Then%>Imports System.ComponentModel.DataAnnotations<%End If%>
+<%If(Framework = FrameworkEnum.v35_SP1)Then%>
+Imports System.ComponentModel.DataAnnotations
+Imports CodeSmith.Data.Attributes;
+Imports CodeSmith.Data.Rules;
+<%End If%>
 
 Namespace <%= Database.EntityNamespace %>
-	
+    
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>
         
-		' For more information about the features contained in this class, please visit our GoogleCode Wiki at...
-		' http://code.google.com/p/codesmith/wiki/PLINQO
-		' Also, you can watch our Video Tutorials at...
-		' http://community.codesmithtools.com/
-		
-		<%If(Framework = FrameworkEnum.v35_SP1)Then%>
-		#Region "Metadata"
-		
-		Protected Friend Class Metadata
-			' Only Attributes in the class will be preserved.
-			
+        ' For more information about the features contained in this class, please visit our GoogleCode Wiki at...
+        ' http://code.google.com/p/codesmith/wiki/PLINQO
+        ' Also, you can watch our Video Tutorials at...
+        ' http://community.codesmithtools.com/
+        
+        <%If(Framework = FrameworkEnum.v35_SP1)Then%>
+        #Region "Metadata"
+        
+        Protected Friend Class Metadata
+            ' Only Attributes in the class will be preserved.
+            
 <%          Dim sourceAttributes As AttributeSectionVisitor = new AttributeSectionVisitor()
             If ExistingFile IsNot Nothing Then
                 ExistingFile.CompilationUnit.AcceptVisitor(sourceAttributes, "Metadata")
             End If 
             For Each column As Column In Type.Columns
                 If sourceAttributes.PropertyMap.ContainsKey(column.Name) Then
-                    For Each attributeSection As ICSharpCode.NRefactory.Ast.AttributeSection In sourceAttributes.PropertyMap(column.Name).Attributes %>
-			<%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %> _
-<%					Next
-				End If %>
-			Public Property <%=column.Name%>() As Object
-				Get
-					Return Nothing
-				End Get
-				Set(ByVal value As Object)
-				End Set
-			End Property
-			
-<% 			Next %>
-		End Class
-		
-		#End Region
-<%		End If%>	
-	
+                    For Each attributeSection As ICSharpCode.NRefactory.Ast.AttributeSection In sourceAttributes.PropertyMap(column.Member).Attributes %>
+            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %> _
+<%                    Next
+                Else
+                    If (column.CanBeNull.Value = False AndAlso column.IsDbGenerated.Value = False) Then
+                        If (column.Type.Contains("String")) Then
+                            Response.WriteLine("            [Required]")
+                        Else If (column.Type.Contains("DateTime")) Then
+                            If (column.Member.Contains("Create")) Then
+                                Response.WriteLine("            [Now(EntityState.New)]")
+                            Else If (column.Member.Contains("Modify") OrElse column.Member.Contains("Modified")) Then
+                                Response.WriteLine("            [Now(EntityState.Dirty)]")
+                            End If
+                        End If
+                    End If
+                    
+                    If (column.Type.Contains("String")) Then
+                        Dim size As Integer = GetSize(column.DbType)
+                        If (0 < size AndAlso size < 8000) Then
+                            Response.WriteLine(string.Format("            [StringLength({0})]", size))
+                        End If
+                        If (size > 1000 OrElse size = -1) Then
+                            Response.WriteLine("            [DataType(DataType.MultilineText)]")
+                        Else If (column.Member.Contains("Email")) Then
+                            Response.WriteLine("            [DataType(DataType.EmailAddress)]")
+                        Else If (column.Member.Contains("Url") OrElse column.Member.Contains("Uri")) Then
+                            Response.WriteLine("            [DataType(DataType.Url)]")
+                        Else If (column.Member.Contains("Phone"))
+                            Response.WriteLine("            [DataType(DataType.PhoneNumber)]")
+                        Else If (column.Member.Contains("Password")) Then
+                            Response.WriteLine("            [DataType(DataType.Password)]")
+                        Else If (column.Member.Contains("Html")) Then
+                            Response.WriteLine("            [DataType(DataType.Html)]")
+                        End If
+                    End If
+                End If %>
+            Public Property <%=column.Name%>() As Object
+                Get
+                    Return Nothing
+                End Get
+                Set(ByVal value As Object)
+                End Set
+            End Property
+            
+<%             Next %>
+        End Class
+        
+        #End Region
+<%        End If%>    
+    
     End Class
 
 End Namespace
+
+<script runat="template">
+    Private Shared ReadOnly _sizeRegex As Regex = New Regex("(?<Size>\d+)", RegexOptions.Compiled)
+    
+    Public Function GetSize(ByVal s As String) As Integer
+        Dim size As Integer = 0
+        
+        Dim m As Match = _sizeRegex.Match(s)
+        If (Not m.Success) Then
+            Return size
+        End If
+        
+        Dim temp As String = m.Groups("Size").Value
+            Integer.Parse(temp, size)
+        Return size
+    End Function
+</script>

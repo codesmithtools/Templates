@@ -20,18 +20,18 @@
 <%@ Property Category="1.Mapping" Name="TableName" 
     Type="System.String" Default="" Optional="True" 
     Description="The name of the table this class is mapped to." %>
-	
+    
 <%@ Property Category="2.Class" Name="EntityBase" 
     Type="System.String" Default="LinqEntityBase" Optional="True" 
     Description="The base class for the entity." %>
 
 <%@ Property Category="2.Class" Name="Framework"
-	Type="FrameworkEnum" Default="v35_SP1" Optional="False"
+    Type="FrameworkEnum" Default="v35_SP1" Optional="False"
     Description="Include Serialization attributes and what kind." %>
 
 <%@ Property Category="2.Class" Name="IncludeDataContract"
- 	Type="System.Boolean" Default="True" Optional="False"
- 	Description="Include WCF DataContract attributes." %>
+     Type="System.Boolean" Default="True" Optional="False"
+     Description="Include WCF DataContract attributes." %>
 
 <%@ Map Name="VBKeywordEscape" 
     Src="VBKeywordEscape.csmap" Reverse="False" 
@@ -73,11 +73,11 @@ Namespace <%= Database.EntityNamespace %>
 <% If (IncludeDataContract ANDALSO Framework = FrameworkEnum.v35) Then %>
     <System.Runtime.Serialization.DataContractAttribute()> _
 <% Else If (IncludeDataContract ANDALSO Framework = FrameworkEnum.v35_SP1) Then%>
-	<DataContract(IsReference:=True)> _
+    <DataContract(IsReference:=True)> _
 <% End If %>
 <% If (Me.Framework = FrameworkEnum.v35_SP1) Then %>
-	<ScaffoldTable(true)> _
-	<MetadataType(GetType(<%= Type.Name %>.Metadata))> _
+    <ScaffoldTable(true)> _
+    <MetadataType(GetType(<%= Type.Name %>.Metadata))> _
 <% End If %>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>
 <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>
@@ -90,14 +90,14 @@ Namespace <%= Database.EntityNamespace %>
         ''' </summary>
         <DebuggerNonUserCodeAttribute()> _
         <%= Naming.GetModifier(Type.AccessModifier) %>  Sub New()
-      		OnCreated()
-	<% If (IncludeDataContract) Then%>	
-			Initialize()
-		End Sub
-		
-		Private Sub Initialize()
-	<%  End If
-	For Each a As Association in Type.EntityRefAssociations %>
+              OnCreated()
+    <% If (IncludeDataContract) Then%>    
+            Initialize()
+        End Sub
+        
+        Private Sub Initialize()
+    <%  End If
+    For Each a As Association in Type.EntityRefAssociations %>
             <%= a.Storage %> = Nothing
 <% Next ' foreach Association%>
 <% For Each a As Association In Type.EntitySetAssociations %>
@@ -108,7 +108,7 @@ Namespace <%= Database.EntityNamespace %>
         End Sub
         #End Region
 
-		#Region "Column Mapped Properties"
+        #Region "Column Mapped Properties"
 <% Dim dataMemberIndex As Integer = 1
 For Each c As Column in Type.Columns 
 Dim dataType As String = c.Type
@@ -150,12 +150,12 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 <% End If ' if IsVersion %>
 <% If (IncludeDataContract) Then %>
         <DataMember(Order:=<%= dataMemberIndex %>)> _
-<% 		dataMemberIndex += 1
+<%         dataMemberIndex += 1
    End If %>
         <%= Naming.GetModifier(c.AccessModifier, c.Modifier) %> Property <%= c.Member %> As <%= dataType %>
             Get 
-				return <%= storageAssign %> 
-			End Get
+                return <%= storageAssign %> 
+            End Get
 <% If Not c.IsReadOnly.Value = True Then %>
             Set
                 If <%If dataType = "String"%>String.IsNullOrEmpty(<%= c.Storage %>) OrElse <%End If%> Not <%= storageAssign %>.Equals(value) Then
@@ -181,18 +181,18 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         #End Region
         
         #Region "Association Mapped Properties"
-		
-<% 		Dim needsOnSerialize As Boolean = False
-		If IncludeDataContract Then
-			For Each a As Association in Type.Associations
-				If Not a.IsForeignKey.Value Then
-					needsOnSerialize = true
-					Exit For
-				End If
-			Next
-		End If
+        
+<%         Dim needsOnSerialize As Boolean = False
+        If IncludeDataContract Then
+            For Each a As Association in Type.Associations
+                If Not a.IsForeignKey.Value Then
+                    needsOnSerialize = true
+                    Exit For
+                End If
+            Next
+        End If
 
-		For Each a As Association In Type.EntityRefAssociations
+        For Each a As Association In Type.EntityRefAssociations
         Dim info As AssociationInfo = GetAssociationInfo(a)
 %>
         Private  <%= a.Storage %> As EntityRef(Of <%= a.Type %>)
@@ -204,16 +204,16 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 <% If (IncludeDataContract) Then %>
         <DataMember(Order:=<%=dataMemberIndex%>, EmitDefaultValue:=False)> _
 <%dataMemberIndex += 1 
-	End If %>
+    End If %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= a.Member %> As <%= a.Type %>
             Get
-			<%	If (needsOnSerialize) Then %>
-				If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValue) Then
-					Return Nothing
-				End If
-			<% End If %>
-				Return <%= a.Storage %>.Entity 
-			End Get
+            <%    If (needsOnSerialize) Then %>
+                If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValue) Then
+                    Return Nothing
+                End If
+            <% End If %>
+                Return <%= a.Storage %>.Entity 
+            End Get
             Set
 <% If info.HasOtherAssociation Then %>
                 Dim previousValue As <%= a.Type %> = <%= a.Storage %>.Entity
@@ -262,16 +262,16 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 <% End If %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= a.Member %> As EntitySet(Of <%= a.Type %>)
             Get
-			<%If (needsOnSerialize) Then%>
-				If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValues) Then
-					Return Nothing
-				End If
-			<%End If%>	
-				return <%= a.Storage %>
-			End Get
+            <%If (needsOnSerialize) Then%>
+                If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValues) Then
+                    Return Nothing
+                End If
+            <%End If%>    
+                return <%= a.Storage %>
+            End Get
             Set
-				<%= a.Storage %>.Assign(value)
-			End Set
+                <%= a.Storage %>.Assign(value)
+            End Set
         End Property
         
         <DebuggerNonUserCodeAttribute()> _
@@ -288,64 +288,64 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
             OnPropertyChanged(Nothing)
         End Sub
 <% Next ' foreach Association%>
-       	#End Region
+           #End Region
         
         #Region "Extensibility Method Definitions"
         ''' <summary>Called when this instance is loaded.</summary>
         Private Partial Sub OnLoaded()
-		End Sub
+        End Sub
         ''' <summary>Called when this instance is being saved.</summary>
         Private Partial Sub OnValidate(ByVal action As ChangeAction)
-		End Sub
+        End Sub
         ''' <summary>Called when this instance is created.</summary>
         Private Partial Sub OnCreated()
-		End Sub
+        End Sub
 <% For Each c As Column in Type.Columns
     Dim dataType As String = VBAlias(c.Type)
     
     If (c.CanBeNull.value = True AND CommonUtility.IsNullableType(c.Type)) Then
         dataType = String.Format("Nullable(Of {0})", dataType)
-	End If
+    End If
 %>
         ''' <summary>Called when <%= c.Member %> is changing.</summary>
         ''' <param name="value">The new value.</param>
         Private Partial Sub On<%= c.Member %>Changing(ByVal value As <%= dataType %>)
-		End Sub
+        End Sub
         ''' <summary>Called after <%= c.Member %> has Changed.</summary>
         Private Partial Sub On<%= c.Member %>Changed()
-		End Sub
+        End Sub
 <% Next ' foreach %>
         #End Region
-		
-		
-	<%If IncludeDataContract Then%>
-		#Region "Serialization"
-		
-		<%If (needsOnSerialize) Then%>
-		Private Serializing As Boolean
-		
-		<OnSerializing(), _
-		 EditorBrowsableAttribute(EditorBrowsableState.Never)> _
-		Public Sub OnSerializing(ByVal context As StreamingContext)
-			serializing = True
-		End Sub
-		
-		<OnSerialized(), _
-		 EditorBrowsableAttribute(EditorBrowsableState.Never)> _
-		Public Sub OnSerialized(ByVal context As StreamingContext)
-			serializing = False
-		End Sub
-		<%End If%>
-		
-		<OnDeserializing(), _
-		 EditorBrowsableAttribute(EditorBrowsableState.Never)> _
-		Public Sub OnDeserializing(ByVal context As StreamingContext)
-			Initialize
-		End Sub
-		
-		#End Region
-	<%End If%>
-	
+        
+        
+    <%If IncludeDataContract Then%>
+        #Region "Serialization"
+        
+        <%If (needsOnSerialize) Then%>
+        Private Serializing As Boolean
+        
+        <OnSerializing(), _
+         EditorBrowsableAttribute(EditorBrowsableState.Never)> _
+        Public Sub OnSerializing(ByVal context As StreamingContext)
+            serializing = True
+        End Sub
+        
+        <OnSerialized(), _
+         EditorBrowsableAttribute(EditorBrowsableState.Never)> _
+        Public Sub OnSerialized(ByVal context As StreamingContext)
+            serializing = False
+        End Sub
+        <%End If%>
+        
+        <OnDeserializing(), _
+         EditorBrowsableAttribute(EditorBrowsableState.Never)> _
+        Public Sub OnDeserializing(ByVal context As StreamingContext)
+            Initialize
+        End Sub
+        
+        #End Region
+    <%End If%>
+    
     End Class
 End Namespace
 

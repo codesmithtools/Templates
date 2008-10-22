@@ -1,6 +1,6 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True" 
     Description="Linq to Sql Entity Class." %>
-	
+    
 <%@ Assembly Name="Generator" Path="..\..\Common"%>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 
@@ -11,13 +11,13 @@
 <%@ Property Category="2.Class" Name="ClassName" 
     Type="System.String" Default="LinqEntityBase" Optional="False" 
     Description="The names of the class."%>
-	
+    
 <%@ Property Category="2.Class" Name="IncludeDataContract"
- 	Type="System.Boolean" Default="False" Optional="False"
- 	Description="Include WCF DataContract attributes." %>
+     Type="System.Boolean" Default="False" Optional="False"
+     Description="Include WCF DataContract attributes." %>
 
 <%@ Property Category="2.Class" Name="Framework"
-	Type="FrameworkEnum" Default="v35_SP1" Optional="False"
+    Type="FrameworkEnum" Default="v35_SP1" Optional="False"
     Description="Include Serialization attributes and what kind." %>
 
 Imports System
@@ -30,10 +30,10 @@ Namespace <%= ClassNamespace %>
     ''' <summary>
     ''' A base class for Linq entities that implements notification events.
     ''' </summary>
-	<%If IncludeDataContract Then %>
+    <%If IncludeDataContract Then %>
     <Serializable> _
-	<DataContract(<%If Framework = FrameworkEnum.v35_SP1 Then %> IsReference:=True <%End If%>)> _
-	<%End If%>
+    <DataContract(<%If Framework = FrameworkEnum.v35_SP1 Then %> IsReference:=True <%End If%>)> _
+    <%End If%>
     Public Partial MustInherit Class <%= ClassName %> 
        Implements INotifyPropertyChanging
        Implements INotifyPropertyChanged

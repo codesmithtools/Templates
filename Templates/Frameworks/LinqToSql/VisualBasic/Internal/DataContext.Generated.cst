@@ -51,49 +51,49 @@ Namespace <%= Database.ContextNamespace %>
     ''' The DataContext class for the <%= Database.Name %> database.
     ''' </summary>
     Partial <%= Naming.GetModifier(Database.AccessModifier) %> Class <%= Database.Class %> 
-	Inherits DataContext
+    Inherits DataContext
         Private Shared mappingCache As MappingSource = New AttributeMappingSource()
 
-		#Region "ConnectionString"
-		Private Const CONNECTION_NAME As String = "<%= Database.Connection.SettingsPropertyName %>"
-		Private Shared _connectionString As String
-		Private Shared _connectionLock As New Object()
-		
-		''' <summary>The application connection string read from web.config or app.config</summary>
-		''' <example>
-		''' Add the following key to the "connectionStrings" section of your config:
-		''' <code><![CDATA[
-		''' <configuration>
-		'''     <connectionStrings>
-		'''         <add name="<%= Database.Connection.SettingsPropertyName %>" 
-		'''             connectionString="Data Source=(local);Initial Catalog=DATABASE;Integrated Security=True"
-		'''             providerName="System.Data.SqlClient" />
-		'''     </connectionStrings>
-		''' </configuration>
-		''' ]]></code>
-		''' </example>
-		Public Shared ReadOnly Property ConnectionString() As String
-		
-			Get
-				If _connectionString Is Nothing Then
-					SyncLock _connectionLock
-					If _connectionString Is Nothing Then
-						_connectionString = GetDefaultConnectionString()
-					End If
-					End SyncLock
-				End If
-				Return _connectionString
-			End Get
-		End Property
-		Private Shared Function GetDefaultConnectionString() As String
-			Dim settings As ConnectionStringSettings = ConfigurationManager.ConnectionStrings(CONNECTION_NAME)
-			If settings Is Nothing Then
-				Dim message As String = String.Format("Could not find the connection string '{0}' in the configuration file.  " + "Please add an entry to connectionStrings section named '{0}'.", CONNECTION_NAME)
-				Throw New ConfigurationErrorsException(message)
-			End If
-			Return settings.ConnectionString
-		End Function
-		#End Region
+        #Region "ConnectionString"
+        Private Const CONNECTION_NAME As String = "<%= Database.Connection.SettingsPropertyName %>"
+        Private Shared _connectionString As String
+        Private Shared _connectionLock As New Object()
+        
+        ''' <summary>The application connection string read from web.config or app.config</summary>
+        ''' <example>
+        ''' Add the following key to the "connectionStrings" section of your config:
+        ''' <code><![CDATA[
+        ''' <configuration>
+        '''     <connectionStrings>
+        '''         <add name="<%= Database.Connection.SettingsPropertyName %>" 
+        '''             connectionString="Data Source=(local);Initial Catalog=DATABASE;Integrated Security=True"
+        '''             providerName="System.Data.SqlClient" />
+        '''     </connectionStrings>
+        ''' </configuration>
+        ''' ]]></code>
+        ''' </example>
+        Public Shared ReadOnly Property ConnectionString() As String
+        
+            Get
+                If _connectionString Is Nothing Then
+                    SyncLock _connectionLock
+                    If _connectionString Is Nothing Then
+                        _connectionString = GetDefaultConnectionString()
+                    End If
+                    End SyncLock
+                End If
+                Return _connectionString
+            End Get
+        End Property
+        Private Shared Function GetDefaultConnectionString() As String
+            Dim settings As ConnectionStringSettings = ConfigurationManager.ConnectionStrings(CONNECTION_NAME)
+            If settings Is Nothing Then
+                Dim message As String = String.Format("Could not find the connection string '{0}' in the configuration file.  " + "Please add an entry to connectionStrings section named '{0}'.", CONNECTION_NAME)
+                Throw New ConfigurationErrorsException(message)
+            End If
+            Return settings.ConnectionString
+        End Function
+        #End Region
 
         #Region "Constructors"
         ''' <summary>
@@ -161,8 +161,8 @@ Namespace <%= Database.ContextNamespace %>
         ''' <summary>Represents the <%= table.Name %> table in the underlying database.</summary>
         <%= Naming.GetModifier(table.AccessModifier, table.Modifier) %> ReadOnly Property <%= GetName(table) %> As Table(Of <%= table.Type.Name %>)
             Get
-				Return GetTable(Of <%= table.Type.Name %>)()
-			End Get
+                Return GetTable(Of <%= table.Type.Name %>)()
+            End Get
         End Property
         
 <% Next %>
@@ -186,7 +186,7 @@ For x = 0 TO f.Parameters.Count - 1
 
     If (p.Direction.Value = LinqToSqlShared.DbmlObjectModel.ParameterDirection.In) Then
         Continue For
-	End If
+    End If
 
     'set out params
     Response.WriteLine("            {0} = (DirectCast(result.GetParameterValue({2}),{1}))",p.ParameterName, GetParameterType(p), x)
@@ -202,27 +202,27 @@ Next
         #Region "Extensibility Method Definitions"
         ''' <summary>Called after this instance is created.</summary>
         Partial Private Sub OnCreated()
-		End Sub
+        End Sub
 <% For Each [table] As [Table] in Database.Tables %>
-		''' <summary>Called before a <%= [table].Type.Name %> is inserted.</summary>
+        ''' <summary>Called before a <%= [table].Type.Name %> is inserted.</summary>
         ''' <param name="instance">The instance.</param>
         Partial Private Sub Insert<%= [table].Type.Name %>(ByVal instance As <%= [table].Type.Name %>)
-		End Sub
+        End Sub
         ''' <summary>Called before a <%= [table].Type.Name %> is updated.</summary>
         ''' <param name="instance">The instance.</param>
         Partial Private Sub Update<%= [table].Type.Name %>(ByVal instance As <%= [table].Type.Name %>)
-		End Sub
+        End Sub
         ''' <summary>Called before a <%= [table].Type.Name %> is deleted.</summary>
         ''' <param name="instance">The instance.</param>
         Partial Private Sub Delete<%= [table].Type.Name %>(ByVal instance As <%= [table].Type.Name %>)
-		End Sub
+        End Sub
 <% Next %>
         #End Region
     End Class
 End Namespace
 
 <script runat="template">
-	Public Function CreateAttribute(ByVal f As [Function]) As String
+    Public Function CreateAttribute(ByVal f As [Function]) As String
     Dim s As New StringBuilder()
     s.Append("<[Function](")
     s.AppendFormat("Name:=""{0}""", f.Name)

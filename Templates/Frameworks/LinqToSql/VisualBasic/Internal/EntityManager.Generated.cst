@@ -19,9 +19,9 @@
 
 
 <%@ Property Category="2.Class" Name="Framework"
-	Type="FrameworkEnum" Default="v35_SP1" Optional="False"
+    Type="FrameworkEnum" Default="v35_SP1" Optional="False"
     Description="Include Serialization attributes and what kind." %>
-	
+    
 <%@ Property Category="4.Manager" Name="ManagerNamespace" 
     Type="System.String" Default="" Optional="True" 
     Description="The namespace to use for the generated manager class files."%>
@@ -81,51 +81,51 @@ Namespace <%= ManagerNamespace %>
     ''' The manager class for <%= EntityManager.EntityName %>.
     ''' </summary>
     Partial Public Class <%= EntityManager.ManagerName %> 
-	Inherits EntityManagerBase(Of <%= DataManager.DataManagerName %>,<%= EntityManager.EntityName %>)
+    Inherits EntityManagerBase(Of <%= DataManager.DataManagerName %>,<%= EntityManager.EntityName %>)
         ''' <summary>
         ''' Initializes the <see cref="<%= EntityManager.ManagerName %>"/> class.
         ''' </summary>
         Shared Sub New()
-			<% If Framework = FrameworkEnum.v35_SP1 Then %>
-			RuleManager.AddShared(Of <%= EntityManager.EntityName%> )(GetType(<%= DataManager.DataContextName%>))
+            <% If Framework = FrameworkEnum.v35_SP1 Then %>
+            RuleManager.AddShared(Of <%= EntityManager.EntityName%> )(GetType(<%= DataManager.DataContextName%>))
             
-			<% Else	
-			Const  lengthFormat As String = "RuleManager.AddShared(Of {0})(new LengthRule(""{1}"", {2}))"
-			Const  requiredFormat As String = "RuleManager.AddShared(Of {0})(new RequiredRule(""{1}""))"
-			Const  sqlDateFormat As String = "RuleManager.AddShared(Of {0})(new RangeRule(Of DateTime)(""{1}"", SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value))"
-			Const  createDateFormat As String = "RuleManager.AddShared(Of {0})(new NowRule(""{1}"", EntityState.New))"
-			Const  modifyDateFormat As String = "RuleManager.AddShared(Of {0})(new NowRule(""{1}"", EntityState.Dirty))"
-			
-			Dim indent As Integer = Response.IndentLevel
-			Response.IndentLevel = 3
-			For Each c As Column In Table.Type.Columns
-				
-				If Not c.CanBeNull.Value = True AndAlso c.IsDbGenerated.Value = False Then
-					If c.Type.Contains("String") Then
-						Response.WriteLine(String.Format(requiredFormat, EntityManager.EntityName, c.Member))
-			ElseIf c.Type.Contains("DateTime") Then
-						If c.Member.Contains("Create") Then
-							Response.WriteLine(String.Format(createDateFormat, EntityManager.EntityName, c.Member))
-			ElseIf c.Member.Contains("Modify") OrElse c.Member.Contains("Modified") Then
-							Response.WriteLine(String.Format(modifyDateFormat, EntityManager.EntityName, c.Member))
-						Else
-							Response.WriteLine(String.Format(sqlDateFormat, EntityManager.EntityName, c.Member))
-						End If
-					End If
-				End If
-				
-				If c.Type.Contains("String") Then
-					Dim size As Integer = GetSize(c.DbType)
-					If 0 < size AndAlso size < 8000 Then
-						Response.WriteLine(String.Format(lengthFormat, EntityManager.EntityName, c.Member, size))
-					End If
-				End If
-			Next
-			Response.IndentLevel = indent
+            <% Else    
+            Const  lengthFormat As String = "RuleManager.AddShared(Of {0})(new LengthRule(""{1}"", {2}))"
+            Const  requiredFormat As String = "RuleManager.AddShared(Of {0})(new RequiredRule(""{1}""))"
+            Const  sqlDateFormat As String = "RuleManager.AddShared(Of {0})(new RangeRule(Of DateTime)(""{1}"", SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value))"
+            Const  createDateFormat As String = "RuleManager.AddShared(Of {0})(new NowRule(""{1}"", EntityState.New))"
+            Const  modifyDateFormat As String = "RuleManager.AddShared(Of {0})(new NowRule(""{1}"", EntityState.Dirty))"
+            
+            Dim indent As Integer = Response.IndentLevel
+            Response.IndentLevel = 3
+            For Each c As Column In Table.Type.Columns
+                
+                If Not c.CanBeNull.Value = True AndAlso c.IsDbGenerated.Value = False Then
+                    If c.Type.Contains("String") Then
+                        Response.WriteLine(String.Format(requiredFormat, EntityManager.EntityName, c.Member))
+            ElseIf c.Type.Contains("DateTime") Then
+                        If c.Member.Contains("Create") Then
+                            Response.WriteLine(String.Format(createDateFormat, EntityManager.EntityName, c.Member))
+            ElseIf c.Member.Contains("Modify") OrElse c.Member.Contains("Modified") Then
+                            Response.WriteLine(String.Format(modifyDateFormat, EntityManager.EntityName, c.Member))
+                        Else
+                            Response.WriteLine(String.Format(sqlDateFormat, EntityManager.EntityName, c.Member))
+                        End If
+                    End If
+                End If
+                
+                If c.Type.Contains("String") Then
+                    Dim size As Integer = GetSize(c.DbType)
+                    If 0 < size AndAlso size < 8000 Then
+                        Response.WriteLine(String.Format(lengthFormat, EntityManager.EntityName, c.Member, size))
+                    End If
+                End If
+            Next
+            Response.IndentLevel = indent
 
-			END IF%>
-			AddRules()
-			
+            END IF%>
+            AddRules()
+            
         End Sub
 
         ''' <summary>
@@ -133,7 +133,7 @@ Namespace <%= ManagerNamespace %>
         ''' </summary>
         ''' <param name="manager">The current manager.</param>
         Public Sub New(ByVal manager As <%= DataManager.DataManagerName %>) 
-			MyBase.New(manager)
+            MyBase.New(manager)
             OnCreated()
         End Sub
 
@@ -142,8 +142,8 @@ Namespace <%= ManagerNamespace %>
         ''' </summary>
         Protected ReadOnly Property Context As <%= DataManager.DataContextName %>
             Get
-				return Manager.Context
-			End Get
+                return Manager.Context
+            End Get
         End Property
         
         ''' <summary>
@@ -151,14 +151,14 @@ Namespace <%= ManagerNamespace %>
         ''' </summary>
         Protected ReadOnly Property Entity As Table(Of <%= EntityManager.EntityName %>)
             Get 
-				return Manager.Context.<%= EntityManager.PropertyName %>
-			End Get
+                return Manager.Context.<%= EntityManager.PropertyName %>
+            End Get
         End Property
         
 <% For Each method As ManagerMethod In EntityManager.Methods 
-     	Dim parameters As String = GetParameters(method)
- 		Dim paramNames As String = GetParametersNames(method)
- 		Dim paramTypes As String = GetParametersTypes(method)
+         Dim parameters As String = GetParameters(method)
+         Dim paramNames As String = GetParametersNames(method)
+         Dim paramTypes As String = GetParametersTypes(method)
 %>
 <% If method.IsKey Then %>
 <% If method.Columns.Count < 5 Then %>
@@ -210,7 +210,7 @@ Namespace <%= ManagerNamespace %>
             Else
 <% End If ' column count%>
                 return Entity.FirstOrDefault(<%= GetLamba(method, 5) %>)
-			End If
+            End If
         End Function
 <%  Else If (method.IsUnique) Then %>
         ''' <summary>
@@ -225,7 +225,7 @@ Namespace <%= ManagerNamespace %>
 <% End If ' column count%>
                 Return Entity.FirstOrDefault(<%= GetLamba(method, 5) %>)
 <% If (method.Columns.Count < 4) Then %>
-			End If
+            End If
 <% End If %>
         END Function
 <% Else  %>
@@ -240,7 +240,7 @@ Namespace <%= ManagerNamespace %>
 <% End If ' column count%>
                 return Entity.Where(<%= GetLamba(method, 5) %>)
 <% If (method.Columns.Count < 4) Then %>
-			End If
+            End If
 <% End If%>
         End Function
 <% End If ' if is key%>
@@ -249,10 +249,10 @@ Namespace <%= ManagerNamespace %>
         #Region "Extensibility Method Definitions"
         ''' <summary>Called by the static constructor to add shared rules.</summary>
         Shared Partial Private Sub AddRules()
-		End Sub
+        End Sub
         ''' <summary>Called when the class is created.</summary>
         Partial Private Sub OnCreated()
-		End Sub
+        End Sub
         #End Region
         
         #Region "Query"
@@ -262,14 +262,14 @@ Namespace <%= ManagerNamespace %>
         Private Partial Class Query
 <% For Each method As ManagerMethod in EntityManager.Methods
     Dim parameters As String = GetParameters(method)
-	Dim paramNames As String = GetParametersNames(method)
-	Dim paramTypes As String = GetParametersTypes(method)
+    Dim paramNames As String = GetParametersNames(method)
+    Dim paramTypes As String = GetParametersTypes(method)
 
 %>
 <% If method.Columns.Count < 4 Then %>
 <% If method.IsKey Then %>
 
-            Friend Shared Readonly GetByKey As Func(Of <%= DataManager.DataContextName %>, <%= paramTypes %>, <%= EntityManager.EntityName %>) = _
+            Friend Shared Readonly GetByKey As Func(Of <%= DataManager.DataContextName %>, <%= paramTypes %>, <%= EntityManager.PropertyName %>) = _
                 CompiledQuery.Compile( _
                      Function(db As <%= DataManager.DataContextName %>, <%= parameters %>) _
                         db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>))
