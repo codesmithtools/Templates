@@ -273,10 +273,13 @@ Description: Used to Quick Start Visual Studio Projects
 		
 		protected void VariableUpdateDirectory(string directoryPath, string projectGuid, string projectName)
 		{
+			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$projectname\$", projectName);
 			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$safeprojectname\$", projectName);
 			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$guid1\$", @"{" + projectGuid + @"}");
 			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", " ");
 			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$endif\$", " ");
+			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$registeredorganization\$", "CodeSmith Tools, LLC");
+			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$year\$", DateTime.Now.Year.ToString());
 		}
 		protected void UpdateWebConfig(string directoryPath)
 		{
