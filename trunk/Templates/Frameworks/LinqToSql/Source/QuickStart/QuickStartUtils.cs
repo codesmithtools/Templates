@@ -63,13 +63,14 @@ namespace QuickStartUtils
 
         public static string FindFileInDirectory(string find, string path)
         {
+            find = find.ToLower();
             string[] fileEntries = Directory.GetFiles(path);
             foreach (string fileName in fileEntries)
             {
-                if (fileName.Contains(find))
+                if (fileName.ToLower().Contains(find))
                     return fileName;
             }
-            return null;
+            return String.Empty;
         }
 
         public static void CopyDirectory(string pathFrom, string pathTo, int level)
@@ -81,7 +82,7 @@ namespace QuickStartUtils
                 string[] fileEntries = Directory.GetFiles(pathFrom);
                 foreach (string fileName in fileEntries)
                 {
-                    File.Copy(fileName,fileName.Replace(pathFrom,pathTo));
+                    File.Copy(fileName, fileName.Replace(pathFrom,pathTo));
                 }
 
                 string[] subdirEntries = Directory.GetDirectories(pathFrom);

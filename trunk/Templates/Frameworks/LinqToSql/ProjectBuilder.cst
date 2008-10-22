@@ -245,20 +245,37 @@ Description: Used to Quick Start Visual Studio Projects
 		
 		protected void GetVsProject(string directoryPath, string projectFileName, string fileName)
 		{
+			// Unzip Folder
 			string zipFilePath = String.Format("{0}.zip", fileName);
 			string zipProjFileName = String.Format("{0}.{1}proj", fileName, ProjectBuilder.LanguageAppendage);
-			UnzipFile(zipFilePath, directoryPath, zipProjFileName, projectFileName);
+			UnzipFileAndRename(zipFilePath, directoryPath, zipProjFileName, projectFileName);
+			
+			// Delete the vstemplate
+			string vstemplate = QuickStartUtils.FindFileInDirectory(".vstemplate", directoryPath);
+			if(!String.IsNullOrEmpty(vstemplate)&& File.Exists(vstemplate))
+				File.Delete(vstemplate);
+			
+			// Delete Class1.cs
+			string class1 = QuickStartUtils.FindFileInDirectory("class1.cs", directoryPath);
+			if(!String.IsNullOrEmpty(class1)&& File.Exists(class1))
+				File.Delete(class1);
+			
+			// Move AssemplyInfo to Properties Folder
+			string assemblyInfo = QuickStartUtils.FindFileInDirectory("assemblyinfo.cs", directoryPath);
+			if(!String.IsNullOrEmpty(assemblyInfo) && File.Exists(assemblyInfo))
+			{
+				string propertiesDirectory = Path.Combine(directoryPath, "Properties");
+				if(!Directory.Exists(propertiesDirectory))
+					Directory.CreateDirectory(propertiesDirectory);
+				File.Move(assemblyInfo, Path.Combine(propertiesDirectory, Path.GetFileName(assemblyInfo)));
+			}
 		}
-		protected void UnzipFile(string zipFileName, string targetDirectory, params string[] renameFiles)
+		protected void UnzipFileAndRename(string zipFileName, string targetDirectory, params string[] renameFiles)
 		{
 			// Unzip Files
 			FastZip fz = new FastZip();
 			string zipFilePath = Path.Combine(ProjectBuilder.ZipFileFolder, zipFileName);
 			fz.ExtractZip(zipFilePath, targetDirectory, "");
-			
-			// Delete the vstempllate file b/c we will not be using it
-			string vstemplate = QuickStartUtils.FindFileInDirectory(".vstemplate", targetDirectory);
-			File.Delete(vstemplate);
 			
 			// Rename Files
 			if(renameFiles.Length % 2 != 0)
