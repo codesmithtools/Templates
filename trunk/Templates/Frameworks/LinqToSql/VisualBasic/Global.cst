@@ -33,6 +33,8 @@ Description:
     p.RenderToFile(parentFileName, true)
 	
 	Dim fileName As String = "Global.asax.cs"
+	
+	Me.RegisterReference("System.Data.Linq")
     
     Response.WriteLine(fileName)
     t.RenderToFile(fileName, parentFileName, true)
