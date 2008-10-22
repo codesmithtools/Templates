@@ -64,7 +64,7 @@ namespace <%= Database.EntityNamespace %>
             {
                 if(sourceAttributes.PropertyMap.ContainsKey(column.Member))
                 {
-                    foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[column.Name].Attributes)
+                    foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[column.Member].Attributes)
                     {
 %>
             <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
