@@ -35,6 +35,9 @@ Description:
     p.RenderToFile(parentFileName, true);
 	
 	string fileName = "Global.asax.cs";
+	
+	this.RegisterReference("System.Data.Linq");
+	this.RegisterReference("..\LinqToSql\Common\CodeSmith.Data");
     
     Response.WriteLine(fileName);
     t.RenderToFile(fileName, parentFileName, true);

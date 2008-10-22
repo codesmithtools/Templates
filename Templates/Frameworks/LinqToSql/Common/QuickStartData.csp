@@ -53,11 +53,5 @@
       <property name="DataManagerName">$myDatabase$DataManager</property>
       <property name="ManagerNamespace">$myContextNamespace$</property>
     </propertySet>
-    <propertySet name="Global" template="$linqToSql$\$language$\Global.cst">
-      <property name="InlineEditing">False</property>
-      <property name="ClassNamespace">$safeprojectname$</property>
-      <property name="ContextNamespace">$myContextNamespace$</property>
-      <property name="DataContextName">$myDatabase$DataContext</property>
-    </propertySet>
   </propertySets>
 </codeSmith>
