@@ -133,6 +133,19 @@ Description: Used to Quick Start Visual Studio Projects
 		{
 			GetVsProject(projectPath, "ClassLibrary");
 			File.Copy(@".\Common\QuickStart.csp", Path.Combine(projectPath.DirectoryPath, "QuickStart.csp"));
+			
+			// Delete Class1
+			string class1File = String.Concat("Class1.", ProjectBuilder.LanguageAppendage);
+			string class1Path = QuickStartUtils.FindFileInDirectory(class1File, projectPath.DirectoryPath);
+			if(!String.IsNullOrEmpty(class1Path)&& File.Exists(class1Path))
+			{
+				// Delete File
+				File.Delete(class1Path);
+				// Remove From Proj
+				QuickStartUtils.FindAndReplace(projectPath.FilePath,
+					String.Format(@"<Compile Include=""{0}"" />", class1File),
+					String.Empty);
+			}
 		}
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
@@ -254,19 +267,6 @@ Description: Used to Quick Start Visual Studio Projects
 			string vstemplate = QuickStartUtils.FindFileInDirectory(".vstemplate", projectPath.DirectoryPath);
 			if(!String.IsNullOrEmpty(vstemplate)&& File.Exists(vstemplate))
 				File.Delete(vstemplate);
-			
-			// Delete Class1
-			string class1File = String.Concat("Class1.", ProjectBuilder.LanguageAppendage);
-			string class1Path = QuickStartUtils.FindFileInDirectory(class1File, projectPath.DirectoryPath);
-			if(!String.IsNullOrEmpty(class1Path)&& File.Exists(class1Path))
-			{
-				// Delete File
-				File.Delete(class1Path);
-				// Remove From Proj
-				QuickStartUtils.FindAndReplace(projectPath.FilePath,
-					String.Format(@"<Compile Include=""{0}"" />", class1File),
-					String.Empty);
-			}
 			
 			// Move AssemplyInfo to Properties Folder
 			string assemblyInfo = QuickStartUtils.FindFileInDirectory("assemblyinfo.cs", projectPath.DirectoryPath);
