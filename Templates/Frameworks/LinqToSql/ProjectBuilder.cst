@@ -37,12 +37,10 @@ Description: Used to Quick Start Visual Studio Projects
 		// Create Website Project
 		WebsiteProjectCreator websiteProjectCreator = new WebsiteProjectCreator(this);
 		solutionItems.Add(websiteProjectCreator.CreateProject(String.Concat(this.ProjectName, ".Website")));
-		//solutionItems.Add(CreateWebsiteProject());
 		
 		// Create Data Project
 		DataProjectCreator dataProjectCreator = new DataProjectCreator(this);
 		solutionItems.Add(dataProjectCreator.CreateProject(String.Concat(this.ProjectName, ".Data")));
-		//solutionItems.Add(CreateDataProject());
 		
 		// Create UnitTests Project
 		UnitTestProjectCreator unitTestProjectCreator = new UnitTestProjectCreator(this);
