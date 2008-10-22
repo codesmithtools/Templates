@@ -115,7 +115,7 @@ Description: Used to Quick Start Visual Studio Projects
 		}
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
-			VariableUpdateDirectory(projectPath.DirectoryPath, projectGuid, projectName);
+			VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage);
 			UpdateWebConfig(projectPath.DirectoryPath);
 		}
 	}
@@ -136,7 +136,7 @@ Description: Used to Quick Start Visual Studio Projects
 		}
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
-			VariableUpdateDirectory(projectPath.DirectoryPath, projectGuid, projectName);
+			VariableUpdateDirectory(projectPath, projectGuid, projectName,this.ProjectBuilder.LanguageAppendage);
 			VariableUpdateQuickStartCsp(projectPath, projectName);
 		}
 		
@@ -175,7 +175,7 @@ Description: Used to Quick Start Visual Studio Projects
 		}
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
-			VariableUpdateDirectory(projectPath.DirectoryPath, projectGuid, projectName);
+			VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage);
 		}
 	}
 	
@@ -288,15 +288,16 @@ Description: Used to Quick Start Visual Studio Projects
 			}
 		}
 		
-		protected void VariableUpdateDirectory(string directoryPath, string projectGuid, string projectName)
+		protected void VariableUpdateDirectory(PathHelper helper, string projectGuid, string projectName, string language)
 		{
-			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$projectname\$", projectName);
-			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$safeprojectname\$", projectName);
-			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$guid1\$", @"{" + projectGuid + @"}");
-			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", " ");
-			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$endif\$", " ");
-			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$registeredorganization\$", "CodeSmith Tools, LLC");
-			QuickStartUtils.ReplaceAllInDirectory(directoryPath, @"\$year\$", DateTime.Now.Year.ToString());
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$projectname\$", projectName);
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$safeprojectname\$", projectName);
+			QuickStartUtils.FindAndReplace(helper.FilePath, @"\$guid1\$", @"{" + projectGuid + @"}");
+			QuickStartUtils.FindAndReplace(Path.Combine(helper.DirectoryPath,@"Properties\AssemblyInfo." + language), @"\$guid1\$", Guid.NewGuid().ToString());
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", " ");
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$endif\$", " ");
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$registeredorganization\$", "CodeSmith Tools, LLC");
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$year\$", DateTime.Now.Year.ToString());
 		}
 		protected void UpdateWebConfig(string directoryPath)
 		{
