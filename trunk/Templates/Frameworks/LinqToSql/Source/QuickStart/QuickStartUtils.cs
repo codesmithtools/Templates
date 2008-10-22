@@ -50,15 +50,22 @@ namespace QuickStartUtils
         public static void FindAndReplace(string fileName, string find, string replace)
         {
             //Taken From http://www.csharp411.com/searchreplace-in-files/
-            StreamReader reader = new StreamReader(fileName);
-            string content = reader.ReadToEnd();
-            reader.Close();
+            
+            string content;
+
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                content = reader.ReadToEnd();
+                reader.Close();
+            }
 
             content = Regex.Replace(content, find, replace);
 
-            StreamWriter writer = new StreamWriter(fileName);
-            writer.Write(content);
-            writer.Close();
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
+                writer.Write(content);
+                writer.Close();
+            }
         }
 
         public static string FindFileInDirectory(string find, string path)
