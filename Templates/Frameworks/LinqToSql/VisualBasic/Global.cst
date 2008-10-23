@@ -8,6 +8,7 @@ Description:
 <%@ Property Name="InlineEditing" Type="System.Boolean" Default="false" Optional="false" Description="Default to Inline Grid Editing for Webpages" %>
 <%@ Property Name="ContextNamespace" Type="System.String" Default="" Optional="false" Description="The namespace where the Data Context is found"%>
 <%@ Property Name="DataContextName" Type="System.String" Default="" Optional="False" Description="Name of the Data Context"%>
+<%@ Import Namespace="System.IO" %>
 
 <%@ Register Name="GlobalParentClass" 
     Template="Internal\Global.Parent.cst"
@@ -35,6 +36,9 @@ Description:
 	Dim fileName As String = "Global.asax.cs"
 	
 	Me.RegisterReference("System.Data.Linq")
+	Me.RegisterReference(Path.GetFullPath(Path.Combine( _
+            Me.CodeTemplateInfo.DirectoryName, _
+            "..\\Common\\CodeSmith.Data.dll")))
     
     Response.WriteLine(fileName)
     t.RenderToFile(fileName, parentFileName, true)
