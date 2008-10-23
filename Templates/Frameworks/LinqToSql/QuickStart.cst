@@ -30,6 +30,10 @@ Description: Used to Quick Start Visual Studio Projects
 		// Prep Directories
 		if(!Directory.Exists(Location))
 			Directory.CreateDirectory(Location);
+			
+		// Copy Plinqo Templates
+		if(IncludePlinqoFiles)
+            QuickStartUtils.CopyDirectory(@"..\LinqToSql",Location + @"\LinqToSql",0);
 				
 		// Create SolutionItems
 		List<QuickStartSolution.SolutionItem> solutionItems = new List<QuickStartSolution.SolutionItem>();
@@ -48,10 +52,6 @@ Description: Used to Quick Start Visual Studio Projects
 		UnitTestProjectCreator unitTestProjectCreator = new UnitTestProjectCreator(this);
 		QuickStartSolution.SolutionItem unitTestsProject = unitTestProjectCreator.CreateProject(String.Concat(this.ProjectName, ".UnitTests"), dataProject);
 		solutionItems.Add(unitTestsProject);
-		
-		// Copy Plinqo Templates
-		if(IncludePlinqoFiles)
-            QuickStartUtils.CopyDirectory(@"..\LinqToSql",Location + @"\LinqToSql",0);
 		
 		// Create Solution
 		CreateSolution(solutionItems);
@@ -109,19 +109,20 @@ Description: Used to Quick Start Visual Studio Projects
 	
 	class WebsiteProjectCreator : VsProjectCreator
 	{
-		public WebsiteProjectCreator(ProjectBuilder_cst projectBuilder)
+		public WebsiteProjectCreator(QuickStart_cst projectBuilder)
 			: base(projectBuilder) { }
 		
 		protected override void GetFiles(PathHelper projectPath)
 		{
 			GetVsProject(projectPath, ProjectBuilder.FileName);
-			File.Copy(@".\Common\QuickStartWeb.csp", Path.Combine(projectPath.DirectoryPath, "QuickStartWeb.csp"));
 		}
+		
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
 			VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage);
-			VariableUpdateQuickStartCsp(projectPath, projectName, "QuickStartWeb.csp");
 			UpdateWebConfig(projectPath.DirectoryPath);
+			UpdateGlobal(projectPath);
+			AddReferences(projectPath);
 		}
 		
 		private void UpdateWebConfig(string directoryPath)
@@ -131,6 +132,43 @@ Description: Used to Quick Start Visual Studio Projects
 					<add name=""" + ProjectBuilder.SourceDatabase.Name + @"ConnectionString"" connectionString=""" + ProjectBuilder.SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
 				</connectionStrings>");
 		}
+		
+		private void UpdateGlobal(PathHelper projectPath)
+		{
+			CodeTemplate globalTemplate = null;
+			if(ProjectBuilder.LanguageAppendage == "cs")
+				globalTemplate = ProjectBuilder.GetCodeTemplateInstance(@"CSharp\Global.cst");
+			else
+				globalTemplate = ProjectBuilder.GetCodeTemplateInstance(@"VisualBasic\Global.cst");
+			
+			string projectNamespace = ProjectBuilder.ProjectName + @".website";
+			globalTemplate.SetProperty("ClassNamespace",projectNamespace);
+			globalTemplate.SetProperty("ContextNamespace",ProjectBuilder.DataContext);
+			globalTemplate.SetProperty("DataContextName",ProjectBuilder.SourceDatabase.Name + "DataContext");
+			globalTemplate.ContextData.Add("RenderLocation",projectPath.DirectoryPath);
+			globalTemplate.RenderToString();
+		}
+		
+		private void AddReferences(PathHelper projectPath)
+		{
+			string systemLocationRegex = @"<Reference Include=""System\.Data"" />";
+			string systemData = @"<Reference Include=""System.Data"" />";
+			// Formated like this to insure proper formatting in the xml file.
+			string systemDataLinq = @"<Reference Include=""System.Data.Linq"">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>";
+	
+			string codeSmithData = null;
+			if(ProjectBuilder.IncludePlinqoFiles)
+				codeSmithData = @"<Reference Include=""CodeSmith.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL"">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\LinqToSql\Common\CodeSmith.Data.dll</HintPath>
+	</Reference>";
+			else
+				codeSmithData = null;
+			
+			QuickStartUtils.FindAndReplace(projectPath.FilePath,systemLocationRegex,String.Concat(systemData,systemDataLinq,codeSmithData));
+		}
 	}
 	
 	#endregion
@@ -139,7 +177,7 @@ Description: Used to Quick Start Visual Studio Projects
 	
 	class DataProjectCreator : VsProjectCreator
 	{
-		public DataProjectCreator(ProjectBuilder_cst projectBuilder)
+		public DataProjectCreator(QuickStart_cst projectBuilder)
 			: base(projectBuilder) { }
 		
 		protected override void GetFiles(PathHelper projectPath)
@@ -163,7 +201,22 @@ Description: Used to Quick Start Visual Studio Projects
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
 			VariableUpdateDirectory(projectPath, projectGuid, projectName,this.ProjectBuilder.LanguageAppendage);
-			VariableUpdateQuickStartCsp(projectPath, projectName, "QuickStartData.csp");
+			
+			string linqToSqlPath = (ProjectBuilder.IncludePlinqoFiles) ? @"..\LinqToSql" : String.Empty; // Needs Normal Path here
+			string cspPath = Path.Combine(projectPath.DirectoryPath,"QuickStartData.csp");
+	
+			QuickStartUtils.FindAndReplace(cspPath, @"\$connectionString\$", ProjectBuilder.SourceDatabase.ConnectionString);
+			QuickStartUtils.FindAndReplace(cspPath, @"\$myDatabase\$", ProjectBuilder.SourceDatabase.Database.Name);
+			QuickStartUtils.FindAndReplace(cspPath, @"\$myContextNamespace\$", ProjectBuilder.DataContext);
+			QuickStartUtils.FindAndReplace(cspPath, @"\$language\$", ProjectBuilder.LanguageFolder);
+			QuickStartUtils.FindAndReplace(cspPath, @"\$linqToSql\$", linqToSqlPath);
+			
+			
+			//The location in the csproj file directly below where we want to insert the csp include
+			QuickStartUtils.FindAndReplace(projectPath.FilePath, ProjectInsertRegex,
+				String.Format("<ItemGroup>{0}\t\t<None Include=\"{1}\" />{0}\t</ItemGroup>{0}\t{2}", Environment.NewLine, "QuickStartData.csp", ProjectInsertLine));
+			//QuickStartUtils.FindAndReplace(projectPath.FilePath, "</Project>",
+			//	String.Format("\t<Import Project=\"$(MSBuildExtensionsPath)\\CodeSmith\\CodeSmith.targets\" />{0}</Project>", Environment.NewLine));
 		}
 		
 		
@@ -175,7 +228,7 @@ Description: Used to Quick Start Visual Studio Projects
 	
 	class UnitTestProjectCreator : VsProjectCreator
 	{
-		public UnitTestProjectCreator(ProjectBuilder_cst projectBuilder)
+		public UnitTestProjectCreator(QuickStart_cst projectBuilder)
 			: base(projectBuilder) { }
 		
 		protected override void GetFiles(PathHelper projectPath)
@@ -220,9 +273,9 @@ Description: Used to Quick Start Visual Studio Projects
 		
 		#endregion
 		
-		protected ProjectBuilder_cst ProjectBuilder;
+		protected QuickStart_cst ProjectBuilder;
 		
-		public VsProjectCreator(ProjectBuilder_cst projectBuilder)
+		public VsProjectCreator(QuickStart_cst projectBuilder)
 		{
 			this.ProjectBuilder = projectBuilder;
 		}
@@ -328,23 +381,7 @@ Description: Used to Quick Start Visual Studio Projects
 			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$registeredorganization\$", "CodeSmith Tools, LLC");
 			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$year\$", DateTime.Now.Year.ToString());
 		}
-		protected void VariableUpdateQuickStartCsp(PathHelper projectPath, string projectName, string cspName)
-		{
-			string linqToSqlPath = (ProjectBuilder.IncludePlinqoFiles) ? @"..\LinqToSql" : String.Empty; // Needs Normal Path here
-			string quickStartPath = Path.Combine(projectPath.DirectoryPath, cspName);
-	
-			QuickStartUtils.FindAndReplace(quickStartPath, @"\$connectionString\$", ProjectBuilder.SourceDatabase.ConnectionString);
-			QuickStartUtils.FindAndReplace(quickStartPath, @"\$myDatabase\$", ProjectBuilder.SourceDatabase.Database.Name);
-			QuickStartUtils.FindAndReplace(quickStartPath, @"\$myContextNamespace\$", ProjectBuilder.DataContext);
-			QuickStartUtils.FindAndReplace(quickStartPath, @"\$language\$", ProjectBuilder.LanguageFolder);
-			QuickStartUtils.FindAndReplace(quickStartPath, @"\$linqToSql\$", linqToSqlPath);
-			
-			//The location in the csproj file directly below where we want to insert the csp include
-			QuickStartUtils.FindAndReplace(projectPath.FilePath, ProjectInsertRegex,
-				String.Format("<ItemGroup>{0}\t\t<Generate Include=\"{1}\" />{0}\t</ItemGroup>{0}\t{2}", Environment.NewLine, cspName, ProjectInsertLine));
-			QuickStartUtils.FindAndReplace(projectPath.FilePath, "</Project>",
-				String.Format("\t<Import Project=\"$(MSBuildExtensionsPath)\\CodeSmith\\CodeSmith.targets\" />{0}</Project>", Environment.NewLine));
-		}
+		
 		
 		protected virtual string ProjectInsertRegex
 		{

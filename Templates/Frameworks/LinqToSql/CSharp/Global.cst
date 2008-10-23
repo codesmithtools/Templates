@@ -31,17 +31,17 @@ Description:
 	p.ClassNamespace = ClassNamespace;
 	
 	string parentFileName = "Global.asax";
-	
+	string renderPath = this.ContextData.Get("RenderLocation") != null ? this.ContextData.Get("RenderLocation") : String.Empty;
+	string parentFilePath = Path.Combine(renderPath,parentFileName);
+			
     Response.WriteLine(parentFileName);
-    p.RenderToFile(parentFileName, true);
+    p.RenderToFile(parentFilePath, true);
 	
 	string fileName = "Global.asax.cs";
+	string filePath = Path.Combine(renderPath,fileName);
 	
 	this.RegisterReference("System.Data.Linq");
-	this.RegisterReference(Path.GetFullPath(Path.Combine(
-            this.CodeTemplateInfo.DirectoryName,
-            @"..\Common\CodeSmith.Data.dll")));
     
     Response.WriteLine(fileName);
-    t.RenderToFile(fileName, parentFileName, true);
+    t.RenderToFile(filePath, parentFilePath, true);
 %>
