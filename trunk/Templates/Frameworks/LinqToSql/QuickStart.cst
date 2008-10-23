@@ -3,7 +3,7 @@ Name: Quick Start
 Author: Reggie Bradshaw
 Description: Used to Quick Start Visual Studio Projects
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
 <%@ Assembly Name="System" %>
 <%@ Assembly Name="ICSharpCode.SharpZipLib" Path="Common" %>
 <%@ Assembly Name="QuickStartUtils" Path="Common"%>
@@ -11,16 +11,16 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Import Namespace="ICSharpCode.SharpZipLib.Zip" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="QuickStartUtils" %>
-<%@ Register Name="QuickStartSolution" Template="QuickStartSolution.cst" %>
-<%@ Property Name="VisualStudioVersion" Type="QuickStartSolution.VisualStudioVersionEnum" Optional="False" Category="1.Project" Description="Version of Visual Studio to Generate for." %>
-<%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="1.Project" Description="This is the path to the project location." %>
-<%@ Property Name="CodeSmithSamplesLocation" Type="System.String" Default="" Optional="True" Category="" Description="" %>
-<%@ Property Name="ProjectName" Type="System.String" Default="" Optional="False" Category="1.Project" Description="Name of the project to be generated." %>
-<%@ Property Name="Language" Type="QuickStartUtils.LanguageEnum" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in" %>
-<%@ Property Name="ProjectType" Type="QuickStartUtils.ProjectTypeEnum" Default="DynamicData" Optional="False" Category="" Description="Type of Project to be created" %>
-<%@ Property Name="DataContext" Type="System.String" Default="" Optional="False" Category="2.Data" Description="Name Space for the Data Project." %>
-<%@ Property Name="IncludePlinqoFiles" Type="System.Boolean" Default="False" Optional="False" Category="2.Data" Description="Include a copy of the LinqToSql Templates in the project directory" %>
-<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Default="" Optional="False" Category="3.Database" Description="Source Database" %>
+<%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
+<%@ Property Name="VisualStudioVersion" Type="QuickStartSolution.VisualStudioVersionEnum" Optional="False" Category="1.Solution" Description="Version of Visual Studio to Generate for." %>
+<%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="1.Solution" Description="This is the path to the Solution location." %>
+<%@ Property Name="SolutionName" Type="System.String" Default="" Optional="False" Category="1.Solution" Description="Name of the project to be generated." %>
+<%@ Property Name="Language" Type="QuickStartUtils.LanguageEnum" Default="CSharp" Optional="False" Category="1.Solution" Description="Language the project will be in" %>
+<%@ Property Name="ProjectType" Type="QuickStartUtils.ProjectTypeEnum" Default="DynamicData" Optional="False" Category="3.Interface Project" Description="Type of Project to be created" %>
+<%@ Property Name="DataProjectName" Type="System.String" Default="" Optional="False" Category="2.Data Project" Description="Name Space for the Data Project." %>
+<%@ Property Name="CopyTemplatesToFolder" Type="System.Boolean" Default="False" Optional="False" Category="2.Data Project" Description="Include a copy of the LinqToSql Templates in the project directory" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Default="" Optional="False" Category="2.Data Project" Description="Source Database" %>
+<%@ Property Name="InterfaceProjectName" Type="System.String" Default="" Optional="False" Category="3.Interface Project" Description="Name Space for the Project." %>
 
 <% CreateDirectoryStructure(); %>
 <script runat="template">
@@ -32,7 +32,7 @@ Description: Used to Quick Start Visual Studio Projects
 			Directory.CreateDirectory(Location);
 			
 		// Copy Plinqo Templates
-		if(IncludePlinqoFiles)
+		if(CopyTemplatesToFolder)
             QuickStartUtils.CopyDirectory(@"..\LinqToSql",Location + @"\LinqToSql",0);
 				
 		// Create SolutionItems
@@ -40,17 +40,17 @@ Description: Used to Quick Start Visual Studio Projects
 		
 		// Create Data Project
 		DataProjectCreator dataProjectCreator = new DataProjectCreator(this);
-		QuickStartSolution.SolutionItem dataProject = dataProjectCreator.CreateProject(String.Concat(this.ProjectName, ".Data"));
+		QuickStartSolution.SolutionItem dataProject = dataProjectCreator.CreateProject(String.Concat(this.DataProjectName));
 		solutionItems.Add(dataProject);
 		
 		// Create Website Project
 		WebsiteProjectCreator websiteProjectCreator = new WebsiteProjectCreator(this);
-		QuickStartSolution.SolutionItem websiteProject = websiteProjectCreator.CreateProject(String.Concat(this.ProjectName, ".Website"), dataProject);
+		QuickStartSolution.SolutionItem websiteProject = websiteProjectCreator.CreateProject(String.Concat(this.InterfaceProjectName), dataProject);
 		solutionItems.Add(websiteProject);
 		
 		// Create UnitTests Project
 		UnitTestProjectCreator unitTestProjectCreator = new UnitTestProjectCreator(this);
-		QuickStartSolution.SolutionItem unitTestsProject = unitTestProjectCreator.CreateProject(String.Concat(this.ProjectName, ".UnitTests"), dataProject);
+		QuickStartSolution.SolutionItem unitTestsProject = unitTestProjectCreator.CreateProject(String.Concat(this.SolutionName, ".UnitTests"), dataProject);
 		solutionItems.Add(unitTestsProject);
 		
 		// Create Solution
@@ -63,7 +63,7 @@ Description: Used to Quick Start Visual Studio Projects
 		quickStartSolution.VisualStudioVersion = VisualStudioVersion;
 		quickStartSolution.SolutionItems = solutionItems;
 		
-		string filePathAboslute = Path.Combine(Location, String.Concat(ProjectName, ".sln"));
+		string filePathAboslute = Path.Combine(Location, String.Concat(SolutionName, ".sln"));
 		quickStartSolution.RenderToFile(filePathAboslute, true);
 	}
 	
@@ -141,9 +141,9 @@ Description: Used to Quick Start Visual Studio Projects
 			else
 				globalTemplate = ProjectBuilder.GetCodeTemplateInstance(@"VisualBasic\Global.cst");
 			
-			string projectNamespace = ProjectBuilder.ProjectName + @".website";
+			string projectNamespace = ProjectBuilder.SolutionName + @".website";
 			globalTemplate.SetProperty("ClassNamespace",projectNamespace);
-			globalTemplate.SetProperty("ContextNamespace",ProjectBuilder.DataContext);
+			globalTemplate.SetProperty("ContextNamespace",ProjectBuilder.DataProjectName);
 			globalTemplate.SetProperty("DataContextName",ProjectBuilder.SourceDatabase.Name + "DataContext");
 			globalTemplate.ContextData.Add("RenderLocation",projectPath.DirectoryPath);
 			globalTemplate.RenderToString();
@@ -159,7 +159,7 @@ Description: Used to Quick Start Visual Studio Projects
     </Reference>";
 	
 			string codeSmithData = null;
-			if(ProjectBuilder.IncludePlinqoFiles)
+			if(ProjectBuilder.CopyTemplatesToFolder)
 				codeSmithData = @"<Reference Include=""CodeSmith.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL"">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\LinqToSql\Common\CodeSmith.Data.dll</HintPath>
@@ -186,6 +186,7 @@ Description: Used to Quick Start Visual Studio Projects
 			File.Copy(@".\Common\QuickStartData.csp", Path.Combine(projectPath.DirectoryPath, "QuickStartData.csp"));
 			
 			// Delete Class1
+			Debugger.Break();
 			string class1File = String.Concat("Class1.", ProjectBuilder.LanguageAppendage);
 			string class1Path = QuickStartUtils.FindFileInDirectory(class1File, projectPath.DirectoryPath);
 			if(!String.IsNullOrEmpty(class1Path)&& File.Exists(class1Path))
@@ -202,12 +203,12 @@ Description: Used to Quick Start Visual Studio Projects
 		{
 			VariableUpdateDirectory(projectPath, projectGuid, projectName,this.ProjectBuilder.LanguageAppendage);
 			
-			string linqToSqlPath = (ProjectBuilder.IncludePlinqoFiles) ? @"..\LinqToSql" : String.Empty; // Needs Normal Path here
+			string linqToSqlPath = (ProjectBuilder.CopyTemplatesToFolder) ? @"..\LinqToSql" : String.Empty; // Needs Normal Path here
 			string cspPath = Path.Combine(projectPath.DirectoryPath,"QuickStartData.csp");
 	
 			QuickStartUtils.FindAndReplace(cspPath, @"\$connectionString\$", ProjectBuilder.SourceDatabase.ConnectionString);
 			QuickStartUtils.FindAndReplace(cspPath, @"\$myDatabase\$", ProjectBuilder.SourceDatabase.Database.Name);
-			QuickStartUtils.FindAndReplace(cspPath, @"\$myContextNamespace\$", ProjectBuilder.DataContext);
+			QuickStartUtils.FindAndReplace(cspPath, @"\$myContextNamespace\$", ProjectBuilder.DataProjectName);
 			QuickStartUtils.FindAndReplace(cspPath, @"\$language\$", ProjectBuilder.LanguageFolder);
 			QuickStartUtils.FindAndReplace(cspPath, @"\$linqToSql\$", linqToSqlPath);
 			
