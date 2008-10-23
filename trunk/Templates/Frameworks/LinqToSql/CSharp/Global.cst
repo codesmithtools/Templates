@@ -10,6 +10,7 @@ Description:
 <%@ Property Name="DataContextName" Type="System.String" Default="" Optional="False" Description="Name of the Data Context"%>
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.IO" %>
 
 <%@ Register Name="GlobalParentClass" 
     Template="Internal\Global.Parent.cst"
@@ -37,7 +38,9 @@ Description:
 	string fileName = "Global.asax.cs";
 	
 	this.RegisterReference("System.Data.Linq");
-	this.RegisterReference("..\LinqToSql\Common\CodeSmith.Data");
+	this.RegisterReference(Path.GetFullPath(Path.Combine(
+            this.CodeTemplateInfo.DirectoryName,
+            @"..\Common\CodeSmith.Data.dll")));
     
     Response.WriteLine(fileName);
     t.RenderToFile(fileName, parentFileName, true);
