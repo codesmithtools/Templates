@@ -18,7 +18,7 @@ Description: Generates a Manager Object for NHibernate.
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Map Name="SystemCSharp" Src="System-CSharpAlias" %>
 <% List<SearchCriteria> scList = SearchCriteria.GetAllSearchCriteria(SourceTable); %>
-<% this.tablePrefix = TablePrefix; %>
+<% tablePrefix = TablePrefix; %>
 using System;
 using System.Collections.Generic;
 using System.Text;

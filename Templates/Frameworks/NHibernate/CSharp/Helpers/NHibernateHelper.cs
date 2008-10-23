@@ -18,7 +18,7 @@ public enum VisualStudioVersion
     VS_2008
 }
 
-public class NHibernateHelper : CodeTemplate
+public class NHibernateHelper2 : CodeTemplate
 {
     public string GetCriterionNamespace(NHibernateVersion version)
     {
@@ -49,6 +49,7 @@ public class NHibernateHelper : CodeTemplate
             return _keyWords;
         }
     }
+	
     #region Variable & Class Name Methods
 
     public string GetPropertyName(TableSchema table, ColumnSchema column)

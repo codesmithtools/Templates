@@ -13,7 +13,7 @@ Description: Generates a Manager Factory class for NHibernate.
 <%@ Assembly Name="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
-<% this.tablePrefix = TablePrefix; %>
+<% tablePrefix = TablePrefix; %>
 using System;
 using System.Collections.Generic;
 using System.Text;

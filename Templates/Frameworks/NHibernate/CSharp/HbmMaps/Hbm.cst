@@ -3,7 +3,7 @@ Name: Hbm.cst
 Author: Tom DuPont
 Description: Generates a HBM Map for NHibernate.
 --%>
-<%@ CodeTemplate Language="C#" Src="..\Helpers\NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="XML" Debug="False" Description="Generates a HBM Map for NHibernate." %>
+<%@ CodeTemplate Language="C#" Inherits="NHibernateHelper" TargetLanguage="XML" Debug="False" Description="Generates a HBM Map for NHibernate." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
@@ -11,9 +11,11 @@ Description: Generates a HBM Map for NHibernate.
 <%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2b. Namespaces" Description="The desired Namespace for the Business Objects." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
-<% this.tablePrefix = TablePrefix; %>
+<%@ Import Namespace="NHibernateHelper" %>
+<% tablePrefix = TablePrefix; %>
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="<%= BusinessNamespace %>" assembly="<%= AssemblyName %>">
 	<class name="<%= BusinessNamespace %>.<%= GetClassName(SourceTable) %>, <%= AssemblyName %>" table="<%= SourceTable.Name %>" lazy="true">
@@ -40,6 +42,13 @@ Description: Generates a HBM Map for NHibernate.
 		<property name="<%= GetPropertyName(column) %>" column="<%= column.Name %>" />
 		<% } %>
 		<% // Many-To-One %>
+		
+		<% AssociationManager associationManager = new AssociationManager(SourceTable, ExcludedTables); %>
+		<% foreach(Association association in associationManager.ManyToOne) { %>
+		<many-to-one name="<%= association.PropertyName %>" column="<%= association.ColumnName %>" class="<%= association.ClassName %>" />
+		<% } %>
+		
+		<% if (false) { %>
 		<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
 		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !mcs.IsPrimaryKeyMember) { %>
@@ -47,6 +56,9 @@ Description: Generates a HBM Map for NHibernate.
 		<% } %>
 		<% } %>
 		<% } %>
+		<% } %>
+		
+		
 		<% // One-To-Many & Many-To-Many %>
 		<% foreach(TableKeySchema tks in SourceTable.PrimaryKeys) { %>
 		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>

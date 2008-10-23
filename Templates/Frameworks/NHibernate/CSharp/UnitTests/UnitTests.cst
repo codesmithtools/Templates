@@ -17,7 +17,7 @@ Description: Generates Unit Tests for NHibernate.
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Map Name="SystemCSharp" Src="System-CSharpAlias" %>
-<% this.tablePrefix = TablePrefix; %>
+<% tablePrefix = TablePrefix; %>
 using System;
 using System.Collections.Generic;
 using System.Text;
