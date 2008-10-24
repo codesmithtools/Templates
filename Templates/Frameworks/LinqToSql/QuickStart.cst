@@ -3,7 +3,7 @@ Name: Quick Start
 Author: Reggie Bradshaw
 Description: Used to Quick Start Visual Studio Projects
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." CompilerVersion="v3.5" %>
 <%@ Assembly Name="System" %>
 <%@ Assembly Name="ICSharpCode.SharpZipLib" Path="Common" %>
 <%@ Assembly Name="QuickStartUtils" Path="Common"%>
@@ -145,7 +145,7 @@ Description: Used to Quick Start Visual Studio Projects
 			globalTemplate.SetProperty("ClassNamespace",projectNamespace);
 			globalTemplate.SetProperty("ContextNamespace",ProjectBuilder.DataProjectName);
 			globalTemplate.SetProperty("DataContextName",ProjectBuilder.SourceDatabase.Name + "DataContext");
-			globalTemplate.ContextData.Add("RenderLocation",projectPath.DirectoryPath);
+			globalTemplate.ContextData["RenderLocation"] = projectPath.DirectoryPath;
 			globalTemplate.RenderToString();
 		}
 		
@@ -186,7 +186,6 @@ Description: Used to Quick Start Visual Studio Projects
 			File.Copy(@".\Common\QuickStartData.csp", Path.Combine(projectPath.DirectoryPath, "QuickStartData.csp"));
 			
 			// Delete Class1
-			Debugger.Break();
 			string class1File = String.Concat("Class1.", ProjectBuilder.LanguageAppendage);
 			string class1Path = QuickStartUtils.FindFileInDirectory(class1File, projectPath.DirectoryPath);
 			if(!String.IsNullOrEmpty(class1Path)&& File.Exists(class1Path))
