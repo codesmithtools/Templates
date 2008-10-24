@@ -3,12 +3,14 @@ Name: BusinessBase.cst
 Author: Tom DuPont
 Description: Generates the NHibernateSessionManager class for NHibernate.
 --%>
-<%@ CodeTemplate Language="C#" Src="..\Helpers\NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="C#" Debug="False" Description="Generates the NHibernateSession class for NHibernateManager." %>
+<%@ CodeTemplate Language="C#" Inherits="NHibernateHelper" TargetLanguage="C#" Debug="False" Description="Generates the NHibernateSession class for NHibernateManager." %>
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="2. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="NHibernateHelper" %>
 using System;
 using System.Collections.Generic;
 using System.Text;
