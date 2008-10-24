@@ -12,15 +12,17 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="QuickStartUtils" %>
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
-<%@ Property Name="VisualStudioVersion" Type="QuickStartSolution.VisualStudioVersionEnum" Optional="False" Category="1.Solution" Description="Version of Visual Studio to Generate for." %>
-<%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="1.Solution" Description="This is the path to the Solution location." %>
-<%@ Property Name="SolutionName" Type="System.String" Default="" Optional="False" Category="1.Solution" Description="Name of the project to be generated." %>
-<%@ Property Name="Language" Type="QuickStartUtils.LanguageEnum" Default="CSharp" Optional="False" Category="1.Solution" Description="Language the project will be in" %>
-<%@ Property Name="ProjectType" Type="QuickStartUtils.ProjectTypeEnum" Default="DynamicData" Optional="False" Category="3.Interface Project" Description="Type of Project to be created" %>
-<%@ Property Name="DataProjectName" Type="System.String" Default="" Optional="False" Category="2.Data Project" Description="Name Space for the Data Project." %>
-<%@ Property Name="CopyTemplatesToFolder" Type="System.Boolean" Default="False" Optional="False" Category="2.Data Project" Description="Include a copy of the LinqToSql Templates in the project directory" %>
-<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Default="" Optional="False" Category="2.Data Project" Description="Source Database" %>
-<%@ Property Name="InterfaceProjectName" Type="System.String" Default="" Optional="False" Category="3.Interface Project" Description="Name Space for the Project." %>
+<%@ Property Name="VisualStudioVersion" Type="QuickStartSolution.VisualStudioVersionEnum" Optional="False" Category="2.Solution" Description="Version of Visual Studio to Generate for." %>
+<%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="This is the path to the Solution location." %>
+<%@ Property Name="SolutionName" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="Name of the project to be generated." %>
+<%@ Property Name="Language" Type="QuickStartUtils.LanguageEnum" Default="CSharp" Optional="False" Category="2.Solution" Description="Language the project will be in" %>
+<%@ Property Name="ProjectType" Type="QuickStartUtils.ProjectTypeEnum" Default="DynamicData" Optional="False" Category="4.Interface Project" Description="Type of Project to be created" %>
+<%@ Property Name="DataProjectName" Type="System.String" Default="" Optional="False" Category="3.Data Project" Description="Name Space for the Data Project." %>
+<%@ Property Name="CopyTemplatesToFolder" Type="System.Boolean" Default="False" Optional="False" Category="3.Data Project" Description="Include a copy of the LinqToSql Templates in the project directory" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Default="" Optional="False" Category="1.DataBase" Description="Source Database" OnChanged="OnSourceDatabaseChanged" %>
+<%@ Property Name="InterfaceProjectName" Type="System.String" Default="" Optional="False" Category="4.Interface Project" Description="Name Space for the Interface Project." %>
+<%@ Property Name="TestProjectName" Type="System.String" Default="" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
+<%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="True" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
 
 <% CreateDirectoryStructure(); %>
 <script runat="template">
@@ -40,18 +42,21 @@ Description: Used to Quick Start Visual Studio Projects
 		
 		// Create Data Project
 		DataProjectCreator dataProjectCreator = new DataProjectCreator(this);
-		QuickStartSolution.SolutionItem dataProject = dataProjectCreator.CreateProject(String.Concat(this.DataProjectName));
+		QuickStartSolution.SolutionItem dataProject = dataProjectCreator.CreateProject(this.DataProjectName);
 		solutionItems.Add(dataProject);
 		
 		// Create Website Project
 		WebsiteProjectCreator websiteProjectCreator = new WebsiteProjectCreator(this);
-		QuickStartSolution.SolutionItem websiteProject = websiteProjectCreator.CreateProject(String.Concat(this.InterfaceProjectName), dataProject);
+		QuickStartSolution.SolutionItem websiteProject = websiteProjectCreator.CreateProject(this.InterfaceProjectName, dataProject);
 		solutionItems.Add(websiteProject);
 		
 		// Create UnitTests Project
-		UnitTestProjectCreator unitTestProjectCreator = new UnitTestProjectCreator(this);
-		QuickStartSolution.SolutionItem unitTestsProject = unitTestProjectCreator.CreateProject(String.Concat(this.SolutionName, ".UnitTests"), dataProject);
-		solutionItems.Add(unitTestsProject);
+		if(IncludeTestProject)
+		{
+			UnitTestProjectCreator unitTestProjectCreator = new UnitTestProjectCreator(this);
+			QuickStartSolution.SolutionItem unitTestsProject = unitTestProjectCreator.CreateProject(this.TestProjectName, dataProject);
+			solutionItems.Add(unitTestsProject);
+		}
 		
 		// Create Solution
 		CreateSolution(solutionItems);
@@ -158,14 +163,12 @@ Description: Used to Quick Start Visual Studio Projects
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>";
 	
-			string codeSmithData = null;
-			if(ProjectBuilder.CopyTemplatesToFolder)
-				codeSmithData = @"<Reference Include=""CodeSmith.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL"">
+			string codeSmithData = (ProjectBuilder.CopyTemplatesToFolder) ? @"..\LinqToSql" : ProjectBuilder.CodeTemplateInfo.DirectoryName;
+			
+			codeSmithData = String.Concat(@"<Reference Include=""CodeSmith.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL"">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\LinqToSql\Common\CodeSmith.Data.dll</HintPath>
-	</Reference>";
-			else
-				codeSmithData = null;
+      <HintPath>",codeSmithData, @"\Common\CodeSmith.Data.dll</HintPath>
+	</Reference>");
 			
 			QuickStartUtils.FindAndReplace(projectPath.FilePath,systemLocationRegex,String.Concat(systemData,systemDataLinq,codeSmithData));
 		}
@@ -202,7 +205,7 @@ Description: Used to Quick Start Visual Studio Projects
 		{
 			VariableUpdateDirectory(projectPath, projectGuid, projectName,this.ProjectBuilder.LanguageAppendage);
 			
-			string linqToSqlPath = (ProjectBuilder.CopyTemplatesToFolder) ? @"..\LinqToSql" : String.Empty; // Needs Normal Path here
+			string linqToSqlPath = (ProjectBuilder.CopyTemplatesToFolder) ? @"..\LinqToSql" : ProjectBuilder.CodeTemplateInfo.DirectoryName; // Needs Normal Path here
 			string cspPath = Path.Combine(projectPath.DirectoryPath,"QuickStartData.csp");
 	
 			QuickStartUtils.FindAndReplace(cspPath, @"\$connectionString\$", ProjectBuilder.SourceDatabase.ConnectionString);
@@ -395,4 +398,22 @@ Description: Used to Quick Start Visual Studio Projects
 	
 	#endregion
 	
+	private void OnSourceDatabaseChanged(object sender, EventArgs e)
+    {
+        if (SourceDatabase == null)
+            return;
+            
+        if(string.IsNullOrEmpty(SolutionName))
+            SolutionName = SourceDatabase.Name;
+
+        if (string.IsNullOrEmpty(DataProjectName))
+            DataProjectName = SourceDatabase.Database.Name + ".Data";
+			
+		if (string.IsNullOrEmpty(InterfaceProjectName))
+            InterfaceProjectName = SourceDatabase.Database.Name + ".UI";
+			
+		if (string.IsNullOrEmpty(TestProjectName))
+            TestProjectName = SourceDatabase.Database.Name + ".Test";
+
+    }
 </script>
