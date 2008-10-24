@@ -23,4 +23,11 @@ namespace NHibernateHelper
         ExtendedProperty,
         Custom
     }
+
+    public enum AssociationTypeEnum
+    {
+        ManyToOne,
+        OneToMany,
+        ManyToMany
+    }
 }

@@ -12,8 +12,9 @@ namespace NHibernateHelper
 
         protected TableSchema sourceTable;
         protected TableSchemaCollection excludedTables;
+        protected Dictionary<MemberColumnSchema, Association> columnMap;
         private bool initialized = false;
-
+        
         #endregion
 
         #region Constructor
@@ -32,8 +33,11 @@ namespace NHibernateHelper
         {
             if (!initialized)
             {
+                columnMap = new Dictionary<MemberColumnSchema, Association>();
+
                 GetManyToOne();
                 GetToMany();
+                GetToManyUnion();
 
                 UpdateDuplicateProperties();
             }
@@ -77,12 +81,16 @@ namespace NHibernateHelper
             _manyToOne = new List<Association>();
 
             foreach (TableKeySchema tks in sourceTable.ForeignKeys)
-                foreach (MemberColumnSchema mcs in tks.ForeignKeyMemberColumns)
-                    if (!excludedTables.Contains(tks.PrimaryKeyTable) && !mcs.IsPrimaryKeyMember)
-                    {
-                        Association association = new Association(tks.PrimaryKeyTable, mcs, false);
-                        _manyToOne.Add(association);
-                    }
+            {
+                MemberColumnSchema mcs = tks.ForeignKeyMemberColumns[0];
+
+                if (!excludedTables.Contains(tks.PrimaryKeyTable) && !mcs.IsPrimaryKeyMember && !columnMap.ContainsKey(mcs))
+                {
+                    Association association = new Association(AssociationTypeEnum.ManyToOne, tks.PrimaryKeyTable, mcs, false);
+                    _manyToOne.Add(association);
+                    columnMap.Add(mcs, association);
+                }
+            }
         }
         protected void GetToMany()
         {
@@ -90,33 +98,58 @@ namespace NHibernateHelper
             _manyToMany = new List<Association>();
 
             foreach (TableKeySchema tks in sourceTable.PrimaryKeys)
-                foreach (MemberColumnSchema mcs in tks.ForeignKeyMemberColumns)
-                    if (!mcs.IsPrimaryKeyMember)
+            {
+                MemberColumnSchema mcs = tks.ForeignKeyMemberColumns[0];
+
+                if (!mcs.IsPrimaryKeyMember && !columnMap.ContainsKey(mcs))
+                {
+                    if (!NHibernateHelper.IsManyToMany(mcs.Table))
                     {
-                        if (!NHibernateHelper.IsManyToMany(mcs.Table))
+                        if (!excludedTables.Contains(mcs.Table))
                         {
-                            if (!excludedTables.Contains(mcs.Table))
+                            Association association = new Association(AssociationTypeEnum.OneToMany, mcs.Table, mcs, true)
                             {
-                                Association association = new Association(mcs.Table, mcs, true)
-                                {
-                                    Cascade = NHibernateHelper.GetCascade(mcs)
-                                };
-                                _oneToMany.Add(association);
-                            }
-                        }
-                        else
-                        {
-                            TableSchema foreignTable = NHibernateHelper.GetToManyTable(mcs.Table, sourceTable);
-                            if (!excludedTables.Contains(foreignTable))
-                            {
-                                Association association = new Association(foreignTable, mcs, true)
-                                {
-                                    ToManyTableKeyName = NHibernateHelper.GetToManyTableKey(mcs.Table, foreignTable).Name
-                                };
-                                _manyToMany.Add(association);
-                            }
+                                Cascade = NHibernateHelper.GetCascade(mcs)
+                            };
+                            _oneToMany.Add(association);
+                            columnMap.Add(mcs, association);
                         }
                     }
+                    else
+                    {
+                        TableSchema foreignTable = NHibernateHelper.GetToManyTable(mcs.Table, sourceTable);
+                        if (!excludedTables.Contains(foreignTable))
+                        {
+                            Association association = new Association(AssociationTypeEnum.ManyToMany, foreignTable, mcs, true)
+                            {
+                                ToManyTableKeyName = NHibernateHelper.GetToManyTableKey(mcs.Table, foreignTable).Name
+                            };
+                            _manyToMany.Add(association);
+                            columnMap.Add(mcs, association);
+                        }
+                    }
+                }
+            }
+        }
+        protected void GetToManyUnion()
+        {
+            _toManyUnion = new List<Association>();
+            _toManyUnion.AddRange(OneToMany);
+            _toManyUnion.AddRange(ManyToMany);
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public Association GetAssocitionFromColumn(MemberColumnSchema column)
+        {
+            if (columnMap == null)
+                Init();
+
+            return (columnMap.ContainsKey(column))
+                ? columnMap[column]
+                : null;
         }
 
         #endregion
@@ -153,6 +186,17 @@ namespace NHibernateHelper
                 if (_manyToMany == null)
                     Init();
                 return _manyToMany;
+            }
+        }
+
+        private List<Association> _toManyUnion = null;
+        public List<Association> ToManyUnion
+        {
+            get
+            {
+                if (_toManyUnion == null)
+                    Init();
+                return _toManyUnion;
             }
         }
 

@@ -3,19 +3,21 @@ Name: BusinessObject.cst
 Author: Tom DuPont
 Description: Generates a Business Object for NHibernate.
 --%>
-<%@ CodeTemplate Language="C#" Src="..\Helpers\NHibernateHelper.cs" Inherits="NHibernateHelper" TargetLanguage="C#" Debug="False" Description="Generates a Business Object for NHibernate." CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" Inherits="NHibernateHelper" TargetLanguage="C#" Debug="False" Description="Generates a Business Object for NHibernate." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
-<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 <%@ Property Name="VsVersion" Type="VisualStudioVersion" Default="VS_2008" Optional="False" Category="2. Versions" Description="The version of Visual Studio to generate for." %>
 <%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2. Namespaces" Description="The desired Namespace for the Business Objects." %>
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="2. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="NHibernateHelper" %>
 <%@ Map Name="SystemCSharp" Src="System-CSharpAlias" %>
-<% tablePrefix = TablePrefix; %>
+<% AssociationManager associationManager = new AssociationManager(SourceTable, ExcludedTables); %>
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,33 +43,16 @@ namespace <%= BusinessNamespace %>
 		<% } %>
 		
 		<% // Many-To-One %>
-		<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
-		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !mcs.IsPrimaryKeyMember) { %>
-		private <%= GetClassName(tks.PrimaryKeyTable) %> <%= GetPrivateVariableName(tks.PrimaryKeyTable, mcs) %> = null;
-		<% } %>
-		<% } %>
+		<% foreach(Association association in associationManager.ManyToOne) { %>
+		private <%= association.ClassName %> <%= association.PrivateVariableName %> = null;
 		<% } %>
 		
 		<% // One-To-Many & Many-To-Many %>
-		<% foreach(TableKeySchema tks in SourceTable.PrimaryKeys) { %>
-		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if (!mcs.IsPrimaryKeyMember) { %>
-		<% if (!IsManyToMany(mcs.Table)) { %>
-		<% if (!ExcludedTables.Contains(mcs.Table)) { %>
-		private IList<<%= GetClassName(mcs.Table) %>> <%= GetPrivateVariableNamePlural(mcs.Table, mcs) %> = new List<<%= GetClassName(mcs.Table) %>>();
-		<% } %>
-		<% } else { %>
-		<% TableSchema foreignTable = GetToManyTable(mcs.Table, SourceTable); %>
-		<% if (!ExcludedTables.Contains(foreignTable)) { %>
-		private IList<<%= GetClassName(foreignTable) %>> <%= GetPrivateVariableNamePlural(foreignTable, mcs) %> = new List<<%= GetClassName(foreignTable) %>>();
-		<% } %>
-		<% } %>
-		<% } %>
-		<% } %>
+		<% foreach(Association association in associationManager.ToManyUnion) { %>
+		private IList<<%= association.ClassName %>> <%= association.PrivateVariableName %> = new List<<%= association.ClassName %>>();
 		<% } %>
 		
-        #endregion
+		#endregion
 
         #region Constructors
 
@@ -148,73 +133,40 @@ namespace <%= BusinessNamespace %>
 		
 		<% } %>
 		<% // Many-To-One %>
-		<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
-		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if (!mcs.IsPrimaryKeyMember) { %>
-		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !mcs.IsPrimaryKeyMember) { %>
-		public virtual <%= GetClassName(tks.PrimaryKeyTable) %> <%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>
+		<% foreach(Association association in associationManager.ManyToOne) { %>
+		public virtual <%= association.ClassName %> <%= association.PropertyName %>
         {
-            get { return <%= GetPrivateVariableName(tks.PrimaryKeyTable, mcs) %>; }
+            get { return <%= association.PrivateVariableName %>; }
 			set
 			{
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changing();<% } %>
-				<%= GetPrivateVariableName(tks.PrimaryKeyTable, mcs) %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changed();<% } %>
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= association.PropertyName %>Changing();<% } %>
+				<%= association.PrivateVariableName %> = value;
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= association.PropertyName %>Changed();<% } %>
 			}
         }
 		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
-		partial void On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changing();
-		partial void On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changed();
+		partial void On<%= association.PropertyName %>Changing();
+		partial void On<%= association.PropertyName %>Changed();
 		<% } %>
 		
-		<% } %>
-		<% } %>
-		<% } %>
 		<% } %>
 		<% // One-To-Many & Many-To-Many %>
-		<% foreach(TableKeySchema tks in SourceTable.PrimaryKeys) { %>
-		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if (!mcs.IsPrimaryKeyMember) { %>
-		<% if (!IsManyToMany(mcs.Table)) { %>
-		<% if (!ExcludedTables.Contains(mcs.Table)) { %>
-		public virtual IList<<%= GetClassName(mcs.Table) %>> <%= GetPropertyNamePlural(mcs.Table, mcs) %>
+		<% foreach(Association association in associationManager.ToManyUnion) { %>
+		public virtual IList<<%= association.ClassName %>> <%= association.PropertyName %>
         {
-            get { return <%= GetPrivateVariableNamePlural(mcs.Table, mcs) %>; }
+            get { return <%= association.PrivateVariableName %>; }
             set
 			{
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changing();<% } %>
-				<%= GetPrivateVariableNamePlural(mcs.Table, mcs) %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changed();<% } %>
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= association.PropertyName %>Changing();<% } %>
+				<%= association.PrivateVariableName %> = value;
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= association.PropertyName %>Changed();<% } %>
 			}
         }
 		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
-		partial void On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changing();
-		partial void On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changed();
+		partial void On<%= association.PropertyName %>Changing();
+		partial void On<%= association.PropertyName %>Changed();
 		<% } %>
 		
-		<% } %>
-		<% } else { %>
-		<% TableSchema foreignTable = GetToManyTable(mcs.Table, SourceTable); %>
-		<% if (!ExcludedTables.Contains(foreignTable)) { %>
-		public virtual IList<<%= GetClassName(foreignTable) %>> <%= GetPropertyNamePlural(foreignTable, mcs) %>
-        {
-            get { return <%= GetPrivateVariableNamePlural(foreignTable, mcs) %>; }
-            set
-			{
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changing();<% } %>
-				<%= GetPrivateVariableNamePlural(foreignTable, mcs) %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changed();<% } %>
-			}
-        }
-		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
-		partial void On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changing();
-		partial void On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changed();
-		<% } %>
-		
-		<% } %>
-		<% } %>
-		<% } %>
-		<% } %>
 		<% } %>
         #endregion
     }

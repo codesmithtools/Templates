@@ -6,7 +6,6 @@ Description: Generates a HBM Map for NHibernate.
 <%@ CodeTemplate Language="C#" Inherits="NHibernateHelper" TargetLanguage="XML" Debug="False" Description="Generates a HBM Map for NHibernate." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
-<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 <%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2a. Assembly" Description="The name of the Assembly that will contain the business objects." %>
 <%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2b. Namespaces" Description="The desired Namespace for the Business Objects." %>
 <%@ Assembly Name="SchemaExplorer" %>
@@ -15,7 +14,7 @@ Description: Generates a HBM Map for NHibernate.
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="NHibernateHelper" %>
-<% tablePrefix = TablePrefix; %>
+<% AssociationManager associationManager = new AssociationManager(SourceTable, ExcludedTables); %>
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="<%= BusinessNamespace %>" assembly="<%= AssemblyName %>">
 	<class name="<%= BusinessNamespace %>.<%= GetClassName(SourceTable) %>, <%= AssemblyName %>" table="<%= SourceTable.Name %>" lazy="true">
@@ -42,45 +41,22 @@ Description: Generates a HBM Map for NHibernate.
 		<property name="<%= GetPropertyName(column) %>" column="<%= column.Name %>" />
 		<% } %>
 		<% // Many-To-One %>
-		
-		<% AssociationManager associationManager = new AssociationManager(SourceTable, ExcludedTables); %>
 		<% foreach(Association association in associationManager.ManyToOne) { %>
 		<many-to-one name="<%= association.PropertyName %>" column="<%= association.ColumnName %>" class="<%= association.ClassName %>" />
 		<% } %>
-		
-		<% if (false) { %>
-		<% foreach(TableKeySchema tks in SourceTable.ForeignKeys) { %>
-		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if(!ExcludedTables.Contains(tks.PrimaryKeyTable) && !mcs.IsPrimaryKeyMember) { %>
-		<many-to-one name="<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>" column="<%= mcs.Name %>" class="<%= GetClassName(tks.PrimaryKeyTable) %>" />
-		<% } %>
-		<% } %>
-		<% } %>
-		<% } %>
-		
-		
-		<% // One-To-Many & Many-To-Many %>
-		<% foreach(TableKeySchema tks in SourceTable.PrimaryKeys) { %>
-		<% foreach(MemberColumnSchema mcs in tks.ForeignKeyMemberColumns) { %>
-		<% if (!mcs.IsPrimaryKeyMember) { %>
-		<% if (!IsManyToMany(mcs.Table)) { %>
-		<% if (!ExcludedTables.Contains(mcs.Table)) { %>
-		<bag name="<%= GetPropertyNamePlural(mcs.Table, mcs) %>" lazy="true" cascade="<%= GetCascade(mcs) %>"  inverse="true" >
-			<key column="<%= mcs.Name %>"></key>
-			<one-to-many class="<%= GetClassName(mcs.Table) %>"></one-to-many>
+		<% // One-To-Many %>
+		<% foreach(Association association in associationManager.OneToMany) { %>
+		<bag name="<%= association.PropertyName %>" lazy="true" cascade="<%= association.Cascade %>"  inverse="true" >
+			<key column="<%= association.ColumnName %>"></key>
+			<one-to-many class="<%= association.ClassName %>"></one-to-many>
 		</bag>
 		<% } %>
-		<% } else { %>
-		<% TableSchema foreignTable = GetToManyTable(mcs.Table, SourceTable); %>
-		<% if (!ExcludedTables.Contains(foreignTable)) { %>
-		<bag name="<%= GetPropertyNamePlural(foreignTable, mcs) %>" table="<%= mcs.Table.Name %>" lazy="true" cascade="all"  inverse="true" >
-			<key column="<%= mcs.Name %>"></key>
-			<many-to-many column="<%= GetToManyTableKey(mcs.Table, foreignTable).Name %>" class="<%= GetClassName(foreignTable) %>" />
+		<% // Many-To-Many %>
+		<% foreach(Association association in associationManager.ManyToMany) { %>
+		<bag name="<%= association.PropertyName %>" table="<%= association.TableName %>" lazy="true" cascade="all" inverse="true" >
+			<key column="<%= association.ColumnName %>"></key>
+			<many-to-many column="<%= association.ToManyTableKeyName %>" class="<%= association.ClassName %>" />
     	</bag>
-		<% } %>
-		<% } %>
-		<% } %>
-		<% } %>
 		<% } %>
 	</class>
 </hibernate-mapping>

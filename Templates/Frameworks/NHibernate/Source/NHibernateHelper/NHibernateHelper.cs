@@ -9,77 +9,23 @@ namespace NHibernateHelper
 {
     public class NHibernateHelper : CodeTemplate
     {
+        #region Constants
+
+        private const string _extendedPropertyName = "cs_alias";
+
+        #endregion
+
         #region HelperInit
 
         /// <summary>
         /// Should be called the first thing every time the master template executes.
         /// </summary>
-        /// <param name="directoryName">CodeTemplateInfo.DirectoryName</param>
         /// <param name="tablePrefix">TablePrefix Property</param>
-        public static void HelperInit(string directoryName, string tablePrefix)
+        public static void HelperInit(string tablePrefix)
         {
-            _directoryName = directoryName;
             _tablePrefix = tablePrefix;
         }
-        private static string _directoryName = String.Empty;
         private static string _tablePrefix = String.Empty;
-
-        #endregion
-
-        #region GetMethodParameters Methods
-
-        public static string GetMethodParameters(List<MemberColumnSchema> mcsList, bool isDeclaration)
-        {
-            StringBuilder result = new StringBuilder();
-            bool isFirst = true;
-            foreach (MemberColumnSchema mcs in mcsList)
-            {
-                if (isFirst)
-                    isFirst = false;
-                else
-                    result.Append(", ");
-                if (isDeclaration)
-                {
-                    result.Append(mcs.SystemType.ToString());
-                    result.Append(" ");
-                }
-                result.Append(KeyWords[GetVariableName(mcs)]);
-            }
-            return result.ToString();
-        }
-        public static string GetMethodParameters(MemberColumnSchemaCollection mcsc, bool isDeclaration)
-        {
-            List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>();
-            for (int x = 0; x < mcsc.Count; x++)
-                mcsList.Add(mcsc[x]);
-            return GetMethodParameters(mcsList, isDeclaration);
-        }
-        public static string GetMethodDeclaration(SearchCriteria sc)
-        {
-            StringBuilder result = new StringBuilder();
-            result.Append(sc.MethodName);
-            result.Append("(");
-            result.Append(GetMethodParameters(sc.Items, true));
-            result.Append(")");
-            return result.ToString();
-        }
-        public static string GetPrimaryKeyCallParameters(List<MemberColumnSchema> mcsList)
-        {
-            System.Text.StringBuilder result = new System.Text.StringBuilder();
-            for (int x = 0; x < mcsList.Count; x++)
-            {
-                if (x > 0)
-                    result.Append(", ");
-
-                if (mcsList[x].SystemType == typeof(Guid))
-                    result.AppendFormat("new {0}(keys[{1}])", mcsList[x].SystemType, x);
-                else if (mcsList[x].SystemType == typeof(string))
-                    result.AppendFormat("keys[{0}]", x);
-                else
-                    result.AppendFormat("{0}.Parse(keys[{1}])", mcsList[x].SystemType, x);
-            }
-            return result.ToString();
-        }
 
         #endregion
 
@@ -138,7 +84,7 @@ namespace NHibernateHelper
         }
         private static string GetPrivateVariableName(string name)
         {
-            return "_" + GetVariableName(name);
+            return  String.Concat("_", GetVariableName(name));
         }
 
         public static string GetPrivateVariableNamePlural(TableSchema table, ColumnSchema column)
@@ -154,7 +100,7 @@ namespace NHibernateHelper
         }
         private static string GetPrivateVariableNamePlural(string name)
         {
-            return "_" + GetVariableNamePlural(name);
+            return String.Concat("_", GetVariableNamePlural(name));
         }
 
         public static string GetVariableName(TableSchema table, ColumnSchema column)
@@ -192,8 +138,8 @@ namespace NHibernateHelper
         public static string GetClassName(TableSchema table)
         {
             string className;
-            if (table.ExtendedProperties.Contains(extendedPropertyName))
-                className = table.ExtendedProperties[extendedPropertyName].Value.ToString();
+            if (table.ExtendedProperties.Contains(_extendedPropertyName))
+                className = table.ExtendedProperties[_extendedPropertyName].Value.ToString();
             else
             {
                 className = table.Name;
@@ -207,13 +153,18 @@ namespace NHibernateHelper
         
         private static bool ColumnHasAlias(ColumnSchema column)
         {
-            return column.ExtendedProperties.Contains(extendedPropertyName);
+            return column.ExtendedProperties.Contains(_extendedPropertyName);
         }
         private static string GetNameFromColumn(ColumnSchema column)
         {
-            return ColumnHasAlias(column) ? column.ExtendedProperties[extendedPropertyName].Value.ToString() : column.Name;
+            string name = (ColumnHasAlias(column))
+                ? column.ExtendedProperties[_extendedPropertyName].Value.ToString()
+                : column.Name;
+
+            return (String.Compare(GetClassName(column.Table), name, true) == 0)
+                ? String.Concat(name, "Member")
+                : name;
         }
-        private const string extendedPropertyName = "cs_alias";
 
         #endregion
 
@@ -407,21 +358,74 @@ namespace NHibernateHelper
             return result;
         }
 
-        private static MapCollection _keyWords;
-        public static MapCollection KeyWords
+        #endregion
+
+        private MapCollection _keyWords;
+        public MapCollection KeyWords
         {
             get
             {
                 if (_keyWords == null)
                 {
                     string path;
-                    Map.TryResolvePath("CSharpKeyWordEscape", _directoryName, out path);
+                    Map.TryResolvePath("CSharpKeyWordEscape", this.CodeTemplateInfo.DirectoryName, out path);
                     _keyWords = Map.Load(path);
                 }
                 return _keyWords;
             }
         }
 
-        #endregion
+        public string GetMethodParameters(List<MemberColumnSchema> mcsList, bool isDeclaration)
+        {
+            StringBuilder result = new StringBuilder();
+            bool isFirst = true;
+            foreach (MemberColumnSchema mcs in mcsList)
+            {
+                if (isFirst)
+                    isFirst = false;
+                else
+                    result.Append(", ");
+                if (isDeclaration)
+                {
+                    result.Append(mcs.SystemType.ToString());
+                    result.Append(" ");
+                }
+                result.Append(KeyWords[GetVariableName(mcs)]);
+            }
+            return result.ToString();
+        }
+        public string GetMethodParameters(MemberColumnSchemaCollection mcsc, bool isDeclaration)
+        {
+            List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>();
+            for (int x = 0; x < mcsc.Count; x++)
+                mcsList.Add(mcsc[x]);
+            return GetMethodParameters(mcsList, isDeclaration);
+        }
+        public string GetMethodDeclaration(SearchCriteria sc)
+        {
+            StringBuilder result = new StringBuilder();
+            result.Append(sc.MethodName);
+            result.Append("(");
+            result.Append(GetMethodParameters(sc.Items, true));
+            result.Append(")");
+            return result.ToString();
+        }
+        public string GetPrimaryKeyCallParameters(List<MemberColumnSchema> mcsList)
+        {
+            System.Text.StringBuilder result = new System.Text.StringBuilder();
+            for (int x = 0; x < mcsList.Count; x++)
+            {
+                if (x > 0)
+                    result.Append(", ");
+
+                if (mcsList[x].SystemType == typeof(Guid))
+                    result.AppendFormat("new {0}(keys[{1}])", mcsList[x].SystemType, x);
+                else if (mcsList[x].SystemType == typeof(string))
+                    result.AppendFormat("keys[{0}]", x);
+                else
+                    result.AppendFormat("{0}.Parse(keys[{1}])", mcsList[x].SystemType, x);
+            }
+            return result.ToString();
+        }
     }
 }

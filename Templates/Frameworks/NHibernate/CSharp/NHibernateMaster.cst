@@ -3,7 +3,7 @@ Name: NHibernateMaster.cst
 Author: Tom DuPont
 Description: Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file.
 --%>
-<%@ CodeTemplate Language="C#" Inherits="NHibernateHelper" TargetLanguage="C#" OutputType="None" Debug="False" Description="Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file."  CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" Inherits="NHibernateHelper" TargetLanguage="C#" OutputType="None" Debug="False" Description="Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file."  %>
 
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="1a. Source Database" Description="The source database to generate from." %>
 
@@ -25,7 +25,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Assembly Name="Microsoft.Build.Engine" %>
 <%@ Assembly Name="Microsoft.Build.Utilities" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
-<%@ Assembly Name="NHibernateHelper" Path="..\..\Common" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\Common" %>
 
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
@@ -50,7 +50,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <script runat="template">
 public override void Render(TextWriter writer)
 {
-	HelperInit(this.TablePrefix, this.CodeTemplateInfo.DirectoryName);
+	HelperInit(this.TablePrefix);
 	
 	if(ExcludedTables == null)
 		ExcludedTables = new TableSchemaCollection();
@@ -110,7 +110,6 @@ private void RenderHbmMaps(TableSchema table)
 	hbmMap.AssemblyName = this.AssemblyName;
 	hbmMap.BusinessNamespace = this.BusinessNamespace;
 	hbmMap.SourceTable = table;
-	hbmMap.TablePrefix = this.TablePrefix;
 	hbmMap.ExcludedTables = this.ExcludedTables;
 	
 	hbmMap.RenderToFile(GetOutputFile(fileName, null, "BuildAction", 3), true);
@@ -126,7 +125,6 @@ private void RenderBusinessObjects(TableSchema table)
 		editableBusinessObject.BusinessNamespace = this.BusinessNamespace;
 		editableBusinessObject.BaseNamespace = this.BaseNamespace;
 		editableBusinessObject.SourceTable = table;
-		editableBusinessObject.TablePrefix = this.TablePrefix;
 		
 		editableBusinessObject.RenderToFile(GetOutputFile(editableFileName, null), true);
 	}
@@ -136,7 +134,6 @@ private void RenderBusinessObjects(TableSchema table)
 	businessObject.BaseNamespace = this.BaseNamespace;
 	businessObject.VsVersion = this.VsVersion;
 	businessObject.SourceTable = table;
-	businessObject.TablePrefix = this.TablePrefix;
 	businessObject.ExcludedTables = this.ExcludedTables;
 
 	businessObject.RenderToFile(GetOutputFile(fileName, editableFileName), true);
@@ -153,7 +150,6 @@ private void RenderManagerObjects(TableSchema table)
 		editableManagerObject.BusinessNamespace = this.BusinessNamespace;
 		editableManagerObject.BaseNamespace = this.BaseNamespace;
 		editableManagerObject.SourceTable = table;
-		editableManagerObject.TablePrefix = this.TablePrefix;
 		
 		editableManagerObject.RenderToFile(GetOutputFile(editableFileName, null), true);
 	}
@@ -164,7 +160,6 @@ private void RenderManagerObjects(TableSchema table)
 	managerObject.BaseNamespace = this.BaseNamespace;
 	managerObject.SourceTable = table;
 	managerObject.NHibernateVersion = this.NHibernateVersion;
-	managerObject.TablePrefix = this.TablePrefix;
 	managerObject.ExcludedTables = this.ExcludedTables;
 
 	managerObject.RenderToFile(GetOutputFile(fileName, editableFileName), true);
@@ -178,7 +173,6 @@ private void RenderManagerFactory()
 	managerFactory.ManagerNamespace = this.ManagerNamespace;
 	managerFactory.BaseNamespace = this.BaseNamespace;
 	managerFactory.ExcludedTables = this.ExcludedTables;
-	managerFactory.TablePrefix = this.TablePrefix;
 	
 	managerFactory.RenderToFile(GetOutputFile(fileName, null), true);
 }
@@ -192,7 +186,6 @@ private void RenderUnitTests(TableSchema table)
 		EditableUnitTestsTemplate editableUnitTests = this.Create<EditableUnitTestsTemplate>();
 		editableUnitTests.SourceTable = table;
 		editableUnitTests.ExcludedTables = this.ExcludedTables;
-		editableUnitTests.TablePrefix = this.TablePrefix;
 		editableUnitTests.ManagerNamespace = this.ManagerNamespace;
 		editableUnitTests.BaseNamespace = this.BaseNamespace;
 		editableUnitTests.BusinessNamespace = this.BusinessNamespace;
@@ -204,7 +197,6 @@ private void RenderUnitTests(TableSchema table)
 	UnitTestsTemplate unitTests = this.Create<UnitTestsTemplate>();
 	unitTests.SourceTable = table;
 	unitTests.ExcludedTables = this.ExcludedTables;
-	unitTests.TablePrefix = this.TablePrefix;
 	unitTests.NHibVersion = this.NHibernateVersion;
 	unitTests.ManagerNamespace = this.ManagerNamespace;
 	unitTests.BaseNamespace = this.BaseNamespace;

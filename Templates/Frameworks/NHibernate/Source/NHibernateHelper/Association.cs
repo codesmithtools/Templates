@@ -18,8 +18,10 @@ namespace NHibernateHelper
 
         #region Constructor
 
-        public Association(TableSchema table, MemberColumnSchema mcs, bool usePluralNames)
+        public Association(AssociationTypeEnum associationType, TableSchema table, MemberColumnSchema mcs, bool usePluralNames)
         {
+            AssociationType = associationType;
+
             _table = table;
             _mcs = mcs;
             _usePluralNames = usePluralNames;
@@ -28,7 +30,7 @@ namespace NHibernateHelper
 
             ColumnName = mcs.Name;
             TableName = mcs.Table.Name;
-            ClassName = table.Name;
+            ClassName = NHibernateHelper.GetClassName(table);
         }
 
         #endregion
@@ -41,26 +43,30 @@ namespace NHibernateHelper
             {
                 if (useTable)
                 {
-                    PropertyName = NHibernateHelper.GetPropertyName(_table, _mcs);
-                    PrivateVariableName = NHibernateHelper.GetPrivateVariableName(_table, _mcs);
+                    PropertyName = NHibernateHelper.GetPropertyNamePlural(_table, _mcs);
+                    PrivateVariableName = NHibernateHelper.GetPrivateVariableNamePlural(_table, _mcs);
+                    VariableName = NHibernateHelper.GetVariableNamePlural(_table, _mcs);
                 }
                 else
                 {
-                    PropertyName = NHibernateHelper.GetPropertyName(_mcs);
-                    PrivateVariableName = NHibernateHelper.GetPrivateVariableName(_mcs);
+                    PropertyName = NHibernateHelper.GetPropertyNamePlural(_mcs);
+                    PrivateVariableName = NHibernateHelper.GetPrivateVariableNamePlural(_mcs);
+                    VariableName = NHibernateHelper.GetVariableNamePlural(_mcs);
                 }
             }
             else
             {
                 if (useTable)
                 {
-                    PropertyName = NHibernateHelper.GetPropertyNamePlural(_table, _mcs);
-                    PrivateVariableName = NHibernateHelper.GetPrivateVariableNamePlural(_table, _mcs);
+                    PropertyName = NHibernateHelper.GetPropertyName(_table, _mcs);
+                    PrivateVariableName = NHibernateHelper.GetPrivateVariableName(_table, _mcs);
+                    VariableName = NHibernateHelper.GetVariableName(_table, _mcs);
                 }
                 else
                 {
-                    PropertyName = NHibernateHelper.GetPropertyNamePlural(_mcs);
-                    PrivateVariableName = NHibernateHelper.GetPrivateVariableNamePlural(_mcs);
+                    PropertyName = NHibernateHelper.GetPropertyName(_mcs);
+                    PrivateVariableName = NHibernateHelper.GetPrivateVariableName(_mcs);
+                    VariableName = NHibernateHelper.GetVariableName(_mcs);
                 }
             }
         }
@@ -69,8 +75,10 @@ namespace NHibernateHelper
 
         #region Properties
 
+        public AssociationTypeEnum AssociationType { get; private set; }
         public string PropertyName { get; private set; }
         public string PrivateVariableName { get; private set; }
+        public string VariableName { get; private set; }
         public string TableName { get; private set; }
         public string ColumnName { get; private set; }
         public string ClassName { get; private set; }
