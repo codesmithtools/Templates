@@ -33,17 +33,17 @@
       </property>
       <property name="EntityNamespace">$myContextNamespace$</property>
       <property name="ContextNamespace">$myContextNamespace$</property>
-      <property name="DbmlFile">App_Data\$myDatabase$.dbml</property>
+      <property name="DbmlFile">$myDatabase$.dbml</property>
     </propertySet>
     <propertySet name="Entities" template="$linqToSql$\$language$\Entities.cst">
-      <property name="DbmlFile">App_Data\$myDatabase$.dbml</property>
+      <property name="DbmlFile">$myDatabase$.dbml</property>
       <property name="Framework">v35_SP1</property>
       <property name="IncludeDataContract">True</property>
       <property name="OutputDirectory">Entities</property>
     </propertySet>
     <propertySet name="Managers" template="$linqToSql$\$language$\Managers.cst">
       <property name="Framework">v35_SP1</property>
-      <property name="DbmlFile">App_Data\$myDatabase$.dbml</property>
+      <property name="DbmlFile">$myDatabase$.dbml</property>
       <property name="ManagerDirectory">Managers</property>
       <property name="SourceDatabase">
         <connectionString>$(ConnectionString1)</connectionString>

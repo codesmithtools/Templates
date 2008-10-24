@@ -41,6 +41,9 @@ Description:
 	string filePath = Path.Combine(renderPath,fileName);
 	
 	this.RegisterReference("System.Data.Linq");
+	this.RegisterReference(Path.GetFullPath(Path.Combine(
+            this.CodeTemplateInfo.DirectoryName,
+            "..\\Common\\CodeSmith.Data.dll")));
     
     Response.WriteLine(fileName);
     t.RenderToFile(filePath, parentFilePath, true);
