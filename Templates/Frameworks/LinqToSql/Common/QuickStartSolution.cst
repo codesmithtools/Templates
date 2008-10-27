@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." CompilerVersion="v3.5" %>
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="False" Description="Template description here." CompilerVersion="v3.5" %>
 <%@ Assembly Name="QuickStartUtils"%>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="QuickStartUtils" %>

@@ -3,7 +3,7 @@ Name: Quick Start
 Author: Reggie Bradshaw
 Description: Used to Quick Start Visual Studio Projects
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
 <%@ Assembly Name="System" %>
 <%@ Assembly Name="ICSharpCode.SharpZipLib" Path="Common" %>
 <%@ Assembly Name="QuickStartUtils" Path="Common"%>
@@ -32,10 +32,10 @@ Description: Used to Quick Start Visual Studio Projects
 		// Prep Directories
 		if(!Directory.Exists(Location))
 			Directory.CreateDirectory(Location);
-			
+				
 		// Copy Plinqo Templates
 		if(CopyTemplatesToFolder)
-            QuickStartUtils.CopyDirectory(@"..\LinqToSql",Location + @"\LinqToSql",0);
+            QuickStartUtils.CopyDirectory(CodeTemplateInfo.DirectoryName,Path.Combine(Location,@"LinqToSql"),0);
 				
 		// Create SolutionItems
 		List<QuickStartSolution.SolutionItem> solutionItems = new List<QuickStartSolution.SolutionItem>();
@@ -105,7 +105,7 @@ Description: Used to Quick Start Visual Studio Projects
 	}
 	protected string ZipFileFolder
 	{
-		get { return Path.Combine("Common", LanguageFolder); }
+		get { return Path.Combine(CodeTemplateInfo.DirectoryName,Path.Combine("Common", LanguageFolder)); }
 	}
 	
 	#endregion
@@ -124,7 +124,8 @@ Description: Used to Quick Start Visual Studio Projects
 		
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
-			VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage);
+			string[] exemptArray = {"Images"};
+			VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage, exemptArray);
 			UpdateWebConfig(projectPath.DirectoryPath);
 			UpdateGlobal(projectPath);
 			AddReferences(projectPath);
@@ -186,7 +187,7 @@ Description: Used to Quick Start Visual Studio Projects
 		protected override void GetFiles(PathHelper projectPath)
 		{
 			GetVsProject(projectPath, "ClassLibrary");
-			File.Copy(@".\Common\QuickStartData.csp", Path.Combine(projectPath.DirectoryPath, "QuickStartData.csp"));
+			File.Copy(Path.Combine(ProjectBuilder.CodeTemplateInfo.DirectoryName,@"Common\QuickStartData.csp"), Path.Combine(projectPath.DirectoryPath, "QuickStartData.csp"));
 			
 			// Delete Class1
 			string class1File = String.Concat("Class1.", ProjectBuilder.LanguageAppendage);
@@ -203,7 +204,7 @@ Description: Used to Quick Start Visual Studio Projects
 		}
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
-			VariableUpdateDirectory(projectPath, projectGuid, projectName,this.ProjectBuilder.LanguageAppendage);
+			VariableUpdateDirectory(projectPath, projectGuid, projectName,this.ProjectBuilder.LanguageAppendage, null);
 			
 			string linqToSqlPath = (ProjectBuilder.CopyTemplatesToFolder) ? @"..\LinqToSql" : ProjectBuilder.CodeTemplateInfo.DirectoryName; // Needs Normal Path here
 			string cspPath = Path.Combine(projectPath.DirectoryPath,"QuickStartData.csp");
@@ -217,9 +218,9 @@ Description: Used to Quick Start Visual Studio Projects
 			
 			//The location in the csproj file directly below where we want to insert the csp include
 			QuickStartUtils.FindAndReplace(projectPath.FilePath, ProjectInsertRegex,
-				String.Format("<ItemGroup>{0}\t\t<None Include=\"{1}\" />{0}\t</ItemGroup>{0}\t{2}", Environment.NewLine, "QuickStartData.csp", ProjectInsertLine));
-			//QuickStartUtils.FindAndReplace(projectPath.FilePath, "</Project>",
-			//	String.Format("\t<Import Project=\"$(MSBuildExtensionsPath)\\CodeSmith\\CodeSmith.targets\" />{0}</Project>", Environment.NewLine));
+				String.Format("<ItemGroup>{0}\t\t<Generate Include=\"{1}\" />{0}\t</ItemGroup>{0}\t{2}", Environment.NewLine, "QuickStartData.csp", ProjectInsertLine));
+			QuickStartUtils.FindAndReplace(projectPath.FilePath, "</Project>",
+				String.Format("\t<Import Project=\"$(MSBuildExtensionsPath)\\CodeSmith\\CodeSmith.targets\" />{0}</Project>", Environment.NewLine));
 		}
 		
 		
@@ -240,7 +241,7 @@ Description: Used to Quick Start Visual Studio Projects
 		}
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
-			VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage);
+			VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage,null);
 		}
 	}
 	
@@ -373,16 +374,16 @@ Description: Used to Quick Start Visual Studio Projects
 			}
 		}
 		
-		protected void VariableUpdateDirectory(PathHelper helper, string projectGuid, string projectName, string language)
+		protected void VariableUpdateDirectory(PathHelper helper, string projectGuid, string projectName, string language, string[] exemptDirectories)
 		{
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$projectname\$", projectName);
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$safeprojectname\$", projectName);
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$projectname\$", projectName, exemptDirectories);
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$safeprojectname\$", projectName, exemptDirectories);
 			QuickStartUtils.FindAndReplace(helper.FilePath, @"\$guid1\$", @"{" + projectGuid + @"}");
 			QuickStartUtils.FindAndReplace(Path.Combine(helper.DirectoryPath,@"Properties\AssemblyInfo." + language), @"\$guid1\$", Guid.NewGuid().ToString());
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", " ");
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$endif\$", " ");
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$registeredorganization\$", "CodeSmith Tools, LLC");
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$year\$", DateTime.Now.Year.ToString());
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", " ", exemptDirectories);
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$endif\$", " ", exemptDirectories);
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$registeredorganization\$", "CodeSmith Tools, LLC", exemptDirectories);
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$year\$", DateTime.Now.Year.ToString(), exemptDirectories);
 		}
 		
 		
