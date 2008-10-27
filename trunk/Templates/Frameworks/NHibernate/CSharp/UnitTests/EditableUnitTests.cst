@@ -12,7 +12,7 @@ Description: Generates Editable Unit Tests for NHibernate.
 <%@ Property Name="UnitTestNamespace" Type="System.String" Default="NHibernate.Generated.UnitTests" Optional="False" Category="2. Namespaces" Description="The desired Namespace for the UnitTests." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
-<%@ Assembly Name="NHibernateHelper" Path="..\..\Common" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="NHibernateHelper" %>
