@@ -51,7 +51,7 @@ namespace QuickStartUtils
                     // Do not iterate through reparse points
                     if ((File.GetAttributes(subdir) & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
                     {
-                        if (exemptDirectories != null && exemptDirectories.Count<string>(d => subdir.EndsWith(d)) == 0)
+                        if (exemptDirectories == null || exemptDirectories.Count<string>(d => subdir.EndsWith(d)) == 0)
                             ReplaceAllInDirectory(subdir, find, replace, exemptDirectories, level + 1);
                     }
                     

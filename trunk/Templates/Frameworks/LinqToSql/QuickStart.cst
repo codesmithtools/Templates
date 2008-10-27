@@ -142,7 +142,7 @@ Description: Used to Quick Start Visual Studio Projects
 		private void UpdateGlobal(PathHelper projectPath)
 		{
 			CodeTemplate globalTemplate = null;
-			if(ProjectBuilder.LanguageAppendage == "cs")
+			if(ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
 				globalTemplate = ProjectBuilder.GetCodeTemplateInstance(@"CSharp\Global.cst");
 			else
 				globalTemplate = ProjectBuilder.GetCodeTemplateInstance(@"VisualBasic\Global.cst");
@@ -187,7 +187,8 @@ Description: Used to Quick Start Visual Studio Projects
 		protected override void GetFiles(PathHelper projectPath)
 		{
 			GetVsProject(projectPath, "ClassLibrary");
-			File.Copy(Path.Combine(ProjectBuilder.CodeTemplateInfo.DirectoryName,@"Common\QuickStartData.csp"), Path.Combine(projectPath.DirectoryPath, "QuickStartData.csp"));
+			File.Copy(Path.Combine(ProjectBuilder.CodeTemplateInfo.DirectoryName,@"Common\QuickStartData.csp"),
+				Path.Combine(projectPath.DirectoryPath, "QuickStartData.csp"));
 			
 			// Delete Class1
 			string class1File = String.Concat("Class1.", ProjectBuilder.LanguageAppendage);
@@ -197,13 +198,15 @@ Description: Used to Quick Start Visual Studio Projects
 				// Delete File
 				File.Delete(class1Path);
 				// Remove From Proj
-				QuickStartUtils.FindAndReplace(projectPath.FilePath,
-					String.Format(@"<Compile Include=""{0}"" />", class1File),
-					String.Empty);
+				//Yes, There is a space in the csproj file while there is not in the vbproj file
+				string classLine = ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp ?
+					String.Format(@"<Compile Include=""{0}"" />", class1File) : String.Format(@"<Compile Include=""{0}""/>", class1File);
+					
+				QuickStartUtils.FindAndReplace(projectPath.FilePath,classLine,String.Empty);
 			}
 		}
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
-		{
+		{	
 			VariableUpdateDirectory(projectPath, projectGuid, projectName,this.ProjectBuilder.LanguageAppendage, null);
 			
 			string linqToSqlPath = (ProjectBuilder.CopyTemplatesToFolder) ? @"..\LinqToSql" : ProjectBuilder.CodeTemplateInfo.DirectoryName; // Needs Normal Path here
@@ -240,7 +243,7 @@ Description: Used to Quick Start Visual Studio Projects
 			GetVsProject(projectPath, "TestProject");
 		}
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
-		{
+		{	
 			VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage,null);
 		}
 	}
@@ -347,13 +350,69 @@ Description: Used to Quick Start Visual Studio Projects
 				File.Delete(vstemplate);
 			
 			// Move AssemplyInfo to Properties Folder
-			string assemblyInfo = QuickStartUtils.FindFileInDirectory("assemblyinfo.cs", projectPath.DirectoryPath);
-			if(!String.IsNullOrEmpty(assemblyInfo) && File.Exists(assemblyInfo))
+			if(ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
 			{
-				string propertiesDirectory = Path.Combine(projectPath.DirectoryPath, "Properties");
-				if(!Directory.Exists(propertiesDirectory))
-					Directory.CreateDirectory(propertiesDirectory);
-				File.Move(assemblyInfo, Path.Combine(propertiesDirectory, Path.GetFileName(assemblyInfo)));
+				string assemblyInfo = QuickStartUtils.FindFileInDirectory("assemblyinfo.cs", projectPath.DirectoryPath);
+				if(!String.IsNullOrEmpty(assemblyInfo) && File.Exists(assemblyInfo))
+				{
+					string propertiesDirectory = Path.Combine(projectPath.DirectoryPath, "Properties");
+					if(!Directory.Exists(propertiesDirectory))
+						Directory.CreateDirectory(propertiesDirectory);
+					File.Move(assemblyInfo, Path.Combine(propertiesDirectory, Path.GetFileName(assemblyInfo)));
+				}
+			}
+			else if(ProjectBuilder.Language == QuickStartUtils.LanguageEnum.VB)
+			{
+				//VB File Structure is much more complicated
+				string[] pathsToMove = {
+					QuickStartUtils.FindFileInDirectory("assemblyinfo.vb", projectPath.DirectoryPath),
+					QuickStartUtils.FindFileInDirectory("Resources.Designer.vb", projectPath.DirectoryPath),
+					QuickStartUtils.FindFileInDirectory("Resources.resx", projectPath.DirectoryPath),
+					QuickStartUtils.FindFileInDirectory("Settings.Designer.vb", projectPath.DirectoryPath),
+					QuickStartUtils.FindFileInDirectory("Settings.settings", projectPath.DirectoryPath),
+					};
+				
+				foreach(string path in pathsToMove)
+				{
+					if(!String.IsNullOrEmpty(path) && File.Exists(path))
+					{
+						string propertiesDirectory = Path.Combine(projectPath.DirectoryPath, @"My Project");
+						if(!Directory.Exists(propertiesDirectory))
+							Directory.CreateDirectory(propertiesDirectory);
+						File.Move(path, Path.Combine(propertiesDirectory, Path.GetFileName(path)));
+					}
+				}
+				
+				string application = QuickStartUtils.FindFileInDirectory("MyApplication.Designer.vb", projectPath.DirectoryPath);
+				
+				if(!String.IsNullOrEmpty(application) && File.Exists(application))
+				{
+					string propertiesDirectory = Path.Combine(projectPath.DirectoryPath, @"My Project");
+					if(!Directory.Exists(propertiesDirectory))
+						Directory.CreateDirectory(propertiesDirectory);
+					File.Move(application, Path.Combine(propertiesDirectory, Path.GetFileName(application).Replace("MyApplication","Application")));
+				}
+				
+				application = QuickStartUtils.FindFileInDirectory("MyApplication.myapp", projectPath.DirectoryPath);
+				
+				if(!String.IsNullOrEmpty(application) && File.Exists(application))
+				{
+					string propertiesDirectory = Path.Combine(projectPath.DirectoryPath, @"My Project");
+					if(!Directory.Exists(propertiesDirectory))
+						Directory.CreateDirectory(propertiesDirectory);
+					File.Move(application, Path.Combine(propertiesDirectory, Path.GetFileName(application).Replace("MyApplication","Application")));
+				}
+				
+				string webExtension = QuickStartUtils.FindFileInDirectory("MyWebExtension.vb", projectPath.DirectoryPath);
+				
+				if(!String.IsNullOrEmpty(webExtension) && File.Exists(webExtension))
+					{
+						string propertiesDirectory = Path.Combine(projectPath.DirectoryPath, @"My Project\MyExtensions");
+						if(!Directory.Exists(propertiesDirectory))
+							Directory.CreateDirectory(propertiesDirectory);
+						File.Move(webExtension, Path.Combine(propertiesDirectory, Path.GetFileName(webExtension)));
+					}
+				
 			}
 		}
 		protected void UnzipFileAndRename(string zipFileName, string targetDirectory, params string[] renameFiles)
@@ -376,12 +435,14 @@ Description: Used to Quick Start Visual Studio Projects
 		
 		protected void VariableUpdateDirectory(PathHelper helper, string projectGuid, string projectName, string language, string[] exemptDirectories)
 		{
+			string assemblyPath = ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp ? @"Properties\AssemblyInfo.cs" : @"My Project\AssemblyInfo.vb";
+			
 			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$projectname\$", projectName, exemptDirectories);
 			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$safeprojectname\$", projectName, exemptDirectories);
 			QuickStartUtils.FindAndReplace(helper.FilePath, @"\$guid1\$", @"{" + projectGuid + @"}");
-			QuickStartUtils.FindAndReplace(Path.Combine(helper.DirectoryPath,@"Properties\AssemblyInfo." + language), @"\$guid1\$", Guid.NewGuid().ToString());
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", " ", exemptDirectories);
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$endif\$", " ", exemptDirectories);
+			QuickStartUtils.FindAndReplace(Path.Combine(helper.DirectoryPath,assemblyPath), @"\$guid1\$", Guid.NewGuid().ToString());
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", String.Empty, exemptDirectories);
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$endif\$", String.Empty, exemptDirectories);
 			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$registeredorganization\$", "CodeSmith Tools, LLC", exemptDirectories);
 			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$year\$", DateTime.Now.Year.ToString(), exemptDirectories);
 		}
@@ -389,11 +450,11 @@ Description: Used to Quick Start Visual Studio Projects
 		
 		protected virtual string ProjectInsertRegex
 		{
-			get { return String.Format(@"<Import Project=""\$\(MSBuild(\w){{3,5}}Path\)\\Microsoft\.{0}\.targets"" />", ProjectBuilder.Language); }
+			get { return String.Format(@"<Import Project=""\$\(MSBuild(\w){{3,5}}Path\)\\Microsoft\.{0}\.targets"" />", ProjectBuilder.LanguageFolder); }
 		}
 		protected virtual string ProjectInsertLine
 		{
-			get { return String.Format("<Import Project=\"$(MSBuildToolsPath)\\Microsoft.{0}.targets\" />", ProjectBuilder.Language); }
+			get { return String.Format("<Import Project=\"$(MSBuildToolsPath)\\Microsoft.{0}.targets\" />", ProjectBuilder.LanguageFolder); }
 		}
 	}
 	
