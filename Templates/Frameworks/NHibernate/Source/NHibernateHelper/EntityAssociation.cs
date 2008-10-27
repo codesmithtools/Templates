@@ -6,7 +6,7 @@ using SchemaExplorer;
 
 namespace NHibernateHelper
 {
-    public class Association
+    public class EntityAssociation
     {
         #region Declarations
 
@@ -18,7 +18,7 @@ namespace NHibernateHelper
 
         #region Constructor
 
-        public Association(AssociationTypeEnum associationType, TableSchema table, MemberColumnSchema mcs, bool usePluralNames)
+        public EntityAssociation(AssociationTypeEnum associationType, TableSchema table, MemberColumnSchema mcs, bool usePluralNames)
         {
             AssociationType = associationType;
 

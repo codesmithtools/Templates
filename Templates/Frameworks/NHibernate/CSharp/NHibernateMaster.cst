@@ -7,7 +7,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="1a. Source Database" Description="The source database to generate from." %>
 
-<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
+<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation."  Filter="SourceTable"%>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 
 <%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v2_0" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
@@ -25,7 +25,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Assembly Name="Microsoft.Build.Engine" %>
 <%@ Assembly Name="Microsoft.Build.Utilities" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
-<%@ Assembly Name="NHibernateHelper" Path="..\Common" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\Common\NHibernateHelper" %>
 
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
@@ -207,12 +207,12 @@ private void RenderUnitTests(TableSchema table)
 }
 private void RegisterReferences()
 {
-	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"Resources\NHibernate\NHibernate.dll"));
-	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"Resources\NHibernate\Castle.Core.dll"));
-	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"Resources\NHibernate\Castle.DynamicProxy2.dll"));
-	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"Resources\NHibernate\Iesi.Collections.dll"));
-	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"Resources\NHibernate\log4net.dll"));
-	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"Resources\NUnit\NUnit.Framework.dll"));
+	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\NHibernate.dll"));
+	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\Castle.Core.dll"));
+	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\Castle.DynamicProxy2.dll"));
+	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\Iesi.Collections.dll"));
+	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\log4net.dll"));
+	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NUnit\NUnit.Framework.dll"));
 	this.RegisterReference(@"System.Web");
 }
 

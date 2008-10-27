@@ -3,7 +3,7 @@ Name: ManagerObject.cst
 Author: Tom DuPont
 Description: Generates a Manager Object for NHibernate.
 --%>
-<%@ CodeTemplate Language="C#" Inherits="NHibernateHelper" TargetLanguage="C#" Debug="False" Description="Generates a Manager Object for NHibernate." %>
+<%@ CodeTemplate Language="C#" Inherits="CsNHibernateHelper" Src="../Helpers/CsNHibernateHelper.cs" TargetLanguage="C#" Debug="False" Description="Generates a Manager Object for NHibernate." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v1_2" Optional="False" Category="2. NHibernate" Description="The version of NHibernate to generate for." %>
@@ -12,14 +12,14 @@ Description: Generates a Manager Object for NHibernate.
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="3. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
-<%@ Assembly Name="NHibernateHelper" Path="..\..\Common" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="NHibernateHelper" %>
 <%@ Map Name="SystemCSharp" Src="System-CSharpAlias" %>
 <% List<SearchCriteria> scList = SearchCriteria.GetAllSearchCriteria(SourceTable); %>
-<% AssociationManager associationManager = new AssociationManager(SourceTable, ExcludedTables); %>
+<% EntityManager entityManager = new EntityManager(SourceTable, ExcludedTables); %>
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -102,13 +102,15 @@ namespace <%= ManagerNamespace %>
 			<% foreach(MemberColumnSchema mcs in sc.Items) { %>
 			
 			<% if(mcs.IsForeignKeyMember) { %>
-			<% Association association = associationManager.GetAssocitionFromColumn(mcs); %>
-<% if(association == null) { %>
-//TROUBLE MAKER: <%= mcs.Table.Name %>.<%= mcs.Name %> 
-<% } else { %>
+			<% EntityAssociation association = entityManager.GetAssocitionFromColumn(mcs); %>
+			<% if(association == null) { %>
+			<% EntityMember em = entityManager.GetMemberFromColumn(mcs); %>
+			ICriteria <%= em.VariableName %>Criteria = criteria.CreateCriteria("<%= em.PropertyName %>");
+            <%= em.VariableName %>Criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("Id", <%= KeyWords[GetVariableName(mcs)] %>));
+			<% } else { %>
 			ICriteria <%= association.VariableName %>Criteria = criteria.CreateCriteria("<%= association.PropertyName %>");
             <%= association.VariableName %>Criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("Id", <%= KeyWords[GetVariableName(mcs)] %>));
-<% } %>
+			<% } %>
 			<% } else { %>
 			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= GetPropertyName(mcs) %>", <%= KeyWords[GetVariableName(mcs)] %>));
 			<% } %>

@@ -3,7 +3,7 @@ Name: BusinessObject.cst
 Author: Tom DuPont
 Description: Generates a Business Object for NHibernate.
 --%>
-<%@ CodeTemplate Language="C#" Inherits="NHibernateHelper" TargetLanguage="C#" Debug="False" Description="Generates a Business Object for NHibernate." %>
+<%@ CodeTemplate Language="C#" Inherits="CsNHibernateHelper" Src="../Helpers/CsNHibernateHelper.cs" TargetLanguage="C#" Debug="False" Description="Generates a Business Object for NHibernate." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="VsVersion" Type="VisualStudioVersion" Default="VS_2008" Optional="False" Category="2. Versions" Description="The version of Visual Studio to generate for." %>
@@ -11,13 +11,14 @@ Description: Generates a Business Object for NHibernate.
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="2. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
-<%@ Assembly Name="NHibernateHelper" Path="..\..\Common" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="NHibernateHelper" %>
 <%@ Map Name="SystemCSharp" Src="System-CSharpAlias" %>
-<% AssociationManager associationManager = new AssociationManager(SourceTable, ExcludedTables); %>
+<% EntityManager entityManager = new EntityManager(SourceTable, ExcludedTables); %>
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,24 +32,24 @@ namespace <%= BusinessNamespace %>
         #region Declarations
 
 		<% // Primary Keys %>
-		<% if(IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) { %>
-		<% foreach(MemberColumnSchema mcs in SourceTable.PrimaryKey.MemberColumns) { %>
-		private <%= SystemCSharp[mcs.SystemType.ToString()] %> <%= GetPrivateVariableName(mcs) %> = <%= GetInitialization(mcs.SystemType) %>;
+		<% if(entityManager.PrimaryKey.IsCompositeKey) { %>
+		<% foreach(EntityMember em in entityManager.PrimaryKey.KeyColumns) { %>
+		private <%= SystemCSharp[em.SystemType.ToString()] %> <%= em.PrivateVariableName %> = <%= GetInitialization(em.SystemType) %>;
 		<% } %>
 		<% } %>
 		
 		<% // Primitives %>
-		<% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-		private <%= SystemCSharp[column.SystemType.ToString()] %> <%= GetPrivateVariableName(column) %> = <%= GetInitialization(column.SystemType) %>;
+		<% foreach(EntityMember em in entityManager.Members) { %>
+		private <%= SystemCSharp[em.SystemType.ToString()] %> <%= em.PrivateVariableName %> = <%= GetInitialization(em.SystemType) %>;
 		<% } %>
 		
 		<% // Many-To-One %>
-		<% foreach(Association association in associationManager.ManyToOne) { %>
+		<% foreach(EntityAssociation association in entityManager.ManyToOne) { %>
 		private <%= association.ClassName %> <%= association.PrivateVariableName %> = null;
 		<% } %>
 		
 		<% // One-To-Many & Many-To-Many %>
-		<% foreach(Association association in associationManager.ToManyUnion) { %>
+		<% foreach(EntityAssociation association in entityManager.ToManyUnion) { %>
 		private IList<<%= association.ClassName %>> <%= association.PrivateVariableName %> = new List<<%= association.ClassName %>>();
 		<% } %>
 		
@@ -95,45 +96,27 @@ namespace <%= BusinessNamespace %>
 			}
 		}
 		
-		<% foreach(MemberColumnSchema mcs in SourceTable.PrimaryKey.MemberColumns) { %>
-		public virtual <%= SystemCSharp[mcs.SystemType.ToString()] %> <%= GetPropertyName(mcs) %>
-        {
-            get { return <%= GetPrivateVariableName(mcs) %>; }
-			set
-			{
-				
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(mcs) %>Changing();<% } %>
-				<%= GetPrivateVariableName(mcs) %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(mcs) %>Changed();<% } %>
-			}
-        }
-		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
-		partial void On<%= GetPropertyName(mcs) %>Changing();
-		partial void On<%= GetPropertyName(mcs) %>Changed();
-		<% } %>
-		
-		<% } %>
 		<% } %>
 		<% // Primitives %>
-		<% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-		public virtual <%= SystemCSharp[column.SystemType.ToString()] %> <%= GetPropertyName(column) %>
+		<% foreach(EntityMember em in entityManager.MembersPrimaryKeyUnion) { %>
+		public virtual <%= SystemCSharp[em.SystemType.ToString()] %> <%= em.PropertyName %>
         {
-            get { return <%= GetPrivateVariableName(column) %>; }
+            get { return <%= em.PrivateVariableName %>; }
 			set
 			{
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(column) %>Changing();<% } %>
-				<%= GetPrivateVariableName(column) %> = value;
-				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= GetPropertyName(column) %>Changed();<% } %>
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= em.PropertyName %>Changing();<% } %>
+				<%= em.PrivateVariableName %> = value;
+				<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>On<%= em.PropertyName %>Changed();<% } %>
 			}
         }
 		<% if(VsVersion.Equals(VisualStudioVersion.VS_2008)) { %>
-		partial void On<%= GetPropertyName(column) %>Changing();
-		partial void On<%= GetPropertyName(column) %>Changed();
+		partial void On<%= em.PropertyName %>Changing();
+		partial void On<%= em.PropertyName %>Changed();
 		<% } %>
 		
 		<% } %>
 		<% // Many-To-One %>
-		<% foreach(Association association in associationManager.ManyToOne) { %>
+		<% foreach(EntityAssociation association in entityManager.ManyToOne) { %>
 		public virtual <%= association.ClassName %> <%= association.PropertyName %>
         {
             get { return <%= association.PrivateVariableName %>; }
@@ -151,7 +134,7 @@ namespace <%= BusinessNamespace %>
 		
 		<% } %>
 		<% // One-To-Many & Many-To-Many %>
-		<% foreach(Association association in associationManager.ToManyUnion) { %>
+		<% foreach(EntityAssociation association in entityManager.ToManyUnion) { %>
 		public virtual IList<<%= association.ClassName %>> <%= association.PropertyName %>
         {
             get { return <%= association.PrivateVariableName %>; }

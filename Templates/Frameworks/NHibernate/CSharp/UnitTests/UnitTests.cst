@@ -13,12 +13,13 @@ Description: Generates Unit Tests for NHibernate.
 <%@ Property Name="UnitTestNamespace" Type="System.String" Default="NHibernate.Generated.UnitTests" Optional="False" Category="3. Namespaces" Description="The desired Namespace for the UnitTests." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
-<%@ Assembly Name="NHibernateHelper" Path="..\..\Common" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text" %>
 <%@ Import Namespace="NHibernateHelper" %>
 <%@ Map Name="SystemCSharp" Src="System-CSharpAlias" %>
-<% AssociationManager associationManager = new AssociationManager(SourceTable, ExcludedTables); %>
+<% EntityManager entityManager = new EntityManager(SourceTable, ExcludedTables); %>
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -43,25 +44,18 @@ namespace <%= UnitTestNamespace %>
 		{
 			<%= GetClassName(SourceTable) %> entity = new <%= GetClassName(SourceTable) %>();
 			
-			<% if(!IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) { %>
-			<% if(SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties.Contains("CS_IsIdentity") && ((bool)SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties["CS_IsIdentity"].Value) == false) { %>
+			<% if(!entityManager.PrimaryKey.IsCompositeKey) { %>
+			<% if(!entityManager.PrimaryKey.IsIdentity) { %>
 			// You may need to maually enter this key if there is a constraint violation.
 			entity.Id = <%= GetUnitTestInitialization(SourceTable.PrimaryKey.MemberColumns[0].Column) %>;
 			<% } %>
-			<% } else { %>
-			<% foreach(MemberColumnSchema mcs in SourceTable.PrimaryKey.MemberColumns) { %>
-			<% if(!mcs.IsForeignKeyMember) { %>
-			entity.<%= GetPropertyName(mcs) %> = <%= GetUnitTestInitialization(mcs.Column) %>;
-			<% } %>
-			<% } %>
 			<% } %>
 			
-			<% // Primitives %>
-			<% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-			entity.<%= GetPropertyName(column) %> = <%= GetUnitTestInitialization(column) %>;
+			<% foreach(EntityMember em in entityManager.MembersPrimaryKeyUnion) { %>
+			entity.<%= em.PropertyName %> = <%= GetUnitTestInitialization(em.Column) %>;
 			<% } %>
 			<% // Many-To-One %>
-			<% foreach(Association association in associationManager.ManyToOne) { %>
+			<% foreach(EntityAssociation association in entityManager.ManyToOne) { %>
 			
 			I<%= association.ClassName %>Manager <%= association.VariableName %>Manager = managerFactory.Get<%= association.ClassName %>Manager();
 			entity.<%= association.PropertyName %> = <%= association.VariableName %>Manager.GetAll(1)[0];
@@ -162,3 +156,60 @@ namespace <%= UnitTestNamespace %>
         }
 	}
 }
+
+<script runat="template">
+private static Random random = new Random();
+public static string GetUnitTestInitialization(ColumnSchema column)
+{
+    string result;
+
+    if (column.SystemType.Equals(typeof(String)))
+    {
+        StringBuilder sb = new StringBuilder();
+
+        int size = (column.Size > 0 && column.Size < 100) ? random.Next(1, column.Size) : 10;
+
+        sb.Append("\"");
+        for (int x = 0; x < size; x++)
+        {
+            switch (x % 5)
+            {
+                case 0:
+                    sb.Append("T");
+                    break;
+                case 1:
+                    sb.Append("e");
+                    break;
+                case 2:
+                    sb.Append("s");
+                    break;
+                case 3:
+                    sb.Append("t");
+                    break;
+                case 4:
+                    sb.Append(" ");
+                    break;
+            }
+        }
+        sb.Append("\"");
+
+        result = sb.ToString();
+    }
+    else if (column.SystemType.Equals(typeof(DateTime)))
+        result = "DateTime.Now";
+    else if (column.SystemType.Equals(typeof(Decimal)))
+        result = Convert.ToDecimal(random.Next(1, 100)).ToString();
+    else if (column.SystemType.Equals(typeof(Int32)))
+        result = random.Next(1, 100).ToString();
+    else if (column.SystemType.Equals(typeof(Boolean)))
+        result = (random.Next(1, 2).Equals(1)).ToString().ToLower();
+    else if (column.SystemType.Equals(typeof(Guid)))
+        result = "Guid.Empty";
+    else if (column.SystemType.IsPrimitive)
+        result = String.Format("default({0})", column.SystemType.Name.ToString());
+    else
+        result = "null";
+
+    return result;
+}
+</script>

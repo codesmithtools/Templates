@@ -10,49 +10,43 @@ Description: Generates a HBM Map for NHibernate.
 <%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2b. Namespaces" Description="The desired Namespace for the Business Objects." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
-<%@ Assembly Name="NHibernateHelper" Path="..\..\Common" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="NHibernateHelper" %>
-<% AssociationManager associationManager = new AssociationManager(SourceTable, ExcludedTables); %>
+<% EntityManager entityManager = new EntityManager(SourceTable, ExcludedTables); %>
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="<%= BusinessNamespace %>" assembly="<%= AssemblyName %>">
 	<class name="<%= BusinessNamespace %>.<%= GetClassName(SourceTable) %>, <%= AssemblyName %>" table="<%= SourceTable.Name %>" lazy="true">
 		<% // Primary Key %>
-		<% if(SourceTable.HasPrimaryKey) { %>
-		<% if(IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) { %>
+		<% if(entityManager.PrimaryKey.IsCompositeKey) { %>
 		<composite-id>
-			<% foreach(MemberColumnSchema mcs in SourceTable.PrimaryKey.MemberColumns) { %>
-			<key-property name="<%= GetPropertyName(mcs) %>" column="<%= mcs.Name %>" /> 
+			<% foreach(EntityMember em in entityManager.PrimaryKey.KeyColumns) { %>
+			<key-property name="<%= em.PropertyName %>" column="<%= em.ColumnName %>" /> 
 			<% } %>
 		</composite-id>
 		<% } else { %>
-		<id name="Id" column="<%= GetPrimaryKeyColumn(SourceTable.PrimaryKey).Name %>">
-		 	<% if(SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties.Contains("CS_IsIdentity") && ((bool)SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties["CS_IsIdentity"].Value) == true) { %>
-			<generator class="native" />
-			<% } else { %>
-			<generator class="assigned" />
-			<% } %>
+		<id name="Id" column="<%= entityManager.PrimaryKey.KeyColumn.ColumnName %>">
+		 	<%= entityManager.PrimaryKey.Generator %>
 		</id>
 		<% } %>
-		<% } %>
 		<% // Properties %>
-		<% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-		<property name="<%= GetPropertyName(column) %>" column="<%= column.Name %>" />
+		<% foreach(EntityMember em in entityManager.Members) { %>
+		<property name="<%= em.PropertyName %>" column="<%= em.ColumnName %>" />
 		<% } %>
 		<% // Many-To-One %>
-		<% foreach(Association association in associationManager.ManyToOne) { %>
+		<% foreach(EntityAssociation association in entityManager.ManyToOne) { %>
 		<many-to-one name="<%= association.PropertyName %>" column="<%= association.ColumnName %>" class="<%= association.ClassName %>" />
 		<% } %>
 		<% // One-To-Many %>
-		<% foreach(Association association in associationManager.OneToMany) { %>
+		<% foreach(EntityAssociation association in entityManager.OneToMany) { %>
 		<bag name="<%= association.PropertyName %>" lazy="true" cascade="<%= association.Cascade %>"  inverse="true" >
 			<key column="<%= association.ColumnName %>"></key>
 			<one-to-many class="<%= association.ClassName %>"></one-to-many>
 		</bag>
 		<% } %>
 		<% // Many-To-Many %>
-		<% foreach(Association association in associationManager.ManyToMany) { %>
+		<% foreach(EntityAssociation association in entityManager.ManyToMany) { %>
 		<bag name="<%= association.PropertyName %>" table="<%= association.TableName %>" lazy="true" cascade="all" inverse="true" >
 			<key column="<%= association.ColumnName %>"></key>
 			<many-to-many column="<%= association.ToManyTableKeyName %>" class="<%= association.ClassName %>" />

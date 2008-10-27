@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Common\</OutputPath>
+    <OutputPath>..\..\Common\NHibernateHelper\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -53,8 +53,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Association.cs" />
-    <Compile Include="AssociationManager.cs" />
+    <Compile Include="EntityAssociation.cs" />
+    <Compile Include="EntityKey.cs" />
+    <Compile Include="EntityManager.cs" />
+    <Compile Include="EntityMember.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="NHibernateHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
