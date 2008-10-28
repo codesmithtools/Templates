@@ -16,7 +16,7 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="This is the path to the Solution location." %>
 <%@ Property Name="SolutionName" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="Name of the project to be generated." %>
 <%@ Property Name="Language" Type="QuickStartUtils.LanguageEnum" Default="CSharp" Optional="False" Category="2.Solution" Description="Language the project will be in" %>
-<%@ Property Name="ProjectType" Type="QuickStartUtils.ProjectTypeEnum" Default="DynamicData" Optional="False" Category="4.Interface Project" Description="Type of Project to be created" %>
+<%@ Property Name="ProjectType" Type="QuickStartUtils.ProjectTypeEnum" Default="DynamicDataWebApp" Optional="False" Category="4.Interface Project" Description="Type of Project to be created" %>
 <%@ Property Name="DataProjectName" Type="System.String" Default="" Optional="False" Category="3.Data Project" Description="Name Space for the Data Project." %>
 <%@ Property Name="CopyTemplatesToFolder" Type="System.Boolean" Default="False" Optional="False" Category="3.Data Project" Description="Include a copy of the LinqToSql Templates in the project directory" %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Default="" Optional="False" Category="1.DataBase" Description="Source Database" OnChanged="OnSourceDatabaseChanged" %>
@@ -40,7 +40,7 @@ Description: Used to Quick Start Visual Studio Projects
 				
 		// Copy Plinqo Templates
 		if(CopyTemplatesToFolder)
-            QuickStartUtils.CopyDirectory(CodeTemplateInfo.DirectoryName, Path.Combine(Location,@"LinqToSql"), 0);
+            QuickStartUtils.CopyDirectory(CodeTemplateInfo.DirectoryName, Path.Combine(Location,@"LinqToSql"));
 				
 		// Create SolutionItems
 		List<QuickStartSolution.SolutionItem> solutionItems = new List<QuickStartSolution.SolutionItem>();
@@ -50,10 +50,13 @@ Description: Used to Quick Start Visual Studio Projects
 		QuickStartSolution.SolutionItem dataProject = dataProjectCreator.CreateProject(this.DataProjectName);
 		solutionItems.Add(dataProject);
 		
-		// Create Website Project
-		WebsiteProjectCreator websiteProjectCreator = new WebsiteProjectCreator(this);
-		QuickStartSolution.SolutionItem websiteProject = websiteProjectCreator.CreateProject(this.InterfaceProjectName, dataProject);
-		solutionItems.Add(websiteProject);
+		// Create DynamicData Web Application Project
+		if(ProjectType == QuickStartUtils.ProjectTypeEnum.DynamicDataWebApp)
+		{
+			WebsiteProjectCreator websiteProjectCreator = new WebsiteProjectCreator(this);
+			QuickStartSolution.SolutionItem websiteProject = websiteProjectCreator.CreateProject(this.InterfaceProjectName, dataProject);
+			solutionItems.Add(websiteProject);
+		}
 		
 		// Create UnitTests Project
 		if(IncludeTestProject)
@@ -130,11 +133,11 @@ Description: Used to Quick Start Visual Studio Projects
 			switch (ProjectType)
 			{
 				default:
-				case QuickStartUtils.ProjectTypeEnum.DynamicData:
+				case QuickStartUtils.ProjectTypeEnum.DynamicDataWebApp:
 					projectTypeFileName = "DynamicDataLinqToSqlWebApplication";
 					break;
-				case QuickStartUtils.ProjectTypeEnum.MVC:
-					projectTypeFileName = "MvcWebApplicationProjectTemplateP5";
+				case QuickStartUtils.ProjectTypeEnum.DynamicDataWebSite:
+					projectTypeFileName = "DynamicDataLinqToSqlWebSite";
 					break;
 			}
 			return projectTypeFileName;

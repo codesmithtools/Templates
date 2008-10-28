@@ -17,8 +17,9 @@ namespace QuickStartUtils
 
         public enum ProjectTypeEnum
         {
-            DynamicData = 1,
-            MVC = 2
+            None = 0,
+            DynamicDataWebApp = 1,
+            DynamicDataWebSite = 2
         }
 
         public static void ReplaceAllInDirectory(string path, string find, string replace, string[] exemptDirectories)
@@ -92,7 +93,12 @@ namespace QuickStartUtils
             return String.Empty;
         }
 
-        public static void CopyDirectory(string pathFrom, string pathTo, int level)
+        public static void CopyDirectory(string pathFrom, string pathTo)
+        {
+            CopyDirectory(pathFrom, pathTo, 0);
+        }
+
+        private static void CopyDirectory(string pathFrom, string pathTo, int level)
         {
             if (level <= 3)
             {
@@ -101,14 +107,15 @@ namespace QuickStartUtils
                 string[] fileEntries = Directory.GetFiles(pathFrom);
                 foreach (string fileName in fileEntries)
                 {
-                    File.Copy(fileName, fileName.Replace(pathFrom,pathTo));
+                    File.Copy(fileName, fileName.Replace(pathFrom,pathTo + @"\"));
                 }
 
                 string[] subdirEntries = Directory.GetDirectories(pathFrom);
                 foreach (string subdir in subdirEntries)
                     // Do not iterate through reparse points
-                    if ((File.GetAttributes(subdir) & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
-                        CopyDirectory(subdir, subdir.Replace(pathFrom,pathTo + @"\"), level + 1);
+                    if ((File.GetAttributes(subdir) & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint
+                        && (File.GetAttributes(subdir) & FileAttributes.Hidden) != FileAttributes.Hidden)
+                            CopyDirectory(subdir, subdir.Replace(pathFrom,pathTo + @"\"), level + 1);
             }
         }
 
