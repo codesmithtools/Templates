@@ -3,11 +3,11 @@ Name: NHibernateMaster.cst
 Author: Tom DuPont
 Description: Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file.
 --%>
-<%@ CodeTemplate Language="VB" Src="Helpers\NHibernateHelper.vb" Inherits="NHibernateHelper" TargetLanguage="VB" OutputType="None" Debug="False" Description="Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file." %>
+<%@ CodeTemplate Language="VB" Src="Helpers\VbNHibernateHelper.vb" Inherits="VbNHibernateHelper" TargetLanguage="VB" OutputType="None" Debug="False" Description="Generates a complete set of Maps, Business Objects, Manager Objects, and a ManagerFactory for NHibernate, the adds them to the specified .csproj file." %>
 
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="1a. Source Database" Description="The source database to generate from." %>
 
-<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
+<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." Filter="SourceTable" %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 
 <%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v2_0" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
@@ -25,6 +25,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Assembly Name="Microsoft.Build.Engine" %>
 <%@ Assembly Name="Microsoft.Build.Utilities" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\Common\NHibernateHelper" %>
 
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
@@ -47,6 +48,8 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 
 <script runat="template">
 Public Overloads Overrides Sub Render(ByVal writer As TextWriter)
+	HelperInit(Me.TablePrefix)
+	
 	Me.tablePrefix = Me.TablePrefix
 	If ExcludedTables Is Nothing Then
 		ExcludedTables = New TableSchemaCollection()
@@ -202,12 +205,12 @@ Private Sub RenderUnitTests(ByVal table As TableSchema)
 	unitTests.RenderToFile(GetOutputFile(fileName, editableFileName), True)
 End Sub
 Private Sub RegisterReferences()
-	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "Resources\NHibernate\NHibernate.dll"))
-	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "Resources\NHibernate\Castle.Core.dll"))
-	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "Resources\NHibernate\Castle.DynamicProxy2.dll"))
-	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "Resources\NHibernate\Iesi.Collections.dll"))
-	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "Resources\NHibernate\log4net.dll"))
-	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "Resources\NUnit\NUnit.Framework.dll"))
+	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\NHibernate.dll"))
+	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\Castle.Core.dll"))
+	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\Castle.DynamicProxy2.dll"))
+	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\Iesi.Collections.dll"))
+	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\log4net.dll"))
+	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NUnit\NUnit.Framework.dll"))
 	Me.RegisterReference("System.Web")
 End Sub
 

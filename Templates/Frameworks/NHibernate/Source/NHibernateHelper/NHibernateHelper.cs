@@ -204,36 +204,6 @@ namespace NHibernateHelper
 
         #endregion
 
-        #region BusinessObject Methods
-
-        public static string GetInitialization(Type type)
-        {
-            string result;
-
-            if (type.Equals(typeof(String)))
-                result = "String.Empty";
-            else if (type.Equals(typeof(DateTime)))
-                result = "new DateTime()";
-            else if (type.Equals(typeof(Decimal)))
-                result = "default(Decimal)";
-            else if (type.Equals(typeof(Guid)))
-                result = "Guid.Empty";
-            else if (type.IsPrimitive)
-                result = String.Format("default({0})", type.Name.ToString());
-            else
-                result = "null";
-            return result;
-        }
-        public static Type GetBusinessBaseIdType(TableSchema table)
-        {
-            if (IsMutliColumnPrimaryKey(table.PrimaryKey))
-                return typeof(string);
-            else
-                return GetPrimaryKeyColumn(table.PrimaryKey).SystemType;
-        }
-
-        #endregion
-
         #region PrimaryKey Methods
 
         public static MemberColumnSchema GetPrimaryKeyColumn(PrimaryKeySchema primaryKey)
@@ -264,6 +234,14 @@ namespace NHibernateHelper
         #endregion
 
         #region Misc
+
+        public static Type GetBusinessBaseIdType(TableSchema table)
+        {
+            if (IsMutliColumnPrimaryKey(table.PrimaryKey))
+                return typeof(string);
+            else
+                return GetPrimaryKeyColumn(table.PrimaryKey).SystemType;
+        }
 
         public static TableSchema GetForeignTable(MemberColumnSchema mcs, TableSchema table)
         {

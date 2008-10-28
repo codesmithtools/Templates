@@ -31,15 +31,8 @@ namespace <%= BusinessNamespace %>
     {
         #region Declarations
 
-		<% // Primary Keys %>
-		<% if(entityManager.PrimaryKey.IsCompositeKey) { %>
-		<% foreach(EntityMember em in entityManager.PrimaryKey.KeyColumns) { %>
-		private <%= SystemCSharp[em.SystemType.ToString()] %> <%= em.PrivateVariableName %> = <%= GetInitialization(em.SystemType) %>;
-		<% } %>
-		<% } %>
-		
 		<% // Primitives %>
-		<% foreach(EntityMember em in entityManager.Members) { %>
+		<% foreach(EntityMember em in entityManager.MembersPrimaryKeyUnion) { %>
 		private <%= SystemCSharp[em.SystemType.ToString()] %> <%= em.PrivateVariableName %> = <%= GetInitialization(em.SystemType) %>;
 		<% } %>
 		
@@ -68,8 +61,8 @@ namespace <%= BusinessNamespace %>
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             
             sb.Append(this.GetType().FullName);
-            <% foreach(ColumnSchema column in SourceTable.NonKeyColumns) { %>
-			sb.Append(<%= GetPrivateVariableName(column) %>);
+            <% foreach(EntityMember em in entityManager.MembersPrimaryKeyUnion) { %>
+			sb.Append(<%= em.PrivateVariableName %>);
 			<% } %>
 
             return sb.ToString().GetHashCode();
@@ -80,17 +73,20 @@ namespace <%= BusinessNamespace %>
         #region Properties
 
 		<% // Primary Keys %>
-		<% if(IsMutliColumnPrimaryKey(SourceTable.PrimaryKey)) { %>
+		<% if(entityManager.PrimaryKey.IsCompositeKey) { %>
 		public override string Id
 		{
 			get
 			{
 				System.Text.StringBuilder uniqueId = new System.Text.StringBuilder();
-				<% for(int x=0; x<SourceTable.PrimaryKey.MemberColumns.Count; x++) { %>
-				<% if(x>0) { %>
+				<% bool isFirst = true; %>
+				<% foreach(EntityMember em in entityManager.PrimaryKey.KeyColumns) { %>
+				<% if(isFirst) { %>
+				<% isFirst = false; %>
+				<% } else { %>
 				uniqueId.Append("^");
 				<% } %>
-				uniqueId.Append(<%= GetPrivateVariableName(SourceTable.PrimaryKey.MemberColumns[x]) %>.ToString());
+				uniqueId.Append(<%= em.PrivateVariableName %>.ToString());
 				<% } %>
 				return uniqueId.ToString();
 			}

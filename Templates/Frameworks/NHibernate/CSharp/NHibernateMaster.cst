@@ -7,7 +7,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="1a. Source Database" Description="The source database to generate from." %>
 
-<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation."  Filter="SourceTable"%>
+<%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." Filter="SourceTable"%>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 
 <%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v2_0" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
@@ -31,7 +31,6 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Import Namespace="System.Data" %>
 <%@ Import NameSpace="System.IO" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="NHibernateHelper" %>
 
 <%@ Register Name="BusinessBaseTemplate" Template="BaseClasses\BusinessBase.cst" %>
 <%@ Register Name="ManagerBaseTemplate" Template="BaseClasses\ManagerBase.cst" %>

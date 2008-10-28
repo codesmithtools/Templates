@@ -3,7 +3,7 @@ Name: ManagerObject.cst
 Author: Tom DuPont
 Description: Generates a Manager Object for NHibernate.
 --%>
-<%@ CodeTemplate Language="VB" Src="..\Helpers\NHibernateHelper.vb" Inherits="NHibernateHelper" TargetLanguage="VB" Debug="False" Description="Generates a Manager Object for NHibernate." %>
+<%@ CodeTemplate Language="VB" Src="..\Helpers\VbNHibernateHelper.vb" Inherits="VbNHibernateHelper" TargetLanguage="VB" Debug="False" Description="Generates a Manager Object for NHibernate." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
@@ -13,11 +13,13 @@ Description: Generates a Manager Object for NHibernate.
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="3. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="NHibernateHelper" %>
 <% Dim scList As List(Of SearchCriteria) = SearchCriteria.GetAllSearchCriteria(SourceTable) %>
-<% Me._tablePrefix = TablePrefix %>
+<% Dim entityManager As New EntityManager(SourceTable, ExcludedTables) %>
 Imports System
 Imports System.Collections.Generic
 Imports System.Text
@@ -32,7 +34,7 @@ Namespace <%= ManagerNamespace %>
 		
 		' Get Methods
 		<% For Each sc As SearchCriteria In scList %>
-		<% If sc.IsAllPrimaryKeys Then %>
+		<% If sc.IsPrimaryKey Then %>
 		<% If sc.Items.Count > 1 Then ' Override GetById %>
 		Overloads Function GetById(<%= GetMethodParameters(sc.Items, true) %>) As <%= GetClassName(SourceTable) %>
 		<% End If %>
@@ -59,7 +61,7 @@ Namespace <%= ManagerNamespace %>
 #region "Get Methods"
 
 		<% For Each sc As SearchCriteria In scList %>
-		<% If sc.IsAllPrimaryKeys Then %>
+		<% If sc.IsPrimaryKey Then %>
 		<% if sc.Items.Count > 1 Then ' Override GetById %>
 		Public Overloads Overrides Function GetById(ByVal id As String) As <%= GetClassName(SourceTable) %>
 			Dim keys As String() = id.Split("^"C)
@@ -91,14 +93,22 @@ Namespace <%= ManagerNamespace %>
             Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(<%= GetClassName(SourceTable) %>))
 			
 			<% For Each mcs As MemberColumnSchema In sc.Items %>
-			<% If mcs.IsForeignKeyMember %>
-			Dim <%= GetVariableName(GetForeignTable(mcs, SourceTable), mcs) %>Criteria As ICriteria = criteria.CreateCriteria("<%= GetPropertyName(GetForeignTable(mcs, SourceTable), mcs) %>")
-            <%= GetVariableName(GetForeignTable(mcs, SourceTable), mcs) %>Criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("Id", <%= GetVariableName(mcs) %>))
+			
+			<% If mcs.IsForeignKeyMember Then %>
+			<% Dim association As EntityAssociation = entityManager.GetAssocitionFromColumn(mcs) %>
+			<% If association Is Nothing Then %>
+			<% Dim em As EntityMember = entityManager.GetMemberFromColumn(mcs) %>
+			Dim <%= em.VariableName %>Criteria As ICriteria = criteria.CreateCriteria("<%= em.PropertyName %>")
+            <%= em.VariableName %>Criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("Id", <%= GetVariableName(mcs) %>))
+			<% Else %>
+			Dim <%= association.VariableName %>Criteria As ICriteria = criteria.CreateCriteria("<%= association.PropertyName %>")
+            <%= association.VariableName %>Criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("Id", <%= GetVariableName(mcs) %>))
+			<% End If %>
 			<% Else %>
 			criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= GetPropertyName(mcs) %>", <%= GetVariableName(mcs) %>))
 			<% End If %>
 			<% Next %>
-			
+						
             return criteria.List(Of <%= GetClassName(SourceTable) %>)()
         End Function
 		<% End If %>

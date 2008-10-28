@@ -3,15 +3,17 @@ Name: UnitTestBase.cst
 Author: Tom DuPont
 Description: Generates the Unit Tests base class for NHibernate.
 --%>
-<%@ CodeTemplate Language="VB" Src="..\Helpers\NHibernateHelper.vb" Inherits="NHibernateHelper" TargetLanguage="VB" Debug="False" Description="Generates the Unit Tests base class for NHibernate." %>
+<%@ CodeTemplate Language="VB" Src="..\Helpers\VbNHibernateHelper.vb" Inherits="VbNHibernateHelper" TargetLanguage="VB" Debug="False" Description="Generates the Unit Tests base class for NHibernate." %>
 <%@ Property Name="ManagerNamespace" Type="System.String" Default="NHibernate.Generated.ManagerObjects" Optional="False" Category="2. Namespaces" Description="The desired Namespace for the Manager Objects." %>
 <%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2. Namespaces" Description="The desired Namespace for the Business Objects." %>
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="2. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="NHibernateHelper" %>
 Imports System
 Imports System.Collections.Generic
 Imports System.Text
