@@ -6,4 +6,4 @@ Description:
 <%@ CodeTemplate Language="VB" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." %>
 <%@ Property Name="ClassNamespace" Type="System.String" Default="" Optional="false" Description="Namspace of the generated class"%>
 
-<%%@ Application Codebehind="Global.asax.cs" Inherits="<%=ClassNamespace%>.Global" Language="C#" %>
+<%%@ Application Codebehind="Global.asax.vb" Inherits="<%=ClassNamespace%>.Global_asax" Language="C#" %>

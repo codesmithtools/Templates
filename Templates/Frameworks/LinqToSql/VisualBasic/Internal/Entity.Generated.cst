@@ -76,7 +76,7 @@ Namespace <%= Database.EntityNamespace %>
     <DataContract(IsReference:=True)> _
 <% End If %>
 <% If (Me.Framework = FrameworkEnum.v35_SP1) Then %>
-    <ScaffoldTable(true)> _
+    <ScaffoldTable(True)> _
     <MetadataType(GetType(<%= Type.Name %>.Metadata))> _
 <% End If %>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>

@@ -3,7 +3,7 @@ Name: Quick Start
 Author: Reggie Bradshaw
 Description: Used to Quick Start Visual Studio Projects
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." CompilerVersion="v3.5" %>
 <%@ Assembly Name="System" %>
 <%@ Assembly Name="ICSharpCode.SharpZipLib" Path="Common" %>
 <%@ Assembly Name="QuickStartUtils" Path="Common"%>
@@ -171,8 +171,7 @@ Description: Used to Quick Start Visual Studio Projects
 			else
 				globalTemplate = ProjectBuilder.GetCodeTemplateInstance(@"VisualBasic\Global.cst");
 			
-			string projectNamespace = ProjectBuilder.SolutionName + @".website";
-			globalTemplate.SetProperty("ClassNamespace",projectNamespace);
+			globalTemplate.SetProperty("ClassNamespace",ProjectBuilder.InterfaceProjectName);
 			globalTemplate.SetProperty("ContextNamespace",ProjectBuilder.DataProjectName);
 			globalTemplate.SetProperty("DataContextName",ProjectBuilder.SourceDatabase.Name + "DataContext");
 			globalTemplate.ContextData["RenderLocation"] = projectPath.DirectoryPath;
@@ -253,9 +252,22 @@ Description: Used to Quick Start Visual Studio Projects
 			
 			//The location in the csproj file directly below where we want to insert the csp include
 			QuickStartUtils.FindAndReplace(projectPath.FilePath, ProjectInsertRegex,
-				String.Format("<ItemGroup>{0}\t\t<Generate Include=\"{1}\" />{0}\t</ItemGroup>{0}\t{2}", Environment.NewLine, cspFileName, ProjectInsertLine));
+				String.Format("<ItemGroup>{0}\t\t<Generate Include=\"{1}\" />{0}\t</ItemGroup>{0}\t{2}", Environment.NewLine,
+					ProjectBuilder.DataProjectName + ".csp", ProjectInsertLine));
 			QuickStartUtils.FindAndReplace(projectPath.FilePath, "</Project>",
 				String.Format("\t<Import Project=\"$(MSBuildExtensionsPath)\\CodeSmith\\CodeSmith.targets\" />{0}</Project>", Environment.NewLine));
+			
+			if(ProjectBuilder.Language == QuickStartUtils.LanguageEnum.VB)
+			{
+				string vbFrameworkReplace = String.Format(@"<TargetFrameworkVersion>v{0}</TargetFrameworkVersion>
+				<OptionExplicit>On</OptionExplicit>
+				<OptionCompare>Binary</OptionCompare>
+				<OptionStrict>Off</OptionStrict>
+				<OptionInfer>On</OptionInfer>", "3.5");
+				
+				QuickStartUtils.FindAndReplace(projectPath.FilePath,
+					@"<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>",vbFrameworkReplace);	
+			}
 		}
 	}
 	
@@ -475,6 +487,7 @@ Description: Used to Quick Start Visual Studio Projects
 			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$endif\$", String.Empty, exemptDirectories);
 			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$registeredorganization\$", "CodeSmith Tools, LLC", exemptDirectories);
 			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$year\$", DateTime.Now.Year.ToString(), exemptDirectories);
+			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$targetframeworkversion\$", "3.5", exemptDirectories);
 		}
 		
 		protected virtual string ProjectInsertRegex
