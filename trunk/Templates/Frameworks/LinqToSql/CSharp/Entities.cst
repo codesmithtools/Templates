@@ -1,6 +1,6 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="XML" 
     Description="Generate Linq to Sql Class File" 
-    Debug="True" OutputType="None" %>
+    Debug="True" OutputType="None" CompilerVersion="v3.5"%>
 
 <%@ Assembly Name="System.Design" %>
 <%@ Assembly Name="System.Data" %>
@@ -217,7 +217,13 @@
 			partialClass.ExistingFile.Parse();
 		}
 		
-		InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata", true, true, InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent, type.Name);
+		InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata")
+		{
+			OnlyInsertMatchingClass = true,
+			PreserveClassAttributes = true,
+			NotFoundAction = InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent,
+			NotFoundParent = type.Name
+		};
         partialClass.Type = type;
         Response.WriteLine(parentFileName);
         partialClass.RenderToFile(parentFileName, insertClassMergeStrategy);
