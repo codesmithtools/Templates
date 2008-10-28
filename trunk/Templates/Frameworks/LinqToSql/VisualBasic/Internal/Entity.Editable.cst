@@ -35,8 +35,8 @@ Imports System.Collections.Generic
 Imports System.Text
 <%If(Framework = FrameworkEnum.v35_SP1)Then%>
 Imports System.ComponentModel.DataAnnotations
-Imports CodeSmith.Data.Attributes;
-Imports CodeSmith.Data.Rules;
+Imports CodeSmith.Data.Attributes
+Imports CodeSmith.Data.Rules
 <%End If%>
 
 Namespace <%= Database.EntityNamespace %>
@@ -66,12 +66,12 @@ Namespace <%= Database.EntityNamespace %>
                 Else
                     If (column.CanBeNull.Value = False AndAlso column.IsDbGenerated.Value = False) Then
                         If (column.Type.Contains("String")) Then
-                            Response.WriteLine("            [Required]")
+                            Response.WriteLine("            <Required> _")
                         Else If (column.Type.Contains("DateTime")) Then
                             If (column.Member.Contains("Create")) Then
-                                Response.WriteLine("            [Now(EntityState.New)]")
+                                Response.WriteLine("            <Now(EntityState.New)> _")
                             Else If (column.Member.Contains("Modify") OrElse column.Member.Contains("Modified")) Then
-                                Response.WriteLine("            [Now(EntityState.Dirty)]")
+                                Response.WriteLine("            <Now(EntityState.Dirty)> _")
                             End If
                         End If
                     End If
@@ -79,20 +79,20 @@ Namespace <%= Database.EntityNamespace %>
                     If (column.Type.Contains("String")) Then
                         Dim size As Integer = GetSize(column.DbType)
                         If (0 < size AndAlso size < 8000) Then
-                            Response.WriteLine(string.Format("            [StringLength({0})]", size))
+                            Response.WriteLine(string.Format("            <StringLength({0})> _", size))
                         End If
                         If (size > 1000 OrElse size = -1) Then
-                            Response.WriteLine("            [DataType(DataType.MultilineText)]")
+                            Response.WriteLine("            <DataType(DataType.MultilineText)> _")
                         Else If (column.Member.Contains("Email")) Then
-                            Response.WriteLine("            [DataType(DataType.EmailAddress)]")
+                            Response.WriteLine("            <DataType(DataType.EmailAddress)> _")
                         Else If (column.Member.Contains("Url") OrElse column.Member.Contains("Uri")) Then
-                            Response.WriteLine("            [DataType(DataType.Url)]")
+                            Response.WriteLine("            <DataType(DataType.Url)> _")
                         Else If (column.Member.Contains("Phone"))
-                            Response.WriteLine("            [DataType(DataType.PhoneNumber)]")
+                            Response.WriteLine("            <DataType(DataType.PhoneNumber)> _")
                         Else If (column.Member.Contains("Password")) Then
-                            Response.WriteLine("            [DataType(DataType.Password)]")
+                            Response.WriteLine("            <DataType(DataType.Password)> _")
                         Else If (column.Member.Contains("Html")) Then
-                            Response.WriteLine("            [DataType(DataType.Html)]")
+                            Response.WriteLine("            <DataType(DataType.Html)> _")
                         End If
                     End If
                 End If %>

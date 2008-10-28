@@ -29,11 +29,18 @@ Description:
 	p.ClassNamespace = ClassNamespace
 	
 	Dim parentFileName As String = "Global.asax"
+	Dim renderPath As String = String.Empty
+	If Me.ContextData.Get("RenderLocation") IsNot Nothing Then
+		renderPath = Me.ContextData.Get("RenderLocation")
+	End If
+
+	Dim parentFilePath As String = Path.Combine(renderPath,parentFileName)
 	
     Response.WriteLine(parentFileName)
-    p.RenderToFile(parentFileName, true)
+    p.RenderToFile(parentFilePath, true)
 	
-	Dim fileName As String = "Global.asax.cs"
+	Dim fileName As String = "Global.asax.vb"
+	Dim filePath As String = Path.Combine(renderPath,fileName)
 	
 	Me.RegisterReference("System.Data.Linq")
 	Me.RegisterReference(Path.GetFullPath(Path.Combine( _
@@ -41,5 +48,5 @@ Description:
             "..\\Common\\CodeSmith.Data.dll")))
     
     Response.WriteLine(fileName)
-    t.RenderToFile(fileName, parentFileName, true)
+    t.RenderToFile(filePath, parentFilePath, true)
 %>
