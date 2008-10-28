@@ -25,6 +25,7 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="True" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
 
 <% CreateDirectoryStructure(); %>
+	The <%= SolutionName %> Solution has been created at <%=Location %>.
 
 <script runat="template">
 
@@ -64,6 +65,17 @@ Description: Used to Quick Start Visual Studio Projects
 		
 		// Create Solution
 		CreateSolution(solutionItems);
+		
+		System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			sb.Append("The ");
+			sb.Append(SolutionName);
+			sb.AppendLine(" Solution has been created at the following location:");
+			sb.AppendLine(Location);
+		
+		System.Windows.Forms.MessageBox.Show(sb.ToString(), "Project Generated",
+				System.Windows.Forms.MessageBoxButtons.OK,
+				System.Windows.Forms.MessageBoxIcon.Exclamation);
+		
     }
 	
 	private bool CheckExistingDirectories()
@@ -518,6 +530,9 @@ Description: Used to Quick Start Visual Studio Projects
 			
 		if (string.IsNullOrEmpty(TestProjectName))
             TestProjectName = SourceDatabase.Database.Name + ".Test";
+			
+		if (string.IsNullOrEmpty(Location))
+            Location = @"C:\CodeSmithProjects\" + SourceDatabase.Database.Name;
 
     }
 </script>
