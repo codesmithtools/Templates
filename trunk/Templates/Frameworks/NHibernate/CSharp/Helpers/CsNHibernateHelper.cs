@@ -24,6 +24,25 @@ public class CsNHibernateHelper : NHibernateHelper.NHibernateHelper
 		}
 	}
 	
+	public string GetInitialization(Type type)
+    {
+        string result;
+
+        if (type.Equals(typeof(String)))
+            result = "String.Empty";
+        else if (type.Equals(typeof(DateTime)))
+            result = "new DateTime()";
+        else if (type.Equals(typeof(Decimal)))
+            result = "default(Decimal)";
+        else if (type.Equals(typeof(Guid)))
+            result = "Guid.Empty";
+        else if (type.IsPrimitive)
+            result = String.Format("default({0})", type.Name.ToString());
+        else
+            result = "null";
+        return result;
+    }
+	
 	public string GetMethodParameters(List<MemberColumnSchema> mcsList, bool isDeclaration)
 	{
 		StringBuilder result = new StringBuilder();

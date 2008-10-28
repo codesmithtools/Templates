@@ -3,7 +3,7 @@ Name: BusinessObject.cst
 Author: Tom DuPont
 Description: Generates a Business Object for NHibernate.
 --%>
-<%@ CodeTemplate Language="VB" Src="..\Helpers\NHibernateHelper.vb" Inherits="NHibernateHelper" TargetLanguage="VB" Debug="False" Description="Generates a Business Object for NHibernate." %>
+<%@ CodeTemplate Language="VB" Src="..\Helpers\VbNHibernateHelper.vb" Inherits="VbNHibernateHelper" TargetLanguage="VB" Debug="False" Description="Generates a Business Object for NHibernate." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
@@ -12,9 +12,11 @@ Description: Generates a Business Object for NHibernate.
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="3. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
-<% Me._tablePrefix = TablePrefix %>
+<%@ Import Namespace="NHibernateHelper" %>
+<% Dim entityManager As New EntityManager(SourceTable, ExcludedTables) %>
 Imports System
 Imports System.Collections
 Imports System.Collections.Generic
@@ -27,43 +29,19 @@ Namespace NHibernate.Generated.BusinessObjects
 
 		#region "Declarations"
 
-		<% 'Primary Keys %>
-		<% If IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) Then %>
-		<% For Each mcs As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns %>
-		Private <%= GetPrivateVariableName(mcs) %> As <%= mcs.SystemType %> = <%= GetInitialization(mcs.SystemType) %>
-		<% Next %>
-		<% End If %>
-		
 		<% 'Primitives %>
-		<% For Each column As ColumnSchema In SourceTable.NonKeyColumns %>
-		Private <%= GetPrivateVariableName(column) %> As <%= column.SystemType %> = <%= GetInitialization(column.SystemType) %>
+		<% For Each em As EntityMember In entityManager.MembersPrimaryKeyUnion %>
+		Private <%= em.PrivateVariableName %> As <%= em.SystemType %> = <%= GetInitialization(em.SystemType) %>
 		<% Next %>
 		
 		<% 'Many-To-One %>
-		<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
-		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
-		<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso Not mcs.IsPrimaryKeyMember Then %>
-		Private <%= GetPrivateVariableName(tks.PrimaryKeyTable, mcs) %> As <%= GetClassName(tks.PrimaryKeyTable) %> = Nothing
-		<% End If %>
-		<% Next %>
+		<% For Each association As EntityAssociation In entityManager.ManyToOne %>
+		Private <%= association.PrivateVariableName %> As <%= association.ClassName %> = Nothing
 		<% Next %>
 		
 		<% 'One-To-Many & Many-To-Many %>
-		<% For Each tks As TableKeySchema In SourceTable.PrimaryKeys %>
-		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
-		<% If Not mcs.IsPrimaryKeyMember Then %>
-		<% If Not IsManyToMany(mcs.Table) Then %>
-		<% If Not ExcludedTables.Contains(mcs.Table) Then %>
-		Private <%= GetPrivateVariableNamePlural(mcs.Table, mcs) %> As IList(Of <%= GetClassName(mcs.Table) %>) = New List(Of <%= GetClassName(mcs.Table) %>)()
-		<% End If %>
-		<% Else %>
-		<% Dim foreignTable As TableSchema = GetToManyTable(mcs.Table, SourceTable) %>
-		<% If Not ExcludedTables.Contains(foreignTable) Then %>
-		Private <%= GetPrivateVariableNamePlural(foreignTable, mcs) %> As IList(Of <%= GetClassName(foreignTable) %>) = New List(Of <%= GetClassName(foreignTable) %>)()
-		<% End If %>
-		<% End If %>
-		<% End If %>
-		<% Next %>
+		<% For Each association As EntityAssociation In entityManager.ToManyUnion %>
+		Private <%= association.PrivateVariableName %> As IList(Of <%= association.ClassName %>) = New List(Of <%= association.ClassName %>)()
 		<% Next %>
 				
         #End Region
@@ -82,8 +60,8 @@ Namespace NHibernate.Generated.BusinessObjects
 
 			sb.Append(Me.[GetType]().FullName)
 			
-			<% For Each column As ColumnSchema In SourceTable.NonKeyColumns %>
-			sb.Append(<%= GetPrivateVariableName(column) %>)
+			<% For Each em As EntityMember In entityManager.MembersPrimaryKeyUnion %>
+			sb.Append(<%= em.PrivateVariableName %>)
 			<% Next %>
 			
 			Return sb.ToString().GetHashCode()
@@ -94,140 +72,85 @@ Namespace NHibernate.Generated.BusinessObjects
         #region "Properties"
 
 		<% 'Primary Keys %>
-		<% If IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) Then %>
+		<% If entityManager.PrimaryKey.IsCompositeKey Then %>
 		Public Overloads Overrides Property Id() As String
 			Get
 				Dim uniqueId As New System.Text.StringBuilder()
-		
-				<% Dim x As Integer = 0 %>
-				<% While x < SourceTable.PrimaryKey.MemberColumns.Count %>
-				<%	If x > 0 Then %>
+				<% Dim isFirst As Boolean = True %>
+				<% For Each em As EntityMember In entityManager.PrimaryKey.KeyColumns %>
+				<% If isFirst Then %>
+				<% isFirst = False %>
+				<% Else %>
 				uniqueId.Append("^")
-				<%	End If %>
-				uniqueId.Append(<%= GetPrivateVariableName(SourceTable.PrimaryKey.MemberColumns(x)) %>.ToString())
-				<% System.Math.Max(System.Threading.Interlocked.Increment(x),x - 1) %>
-				<% End While %>
-		
+				<% End If %>
+				uniqueId.Append(<%= em.PrivateVariableName.ToString() %>)
+				<% Next %>
 				Return uniqueId.ToString()
 			End Get
 			Set(ByVal value As String)
             End Set
 		End Property
 		
-		<% For Each mcs As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns %>
-		Public Overridable Property <%= GetPropertyName(mcs) %>() As <%= mcs.SystemType %>
-			Get
-				Return <%= GetPrivateVariableName(mcs) %>
-			End Get
-			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs) %>Changing()<% End If %>
-				<%= GetPrivateVariableName(mcs) %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs) %>Changed()<% End If %>
-			End Set
-		End Property
-		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
-		Partial Private Sub On<%= GetPropertyName(mcs) %>Changing()
-		End Sub
-		Partial Private Sub On<%= GetPropertyName(mcs) %>Changed()
-		End Sub
 		<% End If %>
-		
-		<% Next %>
-		<% End If %>
-		
 		<% 'Primitives %>
-		<% For Each mcs As ColumnSchema In SourceTable.NonKeyColumns %>
-		Public Overridable Property <%= GetPropertyName(mcs) %>() As <%= mcs.SystemType %>
+		<% For Each em As EntityMember In entityManager.MembersPrimaryKeyUnion %>
+		Public Overridable Property <%= em.PropertyName %>() As <%= em.SystemType %>
 			Get
-				Return <%= GetPrivateVariableName(mcs) %>
+				Return <%= em.PrivateVariableName %>
 			End Get
 			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs) %>Changing()<% End If %>
-				<%= GetPrivateVariableName(mcs) %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(mcs) %>Changed()<% End If %>
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= em.PropertyName %>Changing()<% End If %>
+				<%= em.PrivateVariableName %> = value
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= em.PropertyName %>Changed()<% End If %>
 			End Set
 		End Property
 		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
-		Partial Private Sub On<%= GetPropertyName(mcs) %>Changing()
+		Partial Private Sub On<%= em.PropertyName %>Changing()
 		End Sub
-		Partial Private Sub On<%= GetPropertyName(mcs) %>Changed()
+		Partial Private Sub On<%= em.PropertyName %>Changed()
 		End Sub
 		<% End If %>
 		<% Next %>
 		
 		<% 'Many-To-One %>
-		<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
-		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
-		<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso Not mcs.IsPrimaryKeyMember Then %>
-		Public Overridable Property <%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>() As <%= GetClassName(tks.PrimaryKeyTable) %>
+		<% For Each association As EntityAssociation In entityManager.ManyToOne %>
+		Public Overridable Property <%= association.PropertyName %>() As <%= association.ClassName %>
 			Get
-				Return <%= GetPrivateVariableName(tks.PrimaryKeyTable, mcs) %>
+				Return <%= association.PrivateVariableName %>
 			End Get
 			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changing()<% End If %>
-				<%= GetPrivateVariableName(tks.PrimaryKeyTable, mcs) %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changed()<% End If %>
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= association.PropertyName %>Changing()<% End If %>
+				<%= association.PrivateVariableName %> = value
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= association.PropertyName %>Changed()<% End If %>
 			End Set
 		End Property
 		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
-		Partial Private Sub On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changing()
+		Partial Private Sub On<%= association.PropertyName %>Changing()
 		End Sub
-		Partial Private Sub On<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>Changed()
+		Partial Private Sub On<%= association.PropertyName %>Changed()
 		End Sub
 		<% End If %>
-		<% End If %>
-		<% Next %>
-		<% Next %>
 		
-		
+		<% Next %>
 		<% 'One-To-Many & Many-To-Many %>
-		<% For Each tks As TableKeySchema In SourceTable.PrimaryKeys %>
-		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
-		<% If Not mcs.IsPrimaryKeyMember Then %>
-		<% If Not IsManyToMany(mcs.Table) Then %>
-		<% If Not ExcludedTables.Contains(mcs.Table) Then %>
-		Public Overridable Property <%= GetPropertyNamePlural(mcs.Table, mcs) %>() As IList(Of <%= GetClassName(mcs.Table) %>)
+		<% For Each association As EntityAssociation In entityManager.ToManyUnion %>
+		Public Overridable Property <%= association.PropertyName %>() As IList(Of <%= association.ClassName %>)
 			Get
-				Return <%= GetPrivateVariableNamePlural(mcs.Table, mcs) %>
+				Return <%= association.PrivateVariableName %>
 			End Get
 			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changing()<% End If %>
-				<%= GetPrivateVariableNamePlural(mcs.Table, mcs) %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changed()<% End If %>
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= association.PropertyName %>Changing()<% End If %>
+				<%= association.PrivateVariableName %> = value
+				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= association.PropertyName %>Changed()<% End If %>
 			End Set
 		End Property
 		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
-		Partial Private Sub On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changing()
+		Partial Private Sub On<%= association.PropertyName %>Changing()
 		End Sub
-		Partial Private Sub On<%= GetPropertyNamePlural(mcs.Table, mcs) %>Changed()
-		End Sub
-		<% End If %>
-		
-		<% End If %>
-		<% Else %>
-		<% Dim foreignTable As TableSchema = GetToManyTable(mcs.Table, SourceTable) %>
-		<% If Not ExcludedTables.Contains(foreignTable) Then %>
-		Public Overridable Property <%= GetPropertyNamePlural(foreignTable, mcs) %>() As IList(Of <%= GetClassName(foreignTable) %>)
-			Get
-				Return <%= GetPrivateVariableNamePlural(foreignTable, mcs) %>
-			End Get
-			Set
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changing()<% End If %>
-				<%= GetPrivateVariableNamePlural(foreignTable, mcs) %> = value
-				<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changed()<% End If %>
-			End Set
-		End Property
-		<% If VsVersion.Equals(VisualStudioVersion.VS_2008) Then %>
-		Partial Private Sub On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changing()
-		End Sub
-		Partial Private Sub On<%= GetPropertyNamePlural(foreignTable, mcs) %>Changed()
+		Partial Private Sub On<%= association.PropertyName %>Changed()
 		End Sub
 		<% End If %>
 		
-		<% End If %>
-		<% End If %>
-		<% End If %>
-		<% Next %>
 		<% Next %>
         #End Region
 

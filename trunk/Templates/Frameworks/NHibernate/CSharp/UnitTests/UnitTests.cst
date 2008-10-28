@@ -44,13 +44,12 @@ namespace <%= UnitTestNamespace %>
 		{
 			<%= GetClassName(SourceTable) %> entity = new <%= GetClassName(SourceTable) %>();
 			
-			<% if(!entityManager.PrimaryKey.IsCompositeKey) { %>
-			<% if(!entityManager.PrimaryKey.IsIdentity) { %>
+			<% if(!entityManager.PrimaryKey.IsCompositeKey && !entityManager.PrimaryKey.IsIdentity) { %>
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = <%= GetUnitTestInitialization(SourceTable.PrimaryKey.MemberColumns[0].Column) %>;
-			<% } %>
+			entity.Id = <%= GetUnitTestInitialization(entityManager.PrimaryKey.KeyColumn.Column) %>;
 			<% } %>
 			
+			<% // Primitives %>
 			<% foreach(EntityMember em in entityManager.MembersPrimaryKeyUnion) { %>
 			entity.<%= em.PropertyName %> = <%= GetUnitTestInitialization(em.Column) %>;
 			<% } %>

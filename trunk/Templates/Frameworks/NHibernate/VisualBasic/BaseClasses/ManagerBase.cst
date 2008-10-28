@@ -3,14 +3,16 @@ Name: ManagerBase.cst
 Author: Tom DuPont
 Description: Generates the Manager base class for NHibernate.
 --%>
-<%@ CodeTemplate Language="VB" Src="..\Helpers\NHibernateHelper.vb" Inherits="NHibernateHelper" TargetLanguage="VB" Debug="False" Description="Generates the Manager base class for NHibernate." %>
+<%@ CodeTemplate Language="VB" Src="..\Helpers\VbNHibernateHelper.vb" Inherits="VbNHibernateHelper" TargetLanguage="VB" Debug="False" Description="Generates the Manager base class for NHibernate." %>
 <%@ Property Name="NHibVersion" Type="NHibernateVersion" Default="v1_2" Optional="False" Category="1. NHibernate" Description="The version of NHibernate to generate for." %>
 <%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="2. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="NHibernateHelper" %>
 Imports System
 Imports System.Collections.Generic
 Imports System.Linq

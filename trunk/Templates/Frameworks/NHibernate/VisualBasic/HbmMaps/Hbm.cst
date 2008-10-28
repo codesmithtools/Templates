@@ -3,7 +3,7 @@ Name: Hbm.cst
 Author: Tom DuPont
 Description: Generates a HBM Map for NHibernate.
 --%>
-<%@ CodeTemplate Language="VB" Src="..\Helpers\NHibernateHelper.vb" Inherits="NHibernateHelper" TargetLanguage="XML" Debug="False" Description="Generates a HBM Map for NHibernate." %>
+<%@ CodeTemplate Language="VB" Src="..\Helpers\VbNHibernateHelper.vb" Inherits="VbNHibernateHelper" TargetLanguage="XML" Debug="False" Description="Generates a HBM Map for NHibernate." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
@@ -11,64 +11,47 @@ Description: Generates a HBM Map for NHibernate.
 <%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2b. Namespaces" Description="The desired Namespace for the Business Objects." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
-<% Me._tablePrefix = TablePrefix %>
+<%@ Import Namespace="NHibernateHelper" %>
+<% Dim entityManager As New EntityManager(SourceTable, ExcludedTables) %>
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="<%= BusinessNamespace %>" assembly="<%= AssemblyName %>">
 	<class name="<%= BusinessNamespace %>.<%= GetClassName(SourceTable) %>, <%= AssemblyName %>" table="<%= SourceTable.Name %>" lazy="true">
 		<% 'Primary Key %>
-		<% If SourceTable.HasPrimaryKey Then %>
-		<% If IsMutliColumnPrimaryKey(SourceTable.PrimaryKey) Then %>
+		<% If entityManager.PrimaryKey.IsCompositeKey Then %>
 		<composite-id>
-			<% For Each mcs As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns %>
-			<key-property name="<%= GetPropertyName(mcs) %>" column="<%= mcs.Name %>" /> 
+			<% For Each em As EntityMember In entityManager.PrimaryKey.KeyColumns %>
+			<key-property name="<%= em.PropertyName %>" column="<%= em.ColumnName %>" /> 
 			<% Next %>
 		</composite-id>
 		<% Else %>
-		<id name="Id" column="<%= GetPrimaryKeyColumn(SourceTable.PrimaryKey).Name %>">
-		 	<% If SourceTable.PrimaryKey.MemberColumns(0).ExtendedProperties.Contains("CS_IsIdentity") AndAlso DirectCast(SourceTable.PrimaryKey.MemberColumns(0).ExtendedProperties("CS_IsIdentity").Value, Boolean) Then %>
-			<generator class="native" />
-			<% Else %>
-			<generator class="assigned" />
-			<% End If %>
+		<id name="Id" column="<%= entityManager.PrimaryKey.KeyColumn.ColumnName %>">
+		 	<%= entityManager.PrimaryKey.Generator %>
 		</id>
 		<% End If %>
-		<% End If %>
 		<% 'Properties %>
-		<% For Each column As ColumnSchema In SourceTable.NonKeyColumns %>
-		<property name="<%= GetPropertyName(column) %>" column="<%= column.Name %>" />
+		<% For Each em As EntityMember In entityManager.Members %>
+		<property name="<%= em.PropertyName %>" column="<%= em.ColumnName %>" />
 		<% Next %>
 		<% 'Many-To-One %>
-		<% For Each tks As TableKeySchema In SourceTable.ForeignKeys %>
-		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
-		<% If Not ExcludedTables.Contains(tks.PrimaryKeyTable) AndAlso Not mcs.IsPrimaryKeyMember %>
-		<many-to-one name="<%= GetPropertyName(tks.PrimaryKeyTable, mcs) %>" column="<%= mcs.Name %>" class="<%= GetClassName(tks.PrimaryKeyTable) %>" />
-		<% End If %>
+		<% For Each association As EntityAssociation In entityManager.ManyToOne %>
+		<many-to-one name="<%= association.PropertyName %>" column="<%= association.ColumnName %>" class="<%= association.ClassName %>" />
 		<% Next %>
-		<% Next %>
-		<% 'One-To-Many & Many-To-Many %>
-		<% For Each tks As TableKeySchema In SourceTable.PrimaryKeys %>
-		<% For Each mcs As MemberColumnSchema In tks.ForeignKeyMemberColumns %>
-		<% If Not mcs.IsPrimaryKeyMember Then %>
-		<% If Not IsManyToMany(mcs.Table) Then %>
-		<% If Not ExcludedTables.Contains(mcs.Table) Then %>
-		<bag name="<%= GetPropertyNamePlural(mcs.Table, mcs) %>" lazy="true" cascade="<%= GetCascade(mcs) %>"  inverse="true" >
-			<key column="<%= mcs.Name %>"></key>
-			<one-to-many class="<%= GetClassName(mcs.Table) %>"></one-to-many>
+		<% 'One-To-Many %>
+		<% For Each association As EntityAssociation In entityManager.OneToMany %>
+		<bag name="<%= association.PropertyName %>" lazy="true" cascade="<%= association.Cascade %>"  inverse="true" >
+			<key column="<%= association.ColumnName %>"></key>
+			<one-to-many class="<%= association.ClassName %>"></one-to-many>
 		</bag>
-		<% End If %>
-		<% Else %>
-		<% Dim foreignTable As TableSchema = GetToManyTable(mcs.Table, SourceTable) %>
-		<% If Not ExcludedTables.Contains(foreignTable) Then %>
-		<bag name="<%= GetPropertyNamePlural(foreignTable, mcs) %>" table="<%= mcs.Table.Name %>" lazy="true" cascade="all"  inverse="true" >
-			<key column="<%= mcs.Name %>"></key>
-			<many-to-many column="<%= GetToManyTableKey(mcs.Table, foreignTable).Name %>" class="<%= GetClassName(foreignTable) %>" />
-    	</bag>
-		<% End If %>
-		<% End If %>
-		<% End If %>
 		<% Next %>
+		<% 'Many-To-Many %>
+		<% For Each association As EntityAssociation In entityManager.ManyToMany %>
+		<bag name="<%= association.PropertyName %>" table="<%= association.TableName %>" lazy="true" cascade="all" inverse="true" >
+			<key column="<%= association.ColumnName %>"></key>
+			<many-to-many column="<%= association.ToManyTableKeyName %>" class="<%= association.ClassName %>" />
+    	</bag>
 		<% Next %>
 	</class>
 </hibernate-mapping>
