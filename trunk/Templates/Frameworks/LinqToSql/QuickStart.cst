@@ -25,17 +25,21 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="True" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
 
 <% CreateDirectoryStructure(); %>
+
 <script runat="template">
 
 	public void CreateDirectoryStructure()
-    {   
+    {
+		if(CheckExistingDirectories())
+			return;
+		
 		// Prep Directories
 		if(!Directory.Exists(Location))
 			Directory.CreateDirectory(Location);
 				
 		// Copy Plinqo Templates
 		if(CopyTemplatesToFolder)
-            QuickStartUtils.CopyDirectory(CodeTemplateInfo.DirectoryName,Path.Combine(Location,@"LinqToSql"),0);
+            QuickStartUtils.CopyDirectory(CodeTemplateInfo.DirectoryName, Path.Combine(Location,@"LinqToSql"), 0);
 				
 		// Create SolutionItems
 		List<QuickStartSolution.SolutionItem> solutionItems = new List<QuickStartSolution.SolutionItem>();
@@ -62,6 +66,26 @@ Description: Used to Quick Start Visual Studio Projects
 		CreateSolution(solutionItems);
     }
 	
+	private bool CheckExistingDirectories()
+	{
+		if (Directory.Exists(Path.Combine(Location, this.DataProjectName))
+		 || Directory.Exists(Path.Combine(Location, this.InterfaceProjectName))
+		 || Directory.Exists(Path.Combine(Location, this.TestProjectName))
+		 || File.Exists(Path.Combine(Location, String.Concat(this.SolutionName, ".sln"))))
+		{
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			sb.AppendLine("It seems that a quick start already exists in specified directory:");
+			sb.AppendLine(Location);
+			sb.AppendLine("Please delete existing data or selected a different directory.");
+			System.Windows.Forms.MessageBox.Show(sb.ToString(), "QuickStart Already Exists!",
+				System.Windows.Forms.MessageBoxButtons.OK,
+				System.Windows.Forms.MessageBoxIcon.Exclamation);
+			
+			return true;
+		}
+		else
+			return false;
+	}
 	private void CreateSolution(List<QuickStartSolution.SolutionItem> solutionItems)
 	{
 		QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
@@ -181,14 +205,19 @@ Description: Used to Quick Start Visual Studio Projects
 	
 	class DataProjectCreator : VsProjectCreator
 	{
+		private string cspFileName;
+		
 		public DataProjectCreator(QuickStart_cst projectBuilder)
 			: base(projectBuilder) { }
 		
 		protected override void GetFiles(PathHelper projectPath)
 		{
 			GetVsProject(projectPath, "ClassLibrary");
-			File.Copy(Path.Combine(ProjectBuilder.CodeTemplateInfo.DirectoryName,@"Common\QuickStartData.csp"),
-				Path.Combine(projectPath.DirectoryPath, "QuickStartData.csp"));
+			
+			// Move/Rename CSP
+			cspFileName = String.Format("{0}.csp", Path.GetFileNameWithoutExtension(projectPath.FileName));
+			File.Copy(Path.Combine(ProjectBuilder.CodeTemplateInfo.DirectoryName, @"Common\QuickStartData.csp"),
+				Path.Combine(projectPath.DirectoryPath, cspFileName));
 			
 			// Delete Class1
 			string class1File = String.Concat("Class1.", ProjectBuilder.LanguageAppendage);
@@ -197,20 +226,24 @@ Description: Used to Quick Start Visual Studio Projects
 			{
 				// Delete File
 				File.Delete(class1Path);
+				
 				// Remove From Proj
-				//Yes, There is a space in the csproj file while there is not in the vbproj file
-				string classLine = ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp ?
-					String.Format(@"<Compile Include=""{0}"" />", class1File) : String.Format(@"<Compile Include=""{0}""/>", class1File);
+				// Yes, There is a space in the csproj file while there is not in the vbproj file
+				string classLine = (ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
+					? String.Format(@"<Compile Include=""{0}"" />", class1File)
+					: String.Format(@"<Compile Include=""{0}""/>", class1File);
 					
-				QuickStartUtils.FindAndReplace(projectPath.FilePath,classLine,String.Empty);
+				QuickStartUtils.FindAndReplace(projectPath.FilePath, classLine, String.Empty);
 			}
 		}
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{	
-			VariableUpdateDirectory(projectPath, projectGuid, projectName,this.ProjectBuilder.LanguageAppendage, null);
+			VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage, null);
 			
-			string linqToSqlPath = (ProjectBuilder.CopyTemplatesToFolder) ? @"..\LinqToSql" : ProjectBuilder.CodeTemplateInfo.DirectoryName; // Needs Normal Path here
-			string cspPath = Path.Combine(projectPath.DirectoryPath,"QuickStartData.csp");
+			string linqToSqlPath = (ProjectBuilder.CopyTemplatesToFolder)
+				? @"..\LinqToSql"
+				: ProjectBuilder.CodeTemplateInfo.DirectoryName; // Needs Normal Path here
+			string cspPath = Path.Combine(projectPath.DirectoryPath, cspFileName);
 	
 			QuickStartUtils.FindAndReplace(cspPath, @"\$connectionString\$", ProjectBuilder.SourceDatabase.ConnectionString);
 			QuickStartUtils.FindAndReplace(cspPath, @"\$myDatabase\$", ProjectBuilder.SourceDatabase.Database.Name);
@@ -218,15 +251,12 @@ Description: Used to Quick Start Visual Studio Projects
 			QuickStartUtils.FindAndReplace(cspPath, @"\$language\$", ProjectBuilder.LanguageFolder);
 			QuickStartUtils.FindAndReplace(cspPath, @"\$linqToSql\$", linqToSqlPath);
 			
-			
 			//The location in the csproj file directly below where we want to insert the csp include
 			QuickStartUtils.FindAndReplace(projectPath.FilePath, ProjectInsertRegex,
-				String.Format("<ItemGroup>{0}\t\t<Generate Include=\"{1}\" />{0}\t</ItemGroup>{0}\t{2}", Environment.NewLine, "QuickStartData.csp", ProjectInsertLine));
+				String.Format("<ItemGroup>{0}\t\t<Generate Include=\"{1}\" />{0}\t</ItemGroup>{0}\t{2}", Environment.NewLine, cspFileName, ProjectInsertLine));
 			QuickStartUtils.FindAndReplace(projectPath.FilePath, "</Project>",
 				String.Format("\t<Import Project=\"$(MSBuildExtensionsPath)\\CodeSmith\\CodeSmith.targets\" />{0}</Project>", Environment.NewLine));
 		}
-		
-		
 	}
 	
 	#endregion
@@ -446,7 +476,6 @@ Description: Used to Quick Start Visual Studio Projects
 			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$registeredorganization\$", "CodeSmith Tools, LLC", exemptDirectories);
 			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$year\$", DateTime.Now.Year.ToString(), exemptDirectories);
 		}
-		
 		
 		protected virtual string ProjectInsertRegex
 		{
