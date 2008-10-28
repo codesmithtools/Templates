@@ -27,14 +27,6 @@ namespace CodeSmith.Engine
             this.Language = language;
             this.ClassName = className;
         }
-        public InsertClassMergeStrategy(SupportedLanguage language, string className, bool preserveClassAttributes, bool onlyInsertMatchingClass, NotFoundActionEnum notFoundAction, string notFoundParent)
-            : this(language, className)
-        {
-            this.PreserveClassAttributes = preserveClassAttributes;
-            this.OnlyInsertMatchingClass = onlyInsertMatchingClass;
-            this.NotFoundAction = notFoundAction;
-            this.NotFoundParent = notFoundParent;
-        }
 
         #endregion
 

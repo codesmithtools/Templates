@@ -89,6 +89,7 @@ Description: Used to Quick Start Visual Studio Projects
 			sb.AppendLine("It seems that a quick start already exists in specified directory:");
 			sb.AppendLine(Location);
 			sb.AppendLine("Please delete existing data or selected a different directory.");
+			
 			System.Windows.Forms.MessageBox.Show(sb.ToString(), "QuickStart Already Exists!",
 				System.Windows.Forms.MessageBoxButtons.OK,
 				System.Windows.Forms.MessageBoxIcon.Exclamation);
