@@ -289,7 +289,7 @@ Description: Used to Quick Start Visual Studio Projects
 				Directory.CreateDirectory(projectPath.DirectoryPath);
 				
 			// Create SolutionItem
-			QuickStartSolution.SolutionItem solutionItem = new QuickStartSolution.SolutionItem(projectName, projectPath.DirectoryFile, ProjectBuilder.Language, true);
+			QuickStartSolution.SolutionItem solutionItem = new QuickStartSolution.SolutionItem(projectName, projectPath.DirectoryFile, ProjectBuilder.Language, true, dependancies);
 			
 			// Get Files
 			GetFiles(projectPath);
@@ -300,6 +300,11 @@ Description: Used to Quick Start Visual Studio Projects
 			// Add Dependancies
 			AddDependancies(projectPath.FilePath, dependancies);
 			
+			string webprojFile = String.Format("{0}.{1}.webproj",ProjectBuilder.InterfaceProjectName, ProjectBuilder.LanguageAppendage);
+			string webprojPath = QuickStartUtils.FindFileInDirectory(webprojFile, projectPath.DirectoryPath);
+			
+			File.Delete(webprojPath);
+			
 			// Return Solution Item
 			return solutionItem;
 		}
@@ -309,7 +314,7 @@ Description: Used to Quick Start Visual Studio Projects
 			GetVsProject(projectPath, ProjectBuilder.FileName);
 			
 			GetWebServices(projectPath);
-			File.Delete(projectPath.FileName);
+			
 		}
 		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
 		{
@@ -342,17 +347,14 @@ Description: Used to Quick Start Visual Studio Projects
 		}
 		private void UpdateGlobal(PathHelper projectPath)
 		{
-			CodeTemplate globalTemplate = null;
-			if(ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
-				globalTemplate = ProjectBuilder.GetCodeTemplateInstance(@"CSharp\Global.cst");
-			else
-				globalTemplate = ProjectBuilder.GetCodeTemplateInstance(@"VisualBasic\Global.cst");
-			
-			globalTemplate.SetProperty("ClassNamespace",ProjectBuilder.InterfaceProjectName);
-			globalTemplate.SetProperty("ContextNamespace",ProjectBuilder.DataProjectName);
-			globalTemplate.SetProperty("DataContextName",ProjectBuilder.SourceDatabase.Name + "DataContext");
-			globalTemplate.ContextData["RenderLocation"] = projectPath.DirectoryPath;
-			globalTemplate.RenderToString();
+			string globalPath = QuickStartUtils.FindFileInDirectory("Global.asax",projectPath.DirectoryPath);
+			string contextLine = @"//model.RegisterContext\(typeof\(YourDataContextType\), new ContextConfiguration\(\) \{ ScaffoldAllTables = false \}\);";
+			string contextReplace = String.Concat(@"model.RegisterContext(typeof(",
+				ProjectBuilder.DataProjectName,
+				@".",
+				ProjectBuilder.SourceDatabase.Name,
+				@"DataContext), new ContextConfiguration() { ScaffoldAllTables = false });");
+			QuickStartUtils.FindAndReplace(globalPath,contextLine,contextReplace);
 		}
 		private void AddWebServicesToProj(PathHelper projectPath)
 		{
