@@ -5,7 +5,6 @@
 <%@ Property Name="VisualStudioVersion" Type="VisualStudioVersionEnum" Optional="False" Category="Solution" Description="" %>
 <%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="Projects" Description="" %>
 <%@ Property Name="Language" Type="QuickStartUtils.LanguageEnum" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in" %>
-<%@ Property Name="ProjectType" Type="QuickStartUtils.ProjectTypeEnum" Default="" Optional="False" Category="1.Project" Description="" OnChanged="" Editor="" EditorBase="" Serializer="" %>
 
 Microsoft Visual Studio Solution File, Format Version 10.00
 # <%= VisualStudioVersionString %>
@@ -14,6 +13,9 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFramework = "3.5"
+		<% foreach(SolutionItem item in solutionItem.ProjectReferences) { %>
+		ProjectReferences = "{<%=item.Guid.ToString()%>}|<%=item.Name%>.dll;"
+		<% } %>
 		Debug.AspNetCompiler.VirtualPath = "/<%= solutionItem.Name %>"
 		Debug.AspNetCompiler.PhysicalPath = "<%= solutionItem.Name %>\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\<%= solutionItem.Name %>\"
@@ -73,19 +75,21 @@ protected string VisualStudioVersionString
 public class SolutionItem
 {
 	
-	public SolutionItem(string name, string path, QuickStartUtils.LanguageEnum language) : this(name,path,language,false)
+	public SolutionItem(string name, string path, QuickStartUtils.LanguageEnum language) : this(name,path,language,false, null)
 	{
 		
 	}
 	
-	public SolutionItem(string name, string path, QuickStartUtils.LanguageEnum language, bool website)
+	public SolutionItem(string name, string path, QuickStartUtils.LanguageEnum language, bool website, SolutionItem[] projectReferences)
 	{
 		Name = name;
 		Path = path;
 		Language = language;
 		Website = website;
+		ProjectReferences = projectReferences;
 	}
 	
+	public SolutionItem[] ProjectReferences { get; set; }
 	public bool Website { get; set; }
 	public string Name { get; set; }
 	public string Path { get; set; }
