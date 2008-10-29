@@ -32,7 +32,11 @@
 <%@ Property Category="2.Class" Name="IncludeDataContract"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include WCF DataContract attributes." %>
-    
+
+<%@ Property Category="2.Class" Name="IncludeDataServices"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Include ADO.Net DataServices attributes." %>
+
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
     Description="Mapping to escape c# keywords" %>
@@ -58,6 +62,9 @@ using System.Runtime.Serialization;
 <% } %>
 <% if (this.Framework == FrameworkEnum.v35_SP1) { %>
 using System.ComponentModel.DataAnnotations;
+<% if (IncludeDataServices) { %>
+using System.Data.Services.Common;
+<% } %>
 <% } %>
 namespace <%= Database.EntityNamespace %>
 {
@@ -75,6 +82,19 @@ namespace <%= Database.EntityNamespace %>
 <% if (this.Framework == FrameworkEnum.v35_SP1) { %>
     [ScaffoldTable(true)]
     [MetadataType(typeof(Metadata))]
+	<% if(IncludeDataServices) { %>
+	<% System.Text.StringBuilder dataServiceKey = new System.Text.StringBuilder();
+	bool isFirstDataServiceKey = true;
+	foreach(Column column in Type.PrimaryKeyColumns)
+	{
+		if(isFirstDataServiceKey)
+			isFirstDataServiceKey = false;
+		else
+			dataServiceKey.Append(", ");
+		dataServiceKey.AppendFormat("\"{0}\"", column.Name);
+	} %>
+	[DataServiceKey(<%= dataServiceKey.ToString() %>)]
+	<% } %>
 <%}%>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>

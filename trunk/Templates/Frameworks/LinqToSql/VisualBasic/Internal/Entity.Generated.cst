@@ -32,6 +32,10 @@
 <%@ Property Category="2.Class" Name="IncludeDataContract"
      Type="System.Boolean" Default="True" Optional="False"
      Description="Include WCF DataContract attributes." %>
+	
+<%@ Property Category="2.Class" Name="IncludeDataServices"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Include ADO.Net DataServices attributes." %>
 
 <%@ Map Name="VBKeywordEscape" 
     Src="VBKeywordEscape.csmap" Reverse="False" 
@@ -78,6 +82,19 @@ Namespace <%= Database.EntityNamespace %>
 <% If (Me.Framework = FrameworkEnum.v35_SP1) Then %>
     <ScaffoldTable(True)> _
     <MetadataType(GetType(<%= Type.Name %>.Metadata))> _
+	<% If (IncludeDataServices) Then %>
+	<% Dim dataServiceKey As New System.Text.StringBuilder()
+	Dim isFirstDataServiceKey As Boolean = True
+	For Each column as Column in Type.PrimaryKeyColumns
+		If (isFirstDataServiceKey) Then
+			isFirstDataServiceKey = false
+		Else
+			dataServiceKey.Append(", ")
+		End If
+		dataServiceKey.AppendFormat("""{0}""", column.Name)
+	Next %>
+	<DataServiceKey(<%= dataServiceKey.ToString() %>)> _
+	<% End If %>
 <% End If %>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>
 <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>

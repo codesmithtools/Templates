@@ -34,7 +34,11 @@
 <%@ Property Category="2.Class" Name="IncludeDataContract"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include WCF DataContract attributes." %>
-    
+
+<%@ Property Category="2.Class" Name="IncludeDataServices"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Include ADO.Net DataServices attributes." %>
+	
 <%@ Register Name="DataContextGeneratedClass" 
     Template="Internal\DataContext.Generated.cst" 
     MergeProperties="False" %>
@@ -90,6 +94,8 @@
         {
             this.RegisterReference("System.Web.DynamicData");
             this.RegisterReference("System.ComponentModel.DataAnnotations");
+			if(IncludeDataServices)
+				this.RegisterReference("System.Data.Services.Client");
         }
     }
         
@@ -99,7 +105,7 @@
         t.ClassNamespace = database.EntityNamespace;
         t.ClassName = database.EntityBase;
         t.IncludeDataContract = IncludeDataContract;
-        t.Framework = Framework;
+		t.Framework = Framework;
         
         EntityBaseEditableClass p = this.Create<EntityBaseEditableClass>();
         p.ClassNamespace = database.EntityNamespace;
@@ -157,6 +163,7 @@
         EntityGeneratedClass t = this.Create<EntityGeneratedClass>();
         t.Database = database;
         t.IncludeDataContract = this.IncludeDataContract;
+		t.IncludeDataServices = this.IncludeDataServices;
         t.Framework = this.Framework;
         
         EntityEditableClass p = this.Create<EntityEditableClass>();

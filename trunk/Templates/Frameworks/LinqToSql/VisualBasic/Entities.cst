@@ -34,6 +34,10 @@
 <%@ Property Category="2.Class" Name="IncludeDataContract"
      Type="System.Boolean" Default="True" Optional="False"
      Description="Include WCF DataContract attributes." %>
+	
+<%@ Property Category="2.Class" Name="IncludeDataServices"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Include ADO.Net DataServices attributes." %>
 
 <%@ Register Name="DataContextGeneratedClass" 
     Template="Internal\DataContext.Generated.cst" 
@@ -88,9 +92,12 @@ Public Sub Generate()
     If (IncludeDataContract) Then
         Me.RegisterReference("System.Runtime.Serialization")
     End If
-    If(Me.Framework = FrameworkEnum.v35_SP1)
+    If (Me.Framework = FrameworkEnum.v35_SP1) Then
         Me.RegisterReference("System.Web.DynamicData")
         Me.RegisterReference("System.ComponentModel.DataAnnotations")
+		If (IncludeDataServices) Then
+			Me.RegisterReference("System.Data.Services.Client")
+		End If
     End If
 End Sub
 
@@ -152,6 +159,7 @@ Public Sub CreateEntityClasses(ByVal database As Database)
     Dim t As EntityGeneratedClass = Me.Create(Of EntityGeneratedClass)()
     t.Database = database
     t.IncludeDataContract = IncludeDataContract
+	t.IncludeDataServices = IncludeDataServices
     t.Framework = Framework
     
     Dim p As EntityEditableClass = Me.Create(Of EntityEditableClass)()
