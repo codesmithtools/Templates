@@ -1,5 +1,5 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="False" Description="Template description here." CompilerVersion="v3.5" %>
-<%@ Assembly Name="QuickStartUtils" Path="Common"%>
+<%@ Assembly Name="QuickStartUtils" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="QuickStartUtils" %>
 <%@ Property Name="VisualStudioVersion" Type="VisualStudioVersionEnum" Optional="False" Category="Solution" Description="" %>
