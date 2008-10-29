@@ -63,21 +63,24 @@ namespace QuickStartUtils
             globalTemplate.ContextData["RenderLocation"] = projectPath.DirectoryPath;
             globalTemplate.RenderToString();
         }
-
         private void AddWebServicesToProj(PathHelper projectPath)
         {
             if (ProjectBuilder.IncludeDataServices)
             {
+                // Update .svc Code Behind
                 string fileName = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.svc.{1}", DataServiceName, ProjectBuilder.LanguageAppendage));
-                QuickStartUtils.FindAndReplace(fileName, @"\$rootnamespace\$", ProjectBuilder.InterfaceProjectName);
-                QuickStartUtils.FindAndReplace(fileName, @"\$safeitemname\$", DataServiceName);
-
+                UpdateWebServicesVariables(fileName);
                 string dataContextName = (ProjectBuilder.Language == LanguageEnum.CSharp)
                     ? @" /\* TODO: put your data source class name here \*/ "
                     : @"\[\[class name\]\]";
                 QuickStartUtils.FindAndReplace(fileName, dataContextName,
                     String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, ProjectBuilder.SourceDatabase.Name));
 
+                // Update .svc
+                fileName = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.svc", DataServiceName));
+                UpdateWebServicesVariables(fileName);
+
+                // Update Project
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 sb.AppendLine("<ItemGroup>");
                 sb.AppendFormat("\t\t<Content Include=\"{0}.svc\" />", DataServiceName);
@@ -92,16 +95,18 @@ namespace QuickStartUtils
                 QuickStartUtils.FindAndReplace(projectPath.FilePath, ProjectInsertRegex, sb.ToString());
             }
         }
-
+        private void UpdateWebServicesVariables(string fileName)
+        {
+            QuickStartUtils.FindAndReplace(fileName, @"\$rootnamespace\$", ProjectBuilder.InterfaceProjectName);
+            QuickStartUtils.FindAndReplace(fileName, @"\$safeitemname\$", DataServiceName);
+        }
         private void AddReferences(PathHelper projectPath)
         {
+            string includeFormat = String.Format("{0}\t<Reference Include=\"{{0}}\">{0}\t\t<RequiredTargetFramework>3.5</RequiredTargetFramework>{0}\t</Reference>", Environment.NewLine); ;
+
             string systemLocationRegex = @"<Reference Include=""System\.Data"" />";
             string systemData = @"<Reference Include=""System.Data"" />";
-
-            // Formated like this to insure proper formatting in the xml file.
-            string systemDataLinq = @"<Reference Include=""System.Data.Linq"">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>";
+            string systemDataLinq = String.Format(includeFormat, "System.Data.Linq");
 
             string codeSmithData = (ProjectBuilder.CopyTemplatesToFolder)
                 ? @"..\LinqToSql"
@@ -111,13 +116,14 @@ namespace QuickStartUtils
       <SpecificVersion>False</SpecificVersion>
       <HintPath>", codeSmithData, @"\Common\CodeSmith.Data.dll</HintPath>
 	</Reference>");
-
-            string includeFormat = String.Format("{0}\t<Reference Include=\"{{0}}\">{0}\t\t<RequiredTargetFramework>3.5</RequiredTargetFramework>{0}\t</Reference>", Environment.NewLine); ;
+            
             string dataServices = String.Format(includeFormat, "System.Data.Services");
+            string dataServicesClient = String.Format(includeFormat, "System.Data.Services.Client");
+            string serviceModel = String.Format(includeFormat, "System.ServiceModel");
             string serviceModelWeb = String.Format(includeFormat, "System.ServiceModel.Web");
 
             QuickStartUtils.FindAndReplace(projectPath.FilePath, systemLocationRegex,
-                String.Concat(systemData, systemDataLinq, codeSmithData, dataServices, serviceModelWeb));
+                String.Concat(systemData, systemDataLinq, codeSmithData, dataServices, dataServicesClient, serviceModel, serviceModelWeb));
         }
 
         private string DataServiceName
