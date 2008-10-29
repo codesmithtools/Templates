@@ -1,6 +1,6 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="XML" 
     Description="Generate Linq to Sql Class File" 
-    Debug="True" OutputType="None" %>
+    Debug="True" OutputType="None" CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="System.Design" %>
 <%@ Assembly Name="System.Data" %>
@@ -198,8 +198,13 @@ Public Sub CreateEntity(ByVal entityClass As EntityGeneratedClass, ByVal partial
         partialClass.ExistingFile.Parse()
     End If
     
-    Dim insertClassMergeStrategy As InsertClassMergeStrategy = new InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.VBNet, "Metadata", true, true, InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent, type.Name)
-    partialClass.Type = type
+    Dim insertClassMergeStrategy As InsertClassMergeStrategy = new InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.VBNet, "Metadata")
+	insertClassMergeStrategy.OnlyInsertMatchingClass = True
+	insertClassMergeStrategy.PreserveClassAttributes = True
+	insertClassMergeStrategy.NotFoundAction = InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent
+	insertClassMergeStrategy.NotFoundParent = type.Name
+
+	partialClass.Type = type
     Response.WriteLine(parentFileName)
     partialClass.RenderToFile(parentFileName, insertClassMergeStrategy)
     
