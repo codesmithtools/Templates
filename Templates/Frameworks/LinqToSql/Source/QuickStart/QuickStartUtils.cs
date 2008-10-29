@@ -9,19 +9,6 @@ namespace QuickStartUtils
 {
     public class QuickStartUtils
     {
-        public enum LanguageEnum
-        {
-            CSharp = 1,
-            VB = 2
-        }
-
-        public enum ProjectTypeEnum
-        {
-            None = 0,
-            DynamicDataWebApp = 1,
-            DynamicDataWebSite = 2
-        }
-
         public static void ReplaceAllInDirectory(string path, string find, string replace, string[] exemptDirectories)
         {
             ReplaceAllInDirectory(path, find, replace,exemptDirectories, 0);

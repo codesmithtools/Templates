@@ -13,11 +13,11 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Import Namespace="QuickStartUtils" %>
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Default="" Optional="False" Category="1.Database" Description="Source Database" OnChanged="OnSourceDatabaseChanged" %>
-<%@ Property Name="VisualStudioVersion" Type="QuickStartSolution.VisualStudioVersionEnum" Optional="False" Category="2.Solution" Description="Version of Visual Studio to Generate for." %>
+<%@ Property Name="VisualStudioVersion" Type="VisualStudioVersionEnum" Optional="False" Category="2.Solution" Description="Version of Visual Studio to Generate for." %>
 <%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="This is the path to the Solution location." %>
 <%@ Property Name="SolutionName" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="Name of the project to be generated." %>
-<%@ Property Name="Language" Type="QuickStartUtils.LanguageEnum" Default="CSharp" Optional="False" Category="2.Solution" Description="Language the project will be in" %>
-<%@ Property Name="ProjectType" Type="QuickStartUtils.ProjectTypeEnum" Default="DynamicDataWebApp" Optional="False" Category="4.Interface Project" Description="Type of Project to be created" %>
+<%@ Property Name="Language" Type="LanguageEnum" Default="CSharp" Optional="False" Category="2.Solution" Description="Language the project will be in" %>
+<%@ Property Name="ProjectType" Type="ProjectTypeEnum" Default="DynamicDataWebApp" Optional="False" Category="4.Interface Project" Description="Type of Project to be created" %>
 <%@ Property Name="IncludeDataServices" Type="System.Boolean" Default="True" Optional="False" Category="4.Interface Project" Description="Include DataServices in Interface Project" %>
 <%@ Property Name="DataProjectName" Type="System.String" Default="" Optional="False" Category="3.Data Project" Description="Name Space for the Data Project." %>
 <%@ Property Name="CopyTemplatesToFolder" Type="System.Boolean" Default="False" Optional="False" Category="3.Data Project" Description="Include a copy of the LinqToSql Templates in the project directory" %>
@@ -43,34 +43,34 @@ Description: Used to Quick Start Visual Studio Projects
 		if(CopyTemplatesToFolder)
             QuickStartUtils.CopyDirectory(CodeTemplateInfo.DirectoryName, Path.Combine(Location,@"LinqToSql"));
 				
-		// Create SolutionItems
-		List<QuickStartSolution.SolutionItem> solutionItems = new List<QuickStartSolution.SolutionItem>();
+		List<SolutionItem> solutionItems = new List<SolutionItem>();
+		ProjectBuilderSettings pbs = CreateProjectBuilderSettings();
 		
 		// Create Data Project
-		DataProjectCreator dataProjectCreator = new DataProjectCreator(this);
-		QuickStartSolution.SolutionItem dataProject = dataProjectCreator.CreateProject(this.DataProjectName);
+		DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs);
+		SolutionItem dataProject = dataProjectCreator.CreateProject(this.DataProjectName);
 		solutionItems.Add(dataProject);
 		
 		// Create DynamicData Web Application Project
-		if(ProjectType == QuickStartUtils.ProjectTypeEnum.DynamicDataWebApp)
+		if(ProjectType == ProjectTypeEnum.DynamicDataWebApp)
 		{
-			WebAppProjectCreator webAppCreator = new WebAppProjectCreator(this);
-			QuickStartSolution.SolutionItem webAppProject = webAppCreator.CreateProject(this.InterfaceProjectName, dataProject);
+			WebAppProjectCreator webAppCreator = new WebAppProjectCreator(pbs);
+			SolutionItem webAppProject = webAppCreator.CreateProject(this.InterfaceProjectName, dataProject);
 			solutionItems.Add(webAppProject);
 		}
 		
-		if(ProjectType == QuickStartUtils.ProjectTypeEnum.DynamicDataWebSite)
+		if(ProjectType == ProjectTypeEnum.DynamicDataWebSite)
 		{
-			WebsiteProjectCreator websiteCreator = new WebsiteProjectCreator(this);
-			QuickStartSolution.SolutionItem websiteProject = websiteCreator.CreateProject(this.InterfaceProjectName, dataProject);
+			WebsiteProjectCreator websiteCreator = new WebsiteProjectCreator(pbs);
+			SolutionItem websiteProject = websiteCreator.CreateProject(this.InterfaceProjectName, dataProject);
 			solutionItems.Add(websiteProject);
 		}
 		
 		// Create UnitTests Project
 		if(IncludeTestProject)
 		{
-			UnitTestProjectCreator unitTestProjectCreator = new UnitTestProjectCreator(this);
-			QuickStartSolution.SolutionItem unitTestsProject = unitTestProjectCreator.CreateProject(this.TestProjectName, dataProject);
+			UnitTestProjectCreator unitTestProjectCreator = new UnitTestProjectCreator(pbs);
+			SolutionItem unitTestsProject = unitTestProjectCreator.CreateProject(this.TestProjectName, dataProject);
 			solutionItems.Add(unitTestsProject);
 		}
 		
@@ -100,7 +100,26 @@ Description: Used to Quick Start Visual Studio Projects
 		else
 			return false;
 	}
-	private void CreateSolution(List<QuickStartSolution.SolutionItem> solutionItems)
+	private ProjectBuilderSettings CreateProjectBuilderSettings()
+	{
+		return new ProjectBuilderSettings()
+		{
+			SourceDatabase = this.SourceDatabase,
+			VisualStudioVersion = this.VisualStudioVersion,
+			Location = this.Location,
+			SolutionName = this.SolutionName,
+			Language = this.Language,
+			ProjectType = this.ProjectType,
+			IncludeDataServices = this.IncludeDataServices,
+			DataProjectName = this.DataProjectName,
+			CopyTemplatesToFolder = this.CopyTemplatesToFolder,
+			InterfaceProjectName = this.InterfaceProjectName,
+			TestProjectName = this.TestProjectName,
+			IncludeTestProject = this.IncludeTestProject,
+			CodeTemplate = this
+		};
+	}
+	private void CreateSolution(List<SolutionItem> solutionItems)
 	{
 		QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
 		quickStartSolution.VisualStudioVersion = VisualStudioVersion;
@@ -110,175 +129,14 @@ Description: Used to Quick Start Visual Studio Projects
 		quickStartSolution.RenderToFile(filePathAboslute, true);
 	}
 	
-	#region Properties
-	
-	//Folder in vs web projects where the correct zip file is located
-	protected string LanguageFolder
-	{
-		get { return (this.Language == QuickStartUtils.LanguageEnum.CSharp)	? "CSharp" : "VisualBasic"; }
-	}
-	//Some file names in the VS zip files hava an appendage that should be removed
-	protected string LanguageAppendage 
-	{
-		get { return (this.Language == QuickStartUtils.LanguageEnum.CSharp) ? "cs" : "vb"; }
-	}
-	//A different zip file exists for each project type
-	protected string FileName
-	{
-		get
-		{
-			string projectTypeFileName;
-			switch (ProjectType)
-			{
-				default:
-				case QuickStartUtils.ProjectTypeEnum.DynamicDataWebApp:
-					projectTypeFileName = "DynamicDataLinqToSqlWebApplication";
-					break;
-				case QuickStartUtils.ProjectTypeEnum.DynamicDataWebSite:
-					projectTypeFileName = "DynamicDataLinqToSqlWebSite";
-					break;
-			}
-			return projectTypeFileName;
-		}
-	}
-	protected string ZipFileFolder
-	{
-		get { return Path.Combine(CodeTemplateInfo.DirectoryName, Path.Combine("Common", LanguageFolder)); }
-	}
-	
-	#endregion
-	
-	#region WebAppProjectCreator
-	
-	class WebAppProjectCreator : VsProjectCreator
-	{
-		public WebAppProjectCreator(QuickStart_cst projectBuilder)
-			: base(projectBuilder) { }
-		
-		protected override void GetFiles(PathHelper projectPath)
-		{
-			GetVsProject(projectPath, ProjectBuilder.FileName);
-			
-			GetWebServices(projectPath);
-		}
-		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
-		{
-			string[] exemptArray = {"Images"};
-			VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage, exemptArray);
-			UpdateWebConfig(projectPath.DirectoryPath);
-			UpdateGlobal(projectPath);
-			AddReferences(projectPath);
-			AddWebServicesToProj(projectPath);
-		}
-		
-		private void GetWebServices(PathHelper projectPath)
-		{
-			if (ProjectBuilder.IncludeDataServices)
-			{
-				string zipFile = (ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
-					? "AdoNetDataServiceCSharpWap.zip"
-					: "AdoNetDataServiceVBWap.zip";
-				UnzipFileAndRename(zipFile, projectPath.DirectoryPath,
-					"WebDataService.svc",
-					String.Format("{0}.svc", DataServiceName),
-					String.Format("WebDataService.svc.{0}", ProjectBuilder.LanguageAppendage),
-					String.Format("{0}.svc.{1}", DataServiceName, ProjectBuilder.LanguageAppendage));
-			}
-		}
-		
-		private void UpdateWebConfig(string directoryPath)
-		{
-			QuickStartUtils.FindAndReplace(Path.Combine(directoryPath, "web.config"), @"<connectionStrings/>",
-				@"<connectionStrings>
-					<add name=""" + ProjectBuilder.SourceDatabase.Name + @"ConnectionString"" connectionString=""" + ProjectBuilder.SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
-				</connectionStrings>");
-		}
-		private void UpdateGlobal(PathHelper projectPath)
-		{
-			CodeTemplate globalTemplate = (ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
-				? ProjectBuilder.GetCodeTemplateInstance(@"CSharp\Global.cst")
-				: globalTemplate = ProjectBuilder.GetCodeTemplateInstance(@"VisualBasic\Global.cst");
-			
-			globalTemplate.SetProperty("ClassNamespace", ProjectBuilder.InterfaceProjectName);
-			globalTemplate.SetProperty("ContextNamespace", ProjectBuilder.DataProjectName);
-			globalTemplate.SetProperty("DataContextName",
-				String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, ProjectBuilder.SourceDatabase.Name));
-			globalTemplate.ContextData["RenderLocation"] = projectPath.DirectoryPath;
-			globalTemplate.RenderToString();
-		}
-		private void AddWebServicesToProj(PathHelper projectPath)
-		{
-			if (ProjectBuilder.IncludeDataServices)
-			{
-				string fileName = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.svc.{1}", DataServiceName, ProjectBuilder.LanguageAppendage));
-				QuickStartUtils.FindAndReplace(fileName, @"\$rootnamespace\$", ProjectBuilder.InterfaceProjectName);
-				QuickStartUtils.FindAndReplace(fileName, @"\$safeitemname\$", DataServiceName);
-				
-				string dataContextName = (ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
-					? @" /\* TODO: put your data source class name here \*/ "
-					: @"\[\[class name\]\]";
-				QuickStartUtils.FindAndReplace(fileName, dataContextName,
-					String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, ProjectBuilder.SourceDatabase.Name));
-				
-				System.Text.StringBuilder sb = new System.Text.StringBuilder();
-				sb.AppendLine("<ItemGroup>");
-				sb.AppendFormat("\t\t<Content Include=\"{0}.svc\" />", DataServiceName);
-				sb.AppendLine();
-				sb.AppendFormat("\t\t<Compile Include=\"{0}.svc.{1}\">", DataServiceName, ProjectBuilder.LanguageAppendage);
-				sb.AppendLine();
-				sb.AppendFormat("\t\t\t<DependentUpon>{0}.svc</DependentUpon>", DataServiceName);
-				sb.AppendLine();
-				sb.AppendLine("\t\t</Compile>");
-				sb.AppendLine("\t</ItemGroup>");
-				sb.Append(ProjectInsertLine);
-				QuickStartUtils.FindAndReplace(projectPath.FilePath, ProjectInsertRegex, sb.ToString());
-			}
-		}
-		
-		private void AddReferences(PathHelper projectPath)
-		{
-			string systemLocationRegex = @"<Reference Include=""System\.Data"" />";
-			string systemData = @"<Reference Include=""System.Data"" />";
-			
-			// Formated like this to insure proper formatting in the xml file.
-			string systemDataLinq = @"<Reference Include=""System.Data.Linq"">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>";
-	
-			string codeSmithData = (ProjectBuilder.CopyTemplatesToFolder)
-				? @"..\LinqToSql"
-				: ProjectBuilder.CodeTemplateInfo.DirectoryName;
-			
-			codeSmithData = String.Concat(@"<Reference Include=""CodeSmith.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL"">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>", codeSmithData, @"\Common\CodeSmith.Data.dll</HintPath>
-	</Reference>");
-	
-			string includeFormat = String.Format("{0}\t<Reference Include=\"{{0}}\">{0}\t\t<RequiredTargetFramework>3.5</RequiredTargetFramework>{0}\t</Reference>", Environment.NewLine);;
-			string dataServices = String.Format(includeFormat, "System.Data.Services");
-			string serviceModelWeb = String.Format(includeFormat, "System.ServiceModel.Web");
-			
-			QuickStartUtils.FindAndReplace(projectPath.FilePath, systemLocationRegex,
-				String.Concat(systemData, systemDataLinq, codeSmithData, dataServices, serviceModelWeb));
-		}
-		
-		private string DataServiceName
-		{
-			get { return String.Format("{0}DataService", ProjectBuilder.SourceDatabase.Name); }
-		}
-	}
-	
-	#endregion
-	
 	#region WebsiteProjectCreator
 	
 	class WebsiteProjectCreator : VsProjectCreator
 	{
-		public WebsiteProjectCreator(QuickStart_cst projectBuilder)
+		public WebsiteProjectCreator(ProjectBuilderSettings projectBuilder)
 			: base(projectBuilder) { }
 		
-		
-		public override QuickStartSolution.SolutionItem CreateProject(string projectName, params QuickStartSolution.SolutionItem[] dependancies)
+		public override SolutionItem CreateProject(string projectName, params SolutionItem[] dependancies)
 		{
 			
 			// Create Path Helper
@@ -289,7 +147,7 @@ Description: Used to Quick Start Visual Studio Projects
 				Directory.CreateDirectory(projectPath.DirectoryPath);
 				
 			// Create SolutionItem
-			QuickStartSolution.SolutionItem solutionItem = new QuickStartSolution.SolutionItem(projectName, projectPath.DirectoryFile, ProjectBuilder.Language, true, dependancies);
+			SolutionItem solutionItem = new SolutionItem(projectName, projectPath.DirectoryFile, ProjectBuilder.Language, true, dependancies);
 			
 			// Get Files
 			GetFiles(projectPath);
@@ -329,7 +187,7 @@ Description: Used to Quick Start Visual Studio Projects
 		{
 			if (ProjectBuilder.IncludeDataServices)
 			{
-				string zipFile = (ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
+				string zipFile = (ProjectBuilder.Language == LanguageEnum.CSharp)
 					? "AdoNetDataServiceCSharpWap.zip"
 					: "AdoNetDataServiceVBWap.zip";
 				UnzipFileAndRename(zipFile, projectPath.DirectoryPath,
@@ -351,7 +209,7 @@ Description: Used to Quick Start Visual Studio Projects
 			string contextLine = string.Empty;
 			string contextReplace = string.Empty;
 			
-			if(ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
+			if(ProjectBuilder.Language == LanguageEnum.CSharp)
 			{
 				contextLine = @"//model.RegisterContext\(typeof\(YourDataContextType\), new ContextConfiguration\(\) \{ ScaffoldAllTables = false \}\);";
 				contextReplace = String.Concat(@"model.RegisterContext(typeof(",
@@ -420,286 +278,6 @@ Description: Used to Quick Start Visual Studio Projects
 			string zipFilePath = String.Format("{0}.zip", zipFileName);
 			string zipProjFileName = String.Format("{0}.{1}.webproj", zipFileName, ProjectBuilder.LanguageAppendage);
 			UnzipFileAndRename(zipFilePath, projectPath.DirectoryPath, zipProjFileName, projectPath.FileName);
-		}
-	}
-	
-	#endregion
-	
-	#region DataProjectCreator
-	
-	class DataProjectCreator : VsProjectCreator
-	{
-		private string cspFileName;
-		
-		public DataProjectCreator(QuickStart_cst projectBuilder)
-			: base(projectBuilder) { }
-		
-		protected override void GetFiles(PathHelper projectPath)
-		{
-			GetVsProject(projectPath, "ClassLibrary");
-			
-			// Move/Rename CSP
-			cspFileName = String.Format("{0}.csp", Path.GetFileNameWithoutExtension(projectPath.FileName));
-			File.Copy(Path.Combine(ProjectBuilder.CodeTemplateInfo.DirectoryName, @"Common\QuickStartData.csp"),
-				Path.Combine(projectPath.DirectoryPath, cspFileName));
-			
-			// Delete Class1
-			string class1File = String.Concat("Class1.", ProjectBuilder.LanguageAppendage);
-			string class1Path = QuickStartUtils.FindFileInDirectory(class1File, projectPath.DirectoryPath);
-			if(!String.IsNullOrEmpty(class1Path)&& File.Exists(class1Path))
-			{
-				// Delete File
-				File.Delete(class1Path);
-				
-				// Remove From Proj
-				// Yes, There is a space in the csproj file while there is not in the vbproj file
-				string classLine = (ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
-					? String.Format(@"<Compile Include=""{0}"" />", class1File)
-					: String.Format(@"<Compile Include=""{0}""/>", class1File);
-					
-				QuickStartUtils.FindAndReplace(projectPath.FilePath, classLine, String.Empty);
-			}
-		}
-		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
-		{	
-			VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage, null);
-			
-			string linqToSqlPath = (ProjectBuilder.CopyTemplatesToFolder)
-				? @"..\LinqToSql\"
-				: string.Concat(ProjectBuilder.CodeTemplateInfo.DirectoryName,@"\"); // Needs Normal Path here
-				
-			string cspPath = Path.Combine(projectPath.DirectoryPath, cspFileName);
-	
-			QuickStartUtils.FindAndReplace(cspPath, @"\$connectionString\$", ProjectBuilder.SourceDatabase.ConnectionString);
-			QuickStartUtils.FindAndReplace(cspPath, @"\$myDatabase\$", ProjectBuilder.SourceDatabase.Database.Name);
-			QuickStartUtils.FindAndReplace(cspPath, @"\$myContextNamespace\$", ProjectBuilder.DataProjectName);
-			QuickStartUtils.FindAndReplace(cspPath, @"\$language\$", ProjectBuilder.LanguageFolder);
-			QuickStartUtils.FindAndReplace(cspPath, @"\$linqToSql\$", linqToSqlPath);
-			
-			//The location in the csproj file directly below where we want to insert the csp include
-			QuickStartUtils.FindAndReplace(projectPath.FilePath, ProjectInsertRegex,
-				String.Format("<ItemGroup>{0}\t\t<Generate Include=\"{1}.csp\" />{0}\t</ItemGroup>{0}\t{2}",
-					Environment.NewLine, ProjectBuilder.DataProjectName, ProjectInsertLine));
-			QuickStartUtils.FindAndReplace(projectPath.FilePath, "</Project>",
-				String.Format("\t<Import Project=\"$(MSBuildExtensionsPath)\\CodeSmith\\CodeSmith.targets\" />{0}</Project>",
-					Environment.NewLine));
-			
-			if(ProjectBuilder.Language == QuickStartUtils.LanguageEnum.VB)
-			{
-				// Remove RootNamespace
-				QuickStartUtils.FindAndReplace(projectPath.FilePath, @"<RootNamespace>.*</RootNamespace>", "<RootNamespace></RootNamespace>");
-				//Update Settings File
-				QuickStartUtils.FindAndReplace(Path.Combine(projectPath.DirectoryPath, "My Project\\Settings.Designer.vb"),
-					@"Global\.Petshop\.Data\.My\.MySettings",
-					"Global.My.MySettings");
-				
-				string vbFrameworkReplace = String.Format(@"<TargetFrameworkVersion>v{0}</TargetFrameworkVersion>
-				<OptionExplicit>On</OptionExplicit>
-				<OptionCompare>Binary</OptionCompare>
-				<OptionStrict>Off</OptionStrict>
-				<OptionInfer>On</OptionInfer>", "3.5");
-				
-				QuickStartUtils.FindAndReplace(projectPath.FilePath,
-					@"<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>",vbFrameworkReplace);	
-			}
-		}
-	}
-	
-	#endregion
-	
-	#region UnitTestProjectCreator
-	
-	class UnitTestProjectCreator : VsProjectCreator
-	{
-		public UnitTestProjectCreator(QuickStart_cst projectBuilder)
-			: base(projectBuilder) { }
-		
-		protected override void GetFiles(PathHelper projectPath)
-		{
-			GetVsProject(projectPath, "TestProject");
-		}
-		protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
-		{	
-			VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage,null);
-		}
-	}
-	
-	#endregion
-	
-	#region VsProjectCreator
-	
-	abstract class VsProjectCreator
-	{
-		#region PathHelper Class
-	
-		public class PathHelper
-		{
-			public PathHelper(string fileName, string directoryName, string parentPath)
-			{
-				FileName = fileName;
-				DirectoryName = directoryName;
-				
-				DirectoryFile = Path.Combine(DirectoryName, FileName);
-				
-				DirectoryPath = Path.Combine(parentPath, DirectoryName);
-				FilePath = Path.Combine(DirectoryPath, FileName);
-			}
-			
-			public string FileName { get; private set; }
-			public string DirectoryName { get; private set; }
-			
-			public string DirectoryFile { get; private set; }
-			
-			public string DirectoryPath { get; private set; }
-			public string FilePath { get; private set; }
-		}
-		
-		#endregion
-		
-		protected QuickStart_cst ProjectBuilder;
-		
-		public VsProjectCreator(QuickStart_cst projectBuilder)
-		{
-			this.ProjectBuilder = projectBuilder;
-		}
-		
-		public virtual QuickStartSolution.SolutionItem CreateProject(string projectName, params QuickStartSolution.SolutionItem[] dependancies)
-		{
-			
-			// Create Path Helper
-			PathHelper projectPath = new PathHelper(String.Format("{0}.{1}proj", projectName, ProjectBuilder.LanguageAppendage), projectName, ProjectBuilder.Location);
-		
-			// Create TargetDirectory
-			if(!Directory.Exists(projectPath.DirectoryPath))
-				Directory.CreateDirectory(projectPath.DirectoryPath);
-				
-			// Create SolutionItem
-			QuickStartSolution.SolutionItem solutionItem = new QuickStartSolution.SolutionItem(projectName, projectPath.DirectoryFile, ProjectBuilder.Language);
-			
-			// Get Files
-			GetFiles(projectPath);
-			
-			// Replace Variables In Files
-			ReplaceVariables(projectPath, solutionItem.GuidString, projectName);
-			
-			// Add Dependancies
-			AddDependancies(projectPath.FilePath, dependancies);
-			
-			// Return Solution Item
-			return solutionItem;
-		}
-		
-		protected abstract void GetFiles(PathHelper projectPath);
-		protected abstract void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName);
-		
-		protected void AddDependancies(string projectFilePath, QuickStartSolution.SolutionItem[] dependancies)
-		{
-			System.Text.StringBuilder itemGroup = new System.Text.StringBuilder();
-			itemGroup.AppendLine("<ItemGroup>");
-			
-			foreach (QuickStartSolution.SolutionItem dependancy in dependancies)
-			{
-				itemGroup.AppendLine(String.Format("\t\t<ProjectReference Include=\"..\\{0}\\{1}\">",
-					Path.GetDirectoryName(dependancy.Path),
-					Path.GetFileName(dependancy.Path)));
-				itemGroup.AppendLine(String.Format("\t\t\t<Project>{{{0}}}</Project>", dependancy.GuidString));
-				itemGroup.AppendLine(String.Format("\t\t\t<Name>{0}</Name>", dependancy.Name));
-				itemGroup.AppendLine("\t\t</ProjectReference>");
-			}
-			
-			itemGroup.AppendLine("\t</ItemGroup>");
-			itemGroup.Append("\t");
-			
-			QuickStartUtils.FindAndReplace(projectFilePath, ProjectInsertRegex,
-				String.Concat(itemGroup.ToString(), ProjectInsertLine));
-		}
-		
-		protected virtual void GetVsProject(PathHelper projectPath, string zipFileName)
-		{
-			// Unzip Folder
-			string zipFilePath = String.Format("{0}.zip", zipFileName);
-			string zipProjFileName = String.Format("{0}.{1}proj", zipFileName, ProjectBuilder.LanguageAppendage);
-			UnzipFileAndRename(zipFilePath, projectPath.DirectoryPath, zipProjFileName, projectPath.FileName);
-			
-			// Move Files To SubFolder
-			if(ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
-			{
-				FileMoveToSubDirectory("assemblyinfo.cs", projectPath.DirectoryPath, "Properties");
-			}
-			else if(ProjectBuilder.Language == QuickStartUtils.LanguageEnum.VB)
-			{
-				FileMoveToSubDirectory("assemblyinfo.vb", projectPath.DirectoryPath, "My Project");
-				FileMoveToSubDirectory("Resources.Designer.vb", projectPath.DirectoryPath, "My Project");
-				FileMoveToSubDirectory("Resources.resx", projectPath.DirectoryPath, "My Project");
-				FileMoveToSubDirectory("Settings.Designer.vb", projectPath.DirectoryPath, "My Project");
-				FileMoveToSubDirectory("Settings.settings", projectPath.DirectoryPath, "My Project");
-				FileMoveToSubDirectory("MyApplication.Designer.vb", "Application.Designer.vb", projectPath.DirectoryPath, "My Project");
-				FileMoveToSubDirectory("MyApplication.myapp", "Application.myapp", projectPath.DirectoryPath, "My Project");
-				FileMoveToSubDirectory("MyWebExtension.vb", projectPath.DirectoryPath, "My Project\\MyExtensions");
-			}
-		}
-		protected void FileMoveToSubDirectory(string fileName, string directoryPath, string destinationDirectory)
-		{
-			FileMoveToSubDirectory(fileName, fileName, directoryPath, destinationDirectory);
-		}
-		protected void FileMoveToSubDirectory(string fileName, string newFileName, string directoryPath, string destinationDirectory)
-		{
-			string filePath = QuickStartUtils.FindFileInDirectory(fileName, directoryPath);
-			if(!String.IsNullOrEmpty(filePath) && File.Exists(filePath))
-			{
-				string destinationPath = Path.Combine(directoryPath, destinationDirectory);
-				if(!Directory.Exists(destinationPath))
-					Directory.CreateDirectory(destinationPath);
-				File.Move(filePath, Path.Combine(destinationPath, newFileName));
-			}
-		}
-		protected void UnzipFileAndRename(string zipFileName, string targetDirectory, params string[] renameFiles)
-		{
-			// Unzip Files
-			FastZip fz = new FastZip();
-			string zipFilePath = Path.Combine(ProjectBuilder.ZipFileFolder, zipFileName);
-			fz.ExtractZip(zipFilePath, targetDirectory, "");
-			
-			// Delete the vstemplate
-			string vstemplate = QuickStartUtils.FindFileInDirectory(".vstemplate", targetDirectory);
-			if(!String.IsNullOrEmpty(vstemplate)&& File.Exists(vstemplate))
-				File.Delete(vstemplate);
-			
-			// Rename Files
-			if(renameFiles.Length % 2 != 0)
-				throw new Exception("UnzipFile() needs an even number of params: SourceFile, DestinationFile");
-			for(int x=0; x<renameFiles.Length; x+=2)
-			{
-				string sourFile = Path.Combine(targetDirectory, renameFiles[x]);
-				string destFile = Path.Combine(targetDirectory, renameFiles[x+1]);
-				File.Move(sourFile, destFile);
-			}
-		}
-		
-		protected virtual void VariableUpdateDirectory(PathHelper helper, string projectGuid, string projectName, string language, string[] exemptDirectories)
-		{
-			string assemblyPath = (ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
-				? @"Properties\AssemblyInfo.cs"
-				: @"My Project\AssemblyInfo.vb";
-			
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$projectname\$", projectName, exemptDirectories);
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$safeprojectname\$", projectName, exemptDirectories);
-			QuickStartUtils.FindAndReplace(helper.FilePath, @"\$guid1\$", @"{" + projectGuid + @"}");
-			QuickStartUtils.FindAndReplace(Path.Combine(helper.DirectoryPath,assemblyPath), @"\$guid1\$", Guid.NewGuid().ToString());
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$if\$ \(\$targetframeworkversion\$ == 3.5\)", String.Empty, exemptDirectories);
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$endif\$", String.Empty, exemptDirectories);
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$registeredorganization\$", "CodeSmith Tools, LLC", exemptDirectories);
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$year\$", DateTime.Now.Year.ToString(), exemptDirectories);
-			QuickStartUtils.ReplaceAllInDirectory(helper.DirectoryPath, @"\$targetframeworkversion\$", "3.5", exemptDirectories);
-		}
-		
-		protected virtual string ProjectInsertRegex
-		{
-			get { return String.Format(@"<Import Project=""\$\(MSBuild(\w){{3,5}}Path\)\\Microsoft\.{0}\.targets"" />", ProjectBuilder.LanguageFolder); }
-		}
-		protected virtual string ProjectInsertLine
-		{
-			get { return String.Format("<Import Project=\"$(MSBuildToolsPath)\\Microsoft.{0}.targets\" />", ProjectBuilder.LanguageFolder); }
 		}
 	}
 	
