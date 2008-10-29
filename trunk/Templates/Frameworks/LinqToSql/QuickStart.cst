@@ -348,12 +348,28 @@ Description: Used to Quick Start Visual Studio Projects
 		private void UpdateGlobal(PathHelper projectPath)
 		{
 			string globalPath = QuickStartUtils.FindFileInDirectory("Global.asax",projectPath.DirectoryPath);
-			string contextLine = @"//model.RegisterContext\(typeof\(YourDataContextType\), new ContextConfiguration\(\) \{ ScaffoldAllTables = false \}\);";
-			string contextReplace = String.Concat(@"model.RegisterContext(typeof(",
+			string contextLine = string.Empty;
+			string contextReplace = string.Empty;
+			
+			if(ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
+			{
+				contextLine = @"//model.RegisterContext\(typeof\(YourDataContextType\), new ContextConfiguration\(\) \{ ScaffoldAllTables = false \}\);";
+				contextReplace = String.Concat(@"model.RegisterContext(typeof(",
 				ProjectBuilder.DataProjectName,
 				@".",
 				ProjectBuilder.SourceDatabase.Name,
 				@"DataContext), new ContextConfiguration() { ScaffoldAllTables = false });");
+			}
+			else
+			{	
+				contextLine = @"' model.RegisterContext\(GetType\(YourDataContextType\), New ContextConfiguration\(\) With \{\.ScaffoldAllTables = False\}\)";
+				contextReplace = String.Concat(@"model.RegisterContext(GetType(",
+				ProjectBuilder.DataProjectName,
+				@".",
+				ProjectBuilder.SourceDatabase.Name,
+				@"DataContext), New ContextConfiguration() With { .ScaffoldAllTables = False })");
+			}
+			
 			QuickStartUtils.FindAndReplace(globalPath,contextLine,contextReplace);
 		}
 		private void AddWebServicesToProj(PathHelper projectPath)
