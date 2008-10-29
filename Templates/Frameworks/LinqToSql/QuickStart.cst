@@ -179,8 +179,10 @@ Description: Used to Quick Start Visual Studio Projects
 					? "AdoNetDataServiceCSharpWap.zip"
 					: "AdoNetDataServiceVBWap.zip";
 				UnzipFileAndRename(zipFile, projectPath.DirectoryPath,
-					"WebDataService.svc", String.Format("{0}.svc", DataServiceName),
-					"WebDataService.svc.cs", String.Format("{0}.svc.cs", DataServiceName));
+					"WebDataService.svc",
+					String.Format("{0}.svc", DataServiceName),
+					String.Format("WebDataService.svc.{0}", ProjectBuilder.LanguageAppendage),
+					String.Format("{0}.svc.{1}", DataServiceName, ProjectBuilder.LanguageAppendage));
 			}
 		}
 		
@@ -193,15 +195,14 @@ Description: Used to Quick Start Visual Studio Projects
 		}
 		private void UpdateGlobal(PathHelper projectPath)
 		{
-			CodeTemplate globalTemplate = null;
-			if(ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
-				globalTemplate = ProjectBuilder.GetCodeTemplateInstance(@"CSharp\Global.cst");
-			else
-				globalTemplate = ProjectBuilder.GetCodeTemplateInstance(@"VisualBasic\Global.cst");
+			CodeTemplate globalTemplate = (ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
+				? ProjectBuilder.GetCodeTemplateInstance(@"CSharp\Global.cst")
+				: globalTemplate = ProjectBuilder.GetCodeTemplateInstance(@"VisualBasic\Global.cst");
 			
-			globalTemplate.SetProperty("ClassNamespace",ProjectBuilder.InterfaceProjectName);
-			globalTemplate.SetProperty("ContextNamespace",ProjectBuilder.DataProjectName);
-			globalTemplate.SetProperty("DataContextName",ProjectBuilder.SourceDatabase.Name + "DataContext");
+			globalTemplate.SetProperty("ClassNamespace", ProjectBuilder.InterfaceProjectName);
+			globalTemplate.SetProperty("ContextNamespace", ProjectBuilder.DataProjectName);
+			globalTemplate.SetProperty("DataContextName",
+				String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, ProjectBuilder.SourceDatabase.Name));
 			globalTemplate.ContextData["RenderLocation"] = projectPath.DirectoryPath;
 			globalTemplate.RenderToString();
 		}
@@ -209,17 +210,21 @@ Description: Used to Quick Start Visual Studio Projects
 		{
 			if (ProjectBuilder.IncludeDataServices)
 			{
-				string fileName = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.svc.cs", DataServiceName));
+				string fileName = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.svc.{1}", DataServiceName, ProjectBuilder.LanguageAppendage));
 				QuickStartUtils.FindAndReplace(fileName, @"\$rootnamespace\$", ProjectBuilder.InterfaceProjectName);
 				QuickStartUtils.FindAndReplace(fileName, @"\$safeitemname\$", DataServiceName);
-				QuickStartUtils.FindAndReplace(fileName, @" /\* TODO: put your data source class name here \*/ ",
+				
+				string dataContextName = (ProjectBuilder.Language == QuickStartUtils.LanguageEnum.CSharp)
+					? @" /\* TODO: put your data source class name here \*/ "
+					: @"\[\[class name\]\]";
+				QuickStartUtils.FindAndReplace(fileName, dataContextName,
 					String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, ProjectBuilder.SourceDatabase.Name));
 				
 				System.Text.StringBuilder sb = new System.Text.StringBuilder();
 				sb.AppendLine("<ItemGroup>");
 				sb.AppendFormat("\t\t<Content Include=\"{0}.svc\" />", DataServiceName);
 				sb.AppendLine();
-				sb.AppendFormat("\t\t<Compile Include=\"{0}.svc.cs\">", DataServiceName);
+				sb.AppendFormat("\t\t<Compile Include=\"{0}.svc.{1}\">", DataServiceName, ProjectBuilder.LanguageAppendage);
 				sb.AppendLine();
 				sb.AppendFormat("\t\t\t<DependentUpon>{0}.svc</DependentUpon>", DataServiceName);
 				sb.AppendLine();
@@ -234,19 +239,27 @@ Description: Used to Quick Start Visual Studio Projects
 		{
 			string systemLocationRegex = @"<Reference Include=""System\.Data"" />";
 			string systemData = @"<Reference Include=""System.Data"" />";
+			
 			// Formated like this to insure proper formatting in the xml file.
 			string systemDataLinq = @"<Reference Include=""System.Data.Linq"">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>";
 	
-			string codeSmithData = (ProjectBuilder.CopyTemplatesToFolder) ? @"..\LinqToSql" : ProjectBuilder.CodeTemplateInfo.DirectoryName;
+			string codeSmithData = (ProjectBuilder.CopyTemplatesToFolder)
+				? @"..\LinqToSql"
+				: ProjectBuilder.CodeTemplateInfo.DirectoryName;
 			
 			codeSmithData = String.Concat(@"<Reference Include=""CodeSmith.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL"">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>",codeSmithData, @"\Common\CodeSmith.Data.dll</HintPath>
+      <HintPath>", codeSmithData, @"\Common\CodeSmith.Data.dll</HintPath>
 	</Reference>");
+	
+			string includeFormat = String.Format("{0}\t<Reference Include=\"{{0}}\">{0}\t\t<RequiredTargetFramework>3.5</RequiredTargetFramework>{0}\t</Reference>", Environment.NewLine);;
+			string dataServices = String.Format(includeFormat, "System.Data.Services");
+			string serviceModelWeb = String.Format(includeFormat, "System.ServiceModel.Web");
 			
-			QuickStartUtils.FindAndReplace(projectPath.FilePath,systemLocationRegex,String.Concat(systemData,systemDataLinq,codeSmithData));
+			QuickStartUtils.FindAndReplace(projectPath.FilePath, systemLocationRegex,
+				String.Concat(systemData, systemDataLinq, codeSmithData, dataServices, serviceModelWeb));
 		}
 		
 		private string DataServiceName
@@ -447,13 +460,21 @@ Description: Used to Quick Start Visual Studio Projects
 			
 			//The location in the csproj file directly below where we want to insert the csp include
 			QuickStartUtils.FindAndReplace(projectPath.FilePath, ProjectInsertRegex,
-				String.Format("<ItemGroup>{0}\t\t<Generate Include=\"{1}\" />{0}\t</ItemGroup>{0}\t{2}", Environment.NewLine,
-					ProjectBuilder.DataProjectName + ".csp", ProjectInsertLine));
+				String.Format("<ItemGroup>{0}\t\t<Generate Include=\"{1}.csp\" />{0}\t</ItemGroup>{0}\t{2}",
+					Environment.NewLine, ProjectBuilder.DataProjectName, ProjectInsertLine));
 			QuickStartUtils.FindAndReplace(projectPath.FilePath, "</Project>",
-				String.Format("\t<Import Project=\"$(MSBuildExtensionsPath)\\CodeSmith\\CodeSmith.targets\" />{0}</Project>", Environment.NewLine));
+				String.Format("\t<Import Project=\"$(MSBuildExtensionsPath)\\CodeSmith\\CodeSmith.targets\" />{0}</Project>",
+					Environment.NewLine));
 			
 			if(ProjectBuilder.Language == QuickStartUtils.LanguageEnum.VB)
 			{
+				// Remove RootNamespace
+				QuickStartUtils.FindAndReplace(projectPath.FilePath, @"<RootNamespace>.*</RootNamespace>", "<RootNamespace></RootNamespace>");
+				//Update Settings File
+				QuickStartUtils.FindAndReplace(Path.Combine(projectPath.DirectoryPath, "My Project\\Settings.Designer.vb"),
+					@"Global\.Petshop\.Data\.My\.MySettings",
+					"Global.My.MySettings");
+				
 				string vbFrameworkReplace = String.Format(@"<TargetFrameworkVersion>v{0}</TargetFrameworkVersion>
 				<OptionExplicit>On</OptionExplicit>
 				<OptionCompare>Binary</OptionCompare>
