@@ -25,15 +25,28 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Property Name="TestProjectName" Type="System.String" Default="" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
 <%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="True" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
 
-<% CreateDirectoryStructure(); %>
-	The <%= SolutionName %> Solution has been created at <%=Location %>.
+<% if(CreateQuickStart()) { %>
+The <%= SolutionName %> Solution has been created at <%= Location %>.
+<% } else { %>
+The <%= SolutionName %> Solution has NOT been created.
+<%= AlreadyExistsMessage %>
+<% } %>
 
 <script runat="template">
 
-	public void CreateDirectoryStructure()
+	public bool CreateQuickStart()
     {
-		if(CheckExistingDirectories())
-			return;
+		// Check For Existing Project
+		if(DirectoriesAlreadyExists)
+		{
+			System.Windows.Forms.MessageBox.Show(
+				AlreadyExistsMessage,
+				"QuickStart Already Exists!",
+				System.Windows.Forms.MessageBoxButtons.OK,
+				System.Windows.Forms.MessageBoxIcon.Exclamation);
+				
+			return false;
+		}
 		
 		// Prep Directories
 		if(!Directory.Exists(Location))
@@ -51,15 +64,14 @@ Description: Used to Quick Start Visual Studio Projects
 		SolutionItem dataProject = dataProjectCreator.CreateProject(this.DataProjectName);
 		solutionItems.Add(dataProject);
 		
-		// Create DynamicData Web Application Project
+		// Create UI Project
 		if(ProjectType == ProjectTypeEnum.DynamicDataWebApp)
 		{
 			WebAppProjectCreator webAppCreator = new WebAppProjectCreator(pbs);
 			SolutionItem webAppProject = webAppCreator.CreateProject(this.InterfaceProjectName, dataProject);
 			solutionItems.Add(webAppProject);
 		}
-		
-		if(ProjectType == ProjectTypeEnum.DynamicDataWebSite)
+		else if(ProjectType == ProjectTypeEnum.DynamicDataWebSite)
 		{
 			WebsiteProjectCreator websiteCreator = new WebsiteProjectCreator(pbs);
 			SolutionItem websiteProject = websiteCreator.CreateProject(this.InterfaceProjectName, dataProject);
@@ -77,29 +89,31 @@ Description: Used to Quick Start Visual Studio Projects
 		// Create Solution
 		CreateSolution(solutionItems);
 		
+		return true;
     }
 	
-	private bool CheckExistingDirectories()
+	private bool DirectoriesAlreadyExists
 	{
-		if (Directory.Exists(Path.Combine(Location, this.DataProjectName))
-		 || Directory.Exists(Path.Combine(Location, this.InterfaceProjectName))
-		 || Directory.Exists(Path.Combine(Location, this.TestProjectName))
-		 || File.Exists(Path.Combine(Location, String.Concat(this.SolutionName, ".sln"))))
+		get
+		{
+			return (Directory.Exists(Path.Combine(Location, this.DataProjectName))
+			|| Directory.Exists(Path.Combine(Location, this.InterfaceProjectName))
+			|| Directory.Exists(Path.Combine(Location, this.TestProjectName))
+			|| File.Exists(Path.Combine(Location, String.Concat(this.SolutionName, ".sln"))));
+		}
+	}
+	private string AlreadyExistsMessage
+	{
+		get
 		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			sb.AppendLine("It seems that a quick start already exists in specified directory:");
 			sb.AppendLine(Location);
 			sb.AppendLine("Please delete existing data or selected a different directory.");
-			
-			System.Windows.Forms.MessageBox.Show(sb.ToString(), "QuickStart Already Exists!",
-				System.Windows.Forms.MessageBoxButtons.OK,
-				System.Windows.Forms.MessageBoxIcon.Exclamation);
-			
-			return true;
+			return sb.ToString();
 		}
-		else
-			return false;
 	}
+	
 	private ProjectBuilderSettings CreateProjectBuilderSettings()
 	{
 		return new ProjectBuilderSettings()
