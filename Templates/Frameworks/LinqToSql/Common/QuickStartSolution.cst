@@ -1,4 +1,4 @@
-﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="False" Description="Template description here." CompilerVersion="v3.5" %>
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Encoding="UTF-8" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
 <%@ Assembly Name="QuickStartUtils" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="QuickStartUtils" %>
@@ -8,8 +8,8 @@
 
 Microsoft Visual Studio Solution File, Format Version 10.00
 # <%= VisualStudioVersionString %>
-<% foreach(SolutionItem solutionItem in SolutionItems) {  %>
-	<%if(solutionItem.Website) { %>
+<% foreach(SolutionItem solutionItem in SolutionItems) { 
+	if(solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFramework = "3.5"

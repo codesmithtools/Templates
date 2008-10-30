@@ -19,6 +19,7 @@ namespace QuickStartUtils
             Path = path;
             Language = language;
             Website = website;
+            ProjectReferences = projectReferences;
         }
 
         public SolutionItem[] ProjectReferences { get; set; }

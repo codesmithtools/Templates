@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebsiteProjectCreator.cs" />
     <Compile Include="DataProjectCreator.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="PathHelper.cs" />
