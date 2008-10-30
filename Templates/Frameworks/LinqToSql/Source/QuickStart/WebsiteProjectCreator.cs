@@ -42,7 +42,7 @@ namespace QuickStartUtils
             if (ProjectBuilder.IncludeDataServices)
             {
                 Directory.CreateDirectory(Path.Combine(projectPath.DirectoryPath, "App_Code"));
-                string svcDataFile = String.Format("{0}.svc.{1}", DataServiceName, ProjectBuilder.LanguageAppendage);
+                string svcDataFile = String.Format("{0}.{1}", DataServiceName, ProjectBuilder.LanguageAppendage);
                 string svcDataFileFixed = String.Format("{0}.{1}", DataServiceName, ProjectBuilder.LanguageAppendage);
                 string svcDataPath = Path.Combine(Path.Combine(projectPath.DirectoryPath, "App_Code"), svcDataFileFixed);
                 File.Move(Path.Combine(projectPath.DirectoryPath, svcDataFile), svcDataPath);
@@ -72,13 +72,13 @@ namespace QuickStartUtils
             if (ProjectBuilder.IncludeDataServices)
             {
                 string zipFile = (ProjectBuilder.Language == LanguageEnum.CSharp)
-                    ? "AdoNetDataServiceCSharpWap.zip"
-                    : "AdoNetDataServiceVBWap.zip";
+                    ? "AdoNetDataServiceWebsite.zip"
+                    : "AdoNetDataServiceWebsite.zip";
                 UnzipFileAndRename(zipFile, projectPath.DirectoryPath,
                     "WebDataService.svc",
                     String.Format("{0}.svc", DataServiceName),
-                    String.Format("WebDataService.svc.{0}", ProjectBuilder.LanguageAppendage),
-                    String.Format("{0}.svc.{1}", DataServiceName, ProjectBuilder.LanguageAppendage));
+                    String.Format("WebDataService.{0}", ProjectBuilder.LanguageAppendage),
+                    String.Format("{0}.{1}", DataServiceName, ProjectBuilder.LanguageAppendage));
             }
         }
 
@@ -121,7 +121,7 @@ namespace QuickStartUtils
             if (ProjectBuilder.IncludeDataServices)
             {
                 // Update .svc Code Behind
-                string fileName = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.svc.{1}", DataServiceName, ProjectBuilder.LanguageAppendage));
+                string fileName = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.{1}", DataServiceName, ProjectBuilder.LanguageAppendage));
                 UpdateWebServicesVariables(fileName);
                 string dataContextName = (ProjectBuilder.Language == LanguageEnum.CSharp)
                     ? @" /\* TODO: put your data source class name here \*/ "
