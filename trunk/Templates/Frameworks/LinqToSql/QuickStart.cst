@@ -38,6 +38,9 @@ The <%= SolutionName %> Solution has NOT been created.
 
 	public bool CreateQuickStart()
     {
+		// Make sure Location is FullPath
+		Location = Path.GetFullPath(Location);
+		
 		// Check For Existing Project
 		if(DirectoriesAlreadyExists)
 		{
@@ -152,21 +155,8 @@ The <%= SolutionName %> Solution has NOT been created.
 	}
 	private void LaunchVisualStudioWithSolution(string solutionLink)
 	{
-		if (LaunchVisualStudio)
-		{
-			// Only if Visual Studio is not running
-			bool found = false;
-			Process[] processes = Process.GetProcesses();
-			foreach(Process process in processes)
-				if (process.ProcessName.StartsWith("devenv"))
-					found = true;
-			
-			if(!found)
-			{
-				string args = "/build debug";
-				using (Process p = Process.Start(solutionLink, args)) { }
-			}
-		}
+		string args = "/build debug";
+		using (Process p = Process.Start(solutionLink, args)) { }
 	}
 	
 	private void OnSourceDatabaseChanged(object sender, EventArgs e)
