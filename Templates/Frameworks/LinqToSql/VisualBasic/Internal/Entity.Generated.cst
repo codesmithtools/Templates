@@ -63,6 +63,9 @@ Imports System.Runtime.Serialization
 <% End If %>
 <% If (Me.Framework = FrameworkEnum.v35_SP1) Then %>
 Imports System.ComponentModel.DataAnnotations
+<% If (IncludeDataServices) Then %>
+Imports System.Data.Services.Common
+<% End If %>
 <% End If %>
 
 Namespace <%= Database.EntityNamespace %>
