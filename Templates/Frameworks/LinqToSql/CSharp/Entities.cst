@@ -97,6 +97,9 @@
 			if(IncludeDataServices)
 				this.RegisterReference("System.Data.Services.Client");
         }
+		this.RegisterReference(Path.GetFullPath(Path.Combine(
+            this.CodeTemplateInfo.DirectoryName,
+            "..\\Common\\CodeSmith.Data.dll")));
     }
         
     public void CreateEntityBaseClass(Database database)

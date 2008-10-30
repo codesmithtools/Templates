@@ -180,6 +180,5 @@ The <%= SolutionName %> Solution has NOT been created.
             Location = Path.Combine(
                 CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory, 
                 SourceDatabase.Database.Name);
-
     }
 </script>
