@@ -752,8 +752,6 @@ namespace LinqToSqlShared.Generator
         private string ToParameterName(string name)
         {
             string legalName = ToLegalName(name);
-            if (Settings.DisableRenaming)
-                return legalName;
 
             legalName = CommonUtility.GetParameterName(legalName);
             return legalName;
@@ -782,8 +780,6 @@ namespace LinqToSqlShared.Generator
         private string ToLegalName(string name)
         {
             string legalName = Settings.CleanName(name);
-            if (Settings.DisableRenaming)
-                return legalName.Replace(' ', '_');
 
             legalName = StringUtil.ToPascalCase(legalName);
             return legalName;

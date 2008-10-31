@@ -16,14 +16,6 @@ namespace LinqToSqlShared.Generator
     {
         public NamingProperty() { }
 
-        private bool _disableRenaming = false;
-        [NotifyParentProperty(true), Description("Disable the automatic renaming.of class, property and function names.")]
-        public bool DisableRenaming
-        {
-            get { return _disableRenaming; }
-            set { _disableRenaming = value; }
-        }
-
         private TableNamingEnum _tableNaming = TableNamingEnum.Singular;
         [NotifyParentProperty(true), Description("Table naming convention used in the database.")]
         public TableNamingEnum TableNaming
