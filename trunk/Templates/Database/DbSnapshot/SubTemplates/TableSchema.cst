@@ -77,7 +77,7 @@ BEGIN
 END
 
 <% foreach ( ExtendedProperty prop in this.SourceTable.ExtendedProperties ) { %>
-    <% if (!prop.Name.StartsWith("CS_")) { %>
+    <% if (!prop.Name.StartsWith("CS_") && prop.Value != null) { %>
 EXEC dbo.sp_addextendedproperty N'<%= prop.Name %>', N'<%= prop.Value.ToString().Replace("'", "''") %>', N'user', N'<%= SourceTable.Owner %>', N'TABLE', N'<%= SourceTable.Name %>'
     <% } %>
 <% } %>
@@ -92,7 +92,8 @@ EXEC dbo.sp_addextendedproperty N'<%= prop.Name %>', N'<%= prop.Value.ToString()
 GO
 <% } %>
 
-<% if ( this.ScriptIndexes ) { 
+<% if ( this.ScriptIndexes ) {
+	
    // Sort the indexes to create them in the correct order
     IndexSchemaCollection sortedIndexes = new IndexSchemaCollection(this.SourceTable.Indexes.Count);
 
@@ -141,7 +142,7 @@ BEGIN
         
     if ( idx.IsPrimaryKey )
     {   
-        structure = int.Parse( SafeExtendedProperty(this.SourceTable.PrimaryKey.ExtendedProperties[TablePrimaryKeyEXProps.CS_IsClustered]) ) == 1 ? "CLUSTERED": "NONCLUSTERED";
+        structure = SafeExtendedProperty(this.SourceTable.PrimaryKey.ExtendedProperties[TablePrimaryKeyEXProps.CS_IsClustered]) == bool.TrueString ? "CLUSTERED": "NONCLUSTERED";
 
         this.Response.WriteLine( string.Format( "\tALTER TABLE [{0}].[{1}] ADD CONSTRAINT [{2}] PRIMARY KEY {3}", this.SourceTable.Owner, this.SourceTable.Name, this.SourceTable.PrimaryKey.Name, structure ) );
     
@@ -158,7 +159,7 @@ BEGIN
                 template = "\t\t[{0}]{1}";
             }
                                     
-            this.Response.WriteLine( string.Format( template, this.SourceTable.PrimaryKey.MemberColumns[i].Name, (int.Parse(SafeExtendedProperty(this.SourceTable.PrimaryKey.MemberColumns[i].ExtendedProperties[TablePrimaryKeyEXProps.CS_IsDescending])) == 0 ? "": " DESC") ) );
+            this.Response.WriteLine( string.Format( template, this.SourceTable.PrimaryKey.MemberColumns[i].Name, SafeExtendedProperty(this.SourceTable.PrimaryKey.MemberColumns[i].ExtendedProperties[TablePrimaryKeyEXProps.CS_IsDescending]) == bool.FalseString ? "": " DESC") );
             
         }
         this.Response.WriteLine("\t)");
@@ -188,7 +189,7 @@ BEGIN
                 template = "\t\t[{0}]{1}";
             }
             
-            this.Response.WriteLine( string.Format( template, idx.MemberColumns[i].Name, (int.Parse(SafeExtendedProperty(idx.MemberColumns[i].ExtendedProperties["CS_IsDescending"])) == 0 ? "": " DESC") ) );
+            this.Response.WriteLine( string.Format( template, idx.MemberColumns[i].Name, (SafeExtendedProperty(idx.MemberColumns[i].ExtendedProperties["CS_IsDescending"]) == bool.FalseString ? "": " DESC") ) );
             
         }
         this.Response.WriteLine("\t)");
@@ -255,7 +256,7 @@ BEGIN
             this.Response.WriteLine("\t(");
             for ( int i = 0; i < idx.MemberColumns.Count ; i++ )
             {
-                this.Response.Write( string.Format( "\t\t[{0}]{1}", idx.MemberColumns[i].Name, (int.Parse(SafeExtendedProperty(idx.MemberColumns[i].ExtendedProperties["CS_IsDescending"])) == 0 ? "": " DESC") ) );
+                this.Response.Write( string.Format( "\t\t[{0}]{1}", idx.MemberColumns[i].Name, SafeExtendedProperty(idx.MemberColumns[i].ExtendedProperties["CS_IsDescending"]) == bool.FalseString ? "": " DESC") );
                 
                 if ( i < idx.MemberColumns.Count - 1 )
                 {
