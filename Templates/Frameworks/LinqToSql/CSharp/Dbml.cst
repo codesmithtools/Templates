@@ -105,7 +105,6 @@
         settings.EntityBase = EntityBase;
         settings.IncludeViews = IncludeViews;
         settings.IncludeFunctions = IncludeFunctions;
-        settings.DisableRenaming = NamingConventions.DisableRenaming;
         settings.IncludeDeleteOnNull = IncludeDeleteOnNull;
         settings.TableNaming = this.NamingConventions.TableNaming;
         settings.EntityNaming = this.NamingConventions.EntityNaming;
