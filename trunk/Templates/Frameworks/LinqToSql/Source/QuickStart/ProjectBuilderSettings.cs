@@ -11,7 +11,6 @@ namespace QuickStartUtils
     public class ProjectBuilderSettings
     {
         public DatabaseSchema SourceDatabase { get; set; }
-        public VisualStudioVersionEnum VisualStudioVersion { get; set; }
         public String Location { get; set; }
         public String SolutionName { get; set; }
         public LanguageEnum Language { get; set; }
