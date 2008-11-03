@@ -2,12 +2,11 @@
 <%@ Assembly Name="QuickStartUtils" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="QuickStartUtils" %>
-<%@ Property Name="VisualStudioVersion" Type="VisualStudioVersionEnum" Optional="False" Category="Solution" Description="" %>
 <%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="Projects" Description="" %>
 <%@ Property Name="Language" Type="LanguageEnum" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
 
 Microsoft Visual Studio Solution File, Format Version 10.00
-# <%= VisualStudioVersionString %>
+# Visual Studio 2008
 <% foreach(SolutionItem solutionItem in SolutionItems) { 
 	if(solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
@@ -57,14 +56,3 @@ Global
 	EndGlobalSection
 EndGlobal
 
-<script runat="template">
-protected string VisualStudioVersionString
-{
-	get
-	{
-		return (VisualStudioVersion == VisualStudioVersionEnum.VS08)
-			? "Visual Studio 2008"
-			: "Visual Studio 2005";
-	}
-}
-</script>

@@ -18,12 +18,6 @@ namespace QuickStartUtils
         DynamicDataWebSite = 2
     }
 
-    public enum VisualStudioVersionEnum
-    {
-        VS08,
-        VS05
-    }
-
     public enum SkinEnum
     {
         Default

@@ -128,7 +128,7 @@ namespace QuickStartUtils
             }
         }
 
-        protected virtual void VariableUpdateDirectory(PathHelper helper, string projectGuid, string projectName, string language, string[] exemptDirectories)
+        protected virtual void VariableUpdateDirectory(PathHelper helper, string projectGuid, string projectName, string language, params string[] exemptDirectories)
         {
             string assemblyPath = (ProjectBuilder.Language == LanguageEnum.CSharp)
                 ? @"Properties\AssemblyInfo.cs"

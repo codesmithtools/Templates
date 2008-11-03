@@ -18,16 +18,6 @@ namespace QuickStartUtils
             GetWebServices(projectPath);        
             GetCssFile(projectPath);
         }
-        protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
-        {
-            string[] exemptArray = { "Images" };
-            VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage, exemptArray);
-            UpdateWebConfig(projectPath.DirectoryPath);
-            UpdateGlobal(projectPath);
-            AddReferences(projectPath);
-            AddWebServicesToProj(projectPath);
-        }
-
         private void GetWebServices(PathHelper projectPath)
         {
             if (ProjectBuilder.IncludeDataServices)
@@ -39,10 +29,41 @@ namespace QuickStartUtils
                     "WebDataService.svc",
                     String.Format("{0}.svc", DataServiceName),
                     String.Format("WebDataService.svc.{0}", ProjectBuilder.LanguageAppendage),
-                    String.Format("{0}.svc.{1}", DataServiceName, ProjectBuilder.LanguageAppendage));
+                    DataServiceFileName);
             }
         }
+        private void GetCssFile(PathHelper projectPath)
+        {
+            string stylesPath = Path.Combine(ProjectBuilder.CodeTemplate.CodeTemplateInfo.DirectoryName, @"Common\Styles");
+            string styleFile = Path.Combine(stylesPath, @"Site.css");
 
+            string cssLocation = Path.Combine(projectPath.DirectoryPath, @"Site.css");
+            File.Copy(styleFile, cssLocation, true);
+
+            string imageDirectory = Path.Combine(projectPath.DirectoryPath, @"DynamicData\Content\Images");
+            string imageLocation = Path.Combine(imageDirectory, @"bg.gif");
+            string imageFile = Path.Combine(stylesPath, @"bg.gif");
+            File.Copy(imageFile, imageLocation);
+
+            imageLocation = Path.Combine(imageDirectory, @"table-header-background.gif");
+            imageFile = Path.Combine(stylesPath, @"table-header-background.gif");
+            File.Copy(imageFile, imageLocation);
+        }
+
+        protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
+        {
+            VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage, "Images");
+
+            UpdateWebConfig(projectPath.DirectoryPath);
+            UpdateGlobal(projectPath);
+            AddReferences(projectPath);
+
+            if (ProjectBuilder.IncludeDataServices)
+            {
+                UpdateWebServices(projectPath);
+                AddWebServicesToProj(projectPath);
+            }
+        }
         private void UpdateWebConfig(string directoryPath)
         {
             QuickStartUtils.FindAndReplace(Path.Combine(directoryPath, "web.config"), @"<connectionStrings/>",
@@ -63,43 +84,6 @@ namespace QuickStartUtils
             globalTemplate.ContextData["RenderLocation"] = projectPath.DirectoryPath;
             globalTemplate.RenderToString();
         }
-        private void AddWebServicesToProj(PathHelper projectPath)
-        {
-            if (ProjectBuilder.IncludeDataServices)
-            {
-                // Update .svc Code Behind
-                string fileName = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.svc.{1}", DataServiceName, ProjectBuilder.LanguageAppendage));
-                UpdateWebServicesVariables(fileName);
-                string dataContextName = (ProjectBuilder.Language == LanguageEnum.CSharp)
-                    ? @" /\* TODO: put your data source class name here \*/ "
-                    : @"\[\[class name\]\]";
-                QuickStartUtils.FindAndReplace(fileName, dataContextName,
-                    String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, ProjectBuilder.SourceDatabase.Name));
-
-                // Update .svc
-                fileName = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.svc", DataServiceName));
-                UpdateWebServicesVariables(fileName);
-
-                // Update Project
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                sb.AppendLine("<ItemGroup>");
-                sb.AppendFormat("\t\t<Content Include=\"{0}.svc\" />", DataServiceName);
-                sb.AppendLine();
-                sb.AppendFormat("\t\t<Compile Include=\"{0}.svc.{1}\">", DataServiceName, ProjectBuilder.LanguageAppendage);
-                sb.AppendLine();
-                sb.AppendFormat("\t\t\t<DependentUpon>{0}.svc</DependentUpon>", DataServiceName);
-                sb.AppendLine();
-                sb.AppendLine("\t\t</Compile>");
-                sb.AppendLine("\t</ItemGroup>");
-                sb.Append(ProjectInsertLine);
-                QuickStartUtils.FindAndReplace(projectPath.FilePath, ProjectInsertRegex, sb.ToString());
-            }
-        }
-        private void UpdateWebServicesVariables(string fileName)
-        {
-            QuickStartUtils.FindAndReplace(fileName, @"\$rootnamespace\$", ProjectBuilder.InterfaceProjectName);
-            QuickStartUtils.FindAndReplace(fileName, @"\$safeitemname\$", DataServiceName);
-        }
         private void AddReferences(PathHelper projectPath)
         {
             string includeFormat = String.Format("{0}\t<Reference Include=\"{{0}}\">{0}\t\t<RequiredTargetFramework>3.5</RequiredTargetFramework>{0}\t</Reference>", Environment.NewLine); ;
@@ -116,7 +100,7 @@ namespace QuickStartUtils
       <SpecificVersion>False</SpecificVersion>
       <HintPath>", codeSmithData, @"\Common\CodeSmith.Data.dll</HintPath>
 	</Reference>");
-            
+
             string dataServices = String.Format(includeFormat, "System.Data.Services");
             string dataServicesClient = String.Format(includeFormat, "System.Data.Services.Client");
             string serviceModel = String.Format(includeFormat, "System.ServiceModel");
@@ -126,27 +110,63 @@ namespace QuickStartUtils
                 String.Concat(systemData, systemDataLinq, codeSmithData, dataServices, dataServicesClient, serviceModel, serviceModelWeb));
         }
 
+        private void UpdateWebServices(PathHelper projectPath)
+        {
+            // Update .svc Code Behind
+            string dataServicePath = Path.Combine(projectPath.DirectoryPath, DataServiceFileName);
+            string dataContextName = String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, ProjectBuilder.SourceDatabase.Name);
+
+            if (this.ProjectBuilder.Language == LanguageEnum.CSharp)
+            {
+                QuickStartUtils.FindAndReplace(dataServicePath,
+                    @"// config\.SetEntitySetAccessRule\(""MyEntityset"", EntitySetRights\.AllRead\);",
+                    @"config.SetEntitySetAccessRule(""*"", EntitySetRights.AllRead);");
+
+                QuickStartUtils.FindAndReplace(dataServicePath, @" /\* TODO: put your data source class name here \*/ ", dataContextName);
+            }
+            else
+            {
+                QuickStartUtils.FindAndReplace(dataServicePath,
+                    @"' config\.SetEntitySetAccessRule\(""MyEntityset"", EntitySetRights\.AllRead\)",
+                    @"config.SetEntitySetAccessRule(""*"", EntitySetRights.AllRead)");
+
+                QuickStartUtils.FindAndReplace(dataServicePath, @"\[\[class name\]\]", dataContextName);
+            }
+
+            UpdateWebServicesVariables(dataServicePath);
+
+            // Update .svc
+            dataServicePath = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.svc", DataServiceName));
+            UpdateWebServicesVariables(dataServicePath);
+        }
+        private void UpdateWebServicesVariables(string fileName)
+        {
+            QuickStartUtils.FindAndReplace(fileName, @"\$rootnamespace\$", ProjectBuilder.InterfaceProjectName);
+            QuickStartUtils.FindAndReplace(fileName, @"\$safeitemname\$", DataServiceName);
+        }
+        private void AddWebServicesToProj(PathHelper projectPath)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.AppendLine("<ItemGroup>");
+            sb.AppendFormat("\t\t<Content Include=\"{0}.svc\" />", DataServiceName);
+            sb.AppendLine();
+            sb.AppendFormat("\t\t<Compile Include=\"{0}.svc.{1}\">", DataServiceName, ProjectBuilder.LanguageAppendage);
+            sb.AppendLine();
+            sb.AppendFormat("\t\t\t<DependentUpon>{0}.svc</DependentUpon>", DataServiceName);
+            sb.AppendLine();
+            sb.AppendLine("\t\t</Compile>");
+            sb.AppendLine("\t</ItemGroup>");
+            sb.Append(ProjectInsertLine);
+            QuickStartUtils.FindAndReplace(projectPath.FilePath, ProjectInsertRegex, sb.ToString());
+        }
+
         private string DataServiceName
         {
             get { return String.Format("{0}DataService", ProjectBuilder.SourceDatabase.Name); }
         }
-
-        private void GetCssFile(PathHelper projectPath)
+        private string DataServiceFileName
         {
-            string stylesPath = Path.Combine(ProjectBuilder.CodeTemplate.CodeTemplateInfo.DirectoryName,@"Common\Styles");
-            string styleFile = Path.Combine(stylesPath,@"Site.css");
-
-            string cssLocation = Path.Combine(projectPath.DirectoryPath, @"Site.css");
-            File.Copy(styleFile, cssLocation, true);
-
-            string imageDirectory = Path.Combine(projectPath.DirectoryPath, @"DynamicData\Content\Images");
-            string imageLocation = Path.Combine(imageDirectory, @"bg.gif");
-            string imageFile = Path.Combine(stylesPath, @"bg.gif");
-            File.Copy(imageFile, imageLocation);
-
-            imageLocation = Path.Combine(imageDirectory, @"table-header-background.gif");
-            imageFile = Path.Combine(stylesPath, @"table-header-background.gif");
-            File.Copy(imageFile, imageLocation);
+            get { return String.Format("{0}.svc.{1}", DataServiceName, ProjectBuilder.LanguageAppendage); }
         }
     }
 }
