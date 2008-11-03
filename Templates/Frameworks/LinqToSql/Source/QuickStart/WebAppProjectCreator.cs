@@ -15,8 +15,8 @@ namespace QuickStartUtils
         protected override void GetFiles(PathHelper projectPath)
         {
             GetVsProject(projectPath, ProjectBuilder.FileName);
-
-            GetWebServices(projectPath);
+            GetWebServices(projectPath);        
+            GetCssFile(projectPath);
         }
         protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
         {
@@ -129,6 +129,24 @@ namespace QuickStartUtils
         private string DataServiceName
         {
             get { return String.Format("{0}DataService", ProjectBuilder.SourceDatabase.Name); }
+        }
+
+        private void GetCssFile(PathHelper projectPath)
+        {
+            string stylesPath = Path.Combine(ProjectBuilder.CodeTemplate.CodeTemplateInfo.DirectoryName,@"Common\Styles");
+            string styleFile = Path.Combine(stylesPath,@"Site.css");
+
+            string cssLocation = Path.Combine(projectPath.DirectoryPath, @"Site.css");
+            File.Copy(styleFile, cssLocation, true);
+
+            string imageDirectory = Path.Combine(projectPath.DirectoryPath, @"DynamicData\Content\Images");
+            string imageLocation = Path.Combine(imageDirectory, @"bg.gif");
+            string imageFile = Path.Combine(stylesPath, @"bg.gif");
+            File.Copy(imageFile, imageLocation);
+
+            imageLocation = Path.Combine(imageDirectory, @"table-header-background.gif");
+            imageFile = Path.Combine(stylesPath, @"table-header-background.gif");
+            File.Copy(imageFile, imageLocation);
         }
     }
 }

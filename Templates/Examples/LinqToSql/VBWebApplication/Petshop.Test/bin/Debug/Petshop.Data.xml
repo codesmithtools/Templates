@@ -1,0 +1,1871 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Petshop.Data
+</name>
+</assembly>
+<members>
+<member name="M:Petshop.Data.LineItemManager.#cctor">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.LineItemManager"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.LineItemManager.#ctor(Petshop.Data.PetshopDataManager)">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.LineItemManager"/> class.
+ </summary>
+	<param name="manager">The current manager.</param>
+</member><member name="P:Petshop.Data.LineItemManager.Context">
+	<summary>
+ Gets the current context.
+ </summary>
+</member><member name="P:Petshop.Data.LineItemManager.Entity">
+	<summary>
+ Gets the entity for this manager.
+ </summary>
+</member><member name="M:Petshop.Data.LineItemManager.CreateKey(System.Int32,System.Int32)">
+	<summary>
+ Creates the key for this entity.
+ </summary>
+</member><member name="M:Petshop.Data.LineItemManager.GetByKey(CodeSmith.Data.IEntityKey)">
+	<summary>
+ Gets an entity by the primary key.
+ </summary>
+	<param name="key">The key for the entity.</param>
+	<returns>
+ An instance of the entity or null if not found.
+ </returns>
+	<remarks>
+ This method is expecting key to be of type IEntityKey(Of Integer, Integer).
+ </remarks>
+	<exception cref="T:System.ArgumentException">Thrown when key is not of type IEntityKey(Of Integer, Integer).</exception>
+</member><member name="M:Petshop.Data.LineItemManager.GetByKey(System.Int32,System.Int32)">
+	<summary>
+ Gets an instance by the primary key.
+ </summary>
+	<returns>An instance of the entity or null if not found.</returns>
+</member><member name="M:Petshop.Data.LineItemManager.GetByOrderId(System.Int32)">
+	<summary>
+ Gets a query by an index.
+ </summary>
+</member><member name="M:Petshop.Data.LineItemManager.AddRules">
+	<summary>Called by the static constructor to add shared rules.</summary>
+</member><member name="M:Petshop.Data.LineItemManager.OnCreated">
+	<summary>Called when the class is created.</summary>
+</member><member name="T:Petshop.Data.LineItemManager.Query">
+	<summary>
+ A private class for lazy loading static compiled queries.
+ </summary>
+</member><member name="T:Petshop.Data.LineItemManager">
+	<summary>
+ The manager class for LineItem.
+ </summary>
+</member><member name="M:Petshop.Data.Item.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.Item"/> class.
+ </summary>
+</member><member name="P:Petshop.Data.Item.ItemId">
+	<summary>
+ Gets or sets the ItemId column value.
+ </summary>
+</member><member name="P:Petshop.Data.Item.ProductId">
+	<summary>
+ Gets or sets the ProductId column value.
+ </summary>
+</member><member name="P:Petshop.Data.Item.ListPrice">
+	<summary>
+ Gets or sets the ListPrice column value.
+ </summary>
+</member><member name="P:Petshop.Data.Item.UnitCost">
+	<summary>
+ Gets or sets the UnitCost column value.
+ </summary>
+</member><member name="P:Petshop.Data.Item.Supplier">
+	<summary>
+ Gets or sets the Supplier column value.
+ </summary>
+</member><member name="P:Petshop.Data.Item.Status">
+	<summary>
+ Gets or sets the Status column value.
+ </summary>
+</member><member name="P:Petshop.Data.Item.Name">
+	<summary>
+ Gets or sets the Name column value.
+ </summary>
+</member><member name="P:Petshop.Data.Item.Image">
+	<summary>
+ Gets or sets the Image column value.
+ </summary>
+</member><member name="P:Petshop.Data.Item.Product">
+	<summary>
+ Gets or sets the Product association.
+ </summary>
+</member><member name="P:Petshop.Data.Item.Supplier1">
+	<summary>
+ Gets or sets the Supplier association.
+ </summary>
+</member><member name="M:Petshop.Data.Item.OnLoaded">
+	<summary>Called when this instance is loaded.</summary>
+</member><member name="M:Petshop.Data.Item.OnValidate(System.Data.Linq.ChangeAction)">
+	<summary>Called when this instance is being saved.</summary>
+</member><member name="M:Petshop.Data.Item.OnCreated">
+	<summary>Called when this instance is created.</summary>
+</member><member name="M:Petshop.Data.Item.OnItemIdChanging(System.String)">
+	<summary>Called when ItemId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Item.OnItemIdChanged">
+	<summary>Called after ItemId has Changed.</summary>
+</member><member name="M:Petshop.Data.Item.OnProductIdChanging(System.String)">
+	<summary>Called when ProductId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Item.OnProductIdChanged">
+	<summary>Called after ProductId has Changed.</summary>
+</member><member name="M:Petshop.Data.Item.OnListPriceChanging(System.Nullable{System.Decimal})">
+	<summary>Called when ListPrice is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Item.OnListPriceChanged">
+	<summary>Called after ListPrice has Changed.</summary>
+</member><member name="M:Petshop.Data.Item.OnUnitCostChanging(System.Nullable{System.Decimal})">
+	<summary>Called when UnitCost is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Item.OnUnitCostChanged">
+	<summary>Called after UnitCost has Changed.</summary>
+</member><member name="M:Petshop.Data.Item.OnSupplierChanging(System.Nullable{System.Int32})">
+	<summary>Called when Supplier is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Item.OnSupplierChanged">
+	<summary>Called after Supplier has Changed.</summary>
+</member><member name="M:Petshop.Data.Item.OnStatusChanging(System.String)">
+	<summary>Called when Status is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Item.OnStatusChanged">
+	<summary>Called after Status has Changed.</summary>
+</member><member name="M:Petshop.Data.Item.OnNameChanging(System.String)">
+	<summary>Called when Name is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Item.OnNameChanged">
+	<summary>Called after Name has Changed.</summary>
+</member><member name="M:Petshop.Data.Item.OnImageChanging(System.String)">
+	<summary>Called when Image is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Item.OnImageChanged">
+	<summary>Called after Image has Changed.</summary>
+</member><member name="T:Petshop.Data.Item">
+	<summary>
+ The class representing the dbo.Item table.
+ </summary>
+</member><member name="M:Petshop.Data.Inventory.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.Inventory"/> class.
+ </summary>
+</member><member name="P:Petshop.Data.Inventory.ItemId">
+	<summary>
+ Gets or sets the ItemId column value.
+ </summary>
+</member><member name="P:Petshop.Data.Inventory.Qty">
+	<summary>
+ Gets or sets the Qty column value.
+ </summary>
+</member><member name="M:Petshop.Data.Inventory.OnLoaded">
+	<summary>Called when this instance is loaded.</summary>
+</member><member name="M:Petshop.Data.Inventory.OnValidate(System.Data.Linq.ChangeAction)">
+	<summary>Called when this instance is being saved.</summary>
+</member><member name="M:Petshop.Data.Inventory.OnCreated">
+	<summary>Called when this instance is created.</summary>
+</member><member name="M:Petshop.Data.Inventory.OnItemIdChanging(System.String)">
+	<summary>Called when ItemId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Inventory.OnItemIdChanged">
+	<summary>Called after ItemId has Changed.</summary>
+</member><member name="M:Petshop.Data.Inventory.OnQtyChanging(System.Int32)">
+	<summary>Called when Qty is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Inventory.OnQtyChanged">
+	<summary>Called after Qty has Changed.</summary>
+</member><member name="T:Petshop.Data.Inventory">
+	<summary>
+ The class representing the dbo.Inventory table.
+ </summary>
+</member><member name="M:Petshop.Data.Supplier.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.Supplier"/> class.
+ </summary>
+</member><member name="P:Petshop.Data.Supplier.SuppId">
+	<summary>
+ Gets or sets the SuppId column value.
+ </summary>
+</member><member name="P:Petshop.Data.Supplier.Name">
+	<summary>
+ Gets or sets the Name column value.
+ </summary>
+</member><member name="P:Petshop.Data.Supplier.Status">
+	<summary>
+ Gets or sets the Status column value.
+ </summary>
+</member><member name="P:Petshop.Data.Supplier.Addr1">
+	<summary>
+ Gets or sets the Addr1 column value.
+ </summary>
+</member><member name="P:Petshop.Data.Supplier.Addr2">
+	<summary>
+ Gets or sets the Addr2 column value.
+ </summary>
+</member><member name="P:Petshop.Data.Supplier.City">
+	<summary>
+ Gets or sets the City column value.
+ </summary>
+</member><member name="P:Petshop.Data.Supplier.State">
+	<summary>
+ Gets or sets the State column value.
+ </summary>
+</member><member name="P:Petshop.Data.Supplier.Zip">
+	<summary>
+ Gets or sets the Zip column value.
+ </summary>
+</member><member name="P:Petshop.Data.Supplier.Phone">
+	<summary>
+ Gets or sets the Phone column value.
+ </summary>
+</member><member name="P:Petshop.Data.Supplier.ItemList">
+	<summary>
+ Gets or sets the Item association.
+ </summary>
+</member><member name="M:Petshop.Data.Supplier.OnLoaded">
+	<summary>Called when this instance is loaded.</summary>
+</member><member name="M:Petshop.Data.Supplier.OnValidate(System.Data.Linq.ChangeAction)">
+	<summary>Called when this instance is being saved.</summary>
+</member><member name="M:Petshop.Data.Supplier.OnCreated">
+	<summary>Called when this instance is created.</summary>
+</member><member name="M:Petshop.Data.Supplier.OnSuppIdChanging(System.Int32)">
+	<summary>Called when SuppId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Supplier.OnSuppIdChanged">
+	<summary>Called after SuppId has Changed.</summary>
+</member><member name="M:Petshop.Data.Supplier.OnNameChanging(System.String)">
+	<summary>Called when Name is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Supplier.OnNameChanged">
+	<summary>Called after Name has Changed.</summary>
+</member><member name="M:Petshop.Data.Supplier.OnStatusChanging(System.String)">
+	<summary>Called when Status is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Supplier.OnStatusChanged">
+	<summary>Called after Status has Changed.</summary>
+</member><member name="M:Petshop.Data.Supplier.OnAddr1Changing(System.String)">
+	<summary>Called when Addr1 is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Supplier.OnAddr1Changed">
+	<summary>Called after Addr1 has Changed.</summary>
+</member><member name="M:Petshop.Data.Supplier.OnAddr2Changing(System.String)">
+	<summary>Called when Addr2 is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Supplier.OnAddr2Changed">
+	<summary>Called after Addr2 has Changed.</summary>
+</member><member name="M:Petshop.Data.Supplier.OnCityChanging(System.String)">
+	<summary>Called when City is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Supplier.OnCityChanged">
+	<summary>Called after City has Changed.</summary>
+</member><member name="M:Petshop.Data.Supplier.OnStateChanging(System.String)">
+	<summary>Called when State is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Supplier.OnStateChanged">
+	<summary>Called after State has Changed.</summary>
+</member><member name="M:Petshop.Data.Supplier.OnZipChanging(System.String)">
+	<summary>Called when Zip is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Supplier.OnZipChanged">
+	<summary>Called after Zip has Changed.</summary>
+</member><member name="M:Petshop.Data.Supplier.OnPhoneChanging(System.String)">
+	<summary>Called when Phone is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Supplier.OnPhoneChanged">
+	<summary>Called after Phone has Changed.</summary>
+</member><member name="T:Petshop.Data.Supplier">
+	<summary>
+ The class representing the dbo.Supplier table.
+ </summary>
+</member><member name="M:Petshop.Data.CategoryManager.#cctor">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.CategoryManager"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.CategoryManager.#ctor(Petshop.Data.PetshopDataManager)">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.CategoryManager"/> class.
+ </summary>
+	<param name="manager">The current manager.</param>
+</member><member name="P:Petshop.Data.CategoryManager.Context">
+	<summary>
+ Gets the current context.
+ </summary>
+</member><member name="P:Petshop.Data.CategoryManager.Entity">
+	<summary>
+ Gets the entity for this manager.
+ </summary>
+</member><member name="M:Petshop.Data.CategoryManager.CreateKey(System.String)">
+	<summary>
+ Creates the key for this entity.
+ </summary>
+</member><member name="M:Petshop.Data.CategoryManager.GetByKey(CodeSmith.Data.IEntityKey)">
+	<summary>
+ Gets an entity by the primary key.
+ </summary>
+	<param name="key">The key for the entity.</param>
+	<returns>
+ An instance of the entity or null if not found.
+ </returns>
+	<remarks>
+ This method is expecting key to be of type IEntityKey(Of String).
+ </remarks>
+	<exception cref="T:System.ArgumentException">Thrown when key is not of type IEntityKey(Of String).</exception>
+</member><member name="M:Petshop.Data.CategoryManager.GetByKey(System.String)">
+	<summary>
+ Gets an instance by the primary key.
+ </summary>
+	<returns>An instance of the entity or null if not found.</returns>
+</member><member name="M:Petshop.Data.CategoryManager.AddRules">
+	<summary>Called by the static constructor to add shared rules.</summary>
+</member><member name="M:Petshop.Data.CategoryManager.OnCreated">
+	<summary>Called when the class is created.</summary>
+</member><member name="T:Petshop.Data.CategoryManager.Query">
+	<summary>
+ A private class for lazy loading static compiled queries.
+ </summary>
+</member><member name="T:Petshop.Data.CategoryManager">
+	<summary>
+ The manager class for Category.
+ </summary>
+</member><member name="M:Petshop.Data.InventoryManager.#cctor">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.InventoryManager"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.InventoryManager.#ctor(Petshop.Data.PetshopDataManager)">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.InventoryManager"/> class.
+ </summary>
+	<param name="manager">The current manager.</param>
+</member><member name="P:Petshop.Data.InventoryManager.Context">
+	<summary>
+ Gets the current context.
+ </summary>
+</member><member name="P:Petshop.Data.InventoryManager.Entity">
+	<summary>
+ Gets the entity for this manager.
+ </summary>
+</member><member name="M:Petshop.Data.InventoryManager.CreateKey(System.String)">
+	<summary>
+ Creates the key for this entity.
+ </summary>
+</member><member name="M:Petshop.Data.InventoryManager.GetByKey(CodeSmith.Data.IEntityKey)">
+	<summary>
+ Gets an entity by the primary key.
+ </summary>
+	<param name="key">The key for the entity.</param>
+	<returns>
+ An instance of the entity or null if not found.
+ </returns>
+	<remarks>
+ This method is expecting key to be of type IEntityKey(Of String).
+ </remarks>
+	<exception cref="T:System.ArgumentException">Thrown when key is not of type IEntityKey(Of String).</exception>
+</member><member name="M:Petshop.Data.InventoryManager.GetByKey(System.String)">
+	<summary>
+ Gets an instance by the primary key.
+ </summary>
+	<returns>An instance of the entity or null if not found.</returns>
+</member><member name="M:Petshop.Data.InventoryManager.AddRules">
+	<summary>Called by the static constructor to add shared rules.</summary>
+</member><member name="M:Petshop.Data.InventoryManager.OnCreated">
+	<summary>Called when the class is created.</summary>
+</member><member name="T:Petshop.Data.InventoryManager.Query">
+	<summary>
+ A private class for lazy loading static compiled queries.
+ </summary>
+</member><member name="T:Petshop.Data.InventoryManager">
+	<summary>
+ The manager class for Inventory.
+ </summary>
+</member><member name="M:Petshop.Data.ProfilesManager.#cctor">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.ProfilesManager"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.ProfilesManager.#ctor(Petshop.Data.PetshopDataManager)">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.ProfilesManager"/> class.
+ </summary>
+	<param name="manager">The current manager.</param>
+</member><member name="P:Petshop.Data.ProfilesManager.Context">
+	<summary>
+ Gets the current context.
+ </summary>
+</member><member name="P:Petshop.Data.ProfilesManager.Entity">
+	<summary>
+ Gets the entity for this manager.
+ </summary>
+</member><member name="M:Petshop.Data.ProfilesManager.CreateKey(System.Int32)">
+	<summary>
+ Creates the key for this entity.
+ </summary>
+</member><member name="M:Petshop.Data.ProfilesManager.GetByKey(CodeSmith.Data.IEntityKey)">
+	<summary>
+ Gets an entity by the primary key.
+ </summary>
+	<param name="key">The key for the entity.</param>
+	<returns>
+ An instance of the entity or null if not found.
+ </returns>
+	<remarks>
+ This method is expecting key to be of type IEntityKey(Of Integer).
+ </remarks>
+	<exception cref="T:System.ArgumentException">Thrown when key is not of type IEntityKey(Of Integer).</exception>
+</member><member name="M:Petshop.Data.ProfilesManager.GetByKey(System.Int32)">
+	<summary>
+ Gets an instance by the primary key.
+ </summary>
+	<returns>An instance of the entity or null if not found.</returns>
+</member><member name="M:Petshop.Data.ProfilesManager.GetByUsernameApplicationName(System.String,System.String)">
+	<summary>
+ Gets an instance by using a unique index.
+ </summary>
+	<returns>An instance of the entity or null if not found.</returns>
+</member><member name="M:Petshop.Data.ProfilesManager.AddRules">
+	<summary>Called by the static constructor to add shared rules.</summary>
+</member><member name="M:Petshop.Data.ProfilesManager.OnCreated">
+	<summary>Called when the class is created.</summary>
+</member><member name="T:Petshop.Data.ProfilesManager.Query">
+	<summary>
+ A private class for lazy loading static compiled queries.
+ </summary>
+</member><member name="T:Petshop.Data.ProfilesManager">
+	<summary>
+ The manager class for Profiles.
+ </summary>
+</member><member name="M:Petshop.Data.Account.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.Account"/> class.
+ </summary>
+</member><member name="P:Petshop.Data.Account.AccountID">
+	<summary>
+ Gets the AccountID column value.
+ </summary>
+</member><member name="P:Petshop.Data.Account.UniqueID">
+	<summary>
+ Gets or sets the UniqueID column value.
+ </summary>
+</member><member name="P:Petshop.Data.Account.Email">
+	<summary>
+ Gets or sets the Email column value.
+ </summary>
+</member><member name="P:Petshop.Data.Account.FirstName">
+	<summary>
+ Gets or sets the FirstName column value.
+ </summary>
+</member><member name="P:Petshop.Data.Account.LastName">
+	<summary>
+ Gets or sets the LastName column value.
+ </summary>
+</member><member name="P:Petshop.Data.Account.Address1">
+	<summary>
+ Gets or sets the Address1 column value.
+ </summary>
+</member><member name="P:Petshop.Data.Account.Address2">
+	<summary>
+ Gets or sets the Address2 column value.
+ </summary>
+</member><member name="P:Petshop.Data.Account.City">
+	<summary>
+ Gets or sets the City column value.
+ </summary>
+</member><member name="P:Petshop.Data.Account.State">
+	<summary>
+ Gets or sets the State column value.
+ </summary>
+</member><member name="P:Petshop.Data.Account.Zip">
+	<summary>
+ Gets or sets the Zip column value.
+ </summary>
+</member><member name="P:Petshop.Data.Account.Country">
+	<summary>
+ Gets or sets the Country column value.
+ </summary>
+</member><member name="P:Petshop.Data.Account.Phone">
+	<summary>
+ Gets or sets the Phone column value.
+ </summary>
+</member><member name="P:Petshop.Data.Account.Profiles">
+	<summary>
+ Gets or sets the Profiles association.
+ </summary>
+</member><member name="M:Petshop.Data.Account.OnLoaded">
+	<summary>Called when this instance is loaded.</summary>
+</member><member name="M:Petshop.Data.Account.OnValidate(System.Data.Linq.ChangeAction)">
+	<summary>Called when this instance is being saved.</summary>
+</member><member name="M:Petshop.Data.Account.OnCreated">
+	<summary>Called when this instance is created.</summary>
+</member><member name="M:Petshop.Data.Account.OnAccountIDChanging(System.Int32)">
+	<summary>Called when AccountID is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Account.OnAccountIDChanged">
+	<summary>Called after AccountID has Changed.</summary>
+</member><member name="M:Petshop.Data.Account.OnUniqueIDChanging(System.Int32)">
+	<summary>Called when UniqueID is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Account.OnUniqueIDChanged">
+	<summary>Called after UniqueID has Changed.</summary>
+</member><member name="M:Petshop.Data.Account.OnEmailChanging(System.String)">
+	<summary>Called when Email is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Account.OnEmailChanged">
+	<summary>Called after Email has Changed.</summary>
+</member><member name="M:Petshop.Data.Account.OnFirstNameChanging(System.String)">
+	<summary>Called when FirstName is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Account.OnFirstNameChanged">
+	<summary>Called after FirstName has Changed.</summary>
+</member><member name="M:Petshop.Data.Account.OnLastNameChanging(System.String)">
+	<summary>Called when LastName is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Account.OnLastNameChanged">
+	<summary>Called after LastName has Changed.</summary>
+</member><member name="M:Petshop.Data.Account.OnAddress1Changing(System.String)">
+	<summary>Called when Address1 is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Account.OnAddress1Changed">
+	<summary>Called after Address1 has Changed.</summary>
+</member><member name="M:Petshop.Data.Account.OnAddress2Changing(System.String)">
+	<summary>Called when Address2 is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Account.OnAddress2Changed">
+	<summary>Called after Address2 has Changed.</summary>
+</member><member name="M:Petshop.Data.Account.OnCityChanging(System.String)">
+	<summary>Called when City is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Account.OnCityChanged">
+	<summary>Called after City has Changed.</summary>
+</member><member name="M:Petshop.Data.Account.OnStateChanging(System.String)">
+	<summary>Called when State is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Account.OnStateChanged">
+	<summary>Called after State has Changed.</summary>
+</member><member name="M:Petshop.Data.Account.OnZipChanging(System.String)">
+	<summary>Called when Zip is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Account.OnZipChanged">
+	<summary>Called after Zip has Changed.</summary>
+</member><member name="M:Petshop.Data.Account.OnCountryChanging(System.String)">
+	<summary>Called when Country is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Account.OnCountryChanged">
+	<summary>Called after Country has Changed.</summary>
+</member><member name="M:Petshop.Data.Account.OnPhoneChanging(System.String)">
+	<summary>Called when Phone is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Account.OnPhoneChanged">
+	<summary>Called after Phone has Changed.</summary>
+</member><member name="T:Petshop.Data.Account">
+	<summary>
+ The class representing the dbo.Account table.
+ </summary>
+</member><member name="M:Petshop.Data.Orders.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.Orders"/> class.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.OrderId">
+	<summary>
+ Gets the OrderId column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.UserId">
+	<summary>
+ Gets or sets the UserId column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.OrderDate">
+	<summary>
+ Gets or sets the OrderDate column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.ShipAddr1">
+	<summary>
+ Gets or sets the ShipAddr1 column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.ShipAddr2">
+	<summary>
+ Gets or sets the ShipAddr2 column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.ShipCity">
+	<summary>
+ Gets or sets the ShipCity column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.ShipState">
+	<summary>
+ Gets or sets the ShipState column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.ShipZip">
+	<summary>
+ Gets or sets the ShipZip column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.ShipCountry">
+	<summary>
+ Gets or sets the ShipCountry column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.BillAddr1">
+	<summary>
+ Gets or sets the BillAddr1 column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.BillAddr2">
+	<summary>
+ Gets or sets the BillAddr2 column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.BillCity">
+	<summary>
+ Gets or sets the BillCity column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.BillState">
+	<summary>
+ Gets or sets the BillState column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.BillZip">
+	<summary>
+ Gets or sets the BillZip column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.BillCountry">
+	<summary>
+ Gets or sets the BillCountry column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.Courier">
+	<summary>
+ Gets or sets the Courier column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.TotalPrice">
+	<summary>
+ Gets or sets the TotalPrice column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.BillToFirstName">
+	<summary>
+ Gets or sets the BillToFirstName column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.BillToLastName">
+	<summary>
+ Gets or sets the BillToLastName column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.ShipToFirstName">
+	<summary>
+ Gets or sets the ShipToFirstName column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.ShipToLastName">
+	<summary>
+ Gets or sets the ShipToLastName column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.AuthorizationNumber">
+	<summary>
+ Gets or sets the AuthorizationNumber column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.Locale">
+	<summary>
+ Gets or sets the Locale column value.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.LineItemList">
+	<summary>
+ Gets or sets the LineItem association.
+ </summary>
+</member><member name="P:Petshop.Data.Orders.OrderStatusList">
+	<summary>
+ Gets or sets the OrderStatus association.
+ </summary>
+</member><member name="M:Petshop.Data.Orders.OnLoaded">
+	<summary>Called when this instance is loaded.</summary>
+</member><member name="M:Petshop.Data.Orders.OnValidate(System.Data.Linq.ChangeAction)">
+	<summary>Called when this instance is being saved.</summary>
+</member><member name="M:Petshop.Data.Orders.OnCreated">
+	<summary>Called when this instance is created.</summary>
+</member><member name="M:Petshop.Data.Orders.OnOrderIdChanging(System.Int32)">
+	<summary>Called when OrderId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnOrderIdChanged">
+	<summary>Called after OrderId has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnUserIdChanging(System.String)">
+	<summary>Called when UserId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnUserIdChanged">
+	<summary>Called after UserId has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnOrderDateChanging(System.DateTime)">
+	<summary>Called when OrderDate is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnOrderDateChanged">
+	<summary>Called after OrderDate has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnShipAddr1Changing(System.String)">
+	<summary>Called when ShipAddr1 is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnShipAddr1Changed">
+	<summary>Called after ShipAddr1 has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnShipAddr2Changing(System.String)">
+	<summary>Called when ShipAddr2 is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnShipAddr2Changed">
+	<summary>Called after ShipAddr2 has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnShipCityChanging(System.String)">
+	<summary>Called when ShipCity is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnShipCityChanged">
+	<summary>Called after ShipCity has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnShipStateChanging(System.String)">
+	<summary>Called when ShipState is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnShipStateChanged">
+	<summary>Called after ShipState has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnShipZipChanging(System.String)">
+	<summary>Called when ShipZip is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnShipZipChanged">
+	<summary>Called after ShipZip has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnShipCountryChanging(System.String)">
+	<summary>Called when ShipCountry is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnShipCountryChanged">
+	<summary>Called after ShipCountry has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnBillAddr1Changing(System.String)">
+	<summary>Called when BillAddr1 is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnBillAddr1Changed">
+	<summary>Called after BillAddr1 has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnBillAddr2Changing(System.String)">
+	<summary>Called when BillAddr2 is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnBillAddr2Changed">
+	<summary>Called after BillAddr2 has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnBillCityChanging(System.String)">
+	<summary>Called when BillCity is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnBillCityChanged">
+	<summary>Called after BillCity has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnBillStateChanging(System.String)">
+	<summary>Called when BillState is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnBillStateChanged">
+	<summary>Called after BillState has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnBillZipChanging(System.String)">
+	<summary>Called when BillZip is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnBillZipChanged">
+	<summary>Called after BillZip has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnBillCountryChanging(System.String)">
+	<summary>Called when BillCountry is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnBillCountryChanged">
+	<summary>Called after BillCountry has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnCourierChanging(System.String)">
+	<summary>Called when Courier is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnCourierChanged">
+	<summary>Called after Courier has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnTotalPriceChanging(System.Decimal)">
+	<summary>Called when TotalPrice is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnTotalPriceChanged">
+	<summary>Called after TotalPrice has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnBillToFirstNameChanging(System.String)">
+	<summary>Called when BillToFirstName is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnBillToFirstNameChanged">
+	<summary>Called after BillToFirstName has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnBillToLastNameChanging(System.String)">
+	<summary>Called when BillToLastName is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnBillToLastNameChanged">
+	<summary>Called after BillToLastName has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnShipToFirstNameChanging(System.String)">
+	<summary>Called when ShipToFirstName is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnShipToFirstNameChanged">
+	<summary>Called after ShipToFirstName has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnShipToLastNameChanging(System.String)">
+	<summary>Called when ShipToLastName is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnShipToLastNameChanged">
+	<summary>Called after ShipToLastName has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnAuthorizationNumberChanging(System.Int32)">
+	<summary>Called when AuthorizationNumber is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnAuthorizationNumberChanged">
+	<summary>Called after AuthorizationNumber has Changed.</summary>
+</member><member name="M:Petshop.Data.Orders.OnLocaleChanging(System.String)">
+	<summary>Called when Locale is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Orders.OnLocaleChanged">
+	<summary>Called after Locale has Changed.</summary>
+</member><member name="T:Petshop.Data.Orders">
+	<summary>
+ The class representing the dbo.Orders table.
+ </summary>
+</member><member name="M:Petshop.Data.Profiles.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.Profiles"/> class.
+ </summary>
+</member><member name="P:Petshop.Data.Profiles.UniqueID">
+	<summary>
+ Gets the UniqueID column value.
+ </summary>
+</member><member name="P:Petshop.Data.Profiles.Username">
+	<summary>
+ Gets or sets the Username column value.
+ </summary>
+</member><member name="P:Petshop.Data.Profiles.ApplicationName">
+	<summary>
+ Gets or sets the ApplicationName column value.
+ </summary>
+</member><member name="P:Petshop.Data.Profiles.IsAnonymous">
+	<summary>
+ Gets or sets the IsAnonymous column value.
+ </summary>
+</member><member name="P:Petshop.Data.Profiles.LastActivityDate">
+	<summary>
+ Gets or sets the LastActivityDate column value.
+ </summary>
+</member><member name="P:Petshop.Data.Profiles.LastUpdatedDate">
+	<summary>
+ Gets or sets the LastUpdatedDate column value.
+ </summary>
+</member><member name="P:Petshop.Data.Profiles.AccountList">
+	<summary>
+ Gets or sets the Account association.
+ </summary>
+</member><member name="P:Petshop.Data.Profiles.CartList">
+	<summary>
+ Gets or sets the Cart association.
+ </summary>
+</member><member name="M:Petshop.Data.Profiles.OnLoaded">
+	<summary>Called when this instance is loaded.</summary>
+</member><member name="M:Petshop.Data.Profiles.OnValidate(System.Data.Linq.ChangeAction)">
+	<summary>Called when this instance is being saved.</summary>
+</member><member name="M:Petshop.Data.Profiles.OnCreated">
+	<summary>Called when this instance is created.</summary>
+</member><member name="M:Petshop.Data.Profiles.OnUniqueIDChanging(System.Int32)">
+	<summary>Called when UniqueID is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Profiles.OnUniqueIDChanged">
+	<summary>Called after UniqueID has Changed.</summary>
+</member><member name="M:Petshop.Data.Profiles.OnUsernameChanging(System.String)">
+	<summary>Called when Username is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Profiles.OnUsernameChanged">
+	<summary>Called after Username has Changed.</summary>
+</member><member name="M:Petshop.Data.Profiles.OnApplicationNameChanging(System.String)">
+	<summary>Called when ApplicationName is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Profiles.OnApplicationNameChanged">
+	<summary>Called after ApplicationName has Changed.</summary>
+</member><member name="M:Petshop.Data.Profiles.OnIsAnonymousChanging(System.Nullable{System.Boolean})">
+	<summary>Called when IsAnonymous is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Profiles.OnIsAnonymousChanged">
+	<summary>Called after IsAnonymous has Changed.</summary>
+</member><member name="M:Petshop.Data.Profiles.OnLastActivityDateChanging(System.Nullable{System.DateTime})">
+	<summary>Called when LastActivityDate is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Profiles.OnLastActivityDateChanged">
+	<summary>Called after LastActivityDate has Changed.</summary>
+</member><member name="M:Petshop.Data.Profiles.OnLastUpdatedDateChanging(System.Nullable{System.DateTime})">
+	<summary>Called when LastUpdatedDate is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Profiles.OnLastUpdatedDateChanged">
+	<summary>Called after LastUpdatedDate has Changed.</summary>
+</member><member name="T:Petshop.Data.Profiles">
+	<summary>
+ The class representing the dbo.Profiles table.
+ </summary>
+</member><member name="M:Petshop.Data.ProductManager.#cctor">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.ProductManager"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.ProductManager.#ctor(Petshop.Data.PetshopDataManager)">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.ProductManager"/> class.
+ </summary>
+	<param name="manager">The current manager.</param>
+</member><member name="P:Petshop.Data.ProductManager.Context">
+	<summary>
+ Gets the current context.
+ </summary>
+</member><member name="P:Petshop.Data.ProductManager.Entity">
+	<summary>
+ Gets the entity for this manager.
+ </summary>
+</member><member name="M:Petshop.Data.ProductManager.CreateKey(System.String)">
+	<summary>
+ Creates the key for this entity.
+ </summary>
+</member><member name="M:Petshop.Data.ProductManager.GetByKey(CodeSmith.Data.IEntityKey)">
+	<summary>
+ Gets an entity by the primary key.
+ </summary>
+	<param name="key">The key for the entity.</param>
+	<returns>
+ An instance of the entity or null if not found.
+ </returns>
+	<remarks>
+ This method is expecting key to be of type IEntityKey(Of String).
+ </remarks>
+	<exception cref="T:System.ArgumentException">Thrown when key is not of type IEntityKey(Of String).</exception>
+</member><member name="M:Petshop.Data.ProductManager.GetByKey(System.String)">
+	<summary>
+ Gets an instance by the primary key.
+ </summary>
+	<returns>An instance of the entity or null if not found.</returns>
+</member><member name="M:Petshop.Data.ProductManager.GetByName(System.String)">
+	<summary>
+ Gets a query by an index.
+ </summary>
+</member><member name="M:Petshop.Data.ProductManager.GetByCategoryId(System.String)">
+	<summary>
+ Gets a query by an index.
+ </summary>
+</member><member name="M:Petshop.Data.ProductManager.GetByCategoryIdName(System.String,System.String)">
+	<summary>
+ Gets a query by an index.
+ </summary>
+</member><member name="M:Petshop.Data.ProductManager.GetByCategoryIdProductIdName(System.String,System.String,System.String)">
+	<summary>
+ Gets a query by an index.
+ </summary>
+</member><member name="M:Petshop.Data.ProductManager.AddRules">
+	<summary>Called by the static constructor to add shared rules.</summary>
+</member><member name="M:Petshop.Data.ProductManager.OnCreated">
+	<summary>Called when the class is created.</summary>
+</member><member name="T:Petshop.Data.ProductManager.Query">
+	<summary>
+ A private class for lazy loading static compiled queries.
+ </summary>
+</member><member name="T:Petshop.Data.ProductManager">
+	<summary>
+ The manager class for Product.
+ </summary>
+</member><member name="M:Petshop.Data.LinqEntityBase.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.LinqEntityBase"/> class.
+ </summary>
+</member><member name="E:Petshop.Data.LinqEntityBase.PropertyChanged">
+	<summary>
+ Implements a PropertyChanged event.
+ </summary>
+</member><member name="M:Petshop.Data.LinqEntityBase.OnPropertyChanged(System.String)">
+	<summary>
+ Raise the PropertyChanged event for a specific property.
+ </summary>
+	<param name="propertyName">Name of the property that has changed.</param>
+</member><member name="E:Petshop.Data.LinqEntityBase.PropertyChanging">
+	<summary>
+ Implements a PropertyChanging event.
+ </summary>
+</member><member name="M:Petshop.Data.LinqEntityBase.OnPropertyChanging(System.String)">
+	<summary>
+ Raise the PropertyChanging event for a specific property.
+ </summary>
+	<param name="propertyName">Name of the property that is changing.</param>
+</member><member name="T:Petshop.Data.LinqEntityBase">
+	<summary>
+ A base class for Linq entities that implements notification events.
+ </summary>
+</member><member name="M:Petshop.Data.CartManager.#cctor">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.CartManager"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.CartManager.#ctor(Petshop.Data.PetshopDataManager)">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.CartManager"/> class.
+ </summary>
+	<param name="manager">The current manager.</param>
+</member><member name="P:Petshop.Data.CartManager.Context">
+	<summary>
+ Gets the current context.
+ </summary>
+</member><member name="P:Petshop.Data.CartManager.Entity">
+	<summary>
+ Gets the entity for this manager.
+ </summary>
+</member><member name="M:Petshop.Data.CartManager.CreateKey(System.Int32)">
+	<summary>
+ Creates the key for this entity.
+ </summary>
+</member><member name="M:Petshop.Data.CartManager.GetByKey(CodeSmith.Data.IEntityKey)">
+	<summary>
+ Gets an entity by the primary key.
+ </summary>
+	<param name="key">The key for the entity.</param>
+	<returns>
+ An instance of the entity or null if not found.
+ </returns>
+	<remarks>
+ This method is expecting key to be of type IEntityKey(Of Integer).
+ </remarks>
+	<exception cref="T:System.ArgumentException">Thrown when key is not of type IEntityKey(Of Integer).</exception>
+</member><member name="M:Petshop.Data.CartManager.GetByKey(System.Int32)">
+	<summary>
+ Gets an instance by the primary key.
+ </summary>
+	<returns>An instance of the entity or null if not found.</returns>
+</member><member name="M:Petshop.Data.CartManager.GetByUniqueID(System.Int32)">
+	<summary>
+ Gets a query by an index.
+ </summary>
+</member><member name="M:Petshop.Data.CartManager.GetByIsShoppingCart(System.Boolean)">
+	<summary>
+ Gets a query by an index.
+ </summary>
+</member><member name="M:Petshop.Data.CartManager.AddRules">
+	<summary>Called by the static constructor to add shared rules.</summary>
+</member><member name="M:Petshop.Data.CartManager.OnCreated">
+	<summary>Called when the class is created.</summary>
+</member><member name="T:Petshop.Data.CartManager.Query">
+	<summary>
+ A private class for lazy loading static compiled queries.
+ </summary>
+</member><member name="T:Petshop.Data.CartManager">
+	<summary>
+ The manager class for Cart.
+ </summary>
+</member><member name="M:Petshop.Data.SupplierManager.#cctor">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.SupplierManager"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.SupplierManager.#ctor(Petshop.Data.PetshopDataManager)">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.SupplierManager"/> class.
+ </summary>
+	<param name="manager">The current manager.</param>
+</member><member name="P:Petshop.Data.SupplierManager.Context">
+	<summary>
+ Gets the current context.
+ </summary>
+</member><member name="P:Petshop.Data.SupplierManager.Entity">
+	<summary>
+ Gets the entity for this manager.
+ </summary>
+</member><member name="M:Petshop.Data.SupplierManager.CreateKey(System.Int32)">
+	<summary>
+ Creates the key for this entity.
+ </summary>
+</member><member name="M:Petshop.Data.SupplierManager.GetByKey(CodeSmith.Data.IEntityKey)">
+	<summary>
+ Gets an entity by the primary key.
+ </summary>
+	<param name="key">The key for the entity.</param>
+	<returns>
+ An instance of the entity or null if not found.
+ </returns>
+	<remarks>
+ This method is expecting key to be of type IEntityKey(Of Integer).
+ </remarks>
+	<exception cref="T:System.ArgumentException">Thrown when key is not of type IEntityKey(Of Integer).</exception>
+</member><member name="M:Petshop.Data.SupplierManager.GetByKey(System.Int32)">
+	<summary>
+ Gets an instance by the primary key.
+ </summary>
+	<returns>An instance of the entity or null if not found.</returns>
+</member><member name="M:Petshop.Data.SupplierManager.AddRules">
+	<summary>Called by the static constructor to add shared rules.</summary>
+</member><member name="M:Petshop.Data.SupplierManager.OnCreated">
+	<summary>Called when the class is created.</summary>
+</member><member name="T:Petshop.Data.SupplierManager.Query">
+	<summary>
+ A private class for lazy loading static compiled queries.
+ </summary>
+</member><member name="T:Petshop.Data.SupplierManager">
+	<summary>
+ The manager class for Supplier.
+ </summary>
+</member><member name="M:Petshop.Data.Category.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.Category"/> class.
+ </summary>
+</member><member name="P:Petshop.Data.Category.CategoryId">
+	<summary>
+ Gets or sets the CategoryId column value.
+ </summary>
+</member><member name="P:Petshop.Data.Category.Name">
+	<summary>
+ Gets or sets the Name column value.
+ </summary>
+</member><member name="P:Petshop.Data.Category.Descn">
+	<summary>
+ Gets or sets the Descn column value.
+ </summary>
+</member><member name="P:Petshop.Data.Category.ProductList">
+	<summary>
+ Gets or sets the Product association.
+ </summary>
+</member><member name="M:Petshop.Data.Category.OnLoaded">
+	<summary>Called when this instance is loaded.</summary>
+</member><member name="M:Petshop.Data.Category.OnValidate(System.Data.Linq.ChangeAction)">
+	<summary>Called when this instance is being saved.</summary>
+</member><member name="M:Petshop.Data.Category.OnCreated">
+	<summary>Called when this instance is created.</summary>
+</member><member name="M:Petshop.Data.Category.OnCategoryIdChanging(System.String)">
+	<summary>Called when CategoryId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Category.OnCategoryIdChanged">
+	<summary>Called after CategoryId has Changed.</summary>
+</member><member name="M:Petshop.Data.Category.OnNameChanging(System.String)">
+	<summary>Called when Name is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Category.OnNameChanged">
+	<summary>Called after Name has Changed.</summary>
+</member><member name="M:Petshop.Data.Category.OnDescnChanging(System.String)">
+	<summary>Called when Descn is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Category.OnDescnChanged">
+	<summary>Called after Descn has Changed.</summary>
+</member><member name="T:Petshop.Data.Category">
+	<summary>
+ The class representing the dbo.Category table.
+ </summary>
+</member><member name="M:Petshop.Data.Product.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.Product"/> class.
+ </summary>
+</member><member name="P:Petshop.Data.Product.ProductId">
+	<summary>
+ Gets or sets the ProductId column value.
+ </summary>
+</member><member name="P:Petshop.Data.Product.CategoryId">
+	<summary>
+ Gets or sets the CategoryId column value.
+ </summary>
+</member><member name="P:Petshop.Data.Product.Name">
+	<summary>
+ Gets or sets the Name column value.
+ </summary>
+</member><member name="P:Petshop.Data.Product.Descn">
+	<summary>
+ Gets or sets the Descn column value.
+ </summary>
+</member><member name="P:Petshop.Data.Product.Image">
+	<summary>
+ Gets or sets the Image column value.
+ </summary>
+</member><member name="P:Petshop.Data.Product.Category">
+	<summary>
+ Gets or sets the Category association.
+ </summary>
+</member><member name="P:Petshop.Data.Product.ItemList">
+	<summary>
+ Gets or sets the Item association.
+ </summary>
+</member><member name="M:Petshop.Data.Product.OnLoaded">
+	<summary>Called when this instance is loaded.</summary>
+</member><member name="M:Petshop.Data.Product.OnValidate(System.Data.Linq.ChangeAction)">
+	<summary>Called when this instance is being saved.</summary>
+</member><member name="M:Petshop.Data.Product.OnCreated">
+	<summary>Called when this instance is created.</summary>
+</member><member name="M:Petshop.Data.Product.OnProductIdChanging(System.String)">
+	<summary>Called when ProductId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Product.OnProductIdChanged">
+	<summary>Called after ProductId has Changed.</summary>
+</member><member name="M:Petshop.Data.Product.OnCategoryIdChanging(System.String)">
+	<summary>Called when CategoryId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Product.OnCategoryIdChanged">
+	<summary>Called after CategoryId has Changed.</summary>
+</member><member name="M:Petshop.Data.Product.OnNameChanging(System.String)">
+	<summary>Called when Name is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Product.OnNameChanged">
+	<summary>Called after Name has Changed.</summary>
+</member><member name="M:Petshop.Data.Product.OnDescnChanging(System.String)">
+	<summary>Called when Descn is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Product.OnDescnChanged">
+	<summary>Called after Descn has Changed.</summary>
+</member><member name="M:Petshop.Data.Product.OnImageChanging(System.String)">
+	<summary>Called when Image is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Product.OnImageChanged">
+	<summary>Called after Image has Changed.</summary>
+</member><member name="T:Petshop.Data.Product">
+	<summary>
+ The class representing the dbo.Product table.
+ </summary>
+</member><member name="M:Petshop.Data.AccountManager.#cctor">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.AccountManager"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.AccountManager.#ctor(Petshop.Data.PetshopDataManager)">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.AccountManager"/> class.
+ </summary>
+	<param name="manager">The current manager.</param>
+</member><member name="P:Petshop.Data.AccountManager.Context">
+	<summary>
+ Gets the current context.
+ </summary>
+</member><member name="P:Petshop.Data.AccountManager.Entity">
+	<summary>
+ Gets the entity for this manager.
+ </summary>
+</member><member name="M:Petshop.Data.AccountManager.CreateKey(System.Int32)">
+	<summary>
+ Creates the key for this entity.
+ </summary>
+</member><member name="M:Petshop.Data.AccountManager.GetByKey(CodeSmith.Data.IEntityKey)">
+	<summary>
+ Gets an entity by the primary key.
+ </summary>
+	<param name="key">The key for the entity.</param>
+	<returns>
+ An instance of the entity or null if not found.
+ </returns>
+	<remarks>
+ This method is expecting key to be of type IEntityKey(Of Integer).
+ </remarks>
+	<exception cref="T:System.ArgumentException">Thrown when key is not of type IEntityKey(Of Integer).</exception>
+</member><member name="M:Petshop.Data.AccountManager.GetByKey(System.Int32)">
+	<summary>
+ Gets an instance by the primary key.
+ </summary>
+	<returns>An instance of the entity or null if not found.</returns>
+</member><member name="M:Petshop.Data.AccountManager.GetByUniqueID(System.Int32)">
+	<summary>
+ Gets a query by an index.
+ </summary>
+</member><member name="M:Petshop.Data.AccountManager.AddRules">
+	<summary>Called by the static constructor to add shared rules.</summary>
+</member><member name="M:Petshop.Data.AccountManager.OnCreated">
+	<summary>Called when the class is created.</summary>
+</member><member name="T:Petshop.Data.AccountManager.Query">
+	<summary>
+ A private class for lazy loading static compiled queries.
+ </summary>
+</member><member name="T:Petshop.Data.AccountManager">
+	<summary>
+ The manager class for Account.
+ </summary>
+</member><member name="M:Petshop.Data.OrdersManager.#cctor">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.OrdersManager"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.OrdersManager.#ctor(Petshop.Data.PetshopDataManager)">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.OrdersManager"/> class.
+ </summary>
+	<param name="manager">The current manager.</param>
+</member><member name="P:Petshop.Data.OrdersManager.Context">
+	<summary>
+ Gets the current context.
+ </summary>
+</member><member name="P:Petshop.Data.OrdersManager.Entity">
+	<summary>
+ Gets the entity for this manager.
+ </summary>
+</member><member name="M:Petshop.Data.OrdersManager.CreateKey(System.Int32)">
+	<summary>
+ Creates the key for this entity.
+ </summary>
+</member><member name="M:Petshop.Data.OrdersManager.GetByKey(CodeSmith.Data.IEntityKey)">
+	<summary>
+ Gets an entity by the primary key.
+ </summary>
+	<param name="key">The key for the entity.</param>
+	<returns>
+ An instance of the entity or null if not found.
+ </returns>
+	<remarks>
+ This method is expecting key to be of type IEntityKey(Of Integer).
+ </remarks>
+	<exception cref="T:System.ArgumentException">Thrown when key is not of type IEntityKey(Of Integer).</exception>
+</member><member name="M:Petshop.Data.OrdersManager.GetByKey(System.Int32)">
+	<summary>
+ Gets an instance by the primary key.
+ </summary>
+	<returns>An instance of the entity or null if not found.</returns>
+</member><member name="M:Petshop.Data.OrdersManager.AddRules">
+	<summary>Called by the static constructor to add shared rules.</summary>
+</member><member name="M:Petshop.Data.OrdersManager.OnCreated">
+	<summary>Called when the class is created.</summary>
+</member><member name="T:Petshop.Data.OrdersManager.Query">
+	<summary>
+ A private class for lazy loading static compiled queries.
+ </summary>
+</member><member name="T:Petshop.Data.OrdersManager">
+	<summary>
+ The manager class for Orders.
+ </summary>
+</member><member name="P:Petshop.Data.PetshopDataContext.Manager">
+	<summary>
+ Gets the data manager.
+ </summary>
+	<value>The data manager.</value>
+</member><member name="M:Petshop.Data.PetshopDataContext.SubmitChanges(System.Data.Linq.ConflictMode)">
+	<summary>
+ Sends changes made to retrieved objects to the underlying database.
+ </summary>
+	<param name="failureMode">How concurrency conflicts should be reported.</param>
+</member><member name="T:Petshop.Data.PetshopDataContext">
+	<summary>
+ The DataContext manager class for the Petshop database.
+ </summary>
+</member><member name="M:Petshop.Data.OrderStatusManager.#cctor">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.OrderStatusManager"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.OrderStatusManager.#ctor(Petshop.Data.PetshopDataManager)">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.OrderStatusManager"/> class.
+ </summary>
+	<param name="manager">The current manager.</param>
+</member><member name="P:Petshop.Data.OrderStatusManager.Context">
+	<summary>
+ Gets the current context.
+ </summary>
+</member><member name="P:Petshop.Data.OrderStatusManager.Entity">
+	<summary>
+ Gets the entity for this manager.
+ </summary>
+</member><member name="M:Petshop.Data.OrderStatusManager.CreateKey(System.Int32,System.Int32)">
+	<summary>
+ Creates the key for this entity.
+ </summary>
+</member><member name="M:Petshop.Data.OrderStatusManager.GetByKey(CodeSmith.Data.IEntityKey)">
+	<summary>
+ Gets an entity by the primary key.
+ </summary>
+	<param name="key">The key for the entity.</param>
+	<returns>
+ An instance of the entity or null if not found.
+ </returns>
+	<remarks>
+ This method is expecting key to be of type IEntityKey(Of Integer, Integer).
+ </remarks>
+	<exception cref="T:System.ArgumentException">Thrown when key is not of type IEntityKey(Of Integer, Integer).</exception>
+</member><member name="M:Petshop.Data.OrderStatusManager.GetByKey(System.Int32,System.Int32)">
+	<summary>
+ Gets an instance by the primary key.
+ </summary>
+	<returns>An instance of the entity or null if not found.</returns>
+</member><member name="M:Petshop.Data.OrderStatusManager.GetByOrderId(System.Int32)">
+	<summary>
+ Gets a query by an index.
+ </summary>
+</member><member name="M:Petshop.Data.OrderStatusManager.AddRules">
+	<summary>Called by the static constructor to add shared rules.</summary>
+</member><member name="M:Petshop.Data.OrderStatusManager.OnCreated">
+	<summary>Called when the class is created.</summary>
+</member><member name="T:Petshop.Data.OrderStatusManager.Query">
+	<summary>
+ A private class for lazy loading static compiled queries.
+ </summary>
+</member><member name="T:Petshop.Data.OrderStatusManager">
+	<summary>
+ The manager class for OrderStatus.
+ </summary>
+</member><member name="M:Petshop.Data.Cart.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.Cart"/> class.
+ </summary>
+</member><member name="P:Petshop.Data.Cart.CartID">
+	<summary>
+ Gets the CartID column value.
+ </summary>
+</member><member name="P:Petshop.Data.Cart.UniqueID">
+	<summary>
+ Gets or sets the UniqueID column value.
+ </summary>
+</member><member name="P:Petshop.Data.Cart.ItemId">
+	<summary>
+ Gets or sets the ItemId column value.
+ </summary>
+</member><member name="P:Petshop.Data.Cart.Name">
+	<summary>
+ Gets or sets the Name column value.
+ </summary>
+</member><member name="P:Petshop.Data.Cart.Type">
+	<summary>
+ Gets or sets the Type column value.
+ </summary>
+</member><member name="P:Petshop.Data.Cart.Price">
+	<summary>
+ Gets or sets the Price column value.
+ </summary>
+</member><member name="P:Petshop.Data.Cart.CategoryId">
+	<summary>
+ Gets or sets the CategoryId column value.
+ </summary>
+</member><member name="P:Petshop.Data.Cart.ProductId">
+	<summary>
+ Gets or sets the ProductId column value.
+ </summary>
+</member><member name="P:Petshop.Data.Cart.IsShoppingCart">
+	<summary>
+ Gets or sets the IsShoppingCart column value.
+ </summary>
+</member><member name="P:Petshop.Data.Cart.Quantity">
+	<summary>
+ Gets or sets the Quantity column value.
+ </summary>
+</member><member name="P:Petshop.Data.Cart.Profiles">
+	<summary>
+ Gets or sets the Profiles association.
+ </summary>
+</member><member name="M:Petshop.Data.Cart.OnLoaded">
+	<summary>Called when this instance is loaded.</summary>
+</member><member name="M:Petshop.Data.Cart.OnValidate(System.Data.Linq.ChangeAction)">
+	<summary>Called when this instance is being saved.</summary>
+</member><member name="M:Petshop.Data.Cart.OnCreated">
+	<summary>Called when this instance is created.</summary>
+</member><member name="M:Petshop.Data.Cart.OnCartIDChanging(System.Int32)">
+	<summary>Called when CartID is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Cart.OnCartIDChanged">
+	<summary>Called after CartID has Changed.</summary>
+</member><member name="M:Petshop.Data.Cart.OnUniqueIDChanging(System.Int32)">
+	<summary>Called when UniqueID is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Cart.OnUniqueIDChanged">
+	<summary>Called after UniqueID has Changed.</summary>
+</member><member name="M:Petshop.Data.Cart.OnItemIdChanging(System.String)">
+	<summary>Called when ItemId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Cart.OnItemIdChanged">
+	<summary>Called after ItemId has Changed.</summary>
+</member><member name="M:Petshop.Data.Cart.OnNameChanging(System.String)">
+	<summary>Called when Name is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Cart.OnNameChanged">
+	<summary>Called after Name has Changed.</summary>
+</member><member name="M:Petshop.Data.Cart.OnTypeChanging(System.String)">
+	<summary>Called when Type is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Cart.OnTypeChanged">
+	<summary>Called after Type has Changed.</summary>
+</member><member name="M:Petshop.Data.Cart.OnPriceChanging(System.Decimal)">
+	<summary>Called when Price is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Cart.OnPriceChanged">
+	<summary>Called after Price has Changed.</summary>
+</member><member name="M:Petshop.Data.Cart.OnCategoryIdChanging(System.String)">
+	<summary>Called when CategoryId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Cart.OnCategoryIdChanged">
+	<summary>Called after CategoryId has Changed.</summary>
+</member><member name="M:Petshop.Data.Cart.OnProductIdChanging(System.String)">
+	<summary>Called when ProductId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Cart.OnProductIdChanged">
+	<summary>Called after ProductId has Changed.</summary>
+</member><member name="M:Petshop.Data.Cart.OnIsShoppingCartChanging(System.Boolean)">
+	<summary>Called when IsShoppingCart is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Cart.OnIsShoppingCartChanged">
+	<summary>Called after IsShoppingCart has Changed.</summary>
+</member><member name="M:Petshop.Data.Cart.OnQuantityChanging(System.Int32)">
+	<summary>Called when Quantity is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.Cart.OnQuantityChanged">
+	<summary>Called after Quantity has Changed.</summary>
+</member><member name="T:Petshop.Data.Cart">
+	<summary>
+ The class representing the dbo.Cart table.
+ </summary>
+</member><member name="M:Petshop.Data.PetshopDataManager.#ctor(Petshop.Data.PetshopDataContext)">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.PetshopDataManager"/> class.
+ </summary>
+	<param name="context">An instance of <see cref="T:Petshop.Data.PetshopDataContext"/> DataContext.</param>
+</member><member name="P:Petshop.Data.PetshopDataManager.Account">
+	<summary>
+ Gets the manager for Account.
+ </summary>
+</member><member name="P:Petshop.Data.PetshopDataManager.Cart">
+	<summary>
+ Gets the manager for Cart.
+ </summary>
+</member><member name="P:Petshop.Data.PetshopDataManager.Category">
+	<summary>
+ Gets the manager for Category.
+ </summary>
+</member><member name="P:Petshop.Data.PetshopDataManager.Inventory">
+	<summary>
+ Gets the manager for Inventory.
+ </summary>
+</member><member name="P:Petshop.Data.PetshopDataManager.Item">
+	<summary>
+ Gets the manager for Item.
+ </summary>
+</member><member name="P:Petshop.Data.PetshopDataManager.LineItem">
+	<summary>
+ Gets the manager for LineItem.
+ </summary>
+</member><member name="P:Petshop.Data.PetshopDataManager.Orders">
+	<summary>
+ Gets the manager for Orders.
+ </summary>
+</member><member name="P:Petshop.Data.PetshopDataManager.OrderStatus">
+	<summary>
+ Gets the manager for OrderStatus.
+ </summary>
+</member><member name="P:Petshop.Data.PetshopDataManager.Product">
+	<summary>
+ Gets the manager for Product.
+ </summary>
+</member><member name="P:Petshop.Data.PetshopDataManager.Profiles">
+	<summary>
+ Gets the manager for Profiles.
+ </summary>
+</member><member name="P:Petshop.Data.PetshopDataManager.Supplier">
+	<summary>
+ Gets the manager for Supplier.
+ </summary>
+</member><member name="T:Petshop.Data.PetshopDataManager">
+	<summary>
+ The data manager for a DataContext.
+ </summary>
+</member><member name="M:Petshop.Data.LineItem.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.LineItem"/> class.
+ </summary>
+</member><member name="P:Petshop.Data.LineItem.OrderId">
+	<summary>
+ Gets or sets the OrderId column value.
+ </summary>
+</member><member name="P:Petshop.Data.LineItem.LineNum">
+	<summary>
+ Gets or sets the LineNum column value.
+ </summary>
+</member><member name="P:Petshop.Data.LineItem.ItemId">
+	<summary>
+ Gets or sets the ItemId column value.
+ </summary>
+</member><member name="P:Petshop.Data.LineItem.Quantity">
+	<summary>
+ Gets or sets the Quantity column value.
+ </summary>
+</member><member name="P:Petshop.Data.LineItem.UnitPrice">
+	<summary>
+ Gets or sets the UnitPrice column value.
+ </summary>
+</member><member name="P:Petshop.Data.LineItem.Orders">
+	<summary>
+ Gets or sets the Orders association.
+ </summary>
+</member><member name="M:Petshop.Data.LineItem.OnLoaded">
+	<summary>Called when this instance is loaded.</summary>
+</member><member name="M:Petshop.Data.LineItem.OnValidate(System.Data.Linq.ChangeAction)">
+	<summary>Called when this instance is being saved.</summary>
+</member><member name="M:Petshop.Data.LineItem.OnCreated">
+	<summary>Called when this instance is created.</summary>
+</member><member name="M:Petshop.Data.LineItem.OnOrderIdChanging(System.Int32)">
+	<summary>Called when OrderId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.LineItem.OnOrderIdChanged">
+	<summary>Called after OrderId has Changed.</summary>
+</member><member name="M:Petshop.Data.LineItem.OnLineNumChanging(System.Int32)">
+	<summary>Called when LineNum is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.LineItem.OnLineNumChanged">
+	<summary>Called after LineNum has Changed.</summary>
+</member><member name="M:Petshop.Data.LineItem.OnItemIdChanging(System.String)">
+	<summary>Called when ItemId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.LineItem.OnItemIdChanged">
+	<summary>Called after ItemId has Changed.</summary>
+</member><member name="M:Petshop.Data.LineItem.OnQuantityChanging(System.Int32)">
+	<summary>Called when Quantity is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.LineItem.OnQuantityChanged">
+	<summary>Called after Quantity has Changed.</summary>
+</member><member name="M:Petshop.Data.LineItem.OnUnitPriceChanging(System.Decimal)">
+	<summary>Called when UnitPrice is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.LineItem.OnUnitPriceChanged">
+	<summary>Called after UnitPrice has Changed.</summary>
+</member><member name="T:Petshop.Data.LineItem">
+	<summary>
+ The class representing the dbo.LineItem table.
+ </summary>
+</member><member name="M:Petshop.Data.OrderStatus.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.OrderStatus"/> class.
+ </summary>
+</member><member name="P:Petshop.Data.OrderStatus.OrderId">
+	<summary>
+ Gets or sets the OrderId column value.
+ </summary>
+</member><member name="P:Petshop.Data.OrderStatus.LineNum">
+	<summary>
+ Gets or sets the LineNum column value.
+ </summary>
+</member><member name="P:Petshop.Data.OrderStatus.Timestamp">
+	<summary>
+ Gets or sets the Timestamp column value.
+ </summary>
+</member><member name="P:Petshop.Data.OrderStatus.Status">
+	<summary>
+ Gets or sets the Status column value.
+ </summary>
+</member><member name="P:Petshop.Data.OrderStatus.Orders">
+	<summary>
+ Gets or sets the Orders association.
+ </summary>
+</member><member name="M:Petshop.Data.OrderStatus.OnLoaded">
+	<summary>Called when this instance is loaded.</summary>
+</member><member name="M:Petshop.Data.OrderStatus.OnValidate(System.Data.Linq.ChangeAction)">
+	<summary>Called when this instance is being saved.</summary>
+</member><member name="M:Petshop.Data.OrderStatus.OnCreated">
+	<summary>Called when this instance is created.</summary>
+</member><member name="M:Petshop.Data.OrderStatus.OnOrderIdChanging(System.Int32)">
+	<summary>Called when OrderId is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.OrderStatus.OnOrderIdChanged">
+	<summary>Called after OrderId has Changed.</summary>
+</member><member name="M:Petshop.Data.OrderStatus.OnLineNumChanging(System.Int32)">
+	<summary>Called when LineNum is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.OrderStatus.OnLineNumChanged">
+	<summary>Called after LineNum has Changed.</summary>
+</member><member name="M:Petshop.Data.OrderStatus.OnTimestampChanging(System.DateTime)">
+	<summary>Called when Timestamp is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.OrderStatus.OnTimestampChanged">
+	<summary>Called after Timestamp has Changed.</summary>
+</member><member name="M:Petshop.Data.OrderStatus.OnStatusChanging(System.String)">
+	<summary>Called when Status is changing.</summary>
+	<param name="value">The new value.</param>
+</member><member name="M:Petshop.Data.OrderStatus.OnStatusChanged">
+	<summary>Called after Status has Changed.</summary>
+</member><member name="T:Petshop.Data.OrderStatus">
+	<summary>
+ The class representing the dbo.OrderStatus table.
+ </summary>
+</member><member name="P:Petshop.Data.PetshopDataContext.ConnectionString">
+	<summary>The application connection string read from web.config or app.config</summary>
+	<example>
+ Add the following key to the "connectionStrings" section of your config:
+ <code><![CDATA[
+ <configuration>
+     <connectionStrings>
+         <add name="PetshopConnectionString" 
+             connectionString="Data Source=(local);Initial Catalog=DATABASE;Integrated Security=True"
+             providerName="System.Data.SqlClient" />
+     </connectionStrings>
+ </configuration>
+ ]]></code>
+	</example>
+</member><member name="M:Petshop.Data.PetshopDataContext.#cctor">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.PetshopDataContext"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.PetshopDataContext.#ctor">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.PetshopDataContext"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.PetshopDataContext.#ctor(System.String)">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.PetshopDataContext"/> class.
+ </summary>
+	<param name="connection">The connection string.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.#ctor(System.Data.IDbConnection)">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.PetshopDataContext"/> class.
+ </summary>
+	<param name="connection">The database connection.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.#ctor(System.String,System.Data.Linq.Mapping.MappingSource)">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.PetshopDataContext"/> class.
+ </summary>
+	<param name="connection">The connection string.</param>
+	<param name="mappingSource">The mapping source.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.#ctor(System.Data.IDbConnection,System.Data.Linq.Mapping.MappingSource)">
+	<summary>
+ Initializes a new instance of the <see cref="T:Petshop.Data.PetshopDataContext"/> class.
+ </summary>
+	<param name="connection">The database connection.</param>
+	<param name="mappingSource">The mapping source.</param>
+</member><member name="P:Petshop.Data.PetshopDataContext.Account">
+	<summary>Represents the dbo.Account table in the underlying database.</summary>
+</member><member name="P:Petshop.Data.PetshopDataContext.Cart">
+	<summary>Represents the dbo.Cart table in the underlying database.</summary>
+</member><member name="P:Petshop.Data.PetshopDataContext.Category">
+	<summary>Represents the dbo.Category table in the underlying database.</summary>
+</member><member name="P:Petshop.Data.PetshopDataContext.Inventory">
+	<summary>Represents the dbo.Inventory table in the underlying database.</summary>
+</member><member name="P:Petshop.Data.PetshopDataContext.Item">
+	<summary>Represents the dbo.Item table in the underlying database.</summary>
+</member><member name="P:Petshop.Data.PetshopDataContext.LineItem">
+	<summary>Represents the dbo.LineItem table in the underlying database.</summary>
+</member><member name="P:Petshop.Data.PetshopDataContext.Orders">
+	<summary>Represents the dbo.Orders table in the underlying database.</summary>
+</member><member name="P:Petshop.Data.PetshopDataContext.OrderStatus">
+	<summary>Represents the dbo.OrderStatus table in the underlying database.</summary>
+</member><member name="P:Petshop.Data.PetshopDataContext.Product">
+	<summary>Represents the dbo.Product table in the underlying database.</summary>
+</member><member name="P:Petshop.Data.PetshopDataContext.Profiles">
+	<summary>Represents the dbo.Profiles table in the underlying database.</summary>
+</member><member name="P:Petshop.Data.PetshopDataContext.Supplier">
+	<summary>Represents the dbo.Supplier table in the underlying database.</summary>
+</member><member name="M:Petshop.Data.PetshopDataContext.OnCreated">
+	<summary>Called after this instance is created.</summary>
+</member><member name="M:Petshop.Data.PetshopDataContext.InsertAccount(Petshop.Data.Account)">
+	<summary>Called before a Account is inserted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.UpdateAccount(Petshop.Data.Account)">
+	<summary>Called before a Account is updated.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.DeleteAccount(Petshop.Data.Account)">
+	<summary>Called before a Account is deleted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.InsertCart(Petshop.Data.Cart)">
+	<summary>Called before a Cart is inserted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.UpdateCart(Petshop.Data.Cart)">
+	<summary>Called before a Cart is updated.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.DeleteCart(Petshop.Data.Cart)">
+	<summary>Called before a Cart is deleted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.InsertCategory(Petshop.Data.Category)">
+	<summary>Called before a Category is inserted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.UpdateCategory(Petshop.Data.Category)">
+	<summary>Called before a Category is updated.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.DeleteCategory(Petshop.Data.Category)">
+	<summary>Called before a Category is deleted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.InsertInventory(Petshop.Data.Inventory)">
+	<summary>Called before a Inventory is inserted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.UpdateInventory(Petshop.Data.Inventory)">
+	<summary>Called before a Inventory is updated.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.DeleteInventory(Petshop.Data.Inventory)">
+	<summary>Called before a Inventory is deleted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.InsertItem(Petshop.Data.Item)">
+	<summary>Called before a Item is inserted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.UpdateItem(Petshop.Data.Item)">
+	<summary>Called before a Item is updated.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.DeleteItem(Petshop.Data.Item)">
+	<summary>Called before a Item is deleted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.InsertLineItem(Petshop.Data.LineItem)">
+	<summary>Called before a LineItem is inserted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.UpdateLineItem(Petshop.Data.LineItem)">
+	<summary>Called before a LineItem is updated.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.DeleteLineItem(Petshop.Data.LineItem)">
+	<summary>Called before a LineItem is deleted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.InsertOrders(Petshop.Data.Orders)">
+	<summary>Called before a Orders is inserted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.UpdateOrders(Petshop.Data.Orders)">
+	<summary>Called before a Orders is updated.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.DeleteOrders(Petshop.Data.Orders)">
+	<summary>Called before a Orders is deleted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.InsertOrderStatus(Petshop.Data.OrderStatus)">
+	<summary>Called before a OrderStatus is inserted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.UpdateOrderStatus(Petshop.Data.OrderStatus)">
+	<summary>Called before a OrderStatus is updated.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.DeleteOrderStatus(Petshop.Data.OrderStatus)">
+	<summary>Called before a OrderStatus is deleted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.InsertProduct(Petshop.Data.Product)">
+	<summary>Called before a Product is inserted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.UpdateProduct(Petshop.Data.Product)">
+	<summary>Called before a Product is updated.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.DeleteProduct(Petshop.Data.Product)">
+	<summary>Called before a Product is deleted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.InsertProfiles(Petshop.Data.Profiles)">
+	<summary>Called before a Profiles is inserted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.UpdateProfiles(Petshop.Data.Profiles)">
+	<summary>Called before a Profiles is updated.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.DeleteProfiles(Petshop.Data.Profiles)">
+	<summary>Called before a Profiles is deleted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.InsertSupplier(Petshop.Data.Supplier)">
+	<summary>Called before a Supplier is inserted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.UpdateSupplier(Petshop.Data.Supplier)">
+	<summary>Called before a Supplier is updated.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="M:Petshop.Data.PetshopDataContext.DeleteSupplier(Petshop.Data.Supplier)">
+	<summary>Called before a Supplier is deleted.</summary>
+	<param name="instance">The instance.</param>
+</member><member name="T:Petshop.Data.PetshopDataContext">
+	<summary>
+ The DataContext class for the Petshop database.
+ </summary>
+</member><member name="M:Petshop.Data.ItemManager.#cctor">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.ItemManager"/> class.
+ </summary>
+</member><member name="M:Petshop.Data.ItemManager.#ctor(Petshop.Data.PetshopDataManager)">
+	<summary>
+ Initializes the <see cref="T:Petshop.Data.ItemManager"/> class.
+ </summary>
+	<param name="manager">The current manager.</param>
+</member><member name="P:Petshop.Data.ItemManager.Context">
+	<summary>
+ Gets the current context.
+ </summary>
+</member><member name="P:Petshop.Data.ItemManager.Entity">
+	<summary>
+ Gets the entity for this manager.
+ </summary>
+</member><member name="M:Petshop.Data.ItemManager.CreateKey(System.String)">
+	<summary>
+ Creates the key for this entity.
+ </summary>
+</member><member name="M:Petshop.Data.ItemManager.GetByKey(CodeSmith.Data.IEntityKey)">
+	<summary>
+ Gets an entity by the primary key.
+ </summary>
+	<param name="key">The key for the entity.</param>
+	<returns>
+ An instance of the entity or null if not found.
+ </returns>
+	<remarks>
+ This method is expecting key to be of type IEntityKey(Of String).
+ </remarks>
+	<exception cref="T:System.ArgumentException">Thrown when key is not of type IEntityKey(Of String).</exception>
+</member><member name="M:Petshop.Data.ItemManager.GetByKey(System.String)">
+	<summary>
+ Gets an instance by the primary key.
+ </summary>
+	<returns>An instance of the entity or null if not found.</returns>
+</member><member name="M:Petshop.Data.ItemManager.GetByProductIdItemIdListPriceName(System.String,System.String,System.Nullable{System.Decimal},System.String)">
+	<summary>
+ Gets a query by an index.
+ </summary>
+</member><member name="M:Petshop.Data.ItemManager.GetByProductId(System.String)">
+	<summary>
+ Gets a query by an index.
+ </summary>
+</member><member name="M:Petshop.Data.ItemManager.GetBySupplier(System.Nullable{System.Int32})">
+	<summary>
+ Gets a query by an index.
+ </summary>
+</member><member name="M:Petshop.Data.ItemManager.AddRules">
+	<summary>Called by the static constructor to add shared rules.</summary>
+</member><member name="M:Petshop.Data.ItemManager.OnCreated">
+	<summary>Called when the class is created.</summary>
+</member><member name="T:Petshop.Data.ItemManager.Query">
+	<summary>
+ A private class for lazy loading static compiled queries.
+ </summary>
+</member><member name="T:Petshop.Data.ItemManager">
+	<summary>
+ The manager class for Item.
+ </summary>
+</member>
+</members>
+</doc>

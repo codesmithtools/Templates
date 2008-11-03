@@ -15,14 +15,15 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Default="" Optional="False" Category="1.Database" Description="Source Database" OnChanged="OnSourceDatabaseChanged" %>
 <%@ Property Name="VisualStudioVersion" Type="VisualStudioVersionEnum" Optional="False" Category="2.Solution" Description="Version of Visual Studio to Generate for." %>
-<%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="This is the path to the Solution location." %>
+<%@ Property Name="Location" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="This is the path to the Solution location." 
+    Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 <%@ Property Name="SolutionName" Type="System.String" Default="" Optional="False" Category="2.Solution" Description="Name of the project to be generated." %>
 <%@ Property Name="Language" Type="LanguageEnum" Default="CSharp" Optional="False" Category="2.Solution" Description="Language the project will be in" %>
 <%@ Property Name="LaunchVisualStudio" Type="System.Boolean" Optional="False" Category="2.Solution" Description="Launch Visual Studio after generation." %>
-<%@ Property Name="ProjectType" Type="ProjectTypeEnum" Default="DynamicDataWebApp" Optional="False" Category="4.Interface Project" Description="Type of Project to be created" %>
-<%@ Property Name="IncludeDataServices" Type="System.Boolean" Default="True" Optional="False" Category="4.Interface Project" Description="Include DataServices in Interface Project" %>
 <%@ Property Name="DataProjectName" Type="System.String" Default="" Optional="False" Category="3.Data Project" Description="Name Space for the Data Project." %>
 <%@ Property Name="CopyTemplatesToFolder" Type="System.Boolean" Default="False" Optional="False" Category="3.Data Project" Description="Include a copy of the LinqToSql Templates in the project directory" %>
+<%@ Property Name="ProjectType" Type="ProjectTypeEnum" Default="DynamicDataWebApp" Optional="False" Category="4.Interface Project" Description="Type of Project to be created" %>
+<%@ Property Name="IncludeDataServices" Type="System.Boolean" Default="True" Optional="False" Category="4.Interface Project" Description="Include DataServices in Interface Project" %>
 <%@ Property Name="InterfaceProjectName" Type="System.String" Default="" Optional="False" Category="4.Interface Project" Description="Name Space for the Interface Project." %>
 <%@ Property Name="TestProjectName" Type="System.String" Default="" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>
 <%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="True" Optional="False" Category="5.Test Project" Description="Name Space for the Test Project." %>

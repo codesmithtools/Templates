@@ -23,4 +23,9 @@ namespace QuickStartUtils
         VS08,
         VS05
     }
+
+    public enum SkinEnum
+    {
+        Default
+    }
 }

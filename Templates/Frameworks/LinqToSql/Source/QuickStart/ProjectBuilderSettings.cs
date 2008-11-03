@@ -23,6 +23,7 @@ namespace QuickStartUtils
         public String TestProjectName { get; set; }
         public bool IncludeTestProject { get; set; }
         public CodeTemplate CodeTemplate { get; set; }
+        public string WebSkin { get; set; }
 
         public string LanguageFolder
         {
