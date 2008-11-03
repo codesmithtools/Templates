@@ -42,6 +42,9 @@ These templates are designed to produce 5 major things...
 <li>Very basic unit tests for each business object/manager.</li>
 </ol>
 </p>
+<p>
+Note: To make assign a custom name to either a column or table, add a "cs_alias" value to it's extended properties.
+</p>
 
 
 
@@ -120,9 +123,7 @@ Visual Studio 2005 Differences:
 <p>
 <ul>
 <li>UnitTests require that each table in the database have at least valid row.</li>
-<li>Columns will the same name as their table will cause issues at compile time.
-<ul><li>Solution: Adding a "cs_alias" extended property to any column or table will override it's name with the specified value.</li></ul>
-</li>
+<li>Currently we do not support Composite Foriegn Keys; the columns for the keys will be generated, but the associations will not.</li>
 </ul>
 </p>
 
@@ -141,6 +142,12 @@ Download the latest release from GoogleCode.
 <h2><a title="History" name="History"></a>History</h2>
 <p>
 <ul>
+<li>Release 1.0.2
+<ul>
+<li class="style1">Improved logic that prevents duplication of columns and associations in the business entities.</li>
+<li>Improved logic for processing Primary Keys columns</li>
+<li>Refactored code to use common NHibernateHelper assembly.</li>
+</ul></li>
 <li>Release 1.0.1
 <ul>
 <li>Bug Fix: We now support creating unit test data for varchar(max).</li>
