@@ -15,22 +15,10 @@ namespace QuickStartUtils
         protected override void GetFiles(PathHelper projectPath)
         {
             GetVsProject(projectPath, ProjectBuilder.FileName);
-            GetWebServices(projectPath);        
             GetCssFile(projectPath);
-        }
-        private void GetWebServices(PathHelper projectPath)
-        {
+
             if (ProjectBuilder.IncludeDataServices)
-            {
-                string zipFile = (ProjectBuilder.Language == LanguageEnum.CSharp)
-                    ? "AdoNetDataServiceCSharpWap.zip"
-                    : "AdoNetDataServiceVBWap.zip";
-                UnzipFileAndRename(zipFile, projectPath.DirectoryPath,
-                    "WebDataService.svc",
-                    String.Format("{0}.svc", DataServiceName),
-                    String.Format("WebDataService.svc.{0}", ProjectBuilder.LanguageAppendage),
-                    DataServiceFileName);
-            }
+                GetWebServices(projectPath);
         }
         private void GetCssFile(PathHelper projectPath)
         {
@@ -48,6 +36,20 @@ namespace QuickStartUtils
             imageLocation = Path.Combine(imageDirectory, @"table-header-background.gif");
             imageFile = Path.Combine(stylesPath, @"table-header-background.gif");
             File.Copy(imageFile, imageLocation);
+        }
+        private void GetWebServices(PathHelper projectPath)
+        {
+            string zipFile = (ProjectBuilder.Language == LanguageEnum.CSharp)
+                ? "AdoNetDataServiceCSharpWap.zip"
+                : "AdoNetDataServiceVBWap.zip";
+
+            UnzipFileAndRename(zipFile, projectPath.DirectoryPath,
+                "WebDataService.svc",
+                DataServiceFileName,
+                String.Concat("WebDataService.svc.", ProjectBuilder.LanguageAppendage),
+                DataServiceCodeFileName);
+
+            File.Delete(Path.Combine(projectPath.DirectoryPath, "__TemplateIcon.ico"));
         }
 
         protected override void ReplaceVariables(PathHelper projectPath, string projectGuid, string projectName)
@@ -113,7 +115,7 @@ namespace QuickStartUtils
         private void UpdateWebServices(PathHelper projectPath)
         {
             // Update .svc Code Behind
-            string dataServicePath = Path.Combine(projectPath.DirectoryPath, DataServiceFileName);
+            string dataServicePath = Path.Combine(projectPath.DirectoryPath, DataServiceCodeFileName);
             string dataContextName = String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, ProjectBuilder.SourceDatabase.Name);
 
             if (this.ProjectBuilder.Language == LanguageEnum.CSharp)
@@ -136,8 +138,7 @@ namespace QuickStartUtils
             UpdateWebServicesVariables(dataServicePath);
 
             // Update .svc
-            dataServicePath = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.svc", DataServiceName));
-            UpdateWebServicesVariables(dataServicePath);
+            UpdateWebServicesVariables(Path.Combine(projectPath.DirectoryPath, DataServiceFileName));
         }
         private void UpdateWebServicesVariables(string fileName)
         {
@@ -148,11 +149,11 @@ namespace QuickStartUtils
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.AppendLine("<ItemGroup>");
-            sb.AppendFormat("\t\t<Content Include=\"{0}.svc\" />", DataServiceName);
+            sb.AppendFormat("\t\t<Content Include=\"{0}\" />", DataServiceFileName);
             sb.AppendLine();
-            sb.AppendFormat("\t\t<Compile Include=\"{0}.svc.{1}\">", DataServiceName, ProjectBuilder.LanguageAppendage);
+            sb.AppendFormat("\t\t<Compile Include=\"{0}\">", DataServiceCodeFileName);
             sb.AppendLine();
-            sb.AppendFormat("\t\t\t<DependentUpon>{0}.svc</DependentUpon>", DataServiceName);
+            sb.AppendFormat("\t\t\t<DependentUpon>{0}</DependentUpon>", DataServiceFileName);
             sb.AppendLine();
             sb.AppendLine("\t\t</Compile>");
             sb.AppendLine("\t</ItemGroup>");
@@ -162,11 +163,15 @@ namespace QuickStartUtils
 
         private string DataServiceName
         {
-            get { return String.Format("{0}DataService", ProjectBuilder.SourceDatabase.Name); }
+            get { return String.Concat(ProjectBuilder.SourceDatabase.Name, "DataService"); }
         }
         private string DataServiceFileName
         {
-            get { return String.Format("{0}.svc.{1}", DataServiceName, ProjectBuilder.LanguageAppendage); }
+            get { return String.Concat(DataServiceName, ".svc"); }
+        }
+        private string DataServiceCodeFileName
+        {
+            get { return String.Format("{0}.{1}", DataServiceFileName, ProjectBuilder.LanguageAppendage); }
         }
     }
 }
