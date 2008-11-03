@@ -14,7 +14,7 @@ Public Class PreserveRegionsSample
         ' This section and all other non-custom code
         ' regions will be overwritten during each
         ' template execution.
-        ' Current Date: 6/3/2008 1:04:34 PM
+        ' Current Date: 11/3/2008 9:24:28 AM
 
     End Sub
 
