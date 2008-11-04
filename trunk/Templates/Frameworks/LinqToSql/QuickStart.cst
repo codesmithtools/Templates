@@ -47,7 +47,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
 				
 		// Copy Plinqo Templates
 		if(CopyTemplatesToFolder)
-            QuickStartUtils.CopyDirectory(CodeTemplateInfo.DirectoryName, Path.Combine(Location,@"LinqToSql"));
+            QuickStartUtils.CopyDirectory(CodeTemplateInfo.DirectoryName, Path.Combine(Location,@"Templates\LinqToSql"));
 				
 		List<SolutionItem> solutionItems = new List<SolutionItem>();
 		ProjectBuilderSettings pbs = CreateProjectBuilderSettings();

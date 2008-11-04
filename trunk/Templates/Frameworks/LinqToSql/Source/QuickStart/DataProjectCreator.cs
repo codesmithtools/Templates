@@ -44,7 +44,7 @@ namespace QuickStartUtils
             VariableUpdateDirectory(projectPath, projectGuid, projectName, this.ProjectBuilder.LanguageAppendage, null);
 
             string linqToSqlPath = (ProjectBuilder.CopyTemplatesToFolder)
-                ? @"..\LinqToSql\"
+                ? @"..\Templates\LinqToSql\"
                 : string.Concat(ProjectBuilder.CodeTemplate.CodeTemplateInfo.DirectoryName, @"\"); // Needs Normal Path here
 
             string cspPath = Path.Combine(projectPath.DirectoryPath, cspFileName);
