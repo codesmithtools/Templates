@@ -37,7 +37,7 @@
 	
 <%@ Property Category="2.Class" Name="IncludeDataServices"
     Type="System.Boolean" Default="true" Optional="False"
-    Description="Include ADO.Net DataServices attributes." %>
+    Description="Include ADO.Net DataServices attributes and impliment IUpdatable on DataContext." %>
 
 <%@ Register Name="DataContextGeneratedClass" 
     Template="Internal\DataContext.Generated.cst" 
@@ -96,6 +96,7 @@ Public Sub Generate()
         Me.RegisterReference("System.Web.DynamicData")
         Me.RegisterReference("System.ComponentModel.DataAnnotations")
 		If (IncludeDataServices) Then
+			Me.RegisterReference("System.Data.Services")
 			Me.RegisterReference("System.Data.Services.Client")
 		End If
     End If
@@ -131,6 +132,8 @@ End Sub
 Public Sub CreateDataContextClass(ByVal database As Database)
     Dim t As DataContextGeneratedClass = Me.Create(Of DataContextGeneratedClass)()
     t.Database = database
+	t.Framework = Me.Framework
+	t.IncludeDataServices = Me.IncludeDataServices
     
     Dim p As DataContextEditableClass = Me.Create(Of DataContextEditableClass)()
     p.Database = database

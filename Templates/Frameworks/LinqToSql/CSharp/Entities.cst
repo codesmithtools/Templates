@@ -37,7 +37,7 @@
 
 <%@ Property Category="2.Class" Name="IncludeDataServices"
     Type="System.Boolean" Default="true" Optional="False"
-    Description="Include ADO.Net DataServices attributes." %>
+    Description="Include ADO.Net DataServices attributes and impliment IUpdatable on DataContext." %>
 	
 <%@ Register Name="DataContextGeneratedClass" 
     Template="Internal\DataContext.Generated.cst" 
@@ -95,7 +95,10 @@
             this.RegisterReference("System.Web.DynamicData");
             this.RegisterReference("System.ComponentModel.DataAnnotations");
 			if(IncludeDataServices)
+			{
+				this.RegisterReference("System.Data.Services");
 				this.RegisterReference("System.Data.Services.Client");
+			}
         }
 		this.RegisterReference(Path.GetFullPath(Path.Combine(
             this.CodeTemplateInfo.DirectoryName,
@@ -134,6 +137,8 @@
     {
         DataContextGeneratedClass t = this.Create<DataContextGeneratedClass>();
         t.Database = database;
+		t.Framework = this.Framework;
+		t.IncludeDataServices = this.IncludeDataServices;
         
         DataContextEditableClass p = this.Create<DataContextEditableClass>();
         p.Database = database;
