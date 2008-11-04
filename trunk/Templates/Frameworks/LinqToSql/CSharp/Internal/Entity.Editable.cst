@@ -89,11 +89,9 @@ namespace <%= Database.EntityNamespace %>
                     
                     if (column.Type.Contains("String"))
                     {
-                        int size = GetSize(column.DbType);
-                        if (0 < size && size < 8000)
-                            Response.WriteLine(string.Format("            [StringLength({0})]", size));
+                        int size = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(column.DbType);
                         
-                        if (size > 1000 || size == -1)
+                        if (size > 255 || size == -1)
                             Response.WriteLine("            [DataType(DataType.MultilineText)]");
                         else if (column.Member.Contains("Email"))
                             Response.WriteLine("            [DataType(DataType.EmailAddress)]");
@@ -117,20 +115,3 @@ namespace <%= Database.EntityNamespace %>
 <%      } %>
     }
 }
-
-<script runat="template">
-    private static readonly Regex _sizeRegex = new Regex(@"(?<Size>\d+)", RegexOptions.Compiled);
-    
-    public int GetSize(string s)
-    {
-        int size = 0;
-        
-        Match m = _sizeRegex.Match(s);
-        if (!m.Success)
-            return size;
-        
-        string temp = m.Groups["Size"].Value;
-        int.TryParse(temp, out size);
-        return size;            
-    }
-</script>

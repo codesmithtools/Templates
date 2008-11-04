@@ -77,11 +77,8 @@ Namespace <%= Database.EntityNamespace %>
                     End If
                     
                     If (column.Type.Contains("String")) Then
-                        Dim size As Integer = GetSize(column.DbType)
-                        If (0 < size AndAlso size < 8000) Then
-                            Response.WriteLine(string.Format("            <StringLength({0})> _", size))
-                        End If
-                        If (size > 1000 OrElse size = -1) Then
+                        Dim size As Integer = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(column.DbType)
+						If (size > 1000 OrElse size = -1) Then
                             Response.WriteLine("            <DataType(DataType.MultilineText)> _")
                         Else If (column.Member.Contains("Email")) Then
                             Response.WriteLine("            <DataType(DataType.EmailAddress)> _")
@@ -113,20 +110,3 @@ Namespace <%= Database.EntityNamespace %>
     End Class
 
 End Namespace
-
-<script runat="template">
-    Private Shared ReadOnly _sizeRegex As Regex = New Regex("(?<Size>\d+)", RegexOptions.Compiled)
-    
-    Public Function GetSize(ByVal s As String) As Integer
-        Dim size As Integer = 0
-        
-        Dim m As Match = _sizeRegex.Match(s)
-        If (Not m.Success) Then
-            Return size
-        End If
-        
-        Dim temp As String = m.Groups("Size").Value
-            Integer.Parse(temp, size)
-        Return size
-    End Function
-</script>
