@@ -95,7 +95,7 @@ namespace QuickStartUtils
             string systemDataLinq = String.Format(includeFormat, "System.Data.Linq");
 
             string codeSmithData = (ProjectBuilder.CopyTemplatesToFolder)
-                ? @"..\LinqToSql"
+                ? @"..\Templates\LinqToSql"
                 : ProjectBuilder.CodeTemplate.CodeTemplateInfo.DirectoryName;
 
             codeSmithData = String.Concat(@"<Reference Include=""CodeSmith.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL"">
