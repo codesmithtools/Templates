@@ -78,7 +78,7 @@ Namespace <%= Database.EntityNamespace %>
                     
                     If (column.Type.Contains("String")) Then
                         Dim size As Integer = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(column.DbType)
-						If (size > 1000 OrElse size = -1) Then
+						If (size > 255 OrElse size = -1) Then
                             Response.WriteLine("            <DataType(DataType.MultilineText)> _")
                         Else If (column.Member.Contains("Email")) Then
                             Response.WriteLine("            <DataType(DataType.EmailAddress)> _")
