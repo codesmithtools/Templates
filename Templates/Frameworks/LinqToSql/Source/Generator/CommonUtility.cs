@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using CodeSmith.Engine;
+using System.Text.RegularExpressions;
 
 namespace LinqToSqlShared.Generator
 {
@@ -8,6 +9,7 @@ namespace LinqToSqlShared.Generator
     {
         public const string TrueLiteral = "true";
         public const string FalseLiteral = "false";
+        private static readonly Regex _sizeRegex = new Regex(@"(?<Size>\d+)", RegexOptions.Compiled);
 
         public static bool IsNullableType(string nativeType)
         {
@@ -85,5 +87,17 @@ namespace LinqToSqlShared.Generator
             return sb.ToString();
         }
 
+        public static int GetColumnSize(string dbType)
+        {
+            int size = 0;
+
+            Match m = _sizeRegex.Match(dbType);
+            if (!m.Success)
+                return size;
+
+            string temp = m.Groups["Size"].Value;
+            int.TryParse(temp, out size);
+            return size;
+        }
     }
 }

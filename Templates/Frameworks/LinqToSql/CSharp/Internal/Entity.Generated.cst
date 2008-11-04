@@ -168,14 +168,8 @@ namespace <%= Database.EntityNamespace %>
         /// Gets the <%= column.Name %> column value.
 <% } %>
         /// </summary>
-        <%= CreateAttribute(column) %>
-<% if (column.IsVersion == true) { %>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-<% } // if IsVersion %>
-<% if (IncludeDataContract) { %>
-        [DataMember(Order=<%= ++DataMemberOrderId %>)]
-<% } %>
-        <%= Naming.GetModifier(column.AccessModifier, column.Modifier) %> <%= dataType %> <%= column.Member %>
+        <%= CreateAttributes(column, ref DataMemberOrderId) %>
+		<%= Naming.GetModifier(column.AccessModifier, column.Modifier) %> <%= dataType %> <%= column.Member %>
         {
             get { return <%= storageAssign %>; }
 <% if (!column.IsReadOnly == true) { %>
@@ -476,7 +470,7 @@ namespace <%= Database.EntityNamespace %>
         return info;
     }
     
-    public string CreateAttribute(Column c)
+    public string CreateAttributes(Column c, ref int dataMemberOrderId)
     {
         StringBuilder s = new StringBuilder();
         s.Append("[Column(");
@@ -499,9 +493,24 @@ namespace <%= Database.EntityNamespace %>
             s.AppendFormat(", Expression=\"{0}\"", c.Expression);
         s.Append(")]");
         
+		string prefix = String.Concat(Environment.NewLine, "        ");
+		
+		if (c.IsVersion.HasValue && c.IsVersion.Value)
+        	s.AppendFormat("{0}[EditorBrowsable(EditorBrowsableState.Never)]", prefix);
+
+		if (this.IncludeDataContract)
+			s.AppendFormat("{0}[DataMember(Order={1})]", prefix, ++dataMemberOrderId);
+        	
+		if (c.Type.Contains("String"))
+        {
+            int size = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(c.DbType);
+            if (0 < size && size < 8000)
+                s.AppendFormat("{0}[StringLength({1})]", prefix, size);
+		}
+		
         return s.ToString();
     }
-    
+	
     public string CreateAttribute(Association a)
     {
         StringBuilder s = new StringBuilder();
@@ -525,7 +534,7 @@ namespace <%= Database.EntityNamespace %>
         
         return s.ToString();
     }
-    
+	
     public struct AssociationInfo
     {
         public bool HasOtherAssociation;

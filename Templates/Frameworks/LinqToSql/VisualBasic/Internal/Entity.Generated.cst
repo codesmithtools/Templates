@@ -129,7 +129,7 @@ Namespace <%= Database.EntityNamespace %>
         #End Region
 
         #Region "Column Mapped Properties"
-<% Dim dataMemberIndex As Integer = 1
+<% Dim dataMemberIndex As Integer = 0
 For Each c As Column in Type.Columns 
 Dim dataType As String = c.Type
 Dim fieldType As String = c.Type
@@ -164,14 +164,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         ''' Gets the <%= c.Name %> column value.
 <% End If %>
         ''' </summary>
-        <%= CreateAttribute(c) %>
-<% If c.IsVersion.value = True Then %>
-        <EditorBrowsable(EditorBrowsableState.Never)> _
-<% End If ' if IsVersion %>
-<% If (IncludeDataContract) Then %>
-        <DataMember(Order:=<%= dataMemberIndex %>)> _
-<%         dataMemberIndex += 1
-   End If %>
+        <%= CreateAttributes(c, dataMemberIndex) %>
         <%= Naming.GetModifier(c.AccessModifier, c.Modifier) %> Property <%= c.Member %> As <%= dataType %>
             Get 
                 return <%= storageAssign %> 
@@ -456,7 +449,7 @@ Public Function GetAssociationInfo(ByVal a As Association) As AssociationInfo
     Return info
 End Function
 
-Public Function CreateAttribute(ByVal c As Column) As String
+Public Function CreateAttributes(ByVal c As Column, ByRef dataMemberOrderId As Integer) As String
     Dim s As New StringBuilder()
     s.Append("<Column(")
     s.AppendFormat("Name:=""{0}""", c.Name)
@@ -485,6 +478,24 @@ Public Function CreateAttribute(ByVal c As Column) As String
     End If
     s.Append(")> _")
     
+	Dim prefix As String = [String].Concat(Environment.NewLine, "        ")
+
+	If c.IsVersion.HasValue AndAlso c.IsVersion.Value Then
+		s.AppendFormat("{0}<EditorBrowsable(EditorBrowsableState.Never)> _", prefix)
+	End If
+
+	If Me.IncludeDataContract Then
+		dataMemberOrderId += 1
+		s.AppendFormat("{0}<DataMember(Order:={1})> _", prefix, dataMemberOrderId)
+	End If
+
+	If c.Type.Contains("String") Then
+		Dim size As Integer = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(c.DbType)
+		If 0 < size AndAlso size < 8000 Then
+			s.AppendFormat("{0}<StringLength({1})> _", prefix, size)
+		End If
+	End If
+	
     Return s.ToString()
 End Function
 
