@@ -5,7 +5,7 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="Text" Description="Generates stored procedure wrappers for all stored procedures in a database" %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="Database that the stored procedures wrappers should be based on." %>
 <%@ Property Name="Accessibility" Type="CommandWrapperTemplate.AccessibilityEnum" Default="Public" Category="Context" Description="The accessibility of the generated classes." %>
-<%@ Property Name="ResultSchema" Type="CommandWrapperTemplate.ResultSchemaEnum" Case Else="StronglyTyped" Category="Context" Description="Determines what type of result schema should be used for the wrapper class." %>
+<%@ Property Name="ResultSchema" Type="CommandWrapperTemplate.ResultSchemaEnum" Default="StronglyTyped" Category="Context" Description="Determines what type of result schema should be used for the wrapper class." %>
 <%@ Property Name="ExcludedCommands" Type="StringCollection" Default="" Optional="True" Category="Options"
 	Description="If supplied, any matching commands will not get wrappers generated. (* is treated as a wildcard)" %>
 <%@ Assembly Name="SchemaExplorer" %>

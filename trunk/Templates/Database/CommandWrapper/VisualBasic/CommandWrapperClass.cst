@@ -1,11 +1,11 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Description="Generates a stored procedure wrapper class." %>
 <%@ Property Name="SourceCommand" Type="SchemaExplorer.CommandSchema" Category="Context" Description="Command that the wrapper class should wrap." %>
 <%@ Property Name="TargetNamespace" Type="System.String" Category="Context" Description="Namespace that the generated classes should be a member of." %>
-<%@ Property Name="Accessibility" Type="AccessibilityEnum" Case Else="Public" Category="Context" Description="The accessibility of the generated classes." %>
-<%@ Property Name="ResultSchema" Type="ResultSchemaEnum" Case Else="StronglyTyped" Category="Context" Description="Determines what type of result schema should be used for the wrapper class." %>
+<%@ Property Name="Accessibility" Type="AccessibilityEnum" Default="Public" Category="Context" Description="The accessibility of the generated classes." %>
+<%@ Property Name="ResultSchema" Type="ResultSchemaEnum" Default="StronglyTyped" Category="Context" Description="Determines what type of result schema should be used for the wrapper class." %>
 <%@ Property Name="CommandClassName" Type="System.String" Optional="True" Category="Optional" Description="Used to override the name of the command wrapper class." %>
 <%@ Property Name="ResultRowClassName" Type="System.String" Optional="True" Category="Optional" Description="Used to override the name of the result row class." %>
-<%@ Property Name="CommandPrefix" Type="System.String" Case Else="usp_" Category="Optional" Description="If this prefix is found at the start of a command name, it will be stripped off." %>
+<%@ Property Name="CommandPrefix" Type="System.String" Default="usp_" Category="Optional" Description="If this prefix is found at the start of a command name, it will be stripped off." %>
 <%@ Property Name="BatchMode" Type="System.Boolean" Case Else="False" Category="Optional" Description="If true, the template will not output using AndAlso namespace statements." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Import Namespace="SchemaExplorer" %>
