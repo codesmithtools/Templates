@@ -1,9 +1,10 @@
-<%@ CodeTemplate Language="C#" Src="TypedDataSet.cst.cs" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" TargetLanguage="C#" Description="Generates a typed DataSet class based on a database table schema." %>
+<%@ CodeTemplate Language="C#" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" TargetLanguage="C#" Description="Generates a typed DataSet class based on a database table schema." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Table that the typed DataSet should contain." %>
 <%@ Assembly Name="SchemaExplorer" %>
-<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="SchemaExplorer" %>
-<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text" %>
+
 	#region <%= GetClassName(SourceTable.Name) %>DataSet
 	[Serializable()]
 	[DesignerCategoryAttribute("code")]
@@ -1243,3 +1244,66 @@
 		#endregion
 	}
 	#endregion
+
+<script runat="template">
+
+	public string GetClassName(string value)
+	{
+		return value.Replace(" ", "");
+	}
+	
+	public string GetFillByIndexName(IndexSchema index)
+	{
+		StringBuilder fillByIndexName = new StringBuilder();
+		
+		fillByIndexName.Append("FillBy");
+		
+		for (int i = 0; i < index.MemberColumns.Count; i++)
+		{
+			fillByIndexName.Append(index.MemberColumns[i].Name.Replace(" ", ""));
+			if (i < index.MemberColumns.Count - 1)
+			{
+				fillByIndexName.Append("And");
+			}
+		}
+		
+		return fillByIndexName.ToString();
+	}
+	
+	public string GetFillByIndexParameters(IndexSchema index)
+	{
+		StringBuilder fillByIndexParameters = new StringBuilder();
+		
+		for (int i = 0; i < index.MemberColumns.Count; i++)
+		{
+			fillByIndexParameters.Append(GetCSharpVariableType(index.MemberColumns[i]));
+			fillByIndexParameters.Append(" ");
+			fillByIndexParameters.Append(GetCamelCaseName(index.MemberColumns[i].Name));
+			
+			if (i < index.MemberColumns.Count - 1)
+			{
+				fillByIndexParameters.Append(", ");
+			}
+		}
+		
+		return fillByIndexParameters.ToString();
+	}
+	
+	public bool SizeMatters(ColumnSchema column)
+	{
+		switch (column.DataType)
+		{
+			case DbType.String:
+			case DbType.AnsiString:
+			case DbType.AnsiStringFixedLength:
+			case DbType.Decimal:
+			{
+				return true;
+			}
+			default:
+			{
+				return false;
+			}
+		}
+	}
+</script>
