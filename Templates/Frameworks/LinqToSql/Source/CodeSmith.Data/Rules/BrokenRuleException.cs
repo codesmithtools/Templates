@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace CodeSmith.Data.Rules
 {
@@ -10,7 +11,7 @@ namespace CodeSmith.Data.Rules
     /// An exception class for broken rules.
     /// </summary>
     [Serializable]
-    public class BrokenRuleException : Exception
+    public class BrokenRuleException : ValidationException
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BrokenRuleException"/> class.
