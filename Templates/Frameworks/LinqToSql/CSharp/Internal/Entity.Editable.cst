@@ -91,7 +91,7 @@ namespace <%= Database.EntityNamespace %>
                     {
                         int size = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(column.DbType);
                         
-                        if (size > 255 || size == -1)
+                        if (size > 256 || size == -1)
                             Response.WriteLine("            [DataType(DataType.MultilineText)]");
                         else if (column.Member.Contains("Email"))
                             Response.WriteLine("            [DataType(DataType.EmailAddress)]");
