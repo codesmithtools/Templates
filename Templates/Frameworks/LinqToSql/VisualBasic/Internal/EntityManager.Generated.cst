@@ -88,7 +88,6 @@ Namespace <%= ManagerNamespace %>
         Shared Sub New()
             <% If Framework = FrameworkEnum.v35_SP1 Then %>
             RuleManager.AddShared(Of <%= EntityManager.EntityName%> )()
-			RuleManager.AddShared(Of <%= EntityManager.EntityName%> )(GetType(<%= DataManager.DataContextName%>.Metadata))
             
             <% Else    
             Const  lengthFormat As String = "RuleManager.AddShared(Of {0})(new LengthRule(""{1}"", {2}))"
