@@ -51,7 +51,7 @@ Namespace <%= Database.EntityNamespace %>
         <%If(Framework = FrameworkEnum.v35_SP1)Then%>
         #Region "Metadata"
         
-        Public Friend Class Metadata
+        Protected Friend Class Metadata
             ' Only Attributes in the class will be preserved.
             
 <%          Dim sourceAttributes As AttributeSectionVisitor = new AttributeSectionVisitor()
