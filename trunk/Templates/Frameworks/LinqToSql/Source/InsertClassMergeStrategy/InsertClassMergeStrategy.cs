@@ -116,7 +116,7 @@ namespace CodeSmith.Engine
                         // Try to fix up our output...
                         Regex findWhiteSpace = new Regex(@"^(\s)*");
                         string whiteSpace = findWhiteSpace.Match(sourceParser.SourceContents[sourceStart.Line - 1]).Value;
-                        templateOutput = String.Concat(templateOutput, Environment.NewLine, whiteSpace);
+                        templateOutput = String.Format("\t{0}{1}{2}", templateOutput, Environment.NewLine, whiteSpace);
                         break;
 
                     case NotFoundActionEnum.None:
