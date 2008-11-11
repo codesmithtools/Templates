@@ -489,7 +489,7 @@ Public Function CreateAttributes(ByVal c As Column, ByRef dataMemberOrderId As I
 		s.AppendFormat("{0}<DataMember(Order:={1})> _", prefix, dataMemberOrderId)
 	End If
 
-	If c.Type.Contains("String") Then
+	If Me.Framework = FrameworkEnum.v35_SP1 AndAlso c.Type.Contains("String") Then
 		Dim size As Integer = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(c.DbType)
 		If 0 < size AndAlso size < 8000 Then
 			s.AppendFormat("{0}<StringLength({1})> _", prefix, size)

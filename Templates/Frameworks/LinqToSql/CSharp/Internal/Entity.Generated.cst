@@ -501,7 +501,7 @@ namespace <%= Database.EntityNamespace %>
 		if (this.IncludeDataContract)
 			s.AppendFormat("{0}[DataMember(Order={1})]", prefix, ++dataMemberOrderId);
         	
-		if (c.Type.Contains("String"))
+		if (this.Framework == FrameworkEnum.v35_SP1 && c.Type.Contains("String"))
         {
             int size = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(c.DbType);
             if (0 < size && size < 8000)
