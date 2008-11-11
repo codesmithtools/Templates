@@ -7,6 +7,7 @@ using System.Web.DynamicData;
 using CodeSmith.Data.Attributes;
 using CodeSmith.Data.Rules.Assign;
 using CodeSmith.Data.Rules.Validation;
+using System.Reflection;
 
 namespace CodeSmith.Data.Rules
 {
@@ -64,108 +65,107 @@ namespace CodeSmith.Data.Rules
                 _sharedBusinessRules.Add(typeof(EntityType), new List<IRule> { rule });
         }
 
-        public static void AddShared<EntityType>(Type context)
+        public static void AddShared<EntityType>()
         {
-            MetaModel model = null;
-            try
+            AddRules<EntityType>(typeof(EntityType).GetProperties());
+        }
+
+        public static void AddShared<EntityType>(Type metaData)
+        {
+            AddRules<EntityType>(metaData.GetProperties());
+        }
+
+        private static void  AddRules<EntityType>(PropertyInfo[] properties)
+        {
+            foreach (PropertyInfo property in properties)
             {
-                model = MetaModel.GetModel(context);
-            }
-            catch
-            {
-                model = new MetaModel();
-                model.RegisterContext(context);
-            }
-
-            foreach (MetaColumn col in model.GetTable(typeof(EntityType)).Columns)
-            {
-                if (col.MaxLength > 0)
-                    AddShared<EntityType>(new LengthRule(col.Name, col.MaxLength));
-
-                if (col.IsRequired)
-                {
-                    if (col.RequiredErrorMessage != null)
-                        AddShared<EntityType>(new RequiredRule(col.Name, col.RequiredErrorMessage));
-                    else
-                        AddShared<EntityType>(new RequiredRule(col.Name));
-                }
-
-                if (col.Attributes[typeof(RegularExpressionAttribute)] != null)
-                {
-                    RegularExpressionAttribute attribute = ((RegularExpressionAttribute)col.Attributes[typeof(RegularExpressionAttribute)]);
-                    if (attribute.ErrorMessage != null)
-                        AddShared<EntityType>(new RegexRule(col.Name, attribute.ErrorMessage, attribute.Pattern));
-                    else
-                        AddShared<EntityType>(new RegexRule(col.Name, attribute.Pattern));
-                }
-
-                if (col.Attributes[typeof(NowAttribute)] != null)
-                {
-                    NowAttribute attribute = ((NowAttribute)col.Attributes[typeof(NowAttribute)]);
-                    if (attribute.IsStateSet)
-                        AddShared<EntityType>(new NowRule(col.Name, attribute.State));
-                    else
-                        AddShared<EntityType>(new NowRule(col.Name));
-                }
-                
-                if (col.TypeCode == TypeCode.DateTime)
-                    AddShared<EntityType>(new RangeRule<DateTime>(col.Name, 
+                if (property.GetType() == typeof(DateTime))
+                    AddShared<EntityType>(new RangeRule<DateTime>(property.Name,
                         SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value));
-                
-                if (col.Attributes[typeof(RangeAttribute)] != null)
+
+                foreach (Attribute attribute in property.GetCustomAttributes(true))
                 {
-                    RangeAttribute rangeAttribute = ((RangeAttribute)col.Attributes[typeof(RangeAttribute)]);
-                    if (rangeAttribute.ErrorMessage != null)
+                    if (attribute.GetType() == typeof(StringLengthAttribute))
+                        AddShared<EntityType>(new LengthRule(property.Name, ((StringLengthAttribute)attribute).MaximumLength));
+
+                    if (attribute.GetType() == typeof(RequiredAttribute))
                     {
-                        if (col.IsInteger)
-                            AddShared<EntityType>(new RangeRule<int>(col.Name, rangeAttribute.ErrorMessage, 
-                                (int)rangeAttribute.Minimum, (int)rangeAttribute.Maximum));
-                        else if (col.IsFloatingPoint)
-                            AddShared<EntityType>(new RangeRule<Decimal>(col.Name, rangeAttribute.ErrorMessage, 
-                                Convert.ToDecimal(rangeAttribute.Minimum), Convert.ToDecimal(rangeAttribute.Maximum)));
+                        if (((RequiredAttribute)attribute).ErrorMessage != null)
+                            AddShared<EntityType>(new RequiredRule(property.Name, ((RequiredAttribute)attribute).ErrorMessage));
                         else
-                            AddShared<EntityType>(new RangeRule<DateTime>(col.Name, rangeAttribute.ErrorMessage, 
-                                (DateTime)rangeAttribute.Minimum, (DateTime)rangeAttribute.Maximum));
+                            AddShared<EntityType>(new RequiredRule(property.Name));
                     }
-                    else
+
+                    if (attribute.GetType() == typeof(RegularExpressionAttribute))
                     {
-                        if (col.IsInteger)
-                            AddShared<EntityType>(new RangeRule<int>(col.Name, 
-                                (int)rangeAttribute.Minimum, (int)rangeAttribute.Maximum));
-                        else if (col.IsFloatingPoint)
-                            AddShared<EntityType>(new RangeRule<Decimal>(col.Name, 
-                                Convert.ToDecimal(rangeAttribute.Minimum), Convert.ToDecimal(rangeAttribute.Maximum)));
+                        if (((RegularExpressionAttribute)attribute).ErrorMessage != null)
+                            AddShared<EntityType>(new RegexRule(property.Name, ((RegularExpressionAttribute)attribute).ErrorMessage, ((RegularExpressionAttribute)attribute).Pattern));
                         else
-                            AddShared<EntityType>(new RangeRule<DateTime>(col.Name, 
-                                (DateTime)rangeAttribute.Minimum, (DateTime)rangeAttribute.Maximum));
+                            AddShared<EntityType>(new RegexRule(property.Name, ((RegularExpressionAttribute)attribute).Pattern));
                     }
-                }
 
-                if (col.Attributes[typeof(GuidAttribute)] != null)
-                {
-                    GuidAttribute attribute = ((GuidAttribute)col.Attributes[typeof(GuidAttribute)]);
-                    if (attribute.IsStateSet)
-                        AddShared<EntityType>(new GuidRule(col.Name, attribute.State));
-                    else
-                        AddShared<EntityType>(new GuidRule(col.Name));
-                }
+                    if (attribute.GetType() == typeof(NowAttribute))
+                    {
+                        if (((NowAttribute)attribute).IsStateSet)
+                            AddShared<EntityType>(new NowRule(property.Name, ((NowAttribute)attribute).State));
+                        else
+                            AddShared<EntityType>(new NowRule(property.Name));
+                    }
 
-                if (col.Attributes[typeof(UserNameAttribute)] != null)
-                {
-                    UserNameAttribute userName = ((UserNameAttribute)col.Attributes[typeof(UserNameAttribute)]);
-                    if (userName.IsStateSet)
-                        AddShared<EntityType>(new UseNamerRule(col.Name, userName.State));
-                    else
-                        AddShared<EntityType>(new UseNamerRule(col.Name));
-                }
+                    if (attribute.GetType() == typeof(RangeAttribute))
+                    {
+                        bool isInt = property.GetType() == typeof(int) || property.GetType() == typeof(long);
+                        bool isFloat = property.GetType() == typeof(float) || property.GetType() == typeof(double) || property.GetType() == typeof(decimal);
 
-                if (col.Attributes[typeof(IpAddressAttribute)] != null)
-                {
-                    IpAddressAttribute address = ((IpAddressAttribute)col.Attributes[typeof(IpAddressAttribute)]);
-                    if (address.IsStateSet)
-                        AddShared<EntityType>(new IpAddressRule(col.Name, address.State));
-                    else
-                        AddShared<EntityType>(new IpAddressRule(col.Name));
+                        if (((RangeAttribute)attribute).ErrorMessage != null)
+                        {
+                            if (isInt)
+                                AddShared<EntityType>(new RangeRule<int>(property.Name, ((RangeAttribute)attribute).ErrorMessage,
+                                    (int)((RangeAttribute)attribute).Minimum, (int)((RangeAttribute)attribute).Maximum));
+                            else if (isFloat)
+                                AddShared<EntityType>(new RangeRule<Decimal>(property.Name, ((RangeAttribute)attribute).ErrorMessage,
+                                    Convert.ToDecimal(((RangeAttribute)attribute).Minimum), Convert.ToDecimal(((RangeAttribute)attribute).Maximum)));
+                            else
+                                AddShared<EntityType>(new RangeRule<DateTime>(property.Name, ((RangeAttribute)attribute).ErrorMessage,
+                                    (DateTime)((RangeAttribute)attribute).Minimum, (DateTime)((RangeAttribute)attribute).Maximum));
+                        }
+                        else
+                        {
+                            if (isInt)
+                                AddShared<EntityType>(new RangeRule<int>(property.Name,
+                                    (int)((RangeAttribute)attribute).Minimum, (int)((RangeAttribute)attribute).Maximum));
+                            else if (isFloat)
+                                AddShared<EntityType>(new RangeRule<Decimal>(property.Name,
+                                    Convert.ToDecimal(((RangeAttribute)attribute).Minimum), Convert.ToDecimal(((RangeAttribute)attribute).Maximum)));
+                            else
+                                AddShared<EntityType>(new RangeRule<DateTime>(property.Name,
+                                    (DateTime)((RangeAttribute)attribute).Minimum, (DateTime)((RangeAttribute)attribute).Maximum));
+                        }
+                    }
+
+                    if (attribute.GetType() == typeof(GuidAttribute))
+                    {
+                        if (((GuidAttribute)attribute).IsStateSet)
+                            AddShared<EntityType>(new GuidRule(property.Name, ((GuidAttribute)attribute).State));
+                        else
+                            AddShared<EntityType>(new GuidRule(property.Name));
+                    }
+
+                    if (attribute.GetType() == typeof(UserNameAttribute))
+                    {
+                        if (((UserNameAttribute)attribute).IsStateSet)
+                            AddShared<EntityType>(new UseNamerRule(property.Name, ((UserNameAttribute)attribute).State));
+                        else
+                            AddShared<EntityType>(new UseNamerRule(property.Name));
+                    }
+
+                    if (attribute.GetType() == typeof(IpAddressAttribute))
+                    {
+                        if (((IpAddressAttribute)attribute).IsStateSet)
+                            AddShared<EntityType>(new IpAddressRule(property.Name, ((IpAddressAttribute)attribute).State));
+                        else
+                            AddShared<EntityType>(new IpAddressRule(property.Name));
+                    }
                 }
             }
         }

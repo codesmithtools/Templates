@@ -88,7 +88,8 @@ namespace <%= ManagerNamespace %>
         static <%= EntityManager.ManagerName %>()
         {
             <%if(Framework == FrameworkEnum.v35_SP1) { %>
-            RuleManager.AddShared<%= "<" + EntityManager.EntityName%>>(typeof(<%= DataManager.DataContextName%>));
+			RuleManager.AddShared<%= "<" + EntityManager.EntityName%>>();
+            RuleManager.AddShared<%= "<" + EntityManager.EntityName%>>(typeof(<%= EntityManager.EntityName%>.Metadata));
             <% } else {
                 const string lengthFormat = "RuleManager.AddShared<{0}>(new LengthRule(\"{1}\", {2}));";
                 const string requiredFormat = "RuleManager.AddShared<{0}>(new RequiredRule(\"{1}\"));";
