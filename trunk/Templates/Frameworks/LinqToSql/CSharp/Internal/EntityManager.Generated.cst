@@ -21,23 +21,31 @@
     Type="FrameworkEnum" Default="v35_SP1" Optional="False"
     Description="Include Serialization attributes and what kind." %>
     
-<%@ Property Category="4.Manager" Name="ManagerNamespace" 
+<%@ Property Category="3.Manager" Name="ManagerNamespace" 
     Type="System.String" Default="" Optional="True" 
     Description="The namespace to use for the generated manager class files."%>
 
-<%@ Property Category="4.Manager" Name="DataManager" 
+<%@ Property Category="3.Manager" Name="DataManager" 
     Type="Manager.DataManager" Optional="False" 
     Description="Must be set by parent template" %>
 
-<%@ Property Category="4.Manager" Name="EntityManager" 
+<%@ Property Category="3.Manager" Name="MethodPrefix" 
+    Type="System.String" Default="GetBy" Optional="True" 
+    Description="The prefix of query method names." %>
+
+<%@ Property Category="3.Manager" Name="MethodKeySuffix" 
+    Type="System.String" Default="Key" Optional="False" 
+    Description="The suffix of the primary key query method names." %>
+
+<%@ Property Category="3.Manager" Name="EntityManager" 
     Type="Manager.EntityManager" Optional="False" 
     Description="Must be set by parent template" %>
 
-<%@ Property Category="3.Mapping" Name="Database" 
+<%@ Property Category="4.Mapping" Name="Database" 
     Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
     Description="Database instance. Must be set by parent template" %>
 
-<%@ Property Category="3.Mapping" Name="Table" 
+<%@ Property Category="4.Mapping" Name="Table" 
     Type="LinqToSqlShared.DbmlObjectModel.Table" Optional="False" 
     Description="Must be set by parent template" %>
 
@@ -192,13 +200,13 @@ namespace <%= ManagerNamespace %>
             {
                 IEntityKey<<%= paramTypes %>> entityKey = (IEntityKey<<%= paramTypes %>>)key;
 <% if (method.Columns.Count == 1) { %>
-                return GetByKey(entityKey.Key);
+                return <%= MethodPrefix %><%= MethodKeySuffix %>(entityKey.Key);
 <% } else if (method.Columns.Count == 2) { %>
-                return GetByKey(entityKey.Key, entityKey.Key1);
+                return <%= MethodPrefix %><%= MethodKeySuffix %>(entityKey.Key, entityKey.Key1);
 <% } else if (method.Columns.Count == 3) { %>
-                return GetByKey(entityKey.Key, entityKey.Key1, entityKey.Key2);
+                return <%= MethodPrefix %><%= MethodKeySuffix %>(entityKey.Key, entityKey.Key1, entityKey.Key2);
 <% } else if (method.Columns.Count == 4) { %>
-                return GetByKey(entityKey.Key, entityKey.Key1, entityKey.Key2, entityKey.Key3);
+                return <%= MethodPrefix %><%= MethodKeySuffix %>(entityKey.Key, entityKey.Key1, entityKey.Key2, entityKey.Key3);
 <% } %>
             }
             else
@@ -212,11 +220,11 @@ namespace <%= ManagerNamespace %>
         /// Gets an instance by the primary key.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public <%= EntityManager.EntityName %> GetByKey(<%= parameters %>)
+        public <%= EntityManager.EntityName %> <%= MethodPrefix %><%= MethodKeySuffix %>(<%= parameters %>)
         {
 <% if (method.Columns.Count < 4) { %>
             if (Context.LoadOptions == null) 
-                return Query.GetByKey.Invoke(Context, <%= paramNames %>);
+                return Query.<%= MethodPrefix %><%= MethodKeySuffix %>.Invoke(Context, <%= paramNames %>);
             else
 <% } // column count%>
                 return Entity.FirstOrDefault(<%= GetLamba(method, 5) %>);
@@ -226,11 +234,11 @@ namespace <%= ManagerNamespace %>
         /// Gets an instance by using a unique index.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public <%= EntityManager.EntityName %> GetBy<%= method.NameSuffix %>(<%= parameters %>)
+        public <%= EntityManager.EntityName %> <%= MethodPrefix %><%= method.NameSuffix %>(<%= parameters %>)
         {
 <% if (method.Columns.Count < 4) { %>
             if (Context.LoadOptions == null) 
-                return Query.GetBy<%= method.NameSuffix %>.Invoke(Context, <%= paramNames %>);
+                return Query.<%= MethodPrefix %><%= method.NameSuffix %>.Invoke(Context, <%= paramNames %>);
             else
 <% } // column count%>
                 return Entity.FirstOrDefault(<%= GetLamba(method, 5) %>);
@@ -239,11 +247,11 @@ namespace <%= ManagerNamespace %>
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<<%= EntityManager.EntityName %>> GetBy<%= method.NameSuffix %>(<%= parameters %>)
+        public IQueryable<<%= EntityManager.EntityName %>> <%= MethodPrefix %><%= method.NameSuffix %>(<%= parameters %>)
         {
 <% if (method.Columns.Count < 4) { %>
             if (Context.LoadOptions == null) 
-                return Query.GetBy<%= method.NameSuffix %>.Invoke(Context, <%= paramNames %>);
+                return Query.<%= MethodPrefix %><%= method.NameSuffix %>.Invoke(Context, <%= paramNames %>);
             else
 <% } // column count%>
                 return Entity.Where(<%= GetLamba(method, 5) %>);
@@ -272,19 +280,19 @@ namespace <%= ManagerNamespace %>
 <% if (method.Columns.Count < 4) { %>
 <% if (method.IsKey) { %>
 
-            internal static readonly Func<<%= DataManager.DataContextName %>, <%= paramTypes %>, <%= EntityManager.EntityName %>> GetByKey = 
+            internal static readonly Func<<%= DataManager.DataContextName %>, <%= paramTypes %>, <%= EntityManager.EntityName %>> <%= MethodPrefix %><%= MethodKeySuffix %> = 
                 CompiledQuery.Compile(
                     (<%= DataManager.DataContextName %> db, <%= parameters %>) => 
                         db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
 <% } else if (method.IsUnique) { %>
 
-            internal static readonly Func<<%= DataManager.DataContextName %>, <%= paramTypes %>, <%= EntityManager.EntityName %>> GetBy<%= method.NameSuffix %> = 
+            internal static readonly Func<<%= DataManager.DataContextName %>, <%= paramTypes %>, <%= EntityManager.EntityName %>> <%= MethodPrefix %><%= method.NameSuffix %> = 
                 CompiledQuery.Compile(
                     (<%= DataManager.DataContextName %> db, <%= parameters %>) => 
                         db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
 <% } else { %>
 
-            internal static readonly Func<<%= DataManager.DataContextName %>, <%= paramTypes %>, IQueryable<<%= EntityManager.EntityName %>>> GetBy<%= method.NameSuffix %> = 
+            internal static readonly Func<<%= DataManager.DataContextName %>, <%= paramTypes %>, IQueryable<<%= EntityManager.EntityName %>>> <%= MethodPrefix %><%= method.NameSuffix %> = 
                 CompiledQuery.Compile(
                     (<%= DataManager.DataContextName %> db, <%= parameters %>) => 
                         db.<%= EntityManager.EntityName %>.Where(<%= GetLamba(method, 7) %>));
