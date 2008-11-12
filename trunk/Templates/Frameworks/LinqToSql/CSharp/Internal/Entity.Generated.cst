@@ -361,6 +361,21 @@ namespace <%= Database.EntityNamespace %>
         
         #endregion
 <% } %>
+
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a copy of this instance.
+        /// </returns>
+        /// <remarks>
+        /// This method is equivalent to a Detach from the current <see cref="DataContext"/>.
+        /// Only loaded EntityRef and EntitySet child accessions will be cloned.
+        /// </remarks>
+        public <%= Type.Name %> Clone()
+        {
+            return (<%= Type.Name %>)((ICloneable)this).Clone();
+        }
     }
 }
 

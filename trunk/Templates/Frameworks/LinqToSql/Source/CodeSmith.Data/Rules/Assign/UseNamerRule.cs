@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Reflection;
 using System.Security.Principal;
-using System.Web;
 using System.Threading;
-using System.Reflection;
+using System.Web;
 
 namespace CodeSmith.Data.Rules.Assign
 {
@@ -15,7 +11,7 @@ namespace CodeSmith.Data.Rules.Assign
     public class UseNamerRule : PropertyRuleBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultUseNamerRule"/> class.
+        /// Initializes a new instance of the <see cref="UseNamerRule"/> class.
         /// </summary>
         /// <param name="property">The property.</param>
         public UseNamerRule(string property)
@@ -26,7 +22,7 @@ namespace CodeSmith.Data.Rules.Assign
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultUseNamerRule"/> class.
+        /// Initializes a new instance of the <see cref="UseNamerRule"/> class.
         /// </summary>
         /// <param name="property">The property.</param>
         /// <param name="assignState">State of the object that can be assigned.</param>
