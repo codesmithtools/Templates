@@ -22,6 +22,7 @@
 
 using System;
 using System.ComponentModel;
+using System.IO;
 <%if(IncludeDataContract)%>
 using System.Runtime.Serialization;
 
@@ -30,13 +31,14 @@ namespace <%= ClassNamespace %>
     /// <summary>
     /// A base class for Linq entities that implements notification events.
     /// </summary>
-    <%if (IncludeDataContract) { %>
     [Serializable]
+    <%if (IncludeDataContract) { %>
     [DataContract(<%if (Framework == FrameworkEnum.v35_SP1) { %> IsReference=true <%}%>)]
     <%}%>
     public abstract partial class <%= ClassName %> :
         INotifyPropertyChanging,
-        INotifyPropertyChanged
+        INotifyPropertyChanged,
+        ICloneable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class.
@@ -49,6 +51,7 @@ namespace <%= ClassNamespace %>
         /// <summary>
         /// Implements a PropertyChanged event.
         /// </summary>
+        [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -56,16 +59,16 @@ namespace <%= ClassNamespace %>
         /// </summary>
         /// <param name="propertyName">Name of the property that has changed.</param>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        protected virtual void OnPropertyChanged(string propertyName)
+        protected virtual void SendPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
         /// <summary>
         /// Implements a PropertyChanging event.
         /// </summary>
+        [field: NonSerialized]
         public event PropertyChangingEventHandler PropertyChanging;
 
         /// <summary>
@@ -73,12 +76,39 @@ namespace <%= ClassNamespace %>
         /// </summary>
         /// <param name="propertyName">Name of the property that is changing.</param>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
-        protected virtual void OnPropertyChanging(string propertyName)
+        protected virtual void SendPropertyChanging(string propertyName)
         {
             if (PropertyChanging != null)
                 PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
             
         }
         #endregion
+        
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a copy of this instance.
+        /// </returns>
+        public object Clone()
+        {
+<%if (IncludeDataContract) { %>
+            DataContractSerializer serializer = new DataContractSerializer(GetType());
+            using (MemoryStream ms = new MemoryStream())
+            {
+                serializer.WriteObject(ms, this);
+                ms.Position = 0;
+                return serializer.ReadObject(ms);
+            }
+<%} else {%>
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(ms, this);
+                ms.Position = 0;
+                return formatter.Deserialize(ms);
+            }
+<%}%>
+        }
     }
 }

@@ -66,6 +66,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Services.Common;
 <% } %>
 <% } %>
+
 namespace <%= Database.EntityNamespace %>
 {
     /// <summary>
@@ -75,6 +76,7 @@ namespace <%= Database.EntityNamespace %>
     /// Class representing data for the <%= Database.Name %> database.
 <% } %>
     /// </summary>
+    [Serializable]
     <%= GetClassAttributes() %>
 <% if (IncludeDataContract) { %>
     [DataContract(<% if (Framework == FrameworkEnum.v35_SP1) { %>IsReference=true<% } %>)]
@@ -82,20 +84,33 @@ namespace <%= Database.EntityNamespace %>
 <% if (this.Framework == FrameworkEnum.v35_SP1) { %>
     [ScaffoldTable(true)]
     [MetadataType(typeof(Metadata))]
-	<% if(IncludeDataServices) { %>
-	<% System.Text.StringBuilder dataServiceKey = new System.Text.StringBuilder();
-	bool isFirstDataServiceKey = true;
-	foreach(Column column in Type.PrimaryKeyColumns)
-	{
-		if(isFirstDataServiceKey)
-			isFirstDataServiceKey = false;
-		else
-			dataServiceKey.Append(", ");
-		dataServiceKey.AppendFormat("\"{0}\"", column.Name);
-	} %>
-	[DataServiceKey(<%= dataServiceKey.ToString() %>)]
-	<% } %>
+    <% if(IncludeDataServices) { %>
+    <%
+    StringBuilder dataServiceKey = new StringBuilder();
+    foreach(Column column in Type.PrimaryKeyColumns)
+    {
+        if(dataServiceKey.Length > 0)
+            dataServiceKey.Append(", ");
+        dataServiceKey.AppendFormat("\"{0}\"", column.Member);
+    } 
+    %>
+    [DataServiceKey(<%= dataServiceKey.ToString() %>)]
+    <% } %>
 <%}%>
+<% 
+    StringBuilder sb = new StringBuilder();
+    foreach(Column column in Type.PrimaryKeyColumns)
+    {
+        if(sb.Length > 0)
+            sb.Append(", ");
+        
+        sb.Append(column.Member);
+        sb.Append(": {");
+        sb.Append(column.Member);
+        sb.Append("}");
+    }
+%>
+    [DebuggerDisplay("<%= sb.ToString() %>")]
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
         : <%= EntityBase %>
@@ -169,7 +184,7 @@ namespace <%= Database.EntityNamespace %>
 <% } %>
         /// </summary>
         <%= CreateAttributes(column, ref DataMemberOrderId) %>
-		<%= Naming.GetModifier(column.AccessModifier, column.Modifier) %> <%= dataType %> <%= column.Member %>
+        <%= Naming.GetModifier(column.AccessModifier, column.Modifier) %> <%= dataType %> <%= column.Member %>
         {
             get { return <%= storageAssign %>; }
 <% if (!column.IsReadOnly == true) { %>
@@ -185,11 +200,11 @@ namespace <%= Database.EntityNamespace %>
 <% } %>
                     On<%= column.Member %>Changing(value);
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
-                    OnPropertyChanging("<%= column.Member %>");
+                    SendPropertyChanging("<%= column.Member %>");
 <% } %>
                     <%= storageAssign %> = value;
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
-                    OnPropertyChanged("<%= column.Member %>");
+                    SendPropertyChanged("<%= column.Member %>");
 <% } %>
                     On<%= column.Member %>Changed();
                 }
@@ -200,19 +215,10 @@ namespace <%= Database.EntityNamespace %>
         #endregion
         
         #region Association Mapped Properties
-<%    bool needsOnSerialize = false;
-    if(IncludeDataContract)
-        foreach(Association a in Type.Associations)
-            if(a.IsForeignKey.HasValue && !a.IsForeignKey.Value)
-            {
-                needsOnSerialize = true;
-                break;
-            }
-
-    foreach(Association a in Type.EntityRefAssociations) {
+<%  foreach(Association a in Type.EntityRefAssociations) {
         AssociationInfo info = GetAssociationInfo(a);
 %>
-        
+        [NonSerialized]
         private EntityRef<<%= a.Type %>> <%= a.Storage %>;
 
         /// <summary>
@@ -224,15 +230,8 @@ namespace <%= Database.EntityNamespace %>
 <% } %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> <%= a.Type %> <%= a.Member %>
         {
-<% if (needsOnSerialize) { %>
-            get
-            {
-                if (serializing && !<%= a.Storage %>.HasLoadedOrAssignedValue)
-                {
-                    return null;
-                }
-                return <%= a.Storage %>.Entity;
-            }
+<% if (IncludeDataContract) { %>
+            get { return (serializing && !<%= a.Storage %>.HasLoadedOrAssignedValue) ? null : <%= a.Storage %>.Entity; }
 <% } else { %>
             get { return <%= a.Storage %>.Entity; }
 <% } %>
@@ -242,7 +241,7 @@ namespace <%= Database.EntityNamespace %>
                 <%= a.Type %> previousValue = <%= a.Storage %>.Entity;
                 if (previousValue != value || <%= a.Storage %>.HasLoadedOrAssignedValue == false)
                 {
-                    OnPropertyChanging("<%= a.Member %>");
+                    SendPropertyChanging("<%= a.Member %>");
                     if (previousValue != null)
                     {
                         <%= a.Storage %>.Entity = null;
@@ -262,14 +261,14 @@ namespace <%= Database.EntityNamespace %>
                         <%= info.AssignColumns[i].Storage %> = default(<%= GetColumnType(info.OtherColumns[i]) %>);
 <% } %>
                     }
-                    OnPropertyChanged("<%= a.Member %>");
+                    SendPropertyChanged("<%= a.Member %>");
                 }
 <% } else { %>
                 if (<%= a.Storage %>.Entity != value)
                 {
-                    OnPropertyChanging("<%= a.Member %>");
+                    SendPropertyChanging("<%= a.Member %>");
                     <%= a.Storage %>.Entity = value;
-                    OnPropertyChanged("<%= a.Member %>");
+                    SendPropertyChanged("<%= a.Member %>");
                 }
 <% } // HasOtherAssociation %>
             }
@@ -279,6 +278,7 @@ namespace <%= Database.EntityNamespace %>
         AssociationInfo info = GetAssociationInfo(a);
 %>
         
+        [NonSerialized]
         private EntitySet<<%= a.Type %>> <%= a.Storage %>;
         
         /// <summary>
@@ -286,28 +286,32 @@ namespace <%= Database.EntityNamespace %>
         /// </summary>
         <%= CreateAttribute(a) %>
 <% if (IncludeDataContract) { %>
-        [DataMember]
+        [DataMember(Order=<%= ++DataMemberOrderId %>, EmitDefaultValue=false)]
 <% } %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> EntitySet<<%= a.Type %>> <%= a.Member %>
         {
+<% if (IncludeDataContract) { %>
+            get { return (serializing && !<%= a.Storage %>.HasLoadedOrAssignedValues) ? null : <%= a.Storage %>; }
+<% } else { %>
             get { return <%= a.Storage %>; }
+<% } %>
             set { <%= a.Storage %>.Assign(value); }
         }
         
         [DebuggerNonUserCodeAttribute()]
         private void Attach_<%= a.Member %>(<%= a.Type %> entity)
         {
-            OnPropertyChanging(null);
+            SendPropertyChanging(null);
             entity.<%= info.OtherAssociation.Member %> = this;
-            OnPropertyChanged(null);
+            SendPropertyChanged(null);
         }
         
         [DebuggerNonUserCodeAttribute()]
         private void Detach_<%= a.Member %>(<%= a.Type %> entity)
         {
-            OnPropertyChanging(null);
+            SendPropertyChanging(null);
             entity.<%= info.OtherAssociation.Member %> = null;
-            OnPropertyChanged(null);
+            SendPropertyChanged(null);
         }
 <% } // foreach Association%>
         #endregion
@@ -335,8 +339,6 @@ namespace <%= Database.EntityNamespace %>
         
 <% if (IncludeDataContract) { %>
         #region Serialization
-        
-<% if(needsOnSerialize) { %>
         private bool serializing;
         
         [OnSerializing()]
@@ -351,7 +353,6 @@ namespace <%= Database.EntityNamespace %>
             serializing = false;
         }
         
-<% } %>        
         [OnDeserializing()]
         [EditorBrowsableAttribute(EditorBrowsableState.Never)]
         public void OnDeserializing(StreamingContext context) {
@@ -359,7 +360,6 @@ namespace <%= Database.EntityNamespace %>
         }
         
         #endregion
-        
 <% } %>
     }
 }
@@ -493,24 +493,24 @@ namespace <%= Database.EntityNamespace %>
             s.AppendFormat(", Expression=\"{0}\"", c.Expression);
         s.Append(")]");
         
-		string prefix = String.Concat(Environment.NewLine, "        ");
-		
-		if (c.IsVersion.HasValue && c.IsVersion.Value)
-        	s.AppendFormat("{0}[EditorBrowsable(EditorBrowsableState.Never)]", prefix);
+        string prefix = String.Concat(Environment.NewLine, "        ");
+        
+        if (c.IsVersion.HasValue && c.IsVersion.Value)
+            s.AppendFormat("{0}[EditorBrowsable(EditorBrowsableState.Never)]", prefix);
 
-		if (this.IncludeDataContract)
-			s.AppendFormat("{0}[DataMember(Order={1})]", prefix, ++dataMemberOrderId);
-        	
-		if (this.Framework == FrameworkEnum.v35_SP1 && c.Type.Contains("String"))
+        if (this.IncludeDataContract)
+            s.AppendFormat("{0}[DataMember(Order={1})]", prefix, ++dataMemberOrderId);
+            
+        if (this.Framework == FrameworkEnum.v35_SP1 && c.Type.Contains("String"))
         {
             int size = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(c.DbType);
             if (0 < size && size < 8000)
                 s.AppendFormat("{0}[StringLength({1})]", prefix, size);
-		}
-		
+        }
+        
         return s.ToString();
     }
-	
+    
     public string CreateAttribute(Association a)
     {
         StringBuilder s = new StringBuilder();
@@ -534,7 +534,7 @@ namespace <%= Database.EntityNamespace %>
         
         return s.ToString();
     }
-	
+    
     public struct AssociationInfo
     {
         public bool HasOtherAssociation;

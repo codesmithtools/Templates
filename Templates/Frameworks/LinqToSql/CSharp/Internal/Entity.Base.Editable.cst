@@ -17,9 +17,8 @@ namespace <%= ClassNamespace %>
     /// <summary>
     /// A base class for Linq entities that implements notification events.
     /// </summary>
-    public abstract partial class <%= ClassName %> :
-        INotifyPropertyChanging,
-        INotifyPropertyChanged
+    public abstract partial class <%= ClassName %>
     {
+        
     }
 }
