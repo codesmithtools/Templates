@@ -31,6 +31,7 @@
     Description="Convert system data types to c# alias" %>
 using System;
 using System.Linq;
+using System.Data.Linq;
 using System.Collections.Generic;
 using System.Text;
 <%if(Framework == FrameworkEnum.v35_SP1){%>
@@ -53,6 +54,12 @@ namespace <%= Database.EntityNamespace %>
         
         private class Metadata
         {
+			<% if (Type.Associations != null) { %>
+			//Type.Associations.Count: <%= Type.Associations.Count %> 
+			<% } else { %>
+			//NO ASSOCIATIONS
+			<% } %>
+			
             // Only Attributes in the class will be preserved.
             
 <%          AttributeSectionVisitor sourceAttributes = new AttributeSectionVisitor();
@@ -65,8 +72,7 @@ namespace <%= Database.EntityNamespace %>
                 if(sourceAttributes.PropertyMap.ContainsKey(column.Member))
                 {
                     foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[column.Member].Attributes)
-                    {
-%>
+                    { %>
             <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
 <%                  } // for each attribute
                 } // if property
@@ -104,11 +110,36 @@ namespace <%= Database.EntityNamespace %>
                         else if (column.Member.Contains("Html"))
                             Response.WriteLine("            [DataType(DataType.Html)]");
                     }
-                }
-%>
+                } %>
             public <%= CSharpAlias[column.Type] %> <%=column.Member%> { get; set; }
+			
+<%			} // for each column
+			
+			foreach(Association association in Type.EntityRefAssociations)
+			{
+				if(sourceAttributes.PropertyMap.ContainsKey(association.Member))
+                {
+                    foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[association.Member].Attributes)
+                    { %>
+            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>						
+<%					}
+				} %>
+            public <%= CSharpAlias[association.Type] %> <%=association.Member%> { get; set; }
             
-<%          } // for each column %>
+<%			}
+			
+			foreach(Association association in Type.EntitySetAssociations)
+			{
+				if(sourceAttributes.PropertyMap.ContainsKey(association.Member))
+                {
+                    foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[association.Member].Attributes)
+                    { %>
+            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>						
+<%					}
+				} %>
+            public EntitySet<<%= CSharpAlias[association.Type] %>> <%=association.Member%> { get; set; }
+            
+<%			} %>
         }
         
         #endregion
