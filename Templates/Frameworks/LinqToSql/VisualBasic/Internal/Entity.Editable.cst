@@ -93,7 +93,7 @@ Namespace <%= Database.EntityNamespace %>
                         End If
                     End If
                 End If %>
-            Public Property <%=column.Name%>() As Object
+            Public Property <%=column.Member%>() As Object
                 Get
                     Return Nothing
                 End Get
@@ -101,7 +101,23 @@ Namespace <%= Database.EntityNamespace %>
                 End Set
             End Property
             
-<%             Next %>
+<%             Next
+
+			For Each association As Association In Type.Associations
+				If sourceAttributes.PropertyMap.ContainsKey(association.Member) Then
+                    For Each attributeSection As ICSharpCode.NRefactory.Ast.AttributeSection In sourceAttributes.PropertyMap(association.Member).Attributes %>
+            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>						
+<%					Next
+				End If %>
+            Public Property <%=association.Member%>() As Object
+                Get
+                    Return Nothing
+                End Get
+                Set(ByVal value As Object)
+                End Set
+            End Property
+            
+<%			Next %>
         End Class
         
         #End Region
