@@ -90,7 +90,7 @@ namespace <%= ClassNamespace %>
         /// <returns>
         /// A new object that is a copy of this instance.
         /// </returns>
-        public object Clone()
+        object ICloneable.Clone()
         {
 <%if (IncludeDataContract) { %>
             DataContractSerializer serializer = new DataContractSerializer(GetType());

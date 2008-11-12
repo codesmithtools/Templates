@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CodeSmith.Data.Rules;
-using System.Web;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
+using System.Web;
 
 namespace CodeSmith.Data.Rules.Assign
 {
     public class IpAddressRule : PropertyRuleBase
     {
          /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultUseNamerRule"/> class.
+        /// Initializes a new instance of the <see cref="IpAddressRule"/> class.
         /// </summary>
         /// <param name="property">The property.</param>
         public IpAddressRule(string property)
@@ -23,7 +18,7 @@ namespace CodeSmith.Data.Rules.Assign
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultUseNamerRule"/> class.
+        /// Initializes a new instance of the <see cref="IpAddressRule"/> class.
         /// </summary>
         /// <param name="property">The property.</param>
         /// <param name="assignState">State of the object that can be assigned.</param>

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Reflection;
 
 namespace CodeSmith.Data.Rules.Assign
@@ -12,7 +9,7 @@ namespace CodeSmith.Data.Rules.Assign
     public class NowRule : PropertyRuleBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultNowRule"/> class.
+        /// Initializes a new instance of the <see cref="NowRule"/> class.
         /// </summary>
         /// <param name="property">The property.</param>
         public NowRule(string property)
@@ -23,7 +20,7 @@ namespace CodeSmith.Data.Rules.Assign
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultNowRule"/> class.
+        /// Initializes a new instance of the <see cref="NowRule"/> class.
         /// </summary>
         /// <param name="property">The property.</param>
         /// <param name="assignState">State of the object that can be assigned.</param>
