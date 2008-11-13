@@ -28,6 +28,14 @@
 <%@ Property Category="2.Mapping" Name="Database" 
     Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
     Description="Database schema instance. Must be set by parent template" %>
+    
+<%@ Property Category="3.Query" Name="MethodPrefix" 
+    Type="System.String" Default="GetBy" Optional="True" 
+    Description="The prefix of query method names." %>
+
+<%@ Property Category="3.Query" Name="MethodKeySuffix" 
+    Type="System.String" Default="Key" Optional="False" 
+    Description="The suffix of the primary key query method names." %>
 
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
@@ -66,27 +74,23 @@ namespace <%= Database.ContextNamespace %>
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static <%= EntityManager.EntityName %> GetByKey(this Table<<%= EntityManager.EntityName %>> entity, <%= GetParameters(method) %>)
+        public static <%= EntityManager.EntityName %> <%= MethodPrefix %><%= MethodKeySuffix %>(this IQueryable<<%= EntityManager.EntityName %>> queryable, <%= GetParameters(method) %>)
         {
 <% if (method.Columns.Count < 4) { %>
-            if (entity.Context.LoadOptions == null) 
-                return Query.GetByKey.Invoke((<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
-            else
+            var entity = queryable as Table<<%= EntityManager.EntityName %>>;
+            if (entity != null && entity.Context.LoadOptions == null)
+                return Query.<%= MethodPrefix %><%= MethodKeySuffix %>.Invoke((<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
 <% } // column count%>
-                return entity.FirstOrDefault(<%= GetLamba(method, 5) %>);
+            
+            return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>);
         }
 <% } else { %>
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public static IQueryable<<%= EntityManager.EntityName %>> GetBy<%= method.NameSuffix %>(this Table<<%= EntityManager.EntityName %>> entity, <%= GetParameters(method) %>)
+        public static IQueryable<<%= EntityManager.EntityName %>> <%= MethodPrefix %><%= method.NameSuffix %>(this IQueryable<<%= EntityManager.EntityName %>> queryable, <%= GetParameters(method) %>)
         {
-<% if (method.Columns.Count < 4) { %>
-            if (entity.Context.LoadOptions == null) 
-                return Query.GetBy<%= method.NameSuffix %>.Invoke((<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
-            else
-<% } // column count%>
-                return entity.Where(<%= GetLamba(method, 5) %>);
+            return queryable.Where(<%= GetLamba(method, 5) %>);
         }
 <% } // if is key%>
 <% } // foreach method%>
@@ -101,16 +105,10 @@ namespace <%= Database.ContextNamespace %>
 <% if (method.Columns.Count < 4) { %>
 <% if (method.IsKey) { %>
 
-            internal static readonly Func<<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= EntityManager.EntityName %>> GetByKey = 
+            internal static readonly Func<<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= EntityManager.EntityName %>> <%= MethodPrefix %><%= MethodKeySuffix %> = 
                 CompiledQuery.Compile(
                     (<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) => 
                         db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
-<% } else { %>
-
-            internal static readonly Func<<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, IQueryable<<%= EntityManager.EntityName %>>> GetBy<%= method.NameSuffix %> = 
-                CompiledQuery.Compile(
-                    (<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) => 
-                        db.<%= EntityManager.EntityName %>.Where(<%= GetLamba(method, 7) %>));
 <% } // if is key%>
 <% } // column count%>
 <% } // foreach method%>
