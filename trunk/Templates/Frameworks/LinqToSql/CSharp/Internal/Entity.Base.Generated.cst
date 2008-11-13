@@ -23,6 +23,8 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Data.Linq;
+using System.Linq;
 <%if(IncludeDataContract)%>
 using System.Runtime.Serialization;
 
@@ -110,5 +112,64 @@ namespace <%= ClassNamespace %>
             }
 <%}%>
         }
+        #region "Detach Methods"
+        
+        public bool IsAttached
+        {
+            get { return PropertyChanging != null; }
+        }
+        
+        /// <summary>
+        /// Detach this instance from the <see cref="DataContext"/>.
+        /// </summary>
+        /// <remarks>
+        /// Detaching the entity will allow it to be attached to another <see cref="DataContext"/>.
+        /// </remarks>
+        public virtual void Detach()
+        {
+            PropertyChanging = null;
+            PropertyChanged = null;
+        }
+        
+        /// <summary>
+        /// Detach the specified <see cref="T:System.Data.Linq.EntitySet`1" />.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="set">The <see cref="T:System.Data.Linq.EntitySet`1" /> to detach.</param>
+        /// <param name="onAdd">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Add(`0)" />.</param>
+        /// <param name="onRemove">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Remove(`0)" />.</param>
+        /// <returns>A new <see cref="T:System.Data.Linq.EntitySet`1" /> with the list copied if it was loaded.</returns>
+        protected static EntitySet<TEntity> Detach<TEntity>(EntitySet<TEntity> set, Action<TEntity> onAdd, Action<TEntity> onRemove) 
+            where TEntity : LinqEntityBase
+        {
+            if (set == null || !set.HasLoadedOrAssignedValues)
+                return new EntitySet<TEntity>(onAdd, onRemove);
+
+            // copy list and detach all entities
+            var list = set.ToList();
+            list.ForEach(t => t.Detach());
+
+            var newSet = new EntitySet<TEntity>(onAdd, onRemove);
+            newSet.Assign(list);
+            return newSet;
+        }
+
+        /// <summary>
+        /// Detach the specified <see cref="T:System.Data.Linq.EntityRef`1"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="entity">The <see cref="T:System.Data.Linq.EntityRef`1"/> to detach.</param>
+        /// <returns>A new <see cref="T:System.Data.Linq.EntityRef`1"/> with the entity detached.</returns>
+        protected static EntityRef<TEntity> Detach<TEntity>(EntityRef<TEntity> entity) 
+            where TEntity : LinqEntityBase
+        {
+            if (!entity.HasLoadedOrAssignedValue)
+                return new EntityRef<TEntity>();
+
+            entity.Entity.Detach();
+            return new EntityRef<TEntity>(entity.Entity);
+        }
+        
+        #endregion
     }
 }

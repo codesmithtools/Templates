@@ -394,6 +394,26 @@ namespace <%= Database.EntityNamespace %>
         {
             return (<%= Type.Name %>)((ICloneable)this).Clone();
         }
+        
+          #region "Detach Methods"
+        public override void Detach()
+        {
+            if (!IsAttached)
+                return;
+            
+            base.Detach();
+<%  foreach(Association a in Type.EntityRefAssociations) {
+        AssociationInfo info = GetAssociationInfo(a);
+%>
+            <%=a.Storage%> = Detach(<%=a.Storage%>);
+<%  }
+    foreach(Association a in Type.EntitySetAssociations) {
+        AssociationInfo info = GetAssociationInfo(a);
+%>
+            <%=a.Storage%> = Detach(<%=a.Storage%>, Attach_<%=a.Member%>, Detach_<%=a.Member%>);
+<% } %>
+        }
+        #endregion
     }
 }
 
