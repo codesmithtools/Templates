@@ -94,7 +94,9 @@ namespace <%= Database.EntityNamespace %>
         dataServiceKey.AppendFormat("\"{0}\"", column.Member);
     } 
     %>
+<% if (dataServiceKey.Length > 0) { %>
     [DataServiceKey(<%= dataServiceKey.ToString() %>)]
+<% } %>
     <% } %>
 <%}%>
 <% 
@@ -110,7 +112,9 @@ namespace <%= Database.EntityNamespace %>
         sb.Append("}");
     }
 %>
+<% if (sb.Length > 0) { %>
     [DebuggerDisplay("<%= sb.ToString() %>")]
+<% } %>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
         : <%= EntityBase %>
@@ -343,18 +347,30 @@ namespace <%= Database.EntityNamespace %>
         #region Serialization
         private bool serializing;
         
+        /// <summary>
+        /// Called when serializing.
+        /// </summary>
+        /// <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
         [OnSerializing()]
         [EditorBrowsableAttribute(EditorBrowsableState.Never)]
         public void OnSerializing(StreamingContext context) {
             serializing = true;
         }
         
+        /// <summary>
+        /// Called when serialized.
+        /// </summary>
+        /// <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
         [OnSerialized()]
         [EditorBrowsableAttribute(EditorBrowsableState.Never)]
         public void OnSerialized(StreamingContext context) {
             serializing = false;
         }
         
+        /// <summary>
+        /// Called when deserializing.
+        /// </summary>
+        /// <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
         [OnDeserializing()]
         [EditorBrowsableAttribute(EditorBrowsableState.Never)]
         public void OnDeserializing(StreamingContext context) {

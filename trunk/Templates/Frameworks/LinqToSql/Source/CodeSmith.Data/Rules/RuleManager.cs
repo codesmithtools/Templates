@@ -65,8 +65,8 @@ namespace CodeSmith.Data.Rules
                 _sharedBusinessRules.Add(typeof(EntityType), new List<IRule> { rule });
         }
 
-        private static Dictionary<string, Dictionary<string, Attribute>> FillAttributes(
-            Dictionary<string, Dictionary<string, Attribute>> dictionary, PropertyInfo[] properties)
+        private static void FillAttributes(IDictionary<string, Dictionary<string, Attribute>> dictionary,
+            IEnumerable<PropertyInfo> properties)
         {
             foreach (PropertyInfo property in properties)
             {
@@ -100,97 +100,107 @@ namespace CodeSmith.Data.Rules
                         dictionary[property.Name]["IpAddress"] = attribute;
                 }
             }
-            return dictionary;
         }
 
         public static void AddShared<EntityType>()
         {
             Type metadata = null;
-            foreach(Attribute attribute in typeof(EntityType).GetCustomAttributes(true))
-                if(attribute.GetType() == typeof(MetadataTypeAttribute))
-                    metadata = ((MetadataTypeAttribute)attribute).MetadataClassType;
-            
-            PropertyInfo[] properties = typeof(EntityType).GetProperties();
-            PropertyInfo[] metadataProperties = metadata.GetProperties();
+            foreach (Attribute attribute in typeof(EntityType).GetCustomAttributes(true))
+            {
+                if (!(attribute is MetadataTypeAttribute))
+                    continue;
 
-            Dictionary<string,Dictionary<string, Attribute>> property_attributes = new Dictionary<string,Dictionary<string, Attribute>>();
-            property_attributes = FillAttributes(property_attributes, metadataProperties);
-            property_attributes = FillAttributes(property_attributes, properties);
-        
+                metadata = ((MetadataTypeAttribute)attribute).MetadataClassType;
+                break;
+            }
+
+            PropertyInfo[] properties = typeof(EntityType).GetProperties();
+            PropertyInfo[] metadataProperties = metadata == null ? new PropertyInfo[0] : metadata.GetProperties();
+
+            var attributes = new Dictionary<string, Dictionary<string, Attribute>>();
+            FillAttributes(attributes, metadataProperties);
+            FillAttributes(attributes, properties);
+
             foreach (PropertyInfo property in properties)
             {
-                if (property.GetType() == typeof(DateTime))
+                if (property.PropertyType == typeof(DateTime))
                     AddShared<EntityType>(new RangeRule<DateTime>(property.Name,
                         SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value));
 
-                if (property_attributes[property.Name].ContainsKey("StringLength"))
-                    AddShared<EntityType>(new LengthRule(property.Name, ((StringLengthAttribute)property_attributes[property.Name]["StringLength"]).MaximumLength));
+                if (attributes[property.Name].ContainsKey("StringLength"))
+                    AddShared<EntityType>(new LengthRule(property.Name, ((StringLengthAttribute)attributes[property.Name]["StringLength"]).MaximumLength));
 
-                if (property_attributes[property.Name].ContainsKey("Required"))
+                if (attributes[property.Name].ContainsKey("Required"))
                 {
-                    RequiredAttribute attribute = (RequiredAttribute)property_attributes[property.Name]["Required"];
+                    RequiredAttribute attribute = (RequiredAttribute)attributes[property.Name]["Required"];
                     if (!string.IsNullOrEmpty(attribute.ErrorMessage))
                         AddShared<EntityType>(new RequiredRule(property.Name, attribute.ErrorMessage));
                     else
                         AddShared<EntityType>(new RequiredRule(property.Name));
                 }
 
-                if (property_attributes[property.Name].ContainsKey("RegularExpression"))
+                if (attributes[property.Name].ContainsKey("RegularExpression"))
                 {
-                    RegularExpressionAttribute attribute = (RegularExpressionAttribute)property_attributes[property.Name]["RegularExpression"];
+                    RegularExpressionAttribute attribute = (RegularExpressionAttribute)attributes[property.Name]["RegularExpression"];
                     if (!string.IsNullOrEmpty(attribute.ErrorMessage))
                         AddShared<EntityType>(new RegexRule(property.Name, attribute.ErrorMessage, attribute.Pattern));
                     else
                         AddShared<EntityType>(new RegexRule(property.Name, attribute.Pattern));
                 }
 
-                if (property_attributes[property.Name].ContainsKey("Now"))
+                if (attributes[property.Name].ContainsKey("Now"))
                 {
-                    NowAttribute attribute = (NowAttribute)property_attributes[property.Name]["Now"];
+                    NowAttribute attribute = (NowAttribute)attributes[property.Name]["Now"];
                     if (attribute.IsStateSet)
                         AddShared<EntityType>(new NowRule(property.Name, attribute.State));
                     else
                         AddShared<EntityType>(new NowRule(property.Name));
                 }
 
-                if (property_attributes[property.Name].ContainsKey("Range"))
+                if (attributes[property.Name].ContainsKey("Range"))
                 {
-                    RangeAttribute attribute = (RangeAttribute)property_attributes[property.Name]["Range"];
-                    
+                    RangeAttribute attribute = (RangeAttribute)attributes[property.Name]["Range"];
+
                     if (!string.IsNullOrEmpty(attribute.ErrorMessage))
                     {
-                        PropertyRuleBase generic = Activator.CreateInstance(typeof(RangeRule<>).MakeGenericType(attribute.OperandType), property.Name, attribute.ErrorMessage, ((RangeAttribute)attribute).Minimum,
-                        ((RangeAttribute)attribute).Maximum) as PropertyRuleBase;
+                        PropertyRuleBase generic = Activator.CreateInstance(typeof(RangeRule<>).MakeGenericType(attribute.OperandType),
+                            property.Name, attribute.ErrorMessage,
+                            attribute.Minimum, attribute.Maximum) as PropertyRuleBase;
+
                         AddShared<EntityType>(generic);
                     }
                     else
                     {
-                        PropertyRuleBase generic = Activator.CreateInstance(typeof(RangeRule<>).MakeGenericType(attribute.OperandType),property.Name,((RangeAttribute)attribute).Minimum,
-                        ((RangeAttribute)attribute).Maximum) as PropertyRuleBase;
+                        PropertyRuleBase generic = Activator.CreateInstance(typeof(RangeRule<>).MakeGenericType(attribute.OperandType),
+                            property.Name, attribute.Minimum, attribute.Maximum) as PropertyRuleBase;
+
                         AddShared<EntityType>(generic);
                     }
                 }
 
-                if (property_attributes[property.Name].ContainsKey("Guid"))
+                if (attributes[property.Name].ContainsKey("Guid"))
                 {
-                    if (((GuidAttribute)property_attributes[property.Name]["Guid"]).IsStateSet)
-                        AddShared<EntityType>(new GuidRule(property.Name, ((GuidAttribute)property_attributes[property.Name]["Guid"]).State));
+                    var guidAttribute = (GuidAttribute)attributes[property.Name]["Guid"];
+                    if (guidAttribute.IsStateSet)
+                        AddShared<EntityType>(new GuidRule(property.Name, guidAttribute.State));
                     else
                         AddShared<EntityType>(new GuidRule(property.Name));
                 }
 
-                if (property_attributes[property.Name].ContainsKey("UserName"))
+                if (attributes[property.Name].ContainsKey("UserName"))
                 {
-                    if (((UserNameAttribute)property_attributes[property.Name]["UserName"]).IsStateSet)
-                        AddShared<EntityType>(new UseNamerRule(property.Name, ((UserNameAttribute)property_attributes[property.Name]["UserName"]).State));
+                    var userNameAttribute = (UserNameAttribute)attributes[property.Name]["UserName"];
+                    if (userNameAttribute.IsStateSet)
+                        AddShared<EntityType>(new UseNamerRule(property.Name, userNameAttribute.State));
                     else
                         AddShared<EntityType>(new UseNamerRule(property.Name));
                 }
 
-                if (property_attributes.ContainsKey("IpAddress"))
+                if (attributes.ContainsKey("IpAddress"))
                 {
-                    if (((IpAddressAttribute)property_attributes[property.Name]["IpAddress"]).IsStateSet)
-                        AddShared<EntityType>(new IpAddressRule(property.Name, ((IpAddressAttribute)property_attributes[property.Name]["IpAddress"]).State));
+                    var ipAddressAttribute = (IpAddressAttribute)attributes[property.Name]["IpAddress"];
+                    if (ipAddressAttribute.IsStateSet)
+                        AddShared<EntityType>(new IpAddressRule(property.Name, ipAddressAttribute.State));
                     else
                         AddShared<EntityType>(new IpAddressRule(property.Name));
                 }
