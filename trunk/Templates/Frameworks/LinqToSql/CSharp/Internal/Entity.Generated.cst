@@ -54,6 +54,7 @@
 //------------------------------------------------------------------------------
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Diagnostics;
@@ -318,6 +319,56 @@ namespace <%= Database.EntityNamespace %>
             SendPropertyChanged(null);
         }
         
+<% if(IsManyToMany(info.OtherType))
+    {
+        ManyToManyInfo manyMany = GetManyToManyInfo(info.OtherType);
+%>    
+        private EntitySet<<%=manyMany.RightType.Name%>> _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List;
+
+        /// <summary>
+        /// Gets or sets the Many To Many <%=manyMany.RightType.Name%> list.
+        /// </summary>
+        /// <value>The <%=manyMany.RightType.Name%> list.</value>
+        public EntitySet<<%=manyMany.RightType.Name%>> <%=manyMany.RightType.Name%>List
+        {
+            get
+            {
+                if (serializing)
+                    return null;
+
+                if (_<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List == null)
+                {
+                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List = new EntitySet<<%=manyMany.RightType.Name%>>(Attach_<%=manyMany.RightType.Name%>List, Detach_<%=manyMany.RightType.Name%>List);
+                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.SetSource(<%=manyMany.JoinType.Name%>List.Select(c => c.<%=manyMany.RightType.Name%>));
+
+                }
+                return _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List;
+            }
+            set
+            {
+                _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.Assign(value);
+            }
+        }    
+        
+        [DebuggerNonUserCode]
+        private void Attach_<%=manyMany.RightType.Name%>List(<%=manyMany.RightType.Name%> entity)
+        {
+            SendPropertyChanging(null);
+            <%=manyMany.JoinType.Name%>List.Add(new <%=manyMany.JoinType.Name%> { <%=manyMany.LeftType.Name%> = this, <%=manyMany.RightType.Name%> = entity });
+            SendPropertyChanged(null);
+        }
+        
+        [DebuggerNonUserCode]
+        private void Detach_<%=manyMany.RightType.Name%>List(<%=manyMany.RightType.Name%> entity)
+        {
+            SendPropertyChanging(null);
+            var <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%=manyMany.JoinType.Name%>List.FirstOrDefault(c => c.<%=manyMany.GetLeftKey()%> == <%=manyMany.GetLeftKey()%> && c.<%=manyMany.GetRightKey()%> == entity.<%=manyMany.GetRightKey()%>);
+            <%=manyMany.JoinType.Name%>List.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>);
+            SendPropertyChanged(null);
+        }
+    
+<%}%>
+        
         
 <% } // foreach Association%>
         #endregion
@@ -427,7 +478,7 @@ namespace <%= Database.EntityNamespace %>
     public bool IsManyToMany(LinqToSqlShared.DbmlObjectModel.Type type)
     {
         
-        if (type.Columns.Count != 2)
+        if (type.Columns.Count < 2)
             return false;
         
         List<Column> pk = new List<Column>(type.PrimaryKeyColumns);
@@ -627,9 +678,26 @@ namespace <%= Database.EntityNamespace %>
         public List<Column> OtherColumns;
         public List<Column> AssignColumns;
           
+        public bool IsManyToMany;
         public bool IsOneToOne;
         public string AddSyntax;
         public string RemoveSyntax;
+    }
+    
+    public ManyToManyInfo GetManyToManyInfo(LinqToSqlShared.DbmlObjectModel.Type type)
+    {
+        ManyToManyInfo manyMany = new ManyToManyInfo();
+        manyMany.LeftType = Type;
+        manyMany.JoinType = type;
+        
+        foreach(Association association in type.EntityRefAssociations)
+        {
+            if(association.Type != Type.Name)
+            {
+                manyMany.RightType = Database.GetTypeByName(association.Type);
+            }
+        }
+        return manyMany;
     }
     
     public struct ManyToManyInfo
@@ -639,6 +707,26 @@ namespace <%= Database.EntityNamespace %>
         public LinqToSqlShared.DbmlObjectModel.Type JoinType;
         
         
-
+        //string.Concat would not work below.
+        public string GetRightKey()
+        {
+            
+            string rightKey = string.Empty;
+            foreach(Column pk in RightType.PrimaryKeyColumns)
+                rightKey = rightKey + pk.Name;
+                
+            return rightKey;
+        }
+        
+        public string GetLeftKey()
+        {
+            
+            string leftKey = string.Empty;
+            foreach(Column pk in LeftType.PrimaryKeyColumns)
+                leftKey = leftKey + pk.Name;
+                
+            return leftKey;
+        }
+        
     }
 </script>
