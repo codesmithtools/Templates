@@ -38,7 +38,7 @@
 <%@ Property Category="2.Class" Name="IncludeDataServices"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include ADO.Net DataServices attributes and impliment IUpdatable on DataContext." %>
-	
+    
 <%@ Register Name="DataContextGeneratedClass" 
     Template="Internal\DataContext.Generated.cst" 
     MergeProperties="False" %>
@@ -94,13 +94,13 @@
         {
             this.RegisterReference("System.Web.DynamicData");
             this.RegisterReference("System.ComponentModel.DataAnnotations");
-			if(IncludeDataServices)
-			{
-				this.RegisterReference("System.Data.Services");
-				this.RegisterReference("System.Data.Services.Client");
-			}
+            if(IncludeDataServices)
+            {
+                this.RegisterReference("System.Data.Services");
+                this.RegisterReference("System.Data.Services.Client");
+            }
         }
-		this.RegisterReference(Path.GetFullPath(Path.Combine(
+        this.RegisterReference(Path.GetFullPath(Path.Combine(
             this.CodeTemplateInfo.DirectoryName,
             "..\\Common\\CodeSmith.Data.dll")));
     }
@@ -111,7 +111,7 @@
         t.ClassNamespace = database.EntityNamespace;
         t.ClassName = database.EntityBase;
         t.IncludeDataContract = IncludeDataContract;
-		t.Framework = Framework;
+        t.Framework = Framework;
         
         EntityBaseEditableClass p = this.Create<EntityBaseEditableClass>();
         p.ClassNamespace = database.EntityNamespace;
@@ -137,8 +137,8 @@
     {
         DataContextGeneratedClass t = this.Create<DataContextGeneratedClass>();
         t.Database = database;
-		t.Framework = this.Framework;
-		t.IncludeDataServices = this.IncludeDataServices;
+        t.Framework = this.Framework;
+        t.IncludeDataServices = this.IncludeDataServices;
         
         DataContextEditableClass p = this.Create<DataContextEditableClass>();
         p.Database = database;
@@ -171,7 +171,7 @@
         EntityGeneratedClass t = this.Create<EntityGeneratedClass>();
         t.Database = database;
         t.IncludeDataContract = this.IncludeDataContract;
-		t.IncludeDataServices = this.IncludeDataServices;
+        t.IncludeDataServices = this.IncludeDataServices;
         t.Framework = this.Framework;
         
         EntityEditableClass p = this.Create<EntityEditableClass>();
@@ -227,18 +227,18 @@
 
         if (File.Exists(parentFileName))
         {
-			partialClass.ExistingFile = CodeFileParser.Create(parentFileName);
-			partialClass.ExistingFile.ParseMethodBodies = false;
-			partialClass.ExistingFile.Parse();
-		}
-		
-		InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata")
-		{
-			OnlyInsertMatchingClass = true,
-			PreserveClassAttributes = true,
-			NotFoundAction = InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent,
-			NotFoundParent = type.Name
-		};
+            partialClass.ExistingFile = CodeFileParser.Create(parentFileName);
+            partialClass.ExistingFile.ParseMethodBodies = false;
+            partialClass.ExistingFile.Parse();
+        }
+        
+        InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata")
+        {
+            OnlyInsertMatchingClass = true,
+            PreserveClassAttributes = true,
+            NotFoundAction = InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent,
+            NotFoundParent = type.Name
+        };
         partialClass.Type = type;
         Response.WriteLine(parentFileName);
         partialClass.RenderToFile(parentFileName, insertClassMergeStrategy);
