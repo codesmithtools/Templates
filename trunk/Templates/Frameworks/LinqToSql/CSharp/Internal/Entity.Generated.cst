@@ -313,6 +313,8 @@ namespace <%= Database.EntityNamespace %>
             entity.<%= info.OtherAssociation.Member %> = null;
             SendPropertyChanged(null);
         }
+        
+        
 <% } // foreach Association%>
         #endregion
         
@@ -380,6 +382,29 @@ namespace <%= Database.EntityNamespace %>
 }
 
 <script runat="template">
+    public bool IsManyToMany(LinqToSqlShared.DbmlObjectModel.Type type)
+    {
+        
+        if (type.Columns.Count != 2)
+            return false;
+        
+        List<Column> pk = new List<Column>(type.PrimaryKeyColumns);
+        if (pk.Count != 2)
+            return false;
+        
+        List<Association> fk = new List<Association>();
+        foreach(Column c in pk)
+        {
+            Association a = type.GetForeignKeyAssociation(c);
+            if (a != null)
+                fk.Add(a);
+        }
+        if (fk.Count != 2)
+            return false;
+        
+        return true;
+    }
+    
     public string GetColumnType(Column column)
     {
         string dataType = column.Type;
@@ -563,5 +588,15 @@ namespace <%= Database.EntityNamespace %>
         public bool IsOneToOne;
         public string AddSyntax;
         public string RemoveSyntax;
+    }
+    
+    public struct ManyToManyInfo
+    {
+        public LinqToSqlShared.DbmlObjectModel.Type LeftType;
+        public LinqToSqlShared.DbmlObjectModel.Type RightType;
+        public LinqToSqlShared.DbmlObjectModel.Type JoinType;
+        
+        
+
     }
 </script>

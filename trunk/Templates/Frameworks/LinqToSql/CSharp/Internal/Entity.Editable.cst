@@ -54,12 +54,12 @@ namespace <%= Database.EntityNamespace %>
         
         private class Metadata
         {
-			<% if (Type.Associations != null) { %>
-			//Type.Associations.Count: <%= Type.Associations.Count %> 
-			<% } else { %>
-			//NO ASSOCIATIONS
-			<% } %>
-			
+            <% if (Type.Associations != null) { %>
+            //Type.Associations.Count: <%= Type.Associations.Count %> 
+            <% } else { %>
+            //NO ASSOCIATIONS
+            <% } %>
+            
             // Only Attributes in the class will be preserved.
             
 <%          AttributeSectionVisitor sourceAttributes = new AttributeSectionVisitor();
@@ -112,34 +112,34 @@ namespace <%= Database.EntityNamespace %>
                     }
                 } %>
             public <%= CSharpAlias[column.Type] %> <%=column.Member%> { get; set; }
-			
-<%			} // for each column
-			
-			foreach(Association association in Type.EntityRefAssociations)
-			{
-				if(sourceAttributes.PropertyMap.ContainsKey(association.Member))
+            
+<%            } // for each column
+            
+            foreach(Association association in Type.EntityRefAssociations)
+            {
+                if(sourceAttributes.PropertyMap.ContainsKey(association.Member))
                 {
                     foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[association.Member].Attributes)
                     { %>
-            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>						
-<%					}
-				} %>
+            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>                        
+<%                    }
+                } %>
             public <%= CSharpAlias[association.Type] %> <%=association.Member%> { get; set; }
             
-<%			}
-			
-			foreach(Association association in Type.EntitySetAssociations)
-			{
-				if(sourceAttributes.PropertyMap.ContainsKey(association.Member))
+<%            }
+            
+            foreach(Association association in Type.EntitySetAssociations)
+            {
+                if(sourceAttributes.PropertyMap.ContainsKey(association.Member))
                 {
                     foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[association.Member].Attributes)
                     { %>
-            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>						
-<%					}
-				} %>
+            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>                        
+<%                    }
+                } %>
             public EntitySet<<%= CSharpAlias[association.Type] %>> <%=association.Member%> { get; set; }
             
-<%			} %>
+<%            } %>
         }
         
         #endregion

@@ -40,8 +40,8 @@ namespace <%=ClassNamespace%>
                 Constraints = new RouteValueDictionary(new { action = "List|Details|Edit|Insert" }),
                 Model = model
             });
-			<% }
-			else { %>
+            <% }
+            else { %>
             routes.Add(new DynamicDataRoute("{table}/ListDetails.aspx") {
                 Action = PageAction.List,
                 ViewName = "ListDetails",
@@ -53,7 +53,7 @@ namespace <%=ClassNamespace%>
                 ViewName = "ListDetails",
                 Model = model
             });
-			<% } %>
+            <% } %>
         }
 
         void Application_Start(object sender, EventArgs e)

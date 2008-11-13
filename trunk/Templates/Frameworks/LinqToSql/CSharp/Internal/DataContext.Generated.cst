@@ -232,9 +232,9 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         partial void Delete<%= table.Type.Name %>(<%= table.Type.Name %> instance);
 <% } %>
         #endregion
-		
-		<% if (IncludeIUpdatable) { %>
-		#region IUpdatable Members
+        
+        <% if (IncludeIUpdatable) { %>
+        #region IUpdatable Members
 
         // Special thanks to Mike Taulty; this is his implimentation of IUpdatable.
         // http://mtaulty.com/CommunityServer/blogs/mike_taultys_blog/archive/category/1005.aspx
@@ -432,15 +432,15 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         }
 
         #endregion
-		<% } %>
+        <% } %>
     }
 }
 
 <script runat="template">
-	public bool IncludeIUpdatable
-	{
-		get { return (this.Framework == FrameworkEnum.v35_SP1 && this.IncludeDataServices); }
-	}
+    public bool IncludeIUpdatable
+    {
+        get { return (this.Framework == FrameworkEnum.v35_SP1 && this.IncludeDataServices); }
+    }
 
     public string CreateAttribute(Function f)
     {
