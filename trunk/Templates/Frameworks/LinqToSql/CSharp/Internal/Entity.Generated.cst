@@ -395,10 +395,16 @@ namespace <%= Database.EntityNamespace %>
             return (<%= Type.Name %>)((ICloneable)this).Clone();
         }
         
-          #region "Detach Methods"
+        #region Detach Methods
+        /// <summary>
+        /// Detach this instance from the <see cref="DataContext"/>.
+        /// </summary>
+        /// <remarks>
+        /// Detaching the entity will allow it to be attached to another <see cref="DataContext"/>.
+        /// </remarks>
         public override void Detach()
         {
-            if (!IsAttached)
+            if (!IsAttached())
                 return;
             
             base.Detach();

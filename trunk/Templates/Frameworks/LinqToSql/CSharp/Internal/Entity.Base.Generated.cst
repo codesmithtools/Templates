@@ -112,11 +112,16 @@ namespace <%= ClassNamespace %>
             }
 <%}%>
         }
-        #region "Detach Methods"
-        
-        public bool IsAttached
+        #region Detach Methods        
+        /// <summary>
+        /// Gets a value indicating whether this instance is attached to the change tracking of <see cref="DataContext"/>.
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if this instance is attached; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsAttached()
         {
-            get { return PropertyChanging != null; }
+            return PropertyChanging != null;
         }
         
         /// <summary>
@@ -169,7 +174,6 @@ namespace <%= ClassNamespace %>
             entity.Entity.Detach();
             return new EntityRef<TEntity>(entity.Entity);
         }
-        
         #endregion
     }
 }
