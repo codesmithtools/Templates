@@ -23,8 +23,6 @@ namespace CodeSmith.Data.Attributes
 
         public override bool IsValid(object value)
         {
-            if (value != null)
-                throw new ValidationException(ErrorMessage);
             return true;
         }
         
