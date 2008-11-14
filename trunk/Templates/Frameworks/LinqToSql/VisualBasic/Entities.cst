@@ -205,8 +205,7 @@ Public Sub CreateEntity(ByVal entityClass As EntityGeneratedClass, ByVal partial
     parentFileName = Path.Combine(OutputDirectory, parentFileName)
     
     If File.Exists(parentFileName) Then
-        partialClass.ExistingFile = CodeFileParser.Create(parentFileName)
-        partialClass.ExistingFile.ParseMethodBodies = False
+        partialClass.ExistingFile = new CodeFileParser(parentFileName)
         partialClass.ExistingFile.Parse()
     End If
     

@@ -67,7 +67,7 @@ namespace CodeSmith.Engine
                 throw new Exception("InsertClassMergeStrategy only supports Languages 'C#' and 'VB'");
 
             // Parse Source
-            CodeFileParser sourceParser = CodeFileParser.Create(sourceContent, this.Language.Value);
+            CodeFileParser sourceParser = new CodeFileParser(sourceContent, this.Language.Value);
             sourceParser.ParseMethodBodies = false;
             sourceParser.Parse();
             AttributeSectionVisitor sourceVisitor = new AttributeSectionVisitor();
@@ -77,7 +77,7 @@ namespace CodeSmith.Engine
             if (OnlyInsertMatchingClass)
             {
                 // Parse Template
-                CodeFileParser templateParser = CodeFileParser.Create(templateOutput, this.Language.Value);
+                CodeFileParser templateParser = new CodeFileParser(templateOutput, this.Language.Value);
                 templateParser.ParseMethodBodies = false;
                 templateParser.Parse();
                 AttributeSectionVisitor templateVisitor = new AttributeSectionVisitor();
