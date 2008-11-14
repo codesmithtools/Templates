@@ -31,7 +31,7 @@ namespace CodeSmith.Data
             _rules = new RuleManager();
         }
 
-        private TContext _context;
+        private readonly TContext _context;
 
         /// <summary>
         /// Gets the managers DataContext.
@@ -42,12 +42,13 @@ namespace CodeSmith.Data
             get { return _context; }
         }
 
-        private RuleManager _rules;
+        private readonly RuleManager _rules;
 
         /// <summary>
         /// Gets the current rules for the entities.
         /// </summary>
         /// <value>The entity rules.</value>
+        [Obsolete("Use DataContext.RuleManager instead.")]
         public RuleManager Rules
         {
             get { return _rules; }
