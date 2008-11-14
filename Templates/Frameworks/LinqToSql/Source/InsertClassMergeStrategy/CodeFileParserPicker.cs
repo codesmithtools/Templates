@@ -55,14 +55,11 @@ namespace CodeSmith.Engine
                         _openFileDialog.Title = "Select a Code file:";
                         _openFileDialog.Filter = "C# files (*.cs)|*.cs|VB files (*.vb)|*.vb";
                     }
+
                     DialogResult result = _openFileDialog.ShowDialog(editorControl);
                     if (result == DialogResult.OK)
                     {
-                        CodeFileParser codeSmithParser = CodeFileParser.Create(_openFileDialog.FileName);
-                        codeSmithParser.ParseMethodBodies = GetParseMethodBodies(context);
-                        codeSmithParser.Parse();
-
-                        value = codeSmithParser;
+                        value = new CodeFileParser(_openFileDialog.FileName, GetParseMethodBodies(context));
                         codeTemplate.ContextData[fileKey] = _openFileDialog.FileName;
                     }
                     else

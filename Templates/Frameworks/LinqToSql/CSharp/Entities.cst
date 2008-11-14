@@ -213,8 +213,7 @@
 
         if (File.Exists(parentFileName))
         {
-            partialClass.ExistingFile = CodeFileParser.Create(parentFileName);
-            partialClass.ExistingFile.ParseMethodBodies = false;
+            partialClass.ExistingFile = new CodeFileParser(parentFileName);
             partialClass.ExistingFile.Parse();
         }
         

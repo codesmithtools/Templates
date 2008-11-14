@@ -57,6 +57,7 @@ Namespace <%= Database.EntityNamespace %>
             
 <%          Dim sourceAttributes As AttributeSectionVisitor = new AttributeSectionVisitor()
             If ExistingFile IsNot Nothing Then
+				ExistingFile.Parse()
                 ExistingFile.CompilationUnit.AcceptVisitor(sourceAttributes, "Metadata")
             End If 
             For Each column As Column In Type.Columns
