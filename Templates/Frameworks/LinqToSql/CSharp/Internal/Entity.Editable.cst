@@ -54,12 +54,6 @@ namespace <%= Database.EntityNamespace %>
         
         private class Metadata
         {
-            <% if (Type.Associations != null) { %>
-            //Type.Associations.Count: <%= Type.Associations.Count %> 
-            <% } else { %>
-            //NO ASSOCIATIONS
-            <% } %>
-            
             // Only Attributes in the class will be preserved.
             
 <%          AttributeSectionVisitor sourceAttributes = new AttributeSectionVisitor();
