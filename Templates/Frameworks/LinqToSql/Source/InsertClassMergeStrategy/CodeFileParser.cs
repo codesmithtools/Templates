@@ -63,9 +63,9 @@ namespace CodeSmith.Engine
             // Set Local Properties
             this.FileName = fileName;
             this.Language = language.Value;
-            this.ParseMethodBodies = parseMethodBodies;
             this.SourceContents = source.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            _parser = ParserFactory.CreateParser(language.Value, new StringReader(source));
+            this._parser = ParserFactory.CreateParser(language.Value, new StringReader(source));
+            this.ParseMethodBodies = parseMethodBodies;
         }
 
         ~CodeFileParser()
