@@ -70,7 +70,7 @@ namespace <%= Database.ContextNamespace %>
     /// </summary>
     <%= Naming.GetModifier(Database.AccessModifier) %> partial class <%= Database.Class %> : DataContext<% if (IncludeIUpdatable) { %>, IUpdatable<% } %>
     {
-        private static MappingSource mappingCache = new AttributeMappingSource();
+        private static readonly MappingSource mappingCache = new AttributeMappingSource();
         
         #region ConnectionString
         private const string CONNECTION_NAME = "<%= Database.Connection.SettingsPropertyName %>";
@@ -120,13 +120,6 @@ namespace <%= Database.ContextNamespace %>
         #endregion
         
         #region Constructors
-        /// <summary>
-        /// Initializes the <see cref="<%= Database.Class %>"/> class.
-        /// </summary>
-        [DebuggerNonUserCodeAttribute]
-        static <%= Database.Class %>()
-        { }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         /// </summary>
@@ -390,7 +383,14 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// </summary>
         void IUpdatable.SaveChanges()
         {
-            SubmitChanges();
+            try
+            {
+                SubmitChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new DataServiceException("Error Saving Context. " + ex.GetBaseException().Message, ex);
+            }
         }
 
         /// <summary>
