@@ -22,6 +22,9 @@
 
 Imports System
 Imports System.ComponentModel
+Imports System.IO
+Imports System.Data.Linq
+Imports System.Linq
 <% If IncludeDataContract Then %>
 Imports System.Runtime.Serialization
 <%End If%>
@@ -74,5 +77,66 @@ Namespace <%= ClassNamespace %>
             RaiseEvent PropertyChanging(Me, New PropertyChangingEventArgs(propertyName))
         End Sub
         #End Region
+        
+        #Region "Detach Methods"
+        ''' <summary>
+        ''' Gets a value indicating whether this instance is attached to the change tracking of <see cref="DataContext"/>.
+        ''' </summary>
+        ''' <returns>
+        ''' <c>true</c> if this instance is attached; otherwise, <c>false</c>.
+        ''' </returns>
+        Public Function IsAttached() As Boolean
+            Return PropertyChanging IsNot Nothing
+        End Function
+        
+        ''' <summary>
+        ''' Detach this instance from the <see cref="DataContext"/>.
+        ''' </summary>
+        ''' <remarks>
+        ''' Detaching the entity will allow it to be attached to another <see cref="DataContext"/>.
+        ''' </remarks>
+        Public Overridable Sub Detach()
+            PropertyChanging = Nothing
+            PropertyChanged = Nothing
+        End Sub
+        
+        ''' <summary>
+        ''' Detach the specified <see cref="T:System.Data.Linq.EntitySet`1" />.
+        ''' </summary>
+        ''' <typeparam name="TEntity">The type of the entity.</typeparam>
+        ''' <param name="set">The <see cref="T:System.Data.Linq.EntitySet`1" /> to detach.</param>
+        ''' <param name="onAdd">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Add(`0)" />.</param>
+        ''' <param name="onRemove">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Remove(`0)" />.</param>
+        ''' <returns>A new <see cref="T:System.Data.Linq.EntitySet`1" /> with the list copied if it was loaded.</returns>
+        Protected Shared Function Detach(Of TEntity As LinqEntityBase)(ByVal [set] As EntitySet(Of TEntity), ByVal onAdd As Action(Of TEntity), ByVal onRemove As Action(Of TEntity)) As EntitySet(Of TEntity)
+            If [set] Is Nothing OrElse Not [set].HasLoadedOrAssignedValues Then
+                Return New EntitySet(Of TEntity)(onAdd, onRemove)
+            End If
+            
+            ' copy list and detach all entities
+            Dim list = [set].ToList()
+            list.ForEach(Function(t) t.Detach())
+            
+            Dim newSet = New EntitySet(Of TEntity)(onAdd, onRemove)
+            newSet.Assign(list)
+            Return newSet
+        End Function
+        
+        ''' <summary>
+        ''' Detach the specified <see cref="T:System.Data.Linq.EntityRef`1"/>.
+        ''' </summary>
+        ''' <typeparam name="TEntity">The type of the entity.</typeparam>
+        ''' <param name="entity">The <see cref="T:System.Data.Linq.EntityRef`1"/> to detach.</param>
+        ''' <returns>A new <see cref="T:System.Data.Linq.EntityRef`1"/> with the entity detached.</returns>
+        Protected Shared Function Detach(Of TEntity As LinqEntityBase)(ByVal entity As EntityRef(Of TEntity)) As EntityRef(Of TEntity)
+            If Not entity.HasLoadedOrAssignedValue Then
+                Return New EntityRef(Of TEntity)()
+            End If
+            
+            entity.Entity.Detach()
+            Return New EntityRef(Of TEntity)(entity.Entity)
+        End Function
+        #End Region
+
     End Class
 End Namespace

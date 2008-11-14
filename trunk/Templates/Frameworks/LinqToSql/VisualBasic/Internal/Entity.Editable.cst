@@ -33,6 +33,7 @@ Imports System
 Imports System.Linq
 Imports System.Collections.Generic
 Imports System.Text
+Imports System.Data.Linq
 <%If(Framework = FrameworkEnum.v35_SP1)Then%>
 Imports System.ComponentModel.DataAnnotations
 Imports CodeSmith.Data.Attributes
