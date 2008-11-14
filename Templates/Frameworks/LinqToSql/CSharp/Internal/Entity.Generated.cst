@@ -420,7 +420,7 @@ namespace <%= Database.EntityNamespace %>
         private void Detach_<%=manyMany.RightType.Name%>List(<%=manyMany.RightType.Name%> entity)
         {
             SendPropertyChanging(null);
-            var <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%=manyMany.JoinType.Name%>List.FirstOrDefault(c => c.<%=manyMany.GetLeftKey()%> == <%=manyMany.GetLeftKey()%> && c.<%=manyMany.GetRightKey()%> == entity.<%=manyMany.GetRightKey()%>);
+            var <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%=manyMany.JoinType.Name%>List.FirstOrDefault(c => c.<%=manyMany.JoinLeftKey%> == <%=manyMany.LeftKey%> && c.<%=manyMany.JoinRightKey%> == entity.<%=manyMany.RightKey%>);
             <%=manyMany.JoinType.Name%>List.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>);
             SendPropertyChanged(null);
         }
@@ -765,11 +765,22 @@ namespace <%= Database.EntityNamespace %>
         manyMany.LeftType = Type;
         manyMany.JoinType = type;
         
+        foreach(Column pk in manyMany.LeftType.PrimaryKeyColumns)
+            manyMany.LeftKey = manyMany.LeftKey + pk.Member;
+        
         foreach(Association association in type.EntityRefAssociations)
         {
             if(association.Type != Type.Name)
             {
                 manyMany.RightType = Database.GetTypeByName(association.Type);
+                manyMany.JoinRightKey = association.ThisKey;
+                
+                foreach(Column pk in manyMany.RightType.PrimaryKeyColumns)
+                    manyMany.RightKey = manyMany.RightKey + pk.Member;
+            }
+            else
+            {
+                manyMany.JoinLeftKey = association.ThisKey;
             }
         }
         return manyMany;
@@ -780,28 +791,10 @@ namespace <%= Database.EntityNamespace %>
         public LinqToSqlShared.DbmlObjectModel.Type LeftType;
         public LinqToSqlShared.DbmlObjectModel.Type RightType;
         public LinqToSqlShared.DbmlObjectModel.Type JoinType;
-        
-        
-        //string.Concat would not work below.
-        public string GetRightKey()
-        {
-            
-            string rightKey = string.Empty;
-            foreach(Column pk in RightType.PrimaryKeyColumns)
-                rightKey = rightKey + pk.Name;
-                
-            return rightKey;
-        }
-        
-        public string GetLeftKey()
-        {
-            
-            string leftKey = string.Empty;
-            foreach(Column pk in LeftType.PrimaryKeyColumns)
-                leftKey = leftKey + pk.Name;
-                
-            return leftKey;
-        }
+        public string RightKey;
+        public string LeftKey;
+        public string JoinRightKey;
+        public string JoinLeftKey;
         
     }
 </script>
