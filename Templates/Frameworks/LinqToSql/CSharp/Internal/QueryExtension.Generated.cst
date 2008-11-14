@@ -66,7 +66,7 @@ namespace <%= Database.ContextNamespace %>
     /// <summary>
     /// The query extension class for <%= EntityManager.EntityName %>.
     /// </summary>
-    public static partial class <%= EntityManager.EntityName %>QueryExtension
+    public static partial class <%= EntityManager.EntityName %>Extensions
     {
 <% foreach(ManagerMethod method in EntityManager.Methods) { %>
 

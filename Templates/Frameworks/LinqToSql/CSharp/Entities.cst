@@ -27,18 +27,6 @@
     Description="The full path to the mapping file." 
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
-<%@ Property Category="2.Class" Name="Framework"
-    Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v35_SP1" Optional="False"
-    Description="Which version of the .Net Framework is being generated for." %>
-    
-<%@ Property Category="2.Class" Name="IncludeDataContract"
-    Type="System.Boolean" Default="true" Optional="False"
-    Description="Include WCF DataContract attributes." %>
-
-<%@ Property Category="2.Class" Name="IncludeDataServices"
-    Type="System.Boolean" Default="true" Optional="False"
-    Description="Include ADO.Net DataServices attributes and impliment IUpdatable on DataContext." %>
-    
 <%@ Register Name="DataContextGeneratedClass" 
     Template="Internal\DataContext.Generated.cst" 
     MergeProperties="False" %>
@@ -57,7 +45,7 @@
 
 <%@ Register Name="EntityGeneratedClass" 
     Template="Internal\Entity.Generated.cst" 
-    MergeProperties="False" %>
+    MergeProperties="True" ExcludeProperties="Database,TableName,Type, EntityBase" %>
 
 <%@ Register Name="EntityEditableClass" 
     Template="Internal\Entity.Editable.cst" 
@@ -169,14 +157,12 @@
     public void CreateEntityClasses(Database database)
     {
         EntityGeneratedClass t = this.Create<EntityGeneratedClass>();
+        this.CopyPropertiesTo(t);
         t.Database = database;
-        t.IncludeDataContract = this.IncludeDataContract;
-        t.IncludeDataServices = this.IncludeDataServices;
-        t.Framework = this.Framework;
         
         EntityEditableClass p = this.Create<EntityEditableClass>();
+        this.CopyPropertiesTo(t);
         p.Database = database;
-        p.Framework = Framework;
 
         foreach(Table tableMap in database.Tables)
         {

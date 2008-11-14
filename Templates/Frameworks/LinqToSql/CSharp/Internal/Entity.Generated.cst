@@ -6,6 +6,7 @@
 
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 
@@ -37,6 +38,10 @@
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include ADO.Net DataServices attributes." %>
 
+<%@ Property Category="2.Class" Name="IncludeDataRules"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Include CodeSmith.Data rules." %>
+
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
     Description="Mapping to escape c# keywords" %>
@@ -66,6 +71,11 @@ using System.ComponentModel.DataAnnotations;
 <% if (IncludeDataServices) { %>
 using System.Data.Services.Common;
 <% } %>
+<% } %>
+<% if (IncludeDataRules) { %>
+using CodeSmith.Data.Rules;
+using CodeSmith.Data.Rules.Assign;
+using CodeSmith.Data.Rules.Validation;
 <% } %>
 
 namespace <%= Database.EntityNamespace %>
@@ -121,12 +131,62 @@ namespace <%= Database.EntityNamespace %>
         : <%= EntityBase %>
 <% } %>
     {
-        
+<% if (IncludeDataRules) { %>
+        #region Static Constructor
+        /// <summary>
+        /// Initializes the <see cref="<%= Type.Name %>"/> class.
+        /// </summary>
+        static <%= Type.Name %>()
+        {
+            <%if(Framework == FrameworkEnum.v35_SP1) { %>
+            RuleManager.AddShared<<%= Type.Name %>>();
+            <% } else {
+                const string lengthFormat = "RuleManager.AddShared<{0}>(new LengthRule(\"{1}\", {2}));";
+                const string requiredFormat = "RuleManager.AddShared<{0}>(new RequiredRule(\"{1}\"));";
+                const string sqlDateFormat = "RuleManager.AddShared<{0}>(new RangeRule<DateTime>(\"{1}\", SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value));";
+                const string createDateFormat = "RuleManager.AddShared<{0}>(new NowRule(\"{1}\", EntityState.New));";
+                const string modifyDateFormat = "RuleManager.AddShared<{0}>(new NowRule(\"{1}\", EntityState.Dirty));";
+                
+                int indent = Response.IndentLevel;
+                Response.IndentLevel = 3;
+                foreach(Column c in Type.Columns) { 
+                    
+                    if (!c.CanBeNull == true && c.IsDbGenerated == false)
+                    {
+                        if (c.Type.Contains("String"))
+                        {
+                            Response.WriteLine(string.Format(requiredFormat, Type.Name, c.Member));
+                        }
+                        else if (c.Type.Contains("DateTime"))
+                        {
+                            if (c.Member.Contains("Create"))
+                                Response.WriteLine(string.Format(createDateFormat, Type.Name, c.Member));
+                            else if (c.Member.Contains("Modify") || c.Member.Contains("Modified"))
+                                Response.WriteLine(string.Format(modifyDateFormat, Type.Name, c.Member));
+                            else
+                                Response.WriteLine(string.Format(sqlDateFormat, Type.Name, c.Member));
+                        }
+                    }
+                    
+                    if (c.Type.Contains("String"))
+                    {
+                        int size = GetSize(c.DbType);
+                        if (0 < size && size < 8000)
+                            Response.WriteLine(string.Format(lengthFormat, Type.Name, c.Member, size));
+                    }
+                } 
+                Response.IndentLevel = indent;
+                }%>
+            AddSharedRules();
+        }
+        #endregion
+<% } // IncludeDataRules %>
+
         #region Default Constructor
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= Type.Name %>"/> class.
         /// </summary>
-        [DebuggerNonUserCodeAttribute()]
+        [DebuggerNonUserCodeAttribute]
         <%= Naming.GetModifier(Type.AccessModifier) %> <%= Type.Name %>()
         {
             OnCreated();
@@ -141,9 +201,7 @@ namespace <%= Database.EntityNamespace %>
             <%= a.Storage %> = default(EntityRef<<%= a.Type %>>);
 <% } // foreach Association%>
 <% foreach(Association a in Type.EntitySetAssociations) { %>
-            <%= a.Storage %> = new EntitySet<<%= a.Type %>>(
-                new System.Action<<%= a.Type %>>(this.Attach_<%= a.Member %>),
-                new System.Action<<%= a.Type %>>(this.Detach_<%= a.Member %>));
+            <%= a.Storage %> = new EntitySet<<%= a.Type %>>(Attach_<%= a.Member %>, Detach_<%= a.Member %>);
 <% } // foreach Association%>
         }
         #endregion
@@ -303,7 +361,7 @@ namespace <%= Database.EntityNamespace %>
             set { <%= a.Storage %>.Assign(value); }
         }
         
-        [DebuggerNonUserCodeAttribute()]
+        [DebuggerNonUserCodeAttribute]
         private void Attach_<%= a.Member %>(<%= a.Type %> entity)
         {
             SendPropertyChanging(null);
@@ -311,18 +369,19 @@ namespace <%= Database.EntityNamespace %>
             SendPropertyChanged(null);
         }
         
-        [DebuggerNonUserCodeAttribute()]
+        [DebuggerNonUserCodeAttribute]
         private void Detach_<%= a.Member %>(<%= a.Type %> entity)
         {
             SendPropertyChanging(null);
             entity.<%= info.OtherAssociation.Member %> = null;
             SendPropertyChanged(null);
         }
-        
 <% if(IsManyToMany(info.OtherType))
     {
         ManyToManyInfo manyMany = GetManyToManyInfo(info.OtherType);
-%>    
+%>
+
+        [NonSerialized]
         private EntitySet<<%=manyMany.RightType.Name%>> _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List;
 
         /// <summary>
@@ -340,7 +399,6 @@ namespace <%= Database.EntityNamespace %>
                 {
                     _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List = new EntitySet<<%=manyMany.RightType.Name%>>(Attach_<%=manyMany.RightType.Name%>List, Detach_<%=manyMany.RightType.Name%>List);
                     _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.SetSource(<%=manyMany.JoinType.Name%>List.Select(c => c.<%=manyMany.RightType.Name%>));
-
                 }
                 return _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List;
             }
@@ -348,7 +406,7 @@ namespace <%= Database.EntityNamespace %>
             {
                 _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.Assign(value);
             }
-        }    
+        }
         
         [DebuggerNonUserCode]
         private void Attach_<%=manyMany.RightType.Name%>List(<%=manyMany.RightType.Name%> entity)
@@ -367,13 +425,13 @@ namespace <%= Database.EntityNamespace %>
             SendPropertyChanged(null);
         }
     
-<%}%>
-        
-        
+<%} // many to many%>
 <% } // foreach Association%>
         #endregion
         
         #region Extensibility Method Definitions
+        /// <summary>Called by the static constructor to add shared rules.</summary>
+        static partial void AddSharedRules();
         /// <summary>Called when this instance is loaded.</summary>
         partial void OnLoaded();
         /// <summary>Called when this instance is being saved.</summary>
@@ -386,10 +444,10 @@ namespace <%= Database.EntityNamespace %>
     if (column.CanBeNull == true && CommonUtility.IsNullableType(column.Type))
         dataType = string.Format("Nullable<{0}>", dataType);
 %>
-        /// <summary>Called when <%= column.Member %> is changing.</summary>
+        /// <summary>Called when <see cref="<%= column.Member %>"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void On<%= column.Member %>Changing(<%= dataType %> value);
-        /// <summary>Called after <%= column.Member %> has Changed.</summary>
+        /// <summary>Called after <see cref="<%= column.Member %>"/> has Changed.</summary>
         partial void On<%= column.Member %>Changed();
 <% } // foreach %>
         #endregion
@@ -402,7 +460,7 @@ namespace <%= Database.EntityNamespace %>
         /// Called when serializing.
         /// </summary>
         /// <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
-        [OnSerializing()]
+        [OnSerializing]
         [EditorBrowsableAttribute(EditorBrowsableState.Never)]
         public void OnSerializing(StreamingContext context) {
             serializing = true;
@@ -412,7 +470,7 @@ namespace <%= Database.EntityNamespace %>
         /// Called when serialized.
         /// </summary>
         /// <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
-        [OnSerialized()]
+        [OnSerialized]
         [EditorBrowsableAttribute(EditorBrowsableState.Never)]
         public void OnSerialized(StreamingContext context) {
             serializing = false;
@@ -422,7 +480,7 @@ namespace <%= Database.EntityNamespace %>
         /// Called when deserializing.
         /// </summary>
         /// <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
-        [OnDeserializing()]
+        [OnDeserializing]
         [EditorBrowsableAttribute(EditorBrowsableState.Never)]
         public void OnDeserializing(StreamingContext context) {
             Initialize();
@@ -431,6 +489,7 @@ namespace <%= Database.EntityNamespace %>
         #endregion
 <% } %>
 
+        #region Clone
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>
@@ -445,7 +504,8 @@ namespace <%= Database.EntityNamespace %>
         {
             return (<%= Type.Name %>)((ICloneable)this).Clone();
         }
-        
+        #endregion
+
         #region Detach Methods
         /// <summary>
         /// Detach this instance from the <see cref="DataContext"/>.
@@ -496,6 +556,21 @@ namespace <%= Database.EntityNamespace %>
             return false;
         
         return true;
+    }
+    
+    private static readonly Regex _sizeRegex = new Regex(@"(?<Size>\d+)", RegexOptions.Compiled);
+    
+    public int GetSize(string s)
+    {
+        int size = 0;
+        
+        Match m = _sizeRegex.Match(s);
+        if (!m.Success)
+            return size;
+        
+        string temp = m.Groups["Size"].Value;
+        int.TryParse(temp, out size);
+        return size;            
     }
     
     public string GetColumnType(Column column)

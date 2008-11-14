@@ -40,7 +40,7 @@
 
 <%@ Register Name="QueryExtensionGeneratedClass" 
     Template="Internal\QueryExtension.Generated.cst" 
-    MergeProperties="true" ExcludeProperties="Database, DataManager,EntityManager,Table"%>
+    MergeProperties="true" ExcludeProperties="Database, DataManager,EntityManager,Table" %>
 
 <script runat="template">    
     public void Generate()
@@ -80,7 +80,7 @@
         {
             Stopwatch watch = Stopwatch.StartNew();
             
-            string className = manager.EntityName + "QueryExtension";
+            string className = manager.EntityName + "Extensions";
             string parentFileName = className + ".cs";
             parentFileName = Path.Combine(QueryDirectory, parentFileName);
 
