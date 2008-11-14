@@ -84,6 +84,21 @@ namespace <%= Database.ContextNamespace %>
             
             return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>);
         }
+<% } else if (method.IsUnique) { %>
+        /// <summary>
+        /// Gets an instance by using a unique index.
+        /// </summary>
+        /// <returns>An instance of the entity or null if not found.</returns>
+        public static <%= EntityManager.EntityName %> <%= MethodPrefix %><%= method.NameSuffix %>(this IQueryable<<%= EntityManager.EntityName %>> queryable, <%= GetParameters(method) %>)
+        {
+<% if (method.Columns.Count < 4) { %>
+            var entity = queryable as Table<<%= EntityManager.EntityName %>>;
+            if (entity != null && entity.Context.LoadOptions == null)
+                return Query.<%= MethodPrefix %><%= method.NameSuffix %>.Invoke((<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
+<% } // column count%>
+
+            return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>);
+        }
 <% } else { %>
         /// <summary>
         /// Gets a query by an index.
@@ -106,6 +121,12 @@ namespace <%= Database.ContextNamespace %>
 <% if (method.IsKey) { %>
 
             internal static readonly Func<<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= EntityManager.EntityName %>> <%= MethodPrefix %><%= MethodKeySuffix %> = 
+                CompiledQuery.Compile(
+                    (<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) => 
+                        db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
+<% } else if (method.IsUnique) { %>
+
+            internal static readonly Func<<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= EntityManager.EntityName %>> <%= MethodPrefix %><%= method.NameSuffix %> = 
                 CompiledQuery.Compile(
                     (<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) => 
                         db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
