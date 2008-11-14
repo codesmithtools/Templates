@@ -300,6 +300,58 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
             entity.<%= info.OtherAssociation.Member %> = Nothing
             OnPropertyChanged(Nothing)
         End Sub
+        
+<% If IsManyToMany(info.OtherType) Then
+
+        Dim manyMany As ManyToManyInfo = GetManyToManyInfo(info.OtherType)
+%>
+
+        <NonSerialized> _
+        Private _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List As EntitySet<<%=manyMany.RightType.Name%>>
+
+        ''' <summary>
+        ''' Gets or sets the Many To Many <%=manyMany.RightType.Name%> list.
+        ''' </summary>
+        ''' <value>The <%=manyMany.RightType.Name%> list.</value>
+        Public Property <%=manyMany.RightType.Name%>List As EntitySet<<%=manyMany.RightType.Name%>>
+        
+            Get
+            
+                If (serializing)
+                    Return Nothing
+                End If
+
+                If (_<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List Is Nothing)
+                
+                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List = New EntitySet<<%=manyMany.RightType.Name%>>(Attach_<%=manyMany.RightType.Name%>List, Detach_<%=manyMany.RightType.Name%>List)
+                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.SetSource(<%=manyMany.JoinType.Name%>List.Select(c => c.<%=manyMany.RightType.Name%>))
+                End If
+                return _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List
+            End Get
+            Set
+            
+                _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.Assign(value)
+            End Set
+        End Function
+        
+        <DebuggerNonUserCode> _
+        Private Sub Attach_<%=manyMany.RightType.Name%>List(<%=manyMany.RightType.Name%> entity)
+        
+            SendPropertyChanging(Nothing)
+            <%=manyMany.JoinType.Name%>List.Add(New <%=manyMany.JoinType.Name%> { <%=manyMany.LeftType.Name%> = Me, <%=manyMany.RightType.Name%> = entity })
+            SendPropertyChanged(Nothing)
+        End Sub
+        
+        <DebuggerNonUserCode> _
+        Private Sub Detach_<%=manyMany.RightType.Name%>List(<%=manyMany.RightType.Name%> entity)
+        
+            SendPropertyChanging(Nothing);
+            Var <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%=manyMany.JoinType.Name%>List.FirstOrDefault(c => c.<%=manyMany.JoinLeftKey%> == <%=manyMany.LeftKey%> && c.<%=manyMany.JoinRightKey%> == entity.<%=manyMany.RightKey%>)
+            <%=manyMany.JoinType.Name%>List.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>)
+            SendPropertyChanged(Nothing)
+        End Sub
+    
+<% End If ' many to many%>
 <% Next ' foreach Association%>
            #End Region
         
@@ -359,6 +411,48 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         #End Region
     <%End If%>
     
+       #Region "Clone"
+        ''' <summary>
+        ''' Creates a new object that is a copy of the current instance.
+        ''' </summary>
+        ''' <returns>
+        ''' A new object that is a copy of this instance.
+        ''' </returns>
+        ''' <remarks>
+        ''' This method is equivalent to a Detach from the current <see cref="DataContext"/>.
+        ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
+        ''' </remarks>
+        Public Function Clone() As <%= Type.Name %>
+            return (<%= Type.Name %>)((ICloneable)Me).Clone()
+        End Function
+        #End Region
+
+        #Region "Detach Methods"
+        ''' <summary>
+        ''' Detach this instance from the <see cref="DataContext"/>.
+        ''' </summary>
+        ''' <remarks>
+        ''' Detaching the entity will allow it to be attached to another <see cref="DataContext"/>.
+        ''' </remarks>
+        Public Override Sub Detach()
+        
+            If (!IsAttached())
+                return
+            
+            base.Detach()
+<%  For Each a As Association In Type.EntityRefAssociations
+        Dim info As AssociationInfo = GetAssociationInfo(a)
+%>
+            <%=a.Storage%> = Detach(<%=a.Storage%>)
+<%  Next
+    For Each a As Association In Type.EntitySetAssociations
+        Dim info As AssociationInfo = GetAssociationInfo(a)
+%>
+            <%=a.Storage%> = Detach(<%=a.Storage%>, Attach_<%=a.Member%>, Detach_<%=a.Member%>)
+<%  Next %>
+        End Sub
+        #End Region
+    
     End Class
 End Namespace
 
@@ -374,6 +468,32 @@ End Namespace
     
     Return dataType
 End Function
+
+Public Function IsManyToMany(ByVal type As LinqToSqlShared.DbmlObjectModel.Type) As Boolean
+    
+    If type.Columns.Count < 2 Then
+        Return False
+    End If
+    
+    Dim pk As New List(Of Column)(type.PrimaryKeyColumns)
+    If pk.Count <> 2 Then
+        Return False
+    End If
+    
+    Dim fk As New List(Of Association)()
+    For Each c As Column In pk
+        Dim a As Association = type.GetForeignKeyAssociation(c)
+        If a IsNot Nothing Then
+            fk.Add(a)
+        End If
+    Next
+    If fk.Count <> 2 Then
+        Return False
+    End If
+    
+    Return True
+End Function
+
 Public Function GetClassAttributes() As String
 
     Dim s As New StringBuilder()
@@ -541,5 +661,41 @@ Public Structure AssociationInfo
     Public AddSyntax As String
     Public RemoveSyntax As String
 End Structure
+
+Public Function GetManyToManyInfo(ByVal type__1 As LinqToSqlShared.DbmlObjectModel.Type) As ManyToManyInfo
+    Dim manyMany As New ManyToManyInfo()
+    manyMany.LeftType = Type
+    manyMany.JoinType = type__1
+    
+    For Each pk As Column In manyMany.LeftType.PrimaryKeyColumns
+        manyMany.LeftKey = manyMany.LeftKey + pk.Member
+    Next
+    
+    For Each association As Association In type__1.EntityRefAssociations
+        If association.Type <> Type.Name Then
+            manyMany.RightType = Database.GetTypeByName(association.Type)
+            manyMany.JoinRightKey = association.ThisKey
+            
+            For Each pk As Column In manyMany.RightType.PrimaryKeyColumns
+                manyMany.RightKey = manyMany.RightKey + pk.Member
+            Next
+        Else
+            manyMany.JoinLeftKey = association.ThisKey
+        End If
+    Next
+    Return manyMany
+End Function
+
+Public Structure ManyToManyInfo
+    Public LeftType As LinqToSqlShared.DbmlObjectModel.Type
+    Public RightType As LinqToSqlShared.DbmlObjectModel.Type
+    Public JoinType As LinqToSqlShared.DbmlObjectModel.Type
+    Public RightKey As String
+    Public LeftKey As String
+    Public JoinRightKey As String
+    Public JoinLeftKey As String
+End Structure
+
+
 
 </script>
