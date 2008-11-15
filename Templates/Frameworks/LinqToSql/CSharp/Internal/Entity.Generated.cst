@@ -64,6 +64,7 @@ using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Diagnostics;
 <% if (IncludeDataContract) { %>
+using System.IO;
 using System.Runtime.Serialization;
 <% } %>
 <% if (this.Framework == FrameworkEnum.v35_SP1) { %>
@@ -87,7 +88,6 @@ namespace <%= Database.EntityNamespace %>
     /// Class representing data for the <%= Database.Name %> database.
 <% } %>
     /// </summary>
-    [Serializable]
     <%= GetClassAttributes() %>
 <% if (IncludeDataContract) { %>
     [DataContract(<% if (Framework == FrameworkEnum.v35_SP1) { %>IsReference=true<% } %>)]
@@ -128,7 +128,7 @@ namespace <%= Database.EntityNamespace %>
 <% } %>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
-        : <%= EntityBase %>
+        : <%= EntityBase %><% if (IncludeDataContract) { %>, ICloneable<% } %>
 <% } %>
     {
 <% if (IncludeDataRules) { %>
@@ -281,7 +281,6 @@ namespace <%= Database.EntityNamespace %>
 <%  foreach(Association a in Type.EntityRefAssociations) {
         AssociationInfo info = GetAssociationInfo(a);
 %>
-        [NonSerialized]
         private EntityRef<<%= a.Type %>> <%= a.Storage %>;
 
         /// <summary>
@@ -341,7 +340,6 @@ namespace <%= Database.EntityNamespace %>
         AssociationInfo info = GetAssociationInfo(a);
 %>
         
-        [NonSerialized]
         private EntitySet<<%= a.Type %>> <%= a.Storage %>;
         
         /// <summary>
@@ -381,7 +379,6 @@ namespace <%= Database.EntityNamespace %>
         ManyToManyInfo manyMany = GetManyToManyInfo(info.OtherType);
 %>
 
-        [NonSerialized]
         private EntitySet<<%=manyMany.RightType.Name%>> _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List;
 
         /// <summary>
@@ -392,8 +389,10 @@ namespace <%= Database.EntityNamespace %>
         {
             get
             {
+<% if (IncludeDataContract) { %>
                 if (serializing)
                     return null;
+<% } %>
 
                 if (_<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List == null)
                 {
@@ -485,9 +484,7 @@ namespace <%= Database.EntityNamespace %>
         public void OnDeserializing(StreamingContext context) {
             Initialize();
         }
-        
         #endregion
-<% } %>
 
         #region Clone
         /// <summary>
@@ -496,8 +493,24 @@ namespace <%= Database.EntityNamespace %>
         /// <returns>
         /// A new object that is a copy of this instance.
         /// </returns>
+        object ICloneable.Clone()
+        {
+            DataContractSerializer serializer = new DataContractSerializer(GetType());
+            using (MemoryStream ms = new MemoryStream())
+            {
+                serializer.WriteObject(ms, this);
+                ms.Position = 0;
+                return serializer.ReadObject(ms);
+            }
+        }
+        
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a copy of this instance.
+        /// </returns>
         /// <remarks>
-        /// This method is equivalent to a Detach from the current <see cref="DataContext"/>.
         /// Only loaded EntityRef and EntitySet child accessions will be cloned.
         /// </remarks>
         public <%= Type.Name %> Clone()
@@ -505,6 +518,7 @@ namespace <%= Database.EntityNamespace %>
             return (<%= Type.Name %>)((ICloneable)this).Clone();
         }
         #endregion
+<% } %>
 
         #region Detach Methods
         /// <summary>

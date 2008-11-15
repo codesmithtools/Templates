@@ -25,22 +25,21 @@ using System.ComponentModel;
 using System.IO;
 using System.Data.Linq;
 using System.Linq;
-<%if(IncludeDataContract)%>
+<%if(IncludeDataContract) { %>
 using System.Runtime.Serialization;
+<% } %>
 
 namespace <%= ClassNamespace %>
 {
     /// <summary>
     /// A base class for Linq entities that implements notification events.
     /// </summary>
-    [Serializable]
     <%if (IncludeDataContract) { %>
     [DataContract(<%if (Framework == FrameworkEnum.v35_SP1) { %> IsReference=true <%}%>)]
     <%}%>
     public abstract partial class <%= ClassName %> :
         INotifyPropertyChanging,
-        INotifyPropertyChanged,
-        ICloneable
+        INotifyPropertyChanged
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class.
@@ -86,33 +85,7 @@ namespace <%= ClassNamespace %>
         }
         #endregion
         
-        /// <summary>
-        /// Creates a new object that is a copy of the current instance.
-        /// </summary>
-        /// <returns>
-        /// A new object that is a copy of this instance.
-        /// </returns>
-        object ICloneable.Clone()
-        {
-<%if (IncludeDataContract) { %>
-            DataContractSerializer serializer = new DataContractSerializer(GetType());
-            using (MemoryStream ms = new MemoryStream())
-            {
-                serializer.WriteObject(ms, this);
-                ms.Position = 0;
-                return serializer.ReadObject(ms);
-            }
-<%} else {%>
-            using (MemoryStream ms = new MemoryStream())
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(ms, this);
-                ms.Position = 0;
-                return formatter.Deserialize(ms);
-            }
-<%}%>
-        }
-        #region Detach Methods        
+        #region Detach Methods
         /// <summary>
         /// Gets a value indicating whether this instance is attached to the change tracking of <see cref="DataContext"/>.
         /// </summary>
