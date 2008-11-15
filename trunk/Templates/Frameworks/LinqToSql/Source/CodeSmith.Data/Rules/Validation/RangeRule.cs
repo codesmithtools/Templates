@@ -61,8 +61,13 @@ namespace CodeSmith.Data.Rules.Validation
         /// <param name="context">The context.</param>
         public override void Run(RuleContext context)
         {
-            context.Success = false;
             context.Message = ErrorMessage;
+            context.Success = true;
+
+            if (!CanRun(context.TrackedObject))
+                return;
+            
+            context.Success = false;
             
             T value = GetPropertyValue<T>(context.TrackedObject.Current);
             IComparable comparer = value as IComparable;

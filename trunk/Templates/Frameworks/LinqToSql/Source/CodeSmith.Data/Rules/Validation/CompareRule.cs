@@ -81,6 +81,11 @@ namespace CodeSmith.Data.Rules.Validation
         public override void Run(RuleContext context)
         {
             context.Message = ErrorMessage;
+            context.Success = true;
+
+            if (!CanRun(context.TrackedObject))
+                return;
+
             context.Success = false;
                 
             T value = GetPropertyValue<T>(context.TrackedObject.Current);
