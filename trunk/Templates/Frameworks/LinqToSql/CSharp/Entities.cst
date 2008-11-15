@@ -96,12 +96,12 @@
     public void CreateEntityBaseClass(Database database)
     {
         EntityBaseGeneratedClass t = this.Create<EntityBaseGeneratedClass>();
+        this.CopyPropertiesTo(t);
         t.ClassNamespace = database.EntityNamespace;
         t.ClassName = database.EntityBase;
-        t.IncludeDataContract = IncludeDataContract;
-        t.Framework = Framework;
         
         EntityBaseEditableClass p = this.Create<EntityBaseEditableClass>();
+        this.CopyPropertiesTo(p);
         p.ClassNamespace = database.EntityNamespace;
         p.ClassName = database.EntityBase;
         
@@ -124,13 +124,13 @@
     public void CreateDataContextClass(Database database)
     {
         DataContextGeneratedClass t = this.Create<DataContextGeneratedClass>();
+        this.CopyPropertiesTo(t);
         t.Database = database;
-        t.Framework = this.Framework;
-        t.IncludeDataServices = this.IncludeDataServices;
         
         DataContextEditableClass p = this.Create<DataContextEditableClass>();
+        this.CopyPropertiesTo(p);
         p.Database = database;
-        
+
         string contextClass = CommonUtility.GetClassName(database.Class);
         
         string parentFileName = contextClass + ".cs";
@@ -161,7 +161,7 @@
         t.Database = database;
         
         EntityEditableClass p = this.Create<EntityEditableClass>();
-        this.CopyPropertiesTo(t);
+        this.CopyPropertiesTo(p);
         p.Database = database;
 
         foreach(Table tableMap in database.Tables)
