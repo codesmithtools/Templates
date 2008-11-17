@@ -192,7 +192,6 @@ Public Sub CreateEntity(ByVal entityClass As EntityGeneratedClass, ByVal partial
     
     If File.Exists(parentFileName) Then
         partialClass.ExistingFile = New CodeFileParser(parentFileName)
-        partialClass.ExistingFile.Parse()
     End If
     
     Dim insertClassMergeStrategy__1 As New InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata")

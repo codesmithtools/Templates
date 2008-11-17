@@ -214,7 +214,6 @@
         if (File.Exists(parentFileName))
         {
             partialClass.ExistingFile = new CodeFileParser(parentFileName);
-            partialClass.ExistingFile.Parse();
         }
         
         InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata")
