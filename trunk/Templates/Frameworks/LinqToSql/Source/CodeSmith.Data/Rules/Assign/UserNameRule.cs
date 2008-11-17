@@ -8,13 +8,13 @@ namespace CodeSmith.Data.Rules.Assign
     /// <summary>
     /// Assigns the current logged in username.
     /// </summary>
-    public class UseNamerRule : PropertyRuleBase
+    public class UserNameRule : PropertyRuleBase
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UseNamerRule"/> class.
+        /// Initializes a new instance of the <see cref="UserNameRule"/> class.
         /// </summary>
         /// <param name="property">The property.</param>
-        public UseNamerRule(string property)
+        public UserNameRule(string property)
             : base(property)
         {
             // lower priority because we need to assign before validate
@@ -22,11 +22,11 @@ namespace CodeSmith.Data.Rules.Assign
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UseNamerRule"/> class.
+        /// Initializes a new instance of the <see cref="UserNameRule"/> class.
         /// </summary>
         /// <param name="property">The property.</param>
         /// <param name="assignState">State of the object that can be assigned.</param>
-        public UseNamerRule(string property, EntityState assignState)
+        public UserNameRule(string property, EntityState assignState)
             : base(property, assignState)
         {
             // lower priority because we need to assign before validate
@@ -71,8 +71,5 @@ namespace CodeSmith.Data.Rules.Assign
             
             return string.Empty;
         }
-
-
-
     }
 }

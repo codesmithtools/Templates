@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\IpAddressAttribute.cs" />
+    <Compile Include="Attributes\RuleAttribute.cs" />
     <Compile Include="Attributes\UserNameAttribute.cs" />
     <Compile Include="Attributes\GuidAttribute.cs" />
     <Compile Include="Attributes\NowAttribute.cs" />
@@ -82,7 +83,7 @@
     <Compile Include="Rules\EntityState.cs" />
     <Compile Include="Rules\Assign\GuidRule.cs" />
     <Compile Include="Rules\Assign\NowRule.cs" />
-    <Compile Include="Rules\Assign\UseNamerRule.cs" />
+    <Compile Include="Rules\Assign\UserNameRule.cs" />
     <Compile Include="Rules\Assign\DefaultValueRule.cs" />
     <Compile Include="Rules\BrokenRule.cs" />
     <Compile Include="Rules\BrokenRuleCollection.cs" />
