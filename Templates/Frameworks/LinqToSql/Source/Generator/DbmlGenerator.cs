@@ -29,6 +29,7 @@ namespace LinqToSqlShared.Generator
         "Manager", "Mapping", 
         "ObjectTrackingEnabled", 
         "Provider", 
+        "RuleManager",
         "Services", 
         "Transaction"};
 
