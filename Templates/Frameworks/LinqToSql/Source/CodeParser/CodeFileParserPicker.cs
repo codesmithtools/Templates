@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using System.Drawing.Design;
 using System.ComponentModel;
 using CodeSmith.Engine;
+using System.IO;
+using CodeSmith.Engine.Utility;
 
 namespace CodeSmith.Engine
 {
@@ -59,8 +61,12 @@ namespace CodeSmith.Engine
                     DialogResult result = _openFileDialog.ShowDialog(editorControl);
                     if (result == DialogResult.OK)
                     {
-                        value = new CodeFileParser(_openFileDialog.FileName, GetParseMethodBodies(context));
-                        codeTemplate.ContextData[fileKey] = _openFileDialog.FileName;
+                        string path = PathUtil.RelativePathTo(Path.GetFullPath(codeTemplate.CodeTemplateInfo.DirectoryName), _openFileDialog.FileName);
+                        if (!File.Exists(path))
+                            path = _openFileDialog.FileName;
+
+                        value = new CodeFileParser(path, GetParseMethodBodies(context));
+                        codeTemplate.ContextData[fileKey] = path;
                     }
                     else
                     {

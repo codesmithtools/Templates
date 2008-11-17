@@ -12,15 +12,17 @@ namespace CodeSmith.Engine
 {
     /// <summary>
     /// Parser for a single Code File. Supports only C# and VB.
+    /// CompilationUnit loaded on intialization, CodeDomCompilationUnit lazy loaded.
     /// </summary>
+    [PropertySerializer(typeof(CodeFileParserSerializer))]
     [System.ComponentModel.Editor(typeof(CodeFileParserPicker), typeof(System.Drawing.Design.UITypeEditor))]
-    public class CodeFileParser : IParser
+    public class CodeFileParser : IDisposable
     {
         #region Declarations
 
         private bool _disposed = false;
         private IParser _parser;
-        private CodeNamespace _codeNamespace = null;
+        private CodeCompileUnit _codeCompileUnit = null;
 
         #endregion
 
@@ -64,8 +66,11 @@ namespace CodeSmith.Engine
             this.FileName = fileName;
             this.Language = language.Value;
             this.SourceContents = source.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+
+            // Create and Run Parser
             this._parser = ParserFactory.CreateParser(language.Value, new StringReader(source));
-            this.ParseMethodBodies = parseMethodBodies;
+            this._parser.ParseMethodBodies = parseMethodBodies;
+            this._parser.Parse();
         }
 
         ~CodeFileParser()
@@ -92,24 +97,6 @@ namespace CodeSmith.Engine
         public bool ParseMethodBodies
         {
             get { return _parser.ParseMethodBodies; }
-            set { _parser.ParseMethodBodies = value; }
-        }
-
-        public void Parse()
-        {
-            _parser.Parse();
-        }
-        public BlockStatement ParseBlock()
-        {
-            return _parser.ParseBlock();
-        }
-        public Expression ParseExpression()
-        {
-            return _parser.ParseExpression(); ;
-        }
-        public List<INode> ParseTypeMembers()
-        {
-            return _parser.ParseTypeMembers();
         }
 
         #endregion
@@ -124,7 +111,8 @@ namespace CodeSmith.Engine
         {
             if (!_disposed)
             {
-                _parser.Dispose();
+                if (_parser != null)
+                    _parser.Dispose();
 
                 _disposed = true;
                 if (!finalizing)
@@ -136,11 +124,6 @@ namespace CodeSmith.Engine
 
         #region String/Location Members
 
-        public Location SourceEnd
-        {
-            get { return new Location(SourceContents[SourceContents.Length - 1].Length + 1, SourceContents.Length); }
-        }
-
         public string GetSectionFromStart(Location end)
         {
             return GetSection(new Location(1, 1), end);
@@ -149,7 +132,6 @@ namespace CodeSmith.Engine
         {
             return GetSection(start, SourceEnd);
         }
-
         public string GetSection(Location start, Location end)
         {
             StringBuilder sb = new StringBuilder();
@@ -172,6 +154,20 @@ namespace CodeSmith.Engine
             return sb.ToString();
         }
 
+        public Location SourceEnd
+        {
+            get { return new Location(SourceContents[SourceContents.Length - 1].Length + 1, SourceContents.Length); }
+        }
+
+        #endregion
+
+        #region Override Methods
+
+        public override string ToString()
+        {
+            return this.FileName ?? "File Not Specified";
+        }
+
         #endregion
 
         #region Properties
@@ -180,20 +176,17 @@ namespace CodeSmith.Engine
         public string FileName { get; protected set; }
         public SupportedLanguage Language { get; protected set; }
 
-        /// <summary>
-        /// CodeDOM starting at the Namespace.
-        /// </summary>
-        public CodeNamespace CodeNamespace
+        public CodeCompileUnit CodeDomCompilationUnit
         {
             get
             {
-                if(_codeNamespace == null)
-                    _codeNamespace = (CodeNamespace)this.CompilationUnit.AcceptVisitor(new CodeDomVisitor(), null);
-                return _codeNamespace;
-            }
-            protected set
-            {
-                _codeNamespace = value;
+                if (_codeCompileUnit == null)
+                {
+                    CodeDomVisitor codeDomVisitor = new CodeDomVisitor();
+                    this.CompilationUnit.AcceptVisitor(codeDomVisitor, null);
+                    _codeCompileUnit = codeDomVisitor.codeCompileUnit;
+                }
+                return _codeCompileUnit;
             }
         }
 
