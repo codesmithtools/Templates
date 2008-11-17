@@ -12,7 +12,7 @@ namespace CodeSmith.Data.Attributes
     /// <summary>
     /// Assigns a new GUID to the property for the specified entity states.
     /// </summary>
-    public class GuidAttribute : RuleAttribute
+    public class GuidAttribute : RuleAttributeBase
     {
         public GuidAttribute()
         {

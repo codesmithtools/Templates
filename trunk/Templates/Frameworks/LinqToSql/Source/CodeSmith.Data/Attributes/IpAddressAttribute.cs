@@ -12,7 +12,7 @@ namespace CodeSmith.Data.Attributes
     /// <summary>
     /// Assigns the current user's IP address to the property for the specified entity states.
     /// </summary>
-    public class IpAddressAttribute : RuleAttribute
+    public class IpAddressAttribute : RuleAttributeBase
     {
         public IpAddressAttribute()
         {

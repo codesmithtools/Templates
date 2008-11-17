@@ -12,7 +12,7 @@ namespace CodeSmith.Data.Attributes
     /// <summary>
     /// Assigns the current users name to the property for the specified entity states.
     /// </summary>
-    public class UserNameAttribute : RuleAttribute
+    public class UserNameAttribute : RuleAttributeBase
     {
         public UserNameAttribute()
         {

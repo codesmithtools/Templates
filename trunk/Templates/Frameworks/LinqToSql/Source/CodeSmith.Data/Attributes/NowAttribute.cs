@@ -12,7 +12,7 @@ namespace CodeSmith.Data.Attributes
     /// <summary>
     /// Assigns the current date / time to the property for the specified entity states.
     /// </summary>
-    public class NowAttribute : RuleAttribute
+    public class NowAttribute : RuleAttributeBase
     {
         public NowAttribute()
         {
