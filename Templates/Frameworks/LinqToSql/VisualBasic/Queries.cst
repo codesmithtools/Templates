@@ -37,7 +37,7 @@
 
 <%@ Register Name="QueryExtensionGeneratedClass" 
     Template="Internal\QueryExtension.Generated.cst" 
-    MergeProperties="False" %>
+    MergeProperties="true" ExcludeProperties="Database, DataManager,EntityManager,Table" %>
 
 <script runat="template">    
     Public Sub Generate()
@@ -64,16 +64,14 @@ End Sub
 
 Public Sub CreateQueryClasses(ByVal databaseMap As Database, ByVal dataManager As DataManager)
   Dim t As QueryExtensionGeneratedClass = Me.Create(Of QueryExtensionGeneratedClass)()
+  Me.CopyPropertiesTo(t)
   t.DataManager = dataManager
   t.Database = databaseMap
-  
-  'Dim p As QueryExtensionEditableClass = Me.Create(Of QueryExtensionEditableClass)()
-  'p.ClassNamespace = databaseMap.ContextNamespace
   
   For Each manager As EntityManager In dataManager.Managers
     Dim watch As Stopwatch = Stopwatch.StartNew()
     
-    Dim className As String = manager.EntityName + "QueryExtension"
+    Dim className As String = manager.EntityName + "Extensions"
     Dim parentFileName As String = className + ".vb"
     parentFileName = Path.Combine(QueryDirectory, parentFileName)
     
@@ -97,5 +95,5 @@ Public Sub CreateQueryClasses(ByVal databaseMap As Database, ByVal dataManager A
 End Sub
 
 </script>
-Generating Linq to Sql Entities ...
+Generating Linq to Sql Queries ...
 <% Generate() %>

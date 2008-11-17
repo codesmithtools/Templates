@@ -41,6 +41,10 @@
 <%@ Property Category="2.Class" Name="IncludeDataRules"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include CodeSmith.Data rules." %>
+    
+<%@ Property Name="AssociationNamingSuffix"
+    Type="AssociationNamingEnum" Default="Plural" Optional="False"
+    Description="Suffix for Many To Many Associations" %>
 
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
@@ -379,13 +383,13 @@ namespace <%= Database.EntityNamespace %>
         ManyToManyInfo manyMany = GetManyToManyInfo(info.OtherType);
 %>
 
-        private EntitySet<<%=manyMany.RightType.Name%>> _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List;
+        private EntitySet<<%=manyMany.RightType.Name%>> _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>;
 
         /// <summary>
         /// Gets or sets the Many To Many <%=manyMany.RightType.Name%> list.
         /// </summary>
         /// <value>The <%=manyMany.RightType.Name%> list.</value>
-        public EntitySet<<%=manyMany.RightType.Name%>> <%=manyMany.RightType.Name%>List
+        public EntitySet<<%=manyMany.RightType.Name%>> <%=manyMany.RightType.Name%><%=AssociationSuffix%>
         {
             get
             {
@@ -394,33 +398,33 @@ namespace <%= Database.EntityNamespace %>
                     return null;
 <% } %>
 
-                if (_<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List == null)
+                if (_<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%> == null)
                 {
-                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List = new EntitySet<<%=manyMany.RightType.Name%>>(Attach_<%=manyMany.RightType.Name%>List, Detach_<%=manyMany.RightType.Name%>List);
-                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.SetSource(<%=manyMany.JoinType.Name%>List.Select(c => c.<%=manyMany.RightType.Name%>));
+                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%> = new EntitySet<<%=manyMany.RightType.Name%>>(Attach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>, Detach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>);
+                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>.SetSource(<%=manyMany.JoinType.Name%><%=AssociationSuffix%>.Select(c => c.<%=manyMany.RightType.Name%>));
                 }
-                return _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List;
+                return _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>;
             }
             set
             {
-                _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.Assign(value);
+                _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>.Assign(value);
             }
         }
         
         [DebuggerNonUserCode]
-        private void Attach_<%=manyMany.RightType.Name%>List(<%=manyMany.RightType.Name%> entity)
+        private void Attach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>(<%=manyMany.RightType.Name%> entity)
         {
             SendPropertyChanging(null);
-            <%=manyMany.JoinType.Name%>List.Add(new <%=manyMany.JoinType.Name%> { <%=manyMany.LeftType.Name%> = this, <%=manyMany.RightType.Name%> = entity });
+            <%=manyMany.JoinType.Name%><%=AssociationSuffix%>.Add(new <%=manyMany.JoinType.Name%> { <%=manyMany.LeftType.Name%> = this, <%=manyMany.RightType.Name%> = entity });
             SendPropertyChanged(null);
         }
         
         [DebuggerNonUserCode]
-        private void Detach_<%=manyMany.RightType.Name%>List(<%=manyMany.RightType.Name%> entity)
+        private void Detach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>(<%=manyMany.RightType.Name%> entity)
         {
             SendPropertyChanging(null);
-            var <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%=manyMany.JoinType.Name%>List.FirstOrDefault(c => c.<%=manyMany.JoinLeftKey%> == <%=manyMany.LeftKey%> && c.<%=manyMany.JoinRightKey%> == entity.<%=manyMany.RightKey%>);
-            <%=manyMany.JoinType.Name%>List.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>);
+            var <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%=manyMany.JoinType.Name%><%=AssociationSuffix%>.FirstOrDefault(c => c.<%=manyMany.JoinLeftKey%> == <%=manyMany.LeftKey%> && c.<%=manyMany.JoinRightKey%> == entity.<%=manyMany.RightKey%>);
+            <%=manyMany.JoinType.Name%><%=AssociationSuffix%>.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>);
             SendPropertyChanged(null);
         }
     
@@ -549,6 +553,15 @@ namespace <%= Database.EntityNamespace %>
 }
 
 <script runat="template">
+
+    public string AssociationSuffix
+    {
+       get
+        {
+            return AssociationNamingSuffix == AssociationNamingEnum.ListSuffix ? "List" : "s";
+        }
+    }
+    
     public bool IsManyToMany(LinqToSqlShared.DbmlObjectModel.Type type)
     {
         
