@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\IpAddressAttribute.cs" />
-    <Compile Include="Attributes\RuleAttribute.cs" />
+    <Compile Include="Attributes\RuleAttributeBase.cs" />
     <Compile Include="Attributes\UserNameAttribute.cs" />
     <Compile Include="Attributes\GuidAttribute.cs" />
     <Compile Include="Attributes\NowAttribute.cs" />

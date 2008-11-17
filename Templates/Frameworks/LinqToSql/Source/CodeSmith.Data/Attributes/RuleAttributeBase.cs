@@ -9,11 +9,11 @@ using CodeSmith.Data.Rules;
 namespace CodeSmith.Data.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    public abstract class RuleAttribute : ValidationAttribute
+    public abstract class RuleAttributeBase : ValidationAttribute
     {
-        protected RuleAttribute()
+        protected RuleAttributeBase()
         {
-            this.State = EntityState.All;
+            this.State = EntityState.Dirty;
         }
         
         public abstract IRule CreateRule(PropertyInfo property);
