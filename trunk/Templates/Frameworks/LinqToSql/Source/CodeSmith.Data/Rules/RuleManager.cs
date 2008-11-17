@@ -96,9 +96,9 @@ namespace CodeSmith.Data.Rules
                     if (metadataProperty != null)
                         metadataAttribute = metadataProperty.GetCustomAttributes(attribute.GetType(), false);
 
-                    if (attribute is RuleAttribute)
+                    if (attribute is RuleAttributeBase)
                     {
-                        var ruleAttribute = metadataAttribute != null ? (RuleAttribute)metadataAttribute : (RuleAttribute)attribute;
+                        var ruleAttribute = metadataAttribute != null ? (RuleAttributeBase)metadataAttribute : (RuleAttributeBase)attribute;
                         AddShared<EntityType>(ruleAttribute.CreateRule(property));
                     }
                     else if (attribute is ValidationAttribute)
