@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30428</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DB5F9552-D6D9-43D2-9238-6B4D0C0337E3}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -52,6 +52,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\CodeSmith\CodeSmith\Build\Debug\CodeSmith.Engine.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.NRefactory, Version=4.0.0.9999, Culture=neutral, PublicKeyToken=efe927acf176eea2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Common\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
     <Reference Include="SchemaExplorer, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\CodeSmith\CodeSmith\Build\Debug\SchemaExplorer.dll</HintPath>
@@ -62,6 +66,7 @@
     <Reference Include="nunit.framework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeFileParserTest.cs" />
     <Compile Include="GeneratorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -86,6 +91,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CodeParser\CodeParser.csproj">
+      <Project>{42214FFD-0EAF-4678-BD4C-0DF40BC09800}</Project>
+      <Name>CodeParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dbml\Dbml.csproj">
       <Project>{FE25E33F-95B9-453C-98DC-82DF44CED946}</Project>
       <Name>Dbml</Name>

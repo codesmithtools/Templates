@@ -3,6 +3,7 @@
 
 <%@ Assembly Name="ICSharpCode.NRefactory" Path="..\..\Common" %>
 <%@ Assembly Name="InsertClassMergeStrategy" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.CodeParser" Path="..\..\Common" %>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
 
@@ -59,7 +60,6 @@ namespace <%= Database.EntityNamespace %>
 <%          AttributeSectionVisitor sourceAttributes = new AttributeSectionVisitor();
             if(ExistingFile!=null)
             {
-				ExistingFile.Parse();
                 ExistingFile.CompilationUnit.AcceptVisitor(sourceAttributes, "Metadata");
             } 
             foreach(Column column in Type.Columns)

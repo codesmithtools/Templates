@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3FFDCBFA-77B9-4801-849F-10BF70B38B94}</ProjectGuid>
+    <ProjectGuid>{42214FFD-0EAF-4678-BD4C-0DF40BC09800}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InsertClassMergeStrategy</RootNamespace>
-    <AssemblyName>InsertClassMergeStrategy</AssemblyName>
+    <RootNamespace>CodeSmith.Engine</RootNamespace>
+    <AssemblyName>CodeSmith.CodeParser</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Common\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="CodeSmith.Engine, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Common\CodeSmith.Engine.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\CodeSmith\v5.0\bin\CodeSmith.Engine.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory, Version=4.0.0.9999, Culture=neutral, PublicKeyToken=efe927acf176eea2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -55,16 +55,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeSectionVisitor.cs" />
-    <Compile Include="InsertClassMergeStrategy.cs" />
-    <Compile Include="ParentVisitor.cs" />
+    <Compile Include="CodeFileParser.cs" />
+    <Compile Include="CodeFileParserPicker.cs" />
+    <Compile Include="CodeFileParserSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CodeParser\CodeParser.csproj">
-      <Project>{42214FFD-0EAF-4678-BD4C-0DF40BC09800}</Project>
-      <Name>CodeParser</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
