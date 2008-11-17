@@ -2,7 +2,7 @@
     Description="Linq to Sql Entity Class." %>
 
 <%@ Assembly Name="ICSharpCode.NRefactory" Path="..\..\Common" %>
-<%@ Assembly Name="InsertClassMergeStrategy" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.InsertClassMergeStrategy" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.CodeParser" Path="..\..\Common" %>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
 <%@ Assembly Name="Dbml" Path="..\..\Common"%>

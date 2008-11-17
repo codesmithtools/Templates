@@ -8,8 +8,8 @@
     <ProjectGuid>{3FFDCBFA-77B9-4801-849F-10BF70B38B94}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InsertClassMergeStrategy</RootNamespace>
-    <AssemblyName>InsertClassMergeStrategy</AssemblyName>
+    <RootNamespace>CodeSmith.Engine</RootNamespace>
+    <AssemblyName>CodeSmith.InsertClassMergeStrategy</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
