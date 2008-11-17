@@ -30,16 +30,17 @@ Imports System.Runtime.Serialization
 <%End If%>
 
 Namespace <%= ClassNamespace %>
+    
     ''' <summary>
     ''' A base class for Linq entities that implements notification events.
     ''' </summary>
     <%If IncludeDataContract Then %>
-    <Serializable> _
     <DataContract(<%If Framework = FrameworkEnum.v35_SP1 Then %> IsReference:=True <%End If%>)> _
     <%End If%>
     Public Partial MustInherit Class <%= ClassName %> 
        Implements INotifyPropertyChanging
        Implements INotifyPropertyChanged
+    
         ''' <summary>
         ''' Initializes a new instance of the <see cref="<%= ClassName %>"/> class.
         ''' </summary>
@@ -58,8 +59,10 @@ Namespace <%= ClassNamespace %>
         ''' </summary>
         ''' <param name="propertyName">Name of the property that has changed.</param>
         <EditorBrowsable(EditorBrowsableState.Advanced)> _
-        Protected Sub OnPropertyChanged(ByVal propertyName As String)
-            RaiseEvent    PropertyChanged(Me, New PropertyChangedEventArgs(propertyName))
+        Protected Overridable Sub OnPropertyChanged(ByVal propertyName As String)
+            If PropertyChangedEvent IsNot Nothing Then
+                RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(propertyName))
+            End If
         End Sub
 
 
@@ -73,8 +76,10 @@ Namespace <%= ClassNamespace %>
         ''' </summary>
         ''' <param name="propertyName">Name of the property that is changing.</param>
         <EditorBrowsable(EditorBrowsableState.Advanced)> _
-        Protected Sub OnPropertyChanging(ByVal propertyName As String)
-            RaiseEvent PropertyChanging(Me, New PropertyChangingEventArgs(propertyName))
+        Protected Overridable Sub OnPropertyChanging(ByVal propertyName As String)
+            If PropertyChangingEvent IsNot Nothing Then
+                RaiseEvent PropertyChanging(Me, New PropertyChangingEventArgs(propertyName))
+            End If
         End Sub
         #End Region
         
@@ -86,7 +91,7 @@ Namespace <%= ClassNamespace %>
         ''' <c>true</c> if this instance is attached; otherwise, <c>false</c>.
         ''' </returns>
         Public Function IsAttached() As Boolean
-            Return PropertyChanging IsNot Nothing
+            Return PropertyChangingEvent IsNot Nothing
         End Function
         
         ''' <summary>
@@ -96,8 +101,8 @@ Namespace <%= ClassNamespace %>
         ''' Detaching the entity will allow it to be attached to another <see cref="DataContext"/>.
         ''' </remarks>
         Public Overridable Sub Detach()
-            PropertyChanging = Nothing
-            PropertyChanged = Nothing
+            PropertyChangingEvent = Nothing
+            PropertyChangedEvent = Nothing
         End Sub
         
         ''' <summary>
@@ -115,7 +120,9 @@ Namespace <%= ClassNamespace %>
             
             ' copy list and detach all entities
             Dim list = [set].ToList()
-            list.ForEach(Function(t) t.Detach())
+            For Each t As TEntity In list
+                t.Detach()
+            Next
             
             Dim newSet = New EntitySet(Of TEntity)(onAdd, onRemove)
             newSet.Assign(list)

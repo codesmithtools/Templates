@@ -37,6 +37,10 @@
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include ADO.Net DataServices attributes." %>
 
+<%@ Property Category="2.Class" Name="IncludeDataRules"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Include CodeSmith.Data rules." %>
+
 <%@ Map Name="VBKeywordEscape" 
     Src="VBKeywordEscape.csmap" Reverse="False" 
     Description="Mapping to escape vb keywords" %>
@@ -55,10 +59,12 @@
 
 Imports System
 Imports System.ComponentModel
+Imports System.Linq
 Imports System.Data.Linq
 Imports System.Data.Linq.Mapping
 Imports System.Diagnostics
 <% If (IncludeDataContract) Then %>
+Imports System.IO
 Imports System.Runtime.Serialization
 <% End If %>
 <% If (Me.Framework = FrameworkEnum.v35_SP1) Then %>
@@ -66,6 +72,11 @@ Imports System.ComponentModel.DataAnnotations
 <% If (IncludeDataServices) Then %>
 Imports System.Data.Services.Common
 <% End If %>
+<% End If %>
+<% If IncludeDataRules Then %>
+Imports CodeSmith.Data.Rules
+Imports CodeSmith.Data.Rules.Assign
+Imports CodeSmith.Data.Rules.Validation
 <% End If %>
 
 Namespace <%= Database.EntityNamespace %>
@@ -95,14 +106,90 @@ Namespace <%= Database.EntityNamespace %>
 			dataServiceKey.Append(", ")
 		End If
 		dataServiceKey.AppendFormat("""{0}""", column.Name)
-	Next %>
+	Next %>    
+<%If dataServiceKey.Length > 0 Then  %>
 	<DataServiceKey(<%= dataServiceKey.ToString() %>)> _
+<% End If %>
 	<% End If %>
+<% End If %>
+<% 
+    Dim sb As StringBuilder = new StringBuilder()
+    For Each [column] As Column In Type.PrimaryKeyColumns
+    
+        If(sb.Length > 0) Then
+            sb.Append(", ")
+        End If
+        
+        sb.Append([column].Member)
+        sb.Append(": {")
+        sb.Append([column].Member)
+        sb.Append("}")
+    Next
+%>
+<% If (sb.Length > 0) Then %>
+    <DebuggerDisplay("<%= sb.ToString() %>")> _
 <% End If %>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>
 <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>
         Inherits <%= EntityBase %>
+    <% If IncludeDataContract Then %>
+        Implements ICloneable
+    <% End If %>
 <% End If %>
+
+<% If (IncludeDataRules) Then %>
+        #Region "Static Constructor"
+        ''' <summary>
+        ''' Initializes the <see cref="<%= Type.Name %>"/> class.
+        ''' </summary>
+        Shared Sub New()
+        
+            <%If(Framework = FrameworkEnum.v35_SP1) Then %>
+            RuleManager.AddShared(Of <%= Type.Name %>)()
+            <% Else
+                Const lengthFormat As String = "RuleManager.AddShared(Of {0})(new LengthRule(""{1}"", {2}))"
+                Const  requiredFormat As String = "RuleManager.AddShared(Of {0})(new RequiredRule(""{1}""))"
+                Const sqlDateFormat As String = "RuleManager.AddShared(Of {0})(new RangeRule<DateTime>(""{1}"", SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value))"
+                Const createDateFormat As String = "RuleManager.AddShared(Of {0})(new NowRule(""{1}"", EntityState.New))"
+                Const modifyDateFormat As String = "RuleManager.AddShared(Of {0})(new NowRule(""{1}"", EntityState.Dirty))"
+                
+                Dim indent As Integer = Response.IndentLevel
+                Response.IndentLevel = 3
+                For Each c As Column In Type.Columns
+                    
+                    If Not c.CanBeNull AndAlso Not c.IsDbGenerated Then
+                    
+                        If (c.Type.Contains("String")) Then
+                        
+                            Response.WriteLine(String.Format(requiredFormat, Type.Name, c.Member))
+                        
+                        Else If (c.Type.Contains("DateTime")) Then
+                        
+                            If (c.Member.Contains("Create")) Then
+                                Response.WriteLine(String.Format(createDateFormat, Type.Name, c.Member))
+                            Else If (c.Member.Contains("Modify") OrElse c.Member.Contains("Modified")) Then
+                                Response.WriteLine(String.Format(modifyDateFormat, Type.Name, c.Member))
+                            Else
+                                Response.WriteLine(String.Format(sqlDateFormat, Type.Name, c.Member))
+                            End If
+                        End If
+                    End If
+                    
+                    If (c.Type.Contains("String")) Then
+                    
+                        Dim size As Integer = (c.DbType).Length
+                        If (0 < size AndAlso size < 8000) Then
+                            Response.WriteLine(String.Format(lengthFormat, Type.Name, c.Member, size))
+                        End If
+                    End If
+                    
+                Next 
+                Response.IndentLevel = indent
+                End If%>
+            AddSharedRules()
+        End Sub
+        #End Region
+<% End If '' IncludeDataRules %>
         
         #Region "Default Constructor"
         ''' <summary>
@@ -195,18 +282,8 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         
         #Region "Association Mapped Properties"
         
-<%         Dim needsOnSerialize As Boolean = False
-        If IncludeDataContract Then
-            For Each a As Association in Type.Associations
-                If Not a.IsForeignKey.Value Then
-                    needsOnSerialize = true
-                    Exit For
-                End If
-            Next
-        End If
-
-        For Each a As Association In Type.EntityRefAssociations
-        Dim info As AssociationInfo = GetAssociationInfo(a)
+<% For Each a As Association In Type.EntityRefAssociations
+    Dim info As AssociationInfo = GetAssociationInfo(a)
 %>
         Private  <%= a.Storage %> As EntityRef(Of <%= a.Type %>)
 
@@ -220,12 +297,15 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
     End If %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= a.Member %> As <%= a.Type %>
             Get
-            <%    If (needsOnSerialize) Then %>
+<% If (IncludeDataContract) Then %>
                 If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValue) Then
                     Return Nothing
+                Else
+                    Return <%= a.Storage %>.Entity 
                 End If
-            <% End If %>
+<%Else%>       
                 Return <%= a.Storage %>.Entity 
+<%End If %>
             End Get
             Set
 <% If info.HasOtherAssociation Then %>
@@ -275,12 +355,15 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 <% End If %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= a.Member %> As EntitySet(Of <%= a.Type %>)
             Get
-            <%If (needsOnSerialize) Then%>
+<%If IncludeDataContract Then%>
                 If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValues) Then
                     Return Nothing
+                Else
+                    Return <%= a.Storage %>
                 End If
-            <%End If%>    
-                return <%= a.Storage %>
+<%Else%>    
+                Return <%= a.Storage %>
+<%End If%>
             End Get
             Set
                 <%= a.Storage %>.Assign(value)
@@ -307,24 +390,25 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 %>
 
         <NonSerialized> _
-        Private _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List As EntitySet<<%=manyMany.RightType.Name%>>
+        Private _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List As EntitySet(Of <%=manyMany.RightType.Name%>)
 
         ''' <summary>
         ''' Gets or sets the Many To Many <%=manyMany.RightType.Name%> list.
         ''' </summary>
         ''' <value>The <%=manyMany.RightType.Name%> list.</value>
-        Public Property <%=manyMany.RightType.Name%>List As EntitySet<<%=manyMany.RightType.Name%>>
+        Public Property <%=manyMany.RightType.Name%>List As EntitySet(Of <%=manyMany.RightType.Name%>)
         
             Get
-            
+<% If IncludeDataContract Then %>            
                 If (serializing)
                     Return Nothing
                 End If
+<% End If %>
 
                 If (_<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List Is Nothing)
                 
-                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List = New EntitySet<<%=manyMany.RightType.Name%>>(Attach_<%=manyMany.RightType.Name%>List, Detach_<%=manyMany.RightType.Name%>List)
-                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.SetSource(<%=manyMany.JoinType.Name%>List.Select(c => c.<%=manyMany.RightType.Name%>))
+                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List = New EntitySet(Of <%=manyMany.RightType.Name%>)(Attach_<%=manyMany.RightType.Name%>List, Detach_<%=manyMany.RightType.Name%>List)
+                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.SetSource(<%=manyMany.JoinType.Name%>List.Select(Function(c)c.<%=manyMany.RightType.Name%>))
                 End If
                 return _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List
             End Get
@@ -332,23 +416,23 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
             
                 _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.Assign(value)
             End Set
-        End Function
+        End Property
         
         <DebuggerNonUserCode> _
-        Private Sub Attach_<%=manyMany.RightType.Name%>List(<%=manyMany.RightType.Name%> entity)
+        Private Sub Attach_<%=manyMany.RightType.Name%>List(entity As <%=manyMany.RightType.Name%>)
         
-            SendPropertyChanging(Nothing)
+            RaiseEvent SendPropertyChanging(Nothing)
             <%=manyMany.JoinType.Name%>List.Add(New <%=manyMany.JoinType.Name%> { <%=manyMany.LeftType.Name%> = Me, <%=manyMany.RightType.Name%> = entity })
-            SendPropertyChanged(Nothing)
+            RaiseEvent SendPropertyChanged(Nothing)
         End Sub
         
         <DebuggerNonUserCode> _
-        Private Sub Detach_<%=manyMany.RightType.Name%>List(<%=manyMany.RightType.Name%> entity)
+        Private Sub Detach_<%=manyMany.RightType.Name%>List(entity As <%=manyMany.RightType.Name%> )
         
-            SendPropertyChanging(Nothing);
-            Var <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%=manyMany.JoinType.Name%>List.FirstOrDefault(c => c.<%=manyMany.JoinLeftKey%> == <%=manyMany.LeftKey%> && c.<%=manyMany.JoinRightKey%> == entity.<%=manyMany.RightKey%>)
+            RaiseEvent SendPropertyChanging(Nothing)
+            Dim <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%=manyMany.JoinType.Name%>List.FirstOrDefault(Function(c)c.<%=manyMany.JoinLeftKey%> = <%=manyMany.LeftKey%> AndAlso c.<%=manyMany.JoinRightKey%> = entity.<%=manyMany.RightKey%>)
             <%=manyMany.JoinType.Name%>List.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>)
-            SendPropertyChanged(Nothing)
+            RaiseEvent SendPropertyChanged(Nothing)
         End Sub
     
 <% End If ' many to many%>
@@ -356,6 +440,10 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
            #End Region
         
         #Region "Extensibility Method Definitions"
+        
+        ''' <summary>Called by the Shared constructor to add shared rules.</summary>
+        Partial Private Shared Sub AddSharedRules()     
+        End Sub
         ''' <summary>Called when this instance is loaded.</summary>
         Private Partial Sub OnLoaded()
         End Sub
@@ -386,22 +474,34 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
     <%If IncludeDataContract Then%>
         #Region "Serialization"
         
-        <%If (needsOnSerialize) Then%>
+<%If IncludeDataContract Then%>
         Private Serializing As Boolean
         
+        ''' <summary>
+        ''' Called when serializing.
+        ''' </summary>
+        ''' <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
         <OnSerializing(), _
          EditorBrowsableAttribute(EditorBrowsableState.Never)> _
         Public Sub OnSerializing(ByVal context As StreamingContext)
             serializing = True
         End Sub
         
+        ''' <summary>
+        ''' Called when serializing.
+        ''' </summary>
+        ''' <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
         <OnSerialized(), _
          EditorBrowsableAttribute(EditorBrowsableState.Never)> _
         Public Sub OnSerialized(ByVal context As StreamingContext)
             serializing = False
         End Sub
-        <%End If%>
+<%End If%>
         
+        ''' <summary>
+        ''' Called when deserializing.
+        ''' </summary>
+        ''' <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
         <OnDeserializing(), _
          EditorBrowsableAttribute(EditorBrowsableState.Never)> _
         Public Sub OnDeserializing(ByVal context As StreamingContext)
@@ -409,9 +509,23 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         End Sub
         
         #End Region
-    <%End If%>
     
-       #Region "Clone"
+        #Region "Clone"
+        ''' <summary>
+        ''' Creates a new object that is a copy of the current instance.
+        ''' </summary>
+        ''' <returns>
+        ''' A new object that is a copy of this instance.
+        ''' </returns>
+        Private Function ICloneable_Clone() As Object Implements ICloneable.Clone
+            Dim serializer As New DataContractSerializer([GetType]())
+            Using ms As New MemoryStream()
+                serializer.WriteObject(ms, Me)
+                ms.Position = 0
+                Return serializer.ReadObject(ms)
+            End Using
+        End Function
+
         ''' <summary>
         ''' Creates a new object that is a copy of the current instance.
         ''' </summary>
@@ -423,9 +537,10 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As <%= Type.Name %>
-            return (<%= Type.Name %>)((ICloneable)Me).Clone()
+            Return DirectCast(DirectCast(Me,ICloneable),<%= Type.Name %>).Clone()
         End Function
         #End Region
+<% End If %>
 
         #Region "Detach Methods"
         ''' <summary>
@@ -434,12 +549,13 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         ''' <remarks>
         ''' Detaching the entity will allow it to be attached to another <see cref="DataContext"/>.
         ''' </remarks>
-        Public Override Sub Detach()
+        Public Overrides Sub Detach()
         
-            If (!IsAttached())
+            If (Not IsAttached()) Then
                 return
+            End If
             
-            base.Detach()
+            MyBase.Detach()
 <%  For Each a As Association In Type.EntityRefAssociations
         Dim info As AssociationInfo = GetAssociationInfo(a)
 %>
@@ -448,7 +564,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
     For Each a As Association In Type.EntitySetAssociations
         Dim info As AssociationInfo = GetAssociationInfo(a)
 %>
-            <%=a.Storage%> = Detach(<%=a.Storage%>, Attach_<%=a.Member%>, Detach_<%=a.Member%>)
+            <%=a.Storage%> = Detach(<%=a.Storage%>,AddressOf Attach_<%=a.Member%>,AddressOf Detach_<%=a.Member%>)
 <%  Next %>
         End Sub
         #End Region
