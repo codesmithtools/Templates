@@ -43,7 +43,7 @@
     Description="Include CodeSmith.Data rules." %>
     
 <%@ Property Name="AssociationNamingSuffix"
-    Type="AssociationNamingEnum" Default="Plural" Optional="False"
+    Type="AssociationNamingEnum" Default="ListSuffix" Optional="False"
     Description="Suffix for Many To Many Associations" %>
 
 <%@ Map Name="CSharpKeyWordEscape" 
