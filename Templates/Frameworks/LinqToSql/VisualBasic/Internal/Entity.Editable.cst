@@ -26,10 +26,15 @@
 
 <%@ Property Category="2.Class" Name="ExistingFile"
     Type="CodeFileParser" Optional="True" %>
+    
+<%@ Map Name="VBKeywordEscape" 
+    Src="VBKeywordEscape.csmap" Reverse="False" 
+    Description="Mapping to escape vb keywords" %>
 
 <%@ Map Name="VBAlias" 
     Src="System-VBAlias.csmap" Reverse="False" 
     Description="Convert system data types to vb alias" %>
+    
 Imports System
 Imports System.Linq
 Imports System.Collections.Generic
@@ -95,7 +100,7 @@ Namespace <%= Database.EntityNamespace %>
                         End If
                     End If
                 End If %>
-            Public Property <%=column.Member%>() As Object
+            Public Property <%=VBKeywordEscape(column.Member)%>() As Object
                 Get
                     Return Nothing
                 End Get
@@ -111,7 +116,7 @@ Namespace <%= Database.EntityNamespace %>
             <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>						
 <%					Next
 				End If %>
-            Public Property <%=association.Member%>() As Object
+            Public Property <%=VBKeywordEscape(association.Member)%>() As Object
                 Get
                     Return Nothing
                 End Get

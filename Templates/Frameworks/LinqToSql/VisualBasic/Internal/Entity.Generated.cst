@@ -133,7 +133,7 @@ Namespace <%= Database.EntityNamespace %>
 <% If (sb.Length > 0) Then %>
     <DebuggerDisplay("<%= sb.ToString() %>")> _
 <% End If %>
-    <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>
+    <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= VBKeywordEscape(Type.Name) %>
 <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>
         Inherits <%= EntityBase %>
     <% If IncludeDataContract Then %>
@@ -256,7 +256,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 <% End If %>
         ''' </summary>
         <%= CreateAttributes(c, dataMemberIndex) %>
-        <%= Naming.GetModifier(c.AccessModifier, c.Modifier) %> Property <%= c.Member %> As <%= dataType %>
+        <%= Naming.GetModifier(c.AccessModifier, c.Modifier) %> Property <%=VBKeywordEscape(c.Member) %> As <%= dataType %>
             Get 
                 return <%= storageAssign %> 
             End Get
@@ -299,7 +299,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         <DataMember(Order:=<%=dataMemberIndex%>, EmitDefaultValue:=False)> _
 <%dataMemberIndex += 1 
     End If %>
-        <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= a.Member %> As <%= a.Type %>
+        <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= VBKeywordEscape(a.Member) %> As <%= a.Type %>
             Get
 <% If (IncludeDataContract) Then %>
                 If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValue) Then
@@ -357,7 +357,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 <% If (IncludeDataContract) Then %>
         <DataMember()> _
 <% End If %>
-        <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= a.Member %> As EntitySet(Of <%= a.Type %>)
+        <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= VBKeywordEscape(a.Member) %> As EntitySet(Of <%= a.Type %>)
             Get
 <%If IncludeDataContract Then%>
                 If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValues) Then
@@ -391,6 +391,8 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 <% If IsManyToMany(info.OtherType) Then
 
         Dim manyMany As ManyToManyInfo = GetManyToManyInfo(info.OtherType)
+        If manyMany.RightType IsNot Nothing AndAlso manyMany.LeftType IsNot Nothing Then
+        
 %>
 
         Private _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%> As EntitySet(Of <%=manyMany.RightType.Name%>)
@@ -441,7 +443,8 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
             SendPropertyChanged(Nothing)
         End Sub
     
-<% End If ' many to many%>
+<%      End If 
+End If ' many to many%>
 <% Next ' foreach Association%>
            #End Region
         
