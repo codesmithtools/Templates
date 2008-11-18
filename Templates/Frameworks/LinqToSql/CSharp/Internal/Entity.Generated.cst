@@ -207,27 +207,42 @@ namespace <%= Database.EntityNamespace %>
 <% foreach(Association a in Type.EntitySetAssociations) { %>
             <%= a.Storage %> = new EntitySet<<%= a.Type %>>(Attach_<%= a.Member %>, Detach_<%= a.Member %>);
 <% } // foreach Association%>
+<% foreach(Column c in Type.Columns) { %>
+<% if (c.IsDelayLoaded == true) { %>
+            <%= c.Storage %> = default(Link<<%= c.Type %>>);
+<% } // IsDelayLoaded%>
+<% } // foreach Association%>
         }
         #endregion
         
         #region Column Mapped Properties
-<% int DataMemberOrderId = 0;
-    foreach(Column column in Type.Columns) { 
+<% DataMemberCount = 0;
+foreach(Column column in Type.Columns) { 
     string dataType = column.Type;
     string fieldType = column.Type;
-    string storageAssign = column.Storage;
+    string storageGet = column.Storage;
+    string storageSet = column.Storage;
+    string valueConvert = "value";
+    bool isVersion = column.IsVersion == true && dataType.Equals("System.Data.Linq.Binary");
     
     if (column.IsDelayLoaded == true && column.IsPrimaryKey == false)
     {
         dataType = CSharpAlias[dataType];
         fieldType = string.Format("Link<{0}>", dataType);
-        storageAssign = storageAssign + ".Value";
+        storageGet = storageGet + ".Value";
+        storageSet = storageGet;
     }
     else if (column.CanBeNull == true && CommonUtility.IsNullableType(dataType))
     {
         dataType = string.Format("Nullable<{0}>", CSharpAlias[dataType]);
         fieldType = dataType;
-    }    
+    }
+    else if (isVersion)
+    {
+        dataType = "long";
+        storageGet = "BitConverter.ToInt64(_rowVersion.ToArray(), 0)";
+        valueConvert = "BitConverter.GetBytes(value)";
+    }
     else
     {
         dataType = CSharpAlias[dataType];
@@ -237,6 +252,9 @@ namespace <%= Database.EntityNamespace %>
     Association a = Type.GetForeignKeyAssociation(column);
 %>
         
+<% if (isVersion) { %>
+        <%= CreateAttributes(column) %>
+<% } %>
 <% if (column.IsDbGenerated == true) { %>
         private <%= fieldType %> <%= column.Storage %> = default(<%= fieldType %>);
 <% } else { %>
@@ -250,14 +268,21 @@ namespace <%= Database.EntityNamespace %>
         /// Gets the <%= column.Name %> column value.
 <% } %>
         /// </summary>
-        <%= CreateAttributes(column, ref DataMemberOrderId) %>
+<% if (isVersion) { %>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+<% } else { %>
+        <%= CreateAttributes(column) %>
+<% } %>
+<% if (IncludeDataContract) { %>
+        [DataMember(Order=<%= ++DataMemberCount %>)]
+<% } %>
         <%= Naming.GetModifier(column.AccessModifier, column.Modifier) %> <%= dataType %> <%= column.Member %>
         {
-            get { return <%= storageAssign %>; }
+            get { return <%= storageGet %>; }
 <% if (!column.IsReadOnly == true) { %>
             set
             {
-                if (<%= storageAssign %> != value)
+                if (<%= storageSet %> != <%= valueConvert %>)
                 {
 <% if (a != null) { %>
                     if (<%= a.Storage %>.HasLoadedOrAssignedValue)
@@ -265,11 +290,11 @@ namespace <%= Database.EntityNamespace %>
                         throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
                     }
 <% } %>
-                    On<%= column.Member %>Changing(value);
+                    On<%= column.Member %>Changing(<%= valueConvert %>);
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
                     SendPropertyChanging("<%= column.Member %>");
 <% } %>
-                    <%= storageAssign %> = value;
+                    <%= storageSet %> = <%= valueConvert %>;
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
                     SendPropertyChanged("<%= column.Member %>");
 <% } %>
@@ -292,7 +317,7 @@ namespace <%= Database.EntityNamespace %>
         /// </summary>
         <%= CreateAttribute(a) %>
 <% if (IncludeDataContract) { %>
-        [DataMember(Order=<%= ++DataMemberOrderId %>, EmitDefaultValue=false)]
+        [DataMember(Order=<%= ++DataMemberCount %>, EmitDefaultValue=false)]
 <% } %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> <%= a.Type %> <%= a.Member %>
         {
@@ -351,7 +376,7 @@ namespace <%= Database.EntityNamespace %>
         /// </summary>
         <%= CreateAttribute(a) %>
 <% if (IncludeDataContract) { %>
-        [DataMember(Order=<%= ++DataMemberOrderId %>, EmitDefaultValue=false)]
+        [DataMember(Order=<%= ++DataMemberCount %>, EmitDefaultValue=false)]
 <% } %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> EntitySet<<%= a.Type %>> <%= a.Member %>
         {
@@ -550,6 +575,11 @@ namespace <%= Database.EntityNamespace %>
 %>
             <%=a.Storage%> = Detach(<%=a.Storage%>, Attach_<%=a.Member%>, Detach_<%=a.Member%>);
 <% } %>
+<% foreach(Column c in Type.Columns) { %>
+<% if (c.IsDelayLoaded == true) { %>
+            <%= c.Storage %> = Detach(<%=c.Storage%>);
+<% } // IsDelayLoaded%>
+<% } // foreach Association%>
         }
         #endregion
     }
@@ -558,6 +588,7 @@ namespace <%= Database.EntityNamespace %>
 <script runat="template">
     
     private bool selfAssociated = false;
+    private int DataMemberCount = 0;
     
     public string AssociationSuffix
     {
@@ -710,7 +741,7 @@ namespace <%= Database.EntityNamespace %>
         return info;
     }
     
-    public string CreateAttributes(Column c, ref int dataMemberOrderId)
+    public string CreateAttributes(Column c)
     {
         StringBuilder s = new StringBuilder();
         s.Append("[Column(");
@@ -734,13 +765,7 @@ namespace <%= Database.EntityNamespace %>
         s.Append(")]");
         
         string prefix = String.Concat(Environment.NewLine, "        ");
-        
-        if (c.IsVersion.HasValue && c.IsVersion.Value)
-            s.AppendFormat("{0}[EditorBrowsable(EditorBrowsableState.Never)]", prefix);
 
-        if (this.IncludeDataContract)
-            s.AppendFormat("{0}[DataMember(Order={1})]", prefix, ++dataMemberOrderId);
-            
         if (this.Framework == FrameworkEnum.v35_SP1 && c.Type.Contains("String"))
         {
             int size = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(c.DbType);

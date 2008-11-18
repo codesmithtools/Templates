@@ -22,7 +22,6 @@
 
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Data.Linq;
 using System.Linq;
 <%if(IncludeDataContract) { %>
@@ -146,6 +145,20 @@ namespace <%= ClassNamespace %>
 
             entity.Entity.Detach();
             return new EntityRef<TEntity>(entity.Entity);
+        }
+        
+        /// <summary>
+        /// Detach the specified lazy loaded value.
+        /// </summary>
+        /// <typeparam name="T">The type of the value.</typeparam>
+        /// <param name="value">The lazy loaded value.</param>
+        /// <returns>A new <see cref="T:System.Data.Linq.Link`1"/> that is detached.</returns>
+        protected static Link<T> Detach<T>(Link<T> value)
+        {
+            if (!value.HasLoadedOrAssignedValue)
+                return default(Link<T>);
+
+            return new Link<T>(value.Value);
         }
         #endregion
     }
