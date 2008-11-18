@@ -691,7 +691,13 @@ namespace LinqToSqlShared.Generator
 
         private static string GetSystemType(DataObjectBase d)
         {
-            return d.SystemType == typeof(XmlDocument) ? "System.String" : d.SystemType.ToString();
+            if (d.SystemType == typeof (XmlDocument))
+                return "System.String";
+
+            if (d.SystemType == typeof(byte[]))
+                return "System.Data.Linq.Binary";
+
+            return d.SystemType.ToString();
         }
 
         private static string MakeUnique(ICollection<string> existingItems, string name)
