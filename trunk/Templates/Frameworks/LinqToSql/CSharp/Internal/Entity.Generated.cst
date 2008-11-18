@@ -388,9 +388,9 @@ namespace <%= Database.EntityNamespace %>
         private EntitySet<<%=manyMany.RightType.Name%>> _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>;
 
         /// <summary>
-        /// Gets or sets the Many To Many <%=manyMany.RightType.Name%> list.
+        /// Gets or sets the Many To Many <%=manyMany.PropertyName%> list.
         /// </summary>
-        /// <value>The <%=manyMany.RightType.Name%> list.</value>
+        /// <value>The <%=manyMany.PropertyName%> list.</value>
         public EntitySet<<%=manyMany.RightType.Name%>> <%=manyMany.PropertyName%><%=AssociationSuffix%>
         {
             get
@@ -845,7 +845,7 @@ namespace <%= Database.EntityNamespace %>
         //For those who think a Self-Associating Many To Many Table is a good idea
         if(manyMany.LeftType == manyMany.RightType)
         {
-            manyMany.PropertyName = manyMany.RightType.Name + "By" +manyMany.JoinRightAssociation.ThisKey;
+            manyMany.PropertyName = manyMany.RightType.Name + "By" + manyMany.JoinRightAssociation.ThisKey;
             selfAssociated = true;
         }
         else
