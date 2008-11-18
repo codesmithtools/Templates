@@ -15,8 +15,8 @@ namespace CodeSmith.Data.Attributes
         {
             this.State = EntityState.Dirty;
         }
-        
-        public abstract IRule CreateRule(PropertyInfo property);
+
+        public abstract IRule CreateRule(string property);
 
         public EntityState State { get; protected set; }
     }

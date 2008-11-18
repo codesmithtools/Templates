@@ -23,9 +23,9 @@ namespace CodeSmith.Data.Attributes
             this.State = state;
         }
 
-        public override IRule CreateRule(PropertyInfo property)
+        public override IRule CreateRule(string property)
         {
-            return new NowRule(property.Name, this.State);
+            return new NowRule(property, this.State);
         }
 
         public override bool IsValid(object value)

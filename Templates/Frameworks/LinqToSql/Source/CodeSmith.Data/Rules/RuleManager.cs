@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Linq;
 using System.Data.SqlTypes;
+using System.Linq;
 using CodeSmith.Data.Attributes;
 using CodeSmith.Data.Rules.Assign;
 using CodeSmith.Data.Rules.Validation;
 using System.Reflection;
+using System.ComponentModel;
 
 namespace CodeSmith.Data.Rules
 {
@@ -70,66 +72,87 @@ namespace CodeSmith.Data.Rules
         /// <typeparam name="EntityType">The type of the entity.</typeparam>
         public static void AddShared<EntityType>()
         {
+            Type entityType = typeof(EntityType);
             Type metadata = null;
-            foreach (Attribute attribute in typeof(EntityType).GetCustomAttributes(true))
+
+            var metadataTypeAttribute = entityType.GetCustomAttributes(typeof(MetadataTypeAttribute), true).FirstOrDefault() as MetadataTypeAttribute;
+            if (metadataTypeAttribute != null)
+                metadata = metadataTypeAttribute.MetadataClassType;
+
+            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(entityType);
+            PropertyDescriptorCollection metadataProperties = null;
+            if (metadata != null)
+                metadataProperties = TypeDescriptor.GetProperties(metadata);
+
+            foreach (PropertyDescriptor property in properties)
             {
-                if (!(attribute is MetadataTypeAttribute))
-                    continue;
+                var attributes = GetAttributes(property, metadataProperties);
 
-                metadata = ((MetadataTypeAttribute)attribute).MetadataClassType;
-                break;
-            }
-
-            PropertyInfo[] properties = typeof(EntityType).GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-
-            foreach (var property in properties)
-            {
-                PropertyInfo metadataProperty = null;
-                if (metadata != null)
-                    metadataProperty = metadata.GetProperty(property.Name,
-                                                            BindingFlags.Instance | BindingFlags.NonPublic |
-                                                            BindingFlags.Public);
-
-                foreach (var attribute in property.GetCustomAttributes(true))
+                foreach (var attribute in attributes)
                 {
-                    object metadataAttribute = null;
-                    if (metadataProperty != null)
-                        metadataAttribute = metadataProperty.GetCustomAttributes(attribute.GetType(), false);
-
                     if (attribute is RuleAttributeBase)
                     {
-                        var ruleAttribute = metadataAttribute != null ? (RuleAttributeBase)metadataAttribute : (RuleAttributeBase)attribute;
-                        AddShared<EntityType>(ruleAttribute.CreateRule(property));
+                        var ruleAttribute = (RuleAttributeBase)attribute;
+                        AddShared<EntityType>(ruleAttribute.CreateRule(property.Name));
                     }
                     else if (attribute is ValidationAttribute)
                     {
-                        if (attribute.GetType() == typeof(StringLengthAttribute))
-                        {
-                            var validationAttribute = metadataAttribute != null ? (StringLengthAttribute)metadataAttribute : (StringLengthAttribute)attribute;
-                            AddShared<EntityType>(new LengthRule(property.Name, validationAttribute.ErrorMessage, validationAttribute.MaximumLength));
-                        }
-                        else if (attribute.GetType() == typeof(RequiredAttribute))
-                        {
-                            var validationAttribute = metadataAttribute != null ? (RequiredAttribute)metadataAttribute : (RequiredAttribute)attribute;
-                            AddShared<EntityType>(new RequiredRule(property.Name, validationAttribute.ErrorMessage));
-                        }
-                        else if (attribute.GetType() == typeof(RegularExpressionAttribute))
-                        {
-                            var validationAttribute = metadataAttribute != null ? (RegularExpressionAttribute)metadataAttribute : (RegularExpressionAttribute)attribute;
-                            AddShared<EntityType>(new RegexRule(property.Name, validationAttribute.ErrorMessage, validationAttribute.Pattern));
-                        }
-                        else if (attribute.GetType() == typeof(RangeAttribute))
-                        {
-                            var validationAttribute = metadataAttribute != null ? (RangeAttribute)metadataAttribute : (RangeAttribute)attribute;
-                            PropertyRuleBase rangeRule = Activator.CreateInstance(typeof(RangeRule<>).MakeGenericType(validationAttribute.OperandType),
-                                property.Name, validationAttribute.ErrorMessage,
-                                validationAttribute.Minimum, validationAttribute.Maximum) as PropertyRuleBase;
-
-                            AddShared<EntityType>(rangeRule);
-                        }
+                        AddValidation<EntityType>(property.Name, attribute);
                     }
                 }
             }
+        }
+
+        private static void AddValidation<EntityType>(string property, Attribute attribute)
+        {
+            if (attribute is StringLengthAttribute)
+            {
+                var validationAttribute = (StringLengthAttribute)attribute;
+                AddShared<EntityType>(new LengthRule(property, validationAttribute.ErrorMessage, validationAttribute.MaximumLength));
+            }
+            else if (attribute is RequiredAttribute)
+            {
+                var validationAttribute = (RequiredAttribute)attribute;
+                AddShared<EntityType>(new RequiredRule(property, validationAttribute.ErrorMessage));
+            }
+            else if (attribute is RegularExpressionAttribute)
+            {
+                var validationAttribute = (RegularExpressionAttribute)attribute;
+                AddShared<EntityType>(new RegexRule(property, validationAttribute.ErrorMessage, validationAttribute.Pattern));
+            }
+            else if (attribute is RangeAttribute)
+            {
+                var validationAttribute = (RangeAttribute)attribute;
+                var rangeRule = Activator.CreateInstance(typeof(RangeRule<>).MakeGenericType(validationAttribute.OperandType),
+                                                         property, validationAttribute.ErrorMessage,
+                                                         validationAttribute.Minimum, validationAttribute.Maximum) as PropertyRuleBase;
+
+                AddShared<EntityType>(rangeRule);
+            }
+        }
+
+        private static IList<Attribute> GetAttributes(MemberDescriptor property, PropertyDescriptorCollection metadataProperties)
+        {
+            // 1) only looking for ValidationAttribute attributes
+            // 2) only one rule per attribute type can exist, last in wins.
+
+            var attributes = new Dictionary<Type, Attribute>();
+            foreach (Attribute attribute in property.Attributes)
+                if (attribute is ValidationAttribute)
+                    attributes[attribute.GetType()] = attribute;
+
+            if (metadataProperties == null)
+                return attributes.Values.ToList();
+
+            var metadataProperty = metadataProperties.Find(property.Name, false);
+            if (metadataProperty == null)
+                return attributes.Values.ToList();
+
+            foreach (Attribute attribute in metadataProperty.Attributes)
+                if (attribute is ValidationAttribute)
+                    attributes[attribute.GetType()] = attribute; // overwrite previous type
+
+            return attributes.Values.ToList();
         }
 
         /// <summary>
