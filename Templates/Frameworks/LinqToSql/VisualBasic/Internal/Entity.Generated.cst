@@ -395,13 +395,13 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         
 %>
 
-        Private _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%> As EntitySet(Of <%=manyMany.RightType.Name%>)
+        Private _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> As EntitySet(Of <%=manyMany.RightType.Name%>)
 
         ''' <summary>
-        ''' Gets or sets the Many To Many <%=manyMany.RightType.Name%> list.
+        ''' Gets or sets the Many To Many <%=manyMany.PropertyName%> list.
         ''' </summary>
-        ''' <value>The <%=manyMany.RightType.Name%> list.</value>
-        Public Property <%=manyMany.RightType.Name%><%=AssociationSuffix%> As EntitySet(Of <%=manyMany.RightType.Name%>)
+        ''' <value>The <%=manyMany.PropertyName%> list.</value>
+        Public Property <%=manyMany.PropertyName%><%=AssociationSuffix%> As EntitySet(Of <%=manyMany.RightType.Name%>)
         
             Get
 <% If IncludeDataContract Then %>            
@@ -410,36 +410,36 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
                 End If
 <% End If %>
 
-                If (_<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%> Is Nothing)
+                If (_<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> Is Nothing)
                 
-                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%> = New EntitySet(Of <%=manyMany.RightType.Name%>)(AddressOf Attach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>,AddressOf Detach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>)
-                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>.SetSource(<%=manyMany.JoinType.Name%><%=AssociationSuffix%>.Select(Function(c)c.<%=manyMany.RightType.Name%>))
+                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> = New EntitySet(Of <%=manyMany.RightType.Name%>)(AddressOf Attach_<%=manyMany.PropertyName%><%=AssociationSuffix%>,AddressOf Detach_<%=manyMany.PropertyName%><%=AssociationSuffix%>)
+                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>.SetSource(<%=a.Member %>.Select(Function(c)c.<%=manyMany.JoinRightAssociation.Member%>))
                 End If
-                return _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>
+                return _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>
             End Get
             Set
             
-                _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>.Assign(value)
+                _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>.Assign(value)
             End Set
         End Property
         
         <DebuggerNonUserCode> _
-        Private Sub Attach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>(entity As <%=manyMany.RightType.Name%>)
+        Private Sub Attach_<%=manyMany.PropertyName%><%=AssociationSuffix%>(entity As <%=manyMany.RightType.Name%>)
         
             SendPropertyChanging(Nothing)
             Dim [<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>] As New <%=manyMany.JoinType.Name%>
-            [<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>].<%=manyMany.LeftType.Name%> = Me
-            [<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>].<%=manyMany.RightType.Name%> = entity
-            <%=manyMany.JoinType.Name%><%=AssociationSuffix%>.Add([<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>])
+            [<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>].<%=manyMany.JoinLeftAssociation.Member%> = Me
+            [<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>].<%=manyMany.JoinRightAssociation.Member%> = entity
+            <%= a.Member %>.Add([<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>])
             SendPropertyChanged(Nothing)
         End Sub
         
         <DebuggerNonUserCode> _
-        Private Sub Detach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>(entity As <%=manyMany.RightType.Name%> )
+        Private Sub Detach_<%=manyMany.PropertyName%><%=AssociationSuffix%>(entity As <%=manyMany.RightType.Name%> )
         
             SendPropertyChanging(Nothing)
-            Dim <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%=manyMany.JoinType.Name%><%=AssociationSuffix%>.FirstOrDefault(Function(c)c.<%=manyMany.JoinLeftKey%> = <%=manyMany.LeftKey%> AndAlso c.<%=manyMany.JoinRightKey%> = entity.<%=manyMany.RightKey%>)
-            <%=manyMany.JoinType.Name%><%=AssociationSuffix%>.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>)
+            Dim <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%= a.Member %>.FirstOrDefault(Function(c)c.<%=manyMany.JoinLeftAssociation.ThisKey%> = <%=manyMany.LeftKey%> AndAlso c.<%=manyMany.JoinRightAssociation.ThisKey%> = entity.<%=manyMany.RightKey%>)
+            <%= a.Member %>.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>)
             SendPropertyChanged(Nothing)
         End Sub
     
@@ -582,7 +582,9 @@ End If ' many to many%>
 End Namespace
 
 <script runat="template">
-
+    
+    Private selfAssociated As Boolean = False
+    
     Public ReadOnly Property AssociationSuffix As String
        Get
             If AssociationNamingSuffix = AssociationNamingEnum.ListSuffix Then
@@ -783,6 +785,7 @@ Public Function CreateAttribute(ByVal a As Association) As String
     
     Return s.ToString()
 End Function
+
 Public Structure AssociationInfo
     
     Public HasOtherAssociation As Boolean
@@ -799,6 +802,9 @@ Public Structure AssociationInfo
 End Structure
 
 Public Function GetManyToManyInfo(ByVal type__1 As LinqToSqlShared.DbmlObjectModel.Type) As ManyToManyInfo
+    
+    Dim leftKeyPicked As Boolean = False
+    
     Dim manyMany As New ManyToManyInfo()
     manyMany.LeftType = Type
     manyMany.JoinType = type__1
@@ -807,18 +813,53 @@ Public Function GetManyToManyInfo(ByVal type__1 As LinqToSqlShared.DbmlObjectMod
         manyMany.LeftKey = manyMany.LeftKey + pk.Member
     Next
     
-    For Each association As Association In type__1.EntityRefAssociations
-        If association.Type <> Type.Name Then
-            manyMany.RightType = Database.GetTypeByName(association.Type)
-            manyMany.JoinRightKey = association.ThisKey
+    If Not selfAssociated
+    
+        For Each association As Association In type__1.EntityRefAssociations
             
-            For Each pk As Column In manyMany.RightType.PrimaryKeyColumns
-                manyMany.RightKey = manyMany.RightKey + pk.Member
-            Next
-        Else
-            manyMany.JoinLeftKey = association.ThisKey
-        End If
-    Next
+            If association.Type <> Type.Name OrElse leftKeyPicked Then
+            
+                manyMany.RightType = Database.GetTypeByName(association.Type)
+                manyMany.JoinRightAssociation = association
+                
+                For Each pk As Column In manyMany.RightType.PrimaryKeyColumns
+                    manyMany.RightKey = manyMany.RightKey + pk.Member
+                Next
+            Else
+                manyMany.JoinLeftAssociation = association
+                leftKeyPicked = True
+            End If
+        Next
+    Else
+    
+        For Each association As Association In type__1.EntityRefAssociations
+            
+            If association.Type <> Type.Name OrElse leftKeyPicked Then
+            
+                manyMany.RightType = Database.GetTypeByName(association.Type)
+                manyMany.JoinLeftAssociation = association
+                
+                For Each pk As Column In manyMany.RightType.PrimaryKeyColumns
+                    manyMany.RightKey = manyMany.RightKey + pk.Member
+                Next
+            Else
+                manyMany.JoinRightAssociation = association
+                leftKeyPicked = True
+            End If
+        Next
+    End If
+    
+    'For those who think a Self-Associating Many To Many Table is a good idea
+    If manyMany.LeftType Is manyMany.RightType Then
+    
+        manyMany.PropertyName = manyMany.RightType.Name + "By" + manyMany.JoinRightAssociation.ThisKey
+        selfAssociated = True
+    
+    Else
+        manyMany.PropertyName = manyMany.RightType.Name
+        
+    End If
+    
     Return manyMany
 End Function
 
@@ -828,8 +869,9 @@ Public Structure ManyToManyInfo
     Public JoinType As LinqToSqlShared.DbmlObjectModel.Type
     Public RightKey As String
     Public LeftKey As String
-    Public JoinRightKey As String
-    Public JoinLeftKey As String
+    Public JoinRightAssociation As Association
+    Public JoinLeftAssociation As Association
+    Public PropertyName As String
 End Structure
 
 
