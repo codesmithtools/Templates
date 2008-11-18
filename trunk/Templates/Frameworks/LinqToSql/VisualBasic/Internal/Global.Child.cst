@@ -19,7 +19,7 @@ Imports System.Web.SessionState
 Imports System.Xml.Linq
 Imports System.Web.Routing
 Imports System.Web.DynamicData
-Imports <%=ContextNamespace%>.<%=ContextNamespace%>
+Imports <%=ContextNamespace%>
 
 
 Public Class Global_asax

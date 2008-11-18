@@ -59,7 +59,7 @@ Namespace <%= ClassNamespace %>
         ''' </summary>
         ''' <param name="propertyName">Name of the property that has changed.</param>
         <EditorBrowsable(EditorBrowsableState.Advanced)> _
-        Protected Overridable Sub OnPropertyChanged(ByVal propertyName As String)
+        Protected Overridable Sub SendPropertyChanged(ByVal propertyName As String)
             If PropertyChangedEvent IsNot Nothing Then
                 RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(propertyName))
             End If
@@ -76,7 +76,7 @@ Namespace <%= ClassNamespace %>
         ''' </summary>
         ''' <param name="propertyName">Name of the property that is changing.</param>
         <EditorBrowsable(EditorBrowsableState.Advanced)> _
-        Protected Overridable Sub OnPropertyChanging(ByVal propertyName As String)
+        Protected Overridable Sub SendPropertyChanging(ByVal propertyName As String)
             If PropertyChangingEvent IsNot Nothing Then
                 RaiseEvent PropertyChanging(Me, New PropertyChangingEventArgs(propertyName))
             End If

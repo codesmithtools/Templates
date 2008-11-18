@@ -40,6 +40,10 @@
 <%@ Property Category="2.Class" Name="IncludeDataRules"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include CodeSmith.Data rules." %>
+    
+<%@ Property Name="AssociationNamingSuffix"
+    Type="AssociationNamingEnum" Default="ListSuffix" Optional="False"
+    Description="Suffix for Many To Many Associations" %>
 
 <%@ Map Name="VBKeywordEscape" 
     Src="VBKeywordEscape.csmap" Reverse="False" 
@@ -157,7 +161,7 @@ Namespace <%= Database.EntityNamespace %>
                 Response.IndentLevel = 3
                 For Each c As Column In Type.Columns
                     
-                    If Not c.CanBeNull AndAlso Not c.IsDbGenerated Then
+                    If Not c.CanBeNull.Value AndAlso Not c.IsDbGenerated.Value Then
                     
                         If (c.Type.Contains("String")) Then
                         
@@ -258,7 +262,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
             End Get
 <% If Not c.IsReadOnly.Value = True Then %>
             Set
-                If <%If dataType = "String"%>String.IsNullOrEmpty(<%= c.Storage %>) OrElse <%End If%> Not <%= storageAssign %>.Equals(value) Then
+                If <%If dataType = "String" Then%>String.IsNullOrEmpty(<%= c.Storage %>) OrElse <%Else If dataType.Contains("()")%><%= storageAssign %> Is Nothing OrElse <%End If%> Not <%= storageAssign %>.Equals(value) Then
 <% If a IsNot Nothing Then %>
                     If (<%= a.Storage %>.HasLoadedOrAssignedValue) Then
                         Throw New System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException()
@@ -266,11 +270,11 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 <% End If %>
                     On<%= c.Member %>Changing(value)
 <% If Not String.IsNullOrEmpty(EntityBase) Then %>
-                    OnPropertyChanging("<%= c.Member %>")
+                    SendPropertyChanging("<%= c.Member %>")
 <% End If %>
                     <%= storageAssign %> = value
 <% If Not String.IsNullOrEmpty(EntityBase) Then %>
-                    OnPropertyChanged("<%= c.Member %>")
+                    SendPropertyChanged("<%= c.Member %>")
 <% End If %>
                     On<%= c.Member %>Changed()
                 End If
@@ -311,7 +315,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 <% If info.HasOtherAssociation Then %>
                 Dim previousValue As <%= a.Type %> = <%= a.Storage %>.Entity
                 If Not previousValue Is value Or <%= a.Storage %>.HasLoadedOrAssignedValue = False Then
-                    OnPropertyChanging("<%= a.Member %>")
+                    SendPropertyChanging("<%= a.Member %>")
                     If previousValue IsNot Nothing Then
                         <%= a.Storage %>.Entity = Nothing
                         previousValue.<%= info.OtherAssociation.Member %><%= info.RemoveSyntax %>
@@ -328,13 +332,13 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
                         <%= info.AssignColumns(i).Storage %> = Nothing
 <% Next %>
                     End If
-                    OnPropertyChanged("<%= a.Member %>")
+                    SendPropertyChanged("<%= a.Member %>")
                 End If
 <% Else %>
                 If Not <%= a.Storage %>.Entity = value Then
-                    OnPropertyChanging("<%= a.Member %>")
+                    SendPropertyChanging("<%= a.Member %>")
                     <%= a.Storage %>.Entity = value
-                    OnPropertyChanged("<%= a.Member %>")
+                    SendPropertyChanged("<%= a.Member %>")
                 End If
 <% End If ' HasOtherAssociation %>
             End Set
@@ -372,16 +376,16 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         
         <DebuggerNonUserCodeAttribute()> _
         Private Sub Attach_<%= a.Member %>(ByVal entity As <%= a.Type %>)
-            OnPropertyChanging(Nothing)
+            SendPropertyChanging(Nothing)
             entity.<%= info.OtherAssociation.Member %> = Me
-            OnPropertyChanged(Nothing)
+            SendPropertyChanged(Nothing)
         End Sub
         
         <DebuggerNonUserCodeAttribute()> _
         Private Sub Detach_<%= a.Member %>(ByVal entity As <%= a.Type %>)
-            OnPropertyChanging(Nothing)
+            SendPropertyChanging(Nothing)
             entity.<%= info.OtherAssociation.Member %> = Nothing
-            OnPropertyChanged(Nothing)
+            SendPropertyChanged(Nothing)
         End Sub
         
 <% If IsManyToMany(info.OtherType) Then
@@ -389,14 +393,13 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         Dim manyMany As ManyToManyInfo = GetManyToManyInfo(info.OtherType)
 %>
 
-        <NonSerialized> _
-        Private _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List As EntitySet(Of <%=manyMany.RightType.Name%>)
+        Private _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%> As EntitySet(Of <%=manyMany.RightType.Name%>)
 
         ''' <summary>
         ''' Gets or sets the Many To Many <%=manyMany.RightType.Name%> list.
         ''' </summary>
         ''' <value>The <%=manyMany.RightType.Name%> list.</value>
-        Public Property <%=manyMany.RightType.Name%>List As EntitySet(Of <%=manyMany.RightType.Name%>)
+        Public Property <%=manyMany.RightType.Name%><%=AssociationSuffix%> As EntitySet(Of <%=manyMany.RightType.Name%>)
         
             Get
 <% If IncludeDataContract Then %>            
@@ -405,34 +408,37 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
                 End If
 <% End If %>
 
-                If (_<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List Is Nothing)
+                If (_<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%> Is Nothing)
                 
-                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List = New EntitySet(Of <%=manyMany.RightType.Name%>)(Attach_<%=manyMany.RightType.Name%>List, Detach_<%=manyMany.RightType.Name%>List)
-                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.SetSource(<%=manyMany.JoinType.Name%>List.Select(Function(c)c.<%=manyMany.RightType.Name%>))
+                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%> = New EntitySet(Of <%=manyMany.RightType.Name%>)(AddressOf Attach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>,AddressOf Detach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>)
+                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>.SetSource(<%=manyMany.JoinType.Name%><%=AssociationSuffix%>.Select(Function(c)c.<%=manyMany.RightType.Name%>))
                 End If
-                return _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List
+                return _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>
             End Get
             Set
             
-                _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%>List.Assign(value)
+                _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>.Assign(value)
             End Set
         End Property
         
         <DebuggerNonUserCode> _
-        Private Sub Attach_<%=manyMany.RightType.Name%>List(entity As <%=manyMany.RightType.Name%>)
+        Private Sub Attach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>(entity As <%=manyMany.RightType.Name%>)
         
-            RaiseEvent SendPropertyChanging(Nothing)
-            <%=manyMany.JoinType.Name%>List.Add(New <%=manyMany.JoinType.Name%> { <%=manyMany.LeftType.Name%> = Me, <%=manyMany.RightType.Name%> = entity })
-            RaiseEvent SendPropertyChanged(Nothing)
+            SendPropertyChanging(Nothing)
+            Dim [<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>] As New <%=manyMany.JoinType.Name%>
+            [<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>].<%=manyMany.LeftType.Name%> = Me
+            [<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>].<%=manyMany.RightType.Name%> = entity
+            <%=manyMany.JoinType.Name%><%=AssociationSuffix%>.Add([<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>])
+            SendPropertyChanged(Nothing)
         End Sub
         
         <DebuggerNonUserCode> _
-        Private Sub Detach_<%=manyMany.RightType.Name%>List(entity As <%=manyMany.RightType.Name%> )
+        Private Sub Detach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>(entity As <%=manyMany.RightType.Name%> )
         
-            RaiseEvent SendPropertyChanging(Nothing)
-            Dim <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%=manyMany.JoinType.Name%>List.FirstOrDefault(Function(c)c.<%=manyMany.JoinLeftKey%> = <%=manyMany.LeftKey%> AndAlso c.<%=manyMany.JoinRightKey%> = entity.<%=manyMany.RightKey%>)
-            <%=manyMany.JoinType.Name%>List.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>)
-            RaiseEvent SendPropertyChanged(Nothing)
+            SendPropertyChanging(Nothing)
+            Dim <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%=manyMany.JoinType.Name%><%=AssociationSuffix%>.FirstOrDefault(Function(c)c.<%=manyMany.JoinLeftKey%> = <%=manyMany.LeftKey%> AndAlso c.<%=manyMany.JoinRightKey%> = entity.<%=manyMany.RightKey%>)
+            <%=manyMany.JoinType.Name%><%=AssociationSuffix%>.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>)
+            SendPropertyChanged(Nothing)
         End Sub
     
 <% End If ' many to many%>
@@ -573,6 +579,17 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 End Namespace
 
 <script runat="template">
+
+    Public ReadOnly Property AssociationSuffix As String
+       Get
+            If AssociationNamingSuffix = AssociationNamingEnum.ListSuffix Then
+                Return "List"
+            Else
+                Return "s"
+            End If
+        End Get
+    End Property
+    
    Public Function GetColumnType(ByVal column As Column) As String
     Dim dataType As String = column.Type
     
