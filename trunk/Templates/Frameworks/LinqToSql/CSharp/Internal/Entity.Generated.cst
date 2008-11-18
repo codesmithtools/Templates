@@ -379,17 +379,19 @@ namespace <%= Database.EntityNamespace %>
             SendPropertyChanged(null);
         }
 <% if(IsManyToMany(info.OtherType))
-    {
+    {   
         ManyToManyInfo manyMany = GetManyToManyInfo(info.OtherType);
+        if(manyMany.RightType != null && manyMany.LeftType != null)
+        {
 %>
 
-        private EntitySet<<%=manyMany.RightType.Name%>> _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>;
+        private EntitySet<<%=manyMany.RightType.Name%>> _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>;
 
         /// <summary>
         /// Gets or sets the Many To Many <%=manyMany.RightType.Name%> list.
         /// </summary>
         /// <value>The <%=manyMany.RightType.Name%> list.</value>
-        public EntitySet<<%=manyMany.RightType.Name%>> <%=manyMany.RightType.Name%><%=AssociationSuffix%>
+        public EntitySet<<%=manyMany.RightType.Name%>> <%=manyMany.PropertyName%><%=AssociationSuffix%>
         {
             get
             {
@@ -398,37 +400,38 @@ namespace <%= Database.EntityNamespace %>
                     return null;
 <% } %>
 
-                if (_<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%> == null)
+                if (_<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> == null)
                 {
-                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%> = new EntitySet<<%=manyMany.RightType.Name%>>(Attach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>, Detach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>);
-                    _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>.SetSource(<%=manyMany.JoinType.Name%><%=AssociationSuffix%>.Select(c => c.<%=manyMany.RightType.Name%>));
+                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> = new EntitySet<<%=manyMany.RightType.Name%>>(Attach_<%=manyMany.PropertyName%><%=AssociationSuffix%>, Detach_<%=manyMany.PropertyName%><%=AssociationSuffix%>);
+                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>.SetSource(<%=a.Member %>.Select(c => c.<%=manyMany.JoinRightAssociation.Member%>));
                 }
-                return _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>;
+                return _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>;
             }
             set
             {
-                _<%=StringUtil.ToCamelCase(manyMany.RightType.Name)%><%=AssociationSuffix%>.Assign(value);
+                _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>.Assign(value);
             }
         }
         
         [DebuggerNonUserCode]
-        private void Attach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>(<%=manyMany.RightType.Name%> entity)
+        private void Attach_<%=manyMany.PropertyName%><%=AssociationSuffix%>(<%=manyMany.RightType.Name%> entity)
         {
             SendPropertyChanging(null);
-            <%=manyMany.JoinType.Name%><%=AssociationSuffix%>.Add(new <%=manyMany.JoinType.Name%> { <%=manyMany.LeftType.Name%> = this, <%=manyMany.RightType.Name%> = entity });
+            <%= a.Member %>.Add(new <%=manyMany.JoinType.Name%> { <%=manyMany.JoinLeftAssociation.Member%> = this, <%=manyMany.JoinRightAssociation.Member%> = entity });
             SendPropertyChanged(null);
         }
         
         [DebuggerNonUserCode]
-        private void Detach_<%=manyMany.RightType.Name%><%=AssociationSuffix%>(<%=manyMany.RightType.Name%> entity)
+        private void Detach_<%=manyMany.PropertyName%><%=AssociationSuffix%>(<%=manyMany.RightType.Name%> entity)
         {
             SendPropertyChanging(null);
-            var <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%=manyMany.JoinType.Name%><%=AssociationSuffix%>.FirstOrDefault(c => c.<%=manyMany.JoinLeftKey%> == <%=manyMany.LeftKey%> && c.<%=manyMany.JoinRightKey%> == entity.<%=manyMany.RightKey%>);
-            <%=manyMany.JoinType.Name%><%=AssociationSuffix%>.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>);
+            var <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%= a.Member %>.FirstOrDefault(c => c.<%=manyMany.JoinLeftAssociation.ThisKey%> == <%=manyMany.LeftKey%> && c.<%=manyMany.JoinRightAssociation.ThisKey%> == entity.<%=manyMany.RightKey%>);
+            <%= a.Member %>.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>);
             SendPropertyChanged(null);
         }
     
-<%} // many to many%>
+<%}
+        } // many to many%>
 <% } // foreach Association%>
         #endregion
         
@@ -553,7 +556,9 @@ namespace <%= Database.EntityNamespace %>
 }
 
 <script runat="template">
-
+    
+    private bool selfAssociated = false;
+    
     public string AssociationSuffix
     {
        get
@@ -788,28 +793,64 @@ namespace <%= Database.EntityNamespace %>
     
     public ManyToManyInfo GetManyToManyInfo(LinqToSqlShared.DbmlObjectModel.Type type)
     {
+        bool leftKeyPicked = false;
+        
         ManyToManyInfo manyMany = new ManyToManyInfo();
+        
         manyMany.LeftType = Type;
         manyMany.JoinType = type;
         
         foreach(Column pk in manyMany.LeftType.PrimaryKeyColumns)
             manyMany.LeftKey = manyMany.LeftKey + pk.Member;
         
-        foreach(Association association in type.EntityRefAssociations)
+        if(!selfAssociated)
         {
-            if(association.Type != Type.Name)
+            foreach(Association association in type.EntityRefAssociations)
             {
-                manyMany.RightType = Database.GetTypeByName(association.Type);
-                manyMany.JoinRightKey = association.ThisKey;
-                
-                foreach(Column pk in manyMany.RightType.PrimaryKeyColumns)
-                    manyMany.RightKey = manyMany.RightKey + pk.Member;
-            }
-            else
-            {
-                manyMany.JoinLeftKey = association.ThisKey;
+                if(association.Type != Type.Name || leftKeyPicked)
+                {
+                    manyMany.RightType = Database.GetTypeByName(association.Type);
+                    manyMany.JoinRightAssociation = association;
+                    
+                    foreach(Column pk in manyMany.RightType.PrimaryKeyColumns)
+                        manyMany.RightKey = manyMany.RightKey + pk.Member;
+                }
+                else
+                {
+                    manyMany.JoinLeftAssociation = association;
+                    leftKeyPicked = true;
+                }
             }
         }
+        else
+        {
+            foreach(Association association in type.EntityRefAssociations)
+            {
+                if(association.Type != Type.Name || leftKeyPicked)
+                {
+                    manyMany.RightType = Database.GetTypeByName(association.Type);
+                    manyMany.JoinLeftAssociation = association;
+                    
+                    foreach(Column pk in manyMany.RightType.PrimaryKeyColumns)
+                        manyMany.RightKey = manyMany.RightKey + pk.Member;
+                }
+                else
+                {
+                    manyMany.JoinRightAssociation = association;
+                    leftKeyPicked = true;
+                }
+            }
+        }
+        
+        //For those who think a Self-Associating Many To Many Table is a good idea
+        if(manyMany.LeftType == manyMany.RightType)
+        {
+            manyMany.PropertyName = manyMany.RightType.Name + "By" +manyMany.JoinRightAssociation.ThisKey;
+            selfAssociated = true;
+        }
+        else
+            manyMany.PropertyName = manyMany.RightType.Name;
+        
         return manyMany;
     }
     
@@ -820,8 +861,9 @@ namespace <%= Database.EntityNamespace %>
         public LinqToSqlShared.DbmlObjectModel.Type JoinType;
         public string RightKey;
         public string LeftKey;
-        public string JoinRightKey;
-        public string JoinLeftKey;
+        public Association JoinRightAssociation;
+        public Association JoinLeftAssociation;
+        public string PropertyName;
         
     }
 </script>
