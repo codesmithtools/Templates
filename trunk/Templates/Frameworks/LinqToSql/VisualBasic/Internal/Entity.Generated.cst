@@ -193,7 +193,7 @@ Namespace <%= Database.EntityNamespace %>
             AddSharedRules()
         End Sub
         #End Region
-<% End If '' IncludeDataRules %>
+<% End If ' IncludeDataRules %>
         
         #Region "Default Constructor"
         ''' <summary>
@@ -216,23 +216,40 @@ Namespace <%= Database.EntityNamespace %>
                 New System.Action(Of <%= a.Type %>)(AddressOf Me.Attach_<%= a.Member %>), _
                 New System.Action(Of <%= a.Type %>)(AddressOf Me.Detach_<%= a.Member %>))
 <% Next ' foreach Association%>
+<% For Each c As Column In Type.Columns %>
+<% If c.IsDelayLoaded.Value Then %>
+            <%= c.Storage %> = Nothing
+<% End If ' IsDelayLoaded%>
+<% Next ' foreach Column%>
         End Sub
         #End Region
 
         #Region "Column Mapped Properties"
-<% Dim dataMemberIndex As Integer = 0
+<% DataMemberCount  = 0
 For Each c As Column in Type.Columns 
 Dim dataType As String = c.Type
 Dim fieldType As String = c.Type
-Dim storageAssign As String = c.Storage
+Dim storageGet As String = c.Storage
+Dim storageSet As String = c.Storage
+Dim valueConvert As String = "value"
+Dim isVersion As Boolean = c.IsVersion.Value = True AndAlso dataType.Equals("System.Data.Linq.Binary")
 
 If c.IsDelayLoaded.Value = True AndAlso c.IsPrimaryKey.Value = False Then
     dataType = VBAlias(dataType)
     fieldType = String.Format("Link(Of {0})", dataType)
-    storageAssign = storageAssign + ".Value"
-ElseIf c.CanBeNull.Value = True AndAlso CommonUtility.IsNullableType(dataType) Then
+    storageGet = storageGet + ".Value"
+    storageSet = storageGet
+    
+Else If c.CanBeNull.Value = True AndAlso CommonUtility.IsNullableType(dataType) Then
     dataType = String.Format("Nullable(Of {0})", VBAlias(dataType))
     fieldType = dataType
+    
+Else If isVersion Then
+    
+        dataType = "long"
+        storageGet = "BitConverter.ToInt64(_rowVersion.ToArray(), 0)"
+        valueConvert = "BitConverter.GetBytes(value)"
+    
 Else
     dataType = VBAlias(dataType)
     fieldType = dataType
@@ -241,7 +258,9 @@ End If
 Dim a As Association = Type.GetForeignKeyAssociation(c)
 
 %>
-        
+<% If isVersion Then %>
+        <%= CreateAttributes(c) %>
+<% End If %>        
 <% If (c.IsDbGenerated.Value = True) Then %>
         Private <%= c.Storage %> As <%= fieldType %> = Nothing
 <% Else %>
@@ -255,24 +274,32 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         ''' Gets the <%= c.Name %> column value.
 <% End If %>
         ''' </summary>
-        <%= CreateAttributes(c, dataMemberIndex) %>
+<% If isVersion Then %>
+        <EditorBrowsable(EditorBrowsableState.Never)> _
+<% Else %>
+        <%= CreateAttributes(c) %>
+<% End If %>
+<% If IncludeDataContract Then 
+    DataMemberCount += 1%>
+        <DataMember(Order:=<%= DataMemberCount %>)> _
+<% End If %>
         <%= Naming.GetModifier(c.AccessModifier, c.Modifier) %> Property <%=VBKeywordEscape(c.Member) %> As <%= dataType %>
             Get 
-                return <%= storageAssign %> 
+                return <%= storageGet %> 
             End Get
 <% If Not c.IsReadOnly.Value = True Then %>
             Set
-                If <%If dataType = "String" Then%>String.IsNullOrEmpty(<%= c.Storage %>) OrElse <%Else If dataType.Contains("()")%><%= storageAssign %> Is Nothing OrElse <%End If%> Not <%= storageAssign %>.Equals(value) Then
+                If <%If dataType = "String" Then%>String.IsNullOrEmpty(<%= c.Storage %>) OrElse <%Else If dataType.Contains("()")%><%= storageSet %> Is Nothing OrElse <%End If%> Not <%= storageSet %>.Equals(<%= valueConvert %>) Then
 <% If a IsNot Nothing Then %>
                     If (<%= a.Storage %>.HasLoadedOrAssignedValue) Then
                         Throw New System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException()
                     End If
 <% End If %>
-                    On<%= c.Member %>Changing(value)
+                    On<%= c.Member %>Changing(<%= valueConvert %>)
 <% If Not String.IsNullOrEmpty(EntityBase) Then %>
                     SendPropertyChanging("<%= c.Member %>")
 <% End If %>
-                    <%= storageAssign %> = value
+                    <%= storageSet %> = <%= valueConvert %>
 <% If Not String.IsNullOrEmpty(EntityBase) Then %>
                     SendPropertyChanged("<%= c.Member %>")
 <% End If %>
@@ -295,10 +322,10 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         ''' Gets or sets the <%= a.Type %> association.
         ''' </summary>
         <%= CreateAttribute(a) %>
-<% If (IncludeDataContract) Then %>
-        <DataMember(Order:=<%=dataMemberIndex%>, EmitDefaultValue:=False)> _
-<%dataMemberIndex += 1 
-    End If %>
+<% If (IncludeDataContract) Then 
+    DataMemberCount += 1 %>
+        <DataMember(Order:=<%=DataMemberCount%>, EmitDefaultValue:=False)> _
+<% End If %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= VBKeywordEscape(a.Member) %> As <%= a.Type %>
             Get
 <% If (IncludeDataContract) Then %>
@@ -354,8 +381,9 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         ''' Gets or sets the <%= a.Type %> association.
         ''' </summary>
         <%= CreateAttribute(a) %>
-<% If (IncludeDataContract) Then %>
-        <DataMember()> _
+<% If (IncludeDataContract) Then 
+    DataMemberCount += 1%>
+        <DataMember(Order:=<%= DataMemberCount %>, EmitDefaultValue:=False)> _
 <% End If %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= VBKeywordEscape(a.Member) %> As EntitySet(Of <%= a.Type %>)
             Get
@@ -427,10 +455,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         Private Sub Attach_<%=manyMany.PropertyName%><%=AssociationSuffix%>(entity As <%=manyMany.RightType.Name%>)
         
             SendPropertyChanging(Nothing)
-            Dim [<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>] As New <%=manyMany.JoinType.Name%>
-            [<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>].<%=manyMany.JoinLeftAssociation.Member%> = Me
-            [<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>].<%=manyMany.JoinRightAssociation.Member%> = entity
-            <%= a.Member %>.Add([<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>])
+            <%= a.Member %>.Add( New <%=manyMany.JoinType.Name%> With {.<%=manyMany.JoinLeftAssociation.Member%> = Me ,.<%=manyMany.JoinRightAssociation.Member%> = entity })
             SendPropertyChanged(Nothing)
         End Sub
         
@@ -575,6 +600,11 @@ End If ' many to many%>
 %>
             <%=a.Storage%> = Detach(<%=a.Storage%>,AddressOf Attach_<%=a.Member%>,AddressOf Detach_<%=a.Member%>)
 <%  Next %>
+<% For Each c As Column In Type.Columns %>
+<% If c.IsDelayLoaded.Value = true Then %>
+            <%= c.Storage %> = Detach(<%=c.Storage%>)
+<% End If ' IsDelayLoaded%>
+<% Next ' For Each Column%>
         End Sub
         #End Region
     
@@ -584,6 +614,7 @@ End Namespace
 <script runat="template">
     
     Private selfAssociated As Boolean = False
+    Private DataMemberCount As Integer = 0
     
     Public ReadOnly Property AssociationSuffix As String
        Get
@@ -707,7 +738,7 @@ Public Function GetAssociationInfo(ByVal a As Association) As AssociationInfo
     Return info
 End Function
 
-Public Function CreateAttributes(ByVal c As Column, ByRef dataMemberOrderId As Integer) As String
+Public Function CreateAttributes(ByVal c As Column) As String
     Dim s As New StringBuilder()
     s.Append("<Column(")
     s.AppendFormat("Name:=""{0}""", c.Name)
@@ -737,15 +768,6 @@ Public Function CreateAttributes(ByVal c As Column, ByRef dataMemberOrderId As I
     s.Append(")> _")
     
 	Dim prefix As String = [String].Concat(Environment.NewLine, "        ")
-
-	If c.IsVersion.HasValue AndAlso c.IsVersion.Value Then
-		s.AppendFormat("{0}<EditorBrowsable(EditorBrowsableState.Never)> _", prefix)
-	End If
-
-	If Me.IncludeDataContract Then
-		dataMemberOrderId += 1
-		s.AppendFormat("{0}<DataMember(Order:={1})> _", prefix, dataMemberOrderId)
-	End If
 
 	If Me.Framework = FrameworkEnum.v35_SP1 AndAlso c.Type.Contains("String") Then
 		Dim size As Integer = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(c.DbType)
