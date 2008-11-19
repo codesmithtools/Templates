@@ -22,7 +22,6 @@
 
 Imports System
 Imports System.ComponentModel
-Imports System.IO
 Imports System.Data.Linq
 Imports System.Linq
 <% If IncludeDataContract Then %>
@@ -143,6 +142,22 @@ Namespace <%= ClassNamespace %>
             entity.Entity.Detach()
             Return New EntityRef(Of TEntity)(entity.Entity)
         End Function
+        
+        ''' <summary>
+        ''' Detach the specified lazy loaded value.
+        ''' </summary>
+        ''' <typeparam name="T">The type of the value.</typeparam>
+        ''' <param name="value">The lazy loaded value.</param>
+        ''' <returns>A new <see cref="T:System.Data.Linq.Link`1"/> that is detached.</returns>
+        Protected Shared Function Detach(Of T)(ByVal value As Link(Of T)) As Link(Of T)
+            If Not value.HasLoadedOrAssignedValue Then
+                Return Nothing
+            End If
+            
+            Return New Link(Of T)(value.Value)
+        End Function
+
+        
         #End Region
 
     End Class

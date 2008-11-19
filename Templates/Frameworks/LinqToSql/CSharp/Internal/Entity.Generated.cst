@@ -211,7 +211,7 @@ namespace <%= Database.EntityNamespace %>
 <% if (c.IsDelayLoaded == true) { %>
             <%= c.Storage %> = default(Link<<%= c.Type %>>);
 <% } // IsDelayLoaded%>
-<% } // foreach Association%>
+<% } // foreach Colum%>
         }
         #endregion
         
@@ -579,7 +579,7 @@ foreach(Column column in Type.Columns) {
 <% if (c.IsDelayLoaded == true) { %>
             <%= c.Storage %> = Detach(<%=c.Storage%>);
 <% } // IsDelayLoaded%>
-<% } // foreach Association%>
+<% } // foreach Column%>
         }
         #endregion
     }
