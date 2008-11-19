@@ -240,7 +240,7 @@ foreach(Column column in Type.Columns) {
     else if (isVersion)
     {
         dataType = "long";
-        storageGet = "BitConverter.ToInt64(_rowVersion.ToArray(), 0)";
+        storageGet = "BitConverter.ToInt64(" + column.Storage + ".ToArray(), 0)";
         valueConvert = "BitConverter.GetBytes(value)";
     }
     else

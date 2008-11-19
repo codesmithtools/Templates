@@ -247,7 +247,7 @@ Else If c.CanBeNull.Value = True AndAlso CommonUtility.IsNullableType(dataType) 
 Else If isVersion Then
     
         dataType = "long"
-        storageGet = "BitConverter.ToInt64(_rowVersion.ToArray(), 0)"
+        storageGet = "BitConverter.ToInt64(" + c.Storage + ".ToArray(), 0)"
         valueConvert = "BitConverter.GetBytes(value)"
     
 Else
