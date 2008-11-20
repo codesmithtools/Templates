@@ -1,30 +1,41 @@
 #labels Featured
 PLINQO, which stands for Professional LINQ to Objects, is a collection of CodeSmith templates that are meant to replace and extend the LINQ to SQL designers that are included with Visual Studio 2008.
 
-===Features===
+Video Tutorials
+http://www.codesmithtools.com/video/plinqo-part-1-quick-start.html
+http://www.codesmithtools.com/video/plinqo-part-2-feature-overview.html
 
+===Features===
+  * Templates for both C# and VB
+  * Generates a fully funtional UI and data layer in under 60 seconds
+  * Dynamic Data UI
+  * Meta Data classes for customizing Entity attributes.
   * Generate or update a LINQ to SQL dbml file from a database schema.
     * Includes all tables, stored procedures, functions, and views with the ability to exclude objects based on regex patterns. 
     * Ability to automatically remove object prefix and suffixes (ie. tbl_ and usp_). 
     * Dbml file can still be customized with the normal Visual Studio 2008 designer. 
     * Dbml file can be refreshed based on the current database schema without losing customizations. (See Safe Attributes) 
   * Generation of the LINQ to SQL DataContext class. 
+  * Generates ADO.Net Data Services
   * Generation of the LINQ to SQL entity classes.
     * Generates one file per entity instead of one massive file. 
     * Generates partial classes where custom code can be written and won't be overwritten. 
-    * Generated entity files are added to the project as code behind files to their corresponding custom entity files. 
-  * Generation of entity manager classes.
+    * Generated entity files are added to the project as code behind files to their 
+corresponding custom entity files. 
     * Adds customizable business rules engine to enforce entity validation, business and security rules. 
+  * Generation of entity manager classes.
     * Provides access to common queries based on primary keys, foreign keys, and indexes. 
     * Common queries are exposed as IQueryable so they can be extended. 
+  * Generation of Query classes
   * All templates can be customized to meet your needs. 
+
 
 ===Reasons to use PLINQO===
   * Remove the designer black box and allow for customization of the ouput while still retaining the ability to use the .dbml designer to make customizations inside of Visual Studio.
   * Ability to easily generate your entire .dbml file for a database and then the ability to regenerate that .dbml file as the schema changes. The regeneration preserves any customizations you may have made such as entity, property and relationship names. With the designer, if you make a database change, you need to drop the entity and re-add it to get any new columns or data type changes, which would cause you to lose any customizations you may have made. Also, using the templates allows you to exclude unwanted tables, stored procedures and views using filter expressions and automatically strip / clean entity and property names of things like prefixes and suffixes that your database schema may be using (ie. tbl_Customer to Customer).
   * A business rules engine that allows you to enforce things like property length rules, required field rules, regex data validation rules as well as several other built in rules including authorization rules. The SubmitChanges method on the data context object will automatically run the rules against any entities in your change set. If all rules are not met, a BrokenRulesException will be thrown that contains a list of the broken rules.
   * A manager class is generated for each entity that encapsulates all actions taken on an entity. Known common actions like retrieving entities by primary key, indexes, and foreign keys are generated. Any custom actions can be added and will be preserved during regeneration. While LINQ makes it easy to sprinkle your data access logic throughout your entire application, we still believe its poor design to do so and that is why we have included the manager classes.
-
+  * A fully functional Dynamic Data UI on top of Linq to SQL.
 ===More Information===
   * !CodeProject article: [http://www.codeproject.com/KB/cs/PLINQO.aspx PLINQO - Supercharge LINQ to SQL]
   * [http://weblogs.asp.net/pwelter34/ Paul's Blog]
