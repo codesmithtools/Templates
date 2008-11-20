@@ -17,23 +17,19 @@
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 <%@ Import Namespace="Manager" %>
 
-<%@ Property Category="3.Query" Name="DataManager" 
-    Type="Manager.DataManager" Optional="False" 
-    Description="Must be set by parent template" %>
-
-<%@ Property Category="3.Query" Name="EntityManager" 
-    Type="Manager.EntityManager" Optional="False" 
-    Description="Must be set by parent template" %>
-
-<%@ Property Category="2.Mapping" Name="Database" 
+<%@ Property Category="1.Mapping" Name="Database" 
     Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
     Description="Database schema instance. Must be set by parent template" %>
-
-<%@ Property Category="3.Query" Name="MethodPrefix" 
+    
+<%@ Property Category="1.Mapping" Name="Type" 
+    Type="LinqToSqlShared.DbmlObjectModel.Type" Optional="False" 
+    Description="The Type instance for this entity. Must be set by parent template" %>
+    
+<%@ Property Category="2.Query" Name="MethodPrefix" 
     Type="System.String" Default="GetBy" Optional="True" 
     Description="The prefix of query method names." %>
 
-<%@ Property Category="3.Query" Name="MethodKeySuffix" 
+<%@ Property Category="2.Query" Name="MethodKeySuffix" 
     Type="System.String" Default="Key" Optional="False" 
     Description="The suffix of the primary key query method names." %>
     
@@ -65,53 +61,35 @@ Imports <%= Database.EntityNamespace %>;
 
 Namespace <%= Database.ContextNamespace %>
     ''' <summary>
-    ''' The query extension class for <%= EntityManager.EntityName %>.
+    ''' The query extension class for <%= Type.Name%>.
     ''' </summary>
-    Public Module <%= EntityManager.EntityName %>Extensions
-<% For Each method As ManagerMethod In EntityManager.Methods %>
-
-<% If (method.IsKey) Then %>
-        ''' <summary>
-        ''' Gets an instance by the primary key.
-        ''' </summary>
-        <Extension> _
-        Public Function <%= MethodPrefix %><%= MethodKeySuffix %>(queryable As IQueryable(Of <%= EntityManager.EntityName %>) , <%= GetParameters(method) %>) As <%= EntityManager.EntityName %>
+    Public Module <%= Type.Name%>Extensions
+<% For Each c As Column In Type.Columns %>
         
-<% If (method.Columns.Count < 4) Then %>
-            Diom entity = queryable as Table(Of <%= EntityManager.EntityName %>)
-            If (entity IsNot Nothing AndAlso entity.Context.LoadOptions Is Nothing) Then
-                Return Query.<%= MethodPrefix %><%= MethodKeySuffix %>.Invoke(DirectCast(entity.Context,<%= DataManager.DataContextName %>), <%= GetParametersNames(method) %>)
-            End If
-<% End If '' column count%>
-            
-            Return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>)
-        End Function
-<% Else If (method.IsUnique) Then %>
-        ''' <summary>
-        ''' Gets an instance by using a unique index.
-        ''' </summary>
-        ''' <returns>An instance of the entity or null if not found.</returns>
-        Public Function <%= MethodPrefix %><%= method.NameSuffix %>(queryable As IQueryable(Of <%= EntityManager.EntityName %>) , <%= GetParameters(method) %>) As <%= EntityManager.EntityName %>
-        
-<% If (method.Columns.Count < 4) Then %>
-            Dim entity = queryable as Table(Of <%= EntityManager.EntityName %>)
-            If (entity IsNot Nothing AndAlso entity.Context.LoadOptions Is Nothing) Then
-                return Query.<%= MethodPrefix %><%= method.NameSuffix %>.Invoke(DirectCast(entity.Context,<%= DataManager.DataContextName %>), <%= GetParametersNames(method) %>);
-            End If
-<% End If '' column count%>
-
-            Return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>)
-        End Function
-<% Else  %>
+<%If c.IsPrimaryKey.Value Then%>
         ''' <summary>
         ''' Gets a query by an index.
         ''' </summary>
-        Public Function <%= MethodPrefix %><%= method.NameSuffix %>( queryable As IQueryable(Of <%= EntityManager.EntityName %>), <%= GetParameters(method) %>) As IQueryable(Of <%= EntityManager.EntityName %>)
+        <Extension> _
+		Public Function <%= MethodPrefix %><%= c.Member %>( entity As IQueryable(Of <%= Type.Name%>), <%=StringUtil.ToCamelCase(c.Member) %> As <%= VBAlias(c.Type) %>) As <%=Type.Name%>
+
+            Return entity.FirstOrDefault(Function(c)c.<%=c.Member%> = <%=StringUtil.ToCamelCase(c.Member) %>)
         
-            Return queryable.Where(<%= GetLamba(method, 5) %>)
         End Function
-<% End If '' If is key%>
-<% Next '' For Each method%>
+		
+<% Else If Not c.IsVersion.Value Then %>
+        ''' <summary>
+        ''' Gets a query by an index.
+        ''' </summary>
+        <Extension> _
+        Public Function <%= MethodPrefix %><%= c.Member %>(queryable As IQueryable(Of <%= Type.Name %>) , <%=StringUtil.ToCamelCase(c.Member) %> As <%= VBAlias(c.Type) %> ) As IQueryable(Of <%= Type.Name %>)
+        
+            Return queryable.Where(Function(c)c.<%=c.Member%> = <%=StringUtil.ToCamelCase(c.Member)%>)
+        
+        End Function
+        
+<% End If
+Next%>
 
 		'Insert User Defined Extensions here.
 		'Anything outside of this Region will be lost at regeneration
@@ -126,22 +104,14 @@ Namespace <%= Database.ContextNamespace %>
         ''' </summary>
         Private Partial Class Query
         
-<% For Each method As ManagerMethod In EntityManager.Methods %>
-<% If method.Columns.Count < 4 Then %>
-<% If (method.IsKey) Then %>
+<% For Each c As Column in Type.Columns  %>
+<% If c.IsPrimaryKey.Value Then%>
 
-            Friend Shared ReadOnly <%= MethodPrefix %><%= MethodKeySuffix %> As Func(Of <%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= EntityManager.EntityName %>) = _
+            Friend Readonly <%= MethodPrefix %><%= c.Name %><%= MethodKeySuffix %> As Func(Of <%= Database.Class %>, <%= VBAlias(c.Type) %>, <%= Type.Name %>) = _ 
                 CompiledQuery.Compile( _
-                    Function(db As <%= DataManager.DataContextName %> , <%= GetParameters(method) %>) _ 
-                        db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>))
-<% Else If method.IsUnique Then %>
-
-            Friend Shared ReadOnly <%= MethodPrefix %><%= method.NameSuffix %> As Func(Of <%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, IQueryable(Of <%= EntityManager.EntityName %>)) = _
-                CompiledQuery.Compile( _
-                    Function(db As <%= DataManager.DataContextName %> , <%= GetParameters(method) %>) _ 
-                        db.<%= EntityManager.EntityName %>.Where(<%= GetLamba(method, 7) %>))
+                    (Function(db As <%= Database.Class %> ,<%=StringUtil.ToCamelCase(c.Member) %> As <%= VBAlias(c.Type) %> ) _ 
+                        db.<%= Type.Name %>.FirstOrDefault(Function(c)c.<%=c.Member%> = <%=StringUtil.ToCamelCase(c.Member) %>)))
 <% End If ' if is key%>
-<% End If ' column count%>
 <% Next ' foreach method%>
 		
             ' Add your compiled queries here.
@@ -154,87 +124,3 @@ Namespace <%= Database.ContextNamespace %>
         #End Region
     End Module
 End Namespace
-
-<script runat="template">
-   Public Function GetParameters(ByVal method As ManagerMethod) As String
-	Dim args As New StringBuilder()
-  	For Each column As Column In method.Columns
-   	 	If args.Length > 0 Then
-     	 args.Append(", ")
-    	End If
-    
-    Dim paramName As String = CommonUtility.GetParameterName(column.Member)
-    
-    args.AppendFormat("{1} As {0}", VBAlias(column.Type), VBKeywordEscape(paramName))
-  Next
-  
-  Return args.ToString()
-End Function
-
-Public Function GetParametersNames(ByVal method As ManagerMethod) As String
-  Dim args As New StringBuilder()
-  For Each column As Column In method.Columns
-    If args.Length > 0 Then
-      args.Append(", ")
-    End If
-    
-    Dim paramName As String = CommonUtility.GetParameterName(column.Member)
-    args.Append(VBKeywordEscape(paramName))
-  Next
-  
-  Return args.ToString()
-End Function
-
-Public Function GetParametersTypes(ByVal method As ManagerMethod) As String
-  Dim args As New StringBuilder()
-  For Each column As Column In method.Columns
-    If args.Length > 0 Then
-      args.Append(", ")
-    End If
-    
-    args.Append(VBAlias(column.Type))
-  Next
-  
-  Return args.ToString()
-End Function
-
-Public Function GetLamba(ByVal method As ManagerMethod, ByVal tabCount As Integer) As String
-  Dim lamba As New StringBuilder()
-  Dim [alias] As String = method.EntityName.Substring(0, 1).ToLowerInvariant()
-  
-  For Each column As Column In method.Columns
-    Dim paramName As String = StringUtil.ToCamelCase(column.Member)
-    paramName = VBKeywordEscape(paramName)
-    
-    If lamba.Length = 0 Then
-      lamba.AppendFormat("Function({0})", [alias])
-    Else
-      lamba.Append(" _" & Chr(13) & "" & Chr(10) & "")
-      lamba.Append(Chr(9), tabCount)
-      lamba.Append("AndAlso ")
-    End If
-    
-    lamba.AppendFormat("{0}.{1} = {2}", [alias], column.Member, paramName)
-    
-
-  Next
-  
-  Return lamba.ToString()
-End Function
-Private Shared ReadOnly _sizeRegex As New Regex("(<Size>\d+)", RegexOptions.Compiled)
-
-
-Public Function GetSize(ByVal s As String) As Integer
-  Dim size As Integer = 0
-  
-  Dim m As Match = _sizeRegex.Match(s)
-  If Not m.Success Then
-    Return size
-  End If
-  
-  Dim temp As String = m.Groups("Size").Value
-  Integer.TryParse(temp, size)
-  Return size
-End Function
-
-</script>
