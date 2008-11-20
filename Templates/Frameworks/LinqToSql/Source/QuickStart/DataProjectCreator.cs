@@ -69,7 +69,7 @@ namespace QuickStartUtils
                 QuickStartUtils.FindAndReplace(projectPath.FilePath, @"<RootNamespace>.*</RootNamespace>", "<RootNamespace></RootNamespace>");
                 //Update Settings File
                 QuickStartUtils.FindAndReplace(Path.Combine(projectPath.DirectoryPath, "My Project\\Settings.Designer.vb"),
-                    @"Global\.Petshop\.Data\.My\.MySettings",
+                    @"Global\." + ProjectBuilder.SourceDatabase.Database.Name + @"\.Data\.My\.MySettings",
                     "Global.My.MySettings");
 
                 string vbFrameworkReplace = String.Format(@"<TargetFrameworkVersion>v{0}</TargetFrameworkVersion>
