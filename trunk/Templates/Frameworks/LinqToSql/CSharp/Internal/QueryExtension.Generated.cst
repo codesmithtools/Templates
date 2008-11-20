@@ -70,16 +70,16 @@ namespace <%= Database.ContextNamespace %>
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-<%if(column.IsPrimaryKey.Value) {%>
-		public static <%=Type.Name%> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= Type.Name%>> entity,  <%= CSharpAlias[column.Type] %> <%=StringUtil.ToCamelCase(column.Member) %>)
+<%if(column.IsPrimaryKey.Value) { %>
+		public static <%=Type.Name%> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= Type.Name%>> entity,  <%= CSharpAlias[column.Type] %> <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>)
         {
-            return entity.FirstOrDefault(c => c.<%=column.Member%> == <%=StringUtil.ToCamelCase(column.Member) %>);
+            return entity.FirstOrDefault(c => c.<%=column.Member%> == <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>);
         }
 		
 <% } else if(!column.IsVersion.Value){ %>
-        public static IQueryable<<%= Type.Name %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= Type.Name %>> queryable, <%= CSharpAlias[column.Type] %> <%=StringUtil.ToCamelCase(column.Member) %>)
+        public static IQueryable<<%= Type.Name %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= Type.Name %>> queryable, <%= CSharpAlias[column.Type] %> <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>)
         {
-            return queryable.Where(c => c.<%=column.Member%> == <%=StringUtil.ToCamelCase(column.Member)%>);
+            return queryable.Where(c => c.<%=column.Member%> == <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)]%>);
         }
         
 <% }
@@ -95,8 +95,8 @@ namespace <%= Database.ContextNamespace %>
 
             internal static readonly Func<<%= Database.Class %>, <%= CSharpAlias[column.Type] %>, <%= Type.Name %>> <%= MethodPrefix %><%= column.Name %><%= MethodKeySuffix %> = 
                 CompiledQuery.Compile(
-                    (<%= Database.Class %> db,<%= CSharpAlias[column.Type] %> <%=StringUtil.ToCamelCase(column.Member) %>) => 
-                        db.<%= Type.Name %>.FirstOrDefault(c => c.<%=column.Member%> == <%=StringUtil.ToCamelCase(column.Member) %>));
+                    (<%= Database.Class %> db,<%= CSharpAlias[column.Type] %> <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>) => 
+                        db.<%= Type.Name %>.FirstOrDefault(c => c.<%=column.Member%> == <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>));
 <% } // if is key%>
 <% } // foreach method%>
 

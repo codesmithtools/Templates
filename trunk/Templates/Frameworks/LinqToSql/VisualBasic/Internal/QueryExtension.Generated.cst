@@ -71,9 +71,9 @@ Namespace <%= Database.ContextNamespace %>
         ''' Gets a query by an index.
         ''' </summary>
         <Extension> _
-		Public Function <%= MethodPrefix %><%= c.Member %>( entity As IQueryable(Of <%= Type.Name%>), <%=StringUtil.ToCamelCase(c.Member) %> As <%= VBAlias(c.Type) %>) As <%=Type.Name%>
+		Public Function <%= MethodPrefix %><%= c.Member %>( entity As IQueryable(Of <%= Type.Name%>), <%=VBKeywordEscape[StringUtil.ToCamelCase(c.Member)] %> As <%= VBAlias(c.Type) %>) As <%=Type.Name%>
 
-            Return entity.FirstOrDefault(Function(c)c.<%=c.Member%> = <%=StringUtil.ToCamelCase(c.Member) %>)
+            Return entity.FirstOrDefault(Function(c)c.<%=c.Member%> = <%=VBKeywordEscape[StringUtil.ToCamelCase(c.Member)] %>)
         
         End Function
 		
@@ -82,9 +82,9 @@ Namespace <%= Database.ContextNamespace %>
         ''' Gets a query by an index.
         ''' </summary>
         <Extension> _
-        Public Function <%= MethodPrefix %><%= c.Member %>(queryable As IQueryable(Of <%= Type.Name %>) , <%=StringUtil.ToCamelCase(c.Member) %> As <%= VBAlias(c.Type) %> ) As IQueryable(Of <%= Type.Name %>)
+        Public Function <%= MethodPrefix %><%= c.Member %>(queryable As IQueryable(Of <%= Type.Name %>) , <%=VBKeywordEscape[StringUtil.ToCamelCase(c.Member)] %> As <%= VBAlias(c.Type) %> ) As IQueryable(Of <%= Type.Name %>)
         
-            Return queryable.Where(Function(c)c.<%=c.Member%> = <%=StringUtil.ToCamelCase(c.Member)%>)
+            Return queryable.Where(Function(c)c.<%=c.Member%> = <%=VBKeywordEscape[StringUtil.ToCamelCase(c.Member)]%>)
         
         End Function
         
@@ -109,8 +109,8 @@ Next%>
 
             Friend Readonly <%= MethodPrefix %><%= c.Name %><%= MethodKeySuffix %> As Func(Of <%= Database.Class %>, <%= VBAlias(c.Type) %>, <%= Type.Name %>) = _ 
                 CompiledQuery.Compile( _
-                    (Function(db As <%= Database.Class %> ,<%=StringUtil.ToCamelCase(c.Member) %> As <%= VBAlias(c.Type) %> ) _ 
-                        db.<%= Type.Name %>.FirstOrDefault(Function(c)c.<%=c.Member%> = <%=StringUtil.ToCamelCase(c.Member) %>)))
+                    (Function(db As <%= Database.Class %> ,<%=VBKeywordEscape[StringUtil.ToCamelCase(c.Member)] %> As <%= VBAlias(c.Type) %> ) _ 
+                        db.<%= Type.Name %>.FirstOrDefault(Function(c)c.<%=c.Member%> = <%=VBKeywordEscape[StringUtil.ToCamelCase(c.Member)] %>)))
 <% End If ' if is key%>
 <% Next ' foreach method%>
 		
