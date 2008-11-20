@@ -627,6 +627,12 @@ namespace LinqToSqlShared.Generator
             prefix = prefix.Replace(primaryClass, "");
             prefix = prefix.Replace(foreignClass, "");
             prefix = CleanIdRegex.Replace(prefix, "");
+
+            // FIX ME
+            Regex regex = new Regex(@"^\d");
+            if (regex.IsMatch(prefix))
+                prefix = String.Format("My{0}", prefix);
+
             return prefix;
         }
 
