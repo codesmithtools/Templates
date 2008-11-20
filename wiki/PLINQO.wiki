@@ -4,7 +4,7 @@ PLINQO, which stands for Professional LINQ to Objects, is a collection of CodeSm
 ===Video Tutorials===
 
   * [http://www.codesmithtools.com/video/plinqo-part-1-quick-start.html PLINQO Part 1 - The Quick Start]
-  * http://www.codesmithtools.com/video/plinqo-part-2-feature-overview.html PLINQO Part 2 2 - Feature Overview]
+  * [http://www.codesmithtools.com/video/plinqo-part-2-feature-overview.html PLINQO Part 2 - Feature Overview]
 
 ===Features===
   * Templates for both C# and VB
