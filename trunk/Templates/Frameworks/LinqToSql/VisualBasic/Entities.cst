@@ -147,14 +147,14 @@ Public Sub CreateDataContextClass(ByVal database As Database)
     Me.Progress.PerformStep()
 End Sub
 
-Public Sub CreateEntityClasses(ByVal database As Database)
+Public Sub CreateEntityClasses(ByVal [database] As Database)
     Dim t As EntityGeneratedClass = Me.Create(Of EntityGeneratedClass)()
     Me.CopyPropertiesTo(t)
-    t.Database = database
+    t.Database = [database]
     
     Dim p As EntityEditableClass = Me.Create(Of EntityEditableClass)()
     Me.CopyPropertiesTo(p)
-    p.Database = database
+    p.Database = [database]
     
     For Each tableMap As Table In database.Tables
         Dim watch As Stopwatch = Stopwatch.StartNew()
@@ -162,7 +162,7 @@ Public Sub CreateEntityClasses(ByVal database As Database)
         Debug.WriteLine(String.Format("Creating Entity Class '{0}' ...", tableMap.Type.Name))
         
         t.TableName = tableMap.Name
-        t.EntityBase = database.EntityBase
+        t.EntityBase = [database].EntityBase
         
         CreateEntity(t, p, tableMap.Type)
         
@@ -170,8 +170,8 @@ Public Sub CreateEntityClasses(ByVal database As Database)
         
         Me.Progress.PerformStep()
     Next
-    
-    For Each [function] As [Function] In database.Functions
+   
+    For Each [function] As [Function] In [database].Functions
         For Each resultType As LinqToSqlShared.DbmlObjectModel.Type In [function].Types
             If Not generatedEntities.Contains(resultType.Name) Then
                 t.TableName = String.Empty
