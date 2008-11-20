@@ -8,6 +8,7 @@ PLINQO, which stands for Professional LINQ to Objects, is a collection of CodeSm
 
 ===Features===
   * Templates for both C# and VB
+  * Many features can be turned on or off depending on your needs
   * Generates a fully funtional UI and data layer in under 60 seconds
   * Dynamic Data UI
   * Meta Data classes for customizing Entity attributes.
@@ -21,8 +22,7 @@ PLINQO, which stands for Professional LINQ to Objects, is a collection of CodeSm
   * Generation of the LINQ to SQL entity classes.
     * Generates one file per entity instead of one massive file. 
     * Generates partial classes where custom code can be written and won't be overwritten. 
-    * Generated entity files are added to the project as code behind files to their 
-corresponding custom entity files. 
+    * Generated entity files are added to the project as code behind files to their corresponding custom entity files. 
     * Adds customizable business rules engine to enforce entity validation, business and security rules. 
   * Generation of entity manager classes.
     * Provides access to common queries based on primary keys, foreign keys, and indexes. 
