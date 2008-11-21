@@ -543,7 +543,7 @@ End If ' many to many%>
         End Sub
         
         #End Region
-    
+ <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>   
         #Region "Clone"
         ''' <summary>
         ''' Creates a new object that is a copy of the current instance.
@@ -574,8 +574,10 @@ End If ' many to many%>
             Return DirectCast(DirectCast(Me,ICloneable),<%= Type.Name %>).Clone()
         End Function
         #End Region
+ <% End If %>
 <% End If %>
 
+<% If Not (String.IsNullOrEmpty(EntityBase)) Then %>
         #Region "Detach Methods"
         ''' <summary>
         ''' Detach this instance from the <see cref="DataContext"/>.
@@ -607,7 +609,7 @@ End If ' many to many%>
 <% Next ' For Each Column%>
         End Sub
         #End Region
-    
+  <% End If %>  
     End Class
 End Namespace
 

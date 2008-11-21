@@ -227,6 +227,7 @@
         Response.WriteLine(parentFileName);
         partialClass.RenderToFile(parentFileName, insertClassMergeStrategy);
         
+        
         string fileName = className + ".Generated.cs";
         fileName = Path.Combine(OutputDirectory, fileName);
         
