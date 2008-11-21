@@ -7,6 +7,7 @@ using CodeSmith.Engine;
 using ICSharpCode.NRefactory;
 using ICSharpCode.NRefactory.Ast;
 using System.Text.RegularExpressions;
+using System.CodeDom;
 
 namespace CodeSmith.Engine
 {
@@ -53,6 +54,9 @@ namespace CodeSmith.Engine
 
             if (attribs.ContainsKey("NotFoundParent"))
                 this.NotFoundParent = (string)attribs["NotFoundParent"];
+
+            if (attribs.ContainsKey("MergeImports"))
+                this.MergeImports = Boolean.TryParse((string)attribs["MergeImports"], out _mergeImports);
         }
         public string Merge(CodeTemplate context, string sourceContent, string templateOutput)
         {
@@ -66,10 +70,16 @@ namespace CodeSmith.Engine
             if (!this.Language.HasValue && !SetLanguage(context.CodeTemplateInfo.TargetLanguage))
                 throw new Exception("InsertClassMergeStrategy only supports Languages 'C#' and 'VB'");
 
+                
             // Parse Source
             CodeFileParser sourceParser = new CodeFileParser(sourceContent, this.Language.Value, false);
             AttributeSectionVisitor sourceVisitor = new AttributeSectionVisitor();
             sourceParser.CompilationUnit.AcceptVisitor(sourceVisitor, this.ClassName);
+
+            if (MergeImports)
+            {
+                MergeImportString = templateOutput;
+            }
 
             // Check OnlyInsertMatchingClass
             if (OnlyInsertMatchingClass)
@@ -128,8 +138,26 @@ namespace CodeSmith.Engine
                 sourceEnd = GetCorrectedTypeEnd(sourceVisitor.Type);
             }
 
-            // Add Pre-Class Text To Output
-            mergeResult.Append(sourceParser.GetSectionFromStart(sourceStart));
+         
+            //Add Imports To Output
+            if (MergeImports)
+            {
+                // Parse Template
+                CodeFileParser templateParser = new CodeFileParser(MergeImportString, this.Language.Value, false);
+                AttributeSectionVisitor templateVisitor = new AttributeSectionVisitor();
+                templateParser.CompilationUnit.AcceptVisitor(templateVisitor, this.ClassName);
+
+                AppendMergedImports(mergeResult, sourceParser, sourceVisitor, templateVisitor);
+
+                // Add Pre-Class Text To Output
+                mergeResult.Append(sourceParser.GetSection(ImportsStop, sourceStart));
+
+            }
+            else
+            {
+                // Add Pre-Class Text To Output
+                mergeResult.Append(sourceParser.GetSectionFromStart(sourceStart));
+            }
 
             // Add Merged Class to Output
             mergeResult.Append(templateOutput);
@@ -195,6 +223,40 @@ namespace CodeSmith.Engine
             return true;
         }
 
+        protected void AppendMergedImports(StringBuilder mergeResult, CodeFileParser sourceParser,
+            AttributeSectionVisitor sourceVisitor, AttributeSectionVisitor templateVisitor)
+        {
+            string importPrefix = "using ";
+            string importSuffix = ";";
+
+            if (sourceParser.Language == SupportedLanguage.VBNet)
+            {
+                importPrefix = "Imports ";
+                importSuffix = String.Empty;
+            }
+
+            ImportsStart = sourceVisitor.UsingList.First<UsingDeclaration>().StartLocation;
+            ImportsStop = sourceVisitor.UsingList.Last<UsingDeclaration>().EndLocation;
+
+            //Add Pre-Imports Text to Output
+            mergeResult.Append(sourceParser.GetSectionFromStart(ImportsStart));
+
+            List<string> completeUsingList = new List<string>();
+
+            foreach (UsingDeclaration usingDeclaration in sourceVisitor.UsingList)
+                foreach (Using @using in usingDeclaration.Usings)
+                    completeUsingList.Add(@using.Name);
+
+            foreach (UsingDeclaration usingDeclaration in templateVisitor.UsingList)
+                foreach (Using @using in usingDeclaration.Usings)
+                    if(!completeUsingList.Contains(@using.Name))
+                        completeUsingList.Add(@using.Name);
+
+            foreach (string @using in completeUsingList)        
+                mergeResult.AppendLine(string.Concat(importPrefix, @using, importSuffix));
+
+        }
+
         #endregion
 
         #region Properties
@@ -215,6 +277,13 @@ namespace CodeSmith.Engine
             get { return _preserveClassAttributes; }
             set { _preserveClassAttributes = value; }
         }
+        
+        private bool _mergeImports = false;
+        public bool MergeImports
+        {
+            get { return _mergeImports; }
+            set { _mergeImports = value; }
+        }
 
         private NotFoundActionEnum _notFoundAction = NotFoundActionEnum.None;
         public NotFoundActionEnum NotFoundAction
@@ -230,6 +299,29 @@ namespace CodeSmith.Engine
             set { _language = value; }
         }
 
+        private List<string> _importsList = new List<string>();
+        public List<string> ImportsList
+        {
+            get { return _importsList; }
+        }
+
+        private Location _importsStart;
+        public Location ImportsStart 
+        {
+            get { return _importsStart; }
+            set { _importsStart = value; }
+        }
+
+        private Location _importsStop;
+        public Location ImportsStop
+        {
+            get { return _importsStop; }
+            set { _importsStop = value; }
+        }
+
+        private string MergeImportString { get; set; }
+
         #endregion
+
     }
 }

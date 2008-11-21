@@ -194,7 +194,14 @@ Public Sub CreateEntity(ByVal entityClass As EntityGeneratedClass, ByVal partial
         partialClass.ExistingFile = New CodeFileParser(parentFileName)
     End If
     
-    Dim insertClassMergeStrategy__1 As New InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata")
+    Dim insertClassMergeStrategy__1 As New InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata") With _
+    { _
+            .OnlyInsertMatchingClass = True, _
+            .PreserveClassAttributes = True, _
+            .NotFoundAction = InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent, _
+            .NotFoundParent = type.Name, _
+            .MergeImports = True _
+    }
     partialClass.Type = type
     Response.WriteLine(parentFileName)
     partialClass.RenderToFile(parentFileName, insertClassMergeStrategy__1)

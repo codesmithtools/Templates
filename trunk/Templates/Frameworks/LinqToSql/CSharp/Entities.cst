@@ -221,7 +221,8 @@
             OnlyInsertMatchingClass = true,
             PreserveClassAttributes = true,
             NotFoundAction = InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent,
-            NotFoundParent = type.Name
+            NotFoundParent = type.Name,
+            MergeImports = true
         };
         partialClass.Type = type;
         Response.WriteLine(parentFileName);

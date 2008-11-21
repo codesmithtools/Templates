@@ -106,7 +106,8 @@ namespace <%= Database.EntityNamespace %>
                         else if (column.Member.Contains("Html"))
                             Response.WriteLine("            [DataType(DataType.Html)]");
                     }
-                } %>
+                }    
+            %>
             public <%= CSharpAlias[column.Type] %> <%=column.Member%> { get; set; }
             
 <%            } // for each column
