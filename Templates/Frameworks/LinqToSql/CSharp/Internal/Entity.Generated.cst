@@ -517,7 +517,7 @@ foreach(Column column in Type.Columns) {
             Initialize();
         }
         #endregion
-
+<% if (!string.IsNullOrEmpty(EntityBase)) { %>
         #region Clone
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
@@ -550,8 +550,9 @@ foreach(Column column in Type.Columns) {
             return (<%= Type.Name %>)((ICloneable)this).Clone();
         }
         #endregion
+ <% } %>
 <% } %>
-
+<% if (!string.IsNullOrEmpty(EntityBase)) { %>
         #region Detach Methods
         /// <summary>
         /// Detach this instance from the <see cref="DataContext"/>.
@@ -582,6 +583,7 @@ foreach(Column column in Type.Columns) {
 <% } // foreach Column%>
         }
         #endregion
+   <% } %>
     }
 }
 
