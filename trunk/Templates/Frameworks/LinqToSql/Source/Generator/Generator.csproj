@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LinqToSqlShared.Generator</RootNamespace>
     <AssemblyName>Generator</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -40,11 +40,20 @@
       <HintPath>..\..\..\..\CodeSmith\CodeSmith\Build\Debug\SchemaExplorer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonUtility.cs" />
+    <Compile Include="DbmlEnum.cs">
+      <DependentUpon>DbmlEnum.xsd</DependentUpon>
+    </Compile>
     <Compile Include="DbmlGenerator.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="GeneratorSettings.cs" />
@@ -57,6 +66,9 @@
       <Project>{FE25E33F-95B9-453C-98DC-82DF44CED946}</Project>
       <Name>Dbml</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DbmlEnum.xsd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
