@@ -22,6 +22,11 @@
     Description="The folder to save the generated files." 
     Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
+<%@ Property Category="3.Enum" Name="EnumOutputDirectory" 
+    Type="System.String" Default="" Optional="True" 
+    Description="The folder to save the generated files." 
+    Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
 <%@ Property Category="1.Mapping" Name="DbmlFile" 
     Type="System.String" Default="Database.dbml" Optional="False" 
     Description="The full path to the mapping file." 
@@ -51,6 +56,10 @@
     Template="Internal\Entity.Editable.cst" 
     MergeProperties="False" %>
 
+<%@ Register Name="EnumClass" 
+    Template="Internal\Enum.cst" 
+    MergeProperties="False" %>
+
 
 
 <script runat="template">
@@ -73,6 +82,7 @@
         CreateEntityBaseClass(database);
         CreateDataContextClass(database);
         CreateEntityClasses(database);
+		CreateEnums(database);
         
         this.RegisterReference("System.Data.Linq");
         this.RegisterReference("System.Configuration");
@@ -244,6 +254,23 @@
             CreateEntity(entityClass, partialClass, childType);
         }
     }
+	
+	public void CreateEnums(Database database)
+	{
+		string enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
+		LinqToSqlShared.Generator.DbmlEnum.Database enumDatabase = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(enumXmlFileName);
+		
+		foreach(LinqToSqlShared.Generator.DbmlEnum.Enumerator enumerator in enumDatabase.Enumerators)
+		{
+			EnumClass t = this.Create<EnumClass>();
+			t.Namespace = database.EntityNamespace;
+			t.Enumerator = enumerator;
+			
+			string fileName = Path.Combine(EnumOutputDirectory, String.Concat(enumerator.Name, ".cs"));
+			t.RenderToFile(fileName, true);
+		}
+	}
+	
 </script>
 Generating Linq to Sql Entities ...
 <% Generate(); %>

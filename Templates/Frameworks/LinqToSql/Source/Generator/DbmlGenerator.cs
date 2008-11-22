@@ -9,14 +9,22 @@ using System.Xml;
 using CodeSmith.Engine;
 using SchemaExplorer;
 using LinqToSqlShared.DbmlObjectModel;
-using Type=LinqToSqlShared.DbmlObjectModel.Type;
-
+using System.Linq;
+using System.Data;
+using Type = LinqToSqlShared.DbmlObjectModel.Type;
+using ParameterDirection = LinqToSqlShared.DbmlObjectModel.ParameterDirection;
 
 namespace LinqToSqlShared.Generator
 {
     public class DbmlGenerator
     {
         public event EventHandler<SchemaItemProcessedEventArgs> SchemaItemProcessed;
+
+        public static string GetEnumXmlFileName(string mappingFile)
+        {
+            string dbmlExtension = Path.GetExtension(mappingFile);
+            return mappingFile.Replace(dbmlExtension, ".enum.xml");
+        }
 
         private static readonly Regex CleanIdRegex = new Regex(
             @"(_ID|_id|_Id|\.ID|\.id|\.Id|ID|Id)$", RegexOptions.Compiled);
@@ -34,47 +42,60 @@ namespace LinqToSqlShared.Generator
         "Transaction"};
 
         #region Properties
-        private GeneratorSettings settings;
 
+        private GeneratorSettings settings;
         public GeneratorSettings Settings
         {
             get { return settings; }
         }
 
         private List<string> _classNames = new List<string>();
-
         internal List<string> ClassNames
         {
             get { return _classNames; }
         }
 
         private List<string> _functionNames = new List<string>();
-
         internal List<string> FunctionNames
         {
             get { return _functionNames; }
         }
 
         private List<string> _associationNames = new List<string>();
-
         internal List<string> AssociationNames
         {
             get { return _associationNames; }
         }
 
         private Dictionary<string, List<string>> _propertyNames = new Dictionary<string, List<string>>();
-
         internal Dictionary<string, List<string>> PropertyNames
         {
             get { return _propertyNames; }
         }
 
         private Database _database;
-
         public Database Database
         {
             get { return _database; }
         }
+
+        private DbmlEnum.Database _enumDatabase;
+        public DbmlEnum.Database EnumDatabase
+        {
+            get { return _enumDatabase; }
+        }
+
+        private DbmlEnum.Database _existingEnumDatabase;
+        public DbmlEnum.Database ExistingEnumDatabase
+        {
+            get { return _existingEnumDatabase; }
+        }
+
+        public string EnumXmlFileName
+        {
+            get { return GetEnumXmlFileName(settings.MappingFile); }
+        }
+
         #endregion
 
         public DbmlGenerator(GeneratorSettings settings)
@@ -92,11 +113,22 @@ namespace LinqToSqlShared.Generator
             Database.Name = databaseSchema.Name;
             CreateContext(databaseSchema);
 
+            _enumDatabase = new DbmlEnum.Database()
+            {
+                Name = databaseSchema.Name,
+            };
+            _existingEnumDatabase = DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName);
+
             foreach (TableSchema t in databaseSchema.Tables)
             {
                 if (Settings.IsIgnored(t.Name))
                 {
                     Debug.WriteLine("Skipping Table: " + t.FullName);
+                }
+                else if (Settings.IsEnum(t))
+                {
+                    Debug.WriteLine("Getting Enum Table: " + t.FullName);
+                    GetEnum(t);
                 }
                 else
                 {
@@ -147,6 +179,8 @@ namespace LinqToSqlShared.Generator
             Dbml.ToFile(Dbml.CopyWithNulledOutDefaults(_database), 
                 settings.MappingFile);
 
+            _enumDatabase.SerializeToFile(EnumXmlFileName);
+            
             return _database;
         }
 
@@ -179,6 +213,70 @@ namespace LinqToSqlShared.Generator
 
             if (string.IsNullOrEmpty(Database.Connection.ConnectionString))
                 Database.Connection.ConnectionString = databaseSchema.ConnectionString;
+        }
+
+        private DbmlEnum.Enumerator GetEnum(TableSchema tableSchema)
+        {
+            // Anything coming in here should already have passed through Settings.IsEnum().
+            // Because of this, we know not only that it is an Enum table, but also that all
+            // of the desired columns exist.
+
+            DbmlEnum.Enumerator enumerator = _enumDatabase.Enumerators.Where(e => e.Table == tableSchema.FullName).FirstOrDefault();
+            DbmlEnum.Enumerator existingEnumerator = (_existingEnumDatabase != null)
+                ? _existingEnumDatabase.Enumerators.Where(e => e.Table == tableSchema.FullName).FirstOrDefault()
+                : null;
+            
+            if (enumerator == null)
+            {
+                enumerator = new DbmlEnum.Enumerator()
+                {
+                    Name = (existingEnumerator == null)
+                        ? ToEnumName(tableSchema.Name)
+                        : existingEnumerator.Name,
+                    Table = tableSchema.FullName,
+                    Values = GetEnumValues(tableSchema, existingEnumerator)
+                };
+                _enumDatabase.Enumerators.Add(enumerator);
+            }
+
+            return enumerator;
+        }
+
+        private List<DbmlEnum.Value> GetEnumValues(TableSchema tableSchema, DbmlEnum.Enumerator existingEnumerator)
+        {
+            List<DbmlEnum.Value> valueList = new List<DbmlEnum.Value>();
+
+            string primaryKey = tableSchema.PrimaryKey.MemberColumns[0].Name;
+            string nameColumn = settings.GetEnumNameColumnName(tableSchema);
+            string descriptionColumn = settings.GetEnumDescriptionColumnName(tableSchema);
+            string summaryColumn = settings.GetEnumSummaryColumnName(tableSchema);
+            
+            DataTable table = tableSchema.GetTableData();
+            foreach (DataRow row in table.Rows)
+            {
+                int integerValue = Int32.Parse(row[primaryKey].ToString());
+                DbmlEnum.Value existingValue = (existingEnumerator != null)
+                    ? existingEnumerator.Values.Where(v => v.IntegerValue == integerValue).FirstOrDefault()
+                    : new DbmlEnum.Value();
+
+                string description = (table.Columns.Contains(descriptionColumn))
+                    ? row[descriptionColumn] as String
+                    : existingValue.Description;
+
+                string summary = (table.Columns.Contains(summaryColumn))
+                    ? row[summaryColumn] as String
+                    : existingValue.Summary;
+
+                valueList.Add(new DbmlEnum.Value()
+                    {
+                        Name = row[nameColumn].ToString(),
+                        IntegerValue = integerValue,
+                        Description = description ?? String.Empty,
+                        Summary = summary ?? String.Empty
+                    });
+            }
+            
+            return valueList;
         }
 
         private Table GetTable(TableSchema tableSchema)
@@ -216,13 +314,7 @@ namespace LinqToSqlShared.Generator
 
         private Table CreateTable(TableSchema tableSchema)
         {
-            string tableName = tableSchema.Name;
-            if (settings.TableNaming != TableNamingEnum.Plural  && settings.EntityNaming == EntityNamingEnum.Plural)
-                tableName = StringUtil.ToPlural(tableName);
-            else if(settings.TableNaming != TableNamingEnum.Singular && settings.EntityNaming == EntityNamingEnum.Singular)
-                tableName = StringUtil.ToSingular(tableName);
-
-            Type type = new Type(ToClassName(tableName));
+            Type type = new Type(ToClassName(tableSchema.Name));
             Table t = new Table(tableSchema.FullName, type);
             t.Member = t.Type.Name;
 
@@ -239,7 +331,9 @@ namespace LinqToSqlShared.Generator
             foreach (TableKeySchema tableKey in tableSchema.ForeignKeys)
             {
                 if (Settings.IsIgnored(tableKey.ForeignKeyTable.Name)
-                    || Settings.IsIgnored(tableKey.PrimaryKeyTable.Name))
+                    || Settings.IsIgnored(tableKey.PrimaryKeyTable.Name)
+                    || Settings.IsEnum(tableKey.ForeignKeyTable)
+                    || Settings.IsEnum(tableKey.PrimaryKeyTable))
                     continue;
 
                 CreateAssociation(table, tableKey);
@@ -636,9 +730,36 @@ namespace LinqToSqlShared.Generator
             return prefix;
         }
 
+        private string GetColumnType(ColumnSchema columnSchema)
+        {
+            string typeName;
+
+            return IsEnumAssociation(columnSchema, out typeName)
+                ? typeName
+                : GetSystemType(columnSchema);
+        }
+
+        private bool IsEnumAssociation(ColumnSchema columnSchema, out string typeName)
+        {
+            bool result = false;
+            typeName = String.Empty;
+
+            if (columnSchema.IsForeignKeyMember)
+                foreach (TableKeySchema tableKeySchema in columnSchema.Table.ForeignKeys)
+                    if (tableKeySchema.ForeignKeyMemberColumns.Contains(columnSchema)
+                        && Settings.IsEnum(tableKeySchema.PrimaryKeyTable))
+                    {
+                        DbmlEnum.Enumerator enumerator = GetEnum(tableKeySchema.PrimaryKeyTable);
+                        result = true;
+                        typeName = enumerator.Name;
+                        break;
+                    }
+            
+            return result;
+        }
+
         private void CreateColumns(Table table, TableSchema tableSchema)
         {
-
             foreach (ColumnSchema columnSchema in tableSchema.Columns)
             {
                 bool isNew = !table.Type.Columns.Contains(columnSchema.Name);
@@ -646,13 +767,15 @@ namespace LinqToSqlShared.Generator
 
                 if (isNew)
                 {
-                    column = new Column(GetSystemType(columnSchema));
+                    column = new Column(GetColumnType(columnSchema));
                     column.Name = columnSchema.Name;
                     table.Type.Columns.Add(column);
                 }
                 else
                 {
                     column = table.Type.Columns[columnSchema.Name];
+                    // Need to refresh this incase it was an Enum and the name changed.
+                    column.Type = GetColumnType(columnSchema);
                 }
 
                 PopulateColumn(column, columnSchema, table.Type.Name);
@@ -770,8 +893,18 @@ namespace LinqToSqlShared.Generator
             return legalName;
         }
 
+        private string ToEnumName(string name)
+        {
+            return ToClassName(name);
+        }
+
         private string ToClassName(string name)
         {
+            if (settings.TableNaming != TableNamingEnum.Plural && settings.EntityNaming == EntityNamingEnum.Plural)
+                name = StringUtil.ToPlural(name);
+            else if (settings.TableNaming != TableNamingEnum.Singular && settings.EntityNaming == EntityNamingEnum.Singular)
+                name = StringUtil.ToSingular(name);
+
             string legalName = ToLegalName(name);
             legalName = MakeUnique(ClassNames, legalName);
             return legalName;

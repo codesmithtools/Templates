@@ -39,7 +39,7 @@
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
     Description="List of regular expressions to clean table, view and column names."
     Default="^\\w+_" %>
-
+	
 <%@ Property Category="2.Class" Name="EntityBase"
     Type="System.String" Default="LinqEntityBase" Optional="True"
     Description="The base class for the entity." %>
@@ -58,7 +58,27 @@
     Type="System.Boolean" Default="true" Optional="False"
     Description="Templates will generated DeleteOnNull Attribute for Associations." %>
 
-<%@ Property Category="3.Mapping" Name="DbmlFile"
+<%@ Property Category="3.Enum" Name="EnumExpression"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of regular expressions to identify an Enum Table."
+    Default="(E|e)num$" %>
+
+<%@ Property Category="3.Enum" Name="EnumNameExpr"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of regular expressions to identify an Enum Table's Name Column."
+    Default="(N|n)ame" %>
+	
+<%@ Property Category="3.Enum" Name="EnumDescriptionExpr"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of regular expressions to identify an Enum Table's Description Column."
+    Default="(D|d)esc" %>
+
+<%@ Property Category="3.Enum" Name="EnumSummaryExpr"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of regular expressions to identify an Enum Table's Summary Column."
+    Default="(S|s)ummary" %>
+
+<%@ Property Category="4.Mapping" Name="DbmlFile"
     Type="System.String" Default="" Optional="False"
     Description="The full path to the dbml file."
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
@@ -116,15 +136,32 @@
         foreach(string ignore in IgnoreList)
             if (!string.IsNullOrEmpty(ignore))
                 settings.IgnoreExpressions.Add(new Regex(ignore));
+				
+		foreach(string enumRegex in EnumExpression)
+            if (!string.IsNullOrEmpty(enumRegex))
+                settings.EnumExpressions.Add(new Regex(enumRegex));
+				
+		foreach(string enumNameRegex in this.EnumNameExpr)
+            if (!string.IsNullOrEmpty(enumNameRegex))
+                settings.EnumNameExpressions.Add(new Regex(enumNameRegex));
+		foreach(string enumDescriptionRegex in this.EnumDescriptionExpr)
+            if (!string.IsNullOrEmpty(enumDescriptionRegex))
+                settings.EnumDescriptionExpressions.Add(new Regex(enumDescriptionRegex));
+		foreach(string enumSummaryRegex in this.EnumSummaryExpr)
+            if (!string.IsNullOrEmpty(enumSummaryRegex))
+                settings.EnumSummaryExpressions.Add(new Regex(enumSummaryRegex));
         
         DbmlGenerator generator = new DbmlGenerator(settings);
         generator.SchemaItemProcessed += new EventHandler<SchemaItemProcessedEventArgs>(OnSchemaItemProcessed);
         Database db = generator.Create(SourceDatabase);
         
-        OutputFile outputFile = new OutputFile(this.DbmlFile);
-        outputFile.Metadata.Add("CustomTool", string.Empty);
-        
-        this.RegisterOutput(outputFile);
+        OutputFile dbmlOutputFile = new OutputFile(this.DbmlFile);
+        dbmlOutputFile.Metadata.Add("CustomTool", string.Empty);
+        this.RegisterOutput(dbmlOutputFile);
+		
+		string enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
+		OutputFile enumOutputFile = new OutputFile(enumXmlFileName, this.DbmlFile);
+		this.RegisterOutput(enumOutputFile);
         
         watch.Stop();
         Response.WriteLine("Generate Time: " + watch.ElapsedMilliseconds + " ms");
