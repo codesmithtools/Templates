@@ -205,7 +205,7 @@ namespace <%= Database.EntityNamespace %>
             <%= a.Storage %> = default(EntityRef<<%= a.Type %>>);
 <% } // foreach Association%>
 <% foreach(Association a in Type.EntitySetAssociations) { %>
-            <%= a.Storage %> = new EntitySet<<%= a.Type %>>(Attach_<%= a.Member %>, Detach_<%= a.Member %>);
+            <%= a.Storage %> = new EntitySet<<%= a.Type %>>(On<%= a.Member %>Add, On<%= a.Member %>Remove);
 <% } // foreach Association%>
 <% foreach(Column c in Type.Columns) { %>
 <% if (c.IsDelayLoaded == true) { %>
@@ -389,7 +389,7 @@ foreach(Column column in Type.Columns) {
         }
         
         [DebuggerNonUserCodeAttribute]
-        private void Attach_<%= a.Member %>(<%= a.Type %> entity)
+        private void On<%= a.Member %>Add(<%= a.Type %> entity)
         {
             SendPropertyChanging(null);
             entity.<%= info.OtherAssociation.Member %> = this;
@@ -397,7 +397,7 @@ foreach(Column column in Type.Columns) {
         }
         
         [DebuggerNonUserCodeAttribute]
-        private void Detach_<%= a.Member %>(<%= a.Type %> entity)
+        private void On<%= a.Member %>Remove(<%= a.Type %> entity)
         {
             SendPropertyChanging(null);
             entity.<%= info.OtherAssociation.Member %> = null;
@@ -427,7 +427,7 @@ foreach(Column column in Type.Columns) {
 
                 if (_<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> == null)
                 {
-                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> = new EntitySet<<%=manyMany.RightType.Name%>>(Attach_<%=manyMany.PropertyName%><%=AssociationSuffix%>, Detach_<%=manyMany.PropertyName%><%=AssociationSuffix%>);
+                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> = new EntitySet<<%=manyMany.RightType.Name%>>(On<%=manyMany.PropertyName%><%=AssociationSuffix%>Add, On<%=manyMany.PropertyName%><%=AssociationSuffix%>Remove);
                     _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>.SetSource(<%=a.Member %>.Select(c => c.<%=manyMany.JoinRightAssociation.Member%>));
                 }
                 return _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>;
@@ -439,7 +439,7 @@ foreach(Column column in Type.Columns) {
         }
         
         [DebuggerNonUserCode]
-        private void Attach_<%=manyMany.PropertyName%><%=AssociationSuffix%>(<%=manyMany.RightType.Name%> entity)
+        private void On<%=manyMany.PropertyName%><%=AssociationSuffix%>Add(<%=manyMany.RightType.Name%> entity)
         {
             SendPropertyChanging(null);
             <%= a.Member %>.Add(new <%=manyMany.JoinType.Name%> { <%=manyMany.JoinLeftAssociation.Member%> = this, <%=manyMany.JoinRightAssociation.Member%> = entity });
@@ -447,7 +447,7 @@ foreach(Column column in Type.Columns) {
         }
         
         [DebuggerNonUserCode]
-        private void Detach_<%=manyMany.PropertyName%><%=AssociationSuffix%>(<%=manyMany.RightType.Name%> entity)
+        private void On<%=manyMany.PropertyName%><%=AssociationSuffix%>Remove(<%=manyMany.RightType.Name%> entity)
         {
             SendPropertyChanging(null);
             var <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%= a.Member %>.FirstOrDefault(c => c.<%=manyMany.JoinLeftAssociation.ThisKey%> == <%=manyMany.LeftKey%> && c.<%=manyMany.JoinRightAssociation.ThisKey%> == entity.<%=manyMany.RightKey%>);
@@ -553,32 +553,32 @@ foreach(Column column in Type.Columns) {
  <% } %>
 <% } %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
-        #region Detach Methods
+        #region Remove Methods
         /// <summary>
-        /// Detach this instance from the <see cref="DataContext"/>.
+        /// Remove this instance from the <see cref="DataContext"/>.
         /// </summary>
         /// <remarks>
-        /// Detaching the entity will allow it to be attached to another <see cref="DataContext"/>.
+        /// Removeing the entity will allow it to be Added to another <see cref="DataContext"/>.
         /// </remarks>
-        public override void Detach()
+        public override void Remove()
         {
-            if (!IsAttached())
+            if (!IsAdded())
                 return;
             
-            base.Detach();
+            base.Remove();
 <%  foreach(Association a in Type.EntityRefAssociations) {
         AssociationInfo info = GetAssociationInfo(a);
 %>
-            <%=a.Storage%> = Detach(<%=a.Storage%>);
+            <%=a.Storage%> = Remove(<%=a.Storage%>);
 <%  }
     foreach(Association a in Type.EntitySetAssociations) {
         AssociationInfo info = GetAssociationInfo(a);
 %>
-            <%=a.Storage%> = Detach(<%=a.Storage%>, Attach_<%=a.Member%>, Detach_<%=a.Member%>);
+            <%=a.Storage%> = Remove(<%=a.Storage%>, On<%=a.Member%>Add, On<%=a.Member%>Remove);
 <% } %>
 <% foreach(Column c in Type.Columns) { %>
 <% if (c.IsDelayLoaded == true) { %>
-            <%= c.Storage %> = Detach(<%=c.Storage%>);
+            <%= c.Storage %> = Remove(<%=c.Storage%>);
 <% } // IsDelayLoaded%>
 <% } // foreach Column%>
         }
