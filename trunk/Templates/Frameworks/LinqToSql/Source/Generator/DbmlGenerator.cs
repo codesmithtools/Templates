@@ -739,6 +739,11 @@ namespace LinqToSqlShared.Generator
                 : GetSystemType(columnSchema);
         }
 
+        private bool IsEnumAssociation(ColumnSchema columnSchema)
+        {
+            string typeName;
+            return IsEnumAssociation(columnSchema, out typeName);
+        }
         private bool IsEnumAssociation(ColumnSchema columnSchema, out string typeName)
         {
             bool result = false;
@@ -774,8 +779,10 @@ namespace LinqToSqlShared.Generator
                 else
                 {
                     column = table.Type.Columns[columnSchema.Name];
-                    // Need to refresh this incase it was an Enum and the name changed.
-                    column.Type = GetColumnType(columnSchema);
+
+                    // Refresh type only if this is an Enum.
+                    if (IsEnumAssociation(columnSchema))
+                        column.Type = GetColumnType(columnSchema);
                 }
 
                 PopulateColumn(column, columnSchema, table.Type.Name);
