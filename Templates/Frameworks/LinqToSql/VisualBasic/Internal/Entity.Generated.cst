@@ -578,33 +578,33 @@ End If ' many to many%>
 <% End If %>
 
 <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>
-        #Region "Remove Methods"
+        #Region "Detach Methods"
         ''' <summary>
         ''' Detach this instance from the <see cref="DataContext"/>.
         ''' </summary>
         ''' <remarks>
         ''' Detaching the entity will allow it to be attached to another <see cref="DataContext"/>.
         ''' </remarks>
-        Public Overrides Sub Remove()
+        Public Overrides Sub Detach()
         
-            If (Not IsAdded()) Then
+            If (Not IsAttached()) Then
                 return
             End If
             
-            MyBase.Remove()
+            MyBase.Detach()
 <%  For Each a As Association In Type.EntityRefAssociations
         Dim info As AssociationInfo = GetAssociationInfo(a)
 %>
-            <%=a.Storage%> = Remove(<%=a.Storage%>)
+            <%=a.Storage%> = Detach(<%=a.Storage%>)
 <%  Next
     For Each a As Association In Type.EntitySetAssociations
         Dim info As AssociationInfo = GetAssociationInfo(a)
 %>
-            <%=a.Storage%> = Remove(<%=a.Storage%>,AddressOf On<%=a.Member%>Add,AddressOf On<%=a.Member%>Remove)
+            <%=a.Storage%> = Detach(<%=a.Storage%>,AddressOf On<%=a.Member%>Add,AddressOf On<%=a.Member%>Remove)
 <%  Next %>
 <% For Each c As Column In Type.Columns %>
 <% If c.IsDelayLoaded.Value = true Then %>
-            <%= c.Storage %> = Remove(<%=c.Storage%>)
+            <%= c.Storage %> = Detach(<%=c.Storage%>)
 <% End If ' IsDelayLoaded%>
 <% Next ' For Each Column%>
         End Sub

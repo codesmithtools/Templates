@@ -65,18 +65,39 @@ namespace <%= Database.ContextNamespace %>
     /// </summary>
     public static partial class <%= Type.Name %>Extensions
     {
-
-<% foreach(Column column in Type.Columns) { %>
-        /// <summary>
-        /// Gets a query by an index.
+<% List<Column> keys = new List<Column>();
+    int colCount = 0;
+    foreach(Column column in Type.Columns) { 
+    if(column.IsPrimaryKey.Value)
+    {
+        keys.Add(column);
+        colCount++;
+    }
+    }%>
+       /// <summary>
+        /// Gets an object by its primary key.
         /// </summary>
-<%if(column.IsPrimaryKey.Value) { %>
+       public static <%=Type.Name%> Id(this IQueryable<<%= Type.Name%>> entity,<%foreach(Column column in keys) { %> <%= CSharpAlias[column.Type] %> <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %> <%if(--colCount > 0) { %>, <% }} %>)
+       {
+            <%colCount = keys.Count; %>
+            return entity.FirstOrDefault(c => <%foreach(Column column in keys) { %>c.<%=column.Member%> == <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %> <%if(--colCount > 0) { %> && <% }} %>);
+       }
+        
+<% foreach(Column column in Type.Columns) { %>        
+        
+<%if(column.DbType.Contains("uniqueidentifier") && !column.IsPrimaryKey.Value) { %>
+        /// <summary>
+        /// Gets an object by an index.
+        /// </summary>
 		public static <%=Type.Name%> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= Type.Name%>> entity,  <%= CSharpAlias[column.Type] %> <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>)
         {
             return entity.FirstOrDefault(c => c.<%=column.Member%> == <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>);
         }
 		
-<% } else if(!column.IsVersion.Value){ %>
+<% } else if(!column.IsVersion.Value && !column.IsPrimaryKey.Value){ %>
+        /// <summary>
+        /// Gets an queryable by an index.
+        /// </summary>
         public static IQueryable<<%= Type.Name %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= Type.Name %>> queryable, <%= CSharpAlias[column.Type] %> <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>)
         {
             return queryable.Where(c => c.<%=column.Member%> == <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)]%>);
@@ -90,16 +111,13 @@ namespace <%= Database.ContextNamespace %>
         /// </summary>
         private static partial class Query
         {
-<% foreach(Column column in Type.Columns) { %>
-<%if(column.IsPrimaryKey.Value) {%>
-
-            internal static readonly Func<<%= Database.Class %>, <%= CSharpAlias[column.Type] %>, <%= Type.Name %>> <%= MethodPrefix %><%= column.Name %><%= MethodKeySuffix %> = 
+<%colCount = keys.Count; %>
+            internal static readonly Func<<%= Database.Class %>,<%foreach(Column column in keys) { %> <%= CSharpAlias[column.Type] %><%if(--colCount > 0) { %>, <% }} %> , <%= Type.Name %>> GetByKey = 
                 CompiledQuery.Compile(
-                    (<%= Database.Class %> db,<%= CSharpAlias[column.Type] %> <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>) => 
-                        db.<%= Type.Name %>.FirstOrDefault(c => c.<%=column.Member%> == <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>));
-<% } // if is key%>
-<% } // foreach method%>
-
+<%colCount = keys.Count; %>
+                    (<%= Database.Class %> db,<%foreach(Column column in keys) { %> <%= CSharpAlias[column.Type] %> <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %><%if(--colCount > 0) { %>, <% }} %> ) => 
+<%colCount = keys.Count; %>                        
+                        db.<%= Type.Name %>.FirstOrDefault(c => <%foreach(Column column in keys) { %>c.<%=column.Member%> == <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %><%if(--colCount > 0) { %> && <% }} %>));
         }
         #endregion
     }

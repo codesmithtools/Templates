@@ -553,32 +553,32 @@ foreach(Column column in Type.Columns) {
  <% } %>
 <% } %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
-        #region Remove Methods
+        #region Detach Methods
         /// <summary>
         /// Remove this instance from the <see cref="DataContext"/>.
         /// </summary>
         /// <remarks>
         /// Removeing the entity will allow it to be Added to another <see cref="DataContext"/>.
         /// </remarks>
-        public override void Remove()
+        public override void Detach()
         {
-            if (!IsAdded())
+            if (!IsAttached())
                 return;
             
-            base.Remove();
+            base.Detach();
 <%  foreach(Association a in Type.EntityRefAssociations) {
         AssociationInfo info = GetAssociationInfo(a);
 %>
-            <%=a.Storage%> = Remove(<%=a.Storage%>);
+            <%=a.Storage%> = Detach(<%=a.Storage%>);
 <%  }
     foreach(Association a in Type.EntitySetAssociations) {
         AssociationInfo info = GetAssociationInfo(a);
 %>
-            <%=a.Storage%> = Remove(<%=a.Storage%>, On<%=a.Member%>Add, On<%=a.Member%>Remove);
+            <%=a.Storage%> = Detach(<%=a.Storage%>, On<%=a.Member%>Add, On<%=a.Member%>Remove);
 <% } %>
 <% foreach(Column c in Type.Columns) { %>
 <% if (c.IsDelayLoaded == true) { %>
-            <%= c.Storage %> = Remove(<%=c.Storage%>);
+            <%= c.Storage %> = Detach(<%=c.Storage%>);
 <% } // IsDelayLoaded%>
 <% } // foreach Column%>
         }
