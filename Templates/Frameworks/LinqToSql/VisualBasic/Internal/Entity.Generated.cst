@@ -213,8 +213,8 @@ Namespace <%= Database.EntityNamespace %>
 <% Next ' foreach Association%>
 <% For Each a As Association In Type.EntitySetAssociations %>
             <%= a.Storage %> = New EntitySet(Of <%= a.Type %>)( _
-                New System.Action(Of <%= a.Type %>)(AddressOf Me.Attach_<%= a.Member %>), _
-                New System.Action(Of <%= a.Type %>)(AddressOf Me.Detach_<%= a.Member %>))
+                New System.Action(Of <%= a.Type %>)(AddressOf Me.On<%= a.Member %>Add), _
+                New System.Action(Of <%= a.Type %>)(AddressOf Me.On<%= a.Member %>Remove))
 <% Next ' foreach Association%>
 <% For Each c As Column In Type.Columns %>
 <% If c.IsDelayLoaded.Value Then %>
@@ -403,14 +403,14 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         End Property
         
         <DebuggerNonUserCodeAttribute()> _
-        Private Sub Attach_<%= a.Member %>(ByVal entity As <%= a.Type %>)
+        Private Sub On<%= a.Member %>Add(ByVal entity As <%= a.Type %>)
             SendPropertyChanging(Nothing)
             entity.<%= info.OtherAssociation.Member %> = Me
             SendPropertyChanged(Nothing)
         End Sub
         
         <DebuggerNonUserCodeAttribute()> _
-        Private Sub Detach_<%= a.Member %>(ByVal entity As <%= a.Type %>)
+        Private Sub On<%= a.Member %>Remove(ByVal entity As <%= a.Type %>)
             SendPropertyChanging(Nothing)
             entity.<%= info.OtherAssociation.Member %> = Nothing
             SendPropertyChanged(Nothing)
@@ -440,7 +440,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 
                 If (_<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> Is Nothing)
                 
-                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> = New EntitySet(Of <%=manyMany.RightType.Name%>)(AddressOf Attach_<%=manyMany.PropertyName%><%=AssociationSuffix%>,AddressOf Detach_<%=manyMany.PropertyName%><%=AssociationSuffix%>)
+                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> = New EntitySet(Of <%=manyMany.RightType.Name%>)(AddressOf On<%=manyMany.PropertyName%><%=AssociationSuffix%>Add,AddressOf On<%=manyMany.PropertyName%><%=AssociationSuffix%>Remove)
                     _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>.SetSource(<%=a.Member %>.Select(Function(c)c.<%=manyMany.JoinRightAssociation.Member%>))
                 End If
                 return _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>
@@ -452,7 +452,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         End Property
         
         <DebuggerNonUserCode> _
-        Private Sub Attach_<%=manyMany.PropertyName%><%=AssociationSuffix%>(entity As <%=manyMany.RightType.Name%>)
+        Private Sub On<%=manyMany.PropertyName%><%=AssociationSuffix%>Add(entity As <%=manyMany.RightType.Name%>)
         
             SendPropertyChanging(Nothing)
             <%= a.Member %>.Add( New <%=manyMany.JoinType.Name%> With {.<%=manyMany.JoinLeftAssociation.Member%> = Me ,.<%=manyMany.JoinRightAssociation.Member%> = entity })
@@ -460,7 +460,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         End Sub
         
         <DebuggerNonUserCode> _
-        Private Sub Detach_<%=manyMany.PropertyName%><%=AssociationSuffix%>(entity As <%=manyMany.RightType.Name%> )
+        Private Sub On<%=manyMany.PropertyName%><%=AssociationSuffix%>Remove(entity As <%=manyMany.RightType.Name%> )
         
             SendPropertyChanging(Nothing)
             Dim <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%= a.Member %>.FirstOrDefault(Function(c)c.<%=manyMany.JoinLeftAssociation.ThisKey%> = <%=manyMany.LeftKey%> AndAlso c.<%=manyMany.JoinRightAssociation.ThisKey%> = entity.<%=manyMany.RightKey%>)
@@ -578,33 +578,33 @@ End If ' many to many%>
 <% End If %>
 
 <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>
-        #Region "Detach Methods"
+        #Region "Remove Methods"
         ''' <summary>
         ''' Detach this instance from the <see cref="DataContext"/>.
         ''' </summary>
         ''' <remarks>
         ''' Detaching the entity will allow it to be attached to another <see cref="DataContext"/>.
         ''' </remarks>
-        Public Overrides Sub Detach()
+        Public Overrides Sub Remove()
         
-            If (Not IsAttached()) Then
+            If (Not IsAdded()) Then
                 return
             End If
             
-            MyBase.Detach()
+            MyBase.Remove()
 <%  For Each a As Association In Type.EntityRefAssociations
         Dim info As AssociationInfo = GetAssociationInfo(a)
 %>
-            <%=a.Storage%> = Detach(<%=a.Storage%>)
+            <%=a.Storage%> = Remove(<%=a.Storage%>)
 <%  Next
     For Each a As Association In Type.EntitySetAssociations
         Dim info As AssociationInfo = GetAssociationInfo(a)
 %>
-            <%=a.Storage%> = Detach(<%=a.Storage%>,AddressOf Attach_<%=a.Member%>,AddressOf Detach_<%=a.Member%>)
+            <%=a.Storage%> = Remove(<%=a.Storage%>,AddressOf On<%=a.Member%>Add,AddressOf On<%=a.Member%>Remove)
 <%  Next %>
 <% For Each c As Column In Type.Columns %>
 <% If c.IsDelayLoaded.Value = true Then %>
-            <%= c.Storage %> = Detach(<%=c.Storage%>)
+            <%= c.Storage %> = Remove(<%=c.Storage%>)
 <% End If ' IsDelayLoaded%>
 <% Next ' For Each Column%>
         End Sub
