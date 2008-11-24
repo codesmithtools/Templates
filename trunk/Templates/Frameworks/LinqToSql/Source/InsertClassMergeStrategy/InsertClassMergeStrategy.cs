@@ -70,6 +70,8 @@ namespace CodeSmith.Engine
             if (!this.Language.HasValue && !SetLanguage(context.CodeTemplateInfo.TargetLanguage))
                 throw new Exception("InsertClassMergeStrategy only supports Languages 'C#' and 'VB'");
 
+            CodeFileParser templateParser = null;
+            AttributeSectionVisitor templateVisitor = null;
                 
             // Parse Source
             CodeFileParser sourceParser = new CodeFileParser(sourceContent, this.Language.Value, false);
@@ -85,8 +87,8 @@ namespace CodeSmith.Engine
             if (OnlyInsertMatchingClass)
             {
                 // Parse Template
-                CodeFileParser templateParser = new CodeFileParser(templateOutput, this.Language.Value, false);
-                AttributeSectionVisitor templateVisitor = new AttributeSectionVisitor();
+                templateParser = new CodeFileParser(templateOutput, this.Language.Value, false);
+                templateVisitor = new AttributeSectionVisitor();
                 templateParser.CompilationUnit.AcceptVisitor(templateVisitor, this.ClassName);
 
                 // If no class found (nothing to merge), return the source.
@@ -143,15 +145,15 @@ namespace CodeSmith.Engine
             if (MergeImports)
             {
                 // Parse Template
-                CodeFileParser templateParser = new CodeFileParser(MergeImportString, this.Language.Value, false);
-                AttributeSectionVisitor templateVisitor = new AttributeSectionVisitor();
+                templateParser = new CodeFileParser(MergeImportString, this.Language.Value, false);
+                templateVisitor = new AttributeSectionVisitor();
                 templateParser.CompilationUnit.AcceptVisitor(templateVisitor, this.ClassName);
-
-                AppendMergedImports(mergeResult, sourceParser, sourceVisitor, templateVisitor);
+            
+                UsingDeclaration firstUsing  = sourceVisitor.UsingList.Where<UsingDeclaration>(u => u.StartLocation.Line < sourceStart.Line).FirstOrDefault<UsingDeclaration>();
+                ImportsStop = AppendMergedImports(mergeResult, firstUsing, sourceParser,sourceVisitor, templateVisitor);
 
                 // Add Pre-Class Text To Output
                 mergeResult.Append(sourceParser.GetSection(ImportsStop, sourceStart));
-
             }
             else
             {
@@ -223,7 +225,7 @@ namespace CodeSmith.Engine
             return true;
         }
 
-        protected void AppendMergedImports(StringBuilder mergeResult, CodeFileParser sourceParser,
+        protected Location AppendMergedImports(StringBuilder mergeResult, UsingDeclaration sourceUsing, CodeFileParser sourceParser,
             AttributeSectionVisitor sourceVisitor, AttributeSectionVisitor templateVisitor)
         {
             string importPrefix = "using ";
@@ -235,30 +237,38 @@ namespace CodeSmith.Engine
                 importSuffix = String.Empty;
             }
 
-            ImportsStart = sourceVisitor.UsingList.First<UsingDeclaration>().StartLocation;
-            ImportsStop = sourceVisitor.UsingList.Last<UsingDeclaration>().EndLocation;
+            Location start = new Location(1,sourceUsing.StartLocation.Line);
+            Location stop = new Location(1,sourceUsing.EndLocation.Line);
+
+            // Add Pre-Import Text To Output
+            mergeResult.Append(sourceParser.GetSectionFromStart(start));
 
             //Add Pre-Imports Text to Output
-            mergeResult.Append(sourceParser.GetSectionFromStart(ImportsStart));
+            mergeResult.Append(sourceParser.GetSection(start,stop));
 
             List<string> completeUsingList = new List<string>();
+             List<string> newUsingList = new List<string>();
 
-            foreach (UsingDeclaration usingDeclaration in sourceVisitor.UsingList)
-                foreach (Using @using in usingDeclaration.Usings)
-                    completeUsingList.Add(@using.Name);
+             foreach (Using @using in sourceUsing.Usings)
+             {
+                 newUsingList.Add(@using.Name);
+             }
+
+             foreach (UsingDeclaration usingDeclaration in sourceVisitor.UsingList)
+                 foreach (Using @using in usingDeclaration.Usings)
+                         completeUsingList.Add(@using.Name);
+
 
             foreach (UsingDeclaration usingDeclaration in templateVisitor.UsingList)
                 foreach (Using @using in usingDeclaration.Usings)
                     if(!completeUsingList.Contains(@using.Name))
-                        completeUsingList.Add(@using.Name);
+                        newUsingList.Add(@using.Name);
 
-            foreach (string @using in completeUsingList)
-            {
-                if(@using.Equals(completeUsingList.Last<string>()))
-                    mergeResult.Append(string.Concat(importPrefix, @using, importSuffix));
-                else
-                    mergeResult.AppendLine(string.Concat(importPrefix, @using, importSuffix));
-            }
+            foreach (string @using in newUsingList)
+                mergeResult.AppendLine(string.Concat(importPrefix, @using, importSuffix));
+
+
+            return new Location(1,stop.Line + 1);
 
         }
 

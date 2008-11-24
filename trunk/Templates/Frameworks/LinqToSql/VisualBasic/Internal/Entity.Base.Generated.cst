@@ -82,14 +82,14 @@ Namespace <%= ClassNamespace %>
         End Sub
         #End Region
         
-        #Region "Remove Methods"
+        #Region "Detach Methods"
         ''' <summary>
         ''' Gets a value indicating whether this instance is Added to the change tracking of <see cref="DataContext"/>.
         ''' </summary>
         ''' <returns>
         ''' <c>true</c> if this instance is Added; otherwise, <c>false</c>.
         ''' </returns>
-        Public Function IsAdded() As Boolean
+        Public Function IsAttached() As Boolean
             Return PropertyChangingEvent IsNot Nothing
         End Function
         
@@ -99,7 +99,7 @@ Namespace <%= ClassNamespace %>
         ''' <remarks>
         ''' Removeing the entity will allow it to be Added to another <see cref="DataContext"/>.
         ''' </remarks>
-        Public Overridable Sub Remove()
+        Public Overridable Sub Detach()
             PropertyChangingEvent = Nothing
             PropertyChangedEvent = Nothing
         End Sub
@@ -112,7 +112,7 @@ Namespace <%= ClassNamespace %>
         ''' <param name="onAdd">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Add(`0)" />.</param>
         ''' <param name="onRemove">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Remove(`0)" />.</param>
         ''' <returns>A new <see cref="T:System.Data.Linq.EntitySet`1" /> with the list copied if it was loaded.</returns>
-        Protected Shared Function Remove(Of TEntity As LinqEntityBase)(ByVal [set] As EntitySet(Of TEntity), ByVal onAdd As Action(Of TEntity), ByVal onRemove As Action(Of TEntity)) As EntitySet(Of TEntity)
+        Protected Shared Function Detach(Of TEntity As LinqEntityBase)(ByVal [set] As EntitySet(Of TEntity), ByVal onAdd As Action(Of TEntity), ByVal onRemove As Action(Of TEntity)) As EntitySet(Of TEntity)
             If [set] Is Nothing OrElse Not [set].HasLoadedOrAssignedValues Then
                 Return New EntitySet(Of TEntity)(onAdd, onRemove)
             End If
@@ -120,7 +120,7 @@ Namespace <%= ClassNamespace %>
             ' copy list and Remove all entities
             Dim list = [set].ToList()
             For Each t As TEntity In list
-                t.Remove()
+                t.Detach()
             Next
             
             Dim newSet = New EntitySet(Of TEntity)(onAdd, onRemove)
@@ -134,12 +134,12 @@ Namespace <%= ClassNamespace %>
         ''' <typeparam name="TEntity">The type of the entity.</typeparam>
         ''' <param name="entity">The <see cref="T:System.Data.Linq.EntityRef`1"/> to Remove.</param>
         ''' <returns>A new <see cref="T:System.Data.Linq.EntityRef`1"/> with the entity Removeed.</returns>
-        Protected Shared Function Remove(Of TEntity As LinqEntityBase)(ByVal entity As EntityRef(Of TEntity)) As EntityRef(Of TEntity)
+        Protected Shared Function Detach(Of TEntity As LinqEntityBase)(ByVal entity As EntityRef(Of TEntity)) As EntityRef(Of TEntity)
             If Not entity.HasLoadedOrAssignedValue Then
                 Return New EntityRef(Of TEntity)()
             End If
             
-            entity.Entity.Remove()
+            entity.Entity.Detach()
             Return New EntityRef(Of TEntity)(entity.Entity)
         End Function
         
@@ -149,7 +149,7 @@ Namespace <%= ClassNamespace %>
         ''' <typeparam name="T">The type of the value.</typeparam>
         ''' <param name="value">The lazy loaded value.</param>
         ''' <returns>A new <see cref="T:System.Data.Linq.Link`1"/> that is Removeed.</returns>
-        Protected Shared Function Remove(Of T)(ByVal value As Link(Of T)) As Link(Of T)
+        Protected Shared Function Detach(Of T)(ByVal value As Link(Of T)) As Link(Of T)
             If Not value.HasLoadedOrAssignedValue Then
                 Return Nothing
             End If
