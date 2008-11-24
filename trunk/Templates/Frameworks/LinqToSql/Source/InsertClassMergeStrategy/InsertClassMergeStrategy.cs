@@ -252,8 +252,13 @@ namespace CodeSmith.Engine
                     if(!completeUsingList.Contains(@using.Name))
                         completeUsingList.Add(@using.Name);
 
-            foreach (string @using in completeUsingList)        
-                mergeResult.AppendLine(string.Concat(importPrefix, @using, importSuffix));
+            foreach (string @using in completeUsingList)
+            {
+                if(@using.Equals(completeUsingList.Last<string>()))
+                    mergeResult.Append(string.Concat(importPrefix, @using, importSuffix));
+                else
+                    mergeResult.AppendLine(string.Concat(importPrefix, @using, importSuffix));
+            }
 
         }
 
