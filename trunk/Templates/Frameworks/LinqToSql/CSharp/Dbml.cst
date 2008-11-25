@@ -152,8 +152,11 @@
         this.RegisterOutput(dbmlOutputFile);
 		
 		string enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
-		OutputFile enumOutputFile = new OutputFile(enumXmlFileName, this.DbmlFile);
-		this.RegisterOutput(enumOutputFile);
+        if(System.IO.File.Exists(enumXmlFileName))
+        {
+            OutputFile enumOutputFile = new OutputFile(enumXmlFileName, this.DbmlFile);
+            this.RegisterOutput(enumOutputFile);
+        }
         
         watch.Stop();
         Response.WriteLine("Generate Time: " + watch.ElapsedMilliseconds + " ms");
