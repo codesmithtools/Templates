@@ -8,23 +8,25 @@
   <xs:element name="Database" type="Database" />
   <xs:complexType name="Database">
     <xs:sequence>
-      <xs:element name="Enumerator" type="Enumerator" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Enum" type="Enum" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="Name" type="xs:string" use="optional" />
   </xs:complexType>
-  <xs:complexType name="Enumerator">
+  <xs:complexType name="Enum">
     <xs:sequence>
-      <xs:element name="Value" type="Value" minOccurs="1" maxOccurs="unbounded" />
+      <xs:element name="Item" type="Item" minOccurs="1" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="Name" type="xs:string" use="required" />
     <xs:attribute name="Table" type="xs:string" use="required" />
     <xs:attribute name="AccessModifier" type="AccessModifier" use="optional" />
+    <xs:attribute name="Flags" type="xs:boolean" use="optional" />
+    <xs:attribute name="IncludeDataContract" type="xs:boolean" use="optional" />
   </xs:complexType>
-  <xs:complexType name="Value">
+  <xs:complexType name="Item">
     <xs:attribute name="Name" type="xs:string" use="required" />
-    <xs:attribute name="IntegerValue" type="xs:int" use="required" />
+    <xs:attribute name="Value" type="xs:int" use="required" />
     <xs:attribute name="Description" type="xs:string" use="optional" />
-    <xs:attribute name="Summary" type="xs:string" use="optional" />
+    <xs:attribute name="EnumMember" type="xs:boolean" use="optional" />
   </xs:complexType>
   <xs:simpleType name="AccessModifier">
     <xs:restriction base="xs:string">

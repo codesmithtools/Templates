@@ -179,7 +179,10 @@ namespace LinqToSqlShared.Generator
             Dbml.ToFile(Dbml.CopyWithNulledOutDefaults(_database), 
                 settings.MappingFile);
 
-            _enumDatabase.SerializeToFile(EnumXmlFileName);
+            if (_enumDatabase.Enums.Count > 0)
+                _enumDatabase.SerializeToFile(EnumXmlFileName);
+            else if (File.Exists(EnumXmlFileName))
+                File.Delete(EnumXmlFileName);
             
             return _database;
         }
@@ -215,68 +218,69 @@ namespace LinqToSqlShared.Generator
                 Database.Connection.ConnectionString = databaseSchema.ConnectionString;
         }
 
-        private DbmlEnum.Enumerator GetEnum(TableSchema tableSchema)
+        private DbmlEnum.Enum GetEnum(TableSchema tableSchema)
         {
             // Anything coming in here should already have passed through Settings.IsEnum().
             // Because of this, we know not only that it is an Enum table, but also that all
             // of the desired columns exist.
 
-            DbmlEnum.Enumerator enumerator = _enumDatabase.Enumerators.Where(e => e.Table == tableSchema.FullName).FirstOrDefault();
-            DbmlEnum.Enumerator existingEnumerator = (_existingEnumDatabase != null)
-                ? _existingEnumDatabase.Enumerators.Where(e => e.Table == tableSchema.FullName).FirstOrDefault()
+            DbmlEnum.Enum myEnum = _enumDatabase.Enums.Where(e => e.Table == tableSchema.FullName).FirstOrDefault();
+            DbmlEnum.Enum existingEnum = (_existingEnumDatabase != null)
+                ? _existingEnumDatabase.Enums.Where(e => e.Table == tableSchema.FullName).FirstOrDefault()
                 : null;
             
-            if (enumerator == null)
+            if (myEnum == null)
             {
-                enumerator = new DbmlEnum.Enumerator()
+                myEnum = new DbmlEnum.Enum()
                 {
-                    Name = (existingEnumerator == null)
+                    Name = (existingEnum == null)
                         ? ToEnumName(tableSchema.Name)
-                        : existingEnumerator.Name,
+                        : existingEnum.Name,
                     Table = tableSchema.FullName,
-                    Values = GetEnumValues(tableSchema, existingEnumerator)
+                    Items = GetEnumItems(tableSchema, existingEnum),
+                    Flags = (existingEnum != null)
+                        ? existingEnum.Flags
+                        : false,
+                    IncludeDataContract = (existingEnum != null)
+                        ? existingEnum.IncludeDataContract
+                        : true
                 };
-                _enumDatabase.Enumerators.Add(enumerator);
+                _enumDatabase.Enums.Add(myEnum);
             }
 
-            return enumerator;
+            return myEnum;
         }
 
-        private List<DbmlEnum.Value> GetEnumValues(TableSchema tableSchema, DbmlEnum.Enumerator existingEnumerator)
+        private List<DbmlEnum.Item> GetEnumItems(TableSchema tableSchema, DbmlEnum.Enum existingEnum)
         {
-            List<DbmlEnum.Value> valueList = new List<DbmlEnum.Value>();
+            List<DbmlEnum.Item> itemList = new List<DbmlEnum.Item>();
 
             string primaryKey = tableSchema.PrimaryKey.MemberColumns[0].Name;
             string nameColumn = settings.GetEnumNameColumnName(tableSchema);
             string descriptionColumn = settings.GetEnumDescriptionColumnName(tableSchema);
-            string summaryColumn = settings.GetEnumSummaryColumnName(tableSchema);
             
             DataTable table = tableSchema.GetTableData();
             foreach (DataRow row in table.Rows)
             {
-                int integerValue = Int32.Parse(row[primaryKey].ToString());
-                DbmlEnum.Value existingValue = (existingEnumerator != null)
-                    ? existingEnumerator.Values.Where(v => v.IntegerValue == integerValue).FirstOrDefault()
-                    : new DbmlEnum.Value();
+                int value = Int32.Parse(row[primaryKey].ToString());
+                DbmlEnum.Item existingValue = (existingEnum != null)
+                    ? existingEnum.Items.Where(v => v.Value == value).FirstOrDefault()
+                    : new DbmlEnum.Item();
 
-                string description = (table.Columns.Contains(descriptionColumn))
-                    ? row[descriptionColumn] as String
-                    : existingValue.Description;
+                string description = null;
+                if(table.Columns.Contains(descriptionColumn))
+                    description = row[descriptionColumn] as String;
 
-                string summary = (table.Columns.Contains(summaryColumn))
-                    ? row[summaryColumn] as String
-                    : existingValue.Summary;
-
-                valueList.Add(new DbmlEnum.Value()
-                    {
-                        Name = row[nameColumn].ToString(),
-                        IntegerValue = integerValue,
-                        Description = description ?? String.Empty,
-                        Summary = summary ?? String.Empty
-                    });
+                itemList.Add(new DbmlEnum.Item()
+                {
+                    Name = row[nameColumn].ToString(),
+                    Value = value,
+                    Description = description ?? existingValue.Description,
+                    EnumMember = existingValue.EnumMember
+                });
             }
             
-            return valueList;
+            return itemList;
         }
 
         private Table GetTable(TableSchema tableSchema)
@@ -730,31 +734,31 @@ namespace LinqToSqlShared.Generator
             return prefix;
         }
 
-        private string GetColumnType(ColumnSchema columnSchema)
+        private string GetColumnType(DataObjectBase columnSchema)
         {
             string typeName;
-
-            return IsEnumAssociation(columnSchema, out typeName)
+            return IsEnumAssociation(columnSchema as ColumnSchema, out typeName)
                 ? typeName
                 : GetSystemType(columnSchema);
         }
 
-        private bool IsEnumAssociation(ColumnSchema columnSchema)
+        private bool IsEnumAssociation(DataObjectBase columnSchema)
         {
             string typeName;
-            return IsEnumAssociation(columnSchema, out typeName);
+            return IsEnumAssociation(columnSchema as ColumnSchema, out typeName);
         }
+
         private bool IsEnumAssociation(ColumnSchema columnSchema, out string typeName)
         {
             bool result = false;
             typeName = String.Empty;
 
-            if (columnSchema.IsForeignKeyMember)
+            if (columnSchema != null && columnSchema.IsForeignKeyMember)
                 foreach (TableKeySchema tableKeySchema in columnSchema.Table.ForeignKeys)
                     if (tableKeySchema.ForeignKeyMemberColumns.Contains(columnSchema)
                         && Settings.IsEnum(tableKeySchema.PrimaryKeyTable))
                     {
-                        DbmlEnum.Enumerator enumerator = GetEnum(tableKeySchema.PrimaryKeyTable);
+                        DbmlEnum.Enum enumerator = GetEnum(tableKeySchema.PrimaryKeyTable);
                         result = true;
                         typeName = enumerator.Name;
                         break;
@@ -779,10 +783,6 @@ namespace LinqToSqlShared.Generator
                 else
                 {
                     column = table.Type.Columns[columnSchema.Name];
-
-                    // Refresh type only if this is an Enum.
-                    if (IsEnumAssociation(columnSchema))
-                        column.Type = GetColumnType(columnSchema);
                 }
 
                 PopulateColumn(column, columnSchema, table.Type.Name);
@@ -795,10 +795,11 @@ namespace LinqToSqlShared.Generator
         private void PopulateColumn(Column column, DataObjectBase columnSchema, string className)
         {
             bool canUpdateType = string.IsNullOrEmpty(column.Type)
-                || column.Type.StartsWith("System.");
+                || column.Type.StartsWith("System.")
+                || IsEnumAssociation(columnSchema);
 
             if (canUpdateType)
-                column.Type = GetSystemType(columnSchema);
+                column.Type = GetColumnType(columnSchema);
 
             if (!PropertyNames.ContainsKey(className))
                 PropertyNames.Add(className, new List<string>());
