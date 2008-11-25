@@ -176,10 +176,8 @@ namespace LinqToSqlShared.Generator
             Dbml.ToFile(Dbml.CopyWithNulledOutDefaults(_database), 
                 settings.MappingFile);
 
-            if (_enumDatabase.Enums.Count > 0)
+            if (_enumDatabase.Enums.Count > 0 || File.Exists(EnumXmlFileName))
                 _enumDatabase.SerializeToFile(EnumXmlFileName);
-            else if (File.Exists(EnumXmlFileName))
-                File.Delete(EnumXmlFileName);
             
             return _database;
         }
@@ -733,29 +731,68 @@ namespace LinqToSqlShared.Generator
                 : GetSystemType(columnSchema);
         }
 
-        private bool IsEnumAssociation(DataObjectBase columnSchema)
+        private bool IsOrWasEnumAssociation(DataObjectBase dataObject)
         {
-            string typeName;
-            return IsEnumAssociation(columnSchema as ColumnSchema, out typeName);
+            bool isEnum, wasEnum;
+            IsOrWasEnumAssociation(dataObject, out isEnum, out wasEnum);
+            return (isEnum || wasEnum);
+        }
+
+        private string IsOrWasEnumAssociation(DataObjectBase dataObject, out bool isEnum, out bool wasEnum)
+        {
+            string name = String.Empty;
+            ColumnSchema columnSchema = dataObject as ColumnSchema;
+            isEnum = false;
+            wasEnum = false;
+
+            if (columnSchema != null && columnSchema.IsForeignKeyMember)
+                foreach (TableKeySchema tableKeySchema in columnSchema.Table.ForeignKeys)
+                    if (tableKeySchema.ForeignKeyMemberColumns.Contains(columnSchema))
+                    {
+                        // Is Enum
+                        if (Settings.IsEnum(tableKeySchema.PrimaryKeyTable))
+                        {
+                            name = GetEnum(tableKeySchema.PrimaryKeyTable).Name;
+                            isEnum = true;
+                        }
+
+                        // Was Enum
+                        DbmlEnum.Enum existingEnum = _existingEnumDatabase.Enums.Where(e => e.Table == tableKeySchema.PrimaryKeyTable.FullName).FirstOrDefault();
+                        if (existingEnum != null)
+                        {
+                            if (String.IsNullOrEmpty(name))
+                                name = existingEnum.Name;
+                            wasEnum = true;
+                        }
+
+                        if (isEnum || wasEnum)
+                            break;
+                    }
+
+            return name;
         }
 
         private bool IsEnumAssociation(ColumnSchema columnSchema, out string typeName)
         {
-            bool result = false;
-            typeName = String.Empty;
+            bool isEnum, wasEnum;
+            typeName = IsOrWasEnumAssociation(columnSchema, out isEnum, out wasEnum);
+            return isEnum;
 
-            if (columnSchema != null && columnSchema.IsForeignKeyMember)
-                foreach (TableKeySchema tableKeySchema in columnSchema.Table.ForeignKeys)
-                    if (tableKeySchema.ForeignKeyMemberColumns.Contains(columnSchema)
-                        && Settings.IsEnum(tableKeySchema.PrimaryKeyTable))
-                    {
-                        DbmlEnum.Enum enumerator = GetEnum(tableKeySchema.PrimaryKeyTable);
-                        result = true;
-                        typeName = enumerator.Name;
-                        break;
-                    }
+            //bool result = false;
+            //typeName = String.Empty;
+
+            //if (columnSchema != null && columnSchema.IsForeignKeyMember)
+            //    foreach (TableKeySchema tableKeySchema in columnSchema.Table.ForeignKeys)
+            //        if (tableKeySchema.ForeignKeyMemberColumns.Contains(columnSchema)
+            //            && Settings.IsEnum(tableKeySchema.PrimaryKeyTable))
+            //        {
+            //            DbmlEnum.Enum enumerator = GetEnum(tableKeySchema.PrimaryKeyTable);
+            //            result = true;
+            //            typeName = enumerator.Name;
+            //            break;
+            //        }
             
-            return result;
+            //return result;
         }
 
         private void CreateColumns(Table table, TableSchema tableSchema)
@@ -787,7 +824,7 @@ namespace LinqToSqlShared.Generator
         {
             bool canUpdateType = string.IsNullOrEmpty(column.Type)
                 || column.Type.StartsWith("System.")
-                || IsEnumAssociation(columnSchema);
+                || IsOrWasEnumAssociation(columnSchema);
 
             if (canUpdateType)
                 column.Type = GetColumnType(columnSchema);
