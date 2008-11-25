@@ -113,11 +113,8 @@ namespace LinqToSqlShared.Generator
             Database.Name = databaseSchema.Name;
             CreateContext(databaseSchema);
 
-            _enumDatabase = new DbmlEnum.Database()
-            {
-                Name = databaseSchema.Name,
-            };
-            _existingEnumDatabase = DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName);
+            _enumDatabase = new DbmlEnum.Database() { Name = databaseSchema.Name };
+            _existingEnumDatabase = DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName) ?? new DbmlEnum.Database();
 
             foreach (TableSchema t in databaseSchema.Tables)
             {
@@ -225,25 +222,20 @@ namespace LinqToSqlShared.Generator
             // of the desired columns exist.
 
             DbmlEnum.Enum myEnum = _enumDatabase.Enums.Where(e => e.Table == tableSchema.FullName).FirstOrDefault();
-            DbmlEnum.Enum existingEnum = (_existingEnumDatabase != null)
-                ? _existingEnumDatabase.Enums.Where(e => e.Table == tableSchema.FullName).FirstOrDefault()
-                : null;
+            DbmlEnum.Enum existingEnum = _existingEnumDatabase.Enums.Where(e => e.Table == tableSchema.FullName).FirstOrDefault()
+                ?? new DbmlEnum.Enum();
             
             if (myEnum == null)
             {
                 myEnum = new DbmlEnum.Enum()
                 {
-                    Name = (existingEnum == null)
+                    Name = (String.IsNullOrEmpty(existingEnum.Name))
                         ? ToEnumName(tableSchema.Name)
                         : existingEnum.Name,
                     Table = tableSchema.FullName,
-                    Items = GetEnumItems(tableSchema, existingEnum),
-                    Flags = (existingEnum != null)
-                        ? existingEnum.Flags
-                        : false,
-                    IncludeDataContract = (existingEnum != null)
-                        ? existingEnum.IncludeDataContract
-                        : true
+                    Flags = existingEnum.Flags,
+                    IncludeDataContract = existingEnum.IncludeDataContract,
+                    Items = GetEnumItems(tableSchema, existingEnum)
                 };
                 _enumDatabase.Enums.Add(myEnum);
             }
@@ -263,13 +255,12 @@ namespace LinqToSqlShared.Generator
             foreach (DataRow row in table.Rows)
             {
                 int value = Int32.Parse(row[primaryKey].ToString());
-                DbmlEnum.Item existingValue = (existingEnum != null)
-                    ? existingEnum.Items.Where(v => v.Value == value).FirstOrDefault()
-                    : new DbmlEnum.Item();
+                DbmlEnum.Item existingValue = existingEnum.Items.Where(v => v.Value == value).FirstOrDefault()
+                    ?? new DbmlEnum.Item();
 
-                string description = null;
-                if(table.Columns.Contains(descriptionColumn))
-                    description = row[descriptionColumn] as String;
+                string description = (table.Columns.Contains(descriptionColumn))
+                    ? description = row[descriptionColumn] as String
+                    : null;
 
                 itemList.Add(new DbmlEnum.Item()
                 {
