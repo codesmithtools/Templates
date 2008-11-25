@@ -39,6 +39,11 @@
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
     Description="List of regular expressions to clean table, view and column names."
     Default="^\\w+_" %>
+
+<%@ Property Category="1.Database" Name="EnumList"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of regular expressions to identify an Enum Table."
+    Default="(E|e)num$" %>
 	
 <%@ Property Category="2.Class" Name="EntityBase"
     Type="System.String" Default="LinqEntityBase" Optional="True"
@@ -58,25 +63,15 @@
     Type="System.Boolean" Default="true" Optional="False"
     Description="Templates will generated DeleteOnNull Attribute for Associations." %>
 
-<%@ Property Category="3.Enum" Name="EnumExpression"
-    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
-    Description="List of regular expressions to identify an Enum Table."
-    Default="(E|e)num$" %>
-
-<%@ Property Category="3.Enum" Name="EnumNameExpr"
+<%@ Property Category="3.Enum" Name="NameColumn"
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
     Description="List of regular expressions to identify an Enum Table's Name Column."
-    Default="(N|n)ame" %>
-	
-<%@ Property Category="3.Enum" Name="EnumDescriptionExpr"
+    Default="((N|n)ame)|((T|t)ype(C|c)ode)" %>
+
+<%@ Property Category="3.Enum" Name="DescriptionColumm"
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
     Description="List of regular expressions to identify an Enum Table's Description Column."
     Default="(D|d)esc" %>
-
-<%@ Property Category="3.Enum" Name="EnumSummaryExpr"
-    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
-    Description="List of regular expressions to identify an Enum Table's Summary Column."
-    Default="(S|s)ummary" %>
 
 <%@ Property Category="4.Mapping" Name="DbmlFile"
     Type="System.String" Default="" Optional="False"
@@ -137,20 +132,17 @@
             if (!string.IsNullOrEmpty(ignore))
                 settings.IgnoreExpressions.Add(new Regex(ignore));
 				
-		foreach(string enumRegex in EnumExpression)
+		foreach(string enumRegex in EnumList)
             if (!string.IsNullOrEmpty(enumRegex))
                 settings.EnumExpressions.Add(new Regex(enumRegex));
-				
-		foreach(string enumNameRegex in this.EnumNameExpr)
-            if (!string.IsNullOrEmpty(enumNameRegex))
-                settings.EnumNameExpressions.Add(new Regex(enumNameRegex));
-		foreach(string enumDescriptionRegex in this.EnumDescriptionExpr)
-            if (!string.IsNullOrEmpty(enumDescriptionRegex))
-                settings.EnumDescriptionExpressions.Add(new Regex(enumDescriptionRegex));
-		foreach(string enumSummaryRegex in this.EnumSummaryExpr)
-            if (!string.IsNullOrEmpty(enumSummaryRegex))
-                settings.EnumSummaryExpressions.Add(new Regex(enumSummaryRegex));
-        
+		
+		foreach(string name in this.NameColumn)
+			if (!string.IsNullOrEmpty(name))
+			    settings.EnumNameExpressions.Add(new Regex(name));
+		foreach(string description in this.DescriptionColumm)
+			if (!string.IsNullOrEmpty(description))
+			    settings.EnumDescriptionExpressions.Add(new Regex(description));
+		
         DbmlGenerator generator = new DbmlGenerator(settings);
         generator.SchemaItemProcessed += new EventHandler<SchemaItemProcessedEventArgs>(OnSchemaItemProcessed);
         Database db = generator.Create(SourceDatabase);
@@ -201,6 +193,7 @@
         if (string.IsNullOrEmpty(EntityNamespace))
             EntityNamespace = ContextNamespace;
     }
+
 </script>
 Generating Linq to Sql Dbml File ...
 <% Generate(); %>

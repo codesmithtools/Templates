@@ -78,12 +78,6 @@ namespace LinqToSqlShared.Generator
             get { return _enumDescriptionExpressions; }
         }
 
-        private List<Regex> _enumSummaryExpressions = new List<Regex>();
-        public List<Regex> EnumSummaryExpressions
-        {
-            get { return _enumSummaryExpressions; }
-        }
-
         private bool _disableRenaming = false;
         public bool DisableRenaming
         {
@@ -108,12 +102,18 @@ namespace LinqToSqlShared.Generator
 
         public string GetEnumNameColumnName(TableSchema table)
         {
-            return GetEnumColumnName(table, EnumNameExpressions);
-        }
+            string result = GetEnumColumnName(table, EnumNameExpressions);
 
-        public string GetEnumSummaryColumnName(TableSchema table)
-        {
-            return GetEnumColumnName(table, EnumSummaryExpressions);
+            // If no Regex match found, use first column of type string.
+            if (string.IsNullOrEmpty(result))
+                foreach (ColumnSchema column in table.Columns)
+                    if (column.SystemType == typeof(string))
+                    {
+                        result = column.Name;
+                        break;
+                    }
+
+            return result;
         }
 
         public string GetEnumDescriptionColumnName(TableSchema table)
@@ -121,7 +121,7 @@ namespace LinqToSqlShared.Generator
             return GetEnumColumnName(table, EnumDescriptionExpressions);
         }
 
-        public string GetEnumColumnName(TableSchema table, List<Regex> regexList)
+        private string GetEnumColumnName(TableSchema table, List<Regex> regexList)
         {
             string result = string.Empty;
 

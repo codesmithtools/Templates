@@ -22,11 +22,6 @@
     Description="The folder to save the generated files." 
     Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
-<%@ Property Category="3.Enum" Name="EnumOutputDirectory" 
-    Type="System.String" Default="" Optional="True" 
-    Description="The folder to save the generated files." 
-    Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
-
 <%@ Property Category="1.Mapping" Name="DbmlFile" 
     Type="System.String" Default="Database.dbml" Optional="False" 
     Description="The full path to the mapping file." 
@@ -57,7 +52,7 @@
     MergeProperties="False" %>
 
 <%@ Register Name="EnumClass" 
-    Template="Internal\Enum.cst" 
+    Template="Internal\Enums.cst" 
     MergeProperties="False" %>
 
 
@@ -82,8 +77,7 @@
         CreateEntityBaseClass(database);
         CreateDataContextClass(database);
         CreateEntityClasses(database);
-		CreateEnums(database);
-        
+		
         this.RegisterReference("System.Data.Linq");
         this.RegisterReference("System.Configuration");
         if(this.IncludeDataContract)
@@ -142,7 +136,7 @@
         p.Database = database;
 
         string contextClass = CommonUtility.GetClassName(database.Class);
-        
+
         string parentFileName = contextClass + ".cs";
         parentFileName = Path.Combine(OutputDirectory, parentFileName);
         
@@ -162,6 +156,8 @@
         t.RenderToFile(fileName, parentFileName, true);        
                     
         this.Progress.PerformStep();
+		
+		CreateEnums(database, parentFileName);
     }
     
     public void CreateEntityClasses(Database database)
@@ -255,20 +251,18 @@
         }
     }
 	
-	public void CreateEnums(Database database)
+	public void CreateEnums(Database database, string parentFile)
 	{
 		string enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
 		LinqToSqlShared.Generator.DbmlEnum.Database enumDatabase = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(enumXmlFileName);
 		
-		foreach(LinqToSqlShared.Generator.DbmlEnum.Enumerator enumerator in enumDatabase.Enumerators)
-		{
-			EnumClass t = this.Create<EnumClass>();
-			t.Namespace = database.EntityNamespace;
-			t.Enumerator = enumerator;
-			
-			string fileName = Path.Combine(EnumOutputDirectory, String.Concat(enumerator.Name, ".cs"));
-			t.RenderToFile(fileName, true);
-		}
+		EnumClass t = this.Create<EnumClass>();
+		t.Namespace = database.EntityNamespace;
+		t.Database = enumDatabase;
+        
+		string contextClass = CommonUtility.GetClassName(database.Class);	
+		string fileName = Path.Combine(OutputDirectory, String.Concat(contextClass, ".Enums.cs"));
+		t.RenderToFile(fileName, parentFile, true);
 	}
 	
 </script>
