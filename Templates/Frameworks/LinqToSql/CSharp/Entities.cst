@@ -256,13 +256,16 @@
 		string enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
 		LinqToSqlShared.Generator.DbmlEnum.Database enumDatabase = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(enumXmlFileName);
 		
-		EnumClass t = this.Create<EnumClass>();
-		t.Namespace = database.EntityNamespace;
-		t.Database = enumDatabase;
-        
-		string contextClass = CommonUtility.GetClassName(database.Class);	
-		string fileName = Path.Combine(OutputDirectory, String.Concat(contextClass, ".Enums.cs"));
-		t.RenderToFile(fileName, parentFile, true);
+        if(enumDatabase != null)
+        {
+            EnumClass t = this.Create<EnumClass>();
+            t.Namespace = database.EntityNamespace;
+            t.Database = enumDatabase;
+            
+            string contextClass = CommonUtility.GetClassName(database.Class);	
+            string fileName = Path.Combine(OutputDirectory, String.Concat(contextClass, ".Enums.cs"));
+            t.RenderToFile(fileName, parentFile, true);
+        }
 	}
 	
 </script>

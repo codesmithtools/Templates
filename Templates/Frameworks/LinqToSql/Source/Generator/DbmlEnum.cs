@@ -95,7 +95,7 @@ namespace LinqToSqlShared.Generator.DbmlEnum
             Items = Items.OrderBy(v => v.Value).ToList();
         }
 
-        [XmlElementAttribute("Value")]
+        [XmlElementAttribute("Item")]
         public List<Item> Items
         {
             get
