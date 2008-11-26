@@ -3,13 +3,11 @@
     Debug="true" OutputType="None" %>
 
 <%@ Assembly Name="System.Design" %>
-<%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="Dbml" Path="..\Common" %>
 <%@ Assembly Name="Generator" Path="..\Common" %>
 
-<%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
@@ -44,7 +42,7 @@
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
     Description="List of regular expressions to identify an Enum Table."
     Default="(E|e)num$" %>
-	
+    
 <%@ Property Category="2.Class" Name="EntityBase"
     Type="System.String" Default="LinqEntityBase" Optional="True"
     Description="The base class for the entity." %>
@@ -131,18 +129,18 @@
         foreach(string ignore in IgnoreList)
             if (!string.IsNullOrEmpty(ignore))
                 settings.IgnoreExpressions.Add(new Regex(ignore));
-				
-		foreach(string enumRegex in EnumList)
+                
+        foreach(string enumRegex in EnumList)
             if (!string.IsNullOrEmpty(enumRegex))
                 settings.EnumExpressions.Add(new Regex(enumRegex));
-		
-		foreach(string name in this.NameColumn)
-			if (!string.IsNullOrEmpty(name))
-			    settings.EnumNameExpressions.Add(new Regex(name));
-		foreach(string description in this.DescriptionColumm)
-			if (!string.IsNullOrEmpty(description))
-			    settings.EnumDescriptionExpressions.Add(new Regex(description));
-		
+        
+        foreach(string name in this.NameColumn)
+            if (!string.IsNullOrEmpty(name))
+                settings.EnumNameExpressions.Add(new Regex(name));
+        foreach(string description in this.DescriptionColumm)
+            if (!string.IsNullOrEmpty(description))
+                settings.EnumDescriptionExpressions.Add(new Regex(description));
+        
         DbmlGenerator generator = new DbmlGenerator(settings);
         generator.SchemaItemProcessed += new EventHandler<SchemaItemProcessedEventArgs>(OnSchemaItemProcessed);
         Database db = generator.Create(SourceDatabase);
@@ -150,8 +148,8 @@
         OutputFile dbmlOutputFile = new OutputFile(this.DbmlFile);
         dbmlOutputFile.Metadata.Add("CustomTool", string.Empty);
         this.RegisterOutput(dbmlOutputFile);
-		
-		string enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
+        
+        string enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
         if(System.IO.File.Exists(enumXmlFileName))
         {
             OutputFile enumOutputFile = new OutputFile(enumXmlFileName, this.DbmlFile);

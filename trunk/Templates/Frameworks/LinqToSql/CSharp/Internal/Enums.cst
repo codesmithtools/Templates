@@ -8,28 +8,28 @@ using System.Runtime.Serialization;
 
 namespace <%= Namespace %>
 {
-<%	foreach(LinqToSqlShared.Generator.DbmlEnum.Enum myEnum in Database.Enums) {
-		if (myEnum.Flags) { %>
-	[Flags]
-<%		}
+<%    foreach(LinqToSqlShared.Generator.DbmlEnum.Enum myEnum in Database.Enums) {
+        if (myEnum.Flags) { %>
+    [Flags]
+<%        }
         if (myEnum.IncludeDataContract) { %>
-	[DataContract]
+    [DataContract]
 <%      } %>
-	<%= System.Enum.GetName(typeof(LinqToSqlShared.Generator.DbmlEnum.AccessModifier), myEnum.AccessModifier).ToLower() %> enum <%= myEnum.Name %>
-	{
-<%		for(int x=0; x < myEnum.Items.Count; x++) {
-			if (!String.IsNullOrEmpty(myEnum.Items[x].Description)) { %>
-		/// <summary>
+    <%= System.Enum.GetName(typeof(LinqToSqlShared.Generator.DbmlEnum.AccessModifier), myEnum.AccessModifier).ToLower() %> enum <%= myEnum.Name %>
+    {
+<%        for(int x=0; x < myEnum.Items.Count; x++) {
+            if (!String.IsNullOrEmpty(myEnum.Items[x].Description)) { %>
+        /// <summary>
         /// <%= myEnum.Items[x].Description %>
         /// </summary>
-		[Description("<%= myEnum.Items[x].Description %>")]
-<% 			}
-			if (myEnum.IncludeDataContract && myEnum.Items[x].EnumMember) { %>
-		[EnumMember]
-<%			} %>
-		<%= myEnum.Items[x].Name %> = <%= myEnum.Items[x].Value %><% if (x != myEnum.Items.Count - 1) { %>,<% } %>
-<%		} %>
-	}
-	
-<%	} %>
+        [Description("<%= myEnum.Items[x].Description %>")]
+<%             }
+            if (myEnum.IncludeDataContract && myEnum.Items[x].EnumMember) { %>
+        [EnumMember]
+<%            } %>
+        <%= myEnum.Items[x].Name %> = <%= myEnum.Items[x].Value %><% if (x != myEnum.Items.Count - 1) { %>,<% } %>
+<%        } %>
+    }
+    
+<%    } %>
 }

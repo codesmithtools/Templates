@@ -1,14 +1,11 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" 
     Description="Linq to Sql DataManager Class." %>
 
-<%@ Assembly Name="System.Data" %>
-<%@ Assembly Name="Microsoft.Build.Engine" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
 <%@ Assembly Src="Manager.cs" %>
 
-<%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="Manager" %>

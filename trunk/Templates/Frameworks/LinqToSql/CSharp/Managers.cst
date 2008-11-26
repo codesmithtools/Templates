@@ -3,16 +3,12 @@
     Debug="true" OutputType="None" %>
 
 <%@ Assembly Name="System.Design" %>
-<%@ Assembly Name="System.Data" %>
-<%@ Assembly Name="Microsoft.Build.Engine" %>
-<%@ Assembly Name="Microsoft.Build.Utilities" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="Dbml" Path="..\Common" %>
 <%@ Assembly Name="Generator" Path="..\Common" %>
 <%@ Assembly Src="Internal\Manager.cs" %>
 
-<%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="SchemaExplorer" %>

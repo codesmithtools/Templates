@@ -8,8 +8,6 @@ Description:
 <%@ Property Name="InlineEditing" Type="System.Boolean" Default="false" Optional="false" Description="Default to Inline Grid Editing for Webpages" %>
 <%@ Property Name="ContextNamespace" Type="System.String" Default="" Optional="false" Description="The namespace where the Data Context is found"%>
 <%@ Property Name="DataContextName" Type="System.String" Default="" Optional="False" Description="Name of the Data Context"%>
-<%@ Assembly Name="System.Data" %>
-<%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.IO" %>
 
 <%@ Register Name="GlobalParentClass" 
