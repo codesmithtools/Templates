@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace <%= ClassNamespace %>
 {
-    public static class <%= ClassName %>
+    public partial static class <%= ClassName %>
     {
         //Add query extension methods here.
         
