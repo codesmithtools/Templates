@@ -8,14 +8,13 @@
 <%@ Property Category="2.Class" Name="ClassNamespace" 
     Type="System.String" Default="" Optional="False" 
     Description="The namespace to use for the generated class files."%>
-
 using System;
 using System.Data.Linq;
 using System.Linq;
 
 namespace <%= ClassNamespace %>
 {
-    public static partial class <%= ClassName %>
+    public static class <%= ClassName %>
     {
         //Add query extension methods here.
         
