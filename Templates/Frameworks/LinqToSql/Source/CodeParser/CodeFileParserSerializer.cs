@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms.Design;
-using System.Windows.Forms;
-using System.Drawing.Design;
-using System.ComponentModel;
-using CodeSmith.Engine;
 using System.IO;
 
 namespace CodeSmith.Engine
@@ -34,7 +26,7 @@ namespace CodeSmith.Engine
             if (codeFileParser == null)
                 return;
 
-            string relativePath = CodeSmith.Engine.Utility.PathUtil.RelativePathTo(context.WorkingDirectory, codeFileParser.FileName);
+            string relativePath = Utility.PathUtil.RelativePathTo(context.WorkingDirectory, codeFileParser.FileName);
 
             writer.WriteString(File.Exists(relativePath)
                 ? relativePath
@@ -56,7 +48,7 @@ namespace CodeSmith.Engine
         {
             CodeFileParser codeFileParser;
             bool parseMethodBodies = false;
-            CodeTemplate template = context.Instance as CodeTemplate;
+            CodeTemplate template = context.Instance;
 
             if (template != null)
             {

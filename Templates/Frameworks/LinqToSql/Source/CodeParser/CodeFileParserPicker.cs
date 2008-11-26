@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms.Design;
-using System.Windows.Forms;
-using System.Drawing.Design;
 using System.ComponentModel;
-using CodeSmith.Engine;
+using System.Drawing.Design;
 using System.IO;
+using System.Windows.Forms;
+using System.Windows.Forms.Design;
 using CodeSmith.Engine.Utility;
 
 namespace CodeSmith.Engine

@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Collections;
-using CodeSmith.Engine;
+using System.Text.RegularExpressions;
 using ICSharpCode.NRefactory;
 using ICSharpCode.NRefactory.Ast;
-using System.Text.RegularExpressions;
-using System.CodeDom;
 
 namespace CodeSmith.Engine
 {
@@ -149,7 +147,7 @@ namespace CodeSmith.Engine
                 templateVisitor = new AttributeSectionVisitor();
                 templateParser.CompilationUnit.AcceptVisitor(templateVisitor, this.ClassName);
             
-                UsingDeclaration firstUsing  = sourceVisitor.UsingList.Where<UsingDeclaration>(u => u.StartLocation.Line < sourceStart.Line).FirstOrDefault<UsingDeclaration>();
+                UsingDeclaration firstUsing  = sourceVisitor.UsingList.Where(u => u.StartLocation.Line < sourceStart.Line).FirstOrDefault();
                 ImportsStop = AppendMergedImports(mergeResult, firstUsing, sourceParser,sourceVisitor, templateVisitor);
 
                 // Add Pre-Class Text To Output

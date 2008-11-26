@@ -1,12 +1,11 @@
 ﻿using System;
 using System.CodeDom;
-using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using ICSharpCode.NRefactory;
 using ICSharpCode.NRefactory.Ast;
 using ICSharpCode.NRefactory.Parser;
 using ICSharpCode.NRefactory.Visitors;
-using System.IO;
 
 namespace CodeSmith.Engine
 {
