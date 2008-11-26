@@ -62,7 +62,7 @@ namespace <%= Database.ContextNamespace %>
     /// <summary>
     /// The query extension class for <%= Type.Name %>.
     /// </summary>
-    public static class <%= Type.Name %>GeneratedExtensions
+    public partial static class <%= Type.Name %>Extensions
     {
 <% List<Column> keys = new List<Column>();
     int colCount = 0;
