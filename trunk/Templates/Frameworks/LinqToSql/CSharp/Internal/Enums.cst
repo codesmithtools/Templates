@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="" Inherits="" Debug="False" Description="Template description here." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates Enum file for Plinqo DataContext." %>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
 <%@ Property Name="Database" Type="LinqToSqlShared.Generator.DbmlEnum.Database" Optional="False" Category="Strings" Description="" %>
 <%@ Property Name="Namespace" Type="System.String" Optional="False" Category="Strings" Description="" %>

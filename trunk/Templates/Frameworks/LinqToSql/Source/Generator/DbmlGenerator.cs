@@ -777,22 +777,6 @@ namespace LinqToSqlShared.Generator
             bool isEnum, wasEnum;
             typeName = IsOrWasEnumAssociation(columnSchema, out isEnum, out wasEnum);
             return isEnum;
-
-            //bool result = false;
-            //typeName = String.Empty;
-
-            //if (columnSchema != null && columnSchema.IsForeignKeyMember)
-            //    foreach (TableKeySchema tableKeySchema in columnSchema.Table.ForeignKeys)
-            //        if (tableKeySchema.ForeignKeyMemberColumns.Contains(columnSchema)
-            //            && Settings.IsEnum(tableKeySchema.PrimaryKeyTable))
-            //        {
-            //            DbmlEnum.Enum enumerator = GetEnum(tableKeySchema.PrimaryKeyTable);
-            //            result = true;
-            //            typeName = enumerator.Name;
-            //            break;
-            //        }
-            
-            //return result;
         }
 
         private void CreateColumns(Table table, TableSchema tableSchema)

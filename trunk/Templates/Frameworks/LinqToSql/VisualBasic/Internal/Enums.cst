@@ -1,0 +1,33 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Description="Generates Enum file for Plinqo DataContext." %>
+<%@ Assembly Name="Generator" Path="..\..\Common" %>
+<%@ Property Name="Database" Type="LinqToSqlShared.Generator.DbmlEnum.Database" Optional="False" Category="Strings" Description="" %>
+<%@ Property Name="Namespace" Type="System.String" Optional="False" Category="Strings" Description="" %>
+Imports System
+Imports System.ComponentModel
+Imports System.Runtime.Serialization
+
+Namespace <%= Me.Namespace %>
+<%	For Each myEnum As LinqToSqlShared.Generator.DbmlEnum.Enum In Database.Enums
+        If myEnum.Flags Then %>
+	<Flags()> _
+<%      End If
+        If myEnum.IncludeDataContract Then %>
+	<DataContract()> _
+<%      End If %>
+	<%= System.[Enum].GetName(GetType(LinqToSqlShared.Generator.DbmlEnum.AccessModifier), myEnum.AccessModifier) %> Enum <%= myEnum.Name %>
+<%		For Each myItem As LinqToSqlShared.Generator.DbmlEnum.Item In myEnum.Items
+			If Not String.IsNullOrEmpty(myItem.Description) Then %>
+		''' <summary>
+		''' <%= myItem.Description %>
+		''' </summary>
+		<Description("<%= myItem.Description %>")> _
+<%          End If
+            If myEnum.IncludeDataContract AndAlso myItem.EnumMember Then %>
+		<EnumMember()> _
+<%          End If %>
+        <%= myItem.Name %> = <%= myItem.Value %>
+<%      Next %>
+	End Enum
+    
+<%  Next %>
+End Namespace

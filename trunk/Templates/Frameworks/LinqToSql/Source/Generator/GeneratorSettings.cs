@@ -97,7 +97,8 @@ namespace LinqToSqlShared.Generator
                 && table.PrimaryKey != null                                     // 3) Has a Primary Key...
                 && table.PrimaryKey.MemberColumns.Count == 1                    // 4) ...that is a single column...
                 && table.PrimaryKey.MemberColumns[0].SystemType == typeof(int)  // 5) ...of type integer.
-                && !string.IsNullOrEmpty(GetEnumNameColumnName(table));         // 6) Contains a column for name.
+                && !string.IsNullOrEmpty(GetEnumNameColumnName(table))          // 6) Contains a column for name.
+                && table.GetTableData().Rows.Count > 0;                         // 7) Must have at least one row.
         }
 
         public string GetEnumNameColumnName(TableSchema table)
