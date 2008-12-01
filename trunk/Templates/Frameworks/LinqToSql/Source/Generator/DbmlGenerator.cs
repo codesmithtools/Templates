@@ -267,7 +267,7 @@ namespace LinqToSqlShared.Generator
                     Name = row[nameColumn].ToString(),
                     Value = value,
                     Description = description ?? existingValue.Description,
-                    EnumMember = existingValue.EnumMember
+                    DataContractMember = existingValue.DataContractMember
                 });
             }
             
