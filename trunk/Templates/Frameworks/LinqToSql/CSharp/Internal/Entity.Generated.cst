@@ -1,5 +1,5 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" 
-    Description="Linq to Sql Entity Class." %>
+    Description="Linq to Sql Entity Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
@@ -45,6 +45,10 @@
 <%@ Property Name="AssociationNamingSuffix"
     Type="AssociationNamingEnum" Default="ListSuffix" Optional="False"
     Description="Suffix for Many To Many Associations" %>
+
+<%@ Property Name="EnumDatabase"
+    Type="LinqToSqlShared.Generator.DbmlEnum.Database" Optional="True"
+    Description="Enum Collection for Database." %>
 
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
@@ -275,6 +279,11 @@ foreach(Column column in Type.Columns) {
 <% } %>
 <% if (IncludeDataContract) { %>
         [DataMember(Order=<%= ++DataMemberCount %>)]
+<% } %>
+<% if( this.Framework == FrameworkEnum.v35_SP1
+    && EnumDatabase != null
+    && EnumDatabase.Enums.Where(e => e.Name == column.Type).FirstOrDefault() != null) { %>
+        [UIHint("Enumeration")]
 <% } %>
         <%= Naming.GetModifier(column.AccessModifier, column.Modifier) %> <%= dataType %> <%= column.Member %>
         {

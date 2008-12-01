@@ -159,6 +159,7 @@
         EntityGeneratedClass t = this.Create<EntityGeneratedClass>();
         this.CopyPropertiesTo(t);
         t.Database = database;
+        t.EnumDatabase = this.EnumDatabase;
         
         EntityEditableClass p = this.Create<EntityEditableClass>();
         this.CopyPropertiesTo(p);
@@ -246,18 +247,41 @@
     
     public void CreateEnums(Database database, string parentFile)
     {
-        string enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
-        LinqToSqlShared.Generator.DbmlEnum.Database enumDatabase = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(enumXmlFileName);
-        
-        string contextClass = CommonUtility.GetClassName(database.Class);    
-        string fileName = Path.Combine(OutputDirectory, String.Concat(contextClass, ".Enums.cs"));
-        
-        if(enumDatabase != null)
+        if(EnumDatabase != null)
         {
+            string contextClass = CommonUtility.GetClassName(database.Class);    
+            string fileName = Path.Combine(OutputDirectory, String.Concat(contextClass, ".Enums.cs"));
+        
             EnumClass t = this.Create<EnumClass>();
             t.Namespace = database.EntityNamespace;
-            t.Database = enumDatabase;
+            t.Database = EnumDatabase;
             t.RenderToFile(fileName, parentFile, true);
+        }
+    }
+    
+    private string _enumXmlFileName = null;
+    private string EnumXmlFileName
+    {
+        get
+        {
+            if(String.IsNullOrEmpty(_enumXmlFileName))
+                _enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
+            return _enumXmlFileName;
+        }
+    }
+    
+    private LinqToSqlShared.Generator.DbmlEnum.Database _enumDatabase = null;
+    private bool _isEnumDatabaseLoaded = false;
+    private LinqToSqlShared.Generator.DbmlEnum.Database EnumDatabase
+    {
+        get
+        {
+            if(!_isEnumDatabaseLoaded)
+            {
+                _enumDatabase = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName);
+                _isEnumDatabaseLoaded = true;
+            }
+            return _enumDatabase;
         }
     }
     
