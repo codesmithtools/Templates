@@ -28,6 +28,8 @@ namespace LinqToSqlShared.Generator
 
         private static readonly Regex CleanIdRegex = new Regex(
             @"(_ID|_id|_Id|\.ID|\.id|\.Id|ID|Id)$", RegexOptions.Compiled);
+        
+        private static readonly Regex CleanNumberPrefix = new Regex(@"^\d+");
 
         // must be sorted
         private static readonly string[] ExistingContextProperties = new[] {
@@ -947,6 +949,7 @@ namespace LinqToSqlShared.Generator
         {
             string legalName = Settings.CleanName(name);
 
+            legalName = CleanNumberPrefix.Replace(legalName, string.Empty, 1);
             legalName = StringUtil.ToPascalCase(legalName);
             return legalName;
         }
