@@ -1,0 +1,99 @@
+<%@ CodeTemplate Src="CSLAExpress\CSLAExpress20.vb" Inherits="CSLAExpress20" Debug="False" Language="VB" TargetLanguage="VB" Description="Generates CSLA Business Objects." %>
+<%@ Assembly Name="SchemaExplorer" %><%@ Assembly Name="System.Design" %>
+
+<% Dim Template As CodeTemplate %>
+
+<% Template=CompileTemplate(Me.CodeTemplateInfo.DirectoryName & "ReadOnlyCollection.cst") %>
+<% If Not Template Is Nothing Then %>
+<%   With Template
+      '  Business Object Combo
+      .SetProperty("CollectionName", CollectionName)
+      .SetProperty("ChildType", ChildType)
+      .SetProperty("ObjectTable", ObjectTable)
+	
+      ' File Generation
+      .SetProperty("DateAsSubFolder", DateAsSubFolder)
+      .SetProperty("OutputDirectory", OutputDirectory)
+      .SetProperty("OutputToFile", OutputToFile)
+
+      ' General Options - Business Object
+      .SetProperty("AddComments", AddComments)
+      .SetProperty("AnonymousAccess", AnonymousAccess)
+      .SetProperty("CamelCaseMemberVars", CamelCaseMemberVars)
+      .SetProperty("ExecutionTime", ExecutionTime)
+      .SetProperty("Generate_Class", Generate_Class)
+      .SetProperty("Generate_SProcs", Generate_SProcs)
+      .SetProperty("Generate_Tests", Generate_Tests)
+      .SetProperty("MemberPrefix", MemberPrefix)
+      .SetProperty("ObjectNameSpace", ObjectNameSpace)
+      .SetProperty("UseSmartDate", UseSmartDate)
+
+      ' General Options - Database
+      .SetProperty("ConnectionString", ConnectionString)
+      .SetProperty("DatabaseObjectOwner", DatabaseObjectOwner)
+      .SetProperty("GrantExecute", GrantExecute)
+      .SetProperty("Use_DROP_Statements", Use_DROP_Statements)
+
+      ' Authoriztion Rules - Object Level
+      .SetProperty("CanGetObject", CanGetObject)
+
+      ' Stored Procedures
+      .SetProperty("ListtPrefix", ListPrefix)
+      .SetProperty("ListSuffix", ListSuffix)
+
+	End With %>
+<%   Template.Render(Response) %>
+<% End If %>
+
+<% Template=CompileTemplate(Me.CodeTemplateInfo.DirectoryName & "ReadOnlyChild.cst") %>
+<% If Not Template Is Nothing Then %>
+<%   With Template
+      '  Business Object Combo
+      .SetProperty("ObjectName", ChildType)
+      .SetProperty("ObjectTable", ObjectTable)
+	
+      ' File Generation
+      .SetProperty("DateAsSubFolder", DateAsSubFolder)
+      .SetProperty("OutputDirectory", OutputDirectory)
+      .SetProperty("OutputToFile", OutputToFile)
+
+      ' General Options - Business Object
+      .SetProperty("AddComments", AddComments)
+      .SetProperty("AnonymousAccess", AnonymousAccess)
+      .SetProperty("CamelCaseMemberVars", CamelCaseMemberVars)
+	  .SetProperty("ExecutionTime", ExecutionTime)
+      .SetProperty("Generate_Class", Generate_Class)
+      .SetProperty("Generate_SProcs", Generate_SProcs)
+      .SetProperty("Generate_Tests", Generate_Tests)
+      .SetProperty("MemberPrefix", MemberPrefix)
+      .SetProperty("ObjectNameSpace", ObjectNameSpace)
+      .SetProperty("UseSmartDate", UseSmartDate)
+
+	End With %>
+<%   Template.Render(Response) %>
+<% End If %>
+
+<script runat="template">
+
+<%-- *** Business Object *** --%>
+<!-- #include file="Properties\BusinessCombos\ROC_ROCh.vb" -->
+
+<%-- *** Authorization Rules - Object Level *** --%>
+<!-- #include file="Properties\ObjectAuthorization\CanGetObject.vb" -->
+
+<%-- *** File Generation *** --%>
+<!-- #include file="Properties\FileGeneration\FileGeneration.vb" -->
+
+<%-- *** General Options - Business Object *** --%>
+<!-- #include file="Properties\GeneralOptionsObject\BasicOptionsObject.vb" -->
+<!-- #include file="Properties\GeneralOptionsObject\ExecutionTime.vb" -->
+<!-- #include file="Properties\GeneralOptionsObject\GenSProcs.vb" -->
+<!-- #include file="Properties\GeneralOptionsObject\GenTests.vb" -->
+
+<%-- *** General Options - Database *** --%>
+<!-- #include file="Properties\GeneralOptionsDatabase\BasicOptionsDatabase.vb" -->
+
+<%-- *** Stored Procedures *** --%>
+<!-- #include file="Properties\StoredProcedures\ListSProcs.vb" -->
+
+</script>

@@ -1,0 +1,102 @@
+<%@ CodeTemplate src="TemplateBase.cs" Inherits="CodeSmith.Csla.TemplateBase" Language="C#" TargetLanguage="C#" Description="Generates a CSLA Read Only Root Object." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="ObjectName" Type="System.String" Optional="true" Category="1. Object" Description="Required - The Name of the Business Object Class to Generate." %>
+<%@ Property Name="RootCommand" Type="CommandSchema" Optional="true" Category="2. Data Source" Description="Required - The stored procedure that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootTable" Type="TableSchema" Optional="true" Category="2. Data Source" Description="Required - The Root Table that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootView" Type="ViewSchema" Optional="true" Category="2. Data Source" Description="Required - The Root View that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="ResultSetIndex" Type="System.Int32" Default="0" Optional="true" Category="2. Data Source" Description="Result set index indicates which result set to use from the stored procedure. Required when using RootCommand." %>
+<%@ Property Name="UniqueColumnNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="2. Data Source" Description="Unique columns. Required when using RootView or when ResultSetIndex > 0." %>
+<%@ Property Name="ChildCollectionNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="1a. Child Collection Object" Description="The Child Collection's Name. Used for the memeber variable and collection name." %>
+<%@ Property Name="ChildPropertyNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="1a. Child Collection Object" Description="The Child Collection's member variable name." %>
+
+<%-- Generic Variables for code to use  --%>
+<% 
+   int i = BaseIndentLevel; 
+   ObjectInfo objInfo = new ObjectInfo(this);
+%>
+<!-- #INCLUDE FILE="AutoGenWarning.inc" -->
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using Csla;
+using Csla.Data;
+using Csla.Validation;
+
+<% if (objInfo.Namespace.Length > 0) { %>namespace <%= objInfo.Namespace %>
+<%=Indent(i++)%>{ 
+<% } %> 
+<% if(!objInfo.IsUserPartial) {%>
+<%=Indent(i)%>[Serializable()] 
+<%}%>
+<%=Indent(i)%><%= objInfo.Modifiers %> class <%=objInfo.NameAndSuffix%><%=objInfo.Inherits%>
+<% if(objInfo.IsGeneratedBase) {%>
+<%=Indent(i+1)%><%=objInfo.Constraint%>
+<%}%>
+<%=Indent(i++)%>{
+<% if(objInfo.IsUserPartial) {%>
+<%=Indent(i)%>#region Initialize
+<%=Indent(i)%>protected override void Initialize()
+<%=Indent(i++)%>{
+<%=Indent(i)%>//executeFetchDelegate = executeFetch;
+<%=Indent(i)%>//executeFetchCompleteDelegate = executeFetchComplete;
+<%=Indent(i)%>//fetchObjectCompleteDelegate = fetchObjectComplete;
+<%=Indent(i)%>//fetchChildrenCompleteDelegate = fetchChildrenComplete;
+<%=Indent(--i)%>}
+<%=Indent(i)%>#endregion //Initialize
+<%}%>
+<!-- #INCLUDE FILE="PropertiesMethods.inc" -->
+<!-- #INCLUDE FILE="AuthorizationRules.inc" -->
+<!-- #INCLUDE FILE="ObjectFactoryMethods.inc" -->
+
+<%=Indent(i, true)%>#region Data Access
+<% if(objInfo.IsGeneratedClass) {%>
+<!-- #INCLUDE FILE="ObjectCriteria.inc" -->
+<!-- #INCLUDE FILE="DataPortalFetch.inc" -->
+<%}%>
+<%=Indent(i)%>#endregion //Data Access
+<%if(objInfo.IsGeneratedPartial) {%>
+<%=Indent(i, true)%>#region Delegation Methods
+<%=Indent(i)%>private delegate bool predicateEx<U, V>(U obj1, V obj2);
+<%=Indent(i)%>private delegate void actionEx<U, V>(U obj1, V obj2);
+<%=Indent(i)%>//
+<%=Indent(i)%>// Fetch
+<%=Indent(i)%>//
+<%=Indent(i)%>[NonSerialized()]
+<%=Indent(i)%>[NotUndoable()]
+<%=Indent(i)%>private predicateEx<<%if(objInfo.UseAdoTransaction){%>SqlTransaction<%}else{%>SqlConnection<%}%>, Criteria> executeFetchDelegate = null;
+<%=Indent(i)%>private bool onExecuteFetch(<%if(objInfo.UseAdoTransaction){%>SqlTransaction tr<%}else{%>SqlConnection cn<%}%>, Criteria criteria)
+<%=Indent(i++)%>{
+<%=Indent(i)%>if (executeFetchDelegate != null)
+<%=Indent(i+1)%>return executeFetchDelegate(<%if(objInfo.UseAdoTransaction){%>tr<%}else{%>cn<%}%>, criteria);
+<%=Indent(i)%>return true;
+<%=Indent(--i)%>}
+<%=Indent(i)%>[NonSerialized()]
+<%=Indent(i)%>[NotUndoable()]
+<%=Indent(i)%>private actionEx<SqlCommand, Criteria> executeFetchCompleteDelegate = null;
+<%=Indent(i)%>private void onExecuteFetchComplete(SqlCommand cm, Criteria criteria)
+<%=Indent(i++)%>{
+<%=Indent(i)%>if (executeFetchCompleteDelegate != null)
+<%=Indent(i+1)%>executeFetchCompleteDelegate(cm, criteria);
+<%=Indent(--i)%>}
+<%=Indent(i)%>[NonSerialized()]
+<%=Indent(i)%>[NotUndoable()]
+<%=Indent(i)%>private Action<SafeDataReader> fetchObjectCompleteDelegate = null;
+<%=Indent(i)%>private void onFetchObjectComplete(SafeDataReader dr)
+<%=Indent(i++)%>{
+<%=Indent(i)%>if (fetchObjectCompleteDelegate != null)
+<%=Indent(i+1)%>fetchObjectCompleteDelegate(dr);
+<%=Indent(--i)%>}
+<%=Indent(i)%>[NonSerialized()]
+<%=Indent(i)%>[NotUndoable()]
+<%=Indent(i)%>private Action<SafeDataReader> fetchChildrenCompleteDelegate = null;
+<%=Indent(i)%>private void onFetchChildrenComplete(SafeDataReader dr)
+<%=Indent(i++)%>{
+<%=Indent(i)%>if (fetchChildrenCompleteDelegate != null)
+<%=Indent(i+1)%>fetchChildrenCompleteDelegate(dr);
+<%=Indent(--i)%>}
+<%=Indent(i)%>#endregion //Delegation Methods
+<%} //IsGeneratedPartial%>
+<%=Indent(--i)%>}
+<% if(objInfo.Namespace.Length > 0) {%>}<%}%>

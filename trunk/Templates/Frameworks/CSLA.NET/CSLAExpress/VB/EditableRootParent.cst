@@ -1,0 +1,54 @@
+<%@ CodeTemplate Src="CSLAExpress\CSLAExpress20.vb" Inherits="CSLAExpress20" Debug="False" Language="VB" TargetLanguage="VB" Description="Generates CSLA Business Objects." %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%= Generate("EditableRoot") %>
+
+<script runat="template">
+
+<%-- *** Business Object *** --%>
+<!-- #include file="Properties\BusinessObject\ObjectName.vb" -->
+<!-- #include file="Properties\BusinessObject\ObjectTable.vb" -->
+<%-- <!-- #include file="Properties\BusinessObject\ObjectFetchView.vb" --> --%>
+<!-- #include file="Properties\BusinessObject\Children.vb" -->
+
+<%-- *** Authorization Rules - Object Level *** --%>
+<!-- #include file="Properties\ObjectAuthorization\CanAddObject.vb" -->
+<!-- #include file="Properties\ObjectAuthorization\CanDeleteObject.vb" -->
+<!-- #include file="Properties\ObjectAuthorization\CanEditObject.vb" -->
+<!-- #include file="Properties\ObjectAuthorization\CanExecuteObject.vb" -->
+<!-- #include file="Properties\ObjectAuthorization\CanGetObject.vb" -->
+
+<%-- *** Authorization Rules - Properties Level *** --%>
+<!-- #include file="Properties\PropertyAuthorization\AllowRead.vb" -->
+<!-- #include file="Properties\PropertyAuthorization\AllowWrite.vb" -->
+<!-- #include file="Properties\PropertyAuthorization\DenyRead.vb" -->
+<!-- #include file="Properties\PropertyAuthorization\DenyWrite.vb" -->
+
+<%-- *** Business Methods *** --%>
+<!-- #include file="Properties\BusinessMethods\CanReadWritePropMethods.vb" -->
+<!-- #include file="Properties\BusinessMethods\PropHasChangedMethods.vb" -->
+
+<%-- *** Data Access *** --%>
+<!-- #include file="Properties\DataAccess\RunLocalCreate.vb" -->
+
+<%-- *** Validation Rules *** --%>
+<!-- #include file="Properties\ValidationRules\ImplementValidation.vb" -->
+
+<%-- *** File Generation *** --%>
+<!-- #include file="Properties\FileGeneration\FileGeneration.vb" -->
+
+<%-- *** General Options - Business Object *** --%>
+<!-- #include file="Properties\GeneralOptionsObject\ExecutionTime.vb" -->
+<!-- #include file="Properties\GeneralOptionsObject\GeneralOptionsObject.vb" -->
+<!-- #include file="Properties\GeneralOptionsObject\GenSProcs.vb" -->
+<!-- #include file="Properties\GeneralOptionsObject\GenTests.vb" -->
+
+<%-- *** General Options - Database *** --%>
+<!-- #include file="Properties\GeneralOptionsDatabase\GeneralOptionsDatabase.vb" -->
+
+<%-- *** Stored Procedures *** --%>
+<!-- #include file="Properties\StoredProcedures\ActionSProcs.vb" -->
+<!-- #include file="Properties\StoredProcedures\SelectSProcs.vb" -->
+<!-- #include file="Properties\StoredProcedures\ExistsSProcs.vb" -->
+
+</script>

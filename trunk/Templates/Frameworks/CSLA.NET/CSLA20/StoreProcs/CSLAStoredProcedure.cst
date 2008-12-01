@@ -1,0 +1,1130 @@
+<%------------------------------------------------------------------------------------------
+* CSLA 2.0 : StoreProcedure template
+* Original Author: Eric J. Smith 
+* Modified: Johann A. Hough (with permission from Eric J. Smith)
+* Last Modified: 2006/08/25 16:52
+*
+* Description: This template will generate standard CRUD stored procedures for a given 
+*   database table using the naming conventions of the CSLA 2.0 Templates. 
+*   (eg. Get<TableName(Plural)>; Add<TableName>; etc.).
+* 
+* Note: To generate for multiple tables copy and modify the multiple table stored 
+*       procedure template to include this script
+*
+* Goal: To modify the CodeSmith stored procedure template enough to generate matching StoreProcedures 
+*      as used by the CSLA template.
+
+* Change history : 2006/08/25 16:52 
+* - Remove the "usp_" default prefix for stored precedures
+* - Insert stored procedure (GetInsert) : Prefix the output columns to return the Identity / GUID values with "New"
+* - Change the Include defaults to exclude generation of InsertUpdate, SelectPaged, IncludeSelectDynamic, IncludeSelectDynamic, IncludeDeleteDynamic
+* - Change the Procedure naming methods : Insert --> Add; Select --> Get
+------------------------------------------------------------------------------------------%>
+<%@ CodeTemplate Debug="True" Language="C#" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" TargetLanguage="T-SQL"
+	Description="Generates standard CRUD procedures based on a database table schema." %>
+<%-- Context --%>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="1. Context"
+	Description="Table that the stored procedures should be based on." %>
+<%-- Options --%>
+<%@ Property Name="IncludeDropStatements" Type="System.Boolean" Default="True" Category="2. Options"
+	Description="If true drop statements will be generated to drop existing stored procedures." %>
+<%@ Property Name="IsolationLevel" Type="TransactionIsolationLevelEnum" Default="ReadCommitted" Category="2. Options"
+	Description="Isolation level to use in the generated procedures." %>
+<%@ Property Name="ProcedurePrefix" Type="System.String" Default="" Optional="True" Category="2. Options"
+	Description="Prefix to use for all generated procedure names." %>
+<%@ Property Name="TablePrefix" Type="System.String" Default="tbl_" Category="2. Options"
+	Description="If this prefix is found at the start of a table name, it will be stripped off." %>
+<%@ Property Name="AutoExecuteScript" Type="System.Boolean" Default="False" Category="2. Options"
+	Description="Whether or not to immediately execute the script on the target database." %>
+<%@ Property Name="OrderByExpression" Type="System.String" Default="" Optional="True" Category="2. Options"
+	Description="If supplied, this expression will be used to apply an order to the results on SELECT statements." %>
+<%@ Property Name="ExcludedColumns" Type="StringCollection" Default="" Optional="True" Category="2. Options"
+	Description="If supplied, any columns in this list will be excluded from all stored procedures unless the column is part of the primary key. (* is treated as a wildcard)" %>
+<%@ Property Name="ReadOnlyColumns" Type="StringCollection" Default="" Optional="True" Category="2. Options"
+	Description="If supplied, any columns in this list will be treated as read only. (* is treated as a wildcard)" %>
+<%-- Procedure Types --%>
+<%@ Property Name="IncludeInsert" Type="System.Boolean" Default="True" Category="3. Procedure Types"
+	Description="If true an INSERT procedure will be generated." %>
+<%@ Property Name="IncludeUpdate" Type="System.Boolean" Default="True" Category="3. Procedure Types"
+	Description="If true an UPDATE procedure will be generated." %>
+<%@ Property Name="IncludeInsertUpdate" Type="System.Boolean" Default="False" Category="3. Procedure Types"
+	Description="If true an INSERT/UPDATE procedure will be generated." %>
+<%@ Property Name="IncludeDelete" Type="System.Boolean" Default="True" Category="3. Procedure Types"
+	Description="If true a DELETE procedure will be generated." %>
+<%@ Property Name="IncludeSelect" Type="System.Boolean" Default="True" Category="3. Procedure Types"
+	Description="If true a SELECT procedure will be generated." %>
+<%@ Property Name="IncludeSelectAll" Type="System.Boolean" Default="True" Category="3. Procedure Types"
+	Description="If true a SELECT all procedure will be generated." %>
+<%@ Property Name="IncludeSelectPaged" Type="System.Boolean" Default="False" Category="3. Procedure Types"
+	Description="If true a SELECT procedure will be generated that allows for server side paging." %>
+<%@ Property Name="IncludeSelectByForeignKey" Type="System.Boolean" Default="True" Category="3. Procedure Types"
+	Description="If true a SELECT procedure will be generated for each foreign key." %>
+<%@ Property Name="IncludeSelectByIndex" Type="System.Boolean" Default="True" Category="3. Procedure Types"
+	Description="If true a SELECT procedure will be generated for each table index." %>
+<%@ Property Name="IncludeSelectDynamic" Type="System.Boolean" Default="False" Category="3. Procedure Types"
+	Description="If true a SELECT procedure will be generated that allows a dynamic WHERE condition to be used." %>
+<%@ Property Name="IncludeDeleteByForeignKey" Type="System.Boolean" Default="True" Category="3. Procedure Types"
+	Description="If true a DELETE procedure will be generated for each foreign key." %>
+<%@ Property Name="IncludeDeleteByIndex" Type="System.Boolean" Default="True" Category="3. Procedure Types"
+	Description="If true a DELETE procedure will be generated for each table index." %>
+<%@ Property Name="IncludeDeleteDynamic" Type="System.Boolean" Default="False" Category="3. Procedure Types"
+	Description="If true a DELETE procedure will be generated that allows a dynamic WHERE condition to be used." %>
+<%-- Assembly References --%>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="System.Data" %>
+<%-- Namespace Imports --%>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%
+this.Progress.MaximumValue = 13;
+this.Progress.Step = 1;
+
+// this template requires a primary key on the source table
+if (!SourceTable.HasPrimaryKey) throw new ApplicationException("SourceTable does not contain a primary key.");
+
+// generate drop statements
+if (IncludeDropStatements)
+{
+	Response.WriteLine("--region Drop Existing Procedures");
+	Response.WriteLine("");
+	
+	if (IncludeInsert) GenerateDropStatement(GetInsertProcedureName());
+	if (IncludeUpdate) GenerateDropStatement(GetUpdateProcedureName());
+	if (IncludeInsertUpdate) GenerateDropStatement(GetInsertUpdateProcedureName());
+	if (IncludeDelete)
+	{
+		GenerateDropStatement(GetDeleteProcedureName());
+		// this is to keep a drop statement for a delete by procedure with only the primary key columns from being generated
+		_droppedProcedureNames.Add(GetDeleteByProcedureName(SourceTable.PrimaryKey.MemberColumns));
+	}
+	if (IncludeDeleteDynamic) GenerateDropStatement(GetDeleteDynamicProcedureName());
+	if (IncludeSelect)
+	{
+		GenerateDropStatement(GetSelectProcedureName());
+		// this is to keep a drop statement for a select by procedure with only the primary key columns from being generated
+		_droppedProcedureNames.Add(GetSelectByProcedureName(SourceTable.PrimaryKey.MemberColumns));
+	}
+	if (IncludeSelectDynamic) GenerateDropStatement(GetSelectDynamicProcedureName());
+	if (IncludeSelectAll) GenerateDropStatement(GetSelectAllProcedureName());
+	
+	if (IncludeSelectByForeignKey)
+	{
+		for (int i = 0; i < SourceTable.ForeignKeys.Count; i++)
+		{
+			GenerateDropStatement(GetSelectByProcedureName(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns));
+		}
+	}
+	
+	if (IncludeSelectByIndex)
+	{
+		for (int i = 0; i < SourceTable.Indexes.Count; i++)
+		{
+			GenerateDropStatement(GetSelectByProcedureName(SourceTable.Indexes[i].MemberColumns));
+		}
+	}
+	
+	if (IncludeDeleteByForeignKey)
+	{
+		for (int i = 0; i < SourceTable.ForeignKeys.Count; i++)
+		{
+			GenerateDropStatement(GetDeleteByProcedureName(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns));
+		}
+	}
+	
+	if (IncludeDeleteByIndex)
+	{
+		for (int i = 0; i < SourceTable.Indexes.Count; i++)
+		{
+			GenerateDropStatement(GetDeleteByProcedureName(SourceTable.Indexes[i].MemberColumns));
+		}
+	}
+	
+	Response.WriteLine("--endregion");
+	Response.WriteLine("");
+	Response.WriteLine("GO");
+	Response.WriteLine("");
+	
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Insert Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeInsert)
+{
+	GenerateProcedureHeader(GetInsertProcedureName());
+	
+	/*
+	 * Check to see if the primary key is a single column primary key and also if it's either an
+	 * identity column or a GUID.  If so, we will not include the primary key column in the
+	 * list of input parameters.
+	 */
+	
+	if (SourceTable.PrimaryKey.MemberColumns.Count == 1
+		&& (SourceTable.PrimaryKey.MemberColumns[0].DataType == DbType.Guid
+		|| ((SourceTable.PrimaryKey.MemberColumns[0].DataType == DbType.Int16
+		|| SourceTable.PrimaryKey.MemberColumns[0].DataType == DbType.Int32
+		|| SourceTable.PrimaryKey.MemberColumns[0].DataType == DbType.Int64)
+		&& (bool)SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties["CS_IsIdentity"].Value == true)))
+	{
+		ColumnSchema primaryKeyColumn = SourceTable.PrimaryKey.MemberColumns[0];
+%>
+
+CREATE PROCEDURE <%= GetInsertProcedureName() %>
+<% GenerateParameters(FilterReadOnlyAndExcludedColumns(SourceTable.NonPrimaryKeyColumns), 1, true); %>
+<% GenerateParameter(primaryKeyColumn, 1, false, true, true); %>
+AS
+
+SET NOCOUNT ON
+
+<%-- If the primary key is a GUID, then assign a new GUID using NEWID(). --%>
+<% if (primaryKeyColumn.DataType == DbType.Guid) { %>
+SET @New<%= primaryKeyColumn.Name %> = NEWID()
+
+<% } %>
+INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
+	<% if (primaryKeyColumn.DataType == DbType.Guid) { %>
+	[@New<%= primaryKeyColumn.Name %>],
+	<% } %>
+	<% GenerateColumns(FilterReadOnlyAndExcludedColumns(SourceTable.NonPrimaryKeyColumns), 1); %>
+) VALUES (
+	<% if (primaryKeyColumn.DataType == DbType.Guid) { %>
+	@<%= primaryKeyColumn.Name %>,
+	<% } %>
+	<% GenerateVariables(FilterReadOnlyAndExcludedColumns(SourceTable.NonPrimaryKeyColumns), 1); %>
+)
+<%-- If the primary key is an identity column, then capture the newly assigned identity using SCOPE_IDENTITY(). --%>
+<% if (primaryKeyColumn.DataType == DbType.Int16 || primaryKeyColumn.DataType == DbType.Int32 || primaryKeyColumn.DataType == DbType.Int64) { %>
+
+SET @New<%= primaryKeyColumn.Name %> = SCOPE_IDENTITY()
+<% } %>
+
+<%-- Primary key is not a identity column or a GUID, so include all columns as input parameters. --%>
+<% } else { %>
+
+CREATE PROCEDURE <%= GetInsertProcedureName() %>
+<% GenerateParameters(FilterReadOnlyAndExcludedColumns(SourceTable.Columns), 1); %>
+AS
+
+SET NOCOUNT ON
+
+INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
+	<% GenerateColumns(SourceTable.Columns, 1); %>
+) VALUES (
+	<% GenerateVariables(SourceTable.Columns, 1); %>
+)
+
+<%
+	}
+	GenerateProcedureFooter(GetInsertProcedureName());
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Update Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeUpdate)
+{
+	GenerateProcedureHeader(GetUpdateProcedureName());
+%>
+
+CREATE PROCEDURE <%= GetUpdateProcedureName() %>
+<% GenerateParameters(FilterReadOnlyAndExcludedColumns(SourceTable.Columns), 1); %>
+AS
+
+SET NOCOUNT ON
+
+UPDATE <%= GetTableOwner() %>[<%= SourceTable.Name %>] SET
+	<% GenerateUpdates(SourceTable.NonPrimaryKeyColumns, 1); %>
+WHERE
+	<% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1); %>
+
+<%
+	GenerateProcedureFooter(GetUpdateProcedureName());
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* InsertUpdate Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeInsertUpdate)
+{
+	GenerateProcedureHeader(GetInsertUpdateProcedureName());
+%>
+
+CREATE PROCEDURE <%= GetInsertUpdateProcedureName() %>
+<% GenerateParameters(SourceTable.Columns, 1); %>
+AS
+
+SET NOCOUNT ON
+
+IF EXISTS(SELECT <% GenerateColumns(SourceTable.PrimaryKey.MemberColumns, -1); %> FROM <%= GetTableOwner() %>[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, -1); %>)
+BEGIN
+	UPDATE <%= GetTableOwner() %>[<%= SourceTable.Name %>] SET
+		<% GenerateUpdates(SourceTable.NonPrimaryKeyColumns, 2); %>
+	WHERE
+		<% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 2); %>
+END
+ELSE
+BEGIN
+	INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
+		<% GenerateColumns(SourceTable.Columns, 2); %>
+	) VALUES (
+		<% GenerateVariables(SourceTable.Columns, 2); %>
+	)
+END
+
+<%
+	GenerateProcedureFooter(GetInsertUpdateProcedureName());
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Delete Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeDelete)
+{
+	// this is to keep a delete by procedure with only the primary key columns from being generated
+	_generatedProcedureNames.Add(GetDeleteByProcedureName(SourceTable.PrimaryKey.MemberColumns));
+	
+	GenerateProcedureHeader(GetDeleteProcedureName());
+%>
+
+CREATE PROCEDURE <%= GetDeleteProcedureName() %>
+<% GenerateParameters(SourceTable.PrimaryKey.MemberColumns, 1); %>
+AS
+
+SET NOCOUNT ON
+
+DELETE FROM <%= GetTableOwner() %>[<%= SourceTable.Name %>]
+WHERE
+	<% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1); %>
+
+<%
+	GenerateProcedureFooter(GetDeleteProcedureName());
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Delete By Foreign Key Procedures
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeDeleteByForeignKey)
+{
+	for (int i = 0; i < SourceTable.ForeignKeys.Count; i++)
+	{
+		string procedureName = GetDeleteByProcedureName(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns);
+		if (!_generatedProcedureNames.Contains(procedureName))
+		{
+			_generatedProcedureNames.Add(procedureName);
+			GenerateProcedureHeader(procedureName);
+%>
+
+CREATE PROCEDURE <%= procedureName %>
+<% GenerateParameters(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns, 1); %>
+AS
+
+SET NOCOUNT ON
+
+DELETE FROM <%= GetTableOwner() %>[<%= SourceTable.Name %>]
+WHERE
+	<% GenerateConditions(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns, 1); %>
+
+GO
+
+<%
+			GenerateProcedureFooter(procedureName);
+		}
+	}
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Delete By Index Procedures
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeDeleteByIndex)
+{
+	for (int i = 0; i < SourceTable.Indexes.Count; i++)
+	{
+		string procedureName = GetDeleteByProcedureName(SourceTable.Indexes[i].MemberColumns);
+		if (!_generatedProcedureNames.Contains(procedureName))
+		{
+			_generatedProcedureNames.Add(procedureName);
+			GenerateProcedureHeader(procedureName);
+%>
+
+CREATE PROCEDURE <%= procedureName %>
+<% GenerateParameters(SourceTable.Indexes[i].MemberColumns, 1); %>
+AS
+
+SET NOCOUNT ON
+
+DELETE FROM <%= GetTableOwner() %>[<%= SourceTable.Name %>]
+WHERE
+	<% GenerateConditions(SourceTable.Indexes[i].MemberColumns, 1); %>
+
+<%
+			GenerateProcedureFooter(procedureName);
+		}
+	}
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Delete Dynamic Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeDeleteDynamic)
+{
+	GenerateProcedureHeader(GetDeleteDynamicProcedureName());
+%>
+
+CREATE PROCEDURE <%= GetDeleteDynamicProcedureName() %>
+	@WhereCondition nvarchar(500)
+AS
+
+SET NOCOUNT ON
+
+DECLARE @SQL nvarchar(3250)
+
+SET @SQL = '
+DELETE FROM
+	<%= GetTableOwner() %>[<%= SourceTable.Name %>]
+WHERE
+	' + @WhereCondition
+
+EXEC sp_executesql @SQL
+
+<%
+	GenerateProcedureFooter(GetDeleteDynamicProcedureName());
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Select Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeSelect)
+{
+	// this is to keep a select by procedure with only the primary key columns from being generated
+	_generatedProcedureNames.Add(GetSelectByProcedureName(SourceTable.PrimaryKey.MemberColumns));
+	
+	GenerateProcedureHeader(GetSelectProcedureName());
+%>
+
+CREATE PROCEDURE <%= GetSelectProcedureName() %>
+<% GenerateParameters(SourceTable.PrimaryKey.MemberColumns, 1); %>
+AS
+
+SET NOCOUNT ON
+<% GenerateSetTransactionIsolationLevelStatement(IsolationLevel); %>
+
+SELECT
+	<% GenerateColumns(SourceTable.Columns, 1); %>
+FROM
+	<%= GetTableOwner() %>[<%= SourceTable.Name %>]
+WHERE
+	<% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1); %>
+
+<%
+	GenerateProcedureFooter(GetSelectProcedureName());
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Select By Foreign Key Procedures
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeSelectByForeignKey)
+{
+	for (int i = 0; i < SourceTable.ForeignKeys.Count; i++)
+	{
+		string procedureName = GetSelectByProcedureName(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns);
+		if (!_generatedProcedureNames.Contains(procedureName))
+		{
+			_generatedProcedureNames.Add(procedureName);
+			GenerateProcedureHeader(procedureName);
+%>
+
+CREATE PROCEDURE <%= procedureName %>
+<% GenerateParameters(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns, 1); %>
+AS
+
+SET NOCOUNT ON
+<% GenerateSetTransactionIsolationLevelStatement(IsolationLevel); %>
+
+SELECT
+	<% GenerateColumns(SourceTable.Columns, 1); %>
+FROM
+	<%= GetTableOwner() %>[<%= SourceTable.Name %>]
+WHERE
+	<% GenerateConditions(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns, 1); %>
+<% GenerateOrderByClause(); %>
+
+<%
+			GenerateProcedureFooter(procedureName);
+		}
+	}
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Select By Index Procedures
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeSelectByIndex)
+{
+	for (int i = 0; i < SourceTable.Indexes.Count; i++)
+	{
+		string procedureName = GetSelectByProcedureName(SourceTable.Indexes[i].MemberColumns);
+		if (!_generatedProcedureNames.Contains(procedureName))
+		{
+			_generatedProcedureNames.Add(procedureName);
+			GenerateProcedureHeader(procedureName);
+%>
+
+CREATE PROCEDURE <%= procedureName %>
+<% GenerateParameters(SourceTable.Indexes[i].MemberColumns, 1); %>
+AS
+
+SET NOCOUNT ON
+<% GenerateSetTransactionIsolationLevelStatement(IsolationLevel); %>
+
+SELECT
+	<% GenerateColumns(SourceTable.Columns, 1); %>
+FROM
+	<%= GetTableOwner() %>[<%= SourceTable.Name %>]
+WHERE
+	<% GenerateConditions(SourceTable.Indexes[i].MemberColumns, 1); %>
+<% GenerateOrderByClause(); %>
+
+<%
+			GenerateProcedureFooter(procedureName);
+		}
+	}
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Select Dynamic Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeSelectDynamic)
+{
+	GenerateProcedureHeader(GetSelectDynamicProcedureName());
+%>
+
+CREATE PROCEDURE <%= GetSelectDynamicProcedureName() %>
+	@WhereCondition nvarchar(500),
+	@OrderByExpression nvarchar(250) = NULL
+AS
+
+SET NOCOUNT ON
+<% GenerateSetTransactionIsolationLevelStatement(IsolationLevel); %>
+
+DECLARE @SQL nvarchar(3250)
+
+SET @SQL = '
+SELECT
+	<% GenerateColumns(SourceTable.Columns, 1); %>
+FROM
+	<%= GetTableOwner() %>[<%= SourceTable.Name %>]
+WHERE
+	' + @WhereCondition
+
+IF @OrderByExpression IS NOT NULL AND LEN(@OrderByExpression) > 0
+BEGIN
+	SET @SQL = @SQL + '
+ORDER BY
+	' + @OrderByExpression
+END
+<% if (OrderByExpression != null && OrderByExpression.Trim().Length > 0) { %>
+ELSE
+BEGIN
+	SET @SQL = @SQL + '
+ORDER BY
+	<%= OrderByExpression %>'
+END
+<% } %>
+
+EXEC sp_executesql @SQL
+
+<%
+	GenerateProcedureFooter(GetSelectDynamicProcedureName());
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Select All Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeSelectAll)
+{
+	GenerateProcedureHeader(GetSelectAllProcedureName());
+%>
+
+CREATE PROCEDURE <%= GetSelectAllProcedureName() %>
+AS
+
+SET NOCOUNT ON
+<% GenerateSetTransactionIsolationLevelStatement(IsolationLevel); %>
+
+SELECT
+	<% GenerateColumns(SourceTable.Columns, 1); %>
+FROM
+	<%= GetTableOwner() %>[<%= SourceTable.Name %>]
+<% GenerateOrderByClause(); %>
+
+<%
+	GenerateProcedureFooter(GetSelectAllProcedureName());
+	this.Progress.PerformStep();
+}
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Select Paged Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+if (IncludeSelectPaged)
+{
+	GenerateProcedureHeader(GetSelectPagedProcedureName());
+%>
+
+CREATE PROCEDURE <%= GetSelectPagedProcedureName() %>
+AS
+
+SET NOCOUNT ON
+<% GenerateSetTransactionIsolationLevelStatement(IsolationLevel); %>
+
+SELECT
+	<% GenerateColumns(SourceTable.Columns, 1); %>
+FROM
+	<%= GetTableOwner() %>[<%= SourceTable.Name %>]
+<% GenerateOrderByClause(); %>
+
+<%
+	GenerateProcedureFooter(GetSelectPagedProcedureName());
+	this.Progress.PerformStep();
+}
+%>
+<script runat="template">
+#region Member Variables
+private StringCollection _droppedProcedureNames = new StringCollection();
+private StringCollection _generatedProcedureNames = new StringCollection();
+#endregion
+
+#region Isolation Level
+public enum TransactionIsolationLevelEnum
+{
+	ReadCommitted,
+	ReadUncommitted,
+	RepeatableRead,
+	Serializable
+}
+
+public void GenerateSetTransactionIsolationLevelStatement(TransactionIsolationLevelEnum isolationLevel)
+{
+	Response.Write("SET TRANSACTION ISOLATION LEVEL ");
+	
+	switch (isolationLevel)
+	{
+		case TransactionIsolationLevelEnum.ReadUncommitted:
+		{
+			Response.WriteLine("READ UNCOMMITTED");
+			break;
+		}
+		case TransactionIsolationLevelEnum.RepeatableRead:
+		{
+			Response.WriteLine("REPEATABLE READ");
+			break;
+		}
+		case TransactionIsolationLevelEnum.Serializable:
+		{
+			Response.WriteLine("SERIALIZABLE");
+			break;
+		}
+		default:
+		{
+			Response.WriteLine("READ COMMITTED");
+			break;
+		}
+	}
+}
+#endregion
+
+#region Code Generation Helpers
+public string GetTableOwner()
+{
+	return GetTableOwner(true);
+}
+
+public string GetTableOwner(bool includeDot)
+{
+	if (SourceTable.Owner.Length > 0)
+	{
+		if (includeDot)
+		{
+			return "[" + SourceTable.Owner + "].";
+		}
+		else
+		{
+			return "[" + SourceTable.Owner + "]";
+		}
+	}
+	else
+	{
+		return "";
+	}
+}
+
+public void GenerateDropStatement(string procedureName)
+{
+	// check to see if this procedure has already been dropped.
+	if (!_droppedProcedureNames.Contains(procedureName))
+	{
+		Response.WriteLine("IF OBJECT_ID(N'{0}') IS NOT NULL", procedureName);
+		GenerateIndent(1);
+		Response.WriteLine("DROP PROCEDURE {0}", procedureName);
+		Response.WriteLine("");
+		
+		// add this procedure to the list of dropped procedures
+		_droppedProcedureNames.Add(procedureName);
+	}
+}
+
+public void GenerateProcedureHeader(string procedureName)
+{
+	Response.WriteLine("--region {0}", procedureName);
+	Response.WriteLine("");
+	Response.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+	Response.WriteLine("-- Generated By:   {0} using CodeSmith {1}", System.Environment.UserName, typeof(CodeTemplate).Assembly.GetName().Version.ToString());
+	Response.WriteLine("-- Template:       {0}", this.CodeTemplateInfo.FileName);
+	Response.WriteLine("-- Procedure Name: {0}", procedureName);
+	Response.WriteLine("-- Date Generated: {0}", DateTime.Now.ToLongDateString());
+	Response.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+}
+
+public void GenerateProcedureFooter(string procedureName)
+{
+	Response.WriteLine("--endregion");
+	Response.WriteLine("");
+	Response.WriteLine("GO");
+	Response.WriteLine("");
+}
+
+public void GenerateIndent(int indentLevel)
+{
+    for (int i = 0; i < indentLevel; i++)
+	{
+		Response.Write('\t');
+	}
+}
+
+public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst, bool isLast)
+{
+	GenerateParameter(column, indentLevel, isFirst, isLast, false);
+}
+
+public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst, bool isLast, bool isOutput)
+{
+	GenerateIndent(indentLevel);
+
+	string parameter = GetSqlParameterStatement(column, isOutput);
+	if ((parameter.Length > 0) && (parameter[0] == '@'))
+	{
+		parameter = parameter.Remove( 0, 1 );
+	}
+	Response.Write( (isOutput == true ? "@New" : "@") + parameter );
+	
+	if (!isLast) Response.Write(",");
+	if (indentLevel >= 0)
+	{
+		Response.WriteLine("");
+	}
+	else if (!isLast)
+	{
+		Response.Write(" ");
+	}
+}
+
+public void GenerateParameters(ColumnSchemaCollection columns, int indentLevel)
+{
+	GenerateParameters(columns, indentLevel, false);
+}
+
+public void GenerateParameters(ColumnSchemaCollection columns, int indentLevel, bool includeTrailingComma)
+{
+	ColumnSchemaCollection filteredColumns = FilterExcludedColumns(columns);
+	for (int i = 0; i < filteredColumns.Count; i++)
+	{
+		GenerateParameter(filteredColumns[i], indentLevel, i == 0, i == filteredColumns.Count - 1 && !includeTrailingComma);
+	}
+}
+
+public void GenerateColumn(ColumnSchema column, int indentLevel, bool isFirst, bool isLast)
+{
+	GenerateIndent(indentLevel);
+	Response.Write("[");
+	Response.Write(column.Name);
+	Response.Write("]");
+	if (!isLast) Response.Write(",");
+	if (indentLevel >= 0)
+	{
+		Response.WriteLine("");
+	}
+	else if (!isLast)
+	{
+		Response.Write(" ");
+	}
+}
+
+public void GenerateColumns(ColumnSchemaCollection columns, int indentLevel)
+{
+	ColumnSchemaCollection filteredColumns = FilterExcludedColumns(columns);
+	for (int i = 0; i < filteredColumns.Count; i++)
+	{
+		GenerateColumn(filteredColumns[i], indentLevel, i == 0, i == filteredColumns.Count - 1);
+	}
+}
+
+public void GenerateUpdate(ColumnSchema column, int indentLevel, bool isFirst, bool isLast)
+{
+	GenerateIndent(indentLevel);
+	Response.Write("[");
+	Response.Write(column.Name);
+	Response.Write("] = @");
+	Response.Write(column.Name);
+	if (!isLast) Response.Write(",");
+	if (indentLevel >= 0)
+	{
+		Response.WriteLine("");
+	}
+	else if (!isLast)
+	{
+		Response.Write(" ");
+	}
+}
+
+public void GenerateUpdates(ColumnSchemaCollection columns, int indentLevel)
+{
+	ColumnSchemaCollection filteredColumns = FilterReadOnlyAndExcludedColumns(columns);
+	for (int i = 0; i < filteredColumns.Count; i++)
+	{
+		GenerateUpdate(filteredColumns[i], indentLevel, i == 0, i == filteredColumns.Count - 1);
+	}
+}
+
+public void GenerateCondition(ColumnSchema column, int indentLevel, bool isFirst, bool isLast)
+{
+	GenerateIndent(indentLevel);
+	if (!isFirst) Response.Write("AND ");
+	Response.Write("[");
+	Response.Write(column.Name);
+	Response.Write("] = @");
+	Response.Write(column.Name);
+	if (indentLevel >= 0)
+	{
+		Response.WriteLine("");
+	}
+	else if (!isLast)
+	{
+		Response.Write(" ");
+	}
+}
+
+public void GenerateConditions(ColumnSchemaCollection columns, int indentLevel)
+{
+	ColumnSchemaCollection filteredColumns = FilterExcludedColumns(columns);
+	for (int i = 0; i < filteredColumns.Count; i++)
+	{
+		GenerateCondition(filteredColumns[i], indentLevel, i == 0, i == filteredColumns.Count - 1);
+	}
+}
+
+public void GenerateVariable(ColumnSchema column, int indentLevel, bool isFirst, bool isLast)
+{
+	GenerateIndent(indentLevel);
+	Response.Write("@");
+	Response.Write(column.Name);
+	if (!isLast) Response.Write(",");
+	if (indentLevel >= 0)
+	{
+		Response.WriteLine("");
+	}
+	else if (!isLast)
+	{
+		Response.Write(" ");
+	}
+}
+
+public void GenerateVariables(ColumnSchemaCollection columns, int indentLevel)
+{
+	ColumnSchemaCollection filteredColumns = FilterExcludedColumns(columns);
+	for (int i = 0; i < filteredColumns.Count; i++)
+	{
+		GenerateVariable(filteredColumns[i], indentLevel, i == 0, i == filteredColumns.Count - 1);
+	}
+}
+
+public void GenerateOrderByClause()
+{
+	if (OrderByExpression != null && OrderByExpression.Trim().Length > 0)
+	{
+		Response.WriteLine("ORDER BY");
+		GenerateIndent(1);
+		Response.WriteLine(OrderByExpression);
+	}
+}
+
+public ColumnSchemaCollection FilterReadOnlyColumns(ColumnSchemaCollection columns)
+{
+	ColumnSchemaCollection filteredColumns = new ColumnSchemaCollection();
+	
+	for (int i = 0; i < columns.Count; i++)
+	{
+		if (!ColumnIsReadOnly(columns[i])) filteredColumns.Add(columns[i]);
+	}
+	
+	return filteredColumns;
+}
+
+public ColumnSchemaCollection FilterExcludedColumns(ColumnSchemaCollection columns)
+{
+	ColumnSchemaCollection filteredColumns = new ColumnSchemaCollection();
+	
+	for (int i = 0; i < columns.Count; i++)
+	{
+		if (!ColumnIsExcluded(columns[i])) filteredColumns.Add(columns[i]);
+	}
+	
+	return filteredColumns;
+}
+
+public ColumnSchemaCollection FilterReadOnlyAndExcludedColumns(ColumnSchemaCollection columns)
+{
+	ColumnSchemaCollection filteredColumns = new ColumnSchemaCollection();
+	
+	for (int i = 0; i < columns.Count; i++)
+	{
+		if (!ColumnIsExcludedOrReadOnly(columns[i])) filteredColumns.Add(columns[i]);
+	}
+	
+	return filteredColumns;
+}
+
+private Regex excludedColumnRegex = null;
+
+public bool ColumnIsExcluded(ColumnSchema column)
+{
+	if (column.IsPrimaryKeyMember) return false;
+	
+	if (excludedColumnRegex == null)
+	{
+		if (ExcludedColumns != null && ExcludedColumns.Count > 0)
+		{
+			string excluded = String.Empty;
+			for (int i = 0; i < ExcludedColumns.Count; i++)
+			{
+				if (ExcludedColumns[i].Trim().Length > 0)
+				{
+					excluded += "(" + Regex.Escape(ExcludedColumns[i]).Replace("\\*", ".*?") + ")|";
+				}
+			}
+			
+			if (excluded.Length > 0)
+			{
+				excluded = excluded.Substring(0, excluded.Length - 1);
+				excludedColumnRegex = new Regex(excluded, RegexOptions.IgnoreCase);
+			}
+		}
+	}
+	
+	if (excludedColumnRegex != null && excludedColumnRegex.IsMatch(column.Name)) return true;
+	
+	return false;
+}
+
+private Regex readOnlyColumnRegex = null;
+
+public bool ColumnIsReadOnly(ColumnSchema column)
+{
+	if (column.IsPrimaryKeyMember) return false;
+	
+	if (readOnlyColumnRegex == null)
+	{
+		if (ReadOnlyColumns != null && ReadOnlyColumns.Count > 0)
+		{
+			string readOnly = String.Empty;
+			for (int i = 0; i < ReadOnlyColumns.Count; i++)
+			{
+				if (ReadOnlyColumns[i].Trim().Length > 0)
+				{
+					readOnly += "(" + Regex.Escape(ReadOnlyColumns[i]).Replace("\\*", ".*?") + ")|";
+				}
+			}
+			
+			if (readOnly.Length > 0)
+			{
+				readOnly = readOnly.Substring(0, readOnly.Length - 1);
+				readOnlyColumnRegex = new Regex(readOnly, RegexOptions.IgnoreCase);
+			}
+		}
+	}
+	
+	if (readOnlyColumnRegex != null && readOnlyColumnRegex.IsMatch(column.Name)) return true;
+	
+	return false;
+}
+
+public bool ColumnIsExcludedOrReadOnly(ColumnSchema column)
+{
+	return ColumnIsExcluded(column) || ColumnIsReadOnly(column);
+}
+#endregion
+
+#region Procedure Naming
+public string GetInsertProcedureName()
+{
+	return String.Format("{0}[{1}Add{2}]", GetTableOwner(), ProcedurePrefix, GetEntityName(false));
+}
+
+public string GetUpdateProcedureName()
+{
+	return String.Format("{0}[{1}Update{2}]", GetTableOwner(), ProcedurePrefix, GetEntityName(false));
+}
+
+public string GetInsertUpdateProcedureName()
+{
+	return String.Format("{0}[{1}InsertUpdate{2}]", GetTableOwner(), ProcedurePrefix, GetEntityName(false));
+}
+
+public string GetDeleteProcedureName()
+{
+	return String.Format("{0}[{1}Delete{2}]", GetTableOwner(), ProcedurePrefix, GetEntityName(false));
+}
+
+public string GetSelectProcedureName()
+{
+	return String.Format("{0}[{1}Get{2}]", GetTableOwner(), ProcedurePrefix, GetEntityName(false));
+}
+
+public string GetSelectAllProcedureName()
+{
+	return String.Format("{0}[{1}Get{2}]", GetTableOwner(), ProcedurePrefix, GetEntityName(true));
+}
+
+public string GetSelectPagedProcedureName()
+{
+	return String.Format("{0}[{1}Get{2}Paged]", GetTableOwner(), ProcedurePrefix, GetEntityName(true));
+}
+
+public string GetSelectByProcedureName(ColumnSchemaCollection targetColumns)
+{
+	return String.Format("{0}[{1}Get{2}By{3}]", GetTableOwner(), ProcedurePrefix, GetEntityName(true), GetBySuffix(targetColumns));
+}
+
+public string GetSelectDynamicProcedureName()
+{
+	return String.Format("{0}[{1}Get{2}Dynamic]", GetTableOwner(), ProcedurePrefix, GetEntityName(true));
+}
+
+public string GetDeleteByProcedureName(ColumnSchemaCollection targetColumns)
+{
+	return String.Format("{0}[{1}Delete{2}By{3}]", GetTableOwner(), ProcedurePrefix, GetEntityName(true), GetBySuffix(targetColumns));
+}
+
+public string GetDeleteDynamicProcedureName()
+{
+	return String.Format("{0}[{1}Delete{2}Dynamic]", GetTableOwner(), ProcedurePrefix, GetEntityName(true));
+}
+
+public string GetEntityName(bool plural)
+{
+	string entityName = SourceTable.Name;
+	
+	if (entityName.StartsWith(TablePrefix))
+	{
+		entityName = entityName.Substring(TablePrefix.Length);
+	}
+	
+	if (plural)
+	{
+		entityName = StringUtility.ToPlural(entityName);
+	}
+	else
+	{
+		entityName = StringUtility.ToSingular(entityName);
+	}
+	
+	return entityName;
+}
+
+public string GetBySuffix(ColumnSchemaCollection columns)
+{
+    System.Text.StringBuilder bySuffix = new System.Text.StringBuilder();
+	for (int i = 0; i < columns.Count; i++)
+	{
+	    if (i > 0) bySuffix.Append("And");
+	    bySuffix.Append(columns[i].Name);
+	}
+	
+	return bySuffix.ToString();
+}
+#endregion
+
+#region Template Overrides
+// Assign an appropriate file name to the output.
+public override string GetFileName()
+{
+	if (this.SourceTable != null)
+	{
+		return this.SourceTable.Name + "_Procedures.sql";
+	}
+	else
+	{
+		return base.GetFileName();
+	}
+}
+
+private void cn_InfoMessage(object sender, System.Data.SqlClient.SqlInfoMessageEventArgs e)
+{
+	Trace.WriteLine(e.Message);
+}
+#endregion
+
+</script>
