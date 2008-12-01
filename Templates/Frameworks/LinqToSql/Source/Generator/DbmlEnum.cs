@@ -232,18 +232,18 @@ namespace LinqToSqlShared.Generator.DbmlEnum
         private string _description;
 
         [XmlAttributeAttribute()]
-        public bool EnumMember
+        public bool DataContractMember
         {
             get
             {
-                return _enumMember;
+                return _dataContractMember;
             }
             set
             {
-                _enumMember = value;
+                _dataContractMember = value;
             }
         }
-        private bool _enumMember = true;
+        private bool _dataContractMember = true;
     }
 
     [GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
