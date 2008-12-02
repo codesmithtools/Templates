@@ -20,12 +20,16 @@
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 <%@ Import Namespace="Manager" %>
 
-<%@ Property Category="1.Mapping" Name="DbmlFile" 
+<%@ Property Category="1.Database" Name="SourceDatabase" 
+    Type="SchemaExplorer.DatabaseSchema"  Optional="False"
+    Description="The source database for Linq to Sql." %>
+
+<%@ Property Category="2.Mapping" Name="DbmlFile" 
     Type="System.String" Default="Database.dbml" Optional="False" 
     Description="The full path to the mapping file." 
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
-<%@ Property Category="2.Query" Name="QueryDirectory" 
+<%@ Property Category="3.Query" Name="QueryDirectory" 
     Type="System.String" Default="" Optional="false" 
     Description="The folder to save the generated query extension files." 
     Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
@@ -33,7 +37,7 @@
 
 <%@ Register Name="QueryExtensionGeneratedClass" 
     Template="Internal\QueryExtension.Generated.cst" 
-    MergeProperties="true" ExcludeProperties="Database, Type" %>
+    MergeProperties="true" ExcludeProperties="Database, DataManager,EntityManager,Table" %>
 
 <script runat="template">    
     Public Sub Generate()
@@ -41,39 +45,41 @@
     Directory.CreateDirectory(Me.QueryDirectory)
   End If
   
-  Dim sourceDatabase As Database = Dbml.FromFile(Me.DbmlFile)
-
-  If sourceDatabase IsNot Nothing Then
+  If SourceDatabase IsNot Nothing Then
     Me.Progress.MaximumValue = (SourceDatabase.Tables.Count + 2)
     Me.Progress.[Step] = 1
   End If
-
-  If sourceDatabase Is Nothing Then
+  
+  Dim database As Database = Dbml.FromFile(Me.DbmlFile)
+  If database Is Nothing Then
     Throw New Exception("Error loading Dbml file.")
   End If
   
-  Dbml.FillInDefaults(sourceDatabase)
+  Dbml.FillInDefaults(database)
+
+  Dim mgrMap As DataManager = ManagerGenerator.Create(SourceDatabase, database)
   
-  CreateQueryClasses(sourceDatabase)
+  CreateQueryClasses(database, mgrMap)
 End Sub
 
-Public Sub CreateQueryClasses(ByVal [database] As Database)
+Public Sub CreateQueryClasses(ByVal databaseMap As Database, ByVal dataManager As DataManager)
   Dim t As QueryExtensionGeneratedClass = Me.Create(Of QueryExtensionGeneratedClass)()
   Me.CopyPropertiesTo(t)
-  t.Database = [database]
+  t.DataManager = dataManager
+  t.Database = databaseMap
   
-  For Each [table] As Table In [database].Tables
+  For Each manager As EntityManager In dataManager.Managers
     Dim watch As Stopwatch = Stopwatch.StartNew()
     
-    Dim className As String = [table].Member + ""
+    Dim className As String = manager.EntityName + "Extensions"
     
-    Dim fileName As String = className + "Extensions.vb"
+    Dim fileName As String = className + ".vb"
     fileName = Path.Combine(QueryDirectory, fileName)
     
 	Dim strategy As PreserveRegionsMergeStrategy = New PreserveRegionsMergeStrategy("^[ \t]*(?i:User)", "VB")
 	
     Debug.WriteLine(String.Format("Creating Entity Query Extension Class '{0}' ...", className))
-    t.Type = table.Type
+    t.EntityManager = manager
     t.RenderToFile(  fileName, strategy)
     
     Debug.WriteLine(String.Format("Created '{0}' in {1} ms.", className, watch.Elapsed.TotalMilliseconds.ToString()))

@@ -1,6 +1,8 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" 
     Description="Linq to Sql Entity Manager Class." %>
 
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="Microsoft.Build.Engine" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
@@ -8,26 +10,30 @@
 
 <%@ Import Namespace="System.Text" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 <%@ Import Namespace="Manager" %>
 
+<%@ Property Category="3.Query" Name="DataManager" 
+    Type="Manager.DataManager" Optional="False" 
+    Description="Must be set by parent template" %>
 
-<%@ Property Category="1.Mapping" Name="Database" 
+<%@ Property Category="3.Query" Name="EntityManager" 
+    Type="Manager.EntityManager" Optional="False" 
+    Description="Must be set by parent template" %>
+
+<%@ Property Category="2.Mapping" Name="Database" 
     Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
     Description="Database schema instance. Must be set by parent template" %>
     
-<%@ Property Category="1.Mapping" Name="Type" 
-    Type="LinqToSqlShared.DbmlObjectModel.Type" Optional="False" 
-    Description="The Type instance for this entity. Must be set by parent template" %>
-    
-<%@ Property Category="2.Query" Name="MethodPrefix" 
+<%@ Property Category="3.Query" Name="MethodPrefix" 
     Type="System.String" Default="GetBy" Optional="True" 
     Description="The prefix of query method names." %>
 
-<%@ Property Category="2.Query" Name="MethodKeySuffix" 
+<%@ Property Category="3.Query" Name="MethodKeySuffix" 
     Type="System.String" Default="Key" Optional="False" 
     Description="The suffix of the primary key query method names." %>
 
@@ -54,68 +60,181 @@ using System.Linq;
 <% if (Database.ContextNamespace != Database.EntityNamespace) { %>
 using <%= Database.EntityNamespace %>;
 <% } %>
- 
+
 namespace <%= Database.ContextNamespace %>
 {
     /// <summary>
-    /// The query extension class for <%= Type.Name %>.
+    /// The query extension class for <%= EntityManager.EntityName %>.
     /// </summary>
-    public static partial class <%= Type.Name %>Extensions
+    public static partial class <%= EntityManager.EntityName %>Extensions
     {
-<% List<Column> keys = new List<Column>();
-    int colCount = 0;
-    foreach(Column column in Type.Columns) { 
-    if(column.IsPrimaryKey.Value)
-    {
-        keys.Add(column);
-        colCount++;
-    }
-    }%>
-       /// <summary>
-        /// Gets an object by its primary key.
-        /// </summary>
-       public static <%=Type.Name%> Id(this IQueryable<<%= Type.Name%>> entity,<%foreach(Column column in keys) { %> <%= CSharpAlias[column.Type] %> <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %> <%if(--colCount > 0) { %>, <% }} %>)
-       {
-            <%colCount = keys.Count; %>
-            return entity.FirstOrDefault(c => <%foreach(Column column in keys) { %>c.<%=column.Member%> == <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %> <%if(--colCount > 0) { %> && <% }} %>);
-       }
-        
-<% foreach(Column column in Type.Columns) { %>        
-        
-<%if(column.DbType.Contains("uniqueidentifier") && !column.IsPrimaryKey.Value) { %>
+<% foreach(ManagerMethod method in EntityManager.Methods) { %>
+
+<% if (method.IsKey) { %>
         /// <summary>
-        /// Gets an object by an index.
+        /// Gets an instance by the primary key.
         /// </summary>
-        public static <%=Type.Name%> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= Type.Name%>> entity,  <%= CSharpAlias[column.Type] %> <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>)
+        public static <%= EntityManager.EntityName %> <%= MethodPrefix %><%= MethodKeySuffix %>(this IQueryable<<%= EntityManager.EntityName %>> queryable, <%= GetParameters(method) %>)
         {
-            return entity.FirstOrDefault(c => c.<%=column.Member%> == <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>);
+<% if (method.Columns.Count < 4) { %>
+            var entity = queryable as Table<<%= EntityManager.EntityName %>>;
+            if (entity != null && entity.Context.LoadOptions == null)
+                return Query.<%= MethodPrefix %><%= MethodKeySuffix %>.Invoke((<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
+<% } // column count%>
+            
+            return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>);
         }
-        
-<% } else if(!column.IsVersion.Value && !column.IsPrimaryKey.Value){ %>
+<% } else if (method.IsUnique) { %>
         /// <summary>
-        /// Gets an queryable by an index.
+        /// Gets an instance by using a unique index.
         /// </summary>
-        public static IQueryable<<%= Type.Name %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= Type.Name %>> queryable, <%= CSharpAlias[column.Type] %> <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>)
+        /// <returns>An instance of the entity or null if not found.</returns>
+        public static <%= EntityManager.EntityName %> <%= MethodPrefix %><%= method.NameSuffix %>(this IQueryable<<%= EntityManager.EntityName %>> queryable, <%= GetParameters(method) %>)
         {
-            return queryable.Where(c => c.<%=column.Member%> == <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)]%>);
+<% if (method.Columns.Count < 4) { %>
+            var entity = queryable as Table<<%= EntityManager.EntityName %>>;
+            if (entity != null && entity.Context.LoadOptions == null)
+                return Query.<%= MethodPrefix %><%= method.NameSuffix %>.Invoke((<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
+<% } // column count%>
+
+            return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>);
         }
-        
-<% }
-}%>
+<% } // if is key%>
+<% } // foreach method%>
+
+<% foreach(Column column in Database.GetTypeByName(EntityManager.EntityName).Columns)
+{
+    if(!column.IsPrimaryKey.Value)
+    { %>
+        /// <summary>
+        /// Gets a query by an index.
+        /// </summary>
+        public static IQueryable<<%= EntityManager.EntityName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= EntityManager.EntityName %>> queryable,<%= CSharpAlias[column.Type] %> <%= StringUtil.ToCamelCase(column.Member) %>)
+        {
+            return queryable.Where(c => c.<%= column.Member %> == <%= StringUtil.ToCamelCase(column.Member) %>);
+        }
+<% } // if is  not key
+ } // foreach method%>
+
         #region Query
         /// <summary>
         /// A private class for lazy loading static compiled queries.
         /// </summary>
         private static partial class Query
         {
-<%colCount = keys.Count; %>
-            internal static readonly Func<<%= Database.Class %>,<%foreach(Column column in keys) { %> <%= CSharpAlias[column.Type] %><%if(--colCount > 0) { %>, <% }} %> , <%= Type.Name %>> GetByKey = 
+<% foreach(ManagerMethod method in EntityManager.Methods) { %>
+<% if (method.Columns.Count < 4) { %>
+<% if (method.IsKey) { %>
+
+            internal static readonly Func<<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= EntityManager.EntityName %>> <%= MethodPrefix %><%= MethodKeySuffix %> = 
                 CompiledQuery.Compile(
-<%colCount = keys.Count; %>
-                    (<%= Database.Class %> db,<%foreach(Column column in keys) { %> <%= CSharpAlias[column.Type] %> <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %><%if(--colCount > 0) { %>, <% }} %> ) => 
-<%colCount = keys.Count; %>                        
-                        db.<%= Type.Name %>.FirstOrDefault(c => <%foreach(Column column in keys) { %>c.<%=column.Member%> == <%=CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %><%if(--colCount > 0) { %> && <% }} %>));
+                    (<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) => 
+                        db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
+<% } else if (method.IsUnique) { %>
+
+            internal static readonly Func<<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= EntityManager.EntityName %>> <%= MethodPrefix %><%= method.NameSuffix %> = 
+                CompiledQuery.Compile(
+                    (<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) => 
+                        db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
+<% } // if is key%>
+<% } // column count%>
+<% } // foreach method%>
+
         }
         #endregion
     }
 }
+
+<script runat="template">
+    public string GetParameters(ManagerMethod method)
+    {
+        StringBuilder args = new StringBuilder();
+        foreach(Column column in method.Columns)
+        {
+            if (args.Length > 0)
+                args.Append(", ");
+            
+            string paramName = CommonUtility.GetParameterName(column.Member);
+
+            args.AppendFormat("{0} {1}",
+                CSharpAlias[column.Type],
+                CSharpKeyWordEscape[paramName]);
+        }
+        
+        return args.ToString();
+    }
+    
+    public string GetParametersNames(ManagerMethod method)
+    {
+        StringBuilder args = new StringBuilder();
+        foreach(Column column in method.Columns)
+        {
+            if (args.Length > 0)
+                args.Append(", ");
+            
+            string paramName = CommonUtility.GetParameterName(column.Member);
+            args.Append(CSharpKeyWordEscape[paramName]);
+        }
+        
+        return args.ToString();
+    }
+    
+    public string GetParametersTypes(ManagerMethod method)
+    {
+        StringBuilder args = new StringBuilder();
+        foreach(Column column in method.Columns)
+        {
+            if (args.Length > 0)
+                args.Append(", ");
+            
+            args.Append(CSharpAlias[column.Type]);
+        }
+        
+        return args.ToString();
+    }
+    
+    public string GetLamba(ManagerMethod method, int tabCount)
+    {
+        StringBuilder lamba = new StringBuilder();
+        string alias = method.EntityName.Substring(0, 1).ToLowerInvariant();
+        
+        foreach(Column column in method.Columns)
+        {
+            string paramName = StringUtil.ToCamelCase(column.Member);
+            paramName = CSharpKeyWordEscape[paramName];
+            
+            if (lamba.Length == 0)
+            {
+                lamba.AppendFormat("{0} => ", alias);
+            }
+            else
+            {
+                lamba.Append(" \r\n");
+                lamba.Append('\t', tabCount);
+                lamba.Append("&& ");
+            }
+                
+            lamba.AppendFormat("{0}.{1} == {2}",
+                alias,
+                column.Member,
+                paramName);;
+        }
+        
+        return lamba.ToString();
+    }
+    
+    private static readonly Regex _sizeRegex = new Regex(@"(?<Size>\d+)", RegexOptions.Compiled);
+    
+    public int GetSize(string s)
+    {
+        int size = 0;
+        
+        Match m = _sizeRegex.Match(s);
+        if (!m.Success)
+            return size;
+        
+        string temp = m.Groups["Size"].Value;
+        int.TryParse(temp, out size);
+        return size;            
+    }
+</script>
