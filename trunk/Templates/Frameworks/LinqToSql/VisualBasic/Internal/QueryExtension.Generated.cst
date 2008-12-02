@@ -86,7 +86,8 @@ Namespace <%= Database.ContextNamespace %>
             
             Return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>)
         End Function
-<% Else If (method.IsUnique) Then %>
+<% Else If (method.IsUnique) Then 
+    uniqueMethods.Add(method.NameSuffix )%>
         ''' <summary>
         ''' Gets an instance by using a unique index.
         ''' </summary>
@@ -107,15 +108,15 @@ Namespace <%= Database.ContextNamespace %>
 
 <% For Each c As Column In Database.GetTypeByName(EntityManager.EntityName).Columns 
 
-    If Not c.IsPrimaryKey.Value Then
+    If Not c.IsPrimaryKey.Value AndAlso Not uniqueMethods.Contains(c.Member) AndAlso Not c.IsVersion.Value Then
      %>
         ''' <summary>
         ''' Gets a query by an index.
         ''' </summary>
         <Extension> _
-        Public Function <%= MethodPrefix %><%= c.Member %>(queryable As IQueryable(Of <%= EntityManager.EntityName %>) , <%= StringUtil.ToCamelCase(c.Member) %> As <%= VBAlias(c.Type) %>) As IQueryable(Of <%= EntityManager.EntityName %>)
+        Public Function <%= MethodPrefix %><%= c.Member %>(queryable As IQueryable(Of <%= EntityManager.EntityName %>) , <%= VBKeywordEscape(StringUtil.ToCamelCase(c.Member)) %> As <%= VBAlias(c.Type) %>) As IQueryable(Of <%= EntityManager.EntityName %>)
         
-            return queryable.Where(Function(c)c.<%= c.Member %> = <%= StringUtil.ToCamelCase(c.Member) %>)
+            return queryable.Where(Function(c)c.<%= c.Member %> = <%= VBKeywordEscape(StringUtil.ToCamelCase(c.Member)) %>)
 
         End Function
 <% End If ' if is  not key
@@ -165,6 +166,9 @@ Namespace <%= Database.ContextNamespace %>
 End Namespace
 
 <script runat="template">
+
+   Dim uniqueMethods As List(Of String) = New List(Of String)()
+    
    Public Function GetParameters(ByVal method As ManagerMethod) As String
 	Dim args As New StringBuilder()
   	For Each column As Column In method.Columns

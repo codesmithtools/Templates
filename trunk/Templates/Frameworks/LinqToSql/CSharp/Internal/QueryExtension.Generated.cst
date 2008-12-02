@@ -84,7 +84,8 @@ namespace <%= Database.ContextNamespace %>
             
             return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>);
         }
-<% } else if (method.IsUnique) { %>
+<% } else if (method.IsUnique) {
+        uniqueMethods.Add(method.NameSuffix );%>
         /// <summary>
         /// Gets an instance by using a unique index.
         /// </summary>
@@ -104,14 +105,14 @@ namespace <%= Database.ContextNamespace %>
 
 <% foreach(Column column in Database.GetTypeByName(EntityManager.EntityName).Columns)
 {
-    if(!column.IsPrimaryKey.Value)
+    if(!column.IsPrimaryKey.Value && !uniqueMethods.Contains(column.Member) && !column.IsVersion.Value)
     { %>
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public static IQueryable<<%= EntityManager.EntityName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= EntityManager.EntityName %>> queryable,<%= CSharpAlias[column.Type] %> <%= StringUtil.ToCamelCase(column.Member) %>)
+        public static IQueryable<<%= EntityManager.EntityName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= EntityManager.EntityName %>> queryable,<%= CSharpAlias[column.Type] %> <%= CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>)
         {
-            return queryable.Where(c => c.<%= column.Member %> == <%= StringUtil.ToCamelCase(column.Member) %>);
+            return queryable.Where(c => c.<%= column.Member %> == <%= CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>);
         }
 <% } // if is  not key
  } // foreach method%>
@@ -146,6 +147,9 @@ namespace <%= Database.ContextNamespace %>
 }
 
 <script runat="template">
+
+    List<string> uniqueMethods = new List<string>();
+    
     public string GetParameters(ManagerMethod method)
     {
         StringBuilder args = new StringBuilder();
