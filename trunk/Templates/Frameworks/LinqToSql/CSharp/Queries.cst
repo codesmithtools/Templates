@@ -1,7 +1,7 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="XML" 
     Description="Generate Linq to Sql Query Extension Class File" 
     Debug="true" OutputType="None" %>
-
+    
 <%@ Assembly Name="System.Design" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="SchemaExplorer" %>
