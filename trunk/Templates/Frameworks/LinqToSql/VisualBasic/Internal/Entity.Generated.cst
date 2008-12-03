@@ -243,13 +243,7 @@ If c.IsDelayLoaded.Value = True AndAlso c.IsPrimaryKey.Value = False Then
 Else If c.CanBeNull.Value = True AndAlso CommonUtility.IsNullableType(dataType) Then
     dataType = String.Format("Nullable(Of {0})", VBAlias(dataType))
     fieldType = dataType
-    
-Else If isVersion Then
-    
-        dataType = "long"
-        storageGet = "BitConverter.ToInt64(" + c.Storage + ".ToArray(), 0)"
-        valueConvert = "BitConverter.GetBytes(value)"
-    
+        
 Else
     dataType = VBAlias(dataType)
     fieldType = dataType
@@ -258,9 +252,6 @@ End If
 Dim a As Association = Type.GetForeignKeyAssociation(c)
 
 %>
-<% If isVersion Then %>
-        <%= CreateAttributes(c) %>
-<% End If %>        
 <% If (c.IsDbGenerated.Value = True) Then %>
         Private <%= c.Storage %> As <%= fieldType %> = Nothing
 <% Else %>
@@ -276,9 +267,8 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         ''' </summary>
 <% If isVersion Then %>
         <EditorBrowsable(EditorBrowsableState.Never)> _
-<% Else %>
-        <%= CreateAttributes(c) %>
 <% End If %>
+        <%= CreateAttributes(c) %>
 <% If IncludeDataContract Then 
     DataMemberCount += 1%>
         <DataMember(Order:=<%= DataMemberCount %>)> _
