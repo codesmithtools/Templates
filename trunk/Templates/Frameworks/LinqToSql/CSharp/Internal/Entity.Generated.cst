@@ -241,12 +241,6 @@ foreach(Column column in Type.Columns) {
         dataType = string.Format("Nullable<{0}>", CSharpAlias[dataType]);
         fieldType = dataType;
     }
-    else if (isVersion)
-    {
-        dataType = "long";
-        storageGet = "BitConverter.ToInt64(" + column.Storage + ".ToArray(), 0)";
-        valueConvert = "BitConverter.GetBytes(value)";
-    }
     else
     {
         dataType = CSharpAlias[dataType];
@@ -256,9 +250,6 @@ foreach(Column column in Type.Columns) {
     Association a = Type.GetForeignKeyAssociation(column);
 %>
         
-<% if (isVersion) { %>
-        <%= CreateAttributes(column) %>
-<% } %>
 <% if (column.IsDbGenerated == true) { %>
         private <%= fieldType %> <%= column.Storage %> = default(<%= fieldType %>);
 <% } else { %>
@@ -274,9 +265,8 @@ foreach(Column column in Type.Columns) {
         /// </summary>
 <% if (isVersion) { %>
         [EditorBrowsable(EditorBrowsableState.Never)]
-<% } else { %>
-        <%= CreateAttributes(column) %>
 <% } %>
+        <%= CreateAttributes(column) %>
 <% if (IncludeDataContract) { %>
         [DataMember(Order=<%= ++DataMemberCount %>)]
 <% } %>
@@ -527,6 +517,7 @@ foreach(Column column in Type.Columns) {
         }
         #endregion
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
+        
         #region Clone
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
@@ -552,7 +543,7 @@ foreach(Column column in Type.Columns) {
         /// A new object that is a copy of this instance.
         /// </returns>
         /// <remarks>
-        /// Only loaded EntityRef and EntitySet child accessions will be cloned.
+        /// Only loaded <see cref="T:System.Data.Linq.EntityRef`1"/> and <see cref="T:System.Data.Linq.EntitySet`1" /> child accessions will be cloned.
         /// </remarks>
         public <%= Type.Name %> Clone()
         {
@@ -562,12 +553,13 @@ foreach(Column column in Type.Columns) {
  <% } %>
 <% } %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
+        
         #region Detach Methods
         /// <summary>
-        /// Remove this instance from the <see cref="DataContext"/>.
+        /// Detach this instance from the <see cref="DataContext"/>.
         /// </summary>
         /// <remarks>
-        /// Removeing the entity will allow it to be Added to another <see cref="DataContext"/>.
+        /// Detaching the entity will stop all lazy loading and allow it to be added to another <see cref="DataContext"/>.
         /// </remarks>
         public override void Detach()
         {

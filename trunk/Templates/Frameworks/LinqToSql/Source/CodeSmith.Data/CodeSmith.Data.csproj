@@ -106,9 +106,12 @@
     <Compile Include="Rules\Validation\RangeRule.cs" />
     <Compile Include="Rules\Validation\RegexRule.cs" />
     <Compile Include="Rules\Validation\RequiredRule.cs" />
+    <Compile Include="Serialization\ByteArrayTypeConverter.cs" />
+    <Compile Include="Serialization\JavaScriptSerializerExtensions.cs" />
     <Compile Include="TrackedObject.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Serialization\ByteArrayConverter.cs" />
     <Compile Include="Web\LinqCacheDataSource.cs">
       <SubType>Code</SubType>
     </Compile>

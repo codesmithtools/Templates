@@ -105,12 +105,12 @@ namespace <%= Database.ContextNamespace %>
 
 <% foreach(Column column in Database.GetTypeByName(EntityManager.EntityName).Columns)
 {
-    if(!column.IsPrimaryKey.Value && !uniqueMethods.Contains(column.Member) && !column.IsVersion.Value)
+    if(!column.IsPrimaryKey.Value && !uniqueMethods.Contains(column.Member) && !column.IsVersion.Value && column.Type != "System.Data.Linq.Binary")
     { %>
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public static IQueryable<<%= EntityManager.EntityName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= EntityManager.EntityName %>> queryable,<%= CSharpAlias[column.Type] %> <%= CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>)
+        public static IQueryable<<%= EntityManager.EntityName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= EntityManager.EntityName %>> queryable, <%= CSharpAlias[column.Type] %> <%= CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>)
         {
             return queryable.Where(c => c.<%= column.Member %> == <%= CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>);
         }
