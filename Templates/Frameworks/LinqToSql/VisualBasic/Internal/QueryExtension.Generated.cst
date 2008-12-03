@@ -75,10 +75,10 @@ Namespace <%= Database.ContextNamespace %>
         ''' Gets an instance by the primary key.
         ''' </summary>
         <Extension> _
-        Public Function <%= MethodPrefix %><%= MethodKeySuffix %>(queryable As IQueryable(Of <%= EntityManager.EntityName %>) , <%= GetParameters(method) %>) As <%= EntityManager.EntityName %>
+        Public Function <%= MethodPrefix %><%= MethodKeySuffix %>(queryable As IQueryable(Of <%= EntityManager.EntityName %>), <%= GetParameters(method) %>) As <%= EntityManager.EntityName %>
         
 <% If (method.Columns.Count < 4) Then %>
-            Dim entity As Table(Of <%= EntityManager.EntityName %>) = queryable
+            Dim entity As Table(Of <%= EntityManager.EntityName %>) = CType(queryable, Table(Of <%= EntityManager.EntityName %>))
             If (entity IsNot Nothing AndAlso entity.Context.LoadOptions Is Nothing) Then
                 Return Query.<%= MethodPrefix %><%= MethodKeySuffix %>.Invoke(DirectCast(entity.Context,<%= DataManager.DataContextName %>), <%= GetParametersNames(method) %>)
             End If
@@ -92,12 +92,12 @@ Namespace <%= Database.ContextNamespace %>
         ''' Gets an instance by using a unique index.
         ''' </summary>
         ''' <returns>An instance of the entity or null if not found.</returns>
-        Public Function <%= MethodPrefix %><%= method.NameSuffix %>(queryable As IQueryable(Of <%= EntityManager.EntityName %>) , <%= GetParameters(method) %>) As <%= EntityManager.EntityName %>
+        Public Function <%= MethodPrefix %><%= method.NameSuffix %>(queryable As IQueryable(Of <%= EntityManager.EntityName %>), <%= GetParameters(method) %>) As <%= EntityManager.EntityName %>
         
 <% If (method.Columns.Count < 4) Then %>
-            Dim entity As Table(Of <%= EntityManager.EntityName %>) = queryable
+            Dim entity As Table(Of <%= EntityManager.EntityName %>) = CType(queryable, Table(Of <%= EntityManager.EntityName %>))
             If (entity IsNot Nothing AndAlso entity.Context.LoadOptions Is Nothing) Then
-                return Query.<%= MethodPrefix %><%= method.NameSuffix %>.Invoke(DirectCast(entity.Context,<%= DataManager.DataContextName %>), <%= GetParametersNames(method) %>)
+                Return Query.<%= MethodPrefix %><%= method.NameSuffix %>.Invoke(DirectCast(entity.Context,<%= DataManager.DataContextName %>), <%= GetParametersNames(method) %>)
             End If
 <% End If ' column count%>
 
@@ -111,10 +111,10 @@ Namespace <%= Database.ContextNamespace %>
     If Not c.IsPrimaryKey.Value AndAlso Not uniqueMethods.Contains(c.Member) AndAlso Not c.IsVersion.Value Then
      %>
         ''' <summary>
-        ''' Gets a query by an index.
+        ''' Gets a query for <%= c.Member %>.
         ''' </summary>
         <Extension> _
-        Public Function <%= MethodPrefix %><%= c.Member %>(queryable As IQueryable(Of <%= EntityManager.EntityName %>) , <%= VBKeywordEscape(StringUtil.ToCamelCase(c.Member)) %> As <%= VBAlias(c.Type) %>) As IQueryable(Of <%= EntityManager.EntityName %>)
+        Public Function <%= MethodPrefix %><%= c.Member %>(queryable As IQueryable(Of <%= EntityManager.EntityName %>), <%= VBKeywordEscape(StringUtil.ToCamelCase(c.Member)) %> As <%= VBAlias(c.Type) %>) As IQueryable(Of <%= EntityManager.EntityName %>)
         
             return queryable.Where(Function(c)c.<%= c.Member %> = <%= VBKeywordEscape(StringUtil.ToCamelCase(c.Member)) %>)
 
@@ -146,10 +146,10 @@ Namespace <%= Database.ContextNamespace %>
                         db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>))
 <% Else If method.IsUnique Then %>
 
-            Friend Shared ReadOnly <%= MethodPrefix %><%= method.NameSuffix %> As Func(Of <%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, IQueryable(Of <%= EntityManager.EntityName %>)) = _
+            Friend Shared ReadOnly <%= MethodPrefix %><%= method.NameSuffix %> As Func(Of <%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= EntityManager.EntityName %>) = _
                 CompiledQuery.Compile( _
                     Function(db As <%= DataManager.DataContextName %> , <%= GetParameters(method) %>) _ 
-                        db.<%= EntityManager.EntityName %>.Where(<%= GetLamba(method, 7) %>))
+                        db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>))
 <% End If ' if is key%>
 <% End If ' column count%>
 <% Next ' foreach method%>
