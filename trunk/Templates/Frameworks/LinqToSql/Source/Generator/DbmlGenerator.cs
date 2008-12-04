@@ -429,11 +429,13 @@ namespace LinqToSqlShared.Generator
                 foreignAssociation.DeleteRule = "CASCADE";
             }
 
-            if (settings.IncludeDeleteOnNull && IsTableDeleteOnNull(tableKeySchema))
+            if (settings.IncludeDeleteOnNull)
             {
-                if (foreignAssociation.DeleteOnNull == null)
+                if (!foreignAssociation.DeleteOnNull.HasValue && IsTableDeleteOnNull(tableKeySchema))
                     foreignAssociation.DeleteOnNull = true;
             }
+            else
+                foreignAssociation.DeleteOnNull = null;
             
             foreignAssociation.IsProcessed = true;
             primaryAssociation.IsProcessed = true;
