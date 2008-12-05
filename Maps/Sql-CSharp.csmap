@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csmap.xsd">
   <map caseSensitive="true" returnKeyWhenNotFound="false" description="SQL Server data type to C# data type map">
     <item>
@@ -112,6 +112,18 @@
     <item>
       <key>datetimeoffset</key>
       <value>DateTimeOffset</value>
+    </item>
+    <item>
+      <key>time</key>
+      <value>TimeSpan</value>
+    </item>
+    <item>
+      <key>date</key>
+      <value>DateTime</value>
+    </item>
+    <item>
+      <key>rowversion</key>
+      <value>byte[]</value>
     </item>
   </map>
 </codeSmith>
