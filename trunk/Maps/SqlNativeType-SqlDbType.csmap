@@ -122,11 +122,11 @@
       <value>Date</value>
     </item>
     <item>
-      <key>rowversion </key>
+      <key>rowversion</key>
       <value>Timestamp</value>
     </item>
     <item>
-      <key>time </key>
+      <key>time</key>
       <value>Time</value>
     </item>
   </map>
