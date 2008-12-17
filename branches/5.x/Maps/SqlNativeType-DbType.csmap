@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csmap.xsd">
-  <map caseSensitive="false" returnKeyWhenNotFound="true" description="SQL native type to SqlDbType map">
+  <map caseSensitive="false" returnKeyWhenNotFound="true" description="SQL native type to DbType map">
     <item>
       <key>bigint</key>
       <value>Int64</value>
@@ -27,7 +27,7 @@
     </item>
     <item>
       <key>float</key>
-      <value>Single</value>
+      <value>Double</value>
     </item>
     <item>
       <key>int</key>
@@ -39,11 +39,11 @@
     </item>
     <item>
       <key>image</key>
-      <value>Object</value>
+      <value>Binary</value>
     </item>
     <item>
       <key>money</key>
-      <value>Currency</value>
+      <value>Decimal</value>
     </item>
     <item>
       <key>nchar</key>
@@ -55,7 +55,7 @@
     </item>
     <item>
       <key>numeric</key>
-      <value>VarNumeric</value>
+      <value>Decimal</value>
     </item>
     <item>
       <key>nvarchar</key>
@@ -63,7 +63,7 @@
     </item>
     <item>
       <key>real</key>
-      <value>Double</value>
+      <value>Single</value>
     </item>
     <item>
       <key>smalldatetime</key>
@@ -75,7 +75,7 @@
     </item>
     <item>
       <key>smallmoney</key>
-      <value>Currency</value>
+      <value>Decimal</value>
     </item>
     <item>
       <key>sql_variant</key>
@@ -87,15 +87,15 @@
     </item>
     <item>
       <key>timestamp</key>
-      <value>Int16</value>
+      <value>Binary</value>
     </item>
     <item>
       <key>tinyint</key>
-      <value>SByte</value>
+      <value>Byte</value>
     </item>
     <item>
       <key>uniqueidentifier</key>
-      <value>Object</value>
+      <value>Guid</value>
     </item>
     <item>
       <key>varbinary</key>
@@ -116,6 +116,18 @@
     <item>
       <key>datetimeoffset</key>
       <value>DateTimeOffset</value>
+    </item>
+    <item>
+      <key>date </key>
+      <value>Date</value>
+    </item>
+    <item>
+      <key>rowversion </key>
+      <value>Binary</value>
+    </item>
+    <item>
+      <key>time </key>
+      <value>Time</value>
     </item>
   </map>
 </codeSmith>
