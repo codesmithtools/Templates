@@ -8,8 +8,8 @@
     <ProjectGuid>{3FFDCBFA-77B9-4801-849F-10BF70B38B94}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeSmith.Engine</RootNamespace>
-    <AssemblyName>CodeSmith.InsertClassMergeStrategy</AssemblyName>
+    <RootNamespace>InsertClassMergeStrategy</RootNamespace>
+    <AssemblyName>InsertClassMergeStrategy</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -56,15 +56,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeSectionVisitor.cs" />
+    <Compile Include="CodeFileParser.cs" />
     <Compile Include="InsertClassMergeStrategy.cs" />
     <Compile Include="ParentVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CodeParser\CodeParser.csproj">
-      <Project>{42214FFD-0EAF-4678-BD4C-0DF40BC09800}</Project>
-      <Name>CodeParser</Name>
-    </ProjectReference>
+    <Compile Include="CodeFileParserPicker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -9,10 +9,8 @@ using System.Xml;
 using CodeSmith.Engine;
 using SchemaExplorer;
 using LinqToSqlShared.DbmlObjectModel;
-using System.Linq;
-using System.Data;
-using Type = LinqToSqlShared.DbmlObjectModel.Type;
-using ParameterDirection = LinqToSqlShared.DbmlObjectModel.ParameterDirection;
+using Type=LinqToSqlShared.DbmlObjectModel.Type;
+
 
 namespace LinqToSqlShared.Generator
 {
@@ -20,16 +18,8 @@ namespace LinqToSqlShared.Generator
     {
         public event EventHandler<SchemaItemProcessedEventArgs> SchemaItemProcessed;
 
-        public static string GetEnumXmlFileName(string mappingFile)
-        {
-            string dbmlExtension = Path.GetExtension(mappingFile);
-            return mappingFile.Replace(dbmlExtension, ".enum.xml");
-        }
-
         private static readonly Regex CleanIdRegex = new Regex(
             @"(_ID|_id|_Id|\.ID|\.id|\.Id|ID|Id)$", RegexOptions.Compiled);
-        
-        private static readonly Regex CleanNumberPrefix = new Regex(@"^\d+");
 
         // must be sorted
         private static readonly string[] ExistingContextProperties = new[] {
@@ -39,65 +29,51 @@ namespace LinqToSqlShared.Generator
         "Manager", "Mapping", 
         "ObjectTrackingEnabled", 
         "Provider", 
-        "RuleManager",
         "Services", 
         "Transaction"};
 
         #region Properties
-
         private GeneratorSettings settings;
+
         public GeneratorSettings Settings
         {
             get { return settings; }
         }
 
         private List<string> _classNames = new List<string>();
+
         internal List<string> ClassNames
         {
             get { return _classNames; }
         }
 
         private List<string> _functionNames = new List<string>();
+
         internal List<string> FunctionNames
         {
             get { return _functionNames; }
         }
 
         private List<string> _associationNames = new List<string>();
+
         internal List<string> AssociationNames
         {
             get { return _associationNames; }
         }
 
         private Dictionary<string, List<string>> _propertyNames = new Dictionary<string, List<string>>();
+
         internal Dictionary<string, List<string>> PropertyNames
         {
             get { return _propertyNames; }
         }
 
         private Database _database;
+
         public Database Database
         {
             get { return _database; }
         }
-
-        private DbmlEnum.Database _enumDatabase;
-        public DbmlEnum.Database EnumDatabase
-        {
-            get { return _enumDatabase; }
-        }
-
-        private DbmlEnum.Database _existingEnumDatabase;
-        public DbmlEnum.Database ExistingEnumDatabase
-        {
-            get { return _existingEnumDatabase; }
-        }
-
-        public string EnumXmlFileName
-        {
-            get { return GetEnumXmlFileName(settings.MappingFile); }
-        }
-
         #endregion
 
         public DbmlGenerator(GeneratorSettings settings)
@@ -115,19 +91,11 @@ namespace LinqToSqlShared.Generator
             Database.Name = databaseSchema.Name;
             CreateContext(databaseSchema);
 
-            _enumDatabase = new DbmlEnum.Database() { Name = databaseSchema.Name };
-            _existingEnumDatabase = DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName) ?? new DbmlEnum.Database();
-
             foreach (TableSchema t in databaseSchema.Tables)
             {
                 if (Settings.IsIgnored(t.Name))
                 {
                     Debug.WriteLine("Skipping Table: " + t.FullName);
-                }
-                else if (Settings.IsEnum(t))
-                {
-                    Debug.WriteLine("Getting Enum Table: " + t.FullName);
-                    GetEnum(t);
                 }
                 else
                 {
@@ -178,9 +146,6 @@ namespace LinqToSqlShared.Generator
             Dbml.ToFile(Dbml.CopyWithNulledOutDefaults(_database), 
                 settings.MappingFile);
 
-            if (_enumDatabase.Enums.Count > 0 || File.Exists(EnumXmlFileName))
-                _enumDatabase.SerializeToFile(EnumXmlFileName);
-            
             return _database;
         }
 
@@ -213,65 +178,6 @@ namespace LinqToSqlShared.Generator
 
             if (string.IsNullOrEmpty(Database.Connection.ConnectionString))
                 Database.Connection.ConnectionString = databaseSchema.ConnectionString;
-        }
-
-        private DbmlEnum.Enum GetEnum(TableSchema tableSchema)
-        {
-            // Anything coming in here should already have passed through Settings.IsEnum().
-            // Because of this, we know not only that it is an Enum table, but also that all
-            // of the desired columns exist.
-
-            DbmlEnum.Enum myEnum = _enumDatabase.Enums.Where(e => e.Table == tableSchema.FullName).FirstOrDefault();
-            DbmlEnum.Enum existingEnum = _existingEnumDatabase.Enums.Where(e => e.Table == tableSchema.FullName).FirstOrDefault()
-                ?? new DbmlEnum.Enum();
-            
-            if (myEnum == null)
-            {
-                myEnum = new DbmlEnum.Enum()
-                {
-                    Name = (String.IsNullOrEmpty(existingEnum.Name))
-                        ? ToEnumName(tableSchema.Name)
-                        : existingEnum.Name,
-                    Table = tableSchema.FullName,
-                    Flags = existingEnum.Flags,
-                    IncludeDataContract = existingEnum.IncludeDataContract,
-                    Items = GetEnumItems(tableSchema, existingEnum)
-                };
-                _enumDatabase.Enums.Add(myEnum);
-            }
-
-            return myEnum;
-        }
-
-        private List<DbmlEnum.Item> GetEnumItems(TableSchema tableSchema, DbmlEnum.Enum existingEnum)
-        {
-            List<DbmlEnum.Item> itemList = new List<DbmlEnum.Item>();
-
-            string primaryKey = tableSchema.PrimaryKey.MemberColumns[0].Name;
-            string nameColumn = settings.GetEnumNameColumnName(tableSchema);
-            string descriptionColumn = settings.GetEnumDescriptionColumnName(tableSchema);
-            
-            DataTable table = tableSchema.GetTableData();
-            foreach (DataRow row in table.Rows)
-            {
-                int value = Int32.Parse(row[primaryKey].ToString());
-                DbmlEnum.Item existingValue = existingEnum.Items.Where(v => v.Value == value).FirstOrDefault()
-                    ?? new DbmlEnum.Item();
-
-                string description = (table.Columns.Contains(descriptionColumn))
-                    ? description = row[descriptionColumn] as String
-                    : null;
-
-                itemList.Add(new DbmlEnum.Item()
-                {
-                    Name = row[nameColumn].ToString(),
-                    Value = value,
-                    Description = description ?? existingValue.Description,
-                    DataContractMember = existingValue.DataContractMember
-                });
-            }
-            
-            return itemList;
         }
 
         private Table GetTable(TableSchema tableSchema)
@@ -309,7 +215,13 @@ namespace LinqToSqlShared.Generator
 
         private Table CreateTable(TableSchema tableSchema)
         {
-            Type type = new Type(ToClassName(tableSchema.Name));
+            string tableName = tableSchema.Name;
+            if (settings.TableNaming != TableNamingEnum.Plural  && settings.EntityNaming == EntityNamingEnum.Plural)
+                tableName = StringUtil.ToPlural(tableName);
+            else if(settings.TableNaming != TableNamingEnum.Singular && settings.EntityNaming == EntityNamingEnum.Singular)
+                tableName = StringUtil.ToSingular(tableName);
+
+            Type type = new Type(ToClassName(tableName));
             Table t = new Table(tableSchema.FullName, type);
             t.Member = t.Type.Name;
 
@@ -326,9 +238,7 @@ namespace LinqToSqlShared.Generator
             foreach (TableKeySchema tableKey in tableSchema.ForeignKeys)
             {
                 if (Settings.IsIgnored(tableKey.ForeignKeyTable.Name)
-                    || Settings.IsIgnored(tableKey.PrimaryKeyTable.Name)
-                    || Settings.IsEnum(tableKey.ForeignKeyTable)
-                    || Settings.IsEnum(tableKey.PrimaryKeyTable))
+                    || Settings.IsIgnored(tableKey.PrimaryKeyTable.Name))
                     continue;
 
                 CreateAssociation(table, tableKey);
@@ -429,13 +339,11 @@ namespace LinqToSqlShared.Generator
                 foreignAssociation.DeleteRule = "CASCADE";
             }
 
-            if (settings.IncludeDeleteOnNull)
+            if (settings.IncludeDeleteOnNull && IsTableDeleteOnNull(tableKeySchema))
             {
-                if (!foreignAssociation.DeleteOnNull.HasValue && IsTableDeleteOnNull(tableKeySchema))
+                if (foreignAssociation.DeleteOnNull == null)
                     foreignAssociation.DeleteOnNull = true;
             }
-            else
-                foreignAssociation.DeleteOnNull = null;
             
             foreignAssociation.IsProcessed = true;
             primaryAssociation.IsProcessed = true;
@@ -718,73 +626,12 @@ namespace LinqToSqlShared.Generator
             prefix = prefix.Replace(primaryClass, "");
             prefix = prefix.Replace(foreignClass, "");
             prefix = CleanIdRegex.Replace(prefix, "");
-
-            // FIX ME
-            Regex regex = new Regex(@"^\d");
-            if (regex.IsMatch(prefix))
-                prefix = String.Format("My{0}", prefix);
-
             return prefix;
-        }
-
-        private string GetColumnType(DataObjectBase columnSchema)
-        {
-            string typeName;
-            return IsEnumAssociation(columnSchema as ColumnSchema, out typeName)
-                ? typeName
-                : GetSystemType(columnSchema);
-        }
-
-        private bool IsOrWasEnumAssociation(DataObjectBase dataObject)
-        {
-            bool isEnum, wasEnum;
-            IsOrWasEnumAssociation(dataObject, out isEnum, out wasEnum);
-            return (isEnum || wasEnum);
-        }
-
-        private string IsOrWasEnumAssociation(DataObjectBase dataObject, out bool isEnum, out bool wasEnum)
-        {
-            string name = String.Empty;
-            ColumnSchema columnSchema = dataObject as ColumnSchema;
-            isEnum = false;
-            wasEnum = false;
-
-            if (columnSchema != null && columnSchema.IsForeignKeyMember)
-                foreach (TableKeySchema tableKeySchema in columnSchema.Table.ForeignKeys)
-                    if (tableKeySchema.ForeignKeyMemberColumns.Contains(columnSchema))
-                    {
-                        // Is Enum
-                        if (Settings.IsEnum(tableKeySchema.PrimaryKeyTable))
-                        {
-                            name = GetEnum(tableKeySchema.PrimaryKeyTable).Name;
-                            isEnum = true;
-                        }
-
-                        // Was Enum
-                        DbmlEnum.Enum existingEnum = _existingEnumDatabase.Enums.Where(e => e.Table == tableKeySchema.PrimaryKeyTable.FullName).FirstOrDefault();
-                        if (existingEnum != null)
-                        {
-                            if (String.IsNullOrEmpty(name))
-                                name = existingEnum.Name;
-                            wasEnum = true;
-                        }
-
-                        if (isEnum || wasEnum)
-                            break;
-                    }
-
-            return name;
-        }
-
-        private bool IsEnumAssociation(ColumnSchema columnSchema, out string typeName)
-        {
-            bool isEnum, wasEnum;
-            typeName = IsOrWasEnumAssociation(columnSchema, out isEnum, out wasEnum);
-            return isEnum;
         }
 
         private void CreateColumns(Table table, TableSchema tableSchema)
         {
+
             foreach (ColumnSchema columnSchema in tableSchema.Columns)
             {
                 bool isNew = !table.Type.Columns.Contains(columnSchema.Name);
@@ -792,7 +639,7 @@ namespace LinqToSqlShared.Generator
 
                 if (isNew)
                 {
-                    column = new Column(GetColumnType(columnSchema));
+                    column = new Column(GetSystemType(columnSchema));
                     column.Name = columnSchema.Name;
                     table.Type.Columns.Add(column);
                 }
@@ -811,11 +658,10 @@ namespace LinqToSqlShared.Generator
         private void PopulateColumn(Column column, DataObjectBase columnSchema, string className)
         {
             bool canUpdateType = string.IsNullOrEmpty(column.Type)
-                || column.Type.StartsWith("System.")
-                || IsOrWasEnumAssociation(columnSchema);
+                || column.Type.StartsWith("System.");
 
             if (canUpdateType)
-                column.Type = GetColumnType(columnSchema);
+                column.Type = GetSystemType(columnSchema);
 
             if (!PropertyNames.ContainsKey(className))
                 PropertyNames.Add(className, new List<string>());
@@ -844,13 +690,7 @@ namespace LinqToSqlShared.Generator
 
         private static string GetSystemType(DataObjectBase d)
         {
-            if (d.SystemType == typeof (XmlDocument))
-                return "System.String";
-
-            if (d.SystemType == typeof(byte[]))
-                return "System.Data.Linq.Binary";
-
-            return d.SystemType.ToString();
+            return d.SystemType == typeof(XmlDocument) ? "System.String" : d.SystemType.ToString();
         }
 
         private static string MakeUnique(ICollection<string> existingItems, string name)
@@ -917,18 +757,8 @@ namespace LinqToSqlShared.Generator
             return legalName;
         }
 
-        private string ToEnumName(string name)
-        {
-            return ToClassName(name);
-        }
-
         private string ToClassName(string name)
         {
-            if (settings.TableNaming != TableNamingEnum.Plural && settings.EntityNaming == EntityNamingEnum.Plural)
-                name = StringUtil.ToPlural(name);
-            else if (settings.TableNaming != TableNamingEnum.Singular && settings.EntityNaming == EntityNamingEnum.Singular)
-                name = StringUtil.ToSingular(name);
-
             string legalName = ToLegalName(name);
             legalName = MakeUnique(ClassNames, legalName);
             return legalName;
@@ -951,7 +781,6 @@ namespace LinqToSqlShared.Generator
         {
             string legalName = Settings.CleanName(name);
 
-            legalName = CleanNumberPrefix.Replace(legalName, string.Empty, 1);
             legalName = StringUtil.ToPascalCase(legalName);
             return legalName;
         }

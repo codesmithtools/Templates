@@ -65,33 +65,5 @@
       <key>Xml</key>
       <value>GetString</value>
     </item>
-    <item>
-      <key>Float</key>
-      <value>GetFloat</value>
-    </item>
-    <item>
-      <key>Double</key>
-      <value>GetDouble</value>
-    </item>
-    <item>
-      <key>DateTime2</key>
-      <value>GetDateTime</value>
-    </item>
-    <item>
-      <key>DateTimeOffset</key>
-      <value>GetDateTimeOffset</value>
-    </item>
-    <item>
-      <key>Time</key>
-      <value>GetDateTime</value>
-    </item>
-    <item>
-      <key>VarNumeric</key>
-      <value>GetDecimal</value>
-    </item>
-    <item>
-      <key>Single</key>
-      <value>GetFloat</value>
-    </item>
   </map>
 </codeSmith>

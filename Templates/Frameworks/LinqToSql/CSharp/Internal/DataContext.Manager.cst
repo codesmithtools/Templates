@@ -61,5 +61,20 @@ namespace <%= Database.ContextNamespace %>
                 return _manager;
             }
         }
+        
+        /// <summary>
+        /// Sends changes made to retrieved objects to the underlying database.
+        /// </summary>
+        /// <param name="failureMode">How concurrency conflicts should be reported.</param>
+        public override void SubmitChanges(ConflictMode failureMode)
+        {
+            ChangeSet changes = base.GetChangeSet();
+            bool isValid = Manager.Rules.Run(changes);
+            
+            if (!isValid)
+                throw new BrokenRuleException(Manager.Rules.BrokenRules);
+            
+            base.SubmitChanges(failureMode);
+        }
     }
 }

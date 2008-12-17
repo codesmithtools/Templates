@@ -20,10 +20,6 @@
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include ADO.Net DataServices attributes and impliment IUpdatable on DataContext." %>
 
-<%@ Property Category="2.Class" Name="IncludeDataRules"
-    Type="System.Boolean" Default="true" Optional="False"
-    Description="Include CodeSmith.Data rules." %>
-
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
     Description="Mapping to escape c# keywords" %>
@@ -50,25 +46,24 @@ using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Web.DynamicData;
 <% if (Database.ContextNamespace != Database.EntityNamespace) { %>
 using <%= Database.EntityNamespace %>;
 <% } %>
 <% if (IncludeIUpdatable) { %>
 using System.Data.Services;
 <% } %>
-<% if (IncludeDataRules) { %>
-using CodeSmith.Data.Rules;
-<% } %>
 
 namespace <%= Database.ContextNamespace %>
 {
     /// <summary>
-    /// The <see cref="DataContext"/> class for the <%= Database.Name %> database.
+    /// The DataContext class for the <%= Database.Name %> database.
     /// </summary>
     <%= Naming.GetModifier(Database.AccessModifier) %> partial class <%= Database.Class %> : DataContext<% if (IncludeIUpdatable) { %>, IUpdatable<% } %>
     {
-        private static readonly MappingSource mappingCache = new AttributeMappingSource();
+        private static MappingSource mappingCache = new AttributeMappingSource();
         
         #region ConnectionString
         private const string CONNECTION_NAME = "<%= Database.Connection.SettingsPropertyName %>";
@@ -118,6 +113,13 @@ namespace <%= Database.ContextNamespace %>
         #endregion
         
         #region Constructors
+        /// <summary>
+        /// Initializes the <see cref="<%= Database.Class %>"/> class.
+        /// </summary>
+        [DebuggerNonUserCodeAttribute]
+        static <%= Database.Class %>()
+        { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         /// </summary>
@@ -219,120 +221,110 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <summary>Called after this instance is created.</summary>
         partial void OnCreated();
 <% foreach (Table table in Database.Tables) { %>
-        /// <summary>Called before a <see cref="<%= table.Type.Name %>"/> is inserted.</summary>
+        /// <summary>Called before a <%= table.Type.Name %> is inserted.</summary>
         /// <param name="instance">The instance.</param>
         partial void Insert<%= table.Type.Name %>(<%= table.Type.Name %> instance);
-        /// <summary>Called before a <see cref="<%= table.Type.Name %>"/> is updated.</summary>
+        /// <summary>Called before a <%= table.Type.Name %> is updated.</summary>
         /// <param name="instance">The instance.</param>
         partial void Update<%= table.Type.Name %>(<%= table.Type.Name %> instance);
-        /// <summary>Called before a <see cref="<%= table.Type.Name %>"/> is deleted.</summary>
+        /// <summary>Called before a <%= table.Type.Name %> is deleted.</summary>
         /// <param name="instance">The instance.</param>
         partial void Delete<%= table.Type.Name %>(<%= table.Type.Name %> instance);
 <% } %>
         #endregion
-        <% if (IncludeIUpdatable) { %>
-        
-        #region IUpdatable Members
-        /// <summary>
-        /// Adds the specified value to the collection.
-        /// </summary>
-        /// <param name="targetResource">Target object that defines the property.</param>
-        /// <param name="propertyName">The name of the collection property to which the resource should be added..</param>
-        /// <param name="resourceToBeAdded">The opaque object representing the resource to be added.</param>
-        void IUpdatable.AddReferenceToCollection(object targetResource, string propertyName, object resourceToBeAdded)
+		
+		<% if (IncludeIUpdatable) { %>
+		#region IUpdatable Members
+
+        // Special thanks to Mike Taulty; this is his implimentation of IUpdatable.
+        // http://mtaulty.com/CommunityServer/blogs/mike_taultys_blog/archive/category/1005.aspx
+
+        public void AddReferenceToCollection(object targetResource, string propertyName, object resourceToBeAdded)
         {
             Type t = targetResource.GetType();
 
             PropertyInfo collectionProperty = GetPropertyInfoForType(t, propertyName, false);
-            var collection = collectionProperty.GetValue(targetResource, null) as System.Collections.IList;
-            if (collection == null)
-                return; // throw error
 
-            collection.Add(resourceToBeAdded);
+            object collection = collectionProperty.GetValue(targetResource, null);
+
+            collection.GetType().InvokeMember("Add",
+              BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod,
+              null, collection, new object[] { resourceToBeAdded });
         }
-
-        /// <summary>
-        /// Cancels a change to the data.
-        /// </summary>
-        void IUpdatable.ClearChanges()
+        public void ClearChanges()
         {
-            MethodInfo mi = GetType().GetMethod("ClearCache",
-                BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
+            // This method is somewhat "tricky"
+            // 1) We want to use a partial class because we want to pick up the
+            //    public IQueryable<T> properties that have been generated by the tooling.
+            // 2) We need to have the same class implement IUpdatable as the class that
+            //    we provide to DataService<T>.
+            // 3) There is no public method on DataContext that will clear everything down 
+            //    without disposing but there is an internal method, ClearCache() which 
+            //    looks perfect.
+            // 4) Ideally here we'd get rid of the DataContext and start again but we can't
+            //    because this code _is_ part of DataContext and (1) to (3) above seem to
+            //    box us in.
 
-            if (mi != null)
-                mi.Invoke(this, null);
+            // Hence...
+            MethodInfo mi = this.GetType().GetMethod("ClearCache",
+              BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod);
+
+            mi.Invoke(this, null);
         }
-
-        /// <summary>
-        /// Creates the resource of the specified type and that belongs to the specified container.
-        /// </summary>
-        /// <param name="containerName">The name of the entity set to which the resource belongs.</param>
-        /// <param name="fullTypeName">The full namespace-qualified type name of the resource.</param>
-        /// <returns>
-        /// The object representing a resource of specified type and belonging to the specified container.
-        /// </returns>
-        object IUpdatable.CreateResource(string containerName, string fullTypeName)
+        public object CreateResource(string containerName, string fullTypeName)
         {
             Type t = Type.GetType(fullTypeName);
+
             ITable table = GetTableForType(t);
 
             object value = Construct(t);
+
             table.InsertOnSubmit(value);
 
             return (value);
         }
-
-        /// <summary>
-        /// Deletes the specified resource.
-        /// </summary>
-        /// <param name="targetResource">The resource to be deleted.</param>
-        void IUpdatable.DeleteResource(object targetResource)
+        public void DeleteResource(object targetResource)
         {
-            Type t = targetResource.GetType();
-            ITable table = GetTableForType(t);
+            ITable table = this.GetTable(targetResource.GetType());
+
+            if (table == null)
+            {
+                throw new DataServiceException("Failed to locate table for resource");
+            }
             table.DeleteOnSubmit(targetResource);
         }
-
-        /// <summary>
-        /// Gets the resource of the specified type identified by a query and type name.
-        /// </summary>
-        /// <param name="query">Language integratee query(LINQ) pointing to a particular resource.</param>
-        /// <param name="fullTypeName">The fully qualified type name of resource.</param>
-        /// <returns>
-        /// An opaque object representing a resource of the specified type, referenced by the specified query.
-        /// </returns>
-        object IUpdatable.GetResource(IQueryable query, string fullTypeName)
+        public object GetResource(IQueryable query, string fullTypeName)
         {
             object result = null;
 
             foreach (object item in query)
             {
                 if (result != null)
+                {
                     throw new DataServiceException("A single resource is expected");
+                }
                 result = item;
             }
-
             if (result == null)
+            {
                 throw new DataServiceException(404, "Resource not found");
-
-            if (fullTypeName != null && result.GetType().FullName != fullTypeName)
-                throw new DataServiceException("Resource type mismatch");
-
-            return result;
+            }
+            if (fullTypeName != null)
+            {
+                if (result.GetType().FullName != fullTypeName)
+                {
+                    throw new DataServiceException("Resource type mismatch");
+                }
+            }
+            return (result);
         }
-
-        /// <summary>
-        /// Gets the value of the specified property on the target object.
-        /// </summary>
-        /// <param name="targetResource">An opaque object that represents a resource.</param>
-        /// <param name="propertyName">The name of the property whose value needs to be retrieved.</param>
-        /// <returns></returns>
-        object IUpdatable.GetValue(object targetResource, string propertyName)
+        public object GetValue(object targetResource, string propertyName)
         {
             Type t = targetResource.GetType();
+
             PropertyInfo pi = GetPropertyInfoForType(t, propertyName, false);
 
-            object value;
+            object value = null;
 
             try
             {
@@ -340,77 +332,39 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             }
             catch (Exception ex)
             {
-                throw new DataServiceException(
-                    string.Format("Failed getting property {0} value", propertyName), ex);
+                throw new DataServiceException(string.Format(
+                  "Failed getting property {0} value", propertyName), ex);
             }
-            return value;
+            return (value);
         }
-
-        /// <summary>
-        /// Removes the specified value from the collection.
-        /// </summary>
-        /// <param name="targetResource">The target object that defines the property.</param>
-        /// <param name="propertyName">The name of the property whose value needs to be updated.</param>
-        /// <param name="resourceToBeRemoved">The property value that needs to be removed.</param>
-        void IUpdatable.RemoveReferenceFromCollection(object targetResource, string propertyName, object resourceToBeRemoved)
+        public void RemoveReferenceFromCollection(object targetResource, string propertyName, object resourceToBeRemoved)
         {
             Type t = targetResource.GetType();
 
             PropertyInfo collectionProperty = GetPropertyInfoForType(t, propertyName, false);
-            var collection = collectionProperty.GetValue(targetResource, null) as System.Collections.IList;
-            if (collection == null)
-                return; // throw error
 
-            collection.Remove(resourceToBeRemoved);
+            object collection = collectionProperty.GetValue(targetResource, null);
+
+            collection.GetType().InvokeMember("Remove",
+              BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod,
+              null, collection, new object[] { resourceToBeRemoved });
         }
-
-        /// <summary>
-        /// Returns the instance of the resource represented by the specified resource object.
-        /// </summary>
-        /// <param name="resource">The object representing the resource whose instance needs to be retrieved.</param>
-        /// <returns>
-        /// Returns the instance of the resource represented by the specified resource object.
-        /// </returns>
-        object IUpdatable.ResolveResource(object resource)
+        public object ResolveResource(object resource)
         {
-            return resource;
+            return (resource);
         }
-
-        /// <summary>
-        /// Saves all the changes that have been made by using the <see cref="T:System.Data.Services.IUpdatable"/> APIs.
-        /// </summary>
-        void IUpdatable.SaveChanges()
+        public void SaveChanges()
         {
-            try
-            {
-                SubmitChanges();
-            }
-            catch (Exception ex)
-            {
-                throw new DataServiceException("Error Saving Context. " + ex.GetBaseException().Message, ex);
-            }
+            base.SubmitChanges();
         }
-
-        /// <summary>
-        /// Sets the value of the specified reference property on the target object.
-        /// </summary>
-        /// <param name="targetResource">The target object that defines the property.</param>
-        /// <param name="propertyName">The name of the property whose value needs to be updated.</param>
-        /// <param name="propertyValue">The property value to be updated.</param>
-        void IUpdatable.SetReference(object targetResource, string propertyName, object propertyValue)
+        public void SetReference(object targetResource, string propertyName, object propertyValue)
         {
-            ((IUpdatable)this).SetValue(targetResource, propertyName, propertyValue);
+            this.SetValue(targetResource, propertyName, propertyValue);
         }
-
-        /// <summary>
-        /// Sets the value of the property with the specified name on the target resource to the specified property value.
-        /// </summary>
-        /// <param name="targetResource">The target object that defines the property.</param>
-        /// <param name="propertyName">The name of the property whose value needs to be updated.</param>
-        /// <param name="propertyValue">The property value for update.</param>
-        void IUpdatable.SetValue(object targetResource, string propertyName, object propertyValue)
+        public void SetValue(object targetResource, string propertyName, object propertyValue)
         {
             Type t = targetResource.GetType();
+
             PropertyInfo pi = GetPropertyInfoForType(t, propertyName, true);
 
             try
@@ -420,25 +374,13 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             catch (Exception ex)
             {
                 throw new DataServiceException(
-                  string.Format("Error setting property {0} to {1}", propertyName, propertyValue), ex);
+                  string.Format("Error setting property {0} to {1}", propertyName, propertyValue),
+                  ex);
             }
         }
-
-        /// <summary>
-        /// Updates the resource identified by the parameter <paramref name="resource"/>.
-        /// </summary>
-        /// <param name="resource">The resource to be updated.</param>
-        /// <returns></returns>
-        object IUpdatable.ResetResource(object resource)
-        {
-            Type t = resource.GetType();
-            ITable table = GetTableForType(t);
-            return table.GetOriginalEntityState(resource);
-        }
-
         private PropertyInfo GetPropertyInfoForType(Type t, string propertyName, bool setter)
         {
-            PropertyInfo pi;
+            PropertyInfo pi = null;
 
             try
             {
@@ -448,76 +390,57 @@ for(int x = 0; x < function.Parameters.Count; x++) {
                 pi = t.GetProperty(propertyName, flags);
 
                 if (pi == null)
-                    throw new DataServiceException(
-                        string.Format("Failed to find property {0} on type {1}", propertyName, t.Name));
+                {
+                    throw new DataServiceException(string.Format("Failed to find property {0} on type {1}",
+                      propertyName, t.Name));
+                }
             }
             catch (Exception exception)
             {
                 throw new DataServiceException(
-                    string.Format("Error finding property {0}", propertyName), exception);
+                  string.Format("Error finding property {0}", propertyName),
+                  exception);
             }
-
             return (pi);
         }
-
         private ITable GetTableForType(Type t)
         {
-            ITable table = GetTable(t);
-            if (table == null)
-                throw new DataServiceException(string.Format("No table found for type {0}", t.Name));
+            ITable table = this.GetTable(t);
 
+            if (table == null)
+            {
+                throw new DataServiceException(
+                  string.Format("No table found for type {0}", t.Name));
+            }
             return (table);
         }
-
         private static object Construct(Type t)
         {
             ConstructorInfo ci = t.GetConstructor(Type.EmptyTypes);
 
             if (ci == null)
+            {
                 throw new DataServiceException(
-                    string.Format("No default ctor found for type {0}", t.Name));
-
+                  string.Format("No default ctor found for type {0}", t.Name));
+            }
             return (ci.Invoke(null));
         }
-        #endregion
-        <% } %>
-        <% if (IncludeDataRules) { %>
-        
-        #region RuleManager
-        private readonly RuleManager _ruleManager = new RuleManager();
 
-        /// <summary>
-        /// Gets the current <see cref="RuleManager"/> for the <see cref="DataContext"/>.
-        /// </summary>
-        public RuleManager RuleManager
+        public object ResetResource(object resource)
         {
-            get { return _ruleManager; }
-        } 
-
-        /// <summary>
-        /// Sends changes made to retrieved objects to the underlying database.
-        /// </summary>
-        /// <param name="failureMode">How concurrency conflicts should be reported.</param>
-        public override void SubmitChanges(ConflictMode failureMode)
-        {
-            ChangeSet changes = base.GetChangeSet();
-            bool isValid = RuleManager.Run(changes);
-
-            if (!isValid)
-                throw new BrokenRuleException(RuleManager.BrokenRules);
-
-            base.SubmitChanges(failureMode);
+            throw new NotImplementedException();
         }
+
         #endregion
-        <% } %>
+		<% } %>
     }
 }
 
 <script runat="template">
-    public bool IncludeIUpdatable
-    {
-        get { return (this.Framework == FrameworkEnum.v35_SP1 && this.IncludeDataServices); }
-    }
+	public bool IncludeIUpdatable
+	{
+		get { return (this.Framework == FrameworkEnum.v35_SP1 && this.IncludeDataServices); }
+	}
 
     public string CreateAttribute(Function f)
     {

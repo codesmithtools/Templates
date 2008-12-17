@@ -82,15 +82,9 @@ namespace CodeSmith.Data.Rules.Validation
         /// <param name="context">The context.</param>
         public override void Run(RuleContext context)
         {
-
-            context.Message = ErrorMessage;
-            context.Success = true;
-
-            if (!CanRun(context.TrackedObject))
-                return;
-            
             context.Success = false;
-            
+            context.Message = ErrorMessage;
+
             object value = GetPropertyValue(context.TrackedObject.Current);
 
             if (value == null)

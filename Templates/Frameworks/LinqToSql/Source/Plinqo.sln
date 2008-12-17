@@ -20,8 +20,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsertClassMergeStrategy", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickStartUtils", "QuickStart\QuickStartUtils.csproj", "{A42F95F7-501F-478F-9F3C-8B1E8AFA1461}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeParser", "CodeParser\CodeParser.csproj", "{42214FFD-0EAF-4678-BD4C-0DF40BC09800}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,10 +54,6 @@ Global
 		{A42F95F7-501F-478F-9F3C-8B1E8AFA1461}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A42F95F7-501F-478F-9F3C-8B1E8AFA1461}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A42F95F7-501F-478F-9F3C-8B1E8AFA1461}.Release|Any CPU.Build.0 = Release|Any CPU
-		{42214FFD-0EAF-4678-BD4C-0DF40BC09800}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42214FFD-0EAF-4678-BD4C-0DF40BC09800}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42214FFD-0EAF-4678-BD4C-0DF40BC09800}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42214FFD-0EAF-4678-BD4C-0DF40BC09800}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

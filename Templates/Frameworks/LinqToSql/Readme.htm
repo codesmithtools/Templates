@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -29,15 +29,9 @@
 	<li><a href="#Download">Download</a></li>
 </ul>
 <h2><a title="Overview" name="Overview"></a>Overview</h2>
-
 <p>PLINQO, which stands for Professional LINQ to Objects, is a collection of CodeSmith 
 templates that are meant to replace and extend the LINQ to SQL designers that are 
 included with Visual Studio 2008.</p>
-
-<p>Go learn more about Plinqo even faster, please check out our Video Tutorials!<br>
-<a href="http://codesmithtools.com/video/plinqo-part-1-quick-start.html">Plinqo Part 1: The Quick Start</a><br>
-<a href="http://codesmithtools.com/video/plinqo-part-2-feature-overview.html">Plinqo Part 2: Feature Overview</a></p>
-
 <h2><a title="Features" name="Features">Features</a></h2>
 <p>The templates have the following features.</p>
 <ul>
@@ -230,8 +224,6 @@ attributes.&nbsp; They will be listed as an xpath.</p>
 	<li>Association/@Member - The property name for this association.</li>
 	<li>Association/@Storage - The private field LINQ to SQL will us to assign values 
 	the association to.</li>
-    <li>Association/@DeleteOnNull - Deletes row when association is set to null. 
-    Value will not be persisted if the CST's IncludeDeleteOnNull Property is set to false.</li>
 	<li>Function/@Method - The name of the method for the database procedure.</li>
 	<li>Parameter/@Parameter - The method argument name that maps to the database 
 	procedure parameter.</li>
@@ -248,10 +240,6 @@ that it did not find in the database.</p>
 		<td>CleanExpression</td>
 		<td>List of regular expressions to clean table, view, column and procedure 
 		names.&nbsp; Any matched text found will be removed from the name.</td>
-	</tr>
-    <tr>
-		<td>EnumList</td>
-		<td>List of regular expressions to identify an Enum Table.</td>
 	</tr>
 	<tr>
 		<td>IgnoreList</td>
@@ -274,17 +262,9 @@ that it did not find in the database.</p>
 		<td>ContextNamespace</td>
 		<td>The namespace to use for the context class file.</td>
 	</tr>
-    <tr>
-		<td>EntityBase</td>
-		<td>The base class for the entity.</td>
-	</tr>
 	<tr>
 		<td>EntityNamespace</td>
 		<td>The namespace to use for the entity class files.</td>
-	</tr>
-    <tr>
-		<td>IncludeDeleteOnNull</td>
-		<td>Templates will generated DeleteOnNull Attribute for Associations.</td>
 	</tr>
 	<tr>
 		<td>Naming Conventions</td>
@@ -301,14 +281,6 @@ that it did not find in the database.</p>
 	<tr>
 		<td>TableNaming</td>
 		<td>The table naming convention followed in the source database.</td>
-	</tr>
-    <tr>
-		<td>NameColumn</td>
-		<td>List of regular expressions to identify an Enum Table's Name Column.</td>
-	</tr>
-    <tr>
-		<td>DescriptionColumm</td>
-		<td>List of regular expressions to identify an Enum Table's Description Column.</td>
 	</tr>
 	<tr>
 		<td>DbmlFile</td>
@@ -674,16 +646,7 @@ routing.</p>
 </ul>
 <h2>History</h2>
 <ul>
-    <li>Release 2.x<ul>
-        <li>Added Enum table support.</li>
-        <li>Added Many To Many association support.</li>
-        <li>Added Detach method to Context.</li>
-        <li>Added ICloneable on Business Entities.</li>
-        <li>Updated Insert Class Merge Strategy to support merging Namespaces.</li>
-        <li>Fix Issue with DeleteOnNull persisting when IncludeDeleteOnNull set to False.</li>
-    </ul>
-    </li>
-    <li>Release 2.0<ul>
+    <li>Release 1.4<ul>
         <li>Added Quickstart template to allow quick generation of a Plinqo based 
         web project.</li>
         <li>Added various Naming Convention properties to give better control

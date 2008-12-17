@@ -7,7 +7,7 @@
     </item>
     <item>
       <key>binary</key>
-      <value>VarBinary</value>
+      <value>Binary</value>
     </item>
     <item>
       <key>bit</key>
@@ -15,7 +15,7 @@
     </item>
     <item>
       <key>char</key>
-      <value>Char</value>
+      <value>String</value>
     </item>
     <item>
       <key>decimal</key>
@@ -27,7 +27,7 @@
     </item>
     <item>
       <key>float</key>
-      <value>Float</value>
+      <value>Double</value>
     </item>
     <item>
       <key>int</key>
@@ -39,7 +39,7 @@
     </item>
     <item>
       <key>image</key>
-      <value>Binary</value>
+      <value>Image</value>
     </item>
     <item>
       <key>money</key>
@@ -55,7 +55,7 @@
     </item>
     <item>
       <key>numeric</key>
-      <value>Decimal</value>
+      <value>Numeric</value>
     </item>
     <item>
       <key>nvarchar</key>
@@ -63,11 +63,11 @@
     </item>
     <item>
       <key>real</key>
-      <value>Real</value>
+      <value>Single</value>
     </item>
     <item>
       <key>smalldatetime</key>
-      <value>DateTime</value>
+      <value>SmallDateTime</value>
     </item>
     <item>
       <key>smallint</key>
@@ -116,18 +116,6 @@
     <item>
       <key>datetimeoffset</key>
       <value>DateTimeOffset</value>
-    </item>
-    <item>
-      <key>date</key>
-      <value>Date</value>
-    </item>
-    <item>
-      <key>rowversion</key>
-      <value>Timestamp</value>
-    </item>
-    <item>
-      <key>time</key>
-      <value>Time</value>
     </item>
   </map>
 </codeSmith>

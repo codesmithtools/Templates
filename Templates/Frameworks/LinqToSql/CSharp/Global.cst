@@ -8,6 +8,8 @@ Description:
 <%@ Property Name="InlineEditing" Type="System.Boolean" Default="false" Optional="false" Description="Default to Inline Grid Editing for Webpages" %>
 <%@ Property Name="ContextNamespace" Type="System.String" Default="" Optional="false" Description="The namespace where the Data Context is found"%>
 <%@ Property Name="DataContextName" Type="System.String" Default="" Optional="False" Description="Name of the Data Context"%>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.IO" %>
 
 <%@ Register Name="GlobalParentClass" 
@@ -17,29 +19,29 @@ Description:
 <%@ Register Name="GlobalChildClass" 
     Template="Internal\Global.Child.cst"
     MergeProperties="False" %>
-    
+	
 <%
-    GlobalChildClass t = this.Create<GlobalChildClass>();
-    t.ClassNamespace = ClassNamespace;
-    t.InlineEditing = InlineEditing;
-    t.ContextNamespace = ContextNamespace;
-    t.DataContextName = DataContextName;
-    
-    GlobalParentClass p = this.Create<GlobalParentClass>();
-    p.ClassNamespace = ClassNamespace;
-    
-    string parentFileName = "Global.asax";
-    string renderPath = this.ContextData.Get("RenderLocation") != null ? this.ContextData.Get("RenderLocation") : String.Empty;
-    string parentFilePath = Path.Combine(renderPath,parentFileName);
-            
+	GlobalChildClass t = this.Create<GlobalChildClass>();
+	t.ClassNamespace = ClassNamespace;
+	t.InlineEditing = InlineEditing;
+	t.ContextNamespace = ContextNamespace;
+	t.DataContextName = DataContextName;
+	
+	GlobalParentClass p = this.Create<GlobalParentClass>();
+	p.ClassNamespace = ClassNamespace;
+	
+	string parentFileName = "Global.asax";
+	string renderPath = this.ContextData.Get("RenderLocation") != null ? this.ContextData.Get("RenderLocation") : String.Empty;
+	string parentFilePath = Path.Combine(renderPath,parentFileName);
+			
     Response.WriteLine(parentFileName);
     p.RenderToFile(parentFilePath, true);
-    
-    string fileName = "Global.asax.cs";
-    string filePath = Path.Combine(renderPath,fileName);
-    
-    this.RegisterReference("System.Data.Linq");
-    this.RegisterReference(Path.GetFullPath(Path.Combine(
+	
+	string fileName = "Global.asax.cs";
+	string filePath = Path.Combine(renderPath,fileName);
+	
+	this.RegisterReference("System.Data.Linq");
+	this.RegisterReference(Path.GetFullPath(Path.Combine(
             this.CodeTemplateInfo.DirectoryName,
             "..\\Common\\CodeSmith.Data.dll")));
     

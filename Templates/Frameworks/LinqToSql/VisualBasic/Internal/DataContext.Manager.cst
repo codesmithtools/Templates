@@ -59,5 +59,19 @@ Namespace <%= Database.ContextNamespace %>
             End Get
         End Property
         
+        ''' <summary>
+        ''' Sends changes made to retrieved objects to the underlying database.
+        ''' </summary>
+        ''' <param name="failureMode">How concurrency conflicts should be reported.</param>
+        Public Overrides Sub SubmitChanges(ByVal failureMode As ConflictMode)
+            Dim changes As ChangeSet = MyBase.GetChangeSet()
+            Dim isValid As Boolean = Manager.Rules.Run(changes)
+            
+            If Not isValid
+                Throw New BrokenRuleException(Manager.Rules.BrokenRules)
+			End If
+            
+            MyBase.SubmitChanges(failureMode)
+        End Sub
     End Class
 End Namespace

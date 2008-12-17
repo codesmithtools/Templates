@@ -1,12 +1,11 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" 
-    Description="Linq to Sql Entity Class." CompilerVersion="v3.5" %>
+    Description="Linq to Sql Entity Class." %>
 
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
 
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.Text" %>
-<%@ Import Namespace="System.Text.RegularExpressions" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 
@@ -38,18 +37,6 @@
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include ADO.Net DataServices attributes." %>
 
-<%@ Property Category="2.Class" Name="IncludeDataRules"
-    Type="System.Boolean" Default="true" Optional="False"
-    Description="Include CodeSmith.Data rules." %>
-    
-<%@ Property Name="AssociationNamingSuffix"
-    Type="AssociationNamingEnum" Default="ListSuffix" Optional="False"
-    Description="Suffix for Many To Many Associations" %>
-
-<%@ Property Name="EnumDatabase"
-    Type="LinqToSqlShared.Generator.DbmlEnum.Database" Optional="True"
-    Description="Enum Collection for Database." %>
-
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
     Description="Mapping to escape c# keywords" %>
@@ -67,12 +54,10 @@
 //------------------------------------------------------------------------------
 using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Diagnostics;
 <% if (IncludeDataContract) { %>
-using System.IO;
 using System.Runtime.Serialization;
 <% } %>
 <% if (this.Framework == FrameworkEnum.v35_SP1) { %>
@@ -80,11 +65,6 @@ using System.ComponentModel.DataAnnotations;
 <% if (IncludeDataServices) { %>
 using System.Data.Services.Common;
 <% } %>
-<% } %>
-<% if (IncludeDataRules) { %>
-using CodeSmith.Data.Rules;
-using CodeSmith.Data.Rules.Assign;
-using CodeSmith.Data.Rules.Validation;
 <% } %>
 
 namespace <%= Database.EntityNamespace %>
@@ -96,6 +76,7 @@ namespace <%= Database.EntityNamespace %>
     /// Class representing data for the <%= Database.Name %> database.
 <% } %>
     /// </summary>
+    [Serializable]
     <%= GetClassAttributes() %>
 <% if (IncludeDataContract) { %>
     [DataContract(<% if (Framework == FrameworkEnum.v35_SP1) { %>IsReference=true<% } %>)]
@@ -113,9 +94,7 @@ namespace <%= Database.EntityNamespace %>
         dataServiceKey.AppendFormat("\"{0}\"", column.Member);
     } 
     %>
-<% if (dataServiceKey.Length > 0) { %>
     [DataServiceKey(<%= dataServiceKey.ToString() %>)]
-<% } %>
     <% } %>
 <%}%>
 <% 
@@ -131,70 +110,18 @@ namespace <%= Database.EntityNamespace %>
         sb.Append("}");
     }
 %>
-<% if (sb.Length > 0) { %>
     [DebuggerDisplay("<%= sb.ToString() %>")]
-<% } %>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
-        : <%= EntityBase %><% if (IncludeDataContract) { %>, ICloneable<% } %>
+        : <%= EntityBase %>
 <% } %>
     {
-<% if (IncludeDataRules) { %>
-        #region Static Constructor
-        /// <summary>
-        /// Initializes the <see cref="<%= Type.Name %>"/> class.
-        /// </summary>
-        static <%= Type.Name %>()
-        {
-            <%if(Framework == FrameworkEnum.v35_SP1) { %>
-            RuleManager.AddShared<<%= Type.Name %>>();
-            <% } else {
-                const string lengthFormat = "RuleManager.AddShared<{0}>(new LengthRule(\"{1}\", {2}));";
-                const string requiredFormat = "RuleManager.AddShared<{0}>(new RequiredRule(\"{1}\"));";
-                const string sqlDateFormat = "RuleManager.AddShared<{0}>(new RangeRule<DateTime>(\"{1}\", SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value));";
-                const string createDateFormat = "RuleManager.AddShared<{0}>(new NowRule(\"{1}\", EntityState.New));";
-                const string modifyDateFormat = "RuleManager.AddShared<{0}>(new NowRule(\"{1}\", EntityState.Dirty));";
-                
-                int indent = Response.IndentLevel;
-                Response.IndentLevel = 3;
-                foreach(Column c in Type.Columns) { 
-                    
-                    if (!c.CanBeNull == true && c.IsDbGenerated == false)
-                    {
-                        if (c.Type.Contains("String"))
-                        {
-                            Response.WriteLine(string.Format(requiredFormat, Type.Name, c.Member));
-                        }
-                        else if (c.Type.Contains("DateTime"))
-                        {
-                            if (c.Member.Contains("Create"))
-                                Response.WriteLine(string.Format(createDateFormat, Type.Name, c.Member));
-                            else if (c.Member.Contains("Modify") || c.Member.Contains("Modified"))
-                                Response.WriteLine(string.Format(modifyDateFormat, Type.Name, c.Member));
-                            else
-                                Response.WriteLine(string.Format(sqlDateFormat, Type.Name, c.Member));
-                        }
-                    }
-                    
-                    if (c.Type.Contains("String"))
-                    {
-                        int size = GetSize(c.DbType);
-                        if (0 < size && size < 8000)
-                            Response.WriteLine(string.Format(lengthFormat, Type.Name, c.Member, size));
-                    }
-                } 
-                Response.IndentLevel = indent;
-                }%>
-            AddSharedRules();
-        }
-        #endregion
-<% } // IncludeDataRules %>
-
+        
         #region Default Constructor
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= Type.Name %>"/> class.
         /// </summary>
-        [DebuggerNonUserCodeAttribute]
+        [DebuggerNonUserCodeAttribute()]
         <%= Naming.GetModifier(Type.AccessModifier) %> <%= Type.Name %>()
         {
             OnCreated();
@@ -209,38 +136,31 @@ namespace <%= Database.EntityNamespace %>
             <%= a.Storage %> = default(EntityRef<<%= a.Type %>>);
 <% } // foreach Association%>
 <% foreach(Association a in Type.EntitySetAssociations) { %>
-            <%= a.Storage %> = new EntitySet<<%= a.Type %>>(On<%= a.Member %>Add, On<%= a.Member %>Remove);
+            <%= a.Storage %> = new EntitySet<<%= a.Type %>>(
+                new System.Action<<%= a.Type %>>(this.Attach_<%= a.Member %>),
+                new System.Action<<%= a.Type %>>(this.Detach_<%= a.Member %>));
 <% } // foreach Association%>
-<% foreach(Column c in Type.Columns) { %>
-<% if (c.IsDelayLoaded == true) { %>
-            <%= c.Storage %> = default(Link<<%= c.Type %>>);
-<% } // IsDelayLoaded%>
-<% } // foreach Colum%>
         }
         #endregion
         
         #region Column Mapped Properties
-<% DataMemberCount = 0;
-foreach(Column column in Type.Columns) { 
+<% int DataMemberOrderId = 0;
+    foreach(Column column in Type.Columns) { 
     string dataType = column.Type;
     string fieldType = column.Type;
-    string storageGet = column.Storage;
-    string storageSet = column.Storage;
-    string valueConvert = "value";
-    bool isVersion = column.IsVersion == true && dataType.Equals("System.Data.Linq.Binary");
+    string storageAssign = column.Storage;
     
     if (column.IsDelayLoaded == true && column.IsPrimaryKey == false)
     {
         dataType = CSharpAlias[dataType];
         fieldType = string.Format("Link<{0}>", dataType);
-        storageGet = storageGet + ".Value";
-        storageSet = storageGet;
+        storageAssign = storageAssign + ".Value";
     }
     else if (column.CanBeNull == true && CommonUtility.IsNullableType(dataType))
     {
         dataType = string.Format("Nullable<{0}>", CSharpAlias[dataType]);
         fieldType = dataType;
-    }
+    }    
     else
     {
         dataType = CSharpAlias[dataType];
@@ -263,25 +183,14 @@ foreach(Column column in Type.Columns) {
         /// Gets the <%= column.Name %> column value.
 <% } %>
         /// </summary>
-<% if (isVersion) { %>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-<% } %>
-        <%= CreateAttributes(column) %>
-<% if (IncludeDataContract) { %>
-        [DataMember(Order=<%= ++DataMemberCount %>)]
-<% } %>
-<% if( this.Framework == FrameworkEnum.v35_SP1
-    && EnumDatabase != null
-    && EnumDatabase.Enums.Where(e => e.Name == column.Type).FirstOrDefault() != null) { %>
-        [UIHint("Enumeration")]
-<% } %>
+        <%= CreateAttributes(column, ref DataMemberOrderId) %>
         <%= Naming.GetModifier(column.AccessModifier, column.Modifier) %> <%= dataType %> <%= column.Member %>
         {
-            get { return <%= storageGet %>; }
+            get { return <%= storageAssign %>; }
 <% if (!column.IsReadOnly == true) { %>
             set
             {
-                if (<%= storageSet %> != <%= valueConvert %>)
+                if (<%= storageAssign %> != value)
                 {
 <% if (a != null) { %>
                     if (<%= a.Storage %>.HasLoadedOrAssignedValue)
@@ -289,11 +198,11 @@ foreach(Column column in Type.Columns) {
                         throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
                     }
 <% } %>
-                    On<%= column.Member %>Changing(<%= valueConvert %>);
+                    On<%= column.Member %>Changing(value);
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
                     SendPropertyChanging("<%= column.Member %>");
 <% } %>
-                    <%= storageSet %> = <%= valueConvert %>;
+                    <%= storageAssign %> = value;
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
                     SendPropertyChanged("<%= column.Member %>");
 <% } %>
@@ -309,6 +218,7 @@ foreach(Column column in Type.Columns) {
 <%  foreach(Association a in Type.EntityRefAssociations) {
         AssociationInfo info = GetAssociationInfo(a);
 %>
+        [NonSerialized]
         private EntityRef<<%= a.Type %>> <%= a.Storage %>;
 
         /// <summary>
@@ -316,7 +226,7 @@ foreach(Column column in Type.Columns) {
         /// </summary>
         <%= CreateAttribute(a) %>
 <% if (IncludeDataContract) { %>
-        [DataMember(Order=<%= ++DataMemberCount %>, EmitDefaultValue=false)]
+        [DataMember(Order=<%= ++DataMemberOrderId %>, EmitDefaultValue=false)]
 <% } %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> <%= a.Type %> <%= a.Member %>
         {
@@ -368,6 +278,7 @@ foreach(Column column in Type.Columns) {
         AssociationInfo info = GetAssociationInfo(a);
 %>
         
+        [NonSerialized]
         private EntitySet<<%= a.Type %>> <%= a.Storage %>;
         
         /// <summary>
@@ -375,7 +286,7 @@ foreach(Column column in Type.Columns) {
         /// </summary>
         <%= CreateAttribute(a) %>
 <% if (IncludeDataContract) { %>
-        [DataMember(Order=<%= ++DataMemberCount %>, EmitDefaultValue=false)]
+        [DataMember(Order=<%= ++DataMemberOrderId %>, EmitDefaultValue=false)]
 <% } %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> EntitySet<<%= a.Type %>> <%= a.Member %>
         {
@@ -387,81 +298,25 @@ foreach(Column column in Type.Columns) {
             set { <%= a.Storage %>.Assign(value); }
         }
         
-        [DebuggerNonUserCodeAttribute]
-        private void On<%= a.Member %>Add(<%= a.Type %> entity)
+        [DebuggerNonUserCodeAttribute()]
+        private void Attach_<%= a.Member %>(<%= a.Type %> entity)
         {
             SendPropertyChanging(null);
             entity.<%= info.OtherAssociation.Member %> = this;
             SendPropertyChanged(null);
         }
         
-        [DebuggerNonUserCodeAttribute]
-        private void On<%= a.Member %>Remove(<%= a.Type %> entity)
+        [DebuggerNonUserCodeAttribute()]
+        private void Detach_<%= a.Member %>(<%= a.Type %> entity)
         {
             SendPropertyChanging(null);
             entity.<%= info.OtherAssociation.Member %> = null;
             SendPropertyChanged(null);
         }
-<% if(IsManyToMany(info.OtherType))
-    {   
-        ManyToManyInfo manyMany = GetManyToManyInfo(info.OtherType);
-        if(manyMany.RightType != null && manyMany.LeftType != null)
-        {
-%>
-
-        private EntitySet<<%=manyMany.RightType.Name%>> _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>;
-
-        /// <summary>
-        /// Gets or sets the Many To Many <%=manyMany.PropertyName%> list.
-        /// </summary>
-        /// <value>The <%=manyMany.PropertyName%> list.</value>
-        public EntitySet<<%=manyMany.RightType.Name%>> <%=manyMany.PropertyName%><%=AssociationSuffix%>
-        {
-            get
-            {
-<% if (IncludeDataContract) { %>
-                if (serializing)
-                    return null;
-<% } %>
-
-                if (_<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> == null)
-                {
-                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> = new EntitySet<<%=manyMany.RightType.Name%>>(On<%=manyMany.PropertyName%><%=AssociationSuffix%>Add, On<%=manyMany.PropertyName%><%=AssociationSuffix%>Remove);
-                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>.SetSource(<%=a.Member %>.Select(c => c.<%=manyMany.JoinRightAssociation.Member%>));
-                }
-                return _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>;
-            }
-            set
-            {
-                _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>.Assign(value);
-            }
-        }
-        
-        [DebuggerNonUserCode]
-        private void On<%=manyMany.PropertyName%><%=AssociationSuffix%>Add(<%=manyMany.RightType.Name%> entity)
-        {
-            SendPropertyChanging(null);
-            <%= a.Member %>.Add(new <%=manyMany.JoinType.Name%> { <%=manyMany.JoinLeftAssociation.Member%> = this, <%=manyMany.JoinRightAssociation.Member%> = entity });
-            SendPropertyChanged(null);
-        }
-        
-        [DebuggerNonUserCode]
-        private void On<%=manyMany.PropertyName%><%=AssociationSuffix%>Remove(<%=manyMany.RightType.Name%> entity)
-        {
-            SendPropertyChanging(null);
-            var <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%= a.Member %>.FirstOrDefault(c => c.<%=manyMany.JoinLeftAssociation.ThisKey%> == <%=manyMany.LeftKey%> && c.<%=manyMany.JoinRightAssociation.ThisKey%> == entity.<%=manyMany.RightKey%>);
-            <%= a.Member %>.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>);
-            SendPropertyChanged(null);
-        }
-    
-<%}
-        } // many to many%>
 <% } // foreach Association%>
         #endregion
         
         #region Extensibility Method Definitions
-        /// <summary>Called by the static constructor to add shared rules.</summary>
-        static partial void AddSharedRules();
         /// <summary>Called when this instance is loaded.</summary>
         partial void OnLoaded();
         /// <summary>Called when this instance is being saved.</summary>
@@ -474,10 +329,10 @@ foreach(Column column in Type.Columns) {
     if (column.CanBeNull == true && CommonUtility.IsNullableType(column.Type))
         dataType = string.Format("Nullable<{0}>", dataType);
 %>
-        /// <summary>Called when <see cref="<%= column.Member %>"/> is changing.</summary>
+        /// <summary>Called when <%= column.Member %> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void On<%= column.Member %>Changing(<%= dataType %> value);
-        /// <summary>Called after <see cref="<%= column.Member %>"/> has Changed.</summary>
+        /// <summary>Called after <%= column.Member %> has Changed.</summary>
         partial void On<%= column.Member %>Changed();
 <% } // foreach %>
         #endregion
@@ -486,56 +341,27 @@ foreach(Column column in Type.Columns) {
         #region Serialization
         private bool serializing;
         
-        /// <summary>
-        /// Called when serializing.
-        /// </summary>
-        /// <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
-        [OnSerializing]
+        [OnSerializing()]
         [EditorBrowsableAttribute(EditorBrowsableState.Never)]
         public void OnSerializing(StreamingContext context) {
             serializing = true;
         }
         
-        /// <summary>
-        /// Called when serialized.
-        /// </summary>
-        /// <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
-        [OnSerialized]
+        [OnSerialized()]
         [EditorBrowsableAttribute(EditorBrowsableState.Never)]
         public void OnSerialized(StreamingContext context) {
             serializing = false;
         }
         
-        /// <summary>
-        /// Called when deserializing.
-        /// </summary>
-        /// <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
-        [OnDeserializing]
+        [OnDeserializing()]
         [EditorBrowsableAttribute(EditorBrowsableState.Never)]
         public void OnDeserializing(StreamingContext context) {
             Initialize();
         }
+        
         #endregion
-<% if (!string.IsNullOrEmpty(EntityBase)) { %>
-        
-        #region Clone
-        /// <summary>
-        /// Creates a new object that is a copy of the current instance.
-        /// </summary>
-        /// <returns>
-        /// A new object that is a copy of this instance.
-        /// </returns>
-        object ICloneable.Clone()
-        {
-            DataContractSerializer serializer = new DataContractSerializer(GetType());
-            using (MemoryStream ms = new MemoryStream())
-            {
-                serializer.WriteObject(ms, this);
-                ms.Position = 0;
-                return serializer.ReadObject(ms);
-            }
-        }
-        
+<% } %>
+
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>
@@ -543,102 +369,17 @@ foreach(Column column in Type.Columns) {
         /// A new object that is a copy of this instance.
         /// </returns>
         /// <remarks>
-        /// Only loaded <see cref="T:System.Data.Linq.EntityRef`1"/> and <see cref="T:System.Data.Linq.EntitySet`1" /> child accessions will be cloned.
+        /// This method is equivalent to a Detach from the current <see cref="DataContext"/>.
+        /// Only loaded EntityRef and EntitySet child accessions will be cloned.
         /// </remarks>
         public <%= Type.Name %> Clone()
         {
             return (<%= Type.Name %>)((ICloneable)this).Clone();
         }
-        #endregion
- <% } %>
-<% } %>
-<% if (!string.IsNullOrEmpty(EntityBase)) { %>
-        
-        #region Detach Methods
-        /// <summary>
-        /// Detach this instance from the <see cref="DataContext"/>.
-        /// </summary>
-        /// <remarks>
-        /// Detaching the entity will stop all lazy loading and allow it to be added to another <see cref="DataContext"/>.
-        /// </remarks>
-        public override void Detach()
-        {
-            if (!IsAttached())
-                return;
-            
-            base.Detach();
-<%  foreach(Association a in Type.EntityRefAssociations) {
-        AssociationInfo info = GetAssociationInfo(a);
-%>
-            <%=a.Storage%> = Detach(<%=a.Storage%>);
-<%  }
-    foreach(Association a in Type.EntitySetAssociations) {
-        AssociationInfo info = GetAssociationInfo(a);
-%>
-            <%=a.Storage%> = Detach(<%=a.Storage%>, On<%=a.Member%>Add, On<%=a.Member%>Remove);
-<% } %>
-<% foreach(Column c in Type.Columns) { %>
-<% if (c.IsDelayLoaded == true) { %>
-            <%= c.Storage %> = Detach(<%=c.Storage%>);
-<% } // IsDelayLoaded%>
-<% } // foreach Column%>
-        }
-        #endregion
-   <% } %>
     }
 }
 
 <script runat="template">
-    
-    private bool selfAssociated = false;
-    private int DataMemberCount = 0;
-    
-    public string AssociationSuffix
-    {
-       get
-        {
-            return AssociationNamingSuffix == AssociationNamingEnum.ListSuffix ? "List" : "s";
-        }
-    }
-    
-    public bool IsManyToMany(LinqToSqlShared.DbmlObjectModel.Type type)
-    {
-        
-        if (type.Columns.Count < 2)
-            return false;
-        
-        List<Column> pk = new List<Column>(type.PrimaryKeyColumns);
-        if (pk.Count != 2)
-            return false;
-        
-        List<Association> fk = new List<Association>();
-        foreach(Column c in pk)
-        {
-            Association a = type.GetForeignKeyAssociation(c);
-            if (a != null)
-                fk.Add(a);
-        }
-        if (fk.Count != 2)
-            return false;
-        
-        return true;
-    }
-    
-    private static readonly Regex _sizeRegex = new Regex(@"(?<Size>\d+)", RegexOptions.Compiled);
-    
-    public int GetSize(string s)
-    {
-        int size = 0;
-        
-        Match m = _sizeRegex.Match(s);
-        if (!m.Success)
-            return size;
-        
-        string temp = m.Groups["Size"].Value;
-        int.TryParse(temp, out size);
-        return size;            
-    }
-    
     public string GetColumnType(Column column)
     {
         string dataType = column.Type;
@@ -744,7 +485,7 @@ foreach(Column column in Type.Columns) {
         return info;
     }
     
-    public string CreateAttributes(Column c)
+    public string CreateAttributes(Column c, ref int dataMemberOrderId)
     {
         StringBuilder s = new StringBuilder();
         s.Append("[Column(");
@@ -768,7 +509,13 @@ foreach(Column column in Type.Columns) {
         s.Append(")]");
         
         string prefix = String.Concat(Environment.NewLine, "        ");
+        
+        if (c.IsVersion.HasValue && c.IsVersion.Value)
+            s.AppendFormat("{0}[EditorBrowsable(EditorBrowsableState.Never)]", prefix);
 
+        if (this.IncludeDataContract)
+            s.AppendFormat("{0}[DataMember(Order={1})]", prefix, ++dataMemberOrderId);
+            
         if (this.Framework == FrameworkEnum.v35_SP1 && c.Type.Contains("String"))
         {
             int size = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(c.DbType);
@@ -813,85 +560,8 @@ foreach(Column column in Type.Columns) {
         public List<Column> OtherColumns;
         public List<Column> AssignColumns;
           
-        public bool IsManyToMany;
         public bool IsOneToOne;
         public string AddSyntax;
         public string RemoveSyntax;
-    }
-    
-    public ManyToManyInfo GetManyToManyInfo(LinqToSqlShared.DbmlObjectModel.Type type)
-    {
-        bool leftKeyPicked = false;
-        
-        ManyToManyInfo manyMany = new ManyToManyInfo();
-        
-        manyMany.LeftType = Type;
-        manyMany.JoinType = type;
-        
-        foreach(Column pk in manyMany.LeftType.PrimaryKeyColumns)
-            manyMany.LeftKey = manyMany.LeftKey + pk.Member;
-        
-        if(!selfAssociated)
-        {
-            foreach(Association association in type.EntityRefAssociations)
-            {
-                if(association.Type != Type.Name || leftKeyPicked)
-                {
-                    manyMany.RightType = Database.GetTypeByName(association.Type);
-                    manyMany.JoinRightAssociation = association;
-                    
-                    foreach(Column pk in manyMany.RightType.PrimaryKeyColumns)
-                        manyMany.RightKey = manyMany.RightKey + pk.Member;
-                }
-                else
-                {
-                    manyMany.JoinLeftAssociation = association;
-                    leftKeyPicked = true;
-                }
-            }
-        }
-        else
-        {
-            foreach(Association association in type.EntityRefAssociations)
-            {
-                if(association.Type != Type.Name || leftKeyPicked)
-                {
-                    manyMany.RightType = Database.GetTypeByName(association.Type);
-                    manyMany.JoinLeftAssociation = association;
-                    
-                    foreach(Column pk in manyMany.RightType.PrimaryKeyColumns)
-                        manyMany.RightKey = manyMany.RightKey + pk.Member;
-                }
-                else
-                {
-                    manyMany.JoinRightAssociation = association;
-                    leftKeyPicked = true;
-                }
-            }
-        }
-        
-        //For those who think a Self-Associating Many To Many Table is a good idea
-        if(manyMany.LeftType == manyMany.RightType)
-        {
-            manyMany.PropertyName = manyMany.RightType.Name + "By" + manyMany.JoinRightAssociation.ThisKey;
-            selfAssociated = true;
-        }
-        else
-            manyMany.PropertyName = manyMany.RightType.Name;
-        
-        return manyMany;
-    }
-    
-    public struct ManyToManyInfo
-    {
-        public LinqToSqlShared.DbmlObjectModel.Type LeftType;
-        public LinqToSqlShared.DbmlObjectModel.Type RightType;
-        public LinqToSqlShared.DbmlObjectModel.Type JoinType;
-        public string RightKey;
-        public string LeftKey;
-        public Association JoinRightAssociation;
-        public Association JoinLeftAssociation;
-        public string PropertyName;
-        
     }
 </script>

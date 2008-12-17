@@ -20,10 +20,6 @@
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include ADO.Net DataServices attributes and impliment IUpdatable on DataContext." %>
 
-<%@ Property Category="2.Class" Name="IncludeDataRules"
-    Type="System.Boolean" Default="true" Optional="False"
-    Description="Include CodeSmith.Data rules." %>
-    
 <%@ Map Name="VBKeywordEscape" 
     Src="VBKeywordEscape.csmap" Reverse="False" 
     Description="Mapping to escape c# keywords" %>
@@ -51,6 +47,7 @@ Imports System.Data.Linq
 Imports System.Data.Linq.Mapping
 Imports System.Diagnostics
 Imports System.Linq
+Imports System.Linq.Expressions
 Imports System.Reflection
 <% If Not Database.ContextNamespace = Database.EntityNamespace Then %>
 Imports <%= Database.EntityNamespace %>
@@ -58,20 +55,17 @@ Imports <%= Database.EntityNamespace %>
 <% If (IncludeIUpdatable) Then %>
 Imports System.Data.Services
 <% End If %>
-<% If (IncludeDataRules) Then %>
-Imports CodeSmith.Data.Rules
-<% End If %>
 
 Namespace <%= Database.ContextNamespace %>
     ''' <summary>
     ''' The DataContext class for the <%= Database.Name %> database.
     ''' </summary>
-    <%= Naming.GetModifier(Database.AccessModifier) %> Partial Class <%= Database.Class %> 
+    Partial <%= Naming.GetModifier(Database.AccessModifier) %> Class <%= Database.Class %> 
     Inherits DataContext
 <% If (IncludeIUpdatable) Then %>
 	Implements IUpdatable
 <% End If %>
-        Private Shared ReadOnly mappingCache As MappingSource = New AttributeMappingSource()
+        Private Shared mappingCache As MappingSource = New AttributeMappingSource()
 
         #Region "ConnectionString"
         Private Const CONNECTION_NAME As String = "<%= Database.Connection.SettingsPropertyName %>"
@@ -104,7 +98,6 @@ Namespace <%= Database.ContextNamespace %>
                 Return _connectionString
             End Get
         End Property
-        
         Private Shared Function GetDefaultConnectionString() As String
             Dim settings As ConnectionStringSettings = ConfigurationManager.ConnectionStrings(CONNECTION_NAME)
             If settings Is Nothing Then
@@ -116,6 +109,12 @@ Namespace <%= Database.ContextNamespace %>
         #End Region
 
         #Region "Constructors"
+        ''' <summary>
+        ''' Initializes the <see cref="<%= Database.Class %>"/> class.
+        ''' </summary>
+        <DebuggerNonUserCodeAttribute> _
+        Shared Sub New()
+        End Sub
 
         ''' <summary>
         ''' Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
@@ -248,7 +247,6 @@ Next
 	
 			collection.[GetType]().InvokeMember("Add", BindingFlags.[Public] Or BindingFlags.Instance Or BindingFlags.InvokeMethod, Nothing, collection, New Object() {resourceToBeAdded})
 		End Sub
-        
 		Public Sub ClearChanges() Implements IUpdatable.ClearChanges
 			' This method is somewhat "tricky"
 			' 1) We want to use a partial class because we want to pick up the
@@ -267,7 +265,6 @@ Next
 	
 			mi.Invoke(Me, Nothing)
 		End Sub
-        
 		Public Function CreateResource(ByVal containerName As String, ByVal fullTypeName As String) As Object Implements IUpdatable.CreateResource
 			Dim t As Type = Type.[GetType](fullTypeName)
 	
@@ -279,7 +276,6 @@ Next
 	
 			Return (value)
 		End Function
-        
 		Public Sub DeleteResource(ByVal targetResource As Object) Implements IUpdatable.DeleteResource
 			Dim table As ITable = Me.GetTable(targetResource.[GetType]())
 	
@@ -288,7 +284,6 @@ Next
 			End If
 			table.DeleteOnSubmit(targetResource)
 		End Sub
-        
 		Public Function GetResource(ByVal query As IQueryable, ByVal fullTypeName As String) As Object Implements IUpdatable.GetResource
 			Dim result As Object = Nothing
 	
@@ -308,7 +303,6 @@ Next
 			End If
 			Return (result)
 		End Function
-        
 		Public Function GetValue(ByVal targetResource As Object, ByVal propertyName As String) As Object Implements IUpdatable.GetValue
 			Dim t As Type = targetResource.[GetType]()
 	
@@ -323,7 +317,6 @@ Next
 			End Try
 			Return (value)
 		End Function
-        
 		Public Sub RemoveReferenceFromCollection(ByVal targetResource As Object, ByVal propertyName As String, ByVal resourceToBeRemoved As Object) Implements IUpdatable.RemoveReferenceFromCollection
 			Dim t As Type = targetResource.[GetType]()
 	
@@ -333,23 +326,15 @@ Next
 	
 			collection.[GetType]().InvokeMember("Remove", BindingFlags.[Public] Or BindingFlags.Instance Or BindingFlags.InvokeMethod, Nothing, collection, New Object() {resourceToBeRemoved})
 		End Sub
-        
 		Public Function ResolveResource(ByVal resource As Object) As Object Implements IUpdatable.ResolveResource
 			Return (resource)
 		End Function
-        
 		Public Sub SaveChanges() Implements IUpdatable.SaveChanges
-            Try
-			    MyBase.SubmitChanges()
-            Catch ex As Exception
-                Throw New DataServiceException("Error Saving Context. " + ex.GetBaseException().Message, ex)
-            End Try
+			MyBase.SubmitChanges()
 		End Sub
-        
 		Public Sub SetReference(ByVal targetResource As Object, ByVal propertyName As String, ByVal propertyValue As Object) Implements IUpdatable.SetReference
 			Me.SetValue(targetResource, propertyName, propertyValue)
 		End Sub
-        
 		Public Sub SetValue(ByVal targetResource As Object, ByVal propertyName As String, ByVal propertyValue As Object) Implements IUpdatable.SetValue
 			Dim t As Type = targetResource.[GetType]()
 	
@@ -361,7 +346,6 @@ Next
 				Throw New DataServiceException(String.Format("Error setting property {0} to {1}", propertyName, propertyValue), ex)
 			End Try
 		End Sub
-        
 		Private Function GetPropertyInfoForType(ByVal t As Type, ByVal propertyName As String, ByVal setter As Boolean) As PropertyInfo
 			Dim pi As PropertyInfo = Nothing
 	
@@ -379,7 +363,6 @@ Next
 			End Try
 			Return (pi)
 		End Function
-        
 		Private Function GetTableForType(ByVal t As Type) As ITable
 			Dim table As ITable = Me.GetTable(t)
 	
@@ -388,7 +371,6 @@ Next
 			End If
 			Return (table)
 		End Function
-        
 		Private Shared Function Construct(ByVal t As Type) As Object
 			Dim ci As ConstructorInfo = t.GetConstructor(Type.EmptyTypes)
 	

@@ -517,17 +517,5 @@
       <key>RSet</key>
       <value>[RSet]</value>
     </item>
-    <item>
-      <key>Namespace</key>
-      <value>[Namespace]</value>
-    </item>
-    <item>
-      <key>Char</key>
-      <value>[Char]</value>
-    </item>
-    <item>
-      <key>Decimal</key>
-      <value>[Decimal]</value>
-    </item>
   </map>
 </codeSmith>

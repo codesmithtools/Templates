@@ -29,7 +29,7 @@ namespace NHibernateHelper
             SetVariableNames(true);
 
             ColumnName = mcs.Name;
-            TableName = mcs.Table.FullName;
+            TableName = mcs.Table.Name;
             ClassName = NHibernateHelper.GetClassName(table);
         }
 

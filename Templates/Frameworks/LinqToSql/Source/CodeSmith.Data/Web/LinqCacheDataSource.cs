@@ -19,9 +19,10 @@ namespace CodeSmith.Data.Web
         /// Initializes a new instance of the <see cref="LinqCacheDataSource"/> class.
         /// </summary>
         public LinqCacheDataSource()
+            : base()
         {
-            this.Selecting += OnSelecting;
-            this.Selected += OnSelected;
+            this.Selecting += new EventHandler<LinqDataSourceSelectEventArgs>(OnSelecting);
+            this.Selected += new EventHandler<LinqDataSourceStatusEventArgs>(OnSelected);
         }
 
         private void OnSelecting(object sender, LinqDataSourceSelectEventArgs e)
@@ -58,7 +59,7 @@ namespace CodeSmith.Data.Web
 
         private string GetKey()
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.Append(this.ContextTypeName);
             sb.Append(" from ");
             sb.Append(this.TableName);

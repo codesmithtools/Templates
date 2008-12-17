@@ -1,0 +1,25 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Description="Figure out the Schema Explorer object model." %>
+
+<%@ Property Name="DB" Type="SchemaExplorer.DatabaseSchema" Category="Database" Description="Data Source that the object is based on." %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+
+<% Dim tbl as TableSchema %>
+<% For Each tbl in DB.Tables %> 
+	<%-- Generic Variables for code to use  --%>
+	<% Dim Col as ColumnSchema %>
+	<% Dim PKs as ColumnSchemaCollection = tbl.primarykey.membercolumns %>
+	<% Dim NPKs as ColumnSchemaCollection = tbl.NonPrimaryKeyColumns %>
+	<% Dim PKOrd as integer = PKs.Count - 1 %>	
+
+<%= tbl.Name %>
+<% For each col in tbl.columns %>
+<%IF Col.IsPrimarykeymember then %>|*<%Else %>|<% End If %><%= Col.Name %>|<%= Col.SystemType %>|<%= Col.NativeType %>|<%= Col.Size %>
+<% Next %>	
+	
+<% Next %>
+

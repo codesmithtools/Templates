@@ -80,13 +80,8 @@ namespace CodeSmith.Data.Rules
         /// <param name="context">The context.</param>
         public override void Run(RuleContext context)
         {
-            context.Message = ErrorMessage;
-            context.Success = true;
-
-            if (!CanRun(context.TrackedObject))
-                return;
-            
             string value = GetPropertyValue(context.TrackedObject.Current) as string;
+            context.Message = ErrorMessage; 
             context.Success = (value != null && Regex.IsMatch(value));            
         }
     }

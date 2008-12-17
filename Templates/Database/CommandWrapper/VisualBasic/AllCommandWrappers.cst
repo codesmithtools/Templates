@@ -1,32 +1,24 @@
 <%------------------------------------------------------------------------------------------
-* Author: Eric J. Smith
+* Author: Eric J. Smith 
 * Description: This template will generate wrappers for all stored procedures in a database.
 ------------------------------------------------------------------------------------------%>
-<%@ CodeTemplate Language="VB" TargetLanguage="Text" Description="This template will generate wrappers for all stored procedures in a database." %>
-
-<%-- Required Properties  --%>
-<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Required" Description="Database that the stored procedures wrappers should be based on." %>
-<%@ Property Name="ResultSchema" Type="CommandWrapperTemplate.ResultSchemaEnum" Category="Required" Default="StronglyTyped"  Description="Determines what type of result schema should be used for the wrapper class." %>
-<%@ Property Name="Accessibility" Type="CommandWrapperTemplate.AccessibilityEnum" Category="Required" Default="Public" Description="The accessibility of the generated classes." %>
-
-<%-- Optional Properties  --%>
-<%@ Property Name="ExcludedCommands" Type="StringCollection" Default="" Optional="True" Category="Optional" Description="If supplied, any matching commands will not get wrappers generated. (* is treated as a wildcard)" %>
-
-<%-- Register the StoredProcedures template and have it's properties merged into this template.  --%>
-<%@ Register Template="CommandWrapperClass.cst" Name="CommandWrapperTemplate" MergeProperties="True" ExcludeProperties="SourceCommand,BatchMode,CommandClassName,ResultRowClassName,Accessibility" %>
-
-<%-- Register referenced assemblies.  --%>
-<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="Text" Description="Generates stored procedure wrappers for all stored procedures in a database" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Context" Description="Database that the stored procedures wrappers should be based on." %>
+<%@ Property Name="Accessibility" Type="CommandWrapperTemplate.AccessibilityEnum" Default="Public" Category="Context" Description="The accessibility of the generated classes." %>
+<%@ Property Name="ResultSchema" Type="CommandWrapperTemplate.ResultSchemaEnum" Default="StronglyTyped" Category="Context" Description="Determines what type of result schema should be used for the wrapper class." %>
+<%@ Property Name="ExcludedCommands" Type="StringCollection" Default="" Optional="True" Category="Options"
+	Description="If supplied, any matching commands will not get wrappers generated. (* is treated as a wildcard)" %>
 <%@ Assembly Name="SchemaExplorer" %>
-
-<%-- Import commonly used namespaces. --%>
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
-
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%-- Register the StoredProcedures template and have it's properties merged into this template.  --%>
+<%@ Register Template="CommandWrapperClass.cst" Name="CommandWrapperTemplate" MergeProperties="True" ExcludeProperties="SourceCommand,BatchMode,CommandClassName,ResultRowClassName,Accessibility" %>
 <script runat="template">
-
 Private _outputDirectory As String = [String].Empty
 
 <Editor(GetType(System.Windows.Forms.Design.FolderNameEditor), GetType(System.Drawing.Design.UITypeEditor))> _

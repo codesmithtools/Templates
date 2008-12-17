@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using ICSharpCode.NRefactory.Ast;
 using ICSharpCode.NRefactory.Visitors;
 
@@ -37,17 +40,6 @@ namespace CodeSmith.Engine
             return base.VisitPropertyDeclaration(propertyDeclaration, data);
         }
 
-        public override object VisitUsingDeclaration(UsingDeclaration usingDeclaration, object data)
-        {
-            TypeDeclaration typeDeclaration = usingDeclaration.Parent as TypeDeclaration;
-            if (typeDeclaration == Type)
-            {
-                UsingList.Add(usingDeclaration);
-            }
-
-            return base.VisitUsingDeclaration(usingDeclaration, data);
-        }
-
         #endregion
 
         #region Properties
@@ -71,13 +63,6 @@ namespace CodeSmith.Engine
         {
             get { return _propertyMap; }
             private set { _propertyMap = value; }
-        }
-
-        private List<UsingDeclaration> _usingList = new List<UsingDeclaration>();
-        public List<UsingDeclaration> UsingList 
-        { 
-            get { return _usingList; }
-            set { _usingList = value; }
         }
 
         #endregion

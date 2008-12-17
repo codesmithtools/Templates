@@ -86,7 +86,44 @@ Namespace <%= ManagerNamespace %>
         ''' Initializes the <see cref="<%= EntityManager.ManagerName %>"/> class.
         ''' </summary>
         Shared Sub New()
-           
+            <% If Framework = FrameworkEnum.v35_SP1 Then %>
+            RuleManager.AddShared(Of <%= EntityManager.EntityName%> )()
+            
+            <% Else    
+            Const  lengthFormat As String = "RuleManager.AddShared(Of {0})(new LengthRule(""{1}"", {2}))"
+            Const  requiredFormat As String = "RuleManager.AddShared(Of {0})(new RequiredRule(""{1}""))"
+            Const  sqlDateFormat As String = "RuleManager.AddShared(Of {0})(new RangeRule(Of DateTime)(""{1}"", SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value))"
+            Const  createDateFormat As String = "RuleManager.AddShared(Of {0})(new NowRule(""{1}"", EntityState.New))"
+            Const  modifyDateFormat As String = "RuleManager.AddShared(Of {0})(new NowRule(""{1}"", EntityState.Dirty))"
+            
+            Dim indent As Integer = Response.IndentLevel
+            Response.IndentLevel = 3
+            For Each c As Column In Table.Type.Columns
+                
+                If Not c.CanBeNull.Value = True AndAlso c.IsDbGenerated.Value = False Then
+                    If c.Type.Contains("String") Then
+                        Response.WriteLine(String.Format(requiredFormat, EntityManager.EntityName, c.Member))
+            ElseIf c.Type.Contains("DateTime") Then
+                        If c.Member.Contains("Create") Then
+                            Response.WriteLine(String.Format(createDateFormat, EntityManager.EntityName, c.Member))
+            ElseIf c.Member.Contains("Modify") OrElse c.Member.Contains("Modified") Then
+                            Response.WriteLine(String.Format(modifyDateFormat, EntityManager.EntityName, c.Member))
+                        Else
+                            Response.WriteLine(String.Format(sqlDateFormat, EntityManager.EntityName, c.Member))
+                        End If
+                    End If
+                End If
+                
+                If c.Type.Contains("String") Then
+                    Dim size As Integer = GetSize(c.DbType)
+                    If 0 < size AndAlso size < 8000 Then
+                        Response.WriteLine(String.Format(lengthFormat, EntityManager.EntityName, c.Member, size))
+                    End If
+                End If
+            Next
+            Response.IndentLevel = indent
+
+            END IF%>
             AddRules()
             
         End Sub

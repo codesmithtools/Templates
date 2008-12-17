@@ -1,36 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 using CodeSmith.Data.Rules;
-using CodeSmith.Data.Rules.Assign;
 
 namespace CodeSmith.Data.Attributes
 {
-    /// <summary>
-    /// Assigns a new GUID to the property for the specified entity states.
-    /// </summary>
-    public class GuidAttribute : RuleAttributeBase
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple= false)]
+    sealed public class GuidAttribute : ValidationAttribute
     {
         public GuidAttribute()
         {
+            IsStateSet = false;
         }
 
         public GuidAttribute(EntityState state)
         {
-            this.State = state;
-        }
-
-        public override IRule CreateRule(string property)
-        {
-            return new GuidRule(property, this.State);
+            State = state;
+            IsStateSet = true;
         }
 
         public override bool IsValid(object value)
         {
+            if (value != null)
+                throw new ValidationException(ErrorMessage);
             return true;
+        }
+        
+        public EntityState State { get; private set; }
+
+        public bool IsStateSet { get; private set; }
+
+        private string _errorMessage = "This field is automatically set.";
+
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set { _errorMessage = value; }
         }
     }
 }

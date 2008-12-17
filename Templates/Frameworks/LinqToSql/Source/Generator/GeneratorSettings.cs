@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using SchemaExplorer;
 
 namespace LinqToSqlShared.Generator
 {
@@ -60,24 +59,6 @@ namespace LinqToSqlShared.Generator
             get { return _cleanExpressions; }
         }
 
-        private List<Regex> _enumExpressions = new List<Regex>();
-        public List<Regex> EnumExpressions
-        {
-            get { return _enumExpressions; }
-        }
-
-        private List<Regex> _enumNameExpressions = new List<Regex>();
-        public List<Regex> EnumNameExpressions
-        {
-            get { return _enumNameExpressions; }
-        }
-
-        private List<Regex> _enumDescriptionExpressions = new List<Regex>();
-        public List<Regex> EnumDescriptionExpressions
-        {
-            get { return _enumDescriptionExpressions; }
-        }
-
         private bool _disableRenaming = false;
         public bool DisableRenaming
         {
@@ -87,67 +68,16 @@ namespace LinqToSqlShared.Generator
 
         public bool IsIgnored(string name)
         {
-            return IsRegexMatch(name, IgnoreExpressions);
-        }
+            if (IgnoreExpressions.Count == 0)
+                return false;
 
-        public bool IsEnum(TableSchema table)
-        {
-            return !IsIgnored(table.Name)                                       // 1) Is not ignored.
-                && IsRegexMatch(table.Name, EnumExpressions)                    // 2) Matches the enum regex.
-                && table.PrimaryKey != null                                     // 3) Has a Primary Key...
-                && table.PrimaryKey.MemberColumns.Count == 1                    // 4) ...that is a single column...
-                && table.PrimaryKey.MemberColumns[0].SystemType == typeof(int)  // 5) ...of type integer.
-                && !string.IsNullOrEmpty(GetEnumNameColumnName(table))          // 6) Contains a column for name.
-                && table.GetTableData().Rows.Count > 0;                         // 7) Must have at least one row.
-        }
-
-        public string GetEnumNameColumnName(TableSchema table)
-        {
-            string result = GetEnumColumnName(table, EnumNameExpressions);
-
-            // If no Regex match found, use first column of type string.
-            if (string.IsNullOrEmpty(result))
-                foreach (ColumnSchema column in table.Columns)
-                    if (column.SystemType == typeof(string))
-                    {
-                        result = column.Name;
-                        break;
-                    }
-
-            return result;
-        }
-
-        public string GetEnumDescriptionColumnName(TableSchema table)
-        {
-            return GetEnumColumnName(table, EnumDescriptionExpressions);
-        }
-
-        private string GetEnumColumnName(TableSchema table, List<Regex> regexList)
-        {
-            string result = string.Empty;
-
-            foreach (ColumnSchema column in table.Columns)
-                if (IsRegexMatch(column.Name, regexList))
-                {
-                    result = column.Name;
-                    break;
-                }
-
-            return result;
-        }
-
-        private bool IsRegexMatch(string name, List<Regex> regexList)
-        {
-            bool isEnum = false;
-
-            foreach (Regex regex in regexList)
+            foreach (Regex regex in IgnoreExpressions)
+            {
                 if (regex.IsMatch(name))
-                {
-                    isEnum = true;
-                    break;
-                }
+                    return true;
+            }
 
-            return isEnum;
+            return false;
         }
 
         public string CleanName(string name)

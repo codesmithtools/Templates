@@ -3,11 +3,17 @@
     Debug="True" OutputType="None" CompilerVersion="v3.5"%>
 
 <%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="Microsoft.Build.Engine" %>
+<%@ Assembly Name="Microsoft.Build.Utilities" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="Dbml" Path="..\Common" %>
 <%@ Assembly Name="Generator" Path="..\Common" %>
 
+<%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 
@@ -21,6 +27,18 @@
     Description="The full path to the mapping file." 
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
+<%@ Property Category="2.Class" Name="Framework"
+    Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v35_SP1" Optional="False"
+    Description="Which version of the .Net Framework is being generated for." %>
+    
+<%@ Property Category="2.Class" Name="IncludeDataContract"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Include WCF DataContract attributes." %>
+
+<%@ Property Category="2.Class" Name="IncludeDataServices"
+    Type="System.Boolean" Default="true" Optional="False"
+    Description="Include ADO.Net DataServices attributes and impliment IUpdatable on DataContext." %>
+	
 <%@ Register Name="DataContextGeneratedClass" 
     Template="Internal\DataContext.Generated.cst" 
     MergeProperties="False" %>
@@ -39,14 +57,10 @@
 
 <%@ Register Name="EntityGeneratedClass" 
     Template="Internal\Entity.Generated.cst" 
-    MergeProperties="True" ExcludeProperties="Database,TableName,Type, EntityBase" %>
+    MergeProperties="False" %>
 
 <%@ Register Name="EntityEditableClass" 
     Template="Internal\Entity.Editable.cst" 
-    MergeProperties="False" %>
-
-<%@ Register Name="EnumClass" 
-    Template="Internal\Enums.cst" 
     MergeProperties="False" %>
 
 
@@ -80,13 +94,13 @@
         {
             this.RegisterReference("System.Web.DynamicData");
             this.RegisterReference("System.ComponentModel.DataAnnotations");
-            if(IncludeDataServices)
-            {
-                this.RegisterReference("System.Data.Services");
-                this.RegisterReference("System.Data.Services.Client");
-            }
+			if(IncludeDataServices)
+			{
+				this.RegisterReference("System.Data.Services");
+				this.RegisterReference("System.Data.Services.Client");
+			}
         }
-        this.RegisterReference(Path.GetFullPath(Path.Combine(
+		this.RegisterReference(Path.GetFullPath(Path.Combine(
             this.CodeTemplateInfo.DirectoryName,
             "..\\Common\\CodeSmith.Data.dll")));
     }
@@ -94,12 +108,12 @@
     public void CreateEntityBaseClass(Database database)
     {
         EntityBaseGeneratedClass t = this.Create<EntityBaseGeneratedClass>();
-        this.CopyPropertiesTo(t);
         t.ClassNamespace = database.EntityNamespace;
         t.ClassName = database.EntityBase;
+        t.IncludeDataContract = IncludeDataContract;
+		t.Framework = Framework;
         
         EntityBaseEditableClass p = this.Create<EntityBaseEditableClass>();
-        this.CopyPropertiesTo(p);
         p.ClassNamespace = database.EntityNamespace;
         p.ClassName = database.EntityBase;
         
@@ -122,15 +136,15 @@
     public void CreateDataContextClass(Database database)
     {
         DataContextGeneratedClass t = this.Create<DataContextGeneratedClass>();
-        this.CopyPropertiesTo(t);
         t.Database = database;
+		t.Framework = this.Framework;
+		t.IncludeDataServices = this.IncludeDataServices;
         
         DataContextEditableClass p = this.Create<DataContextEditableClass>();
-        this.CopyPropertiesTo(p);
         p.Database = database;
-
+        
         string contextClass = CommonUtility.GetClassName(database.Class);
-
+        
         string parentFileName = contextClass + ".cs";
         parentFileName = Path.Combine(OutputDirectory, parentFileName);
         
@@ -150,20 +164,19 @@
         t.RenderToFile(fileName, parentFileName, true);        
                     
         this.Progress.PerformStep();
-        
-        CreateEnums(database, parentFileName);
     }
     
     public void CreateEntityClasses(Database database)
     {
         EntityGeneratedClass t = this.Create<EntityGeneratedClass>();
-        this.CopyPropertiesTo(t);
         t.Database = database;
-        t.EnumDatabase = this.EnumDatabase;
+        t.IncludeDataContract = this.IncludeDataContract;
+		t.IncludeDataServices = this.IncludeDataServices;
+        t.Framework = this.Framework;
         
         EntityEditableClass p = this.Create<EntityEditableClass>();
-        this.CopyPropertiesTo(p);
         p.Database = database;
+        p.Framework = Framework;
 
         foreach(Table tableMap in database.Tables)
         {
@@ -214,17 +227,18 @@
 
         if (File.Exists(parentFileName))
         {
-            partialClass.ExistingFile = new CodeFileParser(parentFileName);
-        }
-        
-        InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata")
-        {
-            OnlyInsertMatchingClass = true,
-            PreserveClassAttributes = true,
-            NotFoundAction = InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent,
-            NotFoundParent = type.Name,
-            MergeImports = true
-        };
+			partialClass.ExistingFile = CodeFileParser.Create(parentFileName);
+			partialClass.ExistingFile.ParseMethodBodies = false;
+			partialClass.ExistingFile.Parse();
+		}
+		
+		InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata")
+		{
+			OnlyInsertMatchingClass = true,
+			PreserveClassAttributes = true,
+			NotFoundAction = InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent,
+			NotFoundParent = type.Name
+		};
         partialClass.Type = type;
         Response.WriteLine(parentFileName);
         partialClass.RenderToFile(parentFileName, insertClassMergeStrategy);
@@ -244,47 +258,6 @@
             CreateEntity(entityClass, partialClass, childType);
         }
     }
-    
-    public void CreateEnums(Database database, string parentFile)
-    {
-        if(EnumDatabase != null)
-        {
-            string contextClass = CommonUtility.GetClassName(database.Class);    
-            string fileName = Path.Combine(OutputDirectory, String.Concat(contextClass, ".Enums.cs"));
-        
-            EnumClass t = this.Create<EnumClass>();
-            t.Namespace = database.EntityNamespace;
-            t.Database = EnumDatabase;
-            t.RenderToFile(fileName, parentFile, true);
-        }
-    }
-    
-    private string _enumXmlFileName = null;
-    private string EnumXmlFileName
-    {
-        get
-        {
-            if(String.IsNullOrEmpty(_enumXmlFileName))
-                _enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
-            return _enumXmlFileName;
-        }
-    }
-    
-    private LinqToSqlShared.Generator.DbmlEnum.Database _enumDatabase = null;
-    private bool _isEnumDatabaseLoaded = false;
-    private LinqToSqlShared.Generator.DbmlEnum.Database EnumDatabase
-    {
-        get
-        {
-            if(!_isEnumDatabaseLoaded)
-            {
-                _enumDatabase = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName);
-                _isEnumDatabaseLoaded = true;
-            }
-            return _enumDatabase;
-        }
-    }
-    
 </script>
 Generating Linq to Sql Entities ...
 <% Generate(); %>
