@@ -1,0 +1,282 @@
+<%@ CodeTemplate Src="CSLAExpress\CSLAExpress20.vb" Inherits="CSLAExpress20" Debug="False" Language="VB" TargetLanguage="VB" Description="Generates CSLA Business Objects." %>
+<%@ Assembly Name="SchemaExplorer" %><%@ Assembly Name="System.Design" %>
+
+<% Dim Template As CodeTemplate %>
+
+<% Template=CompileTemplate(Me.CodeTemplateInfo.DirectoryName & "EditableRootParent.cst") %>
+<% If Not Template Is Nothing Then %>
+<%   With Template
+      '  Business Object Combo
+      .SetProperty("ChildCollectionName", ChildCollectionName)
+      .SetProperty("ChildCollectionType", ChildCollectionType)
+      .SetProperty("ChildTable", ChildTable)
+      .SetProperty("ChildType", ChildType)
+	  .SetProperty("ObjectName", RootObjectName)
+      .SetProperty("ObjectTable", RootObjectTable)
+	
+      ' File Generation
+      .SetProperty("DateAsSubFolder", DateAsSubFolder)
+      .SetProperty("OutputDirectory", OutputDirectory)
+      .SetProperty("OutputToFile", OutputToFile)
+
+      ' General Options - Business Object
+      .SetProperty("AnonymousAccess", AnonymousAccess)
+      .SetProperty("CamelCaseMemberVars", CamelCaseMemberVars)
+	  .SetProperty("ExecutionTime", ExecutionTime)
+      .SetProperty("Generate_Class", Generate_Class)
+      .SetProperty("Generate_SProcs", Generate_SProcs)
+      .SetProperty("Generate_Tests", Generate_Tests)
+      .SetProperty("Implement_Exists", Implement_Exists)
+      .SetProperty("MemberPrefix", MemberPrefix)
+      .SetProperty("ObjectNameSpace", ObjectNameSpace)
+      .SetProperty("UseSmartDate", UseSmartDate)
+      .SetProperty("UseSP_ReturnValue", UseSP_ReturnValue)
+
+      ' General Options - Database
+      .SetProperty("ConcurrencyErrMsg", ConcurrencyErrMsg)
+      .SetProperty("ConnectionString", ConnectionString)
+      .SetProperty("DatabaseObjectOwner", DatabaseObjectOwner)
+      .SetProperty("GrantExecute", GrantExecute)
+      .SetProperty("TransationalType_Delete", TransationalType_Delete)
+      .SetProperty("TransationalType_Insert", TransationalType_Insert)
+      .SetProperty("TransationalType_Update", TransationalType_Update)
+      .SetProperty("Use_DROP_Statements", Use_DROP_Statements)
+
+      ' Authoriztion Rules - Object Level
+      .SetProperty("CanAddObject", CanAddObject)
+      .SetProperty("CanDeleteObject", CanDeleteObject)
+      .SetProperty("CanEditObject", CanEditObject)
+      .SetProperty("CanExecuteObject", CanExecuteObject)
+      .SetProperty("CanGetObject", CanGetObject)
+
+      ' Authorization Rules - Properties Level
+      .SetProperty("AllowRead", AllowRead)
+      .SetProperty("AllowWrite", AllowWrite)
+      .SetProperty("DenyRead", DenyRead)
+      .SetProperty("DenyWrite", DenyWrite)
+
+      ' Business Methods
+      .SetProperty("CanReadProperty", CanReadProperty)
+      .SetProperty("CanWriteProperty", CanWriteProperty)
+      .SetProperty("PropertyHasChanged", PropertyHasChanged)
+
+      ' Data Access
+      .SetProperty("RunLocalCreate", RunLocalCreate)
+
+      ' Stored Procedures
+      .SetProperty("InsertPrefix", InsertPrefix)
+      .SetProperty("UpdatePrefix", UpdatePrefix)
+      .SetProperty("DeletePrefix", DeletePrefix)
+      .SetProperty("SelectPrefix", SelectPrefix)
+      .SetProperty("ExistsPrefix", ExistsPrefix)
+      .SetProperty("InsertSuffix", InsertSuffix)
+      .SetProperty("UpdateSuffix", UpdateSuffix)
+      .SetProperty("DeleteSuffix", DeleteSuffix)
+      .SetProperty("SelectSuffix", SelectSuffix)
+      .SetProperty("ExistsSuffix", ExistsSuffix)
+
+	' Validation Rules
+      .SetProperty("ImplementValidation", ImplementValidation)
+	End With %>
+<%   Template.Render(Response) %>
+<% End If %>
+
+<% Template=CompileTemplate(Me.CodeTemplateInfo.DirectoryName & "EditableChildCollection.cst") %>
+<% If Not Template Is Nothing Then %>
+<%   With Template
+      '  Business Object Combo
+      .SetProperty("CollectionName", ChildCollectiontype)
+      .SetProperty("ChildCollectionName", ChildCollectionType)
+      .SetProperty("ChildTable", ChildTable)
+      .SetProperty("ChildType", ChildType)
+      .SetProperty("ParentType", RootObjectName)
+      .SetProperty("SwitchableChild", True)
+
+      ' File Generation
+      .SetProperty("DateAsSubFolder", DateAsSubFolder)
+      .SetProperty("OutputDirectory", OutputDirectory)
+      .SetProperty("OutputToFile", OutputToFile)
+
+      ' General Options - Business Object
+      .SetProperty("AnonymousAccess", AnonymousAccess)
+      .SetProperty("CamelCaseMemberVars", CamelCaseMemberVars)
+      .SetProperty("Generate_Class", Generate_Class)
+      .SetProperty("Generate_SProcs", Generate_SProcs)
+      .SetProperty("Generate_Tests", Generate_Tests)
+      .SetProperty("Implement_Exists", Implement_Exists)
+      .SetProperty("MemberPrefix", MemberPrefix)
+      .SetProperty("ObjectNameSpace", ObjectNameSpace)
+      .SetProperty("UseSmartDate", UseSmartDate)
+      .SetProperty("UseSP_ReturnValue", UseSP_ReturnValue)
+
+      ' General Options - Database
+      .SetProperty("ConcurrencyErrMsg", ConcurrencyErrMsg)
+      .SetProperty("ConnectionString", ConnectionString)
+      .SetProperty("DatabaseObjectOwner", DatabaseObjectOwner)
+      .SetProperty("GrantExecute", GrantExecute)
+      .SetProperty("TransationalType_Delete", TransationalType_Delete)
+      .SetProperty("TransationalType_Insert", TransationalType_Insert)
+      .SetProperty("TransationalType_Update", TransationalType_Update)
+      .SetProperty("Use_DROP_Statements", Use_DROP_Statements)
+
+      ' Authoriztion Rules - Object Level
+      .SetProperty("CanAddObject", CanAddObject)
+      .SetProperty("CanDeleteObject", CanDeleteObject)
+      .SetProperty("CanEditObject", CanEditObject)
+      .SetProperty("CanExecuteObject", CanExecuteObject)
+      .SetProperty("CanGetObject", CanGetObject)
+
+      ' Authorization Rules - Properties Level
+      .SetProperty("AllowRead", AllowRead)
+      .SetProperty("AllowWrite", AllowWrite)
+      .SetProperty("DenyRead", DenyRead)
+      .SetProperty("DenyWrite", DenyWrite)
+
+      ' Business Methods
+      .SetProperty("CanReadProperty", CanReadProperty)
+      .SetProperty("CanWriteProperty", CanWriteProperty)
+      .SetProperty("PropertyHasChanged", PropertyHasChanged)
+
+      ' Data Access
+      .SetProperty("RunLocalCreate", RunLocalCreate)
+
+      ' Stored Procedures
+      .SetProperty("InsertPrefix", InsertPrefix)
+      .SetProperty("UpdatePrefix", UpdatePrefix)
+      .SetProperty("DeletePrefix", DeletePrefix)
+      .SetProperty("SelectPrefix", SelectPrefix)
+      .SetProperty("ExistsPrefix", ExistsPrefix)
+      .SetProperty("InsertSuffix", InsertSuffix)
+      .SetProperty("UpdateSuffix", UpdateSuffix)
+      .SetProperty("DeleteSuffix", DeleteSuffix)
+      .SetProperty("SelectSuffix", SelectSuffix)
+      .SetProperty("ExistsSuffix", ExistsSuffix)
+
+	' Validation Rules
+      .SetProperty("ImplementValidation", ImplementValidation)
+	End With %>
+<%   Template.Render(Response) %>
+<% End If %>
+
+<% Template=CompileTemplate(Me.CodeTemplateInfo.DirectoryName & "Switchable.cst") %>
+<% If Not Template Is Nothing Then %>
+<%   With Template
+      '  Business Object Combo
+      .SetProperty("ObjectName", ChildType)
+      .SetProperty("ObjectTable", ChildTable)
+      .SetProperty("FK_to_Parent", FK_to_Parent)
+      '.SetProperty("ObjectTable", ChildTable)
+      .SetProperty("ParentType", RootObjectName)
+	
+      ' File Generation
+      .SetProperty("DateAsSubFolder", DateAsSubFolder)
+      .SetProperty("OutputDirectory", OutputDirectory)
+      .SetProperty("OutputToFile", OutputToFile)
+
+      ' General Options - Business Object
+      .SetProperty("AnonymousAccess", AnonymousAccess)
+      .SetProperty("CamelCaseMemberVars", CamelCaseMemberVars)
+      .SetProperty("Generate_Class", Generate_Class)
+      .SetProperty("Generate_SProcs", Generate_SProcs)
+      .SetProperty("Generate_Tests", Generate_Tests)
+      .SetProperty("Implement_Exists", Implement_Exists)
+      .SetProperty("MemberPrefix", MemberPrefix)
+      .SetProperty("ObjectNameSpace", ObjectNameSpace)
+      .SetProperty("UseSmartDate", UseSmartDate)
+      .SetProperty("UseSP_ReturnValue", UseSP_ReturnValue)
+
+      ' General Options - Database
+      .SetProperty("ConcurrencyErrMsg", ConcurrencyErrMsg)
+      .SetProperty("ConnectionString", ConnectionString)
+      .SetProperty("DatabaseObjectOwner", DatabaseObjectOwner)
+      .SetProperty("GrantExecute", GrantExecute)
+      .SetProperty("TransationalType_Delete", TransationalType_Delete)
+      .SetProperty("TransationalType_Insert", TransationalType_Insert)
+      .SetProperty("TransationalType_Update", TransationalType_Update)
+      .SetProperty("Use_DROP_Statements", Use_DROP_Statements)
+
+      ' Authoriztion Rules - Object Level
+      .SetProperty("CanAddObject", CanAddObject)
+      .SetProperty("CanDeleteObject", CanDeleteObject)
+      .SetProperty("CanEditObject", CanEditObject)
+      .SetProperty("CanExecuteObject", CanExecuteObject)
+      .SetProperty("CanGetObject", CanGetObject)
+
+      ' Authorization Rules - Properties Level
+      .SetProperty("AllowRead", AllowRead)
+      .SetProperty("AllowWrite", AllowWrite)
+      .SetProperty("DenyRead", DenyRead)
+      .SetProperty("DenyWrite", DenyWrite)
+
+      ' Business Methods
+      .SetProperty("CanReadProperty", CanReadProperty)
+      .SetProperty("CanWriteProperty", CanWriteProperty)
+      .SetProperty("PropertyHasChanged", PropertyHasChanged)
+
+      ' Data Access
+      .SetProperty("RunLocalCreate", RunLocalCreate)
+
+      ' Stored Procedures
+      .SetProperty("InsertPrefix", InsertPrefix)
+      .SetProperty("UpdatePrefix", UpdatePrefix)
+      .SetProperty("DeletePrefix", DeletePrefix)
+      .SetProperty("SelectPrefix", SelectPrefix)
+      .SetProperty("ExistsPrefix", ExistsPrefix)
+      .SetProperty("InsertSuffix", InsertSuffix)
+      .SetProperty("UpdateSuffix", UpdateSuffix)
+      .SetProperty("DeleteSuffix", DeleteSuffix)
+      .SetProperty("SelectSuffix", SelectSuffix)
+      .SetProperty("ExistsSuffix", ExistsSuffix)
+
+	' Validation Rules
+      .SetProperty("ImplementValidation", ImplementValidation)
+	End With %>
+<%   Template.Render(Response) %>
+<% End If %>
+
+<script runat="template">
+
+<%-- *** Business Object *** --%>
+<!-- #include file="Properties\BusinessCombos\ER_ECC_EC.vb" -->
+
+<%-- *** Authorization Rules - Object Level *** --%>
+<!-- #include file="Properties\ObjectAuthorization\CanAddObject.vb" -->
+<!-- #include file="Properties\ObjectAuthorization\CanDeleteObject.vb" -->
+<!-- #include file="Properties\ObjectAuthorization\CanEditObject.vb" -->
+<!-- #include file="Properties\ObjectAuthorization\CanExecuteObject.vb" -->
+<!-- #include file="Properties\ObjectAuthorization\CanGetObject.vb" -->
+
+<%-- *** Authorization Rules - Properties Level *** --%>
+<!-- #include file="Properties\PropertyAuthorization\AllowRead.vb" -->
+<!-- #include file="Properties\PropertyAuthorization\AllowWrite.vb" -->
+<!-- #include file="Properties\PropertyAuthorization\DenyRead.vb" -->
+<!-- #include file="Properties\PropertyAuthorization\DenyWrite.vb" -->
+
+<%-- *** Business Methods *** --%>
+<!-- #include file="Properties\BusinessMethods\CanReadWritePropMethods.vb" -->
+<!-- #include file="Properties\BusinessMethods\PropHasChangedMethods.vb" -->
+
+<%-- *** Data Access *** --%>
+<!-- #include file="Properties\DataAccess\RunLocalCreate.vb" -->
+
+<%-- *** Validation Rules *** --%>
+<!-- #include file="Properties\ValidationRules\ImplementValidation.vb" -->
+
+<%-- *** File Generation *** --%>
+<!-- #include file="Properties\FileGeneration\FileGeneration.vb" -->
+
+<%-- *** General Options - Business Object *** --%>
+<!-- #include file="Properties\GeneralOptionsObject\GeneralOptionsObject.vb" -->
+<!-- #include file="Properties\GeneralOptionsObject\GenSProcs.vb" -->
+<!-- #include file="Properties\GeneralOptionsObject\GenTests.vb" -->
+<!-- #include file="Properties\GeneralOptionsObject\ExecutionTime.vb" -->
+
+<%-- *** General Options - Database *** --%>
+<!-- #include file="Properties\GeneralOptionsDatabase\GeneralOptionsDatabase.vb" -->
+
+<%-- *** Stored Procedures *** --%>
+<!-- #include file="Properties\StoredProcedures\ActionSProcs.vb" -->
+<!-- #include file="Properties\StoredProcedures\SelectSProcs.vb" -->
+<!-- #include file="Properties\StoredProcedures\ExistsSProcs.vb" -->
+
+</script>
