@@ -4,14 +4,9 @@
         <name>CodeSmith.Data</name>
     </assembly>
     <members>
-        <member name="T:CodeSmith.Data.Rules.Validation.LengthRule">
+        <member name="T:CodeSmith.Data.Rules.Security.AuthorizationRuleBase">
             <summary>
-            A rule to check the length.
-            </summary>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.PropertyRuleBase">
-            <summary>
-            A base class for property rules.
+            A base class for authorization rules.
             </summary>
         </member>
         <member name="T:CodeSmith.Data.Rules.IRule">
@@ -42,6 +37,112 @@
             Gets the error message when rule fails.
             </summary>
             <value>The error message when rule fails.</value>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Security.AuthorizationRuleBase"/> class.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.#ctor(System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Security.AuthorizationRuleBase"/> class.
+            </summary>
+            <param name="authorizedRoles">The authorized roles.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.IsAuthorized">
+            <summary>
+            Determines whether this instance is authorized.
+            </summary>
+            <returns>
+            	<c>true</c> if this instance is authorized; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.GetUser">
+            <summary>
+            Gets the current username.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.GetPrincipal">
+            <summary>
+            Gets the current user principal.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.Run(CodeSmith.Data.Rules.RuleContext)">
+            <summary>
+            Runs the specified rule using the RuleContext.
+            </summary>
+            <param name="context">The current RuleContext.</param>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.AuthorizedRoles">
+            <summary>
+            Gets or sets the authorized roles.
+            </summary>
+            <value>The authorized roles.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.ErrorMessage">
+            <summary>
+            Gets the error message when rule fails.
+            </summary>
+            <value>The error message when rule fails.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.TargetProperty">
+            <summary>
+            Gets the target property to apply rule to.
+            </summary>
+            <value>The target property.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.Priority">
+            <summary>
+            Gets the rule priority. The lowest number runs first.
+            </summary>
+            <value>The rule priority.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Rules.Validation.ComparisonOperator">
+            <summary>
+            The operator the Compare Validator uses.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.Validation.ComparisonOperator.Equal">
+            <summary>
+            A comparison for equality.  
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.Validation.ComparisonOperator.GreaterThan">
+            <summary>
+            A comparison for greater than.  
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.Validation.ComparisonOperator.GreaterThanOrEqual">
+            <summary>
+            A comparison for greater than or equal to. 
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.Validation.ComparisonOperator.LessThan">
+            <summary>
+            A comparison for less than.  
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.Validation.ComparisonOperator.LessThanOrEqual">
+            <summary>
+            A comparison for less than or equal to.  
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.Validation.ComparisonOperator.NotEqual">
+            <summary>
+            A comparison for inequality.  
+            </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Rules.Assign.NowRule">
+            <summary>
+            Assigns the current date time to the property.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Rules.PropertyRuleBase">
+            <summary>
+            A base class for property rules.
+            </summary>
         </member>
         <member name="M:CodeSmith.Data.Rules.PropertyRuleBase.#ctor(System.String)">
             <summary>
@@ -133,132 +234,186 @@
             </summary>
             <value>The rule priority.</value>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.LengthRule.#ctor(System.String,System.Int32)">
+        <member name="M:CodeSmith.Data.Rules.Assign.NowRule.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.LengthRule"/> class.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.NowRule"/> class.
             </summary>
             <param name="property">The property.</param>
-            <param name="maxLength">The maximum length.</param>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.LengthRule.#ctor(System.String,System.Int32,System.Int32)">
+        <member name="M:CodeSmith.Data.Rules.Assign.NowRule.#ctor(System.String,CodeSmith.Data.Rules.EntityState)">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.LengthRule"/> class.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.NowRule"/> class.
             </summary>
             <param name="property">The property.</param>
-            <param name="minLength">The minimum length.</param>
-            <param name="maxLength">The maximum length.</param>
+            <param name="assignState">State of the object that can be assigned.</param>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.LengthRule.#ctor(System.String,System.String,System.Int32)">
+        <member name="M:CodeSmith.Data.Rules.Assign.NowRule.Run(CodeSmith.Data.Rules.RuleContext)">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.LengthRule"/> class.
+            Runs this rule.
+            </summary>
+            <param name="context">The rule context.</param>
+        </member>
+        <member name="T:CodeSmith.Data.Rules.EntityState">
+            <summary>
+            The state to the tracked entity
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.EntityState.New">
+            <summary>The entity is new.</summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.EntityState.Changed">
+            <summary>The entity is changed.</summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.EntityState.Deleted">
+            <summary>The entity is deleted.</summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.EntityState.Dirty">
+            <summary>The entity is new or changed.</summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.EntityState.All">
+            <summary>All the entity states.</summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Assign.IpAddressRule.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.IpAddressRule"/> class.
+            </summary>
+            <param name="property">The property.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Assign.IpAddressRule.#ctor(System.String,CodeSmith.Data.Rules.EntityState)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.IpAddressRule"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="assignState">State of the object that can be assigned.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Assign.IpAddressRule.Run(CodeSmith.Data.Rules.RuleContext)">
+            <summary>
+            Runs this rule.
+            </summary>
+            <param name="context">The rule context.</param>
+        </member>
+        <member name="T:CodeSmith.Data.Rules.Validation.RequiredRule">
+            <summary>
+            A rule to check that the value is not null.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.RequiredRule.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.RequiredRule"/> class.
+            </summary>
+            <param name="property">The target property to apply rule to.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.RequiredRule.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.RequiredRule"/> class.
             </summary>
             <param name="property">The property.</param>
             <param name="message">The message.</param>
-            <param name="maxLength">The maximum length.</param>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.LengthRule.#ctor(System.String,System.String,System.Int32,System.Int32)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.LengthRule"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="message">The message.</param>
-            <param name="minLength">The minimum length.</param>
-            <param name="maxLength">The maximum length.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.LengthRule.Run(CodeSmith.Data.Rules.RuleContext)">
+        <member name="M:CodeSmith.Data.Rules.Validation.RequiredRule.Run(CodeSmith.Data.Rules.RuleContext)">
             <summary>
             Runs the specified context.
             </summary>
             <param name="context">The context.</param>
         </member>
-        <member name="P:CodeSmith.Data.Rules.Validation.LengthRule.MaxLength">
+        <member name="T:CodeSmith.Data.Rules.Validation.CustomRule`1">
             <summary>
-            Gets or sets the max length.
+            A rule that run a method to validate.
             </summary>
-            <value>The maximum length.</value>
+            <typeparam name="T">The property type.</typeparam>
         </member>
-        <member name="P:CodeSmith.Data.Rules.Validation.LengthRule.MinLength">
+        <member name="M:CodeSmith.Data.Rules.Validation.CustomRule`1.#ctor(System.String,System.String,System.Predicate{`0})">
             <summary>
-            Gets or sets the minimum length.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.CustomRule`1"/> class.
             </summary>
-            <value>The minimum length.</value>
+            <param name="property">The property.</param>
+            <param name="message">The message.</param>
+            <param name="method">The method.</param>
         </member>
-        <member name="T:CodeSmith.Data.Rules.Security.DeleteRule">
+        <member name="M:CodeSmith.Data.Rules.Validation.CustomRule`1.Run(CodeSmith.Data.Rules.RuleContext)">
             <summary>
-            A rule to determine if the current user has delete permission.
+            Runs the specified context.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.Validation.CustomRule`1.Method">
+            <summary>
+            Gets or sets the method.
+            </summary>
+            <value>The method.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.IPagedList">
+            <summary>
+            Interface defining a paged list.
             </summary>
         </member>
-        <member name="T:CodeSmith.Data.Rules.Security.AuthorizationRuleBase">
+        <member name="P:CodeSmith.Data.Linq.IPagedList.HasPreviousPage">
             <summary>
-            A base class for authorization rules.
+            Gets a value indicating whether this instance has previous page.
             </summary>
+            <value>
+            	<c>true</c> if this instance has previous page; otherwise, <c>false</c>.
+            </value>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.#ctor">
+        <member name="P:CodeSmith.Data.Linq.IPagedList.HasNextPage">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Security.AuthorizationRuleBase"/> class.
+            Gets a value indicating whether this instance has next page.
             </summary>
+            <value>
+            	<c>true</c> if this instance has next page; otherwise, <c>false</c>.
+            </value>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.#ctor(System.String[])">
+        <member name="P:CodeSmith.Data.Linq.IPagedList.IsFirstPage">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Security.AuthorizationRuleBase"/> class.
+            Gets a value indicating whether this instance is first page.
             </summary>
-            <param name="authorizedRoles">The authorized roles.</param>
+            <value>
+            	<c>true</c> if this instance is first page; otherwise, <c>false</c>.
+            </value>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.IsAuthorized">
+        <member name="P:CodeSmith.Data.Linq.IPagedList.IsLastPage">
             <summary>
-            Determines whether this instance is authorized.
+            Gets a value indicating whether this instance is last page.
             </summary>
-            <returns>
-            	<c>true</c> if this instance is authorized; otherwise, <c>false</c>.
-            </returns>
+            <value>
+            	<c>true</c> if this instance is last page; otherwise, <c>false</c>.
+            </value>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.GetUser">
+        <member name="P:CodeSmith.Data.Linq.IPagedList.PageCount">
             <summary>
-            Gets the current username.
+            Gets the total page count.
             </summary>
-            <returns></returns>
+            <value>The total page count.</value>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.GetPrincipal">
+        <member name="P:CodeSmith.Data.Linq.IPagedList.PageIndex">
             <summary>
-            Gets the current user principal.
+            Gets the zero based index of the page.
             </summary>
-            <returns></returns>
+            <value>The index of the page.</value>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.Run(CodeSmith.Data.Rules.RuleContext)">
+        <member name="P:CodeSmith.Data.Linq.IPagedList.PageNumber">
             <summary>
-            Runs the specified rule using the RuleContext.
+            Gets the page number. Page number is PageIndex + 1.
             </summary>
-            <param name="context">The current RuleContext.</param>
+            <value>The page number.</value>
         </member>
-        <member name="P:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.AuthorizedRoles">
+        <member name="P:CodeSmith.Data.Linq.IPagedList.PageSize">
             <summary>
-            Gets or sets the authorized roles.
+            Gets the size of the page.
             </summary>
-            <value>The authorized roles.</value>
+            <value>The size of the page.</value>
         </member>
-        <member name="P:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.ErrorMessage">
+        <member name="P:CodeSmith.Data.Linq.IPagedList.TotalItemCount">
             <summary>
-            Gets the error message when rule fails.
+            Gets the total item count.
             </summary>
-            <value>The error message when rule fails.</value>
+            <value>The total item count.</value>
         </member>
-        <member name="P:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.TargetProperty">
+        <member name="T:CodeSmith.Data.Linq.IPageList`1">
             <summary>
-            Gets the target property to apply rule to.
+            Interface defining a paged list.
             </summary>
-            <value>The target property.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Rules.Security.AuthorizationRuleBase.Priority">
-            <summary>
-            Gets the rule priority. The lowest number runs first.
-            </summary>
-            <value>The rule priority.</value>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Security.DeleteRule.Run(CodeSmith.Data.Rules.RuleContext)">
-            <summary>
-            Runs the specified rule using the RuleContext.
-            </summary>
-            <param name="context">The current RuleContext.</param>
+            <typeparam name="T">The type of the items in the list.</typeparam>
         </member>
         <member name="T:CodeSmith.Data.Rules.RuleManager">
             <summary>
@@ -331,6 +486,469 @@
             </summary>
             <value>The broken rules.</value>
         </member>
+        <member name="T:CodeSmith.Data.Rules.Assign.UserNameRule">
+            <summary>
+            Assigns the current logged in username.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Assign.UserNameRule.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.UserNameRule"/> class.
+            </summary>
+            <param name="property">The property.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Assign.UserNameRule.#ctor(System.String,CodeSmith.Data.Rules.EntityState)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.UserNameRule"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="assignState">State of the object that can be assigned.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Assign.UserNameRule.Run(CodeSmith.Data.Rules.RuleContext)">
+            <summary>
+            Runs this rule.
+            </summary>
+            <param name="context">The rule context.</param>
+        </member>
+        <member name="T:CodeSmith.Data.Rules.BrokenRule">
+            <summary>
+            A class indicating a broken rule.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.BrokenRule.#ctor(CodeSmith.Data.Rules.RuleContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.BrokenRule"/> class.
+            </summary>
+            <param name="context">The rule context.</param>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.BrokenRule.Message">
+            <summary>
+            Gets or sets the error message.
+            </summary>
+            <value>The error message.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.BrokenRule.Context">
+            <summary>
+            Gets or sets the rule context.
+            </summary>
+            <value>The context.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Attributes.IpAddressAttribute">
+            <summary>
+            Assigns the current user's IP address to the property for the specified entity states.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Serialization.JavaScriptSerializerExtensions">
+            <summary>
+            JavaScriptSerializer extension methods.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Serialization.JavaScriptSerializerExtensions.RegisterByteArrayConverter(System.Web.Script.Serialization.JavaScriptSerializer)">
+            <summary>
+            Registers the byte array converter.
+            </summary>
+            <param name="serializer">The <see cref="T:System.Web.Script.Serialization.JavaScriptSerializer"/> instance.</param>
+        </member>
+        <member name="T:CodeSmith.Data.Rules.RuleContext">
+            <summary>
+            The context for a rule.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.RuleContext.#ctor(CodeSmith.Data.TrackedObject,CodeSmith.Data.Rules.IRule)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RuleContext"/> class.
+            </summary>
+            <param name="trackedObject">The tracked object.</param>
+            <param name="rule">The rule to apply.</param>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.RuleContext.TrackedObject">
+            <summary>
+            Gets or sets the tracked object.
+            </summary>
+            <value>The tracked object.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.RuleContext.Success">
+            <summary>
+            Gets or sets a value indicating whether this <see cref="T:CodeSmith.Data.Rules.RuleContext"/> is success.
+            </summary>
+            <value><c>true</c> if success; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.RuleContext.Message">
+            <summary>
+            Gets or sets the message.
+            </summary>
+            <value>The message.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.RuleContext.Rule">
+            <summary>
+            Gets or sets the rule to run.
+            </summary>
+            <value>The rule to run.</value>
+        </member>
+        <member name="T:CodeSmith.Data.DataManagerBase`1">
+            <summary>
+            The base class for the data manager.
+            </summary>
+            <typeparam name="TContext">The type of DataContext.</typeparam>
+        </member>
+        <member name="T:CodeSmith.Data.IDataManager`1">
+            <summary>
+            An interface defining a data manager.
+            </summary>
+            <typeparam name="TContext">The type of the DataContext.</typeparam>
+        </member>
+        <member name="T:CodeSmith.Data.IDataManager">
+            <summary>
+            An interface defining a data manager.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.IDataManager`1.Context">
+            <summary>
+            Gets the DataContext for this manager.
+            </summary>
+            <value>The DataContext.</value>
+        </member>
+        <member name="M:CodeSmith.Data.DataManagerBase`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.DataManagerBase`1"/> class.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="P:CodeSmith.Data.DataManagerBase`1.Context">
+            <summary>
+            Gets the managers DataContext.
+            </summary>
+            <value>The current DataContext.</value>
+        </member>
+        <member name="P:CodeSmith.Data.DataManagerBase`1.Rules">
+            <summary>
+            Gets the current rules for the entities.
+            </summary>
+            <value>The entity rules.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Attributes.NowAttribute">
+            <summary>
+            Assigns the current date / time to the property for the specified entity states.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Attributes.GuidAttribute">
+            <summary>
+            Assigns a new GUID to the property for the specified entity states.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Web.LinqCacheDataSource">
+            <summary>
+            A LinqDataSource that provides caching for Linq queries.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Web.LinqCacheDataSource.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Web.LinqCacheDataSource"/> class.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Web.LinqCacheDataSource.EnableCache">
+            <summary>
+            Gets or sets a value indicating whether query caching is enabled.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Web.LinqCacheDataSource.Duration">
+            <summary>
+            Gets or sets the time, in seconds, that the query is cached.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Serialization.ByteArrayTypeConverter">
+            <summary>
+            Implements a byte array <see cref="T:System.ComponentModel.TypeConverter"/>.
+            </summary>
+            <remarks>
+            The converter supports an array of <see cref="T:System.Byte"/> and <see cref="T:System.Data.Linq.Binary"/>.
+            </remarks>
+        </member>
+        <member name="M:CodeSmith.Data.Serialization.ByteArrayTypeConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+            <summary>
+            Returns whether this converter can convert an object of the given type to the type of this converter, using the specified context.
+            </summary>
+            <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
+            <param name="sourceType">A <see cref="T:System.Type"/> that represents the type you want to convert from.</param>
+            <returns>
+            true if this converter can perform the conversion; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Serialization.ByteArrayTypeConverter.CanConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Type)">
+            <summary>
+            Returns whether this converter can convert the object to the specified type, using the specified context.
+            </summary>
+            <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
+            <param name="destinationType">A <see cref="T:System.Type"/> that represents the type you want to convert to.</param>
+            <returns>
+            true if this converter can perform the conversion; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Serialization.ByteArrayTypeConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
+            <summary>
+            Converts the given object to the type of this converter, using the specified context and culture information.
+            </summary>
+            <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
+            <param name="culture">The <see cref="T:System.Globalization.CultureInfo"/> to use as the current culture.</param>
+            <param name="value">The <see cref="T:System.Object"/> to convert.</param>
+            <returns>
+            An <see cref="T:System.Object"/> that represents the converted value.
+            </returns>
+            <exception cref="T:System.NotSupportedException">The conversion cannot be performed. </exception>
+        </member>
+        <member name="M:CodeSmith.Data.Serialization.ByteArrayTypeConverter.ConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object,System.Type)">
+            <summary>
+            Converts the given value object to the specified type, using the specified context and culture information.
+            </summary>
+            <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
+            <param name="culture">A <see cref="T:System.Globalization.CultureInfo"/>. If null is passed, the current culture is assumed.</param>
+            <param name="value">The <see cref="T:System.Object"/> to convert.</param>
+            <param name="destinationType">The <see cref="T:System.Type"/> to convert the <paramref name="value"/> parameter to.</param>
+            <returns>
+            An <see cref="T:System.Object"/> that represents the converted value.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="destinationType"/> parameter is null. </exception>
+            <exception cref="T:System.NotSupportedException">The conversion cannot be performed. </exception>
+        </member>
+        <member name="T:CodeSmith.Data.Rules.Validation.CompareRule`1">
+            <summary>
+            A rule to compare values.
+            </summary>
+            <typeparam name="T">The value type.</typeparam>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.CompareRule`1.#ctor(System.String,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.CompareRule`1"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.CompareRule`1.#ctor(System.String,`0,CodeSmith.Data.Rules.Validation.ComparisonOperator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.CompareRule`1"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="value">The value.</param>
+            <param name="comparison">The comparison.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.CompareRule`1.#ctor(System.String,System.String,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.CompareRule`1"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="message">The message.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.CompareRule`1.#ctor(System.String,System.String,`0,CodeSmith.Data.Rules.Validation.ComparisonOperator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.CompareRule`1"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="message">The message.</param>
+            <param name="value">The value.</param>
+            <param name="comparison">The comparison.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.CompareRule`1.Run(CodeSmith.Data.Rules.RuleContext)">
+            <summary>
+            Runs the specified context.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.CompareRule`1.CompareResult(System.Int32)">
+            <summary>
+            Tests the comparison result.
+            </summary>
+            <param name="result">The result.</param>
+            <returns></returns>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.Validation.CompareRule`1.ComparisonOperator">
+            <summary>
+            Gets or sets the comparison operator.
+            </summary>
+            <value>The comparison operator.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.Validation.CompareRule`1.ExpectedValue">
+            <summary>
+            Gets or sets the expected value.
+            </summary>
+            <value>The expected value.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Rules.Security.DeleteRule">
+            <summary>
+            A rule to determine if the current user has delete permission.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Security.DeleteRule.Run(CodeSmith.Data.Rules.RuleContext)">
+            <summary>
+            Runs the specified rule using the RuleContext.
+            </summary>
+            <param name="context">The current RuleContext.</param>
+        </member>
+        <member name="T:CodeSmith.Data.EntityManagerBase`2">
+            <summary>
+            A base class for entity managers.
+            </summary>
+            <typeparam name="TManager">The type of the manager.</typeparam>
+            <typeparam name="TEntity">The type of the entity.</typeparam>
+        </member>
+        <member name="T:CodeSmith.Data.IEntityManager`2">
+            <summary>
+            The entity manager interface.
+            </summary>
+            <typeparam name="TManager">The type of the manager.</typeparam>
+            <typeparam name="TEntity">The type of the entity.</typeparam>
+        </member>
+        <member name="M:CodeSmith.Data.IEntityManager`2.GetByKey(CodeSmith.Data.IEntityKey)">
+            <summary>
+            Gets an entity by the primary key.
+            </summary>
+            <param name="key">The key for the entity.</param>
+            <returns>
+            An instance of the entity or null if not found.
+            </returns>
+        </member>
+        <member name="P:CodeSmith.Data.IEntityManager`2.Manager">
+            <summary>
+            Gets the manager.
+            </summary>
+            <value>The manager.</value>
+        </member>
+        <member name="M:CodeSmith.Data.EntityManagerBase`2.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.EntityManagerBase`2"/> class.
+            </summary>
+            <param name="manager">The manager.</param>
+        </member>
+        <member name="M:CodeSmith.Data.EntityManagerBase`2.AddValidationRules">
+            <summary>
+            Add validation rules.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.EntityManagerBase`2.GetByKey(CodeSmith.Data.IEntityKey)">
+            <summary>
+            Gets an entity by the primary key.
+            </summary>
+            <param name="key">The key for the entity.</param>
+            <returns>
+            An instance of the entity or null if not found.
+            </returns>
+            <remarks>
+            This method provides a common retrieval of an entity.
+            </remarks>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
+        <member name="P:CodeSmith.Data.EntityManagerBase`2.Manager">
+            <summary>
+            Gets the manager.
+            </summary>
+            <value>The manager.</value>
+        </member>
+        <member name="T:CodeSmith.Data.IEntityKey">
+            <summary>Interface for an entity key.</summary>
+        </member>
+        <member name="T:CodeSmith.Data.IEntityKey`1">
+            <summary>Interface for an entity key.</summary>
+            <typeparam name="TKey">The type of the key.</typeparam>
+        </member>
+        <member name="P:CodeSmith.Data.IEntityKey`1.Key">
+            <summary>Gets the entity key.</summary>
+        </member>
+        <member name="T:CodeSmith.Data.IEntityKey`2">
+            <summary>Interface for a two part entity key.</summary>
+            <typeparam name="TKey0">The type of the first key.</typeparam>
+            <typeparam name="TKey1">The type of the second key.</typeparam>
+        </member>
+        <member name="P:CodeSmith.Data.IEntityKey`2.Key1">
+            <summary>Gets the second key.</summary>
+        </member>
+        <member name="T:CodeSmith.Data.IEntityKey`3">
+            <summary>Interface for a three part entity key.</summary>
+            <typeparam name="TKey0">The type of the first key.</typeparam>
+            <typeparam name="TKey1">The type of the second key.</typeparam>
+            <typeparam name="TKey2">The type of the key2.</typeparam>
+        </member>
+        <member name="P:CodeSmith.Data.IEntityKey`3.Key2">
+            <summary>Gets the third key.</summary>
+        </member>
+        <member name="T:CodeSmith.Data.IEntityKey`4">
+            <summary>Interface for a four part entity key.</summary>
+            <typeparam name="TKey0">The type of the first key.</typeparam>
+            <typeparam name="TKey1">The type of the second key.</typeparam>
+            <typeparam name="TKey2">The type of the third key.</typeparam>
+            <typeparam name="TKey3">The type of the fourth key.</typeparam>
+        </member>
+        <member name="P:CodeSmith.Data.IEntityKey`4.Key3">
+            <summary>Gets the fourth key.</summary>
+        </member>
+        <member name="T:CodeSmith.Data.EntityKey`1">
+            <summary>Class representing an entity key.</summary>
+            <typeparam name="TKey">The type of the entity key.</typeparam>
+        </member>
+        <member name="M:CodeSmith.Data.EntityKey`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.EntityKey`1"/> class.
+            </summary>
+            <param name="key">The entity key.</param>
+        </member>
+        <member name="P:CodeSmith.Data.EntityKey`1.Key">
+            <summary>Gets the entity key.</summary>
+        </member>
+        <member name="T:CodeSmith.Data.EntityKey`2">
+            <summary>Class representing a two part entity key.</summary>
+            <typeparam name="TKey0">The type of the first key.</typeparam>
+            <typeparam name="TKey1">The type of the second key.</typeparam>
+        </member>
+        <member name="M:CodeSmith.Data.EntityKey`2.#ctor(`0,`1)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.EntityKey`2"/> class.
+            </summary>
+            <param name="key0">The first key value.</param>
+            <param name="key1">The second key value.</param>
+        </member>
+        <member name="P:CodeSmith.Data.EntityKey`2.Key1">
+            <summary>Gets the second key.</summary>
+        </member>
+        <member name="T:CodeSmith.Data.EntityKey`3">
+            <summary>Class representing a three part entity key.</summary>
+            <typeparam name="TKey0">The type of the first key.</typeparam>
+            <typeparam name="TKey1">The type of the second key.</typeparam>
+            <typeparam name="TKey2">The type of the third key.</typeparam>
+        </member>
+        <member name="M:CodeSmith.Data.EntityKey`3.#ctor(`0,`1,`2)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.EntityKey`3"/> class.
+            </summary>
+            <param name="key0">The first key value.</param>
+            <param name="key1">The second key value.</param>
+            <param name="key2">The third key value.</param>
+        </member>
+        <member name="P:CodeSmith.Data.EntityKey`3.Key2">
+            <summary>Gets the third key.</summary>
+        </member>
+        <member name="T:CodeSmith.Data.EntityKey`4">
+            <summary>Class representing a four part entity key.</summary>
+            <typeparam name="TKey0">The type of the first key.</typeparam>
+            <typeparam name="TKey1">The type of the second key.</typeparam>
+            <typeparam name="TKey2">The type of the third key.</typeparam>
+            <typeparam name="TKey3">The type of the fourth key.</typeparam>
+        </member>
+        <member name="M:CodeSmith.Data.EntityKey`4.#ctor(`0,`1,`2,`3)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.EntityKey`4"/> class.
+            </summary>
+            <param name="key0">The first key value.</param>
+            <param name="key1">The second key value.</param>
+            <param name="key2">The third key value.</param>
+            <param name="key3">The fourth key value.</param>
+        </member>
+        <member name="P:CodeSmith.Data.EntityKey`4.Key3">
+            <summary>Gets the fourth key.</summary>
+        </member>
+        <member name="T:CodeSmith.Data.Attributes.UserNameAttribute">
+            <summary>
+            Assigns the current users name to the property for the specified entity states.
+            </summary>
+        </member>
         <member name="T:CodeSmith.Data.Rules.BrokenRuleException">
             <summary>
             An exception class for broken rules.
@@ -394,117 +1012,279 @@
             <value></value>
             <returns>The error message that explains the reason for the exception, or an empty string("").</returns>
         </member>
-        <member name="T:CodeSmith.Data.Rules.Assign.DefaultValueRule`1">
+        <member name="T:CodeSmith.Data.Rules.BrokenRuleCollection">
             <summary>
-            Assign a default value to a property.
+            A collection of broken rules.
             </summary>
-            <typeparam name="T">The type of the property.</typeparam>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.DefaultValueRule`1.#ctor(System.String,`0)">
+        <member name="M:CodeSmith.Data.Rules.BrokenRuleCollection.Filter(System.Type)">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.DefaultValueRule`1"/> class.
+            Filters colleciton to the specified type.
+            </summary>
+            <param name="type">The type to filter.</param>
+            <returns>Enumerator of BrokenRule for the type.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.BrokenRuleCollection.Filter``1">
+            <summary>
+            Filters colleciton to the specified type.
+            </summary>
+            <typeparam name="T">The type to filter.</typeparam>
+            <returns>Enumerator of BrokenRule for the type.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.BrokenRuleCollection.Filter(System.Type,System.String)">
+            <summary>
+            Filters colleciton to the specified type and property.
+            </summary>
+            <param name="property">The property to filter.</param>
+            <param name="type">The type to filter.</param>
+            <returns>Enumerator of BrokenRule for the type.</returns>        
+        </member>
+        <member name="M:CodeSmith.Data.Rules.BrokenRuleCollection.Filter``1(System.String)">
+            <summary>
+            Filters colleciton to the specified type and property.
+            </summary>
+            <param name="property">The property to filter.</param>
+            <typeparam name="T">The type to filter.</typeparam>
+            <returns>Enumerator of BrokenRule for the type.</returns>        
+        </member>
+        <member name="T:CodeSmith.Data.Rules.Assign.GuidRule">
+            <summary>
+            Assigns a new Guid to a property.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Assign.GuidRule.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.GuidRule"/> class.
             </summary>
             <param name="property">The property.</param>
-            <param name="defaultValue">The default value.</param>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.DefaultValueRule`1.#ctor(System.String,`0,CodeSmith.Data.Rules.EntityState)">
+        <member name="M:CodeSmith.Data.Rules.Assign.GuidRule.#ctor(System.String,CodeSmith.Data.Rules.EntityState)">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.DefaultValueRule`1"/> class.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.GuidRule"/> class.
             </summary>
             <param name="property">The property.</param>
-            <param name="defaultValue">The default value.</param>
             <param name="assignState">State of the object that can be assigned.</param>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.DefaultValueRule`1.Run(CodeSmith.Data.Rules.RuleContext)">
+        <member name="M:CodeSmith.Data.Rules.Assign.GuidRule.Run(CodeSmith.Data.Rules.RuleContext)">
             <summary>
             Runs this rule.
             </summary>
             <param name="context">The rule context.</param>
         </member>
-        <member name="P:CodeSmith.Data.Rules.Assign.DefaultValueRule`1.DefaultValue">
+        <member name="T:CodeSmith.Data.Rules.RegexRule">
             <summary>
-            Gets or sets the default value.
+            A rule to match a regular expression.
             </summary>
-            <value>The default value.</value>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.IpAddressRule.#ctor(System.String)">
+        <member name="M:CodeSmith.Data.Rules.RegexRule.#ctor(System.String,System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.IpAddressRule"/> class.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RegexRule"/> class.
             </summary>
             <param name="property">The property.</param>
+            <param name="pattern">The pattern.</param>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.IpAddressRule.#ctor(System.String,CodeSmith.Data.Rules.EntityState)">
+        <member name="M:CodeSmith.Data.Rules.RegexRule.#ctor(System.String,System.String,System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.IpAddressRule"/> class.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RegexRule"/> class.
             </summary>
             <param name="property">The property.</param>
-            <param name="assignState">State of the object that can be assigned.</param>
+            <param name="message">The message.</param>
+            <param name="pattern">The pattern.</param>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.IpAddressRule.Run(CodeSmith.Data.Rules.RuleContext)">
+        <member name="M:CodeSmith.Data.Rules.RegexRule.#ctor(System.String,System.Text.RegularExpressions.Regex)">
             <summary>
-            Runs this rule.
-            </summary>
-            <param name="context">The rule context.</param>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.Assign.NowRule">
-            <summary>
-            Assigns the current date time to the property.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.NowRule.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.NowRule"/> class.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RegexRule"/> class.
             </summary>
             <param name="property">The property.</param>
+            <param name="regex">The regex.</param>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.NowRule.#ctor(System.String,CodeSmith.Data.Rules.EntityState)">
+        <member name="M:CodeSmith.Data.Rules.RegexRule.#ctor(System.String,System.String,System.Text.RegularExpressions.Regex)">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.NowRule"/> class.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RegexRule"/> class.
             </summary>
             <param name="property">The property.</param>
-            <param name="assignState">State of the object that can be assigned.</param>
+            <param name="message">The message.</param>
+            <param name="regex">The regex.</param>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.NowRule.Run(CodeSmith.Data.Rules.RuleContext)">
+        <member name="M:CodeSmith.Data.Rules.RegexRule.Run(CodeSmith.Data.Rules.RuleContext)">
             <summary>
-            Runs this rule.
+            Runs the specified context.
             </summary>
-            <param name="context">The rule context.</param>
+            <param name="context">The context.</param>
         </member>
-        <member name="T:CodeSmith.Data.Rules.RuleContext">
+        <member name="P:CodeSmith.Data.Rules.RegexRule.Regex">
             <summary>
-            The context for a rule.
+            Gets or sets the regex.
+            </summary>
+            <value>The regex.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
             </summary>
         </member>
-        <member name="M:CodeSmith.Data.Rules.RuleContext.#ctor(CodeSmith.Data.TrackedObject,CodeSmith.Data.Rules.IRule)">
+        <member name="P:CodeSmith.Data.Properties.Resources.ResourceManager">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RuleContext"/> class.
+              Returns the cached ResourceManager instance used by this class.
             </summary>
-            <param name="trackedObject">The tracked object.</param>
-            <param name="rule">The rule to apply.</param>
         </member>
-        <member name="P:CodeSmith.Data.Rules.RuleContext.TrackedObject">
+        <member name="P:CodeSmith.Data.Properties.Resources.Culture">
             <summary>
-            Gets or sets the tracked object.
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
             </summary>
-            <value>The tracked object.</value>
         </member>
-        <member name="P:CodeSmith.Data.Rules.RuleContext.Success">
+        <member name="P:CodeSmith.Data.Properties.Resources.DefaultValidationErrorMessage">
             <summary>
-            Gets or sets a value indicating whether this <see cref="T:CodeSmith.Data.Rules.RuleContext"/> is success.
+              Looks up a localized string similar to Validation Error.
             </summary>
-            <value><c>true</c> if success; otherwise, <c>false</c>.</value>
         </member>
-        <member name="P:CodeSmith.Data.Rules.RuleContext.Message">
+        <member name="P:CodeSmith.Data.Properties.Resources.InvalidValidatorMessage">
             <summary>
-            Gets or sets the message.
+              Looks up a localized string similar to {0} cannot be applied to a(n) {1}..
             </summary>
-            <value>The message.</value>
         </member>
-        <member name="P:CodeSmith.Data.Rules.RuleContext.Rule">
+        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorCompareMessage">
             <summary>
-            Gets or sets the rule to run.
+              Looks up a localized string similar to {0} must be {1} to {2}..
             </summary>
-            <value>The rule to run.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorDefaultMessage">
+            <summary>
+              Looks up a localized string similar to {0} is not valid..
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorLengthMessage">
+            <summary>
+              Looks up a localized string similar to {0} must be of length {1} - {2}..
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorNotEmptyMessage">
+            <summary>
+              Looks up a localized string similar to {0} cannot be empty..
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorRangeMessage">
+            <summary>
+              Looks up a localized string similar to {0} must fall between {1} and {2}..
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorRegexMessage">
+            <summary>
+              Looks up a localized string similar to {0} must match the expression {1}..
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorRequiredMessage">
+            <summary>
+              Looks up a localized string similar to {0} is a required field..
+            </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Rules.Validation.LengthRule">
+            <summary>
+            A rule to check the length.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.LengthRule.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.LengthRule"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="maxLength">The maximum length.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.LengthRule.#ctor(System.String,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.LengthRule"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="minLength">The minimum length.</param>
+            <param name="maxLength">The maximum length.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.LengthRule.#ctor(System.String,System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.LengthRule"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="message">The message.</param>
+            <param name="maxLength">The maximum length.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.LengthRule.#ctor(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.LengthRule"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="message">The message.</param>
+            <param name="minLength">The minimum length.</param>
+            <param name="maxLength">The maximum length.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.LengthRule.Run(CodeSmith.Data.Rules.RuleContext)">
+            <summary>
+            Runs the specified context.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.Validation.LengthRule.MaxLength">
+            <summary>
+            Gets or sets the max length.
+            </summary>
+            <value>The maximum length.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.Validation.LengthRule.MinLength">
+            <summary>
+            Gets or sets the minimum length.
+            </summary>
+            <value>The minimum length.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Rules.Validation.RangeRule`1">
+            <summary>
+            A rule to check if the value is between a range.
+            </summary>
+            <typeparam name="T">The value type.</typeparam>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.RangeRule`1.#ctor(System.String,`0,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.RangeRule`1"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="minValue">The min value.</param>
+            <param name="maxValue">The max value.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.RangeRule`1.#ctor(System.String,System.String,`0,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.RangeRule`1"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="message">The message.</param>
+            <param name="minValue">The min value.</param>
+            <param name="maxValue">The max value.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Validation.RangeRule`1.Run(CodeSmith.Data.Rules.RuleContext)">
+            <summary>
+            Runs the specified context.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.Validation.RangeRule`1.MaxValue">
+            <summary>
+            Gets or sets the max value.
+            </summary>
+            <value>The max value.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.Validation.RangeRule`1.MinValue">
+            <summary>
+            Gets or sets the min value.
+            </summary>
+            <value>The min value.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Rules.Security.UpdateRule">
+            <summary>
+            A rule to determine if the current user has update permission.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Security.UpdateRule.Run(CodeSmith.Data.Rules.RuleContext)">
+            <summary>
+            Runs the specified rule using the RuleContext.
+            </summary>
+            <param name="context">The current RuleContext.</param>
         </member>
         <member name="T:CodeSmith.Data.Linq.PagedList`1">
             <summary>
@@ -516,79 +1296,6 @@
             caculated and called on the source list. Also, if total count 
             is not specified, IQueryable Count is called.
             </remarks>
-        </member>
-        <member name="T:CodeSmith.Data.Linq.IPageList`1">
-            <summary>
-            Interface defining a paged list.
-            </summary>
-            <typeparam name="T">The type of the items in the list.</typeparam>
-        </member>
-        <member name="T:CodeSmith.Data.Linq.IPagedList">
-            <summary>
-            Interface defining a paged list.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.IPagedList.HasPreviousPage">
-            <summary>
-            Gets a value indicating whether this instance has previous page.
-            </summary>
-            <value>
-            	<c>true</c> if this instance has previous page; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.IPagedList.HasNextPage">
-            <summary>
-            Gets a value indicating whether this instance has next page.
-            </summary>
-            <value>
-            	<c>true</c> if this instance has next page; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.IPagedList.IsFirstPage">
-            <summary>
-            Gets a value indicating whether this instance is first page.
-            </summary>
-            <value>
-            	<c>true</c> if this instance is first page; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.IPagedList.IsLastPage">
-            <summary>
-            Gets a value indicating whether this instance is last page.
-            </summary>
-            <value>
-            	<c>true</c> if this instance is last page; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.IPagedList.PageCount">
-            <summary>
-            Gets the total page count.
-            </summary>
-            <value>The total page count.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.IPagedList.PageIndex">
-            <summary>
-            Gets the zero based index of the page.
-            </summary>
-            <value>The index of the page.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.IPagedList.PageNumber">
-            <summary>
-            Gets the page number. Page number is PageIndex + 1.
-            </summary>
-            <value>The page number.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.IPagedList.PageSize">
-            <summary>
-            Gets the size of the page.
-            </summary>
-            <value>The size of the page.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.IPagedList.TotalItemCount">
-            <summary>
-            Gets the total item count.
-            </summary>
-            <value>The total item count.</value>
         </member>
         <member name="M:CodeSmith.Data.Linq.PagedList`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Int32,System.Int32)">
             <summary>
@@ -695,188 +1402,43 @@
             </summary>
             <value>The total item count.</value>
         </member>
-        <member name="T:CodeSmith.Data.IEntityManager`2">
+        <member name="T:CodeSmith.Data.Rules.Assign.DefaultValueRule`1">
             <summary>
-            The entity manager interface.
+            Assign a default value to a property.
             </summary>
-            <typeparam name="TManager">The type of the manager.</typeparam>
-            <typeparam name="TEntity">The type of the entity.</typeparam>
+            <typeparam name="T">The type of the property.</typeparam>
         </member>
-        <member name="M:CodeSmith.Data.IEntityManager`2.GetByKey(CodeSmith.Data.IEntityKey)">
+        <member name="M:CodeSmith.Data.Rules.Assign.DefaultValueRule`1.#ctor(System.String,`0)">
             <summary>
-            Gets an entity by the primary key.
-            </summary>
-            <param name="key">The key for the entity.</param>
-            <returns>
-            An instance of the entity or null if not found.
-            </returns>
-        </member>
-        <member name="P:CodeSmith.Data.IEntityManager`2.Manager">
-            <summary>
-            Gets the manager.
-            </summary>
-            <value>The manager.</value>
-        </member>
-        <member name="T:CodeSmith.Data.Web.LinqCacheDataSource">
-            <summary>
-            A LinqDataSource that provides caching for Linq queries.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Web.LinqCacheDataSource.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Web.LinqCacheDataSource"/> class.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Web.LinqCacheDataSource.EnableCache">
-            <summary>
-            Gets or sets a value indicating whether query caching is enabled.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Web.LinqCacheDataSource.Duration">
-            <summary>
-            Gets or sets the time, in seconds, that the query is cached.
-            </summary>
-        </member>
-        <member name="T:CodeSmith.Data.EntityManagerBase`2">
-            <summary>
-            A base class for entity managers.
-            </summary>
-            <typeparam name="TManager">The type of the manager.</typeparam>
-            <typeparam name="TEntity">The type of the entity.</typeparam>
-        </member>
-        <member name="M:CodeSmith.Data.EntityManagerBase`2.#ctor(`0)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.EntityManagerBase`2"/> class.
-            </summary>
-            <param name="manager">The manager.</param>
-        </member>
-        <member name="M:CodeSmith.Data.EntityManagerBase`2.AddValidationRules">
-            <summary>
-            Add validation rules.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.EntityManagerBase`2.GetByKey(CodeSmith.Data.IEntityKey)">
-            <summary>
-            Gets an entity by the primary key.
-            </summary>
-            <param name="key">The key for the entity.</param>
-            <returns>
-            An instance of the entity or null if not found.
-            </returns>
-            <remarks>
-            This method provides a common retrieval of an entity.
-            </remarks>
-            <exception cref="T:System.NotImplementedException"></exception>
-        </member>
-        <member name="P:CodeSmith.Data.EntityManagerBase`2.Manager">
-            <summary>
-            Gets the manager.
-            </summary>
-            <value>The manager.</value>
-        </member>
-        <member name="T:CodeSmith.Data.Attributes.NowAttribute">
-            <summary>
-            Assigns the current date / time to the property for the specified entity states.
-            </summary>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.Security.UpdateRule">
-            <summary>
-            A rule to determine if the current user has update permission.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Security.UpdateRule.Run(CodeSmith.Data.Rules.RuleContext)">
-            <summary>
-            Runs the specified rule using the RuleContext.
-            </summary>
-            <param name="context">The current RuleContext.</param>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.Assign.GuidRule">
-            <summary>
-            Assigns a new Guid to a property.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.GuidRule.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.GuidRule"/> class.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.DefaultValueRule`1"/> class.
             </summary>
             <param name="property">The property.</param>
+            <param name="defaultValue">The default value.</param>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.GuidRule.#ctor(System.String,CodeSmith.Data.Rules.EntityState)">
+        <member name="M:CodeSmith.Data.Rules.Assign.DefaultValueRule`1.#ctor(System.String,`0,CodeSmith.Data.Rules.EntityState)">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.GuidRule"/> class.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.DefaultValueRule`1"/> class.
             </summary>
             <param name="property">The property.</param>
+            <param name="defaultValue">The default value.</param>
             <param name="assignState">State of the object that can be assigned.</param>
         </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.GuidRule.Run(CodeSmith.Data.Rules.RuleContext)">
+        <member name="M:CodeSmith.Data.Rules.Assign.DefaultValueRule`1.Run(CodeSmith.Data.Rules.RuleContext)">
             <summary>
             Runs this rule.
             </summary>
             <param name="context">The rule context.</param>
         </member>
-        <member name="T:CodeSmith.Data.Rules.BrokenRule">
+        <member name="P:CodeSmith.Data.Rules.Assign.DefaultValueRule`1.DefaultValue">
             <summary>
-            A class indicating a broken rule.
+            Gets or sets the default value.
             </summary>
+            <value>The default value.</value>
         </member>
-        <member name="M:CodeSmith.Data.Rules.BrokenRule.#ctor(CodeSmith.Data.Rules.RuleContext)">
+        <member name="T:CodeSmith.Data.Rules.RuleCollection">
             <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.BrokenRule"/> class.
+            A collection of rules.
             </summary>
-            <param name="context">The rule context.</param>
-        </member>
-        <member name="P:CodeSmith.Data.Rules.BrokenRule.Message">
-            <summary>
-            Gets or sets the error message.
-            </summary>
-            <value>The error message.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Rules.BrokenRule.Context">
-            <summary>
-            Gets or sets the rule context.
-            </summary>
-            <value>The context.</value>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.Validation.RequiredRule">
-            <summary>
-            A rule to check that the value is not null.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.RequiredRule.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.RequiredRule"/> class.
-            </summary>
-            <param name="property">The target property to apply rule to.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.RequiredRule.#ctor(System.String,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.RequiredRule"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="message">The message.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.RequiredRule.Run(CodeSmith.Data.Rules.RuleContext)">
-            <summary>
-            Runs the specified context.
-            </summary>
-            <param name="context">The context.</param>
-        </member>
-        <member name="T:CodeSmith.Data.IDataManager`1">
-            <summary>
-            An interface defining a data manager.
-            </summary>
-            <typeparam name="TContext">The type of the DataContext.</typeparam>
-        </member>
-        <member name="T:CodeSmith.Data.IDataManager">
-            <summary>
-            An interface defining a data manager.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.IDataManager`1.Context">
-            <summary>
-            Gets the DataContext for this manager.
-            </summary>
-            <value>The DataContext.</value>
         </member>
         <member name="T:CodeSmith.Data.Rules.Security.CreateRule">
             <summary>
@@ -888,288 +1450,6 @@
             Runs the specified rule using the RuleContext.
             </summary>
             <param name="context">The current RuleContext.</param>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.BrokenRuleCollection">
-            <summary>
-            A collection of broken rules.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.BrokenRuleCollection.Filter(System.Type)">
-            <summary>
-            Filters colleciton to the specified type.
-            </summary>
-            <param name="type">The type to filter.</param>
-            <returns>Enumerator of BrokenRule for the type.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.BrokenRuleCollection.Filter``1">
-            <summary>
-            Filters colleciton to the specified type.
-            </summary>
-            <typeparam name="T">The type to filter.</typeparam>
-            <returns>Enumerator of BrokenRule for the type.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.BrokenRuleCollection.Filter(System.Type,System.String)">
-            <summary>
-            Filters colleciton to the specified type and property.
-            </summary>
-            <param name="property">The property to filter.</param>
-            <param name="type">The type to filter.</param>
-            <returns>Enumerator of BrokenRule for the type.</returns>        
-        </member>
-        <member name="M:CodeSmith.Data.Rules.BrokenRuleCollection.Filter``1(System.String)">
-            <summary>
-            Filters colleciton to the specified type and property.
-            </summary>
-            <param name="property">The property to filter.</param>
-            <typeparam name="T">The type to filter.</typeparam>
-            <returns>Enumerator of BrokenRule for the type.</returns>        
-        </member>
-        <member name="T:CodeSmith.Data.Attributes.GuidAttribute">
-            <summary>
-            Assigns a new GUID to the property for the specified entity states.
-            </summary>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.RegexRule">
-            <summary>
-            A rule to match a regular expression.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.RegexRule.#ctor(System.String,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RegexRule"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="pattern">The pattern.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.RegexRule.#ctor(System.String,System.String,System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RegexRule"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="message">The message.</param>
-            <param name="pattern">The pattern.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.RegexRule.#ctor(System.String,System.Text.RegularExpressions.Regex)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RegexRule"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="regex">The regex.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.RegexRule.#ctor(System.String,System.String,System.Text.RegularExpressions.Regex)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RegexRule"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="message">The message.</param>
-            <param name="regex">The regex.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.RegexRule.Run(CodeSmith.Data.Rules.RuleContext)">
-            <summary>
-            Runs the specified context.
-            </summary>
-            <param name="context">The context.</param>
-        </member>
-        <member name="P:CodeSmith.Data.Rules.RegexRule.Regex">
-            <summary>
-            Gets or sets the regex.
-            </summary>
-            <value>The regex.</value>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.Validation.CustomRule`1">
-            <summary>
-            A rule that run a method to validate.
-            </summary>
-            <typeparam name="T">The property type.</typeparam>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.CustomRule`1.#ctor(System.String,System.String,System.Predicate{`0})">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.CustomRule`1"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="message">The message.</param>
-            <param name="method">The method.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.CustomRule`1.Run(CodeSmith.Data.Rules.RuleContext)">
-            <summary>
-            Runs the specified context.
-            </summary>
-            <param name="context">The context.</param>
-        </member>
-        <member name="P:CodeSmith.Data.Rules.Validation.CustomRule`1.Method">
-            <summary>
-            Gets or sets the method.
-            </summary>
-            <value>The method.</value>
-        </member>
-        <member name="T:CodeSmith.Data.IEntityKey">
-            <summary>Interface for an entity key.</summary>
-        </member>
-        <member name="T:CodeSmith.Data.IEntityKey`1">
-            <summary>Interface for an entity key.</summary>
-            <typeparam name="TKey">The type of the key.</typeparam>
-        </member>
-        <member name="P:CodeSmith.Data.IEntityKey`1.Key">
-            <summary>Gets the entity key.</summary>
-        </member>
-        <member name="T:CodeSmith.Data.IEntityKey`2">
-            <summary>Interface for a two part entity key.</summary>
-            <typeparam name="TKey0">The type of the first key.</typeparam>
-            <typeparam name="TKey1">The type of the second key.</typeparam>
-        </member>
-        <member name="P:CodeSmith.Data.IEntityKey`2.Key1">
-            <summary>Gets the second key.</summary>
-        </member>
-        <member name="T:CodeSmith.Data.IEntityKey`3">
-            <summary>Interface for a three part entity key.</summary>
-            <typeparam name="TKey0">The type of the first key.</typeparam>
-            <typeparam name="TKey1">The type of the second key.</typeparam>
-            <typeparam name="TKey2">The type of the key2.</typeparam>
-        </member>
-        <member name="P:CodeSmith.Data.IEntityKey`3.Key2">
-            <summary>Gets the third key.</summary>
-        </member>
-        <member name="T:CodeSmith.Data.IEntityKey`4">
-            <summary>Interface for a four part entity key.</summary>
-            <typeparam name="TKey0">The type of the first key.</typeparam>
-            <typeparam name="TKey1">The type of the second key.</typeparam>
-            <typeparam name="TKey2">The type of the third key.</typeparam>
-            <typeparam name="TKey3">The type of the fourth key.</typeparam>
-        </member>
-        <member name="P:CodeSmith.Data.IEntityKey`4.Key3">
-            <summary>Gets the fourth key.</summary>
-        </member>
-        <member name="T:CodeSmith.Data.EntityKey`1">
-            <summary>Class representing an entity key.</summary>
-            <typeparam name="TKey">The type of the entity key.</typeparam>
-        </member>
-        <member name="M:CodeSmith.Data.EntityKey`1.#ctor(`0)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.EntityKey`1"/> class.
-            </summary>
-            <param name="key">The entity key.</param>
-        </member>
-        <member name="P:CodeSmith.Data.EntityKey`1.Key">
-            <summary>Gets the entity key.</summary>
-        </member>
-        <member name="T:CodeSmith.Data.EntityKey`2">
-            <summary>Class representing a two part entity key.</summary>
-            <typeparam name="TKey0">The type of the first key.</typeparam>
-            <typeparam name="TKey1">The type of the second key.</typeparam>
-        </member>
-        <member name="M:CodeSmith.Data.EntityKey`2.#ctor(`0,`1)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.EntityKey`2"/> class.
-            </summary>
-            <param name="key0">The first key value.</param>
-            <param name="key1">The second key value.</param>
-        </member>
-        <member name="P:CodeSmith.Data.EntityKey`2.Key1">
-            <summary>Gets the second key.</summary>
-        </member>
-        <member name="T:CodeSmith.Data.EntityKey`3">
-            <summary>Class representing a three part entity key.</summary>
-            <typeparam name="TKey0">The type of the first key.</typeparam>
-            <typeparam name="TKey1">The type of the second key.</typeparam>
-            <typeparam name="TKey2">The type of the third key.</typeparam>
-        </member>
-        <member name="M:CodeSmith.Data.EntityKey`3.#ctor(`0,`1,`2)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.EntityKey`3"/> class.
-            </summary>
-            <param name="key0">The first key value.</param>
-            <param name="key1">The second key value.</param>
-            <param name="key2">The third key value.</param>
-        </member>
-        <member name="P:CodeSmith.Data.EntityKey`3.Key2">
-            <summary>Gets the third key.</summary>
-        </member>
-        <member name="T:CodeSmith.Data.EntityKey`4">
-            <summary>Class representing a four part entity key.</summary>
-            <typeparam name="TKey0">The type of the first key.</typeparam>
-            <typeparam name="TKey1">The type of the second key.</typeparam>
-            <typeparam name="TKey2">The type of the third key.</typeparam>
-            <typeparam name="TKey3">The type of the fourth key.</typeparam>
-        </member>
-        <member name="M:CodeSmith.Data.EntityKey`4.#ctor(`0,`1,`2,`3)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.EntityKey`4"/> class.
-            </summary>
-            <param name="key0">The first key value.</param>
-            <param name="key1">The second key value.</param>
-            <param name="key2">The third key value.</param>
-            <param name="key3">The fourth key value.</param>
-        </member>
-        <member name="P:CodeSmith.Data.EntityKey`4.Key3">
-            <summary>Gets the fourth key.</summary>
-        </member>
-        <member name="T:CodeSmith.Data.Attributes.IpAddressAttribute">
-            <summary>
-            Assigns the current user's IP address to the property for the specified entity states.
-            </summary>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.Validation.CompareRule`1">
-            <summary>
-            A rule to compare values.
-            </summary>
-            <typeparam name="T">The value type.</typeparam>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.CompareRule`1.#ctor(System.String,`0)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.CompareRule`1"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="value">The value.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.CompareRule`1.#ctor(System.String,`0,CodeSmith.Data.Rules.Validation.ComparisonOperator)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.CompareRule`1"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="value">The value.</param>
-            <param name="comparison">The comparison.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.CompareRule`1.#ctor(System.String,System.String,`0)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.CompareRule`1"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="message">The message.</param>
-            <param name="value">The value.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.CompareRule`1.#ctor(System.String,System.String,`0,CodeSmith.Data.Rules.Validation.ComparisonOperator)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.CompareRule`1"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="message">The message.</param>
-            <param name="value">The value.</param>
-            <param name="comparison">The comparison.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.CompareRule`1.Run(CodeSmith.Data.Rules.RuleContext)">
-            <summary>
-            Runs the specified context.
-            </summary>
-            <param name="context">The context.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.CompareRule`1.CompareResult(System.Int32)">
-            <summary>
-            Tests the comparison result.
-            </summary>
-            <param name="result">The result.</param>
-            <returns></returns>
-        </member>
-        <member name="P:CodeSmith.Data.Rules.Validation.CompareRule`1.ComparisonOperator">
-            <summary>
-            Gets or sets the comparison operator.
-            </summary>
-            <value>The comparison operator.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Rules.Validation.CompareRule`1.ExpectedValue">
-            <summary>
-            Gets or sets the expected value.
-            </summary>
-            <value>The expected value.</value>
         </member>
         <member name="T:System.Linq.PagingExtensions">
             <summary>
@@ -1228,6 +1508,41 @@
             <param name="totalCount">The total count.</param>
             <returns>A new instance of <see cref="T:CodeSmith.Data.Linq.PagedList`1"/>.</returns>
         </member>
+        <member name="T:CodeSmith.Data.Serialization.ByteArrayConverter">
+            <summary>
+            Implements a byte array <see cref="T:System.Web.Script.Serialization.JavaScriptConverter"/> for the <see cref="T:System.Web.Script.Serialization.JavaScriptSerializer"/>.
+            </summary>
+            <remarks>
+            The <see cref="T:CodeSmith.Data.Serialization.ByteArrayConverter"/> converts the byte array to a base64 string. The converter supports 
+            an array of <see cref="T:System.Byte"/> and <see cref="T:System.Data.Linq.Binary"/>.
+            </remarks>
+        </member>
+        <member name="M:CodeSmith.Data.Serialization.ByteArrayConverter.Deserialize(System.Collections.Generic.IDictionary{System.String,System.Object},System.Type,System.Web.Script.Serialization.JavaScriptSerializer)">
+            <summary>
+            When overridden in a derived class, converts the provided dictionary into an object of the specified type.
+            </summary>
+            <param name="dictionary">An <see cref="T:System.Collections.Generic.IDictionary`2"/> instance of property data stored as name/value pairs.</param>
+            <param name="type">The type of the resulting object.</param>
+            <param name="serializer">The <see cref="T:System.Web.Script.Serialization.JavaScriptSerializer"/> instance.</param>
+            <returns>The deserialized object.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Serialization.ByteArrayConverter.Serialize(System.Object,System.Web.Script.Serialization.JavaScriptSerializer)">
+            <summary>
+            When overridden in a derived class, builds a dictionary of name/value pairs.
+            </summary>
+            <param name="obj">The object to serialize.</param>
+            <param name="serializer">The object that is responsible for the serialization.</param>
+            <returns>
+            An object that contains key/value pairs that represent the object’s data.
+            </returns>
+        </member>
+        <member name="P:CodeSmith.Data.Serialization.ByteArrayConverter.SupportedTypes">
+            <summary>
+            When overridden in a derived class, gets a collection of the supported types.
+            </summary>
+            <value></value>
+            <returns>An object that implements <see cref="T:System.Collections.Generic.IEnumerable`1"/> that represents the types supported by the converter.</returns>
+        </member>
         <member name="T:CodeSmith.Data.TrackedObject`1">
             <summary>
             A class representing a tracked object.
@@ -1272,321 +1587,6 @@
             <summary>
             A class representing a tracked object.
             </summary>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.Validation.RangeRule`1">
-            <summary>
-            A rule to check if the value is between a range.
-            </summary>
-            <typeparam name="T">The value type.</typeparam>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.RangeRule`1.#ctor(System.String,`0,`0)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.RangeRule`1"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="minValue">The min value.</param>
-            <param name="maxValue">The max value.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.RangeRule`1.#ctor(System.String,System.String,`0,`0)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Validation.RangeRule`1"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="message">The message.</param>
-            <param name="minValue">The min value.</param>
-            <param name="maxValue">The max value.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Validation.RangeRule`1.Run(CodeSmith.Data.Rules.RuleContext)">
-            <summary>
-            Runs the specified context.
-            </summary>
-            <param name="context">The context.</param>
-        </member>
-        <member name="P:CodeSmith.Data.Rules.Validation.RangeRule`1.MaxValue">
-            <summary>
-            Gets or sets the max value.
-            </summary>
-            <value>The max value.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Rules.Validation.RangeRule`1.MinValue">
-            <summary>
-            Gets or sets the min value.
-            </summary>
-            <value>The min value.</value>
-        </member>
-        <member name="T:CodeSmith.Data.Attributes.UserNameAttribute">
-            <summary>
-            Assigns the current users name to the property for the specified entity states.
-            </summary>
-        </member>
-        <member name="T:CodeSmith.Data.Serialization.ByteArrayConverter">
-            <summary>
-            Implements a byte array <see cref="T:System.Web.Script.Serialization.JavaScriptConverter"/> for the <see cref="T:System.Web.Script.Serialization.JavaScriptSerializer"/>.
-            </summary>
-            <remarks>
-            The <see cref="T:CodeSmith.Data.Serialization.ByteArrayConverter"/> converts the byte array to a base64 string. The converter supports 
-            an array of <see cref="T:System.Byte"/> and <see cref="T:System.Data.Linq.Binary"/>.
-            </remarks>
-        </member>
-        <member name="M:CodeSmith.Data.Serialization.ByteArrayConverter.Deserialize(System.Collections.Generic.IDictionary{System.String,System.Object},System.Type,System.Web.Script.Serialization.JavaScriptSerializer)">
-            <summary>
-            When overridden in a derived class, converts the provided dictionary into an object of the specified type.
-            </summary>
-            <param name="dictionary">An <see cref="T:System.Collections.Generic.IDictionary`2"/> instance of property data stored as name/value pairs.</param>
-            <param name="type">The type of the resulting object.</param>
-            <param name="serializer">The <see cref="T:System.Web.Script.Serialization.JavaScriptSerializer"/> instance.</param>
-            <returns>The deserialized object.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Serialization.ByteArrayConverter.Serialize(System.Object,System.Web.Script.Serialization.JavaScriptSerializer)">
-            <summary>
-            When overridden in a derived class, builds a dictionary of name/value pairs.
-            </summary>
-            <param name="obj">The object to serialize.</param>
-            <param name="serializer">The object that is responsible for the serialization.</param>
-            <returns>
-            An object that contains key/value pairs that represent the object’s data.
-            </returns>
-        </member>
-        <member name="P:CodeSmith.Data.Serialization.ByteArrayConverter.SupportedTypes">
-            <summary>
-            When overridden in a derived class, gets a collection of the supported types.
-            </summary>
-            <value></value>
-            <returns>An object that implements <see cref="T:System.Collections.Generic.IEnumerable`1"/> that represents the types supported by the converter.</returns>
-        </member>
-        <member name="T:CodeSmith.Data.Serialization.ByteArrayTypeConverter">
-            <summary>
-            Implements a byte array <see cref="T:System.ComponentModel.TypeConverter"/>.
-            </summary>
-            <remarks>
-            The converter supports an array of <see cref="T:System.Byte"/> and <see cref="T:System.Data.Linq.Binary"/>.
-            </remarks>
-        </member>
-        <member name="M:CodeSmith.Data.Serialization.ByteArrayTypeConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Type)">
-            <summary>
-            Returns whether this converter can convert an object of the given type to the type of this converter, using the specified context.
-            </summary>
-            <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
-            <param name="sourceType">A <see cref="T:System.Type"/> that represents the type you want to convert from.</param>
-            <returns>
-            true if this converter can perform the conversion; otherwise, false.
-            </returns>
-        </member>
-        <member name="M:CodeSmith.Data.Serialization.ByteArrayTypeConverter.CanConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Type)">
-            <summary>
-            Returns whether this converter can convert the object to the specified type, using the specified context.
-            </summary>
-            <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
-            <param name="destinationType">A <see cref="T:System.Type"/> that represents the type you want to convert to.</param>
-            <returns>
-            true if this converter can perform the conversion; otherwise, false.
-            </returns>
-        </member>
-        <member name="M:CodeSmith.Data.Serialization.ByteArrayTypeConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
-            <summary>
-            Converts the given object to the type of this converter, using the specified context and culture information.
-            </summary>
-            <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
-            <param name="culture">The <see cref="T:System.Globalization.CultureInfo"/> to use as the current culture.</param>
-            <param name="value">The <see cref="T:System.Object"/> to convert.</param>
-            <returns>
-            An <see cref="T:System.Object"/> that represents the converted value.
-            </returns>
-            <exception cref="T:System.NotSupportedException">The conversion cannot be performed. </exception>
-        </member>
-        <member name="M:CodeSmith.Data.Serialization.ByteArrayTypeConverter.ConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object,System.Type)">
-            <summary>
-            Converts the given value object to the specified type, using the specified context and culture information.
-            </summary>
-            <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
-            <param name="culture">A <see cref="T:System.Globalization.CultureInfo"/>. If null is passed, the current culture is assumed.</param>
-            <param name="value">The <see cref="T:System.Object"/> to convert.</param>
-            <param name="destinationType">The <see cref="T:System.Type"/> to convert the <paramref name="value"/> parameter to.</param>
-            <returns>
-            An <see cref="T:System.Object"/> that represents the converted value.
-            </returns>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="destinationType"/> parameter is null. </exception>
-            <exception cref="T:System.NotSupportedException">The conversion cannot be performed. </exception>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.Assign.UserNameRule">
-            <summary>
-            Assigns the current logged in username.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.UserNameRule.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.UserNameRule"/> class.
-            </summary>
-            <param name="property">The property.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.UserNameRule.#ctor(System.String,CodeSmith.Data.Rules.EntityState)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.UserNameRule"/> class.
-            </summary>
-            <param name="property">The property.</param>
-            <param name="assignState">State of the object that can be assigned.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Rules.Assign.UserNameRule.Run(CodeSmith.Data.Rules.RuleContext)">
-            <summary>
-            Runs this rule.
-            </summary>
-            <param name="context">The rule context.</param>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.EntityState">
-            <summary>
-            The state to the tracked entity
-            </summary>
-        </member>
-        <member name="F:CodeSmith.Data.Rules.EntityState.New">
-            <summary>The entity is new.</summary>
-        </member>
-        <member name="F:CodeSmith.Data.Rules.EntityState.Changed">
-            <summary>The entity is changed.</summary>
-        </member>
-        <member name="F:CodeSmith.Data.Rules.EntityState.Deleted">
-            <summary>The entity is deleted.</summary>
-        </member>
-        <member name="F:CodeSmith.Data.Rules.EntityState.Dirty">
-            <summary>The entity is new or changed.</summary>
-        </member>
-        <member name="F:CodeSmith.Data.Rules.EntityState.All">
-            <summary>All the entity states.</summary>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.Validation.ComparisonOperator">
-            <summary>
-            The operator the Compare Validator uses.
-            </summary>
-        </member>
-        <member name="F:CodeSmith.Data.Rules.Validation.ComparisonOperator.Equal">
-            <summary>
-            A comparison for equality.  
-            </summary>
-        </member>
-        <member name="F:CodeSmith.Data.Rules.Validation.ComparisonOperator.GreaterThan">
-            <summary>
-            A comparison for greater than.  
-            </summary>
-        </member>
-        <member name="F:CodeSmith.Data.Rules.Validation.ComparisonOperator.GreaterThanOrEqual">
-            <summary>
-            A comparison for greater than or equal to. 
-            </summary>
-        </member>
-        <member name="F:CodeSmith.Data.Rules.Validation.ComparisonOperator.LessThan">
-            <summary>
-            A comparison for less than.  
-            </summary>
-        </member>
-        <member name="F:CodeSmith.Data.Rules.Validation.ComparisonOperator.LessThanOrEqual">
-            <summary>
-            A comparison for less than or equal to.  
-            </summary>
-        </member>
-        <member name="F:CodeSmith.Data.Rules.Validation.ComparisonOperator.NotEqual">
-            <summary>
-            A comparison for inequality.  
-            </summary>
-        </member>
-        <member name="T:CodeSmith.Data.Rules.RuleCollection">
-            <summary>
-            A collection of rules.
-            </summary>
-        </member>
-        <member name="T:CodeSmith.Data.Properties.Resources">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Properties.Resources.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Properties.Resources.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Properties.Resources.DefaultValidationErrorMessage">
-            <summary>
-              Looks up a localized string similar to Validation Error.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Properties.Resources.InvalidValidatorMessage">
-            <summary>
-              Looks up a localized string similar to {0} cannot be applied to a(n) {1}..
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorCompareMessage">
-            <summary>
-              Looks up a localized string similar to {0} must be {1} to {2}..
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorDefaultMessage">
-            <summary>
-              Looks up a localized string similar to {0} is not valid..
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorLengthMessage">
-            <summary>
-              Looks up a localized string similar to {0} must be of length {1} - {2}..
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorNotEmptyMessage">
-            <summary>
-              Looks up a localized string similar to {0} cannot be empty..
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorRangeMessage">
-            <summary>
-              Looks up a localized string similar to {0} must fall between {1} and {2}..
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorRegexMessage">
-            <summary>
-              Looks up a localized string similar to {0} must match the expression {1}..
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorRequiredMessage">
-            <summary>
-              Looks up a localized string similar to {0} is a required field..
-            </summary>
-        </member>
-        <member name="T:CodeSmith.Data.Serialization.JavaScriptSerializerExtensions">
-            <summary>
-            JavaScriptSerializer extension methods.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Serialization.JavaScriptSerializerExtensions.RegisterByteArrayConverter(System.Web.Script.Serialization.JavaScriptSerializer)">
-            <summary>
-            Registers the byte array converter.
-            </summary>
-            <param name="serializer">The <see cref="T:System.Web.Script.Serialization.JavaScriptSerializer"/> instance.</param>
-        </member>
-        <member name="T:CodeSmith.Data.DataManagerBase`1">
-            <summary>
-            The base class for the data manager.
-            </summary>
-            <typeparam name="TContext">The type of DataContext.</typeparam>
-        </member>
-        <member name="M:CodeSmith.Data.DataManagerBase`1.#ctor(`0)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.DataManagerBase`1"/> class.
-            </summary>
-            <param name="context">The context.</param>
-        </member>
-        <member name="P:CodeSmith.Data.DataManagerBase`1.Context">
-            <summary>
-            Gets the managers DataContext.
-            </summary>
-            <value>The current DataContext.</value>
-        </member>
-        <member name="P:CodeSmith.Data.DataManagerBase`1.Rules">
-            <summary>
-            Gets the current rules for the entities.
-            </summary>
-            <value>The entity rules.</value>
         </member>
     </members>
 </doc>
