@@ -18,7 +18,7 @@ Description: Generates a HBM Map for NHibernate.
 <% Dim entityManager As New EntityManager(SourceTable, ExcludedTables) %>
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="<%= BusinessNamespace %>" assembly="<%= AssemblyName %>">
-	<class name="<%= BusinessNamespace %>.<%= GetClassName(SourceTable) %>, <%= AssemblyName %>" table="<%= SourceTable.Name %>" lazy="true">
+	<class name="<%= BusinessNamespace %>.<%= GetClassName(SourceTable) %>, <%= AssemblyName %>" table="<%= SourceTable.FullName %>" lazy="true">
 		<% 'Primary Key %>
 		<% If entityManager.PrimaryKey.IsCompositeKey Then %>
 		<composite-id>
