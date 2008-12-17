@@ -1,0 +1,104 @@
+<%@ CodeTemplate Src="TemplateBase.cs" Inherits="CodeSmith.Csla.TemplateBase" Language="C#" TargetLanguage="C#" Description="Generates a CSLA Editable Root Collection Object." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="ObjectName" Type="System.String" Optional="true" Category="1. Object" Description="Required - The Name of the Business Object Collection Class to Generate." %>
+<%@ Property Name="ChildName" Type="System.String" Optional="true" Category="1. Object" Description="Required - The Name of the Business Object Element of the Collection." %>
+<%@ Property Name="RootCommand" Type="CommandSchema" Optional="true" Category="2. Data Source" Description="Required - The stored procedure that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootTable" Type="TableSchema" Optional="true" Category="2. Data Source" Description="Required - The Root Table that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootView" Type="ViewSchema" Optional="true" Category="2. Data Source" Description="Required - The Root View that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="ResultSetIndex" Type="System.Int32" Default="0" Optional="true" Category="2. Data Source" Description="Result set index indicates which result set to use from the stored procedure. Required when using RootCommand." %>
+<%@ Property Name="FilterColumnNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="2. Data Source" Description="Filter columns used as get criteria. Required when using RootView." %>
+
+<%-- Generic Variables for code to use  --%>
+<% 
+   int i = BaseIndentLevel; 
+   ObjectInfo objInfo = new ObjectInfo(this);
+%>
+<!-- #INCLUDE FILE="AutoGenWarning.inc" -->
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using Csla;
+using Csla.Data;
+
+<% if (objInfo.Namespace.Length > 0) { %>namespace <%= objInfo.Namespace %>
+<%=Indent(i++)%>{ 
+<% } %> 
+<% if(!objInfo.IsUserPartial) {%>
+<%=Indent(i)%>[Serializable()] 
+<%}%>
+<%=Indent(i)%><%= objInfo.Modifiers %> class <%=objInfo.NameAndSuffix%><%=objInfo.Inherits%>
+<% if(objInfo.IsGeneratedBase) {%>
+<%=GetConstraint(objInfo, i+1)%>
+<%}%>
+<%=Indent(i++)%>{
+<% if(objInfo.IsUserPartial) {%>
+<%=Indent(i)%>#region Initialize
+<%=Indent(i)%>protected override void Initialize()
+<%=Indent(i++)%>{
+<%=Indent(i)%>//executeFetchDelegate = executeFetch;
+<%=Indent(i)%>//executeFetchCompleteDelegate = executeFetchComplete;
+<%=Indent(--i)%>}
+<%=Indent(i)%>#endregion //Initialize
+<%}%>
+<!-- #INCLUDE FILE="AuthorizationRules.inc" -->
+<%=Indent(i, true)%>#region Factory Methods
+<% if(objInfo.IsSingle || objInfo.IsGeneratedPartial || objInfo.IsUserBase) {%>
+<%=Indent(i)%>private <%=objInfo.Name%>()
+<%=Indent(i)%>{ /* require use of factory method */ }
+
+<% } %>
+<% //all in generated class except when base class with authorization turned on
+	if(objInfo.IsSingle || objInfo.IsGeneratedPartial 
+	|| (objInfo.IsGeneratedBase && !objInfo.UseSecurity)
+	|| (objInfo.IsUserBase && objInfo.UseSecurity)) { %>
+<%=Indent(i)%>public static <%=objInfo.Type%> <%=objInfo.GetMethodName%>(<%=GetFactoryFilterDeclarationArguments(objInfo)%>)
+<%=Indent(i++)%>{
+<% if(objInfo.UseSecurity) {%>
+<%=Indent(i)%>if (!CanGetObject())
+<%=Indent(i+1)%>throw new System.Security.SecurityException("User not authorized to view a <%=objInfo.Name%>");
+<% } %>
+<%=Indent(i)%>return DataPortal.Fetch<<%=objInfo.Type%>>(new FilterCriteria(<%=GetFactoryFilterCallArguments(objInfo)%>));
+<%=Indent(--i)%>}
+<% } //all in generated class except when base class with authorization turned on%>
+<%=Indent(i)%>#endregion //Factory Methods
+
+<% if(objInfo.IsGeneratedClass) {%>
+<%=Indent(i)%>#region Data Access
+<!-- #INCLUDE FILE="FilterCriteria.inc" -->
+<% if(objInfo.IsGeneratedBase && !objInfo.UseSecurity) {%>
+<!-- #INCLUDE FILE="DataPortalCreate.inc" -->
+
+<%}%>
+<!-- #INCLUDE FILE="DataPortalFetchList.inc" -->
+<%=Indent(i)%>#endregion //Data Access
+<%}%>
+<%if(objInfo.IsGeneratedPartial) {%>
+<%=Indent(i, true)%>#region Delegation Methods
+<%=Indent(i)%>private delegate bool predicateEx<U, V>(U obj1, V obj2);
+<%=Indent(i)%>private delegate void actionEx<U, V>(U obj1, V obj2);
+<%=Indent(i)%>//
+<%=Indent(i)%>// Fetch
+<%=Indent(i)%>//
+<%=Indent(i)%>[NonSerialized()]
+<%=Indent(i)%>[NotUndoable()]
+<%=Indent(i)%>private predicateEx<<%if(objInfo.UseAdoTransaction){%>SqlTransaction<%}else{%>SqlConnection<%}%>, FilterCriteria> executeFetchDelegate = null;
+<%=Indent(i)%>private bool onExecuteFetch(<%if(objInfo.UseAdoTransaction){%>SqlTransaction tr<%}else{%>SqlConnection cn<%}%>, FilterCriteria criteria)
+<%=Indent(i++)%>{
+<%=Indent(i)%>if (executeFetchDelegate != null)
+<%=Indent(i+1)%>return executeFetchDelegate(<%if(objInfo.UseAdoTransaction){%>tr<%}else{%>cn<%}%>, criteria);
+<%=Indent(i)%>return true;
+<%=Indent(--i)%>}
+<%=Indent(i)%>[NonSerialized()]
+<%=Indent(i)%>[NotUndoable()]
+<%=Indent(i)%>private actionEx<SqlCommand, FilterCriteria> executeFetchCompleteDelegate = null;
+<%=Indent(i)%>private void onExecuteFetchComplete(SqlCommand cm, FilterCriteria criteria)
+<%=Indent(i++)%>{
+<%=Indent(i)%>if (executeFetchCompleteDelegate != null)
+<%=Indent(i+1)%>executeFetchCompleteDelegate(cm, criteria);
+<%=Indent(--i)%>}
+<%=Indent(i)%>#endregion //Delegation Methods
+<%} //IsGeneratedPartial%>
+<%=Indent(--i)%>}
+<% if(objInfo.Namespace.Length > 0) {%>}<%}%>

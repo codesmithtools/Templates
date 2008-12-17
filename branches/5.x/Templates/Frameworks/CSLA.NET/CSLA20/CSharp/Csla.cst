@@ -1,0 +1,158 @@
+<%@ CodeTemplate Src="TemplateBase.cs" Inherits="CodeSmith.Csla.TemplateBase" Language="C#" TargetLanguage="C#" Description="Generates a CSLA Editable Root Object." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="System.Design" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="ObjectName" Type="System.String" Optional="true" Category="1. Object" Description="Required - The Name of the Business Object Class to Generate." %>
+<%@ Property Name="ParentName" Type="System.String" Optional="true" Default="" Category="1. Object" Description="The Name of parent Business object belongs." %>
+<%@ Property Name="ChildName" Type="System.String" Optional="true" Category="1. Object" Description="Required - The Name of the Business Object Element of the Collection." %>
+<%@ Property Name="RootCommand" Type="CommandSchema" Optional="true" Category="2. Data Source" Description="Required - The stored procedure that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootTable" Type="TableSchema" Optional="true" Category="2. Data Source" Description="Required - The Root Table that the object is based on. Must select RootTable or RootView." %>
+<%@ Property Name="RootView" Type="ViewSchema" Optional="true" Category="2. Data Source" Description="Required - The Root View that the object is based on. Must select RootTable or RootView." %>
+<%@ Property Name="ResultSetIndex" Type="System.Int32" Default="0" Optional="true" Category="2. Data Source" Description="Result set index indicates which result set to use from the stored procedure. Required when using RootCommand." %>
+<%@ Property Name="UniqueColumnNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="2. Data Source" Description="Unique columns. Required when using RootView." %>
+<%@ Property Name="FilterColumnNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="2. Data Source" Description="Filter columns used as get criteria. Required when using RootView." %>
+<%@ Property Name="ChildCollectionNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="1a. Child Collection Object" Description="The Child Collection's Name. Used for the memeber variable and collection name." %>
+<%@ Property Name="ChildPropertyNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="1a. Child Collection Object" Description="The Child Collection's member variable name." %>
+<%@ Property Name="Template" Type="ObjectType" Optional="false" Category="0. Render Options" Description="Required - Generate the object code from this template." %>
+<%@ Property Name="OutputToFile" Type="System.Boolean" Optional="false" Category="0. Render Options" Description="Required - True to generate file, or False to preview on the screen" %>
+<script runat="template">
+	private string _outputDirectory = "C:\\Projects";	//set your default directory here
+	[Editor(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor)),
+	CodeTemplateProperty(CodeTemplatePropertyOption.Optional),
+	Category("0. Render Options"), Description("Optional - The directory to which every output file is generated.")]
+	public string OutputDirectory
+	{
+		get {return _outputDirectory;}
+		set {_outputDirectory= value;}
+	}
+</script>
+
+<%	
+	OutputSubTemplate(Template, false); 
+%>
+
+
+<script runat="template">
+
+public void OutputSubTemplate(ObjectType objectType, bool overwriteFile)
+{
+	//validate first, make sure all required properties are filled
+	//if(!Validate(table, template)) return;
+	
+	string templateName = CodeTemplateInfo.DirectoryName + objectType.ToString() + ".cst";	
+	
+	CodeTemplate subTemplate = TemplateHelper.GetCompiledTemplate(templateName);
+	if(subTemplate == null) return;
+		
+	SetProperties(subTemplate);
+	
+	// Output to screen
+	subTemplate.Render(Response);
+	
+	if(OutputToFile) 
+	{
+		string fileName = GetSourcePath() + GetSourceFileName();
+		try 
+		{
+			subTemplate.RenderToFile(fileName, overwriteFile);
+		}
+		catch(Exception ex) 
+		{
+			Response.WriteLine("Error Rendering To File: " + ex.Message);
+			Response.WriteLine("- " + fileName);
+		}
+	}
+	
+}
+
+
+// determine output file name based on Language, template name, and table name
+private string GetSourceFileName()
+{
+	string fileName = ObjectName;
+	if(ClassType == GenerationClassType.Generated) 
+	{
+		if(GenerationMethod == CodeGenerationMethod.SplitBase)
+			fileName += "Base";
+		else if(GenerationMethod == CodeGenerationMethod.SplitPartial)
+			fileName += ".Generated";
+	}
+	return fileName + ".cs";
+}
+
+private string GetSourcePath()
+{
+	string path = OutputDirectory.Trim();
+
+	path += path.EndsWith("\\")? "":"\\";
+
+	//check if path not exist, create folder
+	if(!System.IO.Directory.Exists(path)) System.IO.Directory.CreateDirectory(path);
+
+	return path;
+}
+
+// validate properties based on template
+private bool Validate(SchemaExplorer.TableSchema table, ObjectType template)
+{
+	string message = "";
+
+	//validate all required properties for a given template
+
+	if(OutputToFile)
+	{
+		if(OutputDirectory==null || OutputDirectory.Trim().Length==0)
+			message += "OutputDirectory is Required.\n\r";
+	}
+	if(message.Length>0)
+	{
+		System.Windows.Forms.MessageBox.Show(message,"Validation Errors",
+				System.Windows.Forms.MessageBoxButtons.OK, 
+				System.Windows.Forms.MessageBoxIcon.Error);
+		return false;
+	}
+	return true;
+}
+
+private void SetProperties(CodeTemplate template)
+{
+	//properties apply to all templates
+	//Object
+	template.SetProperty("ClassNamespace", ClassNamespace);
+	template.SetProperty("ObjectName", ObjectName);
+	template.SetProperty("BaseClass", BaseClass);
+	if(Template.ToString().IndexOf("Child")>=0 && Template.ToString().IndexOf("Editable")>=0)
+		template.SetProperty("ParentName", ParentName);
+	if(Template.ToString().IndexOf("List")>=0)
+		template.SetProperty("ChildName", ChildName);
+
+	//Child Collection Object
+	if(Template.ToString().IndexOf("List")<0 && Template.ToString().IndexOf("NameValue")<0)
+	{
+		template.SetProperty("ChildCollectionNames", ChildCollectionNames);
+		template.SetProperty("ChildPropertyNames", ChildPropertyNames);
+	}
+
+	//Data Source
+	template.SetProperty("RootCommand", RootCommand);
+	template.SetProperty("RootTable", RootTable);
+	template.SetProperty("RootView", RootView);
+	template.SetProperty("ResultSetIndex", ResultSetIndex);
+	if(Template.ToString().IndexOf("List")<0 && Template.ToString().IndexOf("NameValue")<0)
+		template.SetProperty("UniqueColumnNames", UniqueColumnNames);
+	if(Template.ToString().IndexOf("RootList")>=0)
+		template.SetProperty("FilterColumnNames", FilterColumnNames);
+
+	//Csla Options
+	template.SetProperty("AuthorizationRules", AuthorizationRules);
+	template.SetProperty("PropertyAuthorization", PropertyAuthorization);
+	template.SetProperty("TransactionalType", TransactionalType);
+	
+	//Code Generation
+	template.SetProperty("GenerationMethod", GenerationMethod);
+	template.SetProperty("ClassType", ClassType);
+	
+}
+
+</script>

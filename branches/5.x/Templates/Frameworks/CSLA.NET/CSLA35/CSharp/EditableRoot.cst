@@ -1,0 +1,51 @@
+<%@ CodeTemplate src="TemplateBase.cs" Inherits="CodeSmith.Csla.TemplateBase" Language="C#" TargetLanguage="C#" Description="Generates a CSLA Editable Root Object." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Property Name="ObjectName" Type="System.String" Optional="true" Category="1. Object" Description="Required - The Name of the Business Object Class to Generate." %>
+<%@ Property Name="RootCommand" Type="CommandSchema" Optional="true" Category="2. Data Source" Description="Required - The stored procedure that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootTable" Type="TableSchema" Optional="true" Category="2. Data Source" Description="Required - The Root Table that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="RootView" Type="ViewSchema" Optional="true" Category="2. Data Source" Description="Required - The Root View that the object is based on. Must select RootTable,  RootView, or RootCommand." %>
+<%@ Property Name="ResultSetIndex" Type="System.Int32" Default="0" Optional="true" Category="2. Data Source" Description="Result set index indicates which result set to use from the stored procedure. Required when using RootCommand." %>
+<%@ Property Name="UniqueColumnNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="2. Data Source" Description="Unique columns. Required when using RootView or when ResultSetIndex > 0." %>
+<%@ Property Name="ChildCollectionTypes" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="1a. Child Collection Object" Description="The Child Collection's Type Name. Used for the memeber variable and collection name." %>
+<%@ Property Name="ChildPropertyNames" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="1a. Child Collection Object" Description="The Child Collection's member variable name. Defaulted to child collection type if left empty" %>
+<%@ Property Name="ChildEntitySets" Type="CodeSmith.CustomProperties.StringCollection" Optional="true" Category="1a. Child Collection Object" Description="The Child Collection's Linq2Sql entity collection names. Defaulted to child collection type if left empty." %>
+
+<%-- Generic Variables for code to use  --%>
+<% 
+   int i = BaseIndentLevel; 
+   ObjectInfo objInfo = new ObjectInfo(this);
+%>
+<!-- #INCLUDE FILE="AutoGenWarning.inc" -->
+using System;
+using System.Linq;
+using Csla;
+using Csla.Data;
+using Csla.Security;
+using Csla.Validation;
+
+<% if (objInfo.Namespace.Length > 0) { %>namespace <%= objInfo.Namespace %>
+<%=Indent(i++)%>{ 
+<% } %> 
+<% if(!objInfo.IsUserPartial) {%>
+<%=Indent(i)%>[Serializable()] 
+<%}%>
+<%=Indent(i)%><%= objInfo.Modifiers %> class <%=objInfo.Name%><%=objInfo.Inherits%>
+<%=Indent(i++)%>{
+<!-- #INCLUDE FILE="PropertiesMethods.inc" -->
+<!-- #INCLUDE FILE="ValidationRules.inc" -->
+<!-- #INCLUDE FILE="AuthorizationRules.inc" -->
+<!-- #INCLUDE FILE="ObjectFactoryMethods.inc" -->
+<% if(objInfo.IsGeneratedClass) {%>
+
+<%=Indent(i, true)%>#region Data Access
+<!-- #INCLUDE FILE="ObjectCriteria.inc" -->
+<!-- #INCLUDE FILE="DataPortalCreate.inc" -->
+<!-- #INCLUDE FILE="DataPortalFetch.inc" -->
+<!-- #INCLUDE FILE="DataPortalUpdate.inc" -->
+<!-- #INCLUDE FILE="DataPortalDelete.inc" -->
+<%=Indent(i)%>#endregion //Data Access
+<%}%>
+<%=Indent(--i)%>}
+<% if(objInfo.Namespace.Length > 0) {%>}<%}%>
