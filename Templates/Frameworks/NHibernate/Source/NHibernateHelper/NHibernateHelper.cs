@@ -194,12 +194,29 @@ namespace NHibernateHelper
         }
         public static bool IsManyToMany(TableSchema table)
         {
-            // If there are 2 ForeignKeyColumns AND...
-            // ...there are only two columns OR
-            //    there are 3 columns and 1 is a primary key.
-            return (table.ForeignKeyColumns.Count == 2
-                && ((table.Columns.Count == 2)
-                    || (table.Columns.Count == 3 && table.PrimaryKey != null)));
+            // 1) Table must have Two ForeignKeys.
+            // 2) All columns must be either...
+            //    a) Member of the Primary Key.
+            //    b) Member of a Foreign Key.
+            //    c) A DateTime stamp (CreateDate, EditDate, etc).
+
+            if(table.ForeignKeys.Count != 2)
+                return false;
+
+            bool result = true;
+
+            foreach (ColumnSchema column in table.Columns)
+            {
+                if (!( column.IsForeignKeyMember
+                    || column.IsPrimaryKeyMember
+                    || column.SystemType.Equals(typeof(DateTime))))
+                {
+                    result = false;
+                    break;
+                }
+            }
+
+            return result;
         }
 
         #endregion
