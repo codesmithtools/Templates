@@ -1,0 +1,68 @@
+<%-- 
+Name: Entity.cst
+Author: Tom DuPont
+Description: This template generates a simplistic entity object.  It can only be used from
+   the master since the property grid does not support selecting an individual element.
+--%>
+
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="False" Description="Creates a simplistic entity object." %>
+<%-- The XmlProperty directive must be registered so that the XML object model is generated. --%>
+<%@ XmlProperty Name="EntityMap" Schema="EntityMap.xsd" Optional="True" Category="Context" %>
+<%@ Property Name="EntityName" Type="System.String" Optional="True" Category="Context" Description="If this template is being called directly, then specify the element name to target." %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+Imports System
+
+Namespace <%= EntityElement.Namespace %>
+	''' <summary>
+	''' This object represents the properties and methods of a <%= EntityElement.Name %>.
+	''' </summary>
+	Public Class <%= EntityElement.Name %>
+		<% For Each prop As _codeSmith.Property In EntityElement.Properties %>
+		Private _<%= StringUtil.ToCamelCase(prop.Name) %> As <%= prop.Type %>
+		<% Next %>
+
+		Public Sub New()
+		End Sub
+
+		#region Custom - Methods
+		' Insert custom methods in here so that they are preserved during re-generation.
+#End Region
+	End Class
+End Namespace
+
+<script runat="template">
+
+Private _entityElement As Entity = Nothing
+
+<Browsable(False)> _
+Public Property EntityElement() As Entity
+	Get
+		Return _entityElement
+	End Get
+	Set
+		_entityElement = value
+	End Set
+End Property
+
+Protected Overloads Overrides Sub OnPreRender()
+	' if this template is called directly, then we need to set the EntityElement property using the name of the target entity.
+	If EntityName <> Nothing AndAlso EntityName.Length > 0 Then
+		Dim i As Integer = 0
+		While i < EntityMap.Entities.Count
+			If EntityMap.Entities(i).Name = EntityName Then
+				EntityElement = EntityMap.Entities(i)
+				Exit While
+			End If
+			System.Math.Max(System.Threading.Interlocked.Increment(i),i - 1)
+		End While
+	End If
+
+	If IsNothing(EntityElement) Then
+		Throw New ApplicationException("You must either pass in an EntityElement object from a parent template or set the name of the entity.")
+	End If
+
+	MyBase.OnPreRender()
+End Sub
+
+</script>

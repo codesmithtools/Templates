@@ -1,0 +1,9 @@
+C:\Code\CodeSmith\GeneratorGoogle\Templates\Examples\LinqToSql\CSharpWebApplication\Petshop.UI\bin\Petshop.UI.dll
+C:\Code\CodeSmith\GeneratorGoogle\Templates\Examples\LinqToSql\CSharpWebApplication\Petshop.UI\bin\Petshop.UI.pdb
+C:\Code\CodeSmith\GeneratorGoogle\Templates\Examples\LinqToSql\CSharpWebApplication\Petshop.UI\bin\CodeSmith.Data.dll
+C:\Code\CodeSmith\GeneratorGoogle\Templates\Examples\LinqToSql\CSharpWebApplication\Petshop.UI\bin\Petshop.Data.dll
+C:\Code\CodeSmith\GeneratorGoogle\Templates\Examples\LinqToSql\CSharpWebApplication\Petshop.UI\bin\Petshop.Data.pdb
+C:\Code\CodeSmith\GeneratorGoogle\Templates\Examples\LinqToSql\CSharpWebApplication\Petshop.UI\bin\CodeSmith.Data.xml
+C:\Code\CodeSmith\GeneratorGoogle\Templates\Examples\LinqToSql\CSharpWebApplication\Petshop.UI\obj\Debug\ResolveAssemblyReference.cache
+C:\Code\CodeSmith\GeneratorGoogle\Templates\Examples\LinqToSql\CSharpWebApplication\Petshop.UI\obj\Debug\Petshop.UI.dll
+C:\Code\CodeSmith\GeneratorGoogle\Templates\Examples\LinqToSql\CSharpWebApplication\Petshop.UI\obj\Debug\Petshop.UI.pdb

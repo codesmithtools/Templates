@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <variables>
+    <add key="ConnectionString1" value="Data Source=RBRADSHAW-LT\SQLEXPRESS;Initial Catalog=Petshop;Integrated Security=True" />
+  </variables>
+  <propertySets>
+    <propertySet name="DBML" template="C:\Code\CodeSmith\GeneratorGoogle\Templates\Frameworks\LinqToSql\\VisualBasic\Dbml.cst">
+      <property name="IncludeViews">False</property>
+      <property name="IncludeFunctions">False</property>
+      <property name="IgnoreList">
+        <stringList>
+          <string>^sysdiagrams$</string>
+        </stringList>
+      </property>
+      <property name="CleanExpression">
+        <stringList>
+          <string>^\\w+_</string>
+        </stringList>
+      </property>
+      <property name="EntityBase">LinqEntityBase</property>
+      <property name="DisableRenaming">False</property>
+      <property name="IncludeDeleteOnNull">True</property>
+      <property name="NamingConventions">
+        <NamingProperty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="">
+          <TableNaming>Singular</TableNaming>
+          <EntityNaming>Singular</EntityNaming>
+          <AssociationNaming>ListSuffix</AssociationNaming>
+        </NamingProperty>
+      </property>
+      <property name="SourceDatabase">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="EntityNamespace">Petshop.Data</property>
+      <property name="ContextNamespace">Petshop.Data</property>
+      <property name="DbmlFile">Petshop.dbml</property>
+    </propertySet>
+    <propertySet name="Entities" template="C:\Code\CodeSmith\GeneratorGoogle\Templates\Frameworks\LinqToSql\\VisualBasic\Entities.cst">
+      <property name="DbmlFile">Petshop.dbml</property>
+      <property name="Framework">v35_SP1</property>
+      <property name="IncludeDataContract">True</property>
+      <property name="OutputDirectory">Entities</property>
+    </propertySet>
+    <propertySet name="Managers" template="C:\Code\CodeSmith\GeneratorGoogle\Templates\Frameworks\LinqToSql\\VisualBasic\Managers.cst">
+      <property name="Framework">v35_SP1</property>
+      <property name="DbmlFile">Petshop.dbml</property>
+      <property name="ManagerDirectory">Managers</property>
+      <property name="SourceDatabase">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="DataContextFile">Entities\PetshopDataContext.cs</property>
+      <property name="DataManagerName">PetshopDataManager</property>
+      <property name="ManagerNamespace">Petshop.Data</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

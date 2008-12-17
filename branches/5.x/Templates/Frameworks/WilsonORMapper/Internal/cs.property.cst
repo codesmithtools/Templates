@@ -1,0 +1,41 @@
+<%@ CodeTemplate 
+	Language="C#" 
+	TargetLanguage="C#" 
+	Description="This Template Generates C# Business Objects for the ORMapper" 
+	Debug="true" %>
+
+<%@ Property Category="Class" Name="Summary" Type="System.String" Default="" Optional="True" Description="The summary of the Property."%>
+<%@ Property Category="Class" Name="PropertyName" Type="System.String" Optional="False" Description="The name of the Property."%>
+<%@ Property Category="Class" Name="MemberName" Type="System.String" Optional="False" Description="The name of the Member."%>
+<%@ Property Category="Class" Name="PropertyType" Type="System.String" Optional="False" Description="The data type of the Property."%>
+<%@ Property Category="Class" Name="MemberType" Type="System.String" Optional="False" Description="The data type of the member."%>
+<%@ Property Category="Class" Name="Readonly" Type="System.Boolean" Default="False" Optional="True" Description="True if Property should be readonly" %>
+<%@ Property Category="Class" Name="MemberValue" Type="System.String" Default="" Optional="True" Description="The default value of the Member."%>
+<%@ Property Category="Class" Name="PropertyGet" Type="System.String" Default="" Optional="True" Description="The text that returns a value for the property. Leave blank to use member name."%>
+<%@ Property Category="Class" Name="AttributeText" Type="System.String" Default="" Optional="True" Description="Attribute text for property."%>
+<%@ Property Category="Class" Name="RaisePropertyChange" Type="System.Boolean" Default="False" Optional="True" Description="True if support for OnPropertyChange" %>
+	
+		private <%= this.MemberType %> <%= this.MemberName %><% if (this.MemberValue.Length > 0) {%> = <%= this.MemberValue %><% }%>;
+		///<summary><%= this.Summary %></summary>
+		<% if (this.AttributeText.Length > 0) { %>
+		<%= this.AttributeText %>
+		<% } %>
+		public <%= this.PropertyType %> <%= this.PropertyName %>
+		{
+			get { return <%= this.PropertyGet.Length > 0 ? this.PropertyGet : this.MemberName   %>; }
+			<% if (!this.Readonly) {%>
+			<% if (this.RaisePropertyChange) {%>
+			set
+			{
+				if (<%= this.MemberName %> != value)
+				{
+					<%= this.MemberName %> = value;
+					OnPropertyChanged("<%= this.PropertyName %>");
+				}
+			}
+			<% } else {%>
+			set { <%= this.MemberName %> = value; }
+			<%} // CanPropertyChange%>
+			<%} // Readonly%>
+		}
+		

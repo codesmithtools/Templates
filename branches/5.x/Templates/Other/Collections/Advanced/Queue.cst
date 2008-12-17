@@ -1,0 +1,824 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates a strongly typed Queue collection." %>
+<%@ Property Name="Accessibility" Type="AccessibilityEnum" Category="Options" Description="The accessibility of the collection class." %>
+<%@ Property Name="TargetNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of the collection class." %>
+<%@ Property Name="ClassName" Type="System.String" Optional="True" Category="Context" Description="The name of the collection class." %>
+<%@ Property Name="ItemType" Type="System.String" Category="Context" Description="The element type of the collection." %>
+<%@ Property Name="ItemNamespace" Type="System.String" Optional="True" Category="Namespaces" Description="The namespace of the element type." %>
+<%@ Property Name="ItemValueType" Type="System.Boolean" Category="Context" Default="false" Description="Indicates whether ItemType is a value type." %>
+<%@ Property Name="ItemCustomSearch" Type="System.Boolean" Category="Options" Default="false" Description="Use custom search routines for ItemType." %>
+<%@ Property Name="DeepCopy" Type="System.Boolean" Optional="True" Category="Deep Copy" Default="false" Description="Generate deep copy method for the collection." %>
+<%@ Property Name="DeepCopyItem" Type="System.String" Optional="True" Category="Deep Copy" Default="Clone" Description="The ItemType method that creates a deep copy." %>
+<%@ Property Name="IncludeInterfaces" Type="System.Boolean" Optional="True" Category="Options" Default="true" Description="Generate required interface definitions." %>
+<%@ Property Name="IncludeNamespaces" Type="System.Boolean" Optional="True" Category="Namespaces" Default="true" Description="Generate using and namespace statements." %>
+<script runat="template">
+<!-- #include file="CommonScript.cs" -->
+
+public override string GetFileName() {
+    ValidateClassName("Queue");
+    return ClassName + ".cs";
+}
+
+public void ValidateClassName(string suffix) {
+    if (ClassName == null || ClassName.Length == 0)
+        ClassName = ItemType + suffix;
+}
+
+</script>
+<% ValidateClassName("Queue"); %>
+<% UsingNamespace("System"); %>
+<% UsingNamespace("System.Collections"); %>
+<% UsingNamespace(ItemNamespace); %>
+<% StartNamespace(TargetNamespace); %>
+    <% if (IncludeInterfaces) GenerateInterfaces("IList.cst"); %>
+    #region Class <%= ClassName %>
+
+    /// <summary>
+    /// Implements a strongly typed first-in, first-out collection
+    /// of <see cref="<%= ItemType %>"/> elements.
+    /// </summary>
+    /// <remarks>
+    /// <b><%= ClassName %></b> provides a <see cref="Queue"/>
+    /// that is strongly typed for <see cref="<%= ItemType %>"/> elements.
+    /// </remarks>
+
+    [Serializable]
+    <%= GetAccessModifier(Accessibility) %> class <%= ClassName %>:
+        I<%= ItemType %>Collection, ICollection, ICloneable {
+        #region Private Fields
+
+        private const int _defaultCapacity = 32;
+        private const int _minimumGrow = 4;
+
+        private <%= ItemType %>[] _array = null;
+        private int _growFactor, _head, _tail, _count;
+
+        [NonSerialized]
+        private int _version = 0;
+
+        #endregion
+        #region Private Constructors
+
+        // helper type to identify private ctor
+        private enum Tag { Default }
+
+        private <%= ClassName %>(Tag tag) { }
+
+        #endregion
+        #region Public Constructors
+        #region <%= ClassName %>()
+
+        /// <overloads>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class.
+        /// </overloads>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class that is
+        /// empty, has the default initial capacity, and uses the default growth factor.
+        /// </summary>
+        /// <remarks>Please refer to <see cref="Queue()"/> for details.</remarks>
+
+        public <%= ClassName %>(): this(_defaultCapacity, 2f) { }
+
+        #endregion
+        #region <%= ClassName %>(Int32)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class that is
+        /// empty, has the specified initial capacity, and uses the default growth factor.
+        /// </summary>
+        /// <param name="capacity">The number of elements that the new
+        /// <see cref="<%= ClassName %>"/> is initially capable of storing.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="capacity"/> is less than zero.</exception>
+        /// <remarks>Please refer to <see cref="Queue(Int32)"/> for details.</remarks>
+
+        public <%= ClassName %>(int capacity): this(capacity, 2f) { }
+
+        #endregion
+        #region <%= ClassName %>(Int32, Single)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class that is
+        /// empty, has the specified initial capacity, and uses the specified growth factor.
+        /// </summary>
+        /// <param name="capacity">The number of elements that the new
+        /// <see cref="<%= ClassName %>"/> is initially capable of storing.</param>
+        /// <param name="growFactor">The factor by which the capacity of the
+        /// <see cref="<%= ClassName %>"/> is expanded when necessary.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><para>
+        /// <paramref name="capacity"/> is less than zero.
+        /// </para><para>-or-</para><para>
+        /// <paramref name="growFactor" /> is less than 1.0 or greater than 10.0.
+        /// </para></exception>
+        /// <remarks>Please refer to <see cref="Queue(Int32, Single)"/> for details.</remarks>
+
+        public <%= ClassName %>(int capacity, float growFactor) {
+            if (capacity < 0)
+                throw new ArgumentOutOfRangeException("capacity",
+                    capacity, "Argument cannot be negative.");
+            
+            if (growFactor < 1f || growFactor > 10f)
+                throw new ArgumentOutOfRangeException("growFactor",
+                    growFactor, "Argument cannot be less than 1.0 or greater than 10.0.");
+
+            this._array = new <%= ItemType %>[capacity];
+            this._growFactor = (int) (growFactor * 100f);
+        }
+
+        #endregion
+        #region <%= ClassName %>(I<%= ItemType %>Collection)
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class that
+        /// contains elements copied from the specified collection, has the same initial
+        /// capacity as the number of elements copied, and uses the default growth factor.
+        /// </summary>
+        /// <param name="collection">The <see cref="I<%= ItemType %>Collection"/>
+        /// whose elements are copied to the new collection.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="collection"/> is a null reference.</exception>
+        /// <remarks>Please refer to <see cref="Queue(ICollection)"/> for details.</remarks>
+
+        public <%= ClassName %>(I<%= ItemType %>Collection collection) {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+
+            this._array = new <%= ItemType %>[collection.Count];
+            this._growFactor = 200;
+
+            foreach (<%= ItemType %> item in collection)
+                Enqueue(item);
+        }
+
+        #endregion
+        #region <%= ClassName %>(<%= ItemType %>[])
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class that
+        /// contains elements copied from the specified <see cref="<%= ItemType %>"/>
+        /// array, has the same initial capacity as the number of elements copied,
+        /// and uses the default growth factor.
+        /// </summary>
+        /// <param name="array">An <see cref="Array"/> of <see cref="<%= ItemType %>"/>
+        /// elements that are copied to the new collection.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="array"/> is a null reference.</exception>
+        /// <remarks>Please refer to <see cref="Queue(ICollection)"/> for details.</remarks>
+
+        public <%= ClassName %>(<%= ItemType %>[] array) {
+            if (array == null)
+                throw new ArgumentNullException("array");
+
+            this._array = new <%= ItemType %>[array.Length];
+            this._growFactor = 200;
+
+            foreach (<%= ItemType %> item in array)
+                Enqueue(item);
+        }
+
+        #endregion
+        #endregion
+        #region Public Properties
+        #region Count
+
+        /// <summary>
+        /// Gets the number of elements contained in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>
+        /// The number of elements contained in the <see cref="<%= ClassName %>"/>.
+        /// </value>
+        /// <remarks>Please refer to <see cref="Queue.Count"/> for details.</remarks>
+
+        public virtual int Count {
+            get { return this._count; }
+        }
+
+        #endregion
+        #region IsSynchronized
+
+        /// <summary>
+        /// Gets a value indicating whether access to the <see cref="<%= ClassName %>"/>
+        /// is synchronized (thread-safe).
+        /// </summary>
+        /// <value><c>true</c> if access to the <see cref="<%= ClassName %>"/> is
+        /// synchronized (thread-safe); otherwise, <c>false</c>. The default is <c>false</c>.</value>
+        /// <remarks>Please refer to <see cref="Queue.IsSynchronized"/> for details.</remarks>
+
+        public virtual bool IsSynchronized {
+            get { return false; }
+        }
+
+        #endregion
+        #region SyncRoot
+
+        /// <summary>
+        /// Gets an object that can be used to synchronize
+        /// access to the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <value>An object that can be used to synchronize
+        /// access to the <see cref="<%= ClassName %>"/>.
+        /// </value>
+        /// <remarks>Please refer to <see cref="Queue.SyncRoot"/> for details.</remarks>
+
+        public virtual object SyncRoot {
+            get { return this; }
+        }
+
+        #endregion
+        #endregion
+        #region Public Methods
+        #region Clear
+
+        /// <summary>
+        /// Removes all elements from the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <remarks>Please refer to <see cref="Queue.Clear"/> for details.</remarks>
+
+        public virtual void Clear() {
+            if (this._count == 0) return;
+            ++this._version;
+
+            if (this._head < this._tail)
+                Array.Clear(this._array, this._head, this._count);
+            else {
+                Array.Clear(this._array, this._head, this._array.Length - this._head);
+                Array.Clear(this._array, 0, this._tail);
+            }
+
+            this._head = this._tail = this._count = 0;
+        }
+
+        #endregion
+        #region Clone
+
+        /// <summary>
+        /// Creates a shallow copy of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>A shallow copy of the <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="Queue.Clone"/> for details.</remarks>
+
+        public virtual object Clone() {
+            <%= ClassName %> collection = new <%= ClassName %>(this._count);
+
+            for (int i = 0; i < this._count; i++)
+                collection._array[i] = GetByIndex(i);
+
+            collection._tail = collection._count = this._count;
+            collection._version = this._version;
+
+            return collection;
+        }
+
+        #endregion
+        #region Contains
+
+        /// <summary>
+        /// Determines whether the <see cref="<%= ClassName %>"/>
+        /// contains the specified <see cref="<%= ItemType %>"/> element.
+        /// </summary>
+        /// <param name="value">The <see cref="<%= ItemType %>"/> object
+        /// to locate in the <see cref="<%= ClassName %>"/>.
+        <% if (!ItemValueType) { %>
+        /// This argument can be a null reference.
+        <% } %>
+        /// </param>
+        /// <returns><c>true</c> if <paramref name="value"/> is found in the
+        /// <see cref="<%= ClassName %>"/>; otherwise, <c>false</c>.</returns>
+        /// <remarks>Please refer to <see cref="Queue.Contains"/> for details.</remarks>
+
+        public virtual bool Contains(<%= ItemType %> value) {
+
+        <% if (!ItemValueType) { %>
+            if ((object) value == null) {
+                for (int i = 0; i < this._count; i++)
+                    if ((object) GetByIndex(i) == null)
+                        return true;
+
+                return false;
+            }
+        <% } %>
+
+            for (int i = 0; i < this._count; i++)
+                if (value.Equals(GetByIndex(i)))
+                    return true;
+
+            return false;
+        }
+
+        #endregion
+        <% if (DeepCopy) { %>
+        #region Copy
+        
+        /// <summary>
+        /// Creates a deep copy of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>A deep copy of the <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks><para>
+        <% if (ItemValueType) { %>
+        /// <b>Copy</b> has the same effect as <see cref="Clone"/> 
+        /// because <see cref="<%= ItemType %>"/> is a value type.
+        <% } else if (IsString(ItemType)) { %>
+        /// <b>Copy</b> has the same effect as <see cref="Clone"/> 
+        /// because strings are immutable in the .NET Framework.
+        <% } else { %>
+        /// <b>Copy</b> is similar to <see cref="Clone"/> but creates a deep copy of
+        /// every <see cref="<%= ItemType %>"/> element in the <see cref="<%= ClassName %>"/>
+        /// by invoking its <see cref="<%= ItemType %>.<%= DeepCopyItem %>"/> method.
+        <% } %>
+        /// </para><para>
+        /// <b>Copy</b> never returns a <b><%= ClassName %></b> with a synchronized
+        /// wrapper whereas <b>Clone</b> preserves any present wrapper around this 
+        /// <b><%= ClassName %></b>.
+        /// </para></remarks>
+
+        public virtual <%= ClassName %> Copy() {
+            <%= ClassName %> collection = new <%= ClassName %>(this._count);
+
+        <% if (ItemValueType || IsString(ItemType)) { %>
+            for (int i = 0; i < this._count; i++)
+                collection._array[i] = GetByIndex(i);
+        <% } else { %>
+            for (int i = 0; i < this._count; i++) {
+                <%= ItemType %> item = GetByIndex(i);
+                if ((object) item != null)
+                    collection._array[i] = (<%= ItemType %>) item.<%= DeepCopyItem %>();
+            }
+        <% } %>
+
+            collection._tail = collection._count = this._count;
+            collection._version = this._version;
+
+            return collection;
+        }
+        
+        #endregion
+        <% } %>
+        #region CopyTo(<%= ItemType %>[])
+
+        /// <overloads>
+        /// Copies the <see cref="<%= ClassName %>"/> or a portion of it to a one-dimensional array.
+        /// </overloads>
+        /// <summary>
+        /// Copies the entire <see cref="<%= ClassName %>"/> to a one-dimensional <see cref="Array"/>
+        /// of <see cref="<%= ItemType %>"/> elements, starting at the beginning of the target array.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the
+        /// <see cref="<%= ItemType %>"/> elements copied from the <see cref="<%= ClassName %>"/>.
+        /// The <b>Array</b> must have zero-based indexing.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="array"/> is a null reference.</exception>
+        /// <exception cref="ArgumentException">
+        /// The number of elements in the source <see cref="<%= ClassName %>"/> is greater
+        /// than the available space in the destination <paramref name="array"/>.</exception>
+        /// <remarks>Please refer to <see cref="Queue.CopyTo"/> for details.</remarks>
+
+        public virtual void CopyTo(<%= ItemType %>[] array) {
+            CheckTargetArray(array, 0);
+            for (int i = 0; i < this._count; i++)
+                array[i] = GetByIndex(i);
+        }
+
+        #endregion
+        #region CopyTo(<%= ItemType %>[], Int32)
+
+        /// <summary>
+        /// Copies the entire <see cref="<%= ClassName %>"/> to a one-dimensional <see cref="Array"/>
+        /// of <see cref="<%= ItemType %>"/> elements, starting at the specified index of the target array.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the
+        /// <see cref="<%= ItemType %>"/> elements copied from the <see cref="<%= ClassName %>"/>.
+        /// The <b>Array</b> must have zero-based indexing.</param>
+        /// <param name="arrayIndex">The zero-based index in <paramref name="array"/>
+        /// at which copying begins.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="array"/> is a null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="arrayIndex"/> is less than zero.</exception>
+        /// <exception cref="ArgumentException"><para>
+        /// <paramref name="arrayIndex"/> is equal to or greater than the length of <paramref name="array"/>.
+        /// </para><para>-or-</para><para>
+        /// The number of elements in the source <see cref="<%= ClassName %>"/> is greater than the
+        /// available space from <paramref name="arrayIndex"/> to the end of the destination
+        /// <paramref name="array"/>.</para></exception>
+        /// <remarks>Please refer to <see cref="Queue.CopyTo"/> for details.</remarks>
+
+        public virtual void CopyTo(<%= ItemType %>[] array, int arrayIndex) {
+            CheckTargetArray(array, arrayIndex);
+            for (int i = 0; i < this._count; i++)
+                array[arrayIndex + i] = GetByIndex(i);
+        }
+
+        #endregion
+        #region ICollection.CopyTo(Array, Int32)
+
+        /// <summary>
+        /// Copies the entire <see cref="<%= ClassName %>"/> to a one-dimensional <see cref="Array"/>,
+        /// starting at the specified index of the target array.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the
+        /// <see cref="<%= ItemType %>"/> elements copied from the <see cref="<%= ClassName %>"/>.
+        /// The <b>Array</b> must have zero-based indexing.</param>
+        /// <param name="arrayIndex">The zero-based index in <paramref name="array"/>
+        /// at which copying begins.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="array"/> is a null reference.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="arrayIndex"/> is less than zero.</exception>
+        /// <exception cref="ArgumentException"><para>
+        /// <paramref name="array"/> is multidimensional.
+        /// </para><para>-or-</para><para>
+        /// <paramref name="arrayIndex"/> is equal to or greater than the length of <paramref name="array"/>.
+        /// </para><para>-or-</para><para>
+        /// The number of elements in the source <see cref="<%= ClassName %>"/> is greater than the
+        /// available space from <paramref name="arrayIndex"/> to the end of the destination
+        /// <paramref name="array"/>.</para></exception>
+        /// <exception cref="InvalidCastException">
+        /// The <see cref="<%= ItemType %>"/> type cannot be cast automatically
+        /// to the type of the destination <paramref name="array"/>.</exception>
+        /// <remarks>Please refer to <see cref="Queue.CopyTo"/> for details.</remarks>
+
+        void ICollection.CopyTo(Array array, int arrayIndex) {
+            CheckTargetArray(array, arrayIndex);
+            CopyTo((<%= ItemType %>[]) array, arrayIndex);
+        }
+
+        #endregion
+        #region Dequeue
+
+        /// <summary>
+        /// Removes and returns the <see cref="<%= ItemType %>"/> element
+        /// at the beginning of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>The <see cref="<%= ItemType %>"/> object removed from
+        /// the beginning of the <see cref="<%= ClassName %>"/>.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// The <see cref="<%= ClassName %>"/> is empty.</exception>
+        /// <remarks>Please refer to <see cref="Queue.Dequeue"/> for details.</remarks>
+
+        public virtual <%= ItemType %> Dequeue() {
+            if (this._count == 0)
+                throw new InvalidOperationException("Collection is empty.");
+
+            ++this._version;
+            <%= ItemType %> item = this._array[this._head];
+        <% if (ItemValueType) { %>
+            this._array[this._head] = new <%= ItemType %>();
+        <% } else { %>
+            this._array[this._head] = null;
+        <% } %>
+        
+            this._head = (this._head + 1) % this._array.Length;
+            --this._count;
+            return item;
+        }
+
+        #endregion
+        #region Enqueue
+
+        /// <summary>
+        /// Adds a <see cref="<%= ItemType %>"/> to the 
+        /// end of the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="value">The <see cref="<%= ItemType %>"/> object
+        /// to add to the end of the <see cref="<%= ClassName %>"/>.
+        <% if (!ItemValueType) { %>
+        /// This argument can be a null reference.
+        <% } %>
+        /// </param>
+        /// <remarks>Please refer to <see cref="Queue.Enqueue"/> for details.</remarks>
+
+        public virtual void Enqueue(<%= ItemType %> value) {
+
+            if (this._count == this._array.Length) {
+                int newCapacity = (int) (((long) this._array.Length * this._growFactor) / 100);
+                if (newCapacity < this._array.Length + _minimumGrow)
+                    newCapacity = this._array.Length + _minimumGrow;
+                SetCapacity(newCapacity);
+            }
+
+            ++this._version;
+            this._array[this._tail] = value;
+            this._tail = (this._tail + 1) % this._array.Length;
+            ++this._count;
+        }
+
+        #endregion
+        #region GetEnumerator: I<%= ItemType %>Enumerator
+
+        /// <summary>
+        /// Returns an <see cref="I<%= ItemType %>Enumerator"/> that can
+        /// iterate through the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>An <see cref="I<%= ItemType %>Enumerator"/>
+        /// for the entire <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="Queue.GetEnumerator"/> for details.</remarks>
+
+        public virtual I<%= ItemType %>Enumerator GetEnumerator() {
+            return new Enumerator(this);
+        }
+
+        #endregion
+        #region IEnumerable.GetEnumerator: IEnumerator
+
+        /// <summary>
+        /// Returns an <see cref="IEnumerator"/> that can
+        /// iterate through the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerator"/>
+        /// for the entire <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="Queue.GetEnumerator"/> for details.</remarks>
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return (IEnumerator) GetEnumerator();
+        }
+
+        #endregion
+        #region Peek
+
+        /// <summary>
+        /// Returns the <see cref="<%= ItemType %>"/> element at the beginning
+        /// of the <see cref="<%= ClassName %>"/> without removing it.
+        /// </summary>
+        /// <returns>The <see cref="<%= ItemType %>"/> object at the 
+        /// beginning of the <see cref="<%= ClassName %>"/>.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// The <see cref="<%= ClassName %>"/> is empty.</exception>
+        /// <remarks>Please refer to <see cref="Queue.Peek"/> for details.</remarks>
+
+        public virtual <%= ItemType %> Peek() {
+            if (this._count == 0)
+                throw new InvalidOperationException("Collection is empty.");
+
+            return this._array[this._head];
+        }
+
+        #endregion
+        #region Synchronized
+
+        /// <summary>
+        /// Returns a synchronized (thread-safe) wrapper
+        /// for the specified <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <param name="collection">The <see cref="<%= ClassName %>"/> to synchronize.</param>
+        /// <returns>
+        /// A synchronized (thread-safe) wrapper around <paramref name="collection"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="collection"/> is a null reference.</exception>
+        /// <remarks>Please refer to <see cref="Queue.Synchronized"/> for details.</remarks>
+
+        public static <%= ClassName %> Synchronized(<%= ClassName %> collection) {
+            if (collection == null)
+                throw new ArgumentNullException("collection");
+
+            return new SyncQueue(collection);
+        }
+
+        #endregion
+        #region ToArray
+
+        /// <summary>
+        /// Copies the elements of the <see cref="<%= ClassName %>"/> to a new
+        /// <see cref="Array"/> of <see cref="<%= ItemType %>"/> elements.
+        /// </summary>
+        /// <returns>A one-dimensional <see cref="Array"/> of <see cref="<%= ItemType %>"/>
+        /// elements containing copies of the elements of the <see cref="<%= ClassName %>"/>.</returns>
+        /// <remarks>Please refer to <see cref="Queue.ToArray"/> for details.</remarks>
+
+        public virtual <%= ItemType %>[] ToArray() {
+            <%= ItemType %>[] array = new <%= ItemType %>[this._count];
+
+            for (int i = 0; i < this._count; i++)
+                array[i] = GetByIndex(i);
+
+            return array;
+        }
+
+        #endregion
+        #region TrimToSize
+
+        /// <summary>
+        /// Sets the capacity to the actual number of elements in the <see cref="<%= ClassName %>"/>.
+        /// </summary>
+        /// <exception cref="NotSupportedException">
+        /// <para>The <see cref="<%= ClassName %>"/> is read-only.</para>
+        /// <para>-or-</para>
+        /// <para>The <b><%= ClassName %></b> has a fixed size.</para></exception>
+        /// <remarks>Please refer to <see cref="Queue.TrimToSize"/> for details.</remarks>
+
+        public virtual void TrimToSize() {
+            SetCapacity(this._count);
+        }
+
+        #endregion
+        #endregion
+        #region Private Methods
+        #region CheckEnumIndex
+
+        private void CheckEnumIndex(int index) {
+            if (index < 0 || index >= this._count)
+                throw new InvalidOperationException(
+                    "Enumerator is not on a collection element.");
+        }
+
+        #endregion
+        #region CheckEnumVersion
+
+        private void CheckEnumVersion(int version) {
+            if (version != this._version)
+                throw new InvalidOperationException(
+                    "Enumerator invalidated by modification to collection.");
+        }
+
+        #endregion
+        #region CheckTargetArray
+
+        private void CheckTargetArray(Array array, int arrayIndex) {
+            if (array == null)
+                throw new ArgumentNullException("array");
+            if (array.Rank > 1)
+                throw new ArgumentException(
+                    "Argument cannot be multidimensional.", "array");
+
+            if (arrayIndex < 0)
+                throw new ArgumentOutOfRangeException("arrayIndex",
+                    arrayIndex, "Argument cannot be negative.");
+            if (arrayIndex >= array.Length)
+                throw new ArgumentException(
+                    "Argument must be less than array length.", "arrayIndex");
+
+            if (this._count > array.Length - arrayIndex)
+                throw new ArgumentException(
+                    "Argument section must be large enough for collection.", "array");
+        }
+
+        #endregion
+        #region GetByIndex
+
+        private <%= ItemType %> GetByIndex(int index) {
+            return this._array[(this._head + index) % this._array.Length];
+        }
+
+        #endregion
+        #region SetCapacity
+        
+        private void SetCapacity(int capacity) {
+            <%= ItemType %>[] array = new <%= ItemType %>[capacity];
+            for (int i = 0; i < this._count; i++)
+                array[i] = GetByIndex(i);
+
+            ++this._version;
+            this._array = array;
+            this._head = 0;
+            this._tail = this._count;
+        }
+        
+        #endregion
+        #endregion
+        #region Class Enumerator
+
+        [Serializable]
+        private sealed class Enumerator:
+            I<%= ItemType %>Enumerator, IEnumerator {
+            #region Private Fields
+
+            private readonly <%= ClassName %> _collection;
+            private readonly int _version;
+            private int _index;
+
+            #endregion
+            #region Internal Constructors
+
+            internal Enumerator(<%= ClassName %> collection) {
+                this._collection = collection;
+                this._version = collection._version;
+                this._index = -1;
+            }
+
+            #endregion
+            #region Public Properties
+
+            public <%= ItemType %> Current {
+                get {
+                    this._collection.CheckEnumIndex(this._index);
+                    this._collection.CheckEnumVersion(this._version);
+                    return this._collection.GetByIndex(this._index);
+                }
+            }
+
+            object IEnumerator.Current {
+                get { return Current; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public bool MoveNext() {
+                this._collection.CheckEnumVersion(this._version);
+                return (++this._index < this._collection.Count);
+            }
+
+            public void Reset() {
+                this._collection.CheckEnumVersion(this._version);
+                this._index = -1;
+            }
+
+            #endregion
+        }
+
+        #endregion
+        #region Class SyncQueue
+
+        [Serializable]
+        private sealed class SyncQueue: <%= ClassName %> {
+            #region Private Fields
+
+            private <%= ClassName %> _collection;
+            private object _root;
+
+            #endregion
+            #region Internal Constructors
+
+            internal SyncQueue(<%= ClassName %> collection):
+                base(Tag.Default) {
+
+                this._root = collection.SyncRoot;
+                this._collection = collection;
+            }
+
+            #endregion
+            #region Public Properties
+
+            public override int Count {
+                get { lock (this._root) return this._collection.Count; }
+            }
+
+            public override bool IsSynchronized {
+                get { return true; }
+            }
+
+            public override object SyncRoot {
+                get { return this._root; }
+            }
+
+            #endregion
+            #region Public Methods
+
+            public override void Clear() {
+                lock (this._root) this._collection.Clear();
+            }
+
+            public override object Clone() {
+                lock (this._root)
+                    return new SyncQueue((<%= ClassName %>) this._collection.Clone());
+            }
+
+            public override bool Contains(<%= ItemType %> value) {
+                lock (this._root) return this._collection.Contains(value);
+            }
+            <% if (DeepCopy) { %>
+
+            public override <%= ClassName %> Copy() {
+                lock (this._root) return this._collection.Copy();
+            }
+            <% } %>
+
+            public override void CopyTo(<%= ItemType %>[] array) {
+                lock (this._root) this._collection.CopyTo(array);
+            }
+
+            public override void CopyTo(<%= ItemType %>[] array, int arrayIndex) {
+                lock (this._root) this._collection.CopyTo(array, arrayIndex);
+            }
+
+            public override <%= ItemType %> Dequeue() {
+                lock (this._root) return this._collection.Dequeue();
+            }
+
+            public override void Enqueue(<%= ItemType %> value) {
+                lock (this._root) this._collection.Enqueue(value);
+            }
+
+            public override I<%= ItemType %>Enumerator GetEnumerator() {
+                lock (this._root) return this._collection.GetEnumerator();
+            }
+
+            public override <%= ItemType %> Peek() {
+                lock (this._root) return this._collection.Peek();
+            }
+
+            public override <%= ItemType %>[] ToArray() {
+                lock (this._root) return this._collection.ToArray();
+            }
+
+            public override void TrimToSize() {
+                lock (this._root) this._collection.TrimToSize();
+            }
+
+            #endregion
+        }
+
+        #endregion
+    }
+
+    #endregion
+<% EndNamespace(TargetNamespace); %>

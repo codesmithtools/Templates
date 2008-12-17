@@ -1,0 +1,525 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="XML" Description="Generate ORMapper Mapping File" Debug="true" OutputType="None" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Src="Internal\CommonUtility.cs" %>
+
+<%@ Register Name="MappingInstance" Template="Internal\mapping.common.cst" MergeProperties="True" ExcludeProperties="OutputDirectory,MappingObject" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Collections" %>
+<%@ Import Namespace="System.Collections.Specialized" %>
+<%@ Import Namespace="System.Xml" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="System.Globalization" %>
+
+<%@ Property Category="2.Database" Name="IncludeViews" Type="System.Boolean" Default="false" Optional="False" Description="Include views in mapping." %>
+<%@ Property Category="2.Database" Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Description="Database that the mapping file should be based on." %>
+<%@ Property Category="2.Database" Name="IgnoreList" Type="CodeSmith.CustomProperties.StringCollection" Optional="True" Description="List of tables and views to ignore when generating mapping." Default="sysdiagrams" %>
+<%@ Property Category="2.Database" Name="CleanExpression" Type="CodeSmith.CustomProperties.StringCollection" Optional="True" Description="List of regular expressions to clean table, view and column names." Default="^\\w+_" %>
+
+<%@ Property Category="3.Class" Name="ClassNamespace" Type="System.String" Default="Project.Core.Data" Optional="False" Description="The namespace to use for the generated class files."%>
+<%@ Property Category="3.Class" Name="NullDefaults" Type="System.Boolean" Default="false" Optional="True" Description="Set default values for nullable columns. Set to false to use Nullable types in .net 2.0." %>
+<%@ Property Category="3.Class" Name="SingleTense" Type="System.Boolean" Default="false" Optional="True" Description="Make class names single tense." %>
+<%@ Property Category="3.Class" Name="ShortenName" Type="System.Boolean" Default="false" Optional="True" Description="Column names that start with the table name will be shortened. (i.e. TableID becomes ID)" %>
+
+<script runat="template">
+
+	//global 
+	private StringDictionary _classList = new StringDictionary();
+	private StringDictionary _memberList = new StringDictionary();
+	
+	public string CustomClean(string text)
+	{		
+		if (CleanExpression == null || CleanExpression.Count == 0)
+			return text;
+
+		// run custom expressions
+		string temp = text;
+		foreach(string clean in CleanExpression)
+		{
+			Regex cleaner = new Regex(clean);
+			temp = cleaner.Replace(temp, "");
+		}
+		return temp;
+	}	
+	
+	public bool IsIgnored(string name)
+	{
+		if (IgnoreList == null || IgnoreList.Count == 0)
+			return false;
+			
+		foreach(string expression in IgnoreList)
+		{
+			if (expression.Length == 0)
+				continue;
+				
+			Regex ignoreRegex = new Regex(expression);
+			if (ignoreRegex.IsMatch(name))
+				return true;
+		}
+		return false;
+	}
+	
+	public string GetClassName(string text)
+	{
+		if (_classList.ContainsKey(text))
+		{
+			return _classList[text];
+		}
+		string name = StringUtil.ToPascalCase(CustomClean(text));
+		if (SingleTense)
+			name = StringUtil.ToSingular(name);
+		
+		name = CommonUtility.GetUniqueName(_classList, name);		
+		_classList.Add(text, name);		
+		
+		return name;
+	}
+	
+	public string GetKeyFields(TableSchema table)
+	{
+		string keys = "";
+		if (!table.HasPrimaryKey || table.PrimaryKey == null)
+			return keys;
+		
+		string className = GetClassName(table.Name);
+	
+		foreach(ColumnSchema column in table.PrimaryKey.MemberColumns)
+		{
+			keys += GetMemberName(column.Name, className);
+			keys += ",";
+		}
+		
+		if (keys.Length > 1)
+			keys = keys.Substring(0, keys.Length - 1);
+		
+		return keys;
+	}
+	
+	public void SetKeyType(TableSchema table, entity currentEntity)
+	{
+		if (!table.HasPrimaryKey || table.PrimaryKey == null)
+		{
+			currentEntity.keyType = entityKeyType.None;
+			return;
+		}
+			
+		if (table.PrimaryKey.MemberColumns.Count > 1)
+		{
+			currentEntity.keyType = entityKeyType.Composite;
+			return;
+		}
+		else if (table.PrimaryKey.MemberColumns.Count == 1)		 
+		{
+			ColumnSchema keyColumn = table.PrimaryKey.MemberColumns[0];
+			
+			// fix CS_IsIdentity issue
+			bool isIdentity = false;			
+			if (keyColumn.ExtendedProperties.Contains("CS_IsIdentity"))
+			{
+				isIdentity = (bool)keyColumn.ExtendedProperties["CS_IsIdentity"].Value;
+			}
+			
+			if (isIdentity)
+			{
+				currentEntity.keyType = entityKeyType.Auto;
+				return;
+			}
+			else if (keyColumn.DataType == System.Data.DbType.Guid)
+			{
+				currentEntity.keyType = entityKeyType.Guid;
+				return;
+			}
+			else
+			{
+				currentEntity.keyType = entityKeyType.User;
+				return;
+			}
+		}		
+		currentEntity.keyType = entityKeyType.None;
+		return;
+	}
+	
+	public string GetMemberName(string text, string className)
+	{
+		if (_memberList.ContainsKey(text))
+		{
+			return _memberList[text];
+		}
+		
+		string name = StringUtil.ToPascalCase(CustomClean(text));
+
+		// prevent member names from being the same as their enclosing type
+		if (name == className)
+		{
+			name += "Member";
+		}
+		else if (ShortenName)
+		{
+			Regex shorten = new Regex(string.Format("^{0}(?=[A-Z])", className));
+			name = shorten.Replace(name, "");
+		}
+
+		name = CommonUtility.MemberPrefix + StringUtil.ToCamelCase(name);
+		name = CommonUtility.GetUniqueName(_memberList, name);
+
+		_memberList.Add(text, name);
+		
+		return name;
+	}
+	
+	public string GetPropertyName(string memberName)
+	{		
+		string name = memberName.Substring(CommonUtility.MemberPrefix.Length);
+		name = StringUtil.ToPascalCase(CustomClean(name));
+		return name;
+	}
+	
+    public string GetManyToOneMemberName(ColumnSchema column, TableSchema primaryTable)
+	{
+		string name = GetClassName(primaryTable.Name);				
+        if (!primaryTable.Columns.Contains(column.Name) || column.Table.Name == primaryTable.Name)
+		{
+			// add column name to table name to prevent duplicates
+            name = GetRelationshipName(column, primaryTable) + name;	
+		}
+		
+		name += "Object";
+        name = CommonUtility.MemberPrefix + StringUtil.ToCamelCase(name);
+        
+		name = CommonUtility.GetUniqueName(_memberList, name);		
+		_memberList.Add(System.Guid.NewGuid().ToString(), name);
+		
+		return name;		
+	}
+	
+    public string GetOneToManyMemberName(ColumnSchema column, TableSchema primaryTable)
+	{
+		string name = GetClassName(column.Table.Name);
+		
+        // if foreign key column name differnet then primary key column name
+        if (!primaryTable.Columns.Contains(column.Name) || column.Table.Name == primaryTable.Name)
+		{
+			// add column name to table name to prevent duplicates
+            name = GetRelationshipName(column, primaryTable) + name;	
+		}
+		name += "List";
+		name = CommonUtility.MemberPrefix + StringUtil.ToCamelCase(name);
+		
+		name = CommonUtility.GetUniqueName(_memberList, name);		
+		_memberList.Add(System.Guid.NewGuid().ToString(), name);
+		
+		return name;		
+	}
+	
+	public string GetRelationshipName(ColumnSchema column, TableSchema primaryTable)
+	{		
+		string tempName = column.Name;		
+		if (primaryTable.PrimaryKey != null)
+		{
+			// find diffrence between primary key column and foreign key column
+			ColumnSchema keyColumn = primaryTable.PrimaryKey.MemberColumns[0];
+			tempName = tempName.Replace(keyColumn.Name, "");			
+		}
+		tempName = CommonUtility.RemoveID(tempName);
+		return StringUtil.ToPascalCase(CustomClean(tempName));
+	}	
+	
+	public bool IsManyToManyTable(TableSchema table)
+	{
+		// if Columns.Count = ForeignKey.Count = 2 then ManyToMany
+		if (table.Columns.Count == 2 
+			&& table.ForeignKeys.Count == 2)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+
+    public ManyToManyInfo GetManyToManyInfo(ColumnSchema keyColumn, TableSchema primaryTable)
+    {
+        ManyToManyInfo info = new ManyToManyInfo();
+        
+        TableSchema linkTable = keyColumn.Table;
+		TableSchema secondaryTable = null;
+		
+        //find secondary table
+        foreach(TableKeySchema foreignKey in linkTable.ForeignKeys )
+        {
+            if (foreignKey.ForeignKeyMemberColumns.Count > 0 
+				&& foreignKey.ForeignKeyMemberColumns[0].Name != keyColumn.Name)
+            {
+                secondaryTable = foreignKey.PrimaryKeyTable;
+                
+                info.Member = GetClassName(secondaryTable.Name);
+                info.Type = string.Format("{0}.{1}", ClassNamespace, info.Member);
+                info.Field = foreignKey.PrimaryKeyMemberColumns[0].Name;                
+                info.DestField = foreignKey.ForeignKeyMemberColumns[0].Name;                
+
+				if (!secondaryTable.Columns.Contains(info.DestField))
+				{
+					// add column name to table name to prevent duplicates
+		            info.Member = GetRelationshipName(foreignKey.ForeignKeyMemberColumns[0], secondaryTable) + info.Member;	
+				}
+				
+                info.Member += "List";
+                info.Member = StringUtil.ToCamelCase(info.Member);
+                info.Member = CommonUtility.MemberPrefix + info.Member;
+                
+				info.Member = CommonUtility.GetUniqueName(_memberList, info.Member);		
+				_memberList.Add(System.Guid.NewGuid().ToString(), info.Member);
+            }
+            else
+            {
+                info.SourceField = foreignKey.ForeignKeyMemberColumns[0].Name;
+            }
+        }   
+        return info;
+    }	
+	
+	public void RemoveExtraMembers(entity en)
+	{
+		// always drop extra attributes
+		for(int i = 0; i < en.attributes.Count; i++)
+		{
+			attribute at = en.attributes[i];
+			if(!_memberList.ContainsKey(at.field))
+			{
+				Response.WriteLine("Removing extra member '{0}'.", at.alias);
+				en.attributes.RemoveAt(i);	
+				i--;
+			}
+		}
+		
+		for(int i = 0; i < en.relations.Count; i++)
+		{
+			relation rt = en.relations[i];
+			if(!rt.queryOnly && !_memberList.ContainsValue(rt.member))
+			{
+				Response.WriteLine("Removing extra relationship '{0}'.", rt.alias);
+				en.relations.RemoveAt(i);	
+				i--;
+			}
+		}
+	}
+	
+	public void RemoveExtraClasses(mappings map)
+	{
+		for(int i = 0; i < map.entities.Count; i++)
+		{
+			entity en = map.entities[i];
+			if(en.generated && !_classList.ContainsKey(en.table))
+			{
+				Response.WriteLine("Removing extra class '{0}'.", en.type);
+				map.entities.RemoveAt(i);	
+				i--;
+			}
+		}	
+	}
+</script>
+<%
+if (IgnoreList == null)
+	IgnoreList = new CodeSmith.CustomProperties.StringCollection();
+if (CleanExpression == null)
+	CleanExpression = new CodeSmith.CustomProperties.StringCollection();
+
+//Debugger.Break();
+int max = SourceDatabase.Tables.Count;
+if (IncludeViews) max += SourceDatabase.Views.Count;
+
+this.Progress.MaximumValue = max;
+this.Progress.Step = 1;
+
+TableSchemaCollection tables = new TableSchemaCollection(SourceDatabase.Tables);
+tables.Sort(new PropertyComparer("FullName"));
+
+//create mapping instance template
+MappingInstance mappingInstance = new MappingInstance();
+this.CopyPropertiesTo(mappingInstance);
+
+Response.WriteLine("Loading Mapping File '{0}'.", MappingFile);
+mappings map = mappingInstance.InitializeMappings();
+map.defaultNamespace = ClassNamespace;
+
+foreach (TableSchema table in tables)
+{
+	_memberList.Clear();
+		
+	if (IsManyToManyTable(table) || IsIgnored(table.Name))
+		continue;
+		
+	string className = GetClassName(table.Name);
+	string typeName = string.Format("{0}.{1}", ClassNamespace, className);
+	
+	entity en = mappingInstance.GetExistingOrNewEntity(table.Name);		
+	SetKeyType(table, en);
+	
+	string keyMember = GetKeyFields(table);		
+	
+	en.type = typeName;
+	en.keyMember = keyMember;
+
+	foreach(ColumnSchema column in table.Columns)
+	{			
+		string memberName = GetMemberName(column.Name, className);
+		string propertyName = GetPropertyName(memberName);
+		
+		attribute at = mappingInstance.GetExistingOrNewAttribute(en, column.Name);
+		at.member = memberName;
+		at.alias = propertyName;
+		at.type = column.SystemType.ToString();
+		at.nullable = column.AllowDBNull;
+		
+		if (NullDefaults && column.AllowDBNull && at.nullValue == null)
+			at.nullValue = CommonUtility.GetNullValue(column.SystemType.ToString());
+					
+		bool isIdentity = false;			
+		if (column.ExtendedProperties.Contains("CS_IsIdentity"))
+			isIdentity = (bool)column.ExtendedProperties["CS_IsIdentity"].Value;
+				
+		// make non key idenity columns readonly
+		if (isIdentity && memberName != keyMember)
+		{
+			at.persistType = attributePersistType.ReadOnly;
+		}
+		else if ((column.NativeType == "timestamp" || column.NativeType == "rowversion") 
+			&& _sourceDatabase.Provider.Name == "SqlSchemaProvider")
+		{
+			at.persistType = attributePersistType.Concurrent;
+		}
+	} // for each column
+		
+	// Many to One
+	foreach(TableKeySchema foreignKey in table.ForeignKeys )
+	{
+		foreach(ColumnSchema keyColumn in foreignKey.ForeignKeyMemberColumns)
+		{
+			string memberName = GetManyToOneMemberName(keyColumn, foreignKey.PrimaryKeyTable);
+			string propertyName = GetPropertyName(memberName);
+			
+			relation rt = mappingInstance.GetExistingOrNewRelation(en, memberName);
+			rt.relationship = relationRelationship.ManyToOne;
+			rt.member = memberName;
+			rt.field = keyColumn.Name;
+			rt.alias = propertyName;
+			rt.type = string.Format("{0}.{1}", ClassNamespace, GetClassName(foreignKey.PrimaryKeyTable.Name));
+			
+			//Self Referencing Relations
+			if (foreignKey.PrimaryKeyTable.Name == foreignKey.ForeignKeyTable.Name)
+			{
+				memberName = GetOneToManyMemberName(keyColumn, foreignKey.PrimaryKeyTable);
+				propertyName = GetPropertyName(memberName);
+				
+				relation rtSelf = mappingInstance.GetExistingOrNewRelation(en, memberName);
+				rtSelf.relationship = relationRelationship.OneToMany;
+				rtSelf.member = memberName;
+				rtSelf.field = keyColumn.Name;
+				rtSelf.alias = propertyName;
+				rtSelf.type = string.Format("{0}.{1}", ClassNamespace, GetClassName(foreignKey.PrimaryKeyTable.Name));				
+			}
+		} // for each foreign key column
+	} // for each foreign key
+	
+	foreach(TableKeySchema primaryKey in table.PrimaryKeys)
+	{
+		foreach(ColumnSchema keyColumn in primaryKey.ForeignKeyMemberColumns)
+		{
+			string memberName = "";
+			string propertyName = "";
+			
+			if (IsManyToManyTable(keyColumn.Table)) 
+			{                    
+				// Many To Many
+				ManyToManyInfo info = GetManyToManyInfo(keyColumn, primaryKey.PrimaryKeyTable);
+				memberName = info.Member;
+				propertyName = GetPropertyName(memberName);
+
+				relation rt = mappingInstance.GetExistingOrNewRelation(en, memberName);
+				rt.relationship = relationRelationship.ManyToMany;
+				rt.member = memberName;
+				rt.field = info.Field;
+				rt.alias = propertyName;
+				rt.type = info.Type;						
+				rt.table = keyColumn.Table.Name;
+				rt.sourceField = info.SourceField;
+				rt.destField = info.DestField;
+			}
+            else 
+			{
+				// One to Many
+				memberName = GetOneToManyMemberName(keyColumn, primaryKey.PrimaryKeyTable);
+				propertyName = GetPropertyName(memberName);
+				
+				relation rt = mappingInstance.GetExistingOrNewRelation(en, memberName);
+				rt.relationship = relationRelationship.OneToMany;
+				rt.member = memberName;
+				rt.field = keyColumn.Name;
+				rt.alias = propertyName;
+				rt.type = string.Format("{0}.{1}", ClassNamespace, GetClassName(keyColumn.Table.Name));				
+			}
+		} // for each primary key column
+	} // for each primary key
+
+	// remove extra members
+	RemoveExtraMembers(en);	
+	this.Progress.PerformStep();
+} // for each table
+
+if (IncludeViews)
+{
+	ViewSchemaCollection views = new ViewSchemaCollection(_sourceDatabase.Views);
+	views.Sort(new PropertyComparer("FullName"));
+
+	foreach (ViewSchema view in views)
+	{
+		_memberList.Clear();
+	
+		if (IsIgnored(view.Name))
+			continue;
+		
+		string className = GetClassName(view.Name);
+		string typeName = string.Format("{0}.{1}", ClassNamespace, className);
+		entity en = mappingInstance.GetExistingOrNewEntity(view.Name);		
+		
+		en.table = view.Name;
+		// only update if type not the same
+		if (string.Compare(en.type, typeName, false) != 0)
+		{
+			en.type = typeName;
+			en.keyMember = "";
+			en.keyType = entityKeyType.None;
+			en.readOnly = true;
+		}
+		foreach(ViewColumnSchema column in view.Columns)
+		{
+			string memberName = GetMemberName(column.Name, className);
+			string propertyName = GetPropertyName(memberName);
+
+			attribute at = mappingInstance.GetExistingOrNewAttribute(en, column.Name);
+			at.member = memberName;
+			at.alias = propertyName;
+			at.type = column.SystemType.ToString();
+			at.nullable = column.AllowDBNull;
+			if (NullDefaults && column.AllowDBNull && at.nullValue == null)
+				at.nullValue = CommonUtility.GetNullValue(column.SystemType.ToString());
+		} // for each column
+		
+		// remove extra attributes
+		RemoveExtraMembers(en);
+		this.Progress.PerformStep();
+	} // for each view
+} // include views
+
+// remove extra entities
+RemoveExtraClasses(map);
+
+Response.WriteLine("Saving Mapping File '{0}'.", MappingFile);
+mappingInstance.SaveMappingFile();
+%>

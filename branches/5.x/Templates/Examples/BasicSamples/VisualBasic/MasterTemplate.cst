@@ -1,0 +1,20 @@
+<%-- 
+Name: MasterTemplate.cst
+Author: Tom DuPont
+Description: Demonstrates the use of a sub-template.
+--%>
+
+<%@ CodeTemplate Language="VB" TargetLanguage="Text" Debug="True" Description="Demonstrates the use of a sub-template." %>
+<%@ Register Name="SubTemplate" Template="SubTemplate.cst" %>
+
+My master template content here.
+<% GetSomething() %>
+
+<script runat="template">
+
+Function GetSomething()
+	Dim o = New SubTemplate()
+	o.Render(Me.Response)
+End Function
+
+</script>

@@ -1,0 +1,136 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="SQL" Debug="True" 
+    Description="Create SQLite DDL from source database." %>
+
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="System.Data" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text" %>
+
+<%@ Property Category="1.Database" Name="SourceDatabase" Optional="False"
+    Type="SchemaExplorer.DatabaseSchema" 
+    Description="Database to create SQLite DDL from." %>
+<%@ Property Category="2.Script" Name="NotExists" Optional="False" Default="False"
+    Type="Boolean" Description="Inclue the IF NOT EXISTS syntax." %>
+<%@ Property Category="2.Script" Name="AutoIncrement" Optional="False" Default="False"
+    Type="Boolean" Description="Inclue support for AUTOINCREMENT." %>
+<%@ Property Category="2.Script" Name="Collation" Optional="False" Default="Default" 
+    Type="CollationTypes" Description="Select what text collating function to use when comparing text. Default is binary." %>
+
+<% foreach (TableSchema table in SourceDatabase.Tables) { %>
+<% int counter = 0; %>
+<% bool hasConstraint = (table.HasPrimaryKey && table.PrimaryKey.MemberColumns.Count > 1) || table.ForeignKeys.Count > 0; %>
+CREATE TABLE<% if (NotExists) { Response.Write(" IF NOT EXISTS"); }%> [<%= table.Name %>] (
+<% foreach (ColumnSchema column in table.Columns) { %>
+    [<%= column.Name %>]<%= Options(column) %><% if (hasConstraint || (++counter) < table.Columns.Count) { Response.Write(","); } %>
+<% } %>
+<% if (table.HasPrimaryKey && (!AutoIncrement || table.PrimaryKey.MemberColumns.Count > 1)) { %>
+    CONSTRAINT [<%= table.PrimaryKey.Name %>] PRIMARY KEY (<%= MemberColumns(table.PrimaryKey.MemberColumns)%>)
+<% } %>
+<% foreach (TableKeySchema key in table.ForeignKeys) { %>
+    CONSTRAINT [<%= key.Name %>] FOREIGN KEY (<%= MemberColumns(key.ForeignKeyMemberColumns) %>) REFERENCES [<%= key.PrimaryKeyTable.Name %>] (<%= MemberColumns(key.PrimaryKeyMemberColumns) %>)
+<% } %>
+);
+
+<% foreach (IndexSchema index in table.Indexes) { %>
+<% if (!index.IsPrimaryKey) { %>
+CREATE<% if (index.IsUnique) { Response.Write(" UNIQUE"); }%> INDEX<% if (NotExists) { Response.Write(" IF NOT EXISTS"); }%> [<%= index.Name %>]
+ON [<%= index.Table.Name %>]
+(<%= MemberColumns(index.MemberColumns) %>);
+
+<% } // IsPrimaryKey%>
+<% } // for each index%>
+<% } // for each table%>
+
+<script runat="template">
+public string MemberColumns(MemberColumnSchemaCollection columns)
+{
+    StringBuilder s = new StringBuilder();
+    for(int i = 0; i < columns.Count; i++)
+    {
+        MemberColumnSchema c = columns[i];
+        s.AppendFormat("[{0}]", c.Name);
+        if (i < columns.Count - 1)
+            s.Append(", ");
+    }
+    return s.ToString();
+}
+
+public string Options(ColumnSchema column)
+{
+    StringBuilder s = new StringBuilder();
+    
+    bool isPrimary = AutoIncrement 
+        && column.IsPrimaryKeyMember 
+        && column.Table.HasPrimaryKey 
+        && column.Table.PrimaryKey.MemberColumns.Count == 1;
+
+    bool isIdentity = false;
+    if (column.ExtendedProperties.Contains("CS_IsIdentity"))
+        isIdentity = (bool)column.ExtendedProperties["CS_IsIdentity"].Value;
+
+    if (isPrimary && isIdentity)
+        return " integer NOT NULL PRIMARY KEY AUTOINCREMENT";
+
+    string nativeType = column.NativeType.Trim().ToLower();
+    int size = column.Size;
+    int precision = column.Precision;
+    int scale = column.Scale;
+    nativeType = GetTypeDeclaration(nativeType, size, precision, scale);
+
+    s.Append(" " + nativeType);
+    
+    if (!column.AllowDBNull)
+        s.Append(" NOT NULL");
+    
+    if (isPrimary)
+        s.Append(" PRIMARY KEY");
+
+    if (!isPrimary && column.ExtendedProperties.Contains("CS_Default"))
+    {
+        string defaultValue = column.ExtendedProperties["CS_Default"].ToString();
+    }
+    
+    if (column.SystemType == typeof(string) && Collation != CollationTypes.Default)
+        s.Append(" COLLATE " + Collation.ToString());
+
+    return s.ToString();
+}
+
+public string GetTypeDeclaration(string nativeType, int size, int precision, int scale)
+{
+    string type = nativeType.Trim().ToLower();
+    StringBuilder builder = new StringBuilder();
+    builder.Append(type);
+    switch (type)
+    {
+        case "binary":
+        case "char":
+        case "nchar":
+        case "nvarchar":
+        case "varbinary":
+        case "varchar":
+            // add size
+            if (!(size == 0x7fffffff || size == -1))
+                builder.AppendFormat("({0})", size.ToString());
+            break;
+        case "decimal":
+        case "numeric":
+            // add scale
+            builder.AppendFormat("({0},{1})", precision, scale);
+            break;
+    }
+    return builder.ToString();
+}
+
+public enum CollationTypes
+{
+    Default,
+    BINARY,
+    REVERSE,
+    NOCASE
+}
+</script>

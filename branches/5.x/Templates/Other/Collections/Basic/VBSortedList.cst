@@ -1,0 +1,1371 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Description="Generates a strongly-typed collection of key-and-value pairs that are sorted by the keys and are accessible by key and by index." %>
+<%@ Property Name="ClassNamespace" Type="System.String" Optional="True" Category="Context" Description="The namespace that the generated class will be a member of." %>
+<%@ Property Name="KeyType" Type="System.String" Category="Context" Description="The type to use as a key in the collection." %>
+<%@ Property Name="ItemType" Type="System.String" Category="Context" Description="The type to use as an item in the collection." %>
+<%@ Property Name="ClassName" Type="System.String" Category="Context" Description="The name of the class to be generated." %>
+<%@ Property Name="Accessibility" Type="AccessibilityEnum" Category="Options" Description="The accessibility of the class to be generated." %>
+Option Strict On
+
+Imports System
+Imports System.Collections
+
+<% If Not ClassNamespace Is Nothing AndAlso ClassNamespace.Length > 0 Then %>
+Namespace <%= ClassNamespace %>
+<% End If %>
+
+	<Serializable()> <%= GetAccessModifier(Accessibility) %> Class <%= ClassName %>
+		Implements IDictionary, ICloneable
+
+
+#Region "Member Variables"
+
+		Private Const DEFAULT_CAPACITY As Integer = 16
+
+		Private m_keys() As <%= KeyType %>		   
+		Private m_values() As <%= ItemType %>		  
+		Private m_count As Integer
+		Private m_version As Integer
+		Private m_comparer As IComparer
+		Private m_keyList As KeyList
+		Private m_valueList As ValueList
+
+#End Region
+#Region "Constructors"
+		Public Sub New()
+		'		Initializes a new instance of the <%= ClassName %> class that is empty, 
+		'		has the default initial capacity and is sorted according to the IComparable interface implemented 
+		'		by each key added to the <%= ClassName %>.
+		
+			ReDim m_keys(DEFAULT_CAPACITY)
+			ReDim m_values(DEFAULT_CAPACITY)
+			m_comparer = Comparer.Default
+		End Sub
+
+		Public Sub New(ByVal capacity As Integer)
+		'		Initializes a new instance of the <%= ClassName %> class that is empty, has the specified 
+		'		initial capacity and is sorted according to the IComparable interface implemented by each key added 
+		'		to the <%= ClassName %>
+
+		'		Parameters:
+		'		capacity = The initial number of elements that the <%= ClassName %> can contain.
+
+		'		Execptions thrown:
+		'		ArgumentOutOfRangeException if capacity is less than zero.
+
+			If (capacity < 0) Then
+				Throw New ArgumentOutOfRangeException("capacity", capacity, "Initial capacity cannot be less than zero.")
+			End If
+
+			ReDim m_keys(DEFAULT_CAPACITY)
+			ReDim m_values(DEFAULT_CAPACITY)
+			m_comparer = Comparer.Default
+		End Sub
+
+		Public Sub New(ByRef comparer As IComparer)
+		'		Initializes a new instance of the <%= ClassName %> class that is empty, 
+		'		has the default initial capacity and is sorted according to the IComparable interface implemented 
+		'		by each key added to the <%= ClassName %>.
+		
+		'		Parameters:
+		'		comparer = The IComparer implementation to use when comparing keys or a null reference, to use 
+		'		the IComparable implementation of each key.
+
+			Me.new()
+			If Not (comparer Is Nothing) Then
+				Me.m_comparer = comparer
+			End If
+		End Sub
+
+		Public Sub New(ByRef comparer As IComparer, ByVal capacity As Integer)
+		'		Initializes a new instance of the <%= ClassName %> class that is empty, has the specified 
+		'		initial capacity and is sorted according to the IComparable interface implemented by each key added 
+		'		to the <%= ClassName %>
+
+		'		Parameters:
+		'		capacity = The initial number of elements that the <%= ClassName %> can contain.
+
+		'		comparer = The IComparer implementation to use when comparing keys or a null reference, to use 
+		'		the IComparable implementation of each key.
+
+
+			Me.new(capacity)
+			If Not (comparer Is Nothing) Then
+				Me.m_comparer = comparer
+			End If
+		End Sub
+
+		Public Sub New(ByRef d As IDictionary)
+		'		Initializes a new instance of the <%= ClassName %> class that contains 
+		'		elements copied from the specified dictionary, has the same initial capacity as the number of elements 
+		'		copied and is sorted according to the IComparable interface implemented by each key.
+
+		'		Parameters:
+		'		d = The IDictionary to copy to a new SortedList.
+
+			Me.new(d, Nothing)
+		End Sub
+
+		Public Sub New(ByRef d As IDictionary, ByRef comparer As IComparer)
+		'		Initializes a new instance of the <%= ClassName %> class that contains elements copied 
+		'		from the specified dictionary, has the same initial capacity as the number of elements copied and is sorted 
+		'		according to the specified Comparer interface.
+
+		'		Parameters:
+		'		d = The IDictionary to copy to a new SortedList.
+		'		comparer = The IComparer implementation to use when comparing keys or a null reference, to use 
+		'		the IComparable implementation of each key.
+
+		'		Exceptions thrown:
+		'		ArgumentNullException = d is a null reference.
+		
+			Me.new(comparer, CInt(IIf(d Is Nothing, 0, d.Count)))
+			If (d Is Nothing) Then
+				Throw New ArgumentNullException("d", "The IDictionary cannot be null.")
+			End If
+
+			d.Keys.CopyTo(m_Keys, 0)
+			d.Values.CopyTo(m_Values, 0)
+			Array.Sort(Me.m_Keys, Me.m_Values, Me.m_comparer)
+			Me.m_count = d.Count
+		End Sub
+#End Region
+
+#Region "Properties"
+		Default Public Overridable Property Item(ByVal key As Object) As Object Implements IDictionary.Item
+		'		Gets and sets the value associated with a specific key in the <%= ClassName %>
+		'		Inputs:
+		'		The <%= ItemType %> associated with key in the <%= ClassName %> if the key is found; 
+		'		otherwise, a NullReferenceException is thrown.
+
+		'		remarks:
+		'		This property, unlike its equivalent in System.Collections.SortedList, does not return
+		'		null when a key cannot be found. The reason for this is that the strongly-typed sorted list
+		'		template this class is created from allows the value to be a value type (or struct), which cannot
+		'		be set to null. Instead, a NullReferenceException is thrown when a key cannot be found.
+		'		Callers must either catch this exception, or call the <%= ClassName %>.Contains method first to
+		'		see if the key exists.
+
+		'		Exceptions thrown:
+		'		ArgumentNullException" = The key is a null reference.
+		'		ArgumentException = Either the key or the value are not of a type supported by the <%= ClassName %>.
+		'		NullReferenceException = key" is not found in the <%= ClassName %>
+
+			Get
+				If key Is Nothing Then
+					Throw New ArgumentNullException("key", "The key cannot be null.")
+				End If
+				If Not (TypeOf key Is <%= KeyType %>) Then
+					Throw New ArgumentException("The key must be of type:" & GetType( <%= KeyType %>).FullName, "key")
+				End If
+				Return Me.Item(CType(key, <%= KeyType %>))
+			End Get
+
+			Set(ByVal value as Object)
+				If (key Is Nothing) Then
+					Throw New ArgumentNullException("key", "The key cannot be null.")
+				End If
+				If Not (TypeOf key Is <%= KeyType %>) Then
+					Throw New ArgumentException("The key must be of type: " & GetType(<%= KeyType %>).FullName, "key")
+				End If
+
+				If Not (TypeOf value Is <%= ItemType %>) Then
+					Throw New ArgumentException("The value must be of type: " & GetType(<%= ItemType %>).FullName, "key")
+				End If
+				Me.Item(CType(key, <%= KeyType %>)) = CType(value, <%= ItemType %>)
+
+
+			End Set
+
+		End Property
+
+
+		Default Public Overridable Property Item(ByVal key As <%= KeyType %>) As <%= ItemType %>
+		'		Gets and sets the value associated with a specific key in the <%= ClassName %>.
+		'		Inputs:
+		'		The <%= ItemType %> associated with key in the <%= ClassName %> if the key is found; 
+		'		otherwise, a NullReferenceException is thrown.
+
+		'		remarks:
+		'		This property, unlike its equivalent in System.Collections.SortedList, does not return
+		'		null when a key cannot be found. The reason for this is that the strongly-typed sorted list
+		'		template this class is created from allows the value to be a value type (or struct), which cannot
+		'		be set to null. Instead, a NullReferenceException is thrown when a key cannot be found.
+		'		Callers must either catch this exception, or call the <%= ClassName %>.Contains method first to
+		'		see if the key exists.
+
+		'		Exceptions thrown:
+		'		ArgumentNullException" = The key is a null reference.
+		'		NullReferenceException = key" is not found in the <%= ClassName %>
+
+			Get
+				Dim index As Integer = IndexOfKey(key)
+				If (index >= 0) Then
+					Return m_values(index)
+				End If
+
+				Throw New NullReferenceException("The specified key could not be found.")
+			End Get
+			Set(ByVal Value As <%= ItemType %>)
+				If (Object.ReferenceEquals(key, Nothing)) Then				 '// avoids compiler error for null check on value type
+					Throw New ArgumentNullException("key", "The key cannot be null.")
+				End If
+
+				Dim index As Integer = Array.BinarySearch(m_keys, 0, m_count, key, m_comparer)
+				If (index >= 0) Then
+					m_values(index) = Value
+					m_version += 1
+					Return
+				End If
+				Insert(NOT(index), key, Value)
+			End Set
+		End Property
+
+		Public Overridable Property Capacity() As Integer
+		'		Gets or sets the capacity of the <%= ClassName %>.
+
+		'		Inputs:
+		'		value = The number of elements that the <%= ClassName %> can contain.
+		
+		'		Remarks:
+		'		If the <%= ClassName %> already has elements in it, then a new array is created for the
+		'		keys and values with the new capacity and the old ones are copied into the new arrays.  NOTE: If you have more
+		'		elements in the old <%= ClassName %> than capacity then you will loose those elements 
+		'		above capacity.
+			Get
+				Return m_keys.Length
+			End Get
+			Set(ByVal Value As Integer)
+				If (Value < m_count) Then Value = m_count
+
+				If (Value <> m_keys.Length) Then
+					If (Value > 0) Then
+						Dim newKeys(Value) As <%= KeyType %>
+						Dim newValues(Value) As <%= ItemType %>
+
+						If (m_count > 0) Then
+							Array.Copy(m_keys, 0, newKeys, 0, m_count)
+							Array.Copy(m_values, 0, newValues, 0, m_count)
+
+							m_keys = newKeys
+							m_values = newValues
+						Else
+							ReDim m_keys(DEFAULT_CAPACITY)
+							ReDim m_values(DEFAULT_CAPACITY)
+						End If
+					End If
+				End If
+			End Set
+		End Property
+
+		Protected Property version() As Integer
+			Get
+				Return m_version
+			End Get
+			Set(ByVal Value As Integer)
+				m_version = Value
+			End Set
+		End Property
+
+		Public Overridable ReadOnly Property Count() As Integer Implements IDictionary.Count
+		'		Gets the number of elements contained in the <%= ClassName %>.
+			Get
+				Return m_count
+			End Get
+		End Property
+
+		Public Overridable ReadOnly Property IsFixedSize() As Boolean Implements IDictionary.IsFixedSize
+		'		Gets a value indicating whether the <%= ClassName %> has a fixed size.
+		'		The default is false.
+			Get
+				Return False
+			End Get
+		End Property
+		Public Overridable ReadOnly Property IsReadOnly() As Boolean Implements IDictionary.IsReadOnly
+		'		Gets a value indicating whether the <%= ClassName %> is read only.
+		'		The default is false.
+			Get
+				Return False
+			End Get
+		End Property
+		Public Overridable ReadOnly Property IsSynchronized() As Boolean Implements IDictionary.IsSynchronized
+		'		Gets a value indicating whether the <%= ClassName %> is Synchronized.
+		'		The default is false.
+			Get
+				Return False
+			End Get
+		End Property
+		Public Overridable ReadOnly Property Keys() As ICollection Implements IDictionary.Keys
+		'		Gets the keys in the <%= ClassName %>.
+
+		'		Returns an ICollection containing the keys in the <%= ClassName %>
+
+		'		Remarks:
+		'		The ICollection is a read-only view of the keys in the <%= ClassName %>. Modifications made 
+		'		to the underlying <%= ClassName %> are immediately reflected in the ICollection.
+		'		The elements of the ICollection are sorted in the same order as the keys of the <%= ClassName %>
+		'		Similar to <%= ClassName %>.GetKeyList, but returns an ICollection instead of an IList.
+
+			Get
+				Return GetKeyList()
+			End Get
+		End Property
+		Public Overridable ReadOnly Property SyncRoot() As Object Implements IDictionary.SyncRoot
+		'		Gets an object that can be used to synchronize access to the <%= ClassName %>.
+			Get
+				Return Me
+			End Get
+		End Property
+		Public Overridable ReadOnly Property Values() As ICollection Implements IDictionary.Values
+		'		Gets the values in the <%= ClassName %>.
+
+		'		Remarks:
+		'		The ICollection is a read-only view of the values in the <%= ClassName %>. Modifications made
+		'		to the underlying <%= ClassName %> are immediately reflected in the ICollection.
+		'		The elements of the ICollection are sorted in the same order as the values of the <%= ClassName %>.
+		'		Similar to <%= ClassName %>.GetValueList, but returns an ICollection instead of an IList.
+
+			Get
+				Return GetValueList()
+			End Get
+		End Property
+
+#End Region
+
+#Region "Public Methods"
+		Public Overridable Sub Add(ByVal key As Object, ByVal value As Object) Implements IDictionary.Add
+		'		Adds an element with the specified key and value to the <%= ClassName %>.
+
+		'		Inputs:
+		'		key = The key of the element to add.
+		'		value = The value of the element to add.
+
+		'		Exceptions thrown:
+		'		ArgumentNullException = The key is a null reference.
+		'		ArgumentException =An element with the specified key already exists in the <%= ClassName %> or
+		'		Either the key or the value are not of a type supported by the <%= ClassName %> or the <%= ClassName %>
+		'		is set to use the IComparable, and key does not implement the IComparable interface.
+		'		InvalidOperationException = The comparer throws an exception.
+		'		NotSupportedException = The <%= ClassName %> is read-only or the <%= ClassName %> has a fixed size.
+
+			If (Object.ReferenceEquals(key, Nothing)) Then
+				Throw New ArgumentNullException("key", "The key cannot be null.")
+			End If
+
+			If (Not (TypeOf key Is <%= KeyType %>)) Then
+				Throw New ArgumentException("The key must be of type: " & GetType(<%= KeyType %>).FullName, "key")
+			End If
+
+
+			If (Not (TypeOf value Is <%= ItemType %>)) Then
+				Throw New ArgumentException("The value must be of type: " & GetType(<%= ItemType %>).FullName, "value")
+			End If
+
+
+			Me.Add(CType(key, <%= KeyType %>), CType(value, <%= ItemType %>))
+		End Sub
+		Public Overridable Sub Add(ByVal key As <%= KeyType %>, ByVal value As <%= ItemType %>)
+		'		Adds an element with the specified key and value to the <%= ClassName %>.
+
+		'		Inputs:
+		'		key = The key of the element to add.
+		'		value = The value of the element to add.
+
+		'		Exception thrown:
+ 		'		ArgumentNullException = The key is a null reference.
+		'		ArgumentException = An element with the specified key already exists in the <%= ClassName %> or
+		'		the <%= ClassName %> is set to use the IComparable interface, and key does not implement the 
+		'		IComparable interface.
+		'		InvalidOperationException = The comparer throws an exception.
+		'		NotSupportedException = The <%= ClassName %>is read-only or the <%= ClassName %>has a fixed size.
+
+			If (Object.ReferenceEquals(key, Nothing)) Then			  '// avoids compiler error for null check on value type
+				Throw New ArgumentNullException("key", "The key cannot be null.")
+			End If
+
+			Dim index As Integer = Array.BinarySearch(m_keys, 0, m_count, key, m_comparer)
+
+			If (index >= 0) Then
+				Throw New ArgumentException("Item has already been added.  Key being added:" & key & ".")
+			End If
+
+			Insert(NOT(index), key, value)
+		End Sub
+
+		Public Overridable Sub Clear() Implements IDictionary.Clear
+		'		Removes all elements from the <%= ClassName %>.
+
+		'		Exception thrown:
+		'		NotSupportedException = the <%= ClassName %> is read-only or the <%= ClassName %> has a fixed size.
+			ReDim m_keys(DEFAULT_CAPACITY)
+			ReDim m_values(DEFAULT_CAPACITY)
+			m_count = 0
+			m_version += 1
+		End Sub
+
+		Public Overridable Function Clone() As Object Implements ICloneable.Clone
+		'		Creates a shallow copy of the <%= ClassName %>.
+			Dim newList As <%= ClassName %> = New <%= ClassName %>(m_comparer, m_count)
+			Array.Copy(m_keys, 0, newList.m_keys, 0, m_count)
+			Array.Copy(m_values, 0, newList.m_values, 0, m_count)
+			newList.version = m_version
+			Return newList
+		End Function
+
+		Public Overridable Function Contains(ByVal key As Object) As Boolean Implements IDictionary.Contains
+		'		Determines whether the <%= ClassName %> contains a specific key.
+		'		if the <%= ClassName %> contains an element with the specified key returns true, otherwise returns false.
+
+		'		Inputs:
+		'		key = The key to locate in the <%= ClassName %>.
+		
+		'		Exceptions thrown:
+		'		ArgumentNullException = The key is a null reference.
+		'		ArgumentException = key is not of a type supported by the <%= ClassName %>.
+		'		InvalidOperationException = The comparer throws an exception.
+
+			If (key Is Nothing) Then
+				Throw New ArgumentNullException("key", "The key cannot be null.")
+			End If
+
+			If Not (TypeOf key Is <%= ItemType %>) Then
+				Throw New ArgumentException("The key must be of type: " & GetType(<%= KeyType %>).FullName, "key")
+			End If
+
+			Return (IndexOfKey(ctype(key,<%= KeyType %>)) >= 0)
+		End Function
+
+		Public Overridable Function Contains(ByVal key As <%= KeyType %>) As Boolean
+		'		Determines whether the <%= ClassName %> contains a specific key.
+		
+		'		Inputs:
+		'		key = The key to locate in the <%= ClassName %>.
+
+			Return (IndexOfKey(key) >= 0)
+		End Function
+
+		Public Overridable Function ContainsKey(ByVal key As <%= KeyType %>) As Boolean
+		'		Determines whether the <%= ClassName %> contains a specific key.
+
+		'		Inputs:
+		'		key = The key to locate in the <%= ClassName %>.
+		
+		'		Exceptions thrown:
+		'		ArgumentNullException = The key is a null reference.
+		'		InvalidOperationException = The comparer throws an exception.
+
+			Return (IndexOfKey(key) >= 0)
+		End Function
+
+		Public Overridable Function ContainsValue(ByVal value As <%= ItemType %>) As Boolean
+		'		Determines whether the <%= ClassName %> contains a specific value.
+
+		'		Inputs:
+		'		value = The value to locate in the <%= ClassName %>.
+
+			Return (IndexOfValue(value) >= 0)
+		End Function
+
+		Public Overridable Function IEnumerable_GetEnumerator() As IEnumerator Implements IEnumerable.GetEnumerator
+		'		Returns an IEnumerator that can iterate through the <%= ClassName %>.
+			Return New SortedListEnumerator(Me, 0, m_count, SortedListEnumerator.DictEntry)
+		End Function
+
+		Public Overridable Function IDictionary_GetEnumerator() As IDictionaryEnumerator Implements IDictionary.GetEnumerator
+		'		Returns an IDictionaryEnumerator that can iterate through the <%= ClassName %>.		
+			Return New SortedListEnumerator(Me, 0, m_count, SortedListEnumerator.DictEntry)
+		End Function
+
+		Public Overridable Sub CopyTo(ByVal array As Array, ByVal arrayIndex As Integer) Implements IDictionary.CopyTo
+		'		Copies the <%= ClassName %> elements to a one-dimensional System.Array
+		'		instance at the specified index.
+
+		'		Inputs:
+		'		array = The one-dimensional System.Array that is the destination of the DictionaryEntry objects copied from <%= ClassName %>.
+		'		The array must have zero-based indexing.
+		'		arrayIndex = The zero-based index in array at which copying begins.
+
+		'		Exceptions thrown:
+		'		ArgumentNullException = array is a null reference.
+		'		ArgumentOutOfRangeException = arrayIndex is less than zero.
+		'		ArgumentException array is multidimensional or 	arrayIndex is equal to or greater than the length of array -or
+		'		the number of elements in the source <%= ClassName %> is greater than the 
+		'		available space from arrayIndex to the end of the destination array.
+		'		InvalidCastException = The type of the source <%= ClassName %> cannot be cast automatically to the type
+		'		of the destination array.
+			If (array Is Nothing) Then
+				Throw New ArgumentNullException("array", "The destination array cannot be null.")
+			End If
+			If (arrayIndex < 0) Then
+				Throw New ArgumentOutOfRangeException("arrayIndex", "Destination index cannot be less than zero.")
+			End If
+			If (array.Rank <> 1) Then
+				Throw New ArgumentException("Multidimensional arrays are not supported.", "array")
+			End If
+			If (arrayIndex >= array.Length) Then
+				Throw New ArgumentException("Destination index cannot be greater than the size of the destination array.", "arrayIndex")
+			End If
+			If (m_count > (array.Length - arrayIndex)) Then
+				Throw New ArgumentException("Not enough available space in the destination array.")
+			End If
+			Dim i As Integer
+			For i = 0 To m_count - 1
+				Dim entry As DictionaryEntry = New DictionaryEntry(m_keys(i), m_values(i))
+				array.SetValue(entry, arrayIndex + i)
+			Next
+		End Sub
+
+		Public Overridable Function GetByIndex(ByVal index As Integer) As <%= ItemType %>
+		'		Gets the value at the specified index of the <%= ClassName %>.
+
+		'		Inputs:
+		'		index = The zero-based index of the value to get.
+
+		'		Exceptions thrown:
+		'		ArgumentOutOfRangeException = index is outside the range of valid indices for the <%= ClassName %>.
+			If (index < 0 Or index >= m_count) Then
+				Throw New ArgumentOutOfRangeException("index", index, "The index is outside the range of valid indices.")
+			End If
+			Return m_values(index)
+		End Function
+
+		Public Overridable Function GetKey(ByVal index As Integer) As <%= KeyType %>
+		'		Gets the key at the specified index of the <%= ClassName %>.
+
+		'		Inputs:
+		'		index = The zero-based index of the key to get.
+
+		'		Exceptions thrown:
+		'		ArgumentOutOfRangeException = index is outside the range of valid indices for the <%= ClassName %>.
+			If (index < 0 Or index >= m_count) Then
+				Throw New ArgumentOutOfRangeException("index", index, "The index is outside the range of valid indices.")
+			End If
+			Return m_keys(index)
+		End Function
+
+		Public Overridable Function GetKeyList() As IList
+		'		Gets the keys in the <%= ClassName %>.
+
+		'		Remarks:
+		'		The returned IList is a read-only view of the keys in the <%= ClassName %>. Modifications made to 
+		'		the underlying <%= ClassName %> are immediately reflected in the IList.
+		'		The elements of the IList are sorted in the same order as the keys 	of the <%= ClassName %>.
+		'		Similar to <%= ClassName %>.Keys, but returns an IList instead of an ICollection.
+			If (m_keyList Is Nothing) Then m_keyList = New KeyList(Me)
+
+			Return m_keyList
+		End Function
+
+		Public Overridable Function GetValueList() As IList
+		'		Gets the values in the <%= ClassName %>.
+
+		'		Rremarks:
+		'		The returned IList is a read-only view of the values in the <%= ClassName %>. Modifications made to 
+		'		the underlying <%= ClassName %> are immediately reflected in the IList.
+		'		The elements of the IList are sorted in the same order as the values of the <%= ClassName %>.
+		'		Similar to <%= ClassName %>.Values, but returns an IList instead of an ICollection.
+			If (m_valueList Is Nothing) Then m_valueList = New ValueList(Me)
+			Return m_valueList
+		End Function
+
+
+		Public Overridable Sub Remove(ByVal key As Object) Implements IDictionary.Remove
+		'		Removes the element with the specified key from the <%= ClassName %>.
+
+		'		Inputs:
+		'		key = The key of the element to remove.
+
+		'		Exceptions thrown;
+		'		ArgumentException = The key is not of a type supported by the <%= ClassName %>.
+		'		ArgumentNullException = key is a null reference.
+		'		NotSupportedException = The <%= ClassName %> is read-only or the <%= ClassName %> has a fixed size.
+			If (key Is Nothing) Then
+				Throw New ArgumentNullException("key", "The key cannot be null.")
+			End If
+
+			If Not (TypeOf key Is <%= KeyType %>) Then
+				Throw New ArgumentException("The key must be of type: " + GetType(<%= KeyType %>).FullName, "key")
+			End If
+
+			Remove(CType(key, <%= ItemType %>))
+		End Sub
+
+		Public Overridable Function IndexOfKey(ByVal key As <%= KeyType %>) As Integer
+		'		Returns the zero-based index of the specified key in the <%= ClassName %>.
+
+		'		Inputs:
+		'		key = The key to locate in the <%= ClassName %>.
+
+		'		Exceptions thrown:
+		'		ArgumentNullException = key is a null reference.
+		'		InvalidOperationException = The comparer throws an exception.
+
+		'		Remarks:
+		'		The elements of a <%= ClassName %> are sorted by the keys either according to a specific IComparer 
+		'		implementation specified when the <%= ClassName %> is created or according to the IComparable implementation 
+		'		provided by the keys themselves. The index sequence is based on the sort sequence. When an element is added, it is inserted into 
+		'		<%= ClassName %> in the correct sort order, and the indexing adjusts accordingly. When an element removed, 
+		'		the indexing also adjusts accordingly.  Therefore, the index of a specific key-and-value pair might change as elements are added or 
+		'		removed from the <%= ClassName %>.  This method uses a binary search algorithm; therefore, the average 
+		'		execution time is proportional to Log2(<i>n</i>), where <i>n</i> is <%= ClassName %>.Count.
+			If (Object.ReferenceEquals(key, Nothing)) Then			  '// avoids compiler error for null check on value type
+				Throw New ArgumentNullException("key", "The key cannot be null.")
+			End If
+
+			Dim index As Integer = Array.BinarySearch(m_keys, 0, m_count, key, m_comparer)
+
+			Return CInt(IIf(index >= 0, index, -1))
+		End Function
+
+		Public Overridable Function IndexOfValue(ByVal value As <%= ItemType %>) As Integer
+		'		Returns the zero-based index of the first occurrence of the specified value in the <%= ClassName %>.
+
+		'		Inputs:
+		'		value = The value to locate in the <%= ClassName %>.
+
+		'		Remarks:
+		'		The index sequence is based on the sort sequence. When an element is added, 
+		'		it is inserted into <%= ClassName %> in the correct sort order, and 
+		'		the indexing adjusts accordingly. When an element removed, the indexing also adjusts 
+		'		accordingly. Therefore, the index of a specific key-and-value pair might change as 
+		'		elements are added or removed from the <%= ClassName %>.
+		'		The values of the elements of the <%= ClassName %> are compared to the 
+		'		specified value using the Equals method.
+		'		This method uses a linear search; therefore, the average execution time is 
+		'		proportional to <%= ClassName %>.Count.
+			Return Array.IndexOf(m_values, value, 0, m_count)
+		End Function
+
+		Public Overridable Sub Remove(ByVal key As <%= KeyType %>)
+		'		Removes the element with the specified key from the <%= ClassName %>.
+
+		'		Input:
+		'		key = The key of the element to remove.
+
+		'		Exceptions thrown:
+		'		ArgumentNullException = key is a null reference.
+		'		NotSupportedException = The <%= ClassName %> is read-only or the <%= ClassName %> has a fixed size.
+		' 
+		'		Remarks:
+		'		If the <%= ClassName %> does not contain an element with the specified key,
+		'		the <%= ClassName %> remains unchanged. No exception is thrown.
+			If (Object.ReferenceEquals(key, Nothing)) Then			  '// avoids compiler error for null check on value type
+				Throw New ArgumentNullException("key", "The key cannot be null.")
+			End If
+
+			Dim index As Integer = IndexOfKey(key)
+			If (index >= 0) Then RemoveAt(index)
+		End Sub
+
+		Public Overridable Sub RemoveAt(ByVal index As Integer)
+		'		Removes the element at the specified index of the <%= ClassName %>.
+
+		'		Inputs:
+		'		index = The zero-based index of the element to remove.
+		
+		'		Exceptions thrown:
+		'		ArgumentOutOfRangeException = index is outside the range of valid indices for the <%= ClassName %>.
+		'		NotSupportedException = The <%= ClassName %> is read-only or the <%= ClassName %> has a fixed size.
+		' 
+		'		Remarks:
+		'		The index sequence is based on the sort sequence. When an element is added, 
+		'		it is inserted into <%= ClassName %> in the correct sort order, and 
+		'		the indexing adjusts accordingly. When an element removed, the indexing also adjusts 
+		'		accordingly. Therefore, the index of a specific key-and-value pair might change as 
+		'		elements are added or removed from the <%= ClassName %>.
+		'		In collections of contiguous elements, such as lists, the elements that
+		'		follow the removed element move up to occupy the vacated spot. If the collection is
+		'		indexed, the indices of the elements that are moved are also updated.
+		
+			If (index < 0 Or index >= m_count) Then
+				Throw New ArgumentOutOfRangeException("index", index, "The index is outside the range of valid indices.")
+			End If
+
+			m_count -= 1
+			If (index < m_count) Then
+				Array.Copy(m_keys, index + 1, m_keys, index, m_count - index)
+				Array.Copy(m_values, index + 1, m_values, index, m_count - index)
+			End If
+
+			' We can't set the deleted entries equal to null, because they might be value types.
+			' Instead, we'll create empty single-element arrays of the right type and copy them 
+			' over the entries we want to erase.
+			Dim tempKey(1) As <%= KeyType %>
+			Dim tempVal(1) As <%= ItemType %>
+			Array.Copy(tempKey, 0, m_keys, m_count, 1)
+			Array.Copy(tempVal, 0, m_values, m_count, 1)
+
+			m_version += 1
+		End Sub
+
+		Public Overridable Sub SetByIndex(ByVal index As Integer, ByVal value As <%= ItemType %>)
+		'		Replaces the value at a specific index in the <%= ClassName %>.
+
+		'		Inputs:
+		'		index = The zero-based index at which to save value.
+		'		value = The <%= ItemType %> to save into the <%= ClassName %>.
+	
+		'		Exceptions thrown:
+		'		ArgumentOutOfRangeException = index is outside the range of valid indices for the <%= ClassName %>.
+		' 
+		'		Remarks:
+		'		The index sequence is based on the sort sequence. When an element is added, 
+		'		it is inserted into <%= ClassName %> in the correct sort order, and 
+		'		the indexing adjusts accordingly. When an element is removed, the indexing also adjusts 
+		'		accordingly. Therefore, the index of a specific key-and-value pair might change as 
+		'		elements are added or removed from the <%= ClassName %>.
+
+			If (index < 0 Or index >= m_count) Then
+				Throw New ArgumentOutOfRangeException("index", index, "The index is outside the range of valid indices.")
+			End If
+			m_values(index) = value
+			m_version += 1
+		End Sub
+
+		Public Function Synchronized(ByVal list As <%= ClassName %>) As <%= ClassName %>
+		'		Returns a synchronized (thread-safe) wrapper for the <%= ClassName %>.
+
+		'		Inputs:
+		'		list = The <%= ClassName %> to synchronize.
+
+		'		Exceptions thrown:
+		'		ArgumentNullException = list is a null reference.
+
+			If (list Is Nothing) Then
+				Throw New ArgumentNullException("list", "The list cannot be null.")
+			End If
+			Return New SyncSortedList(list)
+
+		End Function
+		Public Overridable Sub TrimToSize()
+		'		Sets the capacity to the actual number of elements in the <%= ClassName %>.
+
+		'		Exceptions thrown:
+		'		NotSupportedException = The <%= ClassName %> is read-only or the <%= ClassName %> has a fixed size.
+			Me.Capacity = m_count
+		End Sub
+#End Region
+#Region "Private Methods"
+		Private Sub Insert(ByVal index As Integer, ByVal key As <%= KeyType %>, ByVal value As <%= ItemType %>)
+			If (Count = m_keys.Length) Then
+				EnsureCapacity(Count + 1)
+			End If
+
+			If (index < Count) Then
+				Array.Copy(m_keys, index, m_keys, index + 1, Count - index)
+				Array.Copy(m_values, index, m_values, index + 1, Count - index)
+			End If
+			m_keys(index) = key
+			m_values(index) = value
+			m_count += 1
+			m_version += 1
+		End Sub
+
+		Private Sub EnsureCapacity(ByVal min As Integer)
+			Dim newCapacity As Integer
+			If m_keys.Length = 0 then 
+				newcapacity = DEFAULT_CAPACITY
+			Else
+				newcapacity=  m_keys.Length * 2
+			End If
+			If (newCapacity < min) Then
+				newCapacity = min
+			End If
+			Me.Capacity = newCapacity
+		End Sub
+#End Region
+#Region "Nested Class: SyncSortedList"
+		<Serializable()> Private Class SyncSortedList
+			Inherits <%= ClassName %>
+
+
+			Private list As <%= ClassName %>
+			Private root As Object
+
+			Private Sub New()
+			End Sub
+
+			Public Sub New(ByVal list As <%= ClassName %>)
+				Me.list = list
+				Me.root = list.SyncRoot
+			End Sub
+			Public Overloads Overrides Property Capacity() As Integer
+				Get
+					SyncLock (root)
+						Return list.Capacity
+					End SyncLock
+				End Get
+				Set(ByVal Value As Integer)
+					SyncLock (root)
+						list.Capacity = Value
+					End SyncLock
+				End Set
+			End Property
+			Public Overloads Overrides ReadOnly Property Count() As Integer
+				Get
+					SyncLock (root)
+						Return list.Count
+					End SyncLock
+				End Get
+			End Property
+			Public Overloads Overrides ReadOnly Property IsFixedSize() As Boolean
+				Get
+					Return list.IsFixedSize
+				End Get
+			End Property
+			Public Overloads Overrides ReadOnly Property IsReadOnly() As Boolean
+				Get
+					Return list.IsReadOnly
+				End Get
+			End Property
+			Public Overloads Overrides ReadOnly Property IsSynchronized() As Boolean
+				Get
+					Return True
+				End Get
+			End Property
+			Public Overloads Overrides ReadOnly Property SyncRoot() As Object
+				Get
+					Return root
+				End Get
+			End Property
+			Default Public Overloads Overrides Property Item(ByVal key As Object) As Object
+				Get
+					SyncLock (root)
+						Return list.Item(key)
+					End SyncLock
+				End Get
+				Set(ByVal Value As Object)
+					SyncLock (root)
+						list.Item(key) = Value
+					End SyncLock
+				End Set
+
+			End Property
+			Default Public Overloads Overrides Property Item(ByVal key As <%= KeyType %>) As <%= ItemType %>
+				Get
+					SyncLock (root)
+						Return list.Item(key)
+					End SyncLock
+				End Get
+				Set(ByVal Value As <%= ItemType %>)
+					SyncLock (root)
+						list.Item(key) = Value
+					End SyncLock
+				End Set
+			End Property
+			Public Overloads Overrides Sub Add(ByVal key As Object, ByVal value As Object)
+				SyncLock (root)
+					list.Add(key, value)
+				End SyncLock
+			End Sub
+
+			Public Overloads Overrides Sub Add(ByVal key As <%= KeyType %>, ByVal value As <%= ItemType %>)
+				SyncLock (root)
+					list.Add(key, value)
+				End SyncLock
+			End Sub
+
+			Public Overloads Overrides Sub Clear()
+				SyncLock (root)
+					list.Clear()
+				End SyncLock
+			End Sub
+
+			Public Overloads Overrides Function Clone() As Object
+				SyncLock (root)
+					Return list.Clone()
+				End SyncLock
+			End Function
+			Public Overloads Overrides Function Contains(ByVal key As Object) As Boolean
+				SyncLock (root)
+					Return list.Contains(key)
+				End SyncLock
+
+			End Function
+
+			Public Overloads Overrides Function Contains(ByVal key As <%= KeyType %>) As Boolean
+				SyncLock (root)
+					Return list.Contains(key)
+				End SyncLock
+
+			End Function
+			Public Overloads Overrides Function ContainsKey(ByVal key As <%= KeyType %>) As Boolean
+				SyncLock (root)
+					Return list.ContainsKey(key)
+				End SyncLock
+			End Function
+			Public Overloads Overrides Function ContainsValue(ByVal value As <%= ItemType %>) As Boolean
+				SyncLock (root)
+					Return list.ContainsValue(value)
+				End SyncLock
+			End Function
+			Public Overloads Overrides Sub CopyTo(ByVal array As Array, ByVal index As Integer)
+				SyncLock (root)
+					list.CopyTo(array, index)
+				End SyncLock
+			End Sub
+			Public Overloads Overrides Function GetByIndex(ByVal index As Integer) As <%= ItemType %>
+				SyncLock (root)
+					Return list.GetByIndex(index)
+				End SyncLock
+			End Function
+
+			Public Overrides Function IDictionary_GetEnumerator() As IDictionaryEnumerator
+				SyncLock (root)
+					Return list.IDictionary_GetEnumerator
+				End SyncLock
+			End Function
+
+			Public Overloads Overrides Function GetKey(ByVal index As Integer) As <%= KeyType %>
+				SyncLock (root)
+					Return list.GetKey(index)
+				End SyncLock
+			End Function
+			Public Overloads Overrides Function GetKeyList() As IList
+				SyncLock (root)
+					Return list.GetKeyList()
+				End SyncLock
+			End Function
+			Public Overloads Overrides Function GetValueList() As IList
+				SyncLock (root)
+					Return list.GetValueList()
+				End SyncLock
+			End Function
+			Public Overloads Overrides Function IndexOfKey(ByVal key As <%= KeyType %>) As Integer
+				SyncLock (root)
+					Return list.IndexOfKey(key)
+				End SyncLock
+			End Function
+			Public Overloads Overrides Function IndexOfValue(ByVal value As <%= ItemType %>) As Integer
+				SyncLock (root)
+					Return list.IndexOfValue(value)
+				End SyncLock
+			End Function
+
+			Public Overloads Overrides Sub Remove(ByVal key As Object)
+				SyncLock (root)
+					list.Remove(key)
+				End SyncLock
+			End Sub
+
+			Public Overloads Overrides Sub Remove(ByVal key As <%= KeyType %>)
+				SyncLock (root)
+					list.Remove(key)
+				End SyncLock
+			End Sub
+
+			Public Overloads Overrides Sub RemoveAt(ByVal index As Integer)
+				SyncLock (root)
+					list.RemoveAt(index)
+				End SyncLock
+			End Sub
+			Public Overloads Overrides Sub SetByIndex(ByVal index As Integer, ByVal value As <%= ItemType %>)
+				SyncLock (root)
+					list.SetByIndex(index, value)
+				End SyncLock
+			End Sub
+			Public Overloads Overrides Sub TrimToSize()
+				SyncLock (root)
+					list.TrimToSize()
+				End SyncLock
+			End Sub
+
+			Public Overrides Function IEnumerable_GetEnumerator() As System.Collections.IEnumerator
+				SyncLock (root)
+					Return list.IEnumerable_GetEnumerator()
+				End SyncLock
+			End Function
+		End Class
+#End Region
+
+#Region "Nested Class: SortedListEnumerator"
+		<Serializable()> Private Class SortedListEnumerator
+			Implements IDictionaryEnumerator, ICloneable
+
+			Private m_list As <%= ClassName %>
+			Private m_key As <%= KeyType %>
+			Private m_value As <%= ItemType %>
+			Private m_index As Integer
+			Private m_startIndex As Integer
+			Private m_endIndex As Integer
+			Private m_version As Integer
+			Private m_currentValid As Boolean
+			Private m_returnType As Integer
+
+			Friend Const Keys As Integer = 1
+			Friend Const Values As Integer = 2
+			Friend Const DictEntry As Integer = 3
+
+			Friend Sub New(ByVal list As <%= ClassName %>, ByVal index As Integer, ByVal count As Integer, ByVal returnType As Integer)
+				Me.m_list = list
+				Me.m_index = index
+				Me.m_startIndex = index
+				Me.m_endIndex = index + count
+				Me.m_version = list.version
+				Me.m_returnType = returnType
+				Me.m_currentValid = False
+			End Sub
+
+
+			Public Function Clone() As Object Implements ICloneable.Clone
+				Return Me.MemberwiseClone()
+			End Function
+
+			Public ReadOnly Property IDictionaryEnumerator_Key() As Object Implements IDictionaryEnumerator.Key
+				Get
+					CheckState()
+					Return m_key
+				End Get
+			End Property
+
+			Public Overridable ReadOnly Property Key() As <%= KeyType %>
+				Get
+					CheckState()
+					Return m_key
+				End Get
+			End Property
+
+			Public Overridable ReadOnly Property Entry() As DictionaryEntry Implements IDictionaryEnumerator.Entry
+				Get
+					CheckState()
+					Return New DictionaryEntry(m_key, m_value)
+				End Get
+			End Property
+
+			Public Overridable ReadOnly Property Current() As Object Implements IDictionaryEnumerator.Current
+				Get
+					CheckState()
+
+					Select Case (m_returnType)
+						Case Keys
+							Return Keys
+						Case Values
+							Return Values
+						Case DictEntry
+							Return New DictionaryEntry(m_key, m_value)
+						Case Else
+							Return New DictionaryEntry(m_key, m_value)
+					End Select
+				End Get
+			End Property
+
+			Public ReadOnly Property IDictionaryEnumerator_Value() As Object Implements IDictionaryEnumerator.Value
+				Get
+					CheckState()
+					Return m_value
+				End Get
+			End Property
+
+			Public Overridable ReadOnly Property Value() As <%= ItemType %>
+				Get
+					CheckState()
+					Return m_value
+				End Get
+			End Property
+
+			Public Overridable Function MoveNext() As Boolean Implements IDictionaryEnumerator.MoveNext
+				If (m_version <> m_list.version) Then
+					Throw New InvalidOperationException("The collection was modified - enumeration cannot continue.")
+				End If
+
+				If (m_index < m_endIndex) Then
+					m_key = m_list.m_keys(m_index)
+					m_value = m_list.m_values(m_index)
+					m_index += 1
+					m_currentValid = True
+					Return True
+				End If
+				'// We can't set the entries equal to null, because they might be value types.
+				'// Instead, we'll create empty single-element arrays of the right type and copy them 
+				'// over the entries we want to erase.
+				Dim tempKey(1) As <%= KeyType %>
+				Dim tempVal(1) As <%= ItemType %>
+				m_key = tempKey(0)
+				m_value = tempVal(0)
+				m_currentValid = False
+				Return False
+			End Function
+			Public Overridable Sub Reset() Implements IDictionaryEnumerator.Reset
+				If (m_version <> m_list.version) Then
+					Throw New InvalidOperationException("The collection was modified - enumeration cannot continue.")
+				End If
+				'// We can't set the entries equal to null, because they might be value types.
+				'// Instead, we'll create empty single-element arrays of the right type and copy them 
+				'// over the entries we want to erase.
+				Dim tempKey(1) As <%= KeyType %>
+				Dim tempVal(1) As <%= ItemType %>
+				m_key = tempKey(0)
+				m_value = tempVal(0)
+				m_currentValid = False
+				m_index = m_startIndex
+			End Sub
+
+			Private Sub CheckState()
+				If (m_version <> m_list.version) Then
+					Throw New InvalidOperationException("The collection was modified - enumeration cannot continue.")
+				End If
+				If Not (m_currentValid) Then
+					Throw New InvalidOperationException("Enumeration either has not started or has already finished.")
+				End If
+			End Sub
+		End Class
+#End Region
+
+#Region "Nested Class: KeyList"
+		<Serializable()> Private Class KeyList
+			Implements IList
+			Private list As <%= ClassName %>
+
+			Protected Friend Sub New(ByVal list As <%= ClassName %>)
+				Me.list = list
+			End Sub
+			Public Overridable ReadOnly Property Count() As Integer Implements IList.Count
+				Get
+					Return list.Count
+				End Get
+			End Property
+
+			Public Overridable ReadOnly Property IsReadOnly() As Boolean Implements IList.IsReadOnly
+				Get
+					Return True
+				End Get
+			End Property
+
+			Public Overridable ReadOnly Property IsFixedSize() As Boolean Implements IList.IsFixedSize
+				Get
+					Return True
+				End Get
+			End Property
+
+			Public Overridable ReadOnly Property IsSynchronized() As Boolean Implements IList.IsSynchronized
+				Get
+					Return list.IsSynchronized
+				End Get
+			End Property
+
+			Public Overridable ReadOnly Property SyncRoot() As Object Implements IList.SyncRoot
+				Get
+					Return list.SyncRoot
+				End Get
+			End Property
+
+
+			Public Overridable Function Add(ByVal key As Object) As Integer Implements IList.Add
+				Throw New NotSupportedException("Cannot add to a read-only list.")
+			End Function
+
+			Public Overridable Sub Clear() Implements IList.Clear
+				Throw New NotSupportedException("Cannot clear a read-only list.")
+			End Sub
+
+			Public Function Contains(ByVal key As Object) As Boolean Implements IList.Contains
+				Return list.Contains(key)
+			End Function
+
+			Public Overridable Function Contains(ByVal key As <%= KeyType %>) As Boolean
+				Return list.Contains(key)
+			End Function
+
+			Public Overridable Sub CopyTo(ByVal array As Array, ByVal index As Integer) Implements IList.CopyTo
+				If (array Is Nothing And array.Rank <> 1) Then
+					Throw New ArgumentException("Multidimensional arrays are not supported.", "array")
+				End If
+
+				array.Copy(list.m_keys, 0, array, index, list.Count)
+			End Sub
+
+			Public Overridable Sub Insert(ByVal index As Integer, ByVal value As Object) Implements IList.Insert
+				Throw New NotSupportedException("Cannot insert into a read-only list.")
+			End Sub
+
+			Public Overridable Property IList_Item(ByVal index As Integer) As Object Implements IList.Item
+				Get
+					Return list.GetKey(index)
+				End Get
+				Set(ByVal Value As Object)
+					Throw New NotSupportedException("Cannot modify a read-only list.")
+				End Set
+			End Property
+
+			Public Overridable Property Item(ByVal index As Integer) As <%= KeyType %>
+				Get
+					Return list.GetKey(index)
+				End Get
+				Set(ByVal Value As <%= KeyType %>)
+					Throw New NotSupportedException("Cannot modify a read-only list.")
+				End Set
+			End Property
+
+			Public Overridable Function GetEnumerator() As IEnumerator Implements IList.GetEnumerator
+				Return New SortedListEnumerator(list, 0, list.Count, SortedListEnumerator.Keys)
+			End Function
+
+			Public Function IndexOf(ByVal key As Object) As Integer Implements IList.IndexOf
+				If Not (TypeOf key Is <%= KeyType %>) Then
+					Throw New ArgumentException("The key must be of type: " & GetType(<%= KeyType %>).FullName, "key")
+				End If
+
+				Return list.IndexOfKey(CType(key, <%= KeyType %>))
+			End Function
+
+			Public Overridable Function IndexOf(ByVal key As <%= KeyType %>) As Integer
+				Return list.IndexOfKey(key)
+			End Function
+
+
+			Public Overridable Sub Remove(ByVal key As Object) Implements IList.Remove
+				Throw New NotSupportedException("Cannot modify a read-only list.")
+			End Sub
+			Public Overridable Sub RemoveAt(ByVal index As Integer) Implements IList.RemoveAt
+				Throw New NotSupportedException("Cannot modify a read-only list.")
+			End Sub
+		End Class
+#End Region
+
+#Region "Nested Class: ValueList"
+		<Serializable()> Private Class ValueList
+			Implements IList
+
+			Private list As <%= ClassName %>
+
+			Private Sub New()
+			End Sub
+
+			Protected Friend Sub New(ByVal list As <%= ClassName %>)
+				Me.list = list
+			End Sub
+
+			Public Overridable ReadOnly Property Count() As Integer Implements IList.Count
+				Get
+					Return list.Count
+				End Get
+			End Property
+
+			Public Overridable ReadOnly Property IsReadOnly() As Boolean Implements IList.IsReadOnly
+				Get
+					Return True
+				End Get
+			End Property
+
+			Public Overridable ReadOnly Property IsFixedSize() As Boolean Implements IList.IsFixedSize
+				Get
+					Return True
+				End Get
+			End Property
+
+			Public Overridable ReadOnly Property IsSynchronized() As Boolean Implements IList.IsSynchronized
+				Get
+					Return list.IsSynchronized
+				End Get
+			End Property
+
+			Public Overridable ReadOnly Property SyncRoot() As Object Implements IList.SyncRoot
+				Get
+					Return list.SyncRoot
+				End Get
+			End Property
+
+			Public Overridable Function Add(ByVal key As Object) As Integer Implements IList.Add
+				Throw New NotSupportedException("Cannot add to a read-only list.")
+			End Function
+
+			Public Overridable Sub Clear() Implements IList.Clear
+				Throw New NotSupportedException("Cannot clear a read-only list.")
+			End Sub
+
+			Public Function Contains(ByVal value As Object) As Boolean Implements IList.Contains
+				If Not (TypeOf value Is <%= ItemType %>) Then
+					Throw New ArgumentException("The value must be of type: " + GetType(<%= ItemType %>).FullName, "value")
+				End If
+				Return list.ContainsValue(CType(value, <%= ItemType %>))
+			End Function
+
+			Public Overridable Function Contains(ByVal value As <%= ItemType %>) As Boolean
+				Return list.Contains(value)
+			End Function
+
+			Public Overridable Sub CopyTo(ByVal array As Array, ByVal index As Integer) Implements IList.CopyTo
+				If (array Is Nothing And array.Rank <> 1) Then
+					Throw New ArgumentException("Multidimensional arrays are not supported.", "array")
+				End If
+				array.Copy(list.m_values, 0, array, index, list.Count)
+			End Sub
+
+			Public Overridable Sub Insert(ByVal index As Integer, ByVal value As Object) Implements IList.Insert
+				Throw New NotSupportedException("Cannot insert into a read-only list.")
+			End Sub
+
+			Public Property IList_Item(ByVal index As Integer) As Object Implements IList.Item
+				Get
+					Return list.GetByIndex(index)
+				End Get
+				Set(ByVal Value As Object)
+					If Not (TypeOf Value Is <%= ItemType %>) Then
+						Throw New ArgumentException("The value must be of type: " + GetType(<%= ItemType %>).FullName, "value")
+					End If
+					list.SetByIndex(index, CType(Value,<%= ItemType %>))
+				End Set
+			End Property
+
+			Public Overridable Property Item(ByVal index As Integer) As <%= ItemType %>
+				Get
+					Return list.GetByIndex(index)
+				End Get
+				Set(ByVal Value As <%= ItemType %>)
+					list.SetByIndex(index, Value)
+				End Set
+			End Property
+
+			Public Overridable Function GetEnumerator() As IEnumerator Implements IList.GetEnumerator
+				Return New SortedListEnumerator(list, 0, list.Count, SortedListEnumerator.Values)
+			End Function
+
+			Public Function IndexOf(ByVal value As Object) As Integer Implements IList.IndexOf
+				If Not (TypeOf value Is <%= ItemType %>) Then
+					Throw New ArgumentException("The value must be of type: " + GetType(<%= ItemType %>).FullName, "value")
+				End If
+				Return list.IndexOfValue(CType(value, <%= ItemType %>))
+			End Function
+
+			Public Overridable Function IndexOf(ByVal value As <%= ItemType %>) As Integer
+				Return list.IndexOfValue(value)
+			End Function
+
+			Public Overridable Sub Remove(ByVal key As Object) Implements IList.Remove
+				Throw New NotSupportedException("Cannot modify a read-only list.")
+			End Sub
+
+			Public Overridable Sub RemoveAt(ByVal index As Integer) Implements IList.RemoveAt
+				Throw New NotSupportedException("Cannot modify a read-only list.")
+			End Sub
+		End Class
+#End Region
+	End Class
+<% If Not ClassNamespace Is Nothing AndAlso ClassNamespace.Length > 0 Then %>
+End Namespace
+<% End If %>
+<script runat="template">
+Public Enum AccessibilityEnum
+	[Public]
+	[Protected]
+	[Friend]
+	[ProtectedFriend]
+	[Private]
+End Enum
+
+Public Function GetAccessModifier(ByVal accessibility As AccessibilityEnum) As String
+	Select accessibility
+		Case AccessibilityEnum.Public
+			GetAccessModifier = "Public"
+		Case AccessibilityEnum.Protected
+			GetAccessModifier = "Protected"
+		Case AccessibilityEnum.Friend
+			GetAccessModifier = "Friend"
+		Case AccessibilityEnum.ProtectedFriend
+			GetAccessModifier = "Protected Friend"
+		Case AccessibilityEnum.Private
+			GetAccessModifier = "Private"
+		Case Else
+			GetAccessModifier = "Public"
+	End Select
+End Function
+</script>

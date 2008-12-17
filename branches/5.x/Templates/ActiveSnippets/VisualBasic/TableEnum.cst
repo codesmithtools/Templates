@@ -1,0 +1,16 @@
+<%-- 
+Name: Table Enum
+Author: Paul Welter
+Description: Create an enum of tables.
+--%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="False" Description="Create an enum of tables." %>
+<%@ Property Category="Database" Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Description="Database the table enums will come from." %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Data" %>
+Public Enum <%= StringUtil.ToPascalCase(SourceDatabase.Name) %>Tables
+<% For Each table As TableSchema In SourceDatabase.Tables  %>
+	<%= StringUtil.ToPascalCase(table.Name) %>
+<% Next %>
+End Enum

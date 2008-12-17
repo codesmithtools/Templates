@@ -1,0 +1,33 @@
+<html>
+<head>
+	<title>Products Above Average Price</title>
+<link href="dbdocs.css" type="text/css" rel="stylesheet" />	
+</head>
+<body>
+
+<center>
+<table width="80%">
+	<tr>
+		<td class="sprocheaderbar" width="85%">
+			dbo.Products Above Average Price
+		</td>
+		<td class="sprocheaderbar" align="center">
+			[<a href="view_details_9.html">Back to Details</a>]
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<pre>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">create</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">view</span> "Products Above Average Price" <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AS</span>
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">SELECT</span> Products.ProductName, Products.UnitPrice
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">FROM</span> Products
+<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">WHERE</span> Products.UnitPrice&gt;(<span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">SELECT</span> <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">AVG</span>(UnitPrice) <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">From</span> Products)
+--ORDER <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">BY</span> Products.UnitPrice <span style="color: Blue; font-family: Courier New; font-size: 11px; background-color: White">DESC</span>
+			</pre>
+		</td>
+	</tr>
+</table>
+</center>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" 
+    Description="Linq to Sql Entity Class." %>
+    
+<%@ Assembly Name="Generator" Path="..\..\Common"%>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
+
+<%@ Property Category="2.Class" Name="ClassNamespace" 
+    Type="System.String" Default="Project.Core.Data" Optional="False" 
+    Description="The namespace to use for the generated class files."%>
+
+<%@ Property Category="2.Class" Name="ClassName" 
+    Type="System.String" Default="LinqEntityBase" Optional="False" 
+    Description="The names of the class."%>
+    
+<%@ Property Category="2.Class" Name="IncludeDataContract"
+     Type="System.Boolean" Default="true" Optional="False"
+     Description="Include WCF DataContract attributes." %>
+
+<%@ Property Category="2.Class" Name="Framework"
+    Type="FrameworkEnum" Default="v35_SP1" Optional="False"
+    Description="Include Serialization attributes and what kind." %>
+
+using System;
+using System.ComponentModel;
+using System.IO;
+<%if(IncludeDataContract)%>
+using System.Runtime.Serialization;
+
+namespace <%= ClassNamespace %>
+{
+    /// <summary>
+    /// A base class for Linq entities that implements notification events.
+    /// </summary>
+    [Serializable]
+    <%if (IncludeDataContract) { %>
+    [DataContract(<%if (Framework == FrameworkEnum.v35_SP1) { %> IsReference=true <%}%>)]
+    <%}%>
+    public abstract partial class <%= ClassName %> :
+        INotifyPropertyChanging,
+        INotifyPropertyChanged,
+        ICloneable
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class.
+        /// </summary>
+        protected <%= ClassName %>()
+        { }
+
+        #region Notification Events
+
+        /// <summary>
+        /// Implements a PropertyChanged event.
+        /// </summary>
+        [field: NonSerialized]
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Raise the PropertyChanged event for a specific property.
+        /// </summary>
+        /// <param name="propertyName">Name of the property that has changed.</param>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        protected virtual void SendPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Implements a PropertyChanging event.
+        /// </summary>
+        [field: NonSerialized]
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        /// <summary>
+        /// Raise the PropertyChanging event for a specific property.
+        /// </summary>
+        /// <param name="propertyName">Name of the property that is changing.</param>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        protected virtual void SendPropertyChanging(string propertyName)
+        {
+            if (PropertyChanging != null)
+                PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
+            
+        }
+        #endregion
+        
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a copy of this instance.
+        /// </returns>
+        object ICloneable.Clone()
+        {
+<%if (IncludeDataContract) { %>
+            DataContractSerializer serializer = new DataContractSerializer(GetType());
+            using (MemoryStream ms = new MemoryStream())
+            {
+                serializer.WriteObject(ms, this);
+                ms.Position = 0;
+                return serializer.ReadObject(ms);
+            }
+<%} else {%>
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(ms, this);
+                ms.Position = 0;
+                return formatter.Deserialize(ms);
+            }
+<%}%>
+        }
+    }
+}

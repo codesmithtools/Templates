@@ -1,0 +1,230 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="XML" Debug="False" Description="Create WIX fragment file for a directory." %>
+
+<%@ Property Name="FragmentID" Type="System.String" Default="" Optional="False" Category="Name" Description="" %>
+<%@ Property Name="DirectoryRefID" Type="System.String" Default="TARGETDIR" Optional="False" Category="Reference" Description="The directory reference to place the files in." %>
+<%@ Property Name="FeatureRefID" Type="System.String" Default="" Optional="False" Category="Reference" Description="The feature reference to place the components in." %>
+
+<%@ Property Name="SourceDirectory" Type="System.String" Default="" Optional="False" Category="Path" Description="The folder to generate from." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+<%@ Property Name="RelativeDirectory" Type="System.String" Default="" Optional="True" Category="Path" Description="Make source files relative from this directory." Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Name="FilePrefix" Type="System.String" Default="F__" Optional="False" Category="Prefix" Description="A prefix for File IDs" %>
+<%@ Property Name="ComponetPrefix" Type="System.String" Default="C__" Optional="False" Category="Prefix" Description="A prefix for component IDs" %>
+<%@ Property Name="DirectoryPrefix" Type="System.String" Default="D__" Optional="False" Category="Prefix" Description="A prefix for directory IDs" %>
+
+<%@ Property Name="ExcludeDirectories" 
+	Optional="False"
+	Default="bin,obj,Debug,Release,.svn" 
+	Type="CodeSmith.CustomProperties.StringCollection" 
+	Category="Filter" 
+	Description="A prefix for File IDs" %>
+
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Xml" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Runtime.InteropServices" %>
+
+<script runat="template">
+	[DllImport("kernel32.dll", EntryPoint="GetShortPathNameW", CharSet=CharSet.Unicode, ExactSpelling=true, SetLastError=true)]
+    private static extern uint GetShortPathName(string longPath, StringBuilder shortPath, [MarshalAs(UnmanagedType.U4)]int buffer);
+	private const int MaxPath = 255;
+
+	private static string GetShortPathName(string fullPath)
+    {
+        StringBuilder shortPath = new StringBuilder(MaxPath, MaxPath);
+
+        // get the short file name
+        GetShortPathName(fullPath, shortPath, MaxPath);
+
+        // remove the tildes
+        shortPath.Replace('~', '_');
+
+        return shortPath.ToString();
+    }
+	
+	private int componentCount = 0;
+	private int directoryCount = 0;
+	private int fileCount = 0;
+	
+	private StringCollection components = new StringCollection();
+	
+	private void StartComponentElement(XmlWriter writer)
+    {
+        writer.WriteStartElement("Component");
+		string componentID = String.Format("{0}{1}", this.ComponetPrefix, this.componentCount++.ToString().PadLeft(4, '0'));
+		components.Add(componentID);
+		
+        writer.WriteAttributeString("Id", componentID);
+        writer.WriteAttributeString("DiskId", "1");
+        writer.WriteAttributeString("Guid", Guid.NewGuid().ToString("D").ToUpper());        
+    }
+	
+    private void EndComponentElement(XmlWriter writer)
+    {
+        writer.WriteEndElement();
+    }
+
+	private void WriteDirectoryElement(XmlWriter writer, string path)
+	{
+		DirectoryInfo directory = new DirectoryInfo(path);
+		
+		string dirName = directory.Name;
+		string dirShortName = Path.GetFileName(GetShortPathName(directory.FullName));
+	
+		writer.WriteStartElement("Directory");
+		string dirID = String.Format("{0}{1}", this.DirectoryPrefix, this.directoryCount++.ToString().PadLeft(4, '0'));
+		writer.WriteAttributeString("Id", dirID);
+		writer.WriteAttributeString("Name", dirShortName);
+		if (dirShortName != dirName)
+		{
+			writer.WriteAttributeString("LongName", dirName);
+		}
+	
+		FileInfo[] files = directory.GetFiles();
+		if (0 < files.Length)
+		{
+			this.StartComponentElement(writer);
+			
+		
+			for (int i = 0; i < files.Length; ++i)
+			{
+				this.WriteFileElement(writer, files[i].FullName);
+			}
+		
+			this.EndComponentElement(writer); // </Component>			
+		}
+	
+		DirectoryInfo[] directories = directory.GetDirectories();
+		for (int i = 0; i < directories.Length; ++i)
+		{
+			if (ExcludeDirectories.Contains(directories[i].Name))
+				continue;
+				
+			this.WriteDirectoryElement(writer, directories[i].FullName);
+		}
+	
+		writer.WriteEndElement(); // </Directory>
+	}
+	
+    private void WriteFileElement(XmlWriter writer, string path)
+    {
+        string fileName = Path.GetFileName(path);
+        string shortFileName = Path.GetFileName(GetShortPathName(Path.GetFullPath(path)));
+
+        writer.WriteStartElement("File");
+        string fileID = String.Format("{0}{1}", this.FilePrefix, this.fileCount++.ToString().PadLeft(4, '0'));
+		writer.WriteAttributeString("Id", fileID);
+        writer.WriteAttributeString("Name", shortFileName);
+        if (shortFileName != fileName)
+        {
+            writer.WriteAttributeString("LongName", fileName);
+        }
+        
+        writer.WriteAttributeString("Compressed", "yes");
+        
+		string srcPath = Path.GetFullPath(path);
+		if (this.RelativeDirectory != null && this.RelativeDirectory.Length > 0)
+			srcPath = RelativePathTo(Path.GetFullPath(this.RelativeDirectory), srcPath);
+		
+        writer.WriteAttributeString("src", srcPath);
+        writer.WriteEndElement(); // </File>
+    }
+	
+    public static string RelativePathTo(string fromDirectory, string toPath)
+    {
+        if (fromDirectory == null)
+            throw new ArgumentNullException("fromDirectory");
+
+        if (toPath == null)
+            throw new ArgumentNullException("fromDirectory");
+
+        if (System.IO.Path.IsPathRooted(fromDirectory) && System.IO.Path.IsPathRooted(toPath))
+        {
+            if (string.Compare(System.IO.Path.GetPathRoot(fromDirectory),
+                    System.IO.Path.GetPathRoot(toPath), true) != 0)
+            {
+                throw new ArgumentException(
+                    string.Format("The paths '{0} and '{1}' have different path roots.",
+                        fromDirectory, toPath));
+            }
+        }
+
+        StringCollection relativePath = new StringCollection();
+        string[] fromDirectories = fromDirectory.Split(System.IO.Path.DirectorySeparatorChar);
+        string[] toDirectories = toPath.Split(System.IO.Path.DirectorySeparatorChar);
+
+        int length = Math.Min(fromDirectories.Length, toDirectories.Length);
+        int lastCommonRoot = -1;
+
+        // find common root
+        for (int x = 0; x < length; x++)
+        {
+            if (string.Compare(fromDirectories[x], toDirectories[x], true) != 0)
+                break;
+
+            lastCommonRoot = x;
+        }
+        if (lastCommonRoot == -1)
+        {
+            throw new ArgumentException(
+                string.Format("The paths '{0} and '{1}' do not have a common prefix path.",
+                    fromDirectory, toPath));
+        }
+
+        // add relative folders in from path
+        for (int x = lastCommonRoot + 1; x < fromDirectories.Length; x++)
+            if (fromDirectories[x].Length > 0)
+                relativePath.Add("..");
+
+        // add to folders to path
+        for (int x = lastCommonRoot + 1; x < toDirectories.Length; x++)
+            relativePath.Add(toDirectories[x]);
+
+        // create relative path
+        string[] relativeParts = new string[relativePath.Count];
+        relativePath.CopyTo(relativeParts, 0);
+
+        string newPath = string.Join(System.IO.Path.DirectorySeparatorChar.ToString(), relativeParts);
+
+        return newPath;
+    }
+
+</script>
+<?xml version="1.0"?>
+<%
+XmlTextWriter w = new XmlTextWriter(Response);
+w.Formatting = Formatting.Indented;
+
+w.WriteStartElement("Wix");
+w.WriteAttributeString("xmlns", "http://schemas.microsoft.com/wix/2003/01/wi");
+
+w.WriteStartElement("Fragment");
+w.WriteAttributeString("Id", this.FragmentID);
+
+w.WriteStartElement("DirectoryRef");
+w.WriteAttributeString("Id", this.DirectoryRefID);
+
+WriteDirectoryElement(w, this.SourceDirectory);
+
+w.WriteEndElement(); // </DirectoryRef>
+
+w.WriteStartElement("FeatureRef");
+w.WriteAttributeString("Id", this.FeatureRefID);
+
+foreach (string component in components)
+{
+	w.WriteStartElement("ComponentRef");
+	w.WriteAttributeString("Id", component);
+	w.WriteEndElement(); // </ComponentRef>
+}
+
+w.WriteEndElement(); // </FeatureRef>
+
+w.WriteEndElement(); // </Fragment>
+w.WriteEndElement(); // </Wix>
+
+%>
+
