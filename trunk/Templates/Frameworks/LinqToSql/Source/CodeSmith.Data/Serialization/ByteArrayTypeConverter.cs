@@ -69,7 +69,7 @@ namespace CodeSmith.Data.Serialization
             else
                 return base.ConvertFrom(context, culture, value);
 
-            return new Binary(bytes);
+            return context.PropertyDescriptor.PropertyType == typeof(Binary) ? new Binary(bytes) : bytes;
         }
 
         /// <summary>
@@ -86,11 +86,15 @@ namespace CodeSmith.Data.Serialization
         /// <exception cref="T:System.NotSupportedException">The conversion cannot be performed. </exception>
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
         {
-            Binary binary = value as Binary;
-            if (binary == null)
-                return null;
+            byte[] bytes = null;
 
-            byte[] bytes = binary.ToArray();
+            if (value is Binary)
+                bytes = ((Binary)value).ToArray();
+            else if (value is byte[])
+                bytes = (byte[])value;
+
+            if (bytes == null)
+                return base.ConvertTo(context, culture, value, destinationType);
 
             if (destinationType == typeof(string))
                 return Convert.ToBase64String(bytes, 0, bytes.Length);
