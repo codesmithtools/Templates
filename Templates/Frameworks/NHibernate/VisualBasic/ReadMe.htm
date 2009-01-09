@@ -43,7 +43,10 @@ These templates are designed to produce 5 major things...
 </ol>
 </p>
 <p>
-Note: To make assign a custom name to either a column or table, add a "cs_alias" value to it's extended properties.
+Note: To explicitly specify a custom name for either a column or table, add a "cs_alias" value to it's extended properties.
+</p>
+<p>
+Note: To explicitly specify a ManyToMany table, add a "cs_ManyToMany" value to it's extended properties.
 </p>
 
 
@@ -144,6 +147,19 @@ Download the latest release from GoogleCode.
 <h2><a title="History" name="History"></a>History</h2>
 <p>
 <ul>
+<li>Release 1.0.5
+<ul>
+<li><div class="style1">Reworked variable naming system.</div>
+<ul>
+<li>Bug Fix: Column names will no be set to singluar for no reason.</li>
+<li>Bug Fix: Better duplicate member name prevention.</li>
+</ul></li>
+<li>Updated ManyToMany logic.
+<ul>
+<li>Added RowVersion Regex.</li>
+<li>Added Extended Data override (cs_ManyToMany).</li>
+</ul></li>
+</ul></li>
 <li>Release 1.0.4
 <ul>
 <li>Updated HBM files to use Table.FullName.</li>

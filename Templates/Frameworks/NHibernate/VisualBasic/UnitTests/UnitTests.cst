@@ -97,13 +97,15 @@ Namespace <%= UnitTestNamespace %>
 		Public Sub Update()
 			Try
 				Dim entityA As <%= GetClassName(SourceTable) %> = GetFirst<%= GetClassName(SourceTable) %>()
-				entityA.<%= GetPropertyName(SourceTable.NonKeyColumns(0)) %> = <%= GetUnitTestInitialization(SourceTable.NonKeyColumns(0)) %>
+				entityA.<%= entityManager.GetEntityBaseFromColumn(SourceTable.NonKeyColumns(0)).PropertyName %> = <%= GetUnitTestInitialization(SourceTable.NonKeyColumns(0)) %>
 
 				manager.Update(entityA)
 
 				Dim entityB As <%= GetClassName(SourceTable) %> = manager.GetById(entityA.Id)
 
-				Assert.AreEqual(entityA.<%= GetPropertyName(SourceTable.NonKeyColumns(0)) %>, entityB.<%= GetPropertyName(SourceTable.NonKeyColumns(0)) %>)
+
+
+				Assert.AreEqual(entityA.<%= entityManager.GetEntityBaseFromColumn(SourceTable.NonKeyColumns(0)).PropertyName %>, entityB.<%= entityManager.GetEntityBaseFromColumn(SourceTable.NonKeyColumns(0)).PropertyName %>)
 			Catch ex As Exception
 				Assert.Fail(ex.ToString())
 			End Try

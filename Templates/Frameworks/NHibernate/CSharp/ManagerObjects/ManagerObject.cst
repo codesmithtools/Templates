@@ -35,13 +35,13 @@ namespace <%= ManagerNamespace %>
 		<% foreach(SearchCriteria sc in scList) { %>
 		<% if(sc.IsPrimaryKey) { %>
 		<% if(sc.Items.Count > 1) { // Override GetById%>
-		<%= GetClassName(SourceTable) %> GetById(<%= GetMethodParameters(sc.Items, true) %>);
+		<%= GetClassName(SourceTable) %> GetById(<%= GetMethodParameters(entityManager, sc.Items, true) %>);
 		<% } %>
 		<% } else if(!ContainsForeignKey(sc, ExcludedTables)) { %>
 		<% if(sc.IsAllUnique) { %>
-		<%= GetClassName(SourceTable) %> <%= GetMethodDeclaration(sc) %>;
+		<%= GetClassName(SourceTable) %> <%= GetMethodDeclaration(entityManager, sc) %>;
 		<% } else { %>
-		IList<<%= GetClassName(SourceTable) %>> <%= GetMethodDeclaration(sc) %>;
+		IList<<%= GetClassName(SourceTable) %>> <%= GetMethodDeclaration(entityManager, sc) %>;
 		<% } } } %>
     }
 
@@ -72,12 +72,12 @@ namespace <%= ManagerNamespace %>
 			
 			return GetById(<%= GetPrimaryKeyCallParameters(sc.Items) %>);
 		}
-		public <%= GetClassName(SourceTable) %> GetById(<%= GetMethodParameters(sc.Items, true) %>)
+		public <%= GetClassName(SourceTable) %> GetById(<%= GetMethodParameters(entityManager, sc.Items, true) %>)
 		{
 			ICriteria criteria = Session.GetISession().CreateCriteria(typeof(<%= GetClassName(SourceTable) %>));
 			
 			<% foreach(MemberColumnSchema mcs in sc.Items) { %>
-			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= KeyWords[GetVariableName(mcs)] %>));
+			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= KeyWords[entityManager.GetEntityBaseFromColumn(mcs).VariableName] %>));
 			<% } %>
 			
 			<%= GetClassName(SourceTable) %> result = (<%= GetClassName(SourceTable) %>)criteria.UniqueResult();
@@ -92,9 +92,9 @@ namespace <%= ManagerNamespace %>
 		<% } else if(!ContainsForeignKey(sc, ExcludedTables)) { %>
 		
 		<% if(sc.IsAllUnique) { %>
-		public <%= GetClassName(SourceTable) %> <%= GetMethodDeclaration(sc) %>
+		public <%= GetClassName(SourceTable) %> <%= GetMethodDeclaration(entityManager, sc) %>
 		<% } else { %>
-		public IList<<%= GetClassName(SourceTable) %>> <%= GetMethodDeclaration(sc) %>
+		public IList<<%= GetClassName(SourceTable) %>> <%= GetMethodDeclaration(entityManager, sc) %>
 		<% } %>
         {
             ICriteria criteria = Session.GetISession().CreateCriteria(typeof(<%= GetClassName(SourceTable) %>));
@@ -106,13 +106,13 @@ namespace <%= ManagerNamespace %>
 			<% if(association == null) { %>
 			<% EntityMember em = entityManager.GetMemberFromColumn(mcs); %>
 			ICriteria <%= em.VariableName %>Criteria = criteria.CreateCriteria("<%= em.PropertyName %>");
-            <%= em.VariableName %>Criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("Id", <%= KeyWords[GetVariableName(mcs)] %>));
+            <%= em.VariableName %>Criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("Id", <%= KeyWords[entityManager.GetEntityBaseFromColumn(mcs).VariableName] %>));
 			<% } else { %>
 			ICriteria <%= association.VariableName %>Criteria = criteria.CreateCriteria("<%= association.PropertyName %>");
-            <%= association.VariableName %>Criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("Id", <%= KeyWords[GetVariableName(mcs)] %>));
+            <%= association.VariableName %>Criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("Id", <%= KeyWords[entityManager.GetEntityBaseFromColumn(mcs).VariableName] %>));
 			<% } %>
 			<% } else { %>
-			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= GetPropertyName(mcs) %>", <%= KeyWords[GetVariableName(mcs)] %>));
+			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= entityManager.GetEntityBaseFromColumn(mcs).PropertyName %>", <%= KeyWords[entityManager.GetEntityBaseFromColumn(mcs).VariableName] %>));
 			<% } %>
 			<% } %>
 			

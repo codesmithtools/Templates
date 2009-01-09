@@ -10,12 +10,10 @@ namespace NHibernateHelper
     {
         #region Declarations
 
-        protected TableSchema sourceTable;
-        protected TableSchemaCollection excludedTables;
-        protected Dictionary<MemberColumnSchema, EntityAssociation> associationMap;
-        protected Dictionary<ColumnSchema, EntityMember> memberMap = null;
+        private TableSchema _sourceTable;
+        private TableSchemaCollection _excludedTables;
         
-        private bool initialized = false;
+        private bool _initialized = false;
         
         #endregion
 
@@ -23,8 +21,8 @@ namespace NHibernateHelper
 
         public EntityManager(TableSchema sourceTable, TableSchemaCollection excludedTables)
         {
-            this.sourceTable = sourceTable;
-            this.excludedTables = excludedTables;
+            this._sourceTable = sourceTable;
+            this._excludedTables = excludedTables;
         }
 
         #endregion
@@ -33,15 +31,17 @@ namespace NHibernateHelper
 
         protected void Init()
         {
-            if (!initialized)
+            if (!_initialized)
             {
+                _initialized = true;
+
                 // Create Dictionaries
-                associationMap = new Dictionary<MemberColumnSchema, EntityAssociation>();
-                memberMap = new Dictionary<ColumnSchema, EntityMember>();
+                _associationMap = new Dictionary<ColumnSchema, EntityAssociation>();
+                _memberMap = new Dictionary<ColumnSchema, EntityMember>();
 
                 // Get Primary Key & Member Columns
                 GetPrimaryKey();
-                GetMembers(sourceTable.NonKeyColumns);
+                GetMembers(_sourceTable.NonKeyColumns);
 
                 // Association 1) Get all associations.
                 GetManyToOne();
@@ -54,51 +54,30 @@ namespace NHibernateHelper
 
         protected void GetPrimaryKey()
         {
-            _primaryKey = new EntityKey(sourceTable);
+            _primaryKey = new EntityKey(_sourceTable);
 
             foreach (EntityMember em in _primaryKey.KeyColumns)
-                memberMap.Add(em.Column, em);
+                _memberMap.Add(em.Column, em);
         }
         protected void GetMembers(ColumnSchemaCollection columns)
         {
-            if (_members == null)
-                _members = new List<EntityMember>();
-
             foreach (ColumnSchema column in columns)
-                if (!memberMap.ContainsKey(column))
+                if (!_memberMap.ContainsKey(column))
                 {
                     EntityMember em = new EntityMember(column);
-                    _members.Add(em);
-                    memberMap.Add(column, em);
+                    _memberMap.Add(column, em);
                 }
         }
 
         protected void UpdateDuplicateProperties()
         {
-            Dictionary<string, List<EntityAssociation>> names = CreateNamesDictionary();
-            foreach (List<EntityAssociation> associationList in names.Values)
-                if (associationList.Count > 1)
-                    foreach (EntityAssociation association in associationList)
-                        association.SetVariableNames(false);
-        }
-        protected Dictionary<string, List<EntityAssociation>> CreateNamesDictionary()
-        {
-            Dictionary<string, List<EntityAssociation>> names = new Dictionary<string, List<EntityAssociation>>();
-
-            AddToDictionary(names, _manyToOne);
-            AddToDictionary(names, _oneToMany);
-            AddToDictionary(names, _manyToMany);
-
-            return names;
-        }
-        protected void AddToDictionary(Dictionary<string, List<EntityAssociation>> names, List<EntityAssociation> associations)
-        {
-            foreach (EntityAssociation association in associations)
+            IEnumerable<EntityBase> entities = MemberMap.Values.Cast<EntityBase>().Union(AssociationMap.Values.Cast<EntityBase>());
+            foreach (EntityBase entity in entities)
             {
-                if (!names.ContainsKey(association.PropertyName))
-                    names.Add(association.PropertyName, new List<EntityAssociation>());
-
-                names[association.PropertyName].Add(association);
+                List<EntityBase> duplicateEntities = entities.Where(e => e.GenericName == entity.GenericName).ToList();
+                if (duplicateEntities.Count > 1)
+                    for (int x = 0; x < duplicateEntities.Count(); x++)
+                        duplicateEntities[x].AppendNameSuffix(x + 1);
             }
         }
 
@@ -108,69 +87,55 @@ namespace NHibernateHelper
 
         protected void GetManyToOne()
         {
-            _manyToOne = new List<EntityAssociation>();
-
-            foreach (TableKeySchema tks in sourceTable.ForeignKeys)
+            foreach (TableKeySchema tks in _sourceTable.ForeignKeys)
             {
                 if (tks.ForeignKeyMemberColumns.Count > 1)
                 {
-                    GetMembers(sourceTable.ForeignKeyColumns);
+                    GetMembers(_sourceTable.ForeignKeyColumns);
                 }
                 else
                 {
-                    MemberColumnSchema mcs = tks.ForeignKeyMemberColumns[0];
+                    ColumnSchema column = tks.ForeignKeyMemberColumns[0];
 
-                    if (!excludedTables.Contains(tks.PrimaryKeyTable)
-                    && !mcs.IsPrimaryKeyMember
-                    && !associationMap.ContainsKey(mcs))
+                    if (!_excludedTables.Contains(tks.PrimaryKeyTable)
+                    && !column.IsPrimaryKeyMember
+                    && !_associationMap.ContainsKey(column))
                     {
-                        EntityAssociation association = new EntityAssociation(AssociationTypeEnum.ManyToOne, tks.PrimaryKeyTable, mcs, false);
-                        _manyToOne.Add(association);
-                        associationMap.Add(mcs, association);
+                        EntityAssociation association = new EntityAssociation(AssociationTypeEnum.ManyToOne, tks.PrimaryKeyTable, column);
+                        _associationMap.Add(column, association);
                     }
                 }
             }
         }
         protected void GetToMany()
         {
-            _oneToMany = new List<EntityAssociation>();
-            _manyToMany = new List<EntityAssociation>();
-
-            foreach (TableKeySchema tks in sourceTable.PrimaryKeys)
+            foreach (TableKeySchema tks in _sourceTable.PrimaryKeys)
             {
                 if (tks.ForeignKeyMemberColumns.Count > 1)
                 {
-                    GetMembers(sourceTable.ForeignKeyColumns);
+                    GetMembers(_sourceTable.ForeignKeyColumns);
                 }
                 else
                 {
-                    MemberColumnSchema mcs = tks.ForeignKeyMemberColumns[0];
+                    ColumnSchema column = tks.ForeignKeyMemberColumns[0];
 
-                    if (!mcs.IsPrimaryKeyMember && !associationMap.ContainsKey(mcs))
+                    if (!column.IsPrimaryKeyMember && !_associationMap.ContainsKey(column))
                     {
-                        if (!NHibernateHelper.IsManyToMany(mcs.Table))
+                        if (!NHibernateHelper.IsManyToMany(column.Table))
                         {
-                            if (!excludedTables.Contains(mcs.Table))
+                            if (!_excludedTables.Contains(column.Table))
                             {
-                                EntityAssociation association = new EntityAssociation(AssociationTypeEnum.OneToMany, mcs.Table, mcs, true)
-                                {
-                                    Cascade = NHibernateHelper.GetCascade(mcs)
-                                };
-                                _oneToMany.Add(association);
-                                associationMap.Add(mcs, association);
+                                EntityAssociation association = new EntityAssociation(AssociationTypeEnum.OneToMany, column.Table, column);
+                                _associationMap.Add(column, association);
                             }
                         }
                         else
                         {
-                            TableSchema foreignTable = NHibernateHelper.GetToManyTable(mcs.Table, sourceTable);
-                            if (!excludedTables.Contains(foreignTable))
+                            TableSchema foreignTable = NHibernateHelper.GetToManyTable(column.Table, _sourceTable);
+                            if (!_excludedTables.Contains(foreignTable))
                             {
-                                EntityAssociation association = new EntityAssociation(AssociationTypeEnum.ManyToMany, foreignTable, mcs, true)
-                                {
-                                    ToManyTableKeyName = NHibernateHelper.GetToManyTableKey(mcs.Table, foreignTable).Name
-                                };
-                                _manyToMany.Add(association);
-                                associationMap.Add(mcs, association);
+                                EntityAssociation association = new EntityAssociation(AssociationTypeEnum.ManyToMany, foreignTable, column);
+                                _associationMap.Add(column, association);
                             }
                         }
                     }
@@ -182,28 +147,54 @@ namespace NHibernateHelper
 
         #region Public Methods
 
-        public EntityAssociation GetAssocitionFromColumn(MemberColumnSchema column)
+        public EntityBase GetEntityBaseFromColumn(ColumnSchema column)
         {
-            if (associationMap == null)
-                Init();
+            if(MemberMap.ContainsKey(column))
+                return MemberMap[column];
+            else if(AssociationMap.ContainsKey(column))
+                return AssociationMap[column];
+            else
+                return null;
+        }
 
-            return (associationMap.ContainsKey(column))
-                ? associationMap[column]
+        public EntityAssociation GetAssocitionFromColumn(ColumnSchema column)
+        {
+            return (AssociationMap.ContainsKey(column))
+                ? AssociationMap[column]
                 : null;
         }
         public EntityMember GetMemberFromColumn(ColumnSchema column)
         {
-            if (memberMap == null)
-                Init();
-
-            return (memberMap.ContainsKey(column))
-                ? memberMap[column]
+            return (MemberMap.ContainsKey(column))
+                ? MemberMap[column]
                 : null;
         }
 
         #endregion
 
         #region Properties
+
+        private Dictionary<ColumnSchema, EntityAssociation> _associationMap = null;
+        private Dictionary<ColumnSchema, EntityAssociation> AssociationMap
+        {
+            get
+            {
+                if (_associationMap == null)
+                    Init();
+                return _associationMap;
+            }
+        }
+
+        private Dictionary<ColumnSchema, EntityMember> _memberMap = null;
+        private Dictionary<ColumnSchema, EntityMember> MemberMap
+        {
+            get
+            {
+                if (_memberMap == null)
+                    Init();
+                return _memberMap;
+            }
+        }
 
         private EntityKey _primaryKey = null;
         public EntityKey PrimaryKey
@@ -216,59 +207,43 @@ namespace NHibernateHelper
             }
         }
 
-        private List<EntityMember> _members = null;
         public List<EntityMember> Members
         {
             get
             {
-                if (_members == null)
-                    Init();
-                return _members;
+                return MemberMap.Values
+                    .Where(m => !m.IsPrimaryKeyMember)
+                    .ToList();
             }
         }
 
-        private List<EntityAssociation> _manyToOne = null;
         public List<EntityAssociation> ManyToOne
         {
             get
             {
-                if (_manyToOne == null)
-                    Init();
-                return _manyToOne;
+                return AssociationMap.Values
+                   .Where(a => a.AssociationType == AssociationTypeEnum.ManyToOne)
+                   .ToList();
             }
         }
 
-        private List<EntityAssociation> _oneToMany = null;
         public List<EntityAssociation> OneToMany
         {
             get
             {
-                if (_oneToMany == null)
-                    Init();
-                return _oneToMany;
+                return AssociationMap.Values
+                   .Where(a => a.AssociationType == AssociationTypeEnum.OneToMany)
+                   .ToList();
             }
         }
 
-        private List<EntityAssociation> _manyToMany = null;
         public List<EntityAssociation> ManyToMany
         {
             get
             {
-                if (_manyToMany == null)
-                    Init();
-                return _manyToMany;
-            }
-        }
-
-        public List<EntityMember> MembersPrimaryKeyUnion
-        {
-            get
-            {
-                List<EntityMember> membersPrimaryKeyUnion = new List<EntityMember>();
-                membersPrimaryKeyUnion.AddRange(Members);
-                if (PrimaryKey.IsCompositeKey)
-                    membersPrimaryKeyUnion.AddRange(PrimaryKey.KeyColumns);
-                return membersPrimaryKeyUnion;
+                return AssociationMap.Values
+                    .Where(a => a.AssociationType == AssociationTypeEnum.ManyToMany)
+                    .ToList();
             }
         }
 
@@ -276,11 +251,17 @@ namespace NHibernateHelper
         {
             get
             {
-                List<EntityAssociation> toManyUnion = new List<EntityAssociation>();
-                toManyUnion.AddRange(OneToMany);
-                toManyUnion.AddRange(ManyToMany);
-                return toManyUnion;
+                return AssociationMap.Values
+                    .Where(a =>
+                        a.AssociationType == AssociationTypeEnum.ManyToMany
+                        || a.AssociationType == AssociationTypeEnum.OneToMany)
+                    .ToList();
             }
+        }
+
+        public List<EntityMember> MembersPrimaryKeyUnion
+        {
+            get { return MemberMap.Values.ToList(); }
         }
 
         #endregion

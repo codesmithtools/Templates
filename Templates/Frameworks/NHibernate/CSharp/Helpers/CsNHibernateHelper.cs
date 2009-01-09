@@ -43,7 +43,7 @@ public class CsNHibernateHelper : NHibernateHelper.NHibernateHelper
         return result;
     }
 	
-	public string GetMethodParameters(List<MemberColumnSchema> mcsList, bool isDeclaration)
+	public string GetMethodParameters(EntityManager entityManager, List<MemberColumnSchema> mcsList, bool isDeclaration)
 	{
 		StringBuilder result = new StringBuilder();
 		bool isFirst = true;
@@ -58,23 +58,23 @@ public class CsNHibernateHelper : NHibernateHelper.NHibernateHelper
 				result.Append(mcs.SystemType.ToString());
 				result.Append(" ");
 			}
-			result.Append(KeyWords[GetVariableName(mcs)]);
+			result.Append(KeyWords[entityManager.GetEntityBaseFromColumn(mcs).VariableName]);
 		}
 		return result.ToString();
 	}
-	public string GetMethodParameters(MemberColumnSchemaCollection mcsc, bool isDeclaration)
+	public string GetMethodParameters(EntityManager entityManager, MemberColumnSchemaCollection mcsc, bool isDeclaration)
 	{
 		List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>();
 		for (int x = 0; x < mcsc.Count; x++)
 			mcsList.Add(mcsc[x]);
-		return GetMethodParameters(mcsList, isDeclaration);
+		return GetMethodParameters(entityManager, mcsList, isDeclaration);
 	}
-	public string GetMethodDeclaration(SearchCriteria sc)
+	public string GetMethodDeclaration(EntityManager entityManager, SearchCriteria sc)
 	{
 		StringBuilder result = new StringBuilder();
 		result.Append(sc.MethodName);
 		result.Append("(");
-		result.Append(GetMethodParameters(sc.Items, true));
+		result.Append(GetMethodParameters(entityManager, sc.Items, true));
 		result.Append(")");
 		return result.ToString();
 	}
