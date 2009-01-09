@@ -108,17 +108,17 @@ Namespace <%= ClassNamespace %>
         ''' Remove the specified <see cref="T:System.Data.Linq.EntitySet`1" />.
         ''' </summary>
         ''' <typeparam name="TEntity">The type of the entity.</typeparam>
-        ''' <param name="set">The <see cref="T:System.Data.Linq.EntitySet`1" /> to Remove.</param>
+        ''' <param name="entitySet">The <see cref="T:System.Data.Linq.EntitySet`1" /> to Remove.</param>
         ''' <param name="onAdd">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Add(`0)" />.</param>
         ''' <param name="onRemove">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Remove(`0)" />.</param>
         ''' <returns>A new <see cref="T:System.Data.Linq.EntitySet`1" /> with the list copied if it was loaded.</returns>
-        Protected Shared Function Detach(Of TEntity As LinqEntityBase)(ByVal [set] As EntitySet(Of TEntity), ByVal onAdd As Action(Of TEntity), ByVal onRemove As Action(Of TEntity)) As EntitySet(Of TEntity)
-            If [set] Is Nothing OrElse Not [set].HasLoadedOrAssignedValues Then
+        Protected Shared Function Detach(Of TEntity As LinqEntityBase)(ByVal entitySet As EntitySet(Of TEntity), ByVal onAdd As Action(Of TEntity), ByVal onRemove As Action(Of TEntity)) As EntitySet(Of TEntity)
+            If entitySet Is Nothing OrElse Not entitySet.HasLoadedOrAssignedValues Then
                 Return New EntitySet(Of TEntity)(onAdd, onRemove)
             End If
             
             ' copy list and Remove all entities
-            Dim list = [set].ToList()
+            Dim list = entitySet.ToList()
             For Each t As TEntity In list
                 t.Detach()
             Next
@@ -135,7 +135,7 @@ Namespace <%= ClassNamespace %>
         ''' <param name="entity">The <see cref="T:System.Data.Linq.EntityRef`1"/> to Remove.</param>
         ''' <returns>A new <see cref="T:System.Data.Linq.EntityRef`1"/> with the entity Removeed.</returns>
         Protected Shared Function Detach(Of TEntity As LinqEntityBase)(ByVal entity As EntityRef(Of TEntity)) As EntityRef(Of TEntity)
-            If Not entity.HasLoadedOrAssignedValue Then
+            If Not entity.HasLoadedOrAssignedValue OrElse entity.Entity Is Nothing Then
                 Return New EntityRef(Of TEntity)()
             End If
             
