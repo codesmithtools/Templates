@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CodeSmith.Engine;
 using SchemaExplorer;
+using System.Text.RegularExpressions;
 
 namespace NHibernateHelper
 {
@@ -11,7 +12,22 @@ namespace NHibernateHelper
     {
         #region Constants
 
-        private const string _extendedPropertyName = "cs_alias";
+        private const string ExtendedPropertyName = "cs_alias";
+        private const string ExtendedPropertyManyToMany = "cs_ManyToMany";
+
+        private static Regex _versionRegex = null;
+        private static Regex VersionRegex
+        {
+            get
+            {
+                if(_versionRegex == null)
+                    _versionRegex = new Regex("(V|v)ersion", RegexOptions.Compiled);
+                return _versionRegex;
+            }
+        }
+
+        private const string SingularMemberSuffix = "Member";
+        private const string ListSuffix = "List";
 
         #endregion
 
@@ -21,149 +37,118 @@ namespace NHibernateHelper
         /// Should be called the first thing every time the master template executes.
         /// </summary>
         /// <param name="tablePrefix">TablePrefix Property</param>
-        public static void HelperInit(string tablePrefix)
+        /// <param name="namingProperty">NamingContentions Property</param>
+        public static void HelperInit(string tablePrefix) //, NamingProperty namingConventions)
         {
             _tablePrefix = tablePrefix;
+
+            //_tableNaming = namingConventions.TableNaming;
+            //_entityNaming = namingConventions.EntityNaming;
+            //_associationNaming = namingConventions.AssociationNaming;
+            //_associationSuffix = namingConventions.AssociationSuffix;
         }
+
         private static string _tablePrefix = String.Empty;
+
+        private static TableNamingEnum _tableNaming = TableNamingEnum.Mixed;
+        private static EntityNamingEnum _entityNaming = EntityNamingEnum.Singular;
+        private static AssociationNamingEnum _associationNaming = AssociationNamingEnum.Table;
+        private static AssociationSuffixEnum _associationSuffix = AssociationSuffixEnum.Plural;
 
         #endregion
 
         #region Variable & Class Name Methods
 
-        public static string GetPropertyName(TableSchema table, ColumnSchema column)
+        public static string GetGenericName(TableSchema table, ColumnSchema column, AssociationTypeEnum associationType)
+        {
+            return GetGenericName(table, column, (associationType != AssociationTypeEnum.ManyToOne));
+        }
+        private static string GetGenericName(TableSchema table, ColumnSchema column, bool plural)
         {
             if (ColumnHasAlias(column))
-                return GetPropertyName(column);
-            else
-            {
-                string className = GetClassName(table);
-                string name = GetPropertyName(className);
-                return (name == className) ? String.Concat(name, "Member") : name;
-            }
+                return GetNameFromColumn(column);
+
+            string genericName = GetAssociationName(table, column, plural);
+            return PreventClassMatch(column, genericName);
         }
-        public static string GetPropertyName(ColumnSchema column)
+        public static string GetGenericName(ColumnSchema column)
         {
-            return GetPropertyName(GetNameFromColumn(column));
-        }
-        private static string GetPropertyName(string name)
-        {
-            return StringUtil.ToSingular(StringUtil.ToPascalCase(name));
+            if (ColumnHasAlias(column))
+                return GetNameFromColumn(column);
+
+            string genericName = GetNameFromColumn(column);
+            return PreventClassMatch(column, genericName);
         }
 
-        public static string GetPropertyNamePlural(TableSchema table, ColumnSchema column)
+        internal static string GetPropertyName(string name)
         {
-            if (ColumnHasAlias(column))
-                return GetPropertyNamePlural(GetNameFromColumn(column));
-            else
-            {
-                string className = GetClassName(table);
-                string name = GetPropertyNamePlural(className);
-                return name == className ? className + "List" : name;
-            }
+            return StringUtil.ToPascalCase(name);
         }
-        public static string GetPropertyNamePlural(ColumnSchema column)
+        internal static string GetPrivateVariableName(string name)
         {
-            return GetPropertyNamePlural(GetNameFromColumn(column));
+            return String.Concat("_", GetVariableName(name));
         }
-        private static string GetPropertyNamePlural(string name)
+        internal static string GetVariableName(string name)
         {
-            return StringUtil.ToPlural(StringUtil.ToPascalCase(name));
-        }
-
-        public static string GetPrivateVariableName(TableSchema table, ColumnSchema column)
-        {
-            if (ColumnHasAlias(column))
-                return GetPrivateVariableName(GetNameFromColumn(column));
-            else
-                return GetPrivateVariableName(GetClassName(table));
-        }
-        public static string GetPrivateVariableName(ColumnSchema column)
-        {
-            return GetPrivateVariableName(GetNameFromColumn(column));
-        }
-        private static string GetPrivateVariableName(string name)
-        {
-            return  String.Concat("_", GetVariableName(name));
-        }
-
-        public static string GetPrivateVariableNamePlural(TableSchema table, ColumnSchema column)
-        {
-            if (ColumnHasAlias(column))
-                return GetPrivateVariableNamePlural(GetNameFromColumn(column));
-            else
-                return GetPrivateVariableNamePlural(GetClassName(table));
-        }
-        public static string GetPrivateVariableNamePlural(ColumnSchema column)
-        {
-            return GetPrivateVariableNamePlural(GetNameFromColumn(column));
-        }
-        private static string GetPrivateVariableNamePlural(string name)
-        {
-            return String.Concat("_", GetVariableNamePlural(name));
-        }
-
-        public static string GetVariableName(TableSchema table, ColumnSchema column)
-        {
-            if (ColumnHasAlias(column))
-                return GetVariableName(GetNameFromColumn(column));
-            else
-                return GetVariableName(GetClassName(table));
-        }
-        public static string GetVariableName(ColumnSchema column)
-        {
-            return GetVariableName(GetNameFromColumn(column));
-        }
-        private static string GetVariableName(string name)
-        {
-            return StringUtil.ToCamelCase(StringUtil.ToSingular(name));
-        }
-
-        public static string GetVariableNamePlural(TableSchema table, ColumnSchema column)
-        {
-            if (ColumnHasAlias(column))
-                return GetVariableNamePlural(GetNameFromColumn(column));
-            else
-                return GetVariableNamePlural(GetClassName(table));
-        }
-        public static string GetVariableNamePlural(ColumnSchema column)
-        {
-            return GetVariableNamePlural(GetNameFromColumn(column));
-        }
-        private static string GetVariableNamePlural(string name)
-        {
-            return StringUtil.ToCamelCase(StringUtil.ToPlural(name));
+            return StringUtil.ToCamelCase(name);
         }
 
         public static string GetClassName(TableSchema table)
         {
-            string className;
-            if (table.ExtendedProperties.Contains(_extendedPropertyName))
-                className = table.ExtendedProperties[_extendedPropertyName].Value.ToString();
-            else
-            {
-                className = table.Name;
+            if (table.ExtendedProperties.Contains(ExtendedPropertyName))
+                return table.ExtendedProperties[ExtendedPropertyName].Value.ToString();
 
-                if (!String.IsNullOrEmpty(_tablePrefix) && className.StartsWith(_tablePrefix))
-                    className = className.Remove(0, _tablePrefix.Length);
-            }
+            string className = table.Name;
 
-            return StringUtil.ToPascalCase(StringUtil.ToSingular(className));
+            if (!String.IsNullOrEmpty(_tablePrefix) && className.StartsWith(_tablePrefix))
+                className = className.Remove(0, _tablePrefix.Length);
+
+            if (_entityNaming == EntityNamingEnum.Plural && _tableNaming != TableNamingEnum.Plural)
+                className = StringUtil.ToPlural(className);
+            else if (_entityNaming == EntityNamingEnum.Singular && _tableNaming != TableNamingEnum.Singular)
+                className = StringUtil.ToSingular(className);
+
+            return StringUtil.ToPascalCase(className);
         }
-        
+
+        private static string PreventClassMatch(ColumnSchema column, string memberName)
+        {
+            string className = GetClassName(column.Table);
+            return (String.Compare(className, memberName, true) == 0)
+                ? String.Concat(memberName, SingularMemberSuffix)
+                : memberName;
+        }
+
         private static bool ColumnHasAlias(ColumnSchema column)
         {
-            return column.ExtendedProperties.Contains(_extendedPropertyName);
+            return column.ExtendedProperties.Contains(ExtendedPropertyName);
         }
         private static string GetNameFromColumn(ColumnSchema column)
         {
             string name = (ColumnHasAlias(column))
-                ? column.ExtendedProperties[_extendedPropertyName].Value.ToString()
+                ? column.ExtendedProperties[ExtendedPropertyName].Value.ToString()
                 : column.Name;
 
             return (String.Compare(GetClassName(column.Table), name, true) == 0)
-                ? String.Concat(name, "Member")
+                ? String.Concat(name, SingularMemberSuffix)
                 : name;
+        }
+
+        private static string GetAssociationName(TableSchema table, ColumnSchema column, bool plural)
+        {
+            string result = (_associationNaming == AssociationNamingEnum.Column)
+                ? GetNameFromColumn(column)
+                : GetClassName(table);
+
+            if (plural)
+            {
+                if (_associationSuffix == AssociationSuffixEnum.List)
+                    result = String.Concat(result, ListSuffix);
+                else if (_associationSuffix == AssociationSuffixEnum.Plural)
+                    result = StringUtil.ToPlural(result);
+            }
+
+            return result;
         }
 
         #endregion
@@ -194,11 +179,16 @@ namespace NHibernateHelper
         }
         public static bool IsManyToMany(TableSchema table)
         {
+            // Bypass logic if table contains Extended Property for ManyToMany
+            if (table.ExtendedProperties.Contains(ExtendedPropertyManyToMany))
+                return true;
+
             // 1) Table must have Two ForeignKeys.
             // 2) All columns must be either...
             //    a) Member of the Primary Key.
             //    b) Member of a Foreign Key.
             //    c) A DateTime stamp (CreateDate, EditDate, etc).
+            //    d) Name matches Version Regex.
 
             if(table.ForeignKeys.Count != 2)
                 return false;
@@ -209,7 +199,8 @@ namespace NHibernateHelper
             {
                 if (!( column.IsForeignKeyMember
                     || column.IsPrimaryKeyMember
-                    || column.SystemType.Equals(typeof(DateTime))))
+                    || column.SystemType.Equals(typeof(DateTime))
+                    || VersionRegex.IsMatch(column.Name)))
                 {
                     result = false;
                     break;
@@ -268,7 +259,7 @@ namespace NHibernateHelper
             throw new Exception(String.Format("Could not find Column {0} in Table {1}'s ForeignKeys.", mcs.Name, table.Name));
         }
 
-        public static string GetCascade(MemberColumnSchema column)
+        public static string GetCascade(ColumnSchema column)
         {
             return column.AllowDBNull ? "all" : "all-delete-orphan";
         }

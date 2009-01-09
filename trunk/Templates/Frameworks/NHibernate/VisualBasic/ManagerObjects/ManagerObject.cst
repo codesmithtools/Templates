@@ -36,10 +36,10 @@ Namespace <%= ManagerNamespace %>
 		<% For Each sc As SearchCriteria In scList %>
 		<% If sc.IsPrimaryKey Then %>
 		<% If sc.Items.Count > 1 Then ' Override GetById %>
-		Overloads Function GetById(<%= GetMethodParameters(sc.Items, true) %>) As <%= GetClassName(SourceTable) %>
+		Overloads Function GetById(<%= GetMethodParameters(entityManager, sc.Items, true) %>) As <%= GetClassName(SourceTable) %>
 		<% End If %>
 		<% Else If Not ContainsForeignKey(sc, ExcludedTables) Then %>
-		Function <%= GetMethodDeclaration(sc) %> As IList(Of <%= GetClassName(SourceTable) %>)
+		Function <%= GetMethodDeclaration(entityManager, sc) %> As IList(Of <%= GetClassName(SourceTable) %>)
 		<% End If %>
 		<% Next %>
 		
@@ -72,11 +72,11 @@ Namespace <%= ManagerNamespace %>
 		
 			Return GetById(<%= GetPrimaryKeyCallParameters(sc.Items) %>)
 		End Function
-		Public Overloads Function GetById(<%= GetMethodParameters(sc.Items, true) %>) As <%= GetClassName(SourceTable) %>  Implements I<%= GetClassName(SourceTable) %>Manager.GetById
+		Public Overloads Function GetById(<%= GetMethodParameters(entityManager, sc.Items, true) %>) As <%= GetClassName(SourceTable) %>  Implements I<%= GetClassName(SourceTable) %>Manager.GetById
 			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(<%= GetClassName(SourceTable) %>))
 		
 			<% For Each mcs As MemberColumnSchema In sc.Items %>
-			criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= GetVariableName(mcs) %>))
+			criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= entityManager.GetEntityBaseFromColumn(mcs).VariableName %>))
 			<% Next %>
 			
 			Dim result As <%= GetClassName(SourceTable) %> = DirectCast(criteria.UniqueResult(), <%= GetClassName(SourceTable) %>)
@@ -89,7 +89,7 @@ Namespace <%= ManagerNamespace %>
 		End Function
 		<% End If %>
 		<% Else If Not ContainsForeignKey(sc, ExcludedTables) Then %>
-		Public Function <%= GetMethodDeclaration(sc) %> As IList(Of <%= GetClassName(SourceTable) %>) Implements I<%= GetClassName(SourceTable) %>Manager.<%= sc.MethodName %>
+		Public Function <%= GetMethodDeclaration(entityManager, sc) %> As IList(Of <%= GetClassName(SourceTable) %>) Implements I<%= GetClassName(SourceTable) %>Manager.<%= sc.MethodName %>
             Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(<%= GetClassName(SourceTable) %>))
 			
 			<% For Each mcs As MemberColumnSchema In sc.Items %>
@@ -99,13 +99,13 @@ Namespace <%= ManagerNamespace %>
 			<% If association Is Nothing Then %>
 			<% Dim em As EntityMember = entityManager.GetMemberFromColumn(mcs) %>
 			Dim <%= em.VariableName %>Criteria As ICriteria = criteria.CreateCriteria("<%= em.PropertyName %>")
-            <%= em.VariableName %>Criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("Id", <%= GetVariableName(mcs) %>))
+            <%= em.VariableName %>Criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("Id", <%= entityManager.GetEntityBaseFromColumn(mcs).VariableName %>))
 			<% Else %>
 			Dim <%= association.VariableName %>Criteria As ICriteria = criteria.CreateCriteria("<%= association.PropertyName %>")
-            <%= association.VariableName %>Criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("Id", <%= GetVariableName(mcs) %>))
+            <%= association.VariableName %>Criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("Id", <%= entityManager.GetEntityBaseFromColumn(mcs).VariableName %>))
 			<% End If %>
 			<% Else %>
-			criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= GetPropertyName(mcs) %>", <%= GetVariableName(mcs) %>))
+			criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= entityManager.GetEntityBaseFromColumn(mcs).PropertyName %>", <%= entityManager.GetEntityBaseFromColumn(mcs).VariableName %>))
 			<% End If %>
 			<% Next %>
 						

@@ -6,24 +6,16 @@ using SchemaExplorer;
 
 namespace NHibernateHelper
 {
-    public class EntityMember
+    public class EntityMember : EntityBase
     {
         public EntityMember(ColumnSchema column)
+            : base(column)
         {
-            Column = column;
+            GenericName = NHibernateHelper.GetGenericName(column);
 
-            PropertyName = NHibernateHelper.GetPropertyName(column);
-            VariableName = NHibernateHelper.GetVariableName(column);
-            PrivateVariableName = NHibernateHelper.GetPrivateVariableName(column);
-            ColumnName = column.Name;
             SystemType = column.SystemType;
         }
 
-        public string PropertyName { get; private set; }
-        public string VariableName { get; private set; }
-        public string PrivateVariableName { get; private set; }
-        public string ColumnName { get; private set; }
         public Type SystemType { get; private set; }
-        public ColumnSchema Column { get; private set; }
     }
 }

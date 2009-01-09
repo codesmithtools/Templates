@@ -34,7 +34,7 @@ Public Class VbNHibernateHelper
 		Return result
 	End Function
 	
-	Public Function GetMethodParameters(ByVal mcsList As List(Of MemberColumnSchema), ByVal isDeclaration As Boolean) As String
+	Public Function GetMethodParameters(ByVal entityManager As EntityManager, ByVal mcsList As List(Of MemberColumnSchema), ByVal isDeclaration As Boolean) As String
 		Dim result As New StringBuilder()
 		Dim isFirst As Boolean = True
 		For Each mcs As MemberColumnSchema In mcsList
@@ -46,7 +46,7 @@ Public Class VbNHibernateHelper
 			If isDeclaration Then
 				result.Append("ByVal ")
 			End If
-			result.Append(KeyWords(GetVariableName(mcs)))
+			result.Append(KeyWords(entityManager.GetEntityBaseFromColumn(mcs).VariableName))
 			If isDeclaration Then
 				result.Append(" As ")
 				result.Append(mcs.SystemType.ToString())
@@ -54,20 +54,20 @@ Public Class VbNHibernateHelper
 		Next
 		Return result.ToString()
 	End Function
-	Public Function GetMethodParameters(ByVal mcsc As MemberColumnSchemaCollection, ByVal isDeclaration As Boolean) As String
+	Public Function GetMethodParameters(ByVal entityManager As EntityManager, ByVal mcsc As MemberColumnSchemaCollection, ByVal isDeclaration As Boolean) As String
 		Dim mcsList As New List(Of MemberColumnSchema)()
 		Dim x As Integer = 0
 		While x < mcsc.Count
 			mcsList.Add(mcsc(x))
 			System.Math.Max(System.Threading.Interlocked.Increment(x),x - 1)
 		End While
-		Return GetMethodParameters(mcsList, isDeclaration)
+		Return GetMethodParameters(entityManager, mcsList, isDeclaration)
 	End Function
-	Public Function GetMethodDeclaration(ByVal sc As SearchCriteria) As String
+	Public Function GetMethodDeclaration(ByVal entityManager As EntityManager, ByVal sc As SearchCriteria) As String
 		Dim result As New StringBuilder()
 		result.Append(sc.MethodName)
 		result.Append("(")
-		result.Append(GetMethodParameters(sc.Items, True))
+		result.Append(GetMethodParameters(entityManager, sc.Items, True))
 		result.Append(")")
 		Return result.ToString()
 	End Function

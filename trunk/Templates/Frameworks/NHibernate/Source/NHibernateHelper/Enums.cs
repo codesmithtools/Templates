@@ -30,4 +30,29 @@ namespace NHibernateHelper
         OneToMany,
         ManyToMany
     }
+
+    public enum TableNamingEnum
+    {
+        Mixed = 0,
+        Plural = 1,
+        Singular = 2
+    }
+    public enum EntityNamingEnum
+    {
+        Preserve = 0,
+        Plural = 1,
+        Singular = 2
+    }
+
+    public enum AssociationNamingEnum
+    {
+        Table = 0,
+        Column = 1
+    }
+    public enum AssociationSuffixEnum
+    {
+        None = 0,
+        Plural = 1,
+        List = 2
+    }
 }

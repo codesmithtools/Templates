@@ -54,10 +54,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EntityAssociation.cs" />
+    <Compile Include="EntityBase.cs" />
     <Compile Include="EntityKey.cs" />
     <Compile Include="EntityManager.cs" />
     <Compile Include="EntityMember.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="NamingProperty.cs" />
     <Compile Include="NHibernateHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchCriteria.cs" />
