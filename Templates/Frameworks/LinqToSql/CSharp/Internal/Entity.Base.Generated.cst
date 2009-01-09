@@ -140,7 +140,7 @@ namespace <%= ClassNamespace %>
         protected static EntityRef<TEntity> Detach<TEntity>(EntityRef<TEntity> entity) 
             where TEntity : LinqEntityBase
         {
-            if (!entity.HasLoadedOrAssignedValue)
+            if (!entity.HasLoadedOrAssignedValue || entity.Entity == null)
                 return new EntityRef<TEntity>();
 
             entity.Entity.Detach();
