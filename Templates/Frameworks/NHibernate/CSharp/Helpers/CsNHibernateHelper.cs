@@ -24,8 +24,12 @@ public class CsNHibernateHelper : NHibernateHelper.NHibernateHelper
 		}
 	}
 	
-	public string GetInitialization(Type type)
+	public string GetInitialization(ColumnSchema column)
     {
+		if(column.AllowDBNull)
+			return "null";
+		
+		Type type = column.SystemType;
         string result;
 
         if (type.Equals(typeof(String)))

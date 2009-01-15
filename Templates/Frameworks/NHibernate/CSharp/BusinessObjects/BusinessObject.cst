@@ -33,7 +33,7 @@ namespace <%= BusinessNamespace %>
 
 		<% // Primitives %>
 		<% foreach(EntityMember em in entityManager.MembersPrimaryKeyUnion) { %>
-		private <%= SystemCSharp[em.SystemType.ToString()] %> <%= em.PrivateVariableName %> = <%= GetInitialization(em.SystemType) %>;
+		private <%= em.SystemType %> <%= em.PrivateVariableName %> = <%= GetInitialization(em.Column) %>;
 		<% } %>
 		
 		<% // Many-To-One %>
@@ -95,7 +95,7 @@ namespace <%= BusinessNamespace %>
 		<% } %>
 		<% // Primitives %>
 		<% foreach(EntityMember em in entityManager.MembersPrimaryKeyUnion) { %>
-		public virtual <%= SystemCSharp[em.SystemType.ToString()] %> <%= em.PropertyName %>
+		public virtual <%= em.SystemType %> <%= em.PropertyName %>
         {
             get { return <%= em.PrivateVariableName %>; }
 			set

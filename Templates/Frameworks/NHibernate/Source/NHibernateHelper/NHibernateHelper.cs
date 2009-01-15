@@ -38,9 +38,12 @@ namespace NHibernateHelper
         /// </summary>
         /// <param name="tablePrefix">TablePrefix Property</param>
         /// <param name="namingProperty">NamingContentions Property</param>
-        public static void HelperInit(string tablePrefix) //, NamingProperty namingConventions)
+        public static void HelperInit(string tablePrefix, MapCollection systemCSharpAliasMap, MapCollection csharpKeyWordEscapeMap) //, NamingProperty namingConventions)
         {
             _tablePrefix = tablePrefix;
+
+            _systemCSharpAliasMap = systemCSharpAliasMap;
+            _csharpKeyWordEscapeMap = csharpKeyWordEscapeMap;
 
             //_tableNaming = namingConventions.TableNaming;
             //_entityNaming = namingConventions.EntityNaming;
@@ -49,6 +52,9 @@ namespace NHibernateHelper
         }
 
         private static string _tablePrefix = String.Empty;
+
+        private static MapCollection _csharpKeyWordEscapeMap { get; set; }
+        private static MapCollection _systemCSharpAliasMap { get; set; }
 
         private static TableNamingEnum _tableNaming = TableNamingEnum.Mixed;
         private static EntityNamingEnum _entityNaming = EntityNamingEnum.Singular;
@@ -69,7 +75,7 @@ namespace NHibernateHelper
                 return GetNameFromColumn(column);
 
             string genericName = GetAssociationName(table, column, plural);
-            return PreventClassMatch(column, genericName);
+            return ValidateName(column, genericName);
         }
         public static string GetGenericName(ColumnSchema column)
         {
@@ -77,7 +83,7 @@ namespace NHibernateHelper
                 return GetNameFromColumn(column);
 
             string genericName = GetNameFromColumn(column);
-            return PreventClassMatch(column, genericName);
+            return ValidateName(column, genericName);
         }
 
         internal static string GetPropertyName(string name)
@@ -108,15 +114,22 @@ namespace NHibernateHelper
             else if (_entityNaming == EntityNamingEnum.Singular && _tableNaming != TableNamingEnum.Singular)
                 className = StringUtil.ToSingular(className);
 
-            return StringUtil.ToPascalCase(className);
+            className = StringUtil.ToPascalCase(className);
+            return ValidateName(className);
         }
 
-        private static string PreventClassMatch(ColumnSchema column, string memberName)
+        private static string ValidateName(string memberName)
         {
-            string className = GetClassName(column.Table);
-            return (String.Compare(className, memberName, true) == 0)
-                ? String.Concat(memberName, SingularMemberSuffix)
+            return (_csharpKeyWordEscapeMap.ContainsKey(memberName))
+                ? _csharpKeyWordEscapeMap[memberName]
                 : memberName;
+        }
+        private static string ValidateName(ColumnSchema column, string memberName)
+        {
+            if (String.Compare(GetClassName(column.Table), memberName, true) == 0)
+                memberName = String.Concat(memberName, SingularMemberSuffix);
+
+            return ValidateName(memberName);
         }
 
         private static bool ColumnHasAlias(ColumnSchema column)
@@ -129,9 +142,7 @@ namespace NHibernateHelper
                 ? column.ExtendedProperties[ExtendedPropertyName].Value.ToString()
                 : column.Name;
 
-            return (String.Compare(GetClassName(column.Table), name, true) == 0)
-                ? String.Concat(name, SingularMemberSuffix)
-                : name;
+            return ValidateName(name);
         }
 
         private static string GetAssociationName(TableSchema table, ColumnSchema column, bool plural)
@@ -287,6 +298,17 @@ namespace NHibernateHelper
                         if (tks.PrimaryKeyMemberColumns.Contains(mcs))
                             return true;
             return false;
+        }
+
+        public static string GetSystemTypeName(ColumnSchema column)
+        {
+            string result = (_systemCSharpAliasMap.ContainsKey(column.SystemType.FullName))
+                ? _systemCSharpAliasMap[column.SystemType.FullName]
+                : column.SystemType.FullName;
+
+            return (column.AllowDBNull && column.SystemType.IsValueType)
+                ? String.Concat(result, "?")
+                : result;
         }
 
         #endregion

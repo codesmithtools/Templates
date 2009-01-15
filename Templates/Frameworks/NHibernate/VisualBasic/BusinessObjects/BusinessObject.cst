@@ -31,7 +31,7 @@ Namespace NHibernate.Generated.BusinessObjects
 
 		<% 'Primitives %>
 		<% For Each em As EntityMember In entityManager.MembersPrimaryKeyUnion %>
-		Private <%= em.PrivateVariableName %> As <%= em.SystemType %> = <%= GetInitialization(em.SystemType) %>
+		Private <%= em.PrivateVariableName %> As <%= em.SystemType %> = <%= GetInitialization(em.Column) %>
 		<% Next %>
 		
 		<% 'Many-To-One %>
