@@ -21,9 +21,14 @@ Public Class VbNHibernateHelper
 		End Get
 	End Property
 	
-	Public Function GetInitialization(ByVal type As Type) As String
+	Public Function GetInitialization(ByVal column As ColumnSchema) As String
+		If (column.AllowDBNull) Then
+			Return "Nothing"
+		End If
+		
+		Dim type As Type = column.SystemType
 		Dim result As String
-
+		
 		If type.Equals(GetType(String)) Then
 			result = "String.Empty"
 		ElseIf type.Equals(GetType(DateTime)) Then

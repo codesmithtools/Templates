@@ -32,6 +32,8 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Import NameSpace="System.IO" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 
+<%@ Map Name="SystemVB" Src="System-VBAlias" %>
+
 <%@ Register Name="BusinessBaseTemplate" Template="BaseClasses\BusinessBase.cst" %>
 <%@ Register Name="ManagerBaseTemplate" Template="BaseClasses\ManagerBase.cst" %>
 <%@ Register Name="SessionTemplate" Template="BaseClasses\Session.cst" %>
@@ -48,7 +50,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 
 <script runat="template">
 Public Overloads Overrides Sub Render(ByVal writer As TextWriter)
-	HelperInit(Me.TablePrefix)
+	HelperInit(Me.TablePrefix, Me.SystemVB, Me.KeyWords)
 	
 	Me.tablePrefix = Me.TablePrefix
 	If ExcludedTables Is Nothing Then

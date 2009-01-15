@@ -12,10 +12,9 @@ namespace NHibernateHelper
             : base(column)
         {
             GenericName = NHibernateHelper.GetGenericName(column);
-
-            SystemType = column.SystemType;
+            SystemType = NHibernateHelper.GetSystemTypeName(column);
         }
 
-        public Type SystemType { get; private set; }
+        public string SystemType { get; private set; }
     }
 }

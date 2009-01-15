@@ -32,6 +32,8 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Import NameSpace="System.IO" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
 
+<%@ Map Name="SystemCSharp" Src="System-CSharpAlias" %>
+
 <%@ Register Name="BusinessBaseTemplate" Template="BaseClasses\BusinessBase.cst" %>
 <%@ Register Name="ManagerBaseTemplate" Template="BaseClasses\ManagerBase.cst" %>
 <%@ Register Name="SessionTemplate" Template="BaseClasses\Session.cst" %>
@@ -49,7 +51,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <script runat="template">
 public override void Render(TextWriter writer)
 {
-	HelperInit(this.TablePrefix);
+	HelperInit(this.TablePrefix, this.SystemCSharp, this.KeyWords);
 	
 	if(ExcludedTables == null)
 		ExcludedTables = new TableSchemaCollection();
