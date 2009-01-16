@@ -13,8 +13,10 @@ namespace NHibernateHelper
         {
             GenericName = NHibernateHelper.GetGenericName(column);
             SystemType = NHibernateHelper.GetSystemTypeName(column);
+            IsVersion = NHibernateHelper.VersionRegex.IsMatch(column.Name);
         }
 
         public string SystemType { get; private set; }
+        public bool IsVersion { get; private set; }
     }
 }

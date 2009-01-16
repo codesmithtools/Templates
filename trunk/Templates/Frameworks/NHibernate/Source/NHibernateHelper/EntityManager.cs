@@ -67,6 +67,9 @@ namespace NHibernateHelper
                     EntityMember em = new EntityMember(column);
                     _memberMap.Add(column, em);
                 }
+
+            if (_memberMap.Values.Where(em => em.IsVersion).Count() > 1)
+                throw new Exception(String.Format("More than one Version column in {0}", this._sourceTable.FullName));
         }
 
         protected void UpdateDuplicateProperties()

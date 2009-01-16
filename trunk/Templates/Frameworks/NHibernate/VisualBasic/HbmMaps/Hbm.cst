@@ -32,8 +32,15 @@ Description: Generates a HBM Map for NHibernate.
 		</id>
 		<% End If %>
 		<% 'Properties %>
-		<% For Each em As EntityMember In entityManager.Members %>
-		<property name="<%= em.PropertyName %>" column="<%= em.ColumnName %>" />
+		<% For Each em As EntityMember In entityManager.Members
+			Dim type As String
+			If em.IsVersion Then
+				type = "version"
+			Else
+				type = "property"
+			End If
+		%>
+		<<%= type %> name="<%= em.PropertyName %>" column="<%= em.ColumnName %>" />
 		<% Next %>
 		<% 'Many-To-One %>
 		<% For Each association As EntityAssociation In entityManager.ManyToOne %>
