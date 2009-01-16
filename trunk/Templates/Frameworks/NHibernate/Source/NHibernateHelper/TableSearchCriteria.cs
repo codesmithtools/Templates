@@ -8,24 +8,16 @@ namespace NHibernateHelper
 {
     internal class TableSearchCriteria
     {
-        #region Declarations
-
-        protected TableSchema table;
-        protected string extendedProperty = String.Empty;
-        protected const string defaultExtendedProperty = "cs_alias";
-
-        #endregion
-
         #region Constructor
 
         public TableSearchCriteria(TableSchema sourceTable)
-        {
-            this.table = sourceTable;
-        }
+            : this(sourceTable, String.Empty) { }
         public TableSearchCriteria(TableSchema sourceTable, string extendedProperty)
-            : this(sourceTable)
         {
-            this.extendedProperty = extendedProperty;
+            this.Table = sourceTable;
+            this.ExtendedProperty = (String.IsNullOrEmpty(extendedProperty))
+                ? NHibernateHelper.ExtendedPropertyName
+                : extendedProperty;
         }
 
         #endregion
@@ -69,24 +61,24 @@ namespace NHibernateHelper
 
         protected void GetPrimaryKeySearchCriteria(Dictionary<string, SearchCriteria> map)
         {
-            List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>(table.PrimaryKey.MemberColumns.ToArray());
+            List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>(Table.PrimaryKey.MemberColumns.ToArray());
             SearchCriteria searchCriteria = new SearchCriteria(ExtendedProperty, mcsList, true);
 
             if (!String.IsNullOrEmpty(ExtendedProperty)
-               && table.PrimaryKey.ExtendedProperties.Contains(ExtendedProperty)
-               && table.PrimaryKey.ExtendedProperties[ExtendedProperty].Value != null
+               && Table.PrimaryKey.ExtendedProperties.Contains(ExtendedProperty)
+               && Table.PrimaryKey.ExtendedProperties[ExtendedProperty].Value != null
               )
-                searchCriteria.SetMethodNameGeneration(table.PrimaryKey.ExtendedProperties[ExtendedProperty].Value.ToString());
+                searchCriteria.SetMethodNameGeneration(Table.PrimaryKey.ExtendedProperties[ExtendedProperty].Value.ToString());
 
             AddToMap(map, searchCriteria);
         }
         protected void GetForeignKeySearchCriteria(Dictionary<string, SearchCriteria> map)
         {
-            foreach (TableKeySchema tks in table.ForeignKeys)
+            foreach (TableKeySchema tks in Table.ForeignKeys)
             {
                 SearchCriteria searchCriteria = new SearchCriteria(ExtendedProperty);
                 foreach (MemberColumnSchema mcs in tks.ForeignKeyMemberColumns)
-                    if (mcs.Table.Equals(table))
+                    if (mcs.Table.Equals(Table))
                         searchCriteria.Add(mcs);
 
                 if (!String.IsNullOrEmpty(ExtendedProperty) && tks.ExtendedProperties.Contains(ExtendedProperty) && tks.ExtendedProperties[ExtendedProperty].Value != null)
@@ -97,11 +89,11 @@ namespace NHibernateHelper
         }
         protected void GetIndexSearchCriteria(Dictionary<string, SearchCriteria> map)
         {
-            foreach (IndexSchema indexSchema in table.Indexes)
+            foreach (IndexSchema indexSchema in Table.Indexes)
             {
                 SearchCriteria searchCriteria = new SearchCriteria(ExtendedProperty);
                 foreach (MemberColumnSchema mcs in indexSchema.MemberColumns)
-                    if (mcs.Table.Equals(table))
+                    if (mcs.Table.Equals(Table))
                         searchCriteria.Add(mcs);
 
                 if (!String.IsNullOrEmpty(ExtendedProperty) && indexSchema.ExtendedProperties.Contains(ExtendedProperty) && indexSchema.ExtendedProperties[ExtendedProperty].Value != null)
@@ -133,14 +125,8 @@ namespace NHibernateHelper
 
         #region Properties
 
-        public string ExtendedProperty
-        {
-            get { return (String.IsNullOrEmpty(extendedProperty)) ? defaultExtendedProperty : extendedProperty; }
-        }
-        public TableSchema Table
-        {
-            get { return table; }
-        }
+        public string ExtendedProperty { get; protected set; }
+        public TableSchema Table { get; protected set; }
 
         #endregion
     }

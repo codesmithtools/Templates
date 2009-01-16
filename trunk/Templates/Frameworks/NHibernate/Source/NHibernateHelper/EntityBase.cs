@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SchemaExplorer;
+using CodeSmith.Engine;
 
 namespace NHibernateHelper
 {
@@ -13,6 +14,32 @@ namespace NHibernateHelper
         public EntityBase(ColumnSchema column)
         {
             Column = column;
+        }
+
+        private static string GetPropertyName(string name)
+        {
+            return StringUtil.ToPascalCase(name);
+        }
+        private static string GetPrivateVariableName(string name)
+        {
+            return String.Concat("_", GetVariableName(name));
+        }
+        private static string GetVariableName(string name)
+        {
+            return StringUtil.ToCamelCase(name);
+        }
+
+        protected static bool ColumnHasAlias(ColumnSchema column)
+        {
+            return column.ExtendedProperties.Contains(NHibernateHelper.ExtendedPropertyName);
+        }
+        protected static string GetNameFromColumn(ColumnSchema column)
+        {
+            string name = (ColumnHasAlias(column))
+                ? column.ExtendedProperties[NHibernateHelper.ExtendedPropertyName].Value.ToString()
+                : column.Name;
+
+            return NHibernateHelper.ValidateName(name);
         }
 
         internal void AppendNameSuffix(int suffix)
@@ -26,9 +53,9 @@ namespace NHibernateHelper
             protected set
             {
                 _genericName = value;
-                PropertyName = NHibernateHelper.GetPropertyName(value);
-                PrivateVariableName = NHibernateHelper.GetPrivateVariableName(value);
-                VariableName = NHibernateHelper.GetVariableName(value);
+                PropertyName = GetPropertyName(value);
+                PrivateVariableName = GetPrivateVariableName(value);
+                VariableName = GetVariableName(value);
             }
         }
         public string PropertyName { get; private set; }
@@ -44,6 +71,5 @@ namespace NHibernateHelper
         {
             get { return Column.IsPrimaryKeyMember; }
         }
-
     }
 }

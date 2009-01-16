@@ -31,16 +31,14 @@ Description: Generates a HBM Map for NHibernate.
 		 	<%= entityManager.PrimaryKey.Generator %>
 		</id>
 		<% End If %>
+		
+		<% 'Version %>
+		<% If (entityManager.HasRowVersionMember) Then %>
+		<version name="<%= entityManager.RowVersionMember.PropertyName %>" column="<%= entityManager.RowVersionMember.ColumnName %>" />
+		<% End If %>
 		<% 'Properties %>
-		<% For Each em As EntityMember In entityManager.Members
-			Dim type As String
-			If em.IsVersion Then
-				type = "version"
-			Else
-				type = "property"
-			End If
-		%>
-		<<%= type %> name="<%= em.PropertyName %>" column="<%= em.ColumnName %>" />
+		<% For Each em As EntityMember In entityManager.MembersNoRowVersion %>
+		<property name="<%= em.PropertyName %>" column="<%= em.ColumnName %>" />
 		<% Next %>
 		<% 'Many-To-One %>
 		<% For Each association As EntityAssociation In entityManager.ManyToOne %>
