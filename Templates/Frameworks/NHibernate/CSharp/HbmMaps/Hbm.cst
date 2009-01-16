@@ -32,7 +32,7 @@ Description: Generates a HBM Map for NHibernate.
 		<% } %>
 		<% // Properties %>
 		<% foreach(EntityMember em in entityManager.Members) { %>
-		<property name="<%= em.PropertyName %>" column="<%= em.ColumnName %>" />
+		<<%= (em.IsVersion) ? "version" : "property" %> name="<%= em.PropertyName %>" column="<%= em.ColumnName %>" />
 		<% } %>
 		<% // Many-To-One %>
 		<% foreach(EntityAssociation association in entityManager.ManyToOne) { %>

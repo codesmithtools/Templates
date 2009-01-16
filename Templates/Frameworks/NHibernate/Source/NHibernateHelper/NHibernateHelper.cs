@@ -16,7 +16,7 @@ namespace NHibernateHelper
         private const string ExtendedPropertyManyToMany = "cs_ManyToMany";
 
         private static Regex _versionRegex = null;
-        private static Regex VersionRegex
+        public static Regex VersionRegex
         {
             get
             {
