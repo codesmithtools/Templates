@@ -8,6 +8,8 @@ namespace NHibernateHelper
 {
     public class EntityKey
     {
+        private const string Identity = "CS_IsIdentity";
+
         public EntityKey(TableSchema sourceTable)
         {
             if(!sourceTable.HasPrimaryKey)
@@ -19,8 +21,8 @@ namespace NHibernateHelper
 
             if (!IsCompositeKey)
             {
-                IsIdentity = (KeyColumn.Column.ExtendedProperties.Contains("CS_IsIdentity")
-                    && ((bool)KeyColumn.Column.ExtendedProperties["CS_IsIdentity"].Value) == true);
+                IsIdentity = (KeyColumn.Column.ExtendedProperties.Contains(Identity)
+                    && ((bool)KeyColumn.Column.ExtendedProperties[Identity].Value) == true);
 
                 Generator = (IsIdentity)
                     ? "<generator class=\"native\" />"
@@ -28,6 +30,7 @@ namespace NHibernateHelper
             }
             else
             {
+                IsIdentity = false;
                 Generator = String.Empty;
             }
         }

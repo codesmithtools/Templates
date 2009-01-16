@@ -33,8 +33,6 @@ namespace NHibernateHelper
         {
             if (!_initialized)
             {
-                _initialized = true;
-
                 // Create Dictionaries
                 _associationMap = new Dictionary<ColumnSchema, EntityAssociation>();
                 _memberMap = new Dictionary<ColumnSchema, EntityMember>();
@@ -43,12 +41,14 @@ namespace NHibernateHelper
                 GetPrimaryKey();
                 GetMembers(_sourceTable.NonKeyColumns);
 
-                // Association 1) Get all associations.
+                // Get all associations.
                 GetManyToOne();
                 GetToMany();
 
-                // Association 2) Update to try and prevent duplicate names.
+                // Update to prevent duplicate names.
                 UpdateDuplicateProperties();
+
+                _initialized = true;
             }
         }
 
@@ -68,25 +68,9 @@ namespace NHibernateHelper
                     _memberMap.Add(column, em);
                 }
 
-            if (_memberMap.Values.Where(em => em.IsVersion).Count() > 1)
+            if (_memberMap.Values.Where(em => em.IsRowVersion).Count() > 1)
                 throw new Exception(String.Format("More than one Version column in {0}", this._sourceTable.FullName));
         }
-
-        protected void UpdateDuplicateProperties()
-        {
-            IEnumerable<EntityBase> entities = MemberMap.Values.Cast<EntityBase>().Union(AssociationMap.Values.Cast<EntityBase>());
-            foreach (EntityBase entity in entities)
-            {
-                List<EntityBase> duplicateEntities = entities.Where(e => e.GenericName == entity.GenericName).ToList();
-                if (duplicateEntities.Count > 1)
-                    for (int x = 0; x < duplicateEntities.Count(); x++)
-                        duplicateEntities[x].AppendNameSuffix(x + 1);
-            }
-        }
-
-        #endregion
-
-        #region Association Methods
 
         protected void GetManyToOne()
         {
@@ -134,7 +118,7 @@ namespace NHibernateHelper
                         }
                         else
                         {
-                            TableSchema foreignTable = NHibernateHelper.GetToManyTable(column.Table, _sourceTable);
+                            TableSchema foreignTable = GetToManyTable(column.Table, _sourceTable);
                             if (!_excludedTables.Contains(foreignTable))
                             {
                                 EntityAssociation association = new EntityAssociation(AssociationTypeEnum.ManyToMany, foreignTable, column);
@@ -146,6 +130,34 @@ namespace NHibernateHelper
             }
         }
 
+        protected void UpdateDuplicateProperties()
+        {
+            IEnumerable<EntityBase> entities = MemberMap.Values.Cast<EntityBase>().Union(AssociationMap.Values.Cast<EntityBase>());
+            foreach (EntityBase entity in entities)
+            {
+                List<EntityBase> duplicateEntities = entities.Where(e => e.GenericName == entity.GenericName).ToList();
+                if (duplicateEntities.Count > 1)
+                    for (int x = 0; x < duplicateEntities.Count(); x++)
+                        duplicateEntities[x].AppendNameSuffix(x + 1);
+            }
+        }
+
+        #endregion
+
+        #region Many To Many Methods
+
+        private TableSchema GetToManyTable(TableSchema manyToTable, TableSchema sourceTable)
+        {
+            TableSchema result = null;
+            foreach (TableKeySchema key in manyToTable.ForeignKeys)
+                if (!key.PrimaryKeyTable.Equals(sourceTable))
+                {
+                    result = key.PrimaryKeyTable;
+                    break;
+                }
+            return result;
+        }
+        
         #endregion
 
         #region Public Methods
@@ -210,6 +222,23 @@ namespace NHibernateHelper
             }
         }
 
+        public bool HasRowVersionMember
+        {
+            get
+            {
+                return (RowVersionMember != null);
+            }
+        }
+        public EntityMember RowVersionMember
+        {
+            get
+            {
+                return MemberMap.Values
+                    .Where(m => m.IsRowVersion)
+                    .FirstOrDefault();
+            }
+        }
+
         public List<EntityMember> Members
         {
             get
@@ -218,6 +247,19 @@ namespace NHibernateHelper
                     .Where(m => !m.IsPrimaryKeyMember)
                     .ToList();
             }
+        }
+        public List<EntityMember> MembersNoRowVersion
+        {
+            get
+            {
+                return MemberMap.Values
+                    .Where(m => !m.IsPrimaryKeyMember && !m.IsRowVersion)
+                    .ToList();
+            }
+        }
+        public List<EntityMember> MembersPrimaryKeyUnion
+        {
+            get { return MemberMap.Values.ToList(); }
         }
 
         public List<EntityAssociation> ManyToOne
@@ -229,7 +271,6 @@ namespace NHibernateHelper
                    .ToList();
             }
         }
-
         public List<EntityAssociation> OneToMany
         {
             get
@@ -239,7 +280,6 @@ namespace NHibernateHelper
                    .ToList();
             }
         }
-
         public List<EntityAssociation> ManyToMany
         {
             get
@@ -249,7 +289,6 @@ namespace NHibernateHelper
                     .ToList();
             }
         }
-
         public List<EntityAssociation> ToManyUnion
         {
             get
@@ -260,11 +299,6 @@ namespace NHibernateHelper
                         || a.AssociationType == AssociationTypeEnum.OneToMany)
                     .ToList();
             }
-        }
-
-        public List<EntityMember> MembersPrimaryKeyUnion
-        {
-            get { return MemberMap.Values.ToList(); }
         }
 
         #endregion
