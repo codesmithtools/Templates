@@ -21,7 +21,7 @@ namespace NHibernateHelper
             get
             {
                 if(_versionRegex == null)
-                    _versionRegex = new Regex("(V|v)ersion", RegexOptions.Compiled);
+                    _versionRegex = new Regex("^((R|r)ow)?(V|v)ersion$", RegexOptions.Compiled);
                 return _versionRegex;
             }
         }
