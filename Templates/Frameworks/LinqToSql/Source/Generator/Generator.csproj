@@ -33,15 +33,12 @@
   <ItemGroup>
     <Reference Include="CodeSmith.CustomProperties, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\CodeSmith\v5.0\AddIns\CodeSmith.CustomProperties.dll</HintPath>
     </Reference>
     <Reference Include="CodeSmith.Engine, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\CodeSmith\CodeSmith\Build\Debug\CodeSmith.Engine.dll</HintPath>
     </Reference>
     <Reference Include="SchemaExplorer, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\CodeSmith\CodeSmith\Build\Debug\SchemaExplorer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
