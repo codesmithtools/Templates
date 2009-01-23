@@ -86,7 +86,7 @@ namespace <%= Database.EntityNamespace %>
                             if (column.Member.Contains("Create"))
                                 Response.WriteLine("            [Now(EntityState.New)]");
                             else if (column.Member.Contains("Modify") || column.Member.Contains("Modified")
-							|| column.Member.Contains("Edit") || column.Member.Contains("Edited"))
+							|| column.Member.Contains("Edit"))
                                 Response.WriteLine("            [Now(EntityState.Dirty)]");
                         }
                     }

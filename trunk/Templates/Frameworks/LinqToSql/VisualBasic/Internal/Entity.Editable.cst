@@ -78,7 +78,7 @@ Namespace <%= Database.EntityNamespace %>
                             If (column.Member.Contains("Create")) Then
                                 Response.WriteLine("            <Now(EntityState.New)> _")
                             Else If (column.Member.Contains("Modify") OrElse column.Member.Contains("Modified") _
-							OrElse column.Member.Contains("Edit") OrElse column.Member.Contains("Edited")) Then
+							OrElse column.Member.Contains("Edit")) Then
                                 Response.WriteLine("            <Now(EntityState.Dirty)> _")
                             End If
                         End If
