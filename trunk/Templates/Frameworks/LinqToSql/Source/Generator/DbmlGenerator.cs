@@ -120,7 +120,7 @@ namespace LinqToSqlShared.Generator
 
             foreach (TableSchema t in databaseSchema.Tables)
             {
-                if (Settings.IsIgnored(t.Name))
+                if (Settings.IsIgnored(t.FullName))
                 {
                     Debug.WriteLine("Skipping Table: " + t.FullName);
                 }
@@ -141,7 +141,7 @@ namespace LinqToSqlShared.Generator
             {
                 foreach (ViewSchema v in databaseSchema.Views)
                 {
-                    if (Settings.IsIgnored(v.Name))
+                    if (Settings.IsIgnored(v.FullName))
                     {
                         Debug.WriteLine("Skipping View: " + v.FullName);
                     }
@@ -158,7 +158,7 @@ namespace LinqToSqlShared.Generator
             {
                 foreach (CommandSchema c in databaseSchema.Commands)
                 {
-                    if (Settings.IsIgnored(c.Name))
+                    if (Settings.IsIgnored(c.FullName))
                     {
                         Debug.WriteLine("Skipping Function: " + c.FullName);
                     }
