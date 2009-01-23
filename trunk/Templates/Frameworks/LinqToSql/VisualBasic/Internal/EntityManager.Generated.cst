@@ -235,19 +235,19 @@ Namespace <%= ManagerNamespace %>
             Friend Shared Readonly GetByKey As Func(Of <%= DataManager.DataContextName %>, <%= paramTypes %>, <%= EntityManager.PropertyName %>) = _
                 CompiledQuery.Compile( _
                      Function(db As <%= DataManager.DataContextName %>, <%= parameters %>) _
-                        db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>))
+                        db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>))
 <% Else If method.IsUnique Then %>
 
             Friend Shared Readonly GetBy<%= method.NameSuffix %> As Func(Of <%= DataManager.DataContextName %>, <%= paramTypes %>, <%= EntityManager.EntityName %>) = _
                 CompiledQuery.Compile( _
                      Function(db As <%= DataManager.DataContextName %>, <%= parameters %>) _
-                        db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>))
+                        db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>))
 <% Else %>
 
             Friend Shared Readonly  GetBy<%= method.NameSuffix %> As Func(Of <%= DataManager.DataContextName %>, <%= paramTypes %>, IQueryable(Of <%= EntityManager.EntityName %>)) = _
                 CompiledQuery.Compile( _
                     Function( db As <%= DataManager.DataContextName %> , <%= parameters %>) _
-                        db.<%= EntityManager.EntityName %>.Where(<%= GetLamba(method, 7) %>))
+                        db.<%= EntityManager.PropertyName %>.Where(<%= GetLamba(method, 7) %>))
 <% End If ' if is key%>
 <% End If ' column count%>
 <% Next ' foreach method%>

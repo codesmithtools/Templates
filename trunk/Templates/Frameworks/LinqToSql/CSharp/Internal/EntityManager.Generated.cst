@@ -239,19 +239,19 @@ namespace <%= ManagerNamespace %>
             internal static readonly Func<<%= DataManager.DataContextName %>, <%= paramTypes %>, <%= EntityManager.EntityName %>> <%= MethodPrefix %><%= MethodKeySuffix %> = 
                 CompiledQuery.Compile(
                     (<%= DataManager.DataContextName %> db, <%= parameters %>) => 
-                        db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
+                        db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
 <% } else if (method.IsUnique) { %>
 
             internal static readonly Func<<%= DataManager.DataContextName %>, <%= paramTypes %>, <%= EntityManager.EntityName %>> <%= MethodPrefix %><%= method.NameSuffix %> = 
                 CompiledQuery.Compile(
                     (<%= DataManager.DataContextName %> db, <%= parameters %>) => 
-                        db.<%= EntityManager.EntityName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
+                        db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
 <% } else { %>
 
             internal static readonly Func<<%= DataManager.DataContextName %>, <%= paramTypes %>, IQueryable<<%= EntityManager.EntityName %>>> <%= MethodPrefix %><%= method.NameSuffix %> = 
                 CompiledQuery.Compile(
                     (<%= DataManager.DataContextName %> db, <%= parameters %>) => 
-                        db.<%= EntityManager.EntityName %>.Where(<%= GetLamba(method, 7) %>));
+                        db.<%= EntityManager.PropertyName %>.Where(<%= GetLamba(method, 7) %>));
 <% } // if is key%>
 <% } // column count%>
 <% } // foreach method%>
