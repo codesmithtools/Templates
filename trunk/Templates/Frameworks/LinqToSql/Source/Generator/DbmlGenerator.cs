@@ -832,7 +832,10 @@ namespace LinqToSqlShared.Generator
             }
 
             if (columnSchema.NativeType.Equals("text", StringComparison.OrdinalIgnoreCase)
-                || columnSchema.NativeType.Equals("ntext", StringComparison.OrdinalIgnoreCase))
+                || columnSchema.NativeType.Equals("ntext", StringComparison.OrdinalIgnoreCase)
+                || columnSchema.NativeType.Equals("xml", StringComparison.OrdinalIgnoreCase)
+                || columnSchema.NativeType.Equals("binary", StringComparison.OrdinalIgnoreCase)
+                || columnSchema.NativeType.Equals("image", StringComparison.OrdinalIgnoreCase))
                 column.UpdateCheck = UpdateCheck.Never;
 
             column.DbType = GetDbType(columnSchema);
