@@ -117,7 +117,7 @@ namespace <%= ClassNamespace %>
         /// <param name="onRemove">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Remove(`0)" />.</param>
         /// <returns>A new <see cref="T:System.Data.Linq.EntitySet`1" /> with the list copied if it was loaded.</returns>
         protected static EntitySet<TEntity> Detach<TEntity>(EntitySet<TEntity> set, Action<TEntity> onAdd, Action<TEntity> onRemove) 
-            where TEntity : LinqEntityBase
+            where TEntity : <%= ClassName %>
         {
             if (set == null || !set.HasLoadedOrAssignedValues)
                 return new EntitySet<TEntity>(onAdd, onRemove);
@@ -138,7 +138,7 @@ namespace <%= ClassNamespace %>
         /// <param name="entity">The <see cref="T:System.Data.Linq.EntityRef`1"/> to detach.</param>
         /// <returns>A new <see cref="T:System.Data.Linq.EntityRef`1"/> with the entity detached.</returns>
         protected static EntityRef<TEntity> Detach<TEntity>(EntityRef<TEntity> entity) 
-            where TEntity : LinqEntityBase
+            where TEntity : <%= ClassName %>
         {
             if (!entity.HasLoadedOrAssignedValue || entity.Entity == null)
                 return new EntityRef<TEntity>();
