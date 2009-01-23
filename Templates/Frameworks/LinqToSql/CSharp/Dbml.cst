@@ -31,7 +31,7 @@
 <%@ Property Category="1.Database" Name="IgnoreList"
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
     Description="List of regular expressions to ignore tables and views when generating mapping."
-    Default="^sysdiagrams$" %>
+    Default="sysdiagrams$" %>
 
 <%@ Property Category="1.Database" Name="CleanExpression"
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
