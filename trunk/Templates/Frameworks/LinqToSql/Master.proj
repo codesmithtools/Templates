@@ -3,8 +3,8 @@
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
 
   <PropertyGroup>
-    <Major>1</Major>
-    <Minor>3</Minor>
+    <Major>2</Major>
+    <Minor>1</Minor>
     <Build>0</Build>
     <Revision>1</Revision>
   </PropertyGroup>
@@ -20,11 +20,17 @@
     <DefaultExclude Include="**\obj\**" />
     <DefaultExclude Include="**\bin\**" />
     <DefaultExclude Include="**\Sample\**" />
+    <DefaultExclude Include="**\Libraries\**" />
+    <DefaultExclude Include="**\Help\**" />
+    <DefaultExclude Include="**\Patch\**" />
+    <DefaultExclude Include="**\_ReSharper*\**" />
     <DefaultExclude Include="*.proj" />
     <DefaultExclude Include="*.dbml" />
     <DefaultExclude Include="*.zip" />
-    <DefaultExclude Include="*.resharper" />
-    <DefaultExclude Include="*.user" />
+    <DefaultExclude Include="**\*.user" />
+    <DefaultExclude Include="**\*.resharper" />
+    <DefaultExclude Include="**\*.cache" />
+
     <ZipFiles Include="**\*.*" Exclude="@(DefaultExclude)" />
   </ItemGroup>
 
@@ -33,7 +39,7 @@
       <Output TaskParameter="Revision" PropertyName="Revision" />
     </SvnVersion>
 
-    <Message Text="CodeSmith Revision: $(Revision)"/>
+    <Message Text="Plinqo Revision: $(Revision)"/>
   </Target>
 
   <Target Name="Compile">
@@ -47,7 +53,8 @@
   </ItemGroup>
 
   <Target Name="Documentation" DependsOnTargets="Version;Compile">
-    <Sandcastle Clean="true" TopicStyle="vs2005"
+    <Sandcastle Clean="true" TopicStyle="vs2005" 
+                NoWarnMessages="true"
                 WorkingDirectory="Help"
                 Assemblies="@(Assemblies)"
                 Comments="@(Comments)"

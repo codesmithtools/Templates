@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="CodeSmith.Engine, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Common\CodeSmith.Engine.dll</HintPath>
+      <HintPath>..\..\Libraries\bin\CodeSmith.Engine.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.NRefactory, Version=4.0.0.9999, Culture=neutral, PublicKeyToken=efe927acf176eea2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
