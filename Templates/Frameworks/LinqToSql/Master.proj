@@ -41,8 +41,24 @@
              Properties="Configuration=$(BuildConfiguration)"/>
   </Target>
 
-  <Target Name="Zip" DependsOnTargets="Version;Compile">
+  <ItemGroup>
+    <Assemblies Include="Common\CodeSmith.Data.dll" />
+    <Comments Include="Common\CodeSmith.Data.xml" />
+  </ItemGroup>
+
+  <Target Name="Documentation" DependsOnTargets="Version;Compile">
+    <Sandcastle Clean="true" TopicStyle="vs2005"
+                WorkingDirectory="Help"
+                Assemblies="@(Assemblies)"
+                Comments="@(Comments)"
+                ChmName="CodeSmith.Data" />
+
+    <Copy SourceFiles="Help\vs2005\chm\CodeSmith.Data.chm" DestinationFolder="Common"/>
+  </Target>
+
+  <Target Name="Zip" DependsOnTargets="Documentation">
     <Zip Files="@(ZipFiles)"
          ZipFileName="plinqo-v$(Major).$(Minor).$(Revision).zip" />
   </Target>
+
 </Project>

@@ -11,10 +11,10 @@ namespace CodeSmith.Data.Rules
     public class BrokenRuleCollection : List<BrokenRule>
     {
         /// <summary>
-        /// Filters colleciton to the specified type.
+        /// Filters the <see cref="BrokenRuleCollection"/> to the specified type.
         /// </summary>
         /// <param name="type">The type to filter.</param>
-        /// <returns>Enumerator of BrokenRule for the type.</returns>
+        /// <returns>Enumerator of <see cref="BrokenRule"/> for the type.</returns>
         public IEnumerator<BrokenRule> Filter(Type type)
         {
             foreach (BrokenRule r in this)
@@ -26,21 +26,21 @@ namespace CodeSmith.Data.Rules
         }
 
         /// <summary>
-        /// Filters colleciton to the specified type.
+        /// Filters the <see cref="BrokenRuleCollection"/> to the specified type.
         /// </summary>
         /// <typeparam name="T">The type to filter.</typeparam>
-        /// <returns>Enumerator of BrokenRule for the type.</returns>
+        /// <returns>Enumerator of <see cref="BrokenRule"/> for the type.</returns>
         public IEnumerator<BrokenRule> Filter<T>()
         {
             return Filter(typeof(T));
         }
 
         /// <summary>
-        /// Filters colleciton to the specified type and property.
+        /// Filters the <see cref="BrokenRuleCollection"/> to the specified type and property.
         /// </summary>
         /// <param name="property">The property to filter.</param>
         /// <param name="type">The type to filter.</param>
-        /// <returns>Enumerator of BrokenRule for the type.</returns>        
+        /// <returns>Enumerator of <see cref="BrokenRule"/> for the type.</returns>        
         public IEnumerator<BrokenRule> Filter(Type type, string property)
         {
             foreach (BrokenRule r in this)
@@ -54,11 +54,11 @@ namespace CodeSmith.Data.Rules
         }
 
         /// <summary>
-        /// Filters colleciton to the specified type and property.
+        /// Filters the <see cref="BrokenRuleCollection"/> to the specified type and property.
         /// </summary>
         /// <param name="property">The property to filter.</param>
         /// <typeparam name="T">The type to filter.</typeparam>
-        /// <returns>Enumerator of BrokenRule for the type.</returns>        
+        /// <returns>Enumerator of <see cref="BrokenRule"/> for the type.</returns>        
         public IEnumerator<BrokenRule> Filter<T>(string property)
         {
             return Filter(typeof(T), property);

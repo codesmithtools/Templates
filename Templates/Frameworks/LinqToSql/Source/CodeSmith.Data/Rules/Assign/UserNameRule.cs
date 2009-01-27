@@ -2,12 +2,37 @@
 using System.Security.Principal;
 using System.Threading;
 using System.Web;
+using System.Web.Hosting;
 
 namespace CodeSmith.Data.Rules.Assign
 {
     /// <summary>
-    /// Assigns the current logged in username.
+    /// Assigns the current logged in username when the entity is committed from the <see cref="System.Data.Linq.DataContext"/>.
     /// </summary>
+    /// <example>
+    /// <para>Add rule using the rule manager directly.</para>
+    /// <code><![CDATA[
+    /// static partial void AddSharedRules()
+    /// {
+    ///     RuleManager.AddShared<User>(new UserNameRule("CreatedBy", EntityState.New));
+    ///     RuleManager.AddShared<User>(new UserNameRule("ModifiedBy", EntityState.Dirty));
+    /// }
+    /// ]]></code>
+    /// <para>Add rule using the Metadata class and attribute.</para>
+    /// <code><![CDATA[
+    /// private class Metadata
+    /// {
+    ///     // fragment of the metadata class
+    /// 
+    ///     [UserName(EntityState.New)]
+    ///     public string CreatedBy { get; set; }
+    /// 
+    ///     [UserName(EntityState.Dirty)]
+    ///     public string ModifiedBy { get; set; }
+    /// }
+    /// ]]></code>
+    /// </example>
+    /// <seealso cref="T:CodeSmith.Data.Attributes.NowAttribute"/>
     public class UserNameRule : PropertyRuleBase
     {
         /// <summary>
@@ -44,10 +69,10 @@ namespace CodeSmith.Data.Rules.Assign
 
             object current = context.TrackedObject.Current;
             PropertyInfo property = GetPropertyInfo(current);
-            if (property.PropertyType != typeof(string))
+            if (property.PropertyType != typeof (string))
                 return;
 
-            string value = (string)property.GetValue(current, null);
+            var value = (string) property.GetValue(current, null);
             if (CanRun(context.TrackedObject))
                 property.SetValue(current, GetCurrentUserName(), null);
         }
@@ -56,19 +81,19 @@ namespace CodeSmith.Data.Rules.Assign
         {
             IPrincipal currentUser = null;
 
-            if (System.Web.Hosting.HostingEnvironment.IsHosted)
+            if (HostingEnvironment.IsHosted)
             {
                 HttpContext current = HttpContext.Current;
                 if (current != null)
                     currentUser = current.User;
             }
-            
+
             if (currentUser == null)
                 currentUser = Thread.CurrentPrincipal;
 
             if ((currentUser != null) && (currentUser.Identity != null))
                 return currentUser.Identity.Name;
-            
+
             return string.Empty;
         }
     }

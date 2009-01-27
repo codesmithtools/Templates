@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.UI.WebControls;
 using System.ComponentModel;
-using System.Web.UI;
-using System.Web.Caching;
 using System.Diagnostics;
+using System.Text;
+using System.Web.Caching;
+using System.Web.UI.WebControls;
 
 namespace CodeSmith.Data.Web
 {
@@ -20,8 +17,46 @@ namespace CodeSmith.Data.Web
         /// </summary>
         public LinqCacheDataSource()
         {
-            this.Selecting += OnSelecting;
-            this.Selected += OnSelected;
+            Selecting += OnSelecting;
+            Selected += OnSelected;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether query caching is enabled.
+        /// </summary>
+        [DefaultValue(true)]
+        [Category("Cache")]
+        [Description("Enable caching the linq query result.")]
+        public bool EnableCache
+        {
+            get
+            {
+                object result = ViewState["EnableCache"];
+                if (result != null)
+                    return (bool) result;
+
+                return true;
+            }
+            set { ViewState["EnableCache"] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the time, in seconds, that the query is cached.
+        /// </summary>
+        [DefaultValue(30)]
+        [Category("Cache")]
+        [Description("The time, in seconds, that the query is cached.")]
+        public int Duration
+        {
+            get
+            {
+                object result = ViewState["Duration"];
+                if (result != null)
+                    return (int) result;
+
+                return 30;
+            }
+            set { ViewState["Duration"] = value; }
         }
 
         private void OnSelecting(object sender, LinqDataSourceSelectEventArgs e)
@@ -53,76 +88,32 @@ namespace CodeSmith.Data.Web
 
             Debug.WriteLine("Cache Insert: " + key);
             Context.Cache.Insert(key, e.Result, null,
-                DateTime.Now.AddSeconds(Duration), Cache.NoSlidingExpiration);
+                                 DateTime.Now.AddSeconds(Duration), Cache.NoSlidingExpiration);
         }
 
         private string GetKey()
         {
             var sb = new StringBuilder();
-            sb.Append(this.ContextTypeName);
+            sb.Append(ContextTypeName);
             sb.Append(" from ");
-            sb.Append(this.TableName);
+            sb.Append(TableName);
 
-            if (!string.IsNullOrEmpty(this.Select))
+            if (!string.IsNullOrEmpty(Select))
             {
                 sb.Append(" select ");
-                sb.Append(this.Select);
+                sb.Append(Select);
             }
-            if (!string.IsNullOrEmpty(this.Where))
+            if (!string.IsNullOrEmpty(Where))
             {
                 sb.Append(" where ");
-                sb.Append(this.Where);
+                sb.Append(Where);
             }
-            if (!string.IsNullOrEmpty(this.OrderBy))
+            if (!string.IsNullOrEmpty(OrderBy))
             {
                 sb.Append(" OrderBy ");
-                sb.Append(this.OrderBy);
+                sb.Append(OrderBy);
             }
             return sb.ToString();
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether query caching is enabled.
-        /// </summary>
-        [DefaultValue(true)]
-        [Category("Cache")]
-        [Description("Enable caching the linq query result.")]
-        public bool EnableCache
-        {
-            get
-            {
-                object result = this.ViewState["EnableCache"];
-                if (result != null)
-                    return (bool)result;
-
-                return true;
-            }
-            set
-            {
-                this.ViewState["EnableCache"] = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the time, in seconds, that the query is cached.
-        /// </summary>
-        [DefaultValue(30)]
-        [Category("Cache")]
-        [Description("The time, in seconds, that the query is cached.")]
-        public int Duration
-        {
-            get
-            {
-                object result = this.ViewState["Duration"];
-                if (result != null)
-                    return (int)result;
-
-                return 30;
-            }
-            set
-            {
-                this.ViewState["Duration"] = value;
-            }
         }
     }
 }

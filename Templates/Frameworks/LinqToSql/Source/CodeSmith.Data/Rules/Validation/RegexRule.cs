@@ -1,18 +1,33 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using CodeSmith.Data.Properties;
 
-namespace CodeSmith.Data.Rules
+namespace CodeSmith.Data.Rules.Validation
 {
     /// <summary>
     /// A rule to match a regular expression.
     /// </summary>
+    /// <example>
+    /// <para>Add rule using the rule manager directly.</para>
+    /// <code><![CDATA[
+    /// static partial void AddSharedRules()
+    /// {
+    ///     RuleManager.AddShared<User>(new RegexRule("EmailAddress", @"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"));
+    /// }
+    /// ]]></code>
+    /// <para>Add rule using the Metadata class and attribute.</para>
+    /// <code><![CDATA[
+    /// private class Metadata
+    /// {
+    ///     // fragment of the metadata class
+    /// 
+    ///     [RegularExpression(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*")]
+    ///     public string EmailAddress { get; set; }
+    /// }
+    /// ]]></code>
+    /// </example>
+    /// <seealso cref="T:System.ComponentModel.DataAnnotations.RegularExpressionAttribute"/>
     public class RegexRule : PropertyRuleBase
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RegexRule"/> class.
         /// </summary>
@@ -52,8 +67,7 @@ namespace CodeSmith.Data.Rules
             ErrorMessage = string.Format(
                 Resources.ValidatorRegexMessage,
                 property,
-                regex.ToString());
-
+                regex);
         }
 
         /// <summary>
@@ -85,9 +99,9 @@ namespace CodeSmith.Data.Rules
 
             if (!CanRun(context.TrackedObject))
                 return;
-            
-            string value = GetPropertyValue(context.TrackedObject.Current) as string;
-            context.Success = (value != null && Regex.IsMatch(value));            
+
+            var value = GetPropertyValue(context.TrackedObject.Current) as string;
+            context.Success = (value != null && Regex.IsMatch(value));
         }
     }
 }

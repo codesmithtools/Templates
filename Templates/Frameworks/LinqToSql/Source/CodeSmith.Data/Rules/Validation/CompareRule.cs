@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CodeSmith.Data.Properties;
 
 namespace CodeSmith.Data.Rules.Validation
@@ -10,7 +7,17 @@ namespace CodeSmith.Data.Rules.Validation
     /// A rule to compare values.
     /// </summary>
     /// <typeparam name="T">The value type.</typeparam>
-    public class CompareRule<T> : PropertyRuleBase where T : IComparable
+    /// <example>
+    /// <para>Add rule using the rule manager directly.</para>
+    /// <code><![CDATA[
+    /// static partial void AddSharedRules()
+    /// {
+    ///     RuleManager.AddShared<User>(new CompareRule<int>("Age", 21, ComparisonOperator.GreaterThanOrEqual));
+    /// }
+    /// ]]></code>
+    /// </example>
+    public class CompareRule<T> : PropertyRuleBase
+        where T : IComparable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CompareRule&lt;T&gt;"/> class.
@@ -19,7 +26,7 @@ namespace CodeSmith.Data.Rules.Validation
         /// <param name="value">The value.</param>
         public CompareRule(string property, T value)
             : this(property, value, ComparisonOperator.Equal)
-        { }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompareRule&lt;T&gt;"/> class.
@@ -33,10 +40,10 @@ namespace CodeSmith.Data.Rules.Validation
             ComparisonOperator = comparison;
             ExpectedValue = value;
             ErrorMessage = string.Format(
-                    Resources.ValidatorCompareMessage,
-                    property,
-                    comparison.ToString(),
-                    value.ToString());
+                Resources.ValidatorCompareMessage,
+                property,
+                comparison,
+                value);
         }
 
         /// <summary>
@@ -47,7 +54,7 @@ namespace CodeSmith.Data.Rules.Validation
         /// <param name="value">The value.</param>
         public CompareRule(string property, string message, T value)
             : this(property, message, value, ComparisonOperator.Equal)
-        { }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompareRule&lt;T&gt;"/> class.
@@ -68,6 +75,7 @@ namespace CodeSmith.Data.Rules.Validation
         /// </summary>
         /// <value>The comparison operator.</value>
         public ComparisonOperator ComparisonOperator { get; private set; }
+
         /// <summary>
         /// Gets or sets the expected value.
         /// </summary>
@@ -87,14 +95,14 @@ namespace CodeSmith.Data.Rules.Validation
                 return;
 
             context.Success = false;
-                
-            T value = GetPropertyValue<T>(context.TrackedObject.Current);
-            IComparable comparer = value as IComparable;
+
+            var value = GetPropertyValue<T>(context.TrackedObject.Current);
+            IComparable comparer = value;
 
             if (comparer == null)
                 return;
 
-            int result = comparer.CompareTo(ExpectedValue);            
+            int result = comparer.CompareTo(ExpectedValue);
             context.Success = CompareResult(result);
         }
 
@@ -122,6 +130,5 @@ namespace CodeSmith.Data.Rules.Validation
             }
             return false;
         }
-
     }
 }

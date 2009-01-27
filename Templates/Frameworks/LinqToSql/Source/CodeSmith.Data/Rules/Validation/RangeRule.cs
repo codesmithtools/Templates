@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CodeSmith.Data.Properties;
 
 namespace CodeSmith.Data.Rules.Validation
@@ -10,7 +7,28 @@ namespace CodeSmith.Data.Rules.Validation
     /// A rule to check if the value is between a range.
     /// </summary>
     /// <typeparam name="T">The value type.</typeparam>
-    public class RangeRule<T> : PropertyRuleBase where T : IComparable
+    /// <example>
+    /// <para>Add rule using the rule manager directly.</para>
+    /// <code><![CDATA[
+    /// static partial void AddSharedRules()
+    /// {
+    ///     RuleManager.AddShared<User>(new RangeRule<int>("Age", 18, 21));
+    /// }
+    /// ]]></code>
+    /// <para>Add rule using the Metadata class and attribute.</para>
+    /// <code><![CDATA[
+    /// private class Metadata
+    /// {
+    ///     // fragment of the metadata class
+    /// 
+    ///     [Range(18, 21)]            
+    ///     public int Age { get; set; }
+    /// }
+    /// ]]></code>
+    /// </example>
+    /// <seealso cref="T:System.ComponentModel.DataAnnotations.RangeAttribute"/>
+    public class RangeRule<T> : PropertyRuleBase
+        where T : IComparable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RangeRule&lt;T&gt;"/> class.
@@ -24,10 +42,10 @@ namespace CodeSmith.Data.Rules.Validation
             MaxValue = maxValue;
             MinValue = minValue;
             ErrorMessage = string.Format(
-                    Resources.ValidatorRangeMessage,
-                    property,
-                    minValue,
-                    maxValue);
+                Resources.ValidatorRangeMessage,
+                property,
+                minValue,
+                maxValue);
         }
 
         /// <summary>
@@ -49,6 +67,7 @@ namespace CodeSmith.Data.Rules.Validation
         /// </summary>
         /// <value>The max value.</value>
         public T MaxValue { get; private set; }
+
         /// <summary>
         /// Gets or sets the min value.
         /// </summary>
@@ -66,18 +85,16 @@ namespace CodeSmith.Data.Rules.Validation
 
             if (!CanRun(context.TrackedObject))
                 return;
-            
+
             context.Success = false;
-            
-            T value = GetPropertyValue<T>(context.TrackedObject.Current);
-            IComparable comparer = value as IComparable;
+
+            var value = GetPropertyValue<T>(context.TrackedObject.Current);
+            IComparable comparer = value;
 
             if (comparer == null)
                 return;
 
             context.Success = (comparer.CompareTo(MinValue) >= 0 && comparer.CompareTo(MaxValue) <= 0);
         }
-
     }
-
 }

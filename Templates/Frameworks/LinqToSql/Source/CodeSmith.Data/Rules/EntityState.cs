@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CodeSmith.Data.Rules
 {
@@ -20,6 +17,6 @@ namespace CodeSmith.Data.Rules
         /// <summary>The entity is new or changed.</summary>
         Dirty = New | Changed,
         /// <summary>All the entity states.</summary>
-        All = New | Changed | Deleted 
+        All = New | Changed | Deleted
     }
 }

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Linq;
-using System.Data.SqlTypes;
 using System.Linq;
 using CodeSmith.Data.Attributes;
-using CodeSmith.Data.Rules.Assign;
 using CodeSmith.Data.Rules.Validation;
-using System.Reflection;
-using System.ComponentModel;
 
 namespace CodeSmith.Data.Rules
 {
@@ -17,8 +14,8 @@ namespace CodeSmith.Data.Rules
     /// </summary>
     public class RuleManager
     {
-        private RuleCollection _businessRules;
         private static RuleCollection _sharedBusinessRules;
+        private RuleCollection _businessRules;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RuleManager"/> class.
@@ -44,10 +41,10 @@ namespace CodeSmith.Data.Rules
             if (_businessRules == null)
                 _businessRules = new RuleCollection();
 
-            if (_businessRules.ContainsKey(typeof(EntityType)))
-                _businessRules[typeof(EntityType)].Add(rule);
+            if (_businessRules.ContainsKey(typeof (EntityType)))
+                _businessRules[typeof (EntityType)].Add(rule);
             else
-                _businessRules.Add(typeof(EntityType), new List<IRule> { rule });
+                _businessRules.Add(typeof (EntityType), new List<IRule> {rule});
         }
 
         /// <summary>
@@ -60,10 +57,10 @@ namespace CodeSmith.Data.Rules
             if (_sharedBusinessRules == null)
                 _sharedBusinessRules = new RuleCollection();
 
-            if (_sharedBusinessRules.ContainsKey(typeof(EntityType)))
-                _sharedBusinessRules[typeof(EntityType)].Add(rule);
+            if (_sharedBusinessRules.ContainsKey(typeof (EntityType)))
+                _sharedBusinessRules[typeof (EntityType)].Add(rule);
             else
-                _sharedBusinessRules.Add(typeof(EntityType), new List<IRule> { rule });
+                _sharedBusinessRules.Add(typeof (EntityType), new List<IRule> {rule});
         }
 
         /// <summary>
@@ -72,10 +69,10 @@ namespace CodeSmith.Data.Rules
         /// <typeparam name="EntityType">The type of the entity.</typeparam>
         public static void AddShared<EntityType>()
         {
-            Type entityType = typeof(EntityType);
+            Type entityType = typeof (EntityType);
             Type metadata = null;
 
-            var metadataTypeAttribute = entityType.GetCustomAttributes(typeof(MetadataTypeAttribute), true).FirstOrDefault() as MetadataTypeAttribute;
+            var metadataTypeAttribute = entityType.GetCustomAttributes(typeof (MetadataTypeAttribute), true).FirstOrDefault() as MetadataTypeAttribute;
             if (metadataTypeAttribute != null)
                 metadata = metadataTypeAttribute.MetadataClassType;
 
@@ -86,20 +83,16 @@ namespace CodeSmith.Data.Rules
 
             foreach (PropertyDescriptor property in properties)
             {
-                var attributes = GetAttributes(property, metadataProperties);
+                IList<Attribute> attributes = GetAttributes(property, metadataProperties);
 
-                foreach (var attribute in attributes)
-                {
+                foreach (Attribute attribute in attributes)
                     if (attribute is RuleAttributeBase)
                     {
-                        var ruleAttribute = (RuleAttributeBase)attribute;
+                        var ruleAttribute = (RuleAttributeBase) attribute;
                         AddShared<EntityType>(ruleAttribute.CreateRule(property.Name));
                     }
                     else if (attribute is ValidationAttribute)
-                    {
                         AddValidation<EntityType>(property.Name, attribute);
-                    }
-                }
             }
         }
 
@@ -107,23 +100,23 @@ namespace CodeSmith.Data.Rules
         {
             if (attribute is StringLengthAttribute)
             {
-                var validationAttribute = (StringLengthAttribute)attribute;
+                var validationAttribute = (StringLengthAttribute) attribute;
                 AddShared<EntityType>(new LengthRule(property, validationAttribute.ErrorMessage, validationAttribute.MaximumLength));
             }
             else if (attribute is RequiredAttribute)
             {
-                var validationAttribute = (RequiredAttribute)attribute;
+                var validationAttribute = (RequiredAttribute) attribute;
                 AddShared<EntityType>(new RequiredRule(property, validationAttribute.ErrorMessage));
             }
             else if (attribute is RegularExpressionAttribute)
             {
-                var validationAttribute = (RegularExpressionAttribute)attribute;
+                var validationAttribute = (RegularExpressionAttribute) attribute;
                 AddShared<EntityType>(new RegexRule(property, validationAttribute.ErrorMessage, validationAttribute.Pattern));
             }
             else if (attribute is RangeAttribute)
             {
-                var validationAttribute = (RangeAttribute)attribute;
-                var rangeRule = Activator.CreateInstance(typeof(RangeRule<>).MakeGenericType(validationAttribute.OperandType),
+                var validationAttribute = (RangeAttribute) attribute;
+                var rangeRule = Activator.CreateInstance(typeof (RangeRule<>).MakeGenericType(validationAttribute.OperandType),
                                                          property, validationAttribute.ErrorMessage,
                                                          validationAttribute.Minimum, validationAttribute.Maximum) as PropertyRuleBase;
 
@@ -144,7 +137,7 @@ namespace CodeSmith.Data.Rules
             if (metadataProperties == null)
                 return attributes.Values.ToList();
 
-            var metadataProperty = metadataProperties.Find(property.Name, false);
+            PropertyDescriptor metadataProperty = metadataProperties.Find(property.Name, false);
             if (metadataProperty == null)
                 return attributes.Values.ToList();
 
@@ -162,7 +155,7 @@ namespace CodeSmith.Data.Rules
         /// <returns>A collection of rules.</returns>
         public List<IRule> GetRules<EntityType>()
         {
-            return GetRules(typeof(EntityType));
+            return GetRules(typeof (EntityType));
         }
 
         /// <summary>
@@ -207,7 +200,7 @@ namespace CodeSmith.Data.Rules
                         else
                             return x.Priority.CompareTo(y.Priority);
                     }
-                );
+                    );
 
                 foreach (IRule rule in rules)
                 {
@@ -231,7 +224,7 @@ namespace CodeSmith.Data.Rules
         {
             var tracked = new List<TrackedObject>();
             foreach (object o in objects)
-                tracked.Add(new TrackedObject { Current = o });
+                tracked.Add(new TrackedObject {Current = o});
 
             return Run(tracked);
         }
@@ -246,11 +239,11 @@ namespace CodeSmith.Data.Rules
             var tracked = new List<TrackedObject>();
 
             foreach (object o in changedObjects.Inserts)
-                tracked.Add(new TrackedObject { Current = o, IsNew = true });
+                tracked.Add(new TrackedObject {Current = o, IsNew = true});
             foreach (object o in changedObjects.Updates)
-                tracked.Add(new TrackedObject { Current = o, IsChanged = true });
+                tracked.Add(new TrackedObject {Current = o, IsChanged = true});
             foreach (object o in changedObjects.Deletes)
-                tracked.Add(new TrackedObject { Current = o, IsDeleted = true });
+                tracked.Add(new TrackedObject {Current = o, IsDeleted = true});
 
             return Run(tracked);
         }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
+﻿using System.Security.Principal;
 using System.Threading;
-using System.Security.Principal;
+using System.Web;
+using System.Web.Hosting;
 
 namespace CodeSmith.Data.Rules.Security
 {
@@ -16,15 +13,14 @@ namespace CodeSmith.Data.Rules.Security
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthorizationRuleBase"/> class.
         /// </summary>
-        public AuthorizationRuleBase()
-        {
-        }
+        protected AuthorizationRuleBase()
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthorizationRuleBase"/> class.
         /// </summary>
         /// <param name="authorizedRoles">The authorized roles.</param>
-        public AuthorizationRuleBase(string[] authorizedRoles)
+        protected AuthorizationRuleBase(params string[] authorizedRoles)
         {
             AuthorizedRoles = authorizedRoles;
         }
@@ -34,6 +30,34 @@ namespace CodeSmith.Data.Rules.Security
         /// </summary>
         /// <value>The authorized roles.</value>
         public string[] AuthorizedRoles { get; set; }
+
+        #region IRule Members
+
+        /// <summary>
+        /// Runs the specified rule using the RuleContext.
+        /// </summary>
+        /// <param name="context">The current RuleContext.</param>
+        public abstract void Run(RuleContext context);
+
+        /// <summary>
+        /// Gets the error message when rule fails.
+        /// </summary>
+        /// <value>The error message when rule fails.</value>
+        public string ErrorMessage { get; protected set; }
+
+        /// <summary>
+        /// Gets the target property to apply rule to.
+        /// </summary>
+        /// <value>The target property.</value>
+        public string TargetProperty { get; protected set; }
+
+        /// <summary>
+        /// Gets the rule priority. The lowest number runs first.
+        /// </summary>
+        /// <value>The rule priority.</value>
+        public int Priority { get; set; }
+
+        #endregion
 
         /// <summary>
         /// Determines whether this instance is authorized.
@@ -45,10 +69,8 @@ namespace CodeSmith.Data.Rules.Security
         {
             IPrincipal currentUser = GetPrincipal();
             foreach (string role in AuthorizedRoles)
-            {
                 if (currentUser.IsInRole(role))
                     return true;
-            }
 
             return false;
         }
@@ -75,39 +97,17 @@ namespace CodeSmith.Data.Rules.Security
         {
             IPrincipal currentUser = null;
 
-            if (System.Web.Hosting.HostingEnvironment.IsHosted)
+            if (HostingEnvironment.IsHosted)
             {
                 HttpContext current = HttpContext.Current;
                 if (current != null)
                     currentUser = current.User;
             }
-            
+
             if (currentUser == null)
                 currentUser = Thread.CurrentPrincipal;
-            
+
             return currentUser;
         }
-
-
-        /// <summary>
-        /// Runs the specified rule using the RuleContext.
-        /// </summary>
-        /// <param name="context">The current RuleContext.</param>
-        public abstract void Run(RuleContext context);
-        /// <summary>
-        /// Gets the error message when rule fails.
-        /// </summary>
-        /// <value>The error message when rule fails.</value>
-        public string ErrorMessage { get; private set; }
-        /// <summary>
-        /// Gets the target property to apply rule to.
-        /// </summary>
-        /// <value>The target property.</value>
-        public string TargetProperty { get; private set; }
-        /// <summary>
-        /// Gets the rule priority. The lowest number runs first.
-        /// </summary>
-        /// <value>The rule priority.</value>
-        public int Priority { get; set; }
     }
 }

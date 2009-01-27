@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Linq;
 
 namespace CodeSmith.Data
 {
@@ -11,11 +7,13 @@ namespace CodeSmith.Data
     /// </summary>
     /// <typeparam name="TManager">The type of the manager.</typeparam>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public abstract class EntityManagerBase<TManager, TEntity> 
-        : IEntityManager<TManager, TEntity> 
+    public abstract class EntityManagerBase<TManager, TEntity>
+        : IEntityManager<TManager, TEntity>
         where TManager : IDataManager
         where TEntity : class
     {
+        private readonly TManager _manager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EntityManagerBase&lt;TManager, TEntity&gt;"/> class.
         /// </summary>
@@ -26,15 +24,7 @@ namespace CodeSmith.Data
             AddValidationRules();
         }
 
-        /// <summary>
-        /// Add validation rules.
-        /// </summary>
-        protected virtual void AddValidationRules()
-        {
-
-        }
-
-        private TManager _manager;
+        #region IEntityManager<TManager,TEntity> Members
 
         /// <summary>
         /// Gets the manager.
@@ -61,5 +51,12 @@ namespace CodeSmith.Data
             throw new NotImplementedException();
         }
 
+        #endregion
+
+        /// <summary>
+        /// Add validation rules.
+        /// </summary>
+        protected virtual void AddValidationRules()
+        {}
     }
 }

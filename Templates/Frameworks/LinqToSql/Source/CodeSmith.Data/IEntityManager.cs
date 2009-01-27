@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Linq;
-using System.Linq;
-using System.Text;
-
-namespace CodeSmith.Data
+﻿namespace CodeSmith.Data
 {
     /// <summary>
     /// The entity manager interface.
     /// </summary>
     /// <typeparam name="TManager">The type of the manager.</typeparam>
     /// <typeparam name="TEntity">The type of the entity.</typeparam>
-    public interface IEntityManager<TManager, TEntity> 
-        where TManager : IDataManager 
+    /// <seealso cref="IDataManager"/>
+    /// <seealso cref="IEntityKey"/>
+    public interface IEntityManager<TManager, TEntity>
+        where TManager : IDataManager
         where TEntity : class
     {
         /// <summary>

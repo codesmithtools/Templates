@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 using System.Reflection;
 
 namespace CodeSmith.Data.Rules
@@ -17,7 +14,7 @@ namespace CodeSmith.Data.Rules
         /// <param name="property">The target property to apply rule to.</param>
         protected PropertyRuleBase(string property)
             : this(property, EntityState.Dirty)
-        { }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyRuleBase"/> class.
@@ -26,7 +23,7 @@ namespace CodeSmith.Data.Rules
         /// <param name="message">The error message when rule fails.</param>
         protected PropertyRuleBase(string property, string message)
             : this(property, message, EntityState.Dirty)
-        { }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyRuleBase"/> class.
@@ -55,20 +52,25 @@ namespace CodeSmith.Data.Rules
         }
 
         /// <summary>
+        /// Gets the state of the entity in which to apply rule.
+        /// </summary>
+        /// <value>The state of the apply.</value>
+        public EntityState ApplyState { get; private set; }
+
+        #region IRule Members
+
+        /// <summary>
         /// Gets the target property to apply rule to.
         /// </summary>
         /// <value>The target property.</value>
         public string TargetProperty { get; protected set; }
+
         /// <summary>
         /// Gets the error message when rule fails.
         /// </summary>
         /// <value>The error message when rule fails.</value>
         public string ErrorMessage { get; protected set; }
-        /// <summary>
-        /// Gets the state of the entity in which to apply rule.
-        /// </summary>
-        /// <value>The state of the apply.</value>
-        public EntityState ApplyState { get; private set; }
+
         /// <summary>
         /// Gets the rule priority. The lowest number runs first.
         /// </summary>
@@ -76,7 +78,15 @@ namespace CodeSmith.Data.Rules
         public int Priority { get; set; }
 
         /// <summary>
-        /// Determines whether this instance can run the specified rule based on the TrackedObject.
+        /// Runs the specified rule using the <see cref="RuleContext"/>.
+        /// </summary>
+        /// <param name="context">The current <see cref="RuleContext"/>.</param>
+        public abstract void Run(RuleContext context);
+
+        #endregion
+
+        /// <summary>
+        /// Determines whether this instance can run the specified rule based on the <see cref="TrackedObject"/>.
         /// </summary>
         /// <param name="trackedObject">The tracked object.</param>
         /// <returns>
@@ -95,7 +105,7 @@ namespace CodeSmith.Data.Rules
         }
 
         /// <summary>
-        /// Gets the PropertyInfo for the TargetProperty.
+        /// Gets the <see cref="PropertyInfo"/> for the <see cref="TargetProperty"/>.
         /// </summary>
         /// <param name="target">The target object.</param>
         /// <returns></returns>
@@ -105,7 +115,7 @@ namespace CodeSmith.Data.Rules
         }
 
         /// <summary>
-        /// Gets the property value for the TargetProperty.
+        /// Gets the property value for the <see cref="TargetProperty"/>.
         /// </summary>
         /// <param name="target">The target object.</param>
         /// <returns>The property value.</returns>
@@ -119,7 +129,7 @@ namespace CodeSmith.Data.Rules
         }
 
         /// <summary>
-        /// Gets the property value for the TargetProperty.
+        /// Gets the property value for the <see cref="TargetProperty"/>.
         /// </summary>
         /// <typeparam name="T">The type of the property.</typeparam>
         /// <param name="target">The target object.</param>
@@ -127,11 +137,11 @@ namespace CodeSmith.Data.Rules
         protected T GetPropertyValue<T>(object target)
         {
             object value = GetPropertyValue(target);
-            return (value == null) ? default(T) : (T)value;
+            return (value == null) ? default(T) : (T) value;
         }
 
         /// <summary>
-        /// Sets the property value for the TargetProperty.
+        /// Sets the property value for the <see cref="TargetProperty"/>.
         /// </summary>
         /// <param name="target">The target object.</param>
         /// <param name="value">The value to set.</param>
@@ -152,31 +162,26 @@ namespace CodeSmith.Data.Rules
                 Type vType = GetUnderlyingType(value.GetType());
 
                 if (pType.Equals(vType))
-                {
                     // types match, just copy value
                     propertyInfo.SetValue(target, value, null);
-                }
                 else
-                {
                     // types don't match, try to coerce
-                    if (pType.Equals(typeof(Guid)))
+                    if (pType.Equals(typeof (Guid)))
                         propertyInfo.SetValue(target, new Guid(value.ToString()), null);
-                    else if (pType.IsEnum && vType.Equals(typeof(string)))
+                    else if (pType.IsEnum && vType.Equals(typeof (string)))
                         propertyInfo.SetValue(target, Enum.Parse(pType, value.ToString()), null);
                     else
                         propertyInfo.SetValue(target, Convert.ChangeType(value, pType), null);
-                }
             }
         }
 
         private static Type GetUnderlyingType(Type propertyType)
         {
             Type type = propertyType;
-            bool isNullable = type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(Nullable<>));
+            bool isNullable = type.IsGenericType && (type.GetGenericTypeDefinition() == typeof (Nullable<>));
             if (isNullable)
                 return Nullable.GetUnderlyingType(type);
             return type;
         }
-        public abstract void Run(RuleContext context);
     }
 }
