@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using System.Collections;
-using System.Data.Linq.Provider;
 using System.Data.Linq;
-
 using CodeSmith.Data.Rules;
 
 namespace CodeSmith.Data
@@ -14,10 +7,15 @@ namespace CodeSmith.Data
     /// <summary>
     /// The base class for the data manager.
     /// </summary>
-    /// <typeparam name="TContext">The type of DataContext.</typeparam>
+    /// <typeparam name="TContext">The type of <see cref="DataContext"/>.</typeparam>
     public class DataManagerBase<TContext>
-        : IDataManager<TContext> where TContext : DataContext
+        : IDataManager<TContext>
+        where TContext : DataContext
     {
+        private readonly TContext _context;
+
+        private readonly RuleManager _rules;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DataManagerBase&lt;TContext&gt;"/> class.
         /// </summary>
@@ -31,18 +29,16 @@ namespace CodeSmith.Data
             _rules = new RuleManager();
         }
 
-        private readonly TContext _context;
+        #region IDataManager<TContext> Members
 
         /// <summary>
-        /// Gets the managers DataContext.
+        /// Gets the managers <see cref="DataContext"/>.
         /// </summary>
-        /// <value>The current DataContext.</value>
+        /// <value>The current <see cref="DataContext"/>.</value>
         public TContext Context
         {
             get { return _context; }
         }
-
-        private readonly RuleManager _rules;
 
         /// <summary>
         /// Gets the current rules for the entities.
@@ -54,5 +50,6 @@ namespace CodeSmith.Data
             get { return _rules; }
         }
 
+        #endregion
     }
 }

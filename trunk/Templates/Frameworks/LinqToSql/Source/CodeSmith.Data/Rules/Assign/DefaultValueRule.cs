@@ -1,14 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CodeSmith.Data.Rules.Assign
+﻿namespace CodeSmith.Data.Rules.Assign
 {
     /// <summary>
-    /// Assign a default value to a property.
+    /// Assign a default value to a property when the entity is committed from the <see cref="System.Data.Linq.DataContext"/>.
     /// </summary>
     /// <typeparam name="T">The type of the property.</typeparam>
+    /// <example>
+    /// <para>Add rule using the rule manager directly.</para>
+    /// <code><![CDATA[
+    /// static partial void AddSharedRules()
+    /// {
+    ///     RuleManager.AddShared<User>(new DefaultValueRule<int>("Score", 100, EntityState.New));
+    /// }
+    /// ]]></code>
+    /// </example>
     public class DefaultValueRule<T> : PropertyRuleBase
     {
         /// <summary>
@@ -18,7 +22,7 @@ namespace CodeSmith.Data.Rules.Assign
         /// <param name="defaultValue">The default value.</param>
         public DefaultValueRule(string property, T defaultValue)
             : this(property, defaultValue, EntityState.New)
-        { }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultValueRule&lt;T&gt;"/> class.
@@ -51,7 +55,7 @@ namespace CodeSmith.Data.Rules.Assign
 
             object current = context.TrackedObject.Current;
 
-            T value = GetPropertyValue<T>(current);
+            var value = GetPropertyValue<T>(current);
 
             if (default(T).Equals(value) || CanRun(context.TrackedObject))
                 SetPropertyValue(current, DefaultValue);

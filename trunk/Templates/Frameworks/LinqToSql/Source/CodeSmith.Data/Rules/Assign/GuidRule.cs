@@ -1,13 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CodeSmith.Data.Rules.Assign
 {
     /// <summary>
-    /// Assigns a new Guid to a property.
+    /// Assigns a new Guid to a property when the entity is committed from the <see cref="System.Data.Linq.DataContext"/>.
     /// </summary>
+    /// <example>
+    /// <para>Add rule using the rule manager directly.</para>
+    /// <code><![CDATA[
+    /// static partial void AddSharedRules()
+    /// {
+    ///     RuleManager.AddShared<User>(new GuidRule("UserId", EntityState.New));
+    /// }
+    /// ]]></code>
+    /// <para>Add rule using the Metadata class and attribute.</para>
+    /// <code><![CDATA[
+    /// private class Metadata
+    /// {
+    ///     // fragment of the metadata class
+    /// 
+    ///     [Guid(EntityState.New)]
+    ///     public Guid UserId { get; set; }
+    /// }
+    /// ]]></code>
+    /// </example>
+    /// <seealso cref="T:CodeSmith.Data.Attributes.GuidAttribute"/>
     public class GuidRule : PropertyRuleBase
     {
         /// <summary>
@@ -43,7 +60,7 @@ namespace CodeSmith.Data.Rules.Assign
             context.Success = true;
 
             object current = context.TrackedObject.Current;
-            Guid value = GetPropertyValue<Guid>(current);
+            var value = GetPropertyValue<Guid>(current);
 
             if (CanRun(context.TrackedObject) || value == default(Guid))
                 SetPropertyValue(current, Guid.NewGuid());
