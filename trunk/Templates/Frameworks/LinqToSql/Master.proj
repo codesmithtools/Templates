@@ -30,6 +30,7 @@
     <DefaultExclude Include="**\*.user" />
     <DefaultExclude Include="**\*.resharper" />
     <DefaultExclude Include="**\*.cache" />
+    <DefaultExclude Include="*.teamcity.*" />
 
     <ZipFiles Include="**\*.*" Exclude="@(DefaultExclude)" />
   </ItemGroup>
