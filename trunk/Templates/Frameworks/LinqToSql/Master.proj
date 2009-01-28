@@ -11,6 +11,7 @@
 
   <PropertyGroup>
     <BuildConfiguration>Release</BuildConfiguration>
+    <DeployFolder>\\WEB\nightly\Plinqo</DeployFolder>
   </PropertyGroup>
 
   <ItemGroup>
@@ -69,4 +70,8 @@
          ZipFileName="plinqo-v$(Major).$(Minor).$(Revision).zip" />
   </Target>
 
+  <Target Name="Nightly" DependsOnTargets="Zip">
+    <Copy SourceFiles="plinqo-v$(Major).$(Minor).$(Revision).zip" 
+          DestinationFiles="$(DeployFolder)\plinqo-v$(Major).$(Minor).$(Revision).zip" />
+  </Target>
 </Project>
