@@ -39,4 +39,5 @@ PLINQO, which stands for Professional LINQ to Objects, is a collection of CodeSm
   * A fully functional Dynamic Data UI on top of Linq to SQL.
 ===More Information===
   * !CodeProject article: [http://www.codeproject.com/KB/cs/PLINQO.aspx PLINQO - Supercharge LINQ to SQL]
+  * [http://community.codesmithtools.com/nightly/plinqo/ Plinqo Nightly Builds]
   * [http://weblogs.asp.net/pwelter34/ Paul's Blog]
