@@ -409,13 +409,13 @@ foreach(Column column in Type.Columns) {
         {
 %>
 
-        private EntitySet<<%=manyMany.RightType.Name%>> _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>;
+        private EntitySet<<%=manyMany.RightType.Name%>> _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%>;
 
         /// <summary>
         /// Gets or sets the Many To Many <%=manyMany.PropertyName%> list.
         /// </summary>
         /// <value>The <%=manyMany.PropertyName%> list.</value>
-        public EntitySet<<%=manyMany.RightType.Name%>> <%=manyMany.PropertyName%><%=AssociationSuffix%>
+        public EntitySet<<%=manyMany.RightType.Name%>> <%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%>
         {
             get
             {
@@ -424,21 +424,21 @@ foreach(Column column in Type.Columns) {
                     return null;
 <% } %>
 
-                if (_<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> == null)
+                if (_<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%> == null)
                 {
-                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> = new EntitySet<<%=manyMany.RightType.Name%>>(On<%=manyMany.PropertyName%><%=AssociationSuffix%>Add, On<%=manyMany.PropertyName%><%=AssociationSuffix%>Remove);
-                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>.SetSource(<%=a.Member %>.Select(c => c.<%=manyMany.JoinRightAssociation.Member%>));
+                    _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%> = new EntitySet<<%=manyMany.RightType.Name%>>(On<%=ApplyAssociationSuffix(manyMany.PropertyName)%>Add, On<%=ApplyAssociationSuffix(manyMany.PropertyName)%>Remove);
+                    _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%>.SetSource(<%=a.Member %>.Select(c => c.<%=manyMany.JoinRightAssociation.Member%>));
                 }
-                return _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>;
+                return _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%>;
             }
             set
             {
-                _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>.Assign(value);
+                _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%>.Assign(value);
             }
         }
         
         [DebuggerNonUserCode]
-        private void On<%=manyMany.PropertyName%><%=AssociationSuffix%>Add(<%=manyMany.RightType.Name%> entity)
+        private void On<%=ApplyAssociationSuffix(manyMany.PropertyName)%>Add(<%=manyMany.RightType.Name%> entity)
         {
             SendPropertyChanging(null);
             <%= a.Member %>.Add(new <%=manyMany.JoinType.Name%> { <%=manyMany.JoinLeftAssociation.Member%> = this, <%=manyMany.JoinRightAssociation.Member%> = entity });
@@ -446,7 +446,7 @@ foreach(Column column in Type.Columns) {
         }
         
         [DebuggerNonUserCode]
-        private void On<%=manyMany.PropertyName%><%=AssociationSuffix%>Remove(<%=manyMany.RightType.Name%> entity)
+        private void On<%=ApplyAssociationSuffix(manyMany.PropertyName)%>Remove(<%=manyMany.RightType.Name%> entity)
         {
             SendPropertyChanging(null);
             var <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%= a.Member %>.FirstOrDefault(c => c.<%=manyMany.JoinLeftAssociation.ThisKey%> == <%=manyMany.LeftKey%> && c.<%=manyMany.JoinRightAssociation.ThisKey%> == entity.<%=manyMany.RightKey%>);
@@ -593,12 +593,12 @@ foreach(Column column in Type.Columns) {
     private bool selfAssociated = false;
     private int DataMemberCount = 0;
     
-    public string AssociationSuffix
+    public string ApplyAssociationSuffix(string associationName)
     {
-       get
-        {
-            return AssociationNamingSuffix == AssociationNamingEnum.ListSuffix ? "List" : "s";
-        }
+      
+        return AssociationNamingSuffix == AssociationNamingEnum.ListSuffix ? 
+				associationName + "List" : 
+				StringUtil.ToPlural(associationName);
     }
     
     public bool IsManyToMany(LinqToSqlShared.DbmlObjectModel.Type type)

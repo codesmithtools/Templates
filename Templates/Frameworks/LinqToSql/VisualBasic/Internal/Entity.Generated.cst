@@ -413,13 +413,13 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         
 %>
 
-        Private _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> As EntitySet(Of <%=manyMany.RightType.Name%>)
+        Private _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%> As EntitySet(Of <%=manyMany.RightType.Name%>)
 
         ''' <summary>
         ''' Gets or sets the Many To Many <%=manyMany.PropertyName%> list.
         ''' </summary>
         ''' <value>The <%=manyMany.PropertyName%> list.</value>
-        Public Property <%=manyMany.PropertyName%><%=AssociationSuffix%> As EntitySet(Of <%=manyMany.RightType.Name%>)
+        Public Property <%=ApplyAssociationSuffix(manyMany.PropertyName)%> As EntitySet(Of <%=manyMany.RightType.Name%>)
         
             Get
 <% If IncludeDataContract Then %>            
@@ -428,21 +428,21 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
                 End If
 <% End If %>
 
-                If (_<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> Is Nothing)
+                If (_<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%> Is Nothing)
                 
-                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%> = New EntitySet(Of <%=manyMany.RightType.Name%>)(AddressOf On<%=manyMany.PropertyName%><%=AssociationSuffix%>Add,AddressOf On<%=manyMany.PropertyName%><%=AssociationSuffix%>Remove)
-                    _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>.SetSource(<%=a.Member %>.Select(Function(c)c.<%=manyMany.JoinRightAssociation.Member%>))
+                    _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%> = New EntitySet(Of <%=manyMany.RightType.Name%>)(AddressOf On<%=ApplyAssociationSuffix(manyMany.PropertyName)%>Add,AddressOf On<%=ApplyAssociationSuffix(manyMany.PropertyName)%>Remove)
+                    _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%>.SetSource(<%=a.Member %>.Select(Function(c)c.<%=manyMany.JoinRightAssociation.Member%>))
                 End If
-                return _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>
+                return _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%>
             End Get
             Set
             
-                _<%=StringUtil.ToCamelCase(manyMany.PropertyName)%><%=AssociationSuffix%>.Assign(value)
+                _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%>.Assign(value)
             End Set
         End Property
         
         <DebuggerNonUserCode> _
-        Private Sub On<%=manyMany.PropertyName%><%=AssociationSuffix%>Add(entity As <%=manyMany.RightType.Name%>)
+        Private Sub On<%=ApplyAssociationSuffix(manyMany.PropertyName)%>Add(entity As <%=manyMany.RightType.Name%>)
         
             SendPropertyChanging(Nothing)
             <%= a.Member %>.Add( New <%=manyMany.JoinType.Name%> With {.<%=manyMany.JoinLeftAssociation.Member%> = Me ,.<%=manyMany.JoinRightAssociation.Member%> = entity })
@@ -450,7 +450,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
         End Sub
         
         <DebuggerNonUserCode> _
-        Private Sub On<%=manyMany.PropertyName%><%=AssociationSuffix%>Remove(entity As <%=manyMany.RightType.Name%> )
+        Private Sub On<%=ApplyAssociationSuffix(manyMany.PropertyName)%>Remove(entity As <%=manyMany.RightType.Name%> )
         
             SendPropertyChanging(Nothing)
             Dim <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%= a.Member %>.FirstOrDefault(Function(c)c.<%=manyMany.JoinLeftAssociation.ThisKey%> = <%=manyMany.LeftKey%> AndAlso c.<%=manyMany.JoinRightAssociation.ThisKey%> = entity.<%=manyMany.RightKey%>)
@@ -608,15 +608,14 @@ End Namespace
     Private selfAssociated As Boolean = False
     Private DataMemberCount As Integer = 0
     
-    Public ReadOnly Property AssociationSuffix As String
-       Get
+    Public  Function ApplyAssociationSuffix(associationName As String) As String
+       
             If AssociationNamingSuffix = AssociationNamingEnum.ListSuffix Then
-                Return "List"
+                Return associationName + "List"
             Else
-                Return "s"
+                Return StringUtil.ToPlural(associationName)
             End If
-        End Get
-    End Property
+    End Function
     
    Public Function GetColumnType(ByVal column As Column) As String
     Dim dataType As String = column.Type
