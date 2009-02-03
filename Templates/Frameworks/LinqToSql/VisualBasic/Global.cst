@@ -17,33 +17,33 @@ Description:
 <%@ Register Name="GlobalChildClass" 
     Template="Internal\Global.Child.cst"
     MergeProperties="False" %>
-	
+    
 <%
-	Dim t As GlobalChildClass = Me.Create(Of GlobalChildClass)()
-	t.ClassNamespace = ClassNamespace
-	t.InlineEditing = InlineEditing
-	t.ContextNamespace = ContextNamespace
-	t.DataContextName = DataContextName
-	
-	Dim p As GlobalParentClass = Me.Create(Of GlobalParentClass)()
-	p.ClassNamespace = ClassNamespace
-	
-	Dim parentFileName As String = "Global.asax"
-	Dim renderPath As String = String.Empty
-	If Me.ContextData.Get("RenderLocation") IsNot Nothing Then
-		renderPath = Me.ContextData.Get("RenderLocation")
-	End If
+    Dim t As GlobalChildClass = Me.Create(Of GlobalChildClass)()
+    t.ClassNamespace = ClassNamespace
+    t.InlineEditing = InlineEditing
+    t.ContextNamespace = ContextNamespace
+    t.DataContextName = DataContextName
+    
+    Dim p As GlobalParentClass = Me.Create(Of GlobalParentClass)()
+    p.ClassNamespace = ClassNamespace
+    
+    Dim parentFileName As String = "Global.asax"
+    Dim renderPath As String = String.Empty
+    If Me.ContextData.Get("RenderLocation") IsNot Nothing Then
+        renderPath = Me.ContextData.Get("RenderLocation")
+    End If
 
-	Dim parentFilePath As String = Path.Combine(renderPath,parentFileName)
-	
+    Dim parentFilePath As String = Path.Combine(renderPath,parentFileName)
+    
     Response.WriteLine(parentFileName)
     p.RenderToFile(parentFilePath, true)
-	
-	Dim fileName As String = "Global.asax.vb"
-	Dim filePath As String = Path.Combine(renderPath,fileName)
-	
-	Me.RegisterReference("System.Data.Linq")
-	Me.RegisterReference(Path.GetFullPath(Path.Combine( _
+    
+    Dim fileName As String = "Global.asax.vb"
+    Dim filePath As String = Path.Combine(renderPath,fileName)
+    
+    Me.RegisterReference("System.Data.Linq")
+    Me.RegisterReference(Path.GetFullPath(Path.Combine( _
             Me.CodeTemplateInfo.DirectoryName, _
             "..\\Common\\CodeSmith.Data.dll")))
     

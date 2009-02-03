@@ -228,18 +228,18 @@ Public Sub CreateEntity(ByVal entityClass As EntityGeneratedClass, ByVal partial
 End Sub
 
 Public Sub CreateEnums(ByVal database As Database, ByVal parentFile As String)
-	Dim enumXmlFileName As String = DbmlGenerator.GetEnumXmlFileName(DbmlFile)
-	Dim enumDatabase As LinqToSqlShared.Generator.DbmlEnum.Database = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(enumXmlFileName)
+    Dim enumXmlFileName As String = DbmlGenerator.GetEnumXmlFileName(DbmlFile)
+    Dim enumDatabase As LinqToSqlShared.Generator.DbmlEnum.Database = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(enumXmlFileName)
 
-	Dim contextClass As String = CommonUtility.GetClassName(database.[Class])
-	Dim fileName As String = Path.Combine(OutputDirectory, [String].Concat(contextClass, ".Enums.vb"))
+    Dim contextClass As String = CommonUtility.GetClassName(database.[Class])
+    Dim fileName As String = Path.Combine(OutputDirectory, [String].Concat(contextClass, ".Enums.vb"))
 
-	If enumDatabase IsNot Nothing Then
-		Dim t As EnumClass = Me.Create(Of EnumClass)()
-		t.[Namespace] = database.EntityNamespace
-		t.Database = enumDatabase
-		t.RenderToFile(fileName, parentFile, True)
-	End If
+    If enumDatabase IsNot Nothing Then
+        Dim t As EnumClass = Me.Create(Of EnumClass)()
+        t.[Namespace] = database.EntityNamespace
+        t.Database = enumDatabase
+        t.RenderToFile(fileName, parentFile, True)
+    End If
 End Sub
 
 </script>

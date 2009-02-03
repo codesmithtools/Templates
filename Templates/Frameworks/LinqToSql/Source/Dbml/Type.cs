@@ -124,7 +124,7 @@ namespace LinqToSqlShared.DbmlObjectModel
                 return cols;
 
             foreach (Column c in Columns)
-                if (Array.Exists(members, delegate(string s) { return c.Member.Equals(s); }))
+                if (Array.Exists(members, s => c.Member.Equals(s)))
                     cols.Add(c);
 
             return cols;
@@ -137,6 +137,57 @@ namespace LinqToSqlShared.DbmlObjectModel
                     return a;
 
             return null;
+        }
+
+        public bool IsManyToMany()
+        {
+            // 1) Table must have Two ForeignKeys.
+            // 2) All columns must be either...
+            //    a) Member of the Primary Key.
+            //    b) Member of a Foreign Key.
+            //    c) A DateTime stamp (CreateDate, EditDate, etc).
+
+            // has to be at least 2 columns
+            if (Columns.Count < 2)
+                return false;
+
+            List<Column> fColumns = new List<Column>();
+            
+            // can only be 2 fkeys
+            List<Association> fk = new List<Association>(EntityRefAssociations);
+            if (fk.Count != 2)
+                return false;
+
+            // find all fkey columns
+            foreach (Association a in fk)
+                foreach (string key in a.GetThisKey())
+                    if (Columns.Contains(key))
+                        fColumns.Add(Columns[key]);
+
+            // check all columns
+            foreach (var c in Columns)
+                if (c.IsPrimaryKey == false
+                    && c.IsDbGenerated == false
+                    && c.IsVersion == false
+                    && c.IsReadOnly == false
+                    && string.IsNullOrEmpty(c.Expression)
+                    && !fColumns.Contains(c))
+                    return false;
+
+            return true;
+        }
+
+        public bool IsUniqueMember(string member)
+        {
+            foreach (var column in columns)
+                if (column.Member == member)
+                    return false;
+
+            foreach (var association in Associations)
+                if (association.Member == member)
+                    return false;
+            
+            return true;
         }
     }
 }

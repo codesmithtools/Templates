@@ -18,27 +18,27 @@ Imports System.ComponentModel
 Imports System.Runtime.Serialization
 
 Namespace <%= Me.Namespace %>
-<%	For Each myEnum As LinqToSqlShared.Generator.DbmlEnum.Enum In Database.Enums
+<%    For Each myEnum As LinqToSqlShared.Generator.DbmlEnum.Enum In Database.Enums
         If myEnum.Flags Then %>
-	<Flags()> _
+    <Flags()> _
 <%      End If
         If myEnum.IncludeDataContract Then %>
-	<DataContract()> _
+    <DataContract()> _
 <%      End If %>
-	<%= System.[Enum].GetName(GetType(LinqToSqlShared.Generator.DbmlEnum.AccessModifier), myEnum.AccessModifier) %> Enum <%= myEnum.Name %>
-<%		For Each myItem As LinqToSqlShared.Generator.DbmlEnum.Item In myEnum.Items
-			If Not String.IsNullOrEmpty(myItem.Description) Then %>
-		''' <summary>
-		''' <%= myItem.Description %>
-		''' </summary>
-		<Description("<%= myItem.Description %>")> _
+    <%= System.[Enum].GetName(GetType(LinqToSqlShared.Generator.DbmlEnum.AccessModifier), myEnum.AccessModifier) %> Enum <%= myEnum.Name %>
+<%        For Each myItem As LinqToSqlShared.Generator.DbmlEnum.Item In myEnum.Items
+            If Not String.IsNullOrEmpty(myItem.Description) Then %>
+        ''' <summary>
+        ''' <%= myItem.Description %>
+        ''' </summary>
+        <Description("<%= myItem.Description %>")> _
 <%          End If
             If myEnum.IncludeDataContract AndAlso myItem.DataContractMember Then %>
-		<EnumMember()> _
+        <EnumMember()> _
 <%          End If %>
         <%= myItem.Name %> = <%= myItem.Value %>
 <%      Next %>
-	End Enum
+    End Enum
     
 <%  Next %>
 End Namespace

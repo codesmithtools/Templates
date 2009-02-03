@@ -54,7 +54,7 @@ Namespace <%= Database.ContextNamespace %>
             Get
                 If _manager Is Nothing Then
                     _manager = New <%= DataManager.DataManagerName %>(Me)
-				End If
+                End If
                 Return _manager
             End Get
         End Property

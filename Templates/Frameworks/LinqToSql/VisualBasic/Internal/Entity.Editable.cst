@@ -78,7 +78,7 @@ Namespace <%= Database.EntityNamespace %>
                             If (column.Member.Contains("Create")) Then
                                 Response.WriteLine("            <Now(EntityState.New)> _")
                             Else If (column.Member.Contains("Modify") OrElse column.Member.Contains("Modified") _
-							OrElse column.Member.Contains("Edit")) Then
+                            OrElse column.Member.Contains("Edit")) Then
                                 Response.WriteLine("            <Now(EntityState.Dirty)> _")
                             End If
                         End If
@@ -86,7 +86,7 @@ Namespace <%= Database.EntityNamespace %>
                     
                     If (column.Type.Contains("String")) Then
                         Dim size As Integer = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(column.DbType)
-						If (size > 256 OrElse size = -1) Then
+                        If (size > 256 OrElse size = -1) Then
                             Response.WriteLine("            <DataType(DataType.MultilineText)> _")
                         Else If (column.Member.Contains("Email")) Then
                             Response.WriteLine("            <DataType(DataType.EmailAddress)> _")
@@ -111,12 +111,12 @@ Namespace <%= Database.EntityNamespace %>
             
 <%             Next
 
-			For Each association As Association In Type.Associations
-				If sourceAttributes.PropertyMap.ContainsKey(association.Member) Then
+            For Each association As Association In Type.Associations
+                If sourceAttributes.PropertyMap.ContainsKey(association.Member) Then
                     For Each attributeSection As ICSharpCode.NRefactory.Ast.AttributeSection In sourceAttributes.PropertyMap(association.Member).Attributes %>
-            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>						
-<%					Next
-				End If %>
+            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>                        
+<%                    Next
+                End If %>
             Public Property <%=VBKeywordEscape(association.Member)%>() As Object
                 Get
                     Return Nothing
@@ -125,7 +125,7 @@ Namespace <%= Database.EntityNamespace %>
                 End Set
             End Property
             
-<%			Next %>
+<%            Next %>
         End Class
         
         #End Region
