@@ -8,6 +8,18 @@ namespace LinqToSqlShared.DbmlObjectModel
     {
         private static readonly string[] emptyKeys = new string[0];
 
+        public static string BuildKeyField(IEnumerable<Column> columns)
+        {
+            if (columns == null)
+                return string.Empty;
+
+            var columnNames = new List<string>();
+            foreach (var column in columns)
+                columnNames.Add(column.Member);
+
+            return BuildKeyField(columnNames.ToArray());
+        }
+
         public static string BuildKeyField(string[] columnNames)
         {
             return columnNames == null ? string.Empty : string.Join(",", columnNames);

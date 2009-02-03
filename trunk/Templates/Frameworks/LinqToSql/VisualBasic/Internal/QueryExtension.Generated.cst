@@ -129,12 +129,12 @@ Namespace <%= Database.ContextNamespace %>
  Next ' foreach method%>
 
 
-		'Insert User Defined Extensions here.
-		'Anything outside of this Region will be lost at regeneration
-		#Region "User Extensions"
-		
-		
-		#End Region
+        'Insert User Defined Extensions here.
+        'Anything outside of this Region will be lost at regeneration
+        #Region "User Extensions"
+        
+        
+        #End Region
 
         #Region "Query"
         ''' <summary>
@@ -159,13 +159,13 @@ Namespace <%= Database.ContextNamespace %>
 <% End If ' if is key%>
 <% End If ' column count%>
 <% Next ' foreach method%>
-		
+        
             ' Add your compiled queries here.
             'Anything outside of this Region will be lost at regeneration
-			#Region "User Queries"
-			
-			#End Region
-			
+            #Region "User Queries"
+            
+            #End Region
+            
         End Class
         #End Region
     End Module
@@ -176,11 +176,11 @@ End Namespace
    Dim uniqueMethods As List(Of String) = New List(Of String)()
     
    Public Function GetParameters(ByVal method As ManagerMethod) As String
-	Dim args As New StringBuilder()
-  	For Each column As Column In method.Columns
-   	 	If args.Length > 0 Then
-     	 args.Append(", ")
-    	End If
+    Dim args As New StringBuilder()
+      For Each column As Column In method.Columns
+            If args.Length > 0 Then
+          args.Append(", ")
+        End If
     
     Dim paramName As String = CommonUtility.GetParameterName(column.Member)
     

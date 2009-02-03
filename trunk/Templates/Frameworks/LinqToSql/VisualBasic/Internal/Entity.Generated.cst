@@ -32,7 +32,7 @@
 <%@ Property Category="2.Class" Name="IncludeDataContract"
      Type="System.Boolean" Default="True" Optional="False"
      Description="Include WCF DataContract attributes." %>
-	
+   
 <%@ Property Category="2.Class" Name="IncludeDataServices"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include ADO.Net DataServices attributes." %>
@@ -100,21 +100,21 @@ Namespace <%= Database.EntityNamespace %>
 <% If (Me.Framework = FrameworkEnum.v35_SP1) Then %>
     <ScaffoldTable(True)> _
     <MetadataType(GetType(<%= Type.Name %>.Metadata))> _
-	<% If (IncludeDataServices) Then %>
-	<% Dim dataServiceKey As New System.Text.StringBuilder()
-	Dim isFirstDataServiceKey As Boolean = True
-	For Each column as Column in Type.PrimaryKeyColumns
-		If (isFirstDataServiceKey) Then
-			isFirstDataServiceKey = false
-		Else
-			dataServiceKey.Append(", ")
-		End If
-		dataServiceKey.AppendFormat("""{0}""", column.Name)
-	Next %>    
+   <% If (IncludeDataServices) Then %>
+   <% Dim dataServiceKey As New System.Text.StringBuilder()
+   Dim isFirstDataServiceKey As Boolean = True
+   For Each column as Column in Type.PrimaryKeyColumns
+      If (isFirstDataServiceKey) Then
+         isFirstDataServiceKey = false
+      Else
+         dataServiceKey.Append(", ")
+      End If
+      dataServiceKey.AppendFormat("""{0}""", column.Name)
+   Next %>
 <%If dataServiceKey.Length > 0 Then  %>
-	<DataServiceKey(<%= dataServiceKey.ToString() %>)> _
+    <DataServiceKey(<%= dataServiceKey.ToString() %>)> _
 <% End If %>
-	<% End If %>
+   <% End If %>
 <% End If %>
 <% 
     Dim sb As StringBuilder = new StringBuilder()
@@ -133,7 +133,7 @@ Namespace <%= Database.EntityNamespace %>
 <% If (sb.Length > 0) Then %>
     <DebuggerDisplay("<%= sb.ToString() %>")> _
 <% End If %>
-    <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= VBKeywordEscape(Type.Name) %>
+    Partial <%= StringUtil.ToPascalCase(Naming.GetModifier(Type.AccessModifier, Type.Modifier)) %> Class <%= VBKeywordEscape(Type.Name) %>
 <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>
         Inherits <%= EntityBase %>
     <% If IncludeDataContract Then %>
@@ -142,7 +142,7 @@ Namespace <%= Database.EntityNamespace %>
 <% End If %>
 
 <% If (IncludeDataRules) Then %>
-        #Region "Static Constructor"
+#Region "Static Constructor"
         ''' <summary>
         ''' Initializes the <see cref="<%= Type.Name %>"/> class.
         ''' </summary>
@@ -192,17 +192,17 @@ Namespace <%= Database.EntityNamespace %>
                 End If%>
             AddSharedRules()
         End Sub
-        #End Region
+#End Region
 <% End If ' IncludeDataRules %>
         
-        #Region "Default Constructor"
+#Region "Default Constructor"
         ''' <summary>
         ''' Initializes a new instance of the <see cref="<%= Type.Name %>"/> class.
         ''' </summary>
         <DebuggerNonUserCodeAttribute()> _
-        <%= Naming.GetModifier(Type.AccessModifier) %>  Sub New()
+        <%= StringUtil.ToPascalCase(Naming.GetModifier(Type.AccessModifier)) %> Sub New()
               OnCreated()
-    <% If (IncludeDataContract) Then%>    
+    <% If (IncludeDataContract) Then%>
             Initialize()
         End Sub
         
@@ -222,9 +222,9 @@ Namespace <%= Database.EntityNamespace %>
 <% End If ' IsDelayLoaded%>
 <% Next ' foreach Column%>
         End Sub
-        #End Region
+#End Region
 
-        #Region "Column Mapped Properties"
+#Region "Column Mapped Properties"
 <% DataMemberCount  = 0
 For Each c As Column in Type.Columns 
 Dim dataType As String = c.Type
@@ -273,12 +273,12 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
     DataMemberCount += 1%>
         <DataMember(Order:=<%= DataMemberCount %>)> _
 <% End If %>
-        <%= Naming.GetModifier(c.AccessModifier, c.Modifier) %> Property <%=VBKeywordEscape(c.Member) %> As <%= dataType %>
+        <%= StringUtil.ToPascalCase(Naming.GetModifier(c.AccessModifier, c.Modifier)) %> Property <%=VBKeywordEscape(c.Member) %>() As <%= dataType %>
             Get 
-                return <%= storageGet %> 
+                Return <%= storageGet %> 
             End Get
 <% If Not c.IsReadOnly.Value = True Then %>
-            Set
+            Set(ByVal value As <%= dataType %>)
                 If <%If dataType = "String" Then%>String.IsNullOrEmpty(<%= c.Storage %>) OrElse <%Else If dataType.Contains("()")%><%= storageSet %> Is Nothing OrElse <%End If%> Not <%= storageSet %>.Equals(<%= valueConvert %>) Then
 <% If a IsNot Nothing Then %>
                     If (<%= a.Storage %>.HasLoadedOrAssignedValue) Then
@@ -299,9 +299,9 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
 <% End If ' if IsReadOnly %>
         End Property
 <% Next ' foreach column%>
-        #End Region
-        
-        #Region "Association Mapped Properties"
+#End Region
+
+#Region "Association Mapped Properties"
         
 <% For Each a As Association In Type.EntityRefAssociations
     Dim info As AssociationInfo = GetAssociationInfo(a)
@@ -316,7 +316,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
     DataMemberCount += 1 %>
         <DataMember(Order:=<%=DataMemberCount%>, EmitDefaultValue:=False)> _
 <% End If %>
-        <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= VBKeywordEscape(a.Member) %> As <%= a.Type %>
+        <%= StringUtil.ToPascalCase(Naming.GetModifier(a.AccessModifier, a.Modifier)) %> Property <%= VBKeywordEscape(a.Member) %>() As <%= a.Type %>
             Get
 <% If (IncludeDataContract) Then %>
                 If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValue) Then
@@ -328,7 +328,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
                 Return <%= a.Storage %>.Entity 
 <%End If %>
             End Get
-            Set
+            Set(ByVal value As <%= a.Type %>)
 <% If info.HasOtherAssociation Then %>
                 Dim previousValue As <%= a.Type %> = <%= a.Storage %>.Entity
                 If Not previousValue Is value Or <%= a.Storage %>.HasLoadedOrAssignedValue = False Then
@@ -375,7 +375,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
     DataMemberCount += 1%>
         <DataMember(Order:=<%= DataMemberCount %>, EmitDefaultValue:=False)> _
 <% End If %>
-        <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> Property <%= VBKeywordEscape(a.Member) %> As EntitySet(Of <%= a.Type %>)
+        <%= StringUtil.ToPascalCase(Naming.GetModifier(a.AccessModifier, a.Modifier)) %> Property <%= VBKeywordEscape(a.Member) %>() As EntitySet(Of <%= a.Type %>)
             Get
 <%If IncludeDataContract Then%>
                 If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValues) Then
@@ -387,7 +387,7 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
                 Return <%= a.Storage %>
 <%End If%>
             End Get
-            Set
+            Set(ByVal value As EntitySet(Of <%= a.Type %>))
                 <%= a.Storage %>.Assign(value)
             End Set
         End Property
@@ -406,76 +406,78 @@ Dim a As Association = Type.GetForeignKeyAssociation(c)
             SendPropertyChanged(Nothing)
         End Sub
         
-<% If IsManyToMany(info.OtherType) Then
+<% If info.OtherType.IsManyToMany() Then
 
         Dim manyMany As ManyToManyInfo = GetManyToManyInfo(info.OtherType)
-        If manyMany.RightType IsNot Nothing AndAlso manyMany.LeftType IsNot Nothing Then
+        If manyMany.Skip OrElse manyMany.RightType Is Nothing OrElse manyMany.LeftType Is Nothing Then
+            Continue For
+        End If
         
+        Dim memberName As String = StringUtil.ToCamelCase(manyMany.PropertyName)
 %>
 
-        Private _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%> As EntitySet(Of <%=manyMany.RightType.Name%>)
+        Private _<%=memberName%> As EntitySet(Of <%=manyMany.RightType.Name%>)
 
         ''' <summary>
         ''' Gets or sets the Many To Many <%=manyMany.PropertyName%> list.
         ''' </summary>
         ''' <value>The <%=manyMany.PropertyName%> list.</value>
-        Public Property <%=ApplyAssociationSuffix(manyMany.PropertyName)%> As EntitySet(Of <%=manyMany.RightType.Name%>)
+        Public Property <%=manyMany.PropertyName%>() As EntitySet(Of <%=manyMany.RightType.Name%>)
         
             Get
-<% If IncludeDataContract Then %>            
-                If (serializing)
+<% If IncludeDataContract Then %>
+                If (serializing) Then
                     Return Nothing
                 End If
 <% End If %>
 
-                If (_<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%> Is Nothing)
+                If (_<%=memberName%> Is Nothing) Then
                 
-                    _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%> = New EntitySet(Of <%=manyMany.RightType.Name%>)(AddressOf On<%=ApplyAssociationSuffix(manyMany.PropertyName)%>Add,AddressOf On<%=ApplyAssociationSuffix(manyMany.PropertyName)%>Remove)
-                    _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%>.SetSource(<%=a.Member %>.Select(Function(c)c.<%=manyMany.JoinRightAssociation.Member%>))
+                    _<%=memberName%> = New EntitySet(Of <%=manyMany.RightType.Name%>)(AddressOf On<%=manyMany.PropertyName%>Add, AddressOf On<%=manyMany.PropertyName%>Remove)
+                    _<%=memberName%>.SetSource(<%=a.Member %>.Select(Function(c) c.<%=manyMany.JoinRightAssociation.Member%>))
                 End If
-                return _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%>
+                Return _<%=memberName%>
             End Get
-            Set
+            Set(ByVal value As EntitySet(Of <%=manyMany.RightType.Name%>))
             
-                _<%=ApplyAssociationSuffix(StringUtil.ToCamelCase(manyMany.PropertyName))%>.Assign(value)
+                _<%=memberName%>.Assign(value)
             End Set
         End Property
         
-        <DebuggerNonUserCode> _
-        Private Sub On<%=ApplyAssociationSuffix(manyMany.PropertyName)%>Add(entity As <%=manyMany.RightType.Name%>)
+        <DebuggerNonUserCode()> _
+        Private Sub On<%=manyMany.PropertyName%>Add(ByVal entity As <%=manyMany.RightType.Name%>)
         
             SendPropertyChanging(Nothing)
-            <%= a.Member %>.Add( New <%=manyMany.JoinType.Name%> With {.<%=manyMany.JoinLeftAssociation.Member%> = Me ,.<%=manyMany.JoinRightAssociation.Member%> = entity })
+            <%= a.Member %>.Add(New <%=manyMany.JoinType.Name%> With {.<%=manyMany.JoinLeftAssociation.Member%> = Me, .<%=manyMany.JoinRightAssociation.Member%> = entity})
             SendPropertyChanged(Nothing)
         End Sub
         
-        <DebuggerNonUserCode> _
-        Private Sub On<%=ApplyAssociationSuffix(manyMany.PropertyName)%>Remove(entity As <%=manyMany.RightType.Name%> )
+        <DebuggerNonUserCode()> _
+        Private Sub On<%=manyMany.PropertyName%>Remove(ByVal entity As <%=manyMany.RightType.Name%>)
         
             SendPropertyChanging(Nothing)
-            Dim <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%= a.Member %>.FirstOrDefault(Function(c)c.<%=manyMany.JoinLeftAssociation.ThisKey%> = <%=manyMany.LeftKey%> AndAlso c.<%=manyMany.JoinRightAssociation.ThisKey%> = entity.<%=manyMany.RightKey%>)
-            <%= a.Member %>.Remove( <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>)
+            Dim <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%= a.Member %>.FirstOrDefault(<%= BuildManyToManyRemoveLamba(manyMany) %>)
+            <%= a.Member %>.Remove(<%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%>)
             SendPropertyChanged(Nothing)
         End Sub
     
-<%      End If 
-End If ' many to many%>
+<% End If ' many to many%>
 <% Next ' foreach Association%>
-           #End Region
-        
-        #Region "Extensibility Method Definitions"
+#End Region
+
+#Region "Extensibility Method Definitions"
         
         ''' <summary>Called by the Shared constructor to add shared rules.</summary>
         Partial Private Shared Sub AddSharedRules()     
         End Sub
         ''' <summary>Called when this instance is loaded.</summary>
-        Private Partial Sub OnLoaded()
+        Partial Private Sub OnLoaded()
         End Sub
         ''' <summary>Called when this instance is being saved.</summary>
-        Private Partial Sub OnValidate(ByVal action As ChangeAction)
+        Partial Private Sub OnValidate(ByVal action As ChangeAction)
         End Sub
         ''' <summary>Called when this instance is created.</summary>
-        Private Partial Sub OnCreated()
+        Partial Private Sub OnCreated()
         End Sub
 <% For Each c As Column in Type.Columns
     Dim dataType As String = VBAlias(c.Type)
@@ -486,20 +488,19 @@ End If ' many to many%>
 %>
         ''' <summary>Called when <%= c.Member %> is changing.</summary>
         ''' <param name="value">The new value.</param>
-        Private Partial Sub On<%= c.Member %>Changing(ByVal value As <%= dataType %>)
+        Partial Private Sub On<%= c.Member %>Changing(ByVal value As <%= dataType %>)
         End Sub
         ''' <summary>Called after <%= c.Member %> has Changed.</summary>
-        Private Partial Sub On<%= c.Member %>Changed()
+        Partial Private Sub On<%= c.Member %>Changed()
         End Sub
 <% Next ' foreach %>
-        #End Region
-        
-        
-    <%If IncludeDataContract Then%>
-        #Region "Serialization"
+#End Region
+
+<%If IncludeDataContract Then%>
+#Region "Serialization"
         
 <%If IncludeDataContract Then%>
-        Private Serializing As Boolean
+        Private serializing As Boolean
         
         ''' <summary>
         ''' Called when serializing.
@@ -529,12 +530,13 @@ End If ' many to many%>
         <OnDeserializing(), _
          EditorBrowsableAttribute(EditorBrowsableState.Never)> _
         Public Sub OnDeserializing(ByVal context As StreamingContext)
-            Initialize
+            Initialize()
         End Sub
         
-        #End Region
- <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>   
-        #Region "Clone"
+#End Region
+<% If Not (String.IsNullOrEmpty(EntityBase)) Then %>
+
+#Region "Clone"
         ''' <summary>
         ''' Creates a new object that is a copy of the current instance.
         ''' </summary>
@@ -561,14 +563,14 @@ End If ' many to many%>
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As <%= Type.Name %>
-            Return DirectCast(DirectCast(Me,ICloneable),<%= Type.Name %>).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable), <%= Type.Name %>).Clone()
         End Function
-        #End Region
- <% End If %>
-<% End If %>
-
+#End Region
+<% End If 'EntityBase %>
+<% End If 'IncludeDataContract %>
 <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>
-        #Region "Detach Methods"
+
+#Region "Detach Methods"
         ''' <summary>
         ''' Detach this instance from the <see cref="DataContext"/>.
         ''' </summary>
@@ -578,7 +580,7 @@ End If ' many to many%>
         Public Overrides Sub Detach()
         
             If (Not IsAttached()) Then
-                return
+                Return
             End If
             
             MyBase.Detach()
@@ -590,7 +592,7 @@ End If ' many to many%>
     For Each a As Association In Type.EntitySetAssociations
         Dim info As AssociationInfo = GetAssociationInfo(a)
 %>
-            <%=a.Storage%> = Detach(<%=a.Storage%>,AddressOf On<%=a.Member%>Add,AddressOf On<%=a.Member%>Remove)
+            <%=a.Storage%> = Detach(<%=a.Storage%>, AddressOf On<%=a.Member%>Add, AddressOf On<%=a.Member%>Remove)
 <%  Next %>
 <% For Each c As Column In Type.Columns %>
 <% If c.IsDelayLoaded.Value = true Then %>
@@ -598,26 +600,51 @@ End If ' many to many%>
 <% End If ' IsDelayLoaded%>
 <% Next ' For Each Column%>
         End Sub
-        #End Region
-  <% End If %>  
+#End Region
+  <% End If %>
     End Class
 End Namespace
 
 <script runat="template">
+Private selfAssociated As Boolean = False
+Private DataMemberCount As Integer = 0
+Private manyToManyNames As New List(Of String)()
+
+Public Function BuildManyToManyRemoveLamba(ByVal info As ManyToManyInfo) As String
+    Dim sb As New StringBuilder()
+    sb.Append("Function(c) ")
     
-    Private selfAssociated As Boolean = False
-    Private DataMemberCount As Integer = 0
+    Dim leftThisKey As String() = info.JoinLeftAssociation.GetThisKey()
+    Dim leftKey As String() = Dbml.ParseKeyField(info.LeftKey)
     
-    Public  Function ApplyAssociationSuffix(associationName As String) As String
-       
-            If AssociationNamingSuffix = AssociationNamingEnum.ListSuffix Then
-                Return associationName + "List"
-            Else
-                Return StringUtil.ToPlural(associationName)
-            End If
-    End Function
+    For i As Integer = 0 To leftThisKey.Length - 1
+        If i > 0 Then
+            sb.Append(" AndAlso ")
+        End If
+        
+        sb.AppendFormat("c.{0} = {1}", leftThisKey(i), leftKey(i))
+    Next
     
-   Public Function GetColumnType(ByVal column As Column) As String
+    Dim rightThisKey As String() = info.JoinRightAssociation.GetThisKey()
+    Dim rightKey As String() = Dbml.ParseKeyField(info.RightKey)
+    
+    For i As Integer = 0 To rightThisKey.Length - 1
+        sb.Append(" AndAlso ")
+        sb.AppendFormat("c.{0} = entity.{1}", rightThisKey(i), rightKey(i))
+    Next
+    
+    Return sb.ToString()
+End Function
+
+Public  Function ApplyAssociationSuffix(associationName As String) As String
+    If AssociationNamingSuffix = AssociationNamingEnum.ListSuffix Then
+        Return associationName + "List"
+    Else
+        Return StringUtil.ToPlural(associationName)
+    End If
+End Function
+    
+Public Function GetColumnType(ByVal column As Column) As String
     Dim dataType As String = column.Type
     
     If column.CanBeNull.value = True AndAlso CommonUtility.IsNullableType(dataType) Then
@@ -627,31 +654,6 @@ End Namespace
     End If
     
     Return dataType
-End Function
-
-Public Function IsManyToMany(ByVal type As LinqToSqlShared.DbmlObjectModel.Type) As Boolean
-    
-    If type.Columns.Count < 2 Then
-        Return False
-    End If
-    
-    Dim pk As New List(Of Column)(type.PrimaryKeyColumns)
-    If pk.Count <> 2 Then
-        Return False
-    End If
-    
-    Dim fk As New List(Of Association)()
-    For Each c As Column In pk
-        Dim a As Association = type.GetForeignKeyAssociation(c)
-        If a IsNot Nothing Then
-            fk.Add(a)
-        End If
-    Next
-    If fk.Count <> 2 Then
-        Return False
-    End If
-    
-    Return True
 End Function
 
 Public Function GetClassAttributes() As String
@@ -736,19 +738,19 @@ Public Function CreateAttributes(ByVal c As Column) As String
     s.AppendFormat(", Storage:=""{0}""", c.Storage)
     s.AppendFormat(", DbType:=""{0}""", c.DbType)
     If c.IsPrimaryKey Then
-        s.Append(", IsPrimaryKey:=true")
+        s.Append(", IsPrimaryKey:=True")
     End If
     If c.IsDbGenerated Then
-        s.Append(", IsDbGenerated:=true")
+        s.Append(", IsDbGenerated:=True")
     End If
     If c.IsVersion Then
-        s.Append(", IsVersion:=true")
+        s.Append(", IsVersion:=True")
     End If
     If c.IsDiscriminator Then
-        s.Append(", IsDiscriminator:=true")
+        s.Append(", IsDiscriminator:=True")
     End If
     If c.CanBeNull.Value = False Then
-        s.Append(", CanBeNull:=false")
+        s.Append(", CanBeNull:=False")
     End If
     If c.UpdateCheck.Value <> UpdateCheck.Always Then
         s.AppendFormat(", UpdateCheck:=UpdateCheck.{0}", c.UpdateCheck.ToString())
@@ -758,15 +760,15 @@ Public Function CreateAttributes(ByVal c As Column) As String
     End If
     s.Append(")> _")
     
-	Dim prefix As String = [String].Concat(Environment.NewLine, "        ")
+   Dim prefix As String = [String].Concat(Environment.NewLine, "        ")
 
-	If Me.Framework = FrameworkEnum.v35_SP1 AndAlso c.Type.Contains("String") Then
-		Dim size As Integer = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(c.DbType)
-		If 0 < size AndAlso size < 8000 Then
-			s.AppendFormat("{0}<StringLength({1})> _", prefix, size)
-		End If
-	End If
-	
+   If Me.Framework = FrameworkEnum.v35_SP1 AndAlso c.Type.Contains("String") Then
+      Dim size As Integer = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(c.DbType)
+      If 0 < size AndAlso size < 8000 Then
+         s.AppendFormat("{0}<StringLength({1})> _", prefix, size)
+      End If
+   End If
+   
     Return s.ToString()
 End Function
 
@@ -814,65 +816,51 @@ Public Structure AssociationInfo
     Public RemoveSyntax As String
 End Structure
 
-Public Function GetManyToManyInfo(ByVal type__1 As LinqToSqlShared.DbmlObjectModel.Type) As ManyToManyInfo
+Public Function GetManyToManyInfo(ByVal modelType As LinqToSqlShared.DbmlObjectModel.Type) As ManyToManyInfo
     
     Dim leftKeyPicked As Boolean = False
     
     Dim manyMany As New ManyToManyInfo()
     manyMany.LeftType = Type
-    manyMany.JoinType = type__1
+    manyMany.JoinType = modelType
+    manyMany.LeftKey = Dbml.BuildKeyField(manyMany.LeftType.PrimaryKeyColumns)
     
-    For Each pk As Column In manyMany.LeftType.PrimaryKeyColumns
-        manyMany.LeftKey = manyMany.LeftKey + pk.Member
+    For Each association As Association In modelType.EntityRefAssociations
+        If association.Type <> Type.Name OrElse leftKeyPicked Then
+            manyMany.RightType = Database.GetTypeByName(association.Type)
+            manyMany.JoinRightAssociation = association
+            manyMany.RightKey = Dbml.BuildKeyField(manyMany.RightType.PrimaryKeyColumns)
+        Else
+            manyMany.JoinLeftAssociation = association
+            leftKeyPicked = True
+        End If
     Next
-    
-    If Not selfAssociated
-    
-        For Each association As Association In type__1.EntityRefAssociations
-            
-            If association.Type <> Type.Name OrElse leftKeyPicked Then
-            
-                manyMany.RightType = Database.GetTypeByName(association.Type)
-                manyMany.JoinRightAssociation = association
-                
-                For Each pk As Column In manyMany.RightType.PrimaryKeyColumns
-                    manyMany.RightKey = manyMany.RightKey + pk.Member
-                Next
-            Else
-                manyMany.JoinLeftAssociation = association
-                leftKeyPicked = True
-            End If
-        Next
-    Else
-    
-        For Each association As Association In type__1.EntityRefAssociations
-            
-            If association.Type <> Type.Name OrElse leftKeyPicked Then
-            
-                manyMany.RightType = Database.GetTypeByName(association.Type)
-                manyMany.JoinLeftAssociation = association
-                
-                For Each pk As Column In manyMany.RightType.PrimaryKeyColumns
-                    manyMany.RightKey = manyMany.RightKey + pk.Member
-                Next
-            Else
-                manyMany.JoinRightAssociation = association
-                leftKeyPicked = True
-            End If
-        Next
-    End If
-    
+   
     'For those who think a Self-Associating Many To Many Table is a good idea
     If manyMany.LeftType Is manyMany.RightType Then
-    
+        
+        If selfAssociated Then
+            manyMany.Skip = True
+            Return manyMany
+        End If
+        
         manyMany.PropertyName = manyMany.RightType.Name + "By" + manyMany.JoinRightAssociation.ThisKey
         selfAssociated = True
-    
     Else
         manyMany.PropertyName = manyMany.RightType.Name
-        
     End If
     
+    manyMany.PropertyName = ApplyAssociationSuffix(manyMany.PropertyName)
+
+    Dim original As String = manyMany.PropertyName
+    Dim count As Integer = 0
+    
+    While type.IsUniqueMember(manyMany.PropertyName) = False OrElse manyToManyNames.Contains(manyMany.PropertyName)
+        count += 1
+        manyMany.PropertyName = original + count.ToString()
+    End While
+
+    manyToManyNames.Add(manyMany.PropertyName)
     Return manyMany
 End Function
 
@@ -885,8 +873,7 @@ Public Structure ManyToManyInfo
     Public JoinRightAssociation As Association
     Public JoinLeftAssociation As Association
     Public PropertyName As String
+    Public Skip As Boolean
 End Structure
-
-
 
 </script>

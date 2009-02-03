@@ -50,13 +50,13 @@ Namespace <%= ManagerNamespace %>
     ''' The data manager for a DataContext.
     ''' </summary>
     Public Class <%= DataManager.DataManagerName %> 
-	Inherits DataManagerBase(Of <%= DataManager.DataContextName %>)
+    Inherits DataManagerBase(Of <%= DataManager.DataContextName %>)
         ''' <summary>
         ''' Initializes a new instance of the <see cref="<%= DataManager.DataManagerName %>"/> class.
         ''' </summary>
         ''' <param name="context">An instance of <see cref="<%= DataManager.DataContextName %>"/> DataContext.</param>
         Public Sub New(ByVal context As <%= DataManager.DataContextName %>)
-			MyBase.New(context)
+            MyBase.New(context)
 <% For Each m As EntityManager In DataManager.Managers %>
             <%= m.FieldName %> = New <%= m.ManagerName %>(Me)
 <% Next %>
@@ -70,10 +70,10 @@ Namespace <%= ManagerNamespace %>
         ''' Gets the manager for <%= m.PropertyName %>.
         ''' </summary>
         Public ReadOnly Property <%= m.PropertyName %> As <%= m.ManagerName %>
-        	Get
-				Return <%= m.FieldName %>
-        	End Get
-		End Property
+            Get
+                Return <%= m.FieldName %>
+            End Get
+        End Property
 <% Next %>
         #End Region
     End Class

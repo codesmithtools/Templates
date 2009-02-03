@@ -66,6 +66,9 @@ namespace LinqToSqlShared.Generator.Tests
             Database database = generator.Create(databaseSchema);
 
             Assert.IsNotNull(database);
+
+            var t = database.GetTypeByName("UserRole");
+            bool b = t.IsManyToMany();
         }
 
         [Test]
@@ -113,7 +116,10 @@ namespace LinqToSqlShared.Generator.Tests
 
         private DatabaseSchema GetDatabaseSchema(string name)
         {
-            return DatabaseSchemaSerializer.GetDatabaseSchemaFromName(name);
+            var db = DatabaseSchemaSerializer.GetDatabaseSchemaFromName(name);
+            db.Database.DeepLoad = true;
+
+            return db;
         }
     }
 }

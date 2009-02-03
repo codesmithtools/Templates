@@ -76,8 +76,8 @@ Public Sub CreateQueryClasses(ByVal databaseMap As Database, ByVal dataManager A
     Dim fileName As String = className + ".vb"
     fileName = Path.Combine(QueryDirectory, fileName)
     
-	Dim strategy As PreserveRegionsMergeStrategy = New PreserveRegionsMergeStrategy("^[ \t]*(?i:User)", "VB")
-	
+    Dim strategy As PreserveRegionsMergeStrategy = New PreserveRegionsMergeStrategy("^[ \t]*(?i:User)", "VB")
+    
     Debug.WriteLine(String.Format("Creating Entity Query Extension Class '{0}' ...", className))
     t.EntityManager = manager
     t.RenderToFile(  fileName, strategy)

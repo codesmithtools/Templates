@@ -23,32 +23,32 @@ Imports <%=ContextNamespace%>
 
 
 Public Class Global_asax
-	Inherits System.Web.HttpApplication
+    Inherits System.Web.HttpApplication
 
     Public Shared Sub RegisterRoutes(ByVal routes As RouteCollection)
-	Dim model As New MetaModel
+    Dim model As New MetaModel
 
         model.RegisterContext(GetType(<%=DataContextName%>), New ContextConfiguration() With {.ScaffoldAllTables = False})
 
         <%If Not InlineEditing Then %>
         routes.Add(New DynamicDataRoute("{table}/{action}.aspx") With { _
-    		.Constraints = New RouteValueDictionary(New With {.Action = "List|Details|Edit|Insert"}), _
-    		.Model = model})
-		<% Else  %>
+            .Constraints = New RouteValueDictionary(New With {.Action = "List|Details|Edit|Insert"}), _
+            .Model = model})
+        <% Else  %>
         routes.Add(New DynamicDataRoute("{table}/ListDetails.aspx") With { _
-	    .Action = PageAction.List, _
-	    .ViewName = "ListDetails", _
-	    .Model = model})
+        .Action = PageAction.List, _
+        .ViewName = "ListDetails", _
+        .Model = model})
 
-	routes.Add(New DynamicDataRoute("{table}/ListDetails.aspx") With { _
-	    .Action = PageAction.Details, _
-	    .ViewName = "ListDetails", _
-	    .Model = model})
-		<% End If %>
+    routes.Add(New DynamicDataRoute("{table}/ListDetails.aspx") With { _
+        .Action = PageAction.Details, _
+        .ViewName = "ListDetails", _
+        .Model = model})
+        <% End If %>
     End Sub
 
     Private Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)
-	RegisterRoutes(RouteTable.Routes)
-	End Sub
+    RegisterRoutes(RouteTable.Routes)
+    End Sub
 
 End Class

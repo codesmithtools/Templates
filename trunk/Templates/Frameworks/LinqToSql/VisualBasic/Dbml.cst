@@ -145,15 +145,15 @@
             settings.EnumExpressions.Add(New Regex(enumRegex))
         End IF
     Next
-		
-	For Each name As String In NameColumn
-		If Not String.IsNullOrEmpty(name) Then
-		    settings.EnumNameExpressions.Add(New Regex(name))
+        
+    For Each name As String In NameColumn
+        If Not String.IsNullOrEmpty(name) Then
+            settings.EnumNameExpressions.Add(New Regex(name))
         End IF
     Next
-	For Each description As String In DescriptionColumm
-		If Not String.IsNullOrEmpty(description) Then
-		    settings.EnumDescriptionExpressions.Add(New Regex(description))
+    For Each description As String In DescriptionColumm
+        If Not String.IsNullOrEmpty(description) Then
+            settings.EnumDescriptionExpressions.Add(New Regex(description))
         End IF
     Next
     
