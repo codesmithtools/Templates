@@ -116,7 +116,7 @@ namespace <%= Database.ContextNamespace %>
         /// <summary>
         /// Gets a query for <see cref="<%= EntityManager.EntityName %>.<%= column.Member %>"/>.
         /// </summary>
-        public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= CSharpAlias[column.Type] %> <%= CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>)
+        public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= GetColumnType(column) %> <%= CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>)
         {
             return queryable.Where(c => c.<%= column.Member %> == <%= CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>);
         }
@@ -245,6 +245,19 @@ namespace <%= Database.ContextNamespace %>
         
         string temp = m.Groups["Size"].Value;
         int.TryParse(temp, out size);
-        return size;            
+        return size;
     }
+    
+    public string GetColumnType(Column column)
+    {
+        string dataType = column.Type;
+        
+        if (column.CanBeNull == true && CommonUtility.IsNullableType(dataType))
+            dataType = string.Format("Nullable<{0}>", CSharpAlias[dataType]);
+        else
+            dataType = CSharpAlias[dataType];
+        
+        return dataType;
+    }
+
 </script>
