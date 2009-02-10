@@ -96,9 +96,17 @@ namespace LinqToSqlShared.Generator
                 && IsRegexMatch(table.Name, EnumExpressions)                    // 2) Matches the enum regex.
                 && table.PrimaryKey != null                                     // 3) Has a Primary Key...
                 && table.PrimaryKey.MemberColumns.Count == 1                    // 4) ...that is a single column...
-                && table.PrimaryKey.MemberColumns[0].SystemType == typeof(int)  // 5) ...of type integer.
+                && IsEnumSystemType(table.PrimaryKey.MemberColumns[0])          // 5) ...of a number type.
                 && !string.IsNullOrEmpty(GetEnumNameColumnName(table))          // 6) Contains a column for name.
                 && table.GetTableData().Rows.Count > 0;                         // 7) Must have at least one row.
+        }
+
+        private bool IsEnumSystemType(MemberColumnSchema column)
+        {
+            return column.NativeType.Equals("int", System.StringComparison.OrdinalIgnoreCase)
+                || column.NativeType.Equals("bigint", System.StringComparison.OrdinalIgnoreCase)
+                || column.NativeType.Equals("tinyint", System.StringComparison.OrdinalIgnoreCase)
+                || column.NativeType.Equals("byte", System.StringComparison.OrdinalIgnoreCase);
         }
 
         public string GetEnumNameColumnName(TableSchema table)
