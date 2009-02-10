@@ -101,26 +101,44 @@ namespace CodeSmith.Data.Rules
             if (attribute is StringLengthAttribute)
             {
                 var validationAttribute = (StringLengthAttribute) attribute;
-                AddShared<EntityType>(new LengthRule(property, validationAttribute.ErrorMessage, validationAttribute.MaximumLength));
+                if (string.IsNullOrEmpty(validationAttribute.ErrorMessage))
+                    AddShared<EntityType>(new LengthRule(property, validationAttribute.MaximumLength));
+                else
+                    AddShared<EntityType>(new LengthRule(property, validationAttribute.ErrorMessage, validationAttribute.MaximumLength));
             }
             else if (attribute is RequiredAttribute)
             {
                 var validationAttribute = (RequiredAttribute) attribute;
-                AddShared<EntityType>(new RequiredRule(property, validationAttribute.ErrorMessage));
+                if (string.IsNullOrEmpty(validationAttribute.ErrorMessage))
+                    AddShared<EntityType>(new RequiredRule(property));
+                else
+                    AddShared<EntityType>(new RequiredRule(property, validationAttribute.ErrorMessage));
             }
             else if (attribute is RegularExpressionAttribute)
             {
                 var validationAttribute = (RegularExpressionAttribute) attribute;
-                AddShared<EntityType>(new RegexRule(property, validationAttribute.ErrorMessage, validationAttribute.Pattern));
+                if (string.IsNullOrEmpty(validationAttribute.ErrorMessage))
+                    AddShared<EntityType>(new RegexRule(property, validationAttribute.Pattern));
+                else
+                    AddShared<EntityType>(new RegexRule(property, validationAttribute.ErrorMessage, validationAttribute.Pattern));
             }
             else if (attribute is RangeAttribute)
             {
                 var validationAttribute = (RangeAttribute) attribute;
-                var rangeRule = Activator.CreateInstance(typeof (RangeRule<>).MakeGenericType(validationAttribute.OperandType),
-                                                         property, validationAttribute.ErrorMessage,
-                                                         validationAttribute.Minimum, validationAttribute.Maximum) as PropertyRuleBase;
+                if (string.IsNullOrEmpty(validationAttribute.ErrorMessage))
+                {
+                    var rangeRule = Activator.CreateInstance(typeof (RangeRule<>).MakeGenericType(validationAttribute.OperandType),
+                                                             property, validationAttribute.Minimum, validationAttribute.Maximum) as PropertyRuleBase;
+                    AddShared<EntityType>(rangeRule);
+                }
 
-                AddShared<EntityType>(rangeRule);
+                else
+                {
+                    var rangeRule = Activator.CreateInstance(typeof (RangeRule<>).MakeGenericType(validationAttribute.OperandType),
+                                                             property, validationAttribute.ErrorMessage,
+                                                             validationAttribute.Minimum, validationAttribute.Maximum) as PropertyRuleBase;
+                    AddShared<EntityType>(rangeRule);
+                }
             }
         }
 
