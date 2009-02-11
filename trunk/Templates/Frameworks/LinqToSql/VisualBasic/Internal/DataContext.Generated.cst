@@ -405,6 +405,23 @@ Next
         #End Region
 <% End If %>
 
+
+        ''' <summary>
+        ''' Sends changes made to retrieved objects to the underlying database.
+        ''' </summary>
+        ''' <param name="refreshMode">Defines how to handle optimistic concurrency conflicts.</param>
+        Public Sub SubmitChanges(ByVal refreshMode As RefreshMode)
+            Try
+                SubmitChanges(ConflictMode.ContinueOnConflict)
+            Catch generatedExceptionName As ChangeConflictException
+                For Each occ In ChangeConflicts
+                    occ.Resolve(refreshMode)
+                Next
+                
+                SubmitChanges()
+            End Try
+        End Sub
+
     End Class
 End Namespace
 
