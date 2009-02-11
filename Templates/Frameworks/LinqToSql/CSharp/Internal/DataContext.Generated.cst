@@ -510,6 +510,25 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         }
         #endregion
         <% } %>
+        
+        /// <summary>
+        /// Sends changes made to retrieved objects to the underlying database.
+        /// </summary>
+        /// <param name="refreshMode">Defines how to handle optimistic concurrency conflicts.</param>
+        public void SubmitChanges(RefreshMode refreshMode)
+        {
+            try
+            {
+                SubmitChanges(ConflictMode.ContinueOnConflict);
+            }
+            catch (ChangeConflictException)
+            {
+                foreach (var occ in ChangeConflicts)
+                    occ.Resolve(refreshMode);
+
+                SubmitChanges();
+            }
+        }
     }
 }
 
