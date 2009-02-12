@@ -244,13 +244,13 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
                                                 WHERE c.TABLE_NAME = @TableName";
 
 
-                    System.Collections.Generic.List<IDataParameter> parameters = new System.Collections.Generic.List<IDataParameter>();
+                    System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
 
-                    parameters.Add(ServiceLocator.GetDataParameter("@TableName", tableName));
+                    parameters.Add(new SqlParameter("@TableName", tableName));
 
                     try
                     {
-                        using (IDataHelper helper = ServiceLocator.GetHelper())
+                        using (SqlHelper helper = new SqlHelper())
                         {
                             System.Data.IDataReader reader = helper.ExecuteDataReader(commandText, CommandType.Text, parameters);
 

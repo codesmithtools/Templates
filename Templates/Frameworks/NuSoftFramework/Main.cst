@@ -1,7 +1,7 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Description="Generates a set of files to get a project started." Debug="True" %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="1. Setup" Description="Database that entities should be based on." %>
 <%@ Property Name="TablePrefixes" Type="String" Default="" Optional="True" Category="1. Setup" Description="The table prefix to be cut from the class name" %>
-<%@ Property Name="Namespace" Type="String" Default="Kinetic" Optional="False" Category="1. Setup" Description="The root namespace for the project" %>
+<%@ Property Name="Namespace" Type="String" Default="NuSoft" Optional="False" Category="1. Setup" Description="The root namespace for the project" %>
 <%@ Property Name="DomainNamespace" Type="String" Default="Business" Optional="False" Category="1. Setup" Description="The namespace to be added to the root namespace for the business objects" %>
 <%@ Property Name="SQLType" Type="SqlType" Default="Dynamic" Optional="False" Category="1. Setup" Description="Use stored procedures or generated SQL" %>
 <%@ Property Name="ExcludedTables" Type="TableSchemaCollection" Default="" Optional="True" Category="1. Setup" Description="Tables to exclude" %>
@@ -21,9 +21,6 @@
 <%@ Register Template="Domain\Framework\DatabaseColumnAttribute.cst" Name="DatabaseColumnAttribute" MergeProperties="True" ExcludeProperties="SourceTable" %>
 <%@ Register Template="Domain\Framework\ISavable.cst" Name="ISavable" MergeProperties="True" ExcludeProperties="SourceTable" %>
 <%@ Register Template="Domain\Framework\ISearchable.cst" Name="ISearchable" MergeProperties="True" ExcludeProperties="SourceTable" %>
-<%@ Register Template="Domain\Framework\IDataHelper.cst" Name="IDataHelper" MergeProperties="True" ExcludeProperties="SourceTable" %>
-<%@ Register Template="Domain\Framework\IDataFactory.cst" Name="IDataFactory" MergeProperties="True" ExcludeProperties="SourceTable" %>
-<%@ Register Template="Domain\Framework\ServiceLocator.cst" Name="ServiceLocator" MergeProperties="True" ExcludeProperties="SourceTable" %>
 <%@ Register Template="Domain\Framework\EntityComparer.cst" Name="EntityComparer" MergeProperties="True" %>
 <%@ Register Template="Domain\Framework\EntityEventArgs.cst" Name="EntityEventArgs" MergeProperties="True" %>
 <%@ Register Template="Domain\Framework\EntityCancelEventArgs.cst" Name="EntityCancelEventArgs" MergeProperties="True" %>
@@ -37,7 +34,6 @@
 <%@ Register Template="Domain\Framework\EntityListBase.Generated.cst" Name="EntityListBaseGenerated" MergeProperties="True" %>
 <%@ Register Template="Domain\Framework\EntityListReadOnly.cst" Name="EntityListReadOnly" MergeProperties="True" %>
 <%@ Register Template="Domain\Framework\EntityListReadOnly.Generated.cst" Name="EntityListReadOnlyGenerated" MergeProperties="True" %>
-
 <%@ Register Template="Domain\Framework\SqlHelperBase.cst" Name="SqlHelperBase" MergeProperties="True" ExcludeProperties="SourceTable" %>
 <%@ Register Template="Domain\Framework\SqlHelper.cst" Name="SqlHelper" MergeProperties="True" ExcludeProperties="SourceTable" %>
 <%@ Register Template="Domain\Framework\SqlHelper.Generated.cst" Name="SqlHelperGenerated" MergeProperties="True" ExcludeProperties="SourceTable" %>
@@ -64,7 +60,7 @@
 <%@ Register Template="Database\DeleteByFKStoredProcedure.cst" Name="DeleteByFKStoredProcedure" MergeProperties="True" ExcludeProperties="SourceTable,FKTable,IncludeDrop,IsolationLevel" %>
 
 <%
-Debug.WriteLine("Kinetic Framework: starting generation at " + DateTime.Now.ToString());
+Debug.WriteLine("NuSoft Framework: starting generation at " + DateTime.Now.ToString());
 if(SQLType == SqlType.StoredProcedures)
 {
 	SafeCreateDirectory(OutputDirectory + "\\Database");
@@ -229,21 +225,6 @@ ISavable savable = new ISavable();
 this.CopyPropertiesTo(savable);
 savable.RenderToFile(OutputDirectory + "\\" + DomainNamespace + "\\Framework\\ISavable.cs", true);
 
-Debug.WriteLine("Writing File: " + OutputDirectory + "\\" + DomainNamespace + "\\Framework\\IDataHelper.cs");
-IDataHelper dataHelper = new IDataHelper();
-this.CopyPropertiesTo(dataHelper);
-dataHelper.RenderToFile(OutputDirectory + "\\" + DomainNamespace + "\\Framework\\IDataHelper.cs", true);
-
-Debug.WriteLine("Writing File: " + OutputDirectory + "\\" + DomainNamespace + "\\Framework\\IDataFactory.cs");
-IDataFactory dataFactory = new IDataFactory();
-this.CopyPropertiesTo(dataFactory);
-dataFactory.RenderToFile(OutputDirectory + "\\" + DomainNamespace + "\\Framework\\IDataFactory.cs", true);
-
-Debug.WriteLine("Writing File: " + OutputDirectory + "\\" + DomainNamespace + "\\Framework\\ServiceLocator.cs");
-ServiceLocator serviceLocator = new ServiceLocator();
-this.CopyPropertiesTo(serviceLocator);
-serviceLocator.RenderToFile(OutputDirectory + "\\" + DomainNamespace + "\\Framework\\ServiceLocator.cs", true);
-
 Debug.WriteLine("Writing File: " + OutputDirectory + "\\" + DomainNamespace + "\\Framework\\SqlHelperBase.cs");
 SqlHelperBase sqlHelperBase = new SqlHelperBase();
 this.CopyPropertiesTo(sqlHelperBase);
@@ -387,7 +368,7 @@ for (int i = 0; i < SourceDatabase.Tables.Count; i++)
 	}	
 }
 
-Debug.WriteLine("Kinetic Framework: finished generation at " + DateTime.Now.ToString());
+Debug.WriteLine("NuSoft Framework: finished generation at " + DateTime.Now.ToString());
 %>
 
 <script runat="template">

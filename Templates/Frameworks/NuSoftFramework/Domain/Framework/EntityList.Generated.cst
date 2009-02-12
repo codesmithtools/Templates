@@ -96,7 +96,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// Save List
         /// </summary>
         /// <param name="helper">Sql Helper</param>
-        virtual public void Save(IDataHelper helper)
+        virtual public void Save(SqlHelper helper)
         {
             try
             {
@@ -136,7 +136,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// </summary>
         virtual public void Save()
         {
-            using (IDataHelper helper = ServiceLocator.GetHelper())
+            using (SqlHelper helper = new SqlHelper())
             {
                 try
                 {
@@ -157,7 +157,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// </summary>
         virtual public void DeleteAll()
         {
-			using (IDataHelper helper = ServiceLocator.GetHelper())
+			using (SqlHelper helper = new SqlHelper())
 			{
 				try 
 				{
@@ -207,6 +207,23 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// </summary>
         /// <param name="reader">Reader</param>
         internal EntityList(System.Data.IDataReader reader) : base(reader)
+        {
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="table">Table</param>
+        internal EntityList(System.Data.DataTable table) : base(table)
+        {
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="parent">Parent Entity</param>
+        /// <param name="table">Data Table</param>
+        internal EntityList(EntityBaseReadOnly parent, System.Data.DataTable table) : base(parent, table)
         {
         }
 
