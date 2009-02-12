@@ -3,12 +3,14 @@
 <%@ Property Name="DomainNamespace" Type="String" Default="Business" Optional="False" Category="1. Setup" Description="The namespace to be added to the root namespace for the business objects" %>
 <script runat="template"><!--#include file="..\..\Global.cs"--></script><%= GetDefaultCommentHeader() %>
 using System;
+using System.Data;
 
 namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 {
-    interface ISavable
+    public interface IDataFactory
     {
-        void Save();
-        void Save(IDataHelper helper);
+        IDataHelper GetHelper();
+        IDataParameter GetDataParameter();
+        IDataParameter GetDataParameter(string parameterName, object value);
     }
 }

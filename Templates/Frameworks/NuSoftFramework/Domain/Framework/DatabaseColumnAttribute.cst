@@ -9,7 +9,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 	/// <summary>
 	/// A custom attribute used to identify the database column name of a property of a custom business object.
 	/// </summary>
-	public class DatabaseColumnAttribute : Attribute
+	public class DatabaseColumnAttribute : System.Attribute
 	{
 		public DatabaseColumnAttribute(string name)
 		{
