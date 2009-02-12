@@ -100,15 +100,6 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         }
 
         /// <summary>
-		/// Constructor that initializes an Entity from a data row
-		/// </summary>
-		/// <param name="row">The reader containing the data row to load</param>
-		internal EntityBaseReadOnly(DataRowView row) : this()
-        {
-            Initialize(row);
-        }
-		
-        /// <summary>
         /// Constructor that initializes an Entity with a parent list
         /// </summary>
         /// <param name="list">The parent list</param>
@@ -272,7 +263,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// </summary>
         public virtual void Save()  
 		{	
-			using (SqlHelper helper = new SqlHelper()) 
+			using (IDataHelper helper = ServiceLocator.GetHelper()) 
 			{
 				try 
 				{
@@ -364,7 +355,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// internal, and is used for recursive saves within a transaction.
         /// </summary>
         /// <param name="helper">The data connection helper</param>
-        public virtual void Save(SqlHelper helper)
+        public virtual void Save(IDataHelper helper)
         {
             EntityCancelEventArgs e = new EntityCancelEventArgs(this, helper);
 
@@ -471,38 +462,11 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 		}
 
         /// <summary>
-		/// Used to initialize an entity from a data row
-		/// </summary>
-		/// <param name="rowView">The data row to use to initialize the object with</param>
-		internal void Initialize(DataRowView rowView)
-        {
-			System.Type type = this.GetType();
-			
-			// For each column in the data reader, update the like-named property in the entity.
-            for (int i = 0; i < rowView.Row.Table.Columns.Count; i++)
-            {
-                if (!rowView.Row.IsNull(i))
-                {
-					// Get the property information from the Entity for the name of the column
-                    PropertyInfo propertyInfo = GetDatabaseColumnPropertyInfo(type, rowView.Row.Table.Columns[i].ColumnName);
-                    
-					if (propertyInfo != null)
-                    {
-						// Property found with same name as column
-                        SetPropertyValueIfNotNull(this, propertyInfo, rowView[i]);
-                    }
-                }
-            }
-            this.IsNew = false;
-            this.IsDirty = false;
-		}
-
-        /// <summary>
         /// Updates all child entities
         /// </summary>
         /// <param name="helper">The current connection to the database</param>
 		/// <param name="type">The type of update to perform on the children entities</param>
-        protected void UpdateChildren(SqlHelper helper, UpdateType type)
+        protected void UpdateChildren(IDataHelper helper, UpdateType type)
         {
 			if (!IsSaveRequired) return;
 			
@@ -563,9 +527,9 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// </summary>
         /// <param name="columnType">The type of columns to get for the parameters</param>
         /// <returns>A list of parameters</returns>
-        protected System.Collections.Generic.List<SqlParameter> GetParameterList(ColumnType columnType)
+        protected System.Collections.Generic.List<IDataParameter> GetParameterList(ColumnType columnType)
         {
-            System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
+            System.Collections.Generic.List<IDataParameter> parameters = new System.Collections.Generic.List<IDataParameter>();
 
             Dictionary<string, PropertyInfo> propertyList = GetPropertyList(columnType);
 
@@ -573,13 +537,15 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
             {
 				if (propertyList[propertyName].PropertyType.FullName == "System.Byte[]")
 				{
-					SqlParameter varbinaryMax = new SqlParameter("@" + propertyName, SqlDbType.VarBinary, -1);
+					IDataParameter varbinaryMax = ServiceLocator.GetDataParameter();
+                    varbinaryMax.ParameterName = "@" + propertyName;
+                    varbinaryMax.DbType = System.Data.DbType.Binary;
 					varbinaryMax.Value = GetDatabaseValue(propertyList[propertyName], propertyList[propertyName].GetValue(this, null));
 					parameters.Add(varbinaryMax);
 				}
 				else 
 				{
-	                parameters.Add(new SqlParameter("@" + propertyName, GetDatabaseValue(propertyList[propertyName], propertyList[propertyName].GetValue(this, null))));
+	                parameters.Add(ServiceLocator.GetDataParameter("@" + propertyName, GetDatabaseValue(propertyList[propertyName], propertyList[propertyName].GetValue(this, null))));
     	        }
 			}
             return parameters;
@@ -815,8 +781,8 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 
                 if (minValue != null)
                 {
-                                                            if (!minValue.GetValue(null).ToString().Equals(value.ToString()))                   
-                                                            {
+                    if (!minValue.GetValue(null).ToString().Equals(value.ToString()))                   
+                    {
                         returnValue = value;
                     }
                 }
@@ -1079,11 +1045,11 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <param name="commandText">The sql command to execute against the database</param>
         /// <param name="parameters">The parameters to be used for the database command</param>
         /// <returns>The retrieved EntityBaseReadOnly object.</returns>
-        protected internal static T GetOne<T>(string commandText, List<SqlParameter> parameters) where T : EntityBaseReadOnly
+        protected internal static T GetOne<T>(string commandText, List<IDataParameter> parameters) where T : EntityBaseReadOnly
 		{
-			using (SqlHelper helper = new SqlHelper())
+			using (IDataHelper helper = ServiceLocator.GetHelper())
 			{
-				using (IDataReader reader = helper.ExecuteDataReader(commandText, <%= GetCommandType() %>, parameters))
+				using (IDataReader reader = helper.ExecuteDataReader(commandText, CommandType.Text, parameters))
 				{
 					return Initialize<T>(reader);
 				}
@@ -1097,11 +1063,11 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <param name="commandText">The sql command to execute against the database</param>
         /// <param name="parameters">The parameters to be used for the database command</param>
         /// <returns>The retrieved collection of EntitBase objects.</returns>
-        protected internal static EntityList<T> GetList<T>(string commandText, List<SqlParameter> parameters) where T : EntityBaseReadOnly
+        protected internal static EntityList<T> GetList<T>(string commandText, List<IDataParameter> parameters) where T : EntityBaseReadOnly
 		{
-			using (SqlHelper helper = new SqlHelper()) 
+			using (IDataHelper helper = ServiceLocator.GetHelper()) 
 			{
-				using (IDataReader reader = helper.ExecuteDataReader(commandText, <%= GetCommandType() %>, parameters))
+				using (IDataReader reader = helper.ExecuteDataReader(commandText, CommandType.Text, parameters))
 				{
 					return InitializeList<T>(reader);
 				}
@@ -1116,11 +1082,11 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <param name="commandText">The sql command to execute against the database</param>
         /// <param name="parameters">The parameters to be used for the database command</param>
         /// <returns>The retrieved collection of EntitBase objects.</returns>
-        protected internal static EntityList<T> GetList<T>(EntityBaseReadOnly parent, string commandText, List<SqlParameter> parameters) where T : EntityBaseReadOnly
+        protected internal static EntityList<T> GetList<T>(EntityBaseReadOnly parent, string commandText, List<IDataParameter> parameters) where T : EntityBaseReadOnly
         {
-            using (SqlHelper helper = new SqlHelper())
+            using (IDataHelper helper = ServiceLocator.GetHelper())
             {
-                using (IDataReader reader = helper.ExecuteDataReader(commandText, <%= GetCommandType() %>, parameters))
+                using (IDataReader reader = helper.ExecuteDataReader(commandText, CommandType.Text, parameters))
 				{
 					return InitializeList<T>(parent, reader);
 				}
@@ -1138,7 +1104,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 		/// <param name="startRowIndex">Start Page</param>
 		/// <param name="pageSize">PageSize</param>
         /// <returns>The retrieved collection of EntitBase objects.</returns>
-        protected internal static EntityList<T> GetList<T>(string selectedFieldList, string fromStatementAndCriteria, List<SqlParameter> parameters,string orderBy,  long startRowIndex, int pageSize) where T : EntityBaseReadOnly
+        protected internal static EntityList<T> GetList<T>(string selectedFieldList, string fromStatementAndCriteria, List<IDataParameter> parameters,string orderBy,  long startRowIndex, int pageSize) where T : EntityBaseReadOnly
         {
             long startRow = startRowIndex + 1;
             long endRow = startRow + (pageSize - 1);
@@ -1157,7 +1123,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
                 orderBy = "order by " + orderBy;
             }
 			
-            using (SqlHelper helper = new SqlHelper())
+            using (IDataHelper helper = ServiceLocator.GetHelper())
             {
                 string commandText = @"SELECT * FROM (SELECT ROW_NUMBER() OVER (" + orderBy + ") AS row_number, " + selectedFieldList + " " + fromStatementAndCriteria + ") AS pagedTable WHERE row_number between " + startRow.ToString() + " and " + endRow.ToString();
 
@@ -1181,11 +1147,11 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 		/// <param name="endIndex">PageSize</param>
 		/// <param name="totalRows">Output parameter.  Total rows will be returned</param>
         /// <returns>The retrieved collection of EntitBase objects.</returns>
-        protected internal static EntityList<T> GetList<T>(string selectedFieldList, string fromStatementAndCriteria, List<SqlParameter> parameters, string orderBy, long startRowIndex, int pageSize, out long totalRows) where T : EntityBaseReadOnly
+        protected internal static EntityList<T> GetList<T>(string selectedFieldList, string fromStatementAndCriteria, List<IDataParameter> parameters, string orderBy, long startRowIndex, int pageSize, out long totalRows) where T : EntityBaseReadOnly
         {
             totalRows = 0;
 
-            using (SqlHelper helper = new SqlHelper())
+            using (IDataHelper helper = ServiceLocator.GetHelper())
             {
                 string commandText = @"SELECT count(*) " + fromStatementAndCriteria;
 
@@ -1209,11 +1175,11 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <param name="commandText">The sql command to execute against the database</param>
         /// <param name="parameters">The parameters to be used for the database command</param>
         /// <returns>The retrieved collection of EntitBase objects.</returns>
-        protected internal static EntityListReadOnly<T> GetListReadOnly<T>(EntityBaseReadOnly parent, string commandText, List<SqlParameter> parameters) where T : EntityBaseReadOnly
+        protected internal static EntityListReadOnly<T> GetListReadOnly<T>(EntityBaseReadOnly parent, string commandText, List<IDataParameter> parameters) where T : EntityBaseReadOnly
         {
-            using (SqlHelper helper = new SqlHelper())
+            using (IDataHelper helper = ServiceLocator.GetHelper())
             {
-                using(IDataReader reader = helper.ExecuteDataReader(commandText, <%= GetCommandType() %>, parameters))
+                using(IDataReader reader = helper.ExecuteDataReader(commandText, CommandType.Text, parameters))
 				{
                 	return InitializeListReadOnly<T>(parent, reader);
 				}
@@ -1227,11 +1193,11 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
         /// <param name="commandText">The sql command to execute against the database</param>
         /// <param name="parameters">The parameters to be used for the database command</param>
         /// <returns>The retrieved collection of EntitBase objects.</returns>
-        protected internal static EntityListReadOnly<T> GetListReadOnly<T>(string commandText, List<SqlParameter> parameters) where T : EntityBaseReadOnly
+        protected internal static EntityListReadOnly<T> GetListReadOnly<T>(string commandText, List<IDataParameter> parameters) where T : EntityBaseReadOnly
         {
-            using (SqlHelper helper = new SqlHelper())
+            using (IDataHelper helper = ServiceLocator.GetHelper())
             {
-                using (IDataReader reader = helper.ExecuteDataReader(commandText, <%= GetCommandType() %>, parameters))
+                using (IDataReader reader = helper.ExecuteDataReader(commandText, CommandType.Text, parameters))
 				{
 					return InitializeListReadOnly<T>(reader);
 				}
@@ -1251,44 +1217,6 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
                 T entity = GetEntityInstance<T>();
                 entity.Initialize(reader);
                 return entity;
-			}
-			else 
-			{
-				return default(T);	
-			}
-        }
-
-        /// <summary>
-        /// Initialize the properties of a custom business object from a dataview
-        /// </summary>
-        /// <typeparam name="T">The type of custom business object to initialize</typeparam>
-        /// <param name="dataReader">A DataView object</param>
-		/// <returns>The instance of the business object to initialize</returns>
-        protected static T Initialize<T>(DataRowView dataView) where T : EntityBaseReadOnly
-        {
-            if(dataView != null)
-            {
-                T entity = GetEntityInstance<T>();
-                entity.Initialize(dataView);
-                return entity;
-			}
-			else 
-			{
-				return default(T);	
-			}
-        }
-
-        /// <summary>
-        /// Initialize the properties of a custom business object from a datatable
-        /// </summary>
-        /// <typeparam name="T">The type of custom business object to initialize</typeparam>
-        /// <param name="dataReader">A DataTable object</param>
-        /// <returns>The instance of the business object</returns>
-        protected static T Initialize<T>(DataTable dataTable) where T : EntityBaseReadOnly
-        {
-            if (dataTable.Rows.Count > 0) 
-			{
-				return Initialize<T>(dataTable.DefaultView[0]);
 			}
 			else 
 			{
