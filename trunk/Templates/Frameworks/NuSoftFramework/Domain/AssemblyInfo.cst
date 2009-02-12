@@ -17,9 +17,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("<%= Namespace %>.<%= DomainNamespace %>")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Kinetic IG at RCM Technologies")]
+[assembly: AssemblyCompany("NuSoft Solutions")]
 [assembly: AssemblyProduct("<%= Namespace %>")]
-[assembly: AssemblyCopyright("Copyright <%= DateTime.Now.Year.ToString() %>")]
+[assembly: AssemblyCopyright("Copyright <%= DateTime.Now.Year.ToString() %>, NuSoft Solutions")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

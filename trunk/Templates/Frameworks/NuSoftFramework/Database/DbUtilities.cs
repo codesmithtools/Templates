@@ -426,28 +426,13 @@ public string GetSqlParameterStatement(ColumnSchema column, bool isOutput, bool 
 					{
 						param += "(" + column.Size + ")";
 					}
-                    else
-                    {
-                            param += "(MAX)";
-                    }
+                                        else
+                                        {
+                                                param += "(MAX)";
+                                        }
 				}
 				break;
 			}
-            case DbType.Binary:
-            {
-                if (column.NativeType == "varbinary")
-                {
-                    if (column.Size > 0)
-                    {
-                        param += "(" + column.Size + ")";
-                    }
-                    else
-                    {
-                        param += "(MAX)";
-                    }
-                }
-                break;
-            }
 		}
 	}
 	

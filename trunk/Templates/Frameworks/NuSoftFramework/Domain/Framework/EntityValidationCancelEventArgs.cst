@@ -41,7 +41,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 		/// <summary>
 		/// Public constructor taking the entity and a helper
 		/// </summary>
-        public EntityValidationCancelEventArgs(EntityBase entity, IDataHelper helper, string propertyName, string validationGroup) : base(entity, helper)
+        public EntityValidationCancelEventArgs(EntityBase entity, SqlHelper helper, string propertyName, string validationGroup) : base(entity, helper)
         {
 			this._propertyName = propertyName;
 			this._validationGroup = validationGroup;
@@ -55,6 +55,6 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
 		/// <summary>
 		/// Public constructor taking the entity and the helper
 		/// </summary>
-        public EntityValidationCancelEventArgs(EntityBase entity, IDataHelper helper) : base(entity, helper) { }
+        public EntityValidationCancelEventArgs(EntityBase entity, SqlHelper helper) : base(entity, helper) { }
     }
 }

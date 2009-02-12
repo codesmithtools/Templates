@@ -9,6 +9,6 @@ namespace <%= Namespace %>.<%= DomainNamespace %>.Framework
     interface ISavable
     {
         void Save();
-        void Save(IDataHelper helper);
+        void Save(SqlHelper helper);
     }
 }
