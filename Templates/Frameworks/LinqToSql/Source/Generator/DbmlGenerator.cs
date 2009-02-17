@@ -579,6 +579,7 @@ namespace LinqToSqlShared.Generator
                 function.Method = MakeUnique(FunctionNames, methodName);
             }
 
+            function.Parameters.Clear();
             foreach (ParameterSchema p in commandSchema.Parameters)
             {
                 if (p.Direction == System.Data.ParameterDirection.ReturnValue)
