@@ -80,9 +80,7 @@ namespace LinqToSqlShared.Generator.Tests
             settings.IncludeFunctions = true;
 
             DbmlGenerator generator = new DbmlGenerator(settings);
-            SqlSchemaProvider provider = new SqlSchemaProvider();
-            //DatabaseSchema databaseSchema = GetDatabaseSchema("FeedbackRemote");
-            DatabaseSchema databaseSchema = new DatabaseSchema(provider, "Data Source=72.249.140.176;Initial Catalog=Feedback;User ID=rbradshaw;Password=get@10code");
+            DatabaseSchema databaseSchema = GetDatabaseSchema("FeedbackRemote");
             Database database = generator.Create(databaseSchema);
 
             Assert.IsNotNull(database);
