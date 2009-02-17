@@ -60,6 +60,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\AddIns\SchemaExplorer.dll</HintPath>
     </Reference>
+    <Reference Include="SchemaExplorer.SqlSchemaProvider, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\CodeSmith.Tool\Source\SchemaExplorer\SqlSchemaProvider\obj\Debug\SchemaExplorer.SqlSchemaProvider.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -103,6 +107,14 @@
       <Project>{2BDB103C-9F65-41AA-A86D-77BD0F9839B4}</Project>
       <Name>Generator</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\Feedback.dbml.layout">
+      <DependentUpon>Feedback.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

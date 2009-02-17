@@ -589,7 +589,14 @@ namespace LinqToSqlShared.Generator
 
             try
             {
-                if (function.Types.Count != commandSchema.CommandResults.Count)
+                bool typeExists = false;
+                foreach (Table table in Database.Tables)
+                    if (table.Type == function.Types[0])
+                    {
+                        typeExists = true;
+                        break;
+                    }
+                if (!typeExists)
                 {
                     function.Types.Clear();
                     foreach (CommandResultSchema r in commandSchema.CommandResults)
