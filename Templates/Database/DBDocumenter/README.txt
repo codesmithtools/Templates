@@ -12,7 +12,7 @@ Please see http://www.codehighlighter.com/ for more details.
 
 Setup & Running:
 
-1.) Open master.cst and edit the properties for your specific environment:
+1.) Open master.cst or Database.csp and edit the properties for your specific environment:
   
   - OutputDirectory
   This is the literal path that you want your documentation to generate to.  If this value is empty it will default to a 
