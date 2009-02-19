@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CodeDom;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using ICSharpCode.NRefactory;
@@ -15,6 +16,7 @@ namespace CodeSmith.Engine
     /// </summary>
     [PropertySerializer(typeof(CodeFileParserSerializer))]
     [System.ComponentModel.Editor(typeof(CodeFileParserPicker), typeof(System.Drawing.Design.UITypeEditor))]
+    [TypeConverter(typeof(PropertySerializerTypeConverter))]
     public class CodeFileParser : IDisposable
     {
         #region Declarations
@@ -28,24 +30,30 @@ namespace CodeSmith.Engine
         #region Constructors & Destructors
 
         public CodeFileParser(string fileName)
-            : this(String.Empty, null, fileName, false) { }
+            : this(String.Empty, null, fileName, String.Empty, false) { }
+        
+        public CodeFileParser(string fileName, string basePath)
+            : this(String.Empty, null, fileName, basePath, false) { }
 
         public CodeFileParser(string fileName, bool parseMethodBodies)
-            : this(String.Empty, null, fileName, parseMethodBodies) { }
+            : this(String.Empty, null, fileName, String.Empty, parseMethodBodies) { }
+
+        public CodeFileParser(string fileName, string basePath, bool parseMethodBodies)
+            : this(String.Empty, null, fileName, basePath, parseMethodBodies) { }
 
         public CodeFileParser(string source, SupportedLanguage language)
-            : this(source, language, String.Empty, false) { }
+            : this(source, language, String.Empty, String.Empty, false) { }
 
         public CodeFileParser(string source, SupportedLanguage language, bool parseMethodBodies)
-            : this(source, language, String.Empty, parseMethodBodies) { }
+            : this(source, language, String.Empty, String.Empty, parseMethodBodies) { }
 
-        protected CodeFileParser(string source, SupportedLanguage? language, string fileName, bool parseMethodBodies)
+        protected CodeFileParser(string source, SupportedLanguage? language, string fileName, string basePath, bool parseMethodBodies)
         {
             // Get Source
             if (String.IsNullOrEmpty(source))
             {
                 // Find File
-                if (!File.Exists(fileName))
+                if (!File.Exists(Path.Combine(basePath, fileName)))
                     throw new FileNotFoundException("Could not find file.", fileName);
 
                 // Set Language
@@ -58,7 +66,7 @@ namespace CodeSmith.Engine
                     throw new Exception("Parser only supports C# or VB.");
 
                 // Read In Source
-                source = File.ReadAllText(fileName);
+                source = File.ReadAllText(Path.Combine(basePath, fileName));
             }
 
             // Set Local Properties
@@ -127,10 +135,12 @@ namespace CodeSmith.Engine
         {
             return GetSection(new Location(1, 1), end);
         }
+
         public string GetSectionToEnd(Location start)
         {
             return GetSection(start, SourceEnd);
         }
+
         public string GetSection(Location start, Location end)
         {
             StringBuilder sb = new StringBuilder();
@@ -164,7 +174,7 @@ namespace CodeSmith.Engine
 
         public override string ToString()
         {
-            return this.FileName ?? "File Not Specified";
+            return this.FileName;
         }
 
         #endregion
@@ -173,6 +183,7 @@ namespace CodeSmith.Engine
 
         public string[] SourceContents { get; protected set; }
         public string FileName { get; protected set; }
+        public string BasePath { get; protected set; }
         public SupportedLanguage Language { get; protected set; }
 
         public CodeCompileUnit CodeDomCompilationUnit

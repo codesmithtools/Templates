@@ -58,6 +58,7 @@
     <Compile Include="CodeFileParser.cs" />
     <Compile Include="CodeFileParserPicker.cs" />
     <Compile Include="CodeFileParserSerializer.cs" />
+    <Compile Include="CodeFileParserTypeConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -49,9 +49,9 @@ namespace CodeSmith.Engine
                         _openFileDialog.CheckFileExists = true;
                         _openFileDialog.Multiselect = false;
 
-                        _openFileDialog.DefaultExt = ".cs";
-                        _openFileDialog.Title = "Select a Code file:";
-                        _openFileDialog.Filter = "C# files (*.cs)|*.cs|VB files (*.vb)|*.vb";
+                        _openFileDialog.Title = "Select a source file:";
+                        _openFileDialog.Filter = "Source Files(*.cs;*.vb;)|*.cs;*.vb|All files (*.*)|*.*";
+                        _openFileDialog.FilterIndex = 1;
                     }
 
                     DialogResult result = _openFileDialog.ShowDialog(editorControl);
