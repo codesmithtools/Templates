@@ -6,11 +6,16 @@ namespace CodeSmith.Engine
     public class CodeFileParserSerializer : IPropertySerializer
     {
         #region IPropertySerializer Members
-
         public object LoadProperty(PropertySerializerContext context, object propertyValue)
         {
+            if (propertyValue is string)
+            {
+                return CreateCodeFileParser(context, propertyValue.ToString());
+            }
+
             return propertyValue;
         }
+
         public object SaveProperty(PropertySerializerContext context, object propertyValue)
         {
             return propertyValue;
@@ -28,10 +33,11 @@ namespace CodeSmith.Engine
 
             string relativePath = Utility.PathUtil.RelativePathTo(context.WorkingDirectory, codeFileParser.FileName);
 
-            writer.WriteString(File.Exists(relativePath)
+            writer.WriteString(File.Exists(Path.Combine(context.WorkingDirectory, relativePath))
                 ? relativePath
                 : codeFileParser.FileName);
         }
+
         public object ReadPropertyXml(PropertySerializerContext context, System.Xml.XmlNode propertyValue)
         {
             return CreateCodeFileParser(context, propertyValue.InnerText);
@@ -41,7 +47,6 @@ namespace CodeSmith.Engine
         {
             return CreateCodeFileParser(context, defaultValue);
         }
-
         #endregion
 
         protected CodeFileParser CreateCodeFileParser(PropertySerializerContext context, string fileName)
@@ -58,7 +63,7 @@ namespace CodeSmith.Engine
             
             try
             {
-                codeFileParser = new CodeFileParser(fileName, parseMethodBodies);
+                codeFileParser = new CodeFileParser(fileName, context.WorkingDirectory, parseMethodBodies);
             }
             catch (FileNotFoundException)
             {
