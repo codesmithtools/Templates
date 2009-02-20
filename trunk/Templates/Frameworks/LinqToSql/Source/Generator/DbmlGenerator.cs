@@ -597,7 +597,7 @@ namespace LinqToSqlShared.Generator
                         typeExists = true;
                         break;
                     }
-                if (!typeExists)
+                if (!typeExists &&  function.Types.Count != commandSchema.CommandResults.Count)
                 {
                     function.Types.Clear();
                     foreach (CommandResultSchema r in commandSchema.CommandResults)

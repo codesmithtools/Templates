@@ -87,6 +87,21 @@ namespace LinqToSqlShared.Generator.Tests
         }
 
         [Test]
+        public void CreateWebsite()
+        {
+            GeneratorSettings settings = new GeneratorSettings();
+            settings.MappingFile = "Codesmith.dbml";
+            settings.IncludeViews = true;
+            settings.IncludeFunctions = true;
+
+            DbmlGenerator generator = new DbmlGenerator(settings);
+            DatabaseSchema databaseSchema = GetDatabaseSchema("WebsiteRemote");
+            Database database = generator.Create(databaseSchema);
+
+            Assert.IsNotNull(database);
+        }
+
+        [Test]
         public void CreateSimple()
         {
             GeneratorSettings settings = new GeneratorSettings();
