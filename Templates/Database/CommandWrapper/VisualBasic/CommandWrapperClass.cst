@@ -879,6 +879,8 @@ Public Shadows Function GetMemberVariableDefaultValue(myDbType As DbType) As Str
 			Return "SqlMoney.Null"
 		Case DbType.Date
 			Return "SqlDateTime.Null"
+		Case DbType.Time
+			Return "SqlDateTime.Null"
 		Case DbType.DateTime
 			Return "SqlDateTime.Null"
 		Case DbType.Decimal
@@ -925,6 +927,8 @@ Public Function GetSqlType(myDbType As DbType) As String
 		Case DbType.Currency
 			Return "SqlMoney"
 		Case DbType.Date
+			Return "SqlDateTime"
+		Case DbType.Time
 			Return "SqlDateTime"
 		Case DbType.DateTime
 			Return "SqlDateTime"
