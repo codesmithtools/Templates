@@ -48,7 +48,7 @@ Namespace <%= UnitTestNamespace %>
 			<% End If %>
 			
 			<% ' Primitives %>
-			<% For Each em As EntityMember In entityManager.MembersPrimaryKeyUnion %>
+			<% For Each em As EntityMember In entityManager.Members %>
 			entity.<%= em.PropertyName %> = <%= GetUnitTestInitialization(em.Column) %>
 			<% Next %>
 			<% ' Many-To-One %>

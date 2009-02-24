@@ -32,7 +32,7 @@ namespace <%= BusinessNamespace %>
         #region Declarations
 
 		<% // Primitives %>
-		<% foreach(EntityMember em in entityManager.MembersPrimaryKeyUnion) { %>
+		<% foreach(EntityMember em in entityManager.Members) { %>
 		private <%= em.SystemType %> <%= em.PrivateVariableName %> = <%= GetInitialization(em.Column) %>;
 		<% } %>
 		
@@ -61,7 +61,7 @@ namespace <%= BusinessNamespace %>
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             
             sb.Append(this.GetType().FullName);
-            <% foreach(EntityMember em in entityManager.MembersPrimaryKeyUnion) { %>
+            <% foreach(EntityMember em in entityManager.Members) { %>
 			sb.Append(<%= em.PrivateVariableName %>);
 			<% } %>
 
@@ -94,7 +94,7 @@ namespace <%= BusinessNamespace %>
 		
 		<% } %>
 		<% // Primitives %>
-		<% foreach(EntityMember em in entityManager.MembersPrimaryKeyUnion) { %>
+		<% foreach(EntityMember em in entityManager.Members) { %>
 		public virtual <%= em.SystemType %> <%= em.PropertyName %>
         {
             get { return <%= em.PrivateVariableName %>; }

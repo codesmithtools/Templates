@@ -243,9 +243,12 @@ namespace NHibernateHelper
         {
             get
             {
-                return MemberMap.Values
-                    .Where(m => !m.IsPrimaryKeyMember)
-                    .ToList();
+                var result = MemberMap.Values.AsEnumerable();
+
+                if (!PrimaryKey.IsCompositeKey)
+                    result = result.Where(m => !m.IsPrimaryKeyMember);
+
+                return result.ToList();
             }
         }
         public List<EntityMember> MembersNoRowVersion
@@ -257,11 +260,7 @@ namespace NHibernateHelper
                     .ToList();
             }
         }
-        public List<EntityMember> MembersPrimaryKeyUnion
-        {
-            get { return MemberMap.Values.ToList(); }
-        }
-
+        
         public List<EntityAssociation> ManyToOne
         {
             get
