@@ -50,7 +50,7 @@ namespace <%= UnitTestNamespace %>
 			<% } %>
 			
 			<% // Primitives %>
-			<% foreach(EntityMember em in entityManager.MembersPrimaryKeyUnion) { %>
+			<% foreach(EntityMember em in entityManager.Members) { %>
 			entity.<%= em.PropertyName %> = <%= GetUnitTestInitialization(em.Column) %>;
 			<% } %>
 			<% // Many-To-One %>

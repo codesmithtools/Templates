@@ -30,7 +30,7 @@ Namespace NHibernate.Generated.BusinessObjects
 		#region "Declarations"
 
 		<% 'Primitives %>
-		<% For Each em As EntityMember In entityManager.MembersPrimaryKeyUnion %>
+		<% For Each em As EntityMember In entityManager.Members %>
 		Private <%= em.PrivateVariableName %> As <%= em.SystemType %> = <%= GetInitialization(em.Column) %>
 		<% Next %>
 		
@@ -60,7 +60,7 @@ Namespace NHibernate.Generated.BusinessObjects
 
 			sb.Append(Me.[GetType]().FullName)
 			
-			<% For Each em As EntityMember In entityManager.MembersPrimaryKeyUnion %>
+			<% For Each em As EntityMember In entityManager.Members %>
 			sb.Append(<%= em.PrivateVariableName %>)
 			<% Next %>
 			
@@ -93,7 +93,7 @@ Namespace NHibernate.Generated.BusinessObjects
 		
 		<% End If %>
 		<% 'Primitives %>
-		<% For Each em As EntityMember In entityManager.MembersPrimaryKeyUnion %>
+		<% For Each em As EntityMember In entityManager.Members %>
 		Public Overridable Property <%= em.PropertyName %>() As <%= em.SystemType %>
 			Get
 				Return <%= em.PrivateVariableName %>
