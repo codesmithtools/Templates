@@ -995,6 +995,7 @@ public string GetMemberVariableDefaultValue(DbType dbType)
 		case DbType.Byte: return "SqlByte.Null";
 		case DbType.Currency: return "SqlMoney.Null";
 		case DbType.Date: return "SqlDateTime.Null";
+		case DbType.Time: return "SqlDateTime.Null";
 		case DbType.DateTime: return "SqlDateTime.Null";
 		case DbType.Decimal: return "SqlDecimal.Null";
 		case DbType.Double: return "SqlDouble.Null";
@@ -1025,6 +1026,7 @@ public string GetSqlType(DbType dbType)
 		case DbType.Byte: return "SqlByte";
 		case DbType.Currency: return "SqlMoney";
 		case DbType.Date: return "SqlDateTime";
+		case DbType.Time: return "SqlDateTime";
 		case DbType.DateTime: return "SqlDateTime";
 		case DbType.Decimal: return "SqlDecimal";
 		case DbType.Double: return "SqlDouble";
