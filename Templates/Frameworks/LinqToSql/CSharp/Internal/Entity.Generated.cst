@@ -597,6 +597,23 @@ foreach(Column column in Type.Columns) {
         /// <returns>
         /// <c>true</c> if the current object is equal to the <paramref name="other" /> parameter; otherwise, <c>false</c>.
         /// </returns>
+        /// <remarks>
+        /// The following are considered when comparing two objects as equal.
+        /// <list type="bullet">
+        /// <item>
+        /// <description>If one of the objects is null, then they are not equal.</description>
+        /// </item>
+        /// <item>
+        /// <description>If two objects have IDs, and have the same IDs, then they are considered equal.</description>
+        /// </item>
+        /// <item>
+        /// <description>If two objects have IDs, but have different IDs, then they are considered not equal.</description>
+        /// </item>
+        /// <item>
+        /// <description>If neither object has an ID or only one of them has an ID, but their business value signatures are identical, then they are equal.</description>
+        /// </item>
+        /// </list>
+        /// </remarks>
         public bool Equals(<%= Type.Name %> other)
         {
             if (ReferenceEquals(null, other))
@@ -648,24 +665,39 @@ foreach(Column column in Type.Columns) {
             return Equals((<%= Type.Name %>)obj);
         }
 
+        // this magic number is often used in GetHashCode computations
+        private const int SEED = 397;
+
         /// <summary>
         /// Serves as a hash function for a particular type.
         /// </summary>
         /// <returns>
         /// A hash code for the current <see cref="T:System.Object" />.
         /// </returns>
+        /// <remarks>
+        /// GetHashCode only contains the business signature of the object and does not include its ID (Primary Key).
+        /// </remarks>
         public override int GetHashCode()
         {
-            var sb = new System.Text.StringBuilder();
+            unchecked
+            {
+                int hashCode = GetType().GetHashCode();
+<% 
+foreach(Column column in Type.Columns) { 
+    if (column.IsPrimaryKey == true || column.IsDelayLoaded == true)
+        continue;
 
-            //GetHashCode should only contain the "business signature" of the object and not include its ID.
-            sb.Append(GetType().FullName);
-            <% foreach(Column column in Type.Columns) { %>
-            <% if (column.IsPrimaryKey == true) continue; %>
-            sb.Append(<%= column.Storage %>);
-            <% } %>
-
-            return sb.ToString().GetHashCode();
+    bool isValueType = CommonUtility.IsNullableType(column.Type);
+    bool isNullable = (column.CanBeNull == true && isValueType) || !isValueType;
+%>
+<% if (isNullable) { %>
+                hashCode = (hashCode * SEED) ^ (<%= column.Member %> != null ? <%= column.Member %>.GetHashCode() : 0);
+<% } else { %>
+                hashCode = (hashCode * SEED) ^ <%= column.Member %>.GetHashCode();
+<% } %>
+<% } // for each %>
+                return hashCode;
+            }
         }
 
         /// <summary>
