@@ -675,7 +675,7 @@ foreach(Column column in Type.Columns) {
         /// A hash code for the current <see cref="T:System.Object" />.
         /// </returns>
         /// <remarks>
-        /// GetHashCode only contains the business signature of the object and does not include its ID (Primary Key).
+        /// GetHashCode contains the business signature of the object.
         /// </remarks>
         public override int GetHashCode()
         {
@@ -684,7 +684,7 @@ foreach(Column column in Type.Columns) {
                 int hashCode = GetType().GetHashCode();
 <% 
 foreach(Column column in Type.Columns) { 
-    if (column.IsPrimaryKey == true || column.IsDelayLoaded == true)
+    if (column.IsDelayLoaded == true)
         continue;
 
     bool isValueType = CommonUtility.IsNullableType(column.Type);
