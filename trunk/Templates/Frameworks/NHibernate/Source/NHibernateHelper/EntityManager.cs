@@ -251,7 +251,7 @@ namespace NHibernateHelper
                 return result.ToList();
             }
         }
-        public List<EntityMember> MembersNoRowVersion
+        public List<EntityMember> MembersNoKeyNoVersion
         {
             get
             {
