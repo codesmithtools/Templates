@@ -97,8 +97,11 @@ Namespace <%= UnitTestNamespace %>
 		Public Sub Update()
 			Try
 				Dim entityA As <%= GetClassName(SourceTable) %> = GetFirst<%= GetClassName(SourceTable) %>()
-				entityA.<%= entityManager.GetEntityBaseFromColumn(SourceTable.NonKeyColumns(0)).PropertyName %> = <%= GetUnitTestInitialization(SourceTable.NonKeyColumns(0)) %>
-
+				
+				<% If entityManager.MembersNoKeyNoVersion.Count > 0 Then %>
+				entityA.<%= entityManager.MembersNoKeyNoVersion(0).PropertyName %> = <%= GetUnitTestInitialization(entityManager.MembersNoKeyNoVersion(0).Column) %>;
+				<% End If %>
+				
 				manager.Update(entityA)
 
 				Dim entityB As <%= GetClassName(SourceTable) %> = manager.GetById(entityA.Id)

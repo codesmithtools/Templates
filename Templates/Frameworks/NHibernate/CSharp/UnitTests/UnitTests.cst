@@ -110,7 +110,10 @@ namespace <%= UnitTestNamespace %>
             try
             {
                 <%= GetClassName(SourceTable) %> entityA = GetFirst<%= GetClassName(SourceTable) %>();
-				entityA.<%= entityManager.Members[0].PropertyName %> = <%= GetUnitTestInitialization(SourceTable.NonKeyColumns[0]) %>;
+				
+				<% if(entityManager.MembersNoKeyNoVersion.Count > 0) { %>
+				entityA.<%= entityManager.MembersNoKeyNoVersion[0].PropertyName %> = <%= GetUnitTestInitialization(entityManager.MembersNoKeyNoVersion[0].Column) %>;
+				<% } %>
 				
 				manager.Update(entityA);
 
