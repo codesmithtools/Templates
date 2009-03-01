@@ -233,6 +233,7 @@ namespace LinqToSqlShared.Generator
                         ? ToEnumName(tableSchema.Name)
                         : existingEnum.Name,
                     Table = tableSchema.FullName,
+                    Type = tableSchema.PrimaryKey.MemberColumns[0].SystemType.FullName,
                     Flags = existingEnum.Flags,
                     IncludeDataContract = existingEnum.IncludeDataContract,
                     Items = GetEnumItems(tableSchema, existingEnum)

@@ -21,6 +21,7 @@
     <xs:attribute name="AccessModifier" type="AccessModifier" use="optional" />
     <xs:attribute name="Flags" type="xs:boolean" use="optional" />
     <xs:attribute name="IncludeDataContract" type="xs:boolean" use="optional" />
+    <xs:attribute name="Type" type="xs:string" use="optional" />
   </xs:complexType>
   <xs:complexType name="Item">
     <xs:attribute name="Name" type="xs:string" use="required" />

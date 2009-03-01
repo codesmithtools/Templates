@@ -140,6 +140,20 @@ namespace LinqToSqlShared.Generator.DbmlEnum
         private string _table;
 
         [XmlAttributeAttribute()]
+        public string Type
+        {
+            get
+            {
+                return _type;
+            }
+            set
+            {
+                _type = value;
+            }
+        }
+        private string _type;
+
+        [XmlAttributeAttribute()]
         public AccessModifier AccessModifier
         {
             get
