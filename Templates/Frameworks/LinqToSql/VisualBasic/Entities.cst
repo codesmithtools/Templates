@@ -29,7 +29,7 @@
 
 <%@ Register Name="DataContextGeneratedClass" 
     Template="Internal\DataContext.Generated.cst" 
-    MergeProperties="False" %>
+    MergeProperties="True" %>
 
 <%@ Register Name="DataContextEditableClass" 
     Template="Internal\DataContext.Editable.cst" 
