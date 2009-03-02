@@ -23,6 +23,10 @@
 <%@ Property Category="2.Class" Name="IncludeDataRules"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include CodeSmith.Data rules." %>
+    
+<%@ Property Category="2.Class" Name="DefaultConnectionString"
+    Type="System.String" Optional="True"
+    Description="Default Connection String Name for DatabaseContext." %>
 
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
@@ -71,7 +75,7 @@ namespace <%= Database.ContextNamespace %>
         private static readonly MappingSource mappingCache = new AttributeMappingSource();
         
         #region ConnectionString
-        private const string CONNECTION_NAME = "<%= Database.Connection.SettingsPropertyName %>";
+        private const string CONNECTION_NAME = "<%= DefaultConnectionString == null ? Database.Connection.SettingsPropertyName : DefaultConnectionString%>";
         private static volatile string _connectionString;
         private static object _connectionLock = new Object();
 

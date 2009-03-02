@@ -24,6 +24,10 @@
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include CodeSmith.Data rules." %>
     
+<%@ Property Category="2.Class" Name="DefaultConnectionString"
+    Type="System.String" Optional="True"
+    Description="Default Connection String Name for DatabaseContext." %>
+    
 <%@ Map Name="VBKeywordEscape" 
     Src="VBKeywordEscape.csmap" Reverse="False" 
     Description="Mapping to escape c# keywords" %>
@@ -74,7 +78,7 @@ Namespace <%= Database.ContextNamespace %>
         Private Shared ReadOnly mappingCache As MappingSource = New AttributeMappingSource()
 
         #Region "ConnectionString"
-        Private Const CONNECTION_NAME As String = "<%= Database.Connection.SettingsPropertyName %>"
+        Private Const CONNECTION_NAME As String = "<%= IIF(DefaultConnectionString IS NOTHING,Database.Connection.SettingsPropertyName,DefaultConnectionString) %>"
         Private Shared _connectionString As String
         Private Shared _connectionLock As New Object()
         
