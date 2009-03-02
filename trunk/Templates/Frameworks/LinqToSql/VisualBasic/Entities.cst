@@ -29,7 +29,7 @@
 
 <%@ Register Name="DataContextGeneratedClass" 
     Template="Internal\DataContext.Generated.cst" 
-    MergeProperties="True" %>
+    MergeProperties="True" ExcludeProperties="Database"%>
 
 <%@ Register Name="DataContextEditableClass" 
     Template="Internal\DataContext.Editable.cst" 
