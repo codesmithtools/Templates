@@ -28,7 +28,7 @@ namespace LinqToSqlShared.Generator
 
         private static readonly Regex CleanIdRegex = new Regex(
             @"(_ID|_id|_Id|\.ID|\.id|\.Id|ID|Id)$", RegexOptions.Compiled);
-        
+
         private static readonly Regex CleanNumberPrefix = new Regex(@"^\d+");
 
         // must be sorted
@@ -115,7 +115,7 @@ namespace LinqToSqlShared.Generator
             Database.Name = databaseSchema.Name;
             CreateContext(databaseSchema);
 
-            _enumDatabase = new DbmlEnum.Database() { Name = databaseSchema.Name };
+            _enumDatabase = new DbmlEnum.Database { Name = databaseSchema.Name };
             _existingEnumDatabase = DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName) ?? new DbmlEnum.Database();
 
             foreach (TableSchema t in databaseSchema.Tables)
@@ -175,12 +175,12 @@ namespace LinqToSqlShared.Generator
             RemoveExtraMembers(_database);
 
             _database.Tables.Sort();
-            Dbml.ToFile(Dbml.CopyWithNulledOutDefaults(_database), 
+            Dbml.ToFile(Dbml.CopyWithNulledOutDefaults(_database),
                 settings.MappingFile);
 
             if (_enumDatabase.Enums.Count > 0 || File.Exists(EnumXmlFileName))
                 _enumDatabase.SerializeToFile(EnumXmlFileName);
-            
+
             return _database;
         }
 
@@ -224,20 +224,20 @@ namespace LinqToSqlShared.Generator
             DbmlEnum.Enum myEnum = _enumDatabase.Enums.Where(e => e.Table == tableSchema.FullName).FirstOrDefault();
             DbmlEnum.Enum existingEnum = _existingEnumDatabase.Enums.Where(e => e.Table == tableSchema.FullName).FirstOrDefault()
                 ?? new DbmlEnum.Enum();
-            
+
             if (myEnum == null)
             {
-                myEnum = new DbmlEnum.Enum()
-                {
-                    Name = (String.IsNullOrEmpty(existingEnum.Name))
-                        ? ToEnumName(tableSchema.Name)
-                        : existingEnum.Name,
-                    Table = tableSchema.FullName,
-                    Type = tableSchema.PrimaryKey.MemberColumns[0].SystemType.FullName,
-                    Flags = existingEnum.Flags,
-                    IncludeDataContract = existingEnum.IncludeDataContract,
-                    Items = GetEnumItems(tableSchema, existingEnum)
-                };
+                myEnum = new DbmlEnum.Enum
+                             {
+                                 Name = (String.IsNullOrEmpty(existingEnum.Name))
+                                     ? ToEnumName(tableSchema.Name)
+                                     : existingEnum.Name,
+                                 Table = tableSchema.FullName,
+                                 Type = tableSchema.PrimaryKey.MemberColumns[0].SystemType.FullName,
+                                 Flags = existingEnum.Flags,
+                                 IncludeDataContract = existingEnum.IncludeDataContract,
+                                 Items = GetEnumItems(tableSchema, existingEnum)
+                             };
                 _enumDatabase.Enums.Add(myEnum);
             }
 
@@ -251,7 +251,7 @@ namespace LinqToSqlShared.Generator
             string primaryKey = tableSchema.PrimaryKey.MemberColumns[0].Name;
             string nameColumn = settings.GetEnumNameColumnName(tableSchema);
             string descriptionColumn = settings.GetEnumDescriptionColumnName(tableSchema);
-            
+
             DataTable table = tableSchema.GetTableData();
             foreach (DataRow row in table.Rows)
             {
@@ -260,18 +260,18 @@ namespace LinqToSqlShared.Generator
                     ?? new DbmlEnum.Item();
 
                 string description = (table.Columns.Contains(descriptionColumn))
-                    ? description = row[descriptionColumn] as String
+                    ? row[descriptionColumn] as String
                     : null;
 
-                itemList.Add(new DbmlEnum.Item()
-                {
-                    Name = row[nameColumn].ToString(),
-                    Value = value,
-                    Description = description ?? existingValue.Description,
-                    DataContractMember = existingValue.DataContractMember
-                });
+                itemList.Add(new DbmlEnum.Item
+                                 {
+                                     Name = row[nameColumn].ToString(),
+                                     Value = value,
+                                     Description = description ?? existingValue.Description,
+                                     DataContractMember = existingValue.DataContractMember
+                                 });
             }
-            
+
             return itemList;
         }
 
@@ -287,7 +287,7 @@ namespace LinqToSqlShared.Generator
 
             if (Database.Tables.Contains(key))
             {
-                t = Database.Tables[key];
+                t = Database.Tables[key];                
                 ClassNames.Add(t.Type.Name);
             }
             else
@@ -304,6 +304,7 @@ namespace LinqToSqlShared.Generator
             if (processAssociations && !t.Type.Associations.IsProcessed)
                 CreateAssociations(t, tableSchema);
 
+            t.Type.IsProcessed = true;
             t.IsProcessed = true;
             return t;
         }
@@ -317,7 +318,7 @@ namespace LinqToSqlShared.Generator
             if (Array.BinarySearch(ExistingContextProperties, t.Type.Name) >= 1)
                 t.Member += "Table";
 
-                Database.Tables.Add(t);
+            Database.Tables.Add(t);
 
             return t;
         }
@@ -362,7 +363,7 @@ namespace LinqToSqlShared.Generator
             if (isNew)
                 foreignAssociation = new Association(name);
             else
-                foreignAssociation = foreignTable.Type.Associations[key]; 
+                foreignAssociation = foreignTable.Type.Associations[key];
 
             foreignAssociation.IsForeignKey = true;
             foreignAssociation.ThisKey = foreignMembers;
@@ -397,10 +398,7 @@ namespace LinqToSqlShared.Generator
             primaryAssociation.OtherKey = foreignAssociation.ThisKey;
             primaryAssociation.Type = foreignClass;
 
-            bool isOneToOne = tableKeySchema.ForeignKeyTable.HasPrimaryKey
-                && tableKeySchema.ForeignKeyTable.PrimaryKey != null
-                && tableKeySchema.ForeignKeyTable.PrimaryKey.MemberColumns.Count == 1
-                && tableKeySchema.ForeignKeyTable.PrimaryKey.MemberColumns.Contains(foreignAssociation.ThisKey);
+            bool isOneToOne = IsOneToOne(tableKeySchema, foreignAssociation);
 
             if (isOneToOne)
                 primaryAssociation.Cardinality = Cardinality.One;
@@ -437,12 +435,30 @@ namespace LinqToSqlShared.Generator
             }
             else
                 foreignAssociation.DeleteOnNull = null;
-            
+
             foreignAssociation.IsProcessed = true;
             primaryAssociation.IsProcessed = true;
         }
 
-        private bool IsTableKeySchemaCascadeDelete(TableKeySchema tableKeySchema)
+        private static bool IsOneToOne(TableKeySchema tableKeySchema, Association foreignAssociation)
+        {
+            bool isFkeyPkey = tableKeySchema.ForeignKeyTable.HasPrimaryKey
+                              && tableKeySchema.ForeignKeyTable.PrimaryKey != null
+                              && tableKeySchema.ForeignKeyTable.PrimaryKey.MemberColumns.Count == 1
+                              && tableKeySchema.ForeignKeyTable.PrimaryKey.MemberColumns.Contains(foreignAssociation.ThisKey);
+
+            if (isFkeyPkey)
+                return true;
+
+            // if f.key is unique
+            foreach (var column in tableKeySchema.ForeignKeyMemberColumns)
+                if (!column.IsUnique)
+                    return false;
+
+            return true;
+        }
+
+        private static bool IsTableKeySchemaCascadeDelete(TableKeySchema tableKeySchema)
         {
             return (tableKeySchema.ExtendedProperties.Contains("CS_CascadeDelete")
                 && tableKeySchema.ExtendedProperties["CS_CascadeDelete"].Value != null
@@ -460,7 +476,7 @@ namespace LinqToSqlShared.Generator
         /// </summary>
         /// <param name="tableKeySchema">TableKeySchema.ForeignKeyTable is the table being analyzed.</param>
         /// <returns>Value of AssociationAttribute DeleteOnNull Property</returns>
-        private bool IsTableDeleteOnNull(TableKeySchema tableKeySchema)
+        private static bool IsTableDeleteOnNull(TableKeySchema tableKeySchema)
         {
             bool foreignTableForeignKeyColumnAllowDBNull = (tableKeySchema.ForeignKeyMemberColumns.Count == 0);
             foreach (MemberColumnSchema foreignColumn in tableKeySchema.ForeignKeyMemberColumns)
@@ -478,7 +494,7 @@ namespace LinqToSqlShared.Generator
             bool foreignTablePrimaryKeysCascadeDelete = true;
             foreach (TableKeySchema foreignTableKeySchema in tableKeySchema.ForeignKeyTable.PrimaryKeys)
             {
-                if(IsTableKeySchemaCascadeDelete(foreignTableKeySchema))
+                if (IsTableKeySchemaCascadeDelete(foreignTableKeySchema))
                 {
                     foreignTablePrimaryKeysCascadeDelete = false;
                     break;
@@ -488,7 +504,7 @@ namespace LinqToSqlShared.Generator
             return foreignTablePrimaryKeysCascadeDelete;
         }
 
-        private string GetKeyMembers(Table table, MemberColumnSchemaCollection members, string name)
+        private static string GetKeyMembers(Table table, MemberColumnSchemaCollection members, string name)
         {
             StringBuilder keyMembers = new StringBuilder();
 
@@ -591,18 +607,14 @@ namespace LinqToSqlShared.Generator
 
             try
             {
-                bool typeExists = false;
-                foreach (Table table in Database.Tables)
-                    if (table.Type == function.Types[0])
-                    {
-                        typeExists = true;
-                        break;
-                    }
-                if (!typeExists &&  function.Types.Count != commandSchema.CommandResults.Count)
+                for (int i = 0; i < commandSchema.CommandResults.Count; i++)
                 {
-                    function.Types.Clear();
-                    foreach (CommandResultSchema r in commandSchema.CommandResults)
-                        CreateResult(function, r);
+                    var r = commandSchema.CommandResults[i];
+                    string defaultName = function.Method + "Result";
+                    if (commandSchema.CommandResults.Count > 1)
+                        defaultName += (i + 1).ToString();
+
+                    CreateResult(function, r, defaultName, i);
                 }
             }
             catch (Exception ex)
@@ -632,21 +644,28 @@ namespace LinqToSqlShared.Generator
 
         }
 
-        private void CreateResult(Function function, CommandResultSchema commandResultSchema)
+        private void CreateResult(Function function, CommandResultSchema commandResultSchema, string defaultName, int index)
         {
-            string name = function.Method + "Result";
+            string name = defaultName;
             Type result;
 
             if (function.Types.Contains(name))
             {
                 result = function.Types[name];
-            } 
+            }
+            else if (function.Types.Count >= index + 1)
+            {
+                result = function.Types[index];
+            }
             else
             {
-                result = new Type(ToClassName(name));                
+                result = new Type(ToClassName(name));
                 function.Types.Add(result);
             }
-            
+
+            if (result.IsProcessed)
+                return;
+
             // ElementType/@Name safe attribute
             if (string.IsNullOrEmpty(result.Name))
                 result.Name = ToClassName(name);
@@ -666,8 +685,11 @@ namespace LinqToSqlShared.Generator
                     result.Columns.Add(column);
                 }
 
-                PopulateColumn(column, c, result.Name);
+                if (!column.IsProcessed)
+                    PopulateColumn(column, c, result.Name);
             }
+
+            result.IsProcessed = true;
         }
 
         private void CreateParameter(Function function, ParameterSchema parameterSchema)
@@ -679,7 +701,7 @@ namespace LinqToSqlShared.Generator
             }
             else
             {
-                parameter = new Parameter(parameterSchema.Name, 
+                parameter = new Parameter(parameterSchema.Name,
                     parameterSchema.SystemType.ToString());
                 function.Parameters.Add(parameter);
             }
@@ -711,7 +733,7 @@ namespace LinqToSqlShared.Generator
             }
         }
 
-        private string GetMemberPrefix(Association association, string primaryClass, string foreignClass)
+        private static string GetMemberPrefix(Association association, string primaryClass, string foreignClass)
         {
             bool isSameName = association.ThisKey.Equals(association.OtherKey,
                 StringComparison.OrdinalIgnoreCase);
@@ -785,7 +807,7 @@ namespace LinqToSqlShared.Generator
             return name;
         }
 
-        private bool IsEnumAssociation(ColumnSchema columnSchema, out string typeName)
+        private bool IsEnumAssociation(DataObjectBase columnSchema, out string typeName)
         {
             bool isEnum, wasEnum;
             typeName = IsOrWasEnumAssociation(columnSchema, out isEnum, out wasEnum);
@@ -856,7 +878,7 @@ namespace LinqToSqlShared.Generator
 
         private static string GetSystemType(DataObjectBase d)
         {
-            if (d.SystemType == typeof (XmlDocument))
+            if (d.SystemType == typeof(XmlDocument))
                 return "System.String";
 
             if (d.SystemType == typeof(byte[]))

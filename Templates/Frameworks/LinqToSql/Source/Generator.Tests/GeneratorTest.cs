@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using LinqToSqlShared.DbmlObjectModel;
 using LinqToSqlShared.Generator;
 using NUnit.Framework;
@@ -76,11 +77,11 @@ namespace LinqToSqlShared.Generator.Tests
         {
             GeneratorSettings settings = new GeneratorSettings();
             settings.MappingFile = "Feedback.dbml";
-            settings.IncludeViews = true;
+            settings.IncludeViews = false;
             settings.IncludeFunctions = true;
-
+            
             DbmlGenerator generator = new DbmlGenerator(settings);
-            DatabaseSchema databaseSchema = GetDatabaseSchema("FeedbackRemote");
+            DatabaseSchema databaseSchema = GetDatabaseSchema("Feedback");
             Database database = generator.Create(databaseSchema);
 
             Assert.IsNotNull(database);
@@ -121,6 +122,8 @@ namespace LinqToSqlShared.Generator.Tests
         {
             GeneratorSettings settings = new GeneratorSettings();
             settings.MappingFile = "Tester.dbml";
+            settings.IncludeFunctions = true;
+            settings.IgnoreExpressions.Add(new Regex("^dbo.sp_"));
 
             DbmlGenerator generator = new DbmlGenerator(settings);
             DatabaseSchema databaseSchema = GetDatabaseSchema("Tester");
