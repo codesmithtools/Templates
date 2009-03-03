@@ -44,7 +44,7 @@ Namespace <%= UnitTestNamespace %>
 
 			<% If Not entityManager.PrimaryKey.IsCompositeKey AndAlso Not entityManager.PrimaryKey.IsIdentity Then %>
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = <%= GetUnitTestInitialization(SourceTable.PrimaryKey.MemberColumns(0).Column) %>
+			entity.Id = <%= GetUnitTestInitialization(entityManager.PrimaryKey.KeyColumn.Column) %>
 			<% End If %>
 			
 			<% ' Primitives %>
@@ -88,31 +88,31 @@ Namespace <%= UnitTestNamespace %>
 
 				Dim entityB As <%= GetClassName(SourceTable) %> = manager.GetById(entityA.Id)
 
-				Assert.IsTrue(entityA.Equals(entityB))
+				Assert.AreEqual(entityA, entityB)
 			Catch ex As Exception
 				Assert.Fail(ex.ToString())
 			End Try
 		End Sub
+        <% If entityManager.Members.Count > 0 Then %>
 		<Test()> _
 		Public Sub Update()
 			Try
 				Dim entityA As <%= GetClassName(SourceTable) %> = GetFirst<%= GetClassName(SourceTable) %>()
 				
 				<% If entityManager.MembersNoKeyNoVersion.Count > 0 Then %>
-				entityA.<%= entityManager.MembersNoKeyNoVersion(0).PropertyName %> = <%= GetUnitTestInitialization(entityManager.MembersNoKeyNoVersion(0).Column) %>;
+				entityA.<%= entityManager.MembersNoKeyNoVersion(0).PropertyName %> = <%= GetUnitTestInitialization(entityManager.MembersNoKeyNoVersion(0).Column) %>
 				<% End If %>
 				
 				manager.Update(entityA)
 
 				Dim entityB As <%= GetClassName(SourceTable) %> = manager.GetById(entityA.Id)
 
-
-
-				Assert.AreEqual(entityA.<%= entityManager.GetEntityBaseFromColumn(SourceTable.NonKeyColumns(0)).PropertyName %>, entityB.<%= entityManager.GetEntityBaseFromColumn(SourceTable.NonKeyColumns(0)).PropertyName %>)
+				Assert.AreEqual(entityA.<%= entityManager.Members(0).PropertyName %>, entityB.<%= entityManager.Members(0).PropertyName %>)
 			Catch ex As Exception
 				Assert.Fail(ex.ToString())
 			End Try
 		End Sub
+        <% End If %>
 		<Test()> _
 		Public Sub Delete()
 			Try

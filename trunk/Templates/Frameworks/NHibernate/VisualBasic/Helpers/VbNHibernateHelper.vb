@@ -83,7 +83,15 @@ Public Class VbNHibernateHelper
 			If x > 0 Then
 				result.Append(", ")
 			End If
-			result.Append([String].Format("{0}.Parse(keys({1}))", mcsList(x).SystemType, x))
+            
+            If mcsList(x).SystemType.Equals(GetType(Guid)) Then
+                result.AppendFormat("new {0}(keys({1}))", mcsList(x).SystemType, x)
+            ElseIf mcsList(x).SystemType.Equals(GetType(String)) Then
+                result.AppendFormat("keys({0})", x)
+            Else
+                result.AppendFormat("{0}.Parse(keys({1}))", mcsList(x).SystemType, x)
+            End If
+            
 			System.Math.Max(System.Threading.Interlocked.Increment(x),x - 1)
 		End While
 		Return result.ToString()
