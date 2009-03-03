@@ -323,6 +323,19 @@
             </summary>
             <value>The broken rules.</value>
         </member>
+        <member name="T:CodeSmith.Data.Linq.ExpressionVisitor`1">
+            <summary>
+            This class visits every Parameter expression in an expression tree and calls a delegate
+            to optionally replace the parameter.  This is useful where two expression trees need to
+            be merged (and they don't share the same ParameterExpressions).
+            </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.ExpressionVisitor">
+            <summary>
+            Expression visitor
+            (from http://blogs.msdn.com/mattwar/archive/2007/07/31/linq-building-an-iqueryable-provider-part-ii.aspx)
+            </summary>
+        </member>
         <member name="T:CodeSmith.Data.Rules.RuleCollection">
             <summary>
             A collection of rules.
@@ -1652,6 +1665,32 @@
             <param name="totalCount">The total count.</param>
             <returns>A new instance of <see cref="T:CodeSmith.Data.Linq.PagedList`1"/>.</returns>
         </member>
+        <member name="M:System.Data.Linq.DataContextExtensions.ExecuteQuery(System.Data.Linq.DataContext,System.Linq.IQueryable[])">
+            <summary>
+            Batches together multiple <see cref="T:System.Linq.IQueryable"/> queries into a single <see cref="T:System.Data.Common.DbCommand"/> and returns all data in
+            a single round trip to the database.
+            </summary>
+            <param name="context">The <see cref="T:System.Data.Linq.DataContext"/> to execute the batch select against.</param>
+            <param name="queries">Represents a collections of SELECT queries to execute.</param>
+            <returns>Returns an <see cref="T:System.Data.Linq.IMultipleResults"/> object containing all results.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when context or queries are null.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when context.Connection is invalid.</exception>
+        </member>
+        <member name="M:System.Data.Linq.DataContextExtensions.CombineCommands(System.Collections.Generic.IEnumerable{System.Data.Common.DbCommand})">
+            <summary>
+            Combines multiple SELECT commands into a single <see cref="T:System.Data.SqlClient.SqlCommand"/> so that all statements can be executed in a 
+            single round trip to the database and return multiple result sets.
+            </summary>
+            <param name="selectCommands">Represents a collection of commands to be batched together.</param>
+            <returns>Returns a single <see cref="T:System.Data.SqlClient.SqlCommand"/> that executes all SELECT statements at once.</returns>
+        </member>
+        <member name="M:System.Data.Linq.DataContextExtensions.CloneParameter(System.Data.Common.DbParameter)">
+            <summary>
+            Returns a clone (via copying all properties) of an existing <see cref="T:System.Data.Common.DbParameter"/>.
+            </summary>
+            <param name="src">The <see cref="T:System.Data.Common.DbParameter"/> to clone.</param>
+            <returns>Returns a clone (via copying all properties) of an existing <see cref="T:System.Data.Common.DbParameter"/>.</returns>
+        </member>
         <member name="T:CodeSmith.Data.Attributes.UserNameAttribute">
             <summary>
             Assigns the current users name to the property for the specified entity states.
@@ -1891,6 +1930,52 @@
             Gets or sets the default value.
             </summary>
             <value>The default value.</value>
+        </member>
+        <member name="M:System.Data.Linq.TableExtensions.Delete``1(System.Data.Linq.Table{``0},System.Linq.IQueryable{``0})">
+            <summary>
+            Immediately deletes all entities from the collection with a single delete command.
+            </summary>
+            <typeparam name="TEntity">Represents the object type for rows contained in <paramref name="table"/>.</typeparam>
+            <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
+            <param name="entities">Represents the collection of items which are to be removed from <paramref name="table"/>.</param>
+            <returns>The number of rows deleted from the database.</returns>
+            <remarks>
+            <para>Similar to stored procedures, and opposite from DeleteAllOnSubmit, rows provided in <paramref name="entities"/> will be deleted immediately with no need to call <see cref="M:System.Data.Linq.DataContext.SubmitChanges"/>.</para>
+            <para>Additionally, to improve performance, instead of creating a delete command for each item in <paramref name="entities"/>, a single delete command is created.</para>
+            </remarks>
+        </member>
+        <member name="M:System.Data.Linq.TableExtensions.Delete``1(System.Data.Linq.Table{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Immediately deletes all entities from the collection with a single delete command.
+            </summary>
+            <typeparam name="TEntity">Represents the object type for rows contained in <paramref name="table"/>.</typeparam>
+            <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
+            <param name="filter">Represents a filter of items to be updated in <paramref name="table"/>.</param>
+            <returns>The number of rows deleted from the database.</returns>
+        </member>
+        <member name="M:System.Data.Linq.TableExtensions.Update``1(System.Data.Linq.Table{``0},System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``0}})">
+            <summary>
+            Immediately updates all entities in the collection with a single update command based on a <typeparamref name="TEntity"/> created from a Lambda expression.
+            </summary>
+            <typeparam name="TEntity">Represents the object type for rows contained in <paramref name="table"/>.</typeparam>
+            <param name="table">Represents a table for a particular type in the underlying database containing rows are to be updated.</param>
+            <param name="entities">Represents the collection of items which are to be updated in <paramref name="table"/>.</param>
+            <param name="evaluator">A Lambda expression returning a <typeparamref name="TEntity"/> that defines the update assignments to be performed on each item in <paramref name="entities"/>.</param>
+            <returns>The number of rows updated in the database.</returns>
+            <remarks>
+            <para>Similar to stored procedures, and opposite from InsertAllOnSubmit, rows provided in <paramref name="entities"/> will be updated immediately with no need to call <see cref="M:System.Data.Linq.DataContext.SubmitChanges"/>.</para>
+            <para>Additionally, to improve performance, instead of creating an update command for each item in <paramref name="entities"/>, a single update command is created.</para>
+            </remarks>
+        </member>
+        <member name="M:System.Data.Linq.TableExtensions.Update``1(System.Data.Linq.Table{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,``0}})">
+            <summary>
+            Immediately updates all entities in the collection with a single update command based on a <typeparamref name="TEntity"/> created from a Lambda expression.
+            </summary>
+            <typeparam name="TEntity">Represents the object type for rows contained in <paramref name="table"/>.</typeparam>
+            <param name="table">Represents a table for a particular type in the underlying database containing rows are to be updated.</param>
+            <param name="filter">Represents a filter of items to be updated in <paramref name="table"/>.</param>
+            <param name="evaluator">A Lambda expression returning a <typeparamref name="TEntity"/> that defines the update assignments to be performed on each item in <paramref name="filter"/>.</param>
+            <returns>The number of rows updated in the database.</returns>
         </member>
         <member name="T:CodeSmith.Data.Rules.Validation.ComparisonOperator">
             <summary>
