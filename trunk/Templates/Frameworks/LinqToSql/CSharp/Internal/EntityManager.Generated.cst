@@ -71,6 +71,7 @@ string safeName =  Database.EntityNamespace + "." + EntityManager.EntityName;
 
 using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 using System.Text;
 
@@ -176,6 +177,15 @@ namespace <%= ManagerNamespace %>
             else
 <% } // column count%>
                 return Entity.FirstOrDefault(<%= GetLamba(method, 5) %>);
+        }
+        
+        /// <summary>
+        /// Immediately deletes the entity by the primary key from the underlying data source with a single delete command.
+        /// </summary>
+        /// <returns>The number of rows deleted from the database.</returns>
+        public int Delete(<%= parameters %>)
+        {
+            return Entity.Delete(<%= GetLamba(method, 5) %>);
         }
 <% } else if (method.IsUnique) { %>
         /// <summary>

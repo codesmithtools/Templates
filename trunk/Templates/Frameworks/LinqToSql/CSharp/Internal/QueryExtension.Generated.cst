@@ -58,6 +58,7 @@ string safeName =Database.EntityNamespace + "." + EntityManager.EntityName;
 
 using System;
 using System.Linq;
+using System.Data.Linq;
 
 namespace <%= Database.ContextNamespace %>
 {
@@ -68,7 +69,7 @@ namespace <%= Database.ContextNamespace %>
     {
 <% foreach(ManagerMethod method in EntityManager.Methods) { %>
 <% if (method.IsKey) { %>
-        
+
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
@@ -81,6 +82,16 @@ namespace <%= Database.ContextNamespace %>
 <% } // column count%>
             
             return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>);
+        }
+
+        /// <summary>
+        /// Immediately deletes the entity by the primary key from the underlying data source with a single delete command.
+        /// </summary>
+        /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
+        /// <returns>The number of rows deleted from the database.</returns>
+        public static int Delete(this System.Data.Linq.Table<<%= safeName %>> table, <%= GetParameters(method) %>)
+        {
+            return table.Delete(<%= GetLamba(method, 5) %>);
         }
 <% } else if (method.IsUnique) {
         uniqueMethods.Add(method.NameSuffix );%>
