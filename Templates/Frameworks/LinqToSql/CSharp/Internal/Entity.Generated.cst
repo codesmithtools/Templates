@@ -213,7 +213,7 @@ foreach(Column column in Type.Columns) {
     if (column.IsDelayLoaded == true && column.IsPrimaryKey == false)
     {
         dataType = CSharpAlias[dataType];
-        fieldType = string.Format("Link<{0}>", dataType);
+        fieldType = string.Format("System.Data.Linq.Link<{0}>", dataType);
         storageGet = storageGet + ".Value";
         storageSet = storageGet;
     }
