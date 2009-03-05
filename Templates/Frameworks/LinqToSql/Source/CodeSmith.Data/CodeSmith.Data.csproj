@@ -51,6 +51,9 @@
     <Reference Include="System.Data.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.DynamicData">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -66,6 +69,13 @@
     <Compile Include="Attributes\UserNameAttribute.cs" />
     <Compile Include="Attributes\GuidAttribute.cs" />
     <Compile Include="Attributes\NowAttribute.cs" />
+    <Compile Include="Audit\AuditAction.cs" />
+    <Compile Include="Audit\AuditAttribute.cs" />
+    <Compile Include="Audit\AuditEntity.cs" />
+    <Compile Include="Audit\AuditManager.cs" />
+    <Compile Include="Audit\AuditProperty.cs" />
+    <Compile Include="Audit\AuditLog.cs" />
+    <Compile Include="Audit\NotAuditedAttribute.cs" />
     <Compile Include="EntityKey.cs" />
     <Compile Include="DataManagerBase.cs" />
     <Compile Include="EntityManagerBase.cs" />
