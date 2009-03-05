@@ -262,9 +262,7 @@
     {
         if(EnumDatabase != null)
         {
-            string contextClass = CommonUtility.GetClassName(database.Class);    
-            string fileName = Path.Combine(OutputDirectory, String.Concat(contextClass, ".Enums.cs"));
-        
+            string fileName = Path.ChangeExtension(parentFile, ".Enums.cs");
             EnumClass t = this.Create<EnumClass>();
             t.Namespace = database.EntityNamespace;
             t.Database = EnumDatabase;
