@@ -19,6 +19,7 @@ namespace CodeSmith.Data.Audit
 
         private static readonly Dictionary<MemberInfo, bool> _notAuditedCache = new Dictionary<MemberInfo, bool>();
         private static readonly object _notAuditedLock = new object();
+        private static readonly string _binaryType = typeof(Binary).FullName;
 
         /// <summary>
         /// Creates the <see cref="AuditLog"/> of changes form the specified <see cref="DataContext"/>.
@@ -33,14 +34,14 @@ namespace CodeSmith.Data.Audit
             if (dataContext == null)
                 throw new ArgumentNullException("dataContext");
 
-            var auditSet = new AuditLog();
+            var auditLog = new AuditLog();
 
             ChangeSet changeSet = dataContext.GetChangeSet();
-            AddAuditEntities(dataContext, auditSet, AuditAction.Delete, changeSet.Deletes);
-            AddAuditEntities(dataContext, auditSet, AuditAction.Insert, changeSet.Inserts);
-            AddAuditEntities(dataContext, auditSet, AuditAction.Update, changeSet.Updates);
+            AddAuditEntities(dataContext, auditLog, AuditAction.Delete, changeSet.Deletes);
+            AddAuditEntities(dataContext, auditLog, AuditAction.Insert, changeSet.Inserts);
+            AddAuditEntities(dataContext, auditLog, AuditAction.Update, changeSet.Updates);
 
-            return auditSet;
+            return auditLog;
         }
 
         private static void AddAuditEntities(DataContext dataContext, AuditLog auditLog, AuditAction action, IEnumerable<object> entities)
@@ -80,14 +81,15 @@ namespace CodeSmith.Data.Audit
             MetaTable meta = dataContext.Mapping.GetTable(entity.GetType());
             foreach (MetaDataMember dataMember in meta.RowType.DataMembers)
             {
-                if (dataMember.IsAssociation || HasNotAuditedAttribute(dataMember.Member))
+                if (dataMember.IsVersion || dataMember.IsAssociation || HasNotAuditedAttribute(dataMember.Member))
                     continue;
 
                 var auditProperty = new AuditProperty();
                 auditProperty.Name = dataMember.Member.Name;
                 auditProperty.Type = dataMember.Type.FullName;
-                auditProperty.Current = dataMember.MemberAccessor.GetBoxedValue(entity);
-                auditProperty.Original = null;
+
+                if (auditProperty.Type != _binaryType && !dataMember.IsDeferred)
+                    auditProperty.Current = dataMember.MemberAccessor.GetBoxedValue(entity);
 
                 auditEntity.Properties.Add(auditProperty);
             }
@@ -111,8 +113,11 @@ namespace CodeSmith.Data.Audit
                 if (propertyInfo != null)
                     auditProperty.Type = propertyInfo.PropertyType.FullName;
 
-                auditProperty.Current = info.CurrentValue;
-                auditProperty.Original = info.OriginalValue;
+                if (auditProperty.Type != _binaryType)
+                {
+                    auditProperty.Current = info.CurrentValue;
+                    auditProperty.Original = info.OriginalValue;
+                }
 
                 auditEntity.Properties.Add(auditProperty);
             }
@@ -161,6 +166,9 @@ namespace CodeSmith.Data.Audit
                 return false;
 
             Type metadataType = metadataTypeAttribute.MetadataClassType;
+            if (metadataType == null)
+                return false;
+
             if (memberInfo.MemberType == MemberTypes.TypeInfo)
                 return metadataType.IsDefined(attributeType, true);
 

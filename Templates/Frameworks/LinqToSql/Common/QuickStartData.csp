@@ -40,6 +40,8 @@
       <property name="Framework">v35_SP1</property>
       <property name="IncludeDataContract">True</property>
       <property name="OutputDirectory">Entities</property>
+      <property name="DataContextDirectory">.\</property>
+      <property name="ViewDirectory">Views</property>
     </propertySet>
     <propertySet name="Managers" template="$linqToSql$$language$\Managers.cst">
       <property name="Framework">v35_SP1</property>
@@ -49,7 +51,7 @@
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
       </property>
-      <property name="DataContextFile">Entities\$myDatabase$DataContext.cs</property>
+      <property name="DataContextFile">.\$myDatabase$DataContext.cs</property>
       <property name="DataManagerName">$myDatabase$DataManager</property>
       <property name="ManagerNamespace">$myContextNamespace$</property>
     </propertySet>

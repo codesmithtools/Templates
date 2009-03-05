@@ -470,7 +470,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         #endregion
         <% } %>
         <% if (IncludeDataRules) { %>
-        
+
         #region RuleManager
         private readonly CodeSmith.Data.Rules.RuleManager _ruleManager = new CodeSmith.Data.Rules.RuleManager();
 
@@ -493,8 +493,56 @@ for(int x = 0; x < function.Parameters.Count; x++) {
 
             if (!isValid)
                 throw new CodeSmith.Data.Rules.BrokenRuleException(RuleManager.BrokenRules);
-
+            
+            PopulateLastAudit();
+            BeforeSubmitChanges();
             base.SubmitChanges(failureMode);
+        }
+        #endregion
+
+        #region Auditing
+        /// <summary>Called before the underlying DataContext.SubmitChanges is called.</summary>
+        partial void BeforeSubmitChanges();
+
+        private bool _auditingEnabled = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether auditing is enabled.
+        /// </summary>
+        /// <value><c>true</c> if auditing is enabled; otherwise, <c>false</c>.</value>
+        public bool AuditingEnabled
+        {
+            get { return _auditingEnabled; }
+            set { _auditingEnabled = value; }
+        }
+
+        private CodeSmith.Data.Audit.AuditLog _lastAudit;
+
+        /// <summary>
+        /// Gets the last <see cref="CodeSmith.Data.Audit.AuditLog"/>.
+        /// </summary>
+        /// <value>The last <see cref="CodeSmith.Data.Audit.AuditLog"/>.</value>
+        /// <remarks>
+        /// <see cref="AuditingEnabled"/> must be <c>true</c> for <see cref="LastAudit"/> to be populated.
+        /// </remarks>
+        public CodeSmith.Data.Audit.AuditLog LastAudit
+        {
+            get { return _lastAudit; }
+        }
+
+        /// <summary>
+        /// Populates the <see cref="LastAudit"/> property with the <see cref="CodeSmith.Data.Audit.AuditLog"/>
+        /// of changes in this <see cref="System.Data.Linq.DataContext"/>.
+        /// </summary>
+        /// <remarks>
+        /// <see cref="AuditingEnabled"/> must be <c>true</c> for <see cref="LastAudit"/> to be populated.
+        /// </remarks>
+        public void PopulateLastAudit()
+        {
+            if (!AuditingEnabled)
+                return;
+
+            _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(this);
         }
         #endregion
         <% } %>
