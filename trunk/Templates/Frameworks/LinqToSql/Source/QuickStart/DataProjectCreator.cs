@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using CodeSmith.Engine;
 
 namespace QuickStartUtils
 {
@@ -45,12 +46,15 @@ namespace QuickStartUtils
 
             string linqToSqlPath = (ProjectBuilder.CopyTemplatesToFolder)
                 ? @"..\Templates\LinqToSql\"
-                : string.Concat(ProjectBuilder.CodeTemplate.CodeTemplateInfo.DirectoryName, @"\"); // Needs Normal Path here
+                : string.Concat(ProjectBuilder.CodeTemplate.CodeTemplateInfo.DirectoryName); // Needs Normal Path here
+            
+            if (!linqToSqlPath.EndsWith(@"\"))
+                linqToSqlPath += @"\";
 
             string cspPath = Path.Combine(projectPath.DirectoryPath, cspFileName);
 
             QuickStartUtils.FindAndReplace(cspPath, @"\$connectionString\$", ProjectBuilder.SourceDatabase.ConnectionString);
-            QuickStartUtils.FindAndReplace(cspPath, @"\$myDatabase\$", ProjectBuilder.SourceDatabase.Database.Name);
+            QuickStartUtils.FindAndReplace(cspPath, @"\$myDatabase\$", StringUtil.ToPascalCase(ProjectBuilder.SourceDatabase.Database.Name));
             QuickStartUtils.FindAndReplace(cspPath, @"\$myContextNamespace\$", ProjectBuilder.DataProjectName);
             QuickStartUtils.FindAndReplace(cspPath, @"\$language\$", ProjectBuilder.LanguageFolder);
             QuickStartUtils.FindAndReplace(cspPath, @"\$linqToSql\$", linqToSqlPath);

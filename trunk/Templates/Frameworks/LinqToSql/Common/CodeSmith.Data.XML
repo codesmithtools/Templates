@@ -1212,6 +1212,105 @@
             true if the specified value is valid; otherwise, false.
             </returns>
         </member>
+        <member name="T:CodeSmith.Data.Audit.AuditLog">
+            <summary>
+            A class representing a log of the changes to a <see cref="T:System.Data.Linq.DataContext"/>.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Audit.AuditLog.AuditNamespace">
+            <summary>
+            The schema namespace for the audit log.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Audit.AuditLog.ToXml">
+            <summary>
+            Returns an xml string of the <see cref="T:CodeSmith.Data.Audit.AuditLog"/>.
+            </summary>
+            <returns>An xml string of the <see cref="T:CodeSmith.Data.Audit.AuditLog"/>.</returns>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditLog.Entities">
+            <summary>
+            Gets the list entities that have changes in the <see cref="T:System.Data.Linq.DataContext"/>.
+            </summary>
+            <value>The list entities that have changes.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Audit.AuditManager">
+            <summary>
+            A class to create an <see cref="T:CodeSmith.Data.Audit.AuditLog"/> from the changes in a <see cref="T:System.Data.Linq.DataContext"/>.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Audit.AuditManager.CreateAuditLog(System.Data.Linq.DataContext)">
+            <summary>
+            Creates the <see cref="T:CodeSmith.Data.Audit.AuditLog"/> of changes form the specified <see cref="T:System.Data.Linq.DataContext"/>.
+            </summary>
+            <param name="dataContext">The <see cref="T:System.Data.Linq.DataContext"/> to get the changes from.</param>
+            <returns>An instance of <see cref="T:CodeSmith.Data.Audit.AuditLog"/> that is an audit log of the changes to <see cref="T:System.Data.Linq.DataContext"/>.</returns>
+            <remarks>
+            An entity has to be marked with the <see cref="T:CodeSmith.Data.Audit.AuditAttribute"/> for audit data to be collected for that entity.
+            </remarks>
+        </member>
+        <member name="M:CodeSmith.Data.Audit.AuditManager.AddAuditProperties(System.Data.Linq.DataContext,System.Object,CodeSmith.Data.Audit.AuditEntity)">
+            <summary>
+            For inserts and deletes, all the properties current values are included in the log.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Audit.AuditManager.AddAuditProperties(System.Data.Linq.ITable,System.Object,CodeSmith.Data.Audit.AuditEntity)">
+            <summary>
+            For updated entities, only the modified properties are included in the log.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Audit.AuditEntity">
+            <summary>
+            A class for logging the changes to an entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditEntity.Action">
+            <summary>
+            Gets or sets the action that was taken on the entity.
+            </summary>
+            <value>The action that was taken on the entity.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditEntity.Type">
+            <summary>
+            Gets or sets the data type of the entity.
+            </summary>
+            <value>The data type of the entity.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditEntity.Properties">
+            <summary>
+            Gets the list of properties that action was taken on.
+            </summary>
+            <value>The list of properties that action was taken on.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Audit.AuditProperty">
+            <summary>
+            A class for logging the changes to a property on an entity.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditProperty.Name">
+            <summary>
+            Gets or sets the name of the property.
+            </summary>
+            <value>The name of the property.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditProperty.Type">
+            <summary>
+            Gets or sets the type of the property.
+            </summary>
+            <value>The type of the property.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditProperty.Current">
+            <summary>
+            Gets or sets the current/changed value of the property.
+            </summary>
+            <value>The current value of the property.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditProperty.Original">
+            <summary>
+            Gets or sets the original value of the property.
+            </summary>
+            <value>The original value of the property.</value>
+        </member>
         <member name="T:CodeSmith.Data.Rules.BrokenRule">
             <summary>
             A class indicating a broken rule.
@@ -1283,6 +1382,36 @@
             Runs this rule.
             </summary>
             <param name="context">The rule context.</param>
+        </member>
+        <member name="T:CodeSmith.Data.Audit.NotAuditedAttribute">
+            <summary>
+            Indicates that a field in an audited class should not be included in the audit log.
+            </summary>
+            <remarks>
+            Use the NotAuditedAttribute attribute to prevent a field from being included in the audit.
+            </remarks>
+            <seealso cref="T:CodeSmith.Data.Audit.AuditAttribute"/>
+            <seealso cref="T:CodeSmith.Data.Audit.AuditManager"/>
+        </member>
+        <member name="T:CodeSmith.Data.Audit.AuditAction">
+            <summary>
+            A list of entity actions for the audit log.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Audit.AuditAction.Insert">
+            <summary>
+            The entity was inserted.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Audit.AuditAction.Update">
+            <summary>
+            The entity was updated.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Audit.AuditAction.Delete">
+            <summary>
+            The entity was deleted.
+            </summary>
         </member>
         <member name="T:CodeSmith.Data.Attributes.NowAttribute">
             <summary>
@@ -1487,6 +1616,16 @@
             <summary>
               Looks up a localized string similar to {0} is a required field..
             </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Audit.AuditAttribute">
+            <summary>
+            Indicates that a class can be audited.
+            </summary>
+            <remarks>
+            Use the <see cref="T:CodeSmith.Data.Audit.NotAuditedAttribute"/> attribute to prevent a field from being included in the audit
+            </remarks>
+            <seealso cref="T:CodeSmith.Data.Audit.AuditManager"/>
+            <seealso cref="T:CodeSmith.Data.Audit.NotAuditedAttribute"/>
         </member>
         <member name="T:CodeSmith.Data.Rules.Validation.CompareRule`1">
             <summary>
@@ -2117,145 +2256,6 @@
             <returns>
             true if the specified value is valid; otherwise, false.
             </returns>
-        </member>
-        <member name="T:CodeSmith.Data.Audit.AuditAction">
-            <summary>
-            A list of entity actions for the audit log.
-            </summary>
-        </member>
-        <member name="F:CodeSmith.Data.Audit.AuditAction.Insert">
-            <summary>
-            The entity was inserted.
-            </summary>
-        </member>
-        <member name="F:CodeSmith.Data.Audit.AuditAction.Update">
-            <summary>
-            The entity was updated.
-            </summary>
-        </member>
-        <member name="F:CodeSmith.Data.Audit.AuditAction.Delete">
-            <summary>
-            The entity was deleted.
-            </summary>
-        </member>
-        <member name="T:CodeSmith.Data.Audit.AuditEntity">
-            <summary>
-            A class for logging the changes to an entity.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Audit.AuditEntity.Action">
-            <summary>
-            Gets or sets the action that was taken on the entity.
-            </summary>
-            <value>The action that was taken on the entity.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Audit.AuditEntity.Type">
-            <summary>
-            Gets or sets the data type of the entity.
-            </summary>
-            <value>The data type of the entity.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Audit.AuditEntity.Properties">
-            <summary>
-            Gets the list of properties that action was taken on.
-            </summary>
-            <value>The list of properties that action was taken on.</value>
-        </member>
-        <member name="T:CodeSmith.Data.Audit.AuditProperty">
-            <summary>
-            A class for logging the changes to a property on an entity.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Audit.AuditProperty.Name">
-            <summary>
-            Gets or sets the name of the property.
-            </summary>
-            <value>The name of the property.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Audit.AuditProperty.Type">
-            <summary>
-            Gets or sets the type of the property.
-            </summary>
-            <value>The type of the property.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Audit.AuditProperty.Current">
-            <summary>
-            Gets or sets the current/changed value of the property.
-            </summary>
-            <value>The current value of the property.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Audit.AuditProperty.Original">
-            <summary>
-            Gets or sets the original value of the property.
-            </summary>
-            <value>The original value of the property.</value>
-        </member>
-        <member name="T:CodeSmith.Data.Audit.AuditManager">
-            <summary>
-            A class to create an <see cref="T:CodeSmith.Data.Audit.AuditLog"/> from the changes in a <see cref="T:System.Data.Linq.DataContext"/>.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Audit.AuditManager.CreateAuditLog(System.Data.Linq.DataContext)">
-            <summary>
-            Creates the <see cref="T:CodeSmith.Data.Audit.AuditLog"/> of changes form the specified <see cref="T:System.Data.Linq.DataContext"/>.
-            </summary>
-            <param name="dataContext">The <see cref="T:System.Data.Linq.DataContext"/> to get the changes from.</param>
-            <returns>An instance of <see cref="T:CodeSmith.Data.Audit.AuditLog"/> that is an audit log of the changes to <see cref="T:System.Data.Linq.DataContext"/>.</returns>
-            <remarks>
-            An entity has to be marked with the <see cref="T:CodeSmith.Data.Audit.AuditAttribute"/> for audit data to be collected for that entity.
-            </remarks>
-        </member>
-        <member name="M:CodeSmith.Data.Audit.AuditManager.AddAuditProperties(System.Data.Linq.DataContext,System.Object,CodeSmith.Data.Audit.AuditEntity)">
-            <summary>
-            For inserts and deletes, all the properties current values are included in the log.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Audit.AuditManager.AddAuditProperties(System.Data.Linq.ITable,System.Object,CodeSmith.Data.Audit.AuditEntity)">
-            <summary>
-            For updated entities, only the modified properties are included in the log.
-            </summary>
-        </member>
-        <member name="T:CodeSmith.Data.Audit.AuditAttribute">
-            <summary>
-            Indicates that a class can be audited.
-            </summary>
-            <remarks>
-            Use the <see cref="T:CodeSmith.Data.Audit.NotAuditedAttribute"/> attribute to prevent a field from being included in the audit
-            </remarks>
-            <seealso cref="T:CodeSmith.Data.Audit.AuditManager"/>
-            <seealso cref="T:CodeSmith.Data.Audit.NotAuditedAttribute"/>
-        </member>
-        <member name="T:CodeSmith.Data.Audit.NotAuditedAttribute">
-            <summary>
-            Indicates that a field in an audited class should not be included in the audit log.
-            </summary>
-            <remarks>
-            Use the NotAuditedAttribute attribute to prevent a field from being included in the audit.
-            </remarks>
-            <seealso cref="T:CodeSmith.Data.Audit.AuditAttribute"/>
-            <seealso cref="T:CodeSmith.Data.Audit.AuditManager"/>
-        </member>
-        <member name="T:CodeSmith.Data.Audit.AuditLog">
-            <summary>
-            A class representing a log of the changes to a <see cref="T:System.Data.Linq.DataContext"/>.
-            </summary>
-        </member>
-        <member name="F:CodeSmith.Data.Audit.AuditLog.AuditNamespace">
-            <summary>
-            The schema namespace for the audit log.
-            </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Audit.AuditLog.ToXml">
-            <summary>
-            Returns an xml string of the <see cref="T:CodeSmith.Data.Audit.AuditLog"/>.
-            </summary>
-            <returns>An xml string of the <see cref="T:CodeSmith.Data.Audit.AuditLog"/>.</returns>
-        </member>
-        <member name="P:CodeSmith.Data.Audit.AuditLog.Entities">
-            <summary>
-            Gets the list entities that have changes in the <see cref="T:System.Data.Linq.DataContext"/>.
-            </summary>
-            <value>The list entities that have changes.</value>
         </member>
     </members>
 </doc>
