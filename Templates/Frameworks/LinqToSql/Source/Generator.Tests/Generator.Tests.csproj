@@ -52,10 +52,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\bin\CodeSmith.Engine.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.NRefactory, Version=4.0.0.9999, Culture=neutral, PublicKeyToken=efe927acf176eea2, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Common\ICSharpCode.NRefactory.dll</HintPath>
-    </Reference>
     <Reference Include="SchemaExplorer, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\AddIns\SchemaExplorer.dll</HintPath>
@@ -70,7 +66,6 @@
     <Reference Include="nunit.framework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeFileParserTest.cs" />
     <Compile Include="GeneratorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -95,10 +90,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CodeParser\CodeParser.csproj">
-      <Project>{42214FFD-0EAF-4678-BD4C-0DF40BC09800}</Project>
-      <Name>CodeParser</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Dbml\Dbml.csproj">
       <Project>{FE25E33F-95B9-453C-98DC-82DF44CED946}</Project>
       <Name>Dbml</Name>
@@ -112,9 +103,6 @@
     <None Include="bin\Debug\Feedback.dbml.layout">
       <DependentUpon>Feedback.dbml</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="bin\Debug\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
