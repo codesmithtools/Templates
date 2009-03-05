@@ -53,7 +53,20 @@
     <Assemblies Include="Common\CodeSmith.Data.dll" />
     <Comments Include="Common\CodeSmith.Data.xml" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <CommitFiles Include="Common\CodeSmith.CodeParser.dll" />
+    <CommitFiles Include="Common\CodeSmith.Data.dll" />
+    <CommitFiles Include="Common\CodeSmith.Data.xml" />
+    <CommitFiles Include="Common\CodeSmith.Data.chm" />
+    <CommitFiles Include="Common\CodeSmith.InsertClassMergeStrategy.dll" />
+    <CommitFiles Include="Common\Dbml.dll" />
+    <CommitFiles Include="Common\Generator.dll" />
+    <CommitFiles Include="Common\ICSharpCode.NRefactory.dll" />
+    <CommitFiles Include="Common\ICSharpCode.SharpZipLib.dll" />
+    <CommitFiles Include="Common\QuickStartUtils.dll" />
+  </ItemGroup>
+  
   <Target Name="Documentation" DependsOnTargets="Version;Compile">
     <Sandcastle Clean="true" TopicStyle="vs2005" 
                 NoWarnMessages="true"
@@ -70,8 +83,25 @@
          ZipFileName="plinqo-v$(Major).$(Minor).$(Revision).zip" />
   </Target>
 
+  <Target Name="Commit" DependsOnTargets="Compile">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="GoogleUser">
+      <Output TaskParameter="Value" PropertyName="GoogleUser" />
+    </RegistryRead>
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="GooglePassword">
+      <Output TaskParameter="Value" PropertyName="GooglePassword" />
+    </RegistryRead>
+
+    <SvnCommit
+      Targets="@(CommitFiles)"
+      Message="Auto commit from MSBuild."
+      Username="$(GoogleUser)"
+      Password="$(GooglePassword)" />
+
+  </Target>
+  
   <Target Name="Nightly" DependsOnTargets="Zip">
     <Copy SourceFiles="plinqo-v$(Major).$(Minor).$(Revision).zip" 
           DestinationFiles="$(DeployFolder)\plinqo-v$(Major).$(Minor).$(Revision).zip" />
   </Target>
+
 </Project>
