@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace CodeSmith.Data.Audit
@@ -7,6 +8,7 @@ namespace CodeSmith.Data.Audit
     /// A class for logging the changes to an entity.
     /// </summary>
     [XmlRoot(Namespace = AuditLog.AuditNamespace, ElementName = "entity")]
+    [DebuggerDisplay("Action: {Action}, Type: {Type}")]
     public class AuditEntity
     {
         private readonly List<AuditProperty> _properties = new List<AuditProperty>();

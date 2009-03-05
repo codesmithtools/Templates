@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Diagnostics;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace CodeSmith.Data.Audit
@@ -7,6 +8,7 @@ namespace CodeSmith.Data.Audit
     /// A class for logging the changes to a property on an entity.
     /// </summary>
     [XmlRoot(Namespace = AuditLog.AuditNamespace, ElementName = "property")]
+    [DebuggerDisplay("Name: {Name}, Type: {Type}")]
     public class AuditProperty
     {
         /// <summary>

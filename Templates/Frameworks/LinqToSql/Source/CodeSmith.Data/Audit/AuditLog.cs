@@ -39,12 +39,11 @@ namespace CodeSmith.Data.Audit
         {
             var settings = new XmlWriterSettings();
             settings.Indent = true;
-            settings.Encoding = Encoding.UTF8;
+            settings.OmitXmlDeclaration = true;
 
             var builder = new StringBuilder();
 
-            using (var buffer = new StringWriterWithEncoding(builder, Encoding.UTF8))
-            using (XmlWriter writer = XmlWriter.Create(buffer, settings))
+            using (XmlWriter writer = XmlWriter.Create(builder, settings))
             {
                 if (writer != null)
                 {
@@ -55,25 +54,5 @@ namespace CodeSmith.Data.Audit
 
             return builder.ToString();
         }
-
-        #region Nested type: StringWriterWithEncoding
-
-        private class StringWriterWithEncoding : StringWriter
-        {
-            private readonly Encoding encoding;
-
-            public StringWriterWithEncoding(StringBuilder builder, Encoding encoding)
-                : base(builder)
-            {
-                this.encoding = encoding;
-            }
-
-            public override Encoding Encoding
-            {
-                get { return encoding; }
-            }
-        }
-
-        #endregion
     }
 }
