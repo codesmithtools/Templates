@@ -20,7 +20,8 @@ namespace QuickStartUtils
 
             // Move/Rename CSP
             cspFileName = String.Format("{0}.csp", Path.GetFileNameWithoutExtension(projectPath.FileName));
-            File.Copy(Path.Combine(ProjectBuilder.CodeTemplate.CodeTemplateInfo.DirectoryName, @"Common\QuickStartData.csp"),
+            string templateCspFile = ProjectBuilder.QueryPattern == QueryPatternEnum.ManagerClasses ? @"Common\QuickStartData.csp" : @"Common\QuickStartQuery.csp";
+            File.Copy(Path.Combine(ProjectBuilder.CodeTemplate.CodeTemplateInfo.DirectoryName, templateCspFile),
                 Path.Combine(projectPath.DirectoryPath, cspFileName));
 
             // Delete Class1
@@ -58,6 +59,7 @@ namespace QuickStartUtils
             QuickStartUtils.FindAndReplace(cspPath, @"\$myContextNamespace\$", ProjectBuilder.DataProjectName);
             QuickStartUtils.FindAndReplace(cspPath, @"\$language\$", ProjectBuilder.LanguageFolder);
             QuickStartUtils.FindAndReplace(cspPath, @"\$linqToSql\$", linqToSqlPath);
+            QuickStartUtils.FindAndReplace(cspPath, @"\$languageExtension\$", ProjectBuilder.LanguageAppendage);
 
             //The location in the csproj file directly below where we want to insert the csp include
             QuickStartUtils.FindAndReplace(projectPath.FilePath, ProjectInsertRegex,

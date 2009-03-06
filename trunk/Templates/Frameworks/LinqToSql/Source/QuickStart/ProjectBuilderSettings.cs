@@ -10,6 +10,11 @@ namespace QuickStartUtils
 {
     public class ProjectBuilderSettings
     {
+        public ProjectBuilderSettings()
+        {
+            QueryPattern = QueryPatternEnum.ManagerClasses;
+        }
+
         public DatabaseSchema SourceDatabase { get; set; }
         public String Location { get; set; }
         public String SolutionName { get; set; }
@@ -23,6 +28,7 @@ namespace QuickStartUtils
         public bool IncludeTestProject { get; set; }
         public CodeTemplate CodeTemplate { get; set; }
         public string WebSkin { get; set; }
+        public QueryPatternEnum QueryPattern { get; set; }
 
         public string LanguageFolder
         {

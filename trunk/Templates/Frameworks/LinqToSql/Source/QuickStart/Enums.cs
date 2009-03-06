@@ -22,4 +22,10 @@ namespace QuickStartUtils
     {
         Default
     }
+
+    public enum QueryPatternEnum
+    {
+        ManagerClasses,
+        QueryExtensions
+    }
 }
