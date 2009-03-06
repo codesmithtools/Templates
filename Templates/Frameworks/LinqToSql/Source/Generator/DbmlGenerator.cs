@@ -400,7 +400,7 @@ namespace LinqToSqlShared.Generator
 
             bool isOneToOne = IsOneToOne(tableKeySchema, foreignAssociation);
 
-            if (isOneToOne)
+            if (primaryAssociation.Cardinality == null && isOneToOne)
                 primaryAssociation.Cardinality = Cardinality.One;
 
             if (isNew)

@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True" 
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True"
     Description="Linq to Sql Entity Class." %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -8,16 +8,16 @@
 
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 
-<%@ Property Category="2.Mapping" Name="Database" 
-    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
+<%@ Property Category="2.Mapping" Name="Database"
+    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False"
     Description="Database schema instance. Must be set by parent template" %>
 
-<%@ Property Category="3.Manager" Name="ManagerNamespace" 
-    Type="System.String" Default="" Optional="False" 
+<%@ Property Category="3.Manager" Name="ManagerNamespace"
+    Type="System.String" Default="" Optional="False"
     Description="The namespace to use for the generated manager class files."%>
 
-<%@ Property Category="3.Manager" Name="DataManager" 
-    Type="Manager.DataManager" Optional="False" 
+<%@ Property Category="3.Manager" Name="DataManager"
+    Type="Manager.DataManager" Optional="False"
     Description="DatabaseMapping instance. Must be set by parent template" %>
 
 '------------------------------------------------------------------------------
@@ -30,27 +30,18 @@
 '------------------------------------------------------------------------------
 
 Imports System
-Imports System.Data
-Imports System.Data.Linq
-Imports System.Data.Linq.Mapping
-Imports System.Diagnostics
-Imports CodeSmith.Data
-Imports CodeSmith.Data.Rules
-Imports <%= ManagerNamespace %>
 
 Namespace <%= Database.ContextNamespace %>
-    ''' <summary>
-    ''' The DataContext manager class for the <%= Database.Name %> database.
-    ''' </summary>
+
     Partial <%= Naming.GetModifier(Database.AccessModifier).Replace("P","p") %> Class <%= Database.Class %>
-        
-        Private _manager As <%= DataManager.DataManagerName %> = Nothing
-        
+
+        Private _manager As <%= ManagerNamespace %>.<%= DataManager.DataManagerName %> = Nothing
+
         ''' <summary>
         ''' Gets the data manager.
         ''' </summary>
         ''' <value>The data manager.</value>
-        Public ReadOnly Property Manager As <%= DataManager.DataManagerName %>
+        Public ReadOnly Property Manager As <%= ManagerNamespace %>.<%= DataManager.DataManagerName %>
             Get
                 If _manager Is Nothing Then
                     _manager = New <%= DataManager.DataManagerName %>(Me)
@@ -58,6 +49,6 @@ Namespace <%= Database.ContextNamespace %>
                 Return _manager
             End Get
         End Property
-        
+
     End Class
 End Namespace

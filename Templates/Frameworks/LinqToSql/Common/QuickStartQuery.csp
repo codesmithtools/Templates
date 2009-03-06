@@ -62,17 +62,14 @@
       <property name="BaseDirectory">.\</property>
       <property name="ViewDirectory">.\Views</property>
     </propertySet>
-    <propertySet name="Managers" template="$linqToSql$$language$\Managers.cst">
-      <property name="ManagerDirectory">.\Managers</property>
+    <propertySet name="Queries" template="$linqToSql$$language$\Queries.cst">
+      <property name="QueryDirectory">.\Queries</property>
       <property name="MethodPrefix">GetBy</property>
       <property name="MethodKeySuffix">Key</property>
       <property name="SourceDatabase">
         <connectionString>$($myDatabase$ConnectionString)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
       </property>
-      <property name="DataContextFile">.\$myDatabase$DataContext.$languageExtension$</property>
-      <property name="DataManagerName">$myDatabase$DataManager</property>
-      <property name="ManagerNamespace">$myContextNamespace$</property>
     </propertySet>
   </propertySets>
 </codeSmith>

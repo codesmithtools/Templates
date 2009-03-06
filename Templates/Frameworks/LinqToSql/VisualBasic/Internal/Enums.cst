@@ -26,7 +26,7 @@ Namespace <%= Me.Namespace %>
         If myEnum.IncludeDataContract Then %>
     <DataContract()> _
 <%      End If %>
-    <%= System.[Enum].GetName(GetType(LinqToSqlShared.Generator.DbmlEnum.AccessModifier), myEnum.AccessModifier) %> Enum <%= myEnum.Name %> Inherits <%= VBAlias(myEnum.Type) %>
+    <%= System.[Enum].GetName(GetType(LinqToSqlShared.Generator.DbmlEnum.AccessModifier), myEnum.AccessModifier) %> Enum <%= myEnum.Name %> As <%= VBAlias(myEnum.Type) %>
 <%        For Each myItem As LinqToSqlShared.Generator.DbmlEnum.Item In myEnum.Items
             If Not String.IsNullOrEmpty(myItem.Description) Then %>
         ''' <summary>

@@ -323,6 +323,7 @@ foreach(Column column in Type.Columns) {
                     if (value != null)
                     {
                         value.<%= info.OtherAssociation.Member %><%= info.AddSyntax %>;
+<% if (a.IsForeignKey == true) { %>
 <% for(int i = 0; i < info.AssignColumns.Count; i++) { %>
                         <%= info.AssignColumns[i].Storage %> = value.<%= info.OtherColumns[i].Member %>;
 <% } %>
@@ -332,6 +333,7 @@ foreach(Column column in Type.Columns) {
 <% for(int i = 0; i < info.AssignColumns.Count; i++) { %>
                         <%= info.AssignColumns[i].Storage %> = default(<%= GetColumnType(info.OtherColumns[i]) %>);
 <% } %>
+<% } // IsForeignKey %>
                     }
                     SendPropertyChanged("<%= a.Member %>");
                 }
