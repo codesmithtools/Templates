@@ -108,7 +108,7 @@
 
   </Target>
   
-  <Target Name="Nightly" DependsOnTargets="Zip">
+  <Target Name="Nightly" DependsOnTargets="Zip;Commit">
     <Copy SourceFiles="plinqo-v$(Major).$(Minor).$(Revision).zip" 
           DestinationFiles="$(DeployFolder)\plinqo-v$(Major).$(Minor).$(Revision).zip" />
   </Target>
