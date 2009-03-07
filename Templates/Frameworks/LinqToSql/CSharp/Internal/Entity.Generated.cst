@@ -130,11 +130,11 @@ namespace <%= Database.EntityNamespace %>
             <%if(Framework == FrameworkEnum.v35_SP1) { %>
             CodeSmith.Data.Rules.RuleManager.AddShared<<%= Type.Name %>>();
             <% } else {
-                const string lengthFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new LengthRule(\"{1}\", {2}));";
-                const string requiredFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new RequiredRule(\"{1}\"));";
-                const string sqlDateFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new RangeRule<DateTime>(\"{1}\", SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value));";
-                const string createDateFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new NowRule(\"{1}\", EntityState.New));";
-                const string modifyDateFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new NowRule(\"{1}\", EntityState.Dirty));";
+                const string lengthFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Validation.LengthRule(\"{1}\", {2}));";
+                const string requiredFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Validation.RequiredRule(\"{1}\"));";
+                const string sqlDateFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Validation.RangeRule<DateTime>(\"{1}\", System.Data.SqlTypes.SqlDateTime.MinValue.Value, System.Data.SqlTypes.SqlDateTime.MaxValue.Value));";
+                const string createDateFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Assign.NowRule(\"{1}\", CodeSmith.Data.Rules.EntityState.New));";
+                const string modifyDateFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Assign.NowRule(\"{1}\", CodeSmith.Data.Rules.EntityState.Dirty));";
 
                 int indent = Response.IndentLevel;
                 Response.IndentLevel = 3;

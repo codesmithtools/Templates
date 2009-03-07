@@ -2,7 +2,6 @@
     Description="Linq to Sql Entity Manager Class." %>
 
 <%@ Assembly Name="System.Data" %>
-<%@ Assembly Name="Microsoft.Build.Engine" %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
