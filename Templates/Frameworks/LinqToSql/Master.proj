@@ -44,7 +44,16 @@
     <Message Text="Plinqo Revision: $(Revision)"/>
   </Target>
 
-  <Target Name="Compile">
+  <Target Name="Libaries">
+    <Copy Condition="Exists('Libraries\CodeSmith.CodeParser.dll')"
+          SourceFiles="Libraries\CodeSmith.CodeParser.dll" 
+          DestinationFolder="Common" />
+    <Copy Condition="Exists('Libraries\CodeSmith.InsertClassMergeStrategy.dll')"
+          SourceFiles="Libraries\CodeSmith.InsertClassMergeStrategy.dll" 
+          DestinationFolder="Common" />
+  </Target>
+  
+  <Target Name="Compile" DependsOnTargets="Libaries">
     <MSBuild Projects="Source\Plinqo.sln"
              Properties="Configuration=$(BuildConfiguration)"/>
   </Target>
