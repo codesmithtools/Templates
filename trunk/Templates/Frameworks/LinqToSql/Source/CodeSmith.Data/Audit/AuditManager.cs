@@ -89,7 +89,12 @@ namespace CodeSmith.Data.Audit
                 auditProperty.Type = dataMember.Type.FullName;
 
                 if (auditProperty.Type != _binaryType && !dataMember.IsDeferred)
-                    auditProperty.Current = dataMember.MemberAccessor.GetBoxedValue(entity);
+                {
+                    if (auditEntity.Action == AuditAction.Delete)
+                        auditProperty.Original = dataMember.MemberAccessor.GetBoxedValue(entity);
+                    else
+                        auditProperty.Current = dataMember.MemberAccessor.GetBoxedValue(entity);
+                }
 
                 auditEntity.Properties.Add(auditProperty);
             }
