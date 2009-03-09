@@ -53,7 +53,7 @@ namespace <%= Database.EntityNamespace %>
 <%      if(Framework == FrameworkEnum.v35_SP1) { %>
         #region Metadata
 
-
+        [CodeSmith.Data.Audit.Audit]
         private class Metadata
         {
             // Only Attributes in the class will be preserved.

@@ -54,6 +54,7 @@
       <property name="ContextNamespace">$myContextNamespace$</property>
     </propertySet>
     <propertySet name="Entities" template="$linqToSql$$language$\Entities.cst">
+      <property name="AuditingEnabled">True</property>
       <property name="IncludeDataServices">True</property>
       <property name="IncludeDataRules">True</property>
       <property name="IncludeDataContract">True</property>
