@@ -28,6 +28,10 @@
     Type="System.String" Optional="True"
     Description="Default Connection String Name for DatabaseContext." %>
     
+<%@ Property Category="2.Class" Name="AuditingEnabled"
+    Type="System.Boolean" Default="False" Optional="True"
+    Description="Flag indicating if the default state of the AuditingEnabled property." %>
+
 <%@ Map Name="VBKeywordEscape" 
     Src="VBKeywordEscape.csmap" Reverse="False" 
     Description="Mapping to escape c# keywords" %>
@@ -481,7 +485,7 @@ Next
         Private Partial Sub BeforeSubmitChanges()
         End Sub
         
-        Private _auditingEnabled As Boolean = True
+        Private _auditingEnabled As Boolean = <%= AuditingEnabled.ToString() %>
         
         ''' <summary>
         ''' Gets or sets a value indicating whether auditing is enabled.
