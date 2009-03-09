@@ -541,7 +541,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <remarks>
         /// <see cref="AuditingEnabled"/> must be <c>true</c> for <see cref="LastAudit"/> to be populated.
         /// </remarks>
-        public virtual void PopulateLastAudit()
+        protected virtual void PopulateLastAudit()
         {
             if (!AuditingEnabled)
                 return;
