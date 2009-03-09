@@ -116,7 +116,7 @@ namespace CodeSmith.Data.Audit
 
                 var propertyInfo = info.Member as PropertyInfo;
                 if (propertyInfo != null)
-                    auditProperty.Type = propertyInfo.PropertyType.FullName;
+                    auditProperty.Type = GetUnderlyingType(propertyInfo.PropertyType).FullName;
 
                 if (auditProperty.Type != _binaryType)
                 {
@@ -179,6 +179,16 @@ namespace CodeSmith.Data.Audit
 
             MemberInfo metaInfo = metadataType.GetMember(memberInfo.Name, _defaultBinding).FirstOrDefault();
             return metaInfo != null && metaInfo.IsDefined(attributeType, true);
+        }
+
+        private static Type GetUnderlyingType(Type type)
+        {
+            Type t = type;
+            bool isNullable = t.IsGenericType && (t.GetGenericTypeDefinition() == typeof(Nullable<>));
+            if (isNullable)
+                return Nullable.GetUnderlyingType(t);
+
+            return t;
         }
     }
 }
