@@ -845,7 +845,7 @@
             Immediately deletes all entities from the collection with a single delete command.
             </summary>
             <typeparam name="TEntity">Represents the object type for rows contained in <paramref name="table"/>.</typeparam>
-            <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
+            <param name="table">Represents a table for a particular type in the underlying database containing rows to be deleted.</param>
             <param name="entities">Represents the collection of items which are to be removed from <paramref name="table"/>.</param>
             <returns>The number of rows deleted from the database.</returns>
             <remarks>
@@ -858,8 +858,8 @@
             Immediately deletes all entities from the collection with a single delete command.
             </summary>
             <typeparam name="TEntity">Represents the object type for rows contained in <paramref name="table"/>.</typeparam>
-            <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
-            <param name="filter">Represents a filter of items to be updated in <paramref name="table"/>.</param>
+            <param name="table">Represents a table for a particular type in the underlying database containing rows to be deleted.</param>
+            <param name="filter">Represents a filter of items to be deleted in <paramref name="table"/>.</param>
             <returns>The number of rows deleted from the database.</returns>
         </member>
         <member name="M:System.Data.Linq.TableExtensions.Update``1(System.Data.Linq.Table{``0},System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``0}})">
@@ -867,7 +867,7 @@
             Immediately updates all entities in the collection with a single update command based on a <typeparamref name="TEntity"/> created from a Lambda expression.
             </summary>
             <typeparam name="TEntity">Represents the object type for rows contained in <paramref name="table"/>.</typeparam>
-            <param name="table">Represents a table for a particular type in the underlying database containing rows are to be updated.</param>
+            <param name="table">Represents a table for a particular type in the underlying database containing rows to be updated.</param>
             <param name="entities">Represents the collection of items which are to be updated in <paramref name="table"/>.</param>
             <param name="evaluator">A Lambda expression returning a <typeparamref name="TEntity"/> that defines the update assignments to be performed on each item in <paramref name="entities"/>.</param>
             <returns>The number of rows updated in the database.</returns>
@@ -881,7 +881,7 @@
             Immediately updates all entities in the collection with a single update command based on a <typeparamref name="TEntity"/> created from a Lambda expression.
             </summary>
             <typeparam name="TEntity">Represents the object type for rows contained in <paramref name="table"/>.</typeparam>
-            <param name="table">Represents a table for a particular type in the underlying database containing rows are to be updated.</param>
+            <param name="table">Represents a table for a particular type in the underlying database containing rows to be updated.</param>
             <param name="filter">Represents a filter of items to be updated in <paramref name="table"/>.</param>
             <param name="evaluator">A Lambda expression returning a <typeparamref name="TEntity"/> that defines the update assignments to be performed on each item in <paramref name="filter"/>.</param>
             <returns>The number of rows updated in the database.</returns>
