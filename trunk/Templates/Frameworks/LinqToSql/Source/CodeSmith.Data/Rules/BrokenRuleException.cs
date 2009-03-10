@@ -71,9 +71,9 @@ namespace CodeSmith.Data.Rules
             var sb = new StringBuilder();
 
             if (BrokenRules.Count == 1)
-                sb.Append("1 rule has been broken.  All rules must pass.");
+                sb.Append("1 broken rule.");
             else
-                sb.AppendFormat("{0} rules have been broken.  All rules must pass.", BrokenRules.Count);
+                sb.AppendFormat("{0} broken rules.", BrokenRules.Count);
 
             sb.AppendLine();
 
@@ -81,6 +81,7 @@ namespace CodeSmith.Data.Rules
             {
                 sb.AppendFormat("  - {0}", rule.Message);
                 sb.AppendLine();
+                sb.AppendLine(rule.Context.TrackedObject.Current.ToString());
             }
 
             return sb.ToString();

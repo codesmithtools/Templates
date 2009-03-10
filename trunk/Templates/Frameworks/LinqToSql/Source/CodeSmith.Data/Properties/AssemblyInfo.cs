@@ -35,3 +35,4 @@ using System.Web.UI;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: TagPrefix("CodeSmith.Data.Web", "cs")]
+[assembly: CLSCompliant(true)]
