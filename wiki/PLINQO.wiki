@@ -1,2 +1,2 @@
-#labels Deprecated
+#labels Featured
 The PLINQO wiki has moved to [http://community.codesmithtools.com/wikis/plinqo/default.aspx http://community.codesmithtools.com/wikis/plinqo/default.aspx].
