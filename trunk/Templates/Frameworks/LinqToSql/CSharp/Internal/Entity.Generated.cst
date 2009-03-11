@@ -570,26 +570,6 @@ foreach(Column column in Type.Columns) {
 <% } // foreach Column%>
         }
         #endregion
-		
-		#region ToString Method
-		///<summary>
-		/// Returns a string that represents the current object.
-		///</summary>
-		public override string ToString()
-		{
-			return String.Format(System.Globalization.CultureInfo.InvariantCulture,
-				"{<%= Type.Columns.Count + 1 %>}{<%= Type.Columns.Count %>}<% for (int x = 0; x < Type.Columns.Count; x++) { Response.Write("- " + Type.Columns[x].Name + ": {" + x + "}{" + Type.Columns.Count + "}" ); } %>", 
-			<% foreach(Column column in Type.Columns) {
-			    if (column.CanBeNull.Value && !column.Type.EndsWith("Enum") ) { %>
-				(this.<%= column.Member %> == null) ? String.Empty : this.<%= column.Member %>.ToString(),
-				<% } else { %>
-				this.<%= column.Member %>,
-			<% } // if
-			} // foreach %>
-				System.Environment.NewLine, 
-				this.GetType());
-		}
-		#endregion ToString Method
    <% } %>
     }
 }
