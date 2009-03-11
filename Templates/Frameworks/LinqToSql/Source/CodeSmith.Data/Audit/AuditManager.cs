@@ -5,6 +5,7 @@ using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 namespace CodeSmith.Data.Audit
 {
@@ -14,11 +15,11 @@ namespace CodeSmith.Data.Audit
     public static class AuditManager
     {
         private const BindingFlags _defaultBinding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
+        private static readonly ReaderWriterLockSlim _auditableLock = new ReaderWriterLockSlim();
         private static readonly Dictionary<Type, bool> _auditableCache = new Dictionary<Type, bool>();
-        private static readonly object _auditableLock = new object();
 
+        private static readonly ReaderWriterLockSlim _notAuditedLock = new ReaderWriterLockSlim();
         private static readonly Dictionary<MemberInfo, bool> _notAuditedCache = new Dictionary<MemberInfo, bool>();
-        private static readonly object _notAuditedLock = new object();
         private static readonly string _binaryType = typeof(Binary).FullName;
 
         /// <summary>
@@ -44,6 +45,52 @@ namespace CodeSmith.Data.Audit
             return auditLog;
         }
 
+        /// <summary>
+        /// Merges the audit logs together.
+        /// </summary>
+        /// <param name="logs">The list logs to merge together.</param>
+        /// <returns>An instance of <see cref="AuditLog"/> with all other logs merged in.</returns>
+        public static AuditLog MergeAuditLogs(params AuditLog[] logs)
+        {
+            if (logs == null)
+                throw new ArgumentNullException("logs");
+            if (logs.Length == 0)
+                return null;
+            if (logs.Length == 1)
+                return logs[0];
+
+            //use first log as final log
+            var mergedLog = logs[0];
+            for (int i = 1; i < logs.Length; i++)
+            {                
+                var current = logs[i];                
+                foreach (var entity in current.Entities)
+                {
+                    // compare all entities to final, merge duplicates, add new
+                    int index = mergedLog.Entities.IndexOf(entity);
+                    if (index >= 0)
+                        MergeAuditEntity(entity, mergedLog.Entities[index]);
+                    else
+                        mergedLog.Entities.Add(entity);
+                }
+            }
+
+            return mergedLog;
+        }
+
+        private static void MergeAuditEntity(AuditEntity source, AuditEntity destination)
+        {
+            //destination.Action = source.Action;  // merge action?
+            foreach (var property in source.Properties)
+            {
+                if (destination.Properties.Contains(property.Name))
+                    // only update the current property, keep the original
+                    destination.Properties[property.Name].Current = property.Current;
+                else
+                    destination.Properties.Add(property);
+            }
+        }
+
         private static void AddAuditEntities(DataContext dataContext, AuditLog auditLog, AuditAction action, IEnumerable<object> entities)
         {
             foreach (var entity in entities)
@@ -59,27 +106,39 @@ namespace CodeSmith.Data.Audit
         private static AuditEntity GetAuditEntity(DataContext dataContext, object entity, AuditAction action)
         {
             ITable table = dataContext.GetTable(entity.GetType());
-
+            MetaTable metaTable = dataContext.Mapping.GetTable(entity.GetType());
+            
             var auditEntity = new AuditEntity();
             auditEntity.Action = action;
             auditEntity.Type = table.ElementType.FullName;
 
-
+            AddAuditKeys(metaTable, entity, auditEntity);
             if (action == AuditAction.Update)
                 AddAuditProperties(table, entity, auditEntity);
             else
-                AddAuditProperties(dataContext, entity, auditEntity);
+                AddAuditProperties(metaTable, entity, auditEntity);
 
             return auditEntity;
+        }
+
+        private static void AddAuditKeys(MetaTable metaTable, object entity, AuditEntity auditEntity)
+        {
+            foreach (var dataMember in metaTable.RowType.IdentityMembers)
+            {
+                var auditProperty = new AuditKey();
+                auditProperty.Name = dataMember.Member.Name;
+                auditProperty.Type = dataMember.Type.FullName;
+                auditProperty.Value = dataMember.MemberAccessor.GetBoxedValue(entity);                
+                auditEntity.Keys.Add(auditProperty);
+            }
         }
 
         /// <summary>
         /// For inserts and deletes, all the properties current values are included in the log.
         /// </summary>
-        private static void AddAuditProperties(DataContext dataContext, object entity, AuditEntity auditEntity)
+        private static void AddAuditProperties(MetaTable metaTable, object entity, AuditEntity auditEntity)
         {
-            MetaTable meta = dataContext.Mapping.GetTable(entity.GetType());
-            foreach (MetaDataMember dataMember in meta.RowType.DataMembers)
+            foreach (var dataMember in metaTable.RowType.DataMembers)
             {
                 if (dataMember.IsVersion || dataMember.IsAssociation || HasNotAuditedAttribute(dataMember.Member))
                     continue;
@@ -106,6 +165,7 @@ namespace CodeSmith.Data.Audit
         private static void AddAuditProperties(ITable table, object entity, AuditEntity auditEntity)
         {
             ModifiedMemberInfo[] modified = table.GetModifiedMembers(entity);
+            
             foreach (ModifiedMemberInfo info in modified)
             {
                 if (HasNotAuditedAttribute(info.Member))
@@ -129,15 +189,28 @@ namespace CodeSmith.Data.Audit
         }
 
         private static bool HasNotAuditedAttribute(MemberInfo memberInfo)
-        {
-            lock (_notAuditedLock)
+        {            
+            _notAuditedLock.EnterUpgradeableReadLock();
+            try
             {
                 if (_notAuditedCache.ContainsKey(memberInfo))
                     return _notAuditedCache[memberInfo];
 
-                bool result = HasAttribute(memberInfo, typeof(NotAuditedAttribute));
-                _notAuditedCache.Add(memberInfo, result);
-                return result;
+                _notAuditedLock.EnterWriteLock();
+                try
+                {
+                    bool result = HasAttribute(memberInfo, typeof(NotAuditedAttribute));
+                    _notAuditedCache.Add(memberInfo, result);
+                    return result;
+                }
+                finally
+                {
+                    _notAuditedLock.ExitWriteLock();
+                }
+            }
+            finally
+            {
+                _notAuditedLock.ExitUpgradeableReadLock();
             }
         }
 
@@ -145,15 +218,29 @@ namespace CodeSmith.Data.Audit
         {
             Type entityType = entity.GetType();
 
-            lock (_auditableLock)
+            _auditableLock.EnterUpgradeableReadLock();
+            try
             {
                 if (_auditableCache.ContainsKey(entityType))
                     return _auditableCache[entityType];
 
-                bool result = HasAttribute(entityType, typeof(AuditAttribute));
-                _auditableCache.Add(entityType, result);
-                return result;
+                _auditableLock.EnterWriteLock();
+                try
+                {
+                    bool result = HasAttribute(entityType, typeof(AuditAttribute));
+                    _auditableCache.Add(entityType, result);
+                    return result;
+                }
+                finally
+                {
+                    _auditableLock.ExitWriteLock();
+                }
             }
+            finally
+            {
+                _auditableLock.ExitUpgradeableReadLock();
+            }
+            
         }
 
         private static bool HasAttribute(MemberInfo memberInfo, Type attributeType)
