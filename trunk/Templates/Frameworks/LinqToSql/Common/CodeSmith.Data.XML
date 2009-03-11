@@ -1467,6 +1467,12 @@
             <typeparam name="T">The type to filter.</typeparam>
             <returns>Enumerator of <see cref="T:CodeSmith.Data.Rules.BrokenRule"/> for the type.</returns>        
         </member>
+        <member name="M:CodeSmith.Data.Rules.BrokenRuleCollection.GroupByEntity">
+            <summary>
+            Returns a list of broken rules grouped by entity instance.
+            </summary>
+            <returns>Dictionary of entities and their list of broken rules.</returns>        
+        </member>
         <member name="T:CodeSmith.Data.Rules.BrokenRuleException">
             <summary>
             An exception class for broken rules.
