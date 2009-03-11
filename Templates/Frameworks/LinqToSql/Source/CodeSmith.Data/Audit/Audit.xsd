@@ -19,11 +19,20 @@
   </xs:complexType>
 
   <xs:complexType name="AuditEntity">
-    <xs:sequence minOccurs="0" maxOccurs="unbounded">
-      <xs:element name="property" type="AuditProperty" />
+    <xs:sequence>
+      <xs:element name="key" type="AuditKey" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="property" type="AuditProperty" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="action" type="AuditAction" use="required" />
     <xs:attribute name="type" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="AuditKey">
+    <xs:sequence minOccurs="0">
+      <xs:element minOccurs="0" name="value" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="type" type="xs:string" use="optional" />
   </xs:complexType>
 
   <xs:complexType name="AuditProperty">

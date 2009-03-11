@@ -145,7 +145,7 @@ namespace CodeSmith.Data.Audit
 
                 var auditProperty = new AuditProperty();
                 auditProperty.Name = dataMember.Member.Name;
-                auditProperty.Type = dataMember.Type.FullName;
+                auditProperty.Type = GetUnderlyingType(dataMember.Type).FullName;
 
                 if (auditProperty.Type != _binaryType && !dataMember.IsDeferred)
                 {
