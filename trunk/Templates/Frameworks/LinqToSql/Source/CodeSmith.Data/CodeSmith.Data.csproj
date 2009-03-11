@@ -72,9 +72,12 @@
     <Compile Include="Audit\AuditAction.cs" />
     <Compile Include="Audit\AuditAttribute.cs" />
     <Compile Include="Audit\AuditEntity.cs" />
+    <Compile Include="Audit\AuditKey.cs" />
+    <Compile Include="Audit\AuditKeyCollection.cs" />
     <Compile Include="Audit\AuditManager.cs" />
     <Compile Include="Audit\AuditProperty.cs" />
     <Compile Include="Audit\AuditLog.cs" />
+    <Compile Include="Audit\AuditPropertyCollection.cs" />
     <Compile Include="Audit\NotAuditedAttribute.cs" />
     <Compile Include="EntityKey.cs" />
     <Compile Include="DataManagerBase.cs" />
