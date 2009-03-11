@@ -164,5 +164,68 @@ namespace <%= ClassNamespace %>
             return new System.Data.Linq.Link<T>(value.Value);
         }
         #endregion
+		
+        #region ToString()
+        public override string ToString()
+        {
+            return this.ToString(0, "  ");
+        }
+
+        public string ToString(int indentLevel, string indentValue)
+        {
+            System.Reflection.PropertyInfo[] props = this.GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+            var sb = new System.Text.StringBuilder();
+            object value = null;
+            bool includeProperty = true;
+
+            for (int t = 0; t < indentLevel; t++)
+                sb.Append(indentValue);
+
+            sb.AppendLine("{");
+
+            for (int i = 0; i < props.Length; i++)
+            {
+                value = null;
+
+                if (props[i].PropertyType == typeof(byte[])
+                    || props[i].PropertyType == typeof(System.Data.Linq.Binary))
+                {
+                    value = "<binary>";
+                }
+                else if (props[i].PropertyType == typeof(System.Data.Linq.EntitySet<>)
+                    || props[i].PropertyType.BaseType == typeof(LinqEntityBase))
+                {
+                    includeProperty = false;
+                }
+                else
+                {
+                    value = props[i].GetValue(this, null);
+                }
+
+                if (includeProperty)
+                {
+                    if (value != null && value.ToString().Length > 50)
+                    {
+                        value = String.Concat(value.ToString().Substring(0, 50), "...");
+                    }
+
+                    for (int t = 0; t < indentLevel + 1; t++)
+                        sb.Append(indentValue);
+
+                    sb.Append(props[i].Name);
+                    sb.Append(" = ");
+
+                    sb.AppendLine(value != null ? value.ToString().Length > 0 ? value.ToString() : "<empty>" : "<null>");
+                }
+            }
+
+            for (int t = 0; t < indentLevel; t++)
+                sb.Append(indentValue);
+
+            sb.AppendLine("}");
+
+            return sb.ToString();
+        }
+        #endregion
     }
 }
