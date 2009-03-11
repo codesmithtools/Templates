@@ -36,6 +36,7 @@ Namespace <%= BaseNamespace %>
 		Sub Delete(ByVal entity As T)
 		Sub Update(ByVal entity As T)
 		Sub Refresh(ByVal entity As T)
+        Sub Evict(ByVal entity As T)
 
 		' Properties
 		ReadOnly Property Type() As System.Type
@@ -113,6 +114,9 @@ Namespace <%= BaseNamespace %>
 		End Sub
 		Public Sub Refresh(ByVal entity As T) Implements IManagerBase(Of T, TKey).Refresh
 			Session.GetISession().Refresh(entity)
+		End Sub
+        Public Sub Evict(ByVal entity As T) Implements IManagerBase(Of T, TKey).Evict
+			Session.GetISession().Evict(entity)
 		End Sub
 #End Region
 

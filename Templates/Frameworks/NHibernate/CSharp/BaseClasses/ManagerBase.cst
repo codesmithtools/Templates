@@ -37,6 +37,7 @@ namespace <%= BaseNamespace %>
         void Delete(T entity);
         void Update(T entity);
         void Refresh(T entity);
+        void Evict(T entity);
 
         // Properties
         System.Type Type { get; }
@@ -128,6 +129,10 @@ namespace <%= BaseNamespace %>
         public void Refresh(T entity)
         {
             Session.GetISession().Refresh(entity);
+        }
+        public void Evict(T entity)
+        {
+            Session.GetISession().Evict(entity);
         }
         
         #endregion
