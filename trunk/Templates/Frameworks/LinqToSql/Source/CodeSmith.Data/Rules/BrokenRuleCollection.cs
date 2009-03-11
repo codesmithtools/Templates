@@ -64,5 +64,25 @@ namespace CodeSmith.Data.Rules
             return Filter(typeof(T), property);
         }
 
+        /// <summary>
+        /// Returns a list of broken rules grouped by entity instance.
+        /// </summary>
+        /// <returns>Dictionary of entities and their list of broken rules.</returns>        
+        public IDictionary<object, List<BrokenRule>> GroupByEntity()
+        {
+            var entities = new Dictionary<object, List<BrokenRule>>();
+            foreach (BrokenRule r in this)
+            {
+                if (!entities.ContainsKey(r.Context.TrackedObject.Current))
+                {
+                    entities.Add(r.Context.TrackedObject.Current, new List<BrokenRule>());
+                }
+
+                entities[r.Context.TrackedObject.Current].Add(r);
+            }
+
+            return entities;
+        }
+
     }
 }

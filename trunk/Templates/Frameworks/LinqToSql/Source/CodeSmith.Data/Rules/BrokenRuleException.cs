@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -71,17 +73,33 @@ namespace CodeSmith.Data.Rules
             var sb = new StringBuilder();
 
             if (BrokenRules.Count == 1)
-                sb.Append("1 broken rule.");
+                sb.Append("1 broken rule. All rules must pass.");
             else
-                sb.AppendFormat("{0} broken rules.", BrokenRules.Count);
+                sb.AppendFormat("{0} broken rules. All rules must pass.", BrokenRules.Count);
 
             sb.AppendLine();
 
-            foreach (BrokenRule rule in BrokenRules)
+            foreach (KeyValuePair<object, List<BrokenRule>> entity in BrokenRules.GroupByEntity())
+            {
+                if (entity.Key != null && entity.Key is ILinqEntity)
+                {
+                    sb.AppendLine();
+                    sb.AppendFormat("Type: {0}", entity.Key.GetType().Name);
+                    sb.AppendLine();
+                }
+
+                foreach (BrokenRule rule in entity.Value)
             {
                 sb.AppendFormat("  - {0}", rule.Message);
                 sb.AppendLine();
-                sb.AppendLine(rule.Context.TrackedObject.Current.ToString());
+                }
+                sb.AppendLine();
+
+                if (entity.Key != null && entity.Key is ILinqEntity)
+                {
+                    sb.AppendLine("  State:");
+                    sb.AppendLine(((ILinqEntity)entity.Key).ToString(2, "  "));
+                }
             }
 
             return sb.ToString();

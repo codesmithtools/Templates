@@ -40,6 +40,7 @@ namespace <%= ClassNamespace %>
     [System.Runtime.Serialization.DataContract(<%if (Framework == FrameworkEnum.v35_SP1) { %> IsReference = true <%}%>)]
     <%}%>
     public abstract partial class <%= ClassName %> :
+        CodeSmith.Data.ILinqEntity,
         System.ComponentModel.INotifyPropertyChanging,
         System.ComponentModel.INotifyPropertyChanged
     {
@@ -199,7 +200,14 @@ namespace <%= ClassNamespace %>
                 }
                 else
                 {
-                    value = props[i].GetValue(this, null);
+                    try
+                    {
+                        value = props[i].GetValue(this, null);
+                    }
+                    catch (Exception)
+                    {
+                        value = "<exception>";
+                    }
                 }
 
                 if (includeProperty)
