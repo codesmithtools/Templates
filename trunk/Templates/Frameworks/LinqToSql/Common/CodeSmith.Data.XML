@@ -248,6 +248,32 @@
             A class for logging the changes to an entity.
             </summary>
         </member>
+        <member name="M:CodeSmith.Data.Audit.AuditEntity.Equals(CodeSmith.Data.Audit.AuditEntity)">
+            <summary>
+            Indicates whether the current object is equal to another object of the same type.
+            </summary>
+            <returns>
+            true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
+            </returns>
+            <param name="other">An object to compare with this object.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Audit.AuditEntity.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object" /> is equal to the current <see cref="T:System.Object" />.
+            </summary>
+            <returns>
+            true if the specified <see cref="T:System.Object" /> is equal to the current <see cref="T:System.Object" />; otherwise, false.
+            </returns>
+            <param name="obj">The <see cref="T:System.Object" /> to compare with the current <see cref="T:System.Object" />. </param>
+        </member>
+        <member name="M:CodeSmith.Data.Audit.AuditEntity.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type. 
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:System.Object" />.
+            </returns>
+        </member>
         <member name="P:CodeSmith.Data.Audit.AuditEntity.Action">
             <summary>
             Gets or sets the action that was taken on the entity.
@@ -260,11 +286,47 @@
             </summary>
             <value>The data type of the entity.</value>
         </member>
+        <member name="P:CodeSmith.Data.Audit.AuditEntity.Keys">
+            <summary>
+            Gets the list of properties that are the key for the entity.
+            </summary>
+            <value>The list of properties that are the key for the entity.</value>
+        </member>
         <member name="P:CodeSmith.Data.Audit.AuditEntity.Properties">
             <summary>
             Gets the list of properties that action was taken on.
             </summary>
             <value>The list of properties that action was taken on.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditKey.Name">
+            <summary>
+            Gets or sets the name of the property.
+            </summary>
+            <value>The name of the property.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditKey.Type">
+            <summary>
+            Gets or sets the type of the property.
+            </summary>
+            <value>The type of the property.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditKey.Value">
+            <summary>
+            Gets or sets the current/changed value of the property.
+            </summary>
+            <value>The current value of the property.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Audit.AuditKeyCollection">
+            <summary>
+            A keyed collection of <see cref="T:CodeSmith.Data.Audit.AuditKey"/>
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Audit.AuditKeyCollection.GetKeyForItem(CodeSmith.Data.Audit.AuditKey)">
+            <summary>
+            When implemented in a derived class, extracts the key from the specified element.
+            </summary>
+            <param name="item">The element from which to extract the key.</param>
+            <returns>The key for the specified element.</returns>
         </member>
         <member name="T:CodeSmith.Data.Audit.AuditManager">
             <summary>
@@ -281,7 +343,14 @@
             An entity has to be marked with the <see cref="T:CodeSmith.Data.Audit.AuditAttribute"/> for audit data to be collected for that entity.
             </remarks>
         </member>
-        <member name="M:CodeSmith.Data.Audit.AuditManager.AddAuditProperties(System.Data.Linq.DataContext,System.Object,CodeSmith.Data.Audit.AuditEntity)">
+        <member name="M:CodeSmith.Data.Audit.AuditManager.MergeAuditLogs(CodeSmith.Data.Audit.AuditLog[])">
+            <summary>
+            Merges the audit logs together.
+            </summary>
+            <param name="logs">The list logs to merge together.</param>
+            <returns>An instance of <see cref="T:CodeSmith.Data.Audit.AuditLog"/> with all other logs merged in.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Audit.AuditManager.AddAuditProperties(System.Data.Linq.Mapping.MetaTable,System.Object,CodeSmith.Data.Audit.AuditEntity)">
             <summary>
             For inserts and deletes, all the properties current values are included in the log.
             </summary>
@@ -341,6 +410,18 @@
             Gets the list entities that have changes in the <see cref="T:System.Data.Linq.DataContext"/>.
             </summary>
             <value>The list entities that have changes.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Audit.AuditPropertyCollection">
+            <summary>
+            A keyed collection of <see cref="T:CodeSmith.Data.Audit.AuditProperty"/>
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Audit.AuditPropertyCollection.GetKeyForItem(CodeSmith.Data.Audit.AuditProperty)">
+            <summary>
+            When implemented in a derived class, extracts the key from the specified element.
+            </summary>
+            <param name="item">The element from which to extract the key.</param>
+            <returns>The key for the specified element.</returns>
         </member>
         <member name="T:CodeSmith.Data.Audit.NotAuditedAttribute">
             <summary>
