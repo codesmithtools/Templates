@@ -84,9 +84,15 @@ namespace <%= Database.EntityNamespace %>
                         else if (column.Type.Contains("DateTime"))
                         {
                             if (column.Member.Contains("Create"))
+                            {
                                 Response.WriteLine("            [Now(EntityState.New)]");
+                                Response.WriteLine("            [CodeSmith.Data.Audit.NotAudited]");
+                            }
                             else if (column.Member.Contains("Modify") || column.Member.Contains("Modified") || column.Member.Contains("Edit"))
+                            {
                                 Response.WriteLine("            [Now(EntityState.Dirty)]");
+                                Response.WriteLine("            [CodeSmith.Data.Audit.NotAudited]");
+                            }
                         }
                     }
 
