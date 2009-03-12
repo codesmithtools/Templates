@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" 
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8"
     Description="Linq to Sql Entity Manager Class." %>
 
 <%@ Assembly Name="System.Data" %>

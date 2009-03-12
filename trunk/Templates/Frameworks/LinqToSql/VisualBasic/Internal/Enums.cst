@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Description="Generates Enum file for Plinqo DataContext." %>
+﻿<%@ CodeTemplate Language="VB" TargetLanguage="VB" Description="Generates Enum file for Plinqo DataContext." Encoding="UTF-8"%>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
 <%@ Property Name="Database" Type="LinqToSqlShared.Generator.DbmlEnum.Database" Optional="False" Category="Strings" Description="" %>
 <%@ Property Name="Namespace" Type="System.String" Optional="False" Category="Strings" Description="" %>

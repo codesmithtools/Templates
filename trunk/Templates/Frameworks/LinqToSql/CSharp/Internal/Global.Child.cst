@@ -1,9 +1,9 @@
-<%-- 
+﻿<%-- 
 Name: DynamicGlobal
 Author: Reggie Bradshaw
 Description: Used to generate the Global.asax file for a Dynamic Data project
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="" Inherits="" Debug="False" Description="" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="" Inherits="" Debug="False" Encoding="UTF-8" Description="" %>
 <%@ Property Name="ClassNamespace" Type="System.String" Default="" Optional="false" Description="Namspace of the generated class"%> 
 <%@ Property Name="InlineEditing" Type="System.Boolean" Default="false" Optional="false" Description="Default to Inline Grid Editing for Webpages" %>
 <%@ Property Name="ContextNamespace" Type="System.String" Default="" Optional="false" Description="The namespace where the Data Context is found"%>

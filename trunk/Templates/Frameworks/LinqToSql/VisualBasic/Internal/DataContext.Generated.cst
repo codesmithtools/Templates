@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="False" 
+﻿<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="False" Encoding="UTF-8"
     Description="Linq to Sql DataContext Class." %>
 
 <%@ Assembly Name="Dbml" Path="..\..\Common" %>
