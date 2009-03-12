@@ -48,7 +48,7 @@ Namespace <%= ClassNamespace %>
         ''' </summary>
         Protected Sub New()
         End Sub
-
+		
         #Region "Notification Events"
 
         ''' <summary>
@@ -84,7 +84,7 @@ Namespace <%= ClassNamespace %>
             End If
         End Sub
         #End Region
-
+		
         #Region "Detach Methods"
         ''' <summary>
         ''' Gets a value indicating whether this instance is Added to the change tracking of <see cref="DataContext"/>.
@@ -161,6 +161,63 @@ Namespace <%= ClassNamespace %>
         End Function
 
         #End Region
+		
+		#Region "ToString"
+		Public Overloads Overrides Function ToString() As String
+			Return Me.ToString(0, "  ")
+		End Function
+		
+        Public Overloads Function ToString(ByVal indentLevel As Integer, ByVal indentValue As String) As String
+            Dim props As System.Reflection.PropertyInfo() = Me.GetType().GetProperties(System.Reflection.BindingFlags.Instance Or System.Reflection.BindingFlags.Public)
+            Dim sb = New System.Text.StringBuilder()
+            Dim value As Object = Nothing
+            Dim includeProperty As Boolean = True
 
+            For t As Integer = 0 To indentLevel
+                sb.Append(indentValue)
+            Next
+
+            sb.AppendLine("{")
+
+            For Each prop In props
+                value = Nothing
+
+                If prop.PropertyType Is GetType(Byte()) OrElse prop.PropertyType Is GetType(System.Data.Linq.Binary) Then
+                    value = "<binary>"
+                ElseIf prop.PropertyType Is GetType(System.Data.Linq.EntitySet(Of )) OrElse prop.PropertyType.BaseType Is GetType(LinqEntityBase) Then
+                    includeProperty = False
+                Else
+                    Try
+                        value = prop.GetValue(Me, Nothing)
+                    Catch
+                        value = "<exception>"
+                    End Try
+                End If
+
+                If includeProperty Then
+                    If value <> Nothing AndAlso value.ToString().Length > 50 Then
+                        value = [String].Concat(value.ToString().Substring(0, 50), "...")
+                    End If
+
+                    For t As Integer = 0 To indentLevel
+                        sb.Append(indentValue)
+                    Next
+
+                    sb.Append(prop.Name)
+                    sb.Append(" = ")
+
+                    sb.AppendLine(If(value <> Nothing, If(value.ToString().Length > 0, value.ToString(), "<empty>"), "<null>"))
+                End If
+            Next
+
+            For t As Integer = 0 To indentLevel
+                sb.Append(indentValue)
+            Next
+
+            sb.AppendLine("}")
+
+            Return sb.ToString()
+        End Function
+		#End Region
     End Class
 End Namespace
