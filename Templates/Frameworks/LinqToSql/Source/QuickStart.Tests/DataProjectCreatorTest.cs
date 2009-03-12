@@ -23,6 +23,7 @@ namespace QuickStart.Tests
 
         private ProjectBuilderSettings CreateProjectBuilderSettings()
         {
+            
             return new ProjectBuilderSettings()
             {
                 SourceDatabase = GetDatabaseSchema("Sample"),
