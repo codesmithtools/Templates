@@ -95,17 +95,17 @@ namespace <%= Database.EntityNamespace %>
                         int size = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(column.DbType);
 
                         if (size > 256 || size == -1)
-                            Response.WriteLine("            [DataType(DataType.MultilineText)]");
+                            Response.WriteLine("            [DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)]");
                         else if (column.Member.Contains("Email"))
-                            Response.WriteLine("            [DataType(DataType.EmailAddress)]");
+                            Response.WriteLine("            [DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)]");
                         else if (column.Member.Contains("Url") || column.Member.Contains("Uri"))
-                            Response.WriteLine("            [DataType(DataType.Url)]");
+                            Response.WriteLine("            [DataType(System.ComponentModel.DataAnnotations.DataType.Url)]");
                         else if (column.Member.Contains("Phone"))
-                            Response.WriteLine("            [DataType(DataType.PhoneNumber)]");
+                            Response.WriteLine("            [DataType(System.ComponentModel.DataAnnotations.DataType.PhoneNumber)]");
                         else if (column.Member.Contains("Password"))
-                            Response.WriteLine("            [DataType(DataType.Password)]");
+                            Response.WriteLine("            [DataType(System.ComponentModel.DataAnnotations.DataType.Password)]");
                         else if (column.Member.Contains("Html"))
-                            Response.WriteLine("            [DataType(DataType.Html)]");
+                            Response.WriteLine("            [DataType(System.ComponentModel.DataAnnotations.DataType.Html)]");
                     }
                 }
             %>
