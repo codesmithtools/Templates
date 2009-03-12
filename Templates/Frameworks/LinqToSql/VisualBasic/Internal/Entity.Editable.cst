@@ -88,17 +88,17 @@ Namespace <%= Database.EntityNamespace %>
                     If (column.Type.Contains("String")) Then
                         Dim size As Integer = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(column.DbType)
                         If (size > 256 OrElse size = -1) Then
-                            Response.WriteLine("            <DataType(DataType.MultilineText)> _")
+                            Response.WriteLine("            <DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)> _")
                         Else If (column.Member.Contains("Email")) Then
-                            Response.WriteLine("            <DataType(DataType.EmailAddress)> _")
+                            Response.WriteLine("            <DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)> _")
                         Else If (column.Member.Contains("Url") OrElse column.Member.Contains("Uri")) Then
-                            Response.WriteLine("            <DataType(DataType.Url)> _")
+                            Response.WriteLine("            <DataType(System.ComponentModel.DataAnnotations.DataType.Url)> _")
                         Else If (column.Member.Contains("Phone"))
-                            Response.WriteLine("            <DataType(DataType.PhoneNumber)> _")
+                            Response.WriteLine("            <DataType(System.ComponentModel.DataAnnotations.DataType.PhoneNumber)> _")
                         Else If (column.Member.Contains("Password")) Then
-                            Response.WriteLine("            <DataType(DataType.Password)> _")
+                            Response.WriteLine("            <DataType(System.ComponentModel.DataAnnotations.DataType.Password)> _")
                         Else If (column.Member.Contains("Html")) Then
-                            Response.WriteLine("            <DataType(DataType.Html)> _")
+                            Response.WriteLine("            <DataType(System.ComponentModel.DataAnnotations.DataType.Html)> _")
                         End If
                     End If
                 End If %>
