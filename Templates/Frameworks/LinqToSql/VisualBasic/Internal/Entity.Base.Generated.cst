@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True"
+﻿<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True" Encoding="UTF-8"
     Description="Linq to Sql Entity Class." %>
 
 <%@ Assembly Name="Generator" Path="..\..\Common"%>

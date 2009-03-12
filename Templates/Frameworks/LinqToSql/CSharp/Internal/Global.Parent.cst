@@ -1,9 +1,9 @@
-<%-- 
+﻿<%-- 
 Name:
 Author: 
 Description: 
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Description="Template description here." %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="False" Encoding="UTF-8" Description="Template description here." %>
 <%@ Property Name="ClassNamespace" Type="System.String" Default="" Optional="false" Description="Namspace of the generated class"%>
 
 <%%@ Application Codebehind="Global.asax.cs" Inherits="<%=ClassNamespace%>.Global" Language="C#" %>
