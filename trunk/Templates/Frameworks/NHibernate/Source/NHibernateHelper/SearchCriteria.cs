@@ -10,47 +10,47 @@ namespace NHibernateHelper
     {
         #region Static Content
 
-        public static List<SearchCriteria> GetAllSearchCriteria(TableSchema table, string extendedProperty)
+        public static List<SearchCriteria> GetAllSearchCriteria(EntityManager entityManager, TableSchema table, string extendedProperty)
         {
-            TableSearchCriteria tsc = new TableSearchCriteria(table, extendedProperty);
+            TableSearchCriteria tsc = new TableSearchCriteria(entityManager, table, extendedProperty);
             return tsc.GetAllSearchCriteria();
         }
-        public static List<SearchCriteria> GetAllSearchCriteria(TableSchema table)
+        public static List<SearchCriteria> GetAllSearchCriteria(EntityManager entityManager, TableSchema table)
         {
-            TableSearchCriteria tsc = new TableSearchCriteria(table);
+            TableSearchCriteria tsc = new TableSearchCriteria(entityManager, table);
             return tsc.GetAllSearchCriteria();
         }
 
-        public static List<SearchCriteria> GetPrimaryKeySearchCriteria(TableSchema table, string extendedProperty)
+        public static List<SearchCriteria> GetPrimaryKeySearchCriteria(EntityManager entityManager, TableSchema table, string extendedProperty)
         {
-            TableSearchCriteria tsc = new TableSearchCriteria(table, extendedProperty);
+            TableSearchCriteria tsc = new TableSearchCriteria(entityManager, table, extendedProperty);
             return tsc.GetPrimaryKeySearchCriteria();
         }
-        public static List<SearchCriteria> GetPrimaryKeySearchCriteria(TableSchema table)
+        public static List<SearchCriteria> GetPrimaryKeySearchCriteria(EntityManager entityManager, TableSchema table)
         {
-            TableSearchCriteria tsc = new TableSearchCriteria(table);
+            TableSearchCriteria tsc = new TableSearchCriteria(entityManager, table);
             return tsc.GetPrimaryKeySearchCriteria();
         }
 
-        public static List<SearchCriteria> GetForeignKeySearchCriteria(TableSchema table, string extendedProperty)
+        public static List<SearchCriteria> GetForeignKeySearchCriteria(EntityManager entityManager, TableSchema table, string extendedProperty)
         {
-            TableSearchCriteria tsc = new TableSearchCriteria(table, extendedProperty);
+            TableSearchCriteria tsc = new TableSearchCriteria(entityManager, table, extendedProperty);
             return tsc.GetForeignKeySearchCriteria();
         }
-        public static List<SearchCriteria> GetForeignKeySearchCriteria(TableSchema table)
+        public static List<SearchCriteria> GetForeignKeySearchCriteria(EntityManager entityManager, TableSchema table)
         {
-            TableSearchCriteria tsc = new TableSearchCriteria(table);
+            TableSearchCriteria tsc = new TableSearchCriteria(entityManager, table);
             return tsc.GetForeignKeySearchCriteria();
         }
 
-        public static List<SearchCriteria> GetIndexSearchCriteria(TableSchema table, string extendedProperty)
+        public static List<SearchCriteria> GetIndexSearchCriteria(EntityManager entityManager, TableSchema table, string extendedProperty)
         {
-            TableSearchCriteria tsc = new TableSearchCriteria(table, extendedProperty);
+            TableSearchCriteria tsc = new TableSearchCriteria(entityManager, table, extendedProperty);
             return tsc.GetIndexSearchCriteria();
         }
-        public static List<SearchCriteria> GetIndexSearchCriteria(TableSchema table)
+        public static List<SearchCriteria> GetIndexSearchCriteria(EntityManager entityManager, TableSchema table)
         {
-            TableSearchCriteria tsc = new TableSearchCriteria(table);
+            TableSearchCriteria tsc = new TableSearchCriteria(entityManager, table);
             return tsc.GetIndexSearchCriteria();
         }
 

@@ -10,11 +10,12 @@ namespace NHibernateHelper
     {
         #region Constructor
 
-        public TableSearchCriteria(TableSchema sourceTable)
-            : this(sourceTable, String.Empty) { }
-        public TableSearchCriteria(TableSchema sourceTable, string extendedProperty)
+        public TableSearchCriteria(EntityManager entityManager, TableSchema sourceTable)
+            : this(entityManager, sourceTable, String.Empty) { }
+        public TableSearchCriteria(EntityManager entityManager, TableSchema sourceTable, string extendedProperty)
         {
             this.Table = sourceTable;
+            this.EntityManager = entityManager;
             this.ExtendedProperty = (String.IsNullOrEmpty(extendedProperty))
                 ? NHibernateHelper.ExtendedPropertyName
                 : extendedProperty;
@@ -62,6 +63,7 @@ namespace NHibernateHelper
         protected void GetPrimaryKeySearchCriteria(Dictionary<string, SearchCriteria> map)
         {
             List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>(Table.PrimaryKey.MemberColumns.ToArray());
+            CleanColumnList(mcsList);
             SearchCriteria searchCriteria = new SearchCriteria(ExtendedProperty, mcsList, true);
 
             if (!String.IsNullOrEmpty(ExtendedProperty)
@@ -77,9 +79,10 @@ namespace NHibernateHelper
             foreach (TableKeySchema tks in Table.ForeignKeys)
             {
                 SearchCriteria searchCriteria = new SearchCriteria(ExtendedProperty);
-                foreach (MemberColumnSchema mcs in tks.ForeignKeyMemberColumns)
-                    if (mcs.Table.Equals(Table))
-                        searchCriteria.Add(mcs);
+                List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>(tks.ForeignKeyMemberColumns.ToArray());
+                CleanColumnList(mcsList);
+                foreach (MemberColumnSchema mcs in mcsList)
+                    searchCriteria.Add(mcs);
 
                 if (!String.IsNullOrEmpty(ExtendedProperty) && tks.ExtendedProperties.Contains(ExtendedProperty) && tks.ExtendedProperties[ExtendedProperty].Value != null)
                     searchCriteria.SetMethodNameGeneration(tks.ExtendedProperties[ExtendedProperty].Value.ToString());
@@ -92,9 +95,10 @@ namespace NHibernateHelper
             foreach (IndexSchema indexSchema in Table.Indexes)
             {
                 SearchCriteria searchCriteria = new SearchCriteria(ExtendedProperty);
-                foreach (MemberColumnSchema mcs in indexSchema.MemberColumns)
-                    if (mcs.Table.Equals(Table))
-                        searchCriteria.Add(mcs);
+                List<MemberColumnSchema> mcsList = new List<MemberColumnSchema>(indexSchema.MemberColumns.ToArray());
+                CleanColumnList(mcsList);
+                foreach (MemberColumnSchema mcs in mcsList)
+                    searchCriteria.Add(mcs);
 
                 if (!String.IsNullOrEmpty(ExtendedProperty) && indexSchema.ExtendedProperties.Contains(ExtendedProperty) && indexSchema.ExtendedProperties[ExtendedProperty].Value != null)
                     searchCriteria.SetMethodNameGeneration(indexSchema.ExtendedProperties[ExtendedProperty].Value.ToString());
@@ -121,12 +125,25 @@ namespace NHibernateHelper
             return result;
         }
 
+        protected void CleanColumnList(List<MemberColumnSchema> mcsList)
+        {
+            for (int i = 0; i < mcsList.Count; i++)
+            {
+                if (!mcsList[i].Table.Equals(Table) || EntityManager.GetEntityBaseFromColumn(mcsList[i]) == null)
+                {
+                    mcsList.Remove(mcsList[i]);
+                    i--;
+                }
+            }
+        }
+
         #endregion
 
         #region Properties
 
         public string ExtendedProperty { get; protected set; }
         public TableSchema Table { get; protected set; }
+        public EntityManager EntityManager { get; protected set; }
 
         #endregion
     }
