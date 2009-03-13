@@ -18,8 +18,8 @@ Description: Generates a Manager Object for NHibernate.
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="NHibernateHelper" %>
 <%@ Map Name="SystemCSharp" Src="System-CSharpAlias" %>
-<% List<SearchCriteria> scList = SearchCriteria.GetAllSearchCriteria(SourceTable); %>
 <% EntityManager entityManager = new EntityManager(SourceTable, ExcludedTables); %>
+<% List<SearchCriteria> scList = SearchCriteria.GetAllSearchCriteria(entityManager, SourceTable); %>
 using System;
 using System.Collections.Generic;
 using System.Text;
