@@ -19,6 +19,7 @@
 <li><a href="#Overview">Overview</a></li>
 <li><a href="#QuickStart">Quick Start</a></li>
 <li><a href="#SampleAppConfig">Sample App.Config</li>
+<li><a href="#AdvancedTips">AdvancedTips</li>
 <li><a href="#Dependancies">Dependancies</li>
 <li><a href="#KnownIssues">Known Issues</li>
 <li><a href="#Downloads">Downloads</li>
@@ -30,9 +31,11 @@
 
 <h2><a title="Overview" name="Overview"></a>Overview</h2>
 <p>
-These are a collection of templates that generate code that use NHiberate Framework.
+The contents of this readme (and QuickStart section) are covered in our <b><a href="http://community.codesmithtools.com/blogs/videotutorials/archive/2008/11/04/using-codesmith-nhibernate-templates.aspx">NHibernate Video Tutorial</a></b>, located on the <a href="http://community.codesmithtools.com/">CodeSmith Community</a> website.<br>
+Note: This video is done in C#, but the configuration of the CSP & CST are almost identical.
 </p>
 <p>
+These are a collection of templates that generate code that use NHiberate Framework.<br>
 These templates are designed to produce 5 major things...
 <ol>
 <li>NHibernate XML mapping files.</li>
@@ -42,13 +45,6 @@ These templates are designed to produce 5 major things...
 <li>Very basic unit tests for each business object/manager.</li>
 </ol>
 </p>
-<p>
-Note: To explicitly specify a custom name for either a column or table, add a "cs_alias" value to it's extended properties.
-</p>
-<p>
-Note: To explicitly specify a ManyToMany table, add a "cs_ManyToMany" value to it's extended properties.
-</p>
-
 
 
 
@@ -95,6 +91,16 @@ Note: To explicitly specify a ManyToMany table, add a "cs_ManyToMany" value to i
 &nbsp; &nbsp; &lt;/session-factory&gt;<br>
 &nbsp; &lt;/hibernate-configuration&gt;<br>
 &lt;/configuration&gt;<br>
+</p>
+
+
+
+<h2><a title="AdvancedTips" name="AdvancedTips"></a>Advanced Tips</h2>
+<p>
+To explicitly specify a custom name for either a column or table, add a "cs_alias" value to it's extended properties.
+</p>
+<p>
+To explicitly specify a ManyToMany table, add a "cs_ManyToMany" value to it's extended properties.
 </p>
 
 
@@ -219,6 +225,15 @@ Download the latest release from GoogleCode.
 
 
 <h2><a title="Links" name="Links"></a>Links</h2>
+<p>
+<a href="http://www.codesmithtools.com/">CodeSmith Tools</a><br>
+<a href="http://community.codesmithtools.com/">CodeSmith Community</a><br>
+<a href="http://community.codesmithtools.com/blogs/videotutorials/archive/2008/11/04/using-codesmith-nhibernate-templates.aspx">NHibernate Video Tutorial</a>
+</p>
+<p>
+<a href="http://codesmith.googlecode.com/svn/trunk/Templates/Frameworks/NHibernate/">CodeSmith GoogleCode Repository - NHibernate</a><br>
+<a href="http://code.google.com/p/codesmith/issues/list">CodeSmith GoogleCode Repository - Issue Tracker</a><br>
+</p>
 <p>
 <a href="http://www.hibernate.org/343.html">NHibernate for .NET</a>
 </p>
