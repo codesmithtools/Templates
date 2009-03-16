@@ -5,7 +5,10 @@ using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Reflection;
+using System.Security.Principal;
 using System.Threading;
+using System.Web;
+using System.Web.Hosting;
 
 namespace CodeSmith.Data.Audit
 {
@@ -36,6 +39,8 @@ namespace CodeSmith.Data.Audit
                 throw new ArgumentNullException("dataContext");
 
             var auditLog = new AuditLog();
+            auditLog.Date = DateTime.Now;
+            auditLog.Username = GetCurrentUserName();
 
             ChangeSet changeSet = dataContext.GetChangeSet();
             AddAuditEntities(dataContext, auditLog, AuditAction.Delete, changeSet.Deletes);
@@ -276,6 +281,26 @@ namespace CodeSmith.Data.Audit
                 return Nullable.GetUnderlyingType(t);
 
             return t;
+        }
+
+        private static string GetCurrentUserName()
+        {
+            IPrincipal currentUser = null;
+
+            if (HostingEnvironment.IsHosted)
+            {
+                HttpContext current = HttpContext.Current;
+                if (current != null)
+                    currentUser = current.User;
+            }
+
+            if (currentUser == null)
+                currentUser = Thread.CurrentPrincipal;
+
+            if ((currentUser != null) && (currentUser.Identity != null))
+                return currentUser.Identity.Name;
+
+            return string.Empty;
         }
     }
 }
