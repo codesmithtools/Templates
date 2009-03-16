@@ -405,6 +405,18 @@
             </summary>
             <returns>An xml string of the <see cref="T:CodeSmith.Data.Audit.AuditLog"/>.</returns>
         </member>
+        <member name="P:CodeSmith.Data.Audit.AuditLog.Username">
+            <summary>
+            Gets or sets the user name that made the changes.
+            </summary>
+            <value>The user name that made the changes.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditLog.Date">
+            <summary>
+            Gets or sets the date when the changes were made.
+            </summary>
+            <value>The date when the changes were made.</value>
+        </member>
         <member name="P:CodeSmith.Data.Audit.AuditLog.Entities">
             <summary>
             Gets the list entities that have changes in the <see cref="T:System.Data.Linq.DataContext"/>.
