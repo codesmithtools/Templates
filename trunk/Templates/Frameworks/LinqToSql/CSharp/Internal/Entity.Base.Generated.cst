@@ -212,7 +212,8 @@ namespace <%= ClassNamespace %>
 				
                 if (includeProperty)
                 {
-					value = value.Replace("\r\n", " ").Replace('\n', ' ').Replace('\t', ' ');
+                    if (value != null)
+					    value = value.ToString().Replace("\r\n", " ").Replace('\n', ' ').Replace('\t', ' ');
 					
                     if (value != null && value.ToString().Length > 50)
                     {
