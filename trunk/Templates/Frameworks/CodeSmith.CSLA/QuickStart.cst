@@ -1,0 +1,148 @@
+<%-- 
+Name: Quick Start
+Author: Blake Niemyjski
+Description: Used to Quick Start Visual Studio Projects
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="QuickStart.QuickStartCodeTemplate" Debug="False" Description="QuickStart for CSLA 3.6.x" CompilerVersion="v3.5" %>
+
+<%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
+<%@ Register Name="Entities" Template="Common\Entities.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataAccess" Template="Common\DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="Web" Template="Common\Web.cst" MergeProperties="False" ExcludeProperties="" %>
+
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="Common" %>
+<%@ Assembly Name="QuickStart" Path="Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.IO" %>
+
+<%@ Property Name="UseDeferredDeletion" Type="System.Boolean" Default="False" Category="3. Business Project" Description="Changes how the Business Objects are deleted, defaults to immediate deletion" %>
+
+<% Generate(); %>
+
+The <%= SolutionName %> Solution has been created at <%= Location %>.
+
+<script runat="template">
+
+public override void Generate()
+{	
+	// Make sure Location is FullPath
+    Location = Path.GetFullPath(Location);
+
+    // Check For Existing Project
+    if (DirectoriesAlreadyExists)
+    {
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.AppendLine("It seems that a quick start already exists in specified directory:");
+        sb.AppendLine(this.Location);
+        sb.AppendLine("Please delete existing data or selected a different directory.");
+
+        throw new System.ApplicationException(sb.ToString());
+    }
+
+    // Prep Directories
+    if (!Directory.Exists(Location))
+        Directory.CreateDirectory(Location);
+
+	#region Render CSP's
+	
+	Entities entityCSP = this.Create<Entities>();
+	this.CopyPropertiesTo(entityCSP);
+	entityCSP.Location = Path.Combine(this.Location, this.BusinessProjectName);
+	
+	OutputFile outputFile = new OutputFile(Path.GetFullPath("Common\\Entities.csp"));
+	entityCSP.RenderToFile(outputFile.OutputFileName, true);
+	
+	DataAccess dataAccess = this.Create<DataAccess>();
+	this.CopyPropertiesTo(dataAccess);
+	dataAccess.SourceDatabase = SourceDatabase;
+	dataAccess.Location = Path.Combine(this.Location, this.DataProjectName);
+	
+	outputFile = new OutputFile(Path.GetFullPath("Common\\DataAccess.csp"));
+	dataAccess.RenderToFile(outputFile.OutputFileName, true);
+	
+    Web web = this.Create<Web>();
+	this.CopyPropertiesTo(web);
+	web.Location = Path.Combine(this.Location, this.InterfaceProjectName);
+	
+	outputFile = new OutputFile(Path.GetFullPath("Common\\Web.csp"));
+	web.RenderToFile(outputFile.OutputFileName, true);
+    
+	#endregion
+
+    List<SolutionItem> solutionItems = new List<SolutionItem>();
+    ProjectBuilderSettings pbs = CreateProjectBuilderSettings();
+
+    // Create Data Project
+    DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs);
+	dataProjectCreator.CspFileName = "DataAccess.csp";
+    SolutionItem dataProject = dataProjectCreator.CreateProject(this.DataProjectName);
+    solutionItems.Add(dataProject);
+	
+	// Create Business Project
+    DataProjectCreator businessProjectCreator = new DataProjectCreator(pbs);
+	businessProjectCreator.CspFileName = "Entities.csp";
+    businessProjectCreator.ProjectReferences.Add(this.DataProjectName);
+    SolutionItem businessProject = businessProjectCreator.CreateProject(this.BusinessProjectName);
+    solutionItems.Add(businessProject);
+
+    // Create UI Project
+    WebAppProjectCreator webAppCreator = new WebAppProjectCreator(pbs);
+    webAppCreator.CspFileName = "Web.csp";
+    webAppCreator.ProjectReferences.Add(this.BusinessProjectName);
+    SolutionItem webAppProject = webAppCreator.CreateProject(this.InterfaceProjectName);
+    solutionItems.Add(webAppProject);
+    
+    // Create UnitTests Project
+    //if(IncludeTestProject)
+    //{
+    //	UnitTestProjectCreator unitTestProjectCreator = new UnitTestProjectCreator(pbs);
+    //	SolutionItem unitTestsProject = unitTestProjectCreator.CreateProject(this.TestProjectName, dataProject);
+    //	solutionItems.Add(unitTestsProject);
+    //}
+
+    // Create Solution
+    string solutionPath = CreateSolution(solutionItems);
+
+    // Launch Visual Studio
+    if (LaunchVisualStudio)
+        LaunchVisualStudioWithSolution(solutionPath);
+}
+
+private string CreateSolution(List<SolutionItem> solutionItems)
+{
+    QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
+    quickStartSolution.SolutionItems = solutionItems;
+
+    string filePathAboslute = Path.Combine(this.Location, String.Concat(SolutionName, ".sln"));
+    quickStartSolution.RenderToFile(filePathAboslute, true);
+
+    return filePathAboslute;
+}
+
+[Browsable(false)]
+public bool DirectoriesAlreadyExists
+{
+    get
+    {
+        return (File.Exists(Path.Combine(this.Location, String.Concat(SolutionName, ".sln"))));
+    }
+}
+
+ public ProjectBuilderSettings CreateProjectBuilderSettings()
+{
+    return new ProjectBuilderSettings()
+    {
+        SourceDatabase = SourceDatabase,
+        Location = this.Location,
+        SolutionName = SolutionName,
+        Language = Language,
+        DataProjectName = DataProjectName,
+        InterfaceProjectName = this.InterfaceProjectName,
+        CodeTemplate = this
+    };
+}
+</script>
