@@ -1,0 +1,339 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using CodeSmith.SchemaHelper.Util;
+
+namespace CodeSmith.SchemaHelper
+{
+    /// <summary>
+    /// Extension Methods for MemberCollectionExtensions
+    /// </summary>
+    public static class MemberCollectionExtensions
+    {
+        public static List<SearchCriteria> ListSearchCriteria(this List<Member> members)
+        {
+            List<SearchCriteria> searchCriterias = new List<SearchCriteria>();
+
+            foreach (var member in members)
+            {
+                string memberName = member.Name;
+                searchCriterias.AddRange(member.SearchCriteria.Where(sc => !sc.IsUniqueResult && sc.MethodName.Contains(memberName)));
+            }
+
+            return searchCriterias;
+        }
+
+        public static string BuildObjectInitializer(this List<Member> members)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                parameters += string.Format(", {0} = {1}", member.PropertyName, member.VariableName);
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildCriteriaObjectInitializer(this List<Member> members)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                parameters += string.Format(", {0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName), member.Entity.ResolveCriteriaVariableName(member.ColumnName));
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildParametersVariables(this List<Member> members)
+        {
+            return members.BuildParametersVariables(true);
+        }
+
+        public static string BuildParametersVariables(this List<Member> members, bool isNullable)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
+
+                parameters += string.Format(", {0} {1}", systemType, member.VariableName);
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildParametersVariablesCriteria(this List<Member> members)
+        {
+            return members.BuildParametersVariablesCriteria(true);
+        }
+
+        public static string BuildParametersVariablesCriteria(this List<Member> members, bool isNullable)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
+
+                parameters += string.Format(", {0} {1}", systemType, member.Entity.ResolveCriteriaVariableName(member.ColumnName));
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildInsertParametersVariables(this List<Member> members)
+        {
+            return members.BuildInsertParametersVariables(true);
+        }
+
+        public static string BuildInsertParametersVariables(this List<Member> members, bool isNullable)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                if (!member.IsIdentity)
+                {
+                    string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
+
+                    parameters += string.Format(", {0} {1}", systemType, member.VariableName);
+                }
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildVariableArguments(this List<Member> members)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                parameters += string.Format(", {0}", member.VariableName);
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildPropertyVariableArguments(this List<Member> members)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                parameters += string.Format(", {0}", member.PropertyName);
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildCriteriaParametersVariables(this List<Member> members)
+        {
+            return BuildCriteriaParametersVariables(members, "criteria");
+        }
+
+        public static string BuildCriteriaParametersVariables(this List<Member> members, string criteria)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                parameters += string.Format(", {0}.{1}", criteria, member.PropertyName);
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildReadPropertyParametersVariables(this List<Member> members)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                parameters += string.Format(", ReadProperty({0}Property)", member.PrivateMemberVariableName);
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildInsertReadPropertyParametersVariables(this List<Member> members)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                if(!member.IsIdentity)
+                    parameters += string.Format(", ReadProperty({0}Property)", member.PrivateMemberVariableName);
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildPrivateMemberVariableParameters(this List<Member> members)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                parameters += string.Format(", {0}", member.PrivateMemberVariableName);
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildInsertPrivateMemberVariableParameters(this List<Member> members)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                if (!member.IsIdentity)
+                    parameters += string.Format(", {0}", member.PrivateMemberVariableName);
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildDataBaseColumns(this List<Member> members)
+        {
+            string columnNames = string.Empty;
+
+            foreach (Member member in members)
+            {
+                columnNames += string.Format(", [{0}]", member.ColumnName);
+            }
+
+            return columnNames.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildDataBaseParameters(this List<Member> members)
+        {
+            string columnNames = string.Empty;
+
+            foreach (Member member in members)
+            {
+                columnNames += string.Format(", {0}{1}",  Configuration.Instance.ParameterPrefix, member.Name);
+            }
+
+            return columnNames.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildInsertDataBaseColumns(this List<Member> members)
+        {
+            string columnNames = string.Empty;
+
+            foreach (Member member in members)
+            {
+                if(!member.IsIdentity)
+                    columnNames += string.Format(", [{0}]", member.ColumnName);
+            }
+
+            return columnNames.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildInsertDataBaseParameters(this List<Member> members)
+        {
+            string columnNames = string.Empty;
+
+            foreach (Member member in members)
+            {
+                if (!member.IsIdentity)
+                    columnNames += string.Format(", {0}{1}", Configuration.Instance.ParameterPrefix, member.Name);
+            }
+
+            return columnNames.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildInsertCommandParameters(this List<Member> members)
+        {
+            string commandParameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                if(!member.IsIdentity)
+                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2});", Configuration.Instance.ParameterPrefix, member.ColumnName, member.VariableName);
+            }
+
+            return commandParameters.TrimStart(new[] { '\t', '\n' });
+        }
+
+        public static string BuildCommandParameters(this List<Member> members)
+        {
+            string commandParameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2});", Configuration.Instance.ParameterPrefix, member.ColumnName, member.VariableName);
+            }
+
+            return commandParameters.TrimStart(new[] { '\t', '\n' });
+        }
+
+        public static string BuildSetStatements(this List<Member> members)
+        {
+            string setStatements = "\t\t\t\t\t\t SET";
+
+            foreach (Member member in members)
+            {
+                string name = member.ColumnName;
+
+                foreach (AssociationMember association in member.Entity.OneToMany)
+                {
+                    if (association.LocalColumn.ColumnName == member.ColumnName)
+                    {
+                        name = association.ColumnName;
+                        break;
+                    }
+                }
+
+                setStatements += string.Format(" [{0}] = {1}{2},", name, Configuration.Instance.ParameterPrefix, member.VariableName);
+            }
+
+            return setStatements.TrimStart(new[] { '\t', '\n' }).TrimEnd(new[] { ',' });
+        }
+
+        public static string BuildWhereStatements(this List<Member> members)
+        {
+            string columnNames = string.Empty;
+
+            foreach (Member member in members)
+            {
+                columnNames += string.Format("[{0}] = {1} AND ", member.ColumnName, member.BuildParameterVariableName());
+            }
+
+            return string.Format("WHERE {0}", columnNames.Remove(columnNames.Length - 5, 5));
+        }
+
+        public static string BuildManyToOneWhereSubStatements(this List<Member> members, List<Member> primaryKeys)
+        {
+            string columnNames = string.Empty;
+
+            foreach (Member member in members)
+            {
+                foreach (Member primaryKey in primaryKeys)
+                {
+                    columnNames += string.Format(" [{0}] in (SELECT [{1}] FROM [{2}].[{3}] {4}) AND", member.ColumnName, member.ColumnName, primaryKey.Entity.Table.Owner, primaryKey.Entity.Table.Name, primaryKey.BuildWhereStatement());
+                }
+            }
+
+            return string.Format("WHERE {0}", columnNames.TrimStart(new[] { ' ' }).TrimEnd( new[] { 'A', 'N', 'D' }));
+        }
+
+        public static string BuildReaderStatements(this List<Member> members)
+        {
+            string columnNames = string.Empty;
+
+            foreach (Member member in members)
+            {
+                columnNames += string.Format(", reader.{0}(\"{1}\")", member.GetReaderMethod(), member.Name);
+            }
+
+            return columnNames.TrimStart(new[] { ',', ' ' });
+        }
+    }
+}
