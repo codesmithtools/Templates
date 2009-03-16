@@ -193,8 +193,10 @@ Namespace <%= ClassNamespace %>
                         value = "<exception>"
                     End Try
                 End If
-
+				
                 If includeProperty Then
+					value = value.Replace(vbCr & vbLf, " ").Replace(ControlChars.Lf, " "C).Replace(ControlChars.Tab, " "C)
+					
                     If value <> Nothing AndAlso value.ToString().Length > 50 Then
                         value = [String].Concat(value.ToString().Substring(0, 50), "...")
                     End If

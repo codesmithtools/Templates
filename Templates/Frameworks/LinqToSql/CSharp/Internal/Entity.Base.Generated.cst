@@ -209,9 +209,11 @@ namespace <%= ClassNamespace %>
                         value = "<exception>";
                     }
                 }
-
+				
                 if (includeProperty)
                 {
+					value = value.Replace("\r\n", " ").Replace('\n', ' ').Replace('\t', ' ');
+					
                     if (value != null && value.ToString().Length > 50)
                     {
                         value = String.Concat(value.ToString().Substring(0, 50), "...");
