@@ -16,6 +16,8 @@
     <xs:sequence minOccurs="0" maxOccurs="unbounded">
       <xs:element name="entity" type="AuditEntity" />
     </xs:sequence>
+    <xs:attribute name="username" type="xs:string" use="optional" />
+    <xs:attribute name="date" type="xs:dateTime" use="optional" />
   </xs:complexType>
 
   <xs:complexType name="AuditEntity">
