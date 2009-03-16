@@ -181,7 +181,7 @@ Namespace <%= ClassNamespace %>
 
             For Each prop In props
                 value = Nothing
-
+				
                 If prop.PropertyType Is GetType(Byte()) OrElse prop.PropertyType Is GetType(System.Data.Linq.Binary) Then
                     value = "<binary>"
                 ElseIf prop.PropertyType Is GetType(System.Data.Linq.EntitySet(Of )) OrElse prop.PropertyType.BaseType Is GetType(LinqEntityBase) Then
@@ -195,7 +195,8 @@ Namespace <%= ClassNamespace %>
                 End If
 				
                 If includeProperty Then
-					value = value.Replace(vbCr & vbLf, " ").Replace(ControlChars.Lf, " "C).Replace(ControlChars.Tab, " "C)
+					If value <> Nothing Then
+						value = value.ToString().Replace(vbCr & vbLf, " ").Replace(ControlChars.Lf, " "C).Replace(ControlChars.Tab, " "C)
 					
                     If value <> Nothing AndAlso value.ToString().Length > 50 Then
                         value = [String].Concat(value.ToString().Substring(0, 50), "...")
