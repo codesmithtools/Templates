@@ -70,7 +70,7 @@ namespace CodeSmith.Data.Rules.Assign
                 return;
 
             var value = (DateTime) property.GetValue(current, null);
-            if (CanRun(context.TrackedObject) && value == default(DateTime))
+            if (CanRun(context.TrackedObject) || value == default(DateTime))
                 property.SetValue(current, DateTime.Now, null);
         }
     }

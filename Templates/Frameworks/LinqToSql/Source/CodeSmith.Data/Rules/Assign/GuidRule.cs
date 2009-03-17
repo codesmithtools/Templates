@@ -61,10 +61,8 @@ namespace CodeSmith.Data.Rules.Assign
 
             object current = context.TrackedObject.Current;
             var value = GetPropertyValue<Guid>(current);
-            if (context.Rule.TargetProperty == "TransferId")
-                System.Diagnostics.Debugger.Break();
 
-            if (CanRun(context.TrackedObject) && value == default(Guid))
+            if (CanRun(context.TrackedObject) || value == default(Guid))
                 SetPropertyValue(current, Guid.NewGuid());
         }
     }
