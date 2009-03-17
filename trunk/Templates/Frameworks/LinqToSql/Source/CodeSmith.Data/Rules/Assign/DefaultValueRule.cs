@@ -57,7 +57,7 @@
 
             var value = GetPropertyValue<T>(current);
 
-            if (default(T).Equals(value) || CanRun(context.TrackedObject))
+            if (default(T).Equals(value) && CanRun(context.TrackedObject))
                 SetPropertyValue(current, DefaultValue);
         }
     }
