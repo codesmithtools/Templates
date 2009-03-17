@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
@@ -74,7 +73,7 @@ namespace CodeSmith.Data.Rules.Assign
                 return;
 
             var value = (string) property.GetValue(current, null);
-            if (CanRun(context.TrackedObject) && String.IsNullOrEmpty(value))
+            if (CanRun(context.TrackedObject))
                 property.SetValue(current, GetCurrentIpAddress(), null);
         }
 

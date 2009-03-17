@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Security.Principal;
 using System.Threading;
 using System.Web;
@@ -74,7 +73,7 @@ namespace CodeSmith.Data.Rules.Assign
                 return;
 
             var value = (string) property.GetValue(current, null);
-            if (CanRun(context.TrackedObject) && String.IsNullOrEmpty(value))
+            if (CanRun(context.TrackedObject))
                 property.SetValue(current, GetCurrentUserName(), null);
         }
 
