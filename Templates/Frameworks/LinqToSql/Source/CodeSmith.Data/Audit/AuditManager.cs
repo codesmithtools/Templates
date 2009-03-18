@@ -67,8 +67,8 @@ namespace CodeSmith.Data.Audit
             //use first log as final log
             var mergedLog = logs[0];
             for (int i = 1; i < logs.Length; i++)
-            {                
-                var current = logs[i];                
+            {
+                var current = logs[i];
                 foreach (var entity in current.Entities)
                 {
                     // compare all entities to final, merge duplicates, add new
@@ -112,7 +112,7 @@ namespace CodeSmith.Data.Audit
         {
             ITable table = dataContext.GetTable(entity.GetType());
             MetaTable metaTable = dataContext.Mapping.GetTable(entity.GetType());
-            
+
             var auditEntity = new AuditEntity();
             auditEntity.Action = action;
             auditEntity.Type = table.ElementType.FullName;
@@ -133,7 +133,11 @@ namespace CodeSmith.Data.Audit
                 var auditProperty = new AuditKey();
                 auditProperty.Name = dataMember.Member.Name;
                 auditProperty.Type = dataMember.Type.FullName;
-                auditProperty.Value = dataMember.MemberAccessor.GetBoxedValue(entity);                
+                object value = dataMember.MemberAccessor.GetBoxedValue(entity);
+                if (dataMember.Type.IsEnum)
+                    value = Enum.GetName(dataMember.Type, value);
+
+                auditProperty.Value = value;
                 auditEntity.Keys.Add(auditProperty);
             }
         }
@@ -150,14 +154,15 @@ namespace CodeSmith.Data.Audit
 
                 var auditProperty = new AuditProperty();
                 auditProperty.Name = dataMember.Member.Name;
-                auditProperty.Type = GetUnderlyingType(dataMember.Type).FullName;
+                Type underlyingType = GetUnderlyingType(dataMember.Type);
+                auditProperty.Type = underlyingType.FullName;
 
                 if (auditProperty.Type != _binaryType && !dataMember.IsDeferred)
                 {
                     if (auditEntity.Action == AuditAction.Delete)
-                        auditProperty.Original = dataMember.MemberAccessor.GetBoxedValue(entity);
+                        auditProperty.Original = GetValue(underlyingType, dataMember.MemberAccessor.GetBoxedValue(entity));
                     else
-                        auditProperty.Current = dataMember.MemberAccessor.GetBoxedValue(entity);
+                        auditProperty.Current = GetValue(underlyingType, dataMember.MemberAccessor.GetBoxedValue(entity));
                 }
 
                 auditEntity.Properties.Add(auditProperty);
@@ -170,7 +175,7 @@ namespace CodeSmith.Data.Audit
         private static void AddAuditProperties(ITable table, object entity, AuditEntity auditEntity)
         {
             ModifiedMemberInfo[] modified = table.GetModifiedMembers(entity);
-            
+
             foreach (ModifiedMemberInfo info in modified)
             {
                 if (HasNotAuditedAttribute(info.Member))
@@ -180,13 +185,18 @@ namespace CodeSmith.Data.Audit
                 auditProperty.Name = info.Member.Name;
 
                 var propertyInfo = info.Member as PropertyInfo;
+                Type underlyingType = null;
+
                 if (propertyInfo != null)
-                    auditProperty.Type = GetUnderlyingType(propertyInfo.PropertyType).FullName;
+                {
+                    underlyingType = GetUnderlyingType(propertyInfo.PropertyType);
+                    auditProperty.Type = underlyingType.FullName;
+                }
 
                 if (auditProperty.Type != _binaryType)
                 {
-                    auditProperty.Current = info.CurrentValue;
-                    auditProperty.Original = info.OriginalValue;
+                    auditProperty.Current = GetValue(underlyingType, info.CurrentValue);
+                    auditProperty.Original = GetValue(underlyingType, info.OriginalValue);
                 }
 
                 auditEntity.Properties.Add(auditProperty);
@@ -194,7 +204,7 @@ namespace CodeSmith.Data.Audit
         }
 
         private static bool HasNotAuditedAttribute(MemberInfo memberInfo)
-        {            
+        {
             _notAuditedLock.EnterUpgradeableReadLock();
             try
             {
@@ -245,7 +255,7 @@ namespace CodeSmith.Data.Audit
             {
                 _auditableLock.ExitUpgradeableReadLock();
             }
-            
+
         }
 
         private static bool HasAttribute(MemberInfo memberInfo, Type attributeType)
@@ -271,6 +281,16 @@ namespace CodeSmith.Data.Audit
 
             MemberInfo metaInfo = metadataType.GetMember(memberInfo.Name, _defaultBinding).FirstOrDefault();
             return metaInfo != null && metaInfo.IsDefined(attributeType, true);
+        }
+
+        private static object GetValue(Type type, object value)
+        {
+            if (value == null)
+                return null;
+            if (type == null)
+                type = value.GetType();
+
+            return type.IsEnum ? Enum.GetName(type, value) : value;
         }
 
         private static Type GetUnderlyingType(Type type)
