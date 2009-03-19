@@ -48,7 +48,7 @@ namespace <%= BusinessProjectName %>
 			MarkOld();
 		}
 		
-        private void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria);
+        private void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)
 		{
 			// TODO: load values
 		}

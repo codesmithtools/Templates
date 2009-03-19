@@ -45,7 +45,7 @@ namespace <%= BusinessProjectName %>
 			ValidationRules.CheckRules();
 		}
 
-        private void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria);     
+        private void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)     
 		{
 			// TODO: load values
 		}
