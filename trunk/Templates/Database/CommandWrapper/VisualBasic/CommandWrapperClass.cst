@@ -545,7 +545,7 @@ Namespace <%= TargetNamespace %>
 		<% If (ReturnsResultSet) Then %>
 		' <returns><%= GetRowClassCollectionName() %></returns>
 		<% End If %>
-		Public Shared <% If (ReturnsResultSet) Then Response.Write("Function") Else Response.Write("Sub") %> Execute(<%= BuildParameterList() %>) As <% If (ReturnsResultSet) Then Response.Write(GetRowClassCollectionName()) %>
+		Public Shared <% If (ReturnsResultSet) Then Response.Write("Function") Else Response.Write("Sub") %> Execute(<%= BuildParameterList() %>) <% If (ReturnsResultSet) Then Response.Write("As " + GetRowClassCollectionName()) %>
 			Dim <%= GetCamelCaseName(GetClassName()) %> As <%= GetClassName() %> = New <%= GetClassName() %>()
 			
 			'"Assign Property Values"
@@ -566,12 +566,15 @@ Namespace <%= TargetNamespace %>
 			
 			Return <%= GetRowClassCollectionInstanceName() %>
 			<% End If %>
-		End Function
+		End <% If (ReturnsResultSet) Then Response.Write("Function") Else Response.Write("Sub") %>
 		<% End If %>
 		<% End If %>
+        
 		#End Region
-	End Class
-	#End Region
+	
+    End Class
+	
+    #End Region
 <% If (Not BatchMode) Then %>
 End Namespace
 <% End If %>
@@ -675,7 +678,7 @@ End Property
 Public Sub BuildXmlCommentParameterList()
 
 	Dim builder As System.Text.StringBuilder = New System.Text.StringBuilder()
-	builder.Append(vbTab + vbTab + "' <param name=""connectionString"">The connection string to use</param>\r\n")
+	builder.Append(vbTab + vbTab + "' <param name=""connectionString"">The connection string to use</param>" + vbNewLine)
 	
 	For i As Int32 = 0 To (SourceCommand.InputParameters.Count - 1)
 		builder.Append(vbTab + vbTab + " ")
@@ -683,7 +686,7 @@ Public Sub BuildXmlCommentParameterList()
 		builder.Append(GetCamelCaseName(SourceCommand.InputParameters(i).Name))
 		builder.Append(""">")
 		builder.Append(SourceCommand.InputParameters(i).Description)
-		builder.Append("'</param>\r\n")
+		builder.Append("'</param>" + vbNewLine)
 	Next
 	
 	For i As Int32 = 0 To (SourceCommand.InputOutputParameters.Count - 1)
@@ -692,7 +695,7 @@ Public Sub BuildXmlCommentParameterList()
 		builder.Append(GetCamelCaseName(SourceCommand.InputOutputParameters(i).Name))
 		builder.Append(""">")
 		builder.Append(SourceCommand.InputOutputParameters(i).Description)
-		builder.Append("</param>\r\n")
+		builder.Append("</param>" + vbNewLine)
 	Next
 	
 	For i As Int32 = 0 To (SourceCommand.OutputParameters.Count - 1)
@@ -701,7 +704,7 @@ Public Sub BuildXmlCommentParameterList()
 		builder.Append(GetCamelCaseName(SourceCommand.OutputParameters(i).Name))
 		builder.Append(""">")
 		builder.Append(SourceCommand.OutputParameters(i).Description)
-		builder.Append("</param>\r\n")
+		builder.Append("</param>" + vbNewLine)
 	Next
 	
 	If (builder.ToString().Length > 0) Then
@@ -718,7 +721,7 @@ Public Sub BuildParameterExtraStatements(parameter As ParameterSchema)
 			builder.Append(GetParameterName(parameter.Name))
 			builder.Append(".Size = ")
 			builder.Append(parameter.Size)
-			builder.Append("\r\n")
+			builder.Append(vbNewLine)
 		Case DbType.Currency,DbType.Decimal,DbType.Double,DbType.VarNumeric
 			builder.Append(vbTab + vbTab + vbTab + vbTab + vbTab)
 			builder.Append(GetParameterName(parameter.Name))
@@ -729,7 +732,7 @@ Public Sub BuildParameterExtraStatements(parameter As ParameterSchema)
 			builder.Append(GetParameterName(parameter.Name))
 			builder.Append(".Scale = ")
 			builder.Append(parameter.Scale)
-			builder.Append("\r\n")
+			builder.Append(vbNewLine)
 	End Select
 	
 	If (builder.ToString().Length > 0) Then
@@ -776,11 +779,11 @@ Public Function AssignPropertyValues(objectName As String) As String
 		builder.Append(GetPropertyName(SourceCommand.NonReturnValueParameters(i)))
 		builder.Append(" = ")
 		builder.Append(GetCamelCaseName(SourceCommand.NonReturnValueParameters(i).Name))
-		builder.Append("," + vbNewLine + vbNewLine + vbTab + vbTab + vbTab)
+		builder.Append(vbNewLine + vbNewLine + vbTab + vbTab + vbTab)
 	Next
 	
 	if (builder.ToString().Length > 0) Then
-		Return builder.ToString().Substring(0, builder.Length - 8)
+		Return builder.ToString().Substring(0, builder.Length - 7)
 	Else
 		Return String.Empty
 	End If
@@ -796,12 +799,12 @@ Public Function GetPropertyValues(objectName As String) As String
 		builder.Append(objectName)
 		builder.Append(".")
 		builder.Append(GetPropertyName(SourceCommand.AllOutputParameters(i)))
-		builder.Append("," + vbNewLine + vbNewLine + vbTab + vbTab + vbTab)
+		builder.Append(vbNewLine + vbNewLine + vbTab + vbTab + vbTab)
 
 	Next
 	
 	If (builder.ToString().Length > 0) Then
-		Return builder.ToString().Substring(0, builder.Length - 5)
+		Return builder.ToString().Substring(0, builder.Length - 4)
 	Else
 		Return String.Empty
 	End If
