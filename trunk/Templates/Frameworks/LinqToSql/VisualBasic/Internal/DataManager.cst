@@ -36,26 +36,18 @@
 
 Imports System
 Imports System.ComponentModel
-Imports CodeSmith.Data
-Imports CodeSmith.Data.Rules
-<% If Not (Database.ContextNamespace = ManagerNamespace) Then %>
-Imports <%= Database.ContextNamespace %>
-<% End If %>
-<% If Not (Database.ContextNamespace = Database.EntityNamespace) %>
-Imports <%= Database.EntityNamespace %>
-<% End If %>
 
 Namespace <%= ManagerNamespace %>
     ''' <summary>
     ''' The data manager for a DataContext.
     ''' </summary>
     Public Class <%= DataManager.DataManagerName %> 
-    Inherits DataManagerBase(Of <%= DataManager.DataContextName %>)
+        Inherits CodeSmith.Data.DataManagerBase(Of <%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>)
         ''' <summary>
-        ''' Initializes a new instance of the <see cref="<%= DataManager.DataManagerName %>"/> class.
+        ''' Initializes a new instance of the <see cref="<%= Database.ContextNamespace %>.<%= DataManager.DataManagerName %>"/> class.
         ''' </summary>
         ''' <param name="context">An instance of <see cref="<%= DataManager.DataContextName %>"/> DataContext.</param>
-        Public Sub New(ByVal context As <%= DataManager.DataContextName %>)
+        Public Sub New(ByVal context As <%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>)
             MyBase.New(context)
 <% For Each m As EntityManager In DataManager.Managers %>
             <%= m.FieldName %> = New <%= m.ManagerName %>(Me)
