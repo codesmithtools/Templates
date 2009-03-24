@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NHibVbSample.Generated.BusinessObjects" assembly="NHibVbSample.Data">
+	<class name="NHibVbSample.Generated.BusinessObjects.Category, NHibVbSample.Data" table="dbo.Category" lazy="true">
+		<id name="Id" column="CategoryId">
+		 	<generator class="assigned" />
+		</id>
+		
+		<property name="Name" column="Name" />
+		<property name="Descn" column="Descn" />
+		<bag name="Products" lazy="true" cascade="all-delete-orphan"  inverse="true" >
+			<key column="CategoryId"></key>
+			<one-to-many class="Product"></one-to-many>
+		</bag>
+	</class>
+</hibernate-mapping>
