@@ -165,6 +165,6 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
 		if (string.IsNullOrEmpty(Location))
             Location = Path.Combine(
                 CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory, 
-                SourceDatabase.Database.Name);
+                Path.Combine("PLINQO", SourceDatabase.Database.Name));
     }
 </script>
