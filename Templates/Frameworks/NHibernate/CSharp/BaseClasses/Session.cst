@@ -92,7 +92,6 @@ namespace <%= BaseNamespace %>
         {
             if (iSession.IsOpen)
             {
-                iSession.Flush();
                 iSession.Close();
             }
         }

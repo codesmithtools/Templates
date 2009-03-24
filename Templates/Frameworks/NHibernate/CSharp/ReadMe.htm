@@ -7,6 +7,9 @@
 .style1 {
 	color: #FF0000;
 }
+.style2 {
+	color: #FF6600;
+}
 </style>
 </head>
 
@@ -150,6 +153,12 @@ Download the latest release from GoogleCode.
 <h2><a title="History" name="History"></a>History</h2>
 <p>
 <ul>
+<li>Release 1.0.14
+<ul>
+<li>New Feature: Added Query Methods to Managers.</li>
+<li>New Feature: Added Unique Query & Criteria Methods to Managers.</li>
+<li class="style2">Update: Removed automatic flush on session close.</li>
+</ul></li>
 <li>Release 1.0.13
 <ul>
 <li>Bug Fix: SearchCritera was including foreign keys columns even when their associated tables were excluded.</li>
@@ -184,7 +193,7 @@ Download the latest release from GoogleCode.
 </ul></li>
 <li>Release 1.0.5
 <ul>
-<li><div class="style1">Reworked variable naming system.</div>
+<li class="style1">Reworked variable naming system.
 <ul>
 <li>Bug Fix: Column names will no be set to singluar for no reason.</li>
 <li>Bug Fix: Better duplicate member name prevention.</li>
@@ -223,7 +232,10 @@ Download the latest release from GoogleCode.
 </ul></li>
 </ul>
 </p>
-<p class="style1">*Breaking change</p>
+<p>
+<span class="style1">*Breaking change<span><br>
+<span class="style2">*Runtime change<span>
+</p>
 
 
 
