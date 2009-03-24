@@ -33,27 +33,19 @@
 
 using System;
 using System.ComponentModel;
-using CodeSmith.Data;
-using CodeSmith.Data.Rules;
-<% if (Database.ContextNamespace != ManagerNamespace) { %>
-using <%= Database.ContextNamespace %>;
-<% } %>
-<% if (Database.ContextNamespace != Database.EntityNamespace) { %>
-using <%= Database.EntityNamespace %>;
-<% } %>
 
 namespace <%= ManagerNamespace %>
 {
     /// <summary>
     /// The data manager for a DataContext.
     /// </summary>
-    public class <%= DataManager.DataManagerName %> : DataManagerBase<<%= DataManager.DataContextName %>>
+    public class <%= DataManager.DataManagerName %> : CodeSmith.Data.DataManagerBase<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="<%= DataManager.DataManagerName %>"/> class.
+        /// Initializes a new instance of the <see cref="<%= Database.ContextNamespace %>.<%= DataManager.DataManagerName %>"/> class.
         /// </summary>
-        /// <param name="context">An instance of <see cref="<%= DataManager.DataContextName %>"/> DataContext.</param>
-        public <%= DataManager.DataManagerName %>(<%= DataManager.DataContextName %> context) : base(context)
+        /// <param name="context">An instance of <see cref="<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>"/> DataContext.</param>
+        public <%= DataManager.DataManagerName %>(<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %> context) : base(context)
         {
 <% foreach (EntityManager m in DataManager.Managers) { %>
             <%= m.FieldName %> = new <%= m.ManagerName %>(this);
