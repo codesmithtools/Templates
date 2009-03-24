@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NHibVbSample.Generated.BusinessObjects" assembly="NHibVbSample.Data">
+	<class name="NHibVbSample.Generated.BusinessObjects.Supplier, NHibVbSample.Data" table="dbo.Supplier" lazy="true">
+		<id name="Id" column="SuppId">
+		 	<generator class="assigned" />
+		</id>
+		
+		<property name="Name" column="Name" />
+		<property name="Status" column="Status" />
+		<property name="Addr1" column="Addr1" />
+		<property name="Addr2" column="Addr2" />
+		<property name="City" column="City" />
+		<property name="State" column="State" />
+		<property name="Zip" column="Zip" />
+		<property name="Phone" column="Phone" />
+		<bag name="Items" lazy="true" cascade="all"  inverse="true" >
+			<key column="Supplier"></key>
+			<one-to-many class="Item"></one-to-many>
+		</bag>
+	</class>
+</hibernate-mapping>
