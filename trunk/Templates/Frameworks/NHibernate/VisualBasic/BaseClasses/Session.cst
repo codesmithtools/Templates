@@ -86,7 +86,6 @@ Namespace <%= BaseNamespace %>
 		End Sub
 		Public Sub Close() Implements INHibernateSession.Close
 			If iSession.IsOpen Then
-				iSession.Flush()
 				iSession.Close()
 			End If
 		End Sub

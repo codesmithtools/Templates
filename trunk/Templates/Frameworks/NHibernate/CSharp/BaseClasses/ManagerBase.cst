@@ -29,8 +29,12 @@ namespace <%= BaseNamespace %>
         IList<T> GetAll(int maxResults);
         IList<T> GetByCriteria(params ICriterion[] criterionList);
         IList<T> GetByCriteria(int maxResults, params ICriterion[] criterionList);
+        T GetUniqueByCriteria(params ICriterion[] criterionList);
         IList<T> GetByExample(T exampleObject, params string[] excludePropertyList);
-
+        IList<T> GetByQuery(string query);
+        IList<T> GetByQuery(int maxResults, string query);
+        T GetUniqueByQuery(string query);
+        
         // CRUD Methods
         object Save(T entity);
         void SaveOrUpdate(T entity);
@@ -72,6 +76,7 @@ namespace <%= BaseNamespace %>
         {
             return (T)Session.GetISession().Get(typeof(T), id);
         }
+        
         public IList<T> GetAll()
         {
             return GetByCriteria(defaultMaxResults);
@@ -80,6 +85,7 @@ namespace <%= BaseNamespace %>
         {
             return GetByCriteria(maxResults);
         }
+        
         public IList<T> GetByCriteria(params ICriterion[] criterionList)
         {
             return GetByCriteria(defaultMaxResults, criterionList);
@@ -93,6 +99,16 @@ namespace <%= BaseNamespace %>
 
             return criteria.List<T>();
         }
+        public T GetUniqueByCriteria(params ICriterion[] criterionList)
+        {
+            ICriteria criteria = Session.GetISession().CreateCriteria(typeof(T));
+
+            foreach (ICriterion criterion in criterionList)
+                criteria.Add(criterion);
+
+            return criteria.UniqueResult<T>();
+        }
+        
         public IList<T> GetByExample(T exampleObject, params string[] excludePropertyList)
         {
             ICriteria criteria = Session.GetISession().CreateCriteria(typeof(T));
@@ -104,6 +120,21 @@ namespace <%= BaseNamespace %>
             criteria.Add(example);
 
             return criteria.List<T>();
+        }
+        
+        public IList<T> GetByQuery(string query)
+        {
+            return GetByQuery(defaultMaxResults, query);
+        }
+        public IList<T> GetByQuery(int maxResults, string query)
+        {
+            IQuery iQuery = Session.GetISession().CreateQuery(query).SetMaxResults(maxResults);
+            return iQuery.List<T>();
+        }
+        public T GetUniqueByQuery(string query)
+        {
+            IQuery iQuery = Session.GetISession().CreateQuery(query);
+            return iQuery.UniqueResult<T>();
         }
         
         #endregion

@@ -28,7 +28,11 @@ Namespace <%= BaseNamespace %>
 		Function GetAll(ByVal maxResults As Integer) As IList(Of T)
 		Function GetByCriteria(ParamArray criterionList As ICriterion()) As IList(Of T)
 		Function GetByCriteria(ByVal maxResults As Integer, ParamArray criterionList As ICriterion()) As IList(Of T)
+        Function GetUniqueByCriteria(ParamArray criterionList As ICriterion()) As T
 		Function GetByExample(ByVal exampleObject As T, ParamArray excludePropertyList As String()) As IList(Of T)
+        Function GetByQuery(query As String) As IList(Of T)
+        Function GetByQuery(maxResults As Integer, query As String) As IList(Of T)
+        Function GetUniqueByQuery(query As String) As T
 
 		' CRUD Methods
 		Function Save(ByVal entity As T) As Object
@@ -66,13 +70,15 @@ Namespace <%= BaseNamespace %>
 		Public Overridable Function GetById(ByVal id As TKey) As T Implements IManagerBase(Of T, TKey).GetById
 			Return DirectCast(Session.GetISession().[Get](GetType(T), id), T)
 		End Function
-		Public Function GetAll() As IList(Of T) Implements IManagerBase(Of T, TKey).GetAll
+
+        Public Function GetAll() As IList(Of T) Implements IManagerBase(Of T, TKey).GetAll
 			Return GetByCriteria(defaultMaxResults)
 		End Function
 		Public Function GetAll(ByVal maxResults As Integer) As IList(Of T) Implements IManagerBase(Of T, TKey).GetAll
 			Return GetByCriteria(maxResults)
 		End Function
-		Public Function GetByCriteria(ParamArray criterionList As ICriterion()) As IList(Of T) Implements IManagerBase(Of T, TKey).GetByCriteria
+
+        Public Function GetByCriteria(ParamArray criterionList As ICriterion()) As IList(Of T) Implements IManagerBase(Of T, TKey).GetByCriteria
 			Return GetByCriteria(defaultMaxResults, criterionList)
 		End Function
 		Public Function GetByCriteria(ByVal maxResults As Integer, ParamArray criterionList As ICriterion()) As IList(Of T) Implements IManagerBase(Of T, TKey).GetByCriteria
@@ -84,7 +90,17 @@ Namespace <%= BaseNamespace %>
 
 			Return criteria.List(Of T)()
 		End Function
-		Public Function GetByExample(ByVal exampleObject As T, ParamArray excludePropertyList As String()) As IList(Of T) Implements IManagerBase(Of T, TKey).GetByExample
+        Public Function GetUniqueByCriteria(ParamArray criterionList As ICriterion()) As T Implements IManagerBase(Of T, TKey).GetUniqueByCriteria
+            Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(T))
+        
+            For Each criterion As ICriterion In criterionList
+                criteria.Add(criterion)
+            Next
+        
+            Return criteria.UniqueResult(Of T)()
+        End Function
+
+        Public Function GetByExample(ByVal exampleObject As T, ParamArray excludePropertyList As String()) As IList(Of T) Implements IManagerBase(Of T, TKey).GetByExample
 			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(T))
 			Dim example As Example = Example.Create(exampleObject)
 
@@ -96,6 +112,18 @@ Namespace <%= BaseNamespace %>
 
 			Return criteria.List(Of T)()
 		End Function
+        
+        Public Function GetByQuery(query As String) As IList(Of T) Implements IManagerBase(Of T, TKey).GetByQuery
+            Return GetByQuery(defaultMaxResults, query)
+        End Function
+        Public Function GetByQuery(maxResults As Integer, query As String) As IList(Of T) Implements IManagerBase(Of T, TKey).GetByQuery
+            Dim iQuery As IQuery = Session.GetISession().CreateQuery(query).SetMaxResults(maxResults)
+            Return iQuery.List(Of T)()
+        End Function
+        Public Function GetUniqueByQuery(query As String) As T Implements IManagerBase(Of T, TKey).GetUniqueByQuery
+            Dim iQuery As IQuery = Session.GetISession().CreateQuery(query)
+            Return iQuery.UniqueResult(Of T)()
+        End Function
 #End Region
 
 #region "CRUD Methods"
