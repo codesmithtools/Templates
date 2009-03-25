@@ -350,15 +350,17 @@
             <param name="logs">The list logs to merge together.</param>
             <returns>An instance of <see cref="T:CodeSmith.Data.Audit.AuditLog"/> with all other logs merged in.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Audit.AuditManager.AddAuditProperties(System.Data.Linq.Mapping.MetaTable,System.Object,CodeSmith.Data.Audit.AuditEntity)">
+        <member name="M:CodeSmith.Data.Audit.AuditManager.ReadLock(System.Threading.ReaderWriterLockSlim)">
             <summary>
-            For inserts and deletes, all the properties current values are included in the log.
+            Gets the read lock.
             </summary>
+            <returns></returns>
         </member>
-        <member name="M:CodeSmith.Data.Audit.AuditManager.AddAuditProperties(System.Data.Linq.ITable,System.Object,CodeSmith.Data.Audit.AuditEntity)">
+        <member name="M:CodeSmith.Data.Audit.AuditManager.WriteLock(System.Threading.ReaderWriterLockSlim)">
             <summary>
-            For updated entities, only the modified properties are included in the log.
+            Gets the write lock.
             </summary>
+            <returns></returns>
         </member>
         <member name="T:CodeSmith.Data.Audit.AuditProperty">
             <summary>
@@ -376,6 +378,22 @@
             Gets or sets the type of the property.
             </summary>
             <value>The type of the property.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditProperty.IsForeignKey">
+            <summary>
+            Gets or sets a value indicating whether this property is a foreign key.
+            </summary>
+            <value>
+            	<c>true</c> if this property is a foreign key; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditProperty.IsAssociation">
+            <summary>
+            Gets or sets a value indicating whether this property is an association.
+            </summary>
+            <value>
+            	<c>true</c> if this property is an association; otherwise, <c>false</c>.
+            </value>
         </member>
         <member name="P:CodeSmith.Data.Audit.AuditProperty.Current">
             <summary>
