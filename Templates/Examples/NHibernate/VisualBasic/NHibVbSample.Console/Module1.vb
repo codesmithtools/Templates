@@ -33,7 +33,7 @@ Module Module1
         ' Get a new instance of the same category, this time with GetById.
         Dim categoryB As Category = categoryManager.GetById(categoryA.Id)
         ' Update it's description.
-        categoryA.Descn = "Good night moon!"
+        categoryB.Descn = "Good night moon!"
         ' Commit changes to the database.
         categoryManager.Session.CommitChanges()
         ' Notice that this time changes were made.
@@ -100,14 +100,6 @@ Module Module1
         ' Commit changes to the database.
         categoryManager.Session.CommitChanges()
         ' Notice that it has been deleted.
-
-
-        '=======================================================
-        'Service provided by Telerik (www.telerik.com)
-        'Conversion powered by NRefactory.
-        'Built and maintained by Todd Anglin and Telerik
-        '=======================================================
-
 
     End Sub
 
