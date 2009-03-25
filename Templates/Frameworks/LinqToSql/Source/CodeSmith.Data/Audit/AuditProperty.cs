@@ -48,6 +48,13 @@ namespace CodeSmith.Data.Audit
         public bool IsAssociation { get; set; }
 
         /// <summary>
+        /// Gets or sets the property names that this association maps to.
+        /// </summary>
+        /// <value>The property names that this association maps to..</value>
+        [XmlAttribute("foreignKey")]
+        public string ForeignKey { get; set; }
+
+        /// <summary>
         /// Gets or sets the current/changed value of the property.
         /// </summary>
         /// <value>The current value of the property.</value>

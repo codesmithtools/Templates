@@ -5,8 +5,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Reflection;
 using System.Security.Principal;
+using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Hosting;
@@ -218,7 +220,7 @@ namespace CodeSmith.Data.Audit
                         continue;
 
                     var property = auditEntity.Properties[keyMember.Name];
-                    property.IsForeignKey = true;
+                    property.IsForeignKey = association.IsForeignKey;
                     foundMember = true;
                 }
 
@@ -230,11 +232,17 @@ namespace CodeSmith.Data.Audit
                 auditProperty.Name = thisMember.Name;
                 auditProperty.Type = thisMember.Type.FullName;
                 auditProperty.IsAssociation = true;
+                auditProperty.ForeignKey = string.Join(",", association.ThisKey.Select(k => k.Name).ToArray());
 
-                //this will lazy load the fkey entity if not loaded
-                object currentChildEntity = thisMember.MemberAccessor.GetBoxedValue(entity);
+                var displayMember = GetDisplayMember(association.OtherType);
 
-                object currentValue = GetDisplayValue(association.OtherType, currentChildEntity);
+                //this will get the fkey entity with out causing a load               
+                object currentChildEntity = thisMember.DeferredValueAccessor.GetBoxedValue(entity);
+                object currentValue = GetAssociationValue(association, displayMember, currentChildEntity, table, entity);
+
+                //if there is nothing set for the fkey on insert and delete, skip
+                if (auditEntity.Action != AuditAction.Update && currentValue == null)
+                    continue;
 
                 if (auditEntity.Action == AuditAction.Delete)
                     auditProperty.Original = currentValue;
@@ -247,14 +255,51 @@ namespace CodeSmith.Data.Audit
                     object original = table.GetOriginalEntityState(entity);
                     if (original != null)
                     {
-                        //this will lazy load the fkey entity if not loaded
-                        object originalChildEntity = thisMember.MemberAccessor.GetBoxedValue(original);
-                        auditProperty.Original = GetDisplayValue(association.OtherType, originalChildEntity);
+                        //this will get the fkey entity with out causing a load               
+                        object originalChildEntity = thisMember.DeferredValueAccessor.GetBoxedValue(original);
+                        auditProperty.Original = GetAssociationValue(association, displayMember, originalChildEntity, table, original);
                     }
                 }
 
                 auditEntity.Properties.Add(auditProperty);
             } // foreach
+        }
+
+        private static object GetAssociationValue(MetaAssociation association, MetaDataMember childDisplayMember, object childEntity, ITable table, object entity)
+        {
+            if (childEntity != null)
+                return GetValue(childDisplayMember, childEntity);
+
+            if (table == null)
+                return null;
+
+            var dataContext = table.Context;
+            if (dataContext == null)
+                return null;
+
+            var sb = new StringBuilder();
+            var fkeyValues = new object[association.ThisKey.Count];
+
+            // build dymamic query
+            for (int i = 0; i < association.ThisKey.Count; i++)
+            {
+                fkeyValues[i] = association.ThisKey[i].MemberAccessor.GetBoxedValue(entity);
+                if (sb.Length > 0)
+                    sb.Append(" and ");
+                sb.AppendFormat("{0} = @{1}", association.OtherKey[i].Name, i);
+            }
+
+            // get the fkey table            
+            var fkeyTable = dataContext.GetTable(association.OtherType.Type);
+            var q = fkeyTable
+                .Where(sb.ToString(), fkeyValues)
+                .Select(childDisplayMember.Name);
+
+            object value = q.Cast<object>().FirstOrDefault();
+
+            return GetValue(childDisplayMember.Member,
+                GetUnderlyingType(childDisplayMember.Type),
+                value);
         }
 
         private static object GetValue(MemberInfo memberInfo, Type valueType, object value)
@@ -292,7 +337,7 @@ namespace CodeSmith.Data.Audit
 
         private static object GetValue(MetaDataMember dataMember, object entity)
         {
-            if (dataMember == null)
+            if (dataMember == null || entity == null)
                 return null;
 
             Type underlyingType = GetUnderlyingType(dataMember.Type);
@@ -301,9 +346,9 @@ namespace CodeSmith.Data.Audit
             return GetValue(dataMember.Member, underlyingType, value);
         }
 
-        private static object GetDisplayValue(MetaType rowType, object entity)
+        private static MetaDataMember GetDisplayMember(MetaType rowType)
         {
-            if (entity == null)
+            if (rowType == null)
                 return null;
 
             var entityType = rowType.Type;
@@ -313,7 +358,7 @@ namespace CodeSmith.Data.Audit
                 MetaDataMember displayMember = null;
 
                 if (_displayColumnCache.TryGetValue(entityType, out displayMember))
-                    return GetValue(displayMember, entity);
+                    return displayMember;
 
                 using (_displayColumnLock.WriteLock())
                 {
@@ -333,7 +378,7 @@ namespace CodeSmith.Data.Audit
 
                     _displayColumnCache.Add(entityType, displayMember);
                 }
-                return GetValue(displayMember, entity);
+                return displayMember;
             }
         }
 
