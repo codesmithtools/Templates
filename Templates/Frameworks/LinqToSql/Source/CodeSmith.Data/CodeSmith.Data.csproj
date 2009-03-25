@@ -78,6 +78,9 @@
     <Compile Include="Audit\AuditProperty.cs" />
     <Compile Include="Audit\AuditLog.cs" />
     <Compile Include="Audit\AuditPropertyCollection.cs" />
+    <Compile Include="Audit\AuditPropertyFormatAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Audit\NotAuditedAttribute.cs" />
     <Compile Include="EntityKey.cs" />
     <Compile Include="DataManagerBase.cs" />
