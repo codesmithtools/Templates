@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
@@ -18,11 +19,20 @@ namespace CodeSmith.Data.Audit
     public static class AuditManager
     {
         private const BindingFlags _defaultBinding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
+        private const BindingFlags _defaultStaticBinding = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+
         private static readonly ReaderWriterLockSlim _auditableLock = new ReaderWriterLockSlim();
         private static readonly Dictionary<Type, bool> _auditableCache = new Dictionary<Type, bool>();
 
         private static readonly ReaderWriterLockSlim _notAuditedLock = new ReaderWriterLockSlim();
         private static readonly Dictionary<MemberInfo, bool> _notAuditedCache = new Dictionary<MemberInfo, bool>();
+
+        private static readonly ReaderWriterLockSlim _displayColumnLock = new ReaderWriterLockSlim();
+        private static readonly Dictionary<Type, MetaDataMember> _displayColumnCache = new Dictionary<Type, MetaDataMember>();
+
+        private static readonly ReaderWriterLockSlim _formatterLock = new ReaderWriterLockSlim();
+        private static readonly Dictionary<MemberInfo, MethodInfo> _formatterCache = new Dictionary<MemberInfo, MethodInfo>();
+
         private static readonly string _binaryType = typeof(Binary).FullName;
 
         /// <summary>
@@ -103,12 +113,12 @@ namespace CodeSmith.Data.Audit
                 if (!HasAuditAttribute(entity))
                     continue;
 
-                AuditEntity auditEntity = GetAuditEntity(dataContext, entity, action);
+                AuditEntity auditEntity = CreateAuditEntity(dataContext, entity, action);
                 auditLog.Entities.Add(auditEntity);
             }
         }
 
-        private static AuditEntity GetAuditEntity(DataContext dataContext, object entity, AuditAction action)
+        private static AuditEntity CreateAuditEntity(DataContext dataContext, object entity, AuditAction action)
         {
             ITable table = dataContext.GetTable(entity.GetType());
             MetaTable metaTable = dataContext.Mapping.GetTable(entity.GetType());
@@ -118,10 +128,7 @@ namespace CodeSmith.Data.Audit
             auditEntity.Type = table.ElementType.FullName;
 
             AddAuditKeys(metaTable, entity, auditEntity);
-            if (action == AuditAction.Update)
-                AddAuditProperties(table, entity, auditEntity);
-            else
-                AddAuditProperties(metaTable, entity, auditEntity);
+            AddAuditProperties(metaTable, table, entity, auditEntity);
 
             return auditEntity;
         }
@@ -142,90 +149,207 @@ namespace CodeSmith.Data.Audit
             }
         }
 
-        /// <summary>
-        /// For inserts and deletes, all the properties current values are included in the log.
-        /// </summary>
-        private static void AddAuditProperties(MetaTable metaTable, object entity, AuditEntity auditEntity)
+        private static void AddAuditProperties(MetaTable metaTable, ITable table, object entity, AuditEntity auditEntity)
         {
+            var modifiedMembers = table.GetModifiedMembers(entity);
+
             foreach (var dataMember in metaTable.RowType.DataMembers)
             {
                 if (dataMember.IsVersion || dataMember.IsAssociation || HasNotAuditedAttribute(dataMember.Member))
                     continue;
 
-                var auditProperty = new AuditProperty();
-                auditProperty.Name = dataMember.Member.Name;
-                Type underlyingType = GetUnderlyingType(dataMember.Type);
-                auditProperty.Type = underlyingType.FullName;
+                var memberInfo = dataMember.Member;
+                var modifiedMemberInfo = modifiedMembers.FirstOrDefault(m => m.Member == memberInfo);
+                if (auditEntity.Action == AuditAction.Update && modifiedMemberInfo.Member == null)
+                    continue; // this means the property was not changed, skip it
 
-                if (auditProperty.Type != _binaryType && !dataMember.IsDeferred)
-                {
-                    if (auditEntity.Action == AuditAction.Delete)
-                        auditProperty.Original = GetValue(underlyingType, dataMember.MemberAccessor.GetBoxedValue(entity));
-                    else
-                        auditProperty.Current = GetValue(underlyingType, dataMember.MemberAccessor.GetBoxedValue(entity));
-                }
-
-                auditEntity.Properties.Add(auditProperty);
+                var auditProperty = CreateAuditProperty(dataMember, modifiedMemberInfo, entity, auditEntity);
+                if (auditProperty != null)
+                    auditEntity.Properties.Add(auditProperty);
             }
+
+            AddAssociationProperties(metaTable, table, entity, auditEntity);
         }
 
-        /// <summary>
-        /// For updated entities, only the modified properties are included in the log.
-        /// </summary>
-        private static void AddAuditProperties(ITable table, object entity, AuditEntity auditEntity)
+        private static AuditProperty CreateAuditProperty(MetaDataMember dataMember, ModifiedMemberInfo modifiedMemberInfo, object entity, AuditEntity auditEntity)
         {
-            ModifiedMemberInfo[] modified = table.GetModifiedMembers(entity);
+            var auditProperty = new AuditProperty();
+            auditProperty.Name = dataMember.Member.Name;
 
-            foreach (ModifiedMemberInfo info in modified)
+            Type underlyingType = GetUnderlyingType(dataMember.Type);
+            auditProperty.Type = underlyingType.FullName;
+
+            if (auditProperty.Type == _binaryType || dataMember.IsDeferred)
+                return auditProperty;
+
+            if (auditEntity.Action == AuditAction.Update)
             {
-                if (HasNotAuditedAttribute(info.Member))
+                auditProperty.Current = GetValue(modifiedMemberInfo.Member, underlyingType, modifiedMemberInfo.CurrentValue);
+                auditProperty.Original = GetValue(modifiedMemberInfo.Member, underlyingType, modifiedMemberInfo.OriginalValue);
+                return auditProperty;
+            }
+
+            var value = GetValue(dataMember.Member, underlyingType, dataMember.MemberAccessor.GetBoxedValue(entity));
+            if (value == null)
+                return null; // ignore null properties?
+
+            if (auditEntity.Action == AuditAction.Delete)
+                auditProperty.Original = value;
+            else
+                auditProperty.Current = value;
+
+            return auditProperty;
+        }
+
+        private static void AddAssociationProperties(MetaTable metaTable, ITable table, object entity, AuditEntity auditEntity)
+        {
+            foreach (var association in metaTable.RowType.Associations)
+            {
+                if (association.IsMany || HasNotAuditedAttribute(association.ThisMember.Member))
+                    continue;
+
+                // keys can contain multiple columns.
+                // if none of them are found in the change list, skip.
+                bool foundMember = false;
+
+                foreach (var keyMember in association.ThisKey)
+                {
+                    if (!auditEntity.Properties.Contains(keyMember.Name))
+                        continue;
+
+                    var property = auditEntity.Properties[keyMember.Name];
+                    property.IsForeignKey = true;
+                    foundMember = true;
+                }
+
+                if (!foundMember)
                     continue;
 
                 var auditProperty = new AuditProperty();
-                auditProperty.Name = info.Member.Name;
+                var thisMember = association.ThisMember;
+                auditProperty.Name = thisMember.Name;
+                auditProperty.Type = thisMember.Type.FullName;
+                auditProperty.IsAssociation = true;
 
-                var propertyInfo = info.Member as PropertyInfo;
-                Type underlyingType = null;
+                //this will lazy load the fkey entity if not loaded
+                object currentChildEntity = thisMember.MemberAccessor.GetBoxedValue(entity);
 
-                if (propertyInfo != null)
+                object currentValue = GetDisplayValue(association.OtherType, currentChildEntity);
+
+                if (auditEntity.Action == AuditAction.Delete)
+                    auditProperty.Original = currentValue;
+                else
+                    auditProperty.Current = currentValue;
+
+                if (auditEntity.Action == AuditAction.Update && table != null)
                 {
-                    underlyingType = GetUnderlyingType(propertyInfo.PropertyType);
-                    auditProperty.Type = underlyingType.FullName;
-                }
-
-                if (auditProperty.Type != _binaryType)
-                {
-                    auditProperty.Current = GetValue(underlyingType, info.CurrentValue);
-                    auditProperty.Original = GetValue(underlyingType, info.OriginalValue);
+                    // get original value for updates
+                    object original = table.GetOriginalEntityState(entity);
+                    if (original != null)
+                    {
+                        //this will lazy load the fkey entity if not loaded
+                        object originalChildEntity = thisMember.MemberAccessor.GetBoxedValue(original);
+                        auditProperty.Original = GetDisplayValue(association.OtherType, originalChildEntity);
+                    }
                 }
 
                 auditEntity.Properties.Add(auditProperty);
+            } // foreach
+        }
+
+        private static object GetValue(MemberInfo memberInfo, Type valueType, object value)
+        {
+            if (value == null)
+                return null;
+            if (valueType == null)
+                valueType = value.GetType();
+
+            object returnValue = valueType.IsEnum ? Enum.GetName(valueType, value) : value;
+
+            using (_formatterLock.ReadLock())
+            {
+                MethodInfo formatMethod = null;
+                if (_formatterCache.TryGetValue(memberInfo, out formatMethod))
+                    return formatMethod == null ? returnValue : formatMethod.Invoke(null, new[] { returnValue });
+
+                using (_formatterLock.WriteLock())
+                {
+                    var formatAttribute = GetAttribute<AuditPropertyFormatAttribute>(memberInfo);
+                    if (formatAttribute == null)
+                    {
+                        _formatterCache.Add(memberInfo, null);
+                        return returnValue;
+                    }
+
+                    Type formatterType = formatAttribute.FormatType;
+                    formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null, new[] { typeof(object) }, null);
+                    _formatterCache.Add(memberInfo, formatMethod);
+                }
+
+                return formatMethod == null ? returnValue : formatMethod.Invoke(null, new[] { returnValue });
+            }
+        }
+
+        private static object GetValue(MetaDataMember dataMember, object entity)
+        {
+            if (dataMember == null)
+                return null;
+
+            Type underlyingType = GetUnderlyingType(dataMember.Type);
+            object value = dataMember.MemberAccessor.GetBoxedValue(entity);
+
+            return GetValue(dataMember.Member, underlyingType, value);
+        }
+
+        private static object GetDisplayValue(MetaType rowType, object entity)
+        {
+            if (entity == null)
+                return null;
+
+            var entityType = rowType.Type;
+
+            using (_displayColumnLock.ReadLock())
+            {
+                MetaDataMember displayMember = null;
+
+                if (_displayColumnCache.TryGetValue(entityType, out displayMember))
+                    return GetValue(displayMember, entity);
+
+                using (_displayColumnLock.WriteLock())
+                {
+                    var displayAttribute = GetAttribute<DisplayColumnAttribute>(entityType);
+
+                    // first try DisplayColumnAttribute property
+                    if (displayAttribute != null)
+                        displayMember = rowType.DataMembers.FirstOrDefault(m => m.Name == displayAttribute.DisplayColumn);
+
+                    // try first string property
+                    if (displayMember == null)
+                        displayMember = rowType.DataMembers.FirstOrDefault(m => m.Type == typeof(string));
+
+                    // try second property
+                    if (displayMember == null && rowType.DataMembers.Count > 1)
+                        displayMember = rowType.DataMembers[1];
+
+                    _displayColumnCache.Add(entityType, displayMember);
+                }
+                return GetValue(displayMember, entity);
             }
         }
 
         private static bool HasNotAuditedAttribute(MemberInfo memberInfo)
         {
-            _notAuditedLock.EnterUpgradeableReadLock();
-            try
+            using (_notAuditedLock.ReadLock())
             {
                 if (_notAuditedCache.ContainsKey(memberInfo))
                     return _notAuditedCache[memberInfo];
 
-                _notAuditedLock.EnterWriteLock();
-                try
+                using (_notAuditedLock.WriteLock())
                 {
                     bool result = HasAttribute(memberInfo, typeof(NotAuditedAttribute));
                     _notAuditedCache.Add(memberInfo, result);
                     return result;
                 }
-                finally
-                {
-                    _notAuditedLock.ExitWriteLock();
-                }
-            }
-            finally
-            {
-                _notAuditedLock.ExitUpgradeableReadLock();
             }
         }
 
@@ -233,29 +357,18 @@ namespace CodeSmith.Data.Audit
         {
             Type entityType = entity.GetType();
 
-            _auditableLock.EnterUpgradeableReadLock();
-            try
+            using (_auditableLock.ReadLock())
             {
                 if (_auditableCache.ContainsKey(entityType))
                     return _auditableCache[entityType];
 
-                _auditableLock.EnterWriteLock();
-                try
+                using (_auditableLock.WriteLock())
                 {
                     bool result = HasAttribute(entityType, typeof(AuditAttribute));
                     _auditableCache.Add(entityType, result);
                     return result;
                 }
-                finally
-                {
-                    _auditableLock.ExitWriteLock();
-                }
             }
-            finally
-            {
-                _auditableLock.ExitUpgradeableReadLock();
-            }
-
         }
 
         private static bool HasAttribute(MemberInfo memberInfo, Type attributeType)
@@ -283,14 +396,34 @@ namespace CodeSmith.Data.Audit
             return metaInfo != null && metaInfo.IsDefined(attributeType, true);
         }
 
-        private static object GetValue(Type type, object value)
+        private static TAttribute GetAttribute<TAttribute>(MemberInfo memberInfo) where TAttribute : Attribute
         {
-            if (value == null)
-                return null;
-            if (type == null)
-                type = value.GetType();
+            Type attributeType = typeof(TAttribute);
 
-            return type.IsEnum ? Enum.GetName(type, value) : value;
+            TAttribute attribute = memberInfo.GetCustomAttributes(attributeType, true).FirstOrDefault() as TAttribute;
+            if (attribute != null)
+                return attribute;
+
+            // try the metadata object
+            MemberInfo declaringType = memberInfo;
+            if (memberInfo.MemberType != MemberTypes.TypeInfo && memberInfo.DeclaringType != null)
+                declaringType = memberInfo.DeclaringType;
+
+            var metadataTypeAttribute = declaringType.GetCustomAttributes(typeof(MetadataTypeAttribute), true).FirstOrDefault() as MetadataTypeAttribute;
+            if (metadataTypeAttribute == null)
+                return null;
+
+            Type metadataType = metadataTypeAttribute.MetadataClassType;
+            if (metadataType == null)
+                return null;
+
+            if (memberInfo.MemberType == MemberTypes.TypeInfo)
+                return metadataType.GetCustomAttributes(attributeType, true).FirstOrDefault() as TAttribute;
+
+            MemberInfo metaInfo = metadataType.GetMember(memberInfo.Name, _defaultBinding).FirstOrDefault();
+            if (metaInfo == null)
+                return null;
+            return metaInfo.GetCustomAttributes(attributeType, true).FirstOrDefault() as TAttribute;
         }
 
         private static Type GetUnderlyingType(Type type)
@@ -322,5 +455,48 @@ namespace CodeSmith.Data.Audit
 
             return string.Empty;
         }
+
+        #region Disposable Lock Classes
+
+        /// <summary>
+        /// Gets the read lock.
+        /// </summary>
+        /// <returns></returns>
+        private static IDisposable ReadLock(this ReaderWriterLockSlim lockSlim)
+        {
+            lockSlim.EnterUpgradeableReadLock();
+            return new DisposableLock(lockSlim.ExitUpgradeableReadLock);
+        }
+
+        /// <summary>
+        /// Gets the write lock.
+        /// </summary>
+        /// <returns></returns>
+        private static IDisposable WriteLock(this ReaderWriterLockSlim lockSlim)
+        {
+            lockSlim.EnterWriteLock();
+            return new DisposableLock(lockSlim.ExitWriteLock);
+        }
+
+        #region Nested type: DisposableLock
+
+        private class DisposableLock : IDisposable
+        {
+            private readonly Action _exitAction;
+
+            public DisposableLock(Action exitAction)
+            {
+                _exitAction = exitAction;
+            }
+
+            void IDisposable.Dispose()
+            {
+                _exitAction.Invoke();
+            }
+        }
+
+        #endregion
+
+        #endregion
     }
 }

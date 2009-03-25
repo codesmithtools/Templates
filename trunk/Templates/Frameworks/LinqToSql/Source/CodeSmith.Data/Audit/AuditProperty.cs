@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
@@ -24,6 +25,27 @@ namespace CodeSmith.Data.Audit
         /// <value>The type of the property.</value>
         [XmlAttribute("type")]
         public string Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this property is a foreign key.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this property is a foreign key; otherwise, <c>false</c>.
+        /// </value>
+        [XmlAttribute("isForeignKey")]
+        [DefaultValue(false)]
+        public bool IsForeignKey { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this property is an association.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this property is an association; otherwise, <c>false</c>.
+        /// </value>
+        [XmlAttribute("isAssociation")]
+        [DefaultValue(false)]
+        public bool IsAssociation { get; set; }
 
         /// <summary>
         /// Gets or sets the current/changed value of the property.
