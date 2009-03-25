@@ -36,7 +36,7 @@ namespace NHibCsSample.Console
             // Get a new instance of the same category, this time with GetById.
             Category categoryB = categoryManager.GetById(categoryA.Id);
             // Update it's description.
-            categoryA.Descn = "Good night moon!";
+            categoryB.Descn = "Good night moon!";
             // Commit changes to the database.
             categoryManager.Session.CommitChanges();
             // Notice that this time changes were made.
