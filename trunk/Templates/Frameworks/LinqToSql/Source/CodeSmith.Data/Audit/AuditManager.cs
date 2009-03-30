@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Reflection;
@@ -314,24 +315,46 @@ namespace CodeSmith.Data.Audit
             using (_formatterLock.ReadLock())
             {
                 MethodInfo formatMethod = null;
-                if (_formatterCache.TryGetValue(memberInfo, out formatMethod))
-                    return formatMethod == null ? returnValue : formatMethod.Invoke(null, new[] { returnValue });
-
-                using (_formatterLock.WriteLock())
+                if (!_formatterCache.TryGetValue(memberInfo, out formatMethod))
                 {
-                    var formatAttribute = GetAttribute<AuditPropertyFormatAttribute>(memberInfo);
-                    if (formatAttribute == null)
+                    using (_formatterLock.WriteLock())
                     {
-                        _formatterCache.Add(memberInfo, null);
-                        return returnValue;
-                    }
+                        var formatAttribute = GetAttribute<AuditPropertyFormatAttribute>(memberInfo);
+                        if (formatAttribute == null)
+                        {
+                            _formatterCache.Add(memberInfo, null);
+                            return returnValue;
+                        }
 
-                    Type formatterType = formatAttribute.FormatType;
-                    formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null, new[] { typeof(object) }, null);
-                    _formatterCache.Add(memberInfo, formatMethod);
+                        Type formatterType = formatAttribute.FormatType;
+
+                        //support either static object MethodName(object value) or static object MethodName(MemberInfo memberInfo, object value)
+                        formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null, new[] { typeof(MethodInfo), typeof(object) }, null);
+                        if (formatMethod == null)
+                            formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null, new[] { typeof(object) }, null);
+
+                        _formatterCache.Add(memberInfo, formatMethod);
+                    }
                 }
 
-                return formatMethod == null ? returnValue : formatMethod.Invoke(null, new[] { returnValue });
+                if (formatMethod == null)
+                    return returnValue;
+
+                var args = formatMethod.GetParameters();
+
+                try
+                {
+                    if (args.Length == 2)
+                        return formatMethod.Invoke(null, new[] { memberInfo, returnValue });
+
+
+                    return formatMethod.Invoke(null, new[] { returnValue });
+                }
+                catch
+                {
+                    // eat format error?
+                    return returnValue;
+                }
             }
         }
 
