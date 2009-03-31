@@ -23,6 +23,7 @@ namespace CodeSmith.Data.Audit
     {
         private const BindingFlags _defaultBinding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
         private const BindingFlags _defaultStaticBinding = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+        private const string _nullText = "{null}";
 
         private static readonly ReaderWriterLockSlim _auditableLock = new ReaderWriterLockSlim();
         private static readonly Dictionary<Type, bool> _auditableCache = new Dictionary<Type, bool>();
@@ -248,7 +249,7 @@ namespace CodeSmith.Data.Audit
                 if (auditEntity.Action == AuditAction.Delete)
                     auditProperty.Original = currentValue;
                 else
-                    auditProperty.Current = currentValue;
+                    auditProperty.Current = currentValue ?? _nullText;
 
                 if (auditEntity.Action == AuditAction.Update && table != null)
                 {
@@ -258,7 +259,7 @@ namespace CodeSmith.Data.Audit
                     {
                         //this will get the fkey entity with out causing a load               
                         object originalChildEntity = thisMember.DeferredValueAccessor.GetBoxedValue(original);
-                        auditProperty.Original = GetAssociationValue(association, displayMember, originalChildEntity, table, original);
+                        auditProperty.Original = GetAssociationValue(association, displayMember, originalChildEntity, table, original) ?? _nullText;
                     }
                 }
 
@@ -279,21 +280,30 @@ namespace CodeSmith.Data.Audit
                 return null;
 
             var sb = new StringBuilder();
-            var fkeyValues = new object[association.ThisKey.Count];
+            var fkeyValues = new List<object>();
 
             // build dymamic query
             for (int i = 0; i < association.ThisKey.Count; i++)
             {
-                fkeyValues[i] = association.ThisKey[i].MemberAccessor.GetBoxedValue(entity);
+                object v = association.ThisKey[i].MemberAccessor.GetBoxedValue(entity);
+
                 if (sb.Length > 0)
                     sb.Append(" and ");
-                sb.AppendFormat("{0} = @{1}", association.OtherKey[i].Name, i);
+
+                if (v != null || association.OtherKey[i].CanBeNull)
+                {
+                    sb.AppendFormat("{0} = @{1}", association.OtherKey[i].Name, fkeyValues.Count);
+                    fkeyValues.Add(v);
+                }
             }
+
+            if (fkeyValues.Count == 0)
+                return null;
 
             // get the fkey table            
             var fkeyTable = dataContext.GetTable(association.OtherType.Type);
             var q = fkeyTable
-                .Where(sb.ToString(), fkeyValues)
+                .Where(sb.ToString(), fkeyValues.ToArray())
                 .Select(childDisplayMember.Name);
 
             object value = q.Cast<object>().FirstOrDefault();
