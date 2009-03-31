@@ -13,7 +13,7 @@
 <%@ Assembly Name="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%-- Register the StoredProcedures template and have it's properties merged into this template.  --%>
-<%@ Register Template="StoredProcedures.cst" Name="StoredProceduresTemplate" MergeProperties="True" ExcludeProperties="SourceTable,IsolationLevel" %>
+<%@ Register Template="StoredProcedures.cst" Name="StoredProceduresTemplate" MergeProperties="True" ExcludeProperties="SourceTable,IsolationLevel,OutputFile" %>
 <%
 this.Progress.MaximumValue = SourceDatabase.Tables.Count + 1;
 this.Progress.Step = 1;
