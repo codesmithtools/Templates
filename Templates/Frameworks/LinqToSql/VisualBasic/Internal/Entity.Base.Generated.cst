@@ -48,7 +48,7 @@ Namespace <%= ClassNamespace %>
         ''' </summary>
         Protected Sub New()
         End Sub
-		
+
         #Region "Notification Events"
 
         ''' <summary>
@@ -84,7 +84,7 @@ Namespace <%= ClassNamespace %>
             End If
         End Sub
         #End Region
-		
+
         #Region "Detach Methods"
         ''' <summary>
         ''' Gets a value indicating whether this instance is Added to the change tracking of <see cref="DataContext"/>.
@@ -161,12 +161,26 @@ Namespace <%= ClassNamespace %>
         End Function
 
         #End Region
-		
-		#Region "ToString"
-		Public Overloads Overrides Function ToString() As String
-			Return Me.ToString(0, "  ")
-		End Function
-		
+
+        #Region "ToString"
+        ''' <summary>
+        ''' Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        ''' </summary>
+        ''' <returns>
+        ''' A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        ''' </returns>
+        Public Overloads Overrides Function ToString() As String
+            Return Me.ToString(0, "  ")
+        End Function
+
+        ''' <summary>
+        ''' Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        ''' </summary>
+        ''' <param name="indentLevel">The indent level.</param>
+        ''' <param name="indentValue">The indent value.</param>
+        ''' <returns>
+        ''' A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        ''' </returns>
         Public Overloads Function ToString(ByVal indentLevel As Integer, ByVal indentValue As String) As String
             Dim props As System.Reflection.PropertyInfo() = Me.GetType().GetProperties(System.Reflection.BindingFlags.Instance Or System.Reflection.BindingFlags.Public)
             Dim sb = New System.Text.StringBuilder()
@@ -181,7 +195,7 @@ Namespace <%= ClassNamespace %>
 
             For Each prop In props
                 value = Nothing
-				
+
                 If prop.PropertyType Is GetType(Byte()) OrElse prop.PropertyType Is GetType(System.Data.Linq.Binary) Then
                     value = "<binary>"
                 ElseIf prop.PropertyType Is GetType(System.Data.Linq.EntitySet(Of )) OrElse prop.PropertyType.BaseType Is GetType(LinqEntityBase) Then
@@ -193,11 +207,11 @@ Namespace <%= ClassNamespace %>
                         value = "<exception>"
                     End Try
                 End If
-				
+
                 If includeProperty Then
-					If value <> Nothing Then
-						value = value.ToString().Replace(vbCr & vbLf, " ").Replace(ControlChars.Lf, " "C).Replace(ControlChars.Tab, " "C)
-					
+                    If value <> Nothing Then
+                        value = value.ToString().Replace(vbCr & vbLf, " ").Replace(ControlChars.Lf, " "C).Replace(ControlChars.Tab, " "C)
+
                     If value <> Nothing AndAlso value.ToString().Length > 50 Then
                         value = [String].Concat(value.ToString().Substring(0, 50), "...")
                     End If
@@ -221,6 +235,24 @@ Namespace <%= ClassNamespace %>
 
             Return sb.ToString()
         End Function
-		#End Region
+
+        ''' <summary>
+        ''' Returns an XML <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        ''' </summary>
+        ''' <returns>An XML <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.</returns>
+        Public Function ToXml() As String
+            Dim settings = New System.Xml.XmlWriterSettings()
+            settings.Indent = True
+            settings.OmitXmlDeclaration = True
+
+            Dim sb = New System.Text.StringBuilder()
+            Using writer = System.Xml.XmlWriter.Create(sb, settings)
+                Dim serializer = New System.Runtime.Serialization.DataContractSerializer([GetType]())
+                serializer.WriteObject(writer, Me)
+            End Using
+
+            Return sb.ToString()
+        End Function
+        #End Region
     End Class
 End Namespace
