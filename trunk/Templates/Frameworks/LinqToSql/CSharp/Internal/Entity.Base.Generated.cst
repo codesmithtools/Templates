@@ -165,13 +165,27 @@ namespace <%= ClassNamespace %>
             return new System.Data.Linq.Link<T>(value.Value);
         }
         #endregion
-		
+
         #region ToString()
+        /// <summary>
+        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </returns>
         public override string ToString()
         {
             return this.ToString(0, "  ");
         }
 
+        /// <summary>
+        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </summary>
+        /// <param name="indentLevel">The indent level.</param>
+        /// <param name="indentValue">The indent value.</param>
+        /// <returns>
+        /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </returns>
         public string ToString(int indentLevel, string indentValue)
         {
             System.Reflection.PropertyInfo[] props = this.GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
@@ -209,16 +223,14 @@ namespace <%= ClassNamespace %>
                         value = "<exception>";
                     }
                 }
-				
+
                 if (includeProperty)
                 {
                     if (value != null)
-					    value = value.ToString().Replace("\r\n", " ").Replace('\n', ' ').Replace('\t', ' ');
-					
+                        value = value.ToString().Replace("\r\n", " ").Replace('\n', ' ').Replace('\t', ' ');
+
                     if (value != null && value.ToString().Length > 50)
-                    {
                         value = String.Concat(value.ToString().Substring(0, 50), "...");
-                    }
 
                     for (int t = 0; t < indentLevel + 1; t++)
                         sb.Append(indentValue);
@@ -234,6 +246,26 @@ namespace <%= ClassNamespace %>
                 sb.Append(indentValue);
 
             sb.AppendLine("}");
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Returns an XML <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>. 
+        /// </summary>
+        /// <returns>An XML <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.</returns>
+        public string ToXml()
+        {
+            var settings = new System.Xml.XmlWriterSettings();
+            settings.Indent = true;
+            settings.OmitXmlDeclaration = true;
+
+            var sb = new System.Text.StringBuilder();
+            using (var writer = System.Xml.XmlWriter.Create(sb, settings))
+            {
+                var serializer = new System.Runtime.Serialization.DataContractSerializer(GetType());
+                serializer.WriteObject(writer, this);
+            }
 
             return sb.ToString();
         }
