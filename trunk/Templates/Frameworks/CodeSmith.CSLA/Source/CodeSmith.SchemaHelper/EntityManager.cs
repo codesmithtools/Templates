@@ -10,8 +10,7 @@ namespace CodeSmith.SchemaHelper
     {
         #region Constructor(s)
 
-        public EntityManager(DatabaseSchema database)
-            : this(database.Tables) { }
+        public EntityManager(DatabaseSchema database) : this(database.Tables) { }
         public EntityManager(TableSchemaCollection tables)
         {
             if (tables.Count > 0)

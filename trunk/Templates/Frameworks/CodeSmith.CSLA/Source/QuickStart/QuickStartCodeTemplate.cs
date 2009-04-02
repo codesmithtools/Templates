@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
@@ -10,6 +12,7 @@ using CodeSmith.SchemaHelper;
 using SchemaExplorer;
 
 using Configuration=CodeSmith.SchemaHelper.Configuration;
+using StringCollection=CodeSmith.CustomProperties.StringCollection;
 
 namespace QuickStart
 {
@@ -26,6 +29,10 @@ namespace QuickStart
         public QuickStartCodeTemplate()
         {
             DataAccessImplementation = DataAccessMethod.ParameterizedSQL;
+            LaunchVisualStudio = true;
+
+            CleanExpressions = new StringCollection();
+            IgnoreExpressions = new StringCollection();
         }
 
         #endregion
@@ -49,6 +56,18 @@ namespace QuickStart
                 }
             }
         }
+
+        [Category("1. DataSource")]
+        [Description("List of regular expressions to clean table, view and column names.")]
+        [Optional]
+        [DefaultValue("^\\w+_")]
+        public CodeSmith.CustomProperties.StringCollection CleanExpressions { get; set; }
+        
+        [Category("1. DataSource")]
+        [Description("List of regular expressions to ignore tables when generating.")]
+        [Optional]
+        [DefaultValue("sysdiagrams$")]
+        public CodeSmith.CustomProperties.StringCollection IgnoreExpressions { get; set; }
 
         [Browsable(false)]
         public List<Entity> Entities { get; set; }
@@ -158,6 +177,30 @@ namespace QuickStart
 
         private void OnDatabaseChanged()
         {
+            if (CleanExpressions.Count == 0)
+                CleanExpressions.Add("^\\w+_");
+
+            if (IgnoreExpressions.Count == 0)
+                IgnoreExpressions.Add("sysdiagrams$");
+
+            Configuration.Instance.CleanExpressions.Clear();
+            foreach (string clean in CleanExpressions)
+            {
+                if (!string.IsNullOrEmpty(clean))
+                {
+                    Configuration.Instance.CleanExpressions.Add(new Regex(clean));
+                }
+            }
+
+            Configuration.Instance.IgnoreExpressions.Clear();
+            foreach (string ignore in IgnoreExpressions)
+            {
+                if (!string.IsNullOrEmpty(ignore))
+                {
+                    Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore));
+                }
+            }
+
             Entities = new EntityManager(SourceDatabase).Entities;
 
             if (string.IsNullOrEmpty(DataClassName))

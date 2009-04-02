@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Text.RegularExpressions;
 
+using CodeSmith.CustomProperties;
+using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
 
 using SchemaExplorer;
@@ -22,6 +26,7 @@ namespace QuickStart
 
         public EntityCodeTemplate()
         {
+            CleanExpressions = new StringCollection();
         }
 
         #endregion
@@ -47,6 +52,12 @@ namespace QuickStart
                 }
             }
         }
+
+        [Category("1. DataSource")]
+        [Description("List of regular expressions to clean table, view and column names.")]
+        [Optional]
+        [DefaultValue("^\\w+_")]
+        public CodeSmith.CustomProperties.StringCollection CleanExpressions { get; set; }
 
         [Browsable(false)]
         public Entity Entity { get; internal set; }
@@ -128,6 +139,18 @@ namespace QuickStart
 
         public virtual void OnTableChanged()
         {
+            if (CleanExpressions.Count == 0)
+                CleanExpressions.Add("^\\w+_");
+
+            Configuration.Instance.CleanExpressions = new List<Regex>();
+            foreach (string clean in CleanExpressions)
+            {
+                if (!string.IsNullOrEmpty(clean))
+                {
+                    Configuration.Instance.CleanExpressions.Add(new Regex(clean));
+                }
+            }
+
             Entity = new Entity( SourceTable );
 
             if (string.IsNullOrEmpty(BusinessClassName))

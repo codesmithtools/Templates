@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
+
 using CodeSmith.SchemaHelper.Util;
 
 using SchemaExplorer;
@@ -14,6 +16,8 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class TableSchemaExtensions
     {
+        private static readonly Regex CleanNumberPrefix = new Regex(@"^\d+");
+
         #region Public Method(s)
 
         public static bool ContainsCompositeKeys(this TableSchema table)
@@ -45,7 +49,7 @@ namespace CodeSmith.SchemaHelper
                 className = table.ExtendedProperties[Configuration.Instance.AliasExtendedProperty].Value.ToString();
             else
             {
-                className = table.Name;
+                className = CleanNumberPrefix.Replace(table.Name, string.Empty, 1);
 
                 if (!String.IsNullOrEmpty(Configuration.Instance.TablePrefix) && className.StartsWith(Configuration.Instance.TablePrefix))
                     className = className.Remove(0, Configuration.Instance.TablePrefix.Length);
@@ -54,6 +58,17 @@ namespace CodeSmith.SchemaHelper
                     className = StringUtil.ToPlural(className);
                 else if (Configuration.Instance.NamingProperty.EntityNaming == EntityNaming.Singular && Configuration.Instance.NamingProperty.TableNaming != TableNaming.Singular)
                     className = StringUtil.ToSingular(className);
+
+                if (Configuration.Instance.CleanExpressions.Count > 0)
+                {
+                    foreach (Regex regex in Configuration.Instance.CleanExpressions)
+                    {
+                        if (regex.IsMatch(className))
+                        {
+                            return regex.Replace(className, "");
+                        }
+                    }
+                }
             }
 
             return Configuration.Instance.ValidateName(className);

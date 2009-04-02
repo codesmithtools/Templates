@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
@@ -15,8 +14,6 @@ namespace CodeSmith.SchemaHelper
     {
         #region Member(s)
 
-        private List<Regex> _excludeTableRegex = new List<Regex>();
-        private StringCollection _excludeTableRegexCollection = new StringCollection();
         private string _rowVersionColumn;
         private MapCollection _dbTypeToSystemType;
 
@@ -39,11 +36,13 @@ namespace CodeSmith.SchemaHelper
             SearchCriteriaProperty = new SearchCriteriaProperty();
             SearchCriteriaProperty.Prefix = "GetBy";
             
-            ExcludeTableRegexCollection = new StringCollection();
             RowVersionColumn = "^((R|r)ow)?(V|v)ersion$";
             VisualStudioVersion = VisualStudioVersion.VS_2008;
             SingularMemberSuffix = "Member";
             TargetLanguage = LanguageEnum.CSharp;
+
+            IgnoreExpressions = new List<Regex>();
+            CleanExpressions = new List<Regex>();
         }
 
         #endregion
@@ -126,7 +125,7 @@ namespace CodeSmith.SchemaHelper
         internal bool ExcludeTableRegexIsMatch(string tableName)
         {
             bool result = false;
-            foreach (Regex regex in _excludeTableRegex)
+            foreach (Regex regex in IgnoreExpressions)
                 if (regex.IsMatch(tableName))
                 {
                     result = true;
@@ -164,20 +163,6 @@ namespace CodeSmith.SchemaHelper
 
         public SearchCriteriaProperty SearchCriteriaProperty { get; set; }
 
-        public StringCollection ExcludeTableRegexCollection
-        {
-            get { return _excludeTableRegexCollection; }
-            set
-            {
-                _excludeTableRegexCollection = value;
-
-                _excludeTableRegex.Clear();
-                foreach (string pattern in value)
-                    if (!String.IsNullOrEmpty(pattern))
-                        _excludeTableRegex.Add(new Regex(pattern, RegexOptions.Compiled));
-            }
-        }
-
         public string RowVersionColumn
         {
             get { return _rowVersionColumn; }
@@ -193,6 +178,10 @@ namespace CodeSmith.SchemaHelper
         public string SingularMemberSuffix { get; set; }
 
         public string ListSuffix { get; set; }
+
+        public List<Regex> CleanExpressions { get; set; }
+
+        public List<Regex> IgnoreExpressions { get; set; }
 
         #endregion
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 using CodeSmith.Engine;
 
@@ -6,6 +7,8 @@ namespace CodeSmith.SchemaHelper.Util
 {
     public static class NamingConventions
     {
+        private static readonly Regex CleanNumberPrefix = new Regex(@"^\d+");
+
         public static string PropertyName(string value)
         {
             return PropertyName(value, string.Empty);
@@ -19,7 +22,7 @@ namespace CodeSmith.SchemaHelper.Util
             if (string.IsNullOrEmpty(suffix))
                 suffix = string.Empty;
 
-            return string.Format("{0}{1}", StringUtil.ToPascalCase(value), suffix.Trim());
+            return string.Format("{0}{1}", StringUtil.ToPascalCase(CleanName(value.Trim())), suffix.Trim());
         }
 
         public static string PrivateMemberVariableName(string value)
@@ -35,7 +38,7 @@ namespace CodeSmith.SchemaHelper.Util
             if (string.IsNullOrEmpty(suffix))
                 suffix = string.Empty;
 
-            return string.Format("_{0}{1}", StringUtil.ToCamelCase(value.Trim()), suffix.Trim());
+            return string.Format("_{0}{1}", StringUtil.ToCamelCase(CleanName(value.Trim())), suffix.Trim());
         }
 
         public static string VariableName(string value)
@@ -43,7 +46,12 @@ namespace CodeSmith.SchemaHelper.Util
             if (string.IsNullOrEmpty(value))
                 return String.Empty;
 
-            return StringUtil.ToCamelCase(value.Trim());
+            return StringUtil.ToCamelCase(CleanName(value.Trim()));
+        }
+
+        private static string CleanName(string value)
+        {
+            return CleanNumberPrefix.Replace(value, string.Empty, 1);
         }
     }
 }
