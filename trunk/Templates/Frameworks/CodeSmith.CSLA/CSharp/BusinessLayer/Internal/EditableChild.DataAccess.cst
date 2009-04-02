@@ -46,17 +46,17 @@ namespace <%= BusinessProjectName %>
 			// TODO: load values
 		}
 		
-		private override void Child_Insert(object parent)
+		private void Child_Insert(object parent)
 		{
 			// TODO: insert values
 		}
 		
-		private override void Child_Update(object parent)
+		private void Child_Update(object parent)
 		{
 			// TODO: update values
 		}
 		
-		private override void Child_DeleteSelf(object parent)
+		private void Child_DeleteSelf(object parent)
 		{
 			// TODO: delete values
 		}
@@ -73,20 +73,48 @@ namespace <%= BusinessProjectName %>
 			// TODO: load values
 		}
 		
-		private override void Child_Insert(object parent)
+		private void Child_Insert(object parent)
 		{
 			// TODO: insert values
 		}
 		
-		private override void Child_Update(object parent)
+		private void Child_Update(object parent)
 		{
 			// TODO: update values
 		}
 		
-		private override void Child_DeleteSelf(object parent)
+		private void Child_DeleteSelf(object parent)
 		{
 			// TODO: delete values
 		}
+		
+		private void Fetch(SafeDataReader reader)
+		{
+<% foreach(Member member in Entity.MembersPrimaryKeyUnion) { if(UseMemberVariables) { %>
+			<%= member.PrivateMemberVariableName %> = reader.<%= member.GetReaderMethod() %>("<%= member.Name %>");
+<% } else { %>
+			LoadProperty(<%= member.PrivateMemberVariableName %>Property, reader.<%= member.GetReaderMethod() %>("<%= member.Name %>"));
+<% } } %>
+
+<%-- Many-To-One --%>
+<% foreach(AssociationMember association in Entity.ManyToOne) {  if (UseMemberVariables){ %>
+            <%= association.PrivateMemberVariableName %>ID = reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>");
+<% } else { %>
+			LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"));
+<% } if(!UseLazyLoading){ if (UseMemberVariables){ %>
+			<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = new <%= association.ClassName %>(reader);
+<% } else { %>
+			LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>());
+<% } } }  %>
+<%-- One-To-Many & Many-To-Many --%>
+<% foreach(AssociationMember association2 in Entity.ToManyUnion) { if (!UseLazyLoading){ %>
+
+<% if (UseMemberVariables){ %>
+			<%= association2.PrivateMemberVariableName %> = new <%= association2.ClassName %>List.NewList();
+<% } else { %>
+			LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList());
+<% } } } %> 
+        }
 <% } %>
 		#endregion
 	}

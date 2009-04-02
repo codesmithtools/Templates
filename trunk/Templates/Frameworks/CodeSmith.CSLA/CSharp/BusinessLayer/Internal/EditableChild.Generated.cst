@@ -18,7 +18,9 @@
 #region using declarations
 
 using System;
+
 using Csla;
+using Csla.Data;
 using Csla.Validation;
 
 #endregion
@@ -162,9 +164,10 @@ namespace <%= BusinessProjectName %>
 			return DataPortal.CreateChild< <%= ChildBusinessClassName %> >();
 		}
 		
-		internal static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>(<%= ChildBusinessClassName %> data)
+		internal static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
 		{
-			return DataPortal.FetchChild< <%= ChildBusinessClassName %> >(data);
+			return DataPortal.FetchChild< <%= ChildBusinessClassName %> >(
+				new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
 		}
 		
 		#endregion

@@ -35,10 +35,20 @@ namespace <%= BusinessProjectName %>
 			return DataPortal.CreateChild< <%= ChildBusinessClassName %> >();
 		}
 		
-		internal static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>(<%= ChildBusinessClassName %> data)
+		internal static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
 		{
-			return DataPortal.FetchChild< <%= ChildBusinessClassName %> >(data);
+			return DataPortal.FetchChild< <%= ChildBusinessClassName %> >(
+				new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
 		}
+		<%-- One-To-Many & Many-To-Many --%>
+<% foreach(AssociationMember association in Entity.ManyToOne) { foreach(SearchCriteria sc in association.ListSearchCriteria) { %>
+        
+        internal static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members[0].BuildParametersVariablesCriteria(false) %>)
+		{
+            return DataPortal.FetchChild< <%= BusinessClassName %> >(
+                new <%= ChildBusinessClassName %>Criteria { <%= sc.Members[0].BuildCriteriaObjectInitializer() %> });
+        }
+ <% } } %>
 
 		private <%= BusinessClassName %>()
 		{
@@ -50,7 +60,7 @@ namespace <%= BusinessProjectName %>
 
 		#region Business Methods
 		
-		protected override <%= ChildBusinessClassName %> AddNewCore()
+		protected override object AddNewCore()
 		{
 			<%= ChildBusinessClassName %> item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>();
 			Add(item);
