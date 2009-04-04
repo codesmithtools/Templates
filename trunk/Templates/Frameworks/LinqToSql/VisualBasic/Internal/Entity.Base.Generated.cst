@@ -211,6 +211,7 @@ Namespace <%= ClassNamespace %>
                 If includeProperty Then
                     If value <> Nothing Then
                         value = value.ToString().Replace(vbCr & vbLf, " ").Replace(ControlChars.Lf, " "C).Replace(ControlChars.Tab, " "C)
+					End If
 
                     If value <> Nothing AndAlso value.ToString().Length > 50 Then
                         value = [String].Concat(value.ToString().Substring(0, 50), "...")
