@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using CodeSmith.Engine;
@@ -162,6 +162,54 @@ namespace QuickStart
 
         public virtual void Generate()
         {
+        }
+
+        public List<Entity> GetChildEntities()
+        {
+            List<Entity> entities = new List<Entity>(Entities.Count);
+
+            foreach (var entity in Entities)
+            {
+                foreach (AssociationMember associationMember in entity.ManyToOne)
+                {
+                    if (!entities.Contains(associationMember.Entity))
+                    {
+                        entities.Add(associationMember.Entity);
+                    }
+                }
+            }
+
+            return entities;
+        }
+
+        public List<Entity> GetListEntities()
+        {
+            List<Entity> entities = new List<Entity>(Entities.Count);
+
+            foreach (var entity in Entities)
+            {
+                foreach (AssociationMember associationMember in entity.OneToMany)
+                {
+                    if(!entities.Contains(associationMember.Entity))
+                    {
+                        entities.Add(associationMember.Entity);
+                    }
+                }
+            }
+
+            return entities;
+        }
+
+        public IEnumerable<Entity> GetEntities()
+        {
+            IEnumerable<Entity> excludedEntities = GetChildEntities();
+
+            if(excludedEntities == null)
+                return Entities;
+
+            return from entity in Entities
+                    where !excludedEntities.Contains(entity)
+                    select entity;
         }
 
         #endregion
