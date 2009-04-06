@@ -18,6 +18,7 @@
   <propertySets>
 	<propertySet name="CommandObject" enabled="false" template="$CSLA$$language$\BusinessLayer\CommandObject.cst">
       <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
       <property name="DataClassName"><%= DataClassName %></property>
       <property name="ParameterPrefix"><%= ParameterPrefix %></property>
       <property name="BusinessProjectName"><%= BusinessProjectName %></property>
@@ -28,6 +29,7 @@
     </propertySet>
 	<propertySet name="Criteria" template="$CSLA$$language$\BusinessLayer\Criteria.cst">
       <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
       <property name="DataClassName"><%= DataClassName %></property>
       <property name="ParameterPrefix"><%= ParameterPrefix %></property>
       <property name="UseDeferredDeletion"><%= UseDeferredDeletion %></property>
@@ -50,6 +52,7 @@
     </propertySet>
 	<propertySet name="DynamicRoot" enabled="false" template="$CSLA$$language$\BusinessLayer\DynamicRoot.cst">
       <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
       <property name="DataClassName"><%= DataClassName %></property>
       <property name="ParameterPrefix"><%= ParameterPrefix %></property>
       <property name="UseDeferredDeletion"><%= UseDeferredDeletion %></property>
@@ -61,6 +64,7 @@
     </propertySet>
 	<propertySet name="DynamicRootList" enabled="false" template="$CSLA$$language$\BusinessLayer\DynamicRootList.cst">
       <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
       <property name="DataClassName"><%= DataClassName %></property>
       <property name="ParameterPrefix"><%= ParameterPrefix %></property>
       <property name="UseDeferredDeletion"><%= UseDeferredDeletion %></property>
@@ -70,31 +74,11 @@
       <property name="SourceTables" />
       <property name="Location"><%= Location %></property>
     </propertySet>
-	<propertySet name="EditableChild" enabled="false" template="$CSLA$$language$\BusinessLayer\EditableChild.cst">
+	<propertySet name="EditableChild" template="$CSLA$$language$\BusinessLayer\EditableChild.cst">
       <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
       <property name="DataClassName"><%= DataClassName %></property>
       <property name="ParameterPrefix"><%= ParameterPrefix %></property>
-      <property name="BusinessProjectName"><%= BusinessProjectName %></property>
-      <property name="DataAccessImplementation"><%= DataAccessImplementation %></property>
-      <property name="DataProjectName"><%= DataProjectName %></property>
-      <property name="SourceTables" />
-      <property name="Location"><%= Location %></property>
-    </propertySet>
-	<propertySet name="EditableChildList" enabled="false" template="$CSLA$$language$\BusinessLayer\EditableChildList.cst">
-      <property name="UseMemberVariables"><%= UseMemberVariables %></property>
-      <property name="DataClassName"><%= DataClassName %></property>
-      <property name="ParameterPrefix"><%= ParameterPrefix %></property>
-      <property name="BusinessProjectName"><%= BusinessProjectName %></property>
-      <property name="DataAccessImplementation"><%= DataAccessImplementation %></property>
-      <property name="DataProjectName"><%= DataProjectName %></property>
-      <property name="SourceTables" />
-      <property name="Location"><%= Location %></property>
-    </propertySet>
-	<propertySet name="EditableRoot" template="$CSLA$$language$\BusinessLayer\EditableRoot.cst">
-      <property name="UseMemberVariables"><%= UseMemberVariables %></property>
-      <property name="DataClassName"><%= DataClassName %></property>
-      <property name="ParameterPrefix"><%= ParameterPrefix %></property>
-      <property name="UseDeferredDeletion"><%= UseDeferredDeletion %></property>
       <property name="BusinessProjectName"><%= BusinessProjectName %></property>
       <property name="DataAccessImplementation"><%= DataAccessImplementation %></property>
       <property name="DataProjectName"><%= DataProjectName %></property>
@@ -102,7 +86,7 @@
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
-<% foreach(Entity entity in Entities){ %>
+<% foreach(Entity entity in GetChildEntities()){ %>
       <table>
         <owner><%= entity.Table.Owner %></owner>
         <name><%= entity.Table.Name %></name>
@@ -112,8 +96,9 @@
       </property>
       <property name="Location"><%= Location %></property>
     </propertySet>
-	<propertySet name="EditableRootList" template="$CSLA$$language$\BusinessLayer\EditableRootList.cst">
+	<propertySet name="EditableChildList" template="$CSLA$$language$\BusinessLayer\EditableChildList.cst">
       <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
       <property name="DataClassName"><%= DataClassName %></property>
       <property name="ParameterPrefix"><%= ParameterPrefix %></property>
       <property name="BusinessProjectName"><%= BusinessProjectName %></property>
@@ -123,7 +108,7 @@
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
-<% foreach(Entity entity in Entities){ foreach(AssociationMember association in entity.ToManyUnion) { %>
+<% foreach(Entity entity in GetListEntities()){ foreach(AssociationMember association in entity.ToManyUnion) { %>
       <table>
         <owner><%= SourceDatabase.Tables[association.TableName].Owner %></owner>
         <name><%= association.TableName %></name>
@@ -133,8 +118,43 @@
       </property>
       <property name="Location"><%= Location %></property>
     </propertySet>
+	<propertySet name="EditableRoot" template="$CSLA$$language$\BusinessLayer\EditableRoot.cst">
+      <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
+      <property name="DataClassName"><%= DataClassName %></property>
+      <property name="ParameterPrefix"><%= ParameterPrefix %></property>
+      <property name="UseDeferredDeletion"><%= UseDeferredDeletion %></property>
+      <property name="BusinessProjectName"><%= BusinessProjectName %></property>
+      <property name="DataAccessImplementation"><%= DataAccessImplementation %></property>
+      <property name="DataProjectName"><%= DataProjectName %></property>
+      <property name="SourceTables">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <tableList>
+<% foreach(Entity entity in GetEntities()){ %>
+      <table>
+        <owner><%= entity.Table.Owner %></owner>
+        <name><%= entity.Table.Name %></name>
+      </table>
+<% } %>
+		</tableList>
+      </property>
+      <property name="Location"><%= Location %></property>
+    </propertySet>
+	<propertySet name="EditableRootList" enabled="false" template="$CSLA$$language$\BusinessLayer\EditableRootList.cst">
+      <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
+      <property name="DataClassName"><%= DataClassName %></property>
+      <property name="ParameterPrefix"><%= ParameterPrefix %></property>
+      <property name="BusinessProjectName"><%= BusinessProjectName %></property>
+      <property name="DataAccessImplementation"><%= DataAccessImplementation %></property>
+      <property name="DataProjectName"><%= DataProjectName %></property>
+      <property name="SourceTables" />
+      <property name="Location"><%= Location %></property>
+    </propertySet>
 	<propertySet name="NameValueList" enabled="false" template="$CSLA$$language$\BusinessLayer\NameValueList.cst">
       <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
       <property name="DataClassName"><%= DataClassName %></property>
       <property name="ParameterPrefix"><%= ParameterPrefix %></property>
       <property name="BusinessProjectName"><%= BusinessProjectName %></property>
@@ -145,6 +165,7 @@
     </propertySet>
 	<propertySet name="ReadOnlyChild" enabled="false" template="$CSLA$$language$\BusinessLayer\ReadOnlyChild.cst">
       <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
       <property name="DataClassName"><%= DataClassName %></property>
       <property name="ParameterPrefix"><%= ParameterPrefix %></property>
       <property name="UseDeferredDeletion"><%= UseDeferredDeletion %></property>
@@ -156,6 +177,7 @@
     </propertySet>
 	<propertySet name="ReadOnlyChildList" enabled="false" template="$CSLA$$language$\BusinessLayer\ReadOnlyChildList.cst">
       <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
       <property name="DataClassName"><%= DataClassName %></property>
       <property name="ParameterPrefix"><%= ParameterPrefix %></property>
       <property name="BusinessProjectName"><%= BusinessProjectName %></property>
@@ -166,6 +188,7 @@
     </propertySet>
 	<propertySet name="ReadOnlyList" enabled="false" template="$CSLA$$language$\BusinessLayer\ReadOnlyList.cst">
       <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
       <property name="DataClassName"><%= DataClassName %></property>
       <property name="ParameterPrefix"><%= ParameterPrefix %></property>
       <property name="BusinessProjectName"><%= BusinessProjectName %></property>
@@ -176,6 +199,7 @@
     </propertySet>
 	<propertySet name="ReadOnlyRoot" enabled="false" template="$CSLA$$language$\BusinessLayer\ReadOnlyRoot.cst">
       <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
       <property name="DataClassName"><%= DataClassName %></property>
       <property name="ParameterPrefix"><%= ParameterPrefix %></property>
       <property name="BusinessProjectName"><%= BusinessProjectName %></property>
@@ -186,6 +210,7 @@
     </propertySet>
 	<propertySet name="SwitchableObject" enabled="false" template="$CSLA$$language$\BusinessLayer\SwitchableObject.cst">
       <property name="UseMemberVariables"><%= UseMemberVariables %></property>
+      <property name="UseLazyLoading"><%= UseLazyLoading %></property>
       <property name="DataClassName"><%= DataClassName %></property>
       <property name="ParameterPrefix"><%= ParameterPrefix %></property>
       <property name="UseDeferredDeletion"><%= UseDeferredDeletion %></property>

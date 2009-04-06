@@ -68,24 +68,28 @@ namespace <%= BusinessProjectName %>
 			base.Child_Create();
 		}
 		
-		private void Child_Fetch(object childData)
+		private void Child_Fetch(SafeDataReader reader)
 		{
-			// TODO: load values
+			Fetch(reader);
 		}
 		
-		private void Child_Insert(object parent)
+		private void Child_Insert()
 		{
-			// TODO: insert values
+			using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Insert(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildInsertPrivateMemberVariableParameters() %><% } else { %><%= Entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildInsertReadPropertyParametersVariables() %><% } %>))
+			{
+			}
 		}
 		
-		private void Child_Update(object parent)
+		private void Child_Update()
 		{
-			// TODO: update values
+			using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildReadPropertyParametersVariables() %><% } %>))
+			{
+			}
 		}
 		
-		private void Child_DeleteSelf(object parent)
+		private void Child_DeleteSelf()
 		{
-			// TODO: delete values
+			DataPortal_Delete(new <%= BusinessClassName %>Criteria(<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
 		}
 		
 		private void Fetch(SafeDataReader reader)
@@ -110,9 +114,9 @@ namespace <%= BusinessProjectName %>
 <% foreach(AssociationMember association2 in Entity.ToManyUnion) { if (!UseLazyLoading){ %>
 
 <% if (UseMemberVariables){ %>
-			<%= association2.PrivateMemberVariableName %> = new <%= association2.ClassName %>List.NewList();
+			<%= association2.PrivateMemberVariableName %> = new <%= association2.ClassName %>List.New<%= association2.ClassName %>();
 <% } else { %>
-			LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList());
+			LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.New<%= association2.ClassName %>());
 <% } } } %> 
         }
 <% } %>
