@@ -33,15 +33,18 @@ namespace <%= BusinessProjectName %>
 	{
 		#region Data Access
 				
-		private void Child_Fetch(object childData)
+		private void Child_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
 		{
 			RaiseListChangedEvents = false;
 			IsReadOnly = false;
 			
-			// TODO: load values
-			
-			foreach(var child in (List<object>)childData)
-				Add(<%= BusinessClassName %>.Get<%= BusinessClassName %>(child));
+		    using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= ChildBusinessClassName %>Fetch(criteria.StateBag)) 
+			{
+                while(reader.Read())
+				{	
+                    this.Add(new <%= BusinessProjectName %>.<%= ChildBusinessClassName %>(reader));
+				}
+			}
 			
 			IsReadOnly = true;
 			RaiseListChangedEvents = true;

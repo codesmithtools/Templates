@@ -123,10 +123,10 @@ namespace <%= BusinessProjectName %>
 		#endregion
 				
 		#region Factory Methods 
-		
-		internal static <%= BusinessClassName %> Get<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+		internal static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
 		{
-			return DataPortal.FetchChild< <%= BusinessClassName %> >(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>);
+			return DataPortal.FetchChild< <%= ChildBusinessClassName %> >(
+				new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
 		}
 
 		private <%= BusinessClassName %>()
