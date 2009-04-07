@@ -132,18 +132,28 @@ namespace <%= DataProjectName %>
 		#endregion
 
 		#region Update
-		
-		public SafeDataReader <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildParametersVariables() %>)
+
+<% if(entity.Table.ForeignKeyColumns.Count == 0) { %>
+        public SafeDataReader <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersion.BuildParametersVariables() %>)
+<% } else { %>
+        public SafeDataReader <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildParametersVariables() %>)
+<% } %>
 		{
 			SqlConnection connection = new SqlConnection(ConnectionString);
 			
 			connection.Open();
-			
-			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoRowVersion.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %>";
-			using(SqlCommand command = new SqlCommand(commandText, connection))
+<% if(entity.Table.ForeignKeyColumns.Count == 0) { %>
+			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoKeysOrRowVersion.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %>";
+<% } else { %>
+			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoRowVersionIncludeRemoteAssociations.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %>";
+<% } %>
+            using(SqlCommand command = new SqlCommand(commandText, connection))
 			{
-				<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
-				
+<% if(entity.Table.ForeignKeyColumns.Count == 0) { %>
+			<%= entity.MembersNoRowVersion.BuildCommandParameters() %>
+<% } else { %>
+			<%= entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildCommandParameters() %>
+<% } %>
 				return new SafeDataReader(command.ExecuteReader());
 			}
 		}
@@ -156,8 +166,11 @@ namespace <%= DataProjectName %>
 		{
 			SqlConnection connection = new SqlConnection(ConnectionString);
 			connection.Open();
-			
-			string commandText = string.Format("SELECT <%= entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", BuildWhereStatement(bag));
+<%if(entity.Table.ForeignKeyColumns.Count == 0) {%>
+            string commandText = string.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", BuildWhereStatement(bag));
+<%} else {%>
+            string commandText = string.Format("SELECT <%= entity.MembersManyUnion.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", BuildWhereStatement(bag));
+<%}%>
 			using(SqlCommand command = new SqlCommand(commandText, connection))
 			{
 				command.Parameters.AddRange(SqlParameters(bag));

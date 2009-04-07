@@ -96,7 +96,6 @@ namespace CodeSmith.SchemaHelper
 
             foreach (AssociationMember association in entity.ManyToOne)
             {
-
                 if (association.PrivateMemberVariableName == variableName)
                 {
                     foreach (SearchCriteria sc in association.AssociationEntity().SearchCriteria)

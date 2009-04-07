@@ -251,7 +251,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (MemberBase member in members)
             {
-                parameters += string.Format(", ReadProperty({0}Property)", member.PrivateMemberVariableName);
+                parameters += string.Format(", ReadProperty({0}Property)", member.Entity.ResolveCriteriaPrivateMemberVariableName(member.ColumnName));
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -335,7 +335,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (MemberBase member in members)
             {
-                parameters += string.Format(", {0}", member.PrivateMemberVariableName);
+                parameters += string.Format(", {0}", member.Entity.ResolveCriteriaPrivateMemberVariableName(member.ColumnName));
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
