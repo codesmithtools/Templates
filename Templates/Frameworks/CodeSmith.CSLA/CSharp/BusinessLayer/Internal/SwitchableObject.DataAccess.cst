@@ -201,28 +201,64 @@ namespace <%= BusinessProjectName %>
 		{
 			// TODO: load default values
 			// omit this override if you have no defaults to set
-		base.Child_Create();
+		    base.Child_Create();
 		}
 	
-		private void Child_Fetch(object childData)
+		private void Child_Fetch(SafeDataReader reader)
 		{
-			// TODO: load values
+			Fetch(reader);
 		}
-	
-		private void Child_Insert(object parent)
+		
+		private void Child_Insert()
 		{
-			// TODO: insert values
+			using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Insert(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildInsertPrivateMemberVariableParameters() %><% } else { %><%= Entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildInsertReadPropertyParametersVariables() %><% } %>))
+			{
+			}
 		}
-	
-		private void Child_Update(object parent)
+		
+		private void Child_Update()
 		{
-			// TODO: update values
+<% if(Entity.Table.ForeignKeyColumns.Count == 0) { %>
+            using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersion.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.MembersNoRowVersion.BuildReadPropertyParametersVariables() %><% } %>))
+<% } else { %>
+            using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildReadPropertyParametersVariables() %><% } %>))
+<% } %>     
+            {
+			}
 		}
-	
-		private void Child_DeleteSelf(object parent)
+		
+		private void Child_DeleteSelf()
 		{
-			// TODO: delete values
+			DataPortal_Delete(new <%= BusinessClassName %>Criteria(<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
 		}
+		
+		private void Fetch(SafeDataReader reader)
+		{
+<% foreach(Member member in Entity.MembersPrimaryKeyUnion) { if(UseMemberVariables) { %>
+			<%= member.PrivateMemberVariableName %> = reader.<%= member.GetReaderMethod() %>("<%= member.Name %>");
+<% } else { %>
+			LoadProperty(<%= member.PrivateMemberVariableName %>Property, reader.<%= member.GetReaderMethod() %>("<%= member.Name %>"));
+<% } } %>
+
+<%-- Many-To-One --%>
+<% foreach(AssociationMember association in Entity.ManyToOne) {  if (UseMemberVariables){ %>
+            <%= association.PrivateMemberVariableName %>ID = reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>");
+<% } else { %>
+			LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"));
+<% } if(!UseLazyLoading){ if (UseMemberVariables){ %>
+			<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = new <%= association.ClassName %>(reader);
+<% } else { %>
+			LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>());
+<% } } }  %>
+<%-- One-To-Many & Many-To-Many --%>
+<% foreach(AssociationMember association2 in Entity.ToManyUnion) { if (!UseLazyLoading){ %>
+
+<% if (UseMemberVariables){ %>
+			<%= association2.PrivateMemberVariableName %> = new <%= association2.ClassName %>List.New<%= association2.ClassName %>();
+<% } else { %>
+			LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.New<%= association2.ClassName %>());
+<% } } } %> 
+        }
 <% } %>
 
 		#endregion

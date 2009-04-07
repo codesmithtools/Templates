@@ -186,7 +186,8 @@ namespace <%= BusinessProjectName %>
 		
 		public static <%= BusinessClassName %> Get<%= BusinessClassName %>Child(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
 		{
-			return DataPortal.FetchChild< <%= BusinessClassName %> >(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>);
+            return DataPortal.FetchChild< <%= BusinessClassName %> >(
+				new <%= BusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
 		}
 
 		private <%= BusinessClassName %>()
