@@ -114,6 +114,7 @@ namespace NHibernateHelper
                 return true;
 
             // 1) Table must have Two ForeignKeys.
+            //    a) Must be two unique tables.
             // 2) All columns must be either...
             //    a) Member of the Primary Key.
             //    b) Member of a Foreign Key.
@@ -124,6 +125,7 @@ namespace NHibernateHelper
                 return false;
 
             bool result = true;
+            List<TableSchema> foreignTables = new List<TableSchema>();
 
             foreach (ColumnSchema column in table.Columns)
             {
@@ -135,7 +137,22 @@ namespace NHibernateHelper
                     result = false;
                     break;
                 }
+                else if (column.IsForeignKeyMember)
+                {
+                    foreach (TableKeySchema tks in column.Table.ForeignKeys)
+                    {
+                        if (tks.ForeignKeyMemberColumns.Contains(column))
+                        {
+                            if (!foreignTables.Contains(tks.PrimaryKeyTable))
+                                foreignTables.Add(tks.PrimaryKeyTable);
+                            break;
+                        }
+                    }
+                }
             }
+
+            if (foreignTables.Count != 2)
+                result = false;
 
             return result;
         }
