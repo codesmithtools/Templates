@@ -107,7 +107,9 @@ Namespace <%= Database.ContextNamespace %>
 <% End If ' If is key%>
 <% Next ' For Each method%>
 <% For Each c As Column In Database.GetTypeByName(EntityManager.EntityName).Columns
-
+    Dim paramName as string =  GetParamName(c.Member)
+    paramName = CleanParamName(paramName)
+    
     If Not c.IsPrimaryKey.Value AndAlso Not uniqueMethods.Contains(c.Member) AndAlso Not c.IsVersion.Value Then
      %>
 
@@ -115,9 +117,9 @@ Namespace <%= Database.ContextNamespace %>
         ''' Gets a query for <%= c.Member %>.
         ''' </summary>
         <Extension()> _
-        Public Function <%= MethodPrefix %><%= c.Member %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= GetParamName(c.Member) %> As <%= VBAlias(c.Type) %>) As IQueryable(Of <%= safeName %>)
+        Public Function <%= MethodPrefix %><%= c.Member %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= VBAlias(c.Type) %>) As IQueryable(Of <%= safeName %>)
 
-            return queryable.Where(Function(c)c.<%= c.Member %> = <%= GetParamName(c.Member) %>)
+            return queryable.Where(Function(<%= GetAlias() %>)<%= GetAlias() %>.<%= c.Member %> = <%= paramName %>)
 
         End Function
 <% End If ' if is  not key
@@ -167,9 +169,21 @@ End Namespace
 
 <script runat="template">
 
-   Dim uniqueMethods As List(Of String) = New List(Of String)()
+Dim uniqueMethods As List(Of String) = New List(Of String)()
 
-   Public Function GetParameters(ByVal method As ManagerMethod) As String
+Public Function GetAlias() As String
+    Return EntityManager.EntityName.Substring(0, 1).ToLowerInvariant()
+End Function
+
+Public Function CleanParamName(ByVal name As String) As String
+    If name <> GetAlias() Then
+        Return name
+    End If
+    
+    Return "my" & StringUtil.ToPascalCase(name)
+End Function
+
+Public Function GetParameters(ByVal method As ManagerMethod) As String
     Dim args As New StringBuilder()
       For Each column As Column In method.Columns
             If args.Length > 0 Then
@@ -177,7 +191,8 @@ End Namespace
         End If
 
     Dim paramName As String = GetParamName(column.Member)
-
+    paramName = CleanParamName(paramName)
+    
     args.AppendFormat("ByVal {1} As {0}", VBAlias(column.Type), paramName)
   Next
 
@@ -192,6 +207,7 @@ Public Function GetParametersNames(ByVal method As ManagerMethod) As String
     End If
 
     Dim paramName As String = GetParamName(column.Member)
+    paramName = CleanParamName(paramName)
     args.Append(paramName)
   Next
 
@@ -213,20 +229,20 @@ End Function
 
 Public Function GetLamba(ByVal method As ManagerMethod, ByVal tabCount As Integer) As String
   Dim lamba As New StringBuilder()
-  Dim [alias] As String = method.EntityName.Substring(0, 1).ToLowerInvariant()
 
   For Each column As Column In method.Columns
     Dim paramName As String = GetParamName(column.Member)
+    paramName = CleanParamName(paramName)
 
     If lamba.Length = 0 Then
-      lamba.AppendFormat("Function({0})", [alias])
+      lamba.AppendFormat("Function({0})", GetAlias())
     Else
       lamba.Append(" _" & Chr(13) & "" & Chr(10) & "")
       lamba.Append(Chr(9), tabCount)
       lamba.Append("AndAlso ")
     End If
 
-    lamba.AppendFormat("{0}.{1} = {2}", [alias], column.Member, paramName)
+    lamba.AppendFormat("{0}.{1} = {2}", GetAlias(), column.Member, paramName)
 
 
   Next

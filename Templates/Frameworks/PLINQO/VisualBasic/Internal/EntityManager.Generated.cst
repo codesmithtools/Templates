@@ -151,7 +151,7 @@ Namespace <%= ManagerNamespace %>
 <% Else If (method.Columns.Count = 2) Then %>
                 return <%= MethodPrefix %><%= MethodKeySuffix %>(entityKey.Key, entityKey.Key1)
 <% Else If (method.Columns.Count = 3) Then %>
-                return <%= MethodPrefix %><%= MethodKeySuffix %>(entityKey.Key, entityKey.Key1, entityKey.Key2);
+                return <%= MethodPrefix %><%= MethodKeySuffix %>(entityKey.Key, entityKey.Key1, entityKey.Key2)
 <% Else If (method.Columns.Count = 4) Then %>
                 return <%= MethodPrefix %><%= MethodKeySuffix %>(entityKey.Key, entityKey.Key1, entityKey.Key2, entityKey.Key3)
 <% End If %>
@@ -267,7 +267,19 @@ Namespace <%= ManagerNamespace %>
 End Namespace
 
 <script runat="template">
-   Public Function GetParameters(ByVal method As ManagerMethod) As String
+Public Function GetAlias() As String
+    Return EntityManager.EntityName.Substring(0, 1).ToLowerInvariant()
+End Function
+
+Public Function CleanParamName(ByVal name As String) As String
+    If name <> GetAlias() Then
+        Return name
+    End If
+    
+    Return "my" & StringUtil.ToPascalCase(name)
+End Function
+
+Public Function GetParameters(ByVal method As ManagerMethod) As String
     Dim args As New StringBuilder()
     For Each column As Column In method.Columns
         If args.Length > 0 Then
@@ -275,7 +287,8 @@ End Namespace
         End If
         
         Dim paramName As String = GetParamName(column.Member)
-        
+        paramName = CleanParamName(paramName)
+    
         Dim typeName As String = VBAlias(column.Type)
         If column.CanBeNull.Value = True AndAlso CommonUtility.IsNullableType(column.Type) Then
             typeName = String.Format("Nullable(Of {0})", typeName)
@@ -295,6 +308,7 @@ Public Function GetParametersNames(ByVal method As ManagerMethod) As String
         End If
         
         Dim paramName As String = GetParamName(column.Member)
+        paramName = CleanParamName(paramName)
         args.Append(paramName)
     Next
     
@@ -321,20 +335,20 @@ End Function
 
 Public Function GetLamba(ByVal method As ManagerMethod, ByVal tabCount As Integer) As String
     Dim lamba As New StringBuilder()
-    Dim [alias] As String = method.EntityName.Substring(0, 1).ToLowerInvariant()
     
     For Each column As Column In method.Columns
         Dim paramName As String = GetParamName(column.Member)
-        
+        paramName = CleanParamName(paramName)
+    
         If lamba.Length = 0 Then
-            lamba.AppendFormat("Function({0})", [alias])
+            lamba.AppendFormat("Function({0})", GetAlias())
         Else
             lamba.Append(" _" & Chr(13)  & "" & Chr(10) & "")
             lamba.Append(Chr(9), tabCount)
             lamba.Append("AndAlso ")
         End If
         
-        lamba.AppendFormat("{0}.{1} = {2}", [alias], column.Member, paramName)
+        lamba.AppendFormat("{0}.{1} = {2}", GetAlias(), column.Member, paramName)
         
 
     Next

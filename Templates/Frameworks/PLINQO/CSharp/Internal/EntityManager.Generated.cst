@@ -263,6 +263,19 @@ namespace <%= ManagerNamespace %>
 }
 
 <script runat="template">
+    public string GetAlias()
+    {
+        return EntityManager.EntityName.Substring(0, 1).ToLowerInvariant();
+    }
+    
+    public string CleanParamName(string name)
+    {
+        if (name != GetAlias())
+            return name;
+            
+        return "my" + StringUtil.ToPascalCase(name);        
+    }
+    
     public string GetParameters(ManagerMethod method)
     {
         StringBuilder args = new StringBuilder();
@@ -272,6 +285,7 @@ namespace <%= ManagerNamespace %>
                 args.Append(", ");
             
             string paramName = CommonUtility.GetParameterName(column.Member);
+            paramName = CleanParamName(paramName);
             
             string typeName = CSharpAlias[column.Type];
             if (column.CanBeNull == true && CommonUtility.IsNullableType(column.Type))
@@ -294,6 +308,7 @@ namespace <%= ManagerNamespace %>
                 args.Append(", ");
             
             string paramName = CommonUtility.GetParameterName(column.Member);
+            paramName = CleanParamName(paramName);
             args.Append(CSharpKeyWordEscape[paramName]);
         }
         
@@ -321,11 +336,12 @@ namespace <%= ManagerNamespace %>
     public string GetLamba(ManagerMethod method, int tabCount)
     {
         StringBuilder lamba = new StringBuilder();
-        string alias = method.EntityName.Substring(0, 1).ToLowerInvariant();
+        string alias = GetAlias();
         
         foreach(Column column in method.Columns)
         {
             string paramName = CommonUtility.GetParameterName(column.Member);
+            paramName = CleanParamName(paramName);
             paramName = CSharpKeyWordEscape[paramName];
             
             if (lamba.Length == 0)
