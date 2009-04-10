@@ -114,15 +114,18 @@ namespace <%= Database.ContextNamespace %>
 <% } // foreach method%>
 <% foreach(Column column in Database.GetTypeByName(EntityManager.EntityName).Columns)
 {
+    string paramName = CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)];
+    paramName = CleanParamName(paramName);
+        
     if(!column.IsPrimaryKey.Value && !uniqueMethods.Contains(column.Member) && !column.IsVersion.Value && column.Type != "System.Data.Linq.Binary")
     { %>
         
         /// <summary>
         /// Gets a query for <see cref="<%= EntityManager.EntityName %>.<%= column.Member %>"/>.
         /// </summary>
-        public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= GetColumnType(column) %> <%= CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>)
+        public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= GetColumnType(column) %> <%= paramName %>)
         {
-            return queryable.Where(c => c.<%= column.Member %> == <%= CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)] %>);
+            return queryable.Where(<%= GetAlias() %> => <%= GetAlias() %>.<%= column.Member %> == <%= paramName %>);
         }
 <% } // if is  not key
  } // foreach method%>
@@ -159,7 +162,20 @@ namespace <%= Database.ContextNamespace %>
 <script runat="template">
 
     List<string> uniqueMethods = new List<string>();
+
+    public string GetAlias()
+    {
+        return EntityManager.EntityName.Substring(0, 1).ToLowerInvariant();
+    }
     
+    public string CleanParamName(string name)
+    {
+        if (name != GetAlias())
+            return name;
+            
+        return "my" + StringUtil.ToPascalCase(name);        
+    }
+
     public string GetParameters(ManagerMethod method)
     {
         StringBuilder args = new StringBuilder();
@@ -169,6 +185,7 @@ namespace <%= Database.ContextNamespace %>
                 args.Append(", ");
             
             string paramName = CommonUtility.GetParameterName(column.Member);
+            paramName = CleanParamName(paramName);
 
             args.AppendFormat("{0} {1}",
                 CSharpAlias[column.Type],
@@ -187,6 +204,7 @@ namespace <%= Database.ContextNamespace %>
                 args.Append(", ");
             
             string paramName = CommonUtility.GetParameterName(column.Member);
+            paramName = CleanParamName(paramName);
             args.Append(CSharpKeyWordEscape[paramName]);
         }
         
@@ -210,13 +228,14 @@ namespace <%= Database.ContextNamespace %>
     public string GetLamba(ManagerMethod method, int tabCount)
     {
         StringBuilder lamba = new StringBuilder();
-        string alias = method.EntityName.Substring(0, 1).ToLowerInvariant();
+        string alias = GetAlias();
         
         foreach(Column column in method.Columns)
         {
             string paramName = StringUtil.ToCamelCase(column.Member);
             paramName = CSharpKeyWordEscape[paramName];
-            
+            paramName = CleanParamName(paramName);
+
             if (lamba.Length == 0)
             {
                 lamba.AppendFormat("{0} => ", alias);
