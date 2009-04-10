@@ -123,9 +123,11 @@ namespace LinqToSqlShared.DbmlObjectModel
             if (members == null || members.Length == 0)
                 return cols;
 
-            foreach (Column c in Columns)
-                if (Array.Exists(members, s => c.Member.Equals(s)))
-                    cols.Add(c);
+            foreach (var member in members)
+                if (!string.IsNullOrEmpty(member))
+                    foreach (Column c in Columns)
+                        if (c.Member.Equals(member))
+                            cols.Add(c);
 
             return cols;
         }
@@ -152,7 +154,7 @@ namespace LinqToSqlShared.DbmlObjectModel
                 return false;
 
             List<Column> fColumns = new List<Column>();
-            
+
             // can only be 2 fkeys
             List<Association> fk = new List<Association>(EntityRefAssociations);
             if (fk.Count != 2)
@@ -186,7 +188,7 @@ namespace LinqToSqlShared.DbmlObjectModel
             foreach (var association in Associations)
                 if (association.Member == member)
                     return false;
-            
+
             return true;
         }
     }
