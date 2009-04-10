@@ -20,6 +20,7 @@ namespace QuickStartUtils
             if (ProjectBuilder.IncludeDataServices)
                 GetWebServices(projectPath);
         }
+
         private void GetCssFile(PathHelper projectPath)
         {
             string stylesPath = Path.Combine(ProjectBuilder.CodeTemplate.CodeTemplateInfo.DirectoryName, @"Common\Styles");
@@ -37,6 +38,7 @@ namespace QuickStartUtils
             imageFile = Path.Combine(stylesPath, @"table-header-background.gif");
             File.Copy(imageFile, imageLocation);
         }
+
         private void GetWebServices(PathHelper projectPath)
         {
             string zipFile = (ProjectBuilder.Language == LanguageEnum.CSharp)
@@ -66,13 +68,20 @@ namespace QuickStartUtils
                 AddWebServicesToProj(projectPath);
             }
         }
+
         private void UpdateWebConfig(string directoryPath)
         {
             QuickStartUtils.FindAndReplace(Path.Combine(directoryPath, "web.config"), @"<connectionStrings/>",
                 @"<connectionStrings>
-					<add name=""" + ProjectBuilder.SourceDatabase.Name + @"ConnectionString"" connectionString=""" + ProjectBuilder.SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
+					<add name=""" + DatabaseName() + @"ConnectionString"" connectionString=""" + ProjectBuilder.SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
 				</connectionStrings>");
         }
+
+        private string DatabaseName()
+        {
+            return StringUtil.ToPascalCase(ProjectBuilder.SourceDatabase.Name);
+        }
+
         private void UpdateGlobal(PathHelper projectPath)
         {
             CodeTemplate globalTemplate = (ProjectBuilder.Language == LanguageEnum.CSharp)
@@ -82,7 +91,7 @@ namespace QuickStartUtils
             globalTemplate.SetProperty("ClassNamespace", ProjectBuilder.InterfaceProjectName);
             globalTemplate.SetProperty("ContextNamespace", ProjectBuilder.DataProjectName);
             globalTemplate.SetProperty("DataContextName",
-                String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, ProjectBuilder.SourceDatabase.Name));
+                String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, DatabaseName()));
             globalTemplate.ContextData["RenderLocation"] = projectPath.DirectoryPath;
             globalTemplate.RenderToString();
         }
@@ -116,7 +125,7 @@ namespace QuickStartUtils
         {
             // Update .svc Code Behind
             string dataServicePath = Path.Combine(projectPath.DirectoryPath, DataServiceCodeFileName);
-            string dataContextName = String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, ProjectBuilder.SourceDatabase.Name);
+            string dataContextName = String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, DatabaseName());
 
             if (this.ProjectBuilder.Language == LanguageEnum.CSharp)
             {
@@ -163,7 +172,11 @@ namespace QuickStartUtils
 
         private string DataServiceName
         {
-            get { return String.Concat(ProjectBuilder.SourceDatabase.Name, "DataService"); }
+            get
+            {
+                return String.Concat(DatabaseName(),
+                    "DataService");
+            }
         }
         private string DataServiceFileName
         {

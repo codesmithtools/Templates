@@ -184,13 +184,15 @@ Private Sub OnSourceDatabaseChanged(ByVal sender As Object, ByVal e As EventArgs
     If SourceDatabase Is Nothing Then
         Return
     End If
-
+    
+    Dim name as String = StringUtil.ToPascalCase(SourceDatabase.Database.Name)
+    
     If String.IsNullOrEmpty(DbmlFile) OrElse DbmlFile.Equals("Database.dbml") Then
-        DbmlFile = Path.Combine(CodeTemplateInfo.DirectoryName, SourceDatabase.Database.Name + ".dbml")
+        DbmlFile = Path.Combine(CodeTemplateInfo.DirectoryName, name + ".dbml")
     End If
 
     If String.IsNullOrEmpty(ContextNamespace) Then
-        ContextNamespace = SourceDatabase.Database.Name + ".Data"
+        ContextNamespace = name + ".Data"
     End If
 
 End Sub

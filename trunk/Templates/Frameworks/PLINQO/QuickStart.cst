@@ -149,22 +149,24 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
     {
         if (SourceDatabase == null)
             return;
-            
+        
+        string name = StringUtil.ToPascalCase(SourceDatabase.Database.Name);
+
         if(string.IsNullOrEmpty(SolutionName))
-            SolutionName = SourceDatabase.Name;
+            SolutionName = name;
 
         if (string.IsNullOrEmpty(DataProjectName))
-            DataProjectName = SourceDatabase.Database.Name + ".Data";
+            DataProjectName = name + ".Data";
 			
 		if (string.IsNullOrEmpty(InterfaceProjectName))
-            InterfaceProjectName = SourceDatabase.Database.Name + ".UI";
+            InterfaceProjectName = name + ".UI";
 			
 		if (string.IsNullOrEmpty(TestProjectName))
-            TestProjectName = SourceDatabase.Database.Name + ".Test";
+            TestProjectName = name + ".Test";
 			
 		if (string.IsNullOrEmpty(Location))
             Location = Path.Combine(
                 CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory, 
-                Path.Combine("PLINQO", SourceDatabase.Database.Name));
+                Path.Combine("PLINQO", name));
     }
 </script>

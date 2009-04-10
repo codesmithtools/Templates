@@ -198,7 +198,7 @@ Namespace <%= ClassNamespace %>
 
                 If prop.PropertyType Is GetType(Byte()) OrElse prop.PropertyType Is GetType(System.Data.Linq.Binary) Then
                     value = "<binary>"
-                ElseIf prop.PropertyType Is GetType(System.Data.Linq.EntitySet(Of )) OrElse prop.PropertyType.BaseType Is GetType(LinqEntityBase) Then
+                ElseIf prop.PropertyType Is GetType(System.Data.Linq.EntitySet(Of )) OrElse prop.PropertyType.BaseType Is GetType(<%= ClassName %>) Then
                     includeProperty = False
                 Else
                     Try

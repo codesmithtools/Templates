@@ -50,7 +50,7 @@ namespace <%= Database.ContextNamespace %>
             get
             {
                 if (_manager == null)
-                    _manager = new <%= DataManager.DataManagerName %>(this);
+                    _manager = new <%= ManagerNamespace %>.<%= DataManager.DataManagerName %>(this);
                 return _manager;
             }
         }
