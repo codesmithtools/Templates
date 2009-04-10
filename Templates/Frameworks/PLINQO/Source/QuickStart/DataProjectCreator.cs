@@ -55,7 +55,7 @@ namespace QuickStartUtils
             string cspPath = Path.Combine(projectPath.DirectoryPath, cspFileName);
 
             QuickStartUtils.FindAndReplace(cspPath, @"\$connectionString\$", ProjectBuilder.SourceDatabase.ConnectionString);
-            QuickStartUtils.FindAndReplace(cspPath, @"\$myDatabase\$", StringUtil.ToPascalCase(ProjectBuilder.SourceDatabase.Database.Name));
+            QuickStartUtils.FindAndReplace(cspPath, @"\$myDatabase\$", DatabaseName());
             QuickStartUtils.FindAndReplace(cspPath, @"\$myContextNamespace\$", ProjectBuilder.DataProjectName);
             QuickStartUtils.FindAndReplace(cspPath, @"\$language\$", ProjectBuilder.LanguageFolder);
             QuickStartUtils.FindAndReplace(cspPath, @"\$linqToSql\$", linqToSqlPath);
@@ -75,7 +75,7 @@ namespace QuickStartUtils
                 QuickStartUtils.FindAndReplace(projectPath.FilePath, @"<RootNamespace>.*</RootNamespace>", "<RootNamespace></RootNamespace>");
                 //Update Settings File
                 QuickStartUtils.FindAndReplace(Path.Combine(projectPath.DirectoryPath, "My Project\\Settings.Designer.vb"),
-                    @"Global\." + ProjectBuilder.SourceDatabase.Database.Name + @"\.Data\.My\.MySettings",
+                    @"Global\." + DatabaseName() + @"\.Data\.My\.MySettings",
                     "Global.My.MySettings");
 
                 string vbFrameworkReplace = String.Format(@"<TargetFrameworkVersion>v{0}</TargetFrameworkVersion>
@@ -87,6 +87,11 @@ namespace QuickStartUtils
                 QuickStartUtils.FindAndReplace(projectPath.FilePath,
                     @"<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>", vbFrameworkReplace);
             }
+        }
+
+        private string DatabaseName()
+        {
+            return StringUtil.ToPascalCase(ProjectBuilder.SourceDatabase.Database.Name);
         }
     }
 }

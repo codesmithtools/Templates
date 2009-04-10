@@ -170,12 +170,14 @@
     {
         if (SourceDatabase == null)
             return;
-            
+        
+        string name = StringUtil.ToPascalCase(SourceDatabase.Database.Name);
+        
         if(string.IsNullOrEmpty(DbmlFile) || DbmlFile.Equals("Database.dbml"))
-            DbmlFile = SourceDatabase.Database.Name + ".dbml";
+            DbmlFile = name + ".dbml";
 
         if (string.IsNullOrEmpty(ContextNamespace))
-            ContextNamespace = SourceDatabase.Database.Name + ".Data";
+            ContextNamespace = name + ".Data";
 
     }
     private void OnEntityNamespaceChanged(object sender, EventArgs e)

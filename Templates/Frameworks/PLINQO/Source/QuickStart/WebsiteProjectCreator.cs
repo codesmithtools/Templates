@@ -86,9 +86,15 @@ namespace QuickStartUtils
         {
             QuickStartUtils.FindAndReplace(Path.Combine(directoryPath, "web.config"), @"<connectionStrings/>",
                 @"<connectionStrings>
-					<add name=""" + ProjectBuilder.SourceDatabase.Name + @"ConnectionString"" connectionString=""" + ProjectBuilder.SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
+					<add name=""" + DatabaseName() + @"ConnectionString"" connectionString=""" + ProjectBuilder.SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
 				</connectionStrings>");
         }
+
+        private string DatabaseName()
+        {
+            return ProjectBuilder.SourceDatabase.Name;
+        }
+
         private void UpdateGlobal(PathHelper projectPath)
         {
             string globalPath = QuickStartUtils.FindFileInDirectory("Global.asax", projectPath.DirectoryPath);
@@ -101,7 +107,7 @@ namespace QuickStartUtils
                 contextReplace = String.Concat(@"model.RegisterContext(typeof(",
                 ProjectBuilder.DataProjectName,
                 @".",
-                ProjectBuilder.SourceDatabase.Name,
+                DatabaseName(),
                 @"DataContext), new ContextConfiguration() { ScaffoldAllTables = false });");
             }
             else
@@ -110,7 +116,7 @@ namespace QuickStartUtils
                 contextReplace = String.Concat(@"model.RegisterContext(GetType(",
                 ProjectBuilder.DataProjectName,
                 @".",
-                ProjectBuilder.SourceDatabase.Name,
+                DatabaseName(),
                 @"DataContext), New ContextConfiguration() With { .ScaffoldAllTables = False })");
             }
 
@@ -127,7 +133,7 @@ namespace QuickStartUtils
                     ? @" /\* TODO: put your data source class name here \*/ "
                     : @"\[\[class name\]\]";
                 QuickStartUtils.FindAndReplace(fileName, dataContextName,
-                    String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, ProjectBuilder.SourceDatabase.Name));
+                    String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, DatabaseName()));
 
                 // Update .svc
                 fileName = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.svc", DataServiceName));

@@ -44,7 +44,7 @@ Namespace <%= Database.ContextNamespace %>
         Public ReadOnly Property Manager As <%= ManagerNamespace %>.<%= DataManager.DataManagerName %>
             Get
                 If _manager Is Nothing Then
-                    _manager = New <%= DataManager.DataManagerName %>(Me)
+                    _manager = New <%= ManagerNamespace %>.<%= DataManager.DataManagerName %>(Me)
                 End If
                 Return _manager
             End Get

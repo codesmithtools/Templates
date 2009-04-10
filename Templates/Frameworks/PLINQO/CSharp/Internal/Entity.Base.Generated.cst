@@ -208,7 +208,7 @@ namespace <%= ClassNamespace %>
                     value = "<binary>";
                 }
                 else if (props[i].PropertyType == typeof(System.Data.Linq.EntitySet<>)
-                    || props[i].PropertyType.BaseType == typeof(LinqEntityBase))
+                    || props[i].PropertyType.BaseType == typeof(<%= ClassName %>))
                 {
                     includeProperty = false;
                 }
