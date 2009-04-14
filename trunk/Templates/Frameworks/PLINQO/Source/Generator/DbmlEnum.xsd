@@ -25,7 +25,7 @@
   </xs:complexType>
   <xs:complexType name="Item">
     <xs:attribute name="Name" type="xs:string" use="required" />
-    <xs:attribute name="Value" type="xs:int" use="required" />
+    <xs:attribute name="Value" type="ns:long" use="required" />
     <xs:attribute name="Description" type="xs:string" use="optional" />
     <xs:attribute name="DataContractMember" type="xs:boolean" use="optional" />
   </xs:complexType>

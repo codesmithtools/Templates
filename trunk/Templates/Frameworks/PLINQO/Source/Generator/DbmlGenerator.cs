@@ -255,7 +255,7 @@ namespace LinqToSqlShared.Generator
             DataTable table = tableSchema.GetTableData();
             foreach (DataRow row in table.Rows)
             {
-                int value = Int32.Parse(row[primaryKey].ToString());
+                long value = Int64.Parse(row[primaryKey].ToString());
                 DbmlEnum.Item existingValue = existingEnum.Items.Where(v => v.Value == value).FirstOrDefault()
                     ?? new DbmlEnum.Item();
 
