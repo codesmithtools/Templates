@@ -218,7 +218,7 @@ namespace LinqToSqlShared.Generator.DbmlEnum
         private string _name;
 
         [XmlAttributeAttribute()]
-        public int Value
+        public long Value
         {
             get
             {
@@ -229,7 +229,7 @@ namespace LinqToSqlShared.Generator.DbmlEnum
                 _value = value;
             }
         }
-        private int _value;
+        private long _value;
 
         [XmlAttributeAttribute()]
         public string Description
