@@ -64,14 +64,12 @@ namespace CodeSmith.Data.Rules.Assign
             context.Message = ErrorMessage;
             context.Success = true;
 
-            object current = context.TrackedObject.Current;
-            PropertyInfo property = GetPropertyInfo(current);
-            if (property.PropertyType != typeof (DateTime))
+            if (GetPropertyInfo(context.TrackedObject.Current).PropertyType != typeof(DateTime))
                 return;
 
-            var value = (DateTime) property.GetValue(current, null);
-            if (CanRun(context.TrackedObject) || value == default(DateTime))
-                property.SetValue(current, DateTime.Now, null);
+            // Only set if CanRun and if the value has not been manually changed.
+            if (CanRun(context.TrackedObject) && !IsPropertyValueModified(context.TrackedObject.Original, context.TrackedObject.Current))
+                SetPropertyValue(context.TrackedObject.Current, DateTime.Now);
         }
     }
 }
