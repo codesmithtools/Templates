@@ -3,7 +3,7 @@
 * Description: This template will generate standard CRUD stored procedures for all tables
 *   with primary keys in a given database.
 ------------------------------------------------------------------------------------------%>
-<%@ CodeTemplate Language="C#" LinePragmas="True" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" TargetLanguage="T-SQL" Description="Generates SELECT/INSERT/UPDATE/DELETE stored procedure based on a database schema." %>
+<%@ CodeTemplate Language="C#" LinePragmas="True" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" CompilerVersion="v3.5" TargetLanguage="T-SQL" Description="Generates SELECT/INSERT/UPDATE/DELETE stored procedure based on a database schema." %>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="1. Context" Description="Database that the stored procedures should be based on." %>
 <%-- This property must be added manually because it is defined as a nested type in the StoredProcedures template --%>
 <%@ Property Name="IsolationLevel" Type="StoredProceduresTemplate.TransactionIsolationLevelEnum" Default="ReadCommitted" Category="2. Options" Description="Isolation level to use in the generated procedures." %>
@@ -18,22 +18,15 @@
 this.Progress.MaximumValue = SourceDatabase.Tables.Count + 1;
 this.Progress.Step = 1;
 
-for (int i = 0; i < SourceDatabase.Tables.Count; i++)
+foreach(TableSchema table in SourceDatabase.Tables.Where(t => !t.HasPrimaryKey))
 {
-	if (!SourceDatabase.Tables[i].HasPrimaryKey)
-	{
-		Response.WriteLine("-- Skipping " + SourceDatabase.Tables[i].Name + " because it does not have a primary key");
-	}
+    Response.WriteLine("-- Skipping " + table.Name + " because it does not have a primary key");
 }
 this.Progress.PerformStep();
 
-for (int i = 0; i < SourceDatabase.Tables.Count; i++)
+foreach(TableSchema table in SourceDatabase.Tables.Where(t => t.HasPrimaryKey && !TableIsExcluded(t)))
 {
-	if (SourceDatabase.Tables[i].HasPrimaryKey && !TableIsExcluded(SourceDatabase.Tables[i]))
-	{
-		OutputStoredProcedures(SourceDatabase.Tables[i]);
-	}
-	
+    OutputStoredProcedures(table);
 	this.Progress.PerformStep();
 }
 %>
