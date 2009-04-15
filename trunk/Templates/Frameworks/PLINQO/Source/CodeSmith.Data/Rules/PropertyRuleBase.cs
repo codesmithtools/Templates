@@ -175,6 +175,16 @@ namespace CodeSmith.Data.Rules
             }
         }
 
+        protected bool IsPropertyValueModified(object original, object current)
+        {
+            object currentValue = GetPropertyValue(current);
+            object originalValue;
+
+            originalValue = original != null ? GetPropertyValue(original) : Activator.CreateInstance(GetPropertyInfo(current).PropertyType);
+
+            return !currentValue.Equals(originalValue);
+        }
+
         private static Type GetUnderlyingType(Type propertyType)
         {
             Type type = propertyType;

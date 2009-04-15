@@ -53,12 +53,12 @@
             context.Message = ErrorMessage;
             context.Success = true;
 
-            object current = context.TrackedObject.Current;
+            if (!GetPropertyInfo(context.TrackedObject.Current).PropertyType.IsAssignableFrom(DefaultValue.GetType()))
+                return;
 
-            var value = GetPropertyValue<T>(current);
-
-            if (default(T).Equals(value) || CanRun(context.TrackedObject))
-                SetPropertyValue(current, DefaultValue);
+            // Only set if CanRun and if the value has not been manually changed.
+            if (CanRun(context.TrackedObject) && !IsPropertyValueModified(context.TrackedObject.Original, context.TrackedObject.Current))
+                SetPropertyValue(context.TrackedObject.Current, DefaultValue);
         }
     }
 }

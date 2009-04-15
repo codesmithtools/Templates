@@ -59,11 +59,12 @@ namespace CodeSmith.Data.Rules.Assign
             context.Message = ErrorMessage;
             context.Success = true;
 
-            object current = context.TrackedObject.Current;
-            var value = GetPropertyValue<Guid>(current);
-
-            if (CanRun(context.TrackedObject) || value == default(Guid))
-                SetPropertyValue(current, Guid.NewGuid());
+            if (!GetPropertyInfo(context.TrackedObject.Current).PropertyType.IsAssignableFrom(typeof(Guid)))
+                return;
+            
+            // Only set if CanRun and if the value has not been manually changed.
+            if (CanRun(context.TrackedObject) && !IsPropertyValueModified(context.TrackedObject.Original, context.TrackedObject.Current))
+                SetPropertyValue(context.TrackedObject.Current, Guid.NewGuid());
         }
     }
 }

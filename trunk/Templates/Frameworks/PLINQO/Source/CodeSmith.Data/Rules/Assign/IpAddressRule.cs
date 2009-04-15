@@ -67,14 +67,12 @@ namespace CodeSmith.Data.Rules.Assign
             context.Message = ErrorMessage;
             context.Success = true;
 
-            object current = context.TrackedObject.Current;
-            PropertyInfo property = GetPropertyInfo(current);
-            if (property.PropertyType != typeof (string))
+            if (GetPropertyInfo(context.TrackedObject.Current).PropertyType != typeof(string))
                 return;
 
-            var value = (string) property.GetValue(current, null);
-            if (CanRun(context.TrackedObject))
-                property.SetValue(current, GetCurrentIpAddress(), null);
+            // Only set if CanRun and if the value has not been manually changed.
+            if (CanRun(context.TrackedObject) && !IsPropertyValueModified(context.TrackedObject.Original, context.TrackedObject.Current))
+                SetPropertyValue(context.TrackedObject.Current, GetCurrentIpAddress());
         }
 
         private static string GetCurrentIpAddress()
