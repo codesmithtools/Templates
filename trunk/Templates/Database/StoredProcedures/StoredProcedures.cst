@@ -3,7 +3,7 @@
 * Description: This template will generate standard CRUD stored procedures for a given 
 *   database table.
 ------------------------------------------------------------------------------------------%>
-<%@ CodeTemplate Debug="True" Language="C#" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" TargetLanguage="T-SQL"
+<%@ CodeTemplate Debug="True" Language="C#" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" TargetLanguage="T-SQL" CompilerVersion="v3.5"
 	Description="Generates standard CRUD procedures based on a database table schema." %>
 <%-- Context --%>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="1. Context"
@@ -63,6 +63,7 @@
 <%@ Import Namespace="CodeSmith.BaseTemplates" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="System.Collections.Generic" %>
 <%
 this.Progress.MaximumValue = 13;
 this.Progress.Step = 1;
@@ -97,35 +98,36 @@ if (IncludeDropStatements)
 	
 	if (IncludeSelectByForeignKey)
 	{
-		for (int i = 0; i < SourceTable.ForeignKeys.Count; i++)
+        foreach(TableKeySchema foreignKey in SourceTable.ForeignKeys)
 		{
-			GenerateDropStatement(GetSelectByProcedureName(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns));
+			GenerateDropStatement(GetSelectByProcedureName(foreignKey.ForeignKeyMemberColumns));
 		}
 	}
 	
 	if (IncludeSelectByIndex)
 	{
-		for (int i = 0; i < SourceTable.Indexes.Count; i++)
+		foreach(IndexSchema index in SourceTable.Indexes)
 		{
-			GenerateDropStatement(GetSelectByProcedureName(SourceTable.Indexes[i].MemberColumns));
+			GenerateDropStatement(GetSelectByProcedureName(index.MemberColumns));
 		}
 	}
 	
 	if (IncludeDeleteByForeignKey)
 	{
-		for (int i = 0; i < SourceTable.ForeignKeys.Count; i++)
+		foreach(TableKeySchema foreignKey in SourceTable.ForeignKeys)
 		{
-			GenerateDropStatement(GetDeleteByProcedureName(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns));
+			GenerateDropStatement(GetDeleteByProcedureName(foreignKey.ForeignKeyMemberColumns));
 		}
 	}
 	
 	if (IncludeDeleteByIndex)
 	{
-		for (int i = 0; i < SourceTable.Indexes.Count; i++)
+		foreach(IndexSchema index in SourceTable.Indexes)
 		{
-			GenerateDropStatement(GetDeleteByProcedureName(SourceTable.Indexes[i].MemberColumns));
+			GenerateDropStatement(GetDeleteByProcedureName(index.MemberColumns));
 		}
 	}
+
 	
 	Response.WriteLine("--endregion");
 	Response.WriteLine("");
@@ -313,9 +315,9 @@ WHERE
 <%
 if (IncludeDeleteByForeignKey)
 {
-	for (int i = 0; i < SourceTable.ForeignKeys.Count; i++)
+    foreach(TableKeySchema foreignKey in SourceTable.ForeignKeys)
 	{
-		string procedureName = GetDeleteByProcedureName(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns);
+		string procedureName = GetDeleteByProcedureName(foreignKey.ForeignKeyMemberColumns);
 		if (!_generatedProcedureNames.Contains(procedureName))
 		{
 			_generatedProcedureNames.Add(procedureName);
@@ -323,14 +325,14 @@ if (IncludeDeleteByForeignKey)
 %>
 
 CREATE PROCEDURE <%= procedureName %>
-<% GenerateParameters(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns, 1); %>
+<% GenerateParameters(foreignKey.ForeignKeyMemberColumns, 1); %>
 AS
 
 SET NOCOUNT ON
 
 DELETE FROM <%= GetTableOwner() %>[<%= SourceTable.Name %>]
 WHERE
-	<% GenerateConditions(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns, 1); %>
+	<% GenerateConditions(foreignKey.ForeignKeyMemberColumns, 1); %>
 
 GO
 
@@ -349,9 +351,9 @@ GO
 <%
 if (IncludeDeleteByIndex)
 {
-	for (int i = 0; i < SourceTable.Indexes.Count; i++)
+    foreach( IndexSchema index in SourceTable.Indexes)
 	{
-		string procedureName = GetDeleteByProcedureName(SourceTable.Indexes[i].MemberColumns);
+		string procedureName = GetDeleteByProcedureName(index.MemberColumns);
 		if (!_generatedProcedureNames.Contains(procedureName))
 		{
 			_generatedProcedureNames.Add(procedureName);
@@ -359,14 +361,14 @@ if (IncludeDeleteByIndex)
 %>
 
 CREATE PROCEDURE <%= procedureName %>
-<% GenerateParameters(SourceTable.Indexes[i].MemberColumns, 1); %>
+<% GenerateParameters(index.MemberColumns, 1); %>
 AS
 
 SET NOCOUNT ON
 
 DELETE FROM <%= GetTableOwner() %>[<%= SourceTable.Name %>]
 WHERE
-	<% GenerateConditions(SourceTable.Indexes[i].MemberColumns, 1); %>
+	<% GenerateConditions(index.MemberColumns, 1); %>
 
 <%
 			GenerateProcedureFooter(procedureName);
@@ -448,9 +450,9 @@ WHERE
 <%
 if (IncludeSelectByForeignKey)
 {
-	for (int i = 0; i < SourceTable.ForeignKeys.Count; i++)
+	foreach(TableKeySchema foreignKey in SourceTable.ForeignKeys)
 	{
-		string procedureName = GetSelectByProcedureName(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns);
+		string procedureName = GetSelectByProcedureName(foreignKey.ForeignKeyMemberColumns);
 		if (!_generatedProcedureNames.Contains(procedureName))
 		{
 			_generatedProcedureNames.Add(procedureName);
@@ -458,7 +460,7 @@ if (IncludeSelectByForeignKey)
 %>
 
 CREATE PROCEDURE <%= procedureName %>
-<% GenerateParameters(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns, 1); %>
+<% GenerateParameters(foreignKey.ForeignKeyMemberColumns, 1); %>
 AS
 
 SET NOCOUNT ON
@@ -469,7 +471,7 @@ SELECT
 FROM
 	<%= GetTableOwner() %>[<%= SourceTable.Name %>]
 WHERE
-	<% GenerateConditions(SourceTable.ForeignKeys[i].ForeignKeyMemberColumns, 1); %>
+	<% GenerateConditions(foreignKey.ForeignKeyMemberColumns, 1); %>
 <% GenerateOrderByClause(); %>
 
 <%
@@ -487,9 +489,9 @@ WHERE
 <%
 if (IncludeSelectByIndex)
 {
-	for (int i = 0; i < SourceTable.Indexes.Count; i++)
+	foreach(IndexSchema index in SourceTable.Indexes)
 	{
-		string procedureName = GetSelectByProcedureName(SourceTable.Indexes[i].MemberColumns);
+		string procedureName = GetSelectByProcedureName(index.MemberColumns);
 		if (!_generatedProcedureNames.Contains(procedureName))
 		{
 			_generatedProcedureNames.Add(procedureName);
@@ -497,7 +499,7 @@ if (IncludeSelectByIndex)
 %>
 
 CREATE PROCEDURE <%= procedureName %>
-<% GenerateParameters(SourceTable.Indexes[i].MemberColumns, 1); %>
+<% GenerateParameters(index.MemberColumns, 1); %>
 AS
 
 SET NOCOUNT ON
@@ -508,7 +510,7 @@ SELECT
 FROM
 	<%= GetTableOwner() %>[<%= SourceTable.Name %>]
 WHERE
-	<% GenerateConditions(SourceTable.Indexes[i].MemberColumns, 1); %>
+	<% GenerateConditions(index.MemberColumns, 1); %>
 <% GenerateOrderByClause(); %>
 
 <%
@@ -758,17 +760,21 @@ public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst
 	}
 }
 
-public void GenerateParameters(ColumnSchemaCollection columns, int indentLevel)
+public void GenerateParameters(IList<MemberColumnSchema> columns, int indentLevel)
+{
+    GenerateParameters(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel, false);
+}
+
+public void GenerateParameters(IList<ColumnSchema> columns, int indentLevel)
 {
 	GenerateParameters(columns, indentLevel, false);
 }
 
-public void GenerateParameters(ColumnSchemaCollection columns, int indentLevel, bool includeTrailingComma)
+public void GenerateParameters(IList<ColumnSchema> columns, int indentLevel, bool includeTrailingComma)
 {
-	ColumnSchemaCollection filteredColumns = FilterExcludedColumns(columns);
-	for (int i = 0; i < filteredColumns.Count; i++)
+	foreach(var column in FilterExcludedColumns(columns).AsIndexedEnumerable())
 	{
-		GenerateParameter(filteredColumns[i], indentLevel, i == 0, i == filteredColumns.Count - 1 && !includeTrailingComma);
+		GenerateParameter(column.Value, indentLevel, column.IsFirst, column.IsLast && !includeTrailingComma);
 	}
 }
 
@@ -789,12 +795,16 @@ public void GenerateColumn(ColumnSchema column, int indentLevel, bool isFirst, b
 	}
 }
 
-public void GenerateColumns(ColumnSchemaCollection columns, int indentLevel)
+public void GenerateColumns(IList<MemberColumnSchema> columns, int indentLevel)
 {
-	ColumnSchemaCollection filteredColumns = FilterExcludedColumns(columns);
-	for (int i = 0; i < filteredColumns.Count; i++)
+    GenerateColumns(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel);
+}
+
+public void GenerateColumns(IList<ColumnSchema> columns, int indentLevel)
+{
+    foreach(var column in FilterExcludedColumns(columns).AsIndexedEnumerable())
 	{
-		GenerateColumn(filteredColumns[i], indentLevel, i == 0, i == filteredColumns.Count - 1);
+		GenerateColumn(column.Value, indentLevel, column.IsFirst, column.IsLast);
 	}
 }
 
@@ -816,12 +826,11 @@ public void GenerateUpdate(ColumnSchema column, int indentLevel, bool isFirst, b
 	}
 }
 
-public void GenerateUpdates(ColumnSchemaCollection columns, int indentLevel)
+public void GenerateUpdates(IList<ColumnSchema> columns, int indentLevel)
 {
-	ColumnSchemaCollection filteredColumns = FilterReadOnlyAndExcludedColumns(columns);
-	for (int i = 0; i < filteredColumns.Count; i++)
+    foreach(var column in FilterExcludedColumns(columns).AsIndexedEnumerable())
 	{
-		GenerateUpdate(filteredColumns[i], indentLevel, i == 0, i == filteredColumns.Count - 1);
+		GenerateUpdate(column.Value, indentLevel, column.IsFirst, column.IsLast);
 	}
 }
 
@@ -843,12 +852,16 @@ public void GenerateCondition(ColumnSchema column, int indentLevel, bool isFirst
 	}
 }
 
-public void GenerateConditions(ColumnSchemaCollection columns, int indentLevel)
+public void GenerateConditions(IList<MemberColumnSchema> columns, int indentLevel)
 {
-	ColumnSchemaCollection filteredColumns = FilterExcludedColumns(columns);
-	for (int i = 0; i < filteredColumns.Count; i++)
+    GenerateConditions(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel);
+}
+
+public void GenerateConditions(IList<ColumnSchema> columns, int indentLevel)
+{
+    foreach(var column in FilterExcludedColumns(columns).AsIndexedEnumerable())
 	{
-		GenerateCondition(filteredColumns[i], indentLevel, i == 0, i == filteredColumns.Count - 1);
+		GenerateCondition(column.Value, indentLevel, column.IsFirst, column.IsLast);
 	}
 }
 
@@ -868,12 +881,19 @@ public void GenerateVariable(ColumnSchema column, int indentLevel, bool isFirst,
 	}
 }
 
-public void GenerateVariables(ColumnSchemaCollection columns, int indentLevel)
+public void GenerateVariables(List<ColumnSchema> columns, int indentLevel)
 {
-	ColumnSchemaCollection filteredColumns = FilterExcludedColumns(columns);
-	for (int i = 0; i < filteredColumns.Count; i++)
+	foreach(var column in FilterExcludedColumns(columns).AsIndexedEnumerable())
 	{
-		GenerateVariable(filteredColumns[i], indentLevel, i == 0, i == filteredColumns.Count - 1);
+		GenerateVariable(column.Value, indentLevel, column.IsFirst, column.IsLast);
+	}
+}
+
+public void GenerateVariables(IList<ColumnSchema> columns, int indentLevel)
+{
+	foreach(var column in FilterExcludedColumns(columns).AsIndexedEnumerable())
+	{
+		GenerateVariable(column.Value, indentLevel, column.IsFirst, column.IsLast);
 	}
 }
 
@@ -887,40 +907,19 @@ public void GenerateOrderByClause()
 	}
 }
 
-public ColumnSchemaCollection FilterReadOnlyColumns(ColumnSchemaCollection columns)
+public IList<MemberColumnSchema> FilterReadOnlyColumns(IList<MemberColumnSchema> columns)
 {
-	ColumnSchemaCollection filteredColumns = new ColumnSchemaCollection();
-	
-	for (int i = 0; i < columns.Count; i++)
-	{
-		if (!ColumnIsReadOnly(columns[i])) filteredColumns.Add(columns[i]);
-	}
-	
-	return filteredColumns;
+    return columns.Where(c => !ColumnIsReadOnly(c)).ToList();
 }
 
-public ColumnSchemaCollection FilterExcludedColumns(ColumnSchemaCollection columns)
+public List<ColumnSchema> FilterExcludedColumns(IList<ColumnSchema> columns)
 {
-	ColumnSchemaCollection filteredColumns = new ColumnSchemaCollection();
-	
-	for (int i = 0; i < columns.Count; i++)
-	{
-		if (!ColumnIsExcluded(columns[i])) filteredColumns.Add(columns[i]);
-	}
-	
-	return filteredColumns;
+	return columns.Where(c => !ColumnIsExcluded(c)).ToList();
 }
 
-public ColumnSchemaCollection FilterReadOnlyAndExcludedColumns(ColumnSchemaCollection columns)
+public List<ColumnSchema> FilterReadOnlyAndExcludedColumns(IList<ColumnSchema> columns)
 {
-	ColumnSchemaCollection filteredColumns = new ColumnSchemaCollection();
-	
-	for (int i = 0; i < columns.Count; i++)
-	{
-		if (!ColumnIsExcludedOrReadOnly(columns[i])) filteredColumns.Add(columns[i]);
-	}
-	
-	return filteredColumns;
+    return columns.Where(c => !ColumnIsExcludedOrReadOnly(c)).ToList();
 }
 
 private Regex excludedColumnRegex = null;
@@ -1029,7 +1028,12 @@ public string GetSelectPagedProcedureName()
 	return String.Format("{0}[{1}Select{2}Paged]", GetTableOwner(), ProcedurePrefix, GetEntityName(true));
 }
 
-public string GetSelectByProcedureName(ColumnSchemaCollection targetColumns)
+public string GetSelectByProcedureName(IList<MemberColumnSchema> targetColumns)
+{
+    return GetSelectByProcedureName(ConvertMemberColumnSchemaToColumnSchema(targetColumns));
+}
+
+public string GetSelectByProcedureName(IList<ColumnSchema> targetColumns)
 {
 	return String.Format("{0}[{1}Select{2}By{3}]", GetTableOwner(), ProcedurePrefix, GetEntityName(true), GetBySuffix(targetColumns));
 }
@@ -1039,7 +1043,20 @@ public string GetSelectDynamicProcedureName()
 	return String.Format("{0}[{1}Select{2}Dynamic]", GetTableOwner(), ProcedurePrefix, GetEntityName(true));
 }
 
-public string GetDeleteByProcedureName(ColumnSchemaCollection targetColumns)
+
+public string GetDeleteByProcedureName(IList<MemberColumnSchema> targetColumns)
+{
+    return GetDeleteByProcedureName(ConvertMemberColumnSchemaToColumnSchema(targetColumns));
+}
+
+private IList<ColumnSchema> ConvertMemberColumnSchemaToColumnSchema(IList<MemberColumnSchema> memberColumns)
+{
+    var columns = new List<ColumnSchema>();
+    columns.AddRange(memberColumns.Cast<ColumnSchema>());
+    return columns;
+}
+
+public string GetDeleteByProcedureName(IList<ColumnSchema> targetColumns)
 {
 	return String.Format("{0}[{1}Delete{2}By{3}]", GetTableOwner(), ProcedurePrefix, GetEntityName(true), GetBySuffix(targetColumns));
 }
@@ -1070,13 +1087,13 @@ public string GetEntityName(bool plural)
 	return entityName;
 }
 
-public string GetBySuffix(ColumnSchemaCollection columns)
+public string GetBySuffix(IList<ColumnSchema> columns)
 {
     System.Text.StringBuilder bySuffix = new System.Text.StringBuilder();
-	for (int i = 0; i < columns.Count; i++)
+    foreach(var column in columns.AsIndexedEnumerable())
 	{
-	    if (i > 0) bySuffix.Append("And");
-	    bySuffix.Append(columns[i].Name);
+	    if (column.IsFirst) bySuffix.Append("And");
+	    bySuffix.Append(column.Value.Name);
 	}
 	
 	return bySuffix.ToString();
