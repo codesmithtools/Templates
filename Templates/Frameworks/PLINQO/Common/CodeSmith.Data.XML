@@ -1675,27 +1675,27 @@
             <summary>
             Adds the specified rule.
             </summary>
-            <typeparam name="EntityType">The type of the entity.</typeparam>
-            <param name="rule">The rule.</param>
+            <typeparam name="TEntity">The type of the entity.</typeparam>
+            <param name="rule">The rule to add.</param>
         </member>
         <member name="M:CodeSmith.Data.Rules.RuleManager.AddShared``1(CodeSmith.Data.Rules.IRule)">
             <summary>
             Adds the shared global rules.
             </summary>
-            <typeparam name="EntityType">The type of the entity.</typeparam>
-            <param name="rule">The rule.</param>
+            <typeparam name="TEntity">The type of the entity.</typeparam>
+            <param name="rule">The rule to add.</param>
         </member>
         <member name="M:CodeSmith.Data.Rules.RuleManager.AddShared``1">
             <summary>
             Adds rules to the rule manager from any property attributes on the specified type. 
             </summary>
-            <typeparam name="EntityType">The type of the entity.</typeparam>
+            <typeparam name="TEntity">The type of the entity.</typeparam>
         </member>
         <member name="M:CodeSmith.Data.Rules.RuleManager.GetRules``1">
             <summary>
             Gets the rules for a type.
             </summary>
-            <typeparam name="EntityType">The type of the entity.</typeparam>
+            <typeparam name="TEntity">The type of the entity.</typeparam>
             <returns>A collection of rules.</returns>
         </member>
         <member name="M:CodeSmith.Data.Rules.RuleManager.GetRules(System.Type)">
@@ -1705,25 +1705,25 @@
             <param name="type">The type of the entity.</param>
             <returns>A collection of rules.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Rules.RuleManager.Run(System.Collections.Generic.List{CodeSmith.Data.TrackedObject})">
+        <member name="M:CodeSmith.Data.Rules.RuleManager.Run(System.Collections.Generic.IEnumerable{CodeSmith.Data.TrackedObject})">
             <summary>
-            Run the rules specified objects.
+            Run the rules for the specified <see cref="T:CodeSmith.Data.TrackedObject"/> list.
             </summary>
-            <param name="objects">The objects to run rules on.</param>
+            <param name="objects">The <see cref="T:CodeSmith.Data.TrackedObject"/> to run rules on.</param>
             <returns><c>true</c> if rules ran successfully; otherwise, <c>false</c>.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Rules.RuleManager.Run(System.Object[])">
+        <member name="M:CodeSmith.Data.Rules.RuleManager.Run(CodeSmith.Data.TrackedObject)">
             <summary>
-            Run the rules specified objects.
+            Run the rules for the specified <see cref="T:CodeSmith.Data.TrackedObject"/>.
             </summary>
-            <param name="objects">The objects to run rules on.</param>
+            <param name="trackedObject">The <see cref="T:CodeSmith.Data.TrackedObject"/> to run rules on.</param>
             <returns><c>true</c> if rules ran successfully; otherwise, <c>false</c>.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Rules.RuleManager.Run(System.Data.Linq.ChangeSet)">
+        <member name="M:CodeSmith.Data.Rules.RuleManager.Run(System.Data.Linq.DataContext)">
             <summary>
-            Run the rules specified changed objects.
+            Run the rules for the the changed objects in the <see cref="T:System.Data.Linq.DataContext"/>.
             </summary>
-            <param name="changedObjects">The changed objects.</param>
+            <param name="dataContext">The <see cref="T:System.Data.Linq.DataContext"/> to get the <see cref="T:System.Data.Linq.ChangeSet"/> from and run rules against.</param>
             <returns><c>true</c> if rules ran successfully; otherwise, <c>false</c>.</returns>
         </member>
         <member name="P:CodeSmith.Data.Rules.RuleManager.BrokenRules">
