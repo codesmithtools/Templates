@@ -492,8 +492,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <param name="failureMode">How concurrency conflicts should be reported.</param>
         public override void SubmitChanges(System.Data.Linq.ConflictMode failureMode)
         {
-            var changes = base.GetChangeSet();
-            bool isValid = RuleManager.Run(changes);
+            bool isValid = RuleManager.Run(this);
 
             if (!isValid)
                 throw new CodeSmith.Data.Rules.BrokenRuleException(RuleManager.BrokenRules);
