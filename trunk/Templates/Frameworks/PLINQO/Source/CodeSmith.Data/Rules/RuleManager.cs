@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -34,45 +36,46 @@ namespace CodeSmith.Data.Rules
         /// <summary>
         /// Adds the specified rule.
         /// </summary>
-        /// <typeparam name="EntityType">The type of the entity.</typeparam>
-        /// <param name="rule">The rule.</param>
-        public void Add<EntityType>(IRule rule)
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="rule">The rule to add.</param>
+        public void Add<TEntity>(IRule rule)
         {
             if (_businessRules == null)
                 _businessRules = new RuleCollection();
 
-            if (_businessRules.ContainsKey(typeof (EntityType)))
-                _businessRules[typeof (EntityType)].Add(rule);
+            if (_businessRules.ContainsKey(typeof(TEntity)))
+                _businessRules[typeof(TEntity)].Add(rule);
             else
-                _businessRules.Add(typeof (EntityType), new List<IRule> {rule});
+                _businessRules.Add(typeof(TEntity), new List<IRule> { rule });
         }
 
         /// <summary>
         /// Adds the shared global rules.
         /// </summary>
-        /// <typeparam name="EntityType">The type of the entity.</typeparam>
-        /// <param name="rule">The rule.</param>
-        public static void AddShared<EntityType>(IRule rule)
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="rule">The rule to add.</param>
+        public static void AddShared<TEntity>(IRule rule)
         {
             if (_sharedBusinessRules == null)
                 _sharedBusinessRules = new RuleCollection();
 
-            if (_sharedBusinessRules.ContainsKey(typeof (EntityType)))
-                _sharedBusinessRules[typeof (EntityType)].Add(rule);
+            if (_sharedBusinessRules.ContainsKey(typeof(TEntity)))
+                _sharedBusinessRules[typeof(TEntity)].Add(rule);
             else
-                _sharedBusinessRules.Add(typeof (EntityType), new List<IRule> {rule});
+                _sharedBusinessRules.Add(typeof(TEntity), new List<IRule> { rule });
         }
 
         /// <summary>
         /// Adds rules to the rule manager from any property attributes on the specified type. 
         /// </summary>
-        /// <typeparam name="EntityType">The type of the entity.</typeparam>
-        public static void AddShared<EntityType>()
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        public static void AddShared<TEntity>()
         {
-            Type entityType = typeof (EntityType);
+            Type entityType = typeof(TEntity);
             Type metadata = null;
 
-            var metadataTypeAttribute = entityType.GetCustomAttributes(typeof (MetadataTypeAttribute), true).FirstOrDefault() as MetadataTypeAttribute;
+            var metadataTypeAttribute =
+                entityType.GetCustomAttributes(typeof(MetadataTypeAttribute), true).FirstOrDefault() as MetadataTypeAttribute;
             if (metadataTypeAttribute != null)
                 metadata = metadataTypeAttribute.MetadataClassType;
 
@@ -88,56 +91,57 @@ namespace CodeSmith.Data.Rules
                 foreach (Attribute attribute in attributes)
                     if (attribute is RuleAttributeBase)
                     {
-                        var ruleAttribute = (RuleAttributeBase) attribute;
-                        AddShared<EntityType>(ruleAttribute.CreateRule(property.Name));
+                        var ruleAttribute = (RuleAttributeBase)attribute;
+                        AddShared<TEntity>(ruleAttribute.CreateRule(property.Name));
                     }
                     else if (attribute is ValidationAttribute)
-                        AddValidation<EntityType>(property.Name, attribute);
+                        AddValidation<TEntity>(property.Name, attribute);
             }
         }
 
-        private static void AddValidation<EntityType>(string property, Attribute attribute)
+        private static void AddValidation<TEntity>(string property, Attribute attribute)
         {
             if (attribute is StringLengthAttribute)
             {
-                var validationAttribute = (StringLengthAttribute) attribute;
+                var validationAttribute = (StringLengthAttribute)attribute;
                 if (string.IsNullOrEmpty(validationAttribute.ErrorMessage))
-                    AddShared<EntityType>(new LengthRule(property, validationAttribute.MaximumLength));
+                    AddShared<TEntity>(new LengthRule(property, validationAttribute.MaximumLength));
                 else
-                    AddShared<EntityType>(new LengthRule(property, validationAttribute.ErrorMessage, validationAttribute.MaximumLength));
+                    AddShared<TEntity>(new LengthRule(property, validationAttribute.ErrorMessage,
+                                                      validationAttribute.MaximumLength));
             }
             else if (attribute is RequiredAttribute)
             {
-                var validationAttribute = (RequiredAttribute) attribute;
+                var validationAttribute = (RequiredAttribute)attribute;
                 if (string.IsNullOrEmpty(validationAttribute.ErrorMessage))
-                    AddShared<EntityType>(new RequiredRule(property));
+                    AddShared<TEntity>(new RequiredRule(property));
                 else
-                    AddShared<EntityType>(new RequiredRule(property, validationAttribute.ErrorMessage));
+                    AddShared<TEntity>(new RequiredRule(property, validationAttribute.ErrorMessage));
             }
             else if (attribute is RegularExpressionAttribute)
             {
-                var validationAttribute = (RegularExpressionAttribute) attribute;
+                var validationAttribute = (RegularExpressionAttribute)attribute;
                 if (string.IsNullOrEmpty(validationAttribute.ErrorMessage))
-                    AddShared<EntityType>(new RegexRule(property, validationAttribute.Pattern));
+                    AddShared<TEntity>(new RegexRule(property, validationAttribute.Pattern));
                 else
-                    AddShared<EntityType>(new RegexRule(property, validationAttribute.ErrorMessage, validationAttribute.Pattern));
+                    AddShared<TEntity>(new RegexRule(property, validationAttribute.ErrorMessage,
+                                                     validationAttribute.Pattern));
             }
             else if (attribute is RangeAttribute)
             {
-                var validationAttribute = (RangeAttribute) attribute;
+                var validationAttribute = (RangeAttribute)attribute;
                 if (string.IsNullOrEmpty(validationAttribute.ErrorMessage))
                 {
-                    var rangeRule = Activator.CreateInstance(typeof (RangeRule<>).MakeGenericType(validationAttribute.OperandType),
-                                                             property, validationAttribute.Minimum, validationAttribute.Maximum) as PropertyRuleBase;
-                    AddShared<EntityType>(rangeRule);
+                    var rangeRule = Activator.CreateInstance(typeof(RangeRule<>).MakeGenericType(validationAttribute.OperandType),
+                                                 property, validationAttribute.Minimum, validationAttribute.Maximum) as PropertyRuleBase;
+                    AddShared<TEntity>(rangeRule);
                 }
 
                 else
                 {
-                    var rangeRule = Activator.CreateInstance(typeof (RangeRule<>).MakeGenericType(validationAttribute.OperandType),
-                                                             property, validationAttribute.ErrorMessage,
-                                                             validationAttribute.Minimum, validationAttribute.Maximum) as PropertyRuleBase;
-                    AddShared<EntityType>(rangeRule);
+                    var rangeRule = Activator.CreateInstance(typeof(RangeRule<>).MakeGenericType(validationAttribute.OperandType),
+                                                 property, validationAttribute.ErrorMessage, validationAttribute.Minimum, validationAttribute.Maximum) as PropertyRuleBase;
+                    AddShared<TEntity>(rangeRule);
                 }
             }
         }
@@ -169,11 +173,11 @@ namespace CodeSmith.Data.Rules
         /// <summary>
         /// Gets the rules for a type.
         /// </summary>
-        /// <typeparam name="EntityType">The type of the entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <returns>A collection of rules.</returns>
-        public List<IRule> GetRules<EntityType>()
+        public List<IRule> GetRules<TEntity>()
         {
-            return GetRules(typeof (EntityType));
+            return GetRules(typeof(TEntity));
         }
 
         /// <summary>
@@ -193,75 +197,90 @@ namespace CodeSmith.Data.Rules
             return rules;
         }
 
+
         /// <summary>
-        /// Run the rules specified objects.
+        /// Run the rules for the specified <see cref="TrackedObject"/> list.
         /// </summary>
-        /// <param name="objects">The objects to run rules on.</param>
+        /// <param name="objects">The <see cref="TrackedObject"/> to run rules on.</param>
         /// <returns><c>true</c> if rules ran successfully; otherwise, <c>false</c>.</returns>
-        public bool Run(List<TrackedObject> objects)
+        public bool Run(IEnumerable<TrackedObject> objects)
         {
             BrokenRules.Clear();
             bool isSuccess = true;
 
             foreach (TrackedObject o in objects)
-            {
-                List<IRule> rules = GetRules(o.Current.GetType());
-                rules.Sort(
-                    delegate(IRule x, IRule y)
-                    {
-                        if (x == null && y == null)
-                            return 0;
-                        else if (x == null)
-                            return -1;
-                        else if (y == null)
-                            return 1;
-                        else
-                            return x.Priority.CompareTo(y.Priority);
-                    }
-                    );
+                isSuccess &= Run(o);
 
-                foreach (IRule rule in rules)
+            return isSuccess;
+        }
+
+        /// <summary>
+        /// Run the rules for the specified <see cref="TrackedObject"/>.
+        /// </summary>
+        /// <param name="trackedObject">The <see cref="TrackedObject"/> to run rules on.</param>
+        /// <returns><c>true</c> if rules ran successfully; otherwise, <c>false</c>.</returns>
+        public bool Run(TrackedObject trackedObject)
+        {
+            bool isSuccess = true;
+
+            List<IRule> rules = GetRules(trackedObject.Current.GetType());
+            rules.Sort(
+                delegate(IRule x, IRule y)
                 {
-                    var context = new RuleContext(o, rule);
-                    rule.Run(context);
-                    isSuccess &= context.Success;
-                    if (!context.Success)
-                        BrokenRules.Add(new BrokenRule(context));
-                }
+                    if (x == null && y == null)
+                        return 0;
+
+                    if (x == null)
+                        return -1;
+
+                    if (y == null)
+                        return 1;
+
+                    return x.Priority.CompareTo(y.Priority);
+                });
+
+            foreach (IRule rule in rules)
+            {
+                var context = new RuleContext(trackedObject, rule);
+                rule.Run(context);
+                isSuccess &= context.Success;
+                if (!context.Success)
+                    BrokenRules.Add(new BrokenRule(context));
             }
 
             return isSuccess;
         }
 
         /// <summary>
-        /// Run the rules specified objects.
+        /// Run the rules for the the changed objects in the <see cref="DataContext"/>.
         /// </summary>
-        /// <param name="objects">The objects to run rules on.</param>
+        /// <param name="dataContext">The <see cref="DataContext"/> to get the <see cref="ChangeSet"/> from and run rules against.</param>
         /// <returns><c>true</c> if rules ran successfully; otherwise, <c>false</c>.</returns>
-        public bool Run(params object[] objects)
+        public bool Run(DataContext dataContext)
         {
-            var tracked = new List<TrackedObject>();
-            foreach (object o in objects)
-                tracked.Add(new TrackedObject {Current = o});
+            ChangeSet changeSet = dataContext.GetChangeSet();
 
-            return Run(tracked);
-        }
-
-        /// <summary>
-        /// Run the rules specified changed objects.
-        /// </summary>
-        /// <param name="changedObjects">The changed objects.</param>
-        /// <returns><c>true</c> if rules ran successfully; otherwise, <c>false</c>.</returns>
-        public bool Run(ChangeSet changedObjects)
-        {
             var tracked = new List<TrackedObject>();
 
-            foreach (object o in changedObjects.Inserts)
-                tracked.Add(new TrackedObject {Current = o, IsNew = true});
-            foreach (object o in changedObjects.Updates)
-                tracked.Add(new TrackedObject {Current = o, IsChanged = true});
-            foreach (object o in changedObjects.Deletes)
-                tracked.Add(new TrackedObject {Current = o, IsDeleted = true});
+            foreach (object o in changeSet.Inserts)
+                tracked.Add(new TrackedObject { Current = o, IsNew = true });
+
+            foreach (object o in changeSet.Deletes)
+                tracked.Add(new TrackedObject { Current = o, IsDeleted = true });
+
+            foreach (object o in changeSet.Updates)
+            {
+                var trackedObject = new TrackedObject { Current = o, IsChanged = true };
+
+                if (o != null)
+                {
+                    ITable table = dataContext.GetTable(o.GetType());
+                    trackedObject.Original = table.GetOriginalEntityState(o);
+                }
+
+                tracked.Add(trackedObject);
+            }
+
 
             return Run(tracked);
         }

@@ -467,8 +467,7 @@ Next
         ''' </summary>
         ''' <param name="failureMode">How concurrency conflicts should be reported.</param>
         Public Overloads Overrides Sub SubmitChanges(ByVal failureMode As System.Data.Linq.ConflictMode)
-            Dim changes = MyBase.GetChangeSet()
-            Dim isValid As Boolean = RuleManager.Run(changes)
+            Dim isValid As Boolean = RuleManager.Run(Me)
             
             If Not isValid Then
                 Throw New CodeSmith.Data.Rules.BrokenRuleException(RuleManager.BrokenRules)
