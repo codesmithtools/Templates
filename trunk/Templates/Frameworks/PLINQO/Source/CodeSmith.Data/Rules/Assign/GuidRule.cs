@@ -58,9 +58,6 @@ namespace CodeSmith.Data.Rules.Assign
         {
             context.Message = ErrorMessage;
             context.Success = true;
-
-            if (!GetPropertyInfo(context.TrackedObject.Current).PropertyType.IsAssignableFrom(typeof(Guid)))
-                return;
             
             // Only set if CanRun and if the value has not been manually changed.
             if (CanRun(context.TrackedObject) && !IsPropertyValueModified(context.TrackedObject.Original, context.TrackedObject.Current))

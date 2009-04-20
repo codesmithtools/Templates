@@ -163,16 +163,7 @@ Namespace <%= ClassNamespace %>
         #End Region
 
         #Region "ToString"
-        ''' <summary>
-        ''' Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-        ''' </summary>
-        ''' <returns>
-        ''' A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-        ''' </returns>
-        Public Overloads Overrides Function ToString() As String
-            Return Me.ToString(0, "  ")
-        End Function
-
+        
         ''' <summary>
         ''' Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
         ''' </summary>
@@ -181,7 +172,7 @@ Namespace <%= ClassNamespace %>
         ''' <returns>
         ''' A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
         ''' </returns>
-        Public Overloads Function ToString(ByVal indentLevel As Integer, ByVal indentValue As String) As String
+        Public Overloads Function ToEntityString(ByVal indentLevel As Integer, ByVal indentValue As String) As String
             Dim props As System.Reflection.PropertyInfo() = Me.GetType().GetProperties(System.Reflection.BindingFlags.Instance Or System.Reflection.BindingFlags.Public)
             Dim sb = New System.Text.StringBuilder()
             Dim value As Object = Nothing

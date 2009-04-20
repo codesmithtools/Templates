@@ -9,6 +9,6 @@ namespace CodeSmith.Data
     {
         void Detach();
         bool IsAttached();
-        string ToString(int indentLevel, string indentValue);
+        string ToEntityString(int indentLevel, string indentValue);
     }
 }

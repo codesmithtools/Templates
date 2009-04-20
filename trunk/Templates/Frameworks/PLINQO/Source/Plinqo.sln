@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickStartUtils", "QuickSta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickStart.Tests", "QuickStart.Tests\QuickStart.Tests.csproj", "{8DB89DF3-612D-469E-A703-2982304C5C82}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.Data.Tests", "CodeSmith.Data.Tests\CodeSmith.Data.Tests.csproj", "{C17BEF10-A42D-4746-8F82-28B9F4574A66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,9 @@ Global
 		{8DB89DF3-612D-469E-A703-2982304C5C82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8DB89DF3-612D-469E-A703-2982304C5C82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DB89DF3-612D-469E-A703-2982304C5C82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C17BEF10-A42D-4746-8F82-28B9F4574A66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C17BEF10-A42D-4746-8F82-28B9F4574A66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C17BEF10-A42D-4746-8F82-28B9F4574A66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

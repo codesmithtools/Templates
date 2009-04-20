@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Security.Principal;
 using System.Threading;
 using System.Web;
@@ -67,9 +68,6 @@ namespace CodeSmith.Data.Rules.Assign
             context.Message = ErrorMessage;
             context.Success = true;
 
-            if (GetPropertyInfo(context.TrackedObject.Current).PropertyType != typeof(string))
-                return;
-
             // Only set if CanRun and if the value has not been manually changed.
             if (CanRun(context.TrackedObject) && !IsPropertyValueModified(context.TrackedObject.Original, context.TrackedObject.Current))
                 SetPropertyValue(context.TrackedObject.Current, GetCurrentUserName());
@@ -77,22 +75,19 @@ namespace CodeSmith.Data.Rules.Assign
 
         private static string GetCurrentUserName()
         {
-            IPrincipal currentUser = null;
-
+            
             if (HostingEnvironment.IsHosted)
             {
+                IPrincipal currentUser = null;
                 HttpContext current = HttpContext.Current;
                 if (current != null)
                     currentUser = current.User;
+
+                if ((currentUser != null) && (currentUser.Identity != null))
+                    return currentUser.Identity.Name;
             }
 
-            if (currentUser == null)
-                currentUser = Thread.CurrentPrincipal;
-
-            if ((currentUser != null) && (currentUser.Identity != null))
-                return currentUser.Identity.Name;
-
-            return string.Empty;
+            return Environment.UserName;
         }
     }
 }
