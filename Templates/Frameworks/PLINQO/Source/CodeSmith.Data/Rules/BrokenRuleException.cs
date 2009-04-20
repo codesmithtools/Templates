@@ -98,7 +98,7 @@ namespace CodeSmith.Data.Rules
                 if (entity.Key != null && entity.Key is ILinqEntity)
                 {
                     sb.AppendLine("  State:");
-                    sb.AppendLine(((ILinqEntity)entity.Key).ToString(2, "  "));
+                    sb.AppendLine(((ILinqEntity)entity.Key).ToEntityString(2, "  "));
                 }
             }
 

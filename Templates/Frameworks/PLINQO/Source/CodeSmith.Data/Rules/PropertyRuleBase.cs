@@ -14,7 +14,7 @@ namespace CodeSmith.Data.Rules
         /// <param name="property">The target property to apply rule to.</param>
         protected PropertyRuleBase(string property)
             : this(property, EntityState.Dirty)
-        {}
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyRuleBase"/> class.
@@ -23,7 +23,7 @@ namespace CodeSmith.Data.Rules
         /// <param name="message">The error message when rule fails.</param>
         protected PropertyRuleBase(string property, string message)
             : this(property, message, EntityState.Dirty)
-        {}
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyRuleBase"/> class.
@@ -111,6 +111,9 @@ namespace CodeSmith.Data.Rules
         /// <returns></returns>
         protected PropertyInfo GetPropertyInfo(object target)
         {
+            if (target == null)
+                return null;
+
             return target.GetType().GetProperty(TargetProperty);
         }
 
@@ -121,6 +124,9 @@ namespace CodeSmith.Data.Rules
         /// <returns>The property value.</returns>
         protected object GetPropertyValue(object target)
         {
+            if (target == null)
+                return null;
+
             PropertyInfo propertyInfo = GetPropertyInfo(target);
             if (propertyInfo == null)
                 return null;
@@ -137,7 +143,7 @@ namespace CodeSmith.Data.Rules
         protected T GetPropertyValue<T>(object target)
         {
             object value = GetPropertyValue(target);
-            return (value == null) ? default(T) : (T) value;
+            return (value == null) ? default(T) : (T)value;
         }
 
         /// <summary>
@@ -166,29 +172,44 @@ namespace CodeSmith.Data.Rules
                     propertyInfo.SetValue(target, value, null);
                 else
                     // types don't match, try to coerce
-                    if (pType.Equals(typeof (Guid)))
+                    if (pType.Equals(typeof(Guid)))
                         propertyInfo.SetValue(target, new Guid(value.ToString()), null);
-                    else if (pType.IsEnum && vType.Equals(typeof (string)))
+                    else if (pType.IsEnum && vType.Equals(typeof(string)))
                         propertyInfo.SetValue(target, Enum.Parse(pType, value.ToString()), null);
                     else
                         propertyInfo.SetValue(target, Convert.ChangeType(value, pType), null);
             }
         }
 
+        /// <summary>
+        /// Determines whether the property value is modified.
+        /// </summary>
+        /// <param name="original">The original entity.</param>
+        /// <param name="current">The current entity.</param>
+        /// <returns>
+        /// 	<c>true</c> if the property value is modified; otherwise, <c>false</c>.
+        /// </returns>
         protected bool IsPropertyValueModified(object original, object current)
         {
+            if (current == null)
+                return false;
+
             object currentValue = GetPropertyValue(current);
-            object originalValue;
 
-            originalValue = original != null ? GetPropertyValue(original) : Activator.CreateInstance(GetPropertyInfo(current).PropertyType);
+            if (original == null)
+            {
+                Type type = current.GetType();
+                original = Activator.CreateInstance(type);
+            }
 
-            return !currentValue.Equals(originalValue);
+            object originalValue = GetPropertyValue(original);
+            return !Equals(currentValue, originalValue);
         }
 
         private static Type GetUnderlyingType(Type propertyType)
         {
             Type type = propertyType;
-            bool isNullable = type.IsGenericType && (type.GetGenericTypeDefinition() == typeof (Nullable<>));
+            bool isNullable = type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(Nullable<>));
             if (isNullable)
                 return Nullable.GetUnderlyingType(type);
             return type;
