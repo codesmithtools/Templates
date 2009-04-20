@@ -1259,6 +1259,16 @@
             <param name="target">The target object.</param>
             <param name="value">The value to set.</param>
         </member>
+        <member name="M:CodeSmith.Data.Rules.PropertyRuleBase.IsPropertyValueModified(System.Object,System.Object)">
+            <summary>
+            Determines whether the property value is modified.
+            </summary>
+            <param name="original">The original entity.</param>
+            <param name="current">The current entity.</param>
+            <returns>
+            	<c>true</c> if the property value is modified; otherwise, <c>false</c>.
+            </returns>
+        </member>
         <member name="P:CodeSmith.Data.Rules.PropertyRuleBase.ApplyState">
             <summary>
             Gets the state of the entity in which to apply rule.
@@ -2344,6 +2354,11 @@
             A class representing a tracked object.
             </summary>
             <typeparam name="T">The type of the tracked object.</typeparam>
+        </member>
+        <member name="M:CodeSmith.Data.TrackedObject`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.TrackedObject`1"/> class.
+            </summary>
         </member>
         <member name="P:CodeSmith.Data.TrackedObject`1.Current">
             <summary>
