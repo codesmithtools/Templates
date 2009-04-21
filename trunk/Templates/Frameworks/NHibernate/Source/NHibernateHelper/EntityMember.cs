@@ -13,7 +13,7 @@ namespace NHibernateHelper
         {
             GenericName = GetGenericName(column);
             SystemType = GetSystemTypeName(column);
-            IsRowVersion = NHibernateHelper.VersionRegex.IsMatch(column.Name);
+            IsRowVersion = (!column.IsPrimaryKeyMember && NHibernateHelper.VersionRegex.IsMatch(column.Name));
         }
 
         private static string GetGenericName(ColumnSchema column)
