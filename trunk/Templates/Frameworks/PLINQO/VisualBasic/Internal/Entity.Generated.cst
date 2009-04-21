@@ -1,5 +1,5 @@
 ﻿<%@ CodeTemplate Language="VB" TargetLanguage="VB" Debug="True" Encoding="UTF-8"
-    Description="Linq to Sql Entity Class." %>
+    Description="Linq to Sql Entity Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="Dbml" Path="..\..\Common"%>
 <%@ Assembly Name="Generator" Path="..\..\Common"%>
@@ -217,13 +217,19 @@ For Each c As Column in Type.Columns
     Dim valueConvert As String = "value"
     Dim isVersion As Boolean = c.IsVersion.Value = True AndAlso dataType.Equals("System.Data.Linq.Binary")
     
+    Dim enumType As LinqToSqlShared.Generator.DbmlEnum.Enum = Nothing
+    
+    If EnumDatabase IsNot Nothing Then
+        enumType = EnumDatabase.Enums.FirstOrDefault(Function(e) e.Name = c.Type)
+    End If
+
     If c.IsDelayLoaded.Value = True AndAlso c.IsPrimaryKey.Value = False Then
         dataType = VBAlias(dataType)
         fieldType = String.Format("System.Data.Linq.Link(Of {0})", dataType)
         storageGet = storageGet + ".Value"
         storageSet = storageGet
     
-    Else If c.CanBeNull.Value = True AndAlso CommonUtility.IsNullableType(dataType) Then
+    Else If c.CanBeNull.Value = True AndAlso (CommonUtility.IsNullableType(dataType) OrElse enumType IsNot Nothing) Then
         dataType = String.Format("Nullable(Of {0})", VBAlias(dataType))
         fieldType = dataType
     
@@ -242,7 +248,7 @@ For Each c As Column in Type.Columns
 <% End If %>
 
         ''' <summary>
-<% If Not c.IsDbGenerated.value = True And c.IsReadOnly.value = False Then %>
+<% If Not c.IsDbGenerated.value = True AndAlso c.IsReadOnly.value = False Then %>
         ''' Gets or sets the <%= c.Name %> column value.
 <% Else %>
         ''' Gets the <%= c.Name %> column value.
@@ -250,6 +256,12 @@ For Each c As Column in Type.Columns
         ''' </summary>
 <% If isVersion Then %>
         <System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)> _
+<% End If %>
+<% If (c.IsDelayLoaded = True) Then %>
+        <System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)> _
+<% End If %>
+<% If (Me.Framework = FrameworkEnum.v35_SP1) AndAlso (enumType IsNot Nothing) Then %>
+        <System.ComponentModel.DataAnnotations.UIHint("Enumeration")> _
 <% End If %>
         <%= CreateAttributes(c) %>
 <% If IncludeDataContract Then
