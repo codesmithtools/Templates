@@ -209,7 +209,10 @@ foreach(Column column in Type.Columns) {
     string storageSet = column.Storage;
     string valueConvert = "value";
     bool isVersion = column.IsVersion == true && dataType.Equals("System.Data.Linq.Binary");
-
+    
+    LinqToSqlShared.Generator.DbmlEnum.Enum enumType = EnumDatabase != null 
+        ? EnumDatabase.Enums.FirstOrDefault(e => e.Name == column.Type) : null;
+    
     if (column.IsDelayLoaded == true && column.IsPrimaryKey == false)
     {
         dataType = CSharpAlias[dataType];
@@ -217,7 +220,7 @@ foreach(Column column in Type.Columns) {
         storageGet = storageGet + ".Value";
         storageSet = storageGet;
     }
-    else if (column.CanBeNull == true && CommonUtility.IsNullableType(dataType))
+    else if (column.CanBeNull == true && (CommonUtility.IsNullableType(dataType) || enumType != null))
     {
         dataType = string.Format("Nullable<{0}>", CSharpAlias[dataType]);
         fieldType = dataType;
@@ -245,15 +248,16 @@ foreach(Column column in Type.Columns) {
 <% } %>
         /// </summary>
 <% if (isVersion) { %>
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]        
+<% } %>
+<% if (column.IsDelayLoaded == true) { %>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
 <% } %>
         <%= CreateAttributes(column) %>
 <% if (IncludeDataContract) { %>
         [System.Runtime.Serialization.DataMember(Order = <%= ++DataMemberCount %>)]
 <% } %>
-<% if( this.Framework == FrameworkEnum.v35_SP1
-    && EnumDatabase != null
-    && EnumDatabase.Enums.Where(e => e.Name == column.Type).FirstOrDefault() != null) { %>
+<% if( this.Framework == FrameworkEnum.v35_SP1 && enumType != null) { %>
         [System.ComponentModel.DataAnnotations.UIHint("Enumeration")]
 <% } %>
         <%= Naming.GetModifier(column.AccessModifier, column.Modifier) %> <%= dataType %> <%= column.Member %>

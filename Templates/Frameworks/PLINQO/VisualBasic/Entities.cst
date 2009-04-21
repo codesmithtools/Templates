@@ -161,7 +161,8 @@ Public Sub CreateEntityClasses(ByVal [database] As Database)
     Dim t As EntityGeneratedClass = Me.Create(Of EntityGeneratedClass)()
     Me.CopyPropertiesTo(t)
     t.Database = [database]
-    
+    t.EnumDatabase = Me.EnumDatabase
+
     Dim p As EntityEditableClass = Me.Create(Of EntityEditableClass)()
     Me.CopyPropertiesTo(p)
     p.Database = [database]
