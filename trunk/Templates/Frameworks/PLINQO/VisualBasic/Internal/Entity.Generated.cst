@@ -216,9 +216,9 @@ For Each c As Column in Type.Columns
     Dim storageSet As String = c.Storage
     Dim valueConvert As String = "value"
     Dim isVersion As Boolean = c.IsVersion.Value = True AndAlso dataType.Equals("System.Data.Linq.Binary")
-    
+
     Dim enumType As LinqToSqlShared.Generator.DbmlEnum.Enum = Nothing
-    
+
     If EnumDatabase IsNot Nothing Then
         enumType = EnumDatabase.Enums.FirstOrDefault(Function(e) e.Name = c.Type)
     End If
@@ -228,16 +228,16 @@ For Each c As Column in Type.Columns
         fieldType = String.Format("System.Data.Linq.Link(Of {0})", dataType)
         storageGet = storageGet + ".Value"
         storageSet = storageGet
-    
+
     Else If c.CanBeNull.Value = True AndAlso (CommonUtility.IsNullableType(dataType) OrElse enumType IsNot Nothing) Then
         dataType = String.Format("Nullable(Of {0})", VBAlias(dataType))
         fieldType = dataType
-    
+
     Else
         dataType = VBAlias(dataType)
         fieldType = dataType
     End If
-    
+
     Dim a As Association = Type.GetForeignKeyAssociation(c)
 %>
 
