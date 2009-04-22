@@ -209,10 +209,10 @@ foreach(Column column in Type.Columns) {
     string storageSet = column.Storage;
     string valueConvert = "value";
     bool isVersion = column.IsVersion == true && dataType.Equals("System.Data.Linq.Binary");
-    
-    LinqToSqlShared.Generator.DbmlEnum.Enum enumType = EnumDatabase != null 
+
+    LinqToSqlShared.Generator.DbmlEnum.Enum enumType = EnumDatabase != null
         ? EnumDatabase.Enums.FirstOrDefault(e => e.Name == column.Type) : null;
-    
+
     if (column.IsDelayLoaded == true && column.IsPrimaryKey == false)
     {
         dataType = CSharpAlias[dataType];
@@ -248,7 +248,7 @@ foreach(Column column in Type.Columns) {
 <% } %>
         /// </summary>
 <% if (isVersion) { %>
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]        
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 <% } %>
 <% if (column.IsDelayLoaded == true) { %>
         [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
