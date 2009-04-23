@@ -37,15 +37,15 @@
     </Reference>
     <Reference Include="CodeSmith.Engine, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\CodeSmith\v5.1\bin\CodeSmith.Engine.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\CodeSmith\v5.1\bin\CodeSmith.Engine.dll</HintPath>
     </Reference>
     <Reference Include="Ionic.Utils.Zip, Version=1.7.1.10, Culture=neutral, PublicKeyToken=c551e179877da246, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\CodeSmith\v5.0\bin\Ionic.Utils.Zip.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\CodeSmith\v5.1\bin\Ionic.Utils.Zip.dll</HintPath>
     </Reference>
     <Reference Include="SchemaExplorer, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\CodeSmith\v5.1\AddIns\SchemaExplorer.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\CodeSmith\v5.1\AddIns\SchemaExplorer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
