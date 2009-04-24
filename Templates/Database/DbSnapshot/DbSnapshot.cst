@@ -224,10 +224,14 @@ public override void Render(TextWriter writer)
     #endregion
 	
     this.Progress.Value = this.Progress.MaximumValue;
-	
+
 	writer.WriteLine("Generation complete. Execution time: " + (DateTime.Now - startTime).ToString());
+    Trace.WriteLine("Generation complete. Execution time: " + (DateTime.Now - startTime).ToString()); 
 	writer.WriteLine("To view the output go here: " + DATABASEPATH);
+    Trace.WriteLine("To view the output go here: " + DATABASEPATH); 
     writer.WriteLine(sqlCmd.ToString());
+    
+    base.Render(writer);
 }
 
 public string ParseServerName( SchemaExplorer.DatabaseSchema db )
