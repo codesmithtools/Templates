@@ -222,14 +222,16 @@ For Each c As Column in Type.Columns
     If EnumDatabase IsNot Nothing Then
         enumType = EnumDatabase.Enums.FirstOrDefault(Function(e) e.Name = c.Type)
     End If
-
+    
+    Dim isNullable As Boolean = c.CanBeNull.Value = True AndAlso (CommonUtility.IsNullableType(dataType) OrElse enumType IsNot Nothing)
+    
     If c.IsDelayLoaded.Value = True AndAlso c.IsPrimaryKey.Value = False Then
         dataType = VBAlias(dataType)
         fieldType = String.Format("System.Data.Linq.Link(Of {0})", dataType)
         storageGet = storageGet + ".Value"
         storageSet = storageGet
 
-    Else If c.CanBeNull.Value = True AndAlso (CommonUtility.IsNullableType(dataType) OrElse enumType IsNot Nothing) Then
+    Else If isNullable Then
         dataType = String.Format("Nullable(Of {0})", VBAlias(dataType))
         fieldType = dataType
 
@@ -274,7 +276,7 @@ For Each c As Column in Type.Columns
             End Get
 <% If Not c.IsReadOnly.Value = True Then %>
             Set(ByVal value As <%= dataType %>)
-                If <%= storageSet %> <> <%= valueConvert %> Then
+                If <%= GetValueCompare(c, storageSet, valueConvert, isNullable) %> Then
 <% If a IsNot Nothing Then %>
                     If (<%= a.Storage %>.HasLoadedOrAssignedValue) Then
                         Throw New System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException()
@@ -326,14 +328,14 @@ For Each c As Column in Type.Columns
             Set(ByVal value As <%= a.Type %>)
 <% If info.HasOtherAssociation Then %>
                 Dim previousValue As <%= a.Type %> = <%= a.Storage %>.Entity
-                If Not previousValue Is value Or <%= a.Storage %>.HasLoadedOrAssignedValue = False Then
+                If ((Object.Equals(previousValue, value) = False) OrElse (Me.<%= a.Storage %>.HasLoadedOrAssignedValue = False)) Then
                     SendPropertyChanging("<%= a.Member %>")
-                    If previousValue IsNot Nothing Then
+                    If ((previousValue Is Nothing) = False) Then
                         <%= a.Storage %>.Entity = Nothing
                         previousValue.<%= info.OtherAssociation.Member %><%= info.RemoveSyntax %>
                     End If
                     <%= a.Storage %>.Entity = value
-                    If value IsNot Nothing Then
+                    If ((value Is Nothing) = False) Then
                         value.<%= info.OtherAssociation.Member %><%= info.AddSyntax %>
 <% If a.IsForeignKey = True Then %>
 <% Dim i As Integer %>
@@ -795,6 +797,21 @@ Public Function CreateAttribute(ByVal a As Association) As String
 
     s.Append(")> _")
 
+    Return s.ToString()
+End Function
+
+Public Function GetValueCompare(ByVal c as Column, ByVal storage as String, ByVal valueConvert as String, ByVal isNullable as Boolean) As String
+    Dim s As New StringBuilder()
+    If c.Type = "System.String" Then
+        s.AppendFormat("(String.Equals(Me.{0}, {1}) = False)", storage, valueConvert)
+    Else If isNullable Then
+        s.AppendFormat("(Me.{0}.Equals({1}) = False)", storage, valueConvert)
+    Else If CommonUtility.IsNullableType(c.Type) Then
+        s.AppendFormat("((Me.{0} = {1}) = False)", storage, valueConvert)
+    Else 
+        s.AppendFormat("(Object.Equals(Me.{0}, {1}) = False)", storage, valueConvert)
+    End If
+    
     Return s.ToString()
 End Function
 
