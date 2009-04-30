@@ -30,15 +30,15 @@ namespace <%= BusinessProjectName %>
 	{
 		#region Factory Methods 
 		
-		public static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+		public static <%= BusinessClassName %> Get<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
 		{
-			return DataPortal.Fetch< <%= ChildBusinessClassName %> >(
+			return DataPortal.Fetch< <%= BusinessClassName %> >(
                 new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
 		}
         
-        public static <%= ChildBusinessClassName %> GetAll()
+        public static <%= BusinessClassName %> GetAll()
         {
-            return DataPortal.Fetch< <%= ChildBusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
+            return DataPortal.Fetch< <%= BusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
         }
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(AssociationMember association in Entity.ManyToOne) { foreach(SearchCriteria sc in association.ListSearchCriteria) { %>

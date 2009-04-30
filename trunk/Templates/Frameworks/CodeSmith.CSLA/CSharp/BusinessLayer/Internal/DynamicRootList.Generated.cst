@@ -43,9 +43,9 @@ namespace <%= BusinessProjectName %>
 
 		#region Factory Methods 
 		
-		public static <%= ChildBusinessClassName %> New<%= ChildBusinessClassName %>()
+		public static <%= BusinessClassName %> NewList()
 		{
-			return DataPortal.Create< <%= ChildBusinessClassName %> >();
+			return DataPortal.Create< <%= BusinessClassName %> >();
 		}
 		
 		public static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>()
@@ -53,9 +53,9 @@ namespace <%= BusinessProjectName %>
 			return DataPortal.Fetch< <%= ChildBusinessClassName %> >();
 		}
         
-        public static <%= ChildBusinessClassName %> GetAll()
+        public static <%= BusinessClassName %> GetAll()
         {
-            return DataPortal.Fetch< <%= ChildBusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
+            return DataPortal.Fetch< <%= BusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
         }
         
         private <%= BusinessClassName %>()
