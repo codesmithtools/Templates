@@ -35,6 +35,11 @@ namespace <%= BusinessProjectName %>
 			return DataPortal.Fetch< <%= ChildBusinessClassName %> >(
                 new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
 		}
+        
+        public static <%= ChildBusinessClassName %> GetAll()
+        {
+            return DataPortal.Fetch< <%= ChildBusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
+        }
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(AssociationMember association in Entity.ManyToOne) { foreach(SearchCriteria sc in association.ListSearchCriteria) { %>
         
