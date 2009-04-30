@@ -254,9 +254,9 @@ namespace <%= BusinessProjectName %>
 <% foreach(AssociationMember association2 in Entity.ToManyUnion) { if (!UseLazyLoading){ %>
 
 <% if (UseMemberVariables){ %>
-			<%= association2.PrivateMemberVariableName %> = new <%= association2.ClassName %>List.New<%= association2.ClassName %>();
+			<%= association2.PrivateMemberVariableName %> = new <%= association2.ClassName %>List.NewList();
 <% } else { %>
-			LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.New<%= association2.ClassName %>());
+			LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList());
 <% } } } %> 
         }
 <% } %>

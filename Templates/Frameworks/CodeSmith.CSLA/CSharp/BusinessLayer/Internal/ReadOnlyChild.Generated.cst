@@ -48,7 +48,7 @@ namespace <%= BusinessProjectName %>
 <% } } %>
 <%-- Many-To-One --%>
 <% foreach(AssociationMember association in Entity.ManyToOne) { if (UseMemberVariables){ %>
-		private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>);
+		private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>RelationshipTypes.LazyLoad<% } else { %>RelationshipTypes.Child<% } %>);
 		private <%= association.ClassName %> <%= association.PrivateMemberVariableName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue;
 		public <%= association.ClassName %> <%= association.PropertyName %>
 		{
@@ -64,7 +64,7 @@ namespace <%= BusinessProjectName %>
 		}
 
 <% } else { %>
-		private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>);
+		private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>RelationshipTypes.LazyLoad<% } else { %>RelationshipTypes.Child<% } %>);
 		public <%= association.ClassName %> <%= association.PropertyName %>
 		{
 			get
@@ -81,7 +81,7 @@ namespace <%= BusinessProjectName %>
 <% } } %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(AssociationMember association in Entity.ToManyUnion) { if (UseMemberVariables){ %>
-        private static readonly PropertyInfo< <%= association.ClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= association.ClassName %>List>(p => p.<%= association.PropertyName %>);
+        private static readonly PropertyInfo< <%= association.ClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= association.ClassName %>List>(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>RelationshipTypes.LazyLoad<% } else { %>RelationshipTypes.Child<% } %>);
 		private <%= association.ClassName %>List <%= association.PrivateMemberVariableName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue;
 		public <%= association.ClassName %>List <%= association.PropertyName %>
 		{
@@ -101,7 +101,7 @@ namespace <%= BusinessProjectName %>
 		}
 
 <% } else { %>
-		private static readonly PropertyInfo< <%= association.ClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= association.ClassName %>List>(p => p.<%= association.PropertyName %>);
+		private static readonly PropertyInfo< <%= association.ClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= association.ClassName %>List>(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>RelationshipTypes.LazyLoad<% } else { %>RelationshipTypes.Child<% } %>);
 		public <%= association.ClassName %>List <%= association.PropertyName %>
 		{
 			get

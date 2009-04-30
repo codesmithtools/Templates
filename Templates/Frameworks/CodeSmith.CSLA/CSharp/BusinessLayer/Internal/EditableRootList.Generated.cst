@@ -41,7 +41,7 @@ namespace <%= BusinessProjectName %>
         
 		#region Factory Methods 
 		
-		public static <%= BusinessClassName %> New<%= BusinessClassName %>()
+		public static <%= BusinessClassName %> NewList()
 		{
 			return DataPortal.Create< <%= BusinessClassName %> >();
 		}
