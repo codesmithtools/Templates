@@ -52,7 +52,12 @@ namespace <%= BusinessProjectName %>
 		{
 			return DataPortal.Fetch< <%= ChildBusinessClassName %> >();
 		}
-
+        
+        public static <%= ChildBusinessClassName %> GetAll()
+        {
+            return DataPortal.Fetch< <%= ChildBusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
+        }
+        
         private <%= BusinessClassName %>()
 		{ 
 			AllowNew = true;

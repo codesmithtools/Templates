@@ -36,6 +36,11 @@ namespace <%= BusinessProjectName %>
             return DataPortal.FetchChild< <%= BusinessClassName %> >(
                 new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
 		}
+        
+        internal static <%= BusinessClassName %> GetAll()
+        {
+            return DataPortal.FetchChild< <%= BusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
+        }
 
 		private <%= BusinessClassName %>()
 		{ /* Require use of factory methods */ }

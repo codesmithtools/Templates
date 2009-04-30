@@ -95,6 +95,9 @@ namespace <%= DataProjectName %>
         /// <returns>Returns a where clause for the current Criteria object.</returns>
         public string BuildWhereStatement(Dictionary<string, object> bag)
         {
+            if (bag.Count == 0)
+                return string.Empty;
+            
             string columnNames = string.Empty;
 
             foreach (string columnName in bag.Keys)

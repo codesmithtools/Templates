@@ -45,16 +45,21 @@ namespace <%= BusinessProjectName %>
 		{
 			return DataPortal.Create< <%= BusinessClassName %> >();
 		}
+        
+		internal static <%= BusinessClassName %> NewList()
+        {
+            return new <%= BusinessClassName %>();
+        }
 		
-		public static <%= BusinessClassName %> Get<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+        public static <%= BusinessClassName %> Get<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
 		{
 			return DataPortal.Fetch< <%= BusinessClassName %> >(
                 new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
 		}
         
-        internal static <%= BusinessClassName %> NewList()
+        public static <%= BusinessClassName %> GetAll()
         {
-            return new <%= BusinessClassName %>();
+            return DataPortal.Fetch< <%= BusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
         }
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(AssociationMember association in Entity.ManyToOne) { foreach(SearchCriteria sc in association.ListSearchCriteria) { %>
