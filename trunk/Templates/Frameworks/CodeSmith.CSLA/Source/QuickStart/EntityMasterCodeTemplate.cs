@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
 using SchemaExplorer;
@@ -492,6 +493,11 @@ namespace QuickStart
 
         public override void OnDatabaseChanged()
         {
+            if (string.IsNullOrEmpty(Location))
+                Location = Path.Combine(Path.Combine(
+                    CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory,
+                    Path.Combine("CSLA", SourceDatabase.Name)), BusinessProjectName);
+
             base.OnDatabaseChanged();
 
             //EditableChild
