@@ -13,12 +13,13 @@ namespace CodeSmith.SchemaHelper
         public EntityManager(DatabaseSchema database) : this(database.Tables) { }
         public EntityManager(TableSchemaCollection tables)
         {
-            if (tables.Count > 0)
+            ExcludedTables = new List<TableSchema>();
+            Entities = new List<Entity>();
+
+            if (tables != null && tables.Count > 0)
             {
                 Database = tables[0].Database;
-                ExcludedTables = new List< TableSchema >();
-
-                Entities = new List< Entity >();
+                
                 foreach ( TableSchema table in tables )
                 {
                     if ( Configuration.Instance.ExcludeTableRegexIsMatch( table.FullName ) || table.IsManyToMany() )

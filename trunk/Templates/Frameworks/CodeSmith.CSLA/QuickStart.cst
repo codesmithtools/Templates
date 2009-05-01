@@ -6,9 +6,9 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="QuickStart.QuickStartCodeTemplate" Debug="False" Description="QuickStart for CSLA 3.6.x" CompilerVersion="v3.5" %>
 
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
-<%@ Register Name="Entities" Template="Common\Entities.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataAccess" Template="Common\DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="Web" Template="Common\Web.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="Entities" Template="CSharp\BusinessLayer\Entities.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataAccess" Template="CSharp\DataAccessLayer\DataAccessLayer.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="Web" Template="CSharp\WebLayer\Default.aspx.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="Common" %>
 <%@ Assembly Name="QuickStart" Path="Common" %>
@@ -52,25 +52,19 @@ public override void Generate()
 	Entities entityCSP = this.Create<Entities>();
 	this.CopyPropertiesTo(entityCSP);
 	entityCSP.Location = Path.Combine(this.Location, this.BusinessProjectName);
-	
-	OutputFile outputFile = new OutputFile(Path.GetFullPath("Common\\Entities.csp"));
-	entityCSP.RenderToFile(outputFile.OutputFileName, true);
+	entityCSP.SavePropertiesToXmlFile(Path.GetFullPath("Common\\Entities.csp"));
 	
 	DataAccess dataAccess = this.Create<DataAccess>();
 	this.CopyPropertiesTo(dataAccess);
-	dataAccess.SourceDatabase = SourceDatabase;
+	dataAccess.SourceTables = SourceDatabase.Tables;
 	dataAccess.Location = Path.Combine(this.Location, this.DataProjectName);
-	
-	outputFile = new OutputFile(Path.GetFullPath("Common\\DataAccess.csp"));
-	dataAccess.RenderToFile(outputFile.OutputFileName, true);
-	
+	dataAccess.SavePropertiesToXmlFile(Path.GetFullPath("Common\\DataAccess.csp"));
+
     Web web = this.Create<Web>();
 	this.CopyPropertiesTo(web);
 	web.Location = Path.Combine(this.Location, this.InterfaceProjectName);
-	
-	outputFile = new OutputFile(Path.GetFullPath("Common\\Web.csp"));
-	web.RenderToFile(outputFile.OutputFileName, true);
-    
+	web.SavePropertiesToXmlFile(Path.GetFullPath("Common\\Web.csp"));
+
 	#endregion
 
     List<SolutionItem> solutionItems = new List<SolutionItem>();
