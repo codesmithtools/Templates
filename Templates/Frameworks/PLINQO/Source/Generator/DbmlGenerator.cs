@@ -265,7 +265,7 @@ namespace LinqToSqlShared.Generator
 
                 itemList.Add(new DbmlEnum.Item
                                  {
-                                     Name = row[nameColumn].ToString(),
+                                     Name = StringUtil.ToPascalCase(row[nameColumn].ToString()),
                                      Value = value,
                                      Description = description ?? existingValue.Description,
                                      DataContractMember = existingValue.DataContractMember
