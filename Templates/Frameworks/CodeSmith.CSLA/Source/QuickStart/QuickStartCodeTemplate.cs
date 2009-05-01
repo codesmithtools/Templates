@@ -30,6 +30,7 @@ namespace QuickStart
         {
             DataAccessImplementation = DataAccessMethod.ParameterizedSQL;
             LaunchVisualStudio = true;
+            UseLazyLoading = true;
 
             CleanExpressions = new StringCollection();
             IgnoreExpressions = new StringCollection();
@@ -223,7 +224,7 @@ namespace QuickStart
             { }
         }
 
-        private void OnDatabaseChanged()
+        public virtual void OnDatabaseChanged()
         {
             if (CleanExpressions.Count == 0)
                 CleanExpressions.Add("^\\w+_");

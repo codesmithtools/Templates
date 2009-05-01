@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 using CodeSmith.Engine;
@@ -15,11 +17,15 @@ namespace QuickStart
         public CSLABaseTemplate()
         {
             ResolveTargetLanguage();
+            TemplateContext = new Dictionary<string, string>();
         }
 
         #endregion
 
         #region Public Properties
+
+        [Browsable(false)]
+        public Dictionary<string, string> TemplateContext { get; set; }
 
         #endregion
 
