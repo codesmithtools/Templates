@@ -45,6 +45,9 @@ namespace NHibernateHelper
                 GetManyToOne();
                 GetToMany();
 
+                if (_memberMap.Values.Where(em => em.IsRowVersion).Count() > 1)
+                    throw new Exception(String.Format("More than one Version column in {0}", this._sourceTable.FullName));
+
                 // Update to prevent duplicate names.
                 UpdateDuplicateProperties();
 
@@ -62,14 +65,17 @@ namespace NHibernateHelper
         protected void GetMembers(ColumnSchemaCollection columns)
         {
             foreach (ColumnSchema column in columns)
-                if (!_memberMap.ContainsKey(column))
-                {
-                    EntityMember em = new EntityMember(column);
-                    _memberMap.Add(column, em);
-                }
+                GetMember(column);
 
-            if (_memberMap.Values.Where(em => em.IsRowVersion).Count() > 1)
-                throw new Exception(String.Format("More than one Version column in {0}", this._sourceTable.FullName));
+            
+        }
+        protected void GetMember(ColumnSchema column)
+        {
+            if (!_memberMap.ContainsKey(column))
+            {
+                EntityMember em = new EntityMember(column);
+                _memberMap.Add(column, em);
+            }
         }
 
         protected void GetManyToOne()
@@ -84,12 +90,17 @@ namespace NHibernateHelper
                 {
                     ColumnSchema column = tks.ForeignKeyMemberColumns[0];
 
-                    if (!_excludedTables.Contains(tks.PrimaryKeyTable)
-                    && !column.IsPrimaryKeyMember
-                    && !_associationMap.ContainsKey(column))
+                    if(!column.IsPrimaryKeyMember && !_associationMap.ContainsKey(column))
                     {
-                        EntityAssociation association = new EntityAssociation(AssociationTypeEnum.ManyToOne, tks.PrimaryKeyTable, column);
-                        _associationMap.Add(column, association);
+                        if (!_excludedTables.Contains(tks.PrimaryKeyTable))
+                        {
+                            EntityAssociation association = new EntityAssociation(AssociationTypeEnum.ManyToOne, tks.PrimaryKeyTable, column);
+                            _associationMap.Add(column, association);
+                        }
+                        else
+                        {
+                            GetMember(column);
+                        }
                     }
                 }
             }
@@ -115,6 +126,10 @@ namespace NHibernateHelper
                                 EntityAssociation association = new EntityAssociation(AssociationTypeEnum.OneToMany, column.Table, column);
                                 _associationMap.Add(column, association);
                             }
+                            else
+                            {
+                                GetMember(column);
+                            }
                         }
                         else
                         {
@@ -123,6 +138,10 @@ namespace NHibernateHelper
                             {
                                 EntityAssociation association = new EntityAssociation(AssociationTypeEnum.ManyToMany, foreignTable, column);
                                 _associationMap.Add(column, association);
+                            }
+                            else
+                            {
+                                GetMember(column);
                             }
                         }
                     }
