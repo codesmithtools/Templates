@@ -503,7 +503,8 @@ namespace QuickStart
             //EditableChild
             foreach (Entity entity in GetChildEntities())
             {
-                EditableChild.Add(entity.Table);
+                if (!EditableChild.Contains(entity.Table))
+                    EditableChild.Add(entity.Table);
             }
 
             //EditableChildList
@@ -511,21 +512,26 @@ namespace QuickStart
             {
                 foreach (AssociationMember association in entity.ToManyUnion)
                 {
-                    EditableChildList.Add(new TableSchema(SourceDatabase, association.TableName, entity.Table.Owner,
-                                                          DateTime.Now));
+                    var table = new TableSchema(SourceDatabase, association.TableName, entity.Table.Owner,
+                                                DateTime.Now);
+
+                    if(!EditableChildList.Contains(table))
+                        EditableChildList.Add(table);
                 }
             }
 
             //EditableRoot
             foreach (Entity entity in GetEntities())
             {
-                EditableRoot.Add(entity.Table);
+                if (!EditableRoot.Contains(entity.Table))
+                    EditableRoot.Add(entity.Table);
             }
 
             //Criteria
             foreach (Entity entity in Entities)
             {
-                Criteria.Add(entity.Table);
+                if (!Criteria.Contains(entity.Table))
+                    Criteria.Add(entity.Table);
             }
         }
 
