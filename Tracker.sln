@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLINQO.Tracker.Tests", "PLI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLINQO.Tracker.UI", "PLINQO.Tracker.UI\PLINQO.Tracker.UI.csproj", "{642C1142-00C3-4E96-9A66-6DB5105F7E2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.Data", "..\..\CodeSmith\Templates\codesmith.googlecode.com\trunk\Templates\Frameworks\PLINQO\Source\CodeSmith.Data\CodeSmith.Data.csproj", "{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.Data", "Templates\PLINQO\Source\CodeSmith.Data\CodeSmith.Data.csproj", "{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
