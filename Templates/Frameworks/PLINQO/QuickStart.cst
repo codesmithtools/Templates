@@ -21,7 +21,7 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Property Name="LaunchVisualStudio" Type="System.Boolean" Default="True" Optional="False" Category="2.Solution" Description="Launch Visual Studio after generation." %>
 <%@ Property Name="DataProjectName" Type="System.String" Default="" Optional="False" Category="3.Data Project" Description="Name Space for the Data Project." %>
 <%@ Property Name="CopyTemplatesToFolder" Type="System.Boolean" Default="False" Optional="False" Category="3.Data Project" Description="Include a copy of the LinqToSql Templates in the project directory" %>
-<%@ Property Name="QueryPattern" Type="QueryPatternEnum" Default="ManagerClasses" Optional="False" Category="3.Data Project" Description="The type of pattern to use for automatically generated queries." %>
+<%@ Property Name="QueryPattern" Type="QueryPatternEnum" Default="QueryExtensions" Optional="False" Category="3.Data Project" Description="The type of pattern to use for automatically generated queries." %>
 <%@ Property Name="ProjectType" Type="ProjectTypeEnum" Default="DynamicDataWebApp" Optional="False" Category="4.Interface Project" Description="Type of Project to be created" %>
 <%@ Property Name="IncludeDataServices" Type="System.Boolean" Default="True" Optional="False" Category="4.Interface Project" Description="Include DataServices in Interface Project" %>
 <%@ Property Name="InterfaceProjectName" Type="System.String" Default="" Optional="False" Category="4.Interface Project" Description="Name Space for the Interface Project." %>
