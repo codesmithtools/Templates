@@ -17,6 +17,7 @@
 #region using declarations
 
 using System;
+using Csla;
 
 #endregion
 

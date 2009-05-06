@@ -16,7 +16,7 @@ namespace CodeSmith.SchemaHelper
             Name = column.GetName();
             ColumnName = column.Name; 
             TableName = column.Table.Name;
-            TableOwner = column.Table.Name;
+            TableOwner = column.Table.Owner;
 
             Size = column.Size;
             SystemType = column.ResolveSystemType();

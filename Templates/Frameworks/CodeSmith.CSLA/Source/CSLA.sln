@@ -26,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessLayer", "BusinessLa
 		..\CSharp\BusinessLayer\EditableChildList.cst = ..\CSharp\BusinessLayer\EditableChildList.cst
 		..\CSharp\BusinessLayer\EditableRoot.cst = ..\CSharp\BusinessLayer\EditableRoot.cst
 		..\CSharp\BusinessLayer\EditableRootList.cst = ..\CSharp\BusinessLayer\EditableRootList.cst
+		..\CSharp\BusinessLayer\Entities.cst = ..\CSharp\BusinessLayer\Entities.cst
 		..\CSharp\BusinessLayer\NameValueList.cst = ..\CSharp\BusinessLayer\NameValueList.cst
 		..\CSharp\BusinessLayer\ReadOnlyChild.cst = ..\CSharp\BusinessLayer\ReadOnlyChild.cst
 		..\CSharp\BusinessLayer\ReadOnlyChildList.cst = ..\CSharp\BusinessLayer\ReadOnlyChildList.cst
