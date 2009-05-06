@@ -252,7 +252,7 @@ namespace QuickStart
 
                 TemplateContext.Add(entity.ClassName, "DynamicRoot");
 
-                if (this.State != TemplateState.Default)
+                if (this.State == TemplateState.RestoringProperties)
                     return;
 
                 //Many-To-One
@@ -290,7 +290,7 @@ namespace QuickStart
 
                 TemplateContext.Add(entity.ClassName, "EditableChild");
 
-                if (this.State != TemplateState.Default)
+                if (this.State == TemplateState.RestoringProperties)
                     return;
 
                 //Many-To-One
@@ -328,7 +328,7 @@ namespace QuickStart
 
                 TemplateContext.Add(entity.ClassName, "EditableRoot");
 
-                if (this.State != TemplateState.Default)
+                if (this.State == TemplateState.RestoringProperties)
                     return;
 
                 //Many-To-One
@@ -366,7 +366,7 @@ namespace QuickStart
 
                 TemplateContext.Add(entity.ClassName, "ReadOnlyChild");
 
-                if (this.State != TemplateState.Default)
+                if (this.State == TemplateState.RestoringProperties)
                     return;
 
                 //Many-To-One
@@ -404,7 +404,7 @@ namespace QuickStart
 
                 TemplateContext.Add(entity.ClassName, "ReadOnlyRoot");
 
-                if (this.State != TemplateState.Default)
+                if (this.State == TemplateState.RestoringProperties)
                     return;
 
                 //Many-To-One
@@ -442,7 +442,7 @@ namespace QuickStart
 
                 TemplateContext.Add(entity.ClassName, "SwitchableObject");
 
-                if (this.State != TemplateState.Default)
+                if (this.State == TemplateState.RestoringProperties)
                     return;
 
                 //Many-To-One
@@ -485,7 +485,7 @@ namespace QuickStart
 
                 TemplateContext.Add(key, "DynamicRootList");
 
-                if (this.State != TemplateState.Default)
+                if (this.State == TemplateState.RestoringProperties)
                     return;
 
                 AddChildEntity(entity.Table, false, true);
@@ -511,7 +511,7 @@ namespace QuickStart
 
                 TemplateContext.Add(key, "EditableRootList");
 
-                if (this.State != TemplateState.Default)
+                if (this.State == TemplateState.RestoringProperties)
                     return;
 
                 AddChildEntity(entity.Table, false, true);
@@ -538,7 +538,7 @@ namespace QuickStart
 
                 TemplateContext.Add(key, "EditableChildList");
 
-                if (this.State != TemplateState.Default)
+                if (this.State == TemplateState.RestoringProperties)
                     return;
 
                 AddChildEntity(entity.Table, false, true);
@@ -565,7 +565,7 @@ namespace QuickStart
 
                 TemplateContext.Add(key, "ReadOnlyList");
 
-                if (this.State != TemplateState.Default)
+                if (this.State == TemplateState.RestoringProperties)
                     return;
 
                 AddChildEntity(entity.Table, true, true);
@@ -592,7 +592,7 @@ namespace QuickStart
 
                 TemplateContext.Add(key, "ReadOnlyChildList");
 
-                if (this.State != TemplateState.Default)
+                if (this.State == TemplateState.RestoringProperties)
                     return;
 
                 AddChildEntity(entity.Table, true, true);
@@ -710,10 +710,6 @@ namespace QuickStart
 
         public override void OnDatabaseChanged()
         {
-
-            if (this.State != TemplateState.Default)
-                return;
-
             base.OnDatabaseChanged();
 
             string basePath = Path.Combine(CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory,
@@ -721,10 +717,13 @@ namespace QuickStart
             if (Location == basePath)
                 Location = Path.Combine(Location, BusinessProjectName);
 
+            if (this.State != TemplateState.Default)
+                return;
+
             //EditableChild
             foreach (Entity entity in GetChildEntities())
             {
-                if (!EditableChild.Contains(entity.Table))
+                if (!EditableChild.Contains(entity.Table.Owner, entity.Table.Name))
                     EditableChild.Add(entity.Table);
             }
 
@@ -736,7 +735,7 @@ namespace QuickStart
                     var table = new TableSchema(SourceDatabase, association.TableName, entity.Table.Owner,
                                                 DateTime.Now);
 
-                    if (!EditableChildList.Contains(table))
+                    if (!EditableChildList.Contains(table.Owner, table.Name))
                         EditableChildList.Add(table);
                 }
             }
@@ -744,14 +743,14 @@ namespace QuickStart
             //EditableRoot
             foreach (Entity entity in GetEntities())
             {
-                if (!EditableRoot.Contains(entity.Table))
+                if (!EditableRoot.Contains(entity.Table.Owner, entity.Table.Name))
                     EditableRoot.Add(entity.Table);
             }
 
             //Criteria
             foreach (Entity entity in Entities)
             {
-                if (!Criteria.Contains(entity.Table))
+                if (!Criteria.Contains(entity.Table.Owner, entity.Table.Name))
                     Criteria.Add(entity.Table);
             }
         }
