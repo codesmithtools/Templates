@@ -653,7 +653,7 @@ namespace QuickStart
 
         private void AddChildEntity(TableSchema tableSchema, bool readOnly, bool child)
         {
-           if (DynamicRoot.Count > 0 && DynamicRoot.Contains(tableSchema.Owner, tableSchema.Name))
+            if (DynamicRoot.Count > 0 && DynamicRoot.Contains(tableSchema.Owner, tableSchema.Name))
                 return;
             if (EditableChild.Count > 0 && EditableChild.Contains(tableSchema.Owner, tableSchema.Name))
                 return;
@@ -717,9 +717,25 @@ namespace QuickStart
             if (Location == basePath)
                 Location = Path.Combine(Location, BusinessProjectName);
 
-            if (this.State != TemplateState.Default)
-                return;
+            if (DynamicRoot.Count == 0 &&
+                EditableChild.Count == 0 &&
+                EditableRoot.Count == 0 &&
+                ReadOnlyChild.Count == 0 &&
+                ReadOnlyRoot.Count == 0 &&
+                SwitchableObject.Count == 0 &&
+                DynamicRootList.Count == 0 &&
+                EditableRootList.Count == 0 &&
+                EditableChildList.Count == 0 &&
+                ReadOnlyList.Count == 0 &&
+                ReadOnlyChildList.Count == 0)
+            {
+                PopulateDefaultTables();
+            }
 
+        }
+
+        public void PopulateDefaultTables()
+        {
             //EditableChild
             foreach (Entity entity in GetChildEntities())
             {
