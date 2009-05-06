@@ -480,8 +480,15 @@ For Each c As Column in Type.Columns
         End Sub
 <% For Each c As Column in Type.Columns
     Dim dataType As String = VBAlias(c.Type)
+    Dim enumType As LinqToSqlShared.Generator.DbmlEnum.Enum = Nothing
 
-    If (c.CanBeNull.value = True AND CommonUtility.IsNullableType(c.Type)) Then
+    If EnumDatabase IsNot Nothing Then
+        enumType = EnumDatabase.Enums.FirstOrDefault(Function(e) e.Name = c.Type)
+    End If
+    
+    Dim isNullable As Boolean = c.CanBeNull.Value = True AndAlso (CommonUtility.IsNullableType(dataType) OrElse enumType IsNot Nothing)
+
+    If (isNullable) Then
         dataType = String.Format("Nullable(Of {0})", dataType)
     End If
 %>

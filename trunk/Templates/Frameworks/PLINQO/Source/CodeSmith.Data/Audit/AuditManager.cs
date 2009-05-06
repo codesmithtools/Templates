@@ -142,13 +142,21 @@ namespace CodeSmith.Data.Audit
             foreach (var dataMember in metaTable.RowType.IdentityMembers)
             {
                 var auditProperty = new AuditKey();
-                auditProperty.Name = dataMember.Member.Name;
-                auditProperty.Type = dataMember.Type.FullName;
-                object value = dataMember.MemberAccessor.GetBoxedValue(entity);
-                if (dataMember.Type.IsEnum)
-                    value = Enum.GetName(dataMember.Type, value);
+                try
+                {
+                    auditProperty.Name = dataMember.Member.Name;
+                    auditProperty.Type = dataMember.Type.FullName;
+                    object value = dataMember.MemberAccessor.GetBoxedValue(entity);
+                    if (dataMember.Type.IsEnum)
+                        value = Enum.GetName(dataMember.Type, value);
 
-                auditProperty.Value = value;
+                    auditProperty.Value = value;
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError(ex.Message);
+                    auditProperty.Value = "{error}";
+                }
                 auditEntity.Keys.Add(auditProperty);
             }
         }
@@ -178,29 +186,40 @@ namespace CodeSmith.Data.Audit
         private static AuditProperty CreateAuditProperty(MetaDataMember dataMember, ModifiedMemberInfo modifiedMemberInfo, object entity, AuditEntity auditEntity)
         {
             var auditProperty = new AuditProperty();
-            auditProperty.Name = dataMember.Member.Name;
-
-            Type underlyingType = GetUnderlyingType(dataMember.Type);
-            auditProperty.Type = underlyingType.FullName;
-
-            if (auditProperty.Type == _binaryType || dataMember.IsDeferred)
-                return auditProperty;
-
-            if (auditEntity.Action == AuditAction.Update)
+            try
             {
-                auditProperty.Current = GetValue(modifiedMemberInfo.Member, underlyingType, modifiedMemberInfo.CurrentValue);
-                auditProperty.Original = GetValue(modifiedMemberInfo.Member, underlyingType, modifiedMemberInfo.OriginalValue);
-                return auditProperty;
+                auditProperty.Name = dataMember.Member.Name;
+
+                Type underlyingType = GetUnderlyingType(dataMember.Type);
+                auditProperty.Type = underlyingType.FullName;
+
+                if (auditProperty.Type == _binaryType || dataMember.IsDeferred)
+                    return auditProperty;
+
+                if (auditEntity.Action == AuditAction.Update)
+                {
+                    auditProperty.Current = GetValue(modifiedMemberInfo.Member, underlyingType, modifiedMemberInfo.CurrentValue);
+                    auditProperty.Original = GetValue(modifiedMemberInfo.Member, underlyingType, modifiedMemberInfo.OriginalValue);
+                    return auditProperty;
+                }
+
+                var value = GetValue(dataMember.Member, underlyingType, dataMember.MemberAccessor.GetBoxedValue(entity));
+                if (value == null)
+                    return null; // ignore null properties?
+
+                if (auditEntity.Action == AuditAction.Delete)
+                    auditProperty.Original = value;
+                else
+                    auditProperty.Current = value;
             }
-
-            var value = GetValue(dataMember.Member, underlyingType, dataMember.MemberAccessor.GetBoxedValue(entity));
-            if (value == null)
-                return null; // ignore null properties?
-
-            if (auditEntity.Action == AuditAction.Delete)
-                auditProperty.Original = value;
-            else
-                auditProperty.Current = value;
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.Message);
+                if (auditEntity.Action == AuditAction.Delete)
+                    auditProperty.Original = "{error}";
+                else
+                    auditProperty.Current = "{error}";
+            }
 
             return auditProperty;
         }
@@ -230,37 +249,49 @@ namespace CodeSmith.Data.Audit
                     continue;
 
                 var auditProperty = new AuditProperty();
-                var thisMember = association.ThisMember;
-                auditProperty.Name = thisMember.Name;
-                auditProperty.Type = thisMember.Type.FullName;
-                auditProperty.IsAssociation = true;
-                auditProperty.ForeignKey = string.Join(",", association.ThisKey.Select(k => k.Name).ToArray());
 
-                var displayMember = GetDisplayMember(association.OtherType);
-
-                //this will get the fkey entity with out causing a load               
-                object currentChildEntity = thisMember.DeferredValueAccessor.GetBoxedValue(entity);
-                object currentValue = GetAssociationValue(association, displayMember, currentChildEntity, table, entity);
-
-                //if there is nothing set for the fkey on insert and delete, skip
-                if (auditEntity.Action != AuditAction.Update && currentValue == null)
-                    continue;
-
-                if (auditEntity.Action == AuditAction.Delete)
-                    auditProperty.Original = currentValue;
-                else
-                    auditProperty.Current = currentValue ?? _nullText;
-
-                if (auditEntity.Action == AuditAction.Update && table != null)
+                try
                 {
-                    // get original value for updates
-                    object original = table.GetOriginalEntityState(entity);
-                    if (original != null)
+                    var thisMember = association.ThisMember;
+                    auditProperty.Name = thisMember.Name;
+                    auditProperty.Type = thisMember.Type.FullName;
+                    auditProperty.IsAssociation = true;
+                    auditProperty.ForeignKey = string.Join(",", association.ThisKey.Select(k => k.Name).ToArray());
+
+                    var displayMember = GetDisplayMember(association.OtherType);
+
+                    //this will get the fkey entity with out causing a load               
+                    object currentChildEntity = thisMember.DeferredValueAccessor.GetBoxedValue(entity);
+                    object currentValue = GetAssociationValue(association, displayMember, currentChildEntity, table, entity);
+
+                    //if there is nothing set for the fkey on insert and delete, skip
+                    if (auditEntity.Action != AuditAction.Update && currentValue == null)
+                        continue;
+
+                    if (auditEntity.Action == AuditAction.Delete)
+                        auditProperty.Original = currentValue;
+                    else
+                        auditProperty.Current = currentValue ?? _nullText;
+
+                    if (auditEntity.Action == AuditAction.Update && table != null)
                     {
-                        //this will get the fkey entity with out causing a load               
-                        object originalChildEntity = thisMember.DeferredValueAccessor.GetBoxedValue(original);
-                        auditProperty.Original = GetAssociationValue(association, displayMember, originalChildEntity, table, original) ?? _nullText;
+                        // get original value for updates
+                        object original = table.GetOriginalEntityState(entity);
+                        if (original != null)
+                        {
+                            //this will get the fkey entity with out causing a load               
+                            object originalChildEntity = thisMember.DeferredValueAccessor.GetBoxedValue(original);
+                            auditProperty.Original = GetAssociationValue(association, displayMember, originalChildEntity, table, original) ?? _nullText;
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError(ex.Message);
+                    if (auditEntity.Action == AuditAction.Delete)
+                        auditProperty.Original = "{error}";
+                    else
+                        auditProperty.Current = "{error}";
                 }
 
                 auditEntity.Properties.Add(auditProperty);
@@ -279,38 +310,56 @@ namespace CodeSmith.Data.Audit
             if (dataContext == null)
                 return null;
 
-            var sb = new StringBuilder();
-            var fkeyValues = new List<object>();
-
-            // build dymamic query
-            for (int i = 0; i < association.ThisKey.Count; i++)
+            try
             {
-                object v = association.ThisKey[i].MemberAccessor.GetBoxedValue(entity);
+                var sb = new StringBuilder();
+                var fkeyValues = new List<object>();
 
-                if (sb.Length > 0)
-                    sb.Append(" and ");
-
-                if (v != null || association.OtherKey[i].CanBeNull)
+                // build dymamic query
+                for (int i = 0; i < association.ThisKey.Count; i++)
                 {
-                    sb.AppendFormat("{0} = @{1}", association.OtherKey[i].Name, fkeyValues.Count);
-                    fkeyValues.Add(v);
+                    object v = association.ThisKey[i].MemberAccessor.GetBoxedValue(entity);
+
+                    if (sb.Length > 0)
+                        sb.Append(" and ");
+
+                    if (v != null || association.OtherKey[i].CanBeNull)
+                    {
+                        if (v is Guid)
+                        {
+                            // Hack: work around bug in dynamic query for guids
+                            // ParseException: Operator '==' incompatible with operand types 'Guid' and 'Guid'
+                            sb.AppendFormat("{0}.ToString() == @{1}", association.OtherKey[i].Name, fkeyValues.Count);
+                            fkeyValues.Add(v.ToString());
+                        }
+                        else
+                        {
+                            sb.AppendFormat("{0} == @{1}", association.OtherKey[i].Name, fkeyValues.Count);
+                            fkeyValues.Add(v);
+                        }
+                    }
                 }
+
+                if (fkeyValues.Count == 0)
+                    return null;
+
+                // get the fkey table            
+                var fkeyTable = dataContext.GetTable(association.OtherType.Type);
+                var q = fkeyTable
+                    .Where(sb.ToString(), fkeyValues.ToArray())
+                    .Select(childDisplayMember.Name);
+
+                object value = q.Cast<object>().FirstOrDefault();
+
+                return GetValue(childDisplayMember.Member,
+                    GetUnderlyingType(childDisplayMember.Type),
+                    value);
             }
-
-            if (fkeyValues.Count == 0)
-                return null;
-
-            // get the fkey table            
-            var fkeyTable = dataContext.GetTable(association.OtherType.Type);
-            var q = fkeyTable
-                .Where(sb.ToString(), fkeyValues.ToArray())
-                .Select(childDisplayMember.Name);
-
-            object value = q.Cast<object>().FirstOrDefault();
-
-            return GetValue(childDisplayMember.Member,
-                GetUnderlyingType(childDisplayMember.Type),
-                value);
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.Message);
+                return "{error}";
+            }
         }
 
         private static object GetValue(MemberInfo memberInfo, Type valueType, object value)
@@ -320,51 +369,59 @@ namespace CodeSmith.Data.Audit
             if (valueType == null)
                 valueType = value.GetType();
 
-            object returnValue = valueType.IsEnum ? Enum.GetName(valueType, value) : value;
-
-            using (_formatterLock.ReadLock())
+            try
             {
-                MethodInfo formatMethod = null;
-                if (!_formatterCache.TryGetValue(memberInfo, out formatMethod))
+                object returnValue = valueType.IsEnum ? Enum.GetName(valueType, value) : value;
+
+                using (_formatterLock.ReadLock())
                 {
-                    using (_formatterLock.WriteLock())
+                    MethodInfo formatMethod = null;
+                    if (!_formatterCache.TryGetValue(memberInfo, out formatMethod))
                     {
-                        var formatAttribute = GetAttribute<AuditPropertyFormatAttribute>(memberInfo);
-                        if (formatAttribute == null)
+                        using (_formatterLock.WriteLock())
                         {
-                            _formatterCache.Add(memberInfo, null);
-                            return returnValue;
+                            var formatAttribute = GetAttribute<AuditPropertyFormatAttribute>(memberInfo);
+                            if (formatAttribute == null)
+                            {
+                                _formatterCache.Add(memberInfo, null);
+                                return returnValue;
+                            }
+
+                            Type formatterType = formatAttribute.FormatType;
+
+                            //support either static object MethodName(object value) or static object MethodName(MemberInfo memberInfo, object value)
+                            formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null, new[] { typeof(MethodInfo), typeof(object) }, null);
+                            if (formatMethod == null)
+                                formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null, new[] { typeof(object) }, null);
+
+                            _formatterCache.Add(memberInfo, formatMethod);
                         }
-
-                        Type formatterType = formatAttribute.FormatType;
-
-                        //support either static object MethodName(object value) or static object MethodName(MemberInfo memberInfo, object value)
-                        formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null, new[] { typeof(MethodInfo), typeof(object) }, null);
-                        if (formatMethod == null)
-                            formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null, new[] { typeof(object) }, null);
-
-                        _formatterCache.Add(memberInfo, formatMethod);
                     }
-                }
 
-                if (formatMethod == null)
-                    return returnValue;
+                    if (formatMethod == null)
+                        return returnValue;
 
-                var args = formatMethod.GetParameters();
+                    var args = formatMethod.GetParameters();
 
-                try
-                {
-                    if (args.Length == 2)
-                        return formatMethod.Invoke(null, new[] { memberInfo, returnValue });
+                    try
+                    {
+                        if (args.Length == 2)
+                            return formatMethod.Invoke(null, new[] { memberInfo, returnValue });
 
 
-                    return formatMethod.Invoke(null, new[] { returnValue });
-                }
-                catch
-                {
-                    // eat format error?
-                    return returnValue;
-                }
+                        return formatMethod.Invoke(null, new[] { returnValue });
+                    }
+                    catch
+                    {
+                        // eat format error?
+                        return returnValue;
+                    }
+                } // using lock
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.Message);
+                return "{error}";
             }
         }
 
@@ -373,10 +430,18 @@ namespace CodeSmith.Data.Audit
             if (dataMember == null || entity == null)
                 return null;
 
-            Type underlyingType = GetUnderlyingType(dataMember.Type);
-            object value = dataMember.MemberAccessor.GetBoxedValue(entity);
+            try
+            {
+                Type underlyingType = GetUnderlyingType(dataMember.Type);
+                object value = dataMember.MemberAccessor.GetBoxedValue(entity);
 
-            return GetValue(dataMember.Member, underlyingType, value);
+                return GetValue(dataMember.Member, underlyingType, value);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.Message);
+                return "{error}";
+            }
         }
 
         private static MetaDataMember GetDisplayMember(MetaType rowType)
@@ -516,22 +581,18 @@ namespace CodeSmith.Data.Audit
 
         private static string GetCurrentUserName()
         {
-            IPrincipal currentUser = null;
-
             if (HostingEnvironment.IsHosted)
             {
+                IPrincipal currentUser = null;
                 HttpContext current = HttpContext.Current;
                 if (current != null)
                     currentUser = current.User;
+
+                if ((currentUser != null) && (currentUser.Identity != null))
+                    return currentUser.Identity.Name;
             }
 
-            if (currentUser == null)
-                currentUser = Thread.CurrentPrincipal;
-
-            if ((currentUser != null) && (currentUser.Identity != null))
-                return currentUser.Identity.Name;
-
-            return string.Empty;
+            return Environment.UserName;
         }
 
         #region Disposable Lock Classes

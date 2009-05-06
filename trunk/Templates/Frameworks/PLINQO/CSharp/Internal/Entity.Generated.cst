@@ -460,8 +460,11 @@ foreach(Column column in Type.Columns) {
         partial void OnCreated();
 <% foreach(Column column in Type.Columns) {
     string dataType = CSharpAlias[column.Type];
+    
+    LinqToSqlShared.Generator.DbmlEnum.Enum enumType = EnumDatabase != null
+        ? EnumDatabase.Enums.FirstOrDefault(e => e.Name == column.Type) : null;
 
-    if (column.CanBeNull == true && CommonUtility.IsNullableType(column.Type))
+    if (column.CanBeNull == true && (CommonUtility.IsNullableType(column.Type) || enumType != null))
         dataType = string.Format("Nullable<{0}>", dataType);
 %>
         /// <summary>Called when <see cref="<%= column.Member %>"/> is changing.</summary>

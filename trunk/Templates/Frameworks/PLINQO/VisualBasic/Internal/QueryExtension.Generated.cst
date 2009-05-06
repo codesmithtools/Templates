@@ -30,7 +30,7 @@
     Description="Database schema instance. Must be set by parent template" %>
 
 <%@ Property Category="3.Query" Name="MethodPrefix"
-    Type="System.String" Default="GetBy" Optional="True"
+    Type="System.String" Default="By" Optional="True"
     Description="The prefix of query method names." %>
 
 <%@ Property Category="3.Query" Name="MethodKeySuffix"
