@@ -493,13 +493,12 @@ namespace QuickStart
 
         public override void OnDatabaseChanged()
         {
-            if (string.IsNullOrEmpty(Location))
-                Location = Path.Combine(Path.Combine(
-                    CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory,
-                    Path.Combine("CSLA", SourceDatabase.Name)), BusinessProjectName);
-
             base.OnDatabaseChanged();
 
+            string basePath = Path.Combine(CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory, Path.Combine("CSLA", SourceDatabase.Name));
+            if (Location == basePath)
+                Location = Path.Combine(Location, BusinessProjectName);
+            
             //EditableChild
             foreach (Entity entity in GetChildEntities())
             {
