@@ -22,6 +22,9 @@ namespace CodeSmith.SchemaHelper
                 
                 foreach ( TableSchema table in tables )
                 {
+                    if(table == null)
+                        continue;
+                    
                     if ( Configuration.Instance.ExcludeTableRegexIsMatch( table.FullName ) || table.IsManyToMany() )
                         ExcludedTables.Add( table );
                     else if (!table.HasPrimaryKey)

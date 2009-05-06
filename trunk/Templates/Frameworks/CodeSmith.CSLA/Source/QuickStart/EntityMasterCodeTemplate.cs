@@ -12,9 +12,7 @@ namespace QuickStart
     {
         public EntityMasterCodeTemplate()
         {
-            CommandObject = new TableSchemaCollection();
-            Criteria = new TableSchemaCollection();
-            NameValueList = new TableSchemaCollection();
+            UpdateTableCollections();
         }
 
         #region Private Member(s)
@@ -253,6 +251,24 @@ namespace QuickStart
                 SwitchableObject.Remove(entity.Table);
 
                 TemplateContext.Add(entity.ClassName, "DynamicRoot");
+
+                if (this.State != TemplateState.Default)
+                    return;
+
+                //Many-To-One
+                foreach (var childEntity in entity.ManyToOne)
+                {
+                    var table = new TableSchema(SourceDatabase, childEntity.TableName, childEntity.TableOwner,
+                                                DateTime.Now);
+                    AddChildEntity(table, false, false);
+                }
+
+                //One-To-Many & Many-To-Many
+                foreach (var childList in entity.ToManyUnion)
+                {
+                    var table = new TableSchema(SourceDatabase, childList.TableName, childList.TableOwner, DateTime.Now);
+                    AddChildList(table, false, false);
+                }
             }
         }
 
@@ -273,6 +289,24 @@ namespace QuickStart
                 SwitchableObject.Remove(entity.Table);
 
                 TemplateContext.Add(entity.ClassName, "EditableChild");
+
+                if (this.State != TemplateState.Default)
+                    return;
+
+                //Many-To-One
+                foreach (var childEntity in entity.ManyToOne)
+                {
+                    var table = new TableSchema(SourceDatabase, childEntity.TableName, childEntity.TableOwner,
+                                                DateTime.Now);
+                    AddChildEntity(table, false, true);
+                }
+
+                //One-To-Many & Many-To-Many
+                foreach (var childList in entity.ToManyUnion)
+                {
+                    var table = new TableSchema(SourceDatabase, childList.TableName, childList.TableOwner, DateTime.Now);
+                    AddChildList(table, false, true);
+                }
             }
         }
 
@@ -293,6 +327,24 @@ namespace QuickStart
                 SwitchableObject.Remove(entity.Table);
 
                 TemplateContext.Add(entity.ClassName, "EditableRoot");
+
+                if (this.State != TemplateState.Default)
+                    return;
+
+                //Many-To-One
+                foreach (var childEntity in entity.ManyToOne)
+                {
+                    var table = new TableSchema(SourceDatabase, childEntity.TableName, childEntity.TableOwner,
+                                                DateTime.Now);
+                    AddChildEntity(table, false, true);
+                }
+
+                //One-To-Many & Many-To-Many
+                foreach (var childList in entity.ToManyUnion)
+                {
+                    var table = new TableSchema(SourceDatabase, childList.TableName, childList.TableOwner, DateTime.Now);
+                    AddChildList(table, false, true);
+                }
             }
         }
 
@@ -313,6 +365,24 @@ namespace QuickStart
                 SwitchableObject.Remove(entity.Table);
 
                 TemplateContext.Add(entity.ClassName, "ReadOnlyChild");
+
+                if (this.State != TemplateState.Default)
+                    return;
+
+                //Many-To-One
+                foreach (var childEntity in entity.ManyToOne)
+                {
+                    var table = new TableSchema(SourceDatabase, childEntity.TableName, childEntity.TableOwner,
+                                                DateTime.Now);
+                    AddChildEntity(table, true, true);
+                }
+
+                //One-To-Many & Many-To-Many
+                foreach (var childList in entity.ToManyUnion)
+                {
+                    var table = new TableSchema(SourceDatabase, childList.TableName, childList.TableOwner, DateTime.Now);
+                    AddChildList(table, true, true);
+                }
             }
         }
 
@@ -333,6 +403,24 @@ namespace QuickStart
                 SwitchableObject.Remove(entity.Table);
 
                 TemplateContext.Add(entity.ClassName, "ReadOnlyRoot");
+
+                if (this.State != TemplateState.Default)
+                    return;
+
+                //Many-To-One
+                foreach (var childEntity in entity.ManyToOne)
+                {
+                    var table = new TableSchema(SourceDatabase, childEntity.TableName, childEntity.TableOwner,
+                                                DateTime.Now);
+                    AddChildEntity(table, true, true);
+                }
+
+                //One-To-Many & Many-To-Many
+                foreach (var childList in entity.ToManyUnion)
+                {
+                    var table = new TableSchema(SourceDatabase, childList.TableName, childList.TableOwner, DateTime.Now);
+                    AddChildList(table, true, true);
+                }
             }
         }
 
@@ -353,6 +441,24 @@ namespace QuickStart
                 ReadOnlyRoot.Remove(entity.Table);
 
                 TemplateContext.Add(entity.ClassName, "SwitchableObject");
+
+                if (this.State != TemplateState.Default)
+                    return;
+
+                //Many-To-One
+                foreach (var childEntity in entity.ManyToOne)
+                {
+                    var table = new TableSchema(SourceDatabase, childEntity.TableName, childEntity.TableOwner,
+                                                DateTime.Now);
+                    AddChildEntity(table, false, true);
+                }
+
+                //One-To-Many & Many-To-Many
+                foreach (var childList in entity.ToManyUnion)
+                {
+                    var table = new TableSchema(SourceDatabase, childList.TableName, childList.TableOwner, DateTime.Now);
+                    AddChildList(table, false, true);
+                }
             }
         }
 
@@ -378,6 +484,11 @@ namespace QuickStart
                 ReadOnlyChildList.Remove(entity.Table);
 
                 TemplateContext.Add(key, "DynamicRootList");
+
+                if (this.State != TemplateState.Default)
+                    return;
+
+                AddChildEntity(entity.Table, false, true);
             }
         }
 
@@ -399,6 +510,11 @@ namespace QuickStart
                 ReadOnlyChildList.Remove(entity.Table);
 
                 TemplateContext.Add(key, "EditableRootList");
+
+                if (this.State != TemplateState.Default)
+                    return;
+
+                AddChildEntity(entity.Table, false, true);
             }
         }
 
@@ -421,6 +537,11 @@ namespace QuickStart
                 ReadOnlyChildList.Remove(entity.Table);
 
                 TemplateContext.Add(key, "EditableChildList");
+
+                if (this.State != TemplateState.Default)
+                    return;
+
+                AddChildEntity(entity.Table, false, true);
             }
         }
 
@@ -443,6 +564,11 @@ namespace QuickStart
                 ReadOnlyChildList.Remove(entity.Table);
 
                 TemplateContext.Add(key, "ReadOnlyList");
+
+                if (this.State != TemplateState.Default)
+                    return;
+
+                AddChildEntity(entity.Table, true, true);
             }
         }
 
@@ -465,13 +591,102 @@ namespace QuickStart
                 ReadOnlyList.Remove(entity.Table);
 
                 TemplateContext.Add(key, "ReadOnlyChildList");
+
+                if (this.State != TemplateState.Default)
+                    return;
+
+                AddChildEntity(entity.Table, true, true);
             }
         }
 
         #endregion
 
+        #region Helper Methods
+
+        private void UpdateTableCollections()
+        {
+            if (CommandObject == null) CommandObject = new TableSchemaCollection();
+            if (Criteria == null) Criteria = new TableSchemaCollection();
+            if (DynamicRoot == null) DynamicRoot = new TableSchemaCollection();
+            if (EditableChild == null) EditableChild = new TableSchemaCollection();
+            if (EditableRoot == null) EditableRoot = new TableSchemaCollection();
+            if (ReadOnlyChild == null) ReadOnlyChild = new TableSchemaCollection();
+            if (ReadOnlyRoot == null) ReadOnlyRoot = new TableSchemaCollection();
+            if (SwitchableObject == null) SwitchableObject = new TableSchemaCollection();
+
+            if (DynamicRootList == null) DynamicRootList = new TableSchemaCollection();
+            if (EditableRootList == null) EditableRootList = new TableSchemaCollection();
+            if (EditableChildList == null) EditableChildList = new TableSchemaCollection();
+            if (ReadOnlyList == null) ReadOnlyList = new TableSchemaCollection();
+            if (ReadOnlyChildList == null) ReadOnlyChildList = new TableSchemaCollection();
+            if (NameValueList == null) NameValueList = new TableSchemaCollection();
+        }
+
+        private void AddChildList(TableSchema tableSchema, bool readOnly, bool child)
+        {
+            if (DynamicRootList.Count > 0 && DynamicRootList.Contains(tableSchema.Owner, tableSchema.Name))
+                return;
+            if (EditableRootList.Count > 0 && EditableRootList.Contains(tableSchema.Owner, tableSchema.Name))
+                return;
+            if (EditableChildList.Count > 0 && EditableChildList.Contains(tableSchema.Owner, tableSchema.Name))
+                return;
+            if (ReadOnlyList.Count > 0 && ReadOnlyList.Contains(tableSchema.Owner, tableSchema.Name))
+                return;
+            if (ReadOnlyChildList.Count > 0 && ReadOnlyChildList.Contains(tableSchema.Owner, tableSchema.Name))
+                return;
+
+            if (readOnly)
+            {
+                if (child)
+                    ReadOnlyChildList.Add(tableSchema);
+                else
+                    ReadOnlyList.Add(tableSchema);
+            }
+            else
+            {
+                if (child)
+                    EditableChildList.Add(tableSchema);
+                else
+                    EditableRootList.Add(tableSchema);
+            }
+        }
+
+        private void AddChildEntity(TableSchema tableSchema, bool readOnly, bool child)
+        {
+           if (DynamicRoot.Count > 0 && DynamicRoot.Contains(tableSchema.Owner, tableSchema.Name))
+                return;
+            if (EditableChild.Count > 0 && EditableChild.Contains(tableSchema.Owner, tableSchema.Name))
+                return;
+            if (EditableRoot.Count > 0 && EditableRoot.Contains(tableSchema.Owner, tableSchema.Name))
+                return;
+            if (ReadOnlyChild.Count > 0 && ReadOnlyChild.Contains(tableSchema.Owner, tableSchema.Name))
+                return;
+            if (ReadOnlyRoot.Count > 0 && ReadOnlyRoot.Contains(tableSchema.Owner, tableSchema.Name))
+                return;
+            if (SwitchableObject.Count > 0 && SwitchableObject.Contains(tableSchema.Owner, tableSchema.Name))
+                return;
+
+            if (readOnly)
+            {
+                if (child)
+                    ReadOnlyChild.Add(tableSchema);
+                else
+                    ReadOnlyRoot.Add(tableSchema);
+            }
+            else
+            {
+                if (child)
+                    EditableChild.Add(tableSchema);
+                else
+                    EditableRoot.Add(tableSchema);
+            }
+        }
+
+
         private void CleanTemplateContextByValue(string value)
         {
+            UpdateTableCollections();
+
             if (TemplateContext == null)
                 TemplateContext = new Dictionary<string, string>();
 
@@ -489,16 +704,23 @@ namespace QuickStart
 
         #endregion
 
+        #endregion
+
         #region Public Overriden Methods
 
         public override void OnDatabaseChanged()
         {
+
+            if (this.State != TemplateState.Default)
+                return;
+
             base.OnDatabaseChanged();
 
-            string basePath = Path.Combine(CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory, Path.Combine("CSLA", SourceDatabase.Name));
+            string basePath = Path.Combine(CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory,
+                                           Path.Combine("CSLA", SourceDatabase.Name));
             if (Location == basePath)
                 Location = Path.Combine(Location, BusinessProjectName);
-            
+
             //EditableChild
             foreach (Entity entity in GetChildEntities())
             {
@@ -514,7 +736,7 @@ namespace QuickStart
                     var table = new TableSchema(SourceDatabase, association.TableName, entity.Table.Owner,
                                                 DateTime.Now);
 
-                    if(!EditableChildList.Contains(table))
+                    if (!EditableChildList.Contains(table))
                         EditableChildList.Add(table);
                 }
             }
