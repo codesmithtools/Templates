@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Zip" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+  <PropertyGroup>
+    <Major>1</Major>
+    <Minor>0</Minor>
+    <Build>0</Build>
+    <Revision>1</Revision>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SvnExclude Include="**\.svn\**" />
+
+    <DefaultExclude Include="@(SvnExclude)" />
+    <DefaultExclude Include="**\obj\**" />
+    <DefaultExclude Include="**\bin\**" />
+    <DefaultExclude Include="**\Sample\**" />
+    <DefaultExclude Include="**\Libraries\**" />
+    <DefaultExclude Include="**\Help\**" />
+    <DefaultExclude Include="**\Patch\**" />
+    <DefaultExclude Include="**\_ReSharper*\**" />
+    <DefaultExclude Include="*.proj" />
+    <DefaultExclude Include="*.dbml" />
+    <DefaultExclude Include="*.zip" />
+    <DefaultExclude Include="*.suo" />
+    <DefaultExclude Include="**\*.user" />
+    <DefaultExclude Include="**\*.resharper" />
+    <DefaultExclude Include="**\*.cache" />
+    <DefaultExclude Include="*.teamcity.*" />
+
+    <ZipFiles Include="**\*.*" Exclude="@(DefaultExclude)" />
+  </ItemGroup>
+
+  <Target Name="Version">
+    <SvnVersion LocalPath="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="Revision" PropertyName="Revision" />
+    </SvnVersion>
+
+    <Message Text="Revision: $(Revision)"/>
+  </Target>
+ 
+  <Target Name="Zip" DependsOnTargets="Version">
+    <Zip Files="@(ZipFiles)"
+         ZipFileName="tracker-v$(Major).$(Minor).$(Revision).zip" />
+  </Target>
+
+</Project>
