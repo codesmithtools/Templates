@@ -7,6 +7,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="1a. Source Database" Description="The source database to generate from." %>
 
+<%@ Property Name="ExcludedColumns" Type="CodeSmith.CustomProperties.StringCollection" Default="" Optional="True" Category="1b. Database Options" Description="A collection of regular expressions; a match will excluded a column." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." Filter="SourceTable"%>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 
@@ -51,7 +52,8 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <script runat="template">
 public override void Render(TextWriter writer)
 {
-	HelperInit(this.TablePrefix, this.SystemCSharp, this.KeyWords);
+    string[] excludedColumns = (ExcludedColumns != null) ? ExcludedColumns.ToArray() : new string[0]{};
+	HelperInit(this.TablePrefix, this.SystemCSharp, this.KeyWords, excludedColumns);
 	
 	if(ExcludedTables == null)
 		ExcludedTables = new TableSchemaCollection();
