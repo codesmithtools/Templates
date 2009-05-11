@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SchemaExplorer;
+using System.Text.RegularExpressions;
 
 namespace NHibernateHelper
 {
@@ -66,12 +67,10 @@ namespace NHibernateHelper
         {
             foreach (ColumnSchema column in columns)
                 GetMember(column);
-
-            
         }
         protected void GetMember(ColumnSchema column)
         {
-            if (!_memberMap.ContainsKey(column))
+            if (!_memberMap.ContainsKey(column) && !NHibernateHelper.IsExcludedColumn(column.Name))
             {
                 EntityMember em = new EntityMember(column);
                 _memberMap.Add(column, em);
@@ -90,7 +89,7 @@ namespace NHibernateHelper
                 {
                     ColumnSchema column = tks.ForeignKeyMemberColumns[0];
 
-                    if(!column.IsPrimaryKeyMember && !_associationMap.ContainsKey(column))
+                    if (!column.IsPrimaryKeyMember && !_associationMap.ContainsKey(column) && !NHibernateHelper.IsExcludedColumn(column.Name))
                     {
                         if (!_excludedTables.Contains(tks.PrimaryKeyTable))
                         {
@@ -117,7 +116,7 @@ namespace NHibernateHelper
                 {
                     ColumnSchema column = tks.ForeignKeyMemberColumns[0];
 
-                    if (!column.IsPrimaryKeyMember && !_associationMap.ContainsKey(column))
+                    if (!column.IsPrimaryKeyMember && !_associationMap.ContainsKey(column) && !NHibernateHelper.IsExcludedColumn(column.Name))
                     {
                         if (!NHibernateHelper.IsManyToMany(column.Table))
                         {

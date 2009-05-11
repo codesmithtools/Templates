@@ -38,12 +38,18 @@ namespace NHibernateHelper
         /// </summary>
         /// <param name="tablePrefix">TablePrefix Property</param>
         /// <param name="namingProperty">NamingContentions Property</param>
-        public static void HelperInit(string tablePrefix, MapCollection systemCSharpAliasMap, MapCollection csharpKeyWordEscapeMap) //, NamingProperty namingConventions)
+        public static void HelperInit(string tablePrefix, MapCollection systemCSharpAliasMap, MapCollection csharpKeyWordEscapeMap, string[] excludedColumns) //, NamingProperty namingConventions)
         {
             _tablePrefix = tablePrefix;
 
             SystemCSharpAliasMap = systemCSharpAliasMap;
             CsharpKeyWordEscapeMap = csharpKeyWordEscapeMap;
+
+            _excludedColumns = new List<Regex>();
+            foreach (var s in excludedColumns)
+            {
+                _excludedColumns.Add(new Regex(s, RegexOptions.Compiled));
+            }
 
             //_tableNaming = namingConventions.TableNaming;
             //_entityNaming = namingConventions.EntityNaming;
@@ -55,6 +61,24 @@ namespace NHibernateHelper
 
         internal static MapCollection CsharpKeyWordEscapeMap { get; set; }
         internal static MapCollection SystemCSharpAliasMap { get; set; }
+
+        private static List<Regex> _excludedColumns = null;
+        internal static bool IsExcludedColumn(string s)
+        {
+            if (_excludedColumns == null)
+                return false;
+
+            var result = false;
+            foreach (var exclude in _excludedColumns)
+            {
+                if (exclude.IsMatch(s))
+                {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
 
         internal static TableNamingEnum TableNaming = TableNamingEnum.Mixed;
         internal static EntityNamingEnum EntityNaming = EntityNamingEnum.Singular;
