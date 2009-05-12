@@ -94,6 +94,7 @@
     <Compile Include="Linq\IPagedList.cs" />
     <Compile Include="Linq\PagedList.cs" />
     <Compile Include="Linq\PagingExtensions.cs" />
+    <Compile Include="Linq\QueryResultCache.cs" />
     <Compile Include="Linq\TableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
