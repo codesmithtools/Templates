@@ -1016,31 +1016,56 @@
             <param name="totalCount">The total count.</param>
             <returns>A new instance of <see cref="T:CodeSmith.Data.Linq.PagedList`1"/>.</returns>
         </member>
+        <member name="T:CodeSmith.Data.Linq.QueryResultCache">
+            <summary>
+            Provides a set of static methods for caching IQueryable queries. 
+            </summary>
+            <remarks>
+            From http://petemontgomery.wordpress.com/2008/08/07/caching-the-results-of-linq-queries/
+            </remarks>
+        </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0})">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
             the query is materialized and the result cached before being returned.
             The cache entry has a one minute sliding expiration with normal priority.
             </summary>
+            <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <returns>The result of the query.</returns>
         </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},System.Int32)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
             the query is materialized and the result cached before being returned.
             </summary>
+            <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
             <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <returns>The result of the query.</returns>
         </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},System.Web.Caching.CacheItemPriority,System.TimeSpan)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
             the query is materialized and the result cached before being returned.
             </summary>
+            <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="priority">The cost of the object relative to other items stored in the cache, as expressed by the <see cref="T:System.Web.Caching.CacheItemPriority"/> enumeration.</param>
+            <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
+            <returns>The result of the query.</returns>
         </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},System.DateTime,System.TimeSpan,System.Web.Caching.CacheItemPriority)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
             the query is materialized and the result cached before being returned.
             </summary>
+            <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
+            <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
+            <param name="priority">The cost of the object relative to other items stored in the cache, as expressed by the <see cref="T:System.Web.Caching.CacheItemPriority"/> enumeration.</param>
+            <returns>The result of the query.</returns>
         </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.ToMd5Fingerprint(System.String)">
             <summary>
