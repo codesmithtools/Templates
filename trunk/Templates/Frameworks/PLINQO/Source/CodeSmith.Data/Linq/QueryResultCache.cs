@@ -9,6 +9,13 @@ using System.Web.Caching;
 
 namespace CodeSmith.Data.Linq
 {
+
+    /// <summary>
+    /// Provides a set of static methods for caching IQueryable queries. 
+    /// </summary>
+    /// <remarks>
+    /// From http://petemontgomery.wordpress.com/2008/08/07/caching-the-results-of-linq-queries/
+    /// </remarks>
     public static class QueryResultCache
     {
         private static Func<Expression, bool> CanBeEvaluatedLocally
@@ -35,6 +42,9 @@ namespace CodeSmith.Data.Linq
         /// the query is materialized and the result cached before being returned.
         /// The cache entry has a one minute sliding expiration with normal priority.
         /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be materialized.</param>
+        /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query) where T : class
         {
             return query.FromCache(CacheItemPriority.Normal, TimeSpan.FromMinutes(1));
@@ -44,7 +54,10 @@ namespace CodeSmith.Data.Linq
         /// Returns the result of the query; if possible from the cache, otherwise
         /// the query is materialized and the result cached before being returned.
         /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be materialized.</param>
         /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+        /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, int duration) where T : class
         {
             return query.FromCache(DateTime.UtcNow.AddSeconds(duration), Cache.NoSlidingExpiration, CacheItemPriority.Normal);
@@ -54,6 +67,11 @@ namespace CodeSmith.Data.Linq
         /// Returns the result of the query; if possible from the cache, otherwise
         /// the query is materialized and the result cached before being returned.
         /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be materialized.</param>
+        /// <param name="priority">The cost of the object relative to other items stored in the cache, as expressed by the <see cref="CacheItemPriority"/> enumeration.</param>
+        /// <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
+        /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, CacheItemPriority priority, TimeSpan slidingExpiration) where T : class
         {
             return query.FromCache(Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(1), CacheItemPriority.Normal);
@@ -63,6 +81,12 @@ namespace CodeSmith.Data.Linq
         /// Returns the result of the query; if possible from the cache, otherwise
         /// the query is materialized and the result cached before being returned.
         /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be materialized.</param>
+        /// <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
+        /// <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
+        /// <param name="priority">The cost of the object relative to other items stored in the cache, as expressed by the <see cref="CacheItemPriority"/> enumeration.</param>
+        /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, DateTime absoluteExpiration, TimeSpan slidingExpiration, CacheItemPriority priority)
             where T : class
         {
