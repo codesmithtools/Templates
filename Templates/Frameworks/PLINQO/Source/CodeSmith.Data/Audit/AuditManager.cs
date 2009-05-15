@@ -33,6 +33,7 @@ namespace CodeSmith.Data.Audit
 
         private static readonly ReaderWriterLockSlim _alwaysAuditLock = new ReaderWriterLockSlim();
         private static readonly Dictionary<MemberInfo, bool> _alwaysAuditCache = new Dictionary<MemberInfo, bool>();
+
         private static readonly ReaderWriterLockSlim _displayColumnLock = new ReaderWriterLockSlim();
         private static readonly Dictionary<Type, MetaDataMember> _displayColumnCache = new Dictionary<Type, MetaDataMember>();
 
@@ -174,6 +175,7 @@ namespace CodeSmith.Data.Audit
 
                 var memberInfo = dataMember.Member;
                 var modifiedMemberInfo = modifiedMembers.FirstOrDefault(m => m.Member == memberInfo);
+
                 if (auditEntity.Action == AuditAction.Update && modifiedMemberInfo.Member == null && !HasAlwaysAuditAttribute(dataMember.Member))
                     continue; // this means the property was not changed, skip it
 
@@ -504,6 +506,7 @@ namespace CodeSmith.Data.Audit
             {
                 if (_alwaysAuditCache.ContainsKey(memberInfo))
                     return _alwaysAuditCache[memberInfo];
+
                 using (_alwaysAuditLock.WriteLock())
                 {
                     bool result = HasAttribute(memberInfo, typeof(AlwaysAuditAttribute));
@@ -512,6 +515,7 @@ namespace CodeSmith.Data.Audit
                 }
             }
         }
+
         private static bool HasAuditAttribute(object entity)
         {
             Type entityType = entity.GetType();
