@@ -31,6 +31,8 @@ namespace CodeSmith.Data.Audit
         private static readonly ReaderWriterLockSlim _notAuditedLock = new ReaderWriterLockSlim();
         private static readonly Dictionary<MemberInfo, bool> _notAuditedCache = new Dictionary<MemberInfo, bool>();
 
+        private static readonly ReaderWriterLockSlim _alwaysAuditLock = new ReaderWriterLockSlim();
+        private static readonly Dictionary<MemberInfo, bool> _alwaysAuditCache = new Dictionary<MemberInfo, bool>();
         private static readonly ReaderWriterLockSlim _displayColumnLock = new ReaderWriterLockSlim();
         private static readonly Dictionary<Type, MetaDataMember> _displayColumnCache = new Dictionary<Type, MetaDataMember>();
 
@@ -172,7 +174,7 @@ namespace CodeSmith.Data.Audit
 
                 var memberInfo = dataMember.Member;
                 var modifiedMemberInfo = modifiedMembers.FirstOrDefault(m => m.Member == memberInfo);
-                if (auditEntity.Action == AuditAction.Update && modifiedMemberInfo.Member == null)
+                if (auditEntity.Action == AuditAction.Update && modifiedMemberInfo.Member == null && !HasAlwaysAuditAttribute(dataMember.Member))
                     continue; // this means the property was not changed, skip it
 
                 var auditProperty = CreateAuditProperty(dataMember, modifiedMemberInfo, entity, auditEntity);
@@ -196,7 +198,7 @@ namespace CodeSmith.Data.Audit
                 if (auditProperty.Type == _binaryType || dataMember.IsDeferred)
                     return auditProperty;
 
-                if (auditEntity.Action == AuditAction.Update)
+                if (auditEntity.Action == AuditAction.Update && modifiedMemberInfo.Member != null)
                 {
                     auditProperty.Current = GetValue(modifiedMemberInfo.Member, underlyingType, modifiedMemberInfo.CurrentValue);
                     auditProperty.Original = GetValue(modifiedMemberInfo.Member, underlyingType, modifiedMemberInfo.OriginalValue);
@@ -260,7 +262,7 @@ namespace CodeSmith.Data.Audit
 
                     var displayMember = GetDisplayMember(association.OtherType);
 
-                    //this will get the fkey entity with out causing a load               
+                    //this will get the fkey entity with out causing a load
                     object currentChildEntity = thisMember.DeferredValueAccessor.GetBoxedValue(entity);
                     object currentValue = GetAssociationValue(association, displayMember, currentChildEntity, table, entity);
 
@@ -279,7 +281,7 @@ namespace CodeSmith.Data.Audit
                         object original = table.GetOriginalEntityState(entity);
                         if (original != null)
                         {
-                            //this will get the fkey entity with out causing a load               
+                            //this will get the fkey entity with out causing a load
                             object originalChildEntity = thisMember.DeferredValueAccessor.GetBoxedValue(original);
                             auditProperty.Original = GetAssociationValue(association, displayMember, originalChildEntity, table, original) ?? _nullText;
                         }
@@ -343,7 +345,7 @@ namespace CodeSmith.Data.Audit
                 if (fkeyValues.Count == 0)
                     return null;
 
-                // get the fkey table            
+                // get the fkey table
                 var fkeyTable = dataContext.GetTable(association.OtherType.Type);
                 var q = fkeyTable
                     .Where(sb.ToString(), fkeyValues.ToArray())
@@ -496,6 +498,20 @@ namespace CodeSmith.Data.Audit
             }
         }
 
+        private static bool HasAlwaysAuditAttribute(MemberInfo memberInfo)
+        {
+            using (_alwaysAuditLock.ReadLock())
+            {
+                if (_alwaysAuditCache.ContainsKey(memberInfo))
+                    return _alwaysAuditCache[memberInfo];
+                using (_alwaysAuditLock.WriteLock())
+                {
+                    bool result = HasAttribute(memberInfo, typeof(AlwaysAuditAttribute));
+                    _alwaysAuditCache.Add(memberInfo, result);
+                    return result;
+                }
+            }
+        }
         private static bool HasAuditAttribute(object entity)
         {
             Type entityType = entity.GetType();

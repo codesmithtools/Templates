@@ -69,6 +69,7 @@
     <Compile Include="Attributes\UserNameAttribute.cs" />
     <Compile Include="Attributes\GuidAttribute.cs" />
     <Compile Include="Attributes\NowAttribute.cs" />
+    <Compile Include="Audit\AlwaysAuditAttribute.cs" />
     <Compile Include="Audit\AuditAction.cs" />
     <Compile Include="Audit\AuditAttribute.cs" />
     <Compile Include="Audit\AuditEntity.cs" />
