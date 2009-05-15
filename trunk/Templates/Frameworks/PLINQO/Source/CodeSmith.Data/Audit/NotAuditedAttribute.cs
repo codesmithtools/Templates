@@ -9,6 +9,7 @@ namespace CodeSmith.Data.Audit
     /// Use the NotAuditedAttribute attribute to prevent a field from being included in the audit.
     /// </remarks>
     /// <seealso cref="AuditAttribute"/>
+    /// <seealso cref="AlwaysAuditAttribute"/>
     /// <seealso cref="AuditManager"/>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class NotAuditedAttribute : Attribute

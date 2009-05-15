@@ -10,6 +10,7 @@ namespace CodeSmith.Data.Audit
     /// </remarks>
     /// <seealso cref="AuditManager"/>
     /// <seealso cref="NotAuditedAttribute"/>
+    /// <seealso cref="AlwaysAuditAttribute"/>
     [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class, AllowMultiple = false)]
     public class AuditAttribute : Attribute
     { }
