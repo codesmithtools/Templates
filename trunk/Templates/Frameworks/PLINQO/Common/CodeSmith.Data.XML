@@ -213,6 +213,14 @@
             true if the specified value is valid; otherwise, false.
             </returns>
         </member>
+        <member name="T:CodeSmith.Data.Audit.AlwaysAuditAttribute">
+            <summary>
+            Indicates that a field in an audited class should always be included in the audit data even if it hasn't been changed.
+            </summary>
+            <seealso cref="T:CodeSmith.Data.Audit.AuditAttribute"/>
+            <seealso cref="T:CodeSmith.Data.Audit.NotAuditedAttribute"/>
+            <seealso cref="T:CodeSmith.Data.Audit.AuditManager"/>
+        </member>
         <member name="T:CodeSmith.Data.Audit.AuditAction">
             <summary>
             A list of entity actions for the audit log.
@@ -242,6 +250,7 @@
             </remarks>
             <seealso cref="T:CodeSmith.Data.Audit.AuditManager"/>
             <seealso cref="T:CodeSmith.Data.Audit.NotAuditedAttribute"/>
+            <seealso cref="T:CodeSmith.Data.Audit.AlwaysAuditAttribute"/>
         </member>
         <member name="T:CodeSmith.Data.Audit.AuditEntity">
             <summary>
@@ -526,6 +535,7 @@
             Use the NotAuditedAttribute attribute to prevent a field from being included in the audit.
             </remarks>
             <seealso cref="T:CodeSmith.Data.Audit.AuditAttribute"/>
+            <seealso cref="T:CodeSmith.Data.Audit.AlwaysAuditAttribute"/>
             <seealso cref="T:CodeSmith.Data.Audit.AuditManager"/>
         </member>
         <member name="T:CodeSmith.Data.IEntityKey">
