@@ -1,9 +1,0 @@
-bin\Debug\CSLAExpress.exe
-bin\Debug\CSLAExpress.pdb
-bin\Debug\CSLAExpress.xml
-obj\Debug\ResolveAssemblyReference.cache
-obj\Debug\CSLAExpress20.Resources.resources
-obj\Debug\CSLAExpress.vbproj.GenerateResource.Cache
-obj\Debug\CSLAExpress.exe
-obj\Debug\CSLAExpress.xml
-obj\Debug\CSLAExpress.pdb
