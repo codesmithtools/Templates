@@ -636,7 +636,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             if (p.Direction != LinqToSqlShared.DbmlObjectModel.ParameterDirection.In)
                 s.Append("ref ");
             
-            s.AppendFormat("{0} {1}",GetParameterType(p), p.ParameterName);
+            s.AppendFormat("{0} {1}",GetParameterType(p), CSharpKeyWordEscape[p.ParameterName]);
                 
             if (x < function.Parameters.Count - 1)
                 s.Append(", ");
@@ -663,7 +663,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
                 s.Append(", ");
 
             Parameter p = function.Parameters[x];
-            s.Append(p.ParameterName);
+            s.Append(CSharpKeyWordEscape[p.ParameterName]);
         }
         
         return s.ToString();
