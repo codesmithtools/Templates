@@ -1,0 +1,55 @@
+Microsoft (R) Database Mapping Generator 2008 version 1.00.21022
+for Microsoft (R) .NET Framework version 3.5
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+SqlMetal [options] [<input file>]
+
+  Generates code and mapping for the LINQ to SQL component of the .NET framework. SqlMetal can:
+  - Generate source code and mapping attributes or a mapping file from a database.
+  - Generate an intermediate dbml file for customization from the database.
+  - Generate code and mapping attributes or mapping file from a dbml file.
+
+Options:
+  /server:<name>             Database server name.
+  /database:<name>           Database catalog on server.
+  /user:<name>               Login user ID (default: use Windows Authentication).
+  /password:<password>       Login password (default: use Windows Authentication).
+  /conn:<connection string>  Database connection string. Cannot be used with /server, /database, /user or /password options.
+  /timeout:<seconds>         Timeout value to use when SqlMetal accesses the database (default: 0 which means infinite).
+
+  /views                     Extract database views.
+  /functions                 Extract database functions.
+  /sprocs                    Extract stored procedures.
+
+  /dbml[:file]               Output as dbml. Cannot be used with /map option.
+  /code[:file]               Output as source code. Cannot be used with /dbml option.
+  /map[:file]                Generate mapping file, not attributes. Cannot be used with /dbml option.
+
+  /language:<language>       Language for source code: VB or C# (default: derived from extension on code file name).
+  /namespace:<name>          Namespace of generated code (default: no namespace).
+  /context:<type>            Name of data context class (default: derived from database name).
+  /entitybase:<type>         Base class of entity classes in the generated code (default: entities have no base class).
+  /pluralize                 Automatically pluralize or singularize class and member names using English language rules.
+  /serialization:<option>    Generate serializable classes: None or Unidirectional (default: None).
+  /provider:<type>           Provider type: SQLCompact, SQL2000, or SQL2005. (default: provider is determined at run time).
+
+  <input file>               May be a SqlExpress mdf file, a SqlCE sdf file, or a dbml intermediate file.
+
+Create code from SqlServer:
+  SqlMetal /server:myserver /database:northwind /code:nwind.cs /namespace:nwind 
+
+Generate intermediate dbml file from SqlServer:
+  SqlMetal /server:myserver /database:northwind /dbml:northwind.dbml /namespace:nwind
+
+Generate code with external mapping from dbml:
+  SqlMetal /code:nwind.cs /map:nwind.map northwind.dbml
+
+Generate dbml from a SqlCE sdf file:
+  SqlMetal /dbml:northwind.dbml northwind.sdf
+
+Generate dbml from SqlExpress local server:
+  SqlMetal /server:.\sqlexpress /database:northwind /dbml:northwind.dbml
+
+Generate dbml by using a connection string in the command line:
+  SqlMetal /conn:"server='myserver'; database='northwind'" /dbml:northwind.dbml
+
