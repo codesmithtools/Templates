@@ -190,6 +190,7 @@ namespace Tester.Data
                 UserProfile previousValue = _userProfile.Entity;
                 if (previousValue != value || _userProfile.HasLoadedOrAssignedValue == false)
                 {
+                    OnUserProfileChanging(value);
                     SendPropertyChanging("UserProfile");
                     if (previousValue != null)
                     {
@@ -202,6 +203,7 @@ namespace Tester.Data
                         value.User = this;
                     }
                     SendPropertyChanged("UserProfile");
+                    OnUserProfileChanged();
                 }
             }
         }
@@ -241,6 +243,12 @@ namespace Tester.Data
         partial void OnCommentsChanging(string value);
         /// <summary>Called after <see cref="Comments"/> has Changed.</summary>
         partial void OnCommentsChanged();
+        /// <summary>Called when <see cref="UserProfile"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnUserProfileChanging(UserProfile value);
+        /// <summary>Called after <see cref="UserProfile"/> has Changed.</summary>
+        partial void OnUserProfileChanged();
+
         #endregion
 
         #region Serialization

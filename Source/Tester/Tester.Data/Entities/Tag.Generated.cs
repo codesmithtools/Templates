@@ -351,6 +351,7 @@ namespace Tester.Data
         partial void OnTChanging(string value);
         /// <summary>Called after <see cref="T"/> has Changed.</summary>
         partial void OnTChanged();
+
         #endregion
 
         #region Serialization

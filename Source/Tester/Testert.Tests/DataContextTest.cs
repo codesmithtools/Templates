@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.Linq;
 using System.Text;
+using System.Transactions;
 using NUnit.Framework;
 using Tester.Data;
 
@@ -150,7 +151,7 @@ namespace Testert.Tests
         }
 
         [Test]
-        public void Batch()
+        public void TransactionExecuteQuery()
         {
             var db = new TesterDataContext();
             db.Log = Console.Out;
@@ -176,11 +177,45 @@ namespace Testert.Tests
             Assert.IsNotNull(tags);
 
             var tt = tags.FirstOrDefault();
-            tt.IsBlah = 123;
+            tt.IsBlah = (tt.IsBlah ?? 0) + 1;
 
             db.SubmitChanges();
 
             tran.Commit();
+        }
+
+        [Test]
+        public void TransactionScopeExecuteQuery()
+        {
+            using (TransactionScope scope = new TransactionScope())
+            {
+                var db = new TesterDataContext();
+                db.Log = Console.Out;
+
+                var q1 = db.User.Where(u => u.EmailAddress == "admin@email.com");
+                var q2 = db.Tag.Where(t => t.CreatedBy == "pwelter");
+                var results = db.ExecuteQuery(q1, q2);
+
+                Assert.IsNotNull(results);
+
+                var user = results.GetResult<User>();
+                Assert.IsNotNull(user);
+                var userList = user.ToList();
+                Assert.IsNotNull(userList);
+
+                var tag = results.GetResult<Tag>();
+                Assert.IsNotNull(tag);
+                var tags = tag.ToList();
+                Assert.IsNotNull(tags);
+
+                var tt = tags.FirstOrDefault();
+                tt.IsBlah = (tt.IsBlah ?? 0) + 1;
+
+                db.SubmitChanges();
+
+                scope.Complete();
+            }
+           
         }
     }
 }

@@ -140,6 +140,14 @@
     <Compile Include="TesterDataContext.Manager.cs">
       <DependentUpon>TesterDataContext.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\GetUserFixedResult1.cs" />
+    <Compile Include="Views\GetUserFixedResult1.Generated.cs">
+      <DependentUpon>GetUserFixedResult1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GetUserFixedResult2.cs" />
+    <Compile Include="Views\GetUserFixedResult2.Generated.cs">
+      <DependentUpon>GetUserFixedResult2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\IndexableUser.cs" />
     <Compile Include="Views\IndexableUser.Generated.cs">
       <DependentUpon>IndexableUser.cs</DependentUpon>

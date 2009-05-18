@@ -414,6 +414,7 @@ namespace Tracker.Data
                 Status previousValue = _status.Entity;
                 if (previousValue != value || _status.HasLoadedOrAssignedValue == false)
                 {
+                    OnStatusChanging(value);
                     SendPropertyChanging("Status");
                     if (previousValue != null)
                     {
@@ -431,6 +432,7 @@ namespace Tracker.Data
                         _statusId = default(int);
                     }
                     SendPropertyChanged("Status");
+                    OnStatusChanged();
                 }
             }
         }
@@ -450,6 +452,7 @@ namespace Tracker.Data
                 User previousValue = _assignedUser.Entity;
                 if (previousValue != value || _assignedUser.HasLoadedOrAssignedValue == false)
                 {
+                    OnAssignedUserChanging(value);
                     SendPropertyChanging("AssignedUser");
                     if (previousValue != null)
                     {
@@ -467,6 +470,7 @@ namespace Tracker.Data
                         _assignedId = default(int);
                     }
                     SendPropertyChanged("AssignedUser");
+                    OnAssignedUserChanged();
                 }
             }
         }
@@ -486,6 +490,7 @@ namespace Tracker.Data
                 User previousValue = _createdUser.Entity;
                 if (previousValue != value || _createdUser.HasLoadedOrAssignedValue == false)
                 {
+                    OnCreatedUserChanging(value);
                     SendPropertyChanging("CreatedUser");
                     if (previousValue != null)
                     {
@@ -503,6 +508,7 @@ namespace Tracker.Data
                         _createdId = default(int);
                     }
                     SendPropertyChanged("CreatedUser");
+                    OnCreatedUserChanged();
                 }
             }
         }
@@ -522,6 +528,7 @@ namespace Tracker.Data
                 TaskExtended previousValue = _taskExtended.Entity;
                 if (previousValue != value || _taskExtended.HasLoadedOrAssignedValue == false)
                 {
+                    OnTaskExtendedChanging(value);
                     SendPropertyChanging("TaskExtended");
                     if (previousValue != null)
                     {
@@ -534,6 +541,7 @@ namespace Tracker.Data
                         value.Task = this;
                     }
                     SendPropertyChanged("TaskExtended");
+                    OnTaskExtendedChanged();
                 }
             }
         }
@@ -647,6 +655,27 @@ namespace Tracker.Data
         partial void OnLastModifiedByChanging(string value);
         /// <summary>Called after <see cref="LastModifiedBy"/> has Changed.</summary>
         partial void OnLastModifiedByChanged();
+        /// <summary>Called when <see cref="Status"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnStatusChanging(Status value);
+        /// <summary>Called after <see cref="Status"/> has Changed.</summary>
+        partial void OnStatusChanged();
+        /// <summary>Called when <see cref="AssignedUser"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnAssignedUserChanging(User value);
+        /// <summary>Called after <see cref="AssignedUser"/> has Changed.</summary>
+        partial void OnAssignedUserChanged();
+        /// <summary>Called when <see cref="CreatedUser"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnCreatedUserChanging(User value);
+        /// <summary>Called after <see cref="CreatedUser"/> has Changed.</summary>
+        partial void OnCreatedUserChanged();
+        /// <summary>Called when <see cref="TaskExtended"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnTaskExtendedChanging(TaskExtended value);
+        /// <summary>Called after <see cref="TaskExtended"/> has Changed.</summary>
+        partial void OnTaskExtendedChanged();
+
         #endregion
 
         #region Serialization

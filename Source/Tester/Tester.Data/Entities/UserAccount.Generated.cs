@@ -180,6 +180,7 @@ namespace Tester.Data
         partial void OnZipCodeChanging(string value);
         /// <summary>Called after <see cref="ZipCode"/> has Changed.</summary>
         partial void OnZipCodeChanged();
+
         #endregion
 
         #region Serialization

@@ -18,25 +18,25 @@ namespace Tester.Data
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
     [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
-    public partial class IndexableUser
+    public partial class GetUserFixedResult1
     {
         #region Static Constructor
         /// <summary>
-        /// Initializes the <see cref="IndexableUser"/> class.
+        /// Initializes the <see cref="GetUserFixedResult1"/> class.
         /// </summary>
-        static IndexableUser()
+        static GetUserFixedResult1()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<IndexableUser>();
+            CodeSmith.Data.Rules.RuleManager.AddShared<GetUserFixedResult1>();
             AddSharedRules();
         }
         #endregion
 
         #region Default Constructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="IndexableUser"/> class.
+        /// Initializes a new instance of the <see cref="GetUserFixedResult1"/> class.
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
-        public IndexableUser()
+        public GetUserFixedResult1()
         {
             OnCreated();
             Initialize();
@@ -70,44 +70,68 @@ namespace Tester.Data
             }
         }
 
-        private Nullable<int> _userId;
+        private string _userName;
 
         /// <summary>
-        /// Gets or sets the UserId column value.
+        /// Gets or sets the UserName column value.
         /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "UserId", Storage = "_userId", DbType = "int")]
+        [System.Data.Linq.Mapping.Column(Name = "UserName", Storage = "_userName", DbType = "nvarchar(50) NOT NULL", CanBeNull = false)]
+        [System.ComponentModel.DataAnnotations.StringLength(50)]
         [System.Runtime.Serialization.DataMember(Order = 2)]
-        public Nullable<int> UserId
+        public string UserName
         {
-            get { return _userId; }
+            get { return _userName; }
             set
             {
-                if (_userId != value)
+                if (_userName != value)
                 {
-                    OnUserIdChanging(value);
-                    _userId = value;
-                    OnUserIdChanged();
+                    OnUserNameChanging(value);
+                    _userName = value;
+                    OnUserNameChanged();
                 }
             }
         }
 
-        private bool _allowNotification;
+        private string _password;
 
         /// <summary>
-        /// Gets or sets the AllowNotification column value.
+        /// Gets or sets the Password column value.
         /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "AllowNotification", Storage = "_allowNotification", DbType = "bit NOT NULL", CanBeNull = false)]
+        [System.Data.Linq.Mapping.Column(Name = "Password", Storage = "_password", DbType = "nvarchar(50) NOT NULL", CanBeNull = false)]
+        [System.ComponentModel.DataAnnotations.StringLength(50)]
         [System.Runtime.Serialization.DataMember(Order = 3)]
-        public bool AllowNotification
+        public string Password
         {
-            get { return _allowNotification; }
+            get { return _password; }
             set
             {
-                if (_allowNotification != value)
+                if (_password != value)
                 {
-                    OnAllowNotificationChanging(value);
-                    _allowNotification = value;
-                    OnAllowNotificationChanged();
+                    OnPasswordChanging(value);
+                    _password = value;
+                    OnPasswordChanged();
+                }
+            }
+        }
+
+        private string _emailAddress;
+
+        /// <summary>
+        /// Gets or sets the EmailAddress column value.
+        /// </summary>
+        [System.Data.Linq.Mapping.Column(Name = "EmailAddress", Storage = "_emailAddress", DbType = "nvarchar(50) NOT NULL", CanBeNull = false)]
+        [System.ComponentModel.DataAnnotations.StringLength(50)]
+        [System.Runtime.Serialization.DataMember(Order = 4)]
+        public string EmailAddress
+        {
+            get { return _emailAddress; }
+            set
+            {
+                if (_emailAddress != value)
+                {
+                    OnEmailAddressChanging(value);
+                    _emailAddress = value;
+                    OnEmailAddressChanged();
                 }
             }
         }
@@ -130,16 +154,21 @@ namespace Tester.Data
         partial void OnIdChanging(int value);
         /// <summary>Called after <see cref="Id"/> has Changed.</summary>
         partial void OnIdChanged();
-        /// <summary>Called when <see cref="UserId"/> is changing.</summary>
+        /// <summary>Called when <see cref="UserName"/> is changing.</summary>
         /// <param name="value">The new value.</param>
-        partial void OnUserIdChanging(Nullable<int> value);
-        /// <summary>Called after <see cref="UserId"/> has Changed.</summary>
-        partial void OnUserIdChanged();
-        /// <summary>Called when <see cref="AllowNotification"/> is changing.</summary>
+        partial void OnUserNameChanging(string value);
+        /// <summary>Called after <see cref="UserName"/> has Changed.</summary>
+        partial void OnUserNameChanged();
+        /// <summary>Called when <see cref="Password"/> is changing.</summary>
         /// <param name="value">The new value.</param>
-        partial void OnAllowNotificationChanging(bool value);
-        /// <summary>Called after <see cref="AllowNotification"/> has Changed.</summary>
-        partial void OnAllowNotificationChanged();
+        partial void OnPasswordChanging(string value);
+        /// <summary>Called after <see cref="Password"/> has Changed.</summary>
+        partial void OnPasswordChanged();
+        /// <summary>Called when <see cref="EmailAddress"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnEmailAddressChanging(string value);
+        /// <summary>Called after <see cref="EmailAddress"/> has Changed.</summary>
+        partial void OnEmailAddressChanged();
 
         #endregion
 

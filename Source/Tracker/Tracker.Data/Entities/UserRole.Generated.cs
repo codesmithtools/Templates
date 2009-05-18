@@ -126,6 +126,7 @@ namespace Tracker.Data
                 Role previousValue = _role.Entity;
                 if (previousValue != value || _role.HasLoadedOrAssignedValue == false)
                 {
+                    OnRoleChanging(value);
                     SendPropertyChanging("Role");
                     if (previousValue != null)
                     {
@@ -143,6 +144,7 @@ namespace Tracker.Data
                         _roleId = default(int);
                     }
                     SendPropertyChanged("Role");
+                    OnRoleChanged();
                 }
             }
         }
@@ -162,6 +164,7 @@ namespace Tracker.Data
                 User previousValue = _user.Entity;
                 if (previousValue != value || _user.HasLoadedOrAssignedValue == false)
                 {
+                    OnUserChanging(value);
                     SendPropertyChanging("User");
                     if (previousValue != null)
                     {
@@ -179,6 +182,7 @@ namespace Tracker.Data
                         _userId = default(int);
                     }
                     SendPropertyChanged("User");
+                    OnUserChanged();
                 }
             }
         }
@@ -203,6 +207,17 @@ namespace Tracker.Data
         partial void OnRoleIdChanging(int value);
         /// <summary>Called after <see cref="RoleId"/> has Changed.</summary>
         partial void OnRoleIdChanged();
+        /// <summary>Called when <see cref="Role"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnRoleChanging(Role value);
+        /// <summary>Called after <see cref="Role"/> has Changed.</summary>
+        partial void OnRoleChanged();
+        /// <summary>Called when <see cref="User"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnUserChanging(User value);
+        /// <summary>Called after <see cref="User"/> has Changed.</summary>
+        partial void OnUserChanged();
+
         #endregion
 
         #region Serialization
