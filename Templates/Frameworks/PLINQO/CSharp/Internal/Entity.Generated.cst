@@ -317,6 +317,7 @@ foreach(Column column in Type.Columns) {
                 <%= a.Type %> previousValue = <%= a.Storage %>.Entity;
                 if (previousValue != value || <%= a.Storage %>.HasLoadedOrAssignedValue == false)
                 {
+                    On<%= a.Member %>Changing(value);
                     SendPropertyChanging("<%= a.Member %>");
                     if (previousValue != null)
                     {
@@ -340,6 +341,7 @@ foreach(Column column in Type.Columns) {
 <% } // IsForeignKey %>
                     }
                     SendPropertyChanged("<%= a.Member %>");
+                    On<%= a.Member %>Changed();
                 }
 <% } else { %>
                 if (<%= a.Storage %>.Entity != value)
@@ -473,6 +475,14 @@ foreach(Column column in Type.Columns) {
         /// <summary>Called after <see cref="<%= column.Member %>"/> has Changed.</summary>
         partial void On<%= column.Member %>Changed();
 <% } // foreach %>
+<% foreach(Association a in Type.EntityRefAssociations) { %>
+        /// <summary>Called when <see cref="<%= a.Member %>"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void On<%= a.Member %>Changing(<%= a.Type %> value);
+        /// <summary>Called after <see cref="<%= a.Member %>"/> has Changed.</summary>
+        partial void On<%= a.Member %>Changed();
+<% } // foreach Association%>
+
         #endregion
 
 <% if (IncludeDataContract) { %>
