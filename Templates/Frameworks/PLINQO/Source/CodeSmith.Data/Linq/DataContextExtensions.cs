@@ -2,6 +2,7 @@
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Transactions;
 
 namespace System.Data.Linq
 {
@@ -34,6 +35,9 @@ namespace System.Data.Linq
 
             if (batchCommand.Connection == null)
                 throw new InvalidOperationException("The DataContext must contain a valid SqlConnection.");
+
+            if (context.Transaction != null)
+                batchCommand.Transaction = context.Transaction as SqlTransaction;
 
             DbDataReader dr;
 
