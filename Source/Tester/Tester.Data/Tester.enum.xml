@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Tester" xmlns="http://tempuri.org/DbmlEnum.xsd">
+  <Enum Name="TagEnum" Table="dbo.TagEnum" Type="System.Byte" AccessModifier="Public" Flags="false" IncludeDataContract="true">
+    <Item Name="User" Value="1" DataContractMember="true" />
+    <Item Name="System" Value="2" DataContractMember="true" />
+  </Enum>
+</Database>

@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="Tester" EntityNamespace="Tester.Data" ContextNamespace="Tester.Data" Class="TesterDataContext" EntityBase="LinqEntityBase" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection ConnectionString="Data Source=zeus;Initial Catalog=Tester;Integrated Security=True" SettingsObjectName="Properties.Settings" SettingsPropertyName="TesterConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Audit" Member="Audit">
+    <Type Name="Audit">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Source" Storage="_source" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="AuditXml" Storage="_auditXml" Type="System.String" DbType="xml NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedDate" Storage="_createdDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="ModifiedDate" Storage="_modifiedDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Tag" Member="Tag">
+    <Type Name="Tag">
+      <Column Name="ID" Member="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Storage="_name" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedBy" Storage="_createdBy" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="CreatedDate" Storage="_createdDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="ModifiedBy" Storage="_modifiedBy" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="ModifiedDate" Storage="_modifiedDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Column Name="Type" Storage="_type" Type="TagEnum" DbType="tinyint" CanBeNull="true" />
+      <Column Name="IsBlah" Storage="_isBlah" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="T" Type="System.String" DbType="nchar(10)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.User" Member="User">
+    <Type Name="User" Id="ID1">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserName" Storage="_userName" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Storage="_password" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EmailAddress" Storage="_emailAddress" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Comments" Storage="_comments" Type="System.String" DbType="nvarchar(150)" CanBeNull="true" />
+      <Association Name="User_UserProfile" Member="UserProfile" Storage="_userProfile" OtherKey="UserId" Type="UserProfile" Cardinality="One" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserAccount" Member="UserAccount">
+    <Type Name="UserAccount">
+      <Column Name="UserAccountID" Storage="_userAccountID" Type="System.Guid" DbType="uniqueidentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FirstName" Storage="_firstName" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="LastName" Storage="_lastName" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="ZipCode" Storage="_zipCode" Type="System.String" DbType="nvarchar(25) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserProfile" Member="UserProfile">
+    <Type Name="UserProfile" Id="ID2">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="AllowNotification" Storage="_allowNotification" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
+      <Column Name="Avatar" Storage="_avatar" Type="System.Data.Linq.Binary" DbType="image" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="User_UserProfile" Member="User" Storage="_user" ThisKey="UserId" Type="User" IsForeignKey="true" DeleteOnNull="false" />
+    </Type>
+  </Table>
+  <Function Name="dbo.GetUser" Method="GetUser">
+    <Parameter Name="@userId" Parameter="userId" Type="System.Int32" DbType="int" />
+    <ElementType IdRef="ID1" />
+    <ElementType IdRef="ID2" />
+  </Function>
+  <Function Name="dbo.GetUserProfile" Method="GetUserProfile">
+    <Parameter Name="@userId" Parameter="userId" Type="System.Int32" DbType="int" />
+    <ElementType Name="IndexableUser">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="AllowNotification" Storage="_allowNotification" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+</Database>

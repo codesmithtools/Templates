@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
+  <variables>
+    <add key="TesterConnectionString" value="Data Source=.;Initial Catalog=Tester;Integrated Security=True" />
+  </variables>
+  <defaultProperties>
+    <property name="DbmlFile">Tester.dbml</property>
+  </defaultProperties>
+  <propertySets>
+    <propertySet name="DBML" template="..\..\Templates\PLINQO\CSharp\Dbml.cst">
+      <property name="IncludeViews">False</property>
+      <property name="IncludeFunctions">True</property>
+      <property name="IgnoreList">
+        <stringList>
+      <string>^sysdiagrams$</string>
+      <string>^dbo.sp_</string>
+    </stringList>
+      </property>
+      <property name="CleanExpression">
+        <stringList>
+      <string>^\\w+_</string>
+    </stringList>
+      </property>
+      <property name="EnumList">
+        <stringList>
+      <string>(E|e)num$</string>
+    </stringList>
+      </property>
+      <property name="EntityBase">LinqEntityBase</property>
+      <property name="IncludeDeleteOnNull">True</property>
+      <property name="NameColumn">
+        <stringList>
+      <string>((N|n)ame)|((T|t)ype(C|c)ode)</string>
+    </stringList>
+      </property>
+      <property name="DescriptionColumm">
+        <stringList>
+      <string>(D|d)esc</string>
+    </stringList>
+      </property>
+      <property name="NamingConventions">
+        <NamingProperty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="">
+      <TableNaming>Singular</TableNaming>
+      <EntityNaming>Singular</EntityNaming>
+      <AssociationNaming>ListSuffix</AssociationNaming>
+    </NamingProperty>
+      </property>
+      <property name="SourceDatabase">
+        <connectionString>$(TesterConnectionString)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="EntityNamespace">Tester.Data</property>
+      <property name="ContextNamespace">Tester.Data</property>
+    </propertySet>
+    <propertySet name="Entities" template="..\..\Templates\PLINQO\CSharp\Entities.cst">
+      <property name="Framework">v35_SP1</property>
+      <property name="IncludeDataServices">True</property>
+      <property name="IncludeDataRules">True</property>
+      <property name="IncludeDataContract">True</property>
+      <property name="AssociationNamingSuffix">ListSuffix</property>
+      <property name="OutputDirectory">Entities</property>
+      <property name="ViewDirectory">Views</property>
+      <property name="BaseDirectory">.\</property>
+    </propertySet>
+    <propertySet name="Managers" template="..\..\Templates\PLINQO\CSharp\Managers.cst">
+      <property name="Framework">v35_SP1</property>
+      <property name="ManagerDirectory">Managers</property>
+      <property name="MethodPrefix">GetBy</property>
+      <property name="MethodKeySuffix">Key</property>
+      <property name="SourceDatabase">
+        <connectionString>$(TesterConnectionString)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="DataContextFile">.\TesterDataContext.cs</property>
+      <property name="DataManagerName">TesterDataManager</property>
+      <property name="ManagerNamespace">Tester.Data</property>
+    </propertySet>
+    <propertySet name="Queries" template="..\..\Templates\PLINQO\CSharp\Queries.cst">
+      <property name="SourceDatabase">
+        <connectionString>$(TesterConnectionString)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+      </property>
+      <property name="QueryDirectory">Queries</property>
+      <property name="MethodPrefix">GetBy</property>
+      <property name="MethodKeySuffix">Key</property>
+    </propertySet>
+  </propertySets>
+</codeSmith>

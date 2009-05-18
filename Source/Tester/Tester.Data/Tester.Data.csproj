@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6956F889-25B1-4D07-8863-B13C892B4579}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tester.Data</RootNamespace>
+    <AssemblyName>Tester.Data</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Services">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Services.Client">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.DynamicData">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\Audit.cs" />
+    <Compile Include="Entities\Audit.Generated.cs">
+      <DependentUpon>Audit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Tag.cs" />
+    <Compile Include="Entities\Tag.Generated.cs">
+      <DependentUpon>Tag.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\User.Generated.cs">
+      <DependentUpon>User.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\UserAccount.cs" />
+    <Compile Include="Entities\UserAccount.Generated.cs">
+      <DependentUpon>UserAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\UserProfile.cs" />
+    <Compile Include="Entities\UserProfile.Generated.cs">
+      <DependentUpon>UserProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LinqEntityBase.cs" />
+    <Compile Include="LinqEntityBase.Generated.cs">
+      <DependentUpon>LinqEntityBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\AuditManager.cs" />
+    <Compile Include="Managers\AuditManager.Generated.cs">
+      <DependentUpon>AuditManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\TagManager.cs" />
+    <Compile Include="Managers\TagManager.Generated.cs">
+      <DependentUpon>TagManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\TesterDataManager.cs" />
+    <Compile Include="Managers\UserAccountManager.cs" />
+    <Compile Include="Managers\UserAccountManager.Generated.cs">
+      <DependentUpon>UserAccountManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\UserManager.cs" />
+    <Compile Include="Managers\UserManager.Generated.cs">
+      <DependentUpon>UserManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\UserProfileManager.cs" />
+    <Compile Include="Managers\UserProfileManager.Generated.cs">
+      <DependentUpon>UserProfileManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\AuditExtensions.cs" />
+    <Compile Include="Queries\AuditExtensions.Generated.cs">
+      <DependentUpon>AuditExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\TagExtensions.cs" />
+    <Compile Include="Queries\TagExtensions.Generated.cs">
+      <DependentUpon>TagExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\UserAccountExtensions.cs" />
+    <Compile Include="Queries\UserAccountExtensions.Generated.cs">
+      <DependentUpon>UserAccountExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\UserExtensions.cs" />
+    <Compile Include="Queries\UserExtensions.Generated.cs">
+      <DependentUpon>UserExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\UserProfileExtensions.cs" />
+    <Compile Include="Queries\UserProfileExtensions.Generated.cs">
+      <DependentUpon>UserProfileExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TesterDataContext.cs" />
+    <Compile Include="TesterDataContext.Enums.cs">
+      <DependentUpon>TesterDataContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TesterDataContext.Generated.cs">
+      <DependentUpon>TesterDataContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TesterDataContext.Manager.cs">
+      <DependentUpon>TesterDataContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\IndexableUser.cs" />
+    <Compile Include="Views\IndexableUser.Generated.cs">
+      <DependentUpon>IndexableUser.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tester.Data.csp" />
+    <None Include="Tester.dbml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tester.dbml.layout">
+      <DependentUpon>Tester.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Templates\PLINQO\Source\CodeSmith.Data\CodeSmith.Data.csproj">
+      <Project>{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}</Project>
+      <Name>CodeSmith.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Tester.enum.xml">
+      <DependentUpon>Tester.dbml</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.targets" />
+</Project>

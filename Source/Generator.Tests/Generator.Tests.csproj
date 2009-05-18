@@ -52,6 +52,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\bin\CodeSmith.Engine.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework, Version=2.5.0.9122, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="SchemaExplorer, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\AddIns\SchemaExplorer.dll</HintPath>
@@ -63,7 +67,6 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="nunit.framework" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GeneratorTest.cs" />
@@ -90,11 +93,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dbml\Dbml.csproj">
+    <ProjectReference Include="..\Templates\PLINQO\Source\Dbml\Dbml.csproj">
       <Project>{FE25E33F-95B9-453C-98DC-82DF44CED946}</Project>
       <Name>Dbml</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Generator\Generator.csproj">
+    <ProjectReference Include="..\Templates\PLINQO\Source\Generator\Generator.csproj">
       <Project>{2BDB103C-9F65-41AA-A86D-77BD0F9839B4}</Project>
       <Name>Generator</Name>
     </ProjectReference>
