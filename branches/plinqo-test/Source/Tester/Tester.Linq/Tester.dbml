@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database Name="Tester" Class="TesterDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=zeus;Initial Catalog=Tester;Integrated Security=True" SettingsObjectName="Tester.Linq.Properties.Settings" SettingsPropertyName="TesterConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.;Initial Catalog=Tester;Integrated Security=True" SettingsObjectName="Tester.Linq.Properties.Settings" SettingsPropertyName="TesterConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Audit" Member="Audits">
     <Type Name="Audit">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />

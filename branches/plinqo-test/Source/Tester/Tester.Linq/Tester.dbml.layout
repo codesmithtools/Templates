@@ -32,14 +32,14 @@
         <elementListCompartment Id="9dcb487e-95ae-40b4-86f6-dc627089302f" absoluteBounds="0.765, 1.335, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(2.75 : 5.09699625651042); (3.5 : 5.09699625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.75 : 5.09699625651042); (3.5 : 5.09699625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/TesterDataContext/TagEnum/TagEnum_Tag" />
       <nodes>
         <classShapeMoniker Id="3c849f7b-2d2d-45bd-9b0c-a3f567ddaa00" />
         <classShapeMoniker Id="99007f83-ec30-4b02-8884-53efa99bbf35" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 1.78929768880208); (3.5 : 1.78929768880208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.75 : 1.78929768880208); (3.5 : 1.78929768880208)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/TesterDataContext/User/User_UserProfile" />
       <nodes>
         <classShapeMoniker Id="20b99998-f38e-4156-b452-5b79e77f5036" />

@@ -167,6 +167,7 @@ namespace Tester.Data
                 User previousValue = _user.Entity;
                 if (previousValue != value || _user.HasLoadedOrAssignedValue == false)
                 {
+                    OnUserChanging(value);
                     SendPropertyChanging("User");
                     if (previousValue != null)
                     {
@@ -184,6 +185,7 @@ namespace Tester.Data
                         _userId = default(int);
                     }
                     SendPropertyChanged("User");
+                    OnUserChanged();
                 }
             }
         }
@@ -218,6 +220,12 @@ namespace Tester.Data
         partial void OnAvatarChanging(System.Data.Linq.Binary value);
         /// <summary>Called after <see cref="Avatar"/> has Changed.</summary>
         partial void OnAvatarChanged();
+        /// <summary>Called when <see cref="User"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnUserChanging(User value);
+        /// <summary>Called after <see cref="User"/> has Changed.</summary>
+        partial void OnUserChanged();
+
         #endregion
 
         #region Serialization

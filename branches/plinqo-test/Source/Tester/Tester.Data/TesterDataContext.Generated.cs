@@ -185,6 +185,20 @@ namespace Tester.Data
             return ((System.Data.Linq.ISingleResult<Tester.Data.IndexableUser>)(result.ReturnValue));
         }
 
+        /// <summary>Method that is mapped to the dbo.GetUserFixed database procedure.</summary>
+        /// <returns></returns>
+        [System.Data.Linq.Mapping.Function(Name="dbo.GetUserFixed")]
+        [System.Data.Linq.Mapping.ResultType(typeof(Tester.Data.GetUserFixedResult1))]
+        [System.Data.Linq.Mapping.ResultType(typeof(Tester.Data.GetUserFixedResult2))]
+        public System.Data.Linq.IMultipleResults GetUserFixed(
+            [System.Data.Linq.Mapping.Parameter(DbType="int")] int? @fixed)
+        {
+            var methodInfo = (System.Reflection.MethodInfo)System.Reflection.MethodInfo.GetCurrentMethod();
+            var result = this.ExecuteMethodCall(this, methodInfo, @fixed);
+            
+            return ((System.Data.Linq.IMultipleResults)(result.ReturnValue));
+        }
+
         #endregion
 
         #region Extensibility Method Definitions

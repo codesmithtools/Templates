@@ -235,6 +235,7 @@ namespace Tester.Data
         partial void OnRowVersionChanging(System.Data.Linq.Binary value);
         /// <summary>Called after <see cref="RowVersion"/> has Changed.</summary>
         partial void OnRowVersionChanged();
+
         #endregion
 
         #region Serialization

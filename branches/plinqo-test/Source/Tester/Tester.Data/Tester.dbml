@@ -65,4 +65,18 @@
       <Column Name="AllowNotification" Storage="_allowNotification" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
+  <Function Name="dbo.GetUserFixed" Method="GetUserFixed">
+    <Parameter Name="@fixed" Parameter="fixed" Type="System.Int32" DbType="int" />
+    <ElementType Name="GetUserFixedResult1">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="UserName" Storage="_userName" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Storage="_password" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EmailAddress" Storage="_emailAddress" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+    </ElementType>
+    <ElementType Name="GetUserFixedResult2">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="AllowNotification" Storage="_allowNotification" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
 </Database>

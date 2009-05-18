@@ -18,25 +18,25 @@ namespace Tester.Data
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
     [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
-    public partial class IndexableUser
+    public partial class GetUserFixedResult2
     {
         #region Static Constructor
         /// <summary>
-        /// Initializes the <see cref="IndexableUser"/> class.
+        /// Initializes the <see cref="GetUserFixedResult2"/> class.
         /// </summary>
-        static IndexableUser()
+        static GetUserFixedResult2()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<IndexableUser>();
+            CodeSmith.Data.Rules.RuleManager.AddShared<GetUserFixedResult2>();
             AddSharedRules();
         }
         #endregion
 
         #region Default Constructor
         /// <summary>
-        /// Initializes a new instance of the <see cref="IndexableUser"/> class.
+        /// Initializes a new instance of the <see cref="GetUserFixedResult2"/> class.
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
-        public IndexableUser()
+        public GetUserFixedResult2()
         {
             OnCreated();
             Initialize();
