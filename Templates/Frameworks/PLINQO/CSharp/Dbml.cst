@@ -76,6 +76,11 @@
     Description="The full path to the dbml file."
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
+<%@ Property Category="4.Mapping" Name="UserAssociations"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of user defined associations that will not be removed when syncing to the database."%>
+
+
 <script runat="template">
     private NamingProperty _namingConventions = null;
     [Category("2.Class"), Description("Specify naming conventions for DB and Entities.")]
@@ -137,9 +142,15 @@
         foreach(string name in this.NameColumn)
             if (!string.IsNullOrEmpty(name))
                 settings.EnumNameExpressions.Add(new Regex(name));
+                
         foreach(string description in this.DescriptionColumm)
             if (!string.IsNullOrEmpty(description))
                 settings.EnumDescriptionExpressions.Add(new Regex(description));
+        
+        if (UserAssociations != null)
+            foreach(string userAssociation in this.UserAssociations)
+                if (!string.IsNullOrEmpty(userAssociation))
+                    settings.UserDefinedAssociations.Add(userAssociation);
         
         DbmlGenerator generator = new DbmlGenerator(settings);
         generator.SchemaItemProcessed += new EventHandler<SchemaItemProcessedEventArgs>(OnSchemaItemProcessed);
