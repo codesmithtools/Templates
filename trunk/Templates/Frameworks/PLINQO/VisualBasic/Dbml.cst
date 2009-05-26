@@ -78,6 +78,9 @@
     Description="The full path to the dbml file."
     Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 
+<%@ Property Category="4.Mapping" Name="UserAssociations"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of user defined associations that will not be removed when syncing to the database."%>
 
 
 <script runat="template">
@@ -157,6 +160,14 @@ Public Sub Generate()
         End IF
     Next
 
+    If UserAssociations IsNot Nothing Then
+    ? ? For Each userAssociation As String In Me.UserAssociations
+    ? ? ? ? If Not String.IsNullOrEmpty(userAssociation) Then
+    ? ? ? ? ? ? settings.UserDefinedAssociations.Add(userAssociation)
+    ? ? ? ? End If
+    ? ? Next
+    End If
+    
     Dim generator As New DbmlGenerator(settings)
     AddHandler generator.SchemaItemProcessed, AddressOf OnSchemaItemProcessed
     Dim db As Database = generator.Create(SourceDatabase)

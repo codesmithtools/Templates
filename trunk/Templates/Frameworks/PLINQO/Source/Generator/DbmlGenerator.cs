@@ -899,7 +899,7 @@ namespace LinqToSqlShared.Generator
             return uniqueName;
         }
 
-        private static void RemoveExtraMembers(Database database)
+        private void RemoveExtraMembers(Database database)
         {
             List<Table> removedTables = new List<Table>();
             List<Column> removedColumns = new List<Column>();
@@ -921,7 +921,7 @@ namespace LinqToSqlShared.Generator
 
                 removedAssociations.Clear();
                 foreach (Association a in table.Type.Associations)
-                    if (!a.IsProcessed)
+                    if (!a.IsProcessed && !Settings.UserDefinedAssociations.Contains(a.Name))
                         removedAssociations.Add(a);
 
                 foreach (Column c in removedColumns)

@@ -78,6 +78,13 @@ namespace LinqToSqlShared.Generator
             get { return _enumDescriptionExpressions; }
         }
 
+        private List<string> _userDefinedAssociations = new List<string>();
+        public List<string> UserDefinedAssociations
+        {
+            get { return _userDefinedAssociations; }
+            set { _userDefinedAssociations = value; }
+        }
+
         private bool _disableRenaming = false;
         public bool DisableRenaming
         {
@@ -222,5 +229,6 @@ namespace LinqToSqlShared.Generator
             get { return _generateMetaData; }
             set { _generateMetaData = value; }
         }
+
     }
 }
