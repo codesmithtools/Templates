@@ -48,7 +48,10 @@ namespace NHibernateHelper
             _excludedColumns = new List<Regex>();
             foreach (var s in excludedColumns)
             {
-                _excludedColumns.Add(new Regex(s, RegexOptions.Compiled));
+                if (!String.IsNullOrEmpty(s) && s.Trim().Length > 0)
+                {
+                    _excludedColumns.Add(new Regex(s, RegexOptions.Compiled));
+                }
             }
 
             //_tableNaming = namingConventions.TableNaming;
