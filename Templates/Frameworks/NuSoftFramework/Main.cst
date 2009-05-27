@@ -10,8 +10,10 @@
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
 
 <%@ Register Template="Domain\DomainCsProj.cst" Name="DomainCsProj" MergeProperties="True" ExcludeProperties="DomainGuid" %>
 <%@ Register Template="Solution.cst" Name="Solution" MergeProperties="True" ExcludeProperties="DomainGuid,DatabaseGuid" %>
