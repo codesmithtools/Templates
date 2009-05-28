@@ -7,12 +7,15 @@
     <Minor>0</Minor>
     <Build>0</Build>
     <Revision>1</Revision>
+
+    <BindMinor>0</BindMinor>
+    <BindBuild>0</BindBuild>
+    <BindRevision>0</BindRevision>
   </PropertyGroup>
 
   <PropertyGroup>
     <BuildConfiguration>Release</BuildConfiguration>
     <DeployFolder>\\WEB\nightly\Plinqo</DeployFolder>
-    <SourceModified>False</SourceModified>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,36 +41,28 @@
   </ItemGroup>
 
   <Target Name="Version">
-    <SvnVersion LocalPath="$(MSBuildProjectDirectory)\Source">
+    <SvnVersion LocalPath="$(MSBuildProjectDirectory)">
       <Output TaskParameter="Revision" PropertyName="Revision" />
     </SvnVersion>
 
-    <Message Text="Plinqo Revision: $(Revision)"/>
+    <Message Text="Revision: $(Revision)"/>
+    
+    <Time>
+      <Output TaskParameter="Month" PropertyName="Month" />
+      <Output TaskParameter="Day" PropertyName="Day" />
+      <Output TaskParameter="Year" PropertyName="Year" />
+    </Time>
 
-    <SvnClient Command="info" Arguments="--xml" LocalPath="Source">
-      <Output TaskParameter="Output" PropertyName="SourceOutput" />
-    </SvnClient>
-    <WriteLinesToFile File="SourceOutput.xml" Lines="$(SourceOutput)" Overwrite="true"/>
-    <XmlRead XPath="/info/entry/commit/@revision" XmlFileName="SourceOutput.xml">
-      <Output TaskParameter="Value" PropertyName="SourceRevision" />
-    </XmlRead>
-
-    <SvnClient Command="info" Arguments="--xml" LocalPath="Common">
-      <Output TaskParameter="Output" PropertyName="CommonOutput" />
-    </SvnClient>
-    <WriteLinesToFile File="CommonOutput.xml" Lines="$(CommonOutput)" Overwrite="true"/>
-    <XmlRead XPath="/info/entry/commit/@revision" XmlFileName="CommonOutput.xml">
-      <Output TaskParameter="Value" PropertyName="CommonRevision" />
-    </XmlRead>
-
-    <Message Text="Source Revision: $(SourceRevision) "/>
-    <Message Text="Common Revision: $(CommonRevision) "/>
-
-    <CreateProperty Value="True" Condition=" $(SourceRevision) &gt; $(CommonRevision) ">
-      <Output TaskParameter="Value" PropertyName="SourceModified" />
-    </CreateProperty>
-
-    <Message Text="SourceModified: $(SourceModified) "/>
+    <AssemblyInfo CodeLanguage="CS"
+      OutputFile="$(MSBuildProjectDirectory)\Source\GlobalAssemblyInfo.cs"
+      AssemblyCompany="CodeSmith Tools, LLC"
+      AssemblyProduct="PLINQO"
+      AssemblyCopyright="Copyright (c) 2002-$(Year) CodeSmith Tools, LLC.  All rights reserved."
+      AssemblyConfiguration="$(BuildConfiguration)"
+      AssemblyVersion="$(Major).$(BindMinor).$(BindBuild).$(BindRevision)"
+      AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      AssemblyInformationalVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      GenerateClass="true" />
 
   </Target>
 
@@ -82,8 +77,7 @@
 
   <Target Name="Compile" DependsOnTargets="Libaries">
     <MSBuild Projects="Source\Plinqo.sln"
-             Properties="Configuration=$(BuildConfiguration)"
-             Condition=" '$(SourceModified)' == 'True' " />
+             Properties="Configuration=$(BuildConfiguration)" />
   </Target>
 
   <ItemGroup>
@@ -110,11 +104,10 @@
                 WorkingDirectory="Help"
                 Assemblies="@(Assemblies)"
                 Comments="@(Comments)"
-                ChmName="CodeSmith.Data"
-                Condition=" '$(SourceModified)' == 'True' " />
+                ChmName="CodeSmith.Data" />
 
-    <Copy SourceFiles="Help\vs2005\chm\CodeSmith.Data.chm" DestinationFolder="Common"
-          Condition=" '$(SourceModified)' == 'True' "/>
+    <Copy SourceFiles="Help\vs2005\chm\CodeSmith.Data.chm" 
+          DestinationFolder="Common"/>
   </Target>
 
   <Target Name="Zip" DependsOnTargets="Documentation">
