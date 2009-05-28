@@ -100,7 +100,7 @@ namespace <%= BusinessProjectName %>
 		
 		private void Fetch(SafeDataReader reader)
 		{
-<% foreach(Member member in Entity.MembersPrimaryKeyUnion) { if(UseMemberVariables) { %>
+<% foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey) { if(UseMemberVariables) { %>
 			<%= member.PrivateMemberVariableName %> = reader.<%= member.GetReaderMethod() %>("<%= member.Name %>");
 <% } else { %>
 			LoadProperty(<%= member.PrivateMemberVariableName %>Property, reader.<%= member.GetReaderMethod() %>("<%= member.Name %>"));
