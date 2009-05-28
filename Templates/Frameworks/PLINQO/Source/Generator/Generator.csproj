@@ -54,6 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CommonUtility.cs" />
     <Compile Include="DbmlEnum.cs">
       <DependentUpon>DbmlEnum.xsd</DependentUpon>
