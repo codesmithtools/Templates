@@ -52,7 +52,7 @@ private void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)
 		
 		private void Fetch(SafeDataReader reader)
 		{
-<% foreach(Member member in Entity.MembersPrimaryKeyUnion) { %>
+<% foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey) { %>
 <% if(UseMemberVariables) { %>
 			<%= member.PrivateMemberVariableName %> = reader.<%= member.GetReaderMethod() %>("<%= member.Name %>");
 <% } else { %>

@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Data;
 using SchemaExplorer;
 
 using CodeSmith.Engine;
@@ -22,7 +22,13 @@ namespace CodeSmith.SchemaHelper
 
         public static bool IsRowVersion(this ColumnSchema column)
         {
-            return Configuration.Instance.RowVersionColumnRegex.IsMatch(column.Name);
+            if (column.NativeType.ToLower() == "timestamp" || column.NativeType.ToLower() == "rowversion")
+                return true;
+
+            if (Configuration.Instance.RowVersionColumnRegex.IsMatch(column.Name))
+                return true;
+
+            return false;
         }
 
         public static bool HasAlias(this ColumnSchema column)
