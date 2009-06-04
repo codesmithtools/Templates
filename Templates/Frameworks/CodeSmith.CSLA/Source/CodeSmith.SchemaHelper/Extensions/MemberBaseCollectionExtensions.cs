@@ -75,7 +75,7 @@ namespace CodeSmith.SchemaHelper
 
                             if (association.ColumnName == member.ColumnName)
                             {
-                                name = NamingConventions.PrivateMemberVariableName(association.LocalColumn.Name);
+                                name = NamingConventions.PrivateMemberVariableName(association.ColumnName);
                                 break;
                             }
                         }
@@ -192,13 +192,13 @@ namespace CodeSmith.SchemaHelper
             return parameters.TrimStart(new[] { ',', ' ' });
         }
 
-        public static string BuildCriteriaObjectInitializer(this List<MemberBase> members)
+        public static string BuildCriteriaObjectInitializer(this List<MemberBase> members, string className)
         {
             string parameters = string.Empty;
 
             foreach (MemberBase member in members)
             {
-                parameters += string.Format(", {0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName), member.Entity.ResolveCriteriaVariableName(member.ColumnName));
+                parameters += string.Format(", {0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName, className), member.Entity.ResolveCriteriaVariableName(member.ColumnName));
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });

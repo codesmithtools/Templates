@@ -35,5 +35,20 @@ namespace CodeSmith.SchemaHelper
                         !sc.IsUniqueResult)
                     .ToList();
         }
+
+        public static string ResolveManyToOneNameConflict(this AssociationMember member, Entity entity)
+        {
+            string propertyName = Util.NamingConventions.PropertyName(member.ColumnName);
+
+            foreach (AssociationMember association in entity.ManyToOne)
+            {
+                if(association.PropertyName == propertyName)
+                {
+                    return entity.ResolveCriteriaColumnName(member.ColumnName);
+                }
+            }
+
+            return member.ColumnName;
+        }
     }
 }

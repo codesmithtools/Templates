@@ -409,23 +409,31 @@ namespace CodeSmith.SchemaHelper
         }
 
 
-        public List<MemberBase> MembersNoRowVersionIncludeRemoteAssociations
+        public List<AssociationMember> RemoteAssociations
         {
             get
             {
-                var memberUnion = MemberMap.Values.Cast<MemberBase>().Where(m => !m.IsPrimaryKey && !m.IsRowVersion).ToList().Union(FKRemoteMemberMap.Values.Cast<MemberBase>()).ToList();
-
-                List<MemberBase> members = new List<MemberBase>(memberUnion.Count);
-                foreach (MemberBase memberBase in memberUnion)
-                {
-                    string name = memberBase.ColumnName;
-                    if (members.Count(m => m.ColumnName == name) == 0)
-                        members.Add(memberBase);
-                }
-
-                return members;
+                return FKRemoteMemberMap.Values.Cast<AssociationMember>().ToList();
             }
         }
+
+        //public List<MemberBase> MembersNoRowVersionIncludeRemoteAssociations
+        //{
+        //    get
+        //    {
+        //        var memberUnion = MemberMap.Values.Cast<MemberBase>().Where(m => !m.IsPrimaryKey && !m.IsRowVersion).ToList().Union(FKRemoteMemberMap.Values.Cast<MemberBase>()).ToList();
+
+        //        List<MemberBase> members = new List<MemberBase>(memberUnion.Count);
+        //        foreach (MemberBase memberBase in memberUnion)
+        //        {
+        //            string name = memberBase.ColumnName;
+        //            if (members.Count(m => m.ColumnName == name) == 0)
+        //                members.Add(memberBase);
+        //        }
+
+        //        return members;
+        //    }
+        //}
 
         public List<Member> MembersNoForeignKey
         {
@@ -451,37 +459,79 @@ namespace CodeSmith.SchemaHelper
         {
             get
             {
-                var memberUnion = MemberMap.Values.Where(m => !m.IsRowVersion).ToList().Union(FKMemberMap.Values).ToList();
+                var membersNoRowVersion = MemberMap.Values.Where(m => !m.IsRowVersion).ToList();
 
-                List<Member> members = new List<Member>(memberUnion.Count);
-                foreach ( Member memberBase in memberUnion )
+                List<Member> members = new List<Member>(membersNoRowVersion.Count);
+                foreach (Member memberBase in membersNoRowVersion)
                 {
                     string name = memberBase.ColumnName;
                     if (members.Count(m => m.ColumnName == name) == 0)
-                        members.Add( memberBase );
+                        members.Add(memberBase);
                 }
 
                 return members;
             }
         }
 
-        public List<MemberBase> MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations
+        public List<MemberBase> MembersNoRowVersionIncludePrimaryKeyForeignKey
         {
             get
             {
-                var memberUnion = MemberMap.Values.Cast<MemberBase>().Where(m => !m.IsRowVersion).ToList().Union(FKRemoteMemberMap.Values.Cast<MemberBase>()).ToList();
+                var membersNoRowVersion = MemberMap.Values.Cast<MemberBase>().Where(m => !m.IsRowVersion).ToList().Union(FKRemoteMemberMap.Values.Cast<MemberBase>().Where(fk => fk.TableName == this.Table.Name).Cast<MemberBase>().ToList()).ToList();
 
-                List<MemberBase> members = new List<MemberBase>(memberUnion.Count);
-                foreach ( MemberBase memberBase in memberUnion )
+                List<MemberBase> members = new List<MemberBase>(membersNoRowVersion.Count);
+                foreach (var memberBase in membersNoRowVersion)
                 {
                     string name = memberBase.ColumnName;
                     if (members.Count(m => m.ColumnName == name) == 0)
-                        members.Add( memberBase );
+                    {
+                        members.Add(memberBase);
+                    }
+                        
                 }
 
                 return members;
             }
         }
+
+        public List<AssociationMember> MembersForeignKey
+        {
+            get
+            {
+                var foreignKeys = FKRemoteMemberMap.Values.Where(fk => fk.TableName == this.Table.Name).ToList();
+
+                List<AssociationMember> members = new List<AssociationMember>(foreignKeys.Count);
+                foreach (var associationMember in foreignKeys)
+                {
+                    string name = associationMember.ColumnName;
+                    if (members.Count(m => m.ColumnName == name) == 0)
+                    {
+                        members.Add(associationMember);
+                    }
+
+                }
+
+                return members;
+            }
+        }
+
+        //public List<MemberBase> MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations
+        //{
+        //    get
+        //    {
+        //        var memberUnion = MemberMap.Values.Cast<MemberBase>().Where(m => !m.IsRowVersion).ToList().Union(FKRemoteMemberMap.Values.Cast<MemberBase>()).ToList();
+
+        //        List<MemberBase> members = new List<MemberBase>(memberUnion.Count);
+        //        foreach ( MemberBase memberBase in memberUnion )
+        //        {
+        //            string name = memberBase.ColumnName;
+        //            if (members.Count(m => m.ColumnName == name) == 0)
+        //                members.Add( memberBase );
+        //        }
+
+        //        return members;
+        //    }
+        //}
 
         public List<Member> MembersNoRowVersionNoForeignKeyIncludePrimaryKey
         {

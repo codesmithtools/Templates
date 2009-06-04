@@ -77,7 +77,7 @@ namespace <%= BusinessProjectName %>
 		
 		private void Child_Insert()
 		{
-			using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Insert(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildInsertPrivateMemberVariableParameters() %><% } else { %><%= Entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildInsertReadPropertyParametersVariables() %><% } %>))
+			using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Insert(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertPrivateMemberVariableParameters(Entity.MembersForeignKey) %><% } else { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertReadPropertyParametersVariables(Entity.MembersForeignKey) %><% } %>))
 			{
 			}
 		}
@@ -87,7 +87,7 @@ namespace <%= BusinessProjectName %>
 <% if(Entity.Table.ForeignKeyColumns.Count == 0) { %>
             using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersion.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.MembersNoRowVersion.BuildReadPropertyParametersVariables() %><% } %>))
 <% } else { %>
-            using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildReadPropertyParametersVariables() %><% } %>))
+            using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildPrivateMemberVariableParameters(Entity.MembersForeignKey) %><% } else { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildReadPropertyParametersVariables(Entity.MembersForeignKey) %><% } %>))
 <% } %>     
             {
 			}
@@ -101,21 +101,18 @@ namespace <%= BusinessProjectName %>
 		private void Fetch(SafeDataReader reader)
 		{
 <% foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey) { if(UseMemberVariables) { %>
-			<%= member.PrivateMemberVariableName %> = reader.<%= member.GetReaderMethod() %>("<%= member.Name %>");
+			<%= member.PrivateMemberVariableName %> = reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");
 <% } else { %>
-			LoadProperty(<%= member.PrivateMemberVariableName %>Property, reader.<%= member.GetReaderMethod() %>("<%= member.Name %>"));
+			LoadProperty(<%= member.PrivateMemberVariableName %>Property, reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));
 <% } } %>
 
 <%-- Many-To-One --%>
-<% foreach(AssociationMember association in Entity.ManyToOne) {  if (UseMemberVariables){ %>
-            <%= association.PrivateMemberVariableName %>ID = reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>");
+<% foreach(AssociationMember association in Entity.ManyToOne) { if (UseMemberVariables){  %>
+            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>");
 <% } else { %>
 			LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"));
-<% } if(!UseLazyLoading){ if (UseMemberVariables){ %>
-			<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = new <%= association.ClassName %>(reader);
-<% } else { %>
-			LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>());
-<% } } }  %>
+<% } }  %>
+
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(AssociationMember association2 in Entity.ToManyUnion) { if (!UseLazyLoading){ %>
 

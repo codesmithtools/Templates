@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.DataAccessCodeTemplate" Debug="True" CompilerVersion="v3.5" Description="CSLA 3.6.1 DataAccessLayer" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.DataAccessCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.6.1 DataAccessLayer" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\Common" %>
@@ -117,16 +117,16 @@ namespace <%= DataProjectName %>
 		
 		#region Insert
 		
-		public SafeDataReader <%= entity.ClassName %>Insert(<%= entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildInsertParametersVariables() %>)
+		public SafeDataReader <%= entity.ClassName %>Insert(<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertParametersVariables(entity.MembersForeignKey) %>)
 		{
 			SqlConnection connection = new SqlConnection(ConnectionString);
 			
 			connection.Open();
 			
-			const string commandText = "INSERT INTO [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] (<%= entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildInsertDataBaseColumns() %>) VALUES (<%= entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildInsertDataBaseParameters() %>)";
+			const string commandText = "INSERT INTO [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] (<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseColumns(entity.MembersForeignKey) %>) VALUES (<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseParameters(entity.MembersForeignKey) %>)";
 			using(SqlCommand command = new SqlCommand(commandText, connection))
 			{
-				<%= entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildInsertCommandParameters() %>
+				<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(entity.MembersForeignKey) %>
 				
 				return new SafeDataReader(command.ExecuteReader());
 			}
@@ -139,7 +139,7 @@ namespace <%= DataProjectName %>
 <% if(entity.Table.ForeignKeyColumns.Count == 0) { %>
         public SafeDataReader <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersion.BuildParametersVariables() %>)
 <% } else { %>
-        public SafeDataReader <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildParametersVariables() %>)
+        public SafeDataReader <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildParametersVariables(entity.MembersForeignKey) %>)
 <% } %>
 		{
 			SqlConnection connection = new SqlConnection(ConnectionString);
@@ -148,14 +148,14 @@ namespace <%= DataProjectName %>
 <% if(entity.Table.ForeignKeyColumns.Count == 0) { %>
 			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoKeysOrRowVersion.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %>";
 <% } else { %>
-			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoRowVersionIncludeRemoteAssociations.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %>";
+			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoRowVersion.BuildSetStatements(entity.MembersForeignKey) %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %>";
 <% } %>
             using(SqlCommand command = new SqlCommand(commandText, connection))
 			{
 <% if(entity.Table.ForeignKeyColumns.Count == 0) { %>
 			<%= entity.MembersNoRowVersion.BuildCommandParameters() %>
 <% } else { %>
-			<%= entity.MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations.BuildCommandParameters() %>
+			<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(entity.MembersForeignKey) %>
 <% } %>
 				return new SafeDataReader(command.ExecuteReader());
 			}
