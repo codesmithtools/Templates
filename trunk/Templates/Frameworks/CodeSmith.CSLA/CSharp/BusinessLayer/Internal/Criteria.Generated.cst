@@ -44,11 +44,9 @@ namespace <%= BusinessProjectName %>
 
         public <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>) : base(typeof(<%= ChildBusinessClassName %>))
         {
-<%  foreach(Member member in Entity.PrimaryKey.KeyMembers){ if (UseMemberVariables){ %>
-            <%= member.PrivateMemberVariableName %> = <%= member.VariableName %>;
-<% } else { %>
+<%  foreach(Member member in Entity.PrimaryKey.KeyMembers){ %>
             <%= member.PropertyName %> = <%= member.VariableName %>;
-<% } } %>
+<% } %>
         }
         
         #endregion
@@ -58,7 +56,7 @@ namespace <%= BusinessProjectName %>
         #region Read-Write
 <%  foreach(MemberBase member in Entity.GetUniqueSearchCriteriaMembers()){ %>
 		
-        public <%= member.SystemType %> <%= member.Entity.ResolveCriteriaPropertyName( member.ColumnName) %>
+        public <%= member.SystemType %> <%= member.Entity.ResolveCriteriaPropertyName( member.ColumnName, true ) %>
 		{
             get { return GetValue< <%= member.SystemType %> >("<%= member.ColumnName %>"); }				
 			set { _bag["<%= member.ColumnName %>"] = value; }

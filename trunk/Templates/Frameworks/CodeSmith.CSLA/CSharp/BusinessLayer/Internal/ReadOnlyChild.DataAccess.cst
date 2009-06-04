@@ -52,15 +52,11 @@ namespace <%= BusinessProjectName %>
 <% } } %>
 
 <%-- Many-To-One --%>
-<% foreach(AssociationMember association in Entity.ManyToOne) {  if (UseMemberVariables){ %>
-            <%= association.PrivateMemberVariableName %>ID = reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>");
+<% foreach(AssociationMember association in Entity.ManyToOne) { if (UseMemberVariables){  %>
+            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>");
 <% } else { %>
 			LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"));
-<% } if(!UseLazyLoading){ if (UseMemberVariables){ %>
-			<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = new <%= association.ClassName %>(reader);
-<% } else { %>
-			LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>());
-<% } } }  %>
+<% } }  %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(AssociationMember association2 in Entity.ToManyUnion) { if (!UseLazyLoading){ %>
 

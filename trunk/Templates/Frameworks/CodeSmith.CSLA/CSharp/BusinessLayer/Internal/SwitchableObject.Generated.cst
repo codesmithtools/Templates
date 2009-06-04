@@ -84,9 +84,38 @@ namespace <%= BusinessProjectName %>
 		}
 		
 <% } } %>
+<%-- Foreign Keys --%>
+<%  foreach(AssociationMember member in Entity.MembersForeignKey){ string columnName = member.ResolveManyToOneNameConflict(Entity); if (UseMemberVariables){ %>
+		private static readonly PropertyInfo< <%= member.SystemType(false) %> > <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property = RegisterProperty< <%= member.SystemType(false) %> >(p => p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>);
+		private <%= member.SystemType(false) %> <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %> = <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property.DefaultValue;<%= member.BuildDataObjectField() %>
+		public <%= member.SystemType(false) %> <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
+		{
+			get { return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>); }				
+            set
+            {
+                OnPropertyChanging("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>");
+                SetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, ref <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>, value);
+                OnPropertyChanged("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>");
+            }
+		}
+		
+<% } else { %>
+		private static readonly PropertyInfo< <%= member.SystemType(false) %> > <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property = RegisterProperty< <%= member.SystemType(false) %> >(p => p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>);<%= member.BuildDataObjectField() %>
+		public <%= member.SystemType(false) %> <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
+		{
+			get { return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property); }				
+            set
+            { 
+                OnPropertyChanging("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>");
+                SetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, value); 
+                OnPropertyChanged("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>");
+            }
+		}
+		
+<% } } %>
 <%-- Many-To-One --%>
 <% foreach(AssociationMember association in Entity.ManyToOne) { if (UseMemberVariables){ %>
-		private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>RelationshipTypes.LazyLoad<% } else { %>RelationshipTypes.Child<% } %>);
+		private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>Csla.RelationshipTypes.LazyLoad<% } else { %>Csla.RelationshipTypes.Child<% } %>);
 		private <%= association.ClassName %> <%= association.PrivateMemberVariableName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue;
 		public <%= association.ClassName %> <%= association.PropertyName %>
 		{
@@ -94,7 +123,7 @@ namespace <%= BusinessProjectName %>
             {
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.Entity.ResolveCriteriaPropertyName(association.ColumnName) %>));
+                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.ResolveManyToOneNameConflict(Entity)) %>));
 
 <% } %> 
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.PrivateMemberVariableName %>); 
@@ -102,14 +131,14 @@ namespace <%= BusinessProjectName %>
 		}
 
 <% } else { %>
-		private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>RelationshipTypes.LazyLoad<% } else { %>RelationshipTypes.Child<% } %>);
+		private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>Csla.RelationshipTypes.LazyLoad<% } else { %>Csla.RelationshipTypes.Child<% } %>);
 		public <%= association.ClassName %> <%= association.PropertyName %>
 		{
 			get
             {
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.Entity.ResolveCriteriaPropertyName(association.ColumnName) %>));
+                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.ResolveManyToOneNameConflict(Entity)) %>));
 
 <% } %>  
                    return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
@@ -119,19 +148,19 @@ namespace <%= BusinessProjectName %>
 <% } } %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(AssociationMember association in Entity.ToManyUnion) { if (UseMemberVariables){ %>
-        private static readonly PropertyInfo< <%= association.ClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= association.ClassName %>List>(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>RelationshipTypes.LazyLoad<% } else { %>RelationshipTypes.Child<% } %>);
+        private static readonly PropertyInfo< <%= association.ClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= association.ClassName %>List>(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>Csla.RelationshipTypes.LazyLoad<% } else { %>Csla.RelationshipTypes.Child<% } %>);
 		private <%= association.ClassName %>List <%= association.PrivateMemberVariableName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue;
 		public <%= association.ClassName %>List <%= association.PropertyName %>
 		{
 			get
-            { 
+            {  
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-<% if(association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name) != null) { %>
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name).MethodName %>(<%= association.LocalColumn.ColumnName %>));
+<% if(!string.IsNullOrEmpty(association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name))) { %>
+                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name) %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
 
 <% } else { %>
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= association.LocalColumn.ColumnName %>));
+                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
 
 <% } } %> 
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.PrivateMemberVariableName %>); 
@@ -139,25 +168,25 @@ namespace <%= BusinessProjectName %>
 		}
 
 <% } else { %>
-		private static readonly PropertyInfo< <%= association.ClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= association.ClassName %>List>(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>RelationshipTypes.LazyLoad<% } else { %>RelationshipTypes.Child<% } %>);
+		private static readonly PropertyInfo< <%= association.ClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= association.ClassName %>List>(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>Csla.RelationshipTypes.LazyLoad<% } else { %>Csla.RelationshipTypes.Child<% } %>);
 		public <%= association.ClassName %>List <%= association.PropertyName %>
 		{
 			get
             {
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-<% if(association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name) != null) { %>
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name).MethodName %>(<%= association.LocalColumn.ColumnName %>));
+<% if(!string.IsNullOrEmpty(association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.ColumnName))) { %>
+                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.ColumnName) %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
 
 <% } else { %>
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= association.LocalColumn.ColumnName %>));
+                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
 
-<% } } } %>   
+<% } } %>   
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
             }
 		}
 
-<% } %>
+<% }} %>
 		#endregion
 				
 		#region Root Factory Methods 

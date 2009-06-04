@@ -21,9 +21,9 @@ namespace CodeSmith.SchemaHelper
             return string.Format("{0} = {1}", member.PropertyName, member.VariableName);
         }
 
-        public static string BuildCriteriaObjectInitializer(this MemberBase member)
+        public static string BuildCriteriaObjectInitializer(this MemberBase member, string className)
         {
-            return string.Format("{0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName), member.Entity.ResolveCriteriaVariableName(member.ColumnName));
+            return string.Format("{0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName, className), member.Entity.ResolveCriteriaVariableName(member.ColumnName));
         }
 
         public static List<SearchCriteria> ListSearchCriteria(this MemberBase member)

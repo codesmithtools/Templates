@@ -63,6 +63,7 @@
     <Compile Include="Extensions\MemberCollectionExtensions.cs" />
     <Compile Include="Extensions\ColumnSchemaExtensions.cs" />
     <Compile Include="Extensions\MemberBaseExtensions.cs" />
+    <Compile Include="Extensions\SearchCriteriaExtensions.cs" />
     <Compile Include="Extensions\TableSchemaExtensions.cs" />
     <Compile Include="MemberBase.cs" />
     <Compile Include="EntityKey.cs" />

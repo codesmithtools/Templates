@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 using CodeSmith.Engine;
@@ -36,14 +37,17 @@ namespace CodeSmith.SchemaHelper
             return member;
         }
 
-        public static SearchCriteria FindOneToManyOrManyToManyListSearchCriteria(this Entity entity, string memberName)
+        public static string FindOneToManyOrManyToManyListSearchCriteria(this Entity entity, string memberName)
         {
             foreach (AssociationMember association in entity.ManyToOne)
             {
+                if(association.ColumnName.EndsWith(memberName, true, CultureInfo.InvariantCulture))
+                    return string.Format("{0}{1}", Configuration.Instance.SearchCriteriaProperty.Prefix, NamingConventions.PropertyName(association.ColumnName));       
+
                 foreach (SearchCriteria sc in association.ListSearchCriteria)
                 {
                     if (sc.MethodName.EndsWith(memberName))
-                        return sc;
+                        return sc.MethodName;
                 }
             }
 
@@ -52,17 +56,48 @@ namespace CodeSmith.SchemaHelper
 
         public static string ResolveCriteriaPropertyName(this Entity entity, string columnName)
         {
+            return ResolveCriteriaPropertyName(entity, columnName, false);
+        }
+
+        public static string ResolveCriteriaPropertyName(this Entity entity, string columnName, string className)
+        {
+            return ResolveCriteriaPropertyName(entity, columnName, false, className);
+        }
+
+        public static string ResolveCriteriaPropertyName(this Entity entity, string columnName, bool isCritiaClass)
+        {
+            return ResolveCriteriaPropertyName(entity, columnName, isCritiaClass, string.Empty);
+        }
+
+        public static string ResolveCriteriaPropertyName(this Entity entity, string columnName, bool isCritiaClass, string className)
+        {
             string propertyName = NamingConventions.PropertyName(columnName);
+
+            foreach (AssociationMember association in entity.RemoteAssociations)
+            {
+                if(association.TableName == className)
+                {
+                    if (association.ColumnName.EndsWith(columnName, true, CultureInfo.InvariantCulture))
+                        return NamingConventions.PropertyName(association.ColumnName); 
+                }
+            }
 
             foreach (AssociationMember association in entity.ManyToOne)
             {
-
                 if (association.PropertyName == propertyName)
                 {
                     foreach (SearchCriteria sc in association.AssociationEntity().SearchCriteria)
                     {
                         return sc.Members[0].PropertyName;
+                    }
+                }
 
+                if (!isCritiaClass)
+                {
+                    foreach (MemberBase member in association.AssociationEntity().Members)
+                    {
+                        if (columnName.EndsWith(member.ColumnName, true, CultureInfo.InvariantCulture))
+                            return NamingConventions.PropertyName(member.ColumnName);
                     }
                 }
             }
@@ -82,7 +117,12 @@ namespace CodeSmith.SchemaHelper
                     foreach (SearchCriteria sc in association.AssociationEntity().SearchCriteria)
                     {
                         return sc.Members[0].VariableName;
+                    }
 
+                    foreach (MemberBase member in association.AssociationEntity().Members)
+                    {
+                        if (columnName.EndsWith(member.ColumnName, true, CultureInfo.InvariantCulture))
+                            return NamingConventions.VariableName(member.ColumnName);
                     }
                 }
             }
@@ -101,7 +141,36 @@ namespace CodeSmith.SchemaHelper
                     foreach (SearchCriteria sc in association.AssociationEntity().SearchCriteria)
                     {
                         return sc.Members[0].PrivateMemberVariableName;
+                    }
 
+                    foreach (MemberBase member in association.AssociationEntity().Members)
+                    {
+                        if (columnName.EndsWith(member.ColumnName, true, CultureInfo.InvariantCulture))
+                            return NamingConventions.PrivateMemberVariableName(member.ColumnName);
+                    }
+                }
+            }
+
+            return variableName;
+        }
+
+        public static string ResolveCriteriaColumnName(this Entity entity, string columnName)
+        {
+            string variableName = NamingConventions.PrivateMemberVariableName(columnName);
+
+            foreach (AssociationMember association in entity.ManyToOne)
+            {
+                if (association.PrivateMemberVariableName == variableName)
+                {
+                    foreach (SearchCriteria sc in association.AssociationEntity().SearchCriteria)
+                    {
+                        return sc.Members[0].ColumnName;
+                    }
+
+                    foreach (MemberBase member in association.AssociationEntity().Members)
+                    {
+                        if (columnName.EndsWith(member.ColumnName, true, CultureInfo.InvariantCulture))
+                            return member.ColumnName;
                     }
                 }
             }
