@@ -125,7 +125,11 @@ namespace <%= Database.ContextNamespace %>
         /// </summary>
         public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= GetColumnType(column) %> <%= paramName %>)
         {
+<% if (column.CanBeNull == true) { %>
+            return queryable.Where(<%= GetAlias() %> => object.Equals(<%= GetAlias() %>.<%= column.Member %>, <%= paramName %>));
+<% } else { %>
             return queryable.Where(<%= GetAlias() %> => <%= GetAlias() %>.<%= column.Member %> == <%= paramName %>);
+<% } %>
         }
 <% } // if is  not key
  } // foreach method%>
@@ -249,11 +253,13 @@ namespace <%= Database.ContextNamespace %>
                 lamba.Append('\t', tabCount);
                 lamba.Append("&& ");
             }
-                
-            lamba.AppendFormat("{0}.{1} == {2}",
-                alias,
-                column.Member,
-                paramName);;
+            
+            if (column.CanBeNull == true)
+                lamba.AppendFormat("object.Equals({0}.{1}, {2})",
+                    alias, column.Member, paramName);
+            else 
+                lamba.AppendFormat("{0}.{1} == {2}",
+                    alias, column.Member, paramName);
         }
         
         return lamba.ToString();
