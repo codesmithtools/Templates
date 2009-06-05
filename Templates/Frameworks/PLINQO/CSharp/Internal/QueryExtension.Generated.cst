@@ -186,9 +186,11 @@ namespace <%= Database.ContextNamespace %>
             
             string paramName = CommonUtility.GetParameterName(column.Member);
             paramName = CleanParamName(paramName);
-
+            
+            string paramType = GetColumnType(column);
+            
             args.AppendFormat("{0} {1}",
-                CSharpAlias[column.Type],
+                paramType,
                 CSharpKeyWordEscape[paramName]);
         }
         
@@ -219,7 +221,8 @@ namespace <%= Database.ContextNamespace %>
             if (args.Length > 0)
                 args.Append(", ");
             
-            args.Append(CSharpAlias[column.Type]);
+            string paramType = GetColumnType(column);
+            args.Append(paramType);
         }
         
         return args.ToString();
@@ -276,7 +279,7 @@ namespace <%= Database.ContextNamespace %>
         string dataType = column.Type;
         
         if (column.CanBeNull == true && CommonUtility.IsNullableType(dataType))
-            dataType = string.Format("Nullable<{0}>", CSharpAlias[dataType]);
+            dataType = string.Format("{0}?", CSharpAlias[dataType]);
         else
             dataType = CSharpAlias[dataType];
         
