@@ -36,6 +36,11 @@ namespace CodeSmith.SchemaHelper
             return DbTypeToDataReaderMethod[member.Entity.Table.Columns[member.ColumnName].DataType.ToString(), "GetValue"];
         }
 
+        public static bool HasByteArrayColumn(this Member member)
+        {
+            return DbTypeToDataReaderMethod[member.Entity.Table.Columns[member.ColumnName].DataType.ToString(), "GetValue"] == "GetBytes";
+        }
+
         public static string BuildParameterVariableName(this Member member)
         {
             return string.Format("{0}{1}", Configuration.Instance.ParameterPrefix, member.Name);

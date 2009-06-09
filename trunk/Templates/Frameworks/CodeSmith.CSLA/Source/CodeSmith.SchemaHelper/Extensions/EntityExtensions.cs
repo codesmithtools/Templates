@@ -177,5 +177,17 @@ namespace CodeSmith.SchemaHelper
 
             return variableName;
         }
+
+        public static bool HasByteArrayColumn(this Entity entity)
+        {
+            if (entity.MembersNoRowVersionIncludePrimaryKey.HasByteArrayColumn())
+                return true;
+
+            if (entity.ManyToOne.HasByteArrayColumn() || entity.ToManyUnion.HasByteArrayColumn())
+                return true;
+
+
+            return false;
+        }
     }
 }

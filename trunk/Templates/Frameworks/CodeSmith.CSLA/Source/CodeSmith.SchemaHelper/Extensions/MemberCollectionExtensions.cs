@@ -504,5 +504,16 @@ namespace CodeSmith.SchemaHelper
 
             return columnNames.TrimStart(new[] { ',', ' ' });
         }
+
+        public static bool HasByteArrayColumn(this List<Member> members)
+        {
+            foreach (Member member in members)
+            {
+                if (member.HasByteArrayColumn())
+                    return true;
+            }
+
+            return false;
+        }
     }
 }
