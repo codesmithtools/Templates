@@ -26,7 +26,7 @@ public override void Generate()
 	{
 		#region CommandObject
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("{0}.cs", entity.ClassName));
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Command\\{0}.cs", entity.ClassName));
 		
 		CommandObject commandObject = this.Create<CommandObject>();
 		this.CopyPropertiesTo(commandObject);
@@ -40,7 +40,7 @@ public override void Generate()
 		
 		#region CommandObject.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("{0}.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Command\\{0}.Generated.cs", entity.ClassName));
 		
 		CommandObjectGenerated commandObjectGenerated = this.Create<CommandObjectGenerated>();
 		this.CopyPropertiesTo(commandObjectGenerated);
@@ -53,7 +53,7 @@ public override void Generate()
 		
 		#region CommandObject.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("{0}.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Command\\{0}.DataAccess.cs", entity.ClassName));
 		
 		CommandObjectDataAccess commandObjectDataAccess = this.Create<CommandObjectDataAccess>();
 		this.CopyPropertiesTo(commandObjectDataAccess);

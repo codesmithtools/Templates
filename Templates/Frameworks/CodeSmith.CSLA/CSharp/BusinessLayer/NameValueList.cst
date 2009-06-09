@@ -25,7 +25,7 @@ public override void Generate()
 	{
 		#region NameValueList
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("{0}List.cs", entity.ClassName));
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}List.cs", entity.ClassName));
 		
 		NameValueList nameValueList = this.Create<NameValueList>();
 		this.CopyPropertiesTo(nameValueList);
@@ -39,7 +39,7 @@ public override void Generate()
 		
 		#region NameValueList.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("{0}List.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}List.Generated.cs", entity.ClassName));
 		
 		NameValueListGenerated nameValueListGenerated = this.Create<NameValueListGenerated>();
 		this.CopyPropertiesTo(nameValueListGenerated);
@@ -52,7 +52,7 @@ public override void Generate()
 		
 		#region NameValueList.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("{0}List.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}List.DataAccess.cs", entity.ClassName));
 		
 		NameValueListDataAccess nameValueListDataAccess = this.Create<NameValueListDataAccess>();
 		this.CopyPropertiesTo(nameValueListDataAccess);
