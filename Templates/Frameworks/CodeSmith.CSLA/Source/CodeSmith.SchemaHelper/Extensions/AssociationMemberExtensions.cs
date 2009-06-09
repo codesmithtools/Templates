@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeSmith.Engine;
 
 namespace CodeSmith.SchemaHelper
 {
@@ -50,5 +51,41 @@ namespace CodeSmith.SchemaHelper
 
             return member.ColumnName;
         }
+
+        public static bool HasByteArrayColumn(this AssociationMember member)
+        {
+            if (member.Table.Columns.Contains(member.LocalColumn.Name))
+                return DbTypeToDataReaderMethod[member.Table.Columns[member.LocalColumn.Name].DataType.ToString(), "GetValue"] == "GetBytes";
+
+            if (member.Table.Columns.Contains(member.ColumnName))
+                return DbTypeToDataReaderMethod[member.Table.Columns[member.ColumnName].DataType.ToString(), "GetValue"] == "GetBytes";
+
+            if (member.AssociationEntity().Table.Columns.Contains(member.LocalColumn.Name))
+                return DbTypeToDataReaderMethod[member.AssociationEntity().Table.Columns[member.LocalColumn.Name].DataType.ToString(), "GetValue"] == "GetBytes";
+
+            if (member.AssociationEntity().Table.Columns.Contains(member.ColumnName))
+                return DbTypeToDataReaderMethod[member.AssociationEntity().Table.Columns[member.ColumnName].DataType.ToString(), "GetValue"] == "GetBytes";
+
+            return false;
+        }
+
+        #region Internal Properties and MemberBases
+
+        internal static MapCollection _dbTypeToDataReaderMethod;
+        internal static MapCollection DbTypeToDataReaderMethod
+        {
+            get
+            {
+                if (_dbTypeToDataReaderMethod == null)
+                {
+                    string path;
+                    if (Map.TryResolvePath("DbType-DataReaderMethod", "", out path))
+                        _dbTypeToDataReaderMethod = Map.Load(path);
+                }
+                return _dbTypeToDataReaderMethod;
+            }
+        }
+
+        #endregion
     }
 }

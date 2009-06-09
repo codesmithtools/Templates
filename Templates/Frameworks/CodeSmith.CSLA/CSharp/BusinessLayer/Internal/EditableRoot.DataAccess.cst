@@ -21,6 +21,10 @@
 #region using declarations
 
 using System;
+<% if(Entity.HasByteArrayColumn()) { %>
+using System.Data;
+using System.IO;
+<% } %>
 
 using Csla;
 using Csla.Data;
@@ -104,16 +108,16 @@ namespace <%= BusinessProjectName %>
         private void Fetch(SafeDataReader reader)
 		{
 <% foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey) { if(UseMemberVariables) { %>
-			<%= member.PrivateMemberVariableName %> = reader.<%= member.GetReaderMethod() %>("<%= member.Name %>");
+			<%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>GetBytes(reader);<% } %>
 <% } else { %>
-			LoadProperty(<%= member.PrivateMemberVariableName %>Property, reader.<%= member.GetReaderMethod() %>("<%= member.Name %>"));
+			LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>GetBytes(reader));<% } %>
 <% } } %>
 
 <%-- Many-To-One --%>
 <% foreach(AssociationMember association in Entity.ManyToOne) { if (UseMemberVariables){  %>
-            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>");
+            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = <%if(!association.HasByteArrayColumn()) { %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>");<% } else { %>GetBytes(reader);<% } %>
 <% } else { %>
-			LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"));
+			LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, <%if(!association.HasByteArrayColumn()) { %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"));<% } else { %>GetBytes(reader));<% } %>
 <% } }  %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(AssociationMember association2 in Entity.ToManyUnion) { if (!UseLazyLoading){ %>
@@ -168,7 +172,38 @@ namespace <%= BusinessProjectName %>
 				}
 			}
         }
-<% } %>
+
+<% if(Entity.HasByteArrayColumn()) { %>		
+		#endregion
+
+		#region Helper Methods
+
+        /// <summary>
+        /// Returns the Bytes stored in a binary column.
+        /// </summary>
+        /// <param name="reader">The Reader.</param>
+        /// <returns>Bytes Stored in a column.</returns>
+        internal static byte[] GetBytes(IDataRecord reader)
+        {
+            var buffer = new byte[1024];
+            long fieldOffset = 0;
+            
+            using (var stream = new MemoryStream())
+            {
+                long bytesRead;
+            
+                while ((bytesRead = reader.GetBytes(0, fieldOffset, buffer, 0, buffer.Length)) > 0)
+                {
+                    var actualRead = new byte[bytesRead];
+                    Buffer.BlockCopy(buffer, 0, actualRead, 0, (int)bytesRead);
+                    stream.Write(actualRead, 0, actualRead.Length);
+                    fieldOffset += bytesRead;
+                }
+
+                return stream.ToArray();
+            }
+        }
+<% } } %>
 
 		#endregion
 	}
