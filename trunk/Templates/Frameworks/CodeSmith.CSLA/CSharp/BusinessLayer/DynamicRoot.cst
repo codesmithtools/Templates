@@ -25,7 +25,7 @@ public override void Generate()
 	{
 		#region DynamicRoot
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("{0}.cs", entity.ClassName));
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", entity.ClassName));
 		
 		DynamicRoot dynamicRoot = this.Create<DynamicRoot>();
 		this.CopyPropertiesTo(dynamicRoot);
@@ -39,7 +39,7 @@ public override void Generate()
 		
 		#region DynamicRoot.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("{0}.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", entity.ClassName));
 		
 		DynamicRootGenerated dynamicRootGenerated = this.Create<DynamicRootGenerated>();
 		this.CopyPropertiesTo(dynamicRootGenerated);
@@ -52,7 +52,7 @@ public override void Generate()
 		
 		#region DynamicRoot.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("{0}.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", entity.ClassName));
 		
 		DynamicRootDataAccess dynamicRootDataAccess = this.Create<DynamicRootDataAccess>();
 		this.CopyPropertiesTo(dynamicRootDataAccess);

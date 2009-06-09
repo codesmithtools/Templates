@@ -26,7 +26,7 @@ public override void Generate()
 	{
 		#region EditableChild
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("{0}.cs", entity.ClassName));
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", entity.ClassName));
 		
 		EditableChild editableChild = this.Create<EditableChild>();
 		this.CopyPropertiesTo(editableChild);
@@ -40,7 +40,7 @@ public override void Generate()
 		
 		#region EditableChild.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("{0}.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", entity.ClassName));
 		
 		EditableChildGenerated editableChildGenerated = this.Create<EditableChildGenerated>();
 		this.CopyPropertiesTo(editableChildGenerated);
@@ -53,7 +53,7 @@ public override void Generate()
 		
 		#region EditableChild.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("{0}.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", entity.ClassName));
 		
 		EditableChildDataAccess editableChildDataAccess = this.Create<EditableChildDataAccess>();
 		this.CopyPropertiesTo(editableChildDataAccess);

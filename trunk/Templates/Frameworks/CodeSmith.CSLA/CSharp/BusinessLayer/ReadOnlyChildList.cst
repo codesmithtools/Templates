@@ -26,7 +26,7 @@ public override void Generate()
 	{
 		#region ReadOnlyChildList
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("{0}List.cs", entity.ClassName));
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}List.cs", entity.ClassName));
 		
 		ReadOnlyChildList readOnlyChildList = this.Create<ReadOnlyChildList>();
 		this.CopyPropertiesTo(readOnlyChildList);
@@ -40,7 +40,7 @@ public override void Generate()
 		
 		#region ReadOnlyChildList.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("{0}List.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}List.Generated.cs", entity.ClassName));
 		
 		ReadOnlyChildListGenerated readOnlyChildListGenerated = this.Create<ReadOnlyChildListGenerated>();
 		this.CopyPropertiesTo(readOnlyChildListGenerated);
@@ -53,7 +53,7 @@ public override void Generate()
 		
 		#region ReadOnlyChildList.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("{0}List.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}List.DataAccess.cs", entity.ClassName));
 		
 		ReadOnlyChildListDataAccess readOnlyChildListDataAccess = this.Create<ReadOnlyChildListDataAccess>();
 		this.CopyPropertiesTo(readOnlyChildListDataAccess);
