@@ -74,7 +74,7 @@ namespace <%= BusinessProjectName %>
 		[Transactional(TransactionalTypes.TransactionScope)]
 		protected override void DataPortal_DeleteSelf()
 		{
-            DataPortal_Delete(new <%= BusinessClassName %>Criteria(<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
+            // TODO: delete values
 		}
 <% } else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL) { %>
 		[RunLocal]
@@ -104,18 +104,22 @@ namespace <%= BusinessProjectName %>
         private void Fetch(SafeDataReader reader)
 		{
             MarkOld();
-            
+			
+<% if(Entity.HasRowVersionMember) { %>
+			_timestamp = GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+			
+<% } %>
 <% foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey) { if(UseMemberVariables) { %>
 			<%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>GetBytes(reader);<% } %>
 <% } else { %>
-			LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>GetBytes(reader));<% } %>
+			LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>GetBytes(reader," <%= member.ColumnName %>"));<% } %>
 <% } } %>
 
 <%-- Many-To-One --%>
 <% foreach(AssociationMember association in Entity.ManyToOne) { if (UseMemberVariables){  %>
             <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = <%if(!association.HasByteArrayColumn()) { %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>");<% } else { %>GetBytes(reader);<% } %>
 <% } else { %>
-			LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, <%if(!association.HasByteArrayColumn()) { %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"));<% } else { %>GetBytes(reader));<% } %>
+			LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, <%if(!association.HasByteArrayColumn()) { %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"));<% } else { %>GetBytes(reader," <%= association.ColumnName %>"));<% } %>
 <% } }  %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(AssociationMember association2 in Entity.ToManyUnion) { if (!UseLazyLoading){ %>
@@ -132,6 +136,21 @@ namespace <%= BusinessProjectName %>
 		{
 			using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Insert(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertPrivateMemberVariableParameters(Entity.MembersForeignKey) %><% } else { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertReadPropertyParametersVariables(Entity.MembersForeignKey) %><% } %>))
 			{
+				if(reader.Read())
+				{
+<% if(Entity.HasRowVersionMember) { %>
+					_timestamp = GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+<% } %>
+
+<% if(Entity.PrimaryKey.IsIdentity) { %>
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(UseMemberVariables) { %>
+					<%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>GetBytes(reader);<% } %>
+<% } else { %>
+					LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>GetBytes(reader," <%= member.ColumnName %>"));<% } %>
+<% } } %>
+<% } %>
+				}
+				
 <% if(Entity.ToManyUnion.Count > 0 || Entity.ManyToOne.Count > 0){ %>
                 FieldManager.UpdateChildren(this);
 <% } %>
@@ -142,11 +161,18 @@ namespace <%= BusinessProjectName %>
 		protected override void DataPortal_Update()
 		{
 <% if(Entity.Table.ForeignKeyColumns.Count == 0) { %>
-            using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersion.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.MembersNoRowVersion.BuildReadPropertyParametersVariables() %><% } %>))
+            using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildReadPropertyParametersVariables() %><% } %><% if(Entity.HasRowVersionMember) { %>, _timestamp<% } %>))
 <% } else { %>
-            using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildPrivateMemberVariableParameters(Entity.MembersForeignKey) %><% } else { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildReadPropertyParametersVariables(Entity.MembersForeignKey) %><% } %>))
+            using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% if(UseMemberVariables) { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildPrivateMemberVariableParameters(Entity.MembersForeignKey) %><% } else { %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildReadPropertyParametersVariables(Entity.MembersForeignKey) %><% } %><% if(Entity.HasRowVersionMember) { %>, _timestamp<% } %>))
 <% } %>
 			{
+<% if(Entity.HasRowVersionMember) { %>	
+				if(reader.Read())
+				{
+					_timestamp = GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+				}
+<% } %>
+
 <% if(Entity.ToManyUnion.Count > 0 || Entity.ManyToOne.Count > 0){ %>
                 FieldManager.UpdateChildren(this);
 <% } %>
@@ -156,7 +182,7 @@ namespace <%= BusinessProjectName %>
 		[Transactional(TransactionalTypes.TransactionScope)]
 		protected override void DataPortal_DeleteSelf()
 		{
-            DataPortal_Delete(new <%= BusinessClassName %>Criteria(<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
+            DataPortal_Delete(new <%= BusinessClassName %>Criteria(<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %><% if(Entity.HasRowVersionMember) { %>, _timestamp<% } %>));
         }
 		
 <% if(Entity.HasByteArrayColumn()) { %>		
@@ -169,7 +195,7 @@ namespace <%= BusinessProjectName %>
         /// </summary>
         /// <param name="reader">The Reader.</param>
         /// <returns>Bytes Stored in a column.</returns>
-        internal static byte[] GetBytes(IDataRecord reader)
+        internal static byte[] GetBytes(SafeDataReader reader, string columnName)
         {
             var buffer = new byte[1024];
             long fieldOffset = 0;
@@ -178,7 +204,7 @@ namespace <%= BusinessProjectName %>
             {
                 long bytesRead;
             
-                while ((bytesRead = reader.GetBytes(0, fieldOffset, buffer, 0, buffer.Length)) > 0)
+                while ((bytesRead = reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length)) > 0)
                 {
                     var actualRead = new byte[bytesRead];
                     Buffer.BlockCopy(buffer, 0, actualRead, 0, (int)bytesRead);

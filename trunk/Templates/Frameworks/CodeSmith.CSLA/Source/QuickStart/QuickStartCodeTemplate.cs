@@ -53,6 +53,7 @@ namespace QuickStart
                 if (value != null)
                 {
                     _database = value;
+                    _database.DeepLoad = true;
                     OnDatabaseChanged();
                 }
             }
