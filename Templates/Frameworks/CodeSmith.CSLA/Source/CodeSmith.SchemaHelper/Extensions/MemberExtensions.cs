@@ -38,7 +38,7 @@ namespace CodeSmith.SchemaHelper
 
         public static bool HasByteArrayColumn(this Member member)
         {
-            return DbTypeToDataReaderMethod[member.Entity.Table.Columns[member.ColumnName].DataType.ToString(), "GetValue"] == "GetBytes";
+            return DbTypeToDataReaderMethod[member.Entity.Table.Columns[member.ColumnName].DataType.ToString(), "GetValue"] == "GetBytes" || member.IsRowVersion;
         }
 
         public static string BuildParameterVariableName(this Member member)
@@ -60,6 +60,16 @@ namespace CodeSmith.SchemaHelper
         {
             string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
             return string.Format("{0} {1}", systemType, member.VariableName);
+        }
+
+        public static string SystemType(this Member member, bool includeSize)
+        {
+            return includeSize ? member.SystemType.Replace("[]", string.Format("[{0}]", member.Size)) : member.SystemType;
+        }
+
+        public static string BuildDataBaseColumn(this Member member)
+        {
+            return string.Format("[{0}]", member.ColumnName);
         }
 
         #region Internal Properties and Members

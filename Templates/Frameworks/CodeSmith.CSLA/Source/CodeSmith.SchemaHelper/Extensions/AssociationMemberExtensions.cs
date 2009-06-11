@@ -55,16 +55,16 @@ namespace CodeSmith.SchemaHelper
         public static bool HasByteArrayColumn(this AssociationMember member)
         {
             if (member.Table.Columns.Contains(member.LocalColumn.Name))
-                return DbTypeToDataReaderMethod[member.Table.Columns[member.LocalColumn.Name].DataType.ToString(), "GetValue"] == "GetBytes";
+                return DbTypeToDataReaderMethod[member.Table.Columns[member.LocalColumn.Name].DataType.ToString(), "GetValue"] == "GetBytes" || member.IsRowVersion;
 
             if (member.Table.Columns.Contains(member.ColumnName))
-                return DbTypeToDataReaderMethod[member.Table.Columns[member.ColumnName].DataType.ToString(), "GetValue"] == "GetBytes";
+                return DbTypeToDataReaderMethod[member.Table.Columns[member.ColumnName].DataType.ToString(), "GetValue"] == "GetBytes" || member.IsRowVersion;
 
             if (member.AssociationEntity().Table.Columns.Contains(member.LocalColumn.Name))
-                return DbTypeToDataReaderMethod[member.AssociationEntity().Table.Columns[member.LocalColumn.Name].DataType.ToString(), "GetValue"] == "GetBytes";
+                return DbTypeToDataReaderMethod[member.AssociationEntity().Table.Columns[member.LocalColumn.Name].DataType.ToString(), "GetValue"] == "GetBytes" || member.IsRowVersion;
 
             if (member.AssociationEntity().Table.Columns.Contains(member.ColumnName))
-                return DbTypeToDataReaderMethod[member.AssociationEntity().Table.Columns[member.ColumnName].DataType.ToString(), "GetValue"] == "GetBytes";
+                return DbTypeToDataReaderMethod[member.AssociationEntity().Table.Columns[member.ColumnName].DataType.ToString(), "GetValue"] == "GetBytes" || member.IsRowVersion;
 
             return false;
         }

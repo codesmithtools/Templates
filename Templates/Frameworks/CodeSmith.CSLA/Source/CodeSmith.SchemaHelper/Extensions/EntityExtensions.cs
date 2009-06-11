@@ -180,7 +180,7 @@ namespace CodeSmith.SchemaHelper
 
         public static bool HasByteArrayColumn(this Entity entity)
         {
-            if (entity.MembersNoRowVersionIncludePrimaryKey.HasByteArrayColumn())
+            if (entity.Members.HasByteArrayColumn())
                 return true;
 
             if (entity.ManyToOne.HasByteArrayColumn() || entity.ToManyUnion.HasByteArrayColumn())
@@ -188,6 +188,57 @@ namespace CodeSmith.SchemaHelper
 
 
             return false;
+        }
+
+        public static string BuildInsertSelectStatement(this Entity entity)
+        {
+            string query = string.Empty;
+
+            if (entity.PrimaryKey.IsIdentity && entity.HasRowVersionMember)
+            {
+                query = string.Format("; SELECT {0}, {1} FROM [{2}].[{3}] WHERE {4} = SCOPE_IDENTITY()",
+                                      entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),
+                                      entity.RowVersionMember.BuildDataBaseColumn(),
+                                      entity.Table.Owner,
+                                      entity.Table.Name,
+                                      entity.PrimaryKey.KeyMember.ColumnName);
+            }
+            else if (entity.PrimaryKey.IsIdentity)
+            {
+                query = string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {3} = SCOPE_IDENTITY()",
+                                      entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),
+                                      entity.Table.Owner,
+                                      entity.Table.Name,
+                                      entity.PrimaryKey.KeyMember.ColumnName);
+            }
+            else if (entity.HasRowVersionMember)
+            {
+                query = string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {3} = {4}{5}",
+                                      entity.RowVersionMember.BuildDataBaseColumn(),
+                                      entity.Table.Owner,
+                                      entity.Table.Name,
+                                      entity.PrimaryKey.KeyMember.ColumnName,
+                                      Configuration.Instance.ParameterPrefix,
+                                      entity.PrimaryKey.KeyMember.ColumnName);
+            }
+
+            return query;
+        }
+
+        public static string BuildUpdateSelectStatement(this Entity entity)
+        {
+            if (entity.HasRowVersionMember)
+            {
+                return string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {3} = {4}{5}",
+                                     entity.RowVersionMember.BuildDataBaseColumn(),
+                                     entity.Table.Owner,
+                                     entity.Table.Name,
+                                     entity.PrimaryKey.KeyMember.ColumnName,
+                                     Configuration.Instance.ParameterPrefix,
+                                     entity.PrimaryKey.KeyMember.ColumnName);
+            }
+
+            return string.Empty;
         }
     }
 }

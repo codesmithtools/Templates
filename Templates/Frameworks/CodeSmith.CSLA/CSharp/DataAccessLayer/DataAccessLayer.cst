@@ -20,6 +20,7 @@
 #region using declarations
 
 using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 
@@ -55,7 +56,7 @@ namespace <%= DataProjectName %>
 		
 		#endregion
 		
-        #region Public Methods
+        #region Private Methods
 
         /// <summary>
         /// Returns the Connection String.
@@ -77,7 +78,7 @@ namespace <%= DataProjectName %>
         /// <summary>
         /// Returns an array of SqlParameters
         /// </summary>
-        public SqlParameter[] SqlParameters(Dictionary<string, object> bag)
+        private static SqlParameter[] SqlParameters(Dictionary<string, object> bag)
         {
             List<SqlParameter> parameters = new List<SqlParameter>(bag.Keys.Count);
 
@@ -93,7 +94,7 @@ namespace <%= DataProjectName %>
         /// Returns a where clause for the current Criteria object.
         /// </summary>
         /// <returns>Returns a where clause for the current Criteria object.</returns>
-        public string BuildWhereStatement(Dictionary<string, object> bag)
+        private static string BuildWhereStatement(Dictionary<string, object> bag)
         {
             if (bag.Count == 0)
                 return string.Empty;
@@ -123,7 +124,7 @@ namespace <%= DataProjectName %>
 			
 			connection.Open();
 			
-			const string commandText = "INSERT INTO [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] (<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseColumns(entity.MembersForeignKey) %>) VALUES (<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseParameters(entity.MembersForeignKey) %>)";
+			const string commandText = "INSERT INTO [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] (<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseColumns(entity.MembersForeignKey) %>) VALUES (<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseParameters(entity.MembersForeignKey) %>)<%= entity.BuildInsertSelectStatement() %>";
 			using(SqlCommand command = new SqlCommand(commandText, connection))
 			{
 				<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(entity.MembersForeignKey) %>
@@ -137,27 +138,37 @@ namespace <%= DataProjectName %>
 		#region Update
 
 <% if(entity.Table.ForeignKeyColumns.Count == 0) { %>
-        public SafeDataReader <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersion.BuildParametersVariables() %>)
+        public SafeDataReader <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildParametersVariables() %><% if(entity.HasRowVersionMember) { %>, <%= entity.RowVersionMember.SystemType %> timestamp<% } %>)
 <% } else { %>
-        public SafeDataReader <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildParametersVariables(entity.MembersForeignKey) %>)
+        public SafeDataReader <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildParametersVariables(entity.MembersForeignKey) %><% if(entity.HasRowVersionMember) { %>, <%= entity.RowVersionMember.SystemType %> timestamp<% } %>)
 <% } %>
 		{
 			SqlConnection connection = new SqlConnection(ConnectionString);
-			
 			connection.Open();
+
 <% if(entity.Table.ForeignKeyColumns.Count == 0) { %>
-			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoKeysOrRowVersion.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %>";
+			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoKeysOrRowVersion.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(entity.HasRowVersionMember) { %> AND [<%= entity.RowVersionMember.ColumnName %>] = @p_<%= entity.RowVersionMember.ColumnName %><% } %><%= entity.BuildUpdateSelectStatement() %>";
 <% } else { %>
-			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoRowVersion.BuildSetStatements(entity.MembersForeignKey) %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %>";
+			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoRowVersion.BuildSetStatements(entity.MembersForeignKey) %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(entity.HasRowVersionMember) { %> AND [<%= entity.RowVersionMember.ColumnName %>] = @p_<%= entity.RowVersionMember.ColumnName %><% } %><%= entity.BuildUpdateSelectStatement() %>";
 <% } %>
             using(SqlCommand command = new SqlCommand(commandText, connection))
 			{
 <% if(entity.Table.ForeignKeyColumns.Count == 0) { %>
-			<%= entity.MembersNoRowVersion.BuildCommandParameters() %>
+				<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
 <% } else { %>
-			<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(entity.MembersForeignKey) %>
+				<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(entity.MembersForeignKey) %>
 <% } %>
-				return new SafeDataReader(command.ExecuteReader());
+<% if(entity.HasRowVersionMember) { %>
+				command.Parameters.AddWithValue("@p_<%= entity.RowVersionMember.ColumnName %>", timestamp);
+<% } %>
+
+				SafeDataReader reader = new SafeDataReader(command.ExecuteReader());
+
+                //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                if(reader.RecordsAffected == 0)
+                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+
+			    return reader;
 			}
 		}
 		
@@ -170,7 +181,7 @@ namespace <%= DataProjectName %>
 			SqlConnection connection = new SqlConnection(ConnectionString);
 			connection.Open();
 <%if(entity.Table.ForeignKeyColumns.Count == 0) {%>
-            string commandText = string.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", BuildWhereStatement(bag));
+            string commandText = string.Format("SELECT <%= entity.MembersPrimaryKeyUnion.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", BuildWhereStatement(bag));
 <%} else {%>
             string commandText = string.Format("SELECT <%= entity.MembersManyUnion.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", BuildWhereStatement(bag));
 <%}%>
@@ -197,7 +208,13 @@ namespace <%= DataProjectName %>
 			{
 				command.Parameters.AddRange(SqlParameters(bag));
 				
-				return new SafeDataReader(command.ExecuteReader());
+				SafeDataReader reader = new SafeDataReader(command.ExecuteReader());
+
+                //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                if(reader.RecordsAffected == 0)
+                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+
+			    return reader;
 			}
 		}
 		
