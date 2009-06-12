@@ -41,6 +41,16 @@ namespace <%= BusinessProjectName %>
         {
             return DataPortal.FetchChild< <%= BusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
         }
+        
+        <%-- One-To-Many & Many-To-Many --%>
+<% foreach(AssociationMember association in Entity.ManyToOne) { foreach(SearchCriteria sc in association.ListSearchCriteria) { %>
+        
+        internal static <%= BusinessClassName %> <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariable() %>)
+		{
+            return DataPortal.FetchChild< <%= BusinessClassName %> >(
+                new <%= ChildBusinessClassName %>Criteria { <%= association.BuildObjectInitializer() %> });
+        }
+ <% } } %>
 
 		private <%= BusinessClassName %>()
 		{ /* Require use of factory methods */ }

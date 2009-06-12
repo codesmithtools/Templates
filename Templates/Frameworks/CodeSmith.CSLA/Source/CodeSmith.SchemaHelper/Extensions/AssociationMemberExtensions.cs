@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Engine;
+using CodeSmith.SchemaHelper.Util;
 
 namespace CodeSmith.SchemaHelper
 {
@@ -17,7 +18,12 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildObjectInitializer(this AssociationMember member)
         {
-            return string.Format("{0} = {1}", member.PropertyName, member.VariableName);
+            return string.Format("{0} = {1}", NamingConventions.PropertyName(member.ColumnName), NamingConventions.VariableName(member.ColumnName));
+        }
+
+        public static string BuildParametersVariable(this AssociationMember member)
+        {
+            return string.Format("{0} {1}", member.SystemType, NamingConventions.VariableName(member.ColumnName));
         }
 
         public static Entity AssociationEntity(this AssociationMember member)

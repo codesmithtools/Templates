@@ -12,6 +12,7 @@ namespace CodeSmith.SchemaHelper
             return string.Format("{0}{1}", Configuration.Instance.SearchCriteriaProperty.Prefix, NamingConventions.PropertyName(member.ColumnName));       
         }
 
+
         #endregion
     }
 }
