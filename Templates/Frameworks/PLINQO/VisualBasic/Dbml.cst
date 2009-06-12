@@ -161,11 +161,11 @@ Public Sub Generate()
     Next
 
     If UserAssociations IsNot Nothing Then
-    ? ? For Each userAssociation As String In Me.UserAssociations
-    ? ? ? ? If Not String.IsNullOrEmpty(userAssociation) Then
-    ? ? ? ? ? ? settings.UserDefinedAssociations.Add(userAssociation)
-    ? ? ? ? End If
-    ? ? Next
+        For Each userAssociation As String In Me.UserAssociations
+            If Not String.IsNullOrEmpty(userAssociation) Then
+                settings.UserDefinedAssociations.Add(userAssociation)
+            End If
+        Next
     End If
     
     Dim generator As New DbmlGenerator(settings)
