@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using SchemaExplorer;
 
 using CodeSmith.Engine;
@@ -46,6 +45,9 @@ namespace CodeSmith.SchemaHelper
             string result = (Configuration.Instance.ResolveSystemType.ContainsKey(column.DataType.ToString()))
                                 ? Configuration.Instance.ResolveSystemType[column.DataType.ToString()]
                                 : column.SystemType.ToString();
+
+            if (result.Equals("DateTime", StringComparison.InvariantCultureIgnoreCase))
+                result = "SmartDate";
 
             return (column.AllowDBNull && column.SystemType.IsValueType && canAppendNullable)
                        ? string.Format("{0}?", result)
