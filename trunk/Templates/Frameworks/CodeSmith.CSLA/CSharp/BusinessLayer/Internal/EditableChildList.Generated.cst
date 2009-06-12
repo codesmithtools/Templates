@@ -47,13 +47,13 @@ namespace <%= BusinessProjectName %>
         {
             return DataPortal.FetchChild< <%= BusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
         }
-		<%-- One-To-Many & Many-To-Many --%>
+<%-- One-To-Many & Many-To-Many --%>
 <% foreach(AssociationMember association in Entity.ManyToOne) { foreach(SearchCriteria sc in association.ListSearchCriteria) { %>
         
-        internal static <%= BusinessClassName %> <%= sc.GetListMethodName(association) %>(<%= sc.Members[0].BuildParametersVariablesCriteria(false) %>)
+        internal static <%= BusinessClassName %> <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariable() %>)
 		{
             return DataPortal.FetchChild< <%= BusinessClassName %> >(
-                new <%= ChildBusinessClassName %>Criteria { <%= sc.Members[0].BuildCriteriaObjectInitializer(Entity.Table.Name) %> });
+                new <%= ChildBusinessClassName %>Criteria { <%= association.BuildObjectInitializer() %> });
         }
  <% } } %>
 
