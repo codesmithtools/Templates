@@ -25,13 +25,12 @@ public override void Generate()
 	{
 		#region NameValueList
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}List.cs", entity.ClassName));
-		
 		NameValueList nameValueList = this.Create<NameValueList>();
 		this.CopyPropertiesTo(nameValueList);
 		nameValueList.SourceTable = entity.Table;
-		nameValueList.BusinessClassName = string.Format("{0}List", entity.ClassName);
+		nameValueList.BusinessClassName = string.Format("{0}List", nameValueList.BusinessClassName);
 		
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", nameValueList.BusinessClassName));
 		if (!System.IO.File.Exists(parentFileName))
 		{
 			nameValueList.RenderToFile(parentFileName, false);
@@ -39,12 +38,12 @@ public override void Generate()
 		
 		#region NameValueList.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}List.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", nameValueList.BusinessClassName));
 		
 		NameValueListGenerated nameValueListGenerated = this.Create<NameValueListGenerated>();
 		this.CopyPropertiesTo(nameValueListGenerated);
 		nameValueListGenerated.SourceTable = entity.Table;
-		nameValueListGenerated.BusinessClassName = string.Format("{0}List", entity.ClassName);
+		nameValueListGenerated.BusinessClassName = string.Format("{0}List", nameValueListGenerated.BusinessClassName);
 		
 		nameValueListGenerated.RenderToFile(fileName, parentFileName, true);
 		
@@ -52,12 +51,12 @@ public override void Generate()
 		
 		#region NameValueList.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}List.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", nameValueList.BusinessClassName));
 		
 		NameValueListDataAccess nameValueListDataAccess = this.Create<NameValueListDataAccess>();
 		this.CopyPropertiesTo(nameValueListDataAccess);
 		nameValueListDataAccess.SourceTable = entity.Table;
-		nameValueListDataAccess.BusinessClassName = string.Format("{0}List", entity.ClassName);
+		nameValueListDataAccess.BusinessClassName = string.Format("{0}List", nameValueListDataAccess.BusinessClassName);
 		
 		nameValueListDataAccess.RenderToFile(fileName, parentFileName, true);
 		

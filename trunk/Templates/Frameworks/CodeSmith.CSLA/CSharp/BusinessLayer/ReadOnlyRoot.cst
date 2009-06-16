@@ -25,13 +25,11 @@ public override void Generate()
 	{
 		#region ReadOnlyRoot
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", entity.ClassName));
-		
 		ReadOnlyRoot readOnlyRoot = this.Create<ReadOnlyRoot>();
 		this.CopyPropertiesTo(readOnlyRoot);
 		readOnlyRoot.SourceTable = entity.Table;
-		readOnlyRoot.BusinessClassName = entity.ClassName;
 		
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", readOnlyRoot.BusinessClassName));
 		if (!System.IO.File.Exists(parentFileName))
 		{
 			readOnlyRoot.RenderToFile(parentFileName, false);
@@ -39,12 +37,11 @@ public override void Generate()
 		
 		#region ReadOnlyRoot.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", readOnlyRoot.BusinessClassName));
 		
 		ReadOnlyRootGenerated readOnlyRootGenerated = this.Create<ReadOnlyRootGenerated>();
 		this.CopyPropertiesTo(readOnlyRootGenerated);
 		readOnlyRootGenerated.SourceTable = entity.Table;
-		readOnlyRootGenerated.BusinessClassName = entity.ClassName;
 		
 		readOnlyRootGenerated.RenderToFile(fileName, parentFileName, true);
 		
@@ -52,12 +49,11 @@ public override void Generate()
 		
 		#region ReadOnlyRoot.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", readOnlyRoot.BusinessClassName));
 		
 		ReadOnlyRootDataAccess readOnlyRootDataAccess = this.Create<ReadOnlyRootDataAccess>();
 		this.CopyPropertiesTo(readOnlyRootDataAccess);
 		readOnlyRootDataAccess.SourceTable = entity.Table;
-		readOnlyRootDataAccess.BusinessClassName = entity.ClassName;
 		
 		readOnlyRootDataAccess.RenderToFile(fileName, parentFileName, true);
 		

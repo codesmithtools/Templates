@@ -26,13 +26,11 @@ public override void Generate()
 	{
 		#region EditableChild
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", entity.ClassName));
-		
 		EditableChild editableChild = this.Create<EditableChild>();
 		this.CopyPropertiesTo(editableChild);
 		editableChild.SourceTable = entity.Table;
-		editableChild.BusinessClassName = entity.ClassName;
 		
+        string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", editableChild.BusinessClassName));
 		if (!System.IO.File.Exists(parentFileName))
 		{
 			editableChild.RenderToFile(parentFileName, false);
@@ -40,12 +38,11 @@ public override void Generate()
 		
 		#region EditableChild.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", editableChild.BusinessClassName));
 		
 		EditableChildGenerated editableChildGenerated = this.Create<EditableChildGenerated>();
 		this.CopyPropertiesTo(editableChildGenerated);
 		editableChildGenerated.SourceTable = entity.Table;
-		editableChildGenerated.BusinessClassName = entity.ClassName;
 		
 		editableChildGenerated.RenderToFile(fileName, parentFileName, true);
 		
@@ -53,12 +50,11 @@ public override void Generate()
 		
 		#region EditableChild.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", editableChild.BusinessClassName));
 		
 		EditableChildDataAccess editableChildDataAccess = this.Create<EditableChildDataAccess>();
 		this.CopyPropertiesTo(editableChildDataAccess);
 		editableChildDataAccess.SourceTable = entity.Table;
-		editableChildDataAccess.BusinessClassName = entity.ClassName;
 		
 		editableChildDataAccess.RenderToFile(fileName, parentFileName, true);
 		

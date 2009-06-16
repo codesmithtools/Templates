@@ -26,13 +26,11 @@ public override void Generate()
 	{
 		#region SwitchableObject
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", entity.ClassName));
-		
 		SwitchableObject switchableObject = this.Create<SwitchableObject>();
 		this.CopyPropertiesTo(switchableObject);
 		switchableObject.SourceTable = entity.Table;
-		switchableObject.BusinessClassName = entity.ClassName;
 		
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", switchableObject.BusinessClassName));
 		if (!System.IO.File.Exists(parentFileName))
 		{
 			switchableObject.RenderToFile(parentFileName, false);
@@ -40,12 +38,11 @@ public override void Generate()
 		
 		#region SwitchableObject.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", switchableObject.BusinessClassName));
 		
 		SwitchableObjectGenerated switchableObjectGenerated = this.Create<SwitchableObjectGenerated>();
 		this.CopyPropertiesTo(switchableObjectGenerated);
 		switchableObjectGenerated.SourceTable = entity.Table;
-		switchableObjectGenerated.BusinessClassName = entity.ClassName;
 		
 		switchableObjectGenerated.RenderToFile(fileName, parentFileName, true);
 		
@@ -53,12 +50,11 @@ public override void Generate()
 		
 		#region SwitchableObject.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", switchableObject.BusinessClassName));
 		
 		SwitchableObjectDataAccess switchableObjectDataAccess = this.Create<SwitchableObjectDataAccess>();
 		this.CopyPropertiesTo(switchableObjectDataAccess);
 		switchableObjectDataAccess.SourceTable = entity.Table;
-		switchableObjectDataAccess.BusinessClassName = entity.ClassName;
 		
 		switchableObjectDataAccess.RenderToFile(fileName, parentFileName, true);
 		

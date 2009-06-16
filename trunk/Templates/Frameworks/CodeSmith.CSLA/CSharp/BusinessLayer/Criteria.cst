@@ -25,13 +25,12 @@ public override void Generate()
 	{
 		#region Criteria
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Criteria\\{0}Criteria.cs", entity.ClassName));
-		
 		Criteria criteria = this.Create<Criteria>();
 		this.CopyPropertiesTo(criteria);
 		criteria.SourceTable = entity.Table;
-		criteria.BusinessClassName = string.Format("{0}Criteria", entity.ClassName);
+		criteria.BusinessClassName = string.Format("{0}Criteria", criteria.BusinessClassName);
 		
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Criteria\\{0}.cs", criteria.BusinessClassName));
 		if (!System.IO.File.Exists(parentFileName))
 		{
 			criteria.RenderToFile(parentFileName, false);
@@ -39,12 +38,12 @@ public override void Generate()
 		
 		#region Criteria.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Criteria\\{0}Criteria.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Criteria\\{0}.Generated.cs", criteria.BusinessClassName));
 		
 		CriteriaGenerated criteriaGenerated = this.Create<CriteriaGenerated>();
 		this.CopyPropertiesTo(criteriaGenerated);
 		criteriaGenerated.SourceTable = entity.Table;
-		criteriaGenerated.BusinessClassName = string.Format("{0}Criteria", entity.ClassName);
+		criteriaGenerated.BusinessClassName = string.Format("{0}Criteria", criteriaGenerated.BusinessClassName);
 		
 		criteriaGenerated.RenderToFile(fileName, parentFileName, true);
 		
