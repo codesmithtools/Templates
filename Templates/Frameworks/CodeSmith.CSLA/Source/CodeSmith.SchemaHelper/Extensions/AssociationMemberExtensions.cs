@@ -18,12 +18,33 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildObjectInitializer(this AssociationMember member)
         {
-            return string.Format("{0} = {1}", NamingConventions.PropertyName(member.ColumnName), NamingConventions.VariableName(member.ColumnName));
+            foreach (var memberBase in member.AssociationEntity().GetUniqueSearchCriteriaMembers())
+            {
+                if (memberBase.ColumnName == member.ColumnName)
+                {
+                    return string.Format("{0} = {1}", NamingConventions.PropertyName(member.ColumnName), NamingConventions.VariableName(member.ColumnName));
+                }
+            }
+
+            var output = member.BuildCriteriaObjectInitializer(member.TableName);
+
+            if(!output.StartsWith(member.Entity.ResolveCriteriaVariableName(member.ColumnName), StringComparison.InvariantCultureIgnoreCase))
+                return string.Format("{0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName), member.Entity.ResolveCriteriaVariableName(member.ColumnName));
+
+            return output;
         }
 
         public static string BuildParametersVariable(this AssociationMember member)
         {
-            return string.Format("{0} {1}", member.SystemType, NamingConventions.VariableName(member.ColumnName));
+            foreach (var memberBase in member.AssociationEntity().GetUniqueSearchCriteriaMembers())
+            {
+                if (memberBase.ColumnName == member.ColumnName)
+                {
+                    return string.Format("{0} {1}", member.SystemType, NamingConventions.VariableName(member.ColumnName));
+                }
+            }
+
+            return member.BuildParametersVariablesCriteria(false);
         }
 
         public static Entity AssociationEntity(this AssociationMember member)
