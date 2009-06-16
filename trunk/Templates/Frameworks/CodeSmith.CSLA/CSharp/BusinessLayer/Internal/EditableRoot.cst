@@ -29,10 +29,16 @@ namespace <%= BusinessProjectName %>
 	{
 		#region Validation Rules
 		
-		protected void AddBusinessValidationRules()
+		/// <summary>
+        /// All custom rules need to be placed in this method.
+        /// </summary>
+        /// <returns>Return true to override the generated rules; If false generated rules will be run.</returns>
+		protected bool AddBusinessValidationRules()
 		{
-      		// TODO: add validation rules
-      		//ValidationRules.AddRule(RuleMethod, "");
+			// TODO: add validation rules
+			//ValidationRules.AddRule(RuleMethod, "");
+
+		    return false;
 		}
 		
 		#endregion

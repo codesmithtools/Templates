@@ -37,6 +37,9 @@ namespace <%= BusinessProjectName %>
 		
 		protected override void AddBusinessRules()
 		{
+            if(AddBusinessValidationRules())
+                return;
+            
 <% 	foreach(Member member in Entity.MembersNoRowVersion){ %>
 <% if(member.SystemType == "string" ) { %>
 <% if(!member.IsNullable) { %>
@@ -44,8 +47,6 @@ namespace <%= BusinessProjectName %>
 <% } %>
 			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("<%= member.PropertyName %>", <%= member.Size %>));
 <% } } %>
-
-			AddBusinessValidationRules();
 		}
 		
 		#endregion
