@@ -25,13 +25,11 @@ public override void Generate()
 	{
 		#region DynamicRoot
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", entity.ClassName));
-		
 		DynamicRoot dynamicRoot = this.Create<DynamicRoot>();
 		this.CopyPropertiesTo(dynamicRoot);
 		dynamicRoot.SourceTable = entity.Table;
-		dynamicRoot.BusinessClassName = entity.ClassName;
 		
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", dynamicRoot.BusinessClassName));
 		if (!System.IO.File.Exists(parentFileName))
 		{
 			dynamicRoot.RenderToFile(parentFileName, false);
@@ -39,12 +37,11 @@ public override void Generate()
 		
 		#region DynamicRoot.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", dynamicRoot.BusinessClassName));
 		
 		DynamicRootGenerated dynamicRootGenerated = this.Create<DynamicRootGenerated>();
 		this.CopyPropertiesTo(dynamicRootGenerated);
 		dynamicRootGenerated.SourceTable = entity.Table;
-		dynamicRootGenerated.BusinessClassName = entity.ClassName;
 		
 		dynamicRootGenerated.RenderToFile(fileName, parentFileName, true);
 		
@@ -52,12 +49,11 @@ public override void Generate()
 		
 		#region DynamicRoot.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", dynamicRoot.BusinessClassName));
 		
 		DynamicRootDataAccess dynamicRootDataAccess = this.Create<DynamicRootDataAccess>();
 		this.CopyPropertiesTo(dynamicRootDataAccess);
 		dynamicRootDataAccess.SourceTable = entity.Table;
-		dynamicRootDataAccess.BusinessClassName = entity.ClassName;
 		
 		dynamicRootDataAccess.RenderToFile(fileName, parentFileName, true);
 		

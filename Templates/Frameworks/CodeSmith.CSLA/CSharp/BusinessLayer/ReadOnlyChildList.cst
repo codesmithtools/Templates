@@ -26,13 +26,12 @@ public override void Generate()
 	{
 		#region ReadOnlyChildList
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}List.cs", entity.ClassName));
-		
 		ReadOnlyChildList readOnlyChildList = this.Create<ReadOnlyChildList>();
 		this.CopyPropertiesTo(readOnlyChildList);
 		readOnlyChildList.SourceTable = entity.Table;
-		readOnlyChildList.BusinessClassName = string.Format("{0}List", entity.ClassName);
+		readOnlyChildList.BusinessClassName = string.Format("{0}List", readOnlyChildList.BusinessClassName);
 		
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", readOnlyChildList.BusinessClassName));
 		if (!System.IO.File.Exists(parentFileName))
 		{
 			readOnlyChildList.RenderToFile(parentFileName, false);
@@ -40,12 +39,12 @@ public override void Generate()
 		
 		#region ReadOnlyChildList.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}List.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", readOnlyChildList.BusinessClassName));
 		
 		ReadOnlyChildListGenerated readOnlyChildListGenerated = this.Create<ReadOnlyChildListGenerated>();
 		this.CopyPropertiesTo(readOnlyChildListGenerated);
 		readOnlyChildListGenerated.SourceTable = entity.Table;
-		readOnlyChildListGenerated.BusinessClassName = string.Format("{0}List", entity.ClassName);
+		readOnlyChildListGenerated.BusinessClassName = string.Format("{0}List", readOnlyChildListGenerated.BusinessClassName);
 		
 		readOnlyChildListGenerated.RenderToFile(fileName, parentFileName, true);
 		
@@ -53,12 +52,12 @@ public override void Generate()
 		
 		#region ReadOnlyChildList.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}List.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", readOnlyChildList.BusinessClassName));
 		
 		ReadOnlyChildListDataAccess readOnlyChildListDataAccess = this.Create<ReadOnlyChildListDataAccess>();
 		this.CopyPropertiesTo(readOnlyChildListDataAccess);
 		readOnlyChildListDataAccess.SourceTable = entity.Table;
-		readOnlyChildListDataAccess.BusinessClassName = string.Format("{0}List", entity.ClassName);
+		readOnlyChildListDataAccess.BusinessClassName = string.Format("{0}List", readOnlyChildListDataAccess.BusinessClassName);
 		
 		readOnlyChildListDataAccess.RenderToFile(fileName, parentFileName, true);
 		

@@ -26,13 +26,12 @@ public override void Generate()
 	{
 		#region DynamicRootList
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}List.cs", entity.ClassName));
-		
 		DynamicRootList dynamicRootList = this.Create<DynamicRootList>();
 		this.CopyPropertiesTo(dynamicRootList);
 		dynamicRootList.SourceTable = entity.Table;
-		dynamicRootList.BusinessClassName = string.Format("{0}List", entity.ClassName);
+		dynamicRootList.BusinessClassName = string.Format("{0}List", dynamicRootList.BusinessClassName);
 		
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", dynamicRootList.BusinessClassName));
 		if (!System.IO.File.Exists(parentFileName))
 		{
 			dynamicRootList.RenderToFile(parentFileName, false);
@@ -40,12 +39,12 @@ public override void Generate()
 		
 		#region DynamicRootList.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}List.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", dynamicRootList.BusinessClassName));
 		
 		DynamicRootListGenerated dynamicRootListGenerated = this.Create<DynamicRootListGenerated>();
 		this.CopyPropertiesTo(dynamicRootListGenerated);
 		dynamicRootListGenerated.SourceTable = entity.Table;
-		dynamicRootListGenerated.BusinessClassName = string.Format("{0}List", entity.ClassName);
+		dynamicRootListGenerated.BusinessClassName = string.Format("{0}List", dynamicRootListGenerated.BusinessClassName);
 		
 		dynamicRootListGenerated.RenderToFile(fileName, parentFileName, true);
 		
@@ -53,12 +52,12 @@ public override void Generate()
 		
 		#region DynamicRootList.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}List.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", dynamicRootList.BusinessClassName));
 		
 		DynamicRootListDataAccess dynamicRootListDataAccess = this.Create<DynamicRootListDataAccess>();
 		this.CopyPropertiesTo(dynamicRootListDataAccess);
 		dynamicRootListDataAccess.SourceTable = entity.Table;
-		dynamicRootListDataAccess.BusinessClassName = string.Format("{0}List", entity.ClassName);
+		dynamicRootListDataAccess.BusinessClassName = string.Format("{0}List", dynamicRootListDataAccess.BusinessClassName);
 		
 		dynamicRootListDataAccess.RenderToFile(fileName, parentFileName, true);
 		

@@ -26,13 +26,11 @@ public override void Generate()
 	{
 		#region CommandObject
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Command\\{0}.cs", entity.ClassName));
-		
 		CommandObject commandObject = this.Create<CommandObject>();
 		this.CopyPropertiesTo(commandObject);
 		commandObject.SourceTable = entity.Table;
-		commandObject.BusinessClassName = entity.ClassName;
 		
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Command\\{0}.cs", commandObject.BusinessClassName));
 		if (!System.IO.File.Exists(parentFileName))
 		{
 			commandObject.RenderToFile(parentFileName, false);
@@ -40,12 +38,11 @@ public override void Generate()
 		
 		#region CommandObject.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Command\\{0}.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Command\\{0}.Generated.cs", commandObject.BusinessClassName));
 		
 		CommandObjectGenerated commandObjectGenerated = this.Create<CommandObjectGenerated>();
 		this.CopyPropertiesTo(commandObjectGenerated);
 		commandObjectGenerated.SourceTable = entity.Table;
-		commandObjectGenerated.BusinessClassName = entity.ClassName;
 		
 		commandObjectGenerated.RenderToFile(fileName, parentFileName, true);
 		
@@ -53,12 +50,11 @@ public override void Generate()
 		
 		#region CommandObject.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("Command\\{0}.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Command\\{0}.DataAccess.cs", commandObject.BusinessClassName));
 		
 		CommandObjectDataAccess commandObjectDataAccess = this.Create<CommandObjectDataAccess>();
 		this.CopyPropertiesTo(commandObjectDataAccess);
 		commandObjectDataAccess.SourceTable = entity.Table;
-		commandObjectDataAccess.BusinessClassName = entity.ClassName;
 		
 		commandObjectDataAccess.RenderToFile(fileName, parentFileName, true);
 		

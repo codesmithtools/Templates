@@ -26,13 +26,12 @@ public override void Generate()
 	{
 		#region EditableRootList
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}List.cs", entity.ClassName));
-		
 		EditableRootList editableRootList = this.Create<EditableRootList>();
 		this.CopyPropertiesTo(editableRootList);
 		editableRootList.SourceTable = entity.Table;
-		editableRootList.BusinessClassName = string.Format("{0}List", entity.ClassName);
+		editableRootList.BusinessClassName = string.Format("{0}List", editableRootList.BusinessClassName);
 		
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", editableRootList.BusinessClassName));
 		if (!System.IO.File.Exists(parentFileName))
 		{
 			editableRootList.RenderToFile(parentFileName, false);
@@ -40,12 +39,12 @@ public override void Generate()
 		
 		#region EditableRootList.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}List.Generated.cs", entity.ClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", editableRootList.BusinessClassName));
 		
 		EditableRootListGenerated editableRootListGenerated = this.Create<EditableRootListGenerated>();
 		this.CopyPropertiesTo(editableRootListGenerated);
 		editableRootListGenerated.SourceTable = entity.Table;
-		editableRootListGenerated.BusinessClassName = string.Format("{0}List", entity.ClassName);
+		editableRootListGenerated.BusinessClassName = string.Format("{0}List", editableRootListGenerated.BusinessClassName);
 		
 		editableRootListGenerated.RenderToFile(fileName, parentFileName, true);
 		
@@ -53,14 +52,14 @@ public override void Generate()
 		
 		#region EditableRootList.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}List.DataAccess.cs", entity.ClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", editableRootList.BusinessClassName));
 		
 		EditableRootListDataAccess editableRootListDataAccess = this.Create<EditableRootListDataAccess>();
 		this.CopyPropertiesTo(editableRootListDataAccess);
 		editableRootListDataAccess.SourceTable = entity.Table;
-		editableRootListDataAccess.BusinessClassName = string.Format("{0}List", entity.ClassName);
+		editableRootListDataAccess.BusinessClassName = string.Format("{0}List", editableRootListDataAccess.BusinessClassName);
 		
-		editableRootListDataAccess.RenderToFile(fileName, parentFileName, true);
+        editableRootListDataAccess.RenderToFile(fileName, parentFileName, true);
 		
 		#endregion
 		
