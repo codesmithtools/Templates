@@ -27,14 +27,23 @@ namespace CodeSmith.SchemaHelper
 
         public static List<MemberBase> GetUniqueSearchCriteriaMembers(this Entity entity)
         {
-            List<MemberBase> member = new List<MemberBase>();
+            List<MemberBase> members = new List<MemberBase>();
 
             foreach (SearchCriteria sc in entity.SearchCriteria)
             {
-                member = member.Union(sc.Members).ToList();
+                members = members.Union(sc.Members).ToList();
             }
 
-            return member;
+            foreach (Member member in entity.PrimaryKey.KeyMembers)
+            {
+                Member member1 = member;
+                if (members.Exists(m => m.Name == member1.Name) == false)
+                {
+                    members.Add(member);
+                }
+            }
+
+            return members;
         }
 
         public static string FindOneToManyOrManyToManyListSearchCriteria(this Entity entity, string memberName)

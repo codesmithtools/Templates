@@ -179,6 +179,14 @@ namespace QuickStart
                         entities.Add(associationMember.Entity);
                     }
                 }
+
+                foreach (AssociationMember associationMember in entity.OneToZeroOrOne)
+                {
+                    if (!entities.Contains(associationMember.Entity))
+                    {
+                        entities.Add(associationMember.Entity);
+                    }
+                }
             }
 
             return entities;
