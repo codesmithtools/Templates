@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-
+using System.IO;
 using Configuration = CodeSmith.SchemaHelper.Configuration;
 
 namespace QuickStart
@@ -56,9 +56,8 @@ namespace QuickStart
 
         public override void RegisterReferences()
         {
-            base.RegisterReferences();
-
             RegisterReference("System.Configuration");
+            RegisterReference(Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\..\Common\Csla\Csla.dll")));
         }
 
         #endregion
