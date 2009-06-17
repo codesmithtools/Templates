@@ -22,7 +22,8 @@ namespace CodeSmith.SchemaHelper
     {
         ManyToOne = 0,
         OneToMany = 1,
-        ManyToMany = 2
+        ManyToMany = 2,
+        OneToZeroOrOne = 3
     }
 
     public enum TableNaming : byte

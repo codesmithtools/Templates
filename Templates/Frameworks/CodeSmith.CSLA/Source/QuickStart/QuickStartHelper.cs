@@ -17,7 +17,7 @@ namespace QuickStart
             ReplaceAllInDirectory(path, find, replace, null ,0);
         }
 
-        private static void ReplaceAllInDirectory(string path, string find, string replace,string[] exemptDirectories, int level)
+        private static void ReplaceAllInDirectory(string path, string find, string replace, string[] exemptDirectories, int level)
         {
             //Taken in part from http://weblogs.asp.net/israelio/archive/2004/06/23/162913.aspx
             if (level <= 3)

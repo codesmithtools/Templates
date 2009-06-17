@@ -159,6 +159,26 @@ namespace CodeSmith.SchemaHelper
                             }
                         }
                     }
+                    else if (GetToManyTable(column.Table, Table) == null)
+                    {
+                        if (!Configuration.Instance.ExcludeTableRegexIsMatch(column.Table.FullName))
+                        {
+                            AssociationMember association = new AssociationMember(AssociationType.OneToZeroOrOne,
+                                                                                  column.Table, column, tks.PrimaryKeyMemberColumns[0],
+                                                                                  this);
+                            if (_fkMemberMap.ContainsKey(column.Name))
+                                _associationMap.Add(column.Table + "-" + column.Name, association);
+                            else
+                                _associationMap.Add(column.Name, association);
+
+                            if (!_fkMemberMap.ContainsKey(column.Name))
+                                _fkMemberMap.Add(column.Name, association.LocalColumn);
+
+                            if (!_fkRemoteMemberMap.ContainsKey(column.Name))
+                                _fkRemoteMemberMap.Add(column.Name, association);
+                        }
+
+                    }
                 }
             }
         }
@@ -565,6 +585,16 @@ namespace CodeSmith.SchemaHelper
             {
                 return AssociationMap.Values
                     .Where(a => a.AssociationType == AssociationType.ManyToOne)
+                    .ToList();
+            }
+        }
+
+        public List<AssociationMember> OneToZeroOrOne
+        {
+            get
+            {
+                return AssociationMap.Values
+                    .Where(a => a.AssociationType == AssociationType.OneToZeroOrOne)
                     .ToList();
             }
         }

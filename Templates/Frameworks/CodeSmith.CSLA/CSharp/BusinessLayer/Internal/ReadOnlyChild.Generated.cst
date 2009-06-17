@@ -66,6 +66,39 @@ namespace <%= BusinessProjectName %>
 		}
 		
 <% } } %>
+<%-- One-To-Zero-Or-One --%>
+<% foreach(AssociationMember association in Entity.OneToZeroOrOne) { if (UseMemberVariables){ %>
+		private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>Csla.RelationshipTypes.LazyLoad<% } else { %>Csla.RelationshipTypes.Child<% } %>);
+		private <%= association.ClassName %> <%= association.PrivateMemberVariableName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue;
+		public <%= association.ClassName %> <%= association.PropertyName %>
+		{
+			get
+            {
+<% if(UseLazyLoading) { %>
+                if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
+                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.LocalColumn.PropertyName %>));
+
+<% } %> 
+                return GetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.PrivateMemberVariableName %>); 
+            }
+		}
+
+<% } else { %>
+		private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>Csla.RelationshipTypes.LazyLoad<% } else { %>Csla.RelationshipTypes.Child<% } %>);
+		public <%= association.ClassName %> <%= association.PropertyName %>
+		{
+			get
+            {
+<% if(UseLazyLoading) { %>
+                if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
+                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.LocalColumn.PropertyName %>));
+
+<% } %>  
+                   return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
+            }
+		}
+
+<% } } %>
 <%-- Many-To-One --%>
 <% foreach(AssociationMember association in Entity.ManyToOne) { if (UseMemberVariables){ %>
 		private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>Csla.RelationshipTypes.LazyLoad<% } else { %>Csla.RelationshipTypes.Child<% } %>);
