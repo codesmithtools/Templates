@@ -68,7 +68,7 @@ namespace CodeSmith.SchemaHelper
             if (column.HasAlias())
                 return column.GetName();
 
-            bool plural = (associationType != AssociationType.ManyToOne);
+            bool plural = (associationType != AssociationType.ManyToOne && associationType != AssociationType.OneToZeroOrOne);
 
             string name = (Configuration.Instance.NamingProperty.AssociationNaming == AssociationNaming.Column)
                               ? column.GetName()
