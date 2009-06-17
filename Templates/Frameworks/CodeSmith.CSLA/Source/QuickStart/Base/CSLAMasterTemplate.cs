@@ -19,6 +19,8 @@ namespace QuickStart
         #region Private Member(s)
 
         private TableSchemaCollection _tables;
+        private StringCollection _ignoreExpressions;
+        private StringCollection _cleanExpressions;
 
         #endregion
 
@@ -48,6 +50,8 @@ namespace QuickStart
                 {
                     _tables = value;
                     OnTablesChanged();
+
+                    Entities = new EntityManager(SourceTables).Entities;
                 }
             }
         }
@@ -56,13 +60,55 @@ namespace QuickStart
         [Description("List of regular expressions to clean table, view and column names.")]
         [Optional]
         [DefaultValue("^\\w+_")]
-        public CodeSmith.CustomProperties.StringCollection CleanExpressions { get; set; }
+        public CodeSmith.CustomProperties.StringCollection CleanExpressions
+        {
+            get
+            {
+                return _cleanExpressions;
+            }
+            set
+            {
+                _cleanExpressions = value;
+
+                Configuration.Instance.CleanExpressions = new List<Regex>();
+                foreach (string clean in _cleanExpressions)
+                {
+                    if (!string.IsNullOrEmpty(clean))
+                    {
+                        Configuration.Instance.CleanExpressions.Add(new Regex(clean));
+                    }
+                }
+
+                Entities = new EntityManager(SourceTables).Entities;
+            }
+        }
 
         [Category("1. DataSource")]
         [Description("List of regular expressions to ignore tables when generating.")]
         [Optional]
         [DefaultValue("sysdiagrams$")]
-        public CodeSmith.CustomProperties.StringCollection IgnoreExpressions { get; set; }
+        public CodeSmith.CustomProperties.StringCollection IgnoreExpressions
+        {
+            get
+            {
+                return _ignoreExpressions;
+            }
+            set
+            {
+                _ignoreExpressions = value;
+
+                Configuration.Instance.IgnoreExpressions = new List<Regex>();
+                foreach (string ignore in _ignoreExpressions)
+                {
+                    if (!string.IsNullOrEmpty(ignore))
+                    {
+                        Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore));
+                    }
+                }
+
+                Entities = new EntityManager(SourceTables).Entities;
+            }
+        }
 
         [Browsable(false)]
         public List<Entity> Entities { get; internal set; }
@@ -85,26 +131,6 @@ namespace QuickStart
 
             if (IgnoreExpressions.Count == 0)
                 IgnoreExpressions.Add("sysdiagrams$");
-
-            Configuration.Instance.CleanExpressions = new List<Regex>();
-            foreach (string clean in CleanExpressions)
-            {
-                if (!string.IsNullOrEmpty(clean))
-                {
-                    Configuration.Instance.CleanExpressions.Add(new Regex(clean));
-                }
-            }
-
-            Configuration.Instance.IgnoreExpressions = new List<Regex>();
-            foreach (string ignore in IgnoreExpressions)
-            {
-                if (!string.IsNullOrEmpty(ignore))
-                {
-                    Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore));
-                }
-            }
-
-            Entities = new EntityManager(SourceTables).Entities;
 
             if (string.IsNullOrEmpty(Location) && SourceTables.Count > 0)
                 Location = Path.Combine(
