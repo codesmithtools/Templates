@@ -2,9 +2,11 @@
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
 
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="SchemaExplorer" %>
 
 <%@ Property Name="UseDeferredDeletion" Type="System.Boolean" Default="False" Category="3. Business Project" Description="Changes how the Business Objects are deleted, defaults to immediate deletion" %>
 //------------------------------------------------------------------------------
@@ -260,6 +262,24 @@ namespace <%= BusinessProjectName %>
 			return DataPortal.Fetch< <%= BusinessClassName %> >(
                 new <%= BusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
 		}
+<%-- One-To-Zero-Or-One --%>
+<%if(Entity.HasOneToZeroOrZeroMember && Entity.PrimaryKey.KeyMembers.Count > 1){%>
+
+        internal static <%= BusinessClassName %> Get<%= BusinessClassName %>(<%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroParametersVariable() %>)
+		{
+            return DataPortal.Fetch< <%= BusinessClassName %> >(
+                new <%= BusinessClassName %>Criteria { <%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroObjectInitializer() %> });
+        }
+ <% }%>
+<%-- One-To-Many & Many-To-Many --%>
+<% foreach(SearchCriteria sc in Entity.SearchCriteria) { if(sc.IsUniqueResult && !(sc.Members.Count == Entity.PrimaryKey.KeyMembers.Count && sc.Members[0].Name == Entity.PrimaryKey.KeyMember.Name)) { %>
+
+        internal static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariablesCriteria(false) %>)
+		{
+            return DataPortal.Fetch< <%= BusinessClassName %> >(
+                new <%= BusinessClassName %>Criteria { <%= sc.Members.BuildCriteriaObjectInitializer(Entity.Table.Name) %> });
+        }
+ <% } } %>
 		
 		#endregion
 		

@@ -400,6 +400,39 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
+        public bool HasOneToZeroOrZeroMember
+        {
+            get { return (OneToZeroOrZeroMember != null); }
+        }
+
+        public AssociationMember OneToZeroOrZeroMember
+        {
+            get
+            {
+                var associationMembers = new List<AssociationMember>();
+
+                foreach (TableKeySchema tks in Table.ForeignKeys)
+                {
+                    if (tks.PrimaryKeyMemberColumns.Count == 1 && tks.ForeignKeyMemberColumns.Count == 1)
+                    {
+                        ColumnSchema column = tks.PrimaryKeyMemberColumns[0].Column;
+
+                        if (column.IsPrimaryKeyMember) //column.Name.Equals(tks.ForeignKeyMemberColumns[0].Column.Name, StringComparison.InvariantCultureIgnoreCase)
+                        {
+                            if (!Configuration.Instance.ExcludeTableRegexIsMatch(column.Table.FullName))
+                            {
+                                associationMembers.Add(new AssociationMember(AssociationType.OneToZeroOrOne,
+                                                                             column.Table, column,
+                                                                             tks.ForeignKeyMemberColumns[0], this));
+                            }
+                        }
+                    }
+                }
+
+                return associationMembers.FirstOrDefault();
+            }
+        }
+
         public List<Member> Members
         {
             get

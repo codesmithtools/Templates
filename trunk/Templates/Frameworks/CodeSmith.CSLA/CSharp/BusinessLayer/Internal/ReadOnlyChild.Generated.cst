@@ -176,11 +176,21 @@ namespace <%= BusinessProjectName %>
 		#endregion
 				
 		#region Factory Methods 
+        
 		internal static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
 		{
 			return DataPortal.FetchChild< <%= ChildBusinessClassName %> >(
 				new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
 		}
+<%-- One-To-Zero-Or-One --%>
+<%if(Entity.HasOneToZeroOrZeroMember && Entity.PrimaryKey.KeyMembers.Count > 1){%>
+
+        internal static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>(<%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroParametersVariable() %>)
+		{
+            return DataPortal.Fetch< <%= ChildBusinessClassName %> >(
+                new <%= ChildBusinessClassName %>Criteria { <%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroObjectInitializer() %> });
+        }
+ <% }%>
 
 		private <%= BusinessClassName %>()
 		{ /* Require use of factory methods */}

@@ -196,7 +196,15 @@ namespace <%= BusinessProjectName %>
 			return DataPortal.Fetch< <%= BusinessClassName %> >(
                 new <%= BusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
 		}
-        
+<%-- One-To-Zero-Or-One --%>
+<%if(Entity.HasOneToZeroOrZeroMember && Entity.PrimaryKey.KeyMembers.Count > 1){%>
+
+        public static <%= BusinessClassName %> Get<%= BusinessClassName %>(<%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroParametersVariable() %>)
+		{
+            return DataPortal.Fetch< <%= BusinessClassName %> >(
+                new <%= BusinessClassName %>Criteria { <%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroObjectInitializer() %> });
+        }
+ <% }%>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(SearchCriteria sc in Entity.SearchCriteria) { if(sc.IsUniqueResult && !(sc.Members.Count == Entity.PrimaryKey.KeyMembers.Count && sc.Members[0].Name == Entity.PrimaryKey.KeyMember.Name)) { %>
 
