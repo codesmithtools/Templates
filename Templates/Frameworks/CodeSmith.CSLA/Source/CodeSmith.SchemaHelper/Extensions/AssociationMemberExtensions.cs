@@ -47,6 +47,39 @@ namespace CodeSmith.SchemaHelper
             return member.BuildParametersVariablesCriteria(false);
         }
 
+
+        public static string BuildOneToZeroOrZeroObjectInitializer(this AssociationMember member)
+        {
+            foreach (var memberBase in member.Entity.GetUniqueSearchCriteriaMembers())
+            {
+                if (memberBase.ColumnName == member.LocalColumn.Name)
+                {
+                    return string.Format("{0} = {1}", NamingConventions.PropertyName(member.LocalColumn.Name), NamingConventions.VariableName(member.LocalColumn.Name));
+                }
+            }
+
+            var output = member.BuildCriteriaObjectInitializer(member.TableName);
+
+            if (!output.StartsWith(member.Entity.ResolveCriteriaVariableName(member.LocalColumn.Name), StringComparison.InvariantCultureIgnoreCase))
+                return string.Format("{0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.LocalColumn.Name), member.Entity.ResolveCriteriaVariableName(member.LocalColumn.Name));
+
+            return output;
+        }
+
+        public static string BuildOneToZeroOrZeroParametersVariable(this AssociationMember member)
+        {
+            foreach (var memberBase in member.AssociationEntity().GetUniqueSearchCriteriaMembers())
+            {
+                if (memberBase.ColumnName == member.ColumnName)
+                {
+                    return string.Format("{0} {1}", member.SystemType, NamingConventions.VariableName(member.LocalColumn.Name));
+                }
+            }
+
+            return member.BuildParametersVariablesCriteria(false);
+        }
+
+
         public static Entity AssociationEntity(this AssociationMember member)
         {
             return new Entity(member.Table);
