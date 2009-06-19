@@ -16,6 +16,7 @@ namespace CodeSmith.SchemaHelper
 
         private string _rowVersionColumn;
         private MapCollection _dbTypeToSystemType;
+        private MapCollection _systemTypeEscape;
 
         internal Regex RowVersionColumnRegex { get; private set; }
 
@@ -56,7 +57,20 @@ namespace CodeSmith.SchemaHelper
         [Browsable(false)]
         public MapCollection SystemTypeEscape
         {
-            get { return new MapCollection(); }
+
+            get
+            {
+                string mapFileName = TargetLanguage == LanguageEnum.CSharp ? "CSharpKeywordEscape" : "VBKeywordEscape";
+
+                if (_systemTypeEscape == null)
+                {
+                    string path;
+                    Map.TryResolvePath(mapFileName, "", out path);
+                    _systemTypeEscape = Map.Load(path);
+                }
+
+                return _systemTypeEscape;
+            }
         }
 
         /// <summary>

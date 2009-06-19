@@ -51,6 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="AssociationMember.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="EntityManager.cs" />
@@ -71,10 +74,12 @@
     <Compile Include="Member.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="NamingProperty.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchCriteria.cs" />
     <Compile Include="SearchCriteriaProperty.cs" />
     <Compile Include="Util\NamingConventions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
