@@ -274,7 +274,12 @@ namespace CodeSmith.Data.Rules
 
                 if (o != null)
                 {
-                    ITable table = dataContext.GetTable(o.GetType());
+                    var metaType = dataContext.Mapping.GetMetaType(o.GetType());
+                    var type = metaType.InheritanceRoot == null 
+                        ? metaType.Type 
+                        : metaType.InheritanceRoot.Type;
+
+                    ITable table = dataContext.GetTable(type);
                     trackedObject.Original = table.GetOriginalEntityState(o);
                 }
 

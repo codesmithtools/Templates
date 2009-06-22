@@ -191,5 +191,29 @@ namespace LinqToSqlShared.DbmlObjectModel
 
             return true;
         }
+
+        public bool TryFindColumn(string columnName, bool includeSubtypes, out Column column)
+        {
+            column = Find(this, columnName, includeSubtypes);
+            return (column != null);
+        }
+
+        private static Column Find(Type currentType, string columnName, bool includeSubtypes)
+        {
+            if (currentType.Columns.Contains(columnName))
+                return currentType.Columns[columnName];
+
+            if (!includeSubtypes || currentType.SubTypes == null || currentType.SubTypes.Count == 0)
+                return null;
+
+            foreach (var subType in currentType.SubTypes)
+            {
+                var column = Find(subType, columnName, true);
+                if (column != null)
+                    return column;
+            }
+
+            return null;
+        }
     }
 }

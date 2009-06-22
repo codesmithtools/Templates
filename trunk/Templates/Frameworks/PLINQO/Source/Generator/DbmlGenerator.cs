@@ -287,13 +287,16 @@ namespace LinqToSqlShared.Generator
 
             if (Database.Tables.Contains(key))
             {
-                t = Database.Tables[key];                
+                t = Database.Tables[key];
+
+                // add sub type class names
                 ClassNames.Add(t.Type.Name);
             }
             else
             {
                 t = CreateTable(tableSchema);
             }
+
 
             if (!PropertyNames.ContainsKey(t.Type.Name))
                 PropertyNames.Add(t.Type.Name, new List<string>());
@@ -818,8 +821,8 @@ namespace LinqToSqlShared.Generator
         {
             foreach (ColumnSchema columnSchema in tableSchema.Columns)
             {
-                bool isNew = !table.Type.Columns.Contains(columnSchema.Name);
                 Column column;
+                bool isNew = !table.Type.TryFindColumn(columnSchema.Name, true, out column);
 
                 if (isNew)
                 {
@@ -827,13 +830,11 @@ namespace LinqToSqlShared.Generator
                     column.Name = columnSchema.Name;
                     table.Type.Columns.Add(column);
                 }
-                else
-                {
-                    column = table.Type.Columns[columnSchema.Name];
-                }
 
                 PopulateColumn(column, columnSchema, table.Type.Name);
-                column.IsPrimaryKey = columnSchema.IsPrimaryKeyMember;
+
+                if (!column.IsPrimaryKey.HasValue)
+                    column.IsPrimaryKey = columnSchema.IsPrimaryKeyMember;
             }
 
             table.Type.Columns.IsProcessed = true;
