@@ -187,6 +187,7 @@
             
             t.TableName = tableMap.Name;
             t.EntityBase = database.EntityBase;
+            p.EntityBase = database.EntityBase;
             
             CreateEntity(t, p, tableMap.Type, OutputDirectory);
 
@@ -208,6 +209,8 @@
                     t.TableName = string.Empty;
                     t.EntityBase = string.Empty;
                     t.Framework = this.Framework;
+                    p.EntityBase = string.Empty;
+                    
                     CreateEntity(t, p, resultType, viewPath);
                 }
             }
@@ -255,6 +258,9 @@
             entityClass.TableName = string.Empty;
             entityClass.EntityBase = type.Name;
             entityClass.Framework = Framework;
+            
+            partialClass.EntityBase = type.Name;
+            
             CreateEntity(entityClass, partialClass, childType, rootDirectory);
         }
     }

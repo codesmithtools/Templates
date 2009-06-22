@@ -127,22 +127,26 @@ namespace CodeSmith.Data.Audit
 
         private static AuditEntity CreateAuditEntity(DataContext dataContext, object entity, AuditAction action)
         {
-            ITable table = dataContext.GetTable(entity.GetType());
-            MetaTable metaTable = dataContext.Mapping.GetTable(entity.GetType());
+            var metaType = dataContext.Mapping.GetMetaType(entity.GetType());
+            var rootType = metaType.InheritanceRoot == null
+                       ? metaType.Type
+                       : metaType.InheritanceRoot.Type;
 
+            var table = dataContext.GetTable(rootType);
+            
             var auditEntity = new AuditEntity();
             auditEntity.Action = action;
-            auditEntity.Type = table.ElementType.FullName;
+            auditEntity.Type = metaType.Type.FullName;
 
-            AddAuditKeys(metaTable, entity, auditEntity);
-            AddAuditProperties(metaTable, table, entity, auditEntity);
+            AddAuditKeys(metaType, entity, auditEntity);
+            AddAuditProperties(metaType, table, entity, auditEntity);
 
             return auditEntity;
         }
 
-        private static void AddAuditKeys(MetaTable metaTable, object entity, AuditEntity auditEntity)
+        private static void AddAuditKeys(MetaType metaType, object entity, AuditEntity auditEntity)
         {
-            foreach (var dataMember in metaTable.RowType.IdentityMembers)
+            foreach (var dataMember in metaType.IdentityMembers)
             {
                 var auditProperty = new AuditKey();
                 try
@@ -164,11 +168,11 @@ namespace CodeSmith.Data.Audit
             }
         }
 
-        private static void AddAuditProperties(MetaTable metaTable, ITable table, object entity, AuditEntity auditEntity)
+        private static void AddAuditProperties(MetaType metaType, ITable table, object entity, AuditEntity auditEntity)
         {
             var modifiedMembers = table.GetModifiedMembers(entity);
 
-            foreach (var dataMember in metaTable.RowType.DataMembers)
+            foreach (var dataMember in metaType.DataMembers)
             {
                 if (dataMember.IsVersion || dataMember.IsAssociation || HasNotAuditedAttribute(dataMember.Member))
                     continue;
@@ -184,7 +188,7 @@ namespace CodeSmith.Data.Audit
                     auditEntity.Properties.Add(auditProperty);
             }
 
-            AddAssociationProperties(metaTable, table, entity, auditEntity);
+            AddAssociationProperties(metaType, table, entity, auditEntity);
         }
 
         private static AuditProperty CreateAuditProperty(MetaDataMember dataMember, ModifiedMemberInfo modifiedMemberInfo, object entity, AuditEntity auditEntity)
@@ -228,9 +232,9 @@ namespace CodeSmith.Data.Audit
             return auditProperty;
         }
 
-        private static void AddAssociationProperties(MetaTable metaTable, ITable table, object entity, AuditEntity auditEntity)
+        private static void AddAssociationProperties(MetaType metaType, ITable table, object entity, AuditEntity auditEntity)
         {
-            foreach (var association in metaTable.RowType.Associations)
+            foreach (var association in metaType.Associations)
             {
                 if (association.IsMany || HasNotAuditedAttribute(association.ThisMember.Member))
                     continue;

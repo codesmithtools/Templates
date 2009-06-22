@@ -26,6 +26,10 @@
 
 <%@ Property Category="2.Class" Name="ExistingFile"
     Type="CodeFileParser" Optional="True" %>
+
+<%@ Property Category="2.Class" Name="EntityBase"
+    Type="System.String" Default="" Optional="True"
+    Description="The base class for the entity." %>
     
 <%@ Map Name="VBKeywordEscape" 
     Src="VBKeywordEscape.csmap" Reverse="False" 
@@ -59,7 +63,12 @@ Namespace <%= Database.EntityNamespace %>
         #Region "Metadata"
         
         <CodeSmith.Data.Audit.Audit()> _
-        Protected Friend Class Metadata
+<% If Not String.IsNullOrEmpty(EntityBase) AndAlso EntityBase <> Database.EntityBase Then %>
+        Friend Shadows Class Metadata
+            Inherits <%= EntityBase %>.Metadata
+<% Else %>
+        Friend Class Metadata
+<% End If %>
             ' Only Attributes in the class will be preserved.
             
 <%          Dim sourceAttributes As AttributeSectionVisitor = new AttributeSectionVisitor()
