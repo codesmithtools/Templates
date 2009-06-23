@@ -20,7 +20,7 @@
 #region using declarations
 
 using System;
-using System.Collections.Generic;
+
 using Csla;
 
 #endregion
@@ -28,7 +28,7 @@ using Csla;
 namespace <%= BusinessProjectName %>
 {
 	[Serializable]
-	public partial class <%= BusinessClassName %> : EditableRootListBase< <%= BusinessClassName %> >
+	public partial class <%= BusinessClassName %> : EditableRootListBase< <%= ChildBusinessClassName %> >
 	{
 		#region Business Methods
 		
@@ -71,7 +71,6 @@ namespace <%= BusinessProjectName %>
         private <%= BusinessClassName %>()
 		{ 
 			AllowNew = true;
-            MarkAsChild();
 		}
 		
 		#endregion
