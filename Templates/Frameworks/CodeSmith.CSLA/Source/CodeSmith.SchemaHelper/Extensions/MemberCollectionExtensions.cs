@@ -380,17 +380,30 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
+                string cast = string.Empty;
+                if (member.SystemType.Contains("SmartDate"))
+                {
+                    cast = member.IsNullable ? "(DateTime?)" : "(DateTime)";
+                }
+
                 if (!member.IsIdentity)
-                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2});", Configuration.Instance.ParameterPrefix, member.ColumnName, member.VariableName);
+                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
             }
 
             foreach (AssociationMember associationMember in associationMembers)
             {
                 if (!associationMember.IsIdentity)
                 {
-                    string output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2});",
+                    string cast = string.Empty;
+                    if (associationMember.SystemType.Contains("SmartDate"))
+                    {
+                        cast = associationMember.IsNullable ? "(DateTime?)" : "(DateTime)";
+                    }
+
+                    string output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});",
                                                   Configuration.Instance.ParameterPrefix,
                                                   associationMember.LocalColumn.ColumnName,
+                                                  cast,
                                                   NamingConventions.VariableName(associationMember.ColumnName));
 
                     if (!commandParameters.Contains(output))
@@ -412,14 +425,27 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-                commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2});", Configuration.Instance.ParameterPrefix, member.ColumnName, member.VariableName);
+                string cast = string.Empty;
+                if (member.SystemType.Contains("SmartDate"))
+                {
+                    cast = member.IsNullable ? "(DateTime?)" : "(DateTime)";
+                }
+
+                commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
             }
 
             foreach (AssociationMember associationMember in associationMembers)
             {
-                string output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2});",
+                string cast = string.Empty;
+                if (associationMember.SystemType.Contains("SmartDate"))
+                {
+                    cast = associationMember.IsNullable ? "(DateTime?)" : "(DateTime)";
+                }
+
+                string output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});",
                                               Configuration.Instance.ParameterPrefix,
                                               associationMember.LocalColumn.ColumnName,
+                                              cast,
                                               NamingConventions.VariableName(associationMember.ColumnName));
 
                 if (!commandParameters.Contains(output))

@@ -134,8 +134,14 @@ namespace CodeSmith.SchemaHelper
 
             foreach (MemberBase member in members)
             {
+                string cast = string.Empty;
+                if (member.SystemType.Contains("SmartDate"))
+                {
+                    cast = member.IsNullable ? "(DateTime?)" : "(DateTime)";
+                }
+
                 if (!member.IsIdentity)
-                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2});", Configuration.Instance.ParameterPrefix, member.ColumnName, member.VariableName);
+                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
             }
 
             return commandParameters.TrimStart(new[] { '\t', '\n' });
@@ -299,7 +305,13 @@ namespace CodeSmith.SchemaHelper
 
             foreach (MemberBase member in members)
             {
-                commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2});", Configuration.Instance.ParameterPrefix, member.ColumnName, member.VariableName);
+                string cast = string.Empty;
+                if (member.SystemType.Contains("SmartDate"))
+                {
+                    cast = member.IsNullable ? "(DateTime?)" : "(DateTime)";
+                }
+
+                commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
             }
 
             return commandParameters.TrimStart(new[] { '\t', '\n' });

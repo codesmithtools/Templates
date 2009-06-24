@@ -150,11 +150,11 @@ namespace <%= BusinessProjectName %>
 <% } } %>
 <% } %>
 				}
-				
-<% if(Entity.ToManyUnion.Count > 0 || Entity.ManyToOne.Count > 0){ %>
-                FieldManager.UpdateChildren(this);
-<% } %>
 			}
+            
+<% if(Entity.ToManyUnion.Count > 0 || Entity.ManyToOne.Count > 0){ %>
+            FieldManager.UpdateChildren(this);
+<% } %>
 		}
 		
 		[Transactional(TransactionalTypes.TransactionScope)]
@@ -172,11 +172,11 @@ namespace <%= BusinessProjectName %>
 					_timestamp = GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 				}
 <% } %>
-
+            }
+            
 <% if(Entity.ToManyUnion.Count > 0 || Entity.ManyToOne.Count > 0){ %>
-                FieldManager.UpdateChildren(this);
+            FieldManager.UpdateChildren(this);
 <% } %>
-			}
 		}
 		
 		[Transactional(TransactionalTypes.TransactionScope)]
