@@ -74,7 +74,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, CacheItemPriority priority, TimeSpan slidingExpiration) where T : class
         {
-            return query.FromCache(Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(1), CacheItemPriority.Normal);
+            return query.FromCache(Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(1), priority);
         }
 
         /// <summary>
