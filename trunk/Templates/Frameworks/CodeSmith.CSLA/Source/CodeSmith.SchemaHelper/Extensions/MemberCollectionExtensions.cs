@@ -477,15 +477,6 @@ namespace CodeSmith.SchemaHelper
                     }
                 }
 
-                foreach (AssociationMember associationMember in associationMembers)
-                {
-                    string output = string.Format(" [{0}] = {1}{2},", name, Configuration.Instance.ParameterPrefix,
-                                                  associationMember.LocalColumn.VariableName);
-
-                    if (!setStatements.Contains(output))
-                        setStatements += output;
-                }
-
                 setStatements += string.Format(" [{0}] = {1}{2},", name, Configuration.Instance.ParameterPrefix, member.VariableName);
             }
 
