@@ -284,6 +284,8 @@ namespace <%= BusinessProjectName %>
 <% } else { %>
 			LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList());
 <% } } } %> 
+
+            MarkOld();
         }
 
 <% } %>
