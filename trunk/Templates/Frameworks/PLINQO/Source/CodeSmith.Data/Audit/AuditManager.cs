@@ -133,7 +133,7 @@ namespace CodeSmith.Data.Audit
                        : metaType.InheritanceRoot.Type;
 
             var table = dataContext.GetTable(rootType);
-            
+
             var auditEntity = new AuditEntity();
             auditEntity.Action = action;
             auditEntity.Type = metaType.Type.FullName;
@@ -206,12 +206,12 @@ namespace CodeSmith.Data.Audit
 
                 if (auditEntity.Action == AuditAction.Update && modifiedMemberInfo.Member != null)
                 {
-                    auditProperty.Current = GetValue(modifiedMemberInfo.Member, underlyingType, modifiedMemberInfo.CurrentValue);
-                    auditProperty.Original = GetValue(modifiedMemberInfo.Member, underlyingType, modifiedMemberInfo.OriginalValue);
+                    auditProperty.Current = GetValue(modifiedMemberInfo.Member, underlyingType, modifiedMemberInfo.CurrentValue, entity);
+                    auditProperty.Original = GetValue(modifiedMemberInfo.Member, underlyingType, modifiedMemberInfo.OriginalValue, entity);
                     return auditProperty;
                 }
 
-                var value = GetValue(dataMember.Member, underlyingType, dataMember.MemberAccessor.GetBoxedValue(entity));
+                var value = GetValue(dataMember.Member, underlyingType, dataMember.MemberAccessor.GetBoxedValue(entity), entity);
                 if (value == null)
                     return null; // ignore null properties?
 
@@ -361,7 +361,7 @@ namespace CodeSmith.Data.Audit
 
                 return GetValue(childDisplayMember.Member,
                     GetUnderlyingType(childDisplayMember.Type),
-                    value);
+                    value, entity);
             }
             catch (Exception ex)
             {
@@ -370,7 +370,7 @@ namespace CodeSmith.Data.Audit
             }
         }
 
-        private static object GetValue(MemberInfo memberInfo, Type valueType, object value)
+        private static object GetValue(MemberInfo memberInfo, Type valueType, object value, object entity)
         {
             if (value == null)
                 return null;
@@ -397,10 +397,19 @@ namespace CodeSmith.Data.Audit
 
                             Type formatterType = formatAttribute.FormatType;
 
-                            //support either static object MethodName(object value) or static object MethodName(MemberInfo memberInfo, object value)
-                            formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null, new[] { typeof(MethodInfo), typeof(object) }, null);
+                            //first: static object MethodName(MemberInfo memberInfo, object value, object entity)
+                            formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null,
+                                new[] { typeof(MethodInfo), typeof(object), typeof(object) }, null);
+
+                            //next: static object MethodName(MemberInfo memberInfo, object value)
                             if (formatMethod == null)
-                                formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null, new[] { typeof(object) }, null);
+                                formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null,
+                                    new[] { typeof(MethodInfo), typeof(object) }, null);
+
+                            //last: static object MethodName(object value)
+                            if (formatMethod == null)
+                                formatMethod = formatterType.GetMethod(formatAttribute.MethodName, _defaultStaticBinding, null,
+                                    new[] { typeof(object) }, null);
 
                             _formatterCache.Add(memberInfo, formatMethod);
                         }
@@ -413,9 +422,11 @@ namespace CodeSmith.Data.Audit
 
                     try
                     {
+                        if (args.Length == 3)
+                            return formatMethod.Invoke(null, new[] { memberInfo, returnValue, entity });
+
                         if (args.Length == 2)
                             return formatMethod.Invoke(null, new[] { memberInfo, returnValue });
-
 
                         return formatMethod.Invoke(null, new[] { returnValue });
                     }
@@ -443,7 +454,7 @@ namespace CodeSmith.Data.Audit
                 Type underlyingType = GetUnderlyingType(dataMember.Type);
                 object value = dataMember.MemberAccessor.GetBoxedValue(entity);
 
-                return GetValue(dataMember.Member, underlyingType, value);
+                return GetValue(dataMember.Member, underlyingType, value, entity);
             }
             catch (Exception ex)
             {
