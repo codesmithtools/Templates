@@ -30,16 +30,18 @@ namespace CodeSmith.SchemaHelper
             ManyToManyExtendedProperty = "CS_ManyToMany";
             TablePrefix = String.Empty;
             ParameterPrefix = "@p_";
-            NamingProperty = new NamingProperty();
-            NamingProperty.EntityNaming = EntityNaming.Singular;
-            NamingProperty.TableNaming = TableNaming.Mixed;
-            
+            NamingProperty = new NamingProperty
+                                 {
+                                     EntityNaming = EntityNaming.Singular,
+                                     TableNaming = TableNaming.Mixed
+                                 };
+
             SearchCriteriaProperty = new SearchCriteriaProperty();
             SearchCriteriaProperty.Prefix = "GetBy";
             
             RowVersionColumn = "^((R|r)ow)?(V|v)ersion$";
             VisualStudioVersion = VisualStudioVersion.VS_2008;
-            SingularMemberSuffix = "Member";
+            SingularMemberSuffix = "";
             TargetLanguage = LanguageEnum.CSharp;
 
             IgnoreExpressions = new List<Regex>();

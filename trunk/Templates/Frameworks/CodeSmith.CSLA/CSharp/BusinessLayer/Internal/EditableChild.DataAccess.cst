@@ -122,6 +122,18 @@ namespace <%= BusinessProjectName %>
 			DataPortal_Delete(new <%= BusinessClassName %>Criteria(<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %><% if(Entity.HasRowVersionMember) { %>, _timestamp<% } %>));
 		}
 		
+        [Transactional(TransactionalTypes.TransactionScope)]
+		protected override void DataPortal_Delete(object criteria)
+		{
+			<%= BusinessClassName %>Criteria theCriteria = criteria as <%= BusinessClassName %>Criteria;
+            if (theCriteria != null)
+            {
+				using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Delete(theCriteria.StateBag)) 
+				{
+				}
+			}
+        }
+        
 		private void Fetch(SafeDataReader reader)
 		{
 <% if(Entity.HasRowVersionMember) { %>
@@ -149,7 +161,7 @@ namespace <%= BusinessProjectName %>
 <% } else { %>
 			LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList());
 <% } } } %> 
-
+            MarkAsChild();
             MarkOld();
         }
 		

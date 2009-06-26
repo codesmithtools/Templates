@@ -70,6 +70,7 @@ namespace <%= BusinessProjectName %>
 			LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList());
 <% } } } %> 
 
+            MarkAsChild();
             MarkOld();
         }
 		

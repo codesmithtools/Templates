@@ -209,6 +209,8 @@ namespace <%= BusinessProjectName %>
 		private void Child_Fetch(SafeDataReader reader)
 		{
 			Fetch(reader);
+            
+            MarkAsChild();
 		}
 		
 		private void Child_Insert()
