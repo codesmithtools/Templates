@@ -160,7 +160,7 @@ namespace <%= DataProjectName %>
 <% if(entity.Table.ForeignKeyColumns.Count == 0) { %>
 			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoKeysOrRowVersion.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(entity.HasRowVersionMember) { %> AND [<%= entity.RowVersionMember.ColumnName %>] = @p_<%= entity.RowVersionMember.ColumnName %><% } %><%= entity.BuildUpdateSelectStatement() %>";
 <% } else { %>
-			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoRowVersion.BuildSetStatements(entity.MembersForeignKey) %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(entity.HasRowVersionMember) { %> AND [<%= entity.RowVersionMember.ColumnName %>] = @p_<%= entity.RowVersionMember.ColumnName %><% } %><%= entity.BuildUpdateSelectStatement() %>";
+			const string commandText = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoRowVersion.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(entity.HasRowVersionMember) { %> AND [<%= entity.RowVersionMember.ColumnName %>] = @p_<%= entity.RowVersionMember.ColumnName %><% } %><%= entity.BuildUpdateSelectStatement() %>";
 <% } %>
             using(SqlCommand command = new SqlCommand(commandText, GetSqlConnection()))
 			{
