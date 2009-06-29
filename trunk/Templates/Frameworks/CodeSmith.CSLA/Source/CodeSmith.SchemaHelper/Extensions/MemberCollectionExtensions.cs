@@ -329,7 +329,7 @@ namespace CodeSmith.SchemaHelper
             {
                 if (!associationMember.IsIdentity)
                 {
-                    string output = string.Format(", [{0}]", associationMember.LocalColumn.ColumnName);
+                    string output = string.Format(", [{0}]", associationMember.ColumnName);
 
                     if (!columnNames.Contains(output))
                         columnNames += output;
@@ -359,7 +359,7 @@ namespace CodeSmith.SchemaHelper
                 if (!associationMember.IsIdentity)
                 {
                     string output = string.Format(", {0}{1}", Configuration.Instance.ParameterPrefix,
-                                                  associationMember.LocalColumn.Name);
+                                                  associationMember.ColumnName);
 
                     if (!columnNames.Contains(output))
                         columnNames += output;
@@ -402,7 +402,7 @@ namespace CodeSmith.SchemaHelper
 
                     string output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});",
                                                   Configuration.Instance.ParameterPrefix,
-                                                  associationMember.LocalColumn.ColumnName,
+                                                  associationMember.ColumnName,
                                                   cast,
                                                   NamingConventions.VariableName(associationMember.ColumnName));
 
@@ -444,7 +444,7 @@ namespace CodeSmith.SchemaHelper
 
                 string output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});",
                                               Configuration.Instance.ParameterPrefix,
-                                              associationMember.LocalColumn.ColumnName,
+                                               associationMember.ColumnName,
                                               cast,
                                               NamingConventions.VariableName(associationMember.ColumnName));
 
@@ -467,6 +467,7 @@ namespace CodeSmith.SchemaHelper
             foreach (Member member in members)
             {
                 string name = member.ColumnName;
+                string varname = member.VariableName;
 
                 foreach (AssociationMember association in member.Entity.OneToMany)
                 {
@@ -477,7 +478,7 @@ namespace CodeSmith.SchemaHelper
                     }
                 }
 
-                setStatements += string.Format(" [{0}] = {1}{2},", name, Configuration.Instance.ParameterPrefix, member.VariableName);
+                setStatements += string.Format(" [{0}] = {1}{2},", name, Configuration.Instance.ParameterPrefix, name);
             }
 
             return setStatements.TrimStart(new[] { '\t', '\n' }).TrimEnd(new[] { ',' });
