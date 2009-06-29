@@ -31,7 +31,12 @@ namespace <%= BusinessProjectName %>
 	public partial class <%= BusinessClassName %>
 	{
 		#region Data Access
-				
+		
+        [RunLocal]
+        protected override void DataPortal_Create()
+        {
+        }
+
 		private void Child_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
 		{
 			RaiseListChangedEvents = false;

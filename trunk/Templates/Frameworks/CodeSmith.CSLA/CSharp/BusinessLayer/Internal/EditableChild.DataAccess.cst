@@ -71,7 +71,7 @@ namespace <%= BusinessProjectName %>
 		{
 			// TODO: load default values
 			// omit this override if you have no defaults to set
-			base.Child_Create();
+			//base.Child_Create();
 		}
 		
 		private void Child_Fetch(SafeDataReader reader)
