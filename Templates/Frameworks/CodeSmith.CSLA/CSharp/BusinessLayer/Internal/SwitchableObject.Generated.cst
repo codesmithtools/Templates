@@ -301,9 +301,9 @@ namespace <%= BusinessProjectName %>
 <%-- One-To-Zero-Or-One --%>
 <%if(Entity.HasOneToZeroOrZeroMember && Entity.PrimaryKey.KeyMembers.Count > 1){%>
 
-        public static <%= BusinessClassName %> Get<%= BusinessClassName %>(<%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroParametersVariable() %>)
+        public static <%= BusinessClassName %> Get<%= BusinessClassName %>Child(<%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroParametersVariable() %>)
 		{
-            return DataPortal.Fetch< <%= BusinessClassName %> >(
+            return DataPortal.FetchChild< <%= BusinessClassName %> >(
                 new <%= BusinessClassName %>Criteria { <%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroObjectInitializer() %> });
         }
  <% }%>
