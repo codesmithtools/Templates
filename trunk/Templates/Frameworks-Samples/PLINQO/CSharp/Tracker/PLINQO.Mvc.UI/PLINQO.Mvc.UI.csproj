@@ -1,0 +1,206 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CCD7AA1F-0749-46C3-B552-97523A017C33}</ProjectGuid>
+    <ProjectTypeGuids>{603c0e0b-db56-11dc-be95-000d561079b0};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PLINQO.Mvc.UI</RootNamespace>
+    <AssemblyName>PLINQO.Mvc.UI</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Services">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Binder\TaskViewDataBinder.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MasterController.cs" />
+    <Compile Include="Controllers\TaskController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Binder\EmptyStringToNullModelBinder.cs" />
+    <Compile Include="Helpers\ByteArrayConverter.cs" />
+    <Compile Include="Helpers\UIHelper.cs" />
+    <Compile Include="Models\JsonResult.cs" />
+    <Compile Include="Models\TaskListViewData.cs" />
+    <Compile Include="Models\TaskViewData.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\CustomMembershipProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Default.aspx" />
+    <Content Include="Global.asax" />
+    <Content Include="Lib\Images\banner.jpg" />
+    <Content Include="Lib\Images\bg.jpg" />
+    <Content Include="Lib\Images\blog.jpg" />
+    <Content Include="Lib\Images\body_bg.jpg" />
+    <Content Include="Lib\Images\client.jpg" />
+    <Content Include="Lib\Images\footer.jpg" />
+    <Content Include="Lib\Images\home.jpg" />
+    <Content Include="Lib\Images\home_icon.jpg" />
+    <Content Include="Lib\Images\h_line.jpg" />
+    <Content Include="Lib\Images\learn.jpg" />
+    <Content Include="Lib\Images\learnleft.gif" />
+    <Content Include="Lib\Images\learnright.gif" />
+    <Content Include="Lib\Images\learn_over.jpg" />
+    <Content Include="Lib\Images\left_foot.jpg" />
+    <Content Include="Lib\Images\light.jpg" />
+    <Content Include="Lib\Images\logo.jpg" />
+    <Content Include="Lib\Images\navi_left.jpg" />
+    <Content Include="Lib\Images\navi_right.jpg" />
+    <Content Include="Lib\Images\page_bg.jpg" />
+    <Content Include="Lib\Images\rails.jpg" />
+    <Content Include="Lib\Images\right_foot.jpg" />
+    <Content Include="Lib\Images\rpt.jpg" />
+    <Content Include="Lib\Images\studio.jpg" />
+    <Content Include="Lib\Images\tableft1.gif" />
+    <Content Include="Lib\Images\tableft3.gif" />
+    <Content Include="Lib\Images\tabright1.gif" />
+    <Content Include="Lib\Images\tabright3.gif" />
+    <Content Include="Lib\Scripts\date.format.js" />
+    <Content Include="Lib\Scripts\date.js" />
+    <Content Include="Lib\Scripts\ext-core-debug.js" />
+    <Content Include="Lib\Scripts\ext-core.js" />
+    <Content Include="Lib\Scripts\JSON.js" />
+    <Content Include="Lib\Scripts\Utilities.js" />
+    <Content Include="Lib\Styles\site.css" />
+    <Content Include="Lib\Xslts\AuditNote.xslt" />
+    <Content Include="Views\Home\Ajax.aspx" />
+    <Content Include="Views\Index.aspx" />
+    <Content Include="Views\Task\Ajax.aspx" />
+    <Content Include="Views\Task\Create.aspx" />
+    <Content Include="Views\Task\Details.aspx" />
+    <Content Include="Views\Task\Edit.aspx" />
+    <Content Include="Views\Task\Index.aspx" />
+    <Content Include="Views\User\Ajax.aspx" />
+    <Content Include="Views\User\Create.aspx" />
+    <Content Include="Views\User\Edit.aspx" />
+    <Content Include="Views\User\Index.aspx" />
+    <Content Include="Views\User\Details.aspx" />
+    <Content Include="Web.config" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Lib\Scripts\jquery-1.3.2.js" />
+    <Content Include="Lib\Scripts\jquery-1.3.2.min.js" />
+    <Content Include="Lib\Scripts\jquery-1.3.2-vsdoc.js" />
+    <Content Include="Lib\Scripts\jquery-1.3.2.min-vsdoc.js" />
+    <Content Include="Views\Account\ChangePassword.aspx" />
+    <Content Include="Views\Account\ChangePasswordSuccess.aspx" />
+    <Content Include="Views\Account\LogOn.aspx" />
+    <Content Include="Views\Account\Register.aspx" />
+    <Content Include="Views\Home\About.aspx" />
+    <Content Include="Views\Home\Index.aspx" />
+    <Content Include="Views\Shared\Error.aspx" />
+    <Content Include="Views\Shared\LogOnUserControl.ascx" />
+    <Content Include="Views\Shared\Site.Master" />
+    <Content Include="Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Lib\Images\Thumbs.db" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Templates\PLINQO\Source\CodeSmith.Data\CodeSmith.Data.csproj">
+      <Project>{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}</Project>
+      <Name>CodeSmith.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PLINQO.Tracker.Data\PLINQO.Tracker.Data.csproj">
+      <Project>{2DF2FB49-6A04-4FD5-80D9-C662825787E3}</Project>
+      <Name>PLINQO.Tracker.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target> -->
+  <Target Name="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)\..\$(ProjectName)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>54470</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

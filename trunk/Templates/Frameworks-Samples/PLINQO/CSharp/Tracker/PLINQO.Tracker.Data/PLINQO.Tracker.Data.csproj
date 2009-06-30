@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2DF2FB49-6A04-4FD5-80D9-C662825787E3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PLINQO.Tracker.Data</RootNamespace>
+    <AssemblyName>PLINQO.Tracker.Data</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Services" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\Audit.cs" />
+    <Compile Include="Entities\Audit.Generated.cs">
+      <DependentUpon>Audit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Role.cs" />
+    <Compile Include="Entities\Role.Generated.cs">
+      <DependentUpon>Role.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Status.cs" />
+    <Compile Include="Entities\Status.Generated.cs">
+      <DependentUpon>Status.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Task.cs" />
+    <Compile Include="Entities\Task.Generated.cs">
+      <DependentUpon>Task.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\TaskExtended.cs" />
+    <Compile Include="Entities\TaskExtended.Generated.cs">
+      <DependentUpon>TaskExtended.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\User.Generated.cs">
+      <DependentUpon>User.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\UserRole.cs" />
+    <Compile Include="Entities\UserRole.Generated.cs">
+      <DependentUpon>UserRole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LinqEntityBase.cs" />
+    <Compile Include="LinqEntityBase.Generated.cs">
+      <DependentUpon>LinqEntityBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\AuditManager.cs" />
+    <Compile Include="Managers\AuditManager.Generated.cs">
+      <DependentUpon>AuditManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\RoleManager.cs" />
+    <Compile Include="Managers\RoleManager.Generated.cs">
+      <DependentUpon>RoleManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\StatusManager.cs" />
+    <Compile Include="Managers\StatusManager.Generated.cs">
+      <DependentUpon>StatusManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\TaskExtendedManager.cs" />
+    <Compile Include="Managers\TaskExtendedManager.Generated.cs">
+      <DependentUpon>TaskExtendedManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\TaskManager.cs" />
+    <Compile Include="Managers\TaskManager.Generated.cs">
+      <DependentUpon>TaskManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\TrackerDataManager.cs" />
+    <Compile Include="Managers\UserManager.cs" />
+    <Compile Include="Managers\UserManager.Generated.cs">
+      <DependentUpon>UserManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\UserRoleManager.cs" />
+    <Compile Include="Managers\UserRoleManager.Generated.cs">
+      <DependentUpon>UserRoleManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\AuditExtensions.cs" />
+    <Compile Include="Queries\AuditExtensions.Generated.cs">
+      <DependentUpon>AuditExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\RoleExtensions.cs" />
+    <Compile Include="Queries\RoleExtensions.Generated.cs">
+      <DependentUpon>RoleExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\StatusExtensions.cs" />
+    <Compile Include="Queries\StatusExtensions.Generated.cs">
+      <DependentUpon>StatusExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\TaskExtendedExtensions.cs" />
+    <Compile Include="Queries\TaskExtendedExtensions.Generated.cs">
+      <DependentUpon>TaskExtendedExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\TaskExtensions.cs" />
+    <Compile Include="Queries\TaskExtensions.Generated.cs">
+      <DependentUpon>TaskExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\UserExtensions.cs" />
+    <Compile Include="Queries\UserExtensions.Generated.cs">
+      <DependentUpon>UserExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\UserRoleExtensions.cs" />
+    <Compile Include="Queries\UserRoleExtensions.Generated.cs">
+      <DependentUpon>UserRoleExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Rules\CurrentUserNameAttribute.cs" />
+    <Compile Include="Rules\CurrentUserNameRule.cs" />
+    <Compile Include="Rules\TaskAssignmentAttribute.cs" />
+    <Compile Include="Rules\TaskAssignmentRule.cs" />
+    <Compile Include="Rules\UserExistsRule.cs" />
+    <Compile Include="TrackerDataContext.cs" />
+    <Compile Include="TrackerDataContext.Enums.cs">
+      <DependentUpon>TrackerDataContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrackerDataContext.Generated.cs">
+      <DependentUpon>TrackerDataContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrackerDataContext.Manager.cs">
+      <DependentUpon>TrackerDataContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GetUsersWithRolesResult1.cs" />
+    <Compile Include="Views\GetUsersWithRolesResult1.Generated.cs">
+      <DependentUpon>GetUsersWithRolesResult1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GetUsersWithRolesResult2.cs" />
+    <Compile Include="Views\GetUsersWithRolesResult2.Generated.cs">
+      <DependentUpon>GetUsersWithRolesResult2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReturnMultiplResultSetsResult1.cs" />
+    <Compile Include="Views\ReturnMultiplResultSetsResult1.Generated.cs">
+      <DependentUpon>ReturnMultiplResultSetsResult1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ReturnMultiplResultSetsResult2.cs" />
+    <Compile Include="Views\ReturnMultiplResultSetsResult2.Generated.cs">
+      <DependentUpon>ReturnMultiplResultSetsResult2.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PLINQO.Tracker.Data.csp" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tracker.dbml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tracker.dbml.layout">
+      <DependentUpon>Tracker.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Tracker.enum.xml">
+      <DependentUpon>Tracker.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Tracker.enum.xml">
+      <DependentUpon>Tracker.dbml</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Templates\PLINQO\Source\CodeSmith.Data\CodeSmith.Data.csproj">
+      <Project>{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}</Project>
+      <Name>CodeSmith.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.targets" />
+</Project>
