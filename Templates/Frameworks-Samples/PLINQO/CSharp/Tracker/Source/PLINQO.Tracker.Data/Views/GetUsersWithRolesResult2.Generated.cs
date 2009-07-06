@@ -114,6 +114,7 @@ namespace PLINQO.Tracker.Data
         partial void OnRoleIdChanging(int value);
         /// <summary>Called after <see cref="RoleId"/> has Changed.</summary>
         partial void OnRoleIdChanged();
+
         #endregion
 
         #region Serialization

@@ -46,7 +46,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         public static IQueryable<PLINQO.Tracker.Data.TaskExtended> ByBrowser(this IQueryable<PLINQO.Tracker.Data.TaskExtended> queryable, string browser)
         {
-            return queryable.Where(t => t.Browser == browser);
+            return queryable.Where(t => object.Equals(t.Browser, browser));
         }
         
         /// <summary>
@@ -54,7 +54,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         public static IQueryable<PLINQO.Tracker.Data.TaskExtended> ByOs(this IQueryable<PLINQO.Tracker.Data.TaskExtended> queryable, string os)
         {
-            return queryable.Where(t => t.Os == os);
+            return queryable.Where(t => object.Equals(t.Os, os));
         }
         
         /// <summary>

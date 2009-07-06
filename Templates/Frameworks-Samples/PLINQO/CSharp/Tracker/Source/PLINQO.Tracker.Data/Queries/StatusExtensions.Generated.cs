@@ -54,7 +54,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         public static IQueryable<PLINQO.Tracker.Data.Status> ByDescription(this IQueryable<PLINQO.Tracker.Data.Status> queryable, string description)
         {
-            return queryable.Where(s => s.Description == description);
+            return queryable.Where(s => object.Equals(s.Description, description));
         }
         
         /// <summary>
