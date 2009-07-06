@@ -1,0 +1,161 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8"
+    Description="Linq to Sql Entity Class." %>
+
+<%@ Assembly Name="ICSharpCode.NRefactory" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.InsertClassMergeStrategy" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.CodeParser" Path="..\..\Common" %>
+<%@ Assembly Name="Generator" Path="..\..\Common" %>
+<%@ Assembly Name="Dbml" Path="..\..\Common" %>
+
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
+
+<%@ Property Category="1.Mapping" Name="Database"
+    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False"
+    Description="Database instance. Must be set by parent template" %>
+
+<%@ Property Category="1.Mapping" Name="Type"
+    Type="LinqToSqlShared.DbmlObjectModel.Type" Optional="False"
+    Description="The Type instance for this entity. Must be set by parent template" %>
+
+<%@ Property Category="2.Class" Name="Framework"
+    Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v35_SP1" Optional="False"
+    Description="Which version of the .Net Framework is being generated for." %>
+
+<%@ Property Category="2.Class" Name="ExistingFile"
+    Type="CodeFileParser" Optional="True" %>
+    
+<%@ Property Category="2.Class" Name="EntityBase"
+    Type="System.String" Default="" Optional="True"
+    Description="The base class for the entity." %>
+
+<%@ Map Name="CSharpAlias"
+    Src="System-CSharpAlias.csmap" Reverse="False"
+    Description="Convert system data types to c# alias" %>
+using System;
+using System.Linq;
+using System.Data.Linq;
+using System.Collections.Generic;
+using System.Text;
+<%if(Framework == FrameworkEnum.v35_SP1){%>
+using System.ComponentModel.DataAnnotations;
+using CodeSmith.Data.Attributes;
+using CodeSmith.Data.Rules;
+<%}%>
+
+namespace <%= Database.EntityNamespace %>
+{
+    <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
+    {
+        // For more information about the features contained in this class, please visit our GoogleCode Wiki at...
+        // http://code.google.com/p/codesmith/wiki/PLINQO
+        // Also, you can watch our Video Tutorials at...
+        // http://community.codesmithtools.com/
+
+<%      if(Framework == FrameworkEnum.v35_SP1) { %>
+        #region Metadata
+
+        [CodeSmith.Data.Audit.Audit]
+<% if (!string.IsNullOrEmpty(EntityBase) && EntityBase != Database.EntityBase) { %>
+        internal new class Metadata
+            : <%= EntityBase %>.Metadata
+<% } else { %>
+        internal class Metadata
+<% } %>
+        {
+            // Only Attributes in the class will be preserved.
+
+<%          AttributeSectionVisitor sourceAttributes = new AttributeSectionVisitor();
+            if(ExistingFile!=null)
+            {
+                ExistingFile.CompilationUnit.AcceptVisitor(sourceAttributes, "Metadata");
+
+            }
+            foreach(Column column in Type.Columns)
+            {
+                if(sourceAttributes.PropertyMap.ContainsKey(column.Member))
+                {
+                    foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[column.Member].Attributes)
+                    { %>
+            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
+<%                  } // for each attribute
+                } // if property
+                else
+                {
+                    if (!column.CanBeNull == true && column.IsDbGenerated == false)
+                    {
+                        if (column.Type.Contains("String"))
+                        {
+                            Response.WriteLine("            [Required]");
+                        }
+                        else if (column.Type.Contains("DateTime"))
+                        {
+                            if (column.Member.Contains("Create"))
+                            {
+                                Response.WriteLine("            [Now(EntityState.New)]");
+                                Response.WriteLine("            [CodeSmith.Data.Audit.NotAudited]");
+                            }
+                            else if (column.Member.Contains("Modify") || column.Member.Contains("Modified") || column.Member.Contains("Edit"))
+                            {
+                                Response.WriteLine("            [Now(EntityState.Dirty)]");
+                                Response.WriteLine("            [CodeSmith.Data.Audit.NotAudited]");
+                            }
+                        }
+                    }
+
+                    if (column.Type.Contains("String"))
+                    {
+                        int size = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(column.DbType);
+
+                        if (size > 256 || size == -1)
+                            Response.WriteLine("            [DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)]");
+                        else if (column.Member.Contains("Email"))
+                            Response.WriteLine("            [DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)]");
+                        else if (column.Member.Contains("Url") || column.Member.Contains("Uri"))
+                            Response.WriteLine("            [DataType(System.ComponentModel.DataAnnotations.DataType.Url)]");
+                        else if (column.Member.Contains("Phone"))
+                            Response.WriteLine("            [DataType(System.ComponentModel.DataAnnotations.DataType.PhoneNumber)]");
+                        else if (column.Member.Contains("Password"))
+                            Response.WriteLine("            [DataType(System.ComponentModel.DataAnnotations.DataType.Password)]");
+                        else if (column.Member.Contains("Html"))
+                            Response.WriteLine("            [DataType(System.ComponentModel.DataAnnotations.DataType.Html)]");
+                    }
+                }
+            %>
+            public <%= CSharpAlias[column.Type] %> <%=column.Member%> { get; set; }
+
+<%            } // for each column
+
+            foreach(Association association in Type.EntityRefAssociations)
+            {
+                if(sourceAttributes.PropertyMap.ContainsKey(association.Member))
+                {
+                    foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[association.Member].Attributes)
+                    { %>
+            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
+<%                    }
+                } %>
+            public <%= CSharpAlias[association.Type] %> <%=association.Member%> { get; set; }
+
+<%            }
+
+            foreach(Association association in Type.EntitySetAssociations)
+            {
+                if(sourceAttributes.PropertyMap.ContainsKey(association.Member))
+                {
+                    foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[association.Member].Attributes)
+                    { %>
+            <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %>
+<%                    }
+                } %>
+            public EntitySet<<%= CSharpAlias[association.Type] %>> <%=association.Member%> { get; set; }
+
+<%            } %>
+        }
+
+        #endregion
+<%      } %>
+    }
+}

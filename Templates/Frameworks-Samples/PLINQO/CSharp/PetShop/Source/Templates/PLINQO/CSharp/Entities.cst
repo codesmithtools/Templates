@@ -1,0 +1,308 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="XML" 
+    Description="Generate Linq to Sql Class File" 
+    Debug="True" OutputType="None" CompilerVersion="v3.5"%>
+
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="Dbml" Path="..\Common" %>
+<%@ Assembly Name="Generator" Path="..\Common" %>
+
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
+
+<%@ Property Category="2.Class" Name="OutputDirectory" 
+    Type="System.String" Default="" Optional="True" 
+    Description="The folder to save the generated entity files." 
+    Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Category="2.Class" Name="BaseDirectory" 
+    Type="System.String" Default="" Optional="True" 
+    Description="The folder to save the generated DataContext files." 
+    Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Category="2.Class" Name="ViewDirectory" 
+    Type="System.String" Default="" Optional="True" 
+    Description="The folder to save the generated view files." 
+    Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Category="1.Mapping" Name="DbmlFile" 
+    Type="System.String" Default="Database.dbml" Optional="False" 
+    Description="The full path to the mapping file." 
+    Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Register Name="DataContextGeneratedClass" 
+    Template="Internal\DataContext.Generated.cst" 
+    MergeProperties="True" ExcludeProperties="Database"%>
+
+<%@ Register Name="DataContextEditableClass" 
+    Template="Internal\DataContext.Editable.cst" 
+    MergeProperties="False" %>
+
+<%@ Register Name="EntityBaseGeneratedClass" 
+    Template="Internal\Entity.Base.Generated.cst" 
+    MergeProperties="False" %>
+
+<%@ Register Name="EntityBaseEditableClass" 
+    Template="Internal\Entity.Base.Editable.cst" 
+    MergeProperties="False" %>
+
+<%@ Register Name="EntityGeneratedClass" 
+    Template="Internal\Entity.Generated.cst" 
+    MergeProperties="True" ExcludeProperties="Database,TableName,Type, EntityBase" %>
+
+<%@ Register Name="EntityEditableClass" 
+    Template="Internal\Entity.Editable.cst" 
+    MergeProperties="False" %>
+
+<%@ Register Name="EnumClass" 
+    Template="Internal\Enums.cst" 
+    MergeProperties="False" %>
+
+
+
+<script runat="template">
+    private List<string> generatedEntities = new List<string>();
+    
+    public void Generate()
+    {
+        if (!Directory.Exists(this.OutputDirectory))
+            Directory.CreateDirectory(this.OutputDirectory);
+
+        Database database = Dbml.FromFile(this.DbmlFile);
+        if (database == null)
+            throw new Exception("Error loading Dbml file.");
+            
+        Dbml.FillInDefaults(database);
+        
+        this.Progress.MaximumValue = (database.Tables.Count + 1) * 2;
+        this.Progress.Step = 1;
+        
+        CreateEntityBaseClass(database);
+        CreateDataContextClass(database);
+        CreateEntityClasses(database);
+        
+        this.RegisterReference("System.Data.Linq");
+        this.RegisterReference("System.Configuration");
+        if(this.IncludeDataContract)
+            this.RegisterReference("System.Runtime.Serialization");
+        if(this.Framework == FrameworkEnum.v35_SP1)
+        {
+            this.RegisterReference("System.Web.DynamicData");
+            this.RegisterReference("System.ComponentModel.DataAnnotations");
+            if(IncludeDataServices)
+            {
+                this.RegisterReference("System.Data.Services");
+                this.RegisterReference("System.Data.Services.Client");
+            }
+        }
+        this.RegisterReference(Path.GetFullPath(Path.Combine(
+            this.CodeTemplateInfo.DirectoryName,
+            "..\\Common\\CodeSmith.Data.dll")));
+    }
+        
+    public void CreateEntityBaseClass(Database database)
+    {
+        EntityBaseGeneratedClass t = this.Create<EntityBaseGeneratedClass>();
+        this.CopyPropertiesTo(t);
+        t.ClassNamespace = database.EntityNamespace;
+        t.ClassName = database.EntityBase;
+        
+        EntityBaseEditableClass p = this.Create<EntityBaseEditableClass>();
+        this.CopyPropertiesTo(p);
+        p.ClassNamespace = database.EntityNamespace;
+        p.ClassName = database.EntityBase;
+        
+        string parentFileName = database.EntityBase + ".cs";
+        string path = string.IsNullOrEmpty(BaseDirectory) ? OutputDirectory : BaseDirectory;
+        parentFileName = Path.Combine(path, parentFileName);
+
+        if (!File.Exists(parentFileName))
+        {
+            Response.WriteLine(parentFileName);
+            p.RenderToFile(parentFileName, false);
+        }
+        
+        string fileName = database.EntityBase + ".Generated.cs";
+        fileName = Path.Combine(path, fileName);
+        
+        Response.WriteLine(fileName);
+        t.RenderToFile(fileName, parentFileName, true);
+    }
+    
+    public void CreateDataContextClass(Database database)
+    {
+        DataContextGeneratedClass t = this.Create<DataContextGeneratedClass>();
+        this.CopyPropertiesTo(t);
+        t.Database = database;
+        
+        DataContextEditableClass p = this.Create<DataContextEditableClass>();
+        this.CopyPropertiesTo(p);
+        p.Database = database;
+
+        string contextClass = CommonUtility.GetClassName(database.Class);
+
+        string path = string.IsNullOrEmpty(BaseDirectory) ? OutputDirectory : BaseDirectory;
+        string parentFileName = contextClass + ".cs";
+        parentFileName = Path.Combine(path, parentFileName);
+        
+        if (!File.Exists(parentFileName))
+        {
+            Response.WriteLine(parentFileName);
+            p.RenderToFile(parentFileName, true);
+        }
+
+        string fileName = contextClass + ".Generated.cs";
+        fileName = Path.Combine(path, fileName);
+        
+        Debug.WriteLine(string.Format("Creating DataContext Class '{0}' ...", 
+            contextClass));
+        
+        Response.WriteLine(fileName);
+        t.RenderToFile(fileName, parentFileName, true);
+                    
+        this.Progress.PerformStep();
+        
+        CreateEnums(database, parentFileName);
+    }
+    
+    public void CreateEntityClasses(Database database)
+    {
+        EntityGeneratedClass t = this.Create<EntityGeneratedClass>();
+        this.CopyPropertiesTo(t);
+        t.Database = database;
+        t.EnumDatabase = this.EnumDatabase;
+        
+        EntityEditableClass p = this.Create<EntityEditableClass>();
+        this.CopyPropertiesTo(p);
+        p.Database = database;
+
+        foreach(Table tableMap in database.Tables)
+        {
+            Stopwatch watch = Stopwatch.StartNew();
+            
+             Debug.WriteLine(string.Format(
+                "Creating Entity Class '{0}' ...",
+                tableMap.Type.Name));
+            
+            t.TableName = tableMap.Name;
+            t.EntityBase = database.EntityBase;
+            p.EntityBase = database.EntityBase;
+            
+            CreateEntity(t, p, tableMap.Type, OutputDirectory);
+
+            Debug.WriteLine(string.Format(
+                "Created '{0}' in {1} ms.", 
+                tableMap.Type.Name,
+                watch.Elapsed.TotalMilliseconds.ToString()));
+
+            this.Progress.PerformStep();
+        }
+        
+        string viewPath = string.IsNullOrEmpty(ViewDirectory) ? OutputDirectory : ViewDirectory;
+        foreach(Function function in database.Functions)
+        {
+            foreach(LinqToSqlShared.DbmlObjectModel.Type resultType in function.Types)
+            {
+                if (!generatedEntities.Contains(resultType.Name))
+                {
+                    t.TableName = string.Empty;
+                    t.EntityBase = string.Empty;
+                    t.Framework = this.Framework;
+                    p.EntityBase = string.Empty;
+                    
+                    CreateEntity(t, p, resultType, viewPath);
+                }
+            }
+        }
+    }
+    
+    public void CreateEntity(
+        EntityGeneratedClass entityClass, 
+        EntityEditableClass partialClass, 
+        LinqToSqlShared.DbmlObjectModel.Type type, 
+        string rootDirectory)
+    {
+        string className = type.Name;
+        generatedEntities.Add(className);
+        
+        string parentFileName = className + ".cs";
+        parentFileName = Path.Combine(rootDirectory, parentFileName);
+
+        if (File.Exists(parentFileName))
+        {
+            partialClass.ExistingFile = new CodeFileParser(parentFileName);
+        }
+        
+        InsertClassMergeStrategy insertClassMergeStrategy = new InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata")
+        {
+            OnlyInsertMatchingClass = true,
+            PreserveClassAttributes = true,
+            NotFoundAction = InsertClassMergeStrategy.NotFoundActionEnum.InsertInParent,
+            NotFoundParent = type.Name,
+            MergeImports = true
+        };
+        partialClass.Type = type;
+        Response.WriteLine(parentFileName);
+        partialClass.RenderToFile(parentFileName, insertClassMergeStrategy);
+        
+        string fileName = className + ".Generated.cs";
+        fileName = Path.Combine(rootDirectory, fileName);
+        
+        Response.WriteLine(fileName);
+        entityClass.Type = type;
+        entityClass.RenderToFile(fileName, parentFileName, true);
+                
+        foreach(LinqToSqlShared.DbmlObjectModel.Type childType in type.SubTypes)
+        {
+            entityClass.TableName = string.Empty;
+            entityClass.EntityBase = type.Name;
+            entityClass.Framework = Framework;
+            
+            partialClass.EntityBase = type.Name;
+            
+            CreateEntity(entityClass, partialClass, childType, rootDirectory);
+        }
+    }
+    
+    public void CreateEnums(Database database, string parentFile)
+    {
+        if(EnumDatabase != null)
+        {
+            string fileName = Path.ChangeExtension(parentFile, ".Enums.cs");
+            EnumClass t = this.Create<EnumClass>();
+            t.Namespace = database.EntityNamespace;
+            t.Database = EnumDatabase;
+            t.RenderToFile(fileName, parentFile, true);
+        }
+    }
+    
+    private string _enumXmlFileName = null;
+    private string EnumXmlFileName
+    {
+        get
+        {
+            if(String.IsNullOrEmpty(_enumXmlFileName))
+                _enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
+            return _enumXmlFileName;
+        }
+    }
+    
+    private LinqToSqlShared.Generator.DbmlEnum.Database _enumDatabase = null;
+    private bool _isEnumDatabaseLoaded = false;
+    private LinqToSqlShared.Generator.DbmlEnum.Database EnumDatabase
+    {
+        get
+        {
+            if(!_isEnumDatabaseLoaded)
+            {
+                _enumDatabase = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName);
+                _isEnumDatabaseLoaded = true;
+            }
+            return _enumDatabase;
+        }
+    }
+
+</script>
+Generating Linq to Sql Entities ...
+<% Generate(); %>
