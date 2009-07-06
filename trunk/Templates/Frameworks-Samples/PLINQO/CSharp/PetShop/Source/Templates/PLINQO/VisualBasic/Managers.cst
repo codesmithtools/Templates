@@ -1,0 +1,181 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="XML" 
+    Description="Generate Linq to Sql Class File" 
+    Debug="true" OutputType="None" %>
+
+<%@ Assembly Name="System.Design" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="SchemaExplorer" %><%@ Assembly Name="Dbml" Path="..\Common" %>
+<%@ Assembly Name="Generator" Path="..\Common" %>
+<%@ Assembly Src="Internal\Manager.vb" %>
+
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
+<%@ Import Namespace="LinqToSqlShared.Generator" %>
+<%@ Import Namespace="Manager" %>
+
+<%@ Property Category="1.Database" Name="SourceDatabase" DeepLoad="true"
+    Type="SchemaExplorer.DatabaseSchema"  Optional="False"
+    Description="The source database for Linq to Sql." %>
+    
+<%@ Property Category="2.Class" Name="Framework"
+    Type="FrameworkEnum" Default="v35_SP1" Optional="False"
+    Description="Include Serialization attributes and what kind." %>
+
+<%@ Property Category="2.Mapping" Name="DbmlFile" 
+    Type="System.String" Default="Database.dbml" Optional="False" 
+    Description="The full path to the mapping file." 
+    Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Category="3.Manager" Name="ManagerDirectory" 
+    Type="System.String" Default="" Optional="false" 
+    Description="The folder to save the generated manager files." 
+    Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Category="3.Manager" Name="DataContextFile" 
+    Type="System.String" Default="" Optional="True" 
+    Description="The path to the DataContext file to add managers to." 
+    Editor="System.Windows.Forms.Design.FileNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Category="3.Manager" Name="DataManagerName" 
+    Type="System.String" Default="" Optional="True" 
+    Description="The name of the data manager class." %>
+
+
+<%@ Register Name="EntityManagerEditableClass" 
+    Template="Internal\EntityManager.Editable.cst" 
+    MergeProperties="False" %>
+
+<%@ Register Name="DataManagerClass" 
+    Template="Internal\DataManager.cst" 
+    MergeProperties="True" ExcludeProperties="Database, DataManager" %>
+
+<%@ Register Name="DataContextManagerClass" 
+    Template="Internal\DataContext.Manager.cst" 
+    MergeProperties="True" ExcludeProperties="Database, DataManager" %>
+
+<%@ Register Name="EntityManagerGeneratedClass" 
+    Template="Internal\EntityManager.Generated.cst" 
+    MergeProperties="True" ExcludeProperties="Database, DataManager,EntityManager,Table" %>
+
+<script runat="template">
+    Public Sub Generate()
+    If Not Directory.Exists(Me.ManagerDirectory) Then
+        Directory.CreateDirectory(Me.ManagerDirectory)
+    End If
+    
+    'if (ImplementManagers && string.IsNullOrEmpty(this.ManagerNamespace))
+    '    this.ManagerNamespace = this.ClassNamespace + ".Managers";
+    
+    If SourceDatabase IsNot Nothing Then
+        Me.Progress.MaximumValue = (SourceDatabase.Tables.Count + 2)
+        
+        Me.Progress.[Step] = 1
+    End If
+    
+    Dim database As Database = Dbml.FromFile(Me.DbmlFile)
+    If database Is Nothing Then
+        Throw New Exception("Error loading Dbml file.")
+    End If
+    
+    Dbml.FillInDefaults(database)
+    
+    Dim databaseManager As DataManager = ManagerGenerator.Create(SourceDatabase, database)
+    'override the default name
+    If Not String.IsNullOrEmpty(DataManagerName) Then
+        databaseManager.DataManagerName = DataManagerName
+    End If
+
+    CreateDataManagerClass(database, databaseManager)
+    CreateDataContextManagerClass(database, databaseManager)
+    CreateEntityManagerClasses(database, databaseManager)
+    
+    Me.RegisterReference(Path.GetFullPath(Path.Combine( _
+            Me.CodeTemplateInfo.DirectoryName, _
+            "..\Common\CodeSmith.Data.dll")))
+End Sub
+
+Public Sub CreateEntityManagerClasses(ByVal database As Database, ByVal dataManager As DataManager)
+    Dim t As EntityManagerGeneratedClass = Me.Create(Of EntityManagerGeneratedClass)()
+    Me.CopyPropertiesTo(t)
+    t.DataManager = dataManager
+    t.Database = database
+    t.Framework = framework
+    
+    Dim p As EntityManagerEditableClass = Me.Create(Of EntityManagerEditableClass)()
+    Me.CopyPropertiesTo(p)
+    p.ClassNamespace = Me.ManagerNamespace
+    
+    For Each manager As EntityManager In dataManager.Managers
+        Dim watch As Stopwatch = Stopwatch.StartNew()
+        
+        Dim className As String = manager.ManagerName
+        
+        Dim parentFileName As String = className + ".vb"
+        parentFileName = Path.Combine(ManagerDirectory, parentFileName)
+        
+        If Not File.Exists(parentFileName) Then
+            p.ClassName = className
+            Response.WriteLine(parentFileName)
+            p.RenderToFile(parentFileName, False)
+        End If
+        
+        Dim fileName As String = className + ".Generated.vb"
+        fileName = Path.Combine(ManagerDirectory, fileName)
+        
+        Dim table As Table = database.Tables(manager.TableName)
+        
+        Debug.WriteLine(String.Format("Creating Entity Manager Class '{0}' ...", className))
+        t.EntityManager = manager
+        t.Table = table
+        t.RenderToFile(fileName, parentFileName, True)
+        
+        Debug.WriteLine(String.Format("Created '{0}' in {1} ms.", className, watch.Elapsed.TotalMilliseconds.ToString()))
+        
+        Me.Progress.PerformStep()
+    Next
+End Sub
+
+Public Sub CreateDataManagerClass(ByVal database As Database, ByVal dataManager As DataManager)
+    Dim fileName As String = dataManager.DataManagerName + ".vb"
+    fileName = Path.Combine(ManagerDirectory, fileName)
+    
+    Dim t As DataManagerClass = Me.Create(Of DataManagerClass)()
+    Me.CopyPropertiesTo(t)
+    t.DataManager = dataManager
+    t.Database = database
+    
+    t.RenderToFile(fileName, True)
+    
+    Me.Progress.PerformStep()
+End Sub
+
+Public Sub CreateDataContextManagerClass(ByVal database As Database, ByVal dataManager As DataManager)
+    Dim fileName As String = database.[Class] + ".Manager.vb"
+    Dim parentFile As String = DataContextFile
+    
+    Dim dataFolder As String
+    
+    If String.IsNullOrEmpty(parentFile) Then
+        parentFile = Path.Combine(ManagerDirectory, database.[Class] + ".vb")
+        dataFolder = ManagerDirectory
+    Else
+        dataFolder = Path.GetDirectoryName(parentFile)
+    End If
+    
+    fileName = Path.Combine(dataFolder, fileName)
+    
+    Dim t As DataContextManagerClass = Me.Create(Of DataContextManagerClass)()
+    Me.CopyPropertiesTo(t)
+    t.DataManager = dataManager
+    t.Database = database
+    
+    t.RenderToFile(fileName, parentFile, True)
+    
+    Me.Progress.PerformStep()
+    
+End Sub
+
+</script>
+Generating Linq to Sql Entities ...
+<% Generate() %>

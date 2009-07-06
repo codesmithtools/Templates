@@ -22,9 +22,9 @@ namespace PetShop.UI
             }
         }
 
-    //    /// <summary>
-    //    /// Process the order
-    //    /// </summary>
+        /// <summary>
+        /// Process the order
+        /// </summary>
         protected void wzdCheckOut_FinishButtonClick(object sender, WizardNavigationEventArgs e)
         {
             using (var context = new PetShopDataContext())
@@ -115,9 +115,9 @@ namespace PetShop.UI
             }
         }
 
-    //    /// <summary>
-    //    /// Create CreditCardInfo object from user input
-    //    /// </summary>
+        /// <summary>
+        /// Create CreditCardInfo object from user input
+        /// </summary>
         private CreditCard GetCreditCard()
         {
             string type = WebUtility.InputText(listCCType.SelectedValue, 40);
@@ -126,9 +126,9 @@ namespace PetShop.UI
             return new CreditCard(type, number, exp);
         }
 
-    //    /// <summary>
-    //    /// Changing Wiszard steps
-    //    /// </summary>
+        /// <summary>
+        /// Changing Wiszard steps
+        /// </summary>
         protected void wzdCheckOut_ActiveStePChanged(object sender, EventArgs e)
         {
             if (wzdCheckOut.ActiveStepIndex == 3)
@@ -147,19 +147,19 @@ namespace PetShop.UI
             }
         }
 
-    //    /// <summary>
-    //    /// Handler for "Ship to Billing Addredd" checkbox.
-    //    /// Prefill/Clear shipping address form.
-    //    /// </summary>
+        /// <summary>
+        /// Handler for "Ship to Billing Addredd" checkbox.
+        /// Prefill/Clear shipping address form.
+        /// </summary>
         protected void chkShipToBilling_CheckedChanged(object sender, EventArgs e)
         {
             if (chkShipToBilling.Checked)
                 shippingForm.Address = billingForm.Address;
         }
 
-    //    /// <summary>
-    //    /// Custom validator to check CC expiration date
-    //    /// </summary>
+        /// <summary>
+        /// Custom validator to check CC expiration date
+        /// </summary>
         protected void ServerValidate(object source, ServerValidateEventArgs value)
         {
             DateTime dt;

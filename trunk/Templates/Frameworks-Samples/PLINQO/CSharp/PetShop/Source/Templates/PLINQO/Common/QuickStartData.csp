@@ -1,78 +1,79 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
-    <add key="PetShopConnectionString" value="Data Source=.\SQLEXPRESS;Database=PetShop;Integrated Security=True" />
+    <add key="$myDatabase$ConnectionString" value="$connectionString$" />
   </variables>
   <defaultProperties>
-    <property name="DbmlFile">PetShop.dbml</property>
+    <property name="DbmlFile">$myDatabase$.dbml</property>
     <property name="Framework">v35_SP1</property>
   </defaultProperties>
   <propertySets>
-    <propertySet name="DBML" template="..\..\Templates\PLINQO\CSharp\Dbml.cst">
+    <propertySet name="DBML" template="$linqToSql$$language$\Dbml.cst">
       <property name="IncludeViews">False</property>
       <property name="IncludeFunctions">False</property>
       <property name="IgnoreList">
         <stringList>
-      <string>^dbo.sysdiagrams$</string>
-      <string>^dbo.sp_</string>
-      <string>^dbo.aspnet_</string>
-      <string>^dbo.AspNet_</string>
-    </stringList>
+          <string>^dbo.sysdiagrams$</string>
+          <string>^dbo.sp_</string>
+        </stringList>
       </property>
       <property name="CleanExpression">
         <stringList>
-      <string>^\\w+_</string>
-    </stringList>
+          <string>^\\w+_</string>
+        </stringList>
       </property>
       <property name="EnumList">
         <stringList>
-      <string>(E|e)num$</string>
-    </stringList>
+          <string>(E|e)num$</string>
+        </stringList>
       </property>
       <property name="EntityBase">LinqEntityBase</property>
       <property name="IncludeDeleteOnNull">False</property>
       <property name="NameColumn">
         <stringList>
-      <string>((N|n)ame)|((T|t)ype(C|c)ode)</string>
-    </stringList>
+          <string>((N|n)ame)|((T|t)ype(C|c)ode)</string>
+        </stringList>
       </property>
       <property name="DescriptionColumm">
         <stringList>
-      <string>(D|d)esc</string>
-    </stringList>
+          <string>(D|d)esc</string>
+        </stringList>
       </property>
       <property name="NamingConventions">
         <NamingProperty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="">
-      <TableNaming>Singular</TableNaming>
-      <EntityNaming>Singular</EntityNaming>
-      <AssociationNaming>ListSuffix</AssociationNaming>
-    </NamingProperty>
+          <TableNaming>Singular</TableNaming>
+          <EntityNaming>Singular</EntityNaming>
+          <AssociationNaming>ListSuffix</AssociationNaming>
+        </NamingProperty>
       </property>
       <property name="SourceDatabase">
-        <connectionString>$(PetShopConnectionString)</connectionString>
+        <connectionString>$($myDatabase$ConnectionString)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
       </property>
-      <property name="EntityNamespace">PetShop.Core.Data</property>
-      <property name="ContextNamespace">PetShop.Core.Data</property>
+      <property name="EntityNamespace">$myContextNamespace$</property>
+      <property name="ContextNamespace">$myContextNamespace$</property>
     </propertySet>
-    <propertySet name="Entities" template="..\..\Templates\PLINQO\CSharp\Entities.cst">
+    <propertySet name="Entities" template="$linqToSql$$language$\Entities.cst">
+      <property name="AuditingEnabled">True</property>
       <property name="IncludeDataServices">True</property>
       <property name="IncludeDataRules">True</property>
-      <property name="AuditingEnabled">True</property>
       <property name="IncludeDataContract">True</property>
       <property name="AssociationNamingSuffix">ListSuffix</property>
       <property name="OutputDirectory">.\Entities</property>
       <property name="BaseDirectory">.\</property>
       <property name="ViewDirectory">.\Views</property>
     </propertySet>
-    <propertySet name="Queries" template="..\..\Templates\PLINQO\CSharp\Queries.cst">
-      <property name="QueryDirectory">.\Queries</property>
-      <property name="MethodPrefix">By</property>
+    <propertySet name="Managers" template="$linqToSql$$language$\Managers.cst">
+      <property name="ManagerDirectory">.\Managers</property>
+      <property name="MethodPrefix">GetBy</property>
       <property name="MethodKeySuffix">Key</property>
       <property name="SourceDatabase">
-        <connectionString>$(PetShopConnectionString)</connectionString>
+        <connectionString>$($myDatabase$ConnectionString)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
       </property>
+      <property name="DataContextFile">.\$myDatabase$DataContext.$languageExtension$</property>
+      <property name="DataManagerName">$myDatabase$DataManager</property>
+      <property name="ManagerNamespace">$myContextNamespace$</property>
     </propertySet>
   </propertySets>
 </codeSmith>
