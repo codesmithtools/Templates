@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Data", "PetShop.Data\PetShop.Data.csproj", "{232F6A4E-8BD6-431A-9A4B-E3F2C73953AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Data", "Source\PetShop.Data\PetShop.Data.csproj", "{232F6A4E-8BD6-431A-9A4B-E3F2C73953AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Business", "PetShop.Business\PetShop.Business.csproj", "{AC433AE0-A1DF-4D32-98C4-168D6DA1DF38}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Business", "Source\PetShop.Business\PetShop.Business.csproj", "{AC433AE0-A1DF-4D32-98C4-168D6DA1DF38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.UI", "PetShop.UI\PetShop.UI.csproj", "{A761202E-412C-4F8D-8F01-18781D9CA7B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.UI", "Source\PetShop.UI\PetShop.UI.csproj", "{A761202E-412C-4F8D-8F01-18781D9CA7B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Controls", "PetShop.Controls\PetShop.Controls.csproj", "{BF6714B1-2B59-4014-8476-744638F18362}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Controls", "Source\PetShop.Controls\PetShop.Controls.csproj", "{BF6714B1-2B59-4014-8476-744638F18362}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Test", "PetShop.Test\PetShop.Test.csproj", "{EEE780F1-F7C7-465E-82B9-FEAB8A025E17}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Test", "Source\PetShop.Test\PetShop.Test.csproj", "{EEE780F1-F7C7-465E-82B9-FEAB8A025E17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
