@@ -214,7 +214,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Templates\PLINQO\Source\CodeSmith.Data\CodeSmith.Data.csproj">
+    <ProjectReference Include="..\..\..\..\..\..\Frameworks\PLINQO\Source\CodeSmith.Data\CodeSmith.Data.csproj">
       <Project>{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}</Project>
       <Name>CodeSmith.Data</Name>
     </ProjectReference>
