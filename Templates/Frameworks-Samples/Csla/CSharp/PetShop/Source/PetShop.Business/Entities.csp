@@ -4,7 +4,7 @@
     <add key="ConnectionString1" value="Data Source=.\SQLEXPRESS;AttachDbFilename=\PetShop.UI\App_Data\PetShop.mdf;Integrated Security=True;User Instance=True" />
   </variables>
   <propertySets>
-    <propertySet name="Entities.cs" output="Entities.cs" template="\Frameworks\CodeSmith.CSLA\CSharp\BusinessLayer\Entities.cst">
+    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\Frameworks\Csla\CSharp\BusinessLayer\Entities.cst">
       <property name="CommandObject" />
       <property name="Criteria">
         <connectionString>$(ConnectionString1)</connectionString>
