@@ -216,6 +216,7 @@ namespace PLINQO.Tracker.Data
                 Task previousValue = _task.Entity;
                 if (previousValue != value || _task.HasLoadedOrAssignedValue == false)
                 {
+                    OnTaskChanging(value);
                     SendPropertyChanging("Task");
                     if (previousValue != null)
                     {
@@ -233,6 +234,7 @@ namespace PLINQO.Tracker.Data
                         _taskId = default(int);
                     }
                     SendPropertyChanged("Task");
+                    OnTaskChanged();
                 }
             }
         }
@@ -277,6 +279,12 @@ namespace PLINQO.Tracker.Data
         partial void OnRowVersionChanging(System.Data.Linq.Binary value);
         /// <summary>Called after <see cref="RowVersion"/> has Changed.</summary>
         partial void OnRowVersionChanged();
+        /// <summary>Called when <see cref="Task"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnTaskChanging(Task value);
+        /// <summary>Called after <see cref="Task"/> has Changed.</summary>
+        partial void OnTaskChanged();
+
         #endregion
 
         #region Serialization

@@ -458,6 +458,7 @@ namespace PLINQO.Tracker.Data
         partial void OnLastPasswordChangeDateChanging(Nullable<System.DateTime> value);
         /// <summary>Called after <see cref="LastPasswordChangeDate"/> has Changed.</summary>
         partial void OnLastPasswordChangeDateChanged();
+
         #endregion
 
         #region Serialization

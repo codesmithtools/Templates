@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLINQO.Mvc.UI", "Source\PLINQO.Mvc.UI\PLINQO.Mvc.UI.csproj", "{CCD7AA1F-0749-46C3-B552-97523A017C33}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLINQO.MVC.UI", "Source\PLINQO.Mvc.UI\PLINQO.MVC.UI.csproj", "{CCD7AA1F-0749-46C3-B552-97523A017C33}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLINQO.Tracker.Data", "Source\PLINQO.Tracker.Data\PLINQO.Tracker.Data.csproj", "{2DF2FB49-6A04-4FD5-80D9-C662825787E3}"
 EndProject
