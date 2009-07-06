@@ -3,7 +3,7 @@ Name: Quick Start
 Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="QuickStart.QuickStartCodeTemplate" Debug="False" Description="QuickStart for CSLA 3.6.x" CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="QuickStart.QuickStartCodeTemplate" Description="QuickStart for CSLA 3.6.x" CompilerVersion="v3.5" %>
 
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
 <%@ Register Name="Entities" Template="CSharp\BusinessLayer\Entities.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -28,7 +28,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
 <script runat="template">
 
 public override void Generate()
-{	
+{
 	// Make sure Location is FullPath
     Location = Path.GetFullPath(Location);
 
@@ -52,18 +52,18 @@ public override void Generate()
 	Entities entityCSP = this.Create<Entities>();
 	this.CopyPropertiesTo(entityCSP);
 	entityCSP.Location = Path.Combine(this.Location, this.BusinessProjectName);
-	entityCSP.SavePropertiesToXmlFile(Path.GetFullPath("Common\\Entities.csp"));
+	entityCSP.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Entities.csp"));
 	
 	DataAccess dataAccess = this.Create<DataAccess>();
 	this.CopyPropertiesTo(dataAccess);
 	dataAccess.SourceTables = SourceDatabase.Tables;
 	dataAccess.Location = Path.Combine(this.Location, this.DataProjectName);
-	dataAccess.SavePropertiesToXmlFile(Path.GetFullPath("Common\\DataAccess.csp"));
+	dataAccess.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\DataAccess.csp"));
 
     Web web = this.Create<Web>();
 	this.CopyPropertiesTo(web);
 	web.Location = Path.Combine(this.Location, this.InterfaceProjectName);
-	web.SavePropertiesToXmlFile(Path.GetFullPath("Common\\Web.csp"));
+	web.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Web.csp"));
 
 	#endregion
 
