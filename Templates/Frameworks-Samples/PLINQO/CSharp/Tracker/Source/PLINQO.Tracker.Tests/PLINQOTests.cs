@@ -23,7 +23,7 @@ namespace PLINQO.Tracker.Tests
             get;
             set;
         }
-        private int WilliamId
+        private int JamesId
         { get; set; }
 
         private int TaskId
@@ -45,12 +45,12 @@ namespace PLINQO.Tracker.Tests
             using (var context = new TrackerDataContext())
             {
                 context.UserRole.Delete(r => r.UserId == UserId);
-                context.UserRole.Delete(r => r.User.EmailAddress.EndsWith("battlestar.com") && r.UserId == UserId);
+                context.UserRole.Delete(r => r.User.EmailAddress.EndsWith("startrek.com") && r.UserId == UserId);
                 context.Audit.Delete(a => a.TaskId == TaskId || a.UserId == UserId);
                 context.Task.Delete(a => a.CreatedId == UserId || a.AssignedId == UserId);
                 context.Task.Delete(TaskId);
                 context.User.Delete(UserId);
-                context.User.Delete(u => u.EmailAddress.EndsWith("battlestar.com"));
+                context.User.Delete(u => u.EmailAddress.EndsWith("startrek.com"));
             }
         }
 
@@ -76,14 +76,14 @@ namespace PLINQO.Tracker.Tests
         {
             var user = new User()
             {
-                FirstName = "Laura",
-                LastName = "Roslin",
+                FirstName = "Spock",
+                LastName = "Sarekson",
                 PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
                 PasswordSalt = "=Unc%",
-                EmailAddress = "laura.roslin@battlestar.com",
+                EmailAddress = "spock@startrek.com",
                 IsApproved = true
             };
-            
+
             using (var context = new TrackerDataContext())
             {
                 context.User.InsertOnSubmit(user);
@@ -95,31 +95,31 @@ namespace PLINQO.Tracker.Tests
 
             users.Add(new User()
             {
-                FirstName = "William",
-                LastName = "Adama",
+                FirstName = "James",
+                LastName = "Kirk",
                 PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
                 PasswordSalt = "=Unc%",
-                EmailAddress = "william.adama@battlestar.com",
+                EmailAddress = "james.tiberius.kirk@startrek.com",
                 IsApproved = true
             });
 
             users.Add(new User()
             {
-                FirstName = "Kara",
-                LastName = "Starbuck",
+                FirstName = "Bones",
+                LastName = "McCoy",
                 PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
                 PasswordSalt = "=Unc%",
-                EmailAddress = "kara.starbuck@battlestar.com",
+                EmailAddress = "bones.mccory@startrek.com",
                 IsApproved = false
             });
 
             users.Add(new User()
             {
-                FirstName = "Saul",
-                LastName = "Tigh",
+                FirstName = "Nyota",
+                LastName = "Uhura",
                 PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
                 PasswordSalt = "=Unc%",
-                EmailAddress = "saul.tigh@battlestar.com",
+                EmailAddress = "uhura@startrek.com",
                 IsApproved = false
             });
 
@@ -129,7 +129,7 @@ namespace PLINQO.Tracker.Tests
                 LastName = "Tigh",
                 PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
                 PasswordSalt = "=Unc%",
-                EmailAddress = "ellen.tigh@battlestar.com",
+                EmailAddress = "pavel.chekov@startrek.com",
                 IsApproved = false
             });
 
@@ -137,7 +137,7 @@ namespace PLINQO.Tracker.Tests
             {
                 context.User.InsertAllOnSubmit(users);
                 context.SubmitChanges();
-                WilliamId = context.User.ByFirstName("William").ByLastName("Adama").First().Id;
+                JamesId = context.User.ByFirstName("James").ByLastName("Kirk").First().Id;
             }
         }
 
@@ -342,9 +342,9 @@ namespace PLINQO.Tracker.Tests
                 context.Log = Console.Out;
 
                 
-                context.User.Delete(WilliamId);
+                context.User.Delete(JamesId);
 
-                context.User.Delete(u => u.IsApproved == false && u.LastName != "Tigh" && u.EmailAddress.EndsWith("battlestar.com"));
+                context.User.Delete(u => u.IsApproved == false && u.LastName != "Tigh" && u.EmailAddress.EndsWith("startrek.com"));
 
                 IQueryable<User> usersToDelete = from u in context.User 
                                                  where u.IsApproved == false && u.LastName == "Tigh" 
