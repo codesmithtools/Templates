@@ -369,6 +369,28 @@ namespace PLINQO.Tracker.Data
                 }
             }
         }
+
+        private string _avatarType;
+
+        /// <summary>
+        /// Gets or sets the AvatarType column value.
+        /// </summary>
+        [System.Data.Linq.Mapping.Column(Name = "AvatarType", Storage = "_avatarType", DbType = "nvarchar(150)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
+        [System.ComponentModel.DataAnnotations.StringLength(150)]
+        [System.Runtime.Serialization.DataMember(Order = 16)]
+        public string AvatarType
+        {
+            get { return _avatarType; }
+            set
+            {
+                if (_avatarType != value)
+                {
+                    OnAvatarTypeChanging(value);
+                    _avatarType = value;
+                    OnAvatarTypeChanged();
+                }
+            }
+        }
         #endregion
 
         #region Association Mapped Properties
@@ -458,6 +480,11 @@ namespace PLINQO.Tracker.Data
         partial void OnLastPasswordChangeDateChanging(Nullable<System.DateTime> value);
         /// <summary>Called after <see cref="LastPasswordChangeDate"/> has Changed.</summary>
         partial void OnLastPasswordChangeDateChanged();
+        /// <summary>Called when <see cref="AvatarType"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnAvatarTypeChanging(string value);
+        /// <summary>Called after <see cref="AvatarType"/> has Changed.</summary>
+        partial void OnAvatarTypeChanged();
 
         #endregion
 

@@ -47,7 +47,7 @@
             </p>
             <p>
                 <label for="Comment">User Comment</label>
-                <%= Html.TextArea("Comment", Model.User.Comment)%>
+                <%= Html.TextArea("Comment", Model.User.Comment, new { @rows=10, @cols=35})%>
             </p>
             <p>
                 Created:
@@ -83,8 +83,22 @@
             </table>
         </fieldset>
 
+<% if (Model.User != null) { %>
+        <fieldset class="avatar-manage">
+            <legend>Avatar</legend>
+            <% if (Model.User.Avatar != null){ %>
+            <p><a href="/user/removeavatar/<%=Model.User.Id %>">Remove Avatar</a></p>
+            <% } %>
+            <p><img src="/user/avatar/<%=Model.User.Id %>" alt="Avatar" /></p>
+            <form action="/user/avatar" method="post" enctype="multipart/form-data">
+                <%= Html.Hidden("id", Model.User.Id)%>
+                <label for="file">Avatar File:</label>
+                <input type="file" name="file" id="file" />
+                <input type="submit" name="submit" value="Upload" />
+            </form>
+        </fieldset>
     </div>
-
+<% } %>
     
     <%if( Model.Audits.Count > 0) {%>
     <div class="audit-notes">
