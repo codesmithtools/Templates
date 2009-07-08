@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,7 +15,7 @@ using CodeSmith.Data.Rules;
 using PLINQO.Tracker.Data;
 using Data = PLINQO.Tracker.Data;
 using System.Data.Linq;
-using IMultipleResults=System.Data.Linq.IMultipleResults;
+using IMultipleResults = System.Data.Linq.IMultipleResults;
 using System.Transactions;
 
 namespace PLINQO.Mvc.UI.Controllers
@@ -85,17 +87,17 @@ namespace PLINQO.Mvc.UI.Controllers
                         using (var context = new TrackerDataContext())
                         {
                             var user = context.User.ByEmailAddress(emailAddress);
-                            TryUpdateModel(user, null, null, new string[] {"FirstName, LastName"});
+                            TryUpdateModel(user, null, null, new string[] { "FirstName, LastName" });
                             context.SubmitChanges();
                             HttpRuntime.Cache.Remove("Users");
-                            return RedirectToAction("Edit", new {id = user.Id});
+                            return RedirectToAction("Edit", new { id = user.Id });
                         }
                     }
                     else
                     {
                         ModelState.AddModelError("_FORM", UIHelper.ErrorCodeToString(createStatus));
                     }
-                    
+
                     return View();
                 }
                 else
@@ -104,7 +106,7 @@ namespace PLINQO.Mvc.UI.Controllers
                     return View();
                 }
             }
-            catch(BrokenRuleException e)
+            catch (BrokenRuleException e)
             {
                 foreach (BrokenRule rule in e.BrokenRules)
                     ModelState.AddModelError(rule.Context.Rule.TargetProperty, rule.Message);
@@ -138,7 +140,7 @@ namespace PLINQO.Mvc.UI.Controllers
         public ActionResult Get(int id)
         {
             User user = null;
-            using( var context = new TrackerDataContext())
+            using (var context = new TrackerDataContext())
             {
                 context.DeferredLoadingEnabled = false;
                 DataLoadOptions options = new DataLoadOptions();
@@ -197,7 +199,7 @@ namespace PLINQO.Mvc.UI.Controllers
 
         //
         // GET: /User/Edit/5
- 
+
         public ActionResult Edit(int id)
         {
             return View(GetData(id));
@@ -231,7 +233,7 @@ namespace PLINQO.Mvc.UI.Controllers
 
                     HttpRuntime.Cache.Remove("Users");
                 }
-                return RedirectToAction("Edit", new {id = id});
+                return RedirectToAction("Edit", new { id = id });
             }
             catch (BrokenRuleException e)
             {
@@ -242,13 +244,25 @@ namespace PLINQO.Mvc.UI.Controllers
         }
 
 
+        public ActionResult RemoveAvatar(int id)
+        {
+            using (var context = new TrackerDataContext())
+            {
+                var user = context.User.ByKey(id);
+                user.AvatarType = null;
+                user.Avatar = null;
+                context.SubmitChanges();
+            }
+            return RedirectToAction("Edit", new { id = id });
+        }
+
         public ActionResult RemoveRole(int userId, int roleId)
         {
             using (var context = new TrackerDataContext())
             {
                 context.UserRole.Delete(r => r.RoleId == roleId && r.UserId == userId);
             }
-            return RedirectToAction("Edit", new {id = userId});
+            return RedirectToAction("Edit", new { id = userId });
         }
 
         public UserViewData GetData(int userId)
@@ -266,7 +280,7 @@ namespace PLINQO.Mvc.UI.Controllers
         }
 
         public UserViewData GetData(User user)
-        {   
+        {
             var userViewData = new UserViewData();
             userViewData.User = user;
             using (var context = new TrackerDataContext())
@@ -276,5 +290,57 @@ namespace PLINQO.Mvc.UI.Controllers
             }
             return userViewData;
         }
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult Avatar(int id)
+        {
+            User user = null;
+            using (var context = new TrackerDataContext())
+            {
+                user = context.User.ByKey(id);
+                user.Detach();
+            }
+
+            if (null == user || string.IsNullOrEmpty(user.AvatarType) || null == user.Avatar || user.Avatar.Length == 0)
+                return File(Server.MapPath("/lib/images/anonymous.gif"), "image/gif");
+
+            return File(user.Avatar.ToArray(), user.AvatarType);
+        }
+
+
+        [AcceptVerbs(HttpVerbs.Post), ActionName("Avatar")]
+        public ActionResult AvatarPost(int id)
+        {
+            if (Request.Files.Count != 1)
+            {
+                using (var context = new TrackerDataContext())
+                {
+                    var user = context.User.ByKey(id);
+                    ModelState.AddModelError("file", "Must select a file to upload.");
+                    return View("Edit", GetData(user));
+                }
+            }
+
+            var file = Request.Files[0];
+            var buffer = new byte[file.ContentLength];
+            file.InputStream.Read(buffer, 0, buffer.Length);
+
+            using (var context = new TrackerDataContext())
+            {
+                var user = context.User.ByKey(id);
+                user.Avatar = new Binary(buffer);
+                user.AvatarType = file.ContentType;
+                context.SubmitChanges();
+
+                var audit = new Audit(context.LastAudit);
+                audit.User = user;
+                context.Audit.InsertOnSubmit(audit);
+                context.SubmitChanges();
+
+            }
+
+            return RedirectToAction("Edit", new { id = id });
+        }
+
     }
 }

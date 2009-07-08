@@ -58,8 +58,6 @@
             <th>Due Date</th>
             <th>Complete Date</th>
             <th>Created By</th>
-            <th>Created Date</th>
-            <th>Modified Date</th>
         </tr>
 
     <%
@@ -93,8 +91,6 @@
                                              ? item.CompleteDate.Value.ToShortDateString()
                                              : "None"))%></td>
             <td><%=Html.Encode(item.CreatedUser.FirstName + " " + item.CreatedUser.LastName)%></td>
-            <td><%=Html.Encode(String.Format("{0:g}", item.CreatedDate.ToShortDateString()))%></td>
-            <td><%=Html.Encode(String.Format("{0:g}", item.ModifiedDate))%></td>
         </tr>
     
     <%

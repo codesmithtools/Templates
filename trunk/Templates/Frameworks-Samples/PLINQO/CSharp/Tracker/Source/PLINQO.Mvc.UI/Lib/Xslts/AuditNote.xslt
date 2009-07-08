@@ -27,11 +27,14 @@
           <xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp; </xsl:text>
           <xsl:value-of select="@name" />
           <xsl:choose>
-            <xsl:when test="../@action='Update'">
+            <xsl:when test="../@action='Update' and @type != 'System.Data.Linq.Binary'">
               <xsl:text> changed from </xsl:text>
               <xsl:value-of select="a:original" />
               <xsl:text> to </xsl:text>
               <xsl:value-of select="a:current" />
+            </xsl:when>
+            <xsl:when test="../@action='Update' and @type = 'System.Data.Linq.Binary'">
+              <xsl:text> was updated </xsl:text>
             </xsl:when>
             <xsl:when test="../@action='Delete'">
               <xsl:text> was </xsl:text>

@@ -141,6 +141,14 @@ namespace PLINQO.Tracker.Data
         {
             return queryable.Where(u => object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate));
         }
+        
+        /// <summary>
+        /// Gets a query for <see cref="User.AvatarType"/>.
+        /// </summary>
+        public static IQueryable<PLINQO.Tracker.Data.User> ByAvatarType(this IQueryable<PLINQO.Tracker.Data.User> queryable, string avatarType)
+        {
+            return queryable.Where(u => object.Equals(u.AvatarType, avatarType));
+        }
 
         #region Query
         /// <summary>

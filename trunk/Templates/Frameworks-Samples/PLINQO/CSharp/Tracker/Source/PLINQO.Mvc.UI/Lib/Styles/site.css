@@ -95,7 +95,7 @@ page width. Or, you can specify an exact pixel width. */
     width: 90%;
     margin-left: auto;
     margin-right: auto;
-        min-width: 1024px;
+    min-width: 900px;
 }
 
 #header
@@ -198,6 +198,7 @@ fieldset
     margin: 1em 0;
     padding: 1em;
     border: 1px solid #CCC;
+    display: block;
 }
 
 fieldset p 
@@ -339,6 +340,7 @@ div#title
 #user-edit
 {
     overflow: hidden;
+    width: 800px;
 }
 
 #edit-form
@@ -382,4 +384,9 @@ th
 .hide
 {
     display:none;
+}
+
+.avatar-manage
+{
+    width:320px;
 }
