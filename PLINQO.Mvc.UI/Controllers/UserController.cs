@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -276,5 +278,44 @@ namespace PLINQO.Mvc.UI.Controllers
             }
             return userViewData;
         }
+
+        public ActionResult Avatar()
+        {
+            var user = UIHelper.GetCurrentUser();
+
+            if (string.IsNullOrEmpty(user.AvatarType) || user.Avatar.Length == 0)
+                return File(Server.MapPath("Lib/Images/anonymous.gif"), "image/gif");
+                
+            return File(user.Avatar.ToArray(), user.AvatarType);
+        }
+
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Avatar(int id)
+        {
+            var user = UIHelper.GetCurrentUser();
+
+            if (Request.Files.Count != 1)
+            {
+                ModelState.AddModelError("file", "Must select a file to upload.");
+                return View("Edit", GetData(user));
+            }
+
+            var file = Request.Files[0];
+            var buffer = new byte[file.ContentLength];
+            file.InputStream.Read(buffer, 0, buffer.Length);
+
+            using (var context = new TrackerDataContext())
+            {
+                context.User.Attach(user);
+                user.Avatar = new Binary(buffer);
+                user.AvatarType = file.ContentType;
+
+                context.SubmitChanges(RefreshMode.KeepChanges);
+            }
+
+            return RedirectToAction("Edit", new {id = id});          
+        }
+
     }
 }

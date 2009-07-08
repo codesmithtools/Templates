@@ -59,7 +59,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         public static IQueryable<PLINQO.Tracker.Data.User> ByFirstName(this IQueryable<PLINQO.Tracker.Data.User> queryable, string firstName)
         {
-            return queryable.Where(u => u.FirstName == firstName);
+            return queryable.Where(u => object.Equals(u.FirstName, firstName));
         }
         
         /// <summary>
@@ -67,7 +67,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         public static IQueryable<PLINQO.Tracker.Data.User> ByLastName(this IQueryable<PLINQO.Tracker.Data.User> queryable, string lastName)
         {
-            return queryable.Where(u => u.LastName == lastName);
+            return queryable.Where(u => object.Equals(u.LastName, lastName));
         }
         
         /// <summary>
@@ -107,7 +107,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         public static IQueryable<PLINQO.Tracker.Data.User> ByComment(this IQueryable<PLINQO.Tracker.Data.User> queryable, string comment)
         {
-            return queryable.Where(u => u.Comment == comment);
+            return queryable.Where(u => object.Equals(u.Comment, comment));
         }
         
         /// <summary>
@@ -121,9 +121,9 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.LastLoginDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByLastLoginDate(this IQueryable<PLINQO.Tracker.Data.User> queryable, Nullable<System.DateTime> lastLoginDate)
+        public static IQueryable<PLINQO.Tracker.Data.User> ByLastLoginDate(this IQueryable<PLINQO.Tracker.Data.User> queryable, System.DateTime? lastLoginDate)
         {
-            return queryable.Where(u => u.LastLoginDate == lastLoginDate);
+            return queryable.Where(u => object.Equals(u.LastLoginDate, lastLoginDate));
         }
         
         /// <summary>
@@ -137,9 +137,17 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.LastPasswordChangeDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByLastPasswordChangeDate(this IQueryable<PLINQO.Tracker.Data.User> queryable, Nullable<System.DateTime> lastPasswordChangeDate)
+        public static IQueryable<PLINQO.Tracker.Data.User> ByLastPasswordChangeDate(this IQueryable<PLINQO.Tracker.Data.User> queryable, System.DateTime? lastPasswordChangeDate)
         {
-            return queryable.Where(u => u.LastPasswordChangeDate == lastPasswordChangeDate);
+            return queryable.Where(u => object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate));
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="User.AvatarType"/>.
+        /// </summary>
+        public static IQueryable<PLINQO.Tracker.Data.User> ByAvatarType(this IQueryable<PLINQO.Tracker.Data.User> queryable, string avatarType)
+        {
+            return queryable.Where(u => object.Equals(u.AvatarType, avatarType));
         }
 
         #region Query

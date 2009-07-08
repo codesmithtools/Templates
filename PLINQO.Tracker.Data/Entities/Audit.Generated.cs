@@ -266,6 +266,7 @@ namespace PLINQO.Tracker.Data
                 Task previousValue = _task.Entity;
                 if (previousValue != value || _task.HasLoadedOrAssignedValue == false)
                 {
+                    OnTaskChanging(value);
                     SendPropertyChanging("Task");
                     if (previousValue != null)
                     {
@@ -283,6 +284,7 @@ namespace PLINQO.Tracker.Data
                         _taskId = default(int);
                     }
                     SendPropertyChanged("Task");
+                    OnTaskChanged();
                 }
             }
         }
@@ -302,6 +304,7 @@ namespace PLINQO.Tracker.Data
                 User previousValue = _user.Entity;
                 if (previousValue != value || _user.HasLoadedOrAssignedValue == false)
                 {
+                    OnUserChanging(value);
                     SendPropertyChanging("User");
                     if (previousValue != null)
                     {
@@ -319,6 +322,7 @@ namespace PLINQO.Tracker.Data
                         _userId = default(int);
                     }
                     SendPropertyChanged("User");
+                    OnUserChanged();
                 }
             }
         }
@@ -373,6 +377,17 @@ namespace PLINQO.Tracker.Data
         partial void OnTaskIdChanging(Nullable<int> value);
         /// <summary>Called after <see cref="TaskId"/> has Changed.</summary>
         partial void OnTaskIdChanged();
+        /// <summary>Called when <see cref="Task"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnTaskChanging(Task value);
+        /// <summary>Called after <see cref="Task"/> has Changed.</summary>
+        partial void OnTaskChanged();
+        /// <summary>Called when <see cref="User"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnUserChanging(User value);
+        /// <summary>Called after <see cref="User"/> has Changed.</summary>
+        partial void OnUserChanged();
+
         #endregion
 
         #region Serialization

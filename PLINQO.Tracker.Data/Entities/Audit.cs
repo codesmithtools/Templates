@@ -29,7 +29,7 @@ namespace PLINQO.Tracker.Data
 
         #region Metadata
 
-        private class Metadata
+        internal class Metadata
         {
             // Only Attributes in the class will be preserved.
 

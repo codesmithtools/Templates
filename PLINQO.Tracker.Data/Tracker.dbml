@@ -89,6 +89,7 @@
       <Column Name="LastLoginDate" Storage="_lastLoginDate" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
       <Column Name="LastActivityDate" Storage="_lastActivityDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="LastPasswordChangeDate" Storage="_lastPasswordChangeDate" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
+      <Column Name="AvatarType" Storage="_avatarType" Type="System.String" DbType="nvarchar(150)" CanBeNull="true" />
       <Association Name="User_Task" Member="AssignedTaskList" Storage="_assignedTaskList" OtherKey="AssignedId" Type="Task" />
       <Association Name="User_Task1" Member="CreatedTaskList" Storage="_createdTaskList" OtherKey="CreatedId" Type="Task" />
       <Association Name="User_UserRole" Member="UserRoleList" Storage="_userRoleList" OtherKey="UserId" Type="UserRole" />
@@ -120,6 +121,7 @@
       <Column Name="LastLoginDate" Storage="_lastLoginDate" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
       <Column Name="LastActivityDate" Storage="_lastActivityDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="LastPasswordChangeDate" Storage="_lastPasswordChangeDate" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
+      <Column Name="AvatarType" Storage="_avatarType" Type="System.String" DbType="nvarchar(150)" CanBeNull="true" />
     </ElementType>
     <ElementType Name="GetUsersWithRolesResult2">
       <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
