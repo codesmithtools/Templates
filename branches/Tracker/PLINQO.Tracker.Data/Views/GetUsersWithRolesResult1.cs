@@ -19,7 +19,7 @@ namespace PLINQO.Tracker.Data
         #region Metadata
 
         [CodeSmith.Data.Audit.Audit]
-        private class Metadata
+        internal class Metadata
         {
             // Only Attributes in the class will be preserved.
 
@@ -62,6 +62,8 @@ namespace PLINQO.Tracker.Data
             public System.DateTime LastActivityDate { get; set; }
 
             public System.DateTime LastPasswordChangeDate { get; set; }
+
+            public string AvatarType { get; set; }
 
         }
 

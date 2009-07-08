@@ -83,6 +83,16 @@
             </table>
         </fieldset>
 
+        <fieldset id="avatar-manage">
+            <legend>Avatar</legend>
+            <p><img src="/user/avatar" alt="Avatar" /></p>
+            <form action="/user/avatar" method="post" enctype="multipart/form-data">
+                <%= Html.Hidden("id", Model.User.Id)%>
+                <label for="file">Avatar File:</label>
+                <input type="file" name="file" id="file" />
+                <input type="submit" name="submit" value="Upload" />
+            </form>
+        </fieldset>
     </div>
 
     
