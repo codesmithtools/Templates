@@ -31,9 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CodeSmith.Data, Version=3.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libraries\CodeSmith.Data.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -163,10 +167,6 @@
     <None Include="Lib\Images\Thumbs.db" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\..\Frameworks\PLINQO\Source\CodeSmith.Data\CodeSmith.Data.csproj">
-      <Project>{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}</Project>
-      <Name>CodeSmith.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PLINQO.Tracker.Data\PLINQO.Tracker.Data.csproj">
       <Project>{2DF2FB49-6A04-4FD5-80D9-C662825787E3}</Project>
       <Name>PLINQO.Tracker.Data</Name>
