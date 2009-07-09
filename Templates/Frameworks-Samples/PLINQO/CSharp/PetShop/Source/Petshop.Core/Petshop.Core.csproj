@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="CodeSmith.Data, Version=3.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libraries\CodeSmith.Data.dll</HintPath>
+      <HintPath>..\..\Libraries\CodeSmith.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">

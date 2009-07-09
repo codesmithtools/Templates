@@ -7,6 +7,8 @@ using CodeSmith.Data.Rules;
 using NUnit.Framework;
 using PLINQO.Tracker.Data;
 using System.Data.Linq;
+using CodeSmith.Data.Linq;  
+using System.Web.Caching;
 
 namespace PLINQO.Tracker.Tests
 {
@@ -18,7 +20,7 @@ namespace PLINQO.Tracker.Tests
         private const int STATUS_NOT_STARTED = 1;
         private const int STATUS_DONE = 6;
         private const int ROLE_MANAGER = 2;
-        private int UserId
+        private int SpockId
         {
             get;
             set;
@@ -36,7 +38,7 @@ namespace PLINQO.Tracker.Tests
         public void Setup()
         {
             CreateUsers();
-            CreateTask(UserId);
+            CreateTask(SpockId);
         }
 
         [TearDown]
@@ -44,12 +46,12 @@ namespace PLINQO.Tracker.Tests
         {
             using (var context = new TrackerDataContext())
             {
-                context.UserRole.Delete(r => r.UserId == UserId);
-                context.UserRole.Delete(r => r.User.EmailAddress.EndsWith("startrek.com") && r.UserId == UserId);
-                context.Audit.Delete(a => a.TaskId == TaskId || a.UserId == UserId);
-                context.Task.Delete(a => a.CreatedId == UserId || a.AssignedId == UserId);
+                context.UserRole.Delete(r => r.UserId == SpockId);
+                context.UserRole.Delete(r => r.User.EmailAddress.EndsWith("startrek.com") && r.UserId == SpockId);
+                context.Audit.Delete(a => a.TaskId == TaskId || a.UserId == SpockId);
+                context.Task.Delete(a => a.CreatedId == SpockId || a.AssignedId == SpockId);
                 context.Task.Delete(TaskId);
-                context.User.Delete(UserId);
+                context.User.Delete(SpockId);
                 context.User.Delete(u => u.EmailAddress.EndsWith("startrek.com"));
             }
         }
@@ -88,7 +90,7 @@ namespace PLINQO.Tracker.Tests
             {
                 context.User.InsertOnSubmit(user);
                 context.SubmitChanges();
-                UserId = user.Id;
+                SpockId = user.Id;
             }
 
             var users = new List<User>();
@@ -150,8 +152,8 @@ namespace PLINQO.Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                Task task = context.Manager.Task.GetByKey(UserId);
-                IQueryable<Task> tasks = context.Manager.Task.GetByAssignedIdStatusId(UserId, STATUS_NOT_STARTED);
+                Task task = context.Manager.Task.GetByKey(SpockId);
+                IQueryable<Task> tasks = context.Manager.Task.GetByAssignedIdStatusId(SpockId, STATUS_NOT_STARTED);
                 List<Task> taskList = tasks.ToList();
             }
 
@@ -159,8 +161,8 @@ namespace PLINQO.Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                Task task = context.Task.ByKey(UserId);
-                IQueryable<Task> tasks = context.Task.ByAssignedId(UserId).ByStatusId(STATUS_NOT_STARTED);
+                Task task = context.Task.ByKey(SpockId);
+                IQueryable<Task> tasks = context.Task.ByAssignedId(SpockId).ByStatusId(STATUS_NOT_STARTED);
                 List<Task> taskList = tasks.ToList();
             }
         }
@@ -172,7 +174,7 @@ namespace PLINQO.Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                User u = context.User.ByKey(UserId);
+                User u = context.User.ByKey(SpockId);
                 Role r = context.Role.ByName("Manager").First();
                 u.RoleList.Add(r);
                 context.SubmitChanges();
@@ -199,16 +201,16 @@ namespace PLINQO.Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                var user = context.User.ByKey(UserId);
-                user.Comment = "Vote Baltar and move to New Caprica";
+                var user = context.User.ByKey(SpockId);
+                user.Comment = "I love my mom, but I hate Winona Ryder.";
 
                 var task = new Task()
                 {
-                    AssignedId = UserId,
-                    CreatedId = UserId,
+                    AssignedId = SpockId,
+                    CreatedId = SpockId,
                     StatusId = STATUS_NOT_STARTED,
                     PriorityId = Priority.High,
-                    Summary = "Rig the election"
+                    Summary = "Punch Kirk in the face!"
                 };
                 context.Task.InsertOnSubmit(task);
                 context.SubmitChanges();
@@ -227,6 +229,7 @@ namespace PLINQO.Tracker.Tests
                     context.Log = Console.Out;
 
                     User user = new User();
+                    user.EmailAddress = "spock@startrek.com";
                     context.User.InsertOnSubmit(user);
                     context.SubmitChanges();
                 }
@@ -236,7 +239,7 @@ namespace PLINQO.Tracker.Tests
                 brokenRules = e.BrokenRules.Count;
                 Console.Write(e.ToString());
             }
-            Assert.AreEqual(brokenRules, 4);
+            Assert.AreEqual(brokenRules, 5);
         }
 
         [Test]
@@ -316,6 +319,22 @@ namespace PLINQO.Tracker.Tests
         }
 
         [Test]
+        public void Test_Query_Result_Cache()
+        {
+            using (var context = new TrackerDataContext())
+            {
+                //By default, the cached results use a one minute sliding expiration with
+                //no absolute expiration.
+                var tasks = context.Task.ByAssignedId(SpockId).FromCache();
+                var cachedTasks = context.Task.ByAssignedId(SpockId).FromCache();
+
+                //query result is now cached 300 seconds
+                var approvedUsers = context.User.ByIsApproved(true).FromCache(300);
+                var cachedApprovedUsers = context.User.ByIsApproved(true).FromCache(300);
+            }
+        }
+
+        [Test]
         public void Test_Batch_Update()
         {
             using (var context = new TrackerDataContext())
@@ -344,10 +363,10 @@ namespace PLINQO.Tracker.Tests
                 
                 context.User.Delete(JamesId);
 
-                context.User.Delete(u => u.IsApproved == false && u.LastName != "Tigh" && u.EmailAddress.EndsWith("startrek.com"));
+                context.User.Delete(u => u.IsApproved == false && u.LastName != "McCoy" && u.EmailAddress.EndsWith("startrek.com"));
 
-                IQueryable<User> usersToDelete = from u in context.User 
-                                                 where u.IsApproved == false && u.LastName == "Tigh" 
+                IQueryable<User> usersToDelete = from u in context.User
+                                                 where u.IsApproved == false && u.LastName == "McCoy" 
                                                  select u;
                 context.User.Delete(usersToDelete);
             }
@@ -387,5 +406,6 @@ namespace PLINQO.Tracker.Tests
             }
         }
 
+        
     }
 }
