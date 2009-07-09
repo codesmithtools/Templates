@@ -1,7 +1,7 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<PLINQO.Tracker.Data.User>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
-	ViewPage1
+	User Details
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -48,6 +48,10 @@
             </tr>
             <% } %>
         </table>
+    </fieldset>
+    <fieldset class="avatar-manage">
+        <legend>Avatar</legend>
+        <p><img src="/user/avatar/<%=Model.Id %>" alt="Avatar" /></p>
     </fieldset>
     </div>
     <p>
