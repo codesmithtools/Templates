@@ -12,9 +12,6 @@ namespace PetShop.UI.Controls
         /// </summary>
         protected void Page_PreRender(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(Page.User.Identity.Name))
-                Response.Redirect("~/SignIn.aspx");
-
             if (!IsPostBack)
             {
                 BindCart();
@@ -26,20 +23,18 @@ namespace PetShop.UI.Controls
         /// </summary>
         private void BindCart()
         {
-            Profile profile = Profile.GetProfile(Page.User.Identity.Name);
-            if (!string.IsNullOrEmpty(profile.Username))
+            Profile profile = ProfileManager.Instance.GetCurrentUser(Page.User.Identity.Name);
+
+            Business.CartList wishList = profile.WishList;
+            if (wishList.Count > 0)
             {
-                Business.CartList wishList = profile.WishList;
-                if (wishList.Count > 0)
-                {
-                    repWishList.DataSource = wishList;
-                    repWishList.DataBind();
-                }
-                else
-                {
-                    repWishList.Visible = false;
-                    lblMsg.Text = "Your wish list is empty.";
-                }
+                repWishList.DataSource = wishList;
+                repWishList.DataBind();
+            }
+            else
+            {
+                repWishList.Visible = false;
+                lblMsg.Text = "Your wish list is empty.";
             }
         }
 
@@ -48,22 +43,20 @@ namespace PetShop.UI.Controls
         /// </summary>
         protected void CartItem_Command(object sender, CommandEventArgs e)
         {
-            Profile profile = Profile.GetProfile(Page.User.Identity.Name);
-            if (!string.IsNullOrEmpty(profile.Username))
-            {
-                switch (e.CommandName)
-                {
-                    case "Del":
-                        profile.WishList.Remove(e.CommandArgument.ToString());
-                        break;
-                    case "Move":
-                        profile.WishList.Remove(e.CommandArgument.ToString());
-                        profile.ShoppingCart.Add(e.CommandArgument.ToString(), profile.UniqueID, true);
-                        break;
-                }
+            Profile profile = ProfileManager.Instance.GetCurrentUser(Page.User.Identity.Name);
 
-                profile = profile.Save();
+            switch (e.CommandName)
+            {
+                case "Del":
+                    profile.WishList.Remove(e.CommandArgument.ToString());
+                    break;
+                case "Move":
+                    profile.WishList.Remove(e.CommandArgument.ToString());
+                    profile.ShoppingCart.Add(e.CommandArgument.ToString(), profile.UniqueID, true);
+                    break;
             }
+
+            profile = profile.Save();
 
             BindCart();
         }

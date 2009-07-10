@@ -4,7 +4,7 @@
     <add key="ConnectionString1" value="Data Source=.\SQLEXPRESS;AttachDbFilename=\PetShop.UI\App_Data\PetShop.mdf;Integrated Security=True;User Instance=True" />
   </variables>
   <propertySets>
-    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\Frameworks\Csla\CSharp\BusinessLayer\Entities.cst">
+    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Entities.cst">
       <property name="CommandObject" />
       <property name="Criteria">
         <connectionString>$(ConnectionString1)</connectionString>
@@ -143,6 +143,10 @@
         <owner>dbo</owner>
         <name>LineItem</name>
       </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Profiles</name>
+      </table>
     </tableList>
       </property>
       <property name="EditableChildList">
@@ -183,7 +187,7 @@
       </property>
       <property name="LaunchVisualStudio">True</property>
       <property name="Language">CSharp</property>
-      <property name="Location">A:\CodeSmith\Experimental\CSLA-PetShop-Sample\PetShop.Business</property>
+      <property name="Location">\</property>
       <property name="SolutionName">PetShop</property>
       <property name="BusinessProjectName">PetShop.Business</property>
       <property name="UseMemberVariables">False</property>
@@ -193,7 +197,6 @@
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
-      <property name="NameValueList" />
     </propertySet>
   </propertySets>
 </codeSmith>

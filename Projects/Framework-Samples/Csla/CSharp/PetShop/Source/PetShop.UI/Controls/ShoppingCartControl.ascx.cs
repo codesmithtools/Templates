@@ -14,9 +14,6 @@ namespace PetShop.UI.Controls
         /// </summary>
         protected void Page_PreRender(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(Page.User.Identity.Name))
-                Response.Redirect("~/SignIn.aspx");
-
             if (!IsPostBack)
             {
                 BindCart();
@@ -28,23 +25,21 @@ namespace PetShop.UI.Controls
         /// </summary>
         private void BindCart()
         {
-            Profile profile = Profile.GetProfile(Page.User.Identity.Name);
-            if (!string.IsNullOrEmpty(profile.Username))
+            Profile profile = ProfileManager.Instance.GetCurrentUser(Page.User.Identity.Name);
+            
+            Business.CartList items = profile.ShoppingCart;
+            if (items.Count > 0)
             {
-                Business.CartList items = profile.ShoppingCart;
-                if (items.Count > 0)
-                {
-                    repShoppingCart.DataSource = items;
-                    repShoppingCart.DataBind();
-                    PrintTotal();
-                    plhTotal.Visible = true;
-                }
-                else
-                {
-                    repShoppingCart.Visible = false;
-                    plhTotal.Visible = false;
-                    lblMsg.Text = "Your cart is empty.";
-                }
+                repShoppingCart.DataSource = items;
+                repShoppingCart.DataBind();
+                PrintTotal();
+                plhTotal.Visible = true;
+            }
+            else
+            {
+                repShoppingCart.Visible = false;
+                plhTotal.Visible = false;
+                lblMsg.Text = "Your cart is empty.";
             }
         }
 
@@ -53,12 +48,9 @@ namespace PetShop.UI.Controls
         /// </summary>
         private void PrintTotal()
         {
-            Profile profile = Profile.GetProfile(Page.User.Identity.Name);
-            if (!string.IsNullOrEmpty(profile.Username))
-            {
-                if (profile.ShoppingCart.Count > 0)
-                    ltlTotal.Text = profile.ShoppingCart.Total.ToString("c");
-            }
+            Profile profile = ProfileManager.Instance.GetCurrentUser(Page.User.Identity.Name);
+            if (profile.ShoppingCart.Count > 0)
+                ltlTotal.Text = profile.ShoppingCart.Total.ToString("c");
         }
 
         /// <summary>
@@ -66,28 +58,25 @@ namespace PetShop.UI.Controls
         /// </summary>
         protected void BtnTotal_Click(object sender, ImageClickEventArgs e)
         {
-            Profile profile = Profile.GetProfile(Page.User.Identity.Name);
-            if (!string.IsNullOrEmpty(profile.Username))
+            Profile profile = ProfileManager.Instance.GetCurrentUser(Page.User.Identity.Name);
+            
+            foreach (RepeaterItem row in repShoppingCart.Items)
             {
-                TextBox txtQuantity;
-                ImageButton btnDelete;
-                int qty = 0;
-                foreach (RepeaterItem row in repShoppingCart.Items)
+                TextBox txtQuantity = (TextBox) row.FindControl("txtQuantity");
+                ImageButton btnDelete = (ImageButton) row.FindControl("btnDelete");
+                
+                int quantity;
+                if (int.TryParse(WebUtility.InputText(txtQuantity.Text, 10), out quantity))
                 {
-                    txtQuantity = (TextBox) row.FindControl("txtQuantity");
-                    btnDelete = (ImageButton) row.FindControl("btnDelete");
-                    if (int.TryParse(WebUtility.InputText(txtQuantity.Text, 10), out qty))
-                    {
 
-                        if (qty > 0)
-                            profile.ShoppingCart.SetQuantity(btnDelete.CommandArgument, qty);
-                        else if (qty == 0)
-                            profile.ShoppingCart.Remove(btnDelete.CommandArgument);
-                    }
+                    if (quantity > 0)
+                        profile.ShoppingCart.SetQuantity(btnDelete.CommandArgument, quantity);
+                    else if (quantity == 0)
+                        profile.ShoppingCart.Remove(btnDelete.CommandArgument);
                 }
-
-                profile = profile.Save(true);
             }
+
+            profile = profile.Save(true);
 
             BindCart();
         }
@@ -97,23 +86,20 @@ namespace PetShop.UI.Controls
         /// </summary>
         protected void CartItem_Command(object sender, CommandEventArgs e)
         {
-            Profile profile = Profile.GetProfile(Page.User.Identity.Name);
-            if (!string.IsNullOrEmpty(profile.Username))
+            Profile profile = ProfileManager.Instance.GetCurrentUser(Page.User.Identity.Name);
+            switch (e.CommandName)
             {
-                switch (e.CommandName)
-                {
-                    case "Del":
-                        profile.ShoppingCart.Remove(e.CommandArgument.ToString());
-                        break;
-                    case "Move":
-                        profile.ShoppingCart.Remove(e.CommandArgument.ToString());
-                        profile.WishList.Add(e.CommandArgument.ToString(), profile.UniqueID, false);
-                        break;
-                }
-
-                profile = profile.Save(true);
+                case "Del":
+                    profile.ShoppingCart.Remove(e.CommandArgument.ToString());
+                    break;
+                case "Move":
+                    profile.ShoppingCart.Remove(e.CommandArgument.ToString());
+                    profile.WishList.Add(e.CommandArgument.ToString(), profile.UniqueID, false);
+                    break;
             }
 
+            profile = profile.Save(true);
+         
             BindCart();
         }
     }

@@ -36,12 +36,14 @@
       <HintPath>..\..\Libraries\Csla\Csla.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -94,6 +96,13 @@
     </Compile>
     <Compile Include="Collections\ProductList.Generated.cs">
       <DependentUpon>ProductList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\ProfileList.cs" />
+    <Compile Include="Collections\ProfileList.DataAccess.cs">
+      <DependentUpon>ProfileList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\ProfileList.Generated.cs">
+      <DependentUpon>ProfileList.cs</DependentUpon>
     </Compile>
     <Compile Include="CreditCard.cs" />
     <Compile Include="Criteria\AccountCriteria.cs" />
@@ -217,6 +226,8 @@
     <Compile Include="Entities\Supplier.Generated.cs">
       <DependentUpon>Supplier.cs</DependentUpon>
     </Compile>
+    <Compile Include="PetShopProfileProvider.cs" />
+    <Compile Include="ProfileManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

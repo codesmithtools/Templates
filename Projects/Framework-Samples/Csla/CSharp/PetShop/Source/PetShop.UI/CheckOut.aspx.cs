@@ -10,9 +10,14 @@ namespace PetShop.UI
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            Profile profile = ProfileManager.Instance.GetCurrentUser(Page.User.Identity.Name);
+            if(profile.IsAnonymous.Value)
+            {
+                Response.Redirect("~/SignIn.aspx");
+            }
+
             if (billingForm.Address == null)
             {
-                Profile profile = Profile.GetProfile(User.Identity.Name);
                 billingForm.Address = new Address(profile);
             }
         }
@@ -22,7 +27,7 @@ namespace PetShop.UI
         /// </summary>
         protected void wzdCheckOut_FinishButtonClick(object sender, WizardNavigationEventArgs e)
         {
-            Profile profile = Profile.GetProfile(User.Identity.Name);
+            Profile profile = ProfileManager.Instance.GetCurrentUser(Page.User.Identity.Name);
             if (profile.ShoppingCart.Count > 0)
             {
                 // display ordered items
@@ -86,6 +91,14 @@ namespace PetShop.UI
                     }
 
                     inventory.Qty -= cart.Quantity;
+
+                    #region Reset the Inventory back to 10,000
+
+                    if (inventory.Qty < 0)
+                        inventory.Qty = 10000;
+
+                    #endregion
+
                     inventory.Save();
                 }
 
@@ -129,7 +142,7 @@ namespace PetShop.UI
                 billingConfirm.Address = billingForm.Address;
                 shippingConfirm.Address = shippingForm.Address;
 
-                Profile profile = Profile.GetProfile(User.Identity.Name);
+                Profile profile = ProfileManager.Instance.GetCurrentUser(Page.User.Identity.Name);
                 ltlTotal.Text = profile.ShoppingCart.Total.ToString("c");
 
                 if (txtCCNumber.Text.Length > 4)
