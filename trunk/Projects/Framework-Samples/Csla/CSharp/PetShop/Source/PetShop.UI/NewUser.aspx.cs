@@ -11,19 +11,9 @@ namespace PetShop.UI
 
         protected void CreateUserWizard1_CreatedUser(object sender, EventArgs e)
         {
-            string userName = ((System.Web.UI.WebControls.CreateUserWizard)sender).UserName;
-            Profile profile = Profile.GetProfile(userName);
-            if (string.IsNullOrEmpty(profile.Username))
-            {
-                profile = Profile.NewProfile();
-                profile.Username = userName;
-                profile.ApplicationName = ".NET Pet Shop 4.0";
-                profile.IsAnonymous = !User.Identity.IsAuthenticated;
-                profile.LastActivityDate = DateTime.Now;
-                profile.LastUpdatedDate = DateTime.Now;
+            string username = ((System.Web.UI.WebControls.CreateUserWizard) sender).UserName;
 
-                profile = profile.Save();
-            }
+            ProfileManager.Instance.CreateUser(username, false);
         }
     }
 }

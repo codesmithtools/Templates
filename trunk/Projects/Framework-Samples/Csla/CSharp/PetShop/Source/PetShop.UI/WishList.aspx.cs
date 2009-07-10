@@ -12,12 +12,9 @@ namespace PetShop.UI
                 string itemId = Request.QueryString["addItem"];
                 if (!string.IsNullOrEmpty(itemId))
                 {
-                    Profile profile = Profile.GetProfile(Page.User.Identity.Name);
-                    if (!string.IsNullOrEmpty(profile.Username))
-                    {
-                        profile.WishList.Add(itemId, profile.UniqueID, false);
-                        profile = profile.Save();
-                    }
+                    Profile profile = ProfileManager.Instance.GetCurrentUser(Page.User.Identity.Name);
+                    profile.WishList.Add(itemId, profile.UniqueID, false);
+                    profile = profile.Save();
 
                     // Redirect to prevent duplictations in the wish list if user hits "Refresh"
                     Response.Redirect("~/WishList.aspx", true);

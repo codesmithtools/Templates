@@ -1,36 +1,41 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Web.Profile;
+using System.Web.Security;
+using PetShop.Business;
+
+using PB = PetShop.Business;
+using ProfileManager=System.Web.Profile.ProfileManager;
 
 namespace PetShop.UI
 {
     public class Global : System.Web.HttpApplication
     {
-        //// Carry over profile property values from an anonymous to an authenticated state 
-        //protected void Profile_MigrateAnonymous(Object sender, ProfileMigrateEventArgs e)
-        //{
-        //    int uniqueID;
-        //    if(int.TryParse(e.AnonymousID, out uniqueID) == false)
-        //    {
-        //        return;
-        //    }
+        // Carry over profile property values from an anonymous to an authenticated state 
+        protected void Profile_MigrateAnonymous(Object sender, ProfileMigrateEventArgs e)
+        {
+            Profile anonymousProfile = PB.ProfileManager.Instance.GetAnonymousUser();
+            Profile profile = PB.ProfileManager.Instance.GetCurrentUser(e.Context.User.Identity.Name);
 
-        //    Profile profile = Profile.GetProfile(uniqueID);
+            //Merge anonymous shopping cart items to the authenticated shopping cart items
+            foreach (Cart item in anonymousProfile.ShoppingCart)
+                profile.ShoppingCart.Add(item.ItemId, profile.UniqueID, true, item.Quantity);
 
-        //    // Merge anonymous shopping cart items to the authenticated shopping cart items
-        //    foreach (CartItemInfo cartItem in profile.CartMember. .CartItems)
-        //        Profile.ShoppingCart.Add(cartItem);
+            //Merge anonymous wishlist items to the authenticated wishlist items
+            foreach (Cart item in anonymousProfile.WishList)
+                profile.WishList.Add(item.ItemId, profile.UniqueID, false, item.Quantity);
 
-        //    // Merge anonymous wishlist items to the authenticated wishlist items
-        //    foreach (CartItemInfo cartItem in profile.WishList.CartItems)
-        //        Profile.WishList.Add(cartItem);
+            profile = profile.Save();
 
-        //    // Clean up anonymous profile
-        //    ProfileManager.DeleteProfile(e.AnonymousID);
-        //    AnonymousIdentificationModule.ClearAnonymousIdentifier();
+            // Clean up anonymous profile
+            ProfileManager.DeleteProfile(e.AnonymousID);
+            AnonymousIdentificationModule.ClearAnonymousIdentifier();
 
-        //    // Save profile
-        //    profile = Profile.Save();
-        //}
+            //Clear the cart.
+            anonymousProfile.ShoppingCart.Clear();
+            anonymousProfile.WishList.Clear();
+            anonymousProfile = anonymousProfile.Save();
+        }
 
         protected void Application_Start(object sender, EventArgs e)
         {

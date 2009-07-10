@@ -14,12 +14,11 @@ namespace PetShop.UI
                 string itemId = Request.QueryString["addItem"];
                 if (!string.IsNullOrEmpty(itemId))
                 {
-                    Profile profile = Profile.GetProfile(Page.User.Identity.Name);
-                    if (!string.IsNullOrEmpty(profile.Username))
-                    {
-                        profile.ShoppingCart.Add(itemId, profile.UniqueID, true);
-                        profile = profile.Save();
-                    }
+                    Profile profile = ProfileManager.Instance.GetCurrentUser(Page.User.Identity.Name);
+
+                    profile.ShoppingCart.Add(itemId, profile.UniqueID, true);
+                    profile = profile.Save();
+
                     // Redirect to prevent duplictations in the cart if user hits "Refresh"
                     Response.Redirect("~/ShoppingCart.aspx", true);
                 }

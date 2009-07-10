@@ -78,6 +78,18 @@ namespace PetShop.Business
         /// <param name="isShoppingCart">Cart is a shopping cart.</param>
         public void Add(string itemId, int uniqueID, bool isShoppingCart)
         {
+            Add(itemId, uniqueID, isShoppingCart, 1);
+        }
+        /// <summary>
+        /// Add an item to the cart.
+        /// When ItemId to be added has already existed, this method will update the quantity instead.
+        /// </summary>
+        /// <param name="itemId">Item to add</param>
+        /// <param name="uniqueID">Cart's Unique ID</param>
+        /// <param name="isShoppingCart">Cart is a shopping cart.</param>
+        /// <param name="quantity">Item Quanitity</param>
+        public void Add(string itemId, int uniqueID, bool isShoppingCart, int quantity)
+        {
             int index = 0;
             bool found = false;
 
@@ -93,7 +105,7 @@ namespace PetShop.Business
             }
 
             if (found)
-                Items[index].Quantity += 1;
+                Items[index].Quantity += quantity;
             else
             {
                 Item item = Item.GetItem(itemId);
@@ -107,7 +119,7 @@ namespace PetShop.Business
                 cart.Price = item.ListPrice ?? item.UnitCost ?? 0;
                 cart.Type = product.Name;
                 cart.CategoryId = product.CategoryId;
-                cart.Quantity = 1;
+                cart.Quantity = quantity;
 
                 Add(cart);
             }
