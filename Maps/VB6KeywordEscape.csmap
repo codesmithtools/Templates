@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csmap.xsd">
-  <map caseSensitive="false" returnKeyWhenNotFound="true" description="VB.NET keywords escape map">
-    <item>
-      <key>AddHandler</key>
-      <value>[AddHandler]</value>
-    </item>
+  <map caseSensitive="false" returnKeyWhenNotFound="true" description="VB6 keywords escape map">
     <item>
       <key>AddressOf</key>
       <value>[AddressOf]</value>
@@ -18,24 +14,16 @@
       <value>[And]</value>
     </item>
     <item>
-      <key>AndAlso</key>
-      <value>[AndAlso]</value>
-    </item>
-    <item>
-      <key>Ansi</key>
-      <value>[Ansi]</value>
+      <key>Any</key>
+      <value>[Any]</value>
     </item>
     <item>
       <key>As</key>
       <value>[As]</value>
     </item>
     <item>
-      <key>Assembly</key>
-      <value>[Assembly]</value>
-    </item>
-    <item>
-      <key>Auto</key>
-      <value>[Auto]</value>
+      <key>Binary</key>
+      <value>[Binary]</value>
     </item>
     <item>
       <key>Boolean</key>
@@ -62,10 +50,6 @@
       <value>[Case]</value>
     </item>
     <item>
-      <key>Catch</key>
-      <value>[Catch]</value>
-    </item>
-    <item>
       <key>CBool</key>
       <value>[CBool]</value>
     </item>
@@ -74,8 +58,8 @@
       <value>[CByte]</value>
     </item>
     <item>
-      <key>CChar</key>
-      <value>[CChar]</value>
+      <key>CCur</key>
+      <value>[CCur]</value>
     </item>
     <item>
       <key>CDate</key>
@@ -86,44 +70,20 @@
       <value>[CDbl]</value>
     </item>
     <item>
-      <key>CDec</key>
-      <value>[CDec]</value>
-    </item>
-    <item>
-      <key>Char</key>
-      <value>[Char]</value>
-    </item>
-    <item>
       <key>CInt</key>
       <value>[CInt]</value>
-    </item>
-    <item>
-      <key>Class</key>
-      <value>[Class]</value>
     </item>
     <item>
       <key>CLng</key>
       <value>[CLng]</value>
     </item>
     <item>
-      <key>CObj</key>
-      <value>[CObj]</value>
+      <key>Close</key>
+      <value>[Close]</value>
     </item>
     <item>
       <key>Const</key>
       <value>[Const]</value>
-    </item>
-    <item>
-      <key>Continue</key>
-      <value>[Continue]</value>
-    </item>
-    <item>
-      <key>CSByte</key>
-      <value>[CSByte]</value>
-    </item>
-    <item>
-      <key>CShort</key>
-      <value>[CShort]</value>
     </item>
     <item>
       <key>CSng</key>
@@ -134,48 +94,76 @@
       <value>[CStr]</value>
     </item>
     <item>
-      <key>CType</key>
-      <value>[CType]</value>
+      <key>Currency</key>
+      <value>[Currency]</value>
     </item>
     <item>
-      <key>CUInt</key>
-      <value>[CUInt]</value>
+      <key>CVar</key>
+      <value>[CVar]</value>
     </item>
     <item>
-      <key>CULng</key>
-      <value>[CULng]</value>
-    </item>
-    <item>
-      <key>CUShort</key>
-      <value>[CUShort]</value>
+      <key>CVErr</key>
+      <value>[CVErr]</value>
     </item>
     <item>
       <key>Date</key>
       <value>[Date]</value>
     </item>
     <item>
-      <key>Decimal</key>
-      <value>[Decimal]</value>
+      <key>Debug</key>
+      <value>[Debug]</value>
     </item>
     <item>
       <key>Declare</key>
       <value>[Declare]</value>
     </item>
     <item>
-      <key>Default</key>
-      <value>[Default]</value>
+      <key>DefBool</key>
+      <value>[DefBool]</value>
     </item>
     <item>
-      <key>Delegate</key>
-      <value>[Delegate]</value>
+      <key>DefByte</key>
+      <value>[DefByte]</value>
+    </item>
+    <item>
+      <key>DefCur</key>
+      <value>[DefCur]</value>
+    </item>
+    <item>
+      <key>DefDate</key>
+      <value>[DefDate]</value>
+    </item>
+    <item>
+      <key>DefDbl</key>
+      <value>[DefDbl]</value>
+    </item>
+    <item>
+      <key>DefInt</key>
+      <value>[DefInt]</value>
+    </item>
+    <item>
+      <key>DefLng</key>
+      <value>[DefLng]</value>
+    </item>
+    <item>
+      <key>DefObj</key>
+      <value>[DefObj]</value>
+    </item>
+    <item>
+      <key>DefSng</key>
+      <value>[DefSng]</value>
+    </item>
+    <item>
+      <key>DefStr</key>
+      <value>[DefStr]</value>
+    </item>
+    <item>
+      <key>DefVar</key>
+      <value>[DefVar]</value>
     </item>
     <item>
       <key>Dim</key>
       <value>[Dim]</value>
-    </item>
-    <item>
-      <key>DirectCast</key>
-      <value>[DirectCast]</value>
     </item>
     <item>
       <key>Do</key>
@@ -194,20 +182,16 @@
       <value>[Else]</value>
     </item>
     <item>
-      <key>ElseIf</key>
-      <value>[ElseIf]</value>
-    </item>
-    <item>
       <key>End</key>
       <value>[End]</value>
     </item>
     <item>
-      <key>EndIf</key>
-      <value>[EndIf]</value>
-    </item>
-    <item>
       <key>Enum</key>
       <value>[Enum]</value>
+    </item>
+    <item>
+      <key>Eqv</key>
+      <value>[Eqv]</value>
     </item>
     <item>
       <key>Erase</key>
@@ -226,14 +210,6 @@
       <value>[Exit]</value>
     </item>
     <item>
-      <key>False</key>
-      <value>[False]</value>
-    </item>
-    <item>
-      <key>Finally</key>
-      <value>[Finally]</value>
-    </item>
-    <item>
       <key>For</key>
       <value>[For]</value>
     </item>
@@ -250,14 +226,6 @@
       <value>[Get]</value>
     </item>
     <item>
-      <key>GetType</key>
-      <value>[GetType]</value>
-    </item>
-    <item>
-      <key>GetXMLNamespace</key>
-      <value>[GetXMLNamespace]</value>
-    </item>
-    <item>
       <key>Global</key>
       <value>[Global]</value>
     </item>
@@ -270,44 +238,40 @@
       <value>[GoTo]</value>
     </item>
     <item>
-      <key>Handles</key>
-      <value>[Handles]</value>
-    </item>
-    <item>
       <key>If</key>
       <value>[If]</value>
+    </item>
+    <item>
+      <key>Imp</key>
+      <value>[Imp]</value>
     </item>
     <item>
       <key>Implements</key>
       <value>[Implements]</value>
     </item>
     <item>
-      <key>Imports</key>
-      <value>[Imports]</value>
-    </item>
-    <item>
       <key>In</key>
       <value>[In]</value>
     </item>
     <item>
-      <key>Inherits</key>
-      <value>[Inherits]</value>
+      <key>Input</key>
+      <value>[Input]</value>
     </item>
     <item>
       <key>Integer</key>
       <value>[Integer]</value>
     </item>
     <item>
-      <key>Interface</key>
-      <value>[Interface]</value>
-    </item>
-    <item>
       <key>Is</key>
       <value>[Is]</value>
     </item>
     <item>
-      <key>IsNot</key>
-      <value>[IsNot]</value>
+      <key>LBound</key>
+      <value>[LBound]</value>
+    </item>
+    <item>
+      <key>Len</key>
+      <value>[Len]</value>
     </item>
     <item>
       <key>Let</key>
@@ -322,6 +286,14 @@
       <value>[Like]</value>
     </item>
     <item>
+      <key>Line</key>
+      <value>[Line]</value>
+    </item>
+    <item>
+      <key>Lock</key>
+      <value>[Lock]</value>
+    </item>
+    <item>
       <key>Long</key>
       <value>[Long]</value>
     </item>
@@ -330,40 +302,16 @@
       <value>[Loop]</value>
     </item>
     <item>
-      <key>Me</key>
-      <value>[Me]</value>
+      <key>LSet</key>
+      <value>[LSet]</value>
     </item>
     <item>
       <key>Mod</key>
       <value>[Mod]</value>
     </item>
     <item>
-      <key>Module</key>
-      <value>[Module]</value>
-    </item>
-    <item>
-      <key>MustInherit</key>
-      <value>[MustInherit]</value>
-    </item>
-    <item>
-      <key>MustOverride</key>
-      <value>[MustOverride]</value>
-    </item>
-    <item>
-      <key>MyBase</key>
-      <value>[MyBase]</value>
-    </item>
-    <item>
-      <key>MyClass</key>
-      <value>[MyClass]</value>
-    </item>
-    <item>
-      <key>Namespace</key>
-      <value>[Namespace]</value>
-    </item>
-    <item>
-      <key>Narrowing</key>
-      <value>[Narrowing]</value>
+      <key>Name</key>
+      <value>[Name]</value>
     </item>
     <item>
       <key>New</key>
@@ -382,32 +330,44 @@
       <value>[Nothing]</value>
     </item>
     <item>
-      <key>NotInheritable</key>
-      <value>[NotInheritable]</value>
-    </item>
-    <item>
-      <key>NotOverridable</key>
-      <value>[NotOverridable]</value>
+      <key>Null</key>
+      <value>Null</value>
     </item>
     <item>
       <key>Object</key>
       <value>[Object]</value>
     </item>
     <item>
-      <key>Of</key>
-      <value>[Of]</value>
-    </item>
-    <item>
       <key>On</key>
       <value>[On]</value>
     </item>
     <item>
-      <key>Operator</key>
-      <value>[Operator]</value>
+      <key>Open</key>
+      <value>[Open]</value>
     </item>
     <item>
-      <key>Option</key>
-      <value>[Option]</value>
+      <key>Option Base 1</key>
+      <value>[Option Base 1]</value>
+    </item>
+    <item>
+      <key>Option Compare Binary</key>
+      <value>[Option Compare Binary]</value>
+    </item>
+    <item>
+      <key>Option Compare Database</key>
+      <value>[Option Compare Database]</value>
+    </item>
+    <item>
+      <key>Option Compare Text</key>
+      <value>[Option Compare Text]</value>
+    </item>
+    <item>
+      <key>Option Explicit</key>
+      <value>[Option Explicit]</value>
+    </item>
+    <item>
+      <key>Option Private Module</key>
+      <value>[Option Private Module]</value>
     </item>
     <item>
       <key>Optional</key>
@@ -418,32 +378,20 @@
       <value>[Or]</value>
     </item>
     <item>
-      <key>OrElse</key>
-      <value>[OrElse]</value>
-    </item>
-    <item>
-      <key>Overloads</key>
-      <value>[Overloads]</value>
-    </item>
-    <item>
-      <key>Overridable</key>
-      <value>[Overridable]</value>
-    </item>
-    <item>
-      <key>Overrides</key>
-      <value>[Overrides]</value>
+      <key>Output</key>
+      <value>[Output]</value>
     </item>
     <item>
       <key>ParamArray</key>
       <value>[ParamArray]</value>
     </item>
     <item>
-      <key>Partial</key>
-      <value>[Partial]</value>
-    </item>
-    <item>
       <key>Preserve</key>
       <value>[Preserve]</value>
+    </item>
+    <item>
+      <key>Print</key>
+      <value>[Print]</value>
     </item>
     <item>
       <key>Private</key>
@@ -454,20 +402,24 @@
       <value>[Property]</value>
     </item>
     <item>
-      <key>Protected</key>
-      <value>[Protected]</value>
-    </item>
-    <item>
       <key>Public</key>
       <value>[Public]</value>
+    </item>
+    <item>
+      <key>Put</key>
+      <value>[Put]</value>
     </item>
     <item>
       <key>RaiseEvent</key>
       <value>[RaiseEvent]</value>
     </item>
     <item>
-      <key>ReadOnly</key>
-      <value>[ReadOnly]</value>
+      <key>Random</key>
+      <value>[Random]</value>
+    </item>
+    <item>
+      <key>Read</key>
+      <value>[Read]</value>
     </item>
     <item>
       <key>ReDim</key>
@@ -478,10 +430,6 @@
       <value>[REM]</value>
     </item>
     <item>
-      <key>RemoveHandler</key>
-      <value>[RemoveHandler]</value>
-    </item>
-    <item>
       <key>Resume</key>
       <value>[Resume]</value>
     </item>
@@ -490,8 +438,12 @@
       <value>[Return]</value>
     </item>
     <item>
-      <key>SByte</key>
-      <value>[SByte]</value>
+      <key>RSet</key>
+      <value>[RSet]</value>
+    </item>
+    <item>
+      <key>Seek</key>
+      <value>[Seek]</value>
     </item>
     <item>
       <key>Select</key>
@@ -502,20 +454,12 @@
       <value>[Set]</value>
     </item>
     <item>
-      <key>Shadows</key>
-      <value>[Shadows]</value>
-    </item>
-    <item>
-      <key>Shared</key>
-      <value>[Shared]</value>
-    </item>
-    <item>
-      <key>Short</key>
-      <value>[Short]</value>
-    </item>
-    <item>
       <key>Single</key>
       <value>[Single]</value>
+    </item>
+    <item>
+      <key>Spc</key>
+      <value>[Spc]</value>
     </item>
     <item>
       <key>Static</key>
@@ -534,68 +478,32 @@
       <value>[String]</value>
     </item>
     <item>
-      <key>Structure</key>
-      <value>[Structure]</value>
-    </item>
-    <item>
       <key>Sub</key>
       <value>[Sub]</value>
     </item>
     <item>
-      <key>SyncLock</key>
-      <value>[SyncLock]</value>
+      <key>Tab</key>
+      <value>[Tab]</value>
     </item>
     <item>
       <key>Then</key>
       <value>[Then]</value>
     </item>
     <item>
-      <key>Throw</key>
-      <value>[Throw]</value>
-    </item>
-    <item>
       <key>To</key>
       <value>[To]</value>
     </item>
     <item>
-      <key>True</key>
-      <value>[True]</value>
+      <key>Type</key>
+      <value>[Type]</value>
     </item>
     <item>
-      <key>Try</key>
-      <value>[Try]</value>
+      <key>UBound</key>
+      <value>[UBound]</value>
     </item>
     <item>
-      <key>TryCast</key>
-      <value>[TryCast]</value>
-    </item>
-    <item>
-      <key>TypeOf</key>
-      <value>[TypeOf]</value>
-    </item>
-    <item>
-      <key>UInteger</key>
-      <value>[UInteger]</value>
-    </item>
-    <item>
-      <key>ULong</key>
-      <value>[ULong]</value>
-    </item>
-    <item>
-      <key>Unicode</key>
-      <value>[Unicode]</value>
-    </item>
-    <item>
-      <key>Until</key>
-      <value>[Until]</value>
-    </item>
-    <item>
-      <key>UShort</key>
-      <value>[UShort]</value>
-    </item>
-    <item>
-      <key>Using</key>
-      <value>[Using]</value>
+      <key>Unlock</key>
+      <value>[Unlock]</value>
     </item>
     <item>
       <key>Variant</key>
@@ -606,16 +514,8 @@
       <value>[Wend]</value>
     </item>
     <item>
-      <key>When</key>
-      <value>[When]</value>
-    </item>
-    <item>
       <key>While</key>
       <value>[While]</value>
-    </item>
-    <item>
-      <key>Widening</key>
-      <value>[Widening]</value>
     </item>
     <item>
       <key>With</key>
@@ -626,8 +526,8 @@
       <value>[WithEvents]</value>
     </item>
     <item>
-      <key>WriteOnly</key>
-      <value>[WriteOnly]</value>
+      <key>Write</key>
+      <value>[Write]</value>
     </item>
     <item>
       <key>Xor</key>
