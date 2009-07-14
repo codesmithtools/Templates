@@ -146,7 +146,7 @@ namespace CodeSmith.SchemaHelper
                         else
                         {
                             TableSchema foreignTable = GetToManyTable(column.Table, Table);
-                            if (!Configuration.Instance.ExcludeTableRegexIsMatch(foreignTable.FullName))
+                            if (foreignTable != null && !Configuration.Instance.ExcludeTableRegexIsMatch(foreignTable.FullName))
                             {
                                 AssociationMember association = new AssociationMember(AssociationType.ManyToMany, foreignTable, column, localColumn, this);
                                 _associationMap.Add(column.Name, association);
@@ -177,7 +177,6 @@ namespace CodeSmith.SchemaHelper
                             if (!_fkRemoteMemberMap.ContainsKey(column.Name))
                                 _fkRemoteMemberMap.Add(column.Name, association);
                         }
-
                     }
                 }
             }
