@@ -6,10 +6,10 @@ using System.Text;
 using System.ComponentModel.DataAnnotations;
 using CodeSmith.Data.Attributes;
 using CodeSmith.Data.Rules;
-using PLINQO.Tracker.Data.Rules;
-using PLINQO.Tracker.Data.Rules.Attributes;
+using Tracker.Core.Data.Rules;
+using Tracker.Core.Data.Rules.Attributes;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     public partial class Task
     {

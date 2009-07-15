@@ -12,8 +12,8 @@ using System.Web.Routing;
 using System.Web.Security;
 using CodeSmith.Data.Audit;
 using CodeSmith.Data.Rules;
-using PLINQO.Tracker.Data;
-using Data = PLINQO.Tracker.Data;
+using Tracker.Core.Data;
+using Data = Tracker.Core.Data;
 using System.Data.Linq;
 using IMultipleResults = System.Data.Linq.IMultipleResults;
 using System.Transactions;
@@ -159,7 +159,7 @@ namespace PLINQO.Mvc.UI.Controllers
 
         public ActionResult Index()
         {
-            List<Tracker.Data.User> users = null;
+            List<User> users = null;
             using (var context = new TrackerDataContext())
             {
                 users = context.User.OrderBy(u => u.EmailAddress).ToList();

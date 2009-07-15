@@ -10,7 +10,7 @@
 using System;
 using System.Linq;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// A base class for Linq entities that implements notification events.

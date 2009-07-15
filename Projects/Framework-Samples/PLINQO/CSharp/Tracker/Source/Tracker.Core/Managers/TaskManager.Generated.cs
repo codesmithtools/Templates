@@ -14,13 +14,13 @@ using System.Data.Linq;
 using System.Linq;
 using System.Text;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The manager class for Task.
     /// </summary>
     public partial class TaskManager 
-        : CodeSmith.Data.EntityManagerBase<TrackerDataManager, PLINQO.Tracker.Data.Task>
+        : CodeSmith.Data.EntityManagerBase<TrackerDataManager, Tracker.Core.Data.Task>
     {
         /// <summary>
         /// Initializes the <see cref="TaskManager"/> class.
@@ -42,7 +42,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets the current context.
         /// </summary>
-        protected PLINQO.Tracker.Data.TrackerDataContext Context
+        protected Tracker.Core.Data.TrackerDataContext Context
         {
             get { return Manager.Context; }
         }
@@ -50,7 +50,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets the entity for this manager.
         /// </summary>
-        protected System.Data.Linq.Table<PLINQO.Tracker.Data.Task> Entity
+        protected System.Data.Linq.Table<Tracker.Core.Data.Task> Entity
         {
             get { return Manager.Context.Task; }
         }
@@ -75,7 +75,7 @@ namespace PLINQO.Tracker.Data
         /// This method is expecting key to be of type IEntityKey&lt;int&gt;.
         /// </remarks>
         /// <exception cref="ArgumentException">Thrown when key is not of type IEntityKey&lt;int&gt;.</exception>
-        public override PLINQO.Tracker.Data.Task GetByKey(CodeSmith.Data.IEntityKey key)
+        public override Tracker.Core.Data.Task GetByKey(CodeSmith.Data.IEntityKey key)
         {
             if (key is CodeSmith.Data.IEntityKey<int>)
             {
@@ -92,7 +92,7 @@ namespace PLINQO.Tracker.Data
         /// Gets an instance by the primary key.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public PLINQO.Tracker.Data.Task GetByKey(int id)
+        public Tracker.Core.Data.Task GetByKey(int id)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByKey.Invoke(Context, id);
@@ -111,7 +111,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<PLINQO.Tracker.Data.Task> GetByAssignedIdStatusId(int? assignedId, int statusId)
+        public IQueryable<Tracker.Core.Data.Task> GetByAssignedIdStatusId(int? assignedId, int statusId)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByAssignedIdStatusId.Invoke(Context, assignedId, statusId);
@@ -122,7 +122,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<PLINQO.Tracker.Data.Task> GetByStatusId(int statusId)
+        public IQueryable<Tracker.Core.Data.Task> GetByStatusId(int statusId)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByStatusId.Invoke(Context, statusId);
@@ -132,7 +132,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<PLINQO.Tracker.Data.Task> GetByPriorityId(Priority priorityId)
+        public IQueryable<Tracker.Core.Data.Task> GetByPriorityId(Priority priorityId)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByPriorityId.Invoke(Context, priorityId);
@@ -142,7 +142,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<PLINQO.Tracker.Data.Task> GetByCreatedId(int createdId)
+        public IQueryable<Tracker.Core.Data.Task> GetByCreatedId(int createdId)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByCreatedId.Invoke(Context, createdId);
@@ -152,7 +152,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<PLINQO.Tracker.Data.Task> GetByAssignedId(int? assignedId)
+        public IQueryable<Tracker.Core.Data.Task> GetByAssignedId(int? assignedId)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByAssignedId.Invoke(Context, assignedId);
@@ -174,35 +174,35 @@ namespace PLINQO.Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, PLINQO.Tracker.Data.Task> GetByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.Task> GetByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int id) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int id) => 
                         db.Task.FirstOrDefault(t => t.Id == id));
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int?, int, IQueryable<PLINQO.Tracker.Data.Task>> GetByAssignedIdStatusId = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int?, int, IQueryable<Tracker.Core.Data.Task>> GetByAssignedIdStatusId = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int? assignedId, int statusId) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int? assignedId, int statusId) => 
                         db.Task.Where(t => t.AssignedId == assignedId 
 							&& t.StatusId == statusId));
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, IQueryable<PLINQO.Tracker.Data.Task>> GetByStatusId = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, IQueryable<Tracker.Core.Data.Task>> GetByStatusId = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int statusId) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int statusId) => 
                         db.Task.Where(t => t.StatusId == statusId));
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, Priority, IQueryable<PLINQO.Tracker.Data.Task>> GetByPriorityId = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, Priority, IQueryable<Tracker.Core.Data.Task>> GetByPriorityId = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, Priority priorityId) => 
+                    (Tracker.Core.Data.TrackerDataContext db, Priority priorityId) => 
                         db.Task.Where(t => t.PriorityId == priorityId));
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, IQueryable<PLINQO.Tracker.Data.Task>> GetByCreatedId = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, IQueryable<Tracker.Core.Data.Task>> GetByCreatedId = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int createdId) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int createdId) => 
                         db.Task.Where(t => t.CreatedId == createdId));
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int?, IQueryable<PLINQO.Tracker.Data.Task>> GetByAssignedId = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int?, IQueryable<Tracker.Core.Data.Task>> GetByAssignedId = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int? assignedId) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int? assignedId) => 
                         db.Task.Where(t => t.AssignedId == assignedId));
 
         }

@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using System.Data.Linq;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The query extension class for TaskExtended.
@@ -22,11 +22,11 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static PLINQO.Tracker.Data.TaskExtended ByKey(this IQueryable<PLINQO.Tracker.Data.TaskExtended> queryable, int taskId)
+        public static Tracker.Core.Data.TaskExtended ByKey(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, int taskId)
         {
-            var entity = queryable as System.Data.Linq.Table<PLINQO.Tracker.Data.TaskExtended>;
+            var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.TaskExtended>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((PLINQO.Tracker.Data.TrackerDataContext)entity.Context, taskId);
+                return Query.ByKey.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, taskId);
             
             return queryable.FirstOrDefault(t => t.TaskId == taskId);
         }
@@ -36,7 +36,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         /// <returns>The number of rows deleted from the database.</returns>
-        public static int Delete(this System.Data.Linq.Table<PLINQO.Tracker.Data.TaskExtended> table, int taskId)
+        public static int Delete(this System.Data.Linq.Table<Tracker.Core.Data.TaskExtended> table, int taskId)
         {
             return table.Delete(t => t.TaskId == taskId);
         }
@@ -44,7 +44,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="TaskExtended.Browser"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.TaskExtended> ByBrowser(this IQueryable<PLINQO.Tracker.Data.TaskExtended> queryable, string browser)
+        public static IQueryable<Tracker.Core.Data.TaskExtended> ByBrowser(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, string browser)
         {
             return queryable.Where(t => object.Equals(t.Browser, browser));
         }
@@ -52,7 +52,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="TaskExtended.Os"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.TaskExtended> ByOs(this IQueryable<PLINQO.Tracker.Data.TaskExtended> queryable, string os)
+        public static IQueryable<Tracker.Core.Data.TaskExtended> ByOs(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, string os)
         {
             return queryable.Where(t => object.Equals(t.Os, os));
         }
@@ -60,7 +60,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="TaskExtended.CreatedDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.TaskExtended> ByCreatedDate(this IQueryable<PLINQO.Tracker.Data.TaskExtended> queryable, System.DateTime createdDate)
+        public static IQueryable<Tracker.Core.Data.TaskExtended> ByCreatedDate(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, System.DateTime createdDate)
         {
             return queryable.Where(t => t.CreatedDate == createdDate);
         }
@@ -68,7 +68,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="TaskExtended.ModifiedDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.TaskExtended> ByModifiedDate(this IQueryable<PLINQO.Tracker.Data.TaskExtended> queryable, System.DateTime modifiedDate)
+        public static IQueryable<Tracker.Core.Data.TaskExtended> ByModifiedDate(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, System.DateTime modifiedDate)
         {
             return queryable.Where(t => t.ModifiedDate == modifiedDate);
         }
@@ -80,9 +80,9 @@ namespace PLINQO.Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, PLINQO.Tracker.Data.TaskExtended> ByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.TaskExtended> ByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int taskId) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int taskId) => 
                         db.TaskExtended.FirstOrDefault(t => t.TaskId == taskId));
 
         }

@@ -9,9 +9,9 @@ using System.Web.SessionState;
 using System.Xml.Linq;
 using System.Web.Routing;
 using System.Web.DynamicData;
-using PLINQO.Tracker.Data;
+using Tracker.Core.Data;
 
-namespace PLINQO.Tracker.UI
+namespace Tracker.DynamicData.UI
 {
     public class Global : System.Web.HttpApplication
     {
@@ -20,7 +20,7 @@ namespace PLINQO.Tracker.UI
             MetaModel model = new MetaModel();
 
             
-            model.RegisterContext(typeof(PLINQO.Tracker.Data.TrackerDataContext), new ContextConfiguration() { ScaffoldAllTables = false});
+            model.RegisterContext(typeof(TrackerDataContext), new ContextConfiguration() { ScaffoldAllTables = false});
 
             routes.Add(new DynamicDataRoute("{table}/{action}.aspx")
             {

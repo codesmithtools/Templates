@@ -13,7 +13,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     [DataContract]
     public enum Priority : int

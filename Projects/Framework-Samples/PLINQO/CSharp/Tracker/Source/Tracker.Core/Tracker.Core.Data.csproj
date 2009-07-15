@@ -8,8 +8,8 @@
     <ProjectGuid>{2DF2FB49-6A04-4FD5-80D9-C662825787E3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PLINQO.Tracker.Data</RootNamespace>
-    <AssemblyName>PLINQO.Tracker.Data</AssemblyName>
+    <RootNamespace>Tracker.Core.Data</RootNamespace>
+    <AssemblyName>Tracker.Core.Data</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="CodeSmith.Data, Version=3.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\CodeSmith.Data.dll</HintPath>
+      <HintPath>..\Templates\PLINQO\Common\CodeSmith.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -185,9 +185,6 @@
     <Compile Include="Views\ReturnMultiplResultSetsResult2.Generated.cs">
       <DependentUpon>ReturnMultiplResultSetsResult2.cs</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="PLINQO.Tracker.Data.csp" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

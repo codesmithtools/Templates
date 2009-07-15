@@ -14,13 +14,13 @@ using System.Data.Linq;
 using System.Linq;
 using System.Text;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The manager class for User.
     /// </summary>
     public partial class UserManager 
-        : CodeSmith.Data.EntityManagerBase<TrackerDataManager, PLINQO.Tracker.Data.User>
+        : CodeSmith.Data.EntityManagerBase<TrackerDataManager, Tracker.Core.Data.User>
     {
         /// <summary>
         /// Initializes the <see cref="UserManager"/> class.
@@ -42,7 +42,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets the current context.
         /// </summary>
-        protected PLINQO.Tracker.Data.TrackerDataContext Context
+        protected Tracker.Core.Data.TrackerDataContext Context
         {
             get { return Manager.Context; }
         }
@@ -50,7 +50,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets the entity for this manager.
         /// </summary>
-        protected System.Data.Linq.Table<PLINQO.Tracker.Data.User> Entity
+        protected System.Data.Linq.Table<Tracker.Core.Data.User> Entity
         {
             get { return Manager.Context.User; }
         }
@@ -75,7 +75,7 @@ namespace PLINQO.Tracker.Data
         /// This method is expecting key to be of type IEntityKey&lt;int&gt;.
         /// </remarks>
         /// <exception cref="ArgumentException">Thrown when key is not of type IEntityKey&lt;int&gt;.</exception>
-        public override PLINQO.Tracker.Data.User GetByKey(CodeSmith.Data.IEntityKey key)
+        public override Tracker.Core.Data.User GetByKey(CodeSmith.Data.IEntityKey key)
         {
             if (key is CodeSmith.Data.IEntityKey<int>)
             {
@@ -92,7 +92,7 @@ namespace PLINQO.Tracker.Data
         /// Gets an instance by the primary key.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public PLINQO.Tracker.Data.User GetByKey(int id)
+        public Tracker.Core.Data.User GetByKey(int id)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByKey.Invoke(Context, id);
@@ -112,7 +112,7 @@ namespace PLINQO.Tracker.Data
         /// Gets an instance by using a unique index.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public PLINQO.Tracker.Data.User GetByEmailAddress(string emailAddress)
+        public Tracker.Core.Data.User GetByEmailAddress(string emailAddress)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByEmailAddress.Invoke(Context, emailAddress);
@@ -134,14 +134,14 @@ namespace PLINQO.Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, PLINQO.Tracker.Data.User> GetByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.User> GetByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int id) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int id) => 
                         db.User.FirstOrDefault(u => u.Id == id));
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, string, PLINQO.Tracker.Data.User> GetByEmailAddress = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, string, Tracker.Core.Data.User> GetByEmailAddress = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, string emailAddress) => 
+                    (Tracker.Core.Data.TrackerDataContext db, string emailAddress) => 
                         db.User.FirstOrDefault(u => u.EmailAddress == emailAddress));
 
         }

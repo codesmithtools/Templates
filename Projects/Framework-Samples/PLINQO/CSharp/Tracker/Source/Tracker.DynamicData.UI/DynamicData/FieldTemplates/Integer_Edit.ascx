@@ -1,4 +1,4 @@
-<%@ Control Language="C#" CodeBehind="Integer_Edit.ascx.cs" Inherits="PLINQO.Tracker.UI.Integer_EditField" %>
+<%@ Control Language="C#" CodeBehind="Integer_Edit.ascx.cs" Inherits="Tracker.DynamicData.UI.Integer_EditField" %>
 
 <asp:TextBox ID="TextBox1" runat="server" Text="<%# FieldValueEditString %>" Columns="10" CssClass="droplist"></asp:TextBox>
 

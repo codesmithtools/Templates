@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.Web.UI;
-using PLINQO.Tracker.Data;
+using Tracker.Core.Data;
 using System.Data.Linq;
 
 

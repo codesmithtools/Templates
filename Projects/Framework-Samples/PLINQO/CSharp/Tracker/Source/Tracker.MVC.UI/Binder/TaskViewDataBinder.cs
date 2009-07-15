@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using PLINQO.Mvc.UI.Controllers;
 using PLINQO.Mvc.UI.Models;
-using PLINQO.Tracker.Data;
+using Tracker.Core.Data;
 
 namespace PLINQO.Mvc.UI.Binder
 {

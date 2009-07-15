@@ -8,8 +8,8 @@
     <ProjectTypeGuids>{603c0e0b-db56-11dc-be95-000d561079b0};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PLINQO.Mvc.UI</RootNamespace>
-    <AssemblyName>PLINQO.Mvc.UI</AssemblyName>
+    <RootNamespace>Tracker.MVC.UI</RootNamespace>
+    <AssemblyName>Tracker.MVC.UI</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
   </PropertyGroup>
@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="CodeSmith.Data, Version=3.0.0.0, Culture=neutral, PublicKeyToken=596a5eee5d207fdd, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\CodeSmith.Data.dll</HintPath>
+      <HintPath>..\Templates\PLINQO\Common\CodeSmith.Data.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -167,13 +167,13 @@
     <None Include="Lib\Images\Thumbs.db" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PLINQO.Tracker.Data\PLINQO.Tracker.Data.csproj">
-      <Project>{2DF2FB49-6A04-4FD5-80D9-C662825787E3}</Project>
-      <Name>PLINQO.Tracker.Data</Name>
-    </ProjectReference>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+    <ProjectReference Include="..\Tracker.Core\Tracker.Core.Data.csproj">
+      <Project>{2DF2FB49-6A04-4FD5-80D9-C662825787E3}</Project>
+      <Name>Tracker.Core.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

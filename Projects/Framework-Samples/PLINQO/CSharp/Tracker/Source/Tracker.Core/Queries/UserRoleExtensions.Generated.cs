@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using System.Data.Linq;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The query extension class for UserRole.
@@ -22,11 +22,11 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static PLINQO.Tracker.Data.UserRole ByKey(this IQueryable<PLINQO.Tracker.Data.UserRole> queryable, int userId, int roleId)
+        public static Tracker.Core.Data.UserRole ByKey(this IQueryable<Tracker.Core.Data.UserRole> queryable, int userId, int roleId)
         {
-            var entity = queryable as System.Data.Linq.Table<PLINQO.Tracker.Data.UserRole>;
+            var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.UserRole>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((PLINQO.Tracker.Data.TrackerDataContext)entity.Context, userId, roleId);
+                return Query.ByKey.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, userId, roleId);
             
             return queryable.FirstOrDefault(u => u.UserId == userId 
 					&& u.RoleId == roleId);
@@ -37,7 +37,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         /// <returns>The number of rows deleted from the database.</returns>
-        public static int Delete(this System.Data.Linq.Table<PLINQO.Tracker.Data.UserRole> table, int userId, int roleId)
+        public static int Delete(this System.Data.Linq.Table<Tracker.Core.Data.UserRole> table, int userId, int roleId)
         {
             return table.Delete(u => u.UserId == userId 
 					&& u.RoleId == roleId);
@@ -50,9 +50,9 @@ namespace PLINQO.Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, int, PLINQO.Tracker.Data.UserRole> ByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, int, Tracker.Core.Data.UserRole> ByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int userId, int roleId) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int userId, int roleId) => 
                         db.UserRole.FirstOrDefault(u => u.UserId == userId 
 							&& u.RoleId == roleId));
 

@@ -12,7 +12,7 @@ using System.Web.UI.HtmlControls;
 using System.Xml.Linq;
 using System.Web.DynamicData;
 
-namespace PLINQO.Tracker.UI
+namespace Tracker.DynamicData.UI
 {
     public partial class _Default : System.Web.UI.Page {
         protected void Page_Load(object sender, EventArgs e) {

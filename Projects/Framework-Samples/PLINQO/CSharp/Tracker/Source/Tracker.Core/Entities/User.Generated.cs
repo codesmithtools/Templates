@@ -9,7 +9,7 @@
 using System;
 using System.Linq;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The class representing the dbo.User table.

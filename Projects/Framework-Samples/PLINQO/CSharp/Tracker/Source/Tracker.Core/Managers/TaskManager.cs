@@ -7,7 +7,7 @@ using System.Text;
 using CodeSmith.Data.Rules;
 using CodeSmith.Data.Rules.Validation;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     public partial class TaskManager
     {

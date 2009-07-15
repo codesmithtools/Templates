@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using CodeSmith.Data.Audit;
 using CodeSmith.Data.Rules;
 using NUnit.Framework;
-using PLINQO.Tracker.Data;
+using Tracker.Core.Data;
 using System.Data.Linq;
 using CodeSmith.Data.Linq;  
-using System.Web.Caching;
 
-namespace PLINQO.Tracker.Tests
+namespace Tracker.Tests
 {
     [TestFixture]
-    public class PLINQOTests
+    public class DemoTests
     {
 
         #region Setup

@@ -8,7 +8,7 @@ using System.Web.Mvc.Ajax;
 using CodeSmith.Data.Rules;
 using PLINQO.Mvc.UI.Binder;
 using PLINQO.Mvc.UI.Models;
-using PLINQO.Tracker.Data;
+using Tracker.Core.Data;
 using System.Data.Linq;
 
 namespace PLINQO.Mvc.UI.Controllers
@@ -107,7 +107,7 @@ namespace PLINQO.Mvc.UI.Controllers
                 using (var context = new TrackerDataContext())
                 {
                     var options = new DataLoadOptions();
-                    options.LoadWith<Tracker.Data.Task>(t => t.CreatedUser);
+                    options.LoadWith<Task>(t => t.CreatedUser);
                     context.LoadOptions = options;
 
                     task = context.Task.ByKey(id);
@@ -137,9 +137,9 @@ namespace PLINQO.Mvc.UI.Controllers
             using(var context = new TrackerDataContext())
             {
                 var options = new DataLoadOptions();
-                options.LoadWith<Tracker.Data.Task>(t => t.CreatedUser);
-                options.LoadWith<Tracker.Data.Task>(t => t.AssignedUser);
-                options.LoadWith<Tracker.Data.Task>(t => t.Status);
+                options.LoadWith<Task>(t => t.CreatedUser);
+                options.LoadWith<Task>(t => t.AssignedUser);
+                options.LoadWith<Task>(t => t.Status);
                 context.LoadOptions = options;
 
                 task = context.Task.ByKey(id);

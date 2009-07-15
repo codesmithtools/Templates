@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using CodeSmith.Data.Rules;
 
-namespace PLINQO.Tracker.Data.Rules
+namespace Tracker.Core.Data.Rules
 {
     public class UserExistsRule : IRule
     {

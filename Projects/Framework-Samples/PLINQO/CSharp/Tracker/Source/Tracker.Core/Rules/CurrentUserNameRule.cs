@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Hosting;
 using CodeSmith.Data.Rules;
 
-namespace PLINQO.Tracker.Data.Rules
+namespace Tracker.Core.Data.Rules
 {
     public class CurrentUserNameRule : PropertyRuleBase
     {

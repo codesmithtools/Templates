@@ -4,10 +4,11 @@ using System.Data.Services;
 using System.Linq;
 using System.ServiceModel.Web;
 using System.Web;
+using Tracker.Core.Data;
 
-namespace PLINQO.Tracker.UI
+namespace Tracker.DynamicData.UI
 {
-    public class TrackerDataService : DataService<PLINQO.Tracker.Data.TrackerDataContext>
+    public class TrackerDataService : DataService<TrackerDataContext>
     {
         // This method is called only once to initialize service-wide policies.
         public static void InitializeService(IDataServiceConfiguration config)

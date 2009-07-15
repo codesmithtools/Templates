@@ -13,7 +13,7 @@ using System.Web.UI.HtmlControls;
 using System.Xml.Linq;
 using System.Web.DynamicData;
 
-namespace PLINQO.Tracker.UI
+namespace Tracker.DynamicData.UI
 {
     public partial class DateTimeField : System.Web.DynamicData.FieldTemplateUserControl {
         public override Control DataControl {
