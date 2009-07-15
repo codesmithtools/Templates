@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Database Name="Tracker" EntityNamespace="PLINQO.Tracker.Data" ContextNamespace="PLINQO.Tracker.Data" Class="TrackerDataContext" EntityBase="LinqEntityBase" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+<Database Name="Tracker" EntityNamespace="Tracker.Core.Data" ContextNamespace="Tracker.Core.Data" Class="TrackerDataContext" EntityBase="LinqEntityBase" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection ConnectionString="Data Source=.;Initial Catalog=Tracker;Integrated Security=True" SettingsObjectName="Properties.Settings" SettingsPropertyName="TrackerConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Audit" Member="Audit">
     <Type Name="Audit">

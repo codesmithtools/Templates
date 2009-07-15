@@ -10,7 +10,7 @@
 
 using System;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The <see cref="System.Data.Linq.DataContext"/> class for the Tracker database.
@@ -127,45 +127,45 @@ namespace PLINQO.Tracker.Data
         
         #region Tables
         /// <summary>Represents the dbo.Audit table in the underlying database.</summary>
-        public System.Data.Linq.Table<PLINQO.Tracker.Data.Audit> Audit
+        public System.Data.Linq.Table<Tracker.Core.Data.Audit> Audit
         {
-            get { return GetTable<PLINQO.Tracker.Data.Audit>(); }
+            get { return GetTable<Tracker.Core.Data.Audit>(); }
         }
         
         /// <summary>Represents the dbo.Role table in the underlying database.</summary>
-        public System.Data.Linq.Table<PLINQO.Tracker.Data.Role> Role
+        public System.Data.Linq.Table<Tracker.Core.Data.Role> Role
         {
-            get { return GetTable<PLINQO.Tracker.Data.Role>(); }
+            get { return GetTable<Tracker.Core.Data.Role>(); }
         }
         
         /// <summary>Represents the dbo.Status table in the underlying database.</summary>
-        public System.Data.Linq.Table<PLINQO.Tracker.Data.Status> Status
+        public System.Data.Linq.Table<Tracker.Core.Data.Status> Status
         {
-            get { return GetTable<PLINQO.Tracker.Data.Status>(); }
+            get { return GetTable<Tracker.Core.Data.Status>(); }
         }
         
         /// <summary>Represents the dbo.Task table in the underlying database.</summary>
-        public System.Data.Linq.Table<PLINQO.Tracker.Data.Task> Task
+        public System.Data.Linq.Table<Tracker.Core.Data.Task> Task
         {
-            get { return GetTable<PLINQO.Tracker.Data.Task>(); }
+            get { return GetTable<Tracker.Core.Data.Task>(); }
         }
         
         /// <summary>Represents the dbo.TaskExtended table in the underlying database.</summary>
-        public System.Data.Linq.Table<PLINQO.Tracker.Data.TaskExtended> TaskExtended
+        public System.Data.Linq.Table<Tracker.Core.Data.TaskExtended> TaskExtended
         {
-            get { return GetTable<PLINQO.Tracker.Data.TaskExtended>(); }
+            get { return GetTable<Tracker.Core.Data.TaskExtended>(); }
         }
         
         /// <summary>Represents the dbo.User table in the underlying database.</summary>
-        public System.Data.Linq.Table<PLINQO.Tracker.Data.User> User
+        public System.Data.Linq.Table<Tracker.Core.Data.User> User
         {
-            get { return GetTable<PLINQO.Tracker.Data.User>(); }
+            get { return GetTable<Tracker.Core.Data.User>(); }
         }
         
         /// <summary>Represents the dbo.UserRole table in the underlying database.</summary>
-        public System.Data.Linq.Table<PLINQO.Tracker.Data.UserRole> UserRole
+        public System.Data.Linq.Table<Tracker.Core.Data.UserRole> UserRole
         {
-            get { return GetTable<PLINQO.Tracker.Data.UserRole>(); }
+            get { return GetTable<Tracker.Core.Data.UserRole>(); }
         }
         
         #endregion
@@ -174,8 +174,8 @@ namespace PLINQO.Tracker.Data
         /// <summary>Method that is mapped to the dbo.GetUsersWithRoles database procedure.</summary>
         /// <returns></returns>
         [System.Data.Linq.Mapping.Function(Name="dbo.GetUsersWithRoles")]
-        [System.Data.Linq.Mapping.ResultType(typeof(PLINQO.Tracker.Data.GetUsersWithRolesResult1))]
-        [System.Data.Linq.Mapping.ResultType(typeof(PLINQO.Tracker.Data.GetUsersWithRolesResult2))]
+        [System.Data.Linq.Mapping.ResultType(typeof(Tracker.Core.Data.GetUsersWithRolesResult1))]
+        [System.Data.Linq.Mapping.ResultType(typeof(Tracker.Core.Data.GetUsersWithRolesResult2))]
         public System.Data.Linq.IMultipleResults GetUsersWithRoles()
         {
             var methodInfo = (System.Reflection.MethodInfo)System.Reflection.MethodInfo.GetCurrentMethod();
@@ -191,67 +191,67 @@ namespace PLINQO.Tracker.Data
         partial void OnCreated();
         /// <summary>Called before a <see cref="Audit"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void InsertAudit(PLINQO.Tracker.Data.Audit instance);
+        partial void InsertAudit(Tracker.Core.Data.Audit instance);
         /// <summary>Called before a <see cref="Audit"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        partial void UpdateAudit(PLINQO.Tracker.Data.Audit instance);
+        partial void UpdateAudit(Tracker.Core.Data.Audit instance);
         /// <summary>Called before a <see cref="Audit"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void DeleteAudit(PLINQO.Tracker.Data.Audit instance);
+        partial void DeleteAudit(Tracker.Core.Data.Audit instance);
         /// <summary>Called before a <see cref="Role"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void InsertRole(PLINQO.Tracker.Data.Role instance);
+        partial void InsertRole(Tracker.Core.Data.Role instance);
         /// <summary>Called before a <see cref="Role"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        partial void UpdateRole(PLINQO.Tracker.Data.Role instance);
+        partial void UpdateRole(Tracker.Core.Data.Role instance);
         /// <summary>Called before a <see cref="Role"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void DeleteRole(PLINQO.Tracker.Data.Role instance);
+        partial void DeleteRole(Tracker.Core.Data.Role instance);
         /// <summary>Called before a <see cref="Status"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void InsertStatus(PLINQO.Tracker.Data.Status instance);
+        partial void InsertStatus(Tracker.Core.Data.Status instance);
         /// <summary>Called before a <see cref="Status"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        partial void UpdateStatus(PLINQO.Tracker.Data.Status instance);
+        partial void UpdateStatus(Tracker.Core.Data.Status instance);
         /// <summary>Called before a <see cref="Status"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void DeleteStatus(PLINQO.Tracker.Data.Status instance);
+        partial void DeleteStatus(Tracker.Core.Data.Status instance);
         /// <summary>Called before a <see cref="Task"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void InsertTask(PLINQO.Tracker.Data.Task instance);
+        partial void InsertTask(Tracker.Core.Data.Task instance);
         /// <summary>Called before a <see cref="Task"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        partial void UpdateTask(PLINQO.Tracker.Data.Task instance);
+        partial void UpdateTask(Tracker.Core.Data.Task instance);
         /// <summary>Called before a <see cref="Task"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void DeleteTask(PLINQO.Tracker.Data.Task instance);
+        partial void DeleteTask(Tracker.Core.Data.Task instance);
         /// <summary>Called before a <see cref="TaskExtended"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void InsertTaskExtended(PLINQO.Tracker.Data.TaskExtended instance);
+        partial void InsertTaskExtended(Tracker.Core.Data.TaskExtended instance);
         /// <summary>Called before a <see cref="TaskExtended"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        partial void UpdateTaskExtended(PLINQO.Tracker.Data.TaskExtended instance);
+        partial void UpdateTaskExtended(Tracker.Core.Data.TaskExtended instance);
         /// <summary>Called before a <see cref="TaskExtended"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void DeleteTaskExtended(PLINQO.Tracker.Data.TaskExtended instance);
+        partial void DeleteTaskExtended(Tracker.Core.Data.TaskExtended instance);
         /// <summary>Called before a <see cref="User"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void InsertUser(PLINQO.Tracker.Data.User instance);
+        partial void InsertUser(Tracker.Core.Data.User instance);
         /// <summary>Called before a <see cref="User"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        partial void UpdateUser(PLINQO.Tracker.Data.User instance);
+        partial void UpdateUser(Tracker.Core.Data.User instance);
         /// <summary>Called before a <see cref="User"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void DeleteUser(PLINQO.Tracker.Data.User instance);
+        partial void DeleteUser(Tracker.Core.Data.User instance);
         /// <summary>Called before a <see cref="UserRole"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void InsertUserRole(PLINQO.Tracker.Data.UserRole instance);
+        partial void InsertUserRole(Tracker.Core.Data.UserRole instance);
         /// <summary>Called before a <see cref="UserRole"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
-        partial void UpdateUserRole(PLINQO.Tracker.Data.UserRole instance);
+        partial void UpdateUserRole(Tracker.Core.Data.UserRole instance);
         /// <summary>Called before a <see cref="UserRole"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
-        partial void DeleteUserRole(PLINQO.Tracker.Data.UserRole instance);
+        partial void DeleteUserRole(Tracker.Core.Data.UserRole instance);
         #endregion
         
         #region IUpdatable Members

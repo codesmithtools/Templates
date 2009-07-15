@@ -8,8 +8,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PLINQO.Tracker.UI</RootNamespace>
-    <AssemblyName>PLINQO.Tracker.UI</AssemblyName>
+    <RootNamespace>Tracker.DynamicData.UI</RootNamespace>
+    <AssemblyName>Tracker.DynamicData.UI</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -298,7 +298,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PLINQO.Tracker.Data\PLINQO.Tracker.Data.csproj">
+    <ProjectReference Include="..\Tracker.Core\Tracker.Core.Data.csproj">
       <Project>{2DF2FB49-6A04-4FD5-80D9-C662825787E3}</Project>
       <Name>PLINQO.Tracker.Data</Name>
     </ProjectReference>

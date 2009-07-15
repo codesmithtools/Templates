@@ -2,7 +2,7 @@
 using System.Data.Linq;
 using System.Linq;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     public static partial class TaskExtensions
     {

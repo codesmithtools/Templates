@@ -1,2 +1,2 @@
 ﻿
-<%@ Application Codebehind="Global.asax.cs" Inherits="PLINQO.Tracker.UI.Global" Language="C#" %>
+<%@ Application Codebehind="Global.asax.cs" Inherits="Tracker.DynamicData.UI.Global" Language="C#" %>

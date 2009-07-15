@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using CodeSmith.Data.Attributes;
 using CodeSmith.Data.Rules;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     public partial class TaskExtended
     {

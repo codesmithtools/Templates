@@ -11,18 +11,18 @@
 using System;
 using System.ComponentModel;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The data manager for a DataContext.
     /// </summary>
-    public class TrackerDataManager : CodeSmith.Data.DataManagerBase<PLINQO.Tracker.Data.TrackerDataContext>
+    public class TrackerDataManager : CodeSmith.Data.DataManagerBase<Tracker.Core.Data.TrackerDataContext>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PLINQO.Tracker.Data.TrackerDataManager"/> class.
+        /// Initializes a new instance of the <see cref="Tracker.Core.Data.TrackerDataManager"/> class.
         /// </summary>
-        /// <param name="context">An instance of <see cref="PLINQO.Tracker.Data.TrackerDataContext"/> DataContext.</param>
-        public TrackerDataManager(PLINQO.Tracker.Data.TrackerDataContext context) : base(context)
+        /// <param name="context">An instance of <see cref="Tracker.Core.Data.TrackerDataContext"/> DataContext.</param>
+        public TrackerDataManager(Tracker.Core.Data.TrackerDataContext context) : base(context)
         {
             _auditManager = new AuditManager(this);
             _roleManager = new RoleManager(this);

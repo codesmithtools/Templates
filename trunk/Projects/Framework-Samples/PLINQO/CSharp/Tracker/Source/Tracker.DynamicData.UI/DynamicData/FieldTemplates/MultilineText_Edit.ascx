@@ -1,4 +1,4 @@
-<%@ Control Language="C#" CodeBehind="MultilineText_Edit.ascx.cs" Inherits="PLINQO.Tracker.UI.MultilineText_EditField" %>
+<%@ Control Language="C#" CodeBehind="MultilineText_Edit.ascx.cs" Inherits="Tracker.DynamicData.UI.MultilineText_EditField" %>
 
 <asp:TextBox ID="TextBox1" runat="server" CssClass="droplist" TextMode="MultiLine" Text='<%# FieldValueEditString %>' Columns="80" Rows="5"></asp:TextBox>
 

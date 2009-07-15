@@ -1,4 +1,4 @@
-<%@ Control Language="C#" CodeBehind="DateTime_Edit.ascx.cs" Inherits="PLINQO.Tracker.UI.DateTime_EditField" %>
+<%@ Control Language="C#" CodeBehind="DateTime_Edit.ascx.cs" Inherits="Tracker.DynamicData.UI.DateTime_EditField" %>
 
 <asp:TextBox ID="TextBox1" runat="server" CssClass="droplist" Text='<%# FieldValueEditString %>' Columns="20"></asp:TextBox>
 

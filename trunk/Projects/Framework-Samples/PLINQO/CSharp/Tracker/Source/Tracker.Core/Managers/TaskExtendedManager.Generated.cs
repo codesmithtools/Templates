@@ -14,13 +14,13 @@ using System.Data.Linq;
 using System.Linq;
 using System.Text;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The manager class for TaskExtended.
     /// </summary>
     public partial class TaskExtendedManager 
-        : CodeSmith.Data.EntityManagerBase<TrackerDataManager, PLINQO.Tracker.Data.TaskExtended>
+        : CodeSmith.Data.EntityManagerBase<TrackerDataManager, Tracker.Core.Data.TaskExtended>
     {
         /// <summary>
         /// Initializes the <see cref="TaskExtendedManager"/> class.
@@ -42,7 +42,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets the current context.
         /// </summary>
-        protected PLINQO.Tracker.Data.TrackerDataContext Context
+        protected Tracker.Core.Data.TrackerDataContext Context
         {
             get { return Manager.Context; }
         }
@@ -50,7 +50,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets the entity for this manager.
         /// </summary>
-        protected System.Data.Linq.Table<PLINQO.Tracker.Data.TaskExtended> Entity
+        protected System.Data.Linq.Table<Tracker.Core.Data.TaskExtended> Entity
         {
             get { return Manager.Context.TaskExtended; }
         }
@@ -75,7 +75,7 @@ namespace PLINQO.Tracker.Data
         /// This method is expecting key to be of type IEntityKey&lt;int&gt;.
         /// </remarks>
         /// <exception cref="ArgumentException">Thrown when key is not of type IEntityKey&lt;int&gt;.</exception>
-        public override PLINQO.Tracker.Data.TaskExtended GetByKey(CodeSmith.Data.IEntityKey key)
+        public override Tracker.Core.Data.TaskExtended GetByKey(CodeSmith.Data.IEntityKey key)
         {
             if (key is CodeSmith.Data.IEntityKey<int>)
             {
@@ -92,7 +92,7 @@ namespace PLINQO.Tracker.Data
         /// Gets an instance by the primary key.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public PLINQO.Tracker.Data.TaskExtended GetByKey(int taskId)
+        public Tracker.Core.Data.TaskExtended GetByKey(int taskId)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByKey.Invoke(Context, taskId);
@@ -123,9 +123,9 @@ namespace PLINQO.Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, PLINQO.Tracker.Data.TaskExtended> GetByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.TaskExtended> GetByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int taskId) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int taskId) => 
                         db.TaskExtended.FirstOrDefault(t => t.TaskId == taskId));
 
         }

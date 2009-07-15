@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using System.Data.Linq;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The query extension class for Role.
@@ -22,11 +22,11 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static PLINQO.Tracker.Data.Role ByKey(this IQueryable<PLINQO.Tracker.Data.Role> queryable, int id)
+        public static Tracker.Core.Data.Role ByKey(this IQueryable<Tracker.Core.Data.Role> queryable, int id)
         {
-            var entity = queryable as System.Data.Linq.Table<PLINQO.Tracker.Data.Role>;
+            var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.Role>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((PLINQO.Tracker.Data.TrackerDataContext)entity.Context, id);
+                return Query.ByKey.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, id);
             
             return queryable.FirstOrDefault(r => r.Id == id);
         }
@@ -36,7 +36,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         /// <returns>The number of rows deleted from the database.</returns>
-        public static int Delete(this System.Data.Linq.Table<PLINQO.Tracker.Data.Role> table, int id)
+        public static int Delete(this System.Data.Linq.Table<Tracker.Core.Data.Role> table, int id)
         {
             return table.Delete(r => r.Id == id);
         }
@@ -44,7 +44,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Role.Name"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Role> ByName(this IQueryable<PLINQO.Tracker.Data.Role> queryable, string name)
+        public static IQueryable<Tracker.Core.Data.Role> ByName(this IQueryable<Tracker.Core.Data.Role> queryable, string name)
         {
             return queryable.Where(r => r.Name == name);
         }
@@ -52,7 +52,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Role.Description"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Role> ByDescription(this IQueryable<PLINQO.Tracker.Data.Role> queryable, string description)
+        public static IQueryable<Tracker.Core.Data.Role> ByDescription(this IQueryable<Tracker.Core.Data.Role> queryable, string description)
         {
             return queryable.Where(r => object.Equals(r.Description, description));
         }
@@ -60,7 +60,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Role.CreatedDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Role> ByCreatedDate(this IQueryable<PLINQO.Tracker.Data.Role> queryable, System.DateTime createdDate)
+        public static IQueryable<Tracker.Core.Data.Role> ByCreatedDate(this IQueryable<Tracker.Core.Data.Role> queryable, System.DateTime createdDate)
         {
             return queryable.Where(r => r.CreatedDate == createdDate);
         }
@@ -68,7 +68,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Role.ModifiedDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Role> ByModifiedDate(this IQueryable<PLINQO.Tracker.Data.Role> queryable, System.DateTime modifiedDate)
+        public static IQueryable<Tracker.Core.Data.Role> ByModifiedDate(this IQueryable<Tracker.Core.Data.Role> queryable, System.DateTime modifiedDate)
         {
             return queryable.Where(r => r.ModifiedDate == modifiedDate);
         }
@@ -80,9 +80,9 @@ namespace PLINQO.Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, PLINQO.Tracker.Data.Role> ByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.Role> ByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int id) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int id) => 
                         db.Role.FirstOrDefault(r => r.Id == id));
 
         }

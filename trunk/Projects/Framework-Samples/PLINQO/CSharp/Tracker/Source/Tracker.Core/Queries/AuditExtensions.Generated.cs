@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using System.Data.Linq;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The query extension class for Audit.
@@ -22,11 +22,11 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static PLINQO.Tracker.Data.Audit ByKey(this IQueryable<PLINQO.Tracker.Data.Audit> queryable, int id)
+        public static Tracker.Core.Data.Audit ByKey(this IQueryable<Tracker.Core.Data.Audit> queryable, int id)
         {
-            var entity = queryable as System.Data.Linq.Table<PLINQO.Tracker.Data.Audit>;
+            var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.Audit>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((PLINQO.Tracker.Data.TrackerDataContext)entity.Context, id);
+                return Query.ByKey.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, id);
             
             return queryable.FirstOrDefault(a => a.Id == id);
         }
@@ -36,7 +36,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         /// <returns>The number of rows deleted from the database.</returns>
-        public static int Delete(this System.Data.Linq.Table<PLINQO.Tracker.Data.Audit> table, int id)
+        public static int Delete(this System.Data.Linq.Table<Tracker.Core.Data.Audit> table, int id)
         {
             return table.Delete(a => a.Id == id);
         }
@@ -44,7 +44,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Audit.CreatedDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Audit> ByCreatedDate(this IQueryable<PLINQO.Tracker.Data.Audit> queryable, System.DateTime createdDate)
+        public static IQueryable<Tracker.Core.Data.Audit> ByCreatedDate(this IQueryable<Tracker.Core.Data.Audit> queryable, System.DateTime createdDate)
         {
             return queryable.Where(a => a.CreatedDate == createdDate);
         }
@@ -52,7 +52,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Audit.Date"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Audit> ByDate(this IQueryable<PLINQO.Tracker.Data.Audit> queryable, System.DateTime date)
+        public static IQueryable<Tracker.Core.Data.Audit> ByDate(this IQueryable<Tracker.Core.Data.Audit> queryable, System.DateTime date)
         {
             return queryable.Where(a => a.Date == date);
         }
@@ -60,7 +60,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Audit.Username"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Audit> ByUsername(this IQueryable<PLINQO.Tracker.Data.Audit> queryable, string username)
+        public static IQueryable<Tracker.Core.Data.Audit> ByUsername(this IQueryable<Tracker.Core.Data.Audit> queryable, string username)
         {
             return queryable.Where(a => a.Username == username);
         }
@@ -68,7 +68,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Audit.Content"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Audit> ByContent(this IQueryable<PLINQO.Tracker.Data.Audit> queryable, string content)
+        public static IQueryable<Tracker.Core.Data.Audit> ByContent(this IQueryable<Tracker.Core.Data.Audit> queryable, string content)
         {
             return queryable.Where(a => a.Content == content);
         }
@@ -76,7 +76,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Audit.UserId"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Audit> ByUserId(this IQueryable<PLINQO.Tracker.Data.Audit> queryable, int? userId)
+        public static IQueryable<Tracker.Core.Data.Audit> ByUserId(this IQueryable<Tracker.Core.Data.Audit> queryable, int? userId)
         {
             return queryable.Where(a => object.Equals(a.UserId, userId));
         }
@@ -84,7 +84,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Audit.TaskId"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Audit> ByTaskId(this IQueryable<PLINQO.Tracker.Data.Audit> queryable, int? taskId)
+        public static IQueryable<Tracker.Core.Data.Audit> ByTaskId(this IQueryable<Tracker.Core.Data.Audit> queryable, int? taskId)
         {
             return queryable.Where(a => object.Equals(a.TaskId, taskId));
         }
@@ -96,9 +96,9 @@ namespace PLINQO.Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, PLINQO.Tracker.Data.Audit> ByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.Audit> ByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int id) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int id) => 
                         db.Audit.FirstOrDefault(a => a.Id == id));
 
         }

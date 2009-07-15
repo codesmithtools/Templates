@@ -14,13 +14,13 @@ using System.Data.Linq;
 using System.Linq;
 using System.Text;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The manager class for Audit.
     /// </summary>
     public partial class AuditManager 
-        : CodeSmith.Data.EntityManagerBase<TrackerDataManager, PLINQO.Tracker.Data.Audit>
+        : CodeSmith.Data.EntityManagerBase<TrackerDataManager, Tracker.Core.Data.Audit>
     {
         /// <summary>
         /// Initializes the <see cref="AuditManager"/> class.
@@ -42,7 +42,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets the current context.
         /// </summary>
-        protected PLINQO.Tracker.Data.TrackerDataContext Context
+        protected Tracker.Core.Data.TrackerDataContext Context
         {
             get { return Manager.Context; }
         }
@@ -50,7 +50,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets the entity for this manager.
         /// </summary>
-        protected System.Data.Linq.Table<PLINQO.Tracker.Data.Audit> Entity
+        protected System.Data.Linq.Table<Tracker.Core.Data.Audit> Entity
         {
             get { return Manager.Context.Audit; }
         }
@@ -75,7 +75,7 @@ namespace PLINQO.Tracker.Data
         /// This method is expecting key to be of type IEntityKey&lt;int&gt;.
         /// </remarks>
         /// <exception cref="ArgumentException">Thrown when key is not of type IEntityKey&lt;int&gt;.</exception>
-        public override PLINQO.Tracker.Data.Audit GetByKey(CodeSmith.Data.IEntityKey key)
+        public override Tracker.Core.Data.Audit GetByKey(CodeSmith.Data.IEntityKey key)
         {
             if (key is CodeSmith.Data.IEntityKey<int>)
             {
@@ -92,7 +92,7 @@ namespace PLINQO.Tracker.Data
         /// Gets an instance by the primary key.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public PLINQO.Tracker.Data.Audit GetByKey(int id)
+        public Tracker.Core.Data.Audit GetByKey(int id)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByKey.Invoke(Context, id);
@@ -111,7 +111,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<PLINQO.Tracker.Data.Audit> GetByUserId(int? userId)
+        public IQueryable<Tracker.Core.Data.Audit> GetByUserId(int? userId)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByUserId.Invoke(Context, userId);
@@ -121,7 +121,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<PLINQO.Tracker.Data.Audit> GetByTaskId(int? taskId)
+        public IQueryable<Tracker.Core.Data.Audit> GetByTaskId(int? taskId)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByTaskId.Invoke(Context, taskId);
@@ -143,19 +143,19 @@ namespace PLINQO.Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, PLINQO.Tracker.Data.Audit> GetByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.Audit> GetByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int id) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int id) => 
                         db.Audit.FirstOrDefault(a => a.Id == id));
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int?, IQueryable<PLINQO.Tracker.Data.Audit>> GetByUserId = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int?, IQueryable<Tracker.Core.Data.Audit>> GetByUserId = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int? userId) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int? userId) => 
                         db.Audit.Where(a => a.UserId == userId));
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int?, IQueryable<PLINQO.Tracker.Data.Audit>> GetByTaskId = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int?, IQueryable<Tracker.Core.Data.Audit>> GetByTaskId = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int? taskId) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int? taskId) => 
                         db.Audit.Where(a => a.TaskId == taskId));
 
         }

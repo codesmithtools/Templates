@@ -10,7 +10,7 @@
 
 using System;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The DataContext manager class for the Tracker database.
@@ -18,18 +18,18 @@ namespace PLINQO.Tracker.Data
     public partial class TrackerDataContext
     {
         
-        private PLINQO.Tracker.Data.TrackerDataManager _manager = null;
+        private Tracker.Core.Data.TrackerDataManager _manager = null;
         
         /// <summary>
         /// Gets the data manager.
         /// </summary>
         /// <value>The data manager.</value>
-        public PLINQO.Tracker.Data.TrackerDataManager Manager
+        public Tracker.Core.Data.TrackerDataManager Manager
         {
             get
             {
                 if (_manager == null)
-                    _manager = new PLINQO.Tracker.Data.TrackerDataManager(this);
+                    _manager = new Tracker.Core.Data.TrackerDataManager(this);
                 return _manager;
             }
         }

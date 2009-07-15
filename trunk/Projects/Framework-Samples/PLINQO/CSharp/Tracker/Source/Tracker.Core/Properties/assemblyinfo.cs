@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PLINQO.Tracker.Data")]
+[assembly: AssemblyTitle("Tracker.Core.Data")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CodeSmith Tools, LLC")]
-[assembly: AssemblyProduct("PLINQO.Tracker.Data")]
+[assembly: AssemblyProduct("Tracker.Core.Data")]
 [assembly: AssemblyCopyright("Copyright © CodeSmith Tools, LLC 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

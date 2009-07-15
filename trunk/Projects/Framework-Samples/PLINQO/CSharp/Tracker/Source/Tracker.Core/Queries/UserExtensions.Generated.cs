@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using System.Data.Linq;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The query extension class for User.
@@ -22,11 +22,11 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static PLINQO.Tracker.Data.User ByKey(this IQueryable<PLINQO.Tracker.Data.User> queryable, int id)
+        public static Tracker.Core.Data.User ByKey(this IQueryable<Tracker.Core.Data.User> queryable, int id)
         {
-            var entity = queryable as System.Data.Linq.Table<PLINQO.Tracker.Data.User>;
+            var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.User>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((PLINQO.Tracker.Data.TrackerDataContext)entity.Context, id);
+                return Query.ByKey.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, id);
             
             return queryable.FirstOrDefault(u => u.Id == id);
         }
@@ -36,7 +36,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         /// <returns>The number of rows deleted from the database.</returns>
-        public static int Delete(this System.Data.Linq.Table<PLINQO.Tracker.Data.User> table, int id)
+        public static int Delete(this System.Data.Linq.Table<Tracker.Core.Data.User> table, int id)
         {
             return table.Delete(u => u.Id == id);
         }
@@ -45,11 +45,11 @@ namespace PLINQO.Tracker.Data
         /// Gets an instance by using a unique index.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public static PLINQO.Tracker.Data.User ByEmailAddress(this IQueryable<PLINQO.Tracker.Data.User> queryable, string emailAddress)
+        public static Tracker.Core.Data.User ByEmailAddress(this IQueryable<Tracker.Core.Data.User> queryable, string emailAddress)
         {
-            var entity = queryable as System.Data.Linq.Table<PLINQO.Tracker.Data.User>;
+            var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.User>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByEmailAddress.Invoke((PLINQO.Tracker.Data.TrackerDataContext)entity.Context, emailAddress);
+                return Query.ByEmailAddress.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, emailAddress);
 
             return queryable.FirstOrDefault(u => u.EmailAddress == emailAddress);
         }
@@ -57,7 +57,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.FirstName"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByFirstName(this IQueryable<PLINQO.Tracker.Data.User> queryable, string firstName)
+        public static IQueryable<Tracker.Core.Data.User> ByFirstName(this IQueryable<Tracker.Core.Data.User> queryable, string firstName)
         {
             return queryable.Where(u => object.Equals(u.FirstName, firstName));
         }
@@ -65,7 +65,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.LastName"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByLastName(this IQueryable<PLINQO.Tracker.Data.User> queryable, string lastName)
+        public static IQueryable<Tracker.Core.Data.User> ByLastName(this IQueryable<Tracker.Core.Data.User> queryable, string lastName)
         {
             return queryable.Where(u => object.Equals(u.LastName, lastName));
         }
@@ -73,7 +73,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.CreatedDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByCreatedDate(this IQueryable<PLINQO.Tracker.Data.User> queryable, System.DateTime createdDate)
+        public static IQueryable<Tracker.Core.Data.User> ByCreatedDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime createdDate)
         {
             return queryable.Where(u => u.CreatedDate == createdDate);
         }
@@ -81,7 +81,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.ModifiedDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByModifiedDate(this IQueryable<PLINQO.Tracker.Data.User> queryable, System.DateTime modifiedDate)
+        public static IQueryable<Tracker.Core.Data.User> ByModifiedDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime modifiedDate)
         {
             return queryable.Where(u => u.ModifiedDate == modifiedDate);
         }
@@ -89,7 +89,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.PasswordHash"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByPasswordHash(this IQueryable<PLINQO.Tracker.Data.User> queryable, string passwordHash)
+        public static IQueryable<Tracker.Core.Data.User> ByPasswordHash(this IQueryable<Tracker.Core.Data.User> queryable, string passwordHash)
         {
             return queryable.Where(u => u.PasswordHash == passwordHash);
         }
@@ -97,7 +97,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.PasswordSalt"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByPasswordSalt(this IQueryable<PLINQO.Tracker.Data.User> queryable, string passwordSalt)
+        public static IQueryable<Tracker.Core.Data.User> ByPasswordSalt(this IQueryable<Tracker.Core.Data.User> queryable, string passwordSalt)
         {
             return queryable.Where(u => u.PasswordSalt == passwordSalt);
         }
@@ -105,7 +105,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.Comment"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByComment(this IQueryable<PLINQO.Tracker.Data.User> queryable, string comment)
+        public static IQueryable<Tracker.Core.Data.User> ByComment(this IQueryable<Tracker.Core.Data.User> queryable, string comment)
         {
             return queryable.Where(u => object.Equals(u.Comment, comment));
         }
@@ -113,7 +113,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.IsApproved"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByIsApproved(this IQueryable<PLINQO.Tracker.Data.User> queryable, bool isApproved)
+        public static IQueryable<Tracker.Core.Data.User> ByIsApproved(this IQueryable<Tracker.Core.Data.User> queryable, bool isApproved)
         {
             return queryable.Where(u => u.IsApproved == isApproved);
         }
@@ -121,7 +121,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.LastLoginDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByLastLoginDate(this IQueryable<PLINQO.Tracker.Data.User> queryable, System.DateTime? lastLoginDate)
+        public static IQueryable<Tracker.Core.Data.User> ByLastLoginDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime? lastLoginDate)
         {
             return queryable.Where(u => object.Equals(u.LastLoginDate, lastLoginDate));
         }
@@ -129,7 +129,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.LastActivityDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByLastActivityDate(this IQueryable<PLINQO.Tracker.Data.User> queryable, System.DateTime lastActivityDate)
+        public static IQueryable<Tracker.Core.Data.User> ByLastActivityDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime lastActivityDate)
         {
             return queryable.Where(u => u.LastActivityDate == lastActivityDate);
         }
@@ -137,7 +137,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.LastPasswordChangeDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByLastPasswordChangeDate(this IQueryable<PLINQO.Tracker.Data.User> queryable, System.DateTime? lastPasswordChangeDate)
+        public static IQueryable<Tracker.Core.Data.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime? lastPasswordChangeDate)
         {
             return queryable.Where(u => object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate));
         }
@@ -145,7 +145,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.AvatarType"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.User> ByAvatarType(this IQueryable<PLINQO.Tracker.Data.User> queryable, string avatarType)
+        public static IQueryable<Tracker.Core.Data.User> ByAvatarType(this IQueryable<Tracker.Core.Data.User> queryable, string avatarType)
         {
             return queryable.Where(u => object.Equals(u.AvatarType, avatarType));
         }
@@ -157,14 +157,14 @@ namespace PLINQO.Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, PLINQO.Tracker.Data.User> ByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.User> ByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int id) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int id) => 
                         db.User.FirstOrDefault(u => u.Id == id));
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, string, PLINQO.Tracker.Data.User> ByEmailAddress = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, string, Tracker.Core.Data.User> ByEmailAddress = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, string emailAddress) => 
+                    (Tracker.Core.Data.TrackerDataContext db, string emailAddress) => 
                         db.User.FirstOrDefault(u => u.EmailAddress == emailAddress));
 
         }

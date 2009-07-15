@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using System.Data.Linq;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The query extension class for Status.
@@ -22,11 +22,11 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static PLINQO.Tracker.Data.Status ByKey(this IQueryable<PLINQO.Tracker.Data.Status> queryable, int id)
+        public static Tracker.Core.Data.Status ByKey(this IQueryable<Tracker.Core.Data.Status> queryable, int id)
         {
-            var entity = queryable as System.Data.Linq.Table<PLINQO.Tracker.Data.Status>;
+            var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.Status>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((PLINQO.Tracker.Data.TrackerDataContext)entity.Context, id);
+                return Query.ByKey.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, id);
             
             return queryable.FirstOrDefault(s => s.Id == id);
         }
@@ -36,7 +36,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         /// <returns>The number of rows deleted from the database.</returns>
-        public static int Delete(this System.Data.Linq.Table<PLINQO.Tracker.Data.Status> table, int id)
+        public static int Delete(this System.Data.Linq.Table<Tracker.Core.Data.Status> table, int id)
         {
             return table.Delete(s => s.Id == id);
         }
@@ -44,7 +44,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Status.Name"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Status> ByName(this IQueryable<PLINQO.Tracker.Data.Status> queryable, string name)
+        public static IQueryable<Tracker.Core.Data.Status> ByName(this IQueryable<Tracker.Core.Data.Status> queryable, string name)
         {
             return queryable.Where(s => s.Name == name);
         }
@@ -52,7 +52,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Status.Description"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Status> ByDescription(this IQueryable<PLINQO.Tracker.Data.Status> queryable, string description)
+        public static IQueryable<Tracker.Core.Data.Status> ByDescription(this IQueryable<Tracker.Core.Data.Status> queryable, string description)
         {
             return queryable.Where(s => object.Equals(s.Description, description));
         }
@@ -60,7 +60,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Status.Order"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Status> ByOrder(this IQueryable<PLINQO.Tracker.Data.Status> queryable, int order)
+        public static IQueryable<Tracker.Core.Data.Status> ByOrder(this IQueryable<Tracker.Core.Data.Status> queryable, int order)
         {
             return queryable.Where(s => s.Order == order);
         }
@@ -68,7 +68,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Status.CreatedDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Status> ByCreatedDate(this IQueryable<PLINQO.Tracker.Data.Status> queryable, System.DateTime createdDate)
+        public static IQueryable<Tracker.Core.Data.Status> ByCreatedDate(this IQueryable<Tracker.Core.Data.Status> queryable, System.DateTime createdDate)
         {
             return queryable.Where(s => s.CreatedDate == createdDate);
         }
@@ -76,7 +76,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Status.ModifiedDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Status> ByModifiedDate(this IQueryable<PLINQO.Tracker.Data.Status> queryable, System.DateTime modifiedDate)
+        public static IQueryable<Tracker.Core.Data.Status> ByModifiedDate(this IQueryable<Tracker.Core.Data.Status> queryable, System.DateTime modifiedDate)
         {
             return queryable.Where(s => s.ModifiedDate == modifiedDate);
         }
@@ -88,9 +88,9 @@ namespace PLINQO.Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, PLINQO.Tracker.Data.Status> ByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.Status> ByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int id) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int id) => 
                         db.Status.FirstOrDefault(s => s.Id == id));
 
         }

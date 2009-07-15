@@ -1,4 +1,4 @@
-<%@ Control Language="C#" CodeBehind="GridViewPager.ascx.cs" Inherits="PLINQO.Tracker.UI.GridViewPager" %>
+<%@ Control Language="C#" CodeBehind="GridViewPager.ascx.cs" Inherits="Tracker.DynamicData.UI.GridViewPager" %>
 
 <div class="pager">
     <span class="results1">

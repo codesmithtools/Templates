@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 using CodeSmith.Data.Attributes;
 using CodeSmith.Data.Rules;
 using CodeSmith.Data.Rules.Validation;
-using PLINQO.Tracker.Data.Rules;
+using Tracker.Core.Data.Rules;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     public partial class User
     {

@@ -1,4 +1,4 @@
-<%@ Control Language="C#" CodeBehind="Decimal_Edit.ascx.cs" Inherits="PLINQO.Tracker.UI.Decimal_EditField" %>
+<%@ Control Language="C#" CodeBehind="Decimal_Edit.ascx.cs" Inherits="Tracker.DynamicData.UI.Decimal_EditField" %>
 
 <asp:TextBox ID="TextBox1" runat="server" CssClass="droplist" Text='<%# FieldValueEditString %>' Columns="10"></asp:TextBox>
 

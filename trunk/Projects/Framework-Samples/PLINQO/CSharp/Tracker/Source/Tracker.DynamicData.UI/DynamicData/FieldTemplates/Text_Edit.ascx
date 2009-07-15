@@ -1,4 +1,4 @@
-<%@ Control Language="C#" CodeBehind="Text_Edit.ascx.cs" Inherits="PLINQO.Tracker.UI.Text_EditField" %>
+<%@ Control Language="C#" CodeBehind="Text_Edit.ascx.cs" Inherits="Tracker.DynamicData.UI.Text_EditField" %>
 
 <asp:TextBox ID="TextBox1" runat="server" Text='<%# FieldValueEditString %>' CssClass="droplist"></asp:TextBox>
 

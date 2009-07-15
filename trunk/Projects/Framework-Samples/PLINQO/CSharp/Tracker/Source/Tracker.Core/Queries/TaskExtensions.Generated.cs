@@ -11,7 +11,7 @@ using System;
 using System.Linq;
 using System.Data.Linq;
 
-namespace PLINQO.Tracker.Data
+namespace Tracker.Core.Data
 {
     /// <summary>
     /// The query extension class for Task.
@@ -22,11 +22,11 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static PLINQO.Tracker.Data.Task ByKey(this IQueryable<PLINQO.Tracker.Data.Task> queryable, int id)
+        public static Tracker.Core.Data.Task ByKey(this IQueryable<Tracker.Core.Data.Task> queryable, int id)
         {
-            var entity = queryable as System.Data.Linq.Table<PLINQO.Tracker.Data.Task>;
+            var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.Task>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((PLINQO.Tracker.Data.TrackerDataContext)entity.Context, id);
+                return Query.ByKey.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, id);
             
             return queryable.FirstOrDefault(t => t.Id == id);
         }
@@ -36,7 +36,7 @@ namespace PLINQO.Tracker.Data
         /// </summary>
         /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         /// <returns>The number of rows deleted from the database.</returns>
-        public static int Delete(this System.Data.Linq.Table<PLINQO.Tracker.Data.Task> table, int id)
+        public static int Delete(this System.Data.Linq.Table<Tracker.Core.Data.Task> table, int id)
         {
             return table.Delete(t => t.Id == id);
         }
@@ -44,7 +44,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Task.StatusId"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Task> ByStatusId(this IQueryable<PLINQO.Tracker.Data.Task> queryable, int statusId)
+        public static IQueryable<Tracker.Core.Data.Task> ByStatusId(this IQueryable<Tracker.Core.Data.Task> queryable, int statusId)
         {
             return queryable.Where(t => t.StatusId == statusId);
         }
@@ -52,7 +52,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Task.PriorityId"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Task> ByPriorityId(this IQueryable<PLINQO.Tracker.Data.Task> queryable, Priority priorityId)
+        public static IQueryable<Tracker.Core.Data.Task> ByPriorityId(this IQueryable<Tracker.Core.Data.Task> queryable, Priority priorityId)
         {
             return queryable.Where(t => t.PriorityId == priorityId);
         }
@@ -60,7 +60,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Task.CreatedId"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Task> ByCreatedId(this IQueryable<PLINQO.Tracker.Data.Task> queryable, int createdId)
+        public static IQueryable<Tracker.Core.Data.Task> ByCreatedId(this IQueryable<Tracker.Core.Data.Task> queryable, int createdId)
         {
             return queryable.Where(t => t.CreatedId == createdId);
         }
@@ -68,7 +68,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Task.Summary"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Task> BySummary(this IQueryable<PLINQO.Tracker.Data.Task> queryable, string summary)
+        public static IQueryable<Tracker.Core.Data.Task> BySummary(this IQueryable<Tracker.Core.Data.Task> queryable, string summary)
         {
             return queryable.Where(t => t.Summary == summary);
         }
@@ -76,7 +76,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Task.Details"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Task> ByDetails(this IQueryable<PLINQO.Tracker.Data.Task> queryable, string details)
+        public static IQueryable<Tracker.Core.Data.Task> ByDetails(this IQueryable<Tracker.Core.Data.Task> queryable, string details)
         {
             return queryable.Where(t => object.Equals(t.Details, details));
         }
@@ -84,7 +84,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Task.StartDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Task> ByStartDate(this IQueryable<PLINQO.Tracker.Data.Task> queryable, System.DateTime? startDate)
+        public static IQueryable<Tracker.Core.Data.Task> ByStartDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? startDate)
         {
             return queryable.Where(t => object.Equals(t.StartDate, startDate));
         }
@@ -92,7 +92,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Task.DueDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Task> ByDueDate(this IQueryable<PLINQO.Tracker.Data.Task> queryable, System.DateTime? dueDate)
+        public static IQueryable<Tracker.Core.Data.Task> ByDueDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? dueDate)
         {
             return queryable.Where(t => object.Equals(t.DueDate, dueDate));
         }
@@ -100,7 +100,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Task.CompleteDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Task> ByCompleteDate(this IQueryable<PLINQO.Tracker.Data.Task> queryable, System.DateTime? completeDate)
+        public static IQueryable<Tracker.Core.Data.Task> ByCompleteDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? completeDate)
         {
             return queryable.Where(t => object.Equals(t.CompleteDate, completeDate));
         }
@@ -108,7 +108,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Task.AssignedId"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Task> ByAssignedId(this IQueryable<PLINQO.Tracker.Data.Task> queryable, int? assignedId)
+        public static IQueryable<Tracker.Core.Data.Task> ByAssignedId(this IQueryable<Tracker.Core.Data.Task> queryable, int? assignedId)
         {
             return queryable.Where(t => object.Equals(t.AssignedId, assignedId));
         }
@@ -116,7 +116,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Task.CreatedDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Task> ByCreatedDate(this IQueryable<PLINQO.Tracker.Data.Task> queryable, System.DateTime createdDate)
+        public static IQueryable<Tracker.Core.Data.Task> ByCreatedDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime createdDate)
         {
             return queryable.Where(t => t.CreatedDate == createdDate);
         }
@@ -124,7 +124,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Task.ModifiedDate"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Task> ByModifiedDate(this IQueryable<PLINQO.Tracker.Data.Task> queryable, System.DateTime modifiedDate)
+        public static IQueryable<Tracker.Core.Data.Task> ByModifiedDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime modifiedDate)
         {
             return queryable.Where(t => t.ModifiedDate == modifiedDate);
         }
@@ -132,7 +132,7 @@ namespace PLINQO.Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Task.LastModifiedBy"/>.
         /// </summary>
-        public static IQueryable<PLINQO.Tracker.Data.Task> ByLastModifiedBy(this IQueryable<PLINQO.Tracker.Data.Task> queryable, string lastModifiedBy)
+        public static IQueryable<Tracker.Core.Data.Task> ByLastModifiedBy(this IQueryable<Tracker.Core.Data.Task> queryable, string lastModifiedBy)
         {
             return queryable.Where(t => object.Equals(t.LastModifiedBy, lastModifiedBy));
         }
@@ -144,9 +144,9 @@ namespace PLINQO.Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PLINQO.Tracker.Data.TrackerDataContext, int, PLINQO.Tracker.Data.Task> ByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.Task> ByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PLINQO.Tracker.Data.TrackerDataContext db, int id) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int id) => 
                         db.Task.FirstOrDefault(t => t.Id == id));
 
         }

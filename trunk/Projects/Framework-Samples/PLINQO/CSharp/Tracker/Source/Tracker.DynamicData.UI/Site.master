@@ -1,4 +1,4 @@
-<%@ Master Language="C#" CodeBehind="Site.master.cs" Inherits="PLINQO.Tracker.UI.Site" %>
+<%@ Master Language="C#" CodeBehind="Site.master.cs" Inherits="Tracker.DynamicData.UI.Site" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
