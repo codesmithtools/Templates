@@ -94,7 +94,6 @@
     <Compile Include="Models\TaskListViewData.cs" />
     <Compile Include="Models\TaskViewData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\CustomMembershipProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />

@@ -10,7 +10,7 @@ using System.Configuration;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace PLINQO.Mvc.UI.Providers
+namespace Tracker.Core.Data.Providers
 {
     public sealed class CustomMembershipProvider : MembershipProvider
     {

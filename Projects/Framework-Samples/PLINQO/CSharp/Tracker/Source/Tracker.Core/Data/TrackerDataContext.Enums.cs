@@ -35,7 +35,13 @@ namespace Tracker.Core.Data
         /// </summary>
         [Description("A Low Priority")]
         [EnumMember]
-        Low = 3
+        Low = 3,
+        /// <summary>
+        /// All of Tom's Tasks
+        /// </summary>
+        [Description("All of Tom's Tasks")]
+        [EnumMember]
+        VeryLow = 4
     }
     
 }

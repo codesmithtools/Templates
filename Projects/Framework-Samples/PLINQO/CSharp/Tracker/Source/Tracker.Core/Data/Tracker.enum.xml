@@ -4,5 +4,6 @@
     <Item Name="High" Value="1" Description="A High Priority" DataContractMember="true" />
     <Item Name="Normal" Value="2" Description="A Normal Priority" DataContractMember="true" />
     <Item Name="Low" Value="3" Description="A Low Priority" DataContractMember="true" />
+    <Item Name="VeryLow" Value="4" Description="All of Tom's Tasks" DataContractMember="true" />
   </Enum>
 </Database>

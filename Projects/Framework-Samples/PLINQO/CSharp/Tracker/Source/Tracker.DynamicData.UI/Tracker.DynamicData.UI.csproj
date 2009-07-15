@@ -300,7 +300,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Tracker.Core\Tracker.Core.Data.csproj">
       <Project>{2DF2FB49-6A04-4FD5-80D9-C662825787E3}</Project>
-      <Name>PLINQO.Tracker.Data</Name>
+      <Name>Tracker.Core.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
