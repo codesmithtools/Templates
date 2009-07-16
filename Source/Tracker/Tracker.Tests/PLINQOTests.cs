@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using CodeSmith.Data.Rules;
@@ -72,7 +73,8 @@ namespace Tracker.Tests
                 PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
                 PasswordSalt = "=Unc%",
                 EmailAddress = "laura.roslin@battlestar.com",
-                IsApproved = true
+                IsApproved = true,
+                LastActivityDate = DateTime.Now
             };
 
             using (var context = new TrackerDataContext())
@@ -91,7 +93,8 @@ namespace Tracker.Tests
                 PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
                 PasswordSalt = "=Unc%",
                 EmailAddress = "william.adama@battlestar.com",
-                IsApproved = true
+                IsApproved = true,
+                LastActivityDate = DateTime.Now
             });
 
             users.Add(new User()
@@ -101,7 +104,8 @@ namespace Tracker.Tests
                 PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
                 PasswordSalt = "=Unc%",
                 EmailAddress = "kara.starbuck@battlestar.com",
-                IsApproved = false
+                IsApproved = false,
+                LastActivityDate = DateTime.Now
             });
 
             users.Add(new User()
@@ -111,7 +115,8 @@ namespace Tracker.Tests
                 PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
                 PasswordSalt = "=Unc%",
                 EmailAddress = "saul.tigh@battlestar.com",
-                IsApproved = false
+                IsApproved = false,
+                LastActivityDate = DateTime.Now
             });
 
             users.Add(new User()
@@ -121,7 +126,8 @@ namespace Tracker.Tests
                 PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
                 PasswordSalt = "=Unc%",
                 EmailAddress = "ellen.tigh@battlestar.com",
-                IsApproved = false
+                IsApproved = false,
+                LastActivityDate = DateTime.Now
             });
 
             using (var context = new TrackerDataContext())
@@ -171,7 +177,33 @@ namespace Tracker.Tests
                 u.RoleList.Add(r);
                 context.SubmitChanges();
             }
+
+
         }
+
+        [Test]
+        public void Test_Many_To_Many_Remove()
+        {
+            using (var context = new TrackerDataContext())
+            {
+                context.Log = Console.Out;
+
+                User u = context.User.ByKey(UserId);
+                Role r = context.Role.ByName("Manager").First();
+                u.RoleList.Add(r);
+                context.SubmitChanges();
+
+                u.RoleList.Remove(r);
+                //u.UserRoleList.Remove();
+
+                //var changes = context.GetChangeSet();
+
+                context.SubmitChanges();
+            }
+
+
+        }
+
 
         [Test]
         public void Test_Enum()
@@ -378,8 +410,59 @@ namespace Tracker.Tests
                 IMultipleResults results = context.ExecuteQuery(q1, q2);
                 List<User> users = results.GetResult<User>().ToList();
                 List<UserRole> roles = results.GetResult<UserRole>().ToList();
+
+
             }
         }
 
+        [Test]
+        public void Test_Batch_Queries2()
+        {
+            using (var context = new TrackerDataContext())
+            {
+                context.Log = Console.Out;
+
+                if (context.Connection.State == ConnectionState.Closed)
+                    context.Connection.Open();
+
+                var transaction = context.Connection.BeginTransaction();
+                context.Transaction = transaction;
+
+                try
+                {
+                    var task = context.Task.FirstOrDefault();
+                    task.Details += " blah";
+
+                    var q1 = from u in context.User select u;
+                    var q2 = from ur in context.UserRole select ur;
+                    var results = context.ExecuteQuery(q1, q2);
+                    var users = results.GetResult<User>();
+                    var roles = results.GetResult<UserRole>();
+                    results.Dispose();
+
+                    context.SubmitChanges();
+
+                    
+                    var q3 = from u in context.Task select u;
+                    var q4 = from ur in context.TaskExtended select ur;
+
+                    var results2 = context.ExecuteQuery(q3, q4);
+                    var tasks = results2.GetResult<Task>();
+                    var extended = results2.GetResult<TaskExtended>();
+
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+                finally
+                {
+                    if (context.Connection.State != ConnectionState.Closed)
+                        context.Connection.Close();
+                }
+
+            }
+        }
     }
 }

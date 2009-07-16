@@ -108,6 +108,17 @@ namespace Tracker.Data
         {
             return Entity.Delete(u => u.Id == id);
         }
+        /// <summary>
+        /// Gets an instance by using a unique index.
+        /// </summary>
+        /// <returns>An instance of the entity or null if not found.</returns>
+        public Tracker.Data.User GetByEmailAddress(string emailAddress)
+        {
+            if (Context.LoadOptions == null) 
+                return Query.GetByEmailAddress.Invoke(Context, emailAddress);
+            else
+                return Entity.FirstOrDefault(u => u.EmailAddress == emailAddress);
+        }
 
         #region Extensibility Method Definitions
         /// <summary>Called by the static constructor to add shared rules.</summary>
@@ -127,6 +138,11 @@ namespace Tracker.Data
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Data.TrackerDataContext db, int id) => 
                         db.User.FirstOrDefault(u => u.Id == id));
+
+            internal static readonly Func<Tracker.Data.TrackerDataContext, string, Tracker.Data.User> GetByEmailAddress = 
+                System.Data.Linq.CompiledQuery.Compile(
+                    (Tracker.Data.TrackerDataContext db, string emailAddress) => 
+                        db.User.FirstOrDefault(u => u.EmailAddress == emailAddress));
 
         }
         #endregion

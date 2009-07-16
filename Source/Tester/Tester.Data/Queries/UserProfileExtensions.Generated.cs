@@ -44,9 +44,9 @@ namespace Tester.Data
         /// <summary>
         /// Gets a query for <see cref="UserProfile.UserId"/>.
         /// </summary>
-        public static IQueryable<Tester.Data.UserProfile> GetByUserId(this IQueryable<Tester.Data.UserProfile> queryable, Nullable<int> userId)
+        public static IQueryable<Tester.Data.UserProfile> GetByUserId(this IQueryable<Tester.Data.UserProfile> queryable, int? userId)
         {
-            return queryable.Where(u => u.UserId == userId);
+            return queryable.Where(u => object.Equals(u.UserId, userId));
         }
         
         /// <summary>

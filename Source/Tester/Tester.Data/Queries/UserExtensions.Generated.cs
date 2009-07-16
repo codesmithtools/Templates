@@ -70,7 +70,7 @@ namespace Tester.Data
         /// </summary>
         public static IQueryable<Tester.Data.User> GetByComments(this IQueryable<Tester.Data.User> queryable, string comments)
         {
-            return queryable.Where(u => u.Comments == comments);
+            return queryable.Where(u => object.Equals(u.Comments, comments));
         }
 
         #region Query

@@ -47,7 +47,7 @@ namespace Tester.Data
 
         private void Initialize()
         {
-            _userProfile = default(System.Data.Linq.EntityRef<UserProfile>);
+            _userProfileList = new System.Data.Linq.EntitySet<UserProfile>(OnUserProfileListAdd, OnUserProfileListRemove);
         }
         #endregion
 
@@ -175,37 +175,33 @@ namespace Tester.Data
 
         #region Association Mapped Properties
 
-        private System.Data.Linq.EntityRef<UserProfile> _userProfile;
+        private System.Data.Linq.EntitySet<UserProfile> _userProfileList;
 
         /// <summary>
         /// Gets or sets the UserProfile association.
         /// </summary>
-        [System.Data.Linq.Mapping.Association(Name = "User_UserProfile", Storage = "_userProfile", ThisKey = "Id", OtherKey = "UserId", IsUnique = true)]
-        [System.Runtime.Serialization.DataMember(Order = 6, EmitDefaultValue = false)]
-        public UserProfile UserProfile
+        [System.Data.Linq.Mapping.Association(Name = "User_UserProfile", Storage = "_userProfileList", ThisKey = "Id", OtherKey = "UserId")]
+        [System.Runtime.Serialization.DataMember(Order=6, EmitDefaultValue=false)]
+        public System.Data.Linq.EntitySet<UserProfile> UserProfileList
         {
-            get { return (serializing && !_userProfile.HasLoadedOrAssignedValue) ? null : _userProfile.Entity; }
-            set
-            {
-                UserProfile previousValue = _userProfile.Entity;
-                if (previousValue != value || _userProfile.HasLoadedOrAssignedValue == false)
-                {
-                    OnUserProfileChanging(value);
-                    SendPropertyChanging("UserProfile");
-                    if (previousValue != null)
-                    {
-                        _userProfile.Entity = null;
-                        previousValue.User = null;
-                    }
-                    _userProfile.Entity = value;
-                    if (value != null)
-                    {
-                        value.User = this;
-                    }
-                    SendPropertyChanged("UserProfile");
-                    OnUserProfileChanged();
-                }
-            }
+            get { return (serializing && !_userProfileList.HasLoadedOrAssignedValues) ? null : _userProfileList; }
+            set { _userProfileList.Assign(value); }
+        }
+
+        [System.Diagnostics.DebuggerNonUserCode]
+        private void OnUserProfileListAdd(UserProfile entity)
+        {
+            SendPropertyChanging(null);
+            entity.User = this;
+            SendPropertyChanged(null);
+        }
+
+        [System.Diagnostics.DebuggerNonUserCode]
+        private void OnUserProfileListRemove(UserProfile entity)
+        {
+            SendPropertyChanging(null);
+            entity.User = null;
+            SendPropertyChanged(null);
         }
         #endregion
 
@@ -243,11 +239,6 @@ namespace Tester.Data
         partial void OnCommentsChanging(string value);
         /// <summary>Called after <see cref="Comments"/> has Changed.</summary>
         partial void OnCommentsChanged();
-        /// <summary>Called when <see cref="UserProfile"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnUserProfileChanging(UserProfile value);
-        /// <summary>Called after <see cref="UserProfile"/> has Changed.</summary>
-        partial void OnUserProfileChanged();
 
         #endregion
 
@@ -331,7 +322,7 @@ namespace Tester.Data
                 return;
 
             base.Detach();
-            _userProfile = Detach(_userProfile);
+            _userProfileList = Detach(_userProfileList, OnUserProfileListAdd, OnUserProfileListRemove);
         }
         #endregion
     }

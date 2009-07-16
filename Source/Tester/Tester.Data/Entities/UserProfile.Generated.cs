@@ -172,12 +172,12 @@ namespace Tester.Data
                     if (previousValue != null)
                     {
                         _user.Entity = null;
-                        previousValue.UserProfile = null;
+                        previousValue.UserProfileList.Remove(this);
                     }
                     _user.Entity = value;
                     if (value != null)
                     {
-                        value.UserProfile = this;
+                        value.UserProfileList.Add(this);
                         _userId = value.Id;
                     }
                     else

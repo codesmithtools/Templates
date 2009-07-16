@@ -78,39 +78,39 @@ namespace Tracker.Data
         /// </summary>
         public static IQueryable<Tracker.Data.Task> ByDetails(this IQueryable<Tracker.Data.Task> queryable, string details)
         {
-            return queryable.Where(t => t.Details == details);
+            return queryable.Where(t => object.Equals(t.Details, details));
         }
         
         /// <summary>
         /// Gets a query for <see cref="Task.StartDate"/>.
         /// </summary>
-        public static IQueryable<Tracker.Data.Task> ByStartDate(this IQueryable<Tracker.Data.Task> queryable, Nullable<System.DateTime> startDate)
+        public static IQueryable<Tracker.Data.Task> ByStartDate(this IQueryable<Tracker.Data.Task> queryable, System.DateTime? startDate)
         {
-            return queryable.Where(t => t.StartDate == startDate);
+            return queryable.Where(t => object.Equals(t.StartDate, startDate));
         }
         
         /// <summary>
         /// Gets a query for <see cref="Task.DueDate"/>.
         /// </summary>
-        public static IQueryable<Tracker.Data.Task> ByDueDate(this IQueryable<Tracker.Data.Task> queryable, Nullable<System.DateTime> dueDate)
+        public static IQueryable<Tracker.Data.Task> ByDueDate(this IQueryable<Tracker.Data.Task> queryable, System.DateTime? dueDate)
         {
-            return queryable.Where(t => t.DueDate == dueDate);
+            return queryable.Where(t => object.Equals(t.DueDate, dueDate));
         }
         
         /// <summary>
         /// Gets a query for <see cref="Task.CompleteDate"/>.
         /// </summary>
-        public static IQueryable<Tracker.Data.Task> ByCompleteDate(this IQueryable<Tracker.Data.Task> queryable, Nullable<System.DateTime> completeDate)
+        public static IQueryable<Tracker.Data.Task> ByCompleteDate(this IQueryable<Tracker.Data.Task> queryable, System.DateTime? completeDate)
         {
-            return queryable.Where(t => t.CompleteDate == completeDate);
+            return queryable.Where(t => object.Equals(t.CompleteDate, completeDate));
         }
         
         /// <summary>
         /// Gets a query for <see cref="Task.AssignedId"/>.
         /// </summary>
-        public static IQueryable<Tracker.Data.Task> ByAssignedId(this IQueryable<Tracker.Data.Task> queryable, Nullable<int> assignedId)
+        public static IQueryable<Tracker.Data.Task> ByAssignedId(this IQueryable<Tracker.Data.Task> queryable, int? assignedId)
         {
-            return queryable.Where(t => t.AssignedId == assignedId);
+            return queryable.Where(t => object.Equals(t.AssignedId, assignedId));
         }
         
         /// <summary>
@@ -134,7 +134,7 @@ namespace Tracker.Data
         /// </summary>
         public static IQueryable<Tracker.Data.Task> ByLastModifiedBy(this IQueryable<Tracker.Data.Task> queryable, string lastModifiedBy)
         {
-            return queryable.Where(t => t.LastModifiedBy == lastModifiedBy);
+            return queryable.Where(t => object.Equals(t.LastModifiedBy, lastModifiedBy));
         }
 
         #region Query

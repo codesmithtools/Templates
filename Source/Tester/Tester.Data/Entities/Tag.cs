@@ -21,7 +21,7 @@ namespace Tester.Data
 
 
         [Audit]
-        private class Metadata
+        internal class Metadata
         {
             // Only Attributes in the class will be preserved.
 
@@ -29,6 +29,12 @@ namespace Tester.Data
 
             [Required]
             public string Name { get; set; }
+
+            public string T { get; set; }
+
+            public TagEnum Type { get; set; }
+
+            public int IsBlah { get; set; }
 
             public string CreatedBy { get; set; }
 
@@ -42,12 +48,6 @@ namespace Tester.Data
             public System.DateTime ModifiedDate { get; set; }
 
             public System.Data.Linq.Binary RowVersion { get; set; }
-
-            public TagEnum Type { get; set; }
-
-            public int IsBlah { get; set; }
-
-            public string T { get; set; }
 
         }
 

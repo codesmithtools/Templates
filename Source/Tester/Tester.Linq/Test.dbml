@@ -20,11 +20,54 @@
       <Association Name="User_UserProfile" Member="User" ThisKey="UserId" OtherKey="Id" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.[Order]" Member="Orders">
+    <Type Name="Order">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Total" Type="System.Decimal" DbType="Decimal(18,0) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OrderLine" Member="OrderLines">
+    <Type Name="OrderLine">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="OrderId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ItemId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Quantity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Total" Type="System.Decimal" DbType="Decimal(18,0) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Person" Member="Persons">
+    <Type Name="Person">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="Type" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" IsDiscriminator="true" />
+      <Type Name="Contact" InheritanceCode="1">
+        <Column Name="EmailAddress" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+        <Column Name="Phone" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      </Type>
+      <Type Name="Employee" IsInheritanceDefault="true">
+        <Column Name="JobTitle" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+        <Column Name="HireDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+        <Column Name="Salary" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+        <Type Name="SalesPerson" InheritanceCode="3">
+          <Column Name="Bonus" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+          <Column Name="Sales" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+        </Type>
+        <Type Name="Programmer" InheritanceCode="2">
+          <Column Name="Language" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+          <Column Name="[Level]" Member="Level" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+        </Type>
+      </Type>
+    </Type>
+  </Table>
   <Table Name="dbo.Tag" Member="Tags">
     <Type Name="Tag">
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="Type" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
+      <Column Name="T" Type="System.String" DbType="NChar(10)" CanBeNull="true" />
+      <Column Name="Type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="IsBlah" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="CreatedBy" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="CreatedDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="ModifiedBy" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
@@ -47,7 +90,15 @@
       <Column Name="Password" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="EmailAddress" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="Comments" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
-      <Association Name="User_UserProfile" Member="UserProfiles" ThisKey="Id" OtherKey="UserId" Type="UserProfile" Cardinality="One" />
+      <Association Name="User_UserProfile" Member="UserProfiles" ThisKey="Id" OtherKey="UserId" Type="UserProfile" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserAccount" Member="UserAccounts">
+    <Type Name="UserAccount">
+      <Column Name="UserAccountID" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FirstName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="LastName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="ZipCode" Type="System.String" DbType="NVarChar(25) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
 </Database>

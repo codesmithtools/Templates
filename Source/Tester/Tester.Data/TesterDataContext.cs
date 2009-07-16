@@ -15,6 +15,13 @@ namespace Tester.Data
         //    
         //}
         #endregion
+        public IQueryable<Programmer> Programmer
+        { 
+            get
+            {
+                return Person.OfType<Programmer>();
+            }
+        }
 
         //partial void BeforeSubmitChanges()
         //{

@@ -52,17 +52,17 @@ namespace Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="Audit.UserId"/>.
         /// </summary>
-        public static IQueryable<Tracker.Data.Audit> ByUserId(this IQueryable<Tracker.Data.Audit> queryable, Nullable<int> userId)
+        public static IQueryable<Tracker.Data.Audit> ByUserId(this IQueryable<Tracker.Data.Audit> queryable, int? userId)
         {
-            return queryable.Where(a => a.UserId == userId);
+            return queryable.Where(a => object.Equals(a.UserId, userId));
         }
         
         /// <summary>
         /// Gets a query for <see cref="Audit.TaskId"/>.
         /// </summary>
-        public static IQueryable<Tracker.Data.Audit> ByTaskId(this IQueryable<Tracker.Data.Audit> queryable, Nullable<int> taskId)
+        public static IQueryable<Tracker.Data.Audit> ByTaskId(this IQueryable<Tracker.Data.Audit> queryable, int? taskId)
         {
-            return queryable.Where(a => a.TaskId == taskId);
+            return queryable.Where(a => object.Equals(a.TaskId, taskId));
         }
         
         /// <summary>

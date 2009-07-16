@@ -116,7 +116,7 @@ namespace Tracker.Data
         /// <summary>
         /// Gets or sets the Role association.
         /// </summary>
-        [System.Data.Linq.Mapping.Association(Name = "Role_UserRole", Storage = "_role", ThisKey = "RoleId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
+        [System.Data.Linq.Mapping.Association(Name = "Role_UserRole", Storage = "_role", ThisKey = "RoleId", OtherKey = "Id", IsUnique = true, IsForeignKey = true, DeleteOnNull = true)]
         [System.Runtime.Serialization.DataMember(Order = 3, EmitDefaultValue = false)]
         public Role Role
         {
@@ -154,7 +154,7 @@ namespace Tracker.Data
         /// <summary>
         /// Gets or sets the User association.
         /// </summary>
-        [System.Data.Linq.Mapping.Association(Name = "User_UserRole", Storage = "_user", ThisKey = "UserId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
+        [System.Data.Linq.Mapping.Association(Name = "User_UserRole", Storage = "_user", ThisKey = "UserId", OtherKey = "Id", IsUnique = true, IsForeignKey = true, DeleteOnNull = true)]
         [System.Runtime.Serialization.DataMember(Order = 4, EmitDefaultValue = false)]
         public User User
         {

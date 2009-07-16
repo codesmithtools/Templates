@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Data.Linq;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 using CodeSmith.Data.Attributes;
@@ -21,7 +22,7 @@ namespace Tester.Data
         #region Metadata
 
 
-        private class Metadata
+        internal class Metadata
         {
             // Only Attributes in the class will be preserved.
 
@@ -32,6 +33,7 @@ namespace Tester.Data
 
             [Required]
             [DataType(DataType.Password)]
+            [AuditPropertyFormat(typeof(User), "FormatPassword")]
             public string Password { get; set; }
 
             [Required]
@@ -40,10 +42,17 @@ namespace Tester.Data
 
             public string Comments { get; set; }
 
-            public UserProfile UserProfile { get; set; }
+            public EntitySet<UserProfile> UserProfileList { get; set; }
 
         }
 
         #endregion
+
+        public static object FormatPassword(MemberInfo memberInfo, object value, object entity)
+        {
+            return value;
+        }
     }
+
+
 }

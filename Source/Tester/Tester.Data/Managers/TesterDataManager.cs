@@ -25,6 +25,13 @@ namespace Tester.Data
         public TesterDataManager(Tester.Data.TesterDataContext context) : base(context)
         {
             _auditManager = new AuditManager(this);
+            _automobileManager = new AutomobileManager(this);
+            _junctionManager = new JunctionManager(this);
+            _leftManager = new LeftManager(this);
+            _orderManager = new OrderManager(this);
+            _orderLineManager = new OrderLineManager(this);
+            _personManager = new PersonManager(this);
+            _rightManager = new RightManager(this);
             _tagManager = new TagManager(this);
             _userManager = new UserManager(this);
             _userAccountManager = new UserAccountManager(this);
@@ -40,6 +47,76 @@ namespace Tester.Data
         public AuditManager Audit
         {
             get { return _auditManager; }
+        }
+        
+        private AutomobileManager _automobileManager;
+
+        /// <summary>
+        /// Gets the manager for Automobile.
+        /// </summary>
+        public AutomobileManager Automobile
+        {
+            get { return _automobileManager; }
+        }
+        
+        private JunctionManager _junctionManager;
+
+        /// <summary>
+        /// Gets the manager for Junction.
+        /// </summary>
+        public JunctionManager Junction
+        {
+            get { return _junctionManager; }
+        }
+        
+        private LeftManager _leftManager;
+
+        /// <summary>
+        /// Gets the manager for Left.
+        /// </summary>
+        public LeftManager Left
+        {
+            get { return _leftManager; }
+        }
+        
+        private OrderManager _orderManager;
+
+        /// <summary>
+        /// Gets the manager for Order.
+        /// </summary>
+        public OrderManager Order
+        {
+            get { return _orderManager; }
+        }
+        
+        private OrderLineManager _orderLineManager;
+
+        /// <summary>
+        /// Gets the manager for OrderLine.
+        /// </summary>
+        public OrderLineManager OrderLine
+        {
+            get { return _orderLineManager; }
+        }
+        
+        private PersonManager _personManager;
+
+        /// <summary>
+        /// Gets the manager for Person.
+        /// </summary>
+        public PersonManager Person
+        {
+            get { return _personManager; }
+        }
+        
+        private RightManager _rightManager;
+
+        /// <summary>
+        /// Gets the manager for Right.
+        /// </summary>
+        public RightManager Right
+        {
+            get { return _rightManager; }
         }
         
         private TagManager _tagManager;

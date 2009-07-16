@@ -132,6 +132,48 @@ namespace Tester.Data
             get { return GetTable<Tester.Data.Audit>(); }
         }
         
+        /// <summary>Represents the dbo.Automobile table in the underlying database.</summary>
+        public System.Data.Linq.Table<Tester.Data.Automobile> Automobile
+        {
+            get { return GetTable<Tester.Data.Automobile>(); }
+        }
+        
+        /// <summary>Represents the dbo.Junction table in the underlying database.</summary>
+        public System.Data.Linq.Table<Tester.Data.Junction> Junction
+        {
+            get { return GetTable<Tester.Data.Junction>(); }
+        }
+        
+        /// <summary>Represents the dbo.Left table in the underlying database.</summary>
+        public System.Data.Linq.Table<Tester.Data.Left> Left
+        {
+            get { return GetTable<Tester.Data.Left>(); }
+        }
+        
+        /// <summary>Represents the dbo.Order table in the underlying database.</summary>
+        public System.Data.Linq.Table<Tester.Data.Order> Order
+        {
+            get { return GetTable<Tester.Data.Order>(); }
+        }
+        
+        /// <summary>Represents the dbo.OrderLine table in the underlying database.</summary>
+        public System.Data.Linq.Table<Tester.Data.OrderLine> OrderLine
+        {
+            get { return GetTable<Tester.Data.OrderLine>(); }
+        }
+        
+        /// <summary>Represents the dbo.Person table in the underlying database.</summary>
+        public System.Data.Linq.Table<Tester.Data.Person> Person
+        {
+            get { return GetTable<Tester.Data.Person>(); }
+        }
+        
+        /// <summary>Represents the dbo.Right table in the underlying database.</summary>
+        public System.Data.Linq.Table<Tester.Data.Right> Right
+        {
+            get { return GetTable<Tester.Data.Right>(); }
+        }
+        
         /// <summary>Represents the dbo.Tag table in the underlying database.</summary>
         public System.Data.Linq.Table<Tester.Data.Tag> Tag
         {
@@ -162,8 +204,8 @@ namespace Tester.Data
         /// <summary>Method that is mapped to the dbo.GetUser database procedure.</summary>
         /// <returns></returns>
         [System.Data.Linq.Mapping.Function(Name="dbo.GetUser")]
-        [System.Data.Linq.Mapping.ResultType(typeof(Tester.Data.User))]
-        [System.Data.Linq.Mapping.ResultType(typeof(Tester.Data.UserProfile))]
+        [System.Data.Linq.Mapping.ResultType(typeof(Tester.Data.GetUserResult1))]
+        [System.Data.Linq.Mapping.ResultType(typeof(Tester.Data.GetUserResult2))]
         public System.Data.Linq.IMultipleResults GetUser(
             [System.Data.Linq.Mapping.Parameter(DbType="int")] int? userId)
         {
@@ -171,18 +213,6 @@ namespace Tester.Data
             var result = this.ExecuteMethodCall(this, methodInfo, userId);
             
             return ((System.Data.Linq.IMultipleResults)(result.ReturnValue));
-        }
-
-        /// <summary>Method that is mapped to the dbo.GetUserProfile database procedure.</summary>
-        /// <returns></returns>
-        [System.Data.Linq.Mapping.Function(Name="dbo.GetUserProfile")]
-        public System.Data.Linq.ISingleResult<Tester.Data.IndexableUser> GetUserProfile(
-            [System.Data.Linq.Mapping.Parameter(DbType="int")] int? userId)
-        {
-            var methodInfo = (System.Reflection.MethodInfo)System.Reflection.MethodInfo.GetCurrentMethod();
-            var result = this.ExecuteMethodCall(this, methodInfo, userId);
-            
-            return ((System.Data.Linq.ISingleResult<Tester.Data.IndexableUser>)(result.ReturnValue));
         }
 
         /// <summary>Method that is mapped to the dbo.GetUserFixed database procedure.</summary>
@@ -199,6 +229,18 @@ namespace Tester.Data
             return ((System.Data.Linq.IMultipleResults)(result.ReturnValue));
         }
 
+        /// <summary>Method that is mapped to the dbo.GetUserProfile database procedure.</summary>
+        /// <returns></returns>
+        [System.Data.Linq.Mapping.Function(Name="dbo.GetUserProfile")]
+        public System.Data.Linq.ISingleResult<Tester.Data.GetUserProfileResult> GetUserProfile(
+            [System.Data.Linq.Mapping.Parameter(DbType="int")] int? userId)
+        {
+            var methodInfo = (System.Reflection.MethodInfo)System.Reflection.MethodInfo.GetCurrentMethod();
+            var result = this.ExecuteMethodCall(this, methodInfo, userId);
+            
+            return ((System.Data.Linq.ISingleResult<Tester.Data.GetUserProfileResult>)(result.ReturnValue));
+        }
+
         #endregion
 
         #region Extensibility Method Definitions
@@ -213,6 +255,69 @@ namespace Tester.Data
         /// <summary>Called before a <see cref="Audit"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
         partial void DeleteAudit(Tester.Data.Audit instance);
+        /// <summary>Called before a <see cref="Automobile"/> is inserted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void InsertAutomobile(Tester.Data.Automobile instance);
+        /// <summary>Called before a <see cref="Automobile"/> is updated.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void UpdateAutomobile(Tester.Data.Automobile instance);
+        /// <summary>Called before a <see cref="Automobile"/> is deleted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void DeleteAutomobile(Tester.Data.Automobile instance);
+        /// <summary>Called before a <see cref="Junction"/> is inserted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void InsertJunction(Tester.Data.Junction instance);
+        /// <summary>Called before a <see cref="Junction"/> is updated.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void UpdateJunction(Tester.Data.Junction instance);
+        /// <summary>Called before a <see cref="Junction"/> is deleted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void DeleteJunction(Tester.Data.Junction instance);
+        /// <summary>Called before a <see cref="Left"/> is inserted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void InsertLeft(Tester.Data.Left instance);
+        /// <summary>Called before a <see cref="Left"/> is updated.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void UpdateLeft(Tester.Data.Left instance);
+        /// <summary>Called before a <see cref="Left"/> is deleted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void DeleteLeft(Tester.Data.Left instance);
+        /// <summary>Called before a <see cref="Order"/> is inserted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void InsertOrder(Tester.Data.Order instance);
+        /// <summary>Called before a <see cref="Order"/> is updated.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void UpdateOrder(Tester.Data.Order instance);
+        /// <summary>Called before a <see cref="Order"/> is deleted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void DeleteOrder(Tester.Data.Order instance);
+        /// <summary>Called before a <see cref="OrderLine"/> is inserted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void InsertOrderLine(Tester.Data.OrderLine instance);
+        /// <summary>Called before a <see cref="OrderLine"/> is updated.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void UpdateOrderLine(Tester.Data.OrderLine instance);
+        /// <summary>Called before a <see cref="OrderLine"/> is deleted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void DeleteOrderLine(Tester.Data.OrderLine instance);
+        /// <summary>Called before a <see cref="Person"/> is inserted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void InsertPerson(Tester.Data.Person instance);
+        /// <summary>Called before a <see cref="Person"/> is updated.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void UpdatePerson(Tester.Data.Person instance);
+        /// <summary>Called before a <see cref="Person"/> is deleted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void DeletePerson(Tester.Data.Person instance);
+        /// <summary>Called before a <see cref="Right"/> is inserted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void InsertRight(Tester.Data.Right instance);
+        /// <summary>Called before a <see cref="Right"/> is updated.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void UpdateRight(Tester.Data.Right instance);
+        /// <summary>Called before a <see cref="Right"/> is deleted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void DeleteRight(Tester.Data.Right instance);
         /// <summary>Called before a <see cref="Tag"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
         partial void InsertTag(Tester.Data.Tag instance);
