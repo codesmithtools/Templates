@@ -30,26 +30,32 @@ namespace System.Data.Linq
             foreach (var query in queries)
                 commandList.Add(context.GetCommand(query));
 
-            SqlCommand batchCommand = CombineCommands(commandList);
-            batchCommand.Connection = context.Connection as SqlConnection;
-
-            if (batchCommand.Connection == null)
-                throw new InvalidOperationException("The DataContext must contain a valid SqlConnection.");
-
-            if (context.Transaction != null)
-                batchCommand.Transaction = context.Transaction as SqlTransaction;
-
-            DbDataReader dr;
-
-            if (batchCommand.Connection.State == ConnectionState.Closed)
+            using (SqlCommand batchCommand = CombineCommands(commandList))
             {
-                batchCommand.Connection.Open();
-                dr = batchCommand.ExecuteReader(CommandBehavior.CloseConnection);
-            }
-            else
-                dr = batchCommand.ExecuteReader();
+                batchCommand.Connection = context.Connection as SqlConnection;
 
-            return dr == null ? null : context.Translate(dr);
+
+                if (batchCommand.Connection == null)
+                    throw new InvalidOperationException("The DataContext must contain a valid SqlConnection.");
+
+                if (context.Transaction != null)
+                    batchCommand.Transaction = context.Transaction as SqlTransaction;
+
+                DbDataReader dr;
+
+                if (batchCommand.Connection.State == ConnectionState.Closed)
+                {
+                    batchCommand.Connection.Open();
+                    dr = batchCommand.ExecuteReader(CommandBehavior.CloseConnection);
+                }
+                else
+                    dr = batchCommand.ExecuteReader();
+
+                if (dr == null)
+                    return null;
+
+                return context.Translate(dr);
+            }
         }
 
         /// <summary>

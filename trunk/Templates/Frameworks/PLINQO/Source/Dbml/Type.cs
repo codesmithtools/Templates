@@ -168,10 +168,10 @@ namespace LinqToSqlShared.DbmlObjectModel
 
             // check all columns
             foreach (var c in Columns)
-                if (c.IsPrimaryKey == false
-                    && c.IsDbGenerated == false
-                    && c.IsVersion == false
-                    && c.IsReadOnly == false
+                if (c.IsPrimaryKey != true
+                    && c.IsDbGenerated != true
+                    && c.IsVersion != true
+                    && c.IsReadOnly != true
                     && string.IsNullOrEmpty(c.Expression)
                     && !fColumns.Contains(c))
                     return false;
