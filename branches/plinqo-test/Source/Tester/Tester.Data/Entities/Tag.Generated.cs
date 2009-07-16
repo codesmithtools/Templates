@@ -99,120 +99,26 @@ namespace Tester.Data
             }
         }
 
-        private string _createdBy;
+        private string _T;
 
         /// <summary>
-        /// Gets or sets the CreatedBy column value.
+        /// Gets or sets the T column value.
         /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "CreatedBy", Storage = "_createdBy", DbType = "nvarchar(50)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.ComponentModel.DataAnnotations.StringLength(50)]
+        [System.Data.Linq.Mapping.Column(Name = "T", Storage = "_T", DbType = "nchar(10)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
+        [System.ComponentModel.DataAnnotations.StringLength(10)]
         [System.Runtime.Serialization.DataMember(Order = 3)]
-        public string CreatedBy
+        public string T
         {
-            get { return _createdBy; }
+            get { return _T; }
             set
             {
-                if (_createdBy != value)
+                if (_T != value)
                 {
-                    OnCreatedByChanging(value);
-                    SendPropertyChanging("CreatedBy");
-                    _createdBy = value;
-                    SendPropertyChanged("CreatedBy");
-                    OnCreatedByChanged();
-                }
-            }
-        }
-
-        private System.DateTime _createdDate;
-
-        /// <summary>
-        /// Gets or sets the CreatedDate column value.
-        /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "CreatedDate", Storage = "_createdDate", DbType = "datetime NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 4)]
-        public System.DateTime CreatedDate
-        {
-            get { return _createdDate; }
-            set
-            {
-                if (_createdDate != value)
-                {
-                    OnCreatedDateChanging(value);
-                    SendPropertyChanging("CreatedDate");
-                    _createdDate = value;
-                    SendPropertyChanged("CreatedDate");
-                    OnCreatedDateChanged();
-                }
-            }
-        }
-
-        private string _modifiedBy;
-
-        /// <summary>
-        /// Gets or sets the ModifiedBy column value.
-        /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "ModifiedBy", Storage = "_modifiedBy", DbType = "nvarchar(50)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.ComponentModel.DataAnnotations.StringLength(50)]
-        [System.Runtime.Serialization.DataMember(Order = 5)]
-        public string ModifiedBy
-        {
-            get { return _modifiedBy; }
-            set
-            {
-                if (_modifiedBy != value)
-                {
-                    OnModifiedByChanging(value);
-                    SendPropertyChanging("ModifiedBy");
-                    _modifiedBy = value;
-                    SendPropertyChanged("ModifiedBy");
-                    OnModifiedByChanged();
-                }
-            }
-        }
-
-        private System.DateTime _modifiedDate;
-
-        /// <summary>
-        /// Gets or sets the ModifiedDate column value.
-        /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "ModifiedDate", Storage = "_modifiedDate", DbType = "datetime NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 6)]
-        public System.DateTime ModifiedDate
-        {
-            get { return _modifiedDate; }
-            set
-            {
-                if (_modifiedDate != value)
-                {
-                    OnModifiedDateChanging(value);
-                    SendPropertyChanging("ModifiedDate");
-                    _modifiedDate = value;
-                    SendPropertyChanged("ModifiedDate");
-                    OnModifiedDateChanged();
-                }
-            }
-        }
-
-        private System.Data.Linq.Binary _rowVersion = default(System.Data.Linq.Binary);
-
-        /// <summary>
-        /// Gets the RowVersion column value.
-        /// </summary>
-        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        [System.Data.Linq.Mapping.Column(Name = "RowVersion", Storage = "_rowVersion", DbType = "timestamp NOT NULL", IsDbGenerated = true, IsVersion = true, CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 7)]
-        public System.Data.Linq.Binary RowVersion
-        {
-            get { return _rowVersion; }
-            set
-            {
-                if (_rowVersion != value)
-                {
-                    OnRowVersionChanging(value);
-                    SendPropertyChanging("RowVersion");
-                    _rowVersion = value;
-                    SendPropertyChanged("RowVersion");
-                    OnRowVersionChanged();
+                    OnTChanging(value);
+                    SendPropertyChanging("T");
+                    _T = value;
+                    SendPropertyChanged("T");
+                    OnTChanged();
                 }
             }
         }
@@ -223,7 +129,7 @@ namespace Tester.Data
         /// Gets or sets the Type column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Type", Storage = "_type", DbType = "tinyint", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 8)]
+        [System.Runtime.Serialization.DataMember(Order = 4)]
         [System.ComponentModel.DataAnnotations.UIHint("Enumeration")]
         public Nullable<TagEnum> Type
         {
@@ -247,7 +153,7 @@ namespace Tester.Data
         /// Gets or sets the IsBlah column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "IsBlah", Storage = "_isBlah", DbType = "int", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 9)]
+        [System.Runtime.Serialization.DataMember(Order = 5)]
         public Nullable<int> IsBlah
         {
             get { return _isBlah; }
@@ -264,26 +170,120 @@ namespace Tester.Data
             }
         }
 
-        private string _T;
+        private string _createdBy;
 
         /// <summary>
-        /// Gets or sets the T column value.
+        /// Gets or sets the CreatedBy column value.
         /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "T", Storage = "_T", DbType = "nchar(10)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.ComponentModel.DataAnnotations.StringLength(10)]
-        [System.Runtime.Serialization.DataMember(Order = 10)]
-        public string T
+        [System.Data.Linq.Mapping.Column(Name = "CreatedBy", Storage = "_createdBy", DbType = "nvarchar(50)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
+        [System.ComponentModel.DataAnnotations.StringLength(50)]
+        [System.Runtime.Serialization.DataMember(Order = 6)]
+        public string CreatedBy
         {
-            get { return _T; }
+            get { return _createdBy; }
             set
             {
-                if (_T != value)
+                if (_createdBy != value)
                 {
-                    OnTChanging(value);
-                    SendPropertyChanging("T");
-                    _T = value;
-                    SendPropertyChanged("T");
-                    OnTChanged();
+                    OnCreatedByChanging(value);
+                    SendPropertyChanging("CreatedBy");
+                    _createdBy = value;
+                    SendPropertyChanged("CreatedBy");
+                    OnCreatedByChanged();
+                }
+            }
+        }
+
+        private System.DateTime _createdDate;
+
+        /// <summary>
+        /// Gets or sets the CreatedDate column value.
+        /// </summary>
+        [System.Data.Linq.Mapping.Column(Name = "CreatedDate", Storage = "_createdDate", DbType = "datetime NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
+        [System.Runtime.Serialization.DataMember(Order = 7)]
+        public System.DateTime CreatedDate
+        {
+            get { return _createdDate; }
+            set
+            {
+                if (_createdDate != value)
+                {
+                    OnCreatedDateChanging(value);
+                    SendPropertyChanging("CreatedDate");
+                    _createdDate = value;
+                    SendPropertyChanged("CreatedDate");
+                    OnCreatedDateChanged();
+                }
+            }
+        }
+
+        private string _modifiedBy;
+
+        /// <summary>
+        /// Gets or sets the ModifiedBy column value.
+        /// </summary>
+        [System.Data.Linq.Mapping.Column(Name = "ModifiedBy", Storage = "_modifiedBy", DbType = "nvarchar(50)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
+        [System.ComponentModel.DataAnnotations.StringLength(50)]
+        [System.Runtime.Serialization.DataMember(Order = 8)]
+        public string ModifiedBy
+        {
+            get { return _modifiedBy; }
+            set
+            {
+                if (_modifiedBy != value)
+                {
+                    OnModifiedByChanging(value);
+                    SendPropertyChanging("ModifiedBy");
+                    _modifiedBy = value;
+                    SendPropertyChanged("ModifiedBy");
+                    OnModifiedByChanged();
+                }
+            }
+        }
+
+        private System.DateTime _modifiedDate;
+
+        /// <summary>
+        /// Gets or sets the ModifiedDate column value.
+        /// </summary>
+        [System.Data.Linq.Mapping.Column(Name = "ModifiedDate", Storage = "_modifiedDate", DbType = "datetime NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
+        [System.Runtime.Serialization.DataMember(Order = 9)]
+        public System.DateTime ModifiedDate
+        {
+            get { return _modifiedDate; }
+            set
+            {
+                if (_modifiedDate != value)
+                {
+                    OnModifiedDateChanging(value);
+                    SendPropertyChanging("ModifiedDate");
+                    _modifiedDate = value;
+                    SendPropertyChanged("ModifiedDate");
+                    OnModifiedDateChanged();
+                }
+            }
+        }
+
+        private System.Data.Linq.Binary _rowVersion = default(System.Data.Linq.Binary);
+
+        /// <summary>
+        /// Gets the RowVersion column value.
+        /// </summary>
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.Data.Linq.Mapping.Column(Name = "RowVersion", Storage = "_rowVersion", DbType = "timestamp NOT NULL", IsDbGenerated = true, IsVersion = true, CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
+        [System.Runtime.Serialization.DataMember(Order = 10)]
+        public System.Data.Linq.Binary RowVersion
+        {
+            get { return _rowVersion; }
+            set
+            {
+                if (_rowVersion != value)
+                {
+                    OnRowVersionChanging(value);
+                    SendPropertyChanging("RowVersion");
+                    _rowVersion = value;
+                    SendPropertyChanged("RowVersion");
+                    OnRowVersionChanged();
                 }
             }
         }
@@ -311,6 +311,21 @@ namespace Tester.Data
         partial void OnNameChanging(string value);
         /// <summary>Called after <see cref="Name"/> has Changed.</summary>
         partial void OnNameChanged();
+        /// <summary>Called when <see cref="T"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnTChanging(string value);
+        /// <summary>Called after <see cref="T"/> has Changed.</summary>
+        partial void OnTChanged();
+        /// <summary>Called when <see cref="Type"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnTypeChanging(Nullable<TagEnum> value);
+        /// <summary>Called after <see cref="Type"/> has Changed.</summary>
+        partial void OnTypeChanged();
+        /// <summary>Called when <see cref="IsBlah"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnIsBlahChanging(Nullable<int> value);
+        /// <summary>Called after <see cref="IsBlah"/> has Changed.</summary>
+        partial void OnIsBlahChanged();
         /// <summary>Called when <see cref="CreatedBy"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnCreatedByChanging(string value);
@@ -336,21 +351,6 @@ namespace Tester.Data
         partial void OnRowVersionChanging(System.Data.Linq.Binary value);
         /// <summary>Called after <see cref="RowVersion"/> has Changed.</summary>
         partial void OnRowVersionChanged();
-        /// <summary>Called when <see cref="Type"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnTypeChanging(Nullable<TagEnum> value);
-        /// <summary>Called after <see cref="Type"/> has Changed.</summary>
-        partial void OnTypeChanged();
-        /// <summary>Called when <see cref="IsBlah"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnIsBlahChanging(Nullable<int> value);
-        /// <summary>Called after <see cref="IsBlah"/> has Changed.</summary>
-        partial void OnIsBlahChanged();
-        /// <summary>Called when <see cref="T"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnTChanging(string value);
-        /// <summary>Called after <see cref="T"/> has Changed.</summary>
-        partial void OnTChanged();
 
         #endregion
 

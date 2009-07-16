@@ -47,6 +47,7 @@ namespace Tester.Data
 
         private void Initialize()
         {
+            _auditXml = default(System.Data.Linq.Link<System.String>);
         }
         #endregion
 
@@ -99,23 +100,24 @@ namespace Tester.Data
             }
         }
 
-        private string _auditXml;
+        private System.Data.Linq.Link<string> _auditXml;
 
         /// <summary>
         /// Gets or sets the AuditXml column value.
         /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         [System.Data.Linq.Mapping.Column(Name = "AuditXml", Storage = "_auditXml", DbType = "xml NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.Runtime.Serialization.DataMember(Order = 3)]
         public string AuditXml
         {
-            get { return _auditXml; }
+            get { return _auditXml.Value; }
             set
             {
-                if (_auditXml != value)
+                if (_auditXml.Value != value)
                 {
                     OnAuditXmlChanging(value);
                     SendPropertyChanging("AuditXml");
-                    _auditXml = value;
+                    _auditXml.Value = value;
                     SendPropertyChanged("AuditXml");
                     OnAuditXmlChanged();
                 }
@@ -318,6 +320,7 @@ namespace Tester.Data
                 return;
 
             base.Detach();
+            _auditXml = Detach(_auditXml);
         }
         #endregion
     }

@@ -50,11 +50,35 @@ namespace Tester.Data
         }
         
         /// <summary>
+        /// Gets a query for <see cref="Tag.T"/>.
+        /// </summary>
+        public static IQueryable<Tester.Data.Tag> GetByT(this IQueryable<Tester.Data.Tag> queryable, string myT)
+        {
+            return queryable.Where(t => object.Equals(t.T, myT));
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tag.Type"/>.
+        /// </summary>
+        public static IQueryable<Tester.Data.Tag> GetByType(this IQueryable<Tester.Data.Tag> queryable, TagEnum type)
+        {
+            return queryable.Where(t => object.Equals(t.Type, type));
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tag.IsBlah"/>.
+        /// </summary>
+        public static IQueryable<Tester.Data.Tag> GetByIsBlah(this IQueryable<Tester.Data.Tag> queryable, int? isBlah)
+        {
+            return queryable.Where(t => object.Equals(t.IsBlah, isBlah));
+        }
+        
+        /// <summary>
         /// Gets a query for <see cref="Tag.CreatedBy"/>.
         /// </summary>
         public static IQueryable<Tester.Data.Tag> GetByCreatedBy(this IQueryable<Tester.Data.Tag> queryable, string createdBy)
         {
-            return queryable.Where(t => t.CreatedBy == createdBy);
+            return queryable.Where(t => object.Equals(t.CreatedBy, createdBy));
         }
         
         /// <summary>
@@ -70,7 +94,7 @@ namespace Tester.Data
         /// </summary>
         public static IQueryable<Tester.Data.Tag> GetByModifiedBy(this IQueryable<Tester.Data.Tag> queryable, string modifiedBy)
         {
-            return queryable.Where(t => t.ModifiedBy == modifiedBy);
+            return queryable.Where(t => object.Equals(t.ModifiedBy, modifiedBy));
         }
         
         /// <summary>
@@ -79,30 +103,6 @@ namespace Tester.Data
         public static IQueryable<Tester.Data.Tag> GetByModifiedDate(this IQueryable<Tester.Data.Tag> queryable, System.DateTime modifiedDate)
         {
             return queryable.Where(t => t.ModifiedDate == modifiedDate);
-        }
-        
-        /// <summary>
-        /// Gets a query for <see cref="Tag.Type"/>.
-        /// </summary>
-        public static IQueryable<Tester.Data.Tag> GetByType(this IQueryable<Tester.Data.Tag> queryable, TagEnum type)
-        {
-            return queryable.Where(t => t.Type == type);
-        }
-        
-        /// <summary>
-        /// Gets a query for <see cref="Tag.IsBlah"/>.
-        /// </summary>
-        public static IQueryable<Tester.Data.Tag> GetByIsBlah(this IQueryable<Tester.Data.Tag> queryable, Nullable<int> isBlah)
-        {
-            return queryable.Where(t => t.IsBlah == isBlah);
-        }
-        
-        /// <summary>
-        /// Gets a query for <see cref="Tag.T"/>.
-        /// </summary>
-        public static IQueryable<Tester.Data.Tag> GetByT(this IQueryable<Tester.Data.Tag> queryable, string myT)
-        {
-            return queryable.Where(t => t.T == myT);
         }
 
         #region Query

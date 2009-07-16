@@ -130,14 +130,14 @@ namespace Testert.Tests
             newuser.EmailAddress = "newuser@email.com";
             newuser.Password = "blah";
             newuser.UserName = "newuser";
-            newuser.UserProfile = new UserProfile();
-            newuser.UserProfile.AllowNotification = true;
+            //newuser.UserProfile = new UserProfile();
+            //newuser.UserProfile.AllowNotification = true;
 
-            var ms = new MemoryStream();
-            Properties.Resources.Image2.Save(ms, ImageFormat.Bmp);
-            ms.Position = 0;
+            //var ms = new MemoryStream();
+            //Properties.Resources.Image2.Save(ms, ImageFormat.Bmp);
+            //ms.Position = 0;
 
-            newuser.UserProfile.Avatar = new Binary(ms.ToArray());
+            //newuser.UserProfile.Avatar = new Binary(ms.ToArray());
             db.User.InsertOnSubmit(newuser);
 
             var profile = db.UserProfile.GetByKey(1);
@@ -178,14 +178,14 @@ namespace Testert.Tests
             newuser.EmailAddress = "newuser@email.com";
             newuser.Password = "blah";
             newuser.UserName = "newuser";
-            newuser.UserProfile = new UserProfile();
-            newuser.UserProfile.AllowNotification = true;
+            //newuser.UserProfile = new UserProfile();
+            //newuser.UserProfile.AllowNotification = true;
 
-            var ms = new MemoryStream();
-            Properties.Resources.Image2.Save(ms, ImageFormat.Bmp);
-            ms.Position = 0;
+            //var ms = new MemoryStream();
+            //Properties.Resources.Image2.Save(ms, ImageFormat.Bmp);
+            //ms.Position = 0;
 
-            newuser.UserProfile.Avatar = new Binary(ms.ToArray());
+            //newuser.UserProfile.Avatar = new Binary(ms.ToArray());
             db.User.InsertOnSubmit(newuser);
 
             db.SubmitChanges();

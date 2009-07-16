@@ -46,7 +46,7 @@ namespace Tracker.Data
         /// </summary>
         public static IQueryable<Tracker.Data.TaskExtended> ByBrowser(this IQueryable<Tracker.Data.TaskExtended> queryable, string browser)
         {
-            return queryable.Where(t => t.Browser == browser);
+            return queryable.Where(t => object.Equals(t.Browser, browser));
         }
         
         /// <summary>
@@ -54,7 +54,7 @@ namespace Tracker.Data
         /// </summary>
         public static IQueryable<Tracker.Data.TaskExtended> ByOs(this IQueryable<Tracker.Data.TaskExtended> queryable, string os)
         {
-            return queryable.Where(t => t.Os == os);
+            return queryable.Where(t => object.Equals(t.Os, os));
         }
         
         /// <summary>

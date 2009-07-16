@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Data.Linq;
 using System.Text;
@@ -12,7 +13,19 @@ namespace Testert.Tests
     [TestFixture]
     public class DataContextTest
     {
+        [Test]
 
+        public void MyTest()
+        {
+            var db = new TesterDataContext();
+            db.Log = Console.Out;
+
+            var audit = db.Audit.FirstOrDefault();
+
+            var xml = audit.AuditXml;
+
+
+        }
         [Test]
         public void MultipleResults()
         {
@@ -216,6 +229,92 @@ namespace Testert.Tests
                 scope.Complete();
             }
            
+        }
+
+        [Test]
+        public void ProgrammerInheritance()
+        {
+            var db = new TesterDataContext();
+            db.Log = Console.Out;
+
+            var query = from p in db.Person.OfType<Programmer>()
+                        select p;
+
+            int i = 1;
+            foreach (var programmer in query)
+            {
+                programmer.Language = "c#";
+                programmer.Level = string.Format("Level {0}", i++);
+            }
+
+            db.SubmitChanges();
+
+            var p1 = new Programmer();
+            p1.FirstName = "Bill";
+            p1.LastName = "Coder";
+            p1.JobTitle = "Coder";
+            p1.Language = "c#";
+
+            
+            db.Person.InsertOnSubmit(p1);
+
+            db.SubmitChanges();
+
+        }
+
+
+        [Test]
+        public void ProgrammerInheritanceAudit()
+        {
+            var db = new TesterDataContext();
+            db.Log = Console.Out;
+            db.AuditingEnabled = true;
+
+            var programmer = db.Person.OfType<Programmer>().FirstOrDefault();
+            programmer.Language = "c#";
+            programmer.Level = string.Format("Level {0}", DateTime.Now.Ticks);
+            programmer.FirstName = "Name " + DateTime.Now.Ticks;
+
+            db.SubmitChanges();
+
+            var a = db.LastAudit;
+            Console.WriteLine(a.ToXml());
+
+            var p1 = new Programmer();
+            p1.FirstName = "Bob";
+            p1.LastName = "Coder";
+            p1.JobTitle = "Coder";
+            p1.Language = "c#";
+
+            db.Person.InsertOnSubmit(p1);
+
+            db.SubmitChanges();
+            a = db.LastAudit;
+            Console.WriteLine(a.ToXml());
+        }
+
+        [Test]
+        public void ManyToManyDelete()
+        {
+            var db = new TesterDataContext();
+            db.Log = Console.Out;
+
+            var left = db.Left.GetByKey(1);
+            var right = db.Right.GetByDescription("This is new").FirstOrDefault();
+
+            //var right = new Right();
+            //right.Description = "This is new";
+            
+            //db.Right.InsertOnSubmit(right);
+            
+            left.RightList.Add(right);
+
+            db.SubmitChanges();
+
+            left.RightList.Remove(right);
+
+            db.SubmitChanges();
+            
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Tracker.Data
         #region Metadata
 
         [CodeSmith.Data.Audit.Audit]
-        private class Metadata
+        internal class Metadata
         {
             // Only Attributes in the class will be preserved.
 

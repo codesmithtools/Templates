@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="Tester" Class="TesterDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="ConnectionString" ConnectionString="Data Source=.;Initial Catalog=Tester;Integrated Security=True" SettingsObjectName="Properties.Settings" SettingsPropertyName="TesterConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Audit" Member="Audit">
+    <Type Name="Audit">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Source" Storage="_source" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="AuditXml" Storage="_auditXml" Type="System.String" DbType="xml NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedDate" Storage="_createdDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="ModifiedDate" Storage="_modifiedDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Automobile" Member="Automobile">
+    <Type Name="Automobile">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Make" Storage="_make" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Model" Storage="_model" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="VIN" Member="Vin" Storage="_vin" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Junction" Member="Junction">
+    <Type Name="Junction">
+      <Column Name="LeftId" Storage="_leftId" Type="System.Int32" DbType="int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="RightId" Storage="_rightId" Type="System.Int32" DbType="int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="Left_Junction" Member="Left" Storage="_left" ThisKey="LeftId" Type="Left" IsForeignKey="true" DeleteOnNull="true" />
+      <Association Name="Right_Junction" Member="Right" Storage="_right" ThisKey="RightId" Type="Right" IsForeignKey="true" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Left" Member="Left">
+    <Type Name="Left">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Storage="_name" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedDate" Storage="_createdDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="ModifiedDate" Storage="_modifiedDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Association Name="Left_Junction" Member="JunctionList" Storage="_junctionList" OtherKey="LeftId" Type="Junction" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Order" Member="Order">
+    <Type Name="Order">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Description" Storage="_description" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="Total" Storage="_total" Type="System.Decimal" DbType="decimal(18,0) NOT NULL" CanBeNull="false" />
+      <Association Name="Order_OrderLine" Member="OrderLines" OtherKey="OrderId" Type="OrderLine" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OrderLine" Member="OrderLine">
+    <Type Name="OrderLine">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="OrderId" Storage="_orderId" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="ItemId" Storage="_itemId" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="Quantity" Storage="_quantity" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="Total" Storage="_total" Type="System.Decimal" DbType="decimal(18,0) NOT NULL" CanBeNull="false" />
+      <Association Name="Order_OrderLine" Member="Order" ThisKey="OrderId" Type="Order" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Person" Member="Person">
+    <Type Name="Person">
+      <Column Name="ID" Member="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FirstName" Storage="_firstName" Type="System.String" DbType="varchar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="LastName" Storage="_lastName" Type="System.String" DbType="varchar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="Manager" Storage="_manager" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="Type" Storage="_type" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedDate" Storage="_createdDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="ModifiedDate" Storage="_modifiedDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Type Name="Contact" InheritanceCode="1" IsInheritanceDefault="true">
+        <Column Name="EmailAddress" Storage="_emailAddress" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+        <Column Name="Phone" Storage="_phone" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      </Type>
+      <Type Name="Employee" IsInheritanceDefault="true">
+        <Column Name="JobTitle" Storage="_jobTitle" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+        <Column Name="HireDate" Storage="_hireDate" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
+        <Column Name="Salary" Storage="_salary" Type="System.Decimal" DbType="decimal(18,0)" CanBeNull="true" />
+        <Type Name="SalesPerson" InheritanceCode="3">
+          <Column Name="Bonus" Storage="_bonus" Type="System.Decimal" DbType="decimal(18,0)" CanBeNull="true" />
+          <Column Name="Sales" Storage="_sales" Type="System.Decimal" DbType="decimal(18,0)" CanBeNull="true" />
+        </Type>
+        <Type Name="Programmer" InheritanceCode="2">
+          <Column Name="Language" Storage="_language" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+          <Column Name="Level" Storage="_level" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+        </Type>
+      </Type>
+    </Type>
+  </Table>
+  <Table Name="dbo.Right" Member="Right">
+    <Type Name="Right">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Description" Storage="_description" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedDate" Storage="_createdDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="ModifiedDate" Storage="_modifiedDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Association Name="Right_Junction" Member="JunctionList" Storage="_junctionList" OtherKey="RightId" Type="Junction" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Tag" Member="Tag">
+    <Type Name="Tag">
+      <Column Name="ID" Member="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Storage="_name" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="T" Type="System.String" DbType="nchar(10)" CanBeNull="true" />
+      <Column Name="Type" Storage="_type" Type="System.Byte" DbType="tinyint" CanBeNull="true" />
+      <Column Name="IsBlah" Storage="_isBlah" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="CreatedBy" Storage="_createdBy" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="CreatedDate" Storage="_createdDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="ModifiedBy" Storage="_modifiedBy" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="ModifiedDate" Storage="_modifiedDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Association Name="TagEnum_Tag" Member="TypeTagEnum" Storage="_typeTagEnum" ThisKey="Type" Type="TagEnum" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TagEnum" Member="TagEnum">
+    <Type Name="TagEnum">
+      <Column Name="Id" Storage="_id" Type="System.Byte" DbType="tinyint NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Storage="_name" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="TagEnum_Tag" Member="TypeTagList" Storage="_typeTagList" OtherKey="Type" Type="Tag" />
+    </Type>
+  </Table>
+  <Table Name="dbo.User" Member="User">
+    <Type Name="User">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserName" Storage="_userName" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Storage="_password" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EmailAddress" Storage="_emailAddress" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Comments" Storage="_comments" Type="System.String" DbType="nvarchar(150)" CanBeNull="true" />
+      <Association Name="User_UserProfile" Member="UserProfileList" Storage="_userProfileList" OtherKey="UserId" Type="UserProfile" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserAccount" Member="UserAccount">
+    <Type Name="UserAccount">
+      <Column Name="UserAccountID" Storage="_userAccountID" Type="System.Guid" DbType="uniqueidentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FirstName" Storage="_firstName" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="LastName" Storage="_lastName" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="ZipCode" Storage="_zipCode" Type="System.String" DbType="nvarchar(25) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserProfile" Member="UserProfile">
+    <Type Name="UserProfile">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="AllowNotification" Storage="_allowNotification" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
+      <Column Name="Avatar" Storage="_avatar" Type="System.Data.Linq.Binary" DbType="image" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="User_UserProfile" Member="User" Storage="_user" ThisKey="UserId" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.GetUser" Method="GetUser">
+    <Parameter Name="@userId" Parameter="userId" Type="System.Int32" DbType="int" />
+    <ElementType Name="GetUserResult1">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="UserName" Storage="_userName" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Storage="_password" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EmailAddress" Storage="_emailAddress" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+    </ElementType>
+    <ElementType Name="GetUserResult2">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="AllowNotification" Storage="_allowNotification" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetUserFixed" Method="GetUserFixed">
+    <Parameter Name="@fixed" Parameter="fixed" Type="System.Int32" DbType="int" />
+    <ElementType Name="GetUserFixedResult1">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="UserName" Storage="_userName" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Storage="_password" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EmailAddress" Storage="_emailAddress" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
+    </ElementType>
+    <ElementType Name="GetUserFixedResult2">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="AllowNotification" Storage="_allowNotification" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetUserProfile" Method="GetUserProfile">
+    <Parameter Name="@userId" Parameter="userId" Type="System.Int32" DbType="int" />
+    <ElementType Name="GetUserProfileResult">
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="AllowNotification" Storage="_allowNotification" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+</Database>

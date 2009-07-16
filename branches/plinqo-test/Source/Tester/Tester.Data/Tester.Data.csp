@@ -51,6 +51,11 @@
       </property>
       <property name="EntityNamespace">Tester.Data</property>
       <property name="ContextNamespace">Tester.Data</property>
+      <property name="UserAssociations">
+        <stringList>
+      <string>Order_OrderLine</string>
+    </stringList>
+      </property>
     </propertySet>
     <propertySet name="Entities" template="..\..\Templates\PLINQO\CSharp\Entities.cst">
       <property name="Framework">v35_SP1</property>

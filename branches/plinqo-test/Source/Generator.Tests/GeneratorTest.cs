@@ -39,16 +39,17 @@ namespace LinqToSqlShared.Generator.Tests
         }
 
         [Test]
-        public void CreateLoreSoft()
+        public void CreateTracker()
         {
             GeneratorSettings settings = new GeneratorSettings();
-            settings.MappingFile = "LoreSoft.dbml";
+            settings.MappingFile = @"..\..\Tracker.dbml";
             settings.IncludeViews = true;
             settings.IncludeFunctions = true;
             settings.IgnoreExpressions.Add(new System.Text.RegularExpressions.Regex("aspnet_"));
+            settings.IncludeDeleteOnNull = false;
 
             DbmlGenerator generator = new DbmlGenerator(settings);
-            DatabaseSchema databaseSchema = GetDatabaseSchema("LoreSoft");
+            DatabaseSchema databaseSchema = GetDatabaseSchema("Tracker");
             Database database = generator.Create(databaseSchema);
 
             Assert.IsNotNull(database);
@@ -121,9 +122,11 @@ namespace LinqToSqlShared.Generator.Tests
         public void CreateTester()
         {
             GeneratorSettings settings = new GeneratorSettings();
-            settings.MappingFile = "Tester.dbml";
+            settings.MappingFile = @"..\..\Tester.dbml";
             settings.IncludeFunctions = true;
             settings.IgnoreExpressions.Add(new Regex("^dbo.sp_"));
+            settings.UserDefinedAssociations.Add("Order_OrderLine");
+            settings.IncludeDeleteOnNull = false;
 
             DbmlGenerator generator = new DbmlGenerator(settings);
             DatabaseSchema databaseSchema = GetDatabaseSchema("Tester");

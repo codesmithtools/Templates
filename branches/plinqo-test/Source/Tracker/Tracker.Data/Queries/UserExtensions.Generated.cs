@@ -42,11 +42,16 @@ namespace Tracker.Data
         }
         
         /// <summary>
-        /// Gets a query for <see cref="User.EmailAddress"/>.
+        /// Gets an instance by using a unique index.
         /// </summary>
-        public static IQueryable<Tracker.Data.User> ByEmailAddress(this IQueryable<Tracker.Data.User> queryable, string emailAddress)
+        /// <returns>An instance of the entity or null if not found.</returns>
+        public static Tracker.Data.User ByEmailAddress(this IQueryable<Tracker.Data.User> queryable, string emailAddress)
         {
-            return queryable.Where(u => u.EmailAddress == emailAddress);
+            var entity = queryable as System.Data.Linq.Table<Tracker.Data.User>;
+            if (entity != null && entity.Context.LoadOptions == null)
+                return Query.ByEmailAddress.Invoke((Tracker.Data.TrackerDataContext)entity.Context, emailAddress);
+
+            return queryable.FirstOrDefault(u => u.EmailAddress == emailAddress);
         }
         
         /// <summary>
@@ -54,7 +59,7 @@ namespace Tracker.Data
         /// </summary>
         public static IQueryable<Tracker.Data.User> ByFirstName(this IQueryable<Tracker.Data.User> queryable, string firstName)
         {
-            return queryable.Where(u => u.FirstName == firstName);
+            return queryable.Where(u => object.Equals(u.FirstName, firstName));
         }
         
         /// <summary>
@@ -62,7 +67,7 @@ namespace Tracker.Data
         /// </summary>
         public static IQueryable<Tracker.Data.User> ByLastName(this IQueryable<Tracker.Data.User> queryable, string lastName)
         {
-            return queryable.Where(u => u.LastName == lastName);
+            return queryable.Where(u => object.Equals(u.LastName, lastName));
         }
         
         /// <summary>
@@ -102,7 +107,7 @@ namespace Tracker.Data
         /// </summary>
         public static IQueryable<Tracker.Data.User> ByComment(this IQueryable<Tracker.Data.User> queryable, string comment)
         {
-            return queryable.Where(u => u.Comment == comment);
+            return queryable.Where(u => object.Equals(u.Comment, comment));
         }
         
         /// <summary>
@@ -116,9 +121,9 @@ namespace Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.LastLoginDate"/>.
         /// </summary>
-        public static IQueryable<Tracker.Data.User> ByLastLoginDate(this IQueryable<Tracker.Data.User> queryable, Nullable<System.DateTime> lastLoginDate)
+        public static IQueryable<Tracker.Data.User> ByLastLoginDate(this IQueryable<Tracker.Data.User> queryable, System.DateTime? lastLoginDate)
         {
-            return queryable.Where(u => u.LastLoginDate == lastLoginDate);
+            return queryable.Where(u => object.Equals(u.LastLoginDate, lastLoginDate));
         }
         
         /// <summary>
@@ -132,9 +137,17 @@ namespace Tracker.Data
         /// <summary>
         /// Gets a query for <see cref="User.LastPasswordChangeDate"/>.
         /// </summary>
-        public static IQueryable<Tracker.Data.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Data.User> queryable, Nullable<System.DateTime> lastPasswordChangeDate)
+        public static IQueryable<Tracker.Data.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Data.User> queryable, System.DateTime? lastPasswordChangeDate)
         {
-            return queryable.Where(u => u.LastPasswordChangeDate == lastPasswordChangeDate);
+            return queryable.Where(u => object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate));
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="User.AvatarType"/>.
+        /// </summary>
+        public static IQueryable<Tracker.Data.User> ByAvatarType(this IQueryable<Tracker.Data.User> queryable, string avatarType)
+        {
+            return queryable.Where(u => object.Equals(u.AvatarType, avatarType));
         }
 
         #region Query
@@ -148,6 +161,11 @@ namespace Tracker.Data
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Data.TrackerDataContext db, int id) => 
                         db.User.FirstOrDefault(u => u.Id == id));
+
+            internal static readonly Func<Tracker.Data.TrackerDataContext, string, Tracker.Data.User> ByEmailAddress = 
+                System.Data.Linq.CompiledQuery.Compile(
+                    (Tracker.Data.TrackerDataContext db, string emailAddress) => 
+                        db.User.FirstOrDefault(u => u.EmailAddress == emailAddress));
 
         }
         #endregion
