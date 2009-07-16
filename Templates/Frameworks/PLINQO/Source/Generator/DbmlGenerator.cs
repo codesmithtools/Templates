@@ -431,7 +431,7 @@ namespace LinqToSqlShared.Generator
                 foreignAssociation.DeleteRule = "CASCADE";
             }
 
-            if (settings.IncludeDeleteOnNull)
+            if (settings.IncludeDeleteOnNull || foreignTable.Type.IsManyToMany())
             {
                 if (!foreignAssociation.DeleteOnNull.HasValue && IsTableDeleteOnNull(tableKeySchema))
                     foreignAssociation.DeleteOnNull = true;
