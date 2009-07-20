@@ -46,11 +46,8 @@ namespace <%= ManagerNamespace %>
         /// </summary>
         /// <param name="context">An instance of <see cref="<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>"/> DataContext.</param>
         public <%= DataManager.DataManagerName %>(<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %> context) : base(context)
-        {
-<% foreach (EntityManager m in DataManager.Managers) { %>
-            <%= m.FieldName %> = new <%= m.ManagerName %>(this);
-<% } %>
-        }
+        { }
+        
         #region Managers
 <% foreach (EntityManager m in DataManager.Managers) { %>
         
@@ -61,7 +58,13 @@ namespace <%= ManagerNamespace %>
         /// </summary>
         public <%= m.ManagerName %> <%= m.PropertyName %>
         {
-            get { return <%= m.FieldName %>; }
+            get
+            {
+                if (<%= m.FieldName %> == null)
+                    <%= m.FieldName %> = new <%= m.ManagerName %>(this);
+
+                return <%= m.FieldName %>;
+            }
         }
 <% } %>
         #endregion
