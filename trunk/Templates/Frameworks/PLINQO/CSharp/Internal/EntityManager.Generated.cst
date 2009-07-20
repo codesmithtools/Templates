@@ -85,14 +85,6 @@ namespace <%= ManagerNamespace %>
         /// <summary>
         /// Initializes the <see cref="<%= EntityManager.ManagerName %>"/> class.
         /// </summary>
-        static <%= EntityManager.ManagerName %>()
-        {
-            AddRules();
-        }
-
-        /// <summary>
-        /// Initializes the <see cref="<%= EntityManager.ManagerName %>"/> class.
-        /// </summary>
         /// <param name="manager">The current manager.</param>
         public <%= EntityManager.ManagerName %>(<%= DataManager.DataManagerName %> manager) : base(manager)
         {
@@ -217,8 +209,6 @@ namespace <%= ManagerNamespace %>
 <% } // foreach method%>
 
         #region Extensibility Method Definitions
-        /// <summary>Called by the static constructor to add shared rules.</summary>
-        static partial void AddRules();
         /// <summary>Called when the class is created.</summary>
         partial void OnCreated();
         #endregion
