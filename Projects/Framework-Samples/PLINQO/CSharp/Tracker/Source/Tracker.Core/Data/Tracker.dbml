@@ -101,8 +101,8 @@
     <Type Name="UserRole">
       <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="RoleId" Storage="_roleId" Type="System.Int32" DbType="int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Association Name="Role_UserRole" Member="Role" Storage="_role" ThisKey="RoleId" Type="Role" IsForeignKey="true" />
-      <Association Name="User_UserRole" Member="User" Storage="_user" ThisKey="UserId" Type="User" IsForeignKey="true" />
+      <Association Name="Role_UserRole" Member="Role" Storage="_role" ThisKey="RoleId" Type="Role" IsForeignKey="true" DeleteOnNull="true" />
+      <Association Name="User_UserRole" Member="User" Storage="_user" ThisKey="UserId" Type="User" IsForeignKey="true" DeleteOnNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetUsersWithRoles" Method="GetUsersWithRoles">

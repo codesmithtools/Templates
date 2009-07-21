@@ -1,3 +1,4 @@
+using CodeSmith.Data.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -56,8 +57,29 @@ namespace PLINQO.Mvc.UI.Controllers
         {
             using (var context = new TrackerDataContext())
             {
-                var userRole = new UserRole() { UserId = userId, RoleId = roleId };
-                context.UserRole.InsertOnSubmit(userRole);
+                var options = new DataLoadOptions();
+                options.LoadWith<User>(u => u.UserRoleList);
+
+                var user = context.User.ByKey(userId);
+                var role = context.Role.ByKey(roleId);
+                user.RoleList.Add(role);
+                context.SubmitChanges();
+            }
+            return RedirectToAction("Edit", new { id = userId });
+        }
+
+        public ActionResult RemoveRole(int userId, int roleId)
+        {
+            using (var context = new TrackerDataContext())
+            {
+                var options = new DataLoadOptions();
+                options.LoadWith<User>(u => u.UserRoleList);
+                context.LoadOptions = options;
+
+                var user = context.User.ByKey(userId);
+                var role = user.RoleList.FirstOrDefault(r => r.Id == roleId);
+
+                user.RoleList.Remove(role);
                 context.SubmitChanges();
             }
             return RedirectToAction("Edit", new { id = userId });
@@ -256,14 +278,6 @@ namespace PLINQO.Mvc.UI.Controllers
             return RedirectToAction("Edit", new { id = id });
         }
 
-        public ActionResult RemoveRole(int userId, int roleId)
-        {
-            using (var context = new TrackerDataContext())
-            {
-                context.UserRole.Delete(r => r.RoleId == roleId && r.UserId == userId);
-            }
-            return RedirectToAction("Edit", new { id = userId });
-        }
 
         public UserViewData GetData(int userId)
         {
