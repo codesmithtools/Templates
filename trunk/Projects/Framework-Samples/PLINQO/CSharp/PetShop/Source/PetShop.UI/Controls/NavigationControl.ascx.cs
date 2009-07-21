@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.Linq;
 using System.Collections.Generic;
 using PetShop.Core.Data;
+using CodeSmith.Data.Linq;
 
 namespace PetShop.UI.Controls
 {
@@ -57,7 +58,7 @@ namespace PetShop.UI.Controls
             
             using (var context = new PetShopDataContext())
             {
-                rePCategories.DataSource = context.Category.OrderBy(c => c.Name).ToList();
+                rePCategories.DataSource = context.Category.OrderBy(c => c.Name).FromCache().ToList();
             }
             
             rePCategories.DataBind();
