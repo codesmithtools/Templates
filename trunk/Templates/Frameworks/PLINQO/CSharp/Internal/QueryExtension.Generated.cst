@@ -33,6 +33,10 @@
     Type="System.String" Default="By" Optional="True" 
     Description="The prefix of query method names." %>
 
+<%@ Property Category="3.Query" Name="UniqueMethodPrefix" 
+    Type="System.String" Default="GetBy" Optional="True" 
+    Description="The prefix of query method names." %>
+
 <%@ Property Category="3.Query" Name="MethodKeySuffix" 
     Type="System.String" Default="Key" Optional="False" 
     Description="The suffix of the primary key query method names." %>
@@ -73,12 +77,12 @@ namespace <%= Database.ContextNamespace %>
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static <%= safeName %> <%= MethodPrefix %><%= MethodKeySuffix %>(this IQueryable<<%= safeName %>> queryable, <%= GetParameters(method) %>)
+        public static <%= safeName %> <%= UniqueMethodPrefix %><%= MethodKeySuffix %>(this IQueryable<<%= safeName %>> queryable, <%= GetParameters(method) %>)
         {
 <% if (method.Columns.Count < 4) { %>
             var entity = queryable as System.Data.Linq.Table<<%= safeName %>>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.<%= MethodPrefix %><%= MethodKeySuffix %>.Invoke((<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
+                return Query.<%= UniqueMethodPrefix %><%= MethodKeySuffix %>.Invoke((<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
 <% } // column count%>
             
             return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>);
@@ -100,12 +104,12 @@ namespace <%= Database.ContextNamespace %>
         /// Gets an instance by using a unique index.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public static <%= safeName %> <%= MethodPrefix %><%= method.NameSuffix %>(this IQueryable<<%= safeName %>> queryable, <%= GetParameters(method) %>)
+        public static <%= safeName %> <%= UniqueMethodPrefix %><%= method.NameSuffix %>(this IQueryable<<%= safeName %>> queryable, <%= GetParameters(method) %>)
         {
 <% if (method.Columns.Count < 4) { %>
             var entity = queryable as System.Data.Linq.Table<<%= safeName %>>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.<%= MethodPrefix %><%= method.NameSuffix %>.Invoke((<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
+                return Query.<%= UniqueMethodPrefix %><%= method.NameSuffix %>.Invoke((<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
 <% } // column count%>
 
             return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>);
@@ -117,7 +121,7 @@ namespace <%= Database.ContextNamespace %>
     string paramName = CSharpKeyWordEscape[StringUtil.ToCamelCase(column.Member)];
     paramName = CleanParamName(paramName);
         
-    if(!column.IsPrimaryKey.Value && !uniqueMethods.Contains(column.Member) && !column.IsVersion.Value && column.Type != "System.Data.Linq.Binary")
+    if(!column.IsVersion.Value && column.Type != "System.Data.Linq.Binary")
     { %>
         
         /// <summary>
@@ -144,13 +148,13 @@ namespace <%= Database.ContextNamespace %>
 <% if (method.Columns.Count < 4) { %>
 <% if (method.IsKey) { %>
 
-            internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>> <%= MethodPrefix %><%= MethodKeySuffix %> = 
+            internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>> <%= UniqueMethodPrefix %><%= MethodKeySuffix %> = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) => 
                         db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
 <% } else if (method.IsUnique) { %>
 
-            internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>> <%= MethodPrefix %><%= method.NameSuffix %> = 
+            internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>> <%= UniqueMethodPrefix %><%= method.NameSuffix %> = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) => 
                         db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
