@@ -17,7 +17,7 @@ namespace PetShop.UI
                     using (var context = new PetShopDataContext())
                     {
                         var profile = context.Profile.GetProfile(Page.User.Identity.Name);
-                        if (!string.IsNullOrEmpty(profile.Username))
+                        if (profile != null  && !string.IsNullOrEmpty(profile.Username))
                         {
                             CartHelper.Add(profile.ShoppingCart, itemId, profile.UniqueID, true);
                         }
