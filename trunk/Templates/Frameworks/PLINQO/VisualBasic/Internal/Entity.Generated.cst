@@ -83,7 +83,7 @@ Namespace <%= Database.EntityNamespace %>
 <% End If %>
 <% If (Me.Framework = FrameworkEnum.v35_SP1) Then %>
     <System.ComponentModel.DataAnnotations.ScaffoldTable(True)> _
-    <System.ComponentModel.DataAnnotations.MetadataType(GetType(<%= Type.Name %>.Metadata))> _
+    <System.ComponentModel.DataAnnotations.MetadataType(GetType(<%= VBKeywordEscape(Type.Name) %>.Metadata))> _
    <% If (IncludeDataServices) Then %>
    <% Dim dataServiceKey As New System.Text.StringBuilder()
    Dim isFirstDataServiceKey As Boolean = True
@@ -128,11 +128,11 @@ Namespace <%= Database.EntityNamespace %>
 <% If (IncludeDataRules) Then %>
 #Region "Static Constructor"
         ''' <summary>
-        ''' Initializes the <see cref="<%= Type.Name %>"/> class.
+        ''' Initializes the <see cref="<%= VBKeywordEscape(Type.Name) %>"/> class.
         ''' </summary>
         Shared Sub New()
             <%If(Framework = FrameworkEnum.v35_SP1) Then %>
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of <%= Type.Name %>)()
+            CodeSmith.Data.Rules.RuleManager.AddShared(Of <%= VBKeywordEscape(Type.Name) %>)()
             <% Else
                 Const lengthFormat As String = "CodeSmith.Data.Rules.RuleManager.AddShared(Of {0})(new CodeSmith.Data.Rules.Validation.LengthRule(""{1}"", {2}))"
                 Const  requiredFormat As String = "CodeSmith.Data.Rules.RuleManager.AddShared(Of {0})(new CodeSmith.Data.Rules.Validation.RequiredRule(""{1}""))"
@@ -195,9 +195,9 @@ Namespace <%= Database.EntityNamespace %>
             <%= a.Storage %> = Nothing
 <% Next ' foreach Association%>
 <% For Each a As Association In Type.EntitySetAssociations %>
-            <%= a.Storage %> = New System.Data.Linq.EntitySet(Of <%= a.Type %>)( _
-                New System.Action(Of <%= a.Type %>)(AddressOf Me.On<%= a.Member %>Add), _
-                New System.Action(Of <%= a.Type %>)(AddressOf Me.On<%= a.Member %>Remove))
+            <%= a.Storage %> = New System.Data.Linq.EntitySet(Of <%= VBKeywordEscape(a.Type) %>)( _
+                New System.Action(Of <%= VBKeywordEscape(a.Type) %>)(AddressOf Me.On<%= a.Member %>Add), _
+                New System.Action(Of <%= VBKeywordEscape(a.Type) %>)(AddressOf Me.On<%= a.Member %>Remove))
 <% Next ' foreach Association%>
 <% For Each c As Column In Type.Columns %>
 <% If c.IsDelayLoaded.Value Then %>
@@ -303,17 +303,17 @@ For Each c As Column in Type.Columns
 <% For Each a As Association In Type.EntityRefAssociations
     Dim info As AssociationInfo = GetAssociationInfo(a)
 %>
-        Private  <%= a.Storage %> As System.Data.Linq.EntityRef(Of <%= a.Type %>)
+        Private  <%= a.Storage %> As System.Data.Linq.EntityRef(Of <%= VBKeywordEscape(a.Type) %>)
 
         ''' <summary>
-        ''' Gets or sets the <%= a.Type %> association.
+        ''' Gets or sets the <%= VBKeywordEscape(a.Type) %> association.
         ''' </summary>
         <%= CreateAttribute(a) %>
 <% If (IncludeDataContract) Then
     DataMemberCount += 1 %>
         <System.Runtime.Serialization.DataMember(Order:=<%=DataMemberCount%>, EmitDefaultValue:=False)> _
 <% End If %>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(a.AccessModifier, a.Modifier)) %> Property <%= VBKeywordEscape(a.Member) %>() As <%= a.Type %>
+        <%= StringUtil.ToPascalCase(Naming.GetModifier(a.AccessModifier, a.Modifier)) %> Property <%= VBKeywordEscape(a.Member) %>() As <%= VBKeywordEscape(a.Type) %>
             Get
 <% If (IncludeDataContract) Then %>
                 If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValue) Then
@@ -325,9 +325,9 @@ For Each c As Column in Type.Columns
                 Return <%= a.Storage %>.Entity
 <%End If %>
             End Get
-            Set(ByVal value As <%= a.Type %>)
+            Set(ByVal value As <%= VBKeywordEscape(a.Type) %>)
 <% If info.HasOtherAssociation Then %>
-                Dim previousValue As <%= a.Type %> = <%= a.Storage %>.Entity
+                Dim previousValue As <%= VBKeywordEscape(a.Type) %> = <%= a.Storage %>.Entity
                 If ((Object.Equals(previousValue, value) = False) OrElse (Me.<%= a.Storage %>.HasLoadedOrAssignedValue = False)) Then
                     SendPropertyChanging("<%= a.Member %>")
                     If ((previousValue Is Nothing) = False) Then
@@ -364,17 +364,17 @@ For Each c As Column in Type.Columns
         Dim info As AssociationInfo = GetAssociationInfo(a)
 %>
 
-        Private <%= a.Storage %> As System.Data.Linq.EntitySet(Of <%= a.Type %>)
+        Private <%= a.Storage %> As System.Data.Linq.EntitySet(Of <%= VBKeywordEscape(a.Type) %>)
 
         ''' <summary>
-        ''' Gets or sets the <%= a.Type %> association.
+        ''' Gets or sets the <%= VBKeywordEscape(a.Type) %> association.
         ''' </summary>
         <%= CreateAttribute(a) %>
 <% If (IncludeDataContract) Then
     DataMemberCount += 1%>
         <System.Runtime.Serialization.DataMember(Order:=<%= DataMemberCount %>, EmitDefaultValue:=False)> _
 <% End If %>
-        <%= StringUtil.ToPascalCase(Naming.GetModifier(a.AccessModifier, a.Modifier)) %> Property <%= VBKeywordEscape(a.Member) %>() As System.Data.Linq.EntitySet(Of <%= a.Type %>)
+        <%= StringUtil.ToPascalCase(Naming.GetModifier(a.AccessModifier, a.Modifier)) %> Property <%= VBKeywordEscape(a.Member) %>() As System.Data.Linq.EntitySet(Of <%= VBKeywordEscape(a.Type) %>)
             Get
 <%If IncludeDataContract Then%>
                 If (serializing AndAlso Not <%=a.Storage%>.HasLoadedOrAssignedValues) Then
@@ -386,20 +386,20 @@ For Each c As Column in Type.Columns
                 Return <%= a.Storage %>
 <%End If%>
             End Get
-            Set(ByVal value As System.Data.Linq.EntitySet(Of <%= a.Type %>))
+            Set(ByVal value As System.Data.Linq.EntitySet(Of <%= VBKeywordEscape(a.Type) %>))
                 <%= a.Storage %>.Assign(value)
             End Set
         End Property
 
         <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub On<%= a.Member %>Add(ByVal entity As <%= a.Type %>)
+        Private Sub On<%= a.Member %>Add(ByVal entity As <%= VBKeywordEscape(a.Type) %>)
             SendPropertyChanging(Nothing)
             entity.<%= info.OtherAssociation.Member %> = Me
             SendPropertyChanged(Nothing)
         End Sub
 
         <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub On<%= a.Member %>Remove(ByVal entity As <%= a.Type %>)
+        Private Sub On<%= a.Member %>Remove(ByVal entity As <%= VBKeywordEscape(a.Type) %>)
             SendPropertyChanging(Nothing)
             entity.<%= info.OtherAssociation.Member %> = Nothing
             SendPropertyChanged(Nothing)
@@ -415,13 +415,13 @@ For Each c As Column in Type.Columns
         Dim memberName As String = StringUtil.ToCamelCase(manyMany.PropertyName)
 %>
 
-        Private _<%=memberName%> As System.Data.Linq.EntitySet(Of <%=manyMany.RightType.Name%>)
+        Private _<%=memberName%> As System.Data.Linq.EntitySet(Of <%=VBKeywordEscape(manyMany.RightType.Name)%>)
 
         ''' <summary>
         ''' Gets or sets the Many To Many <%=manyMany.PropertyName%> list.
         ''' </summary>
         ''' <value>The <%=manyMany.PropertyName%> list.</value>
-        Public Property <%=manyMany.PropertyName%>() As System.Data.Linq.EntitySet(Of <%=manyMany.RightType.Name%>)
+        Public Property <%=manyMany.PropertyName%>() As System.Data.Linq.EntitySet(Of <%=VBKeywordEscape(manyMany.RightType.Name)%>)
 
             Get
 <% If IncludeDataContract Then %>
@@ -432,19 +432,19 @@ For Each c As Column in Type.Columns
 
                 If (_<%=memberName%> Is Nothing) Then
 
-                    _<%=memberName%> = New System.Data.Linq.EntitySet(Of <%=manyMany.RightType.Name%>)(AddressOf On<%=manyMany.PropertyName%>Add, AddressOf On<%=manyMany.PropertyName%>Remove)
+                    _<%=memberName%> = New System.Data.Linq.EntitySet(Of <%=VBKeywordEscape(manyMany.RightType.Name)%>)(AddressOf On<%=manyMany.PropertyName%>Add, AddressOf On<%=manyMany.PropertyName%>Remove)
                     _<%=memberName%>.SetSource(<%=a.Member %>.Select(Function(c) c.<%=manyMany.JoinRightAssociation.Member%>))
                 End If
                 Return _<%=memberName%>
             End Get
-            Set(ByVal value As System.Data.Linq.EntitySet(Of <%=manyMany.RightType.Name%>))
+            Set(ByVal value As System.Data.Linq.EntitySet(Of <%=VBKeywordEscape(manyMany.RightType.Name)%>))
 
                 _<%=memberName%>.Assign(value)
             End Set
         End Property
 
         <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub On<%=manyMany.PropertyName%>Add(ByVal entity As <%=manyMany.RightType.Name%>)
+        Private Sub On<%=manyMany.PropertyName%>Add(ByVal entity As <%=VBKeywordEscape(manyMany.RightType.Name)%>)
 
             SendPropertyChanging(Nothing)
             <%= a.Member %>.Add(New <%=manyMany.JoinType.Name%> With {.<%=manyMany.JoinLeftAssociation.Member%> = Me, .<%=manyMany.JoinRightAssociation.Member%> = entity})
@@ -452,7 +452,7 @@ For Each c As Column in Type.Columns
         End Sub
 
         <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub On<%=manyMany.PropertyName%>Remove(ByVal entity As <%=manyMany.RightType.Name%>)
+        Private Sub On<%=manyMany.PropertyName%>Remove(ByVal entity As <%=VBKeywordEscape(manyMany.RightType.Name)%>)
 
             SendPropertyChanging(Nothing)
             Dim <%=StringUtil.ToCamelCase(manyMany.JoinType.Name)%> = <%= a.Member %>.FirstOrDefault(<%= BuildManyToManyRemoveLamba(manyMany) %>)
@@ -568,8 +568,8 @@ For Each c As Column in Type.Columns
         ''' This method is equivalent to a Detach from the current <see cref="DataContext"/>.
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
-        Public Function Clone() As <%= Type.Name %>
-            Return DirectCast(DirectCast(Me, ICloneable), <%= Type.Name %>).Clone()
+        Public Function Clone() As <%= VBKeywordEscape(Type.Name) %>
+            Return DirectCast(DirectCast(Me, ICloneable), <%= VBKeywordEscape(Type.Name) %>).Clone()
         End Function
 #End Region
 <% End If 'EntityBase %>
