@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DbmlEnum"
+    targetNamespace="http://tempuri.org/DbmlEnum.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/DbmlEnum.xsd"
+    xmlns:mstns="http://tempuri.org/DbmlEnum.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+  <xs:element name="Database" type="Database" />
+  <xs:complexType name="Database">
+    <xs:sequence>
+      <xs:element name="Enum" type="Enum" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="optional" />
+  </xs:complexType>
+  <xs:complexType name="Enum">
+    <xs:sequence>
+      <xs:element name="Item" type="Item" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute name="Table" type="xs:string" use="required" />
+    <xs:attribute name="AccessModifier" type="AccessModifier" use="optional" />
+    <xs:attribute name="Flags" type="xs:boolean" use="optional" />
+    <xs:attribute name="IncludeDataContract" type="xs:boolean" use="optional" />
+    <xs:attribute name="Type" type="xs:string" use="optional" />
+  </xs:complexType>
+  <xs:complexType name="Item">
+    <xs:attribute name="Name" type="xs:string" use="required" />
+    <xs:attribute name="Value" type="ns:long" use="required" />
+    <xs:attribute name="Description" type="xs:string" use="optional" />
+    <xs:attribute name="DataContractMember" type="xs:boolean" use="optional" />
+  </xs:complexType>
+  <xs:simpleType name="AccessModifier">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Public" />
+      <xs:enumeration value="Internal" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
