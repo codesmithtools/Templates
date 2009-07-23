@@ -26,10 +26,6 @@
 
 <%@ Property Category="2.Class" Name="ExistingFile"
     Type="CodeFileParser" Optional="True" %>
-
-<%@ Property Category="2.Class" Name="EntityBase"
-    Type="System.String" Default="" Optional="True"
-    Description="The base class for the entity." %>
     
 <%@ Map Name="VBKeywordEscape" 
     Src="VBKeywordEscape.csmap" Reverse="False" 
@@ -52,7 +48,7 @@ Imports CodeSmith.Data.Rules
 
 Namespace <%= Database.EntityNamespace %>
     
-    <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= Type.Name %>
+    <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> Partial Class <%= VBKeywordEscape(Type.Name) %>
         
         ' For more information about the features contained in this class, please visit our GoogleCode Wiki at...
         ' http://code.google.com/p/codesmith/wiki/PLINQO
@@ -63,12 +59,7 @@ Namespace <%= Database.EntityNamespace %>
         #Region "Metadata"
         
         <CodeSmith.Data.Audit.Audit()> _
-<% If Not String.IsNullOrEmpty(EntityBase) AndAlso EntityBase <> Database.EntityBase Then %>
-        Friend Shadows Class Metadata
-            Inherits <%= EntityBase %>.Metadata
-<% Else %>
-        Friend Class Metadata
-<% End If %>
+        Protected Friend Class Metadata
             ' Only Attributes in the class will be preserved.
             
 <%          Dim sourceAttributes As AttributeSectionVisitor = new AttributeSectionVisitor()

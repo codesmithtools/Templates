@@ -163,7 +163,7 @@ Namespace <%= Database.ContextNamespace %>
         #Region "Tables"
 <% For Each table As Table In Database.Tables  %>
         ''' <summary>Represents the <%= table.Name %> table in the underlying database.</summary>
-        <%= Naming.GetModifier(table.AccessModifier, table.Modifier) %> ReadOnly Property <%= GetName(table) %> As System.Data.Linq.Table(Of <%= Database.EntityNamespace %>.<%= table.Type.Name %>)
+        <%= Naming.GetModifier(table.AccessModifier, table.Modifier) %> ReadOnly Property <%= VBKeywordEscape(GetName(table)) %> As System.Data.Linq.Table(Of <%= Database.EntityNamespace %>.<%= table.Type.Name %>)
             Get
                 Return GetTable(Of <%= Database.EntityNamespace %>.<%= table.Type.Name %>)()
             End Get
