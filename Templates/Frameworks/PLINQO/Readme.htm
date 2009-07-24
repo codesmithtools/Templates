@@ -659,11 +659,9 @@ routing.</p>
 </ul>
 <h2><a title="Roadmap" name="Roadmap"></a>Roadmap</h2>
 <ul>
-	<li>Improve manager template</li>
 	<li>Unit test generation</li>
 	<li>Web service generation</li>
 	<li>ASP.NET, Winforms and WPF UI generation</li>
-	<li>Visual Basic support</li>
 </ul>
 <h2><a name="Download"></a>Download</h2>
 <p>Download the latest release of PLINQO.</p>
@@ -673,6 +671,34 @@ routing.</p>
 </ul>
 <h2>History</h2>
 <ul>
+    <li>Release 3.1<ul>
+        <li>Added query result caching.</li>
+        <li>Added a new AlwaysAuditAttribute to make it possible to always audit a property 
+            even if it hasn&#39;t changed.</li>
+        <li>Added partial change tracking methods for EntityRef associations.</li>
+        <li>Added support for maintaining user defined associations.</li>
+        <li>Added partial change tracking methods for EntityRef associations.</li>
+        <li>Added shared version information for Assemblies.</li>
+        <li>Added support for AuditPropertyFormat.</li>
+        <li>Removed AddRule that is no longer used in manager templates.</li>
+        <li>Updated manager templates classes to lazy load.</li>
+        <li>Fixed many to many issue when IncludeDeleteOnNull is false.</li>
+        <li>Fixed&nbsp;bug with a keyword in function parameter name.</li>
+        <li>Fixed&nbsp;bug with transactions in ExecuteQuery.</li>
+        <li>Fixed&nbsp;bug with nullable columns in queries.</li>
+        <li>Fixed&nbsp;bug with nullable parameter in query.</li>
+        <li>Fixed&nbsp;support for inheritance.</li>
+        </ul>
+    </li>
+    <li>Release 3.0<ul>
+        <li>Added Entity Detach.</li>
+        <li>Added Entity Clone.</li>
+        <li>Added support for Many-to-Many Relationships.</li>
+        <li>Added auditing.</li>
+        <li>Added Batch Updates and Deletes.</li>
+        <li>Added support for multiple result sets.</li>
+        </ul>
+    </li>
     <li>Release 2.x<ul>
         <li>Added Enum table support.</li>
         <li>Added Many To Many association support.</li>
