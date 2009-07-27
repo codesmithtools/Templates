@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.6.1 ReadOnlyList" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.6.1 ReadOnlyList" %>
 
 <%@ Register Name="ReadOnlyList" Template="Internal\ReadOnlyList.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="ReadOnlyListDataAccess" Template="Internal\ReadOnlyList.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
@@ -14,52 +14,52 @@
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="SchemaExplorer" %>
 
-<% Generate(); %>
+<% Generate() %>
 
 <script runat="template">
 
-public override void Generate()
+Public override void Generate()
 {
-    RegisterReferences();
+    RegisterReferences()
     
 	foreach(Entity entity in Entities)
 	{
 		#region ReadOnlyList
 		
-		ReadOnlyList readOnlyList = this.Create<ReadOnlyList>();
-		this.CopyPropertiesTo(readOnlyList);
-		readOnlyList.SourceTable = entity.Table;
-		readOnlyList.BusinessClassName = string.Format("{0}List", readOnlyList.BusinessClassName);
+		ReadOnlyList readOnlyList = this.Create<ReadOnlyList>()
+		this.CopyPropertiesTo(readOnlyList)
+		readOnlyList.SourceTable = entity.Table
+		readOnlyList.BusinessClassName = string.Format("{0}List", readOnlyList.BusinessClassName)
 		
-		string parentFileName = System.IO.Path.Combine(Location, string.Format("{0}.cs", readOnlyList.BusinessClassName));
+		string parentFileName = System.IO.Path.Combine(Location, string.Format("{0}.cs", readOnlyList.BusinessClassName))
 		if (!System.IO.File.Exists(parentFileName))
 		{
-			readOnlyList.RenderToFile(parentFileName, false);
+			readOnlyList.RenderToFile(parentFileName, false)
 		}
 		
 		#region ReadOnlyList.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", readOnlyList.BusinessClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", readOnlyList.BusinessClassName))
 		
-		ReadOnlyListGenerated readOnlyListGenerated = this.Create<ReadOnlyListGenerated>();
-		this.CopyPropertiesTo(readOnlyListGenerated);
-		readOnlyListGenerated.SourceTable = entity.Table;
-		readOnlyListGenerated.BusinessClassName = string.Format("{0}List", readOnlyListGenerated.BusinessClassName);
+		ReadOnlyListGenerated readOnlyListGenerated = this.Create<ReadOnlyListGenerated>()
+		this.CopyPropertiesTo(readOnlyListGenerated)
+		readOnlyListGenerated.SourceTable = entity.Table
+		readOnlyListGenerated.BusinessClassName = string.Format("{0}List", readOnlyListGenerated.BusinessClassName)
 		
-		readOnlyListGenerated.RenderToFile(fileName, parentFileName, true);
+		readOnlyListGenerated.RenderToFile(fileName, parentFileName, true)
 		
 		#endregion
 		
 		#region ReadOnlyList.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", readOnlyList.BusinessClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", readOnlyList.BusinessClassName))
 		
-		ReadOnlyListDataAccess readOnlyListDataAccess = this.Create<ReadOnlyListDataAccess>();
-		this.CopyPropertiesTo(readOnlyListDataAccess);
-		readOnlyListDataAccess.SourceTable = entity.Table;
-		readOnlyListDataAccess.BusinessClassName = string.Format("{0}List", readOnlyListDataAccess.BusinessClassName);
+		ReadOnlyListDataAccess readOnlyListDataAccess = this.Create<ReadOnlyListDataAccess>()
+		this.CopyPropertiesTo(readOnlyListDataAccess)
+		readOnlyListDataAccess.SourceTable = entity.Table
+		readOnlyListDataAccess.BusinessClassName = string.Format("{0}List", readOnlyListDataAccess.BusinessClassName)
 		
-		readOnlyListDataAccess.RenderToFile(fileName, parentFileName, true);
+		readOnlyListDataAccess.RenderToFile(fileName, parentFileName, true)
 		
 		#endregion
 		

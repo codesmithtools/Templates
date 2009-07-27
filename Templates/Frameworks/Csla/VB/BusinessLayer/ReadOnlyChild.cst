@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.6.1 ReadOnlyChild" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.6.1 ReadOnlyChild" %>
 
 <%@ Register Name="ReadOnlyChild" Template="Internal\ReadOnlyChild.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="ReadOnlyChildDataAccess" Template="Internal\ReadOnlyChild.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
@@ -14,49 +14,49 @@
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="SchemaExplorer" %>
 
-<% Generate(); %>
+<% Generate() %>
 
 <script runat="template">
 
-public override void Generate()
+Public override void Generate()
 {
-    RegisterReferences();
+    RegisterReferences()
     
 	foreach(Entity entity in Entities)
 	{
 		#region ReadOnlyChild
 		
-		ReadOnlyChild readOnlyChild = this.Create<ReadOnlyChild>();
-		this.CopyPropertiesTo(readOnlyChild);
-		readOnlyChild.SourceTable = entity.Table;
+		ReadOnlyChild readOnlyChild = this.Create<ReadOnlyChild>()
+		this.CopyPropertiesTo(readOnlyChild)
+		readOnlyChild.SourceTable = entity.Table
 		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", readOnlyChild.BusinessClassName));
+		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", readOnlyChild.BusinessClassName))
 		if (!System.IO.File.Exists(parentFileName))
 		{
-			readOnlyChild.RenderToFile(parentFileName, false);
+			readOnlyChild.RenderToFile(parentFileName, false)
 		}
 		
 		#region ReadOnlyChild.Generated
 		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", readOnlyChild.BusinessClassName));
+		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", readOnlyChild.BusinessClassName))
 		
-		ReadOnlyChildGenerated readOnlyChildGenerated = this.Create<ReadOnlyChildGenerated>();
-		this.CopyPropertiesTo(readOnlyChildGenerated);
-		readOnlyChildGenerated.SourceTable = entity.Table;
+		ReadOnlyChildGenerated readOnlyChildGenerated = this.Create<ReadOnlyChildGenerated>()
+		this.CopyPropertiesTo(readOnlyChildGenerated)
+		readOnlyChildGenerated.SourceTable = entity.Table
 		
-		readOnlyChildGenerated.RenderToFile(fileName, parentFileName, true);
+		readOnlyChildGenerated.RenderToFile(fileName, parentFileName, true)
 		
 		#endregion
 		
 		#region ReadOnlyChild.DataAccess
 		
-		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", readOnlyChild.BusinessClassName));
+		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", readOnlyChild.BusinessClassName))
 		
-		ReadOnlyChildDataAccess readOnlyChildDataAccess = this.Create<ReadOnlyChildDataAccess>();
-		this.CopyPropertiesTo(readOnlyChildDataAccess);
-		readOnlyChildDataAccess.SourceTable = entity.Table;
+		ReadOnlyChildDataAccess readOnlyChildDataAccess = this.Create<ReadOnlyChildDataAccess>()
+		this.CopyPropertiesTo(readOnlyChildDataAccess)
+		readOnlyChildDataAccess.SourceTable = entity.Table
 		
-		readOnlyChildDataAccess.RenderToFile(fileName, parentFileName, true);
+		readOnlyChildDataAccess.RenderToFile(fileName, parentFileName, true)
 		
 		#endregion
 		
