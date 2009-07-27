@@ -20,7 +20,7 @@ public class PreserveRegionsSample
         // This section and all other non-custom code
         // regions will be overwritten during each
         // template execution.
-        // Current Date: Monday, November 03, 2008
+        // Current Date: Monday, July 27, 2009
 	}
 
 
