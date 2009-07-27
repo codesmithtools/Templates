@@ -85,6 +85,95 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{67
 		..\CSharp\BusinessLayer\Internal\SwitchableObject.Generated.cst = ..\CSharp\BusinessLayer\Internal\SwitchableObject.Generated.cst
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VB", "VB", "{580D643C-0950-4C43-BF66-4724D24C673D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessLayer", "BusinessLayer", "{8AF4CEEA-7B24-40A5-87C2-1A934E4A0F54}"
+	ProjectSection(SolutionItems) = preProject
+		..\VB\BusinessLayer\CommandObject.cst = ..\VB\BusinessLayer\CommandObject.cst
+		..\VB\BusinessLayer\Criteria.cst = ..\VB\BusinessLayer\Criteria.cst
+		..\VB\BusinessLayer\DynamicRoot.cst = ..\VB\BusinessLayer\DynamicRoot.cst
+		..\VB\BusinessLayer\DynamicRootList.cst = ..\VB\BusinessLayer\DynamicRootList.cst
+		..\VB\BusinessLayer\EditableChild.cst = ..\VB\BusinessLayer\EditableChild.cst
+		..\VB\BusinessLayer\EditableChildList.cst = ..\VB\BusinessLayer\EditableChildList.cst
+		..\VB\BusinessLayer\EditableRoot.cst = ..\VB\BusinessLayer\EditableRoot.cst
+		..\VB\BusinessLayer\EditableRootList.cst = ..\VB\BusinessLayer\EditableRootList.cst
+		..\VB\BusinessLayer\Entities.cst = ..\VB\BusinessLayer\Entities.cst
+		..\VB\BusinessLayer\NameValueList.cst = ..\VB\BusinessLayer\NameValueList.cst
+		..\VB\BusinessLayer\ReadOnlyChild.cst = ..\VB\BusinessLayer\ReadOnlyChild.cst
+		..\VB\BusinessLayer\ReadOnlyChildList.cst = ..\VB\BusinessLayer\ReadOnlyChildList.cst
+		..\VB\BusinessLayer\ReadOnlyList.cst = ..\VB\BusinessLayer\ReadOnlyList.cst
+		..\VB\BusinessLayer\ReadOnlyRoot.cst = ..\VB\BusinessLayer\ReadOnlyRoot.cst
+		..\VB\BusinessLayer\SwitchableObject.cst = ..\VB\BusinessLayer\SwitchableObject.cst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{D033080D-12D9-4DC3-91CB-274675B2BC80}"
+	ProjectSection(SolutionItems) = preProject
+		..\VB\BusinessLayer\Internal\CommandObject.cst = ..\VB\BusinessLayer\Internal\CommandObject.cst
+		..\VB\BusinessLayer\Internal\CommandObject.DataAccess.cst = ..\VB\BusinessLayer\Internal\CommandObject.DataAccess.cst
+		..\VB\BusinessLayer\Internal\CommandObject.Generated.cst = ..\VB\BusinessLayer\Internal\CommandObject.Generated.cst
+		..\VB\BusinessLayer\Internal\Criteria.cst = ..\VB\BusinessLayer\Internal\Criteria.cst
+		..\VB\BusinessLayer\Internal\Criteria.Generated.cst = ..\VB\BusinessLayer\Internal\Criteria.Generated.cst
+		..\VB\BusinessLayer\Internal\DynamicRoot.cst = ..\VB\BusinessLayer\Internal\DynamicRoot.cst
+		..\VB\BusinessLayer\Internal\DynamicRoot.DataAccess.cst = ..\VB\BusinessLayer\Internal\DynamicRoot.DataAccess.cst
+		..\VB\BusinessLayer\Internal\DynamicRoot.Generated.cst = ..\VB\BusinessLayer\Internal\DynamicRoot.Generated.cst
+		..\VB\BusinessLayer\Internal\DynamicRootList.cst = ..\VB\BusinessLayer\Internal\DynamicRootList.cst
+		..\VB\BusinessLayer\Internal\DynamicRootList.DataAccess.cst = ..\VB\BusinessLayer\Internal\DynamicRootList.DataAccess.cst
+		..\VB\BusinessLayer\Internal\DynamicRootList.Generated.cst = ..\VB\BusinessLayer\Internal\DynamicRootList.Generated.cst
+		..\VB\BusinessLayer\Internal\EditableChild.cst = ..\VB\BusinessLayer\Internal\EditableChild.cst
+		..\VB\BusinessLayer\Internal\EditableChild.DataAccess.cst = ..\VB\BusinessLayer\Internal\EditableChild.DataAccess.cst
+		..\VB\BusinessLayer\Internal\EditableChild.Generated.cst = ..\VB\BusinessLayer\Internal\EditableChild.Generated.cst
+		..\VB\BusinessLayer\Internal\EditableChildList.cst = ..\VB\BusinessLayer\Internal\EditableChildList.cst
+		..\VB\BusinessLayer\Internal\EditableChildList.DataAccess.cst = ..\VB\BusinessLayer\Internal\EditableChildList.DataAccess.cst
+		..\VB\BusinessLayer\Internal\EditableChildList.Generated.cst = ..\VB\BusinessLayer\Internal\EditableChildList.Generated.cst
+		..\VB\BusinessLayer\Internal\EditableRoot.cst = ..\VB\BusinessLayer\Internal\EditableRoot.cst
+		..\VB\BusinessLayer\Internal\EditableRoot.DataAccess.cst = ..\VB\BusinessLayer\Internal\EditableRoot.DataAccess.cst
+		..\VB\BusinessLayer\Internal\EditableRoot.Generated.cst = ..\VB\BusinessLayer\Internal\EditableRoot.Generated.cst
+		..\VB\BusinessLayer\Internal\EditableRootList.cst = ..\VB\BusinessLayer\Internal\EditableRootList.cst
+		..\VB\BusinessLayer\Internal\EditableRootList.DataAccess.cst = ..\VB\BusinessLayer\Internal\EditableRootList.DataAccess.cst
+		..\VB\BusinessLayer\Internal\EditableRootList.Generated.cst = ..\VB\BusinessLayer\Internal\EditableRootList.Generated.cst
+		..\VB\BusinessLayer\Internal\NameValueList.cst = ..\VB\BusinessLayer\Internal\NameValueList.cst
+		..\VB\BusinessLayer\Internal\NameValueList.DataAccess.cst = ..\VB\BusinessLayer\Internal\NameValueList.DataAccess.cst
+		..\VB\BusinessLayer\Internal\NameValueList.Generated.cst = ..\VB\BusinessLayer\Internal\NameValueList.Generated.cst
+		..\VB\BusinessLayer\Internal\ReadOnlyChild.cst = ..\VB\BusinessLayer\Internal\ReadOnlyChild.cst
+		..\VB\BusinessLayer\Internal\ReadOnlyChild.DataAccess.cst = ..\VB\BusinessLayer\Internal\ReadOnlyChild.DataAccess.cst
+		..\VB\BusinessLayer\Internal\ReadOnlyChild.Generated.cst = ..\VB\BusinessLayer\Internal\ReadOnlyChild.Generated.cst
+		..\VB\BusinessLayer\Internal\ReadOnlyChildList.cst = ..\VB\BusinessLayer\Internal\ReadOnlyChildList.cst
+		..\VB\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.cst = ..\VB\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.cst
+		..\VB\BusinessLayer\Internal\ReadOnlyChildList.Generated.cst = ..\VB\BusinessLayer\Internal\ReadOnlyChildList.Generated.cst
+		..\VB\BusinessLayer\Internal\ReadOnlyList.cst = ..\VB\BusinessLayer\Internal\ReadOnlyList.cst
+		..\VB\BusinessLayer\Internal\ReadOnlyList.DataAccess.cst = ..\VB\BusinessLayer\Internal\ReadOnlyList.DataAccess.cst
+		..\VB\BusinessLayer\Internal\ReadOnlyList.Generated.cst = ..\VB\BusinessLayer\Internal\ReadOnlyList.Generated.cst
+		..\VB\BusinessLayer\Internal\ReadOnlyRoot.cst = ..\VB\BusinessLayer\Internal\ReadOnlyRoot.cst
+		..\VB\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.cst = ..\VB\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.cst
+		..\VB\BusinessLayer\Internal\ReadOnlyRoot.Generated.cst = ..\VB\BusinessLayer\Internal\ReadOnlyRoot.Generated.cst
+		..\VB\BusinessLayer\Internal\SwitchableObject.cst = ..\VB\BusinessLayer\Internal\SwitchableObject.cst
+		..\VB\BusinessLayer\Internal\SwitchableObject.DataAccess.cst = ..\VB\BusinessLayer\Internal\SwitchableObject.DataAccess.cst
+		..\VB\BusinessLayer\Internal\SwitchableObject.Generated.cst = ..\VB\BusinessLayer\Internal\SwitchableObject.Generated.cst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebLayer", "WebLayer", "{B3F774E2-9D8D-4780-A9F5-D54958DEF3E8}"
+	ProjectSection(SolutionItems) = preProject
+		..\VB\WebLayer\Default.aspx.cst = ..\VB\WebLayer\Default.aspx.cst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccessLayer", "DataAccessLayer", "{AB7EA04C-C7E9-447A-9277-B677409B54BA}"
+	ProjectSection(SolutionItems) = preProject
+		..\VB\DataAccessLayer\DataAccessLayer.cst = ..\VB\DataAccessLayer\DataAccessLayer.cst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{1EBCD6D8-6E9E-41EB-8968-F1ABAD8CB1CE}"
+	ProjectSection(SolutionItems) = preProject
+		..\VB\DataAccessLayer\Internal\ParameterizedSQL.cst = ..\VB\DataAccessLayer\Internal\ParameterizedSQL.cst
+		..\VB\DataAccessLayer\Internal\ParameterizedSQLBase.cst = ..\VB\DataAccessLayer\Internal\ParameterizedSQLBase.cst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{AA24549B-F016-4588-9AE9-3A503B4DAD79}"
+	ProjectSection(SolutionItems) = preProject
+		..\VB\WebLayer\Internal\Default.aspx.cs.cst = ..\VB\WebLayer\Internal\Default.aspx.cs.cst
+		..\VB\WebLayer\Internal\Default.aspx.cst = ..\VB\WebLayer\Internal\Default.aspx.cst
+		..\VB\WebLayer\Internal\Default.aspx.designer.cs.cst = ..\VB\WebLayer\Internal\Default.aspx.designer.cs.cst
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,8 +199,15 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{06C6ADF6-C3DB-4ABC-948E-1705702DD07C} = {A3DD79D2-92AD-4BAF-893F-7230A4A7D1E6}
+		{580D643C-0950-4C43-BF66-4724D24C673D} = {A3DD79D2-92AD-4BAF-893F-7230A4A7D1E6}
 		{999286CE-0FB7-4622-8D09-EA068B9778DE} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
 		{C2E439BE-629B-4069-9A36-A61F1D793E94} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
 		{670B086B-ECFC-4769-85FC-FA19DC00E5B9} = {999286CE-0FB7-4622-8D09-EA068B9778DE}
+		{8AF4CEEA-7B24-40A5-87C2-1A934E4A0F54} = {580D643C-0950-4C43-BF66-4724D24C673D}
+		{B3F774E2-9D8D-4780-A9F5-D54958DEF3E8} = {580D643C-0950-4C43-BF66-4724D24C673D}
+		{AB7EA04C-C7E9-447A-9277-B677409B54BA} = {580D643C-0950-4C43-BF66-4724D24C673D}
+		{D033080D-12D9-4DC3-91CB-274675B2BC80} = {8AF4CEEA-7B24-40A5-87C2-1A934E4A0F54}
+		{AA24549B-F016-4588-9AE9-3A503B4DAD79} = {B3F774E2-9D8D-4780-A9F5-D54958DEF3E8}
+		{1EBCD6D8-6E9E-41EB-8968-F1ABAD8CB1CE} = {AB7EA04C-C7E9-447A-9277-B677409B54BA}
 	EndGlobalSection
 EndGlobal

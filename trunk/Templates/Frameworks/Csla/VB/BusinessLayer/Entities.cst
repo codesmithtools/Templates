@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Description="CSLA 3.6.1 Entities" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Description="CSLA 3.6.1 Entities" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
@@ -26,20 +26,20 @@
 <%@ Register Name="ReadOnlyRootTemplate" Template="ReadOnlyRoot.cst" %>
 <%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
 
-<% Generate(); %>
+<% Generate() %>
 
 <script runat="template">
 
-public override void Generate()
+Public override void Generate()
 {
     #region CommandObjectTemplate
     
     if(this.CommandObject != null && this.CommandObject.Count > 0)
     {
-        CommandObjectTemplate commandObjectTemplate = this.Create<CommandObjectTemplate>();
-        this.CopyPropertiesTo(commandObjectTemplate);
-        commandObjectTemplate.SourceTables = this.CommandObject;
-        commandObjectTemplate.Generate();
+        CommandObjectTemplate commandObjectTemplate = this.Create<CommandObjectTemplate>()
+        this.CopyPropertiesTo(commandObjectTemplate)
+        commandObjectTemplate.SourceTables = this.CommandObject
+        commandObjectTemplate.Generate()
     }
     
     #endregion
@@ -48,10 +48,10 @@ public override void Generate()
     
     if(this.Criteria != null && this.Criteria.Count > 0)
     {
-        CriteriaTemplate criteriaTemplate = this.Create<CriteriaTemplate>();
-        this.CopyPropertiesTo(criteriaTemplate);
-        criteriaTemplate.SourceTables = this.Criteria;
-        criteriaTemplate.Generate();
+        CriteriaTemplate criteriaTemplate = this.Create<CriteriaTemplate>()
+        this.CopyPropertiesTo(criteriaTemplate)
+        criteriaTemplate.SourceTables = this.Criteria
+        criteriaTemplate.Generate()
     }
     
     #endregion    
@@ -60,10 +60,10 @@ public override void Generate()
     
     if(this.DynamicRoot != null && this.DynamicRoot.Count > 0)
     {
-        DynamicRootTemplate dynamicRootTemplate = this.Create<DynamicRootTemplate>();
-        this.CopyPropertiesTo(dynamicRootTemplate);
-        dynamicRootTemplate.SourceTables = this.DynamicRoot;
-        dynamicRootTemplate.Generate();
+        DynamicRootTemplate dynamicRootTemplate = this.Create<DynamicRootTemplate>()
+        this.CopyPropertiesTo(dynamicRootTemplate)
+        dynamicRootTemplate.SourceTables = this.DynamicRoot
+        dynamicRootTemplate.Generate()
     }
     
     #endregion
@@ -72,10 +72,10 @@ public override void Generate()
     
     if(this.DynamicRootList != null && this.DynamicRootList.Count > 0)
     {
-        DynamicRootListTemplate dynamicRootListTemplate = this.Create<DynamicRootListTemplate>();
-        this.CopyPropertiesTo(dynamicRootListTemplate);
-        dynamicRootListTemplate.SourceTables = this.DynamicRootList;
-        dynamicRootListTemplate.Generate();
+        DynamicRootListTemplate dynamicRootListTemplate = this.Create<DynamicRootListTemplate>()
+        this.CopyPropertiesTo(dynamicRootListTemplate)
+        dynamicRootListTemplate.SourceTables = this.DynamicRootList
+        dynamicRootListTemplate.Generate()
     }
     
     #endregion    
@@ -84,10 +84,10 @@ public override void Generate()
     
     if(this.EditableChild != null && this.EditableChild.Count > 0)
     {
-        EditableChildTemplate editableChildTemplate = this.Create<EditableChildTemplate>();
-        this.CopyPropertiesTo(editableChildTemplate);
-        editableChildTemplate.SourceTables = this.EditableChild;
-        editableChildTemplate.Generate();
+        EditableChildTemplate editableChildTemplate = this.Create<EditableChildTemplate>()
+        this.CopyPropertiesTo(editableChildTemplate)
+        editableChildTemplate.SourceTables = this.EditableChild
+        editableChildTemplate.Generate()
     }
     
     #endregion
@@ -96,10 +96,10 @@ public override void Generate()
     
     if(this.EditableChildList != null && this.EditableChildList.Count > 0)
     {
-        EditableChildListTemplate editableChildListTemplate = this.Create<EditableChildListTemplate>();
-        this.CopyPropertiesTo(editableChildListTemplate);
-        editableChildListTemplate.SourceTables = this.EditableChildList;
-        editableChildListTemplate.Generate();
+        EditableChildListTemplate editableChildListTemplate = this.Create<EditableChildListTemplate>()
+        this.CopyPropertiesTo(editableChildListTemplate)
+        editableChildListTemplate.SourceTables = this.EditableChildList
+        editableChildListTemplate.Generate()
     }
     
     #endregion    
@@ -108,10 +108,10 @@ public override void Generate()
     
     if(this.EditableRoot != null && this.EditableRoot.Count > 0)
     {
-        EditableRootTemplate editableRootTemplate = this.Create<EditableRootTemplate>();
-        this.CopyPropertiesTo(editableRootTemplate);
-        editableRootTemplate.SourceTables = this.EditableRoot;
-        editableRootTemplate.Generate();
+        EditableRootTemplate editableRootTemplate = this.Create<EditableRootTemplate>()
+        this.CopyPropertiesTo(editableRootTemplate)
+        editableRootTemplate.SourceTables = this.EditableRoot
+        editableRootTemplate.Generate()
     }
     
     #endregion    
@@ -120,10 +120,10 @@ public override void Generate()
     
     if(this.EditableRootList != null && this.EditableRootList.Count > 0)
     {
-        EditableRootListTemplate editableRootListTemplate = this.Create<EditableRootListTemplate>();
-        this.CopyPropertiesTo(editableRootListTemplate);
-        editableRootListTemplate.SourceTables = this.EditableRootList;
-        editableRootListTemplate.Generate();
+        EditableRootListTemplate editableRootListTemplate = this.Create<EditableRootListTemplate>()
+        this.CopyPropertiesTo(editableRootListTemplate)
+        editableRootListTemplate.SourceTables = this.EditableRootList
+        editableRootListTemplate.Generate()
     }
     
     #endregion
@@ -132,10 +132,10 @@ public override void Generate()
     
     if(this.NameValueList != null && this.NameValueList.Count > 0)
     {
-        NameValueListTemplate nameValueListTemplate = this.Create<NameValueListTemplate>();
-        this.CopyPropertiesTo(nameValueListTemplate);
-        nameValueListTemplate.SourceTables = this.NameValueList;
-        nameValueListTemplate.Generate();
+        NameValueListTemplate nameValueListTemplate = this.Create<NameValueListTemplate>()
+        this.CopyPropertiesTo(nameValueListTemplate)
+        nameValueListTemplate.SourceTables = this.NameValueList
+        nameValueListTemplate.Generate()
     }
     
     #endregion    
@@ -144,10 +144,10 @@ public override void Generate()
     
     if(this.ReadOnlyChild != null && this.ReadOnlyChild.Count > 0)
     {
-        ReadOnlyChildTemplate readOnlyChildTemplate = this.Create<ReadOnlyChildTemplate>();
-        this.CopyPropertiesTo(readOnlyChildTemplate);
-        readOnlyChildTemplate.SourceTables = this.ReadOnlyChild;
-        readOnlyChildTemplate.Generate();
+        ReadOnlyChildTemplate readOnlyChildTemplate = this.Create<ReadOnlyChildTemplate>()
+        this.CopyPropertiesTo(readOnlyChildTemplate)
+        readOnlyChildTemplate.SourceTables = this.ReadOnlyChild
+        readOnlyChildTemplate.Generate()
     }
     
     #endregion
@@ -156,10 +156,10 @@ public override void Generate()
     
     if(this.ReadOnlyChildList != null && this.ReadOnlyChildList.Count > 0)
     {
-        ReadOnlyChildListTemplate readOnlyChildListTemplate = this.Create<ReadOnlyChildListTemplate>();
-        this.CopyPropertiesTo(readOnlyChildListTemplate);
-        readOnlyChildListTemplate.SourceTables = this.ReadOnlyChildList;
-        readOnlyChildListTemplate.Generate();
+        ReadOnlyChildListTemplate readOnlyChildListTemplate = this.Create<ReadOnlyChildListTemplate>()
+        this.CopyPropertiesTo(readOnlyChildListTemplate)
+        readOnlyChildListTemplate.SourceTables = this.ReadOnlyChildList
+        readOnlyChildListTemplate.Generate()
     }
     
     #endregion    
@@ -168,10 +168,10 @@ public override void Generate()
     
     if(this.ReadOnlyList != null && this.ReadOnlyList.Count > 0)
     {
-        ReadOnlyListTemplate readOnlyListTemplate = this.Create<ReadOnlyListTemplate>();
-        this.CopyPropertiesTo(readOnlyListTemplate);
-        readOnlyListTemplate.SourceTables = this.ReadOnlyList;
-        readOnlyListTemplate.Generate();
+        ReadOnlyListTemplate readOnlyListTemplate = this.Create<ReadOnlyListTemplate>()
+        this.CopyPropertiesTo(readOnlyListTemplate)
+        readOnlyListTemplate.SourceTables = this.ReadOnlyList
+        readOnlyListTemplate.Generate()
     }
     
     #endregion
@@ -180,10 +180,10 @@ public override void Generate()
     
     if(this.ReadOnlyRoot != null && this.ReadOnlyRoot.Count > 0)
     {
-        ReadOnlyRootTemplate readOnlyRootTemplate = this.Create<ReadOnlyRootTemplate>();
-        this.CopyPropertiesTo(readOnlyRootTemplate);
-        readOnlyRootTemplate.SourceTables = this.ReadOnlyRoot;
-        readOnlyRootTemplate.Generate();
+        ReadOnlyRootTemplate readOnlyRootTemplate = this.Create<ReadOnlyRootTemplate>()
+        this.CopyPropertiesTo(readOnlyRootTemplate)
+        readOnlyRootTemplate.SourceTables = this.ReadOnlyRoot
+        readOnlyRootTemplate.Generate()
     }
     
     #endregion    
@@ -192,10 +192,10 @@ public override void Generate()
     
     if(this.SwitchableObject != null && this.SwitchableObject.Count > 0)
     {
-        SwitchableObjectTemplate switchableObjectTemplate = this.Create<SwitchableObjectTemplate>();
-        this.CopyPropertiesTo(switchableObjectTemplate);
-        switchableObjectTemplate.SourceTables = this.SwitchableObject;
-        switchableObjectTemplate.Generate();
+        SwitchableObjectTemplate switchableObjectTemplate = this.Create<SwitchableObjectTemplate>()
+        this.CopyPropertiesTo(switchableObjectTemplate)
+        switchableObjectTemplate.SourceTables = this.SwitchableObject
+        switchableObjectTemplate.Generate()
     }
     
     #endregion    
