@@ -99,7 +99,8 @@ namespace QuickStart
                 }
                 else
                 {
-                    //TODO: add vb project reference.   
+                    projectReferneces += @"<ItemGroup><ProjectReference Include=" + string.Format("\"..\\{0}\\{0}.vbproj\"", reference) + "><Project>{B6476699-0462-4F01-8490-E489161548F1}</Project>" +
+                                         string.Format("<Name>{0}</Name>", reference) + "</ProjectReference></ItemGroup>";
                 }
             }
 
