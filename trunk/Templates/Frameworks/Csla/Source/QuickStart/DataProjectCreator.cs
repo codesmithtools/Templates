@@ -55,7 +55,7 @@ namespace QuickStart
             QuickStartHelper.FindAndReplace(cspPath, @"\$myContextNamespace\$", ProjectBuilder.DataProjectName);
             QuickStartHelper.FindAndReplace(cspPath, @"\$language\$", ProjectBuilder.LanguageFolder);
             QuickStartHelper.FindAndReplace(cspPath, @"\$CSLA\$", CSLAPath);
-
+            
             //The location in the csproj file directly below where we want to insert the csp include
             QuickStartHelper.FindAndReplace(projectPath.FilePath, ProjectInsertRegex,
                 String.Format("<ItemGroup>{0}\t\t<Generate Include=\"{1}\" />{0}\t</ItemGroup>{0}\t{2}",
@@ -67,11 +67,21 @@ namespace QuickStart
             if (ProjectBuilder.Language == LanguageEnum.VB)
             {
                 // Remove RootNamespace
-                QuickStartHelper.FindAndReplace(projectPath.FilePath, @"<RootNamespace>.*</RootNamespace>", "<RootNamespace></RootNamespace>");
+                //QuickStartHelper.FindAndReplace(projectPath.FilePath, @"<RootNamespace>.*</RootNamespace>", "<RootNamespace></RootNamespace>");
+
                 //Update Settings File
+                //QuickStartHelper.FindAndReplace(Path.Combine(projectPath.DirectoryPath, "My Project\\Settings.Designer.vb"),
+                //    @"Global\." + ProjectBuilder.SourceDatabase.Database.Name + @"\.Data\.My\.MySettings",
+                //    "Global.My.MySettings");
+
+                QuickStartHelper.FindAndReplace(Path.Combine(projectPath.DirectoryPath, "My Project\\Application.Designer.vb"),
+                    @"\$clrversion\$", "2.0.50727.4927");
+
+                QuickStartHelper.FindAndReplace(Path.Combine(projectPath.DirectoryPath, "My Project\\Resources.Designer.vb"),
+                    @"\$clrversion\$", "2.0.50727.4927");
+
                 QuickStartHelper.FindAndReplace(Path.Combine(projectPath.DirectoryPath, "My Project\\Settings.Designer.vb"),
-                    @"Global\." + ProjectBuilder.SourceDatabase.Database.Name + @"\.Data\.My\.MySettings",
-                    "Global.My.MySettings");
+                    @"\$clrversion\$", "2.0.50727.4927");
 
                 string vbFrameworkReplace = String.Format(@"<TargetFrameworkVersion>v{0}</TargetFrameworkVersion>
 				<OptionExplicit>On</OptionExplicit>
