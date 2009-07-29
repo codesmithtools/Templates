@@ -6,8 +6,7 @@ Description: The following template will generate an ASP.Net page.
 <%@ CodeTemplate Language="VB" TargetLanguage="Text" OutputType="None" Inherits="QuickStart.InterfaceCodeTemplate" CompilerVersion="v3.5" Description="The following template will generate a sample ASP.Net page." %>
 
 <%@ Register Name="SourceViewTemplate" Template="Internal\Default.aspx.cst" %>
-<%@ Register Name="CodeBehindTemplate" Template="Internal\Default.aspx.cs.cst" %>
-<%@ Register Name="DesignerTemplate" Template="Internal\Default.aspx.designer.cs.cst" %>
+<%@ Register Name="CodeBehindTemplate" Template="Internal\Default.aspx.vb.cst" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\Common" %>
@@ -21,50 +20,29 @@ Description: The following template will generate an ASP.Net page.
 
 <script runat="template">
 
-Public override void Generate()
-{
+Public Overloads Overrides Sub Generate()
+    
     RegisterReferences()
-    
-	#region SourceViewTemplate
-	
-	string parentFileName = System.IO.Path.Combine(this.Location, "Default.aspx")
-	
-    SourceViewTemplate sourceView = this.Create<SourceViewTemplate>()
-	this.CopyPropertiesTo(sourceView)
-	
-	if (!System.IO.File.Exists(parentFileName))
-	{
-		sourceView.RenderToFile(parentFileName, false)
-	}
-	
-	#region CodeBehindTemplate
-	
-	string fileName = System.IO.Path.Combine(Location, "Default.aspx.cs")
-	
-	CodeBehindTemplate codeBehind = this.Create<CodeBehindTemplate>()
-	this.CopyPropertiesTo(codeBehind)
-	
-    if (!System.IO.File.Exists(fileName))
-	{
-		codeBehind.RenderToFile(fileName, parentFileName, false)
-	}
-    
-	#endregion
-	
-	#region DesignerTemplate
-	
-	fileName = System.IO.Path.Combine(Location, "Default.aspx.designer.cs")
-	
-	DesignerTemplate designer = this.Create<DesignerTemplate>()
-	this.CopyPropertiesTo(designer)
-	
-    if (!System.IO.File.Exists(fileName))
-	{
-		designer.RenderToFile(fileName, parentFileName, false)
-	}
-	
-	#endregion
-	
-	#endregion
-}
+
+	Dim parentFileName As String = System.IO.Path.Combine(Me.Location, "Default.aspx")
+
+	Dim sourceView As SourceViewTemplate = Me.Create(Of SourceViewTemplate)()
+	Me.CopyPropertiesTo(sourceView)
+
+	If Not System.IO.File.Exists(parentFileName) Then
+		sourceView.RenderToFile(parentFileName, False)
+	End If
+
+	'CodeBehindTemplate
+	Dim fileName As String = System.IO.Path.Combine(Location, "Default.aspx.vb")
+
+	Dim codeBehind As CodeBehindTemplate = Me.Create(Of CodeBehindTemplate)()
+	Me.CopyPropertiesTo(codeBehind)
+
+	If Not System.IO.File.Exists(fileName) Then
+		codeBehind.RenderToFile(fileName, parentFileName, False)
+	End If
+
+End Sub
+
 </script>
