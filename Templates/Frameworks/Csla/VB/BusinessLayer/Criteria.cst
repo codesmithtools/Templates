@@ -17,40 +17,36 @@
 
 <script runat="template">
 
-Public override void Generate()
-{
-    RegisterReferences()
-    
-	foreach(Entity entity in Entities)
-	{
-		#region Criteria
-		
-		Criteria criteria = this.Create<Criteria>()
-		this.CopyPropertiesTo(criteria)
-		criteria.SourceTable = entity.Table
-		criteria.BusinessClassName = string.Format("{0}Criteria", criteria.BusinessClassName)
-		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Criteria\\{0}.cs", criteria.BusinessClassName))
-		if (!System.IO.File.Exists(parentFileName))
-		{
-			criteria.RenderToFile(parentFileName, false)
-		}
-		
-		#region Criteria.Generated
-		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Criteria\\{0}.Generated.cs", criteria.BusinessClassName))
-		
-		CriteriaGenerated criteriaGenerated = this.Create<CriteriaGenerated>()
-		this.CopyPropertiesTo(criteriaGenerated)
-		criteriaGenerated.SourceTable = entity.Table
-		criteriaGenerated.BusinessClassName = string.Format("{0}Criteria", criteriaGenerated.BusinessClassName)
-		
-		criteriaGenerated.RenderToFile(fileName, parentFileName, true)
-		
-		#endregion
+Public Overloads Overrides Sub Generate()
 	
-		#endregion
-	}
-}
+    RegisterReferences()
+
+	For Each entity As Entity In Entities
+		
+        'Criteria
+        Dim criteria As Criteria = Me.Create(Of Criteria)()
+		Me.CopyPropertiesTo(criteria)
+		criteria.SourceTable = entity.Table
+		criteria.BusinessClassName = String.Format("{0}Criteria", criteria.BusinessClassName)
+
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Criteria\{0}.vb", criteria.BusinessClassName))
+		
+
+		If Not System.IO.File.Exists(parentFileName) Then
+			criteria.RenderToFile(parentFileName, False)
+		End If
+
+		'Criteria.Generated
+        Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Criteria\{0}.Generated.vb", criteria.BusinessClassName))
+
+		Dim criteriaGenerated As CriteriaGenerated = Me.Create(Of CriteriaGenerated)()
+		Me.CopyPropertiesTo(criteriaGenerated)
+		criteriaGenerated.SourceTable = entity.Table
+		criteriaGenerated.BusinessClassName = String.Format("{0}Criteria", criteriaGenerated.BusinessClassName)
+
+		criteriaGenerated.RenderToFile(fileName, parentFileName, True)
+	Next
+    
+End Sub
 
 </script>
