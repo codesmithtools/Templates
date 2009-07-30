@@ -52,7 +52,10 @@ namespace CodeSmith.SchemaHelper
                 {
                     string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd( new[] {'?'} );
 
-                    parameters += string.Format( ", {0} {1}", systemType, member.VariableName );
+                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                        parameters += string.Format(", ByVal {0} As {1}", member.VariableName, systemType);
+                    else
+                        parameters += string.Format(", {0} {1}", systemType, member.VariableName);
                 }
             }
 
@@ -161,7 +164,10 @@ namespace CodeSmith.SchemaHelper
             {
                 string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
 
-                parameters += string.Format(", {0} {1}", systemType, member.VariableName);
+                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    parameters += string.Format(", ByVal {0} As {1}", member.VariableName, systemType);
+                else
+                    parameters += string.Format(", {0} {1}", systemType, member.VariableName);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -180,7 +186,10 @@ namespace CodeSmith.SchemaHelper
             {
                 string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
 
-                parameters += string.Format(", {0} {1}", systemType, member.Entity.ResolveCriteriaVariableName(member.ColumnName));
+                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    parameters += string.Format(", ByVal {0} As {1}", member.Entity.ResolveCriteriaVariableName(member.ColumnName), systemType);
+                else
+                    parameters += string.Format(", {0} {1}", systemType, member.Entity.ResolveCriteriaVariableName(member.ColumnName));
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });

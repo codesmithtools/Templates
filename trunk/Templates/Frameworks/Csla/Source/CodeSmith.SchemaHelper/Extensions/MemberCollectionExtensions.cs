@@ -58,7 +58,10 @@ namespace CodeSmith.SchemaHelper
             {
                 string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
 
-                parameters += string.Format(", {0} {1}", systemType, member.VariableName);
+                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    parameters += string.Format(", ByVal {0} As {1}", member.VariableName, systemType);
+                else
+                    parameters += string.Format(", {0} {1}", systemType, member.VariableName);
             }
 
             foreach (AssociationMember associationMember in associationMembers)
@@ -66,7 +69,13 @@ namespace CodeSmith.SchemaHelper
                 string systemType = isNullable
                                         ? associationMember.LocalColumn.SystemType
                                         : associationMember.LocalColumn.SystemType.TrimEnd(new[] {'?'});
-                string output = string.Format(", {0} {1}", systemType, NamingConventions.VariableName(associationMember.ColumnName));
+
+                string output = string.Empty;;
+
+                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    output = string.Format(", ByVal {0} As {1}", NamingConventions.VariableName(associationMember.ColumnName), systemType);
+                else
+                    output = string.Format(", {0} {1}", systemType, NamingConventions.VariableName(associationMember.ColumnName));
 
                 if (!parameters.Contains(output))
                     parameters += output;
@@ -88,7 +97,10 @@ namespace CodeSmith.SchemaHelper
             {
                 string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
 
-                parameters += string.Format(", {0} {1}", systemType, member.Entity.ResolveCriteriaVariableName(member.ColumnName));
+                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    parameters += string.Format(", ByVal {0} As {1}", member.Entity.ResolveCriteriaVariableName(member.ColumnName), systemType);
+                else
+                    parameters += string.Format(", {0} {1}", systemType, member.Entity.ResolveCriteriaVariableName(member.ColumnName));
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -118,7 +130,11 @@ namespace CodeSmith.SchemaHelper
                 if (!member.IsIdentity)
                 {
                     string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
-                    parameters += string.Format(", {0} {1}", systemType, member.VariableName);
+
+                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                        parameters += string.Format(", ByVal {0} As {1}", member.VariableName, systemType);
+                    else
+                        parameters += string.Format(", {0} {1}", systemType, member.VariableName);
                 }
             }
 
@@ -129,7 +145,13 @@ namespace CodeSmith.SchemaHelper
                     string systemType = isNullable
                                             ? associationMember.LocalColumn.SystemType
                                             : associationMember.LocalColumn.SystemType.TrimEnd(new[] {'?'});
-                    string output = string.Format(", {0} {1}", systemType, NamingConventions.VariableName(associationMember.ColumnName));
+                    
+                    string output = string.Empty;
+
+                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                        output = string.Format(", ByVal {0} As {1}", NamingConventions.VariableName(associationMember.ColumnName), systemType);
+                    else
+                        output = string.Format(", {0} {1}", systemType, NamingConventions.VariableName(associationMember.ColumnName));
 
                     if (!parameters.Contains(output))
                         parameters += output;
