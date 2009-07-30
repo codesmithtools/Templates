@@ -42,7 +42,6 @@ namespace CodeSmith.SchemaHelper
             RowVersionColumn = "^((R|r)ow)?(V|v)ersion$";
             VisualStudioVersion = VisualStudioVersion.VS_2008;
             SingularMemberSuffix = "";
-            TargetLanguage = LanguageEnum.CSharp;
 
             IgnoreExpressions = new List<Regex>();
             CleanExpressions = new List<Regex>();

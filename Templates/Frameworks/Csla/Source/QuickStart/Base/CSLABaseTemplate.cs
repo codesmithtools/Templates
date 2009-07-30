@@ -39,6 +39,10 @@ namespace QuickStart
                 {
                     Configuration.Instance.TargetLanguage = LanguageEnum.VB;
                 }
+                else
+                {
+                    Configuration.Instance.TargetLanguage = LanguageEnum.CSharp;
+                }
             }
         }
 

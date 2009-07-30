@@ -28,7 +28,10 @@ namespace CodeSmith.SchemaHelper
 
             foreach (AssociationMember member in members)
             {
-                parameters += string.Format(", {0} {1}", member.SystemType, member.VariableName);
+                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    parameters += string.Format(", ByVal {0} As {1}", member.VariableName, member.SystemType);
+                else
+                    parameters += string.Format(", {0} {1}", member.SystemType, member.VariableName);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });

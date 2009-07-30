@@ -45,9 +45,13 @@ namespace QuickStart
             QuickStartHelper.FindAndReplace(cspPath, @"\$language\$", ProjectBuilder.LanguageFolder);
             QuickStartHelper.FindAndReplace(cspPath, @"\$CSLA\$", CSLAPath);
 
-            QuickStartHelper.FindAndReplace(Path.Combine(projectPath.DirectoryPath, "My Project\\Settings.Designer.vb"), 
-                @"\$safeprojectname\$", ProjectBuilder.InterfaceProjectName);
-            
+            if (ProjectBuilder.Language == LanguageEnum.VB)
+            {
+                QuickStartHelper.FindAndReplace(
+                    Path.Combine(projectPath.DirectoryPath, "My Project\\Settings.Designer.vb"),
+                    @"\$safeprojectname\$", ProjectBuilder.InterfaceProjectName);
+            }
+
             UpdateWebConfig(projectPath.DirectoryPath);
             AddReferences(projectPath);
 

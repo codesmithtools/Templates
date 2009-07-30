@@ -18,50 +18,40 @@
 
 <script runat="template">
 
-Public override void Generate()
-{
+Public Overloads Overrides Sub Generate()
+
     RegisterReferences()
-    
-	foreach(Entity entity in Entities)
-	{
-		#region EditableRoot
+
+	For Each entity As Entity In Entities
 		
-		EditableRoot editableRoot = this.Create<EditableRoot>()
-		this.CopyPropertiesTo(editableRoot)
+        'EditableRoot
+		Dim editableRoot As EditableRoot = Me.Create(Of EditableRoot)()
+		Me.CopyPropertiesTo(editableRoot)
 		editableRoot.SourceTable = entity.Table
-		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", editableRoot.BusinessClassName))
-		if (!System.IO.File.Exists(parentFileName))
-		{
-			editableRoot.RenderToFile(parentFileName, false)
-		}
-		
-		#region EditableRoot.Generated
-		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", editableRoot.BusinessClassName))
-		
-		EditableRootGenerated editableRootGenerated = this.Create<EditableRootGenerated>()
-		this.CopyPropertiesTo(editableRootGenerated)
+
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", editableRoot.BusinessClassName))
+		If Not System.IO.File.Exists(parentFileName) Then
+			editableRoot.RenderToFile(parentFileName, False)
+		End If
+
+		'EditableRoot.Generated
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", editableRoot.BusinessClassName))
+
+		Dim editableRootGenerated As EditableRootGenerated = Me.Create(Of EditableRootGenerated)()
+		Me.CopyPropertiesTo(editableRootGenerated)
 		editableRootGenerated.SourceTable = entity.Table
-		
-		editableRootGenerated.RenderToFile(fileName, parentFileName, true)
-		
-		#endregion
-		
-		#region EditableRoot.DataAccess
-		
-		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", editableRoot.BusinessClassName))
-		
-		EditableRootDataAccess editableRootDataAccess = this.Create<EditableRootDataAccess>()
-		this.CopyPropertiesTo(editableRootDataAccess)
+
+		editableRootGenerated.RenderToFile(fileName, parentFileName, True)
+
+        'EditableRoot.DataAccess
+		fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", editableRoot.BusinessClassName))
+
+		Dim editableRootDataAccess As EditableRootDataAccess = Me.Create(Of EditableRootDataAccess)()
+		Me.CopyPropertiesTo(editableRootDataAccess)
 		editableRootDataAccess.SourceTable = entity.Table
-		
-		editableRootDataAccess.RenderToFile(fileName, parentFileName, true)
-		
-		#endregion
-		
-		#endregion
-	}
-}
+		editableRootDataAccess.RenderToFile(fileName, parentFileName, True)
+	Next
+
+End Sub
 
 </script>

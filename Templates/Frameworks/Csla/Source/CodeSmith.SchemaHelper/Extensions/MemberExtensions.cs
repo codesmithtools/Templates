@@ -25,6 +25,9 @@ namespace CodeSmith.SchemaHelper
         {
             if (member.IsPrimaryKey)
             {
+                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    return string.Format("\n\t\t<System.ComponentModel.DataObjectField(true, {0})> _", member.IsIdentity.ToString().ToLower());
+               
                 return string.Format("\n\t\t[System.ComponentModel.DataObjectField(true, {0})]", member.IsIdentity.ToString().ToLower());
             }
 
@@ -59,6 +62,12 @@ namespace CodeSmith.SchemaHelper
         public static string BuildParametersVariable(this Member member, bool isNullable)
         {
             string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
+            
+            if(Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+            {
+                return string.Format("ByVal {0} As {1}", member.VariableName, systemType);
+            }
+
             return string.Format("{0} {1}", systemType, member.VariableName);
         }
 

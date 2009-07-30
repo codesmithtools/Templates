@@ -11,6 +11,11 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class AssociationMemberCollectionExtensions
     {
+        public static string SystemType(this AssociationMember member, bool isNullable)
+        {
+            return isNullable ? member.SystemType : member.SystemType.TrimEnd(new char[] { '?' });
+        }
+
         public static List<SearchCriteria> ListSearchCriteria(this AssociationMember member)
         {
             return member.SearchCriteria.Where(sc => !sc.IsUniqueResult && sc.MethodName.Contains(member.Name)).ToList();
