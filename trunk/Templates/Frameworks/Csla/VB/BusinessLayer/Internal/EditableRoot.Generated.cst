@@ -103,7 +103,7 @@ Next %>
 				Return GetProperty(<%= member.PrivateMemberVariableName %>Property)
 			End Get
 <% 
-	if Not member.IsReadOnly Then %>
+	If Not member.IsReadOnly Then %>
             Set (ByVal value As <%= member.SystemType %>)
                 OnPropertyChanging("<%= member.PropertyName %>")
                 SetProperty(<%= member.PrivateMemberVariableName %>Property, value)
@@ -148,7 +148,7 @@ Next %>
 Next %>
 <%-- One-To-Zero-Or-One --%>
 <% For Each association As AssociationMember in Entity.OneToZeroOrOne 
-	if UseMemberVariables then %>
+	If UseMemberVariables then %>
 		Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>) = RegisterProperty(Of <%= association.ClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, <% If(UseLazyLoading)  %>Csla.RelationshipTypes.LazyLoad<%  else  %>Csla.RelationshipTypes.Child<% End If %>)
 		Private <%= association.PrivateMemberVariableName %> As <%= association.ClassName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue
 		Public ReadOnly Property <%= association.PropertyName %>() As <%= association.ClassName %>
@@ -181,7 +181,7 @@ Next %>
 Next %>
 <%-- Many-To-One --%>
 <% For Each association  As AssociationMember in Entity.ManyToOne 
-	if UseMemberVariables Then %>
+	If UseMemberVariables Then %>
 		Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>) = RegisterProperty(Of <%= association.ClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, <% If(UseLazyLoading)  %>Csla.RelationshipTypes.LazyLoad<%  else  %>Csla.RelationshipTypes.Child<% End If %>)
 		Private <%= association.PrivateMemberVariableName %> As <%= association.ClassName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue
 		Public ReadOnly Property <%= association.PropertyName %>() As <%= association.ClassName %>
@@ -215,7 +215,7 @@ Next %>
 Next  %>
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each association As AssociationMember in Entity.ToManyUnion 
-	if (UseMemberVariables) Then %>
+	If (UseMemberVariables) Then %>
         Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>List) = RegisterProperty(Of <%= association.ClassName %>List)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, <% If(UseLazyLoading)  %>Csla.RelationshipTypes.LazyLoad<%  else  %>Csla.RelationshipTypes.Child<% End If %>)
 		Private <%= association.PrivateMemberVariableName %> As <%= association.ClassName %>List  = <%= association.PrivateMemberVariableName %>Property.DefaultValue
 		Public ReadOnly Property <%= association.PropertyName %>() As <%= association.ClassName %>List 
@@ -268,7 +268,7 @@ Next %>
 			Return DataPortal.Fetch(Of <%= BusinessClassName %>)(New <%= BusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
 		End Function
 <%-- One-To-Zero-Or-One --%>
-<%if (Entity.HasOneToZeroOrZeroMember AndAlso Entity.PrimaryKey.KeyMembers.Count > 1)Then %>
+<%If (Entity.HasOneToZeroOrZeroMember AndAlso Entity.PrimaryKey.KeyMembers.Count > 1)Then %>
 
         Public Shared Function Get<%= BusinessClassName %>(<%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroParametersVariable() %>) As <%= BusinessClassName %> 
 		    Dim criteria As New <%= BusinessClassName %>Criteria()
@@ -279,7 +279,7 @@ Next %>
  <% End If%>
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each sc As SearchCriteria in Entity.SearchCriteria
-	if sc.IsUniqueResult AndAlso Not ((sc.Members.Count = Entity.PrimaryKey.KeyMembers.Count) AndAlso (sc.Members.item(0).Name = Entity.PrimaryKey.KeyMember.Name)) Then %>
+	If sc.IsUniqueResult AndAlso Not ((sc.Members.Count = Entity.PrimaryKey.KeyMembers.Count) AndAlso (sc.Members.item(0).Name = Entity.PrimaryKey.KeyMember.Name)) Then %>
         Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariablesCriteria(False) %>) As <%= BusinessClassName %> 
 		    Dim criteria As New <%= BusinessClassName %>Criteria()
 <% For Each member As MemberBase In sc.Members %>
@@ -333,5 +333,7 @@ End If%>
         
 		#End Region
 <% End If %>
-	End Class
+
+        End Class
+    
 End Namespace

@@ -22,7 +22,7 @@ Imports System
 Imports Csla
 Imports Csla.Validation
 
-namespace <%= BusinessProjectName %>
+Namespace <%= BusinessProjectName %>
 
 	Public Partial Class <%= BusinessClassName %>
 	
@@ -41,7 +41,7 @@ namespace <%= BusinessProjectName %>
 		
 		End Function
 		
-		#end region
+		#End Region
 		
 		#region "Authorization Rules"
 		
@@ -58,6 +58,8 @@ namespace <%= BusinessProjectName %>
 		
 		End Sub
 		
-		#end region
+		#End Region
+        
 	End Class
+    
 End Namespace
