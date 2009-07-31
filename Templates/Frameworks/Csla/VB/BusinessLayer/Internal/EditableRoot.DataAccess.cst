@@ -22,7 +22,7 @@ Option Explicit On
 Option Strict On
 
 Imports System
-<% if Entity.HasByteArrayColumn() Then %>
+<% If Entity.HasByteArrayColumn() Then %>
 Imports System.Data
 Imports System.IO
 <% End If %>
@@ -38,20 +38,19 @@ Namespace <%= BusinessProjectName %>
 			
 		#Region "Data Access"
 
-<% if (DataAccessImplementation = DataAccessMethod.None) Then %>
+<% If (DataAccessImplementation = DataAccessMethod.None) Then %>
 		<RunLocal()> _
 		Protected Sub DataPortal_Create()
 		
 			' TODO: load default values
-     	 	' omit Me override if you have no defaults to set
+     	 	' omit Me override If you have no defaults to set
 			
 			base.DataPortal_Create()
 
 			ValidationRules.CheckRules()
 		End Sub
 
-        Private Sub DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)     
-		
+        Private Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)     
 			' TODO: load values
 		End Sub
 		
@@ -99,31 +98,31 @@ Namespace <%= BusinessProjectName %>
         End Sub
 		
         Private Sub Fetch(ByVal reader As SafeDataReader)
-<% if Entity.HasRowVersionMember Then %>
+<% If Entity.HasRowVersionMember Then %>
 			_timestamp = GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 			
 <% End If %>
 <% for each [member] as Member in Entity.MembersNoRowVersionIncludePrimaryKey 
-	if UseMemberVariables Then %>
-			<%= [member].PrivateMemberVariableName %> = <%if not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>GetBytes(reader)<% End If %>
+	If UseMemberVariables Then %>
+			<%= [member].PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>GetBytes(reader)<% End If %>
 <%  else  %>
-			LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%if not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
+			LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
 <% End If 
 Next %>
 
 <%-- Many-To-One --%>
 <% for each association As AssociationMember in Entity.ManyToOne
-	if UseMemberVariables Then  %>
-            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = <%if Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>GetBytes(reader)<% End If %>
+	If UseMemberVariables Then  %>
+            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>GetBytes(reader)<% End If %>
 <%  else  %>
-			LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, <%if Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"))<% else %>GetBytes(reader," <%= association.ColumnName %>"))<% End If %>
+			LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"))<% else %>GetBytes(reader," <%= association.ColumnName %>"))<% End If %>
 <% End If
  Next  %>
 <%-- One-To-Many & Many-To-Many --%>
 <% for each association2 As AssociationMember in Entity.ToManyUnion
-	if Not UseLazyLoading Then %>
+	If Not UseLazyLoading Then %>
 
-<% if (UseMemberVariables) Then %>
+<% If (UseMemberVariables) Then %>
 			<%= association2.PrivateMemberVariableName %> = New <%= association2.ClassName %>List.NewList()
 <%  else  %>
 			LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList())
@@ -136,51 +135,51 @@ Next %>
 		
 		<Transactional(TransactionalTypes.TransactionScope)> _
 		Protected Overloads Overrides Sub DataPortal_Insert()
-			Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Insert(<% if(UseMemberVariables) Then %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertPrivateMemberVariableParameters(Entity.MembersForeignKey) %><% else %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertReadPropertyParametersVariables(Entity.MembersForeignKey) %><% End If %>)
+			Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Insert(<% If(UseMemberVariables) Then %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertPrivateMemberVariableParameters(Entity.MembersForeignKey) %><% else %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertReadPropertyParametersVariables(Entity.MembersForeignKey) %><% End If %>)
 				If reader.Read() Then
-<% if (Entity.HasRowVersionMember) Then %>
+<% If (Entity.HasRowVersionMember) Then %>
 					_timestamp = GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
 
-<% if (Entity.PrimaryKey.IsIdentity) Then %>
+<% If (Entity.PrimaryKey.IsIdentity) Then %>
 <% for each [member] As Member in Entity.PrimaryKey.KeyMembers
-	if(UseMemberVariables) Then %>
-					<%= [member].PrivateMemberVariableName %> = <%if Not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>GetBytes(reader)<% End If %>
+	If(UseMemberVariables) Then %>
+					<%= [member].PrivateMemberVariableName %> = <%If Not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>GetBytes(reader)<% End If %>
 <% else %>
-					LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <% if NOT [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
+					LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <% If NOT [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
 <%  End If
    Next %>
 <% End If %>
 				End If
 			End Using
             
-<% if (Entity.ToManyUnion.Count > 0 OrElse Entity.ManyToOne.Count > 0)Then %>
+<% If (Entity.ToManyUnion.Count > 0 OrElse Entity.ManyToOne.Count > 0)Then %>
             FieldManager.UpdateChildren(Me)
 <% End If %>
 		End Sub
 		
 		<Transactional(TransactionalTypes.TransactionScope)> _
 		Protected Overrides Sub DataPortal_Update()
-<% if(Entity.Table.ForeignKeyColumns.Count = 0) Then %>
-            Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% if (UseMemberVariables) Then %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildPrivateMemberVariableParameters() %><% else %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildReadPropertyParametersVariables() %><% End If %><% if Entity.HasRowVersionMember then %>, _timestamp<% End If %>)
+<% If(Entity.Table.ForeignKeyColumns.Count = 0) Then %>
+            Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% If (UseMemberVariables) Then %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildPrivateMemberVariableParameters() %><% else %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildReadPropertyParametersVariables() %><% End If %><% If Entity.HasRowVersionMember then %>, _timestamp<% End If %>)
 <% else %>
-            Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% if (UseMemberVariables) Then %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildPrivateMemberVariableParameters(Entity.MembersForeignKey) %><% else %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildReadPropertyParametersVariables(Entity.MembersForeignKey) %><% End If %><% if Entity.HasRowVersionMember Then %>, _timestamp<% End If %>)
+            Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Update(<% If (UseMemberVariables) Then %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildPrivateMemberVariableParameters(Entity.MembersForeignKey) %><% else %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildReadPropertyParametersVariables(Entity.MembersForeignKey) %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>)
 <% End If %>     
-<% if (Entity.HasRowVersionMember) Then %>	
+<% If (Entity.HasRowVersionMember) Then %>	
 				If reader.Read() then
 					_timestamp = GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 				End If
 <% End If %>
             End Using
             
-<% if (Entity.ToManyUnion.Count > 0 OrElse Entity.ManyToOne.Count > 0) Then %>
+<% If (Entity.ToManyUnion.Count > 0 OrElse Entity.ManyToOne.Count > 0) Then %>
             FieldManager.UpdateChildren(Me)
 <% End If %>
 		End Sub
 		
 		<Transactional(TransactionalTypes.TransactionScope)> _
 		Protected Overrides Sub DataPortal_DeleteSelf()
-            DataPortal_Delete(new <%= BusinessClassName %>Criteria(<% if (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableParameters() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% if Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
+            DataPortal_Delete(new <%= BusinessClassName %>Criteria(<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableParameters() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
         End Sub
 		
 		<Transactional(TransactionalTypes.TransactionScope)> _
@@ -194,7 +193,7 @@ Next %>
 
         #End Region
         
-<% if (Entity.HasByteArrayColumn()) Then %>		
+<% If (Entity.HasByteArrayColumn()) Then %>		
 		#Region "Helper Methods"
 
         ''' <summary>
@@ -225,5 +224,6 @@ Next %>
 <%  End If
  End If %>
         
-	End Class
+    End Class
+    
 End Namespace
