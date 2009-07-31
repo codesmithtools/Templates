@@ -20,11 +20,7 @@
 
 Imports System
 
-Namespace <%= DataProjectName %>
-	
-    <Serializable> _
-	Public Class <%= DataClassName %>
-		Inherits <%= DataClassName %>Base
-	End Class
-    
-End Namespace
+<Serializable> _
+Public Class <%= DataClassName %>
+	Inherits <%= DataClassName %>Base
+End Class
