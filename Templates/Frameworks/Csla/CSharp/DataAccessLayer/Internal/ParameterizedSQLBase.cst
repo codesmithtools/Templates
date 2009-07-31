@@ -69,7 +69,7 @@ namespace <%= DataProjectName %>
 	        {
                 if(string.IsNullOrEmpty(_connectionString))
                 {
-                    _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["PetShopConnectionString"].ConnectionString;
+                    _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["<%= SourceTables[0].Database.Name %>ConnectionString"].ConnectionString;
                 }
                 
                 return _connectionString;

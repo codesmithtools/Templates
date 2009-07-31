@@ -409,7 +409,12 @@ namespace CodeSmith.SchemaHelper
                 }
 
                 if (!member.IsIdentity)
-                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
+                {
+                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                        commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3})", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
+                    else
+                        commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
+                }
             }
 
             foreach (AssociationMember associationMember in associationMembers)
@@ -422,7 +427,15 @@ namespace CodeSmith.SchemaHelper
                         cast = associationMember.IsNullable ? "(DateTime?)" : "(DateTime)";
                     }
 
-                    string output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});",
+                    string output = string.Empty;
+                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                        output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3})",
+                                                  Configuration.Instance.ParameterPrefix,
+                                                  associationMember.ColumnName,
+                                                  cast,
+                                                  NamingConventions.VariableName(associationMember.ColumnName));
+                    else
+                        output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});",
                                                   Configuration.Instance.ParameterPrefix,
                                                   associationMember.ColumnName,
                                                   cast,
@@ -453,7 +466,10 @@ namespace CodeSmith.SchemaHelper
                     cast = member.IsNullable ? "(DateTime?)" : "(DateTime)";
                 }
 
-                commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
+                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3})", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
+                else
+                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
             }
 
             foreach (AssociationMember associationMember in associationMembers)
@@ -464,7 +480,15 @@ namespace CodeSmith.SchemaHelper
                     cast = associationMember.IsNullable ? "(DateTime?)" : "(DateTime)";
                 }
 
-                string output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});",
+                string output = string.Empty;
+                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3})",
+                                              Configuration.Instance.ParameterPrefix,
+                                               associationMember.ColumnName,
+                                              cast,
+                                              NamingConventions.VariableName(associationMember.ColumnName));
+                else
+                    output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});",
                                               Configuration.Instance.ParameterPrefix,
                                                associationMember.ColumnName,
                                               cast,

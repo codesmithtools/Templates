@@ -16,33 +16,23 @@
 
 <script runat="template">
 
-Public override void Generate()
-{
-    if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
-    {
-        #region ParameterizedSQL
-		
-        ParameterizedSQL parameterizedSQL = this.Create<ParameterizedSQL>()
-        this.CopyPropertiesTo(parameterizedSQL)
-        
-        string fileName = System.IO.Path.Combine(this.Location, "DataAccessLayer.cs")
-		if (!System.IO.File.Exists(fileName))
-		{
-			parameterizedSQL.RenderToFile(fileName, false)
-		}
-        
-		#region ParameterizedSQLBase
-		
-		ParameterizedSQLBase parameterizedSQLBase = this.Create<ParameterizedSQLBase>()
-        this.CopyPropertiesTo(parameterizedSQLBase)
-        parameterizedSQLBase.DataClassName = string.Format("{0}Base", DataClassName)
-        
-        parameterizedSQLBase.RenderToFile(System.IO.Path.Combine(this.Location, "Base\\DataAccessLayerBase.cs"), true)
-		
-		#endregion
-        
-        #endregion
-    }
-}
+Public Overloads Overrides Sub Generate()
+	If DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+		'ParameterizedSQL
+		Dim parameterizedSQL As ParameterizedSQL = Me.Create(Of ParameterizedSQL)()
+		Me.CopyPropertiesTo(parameterizedSQL)
+
+		Dim fileName As String = System.IO.Path.Combine(Me.Location, "DataAccessLayer.vb")
+		If Not System.IO.File.Exists(fileName) Then
+			parameterizedSQL.RenderToFile(fileName, False)
+		End If
+
+		'ParameterizedSQLBase
+		Dim parameterizedSQLBase As ParameterizedSQLBase = Me.Create(Of ParameterizedSQLBase)()
+		Me.CopyPropertiesTo(parameterizedSQLBase)
+		parameterizedSQLBase.DataClassName = String.Format("{0}Base", DataClassName)
+		parameterizedSQLBase.RenderToFile(System.IO.Path.Combine(Me.Location, "Base\DataAccessLayerBase.vb"), True)
+	End If
+End Sub
 
 </script>
