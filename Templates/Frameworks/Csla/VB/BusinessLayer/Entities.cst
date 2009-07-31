@@ -11,194 +11,143 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 
-<%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
+<%-- <%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
 <%@ Register Name="CriteriaTemplate" Template="Criteria.cst" %>
 <%@ Register Name="DynamicRootTemplate" Template="DynamicRoot.cst" %>
 <%@ Register Name="DynamicRootListTemplate" Template="DynamicRootList.cst" %>
 <%@ Register Name="EditableChildTemplate" Template="EditableChild.cst" %>
-<%@ Register Name="EditableChildListTemplate" Template="EditableChildList.cst" %>
+<%@ Register Name="EditableChildListTemplate" Template="EditableChildList.cst" %> --%>
 <%@ Register Name="EditableRootTemplate" Template="EditableRoot.cst" %>
 <%@ Register Name="EditableRootListTemplate" Template="EditableRootList.cst" %>
-<%@ Register Name="NameValueListTemplate" Template="NameValueList.cst" %>
+<%-- <%@ Register Name="NameValueListTemplate" Template="NameValueList.cst" %>
 <%@ Register Name="ReadOnlyChildTemplate" Template="ReadOnlyChild.cst" %>
 <%@ Register Name="ReadOnlyChildListTemplate" Template="ReadOnlyChildList.cst" %>
 <%@ Register Name="ReadOnlyListTemplate" Template="ReadOnlyList.cst" %>
 <%@ Register Name="ReadOnlyRootTemplate" Template="ReadOnlyRoot.cst" %>
-<%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
+<%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %> --%>
 
 <% Generate() %>
 
+	<%-- 'CommandObjectTemplate
+	If Me.CommandObject <> Nothing AndAlso Me.CommandObject.Count > 0 Then
+		Dim commandObjectTemplate As CommandObjectTemplate = Me.Create(Of CommandObjectTemplate)()
+		Me.CopyPropertiesTo(commandObjectTemplate)
+		commandObjectTemplate.SourceTables = Me.CommandObject
+		commandObjectTemplate.Generate()
+	End If
+
+	'CriteriaTemplate
+	If Me.Criteria <> Nothing AndAlso Me.Criteria.Count > 0 Then
+		Dim criteriaTemplate As CriteriaTemplate = Me.Create(Of CriteriaTemplate)()
+		Me.CopyPropertiesTo(criteriaTemplate)
+		criteriaTemplate.SourceTables = Me.Criteria
+		criteriaTemplate.Generate()
+	End If
+
+	'DynamicRootTemplate
+	If Me.DynamicRoot <> Nothing AndAlso Me.DynamicRoot.Count > 0 Then
+		Dim dynamicRootTemplate As DynamicRootTemplate = Me.Create(Of DynamicRootTemplate)()
+		Me.CopyPropertiesTo(dynamicRootTemplate)
+		dynamicRootTemplate.SourceTables = Me.DynamicRoot
+		dynamicRootTemplate.Generate()
+	End If
+
+	'DynamicRootListTemplate
+	If Me.DynamicRootList <> Nothing AndAlso Me.DynamicRootList.Count > 0 Then
+		Dim dynamicRootListTemplate As DynamicRootListTemplate = Me.Create(Of DynamicRootListTemplate)()
+		Me.CopyPropertiesTo(dynamicRootListTemplate)
+		dynamicRootListTemplate.SourceTables = Me.DynamicRootList
+		dynamicRootListTemplate.Generate()
+	End If
+
+	'EditableChildTemplate
+	If Me.EditableChild <> Nothing AndAlso Me.EditableChild.Count > 0 Then
+		Dim editableChildTemplate As EditableChildTemplate = Me.Create(Of EditableChildTemplate)()
+		Me.CopyPropertiesTo(editableChildTemplate)
+		editableChildTemplate.SourceTables = Me.EditableChild
+		editableChildTemplate.Generate()
+	End If
+
+	'EditableChildListTemplate
+	If Me.EditableChildList <> Nothing AndAlso Me.EditableChildList.Count > 0 Then
+		Dim editableChildListTemplate As EditableChildListTemplate = Me.Create(Of EditableChildListTemplate)()
+		Me.CopyPropertiesTo(editableChildListTemplate)
+		editableChildListTemplate.SourceTables = Me.EditableChildList
+		editableChildListTemplate.Generate()
+	End If
+    
+    
+    
+    'NameValueListTemplate
+	If Me.NameValueList <> Nothing AndAlso Me.NameValueList.Count > 0 Then
+		Dim nameValueListTemplate As NameValueListTemplate = Me.Create(Of NameValueListTemplate)()
+		Me.CopyPropertiesTo(nameValueListTemplate)
+		nameValueListTemplate.SourceTables = Me.NameValueList
+		nameValueListTemplate.Generate()
+	End If
+
+	'ReadOnlyChildTemplate
+	If Me.ReadOnlyChild <> Nothing AndAlso Me.ReadOnlyChild.Count > 0 Then
+		Dim readOnlyChildTemplate As ReadOnlyChildTemplate = Me.Create(Of ReadOnlyChildTemplate)()
+		Me.CopyPropertiesTo(readOnlyChildTemplate)
+		readOnlyChildTemplate.SourceTables = Me.ReadOnlyChild
+		readOnlyChildTemplate.Generate()
+	End If
+
+	'ReadOnlyChildListTemplate
+	If Me.ReadOnlyChildList <> Nothing AndAlso Me.ReadOnlyChildList.Count > 0 Then
+		Dim readOnlyChildListTemplate As ReadOnlyChildListTemplate = Me.Create(Of ReadOnlyChildListTemplate)()
+		Me.CopyPropertiesTo(readOnlyChildListTemplate)
+		readOnlyChildListTemplate.SourceTables = Me.ReadOnlyChildList
+		readOnlyChildListTemplate.Generate()
+	End If
+
+	'ReadOnlyListTemplate
+	If Me.ReadOnlyList <> Nothing AndAlso Me.ReadOnlyList.Count > 0 Then
+		Dim readOnlyListTemplate As ReadOnlyListTemplate = Me.Create(Of ReadOnlyListTemplate)()
+		Me.CopyPropertiesTo(readOnlyListTemplate)
+		readOnlyListTemplate.SourceTables = Me.ReadOnlyList
+		readOnlyListTemplate.Generate()
+	End If
+
+	'ReadOnlyRootTemplate
+	If Me.ReadOnlyRoot <> Nothing AndAlso Me.ReadOnlyRoot.Count > 0 Then
+		Dim readOnlyRootTemplate As ReadOnlyRootTemplate = Me.Create(Of ReadOnlyRootTemplate)()
+		Me.CopyPropertiesTo(readOnlyRootTemplate)
+		readOnlyRootTemplate.SourceTables = Me.ReadOnlyRoot
+		readOnlyRootTemplate.Generate()
+	End If
+
+	'SwitchableObjectTemplate
+	If Me.SwitchableObject <> Nothing AndAlso Me.SwitchableObject.Count > 0 Then
+		Dim switchableObjectTemplate As SwitchableObjectTemplate = Me.Create(Of SwitchableObjectTemplate)()
+		Me.CopyPropertiesTo(switchableObjectTemplate)
+		switchableObjectTemplate.SourceTables = Me.SwitchableObject
+		switchableObjectTemplate.Generate()
+	End If
+    
+ --%>
+
 <script runat="template">
 
-Public override void Generate()
-{
-    #region CommandObjectTemplate
-    
-    if(this.CommandObject != null && this.CommandObject.Count > 0)
-    {
-        CommandObjectTemplate commandObjectTemplate = this.Create<CommandObjectTemplate>()
-        this.CopyPropertiesTo(commandObjectTemplate)
-        commandObjectTemplate.SourceTables = this.CommandObject
-        commandObjectTemplate.Generate()
-    }
-    
-    #endregion
-    
-    #region CriteriaTemplate
-    
-    if(this.Criteria != null && this.Criteria.Count > 0)
-    {
-        CriteriaTemplate criteriaTemplate = this.Create<CriteriaTemplate>()
-        this.CopyPropertiesTo(criteriaTemplate)
-        criteriaTemplate.SourceTables = this.Criteria
-        criteriaTemplate.Generate()
-    }
-    
-    #endregion    
-    
-    #region DynamicRootTemplate
-    
-    if(this.DynamicRoot != null && this.DynamicRoot.Count > 0)
-    {
-        DynamicRootTemplate dynamicRootTemplate = this.Create<DynamicRootTemplate>()
-        this.CopyPropertiesTo(dynamicRootTemplate)
-        dynamicRootTemplate.SourceTables = this.DynamicRoot
-        dynamicRootTemplate.Generate()
-    }
-    
-    #endregion
-    
-    #region DynamicRootListTemplate
-    
-    if(this.DynamicRootList != null && this.DynamicRootList.Count > 0)
-    {
-        DynamicRootListTemplate dynamicRootListTemplate = this.Create<DynamicRootListTemplate>()
-        this.CopyPropertiesTo(dynamicRootListTemplate)
-        dynamicRootListTemplate.SourceTables = this.DynamicRootList
-        dynamicRootListTemplate.Generate()
-    }
-    
-    #endregion    
-    
-    #region EditableChildTemplate
-    
-    if(this.EditableChild != null && this.EditableChild.Count > 0)
-    {
-        EditableChildTemplate editableChildTemplate = this.Create<EditableChildTemplate>()
-        this.CopyPropertiesTo(editableChildTemplate)
-        editableChildTemplate.SourceTables = this.EditableChild
-        editableChildTemplate.Generate()
-    }
-    
-    #endregion
-    
-    #region EditableChildListTemplate
-    
-    if(this.EditableChildList != null && this.EditableChildList.Count > 0)
-    {
-        EditableChildListTemplate editableChildListTemplate = this.Create<EditableChildListTemplate>()
-        this.CopyPropertiesTo(editableChildListTemplate)
-        editableChildListTemplate.SourceTables = this.EditableChildList
-        editableChildListTemplate.Generate()
-    }
-    
-    #endregion    
-    
-    #region EditableRootTemplate
-    
-    if(this.EditableRoot != null && this.EditableRoot.Count > 0)
-    {
-        EditableRootTemplate editableRootTemplate = this.Create<EditableRootTemplate>()
-        this.CopyPropertiesTo(editableRootTemplate)
-        editableRootTemplate.SourceTables = this.EditableRoot
-        editableRootTemplate.Generate()
-    }
-    
-    #endregion    
-    
-    #region EditableRootListTemplate
-    
-    if(this.EditableRootList != null && this.EditableRootList.Count > 0)
-    {
-        EditableRootListTemplate editableRootListTemplate = this.Create<EditableRootListTemplate>()
-        this.CopyPropertiesTo(editableRootListTemplate)
-        editableRootListTemplate.SourceTables = this.EditableRootList
-        editableRootListTemplate.Generate()
-    }
-    
-    #endregion
-    
-    #region NameValueListTemplate
-    
-    if(this.NameValueList != null && this.NameValueList.Count > 0)
-    {
-        NameValueListTemplate nameValueListTemplate = this.Create<NameValueListTemplate>()
-        this.CopyPropertiesTo(nameValueListTemplate)
-        nameValueListTemplate.SourceTables = this.NameValueList
-        nameValueListTemplate.Generate()
-    }
-    
-    #endregion    
-    
-    #region ReadOnlyChildTemplate
-    
-    if(this.ReadOnlyChild != null && this.ReadOnlyChild.Count > 0)
-    {
-        ReadOnlyChildTemplate readOnlyChildTemplate = this.Create<ReadOnlyChildTemplate>()
-        this.CopyPropertiesTo(readOnlyChildTemplate)
-        readOnlyChildTemplate.SourceTables = this.ReadOnlyChild
-        readOnlyChildTemplate.Generate()
-    }
-    
-    #endregion
-    
-    #region ReadOnlyChildListTemplate
-    
-    if(this.ReadOnlyChildList != null && this.ReadOnlyChildList.Count > 0)
-    {
-        ReadOnlyChildListTemplate readOnlyChildListTemplate = this.Create<ReadOnlyChildListTemplate>()
-        this.CopyPropertiesTo(readOnlyChildListTemplate)
-        readOnlyChildListTemplate.SourceTables = this.ReadOnlyChildList
-        readOnlyChildListTemplate.Generate()
-    }
-    
-    #endregion    
-    
-    #region ReadOnlyListTemplate
-    
-    if(this.ReadOnlyList != null && this.ReadOnlyList.Count > 0)
-    {
-        ReadOnlyListTemplate readOnlyListTemplate = this.Create<ReadOnlyListTemplate>()
-        this.CopyPropertiesTo(readOnlyListTemplate)
-        readOnlyListTemplate.SourceTables = this.ReadOnlyList
-        readOnlyListTemplate.Generate()
-    }
-    
-    #endregion
-    
-    #region ReadOnlyRootTemplate
-    
-    if(this.ReadOnlyRoot != null && this.ReadOnlyRoot.Count > 0)
-    {
-        ReadOnlyRootTemplate readOnlyRootTemplate = this.Create<ReadOnlyRootTemplate>()
-        this.CopyPropertiesTo(readOnlyRootTemplate)
-        readOnlyRootTemplate.SourceTables = this.ReadOnlyRoot
-        readOnlyRootTemplate.Generate()
-    }
-    
-    #endregion    
-    
-    #region SwitchableObjectTemplate
-    
-    if(this.SwitchableObject != null && this.SwitchableObject.Count > 0)
-    {
-        SwitchableObjectTemplate switchableObjectTemplate = this.Create<SwitchableObjectTemplate>()
-        this.CopyPropertiesTo(switchableObjectTemplate)
-        switchableObjectTemplate.SourceTables = this.SwitchableObject
-        switchableObjectTemplate.Generate()
-    }
-    
-    #endregion    
-}
+Public Overrides Sub Generate()
+
+	'EditableRootTemplate
+	If Not Me.EditableRoot Is Nothing AndAlso Me.EditableRoot.Count > 0 Then
+		Dim editableRootTemplate As EditableRootTemplate = Me.Create(Of EditableRootTemplate)()
+		Me.CopyPropertiesTo(editableRootTemplate)
+		editableRootTemplate.SourceTables = Me.EditableRoot
+		editableRootTemplate.Generate()
+	End If
+
+	'EditableRootListTemplate
+	If Not Me.EditableRootList Is Nothing AndAlso Me.EditableRootList.Count > 0 Then
+		Dim editableRootListTemplate As EditableRootListTemplate = Me.Create(Of EditableRootListTemplate)()
+		Me.CopyPropertiesTo(editableRootListTemplate)
+		editableRootListTemplate.SourceTables = Me.EditableRootList
+		editableRootListTemplate.Generate()
+	End If
+
+End Sub
 
 </script>

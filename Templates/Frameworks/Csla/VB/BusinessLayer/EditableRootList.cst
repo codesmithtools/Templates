@@ -18,53 +18,41 @@
 
 <script runat="template">
 
-Public override void Generate()
-{
-    RegisterReferences()
+Public Overrides Sub Generate()
+	RegisterReferences()
+
+	For Each entity As Entity In Entities
     
-	foreach(Entity entity in Entities)
-	{
-		#region EditableRootList
-		
-		EditableRootList editableRootList = this.Create<EditableRootList>()
-		this.CopyPropertiesTo(editableRootList)
+		'EditableRootList
+		Dim editableRootList As EditableRootList = Me.Create(Of EditableRootList)()
+		Me.CopyPropertiesTo(editableRootList)
 		editableRootList.SourceTable = entity.Table
-		editableRootList.BusinessClassName = string.Format("{0}List", editableRootList.BusinessClassName)
-		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", editableRootList.BusinessClassName))
-		if (!System.IO.File.Exists(parentFileName))
-		{
-			editableRootList.RenderToFile(parentFileName, false)
-		}
-		
-		#region EditableRootList.Generated
-		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", editableRootList.BusinessClassName))
-		
-		EditableRootListGenerated editableRootListGenerated = this.Create<EditableRootListGenerated>()
-		this.CopyPropertiesTo(editableRootListGenerated)
+		editableRootList.BusinessClassName = String.Format("{0}List", editableRootList.BusinessClassName)
+
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.cs", editableRootList.BusinessClassName))
+		If Not System.IO.File.Exists(parentFileName) Then
+			editableRootList.RenderToFile(parentFileName, False)
+		End If
+
+		'EditableRootList.Generated
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.cs", editableRootList.BusinessClassName))
+
+		Dim editableRootListGenerated As EditableRootListGenerated = Me.Create(Of EditableRootListGenerated)()
+		Me.CopyPropertiesTo(editableRootListGenerated)
 		editableRootListGenerated.SourceTable = entity.Table
-		editableRootListGenerated.BusinessClassName = string.Format("{0}List", editableRootListGenerated.BusinessClassName)
-		
-		editableRootListGenerated.RenderToFile(fileName, parentFileName, true)
-		
-		#endregion
-		
-		#region EditableRootList.DataAccess
-		
-		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", editableRootList.BusinessClassName))
-		
-		EditableRootListDataAccess editableRootListDataAccess = this.Create<EditableRootListDataAccess>()
-		this.CopyPropertiesTo(editableRootListDataAccess)
+		editableRootListGenerated.BusinessClassName = String.Format("{0}List", editableRootListGenerated.BusinessClassName)
+
+		editableRootListGenerated.RenderToFile(fileName, parentFileName, True)
+
+		'EditableRootList.DataAccess
+		fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.cs", editableRootList.BusinessClassName))
+
+		Dim editableRootListDataAccess As EditableRootListDataAccess = Me.Create(Of EditableRootListDataAccess)()
+		Me.CopyPropertiesTo(editableRootListDataAccess)
 		editableRootListDataAccess.SourceTable = entity.Table
-		editableRootListDataAccess.BusinessClassName = string.Format("{0}List", editableRootListDataAccess.BusinessClassName)
-		
-        editableRootListDataAccess.RenderToFile(fileName, parentFileName, true)
-		
-		#endregion
-		
-		#endregion
-	}
-}
+		editableRootListDataAccess.BusinessClassName = String.Format("{0}List", editableRootListDataAccess.BusinessClassName)
+		editableRootListDataAccess.RenderToFile(fileName, parentFileName, True)
+	Next
+End Sub
 
 </script>
