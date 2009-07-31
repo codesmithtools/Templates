@@ -137,20 +137,28 @@ namespace CodeSmith.SchemaHelper
 
             foreach (MemberBase member in members)
             {
-                string cast = string.Empty;
-                if (member.SystemType.Contains("SmartDate"))
-                {
-                    cast = member.IsNullable ? "(DateTime?)" : "(DateTime)";
-                }
-
                 if (!member.IsIdentity)
                 {
-                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                        commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3})", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
+
+                    string cast = string.Empty;
+                    if (member.SystemType.Contains("SmartDate"))
+                    {
+                        if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                            cast = member.IsNullable
+                                       ? string.Format("DirectCast({0}.Date, DateTime?))", member.VariableName)
+                                       : string.Format("DirectCast({0}.Date, DateTime))", member.VariableName);
+                        else 
+                            cast = member.IsNullable
+                                       ? string.Format("(DateTime?){0});", member.VariableName)
+                                       : string.Format("(DateTime){0});", member.VariableName);
+                    }
                     else
-                        commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
+                        cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB
+                                   ? string.Format("{0})", member.VariableName)
+                                   : string.Format("{0});", member.VariableName);
+
+                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
                 }
-                    
             }
 
             return commandParameters.TrimStart(new[] { '\t', '\n' });
@@ -323,13 +331,17 @@ namespace CodeSmith.SchemaHelper
                 string cast = string.Empty;
                 if (member.SystemType.Contains("SmartDate"))
                 {
-                    cast = member.IsNullable ? "(DateTime?)" : "(DateTime)";
+                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                        cast = member.IsNullable ? string.Format("DirectCast({0}.Date, DateTime?))", member.VariableName)
+                                                 : string.Format("DirectCast({0}.Date, DateTime))", member.VariableName);
+                    else
+                        cast = member.IsNullable ? string.Format("(DateTime?){0});", member.VariableName)
+                                                 : string.Format("(DateTime){0});", member.VariableName);
                 }
-
-                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3})", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
                 else
-                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
+                    cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", member.VariableName) : string.Format("{0});", member.VariableName);
+
+                commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
             }
 
             return commandParameters.TrimStart(new[] { '\t', '\n' });

@@ -45,6 +45,11 @@ namespace CodeSmith.SchemaHelper
             {
                 if (memberBase.ColumnName == member.ColumnName)
                 {
+                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    {
+                        return string.Format("ByVal {0} As {1}", NamingConventions.VariableName(member.ColumnName), member.SystemType);
+                    }
+
                     return string.Format("{0} {1}", member.SystemType, NamingConventions.VariableName(member.ColumnName));
                 }
             }
@@ -77,6 +82,11 @@ namespace CodeSmith.SchemaHelper
             {
                 if (memberBase.ColumnName == member.ColumnName)
                 {
+                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    {
+                        return string.Format("ByVal {0} As {1}", NamingConventions.VariableName(member.LocalColumn.Name), member.SystemType);
+                    }
+
                     return string.Format("{0} {1}", member.SystemType, NamingConventions.VariableName(member.LocalColumn.Name));
                 }
             }

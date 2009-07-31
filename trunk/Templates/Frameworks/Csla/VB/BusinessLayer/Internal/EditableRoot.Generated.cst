@@ -154,7 +154,8 @@ Next %>
 <% If UseLazyLoading Then %>
                 If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                     SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.LocalColumn.PropertyName %>))
-
+                End If
+                
 <% End If %> 
                 Return GetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.PrivateMemberVariableName %>) 
             End Get
@@ -167,7 +168,8 @@ Next %>
 <% If UseLazyLoading Then %>
                 If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                     SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.LocalColumn.PropertyName %>))
-
+                End If
+                
 <% End If %>  
                    Return GetProperty(<%= association.PrivateMemberVariableName %>Property) 
             End Get
@@ -224,8 +226,10 @@ Next  %>
 <% else %>
                     SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>))
 
-<% End If 
-End If%> 
+<% End If %>
+                End If
+<% End If%> 
+
                 Return GetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.PrivateMemberVariableName %>) 
             End Get
         End Property
@@ -241,8 +245,9 @@ End If%>
 
 <% else %>
                     SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>))
-<% End If
-End If %>   
+<% End If %>
+                End If
+<% End If%>   
                 Return GetProperty(<%= association.PrivateMemberVariableName %>Property) 
             End Get
         End Property
@@ -254,24 +259,32 @@ Next %>
 		#Region "Factory Methods"
 		
 		Public Shared Function New<%= BusinessClassName %>() As <%= BusinessClassName %> 
-			Return DataPortal.Create(Of <%= BusinessClassName %> )()
+			Return DataPortal.Create(Of <%= BusinessClassName %>)()
 		End Function
 		
 		Public Shared Function Get<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>) As <%= BusinessClassName %> 		
-			Return DataPortal.Fetch(Of <%= BusinessClassName %> )(New <%= BusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+			Return DataPortal.Fetch(Of <%= BusinessClassName %>)(New <%= BusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
 		End Function
 <%-- One-To-Zero-Or-One --%>
 <%if (Entity.HasOneToZeroOrZeroMember AndAlso Entity.PrimaryKey.KeyMembers.Count > 1)Then %>
 
         Public Shared Function Get<%= BusinessClassName %>(<%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroParametersVariable() %>) As <%= BusinessClassName %> 
-		    Return DataPortal.Fetch(Of <%= BusinessClassName %> )(New <%= BusinessClassName %>Criteria  <%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroObjectInitializer() %> )
+		    Dim criteria As New <%= BusinessClassName %>Criteria()
+            criteria.<%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroObjectInitializer() %>
+            
+            Return DataPortal.Fetch(Of <%= BusinessClassName %>)(criteria)
         End Function
  <% End If%>
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each sc As SearchCriteria in Entity.SearchCriteria
 	if sc.IsUniqueResult AndAlso Not ((sc.Members.Count = Entity.PrimaryKey.KeyMembers.Count) AndAlso (sc.Members.item(0).Name = Entity.PrimaryKey.KeyMember.Name)) Then %>
         Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariablesCriteria(False) %>) As <%= BusinessClassName %> 
-		    Return DataPortal.Fetch(Of <%= BusinessClassName %> )(New <%= BusinessClassName %>Criteria  <%= sc.Members.BuildCriteriaObjectInitializer(Entity.Table.Name) %> )
+		    Dim criteria As New <%= BusinessClassName %>Criteria()
+<% For Each member As MemberBase In sc.Members %>
+            criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
+<% Next %>
+            
+            Return DataPortal.Fetch(Of <%= BusinessClassName %>)(criteria)
         End Function
  <% End If
 Next %>
@@ -282,8 +295,13 @@ Next %>
 		'End Sub
 <% If Not ((Entity.GetUniqueSearchCriteriaMembers().Count = Entity.PrimaryKey.KeyMembers.Count AndAlso Entity.GetUniqueSearchCriteriaMembers.item(0).Name = Entity.PrimaryKey.KeyMember.Name)) %>
         'Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.GetUniqueSearchCriteriaMembers().BuildParametersVariables() %>)
-		'   DataPortal.Delete(New <%= BusinessClassName %>Criteria<%= Entity.GetUniqueSearchCriteriaMembers().BuildCriteriaObjectInitializer(Entity.Table.Name) %>)
-		'End Sub
+		    'Dim criteria As New <%= BusinessClassName %>Criteria()
+<% For Each member As MemberBase In Entity.GetUniqueSearchCriteriaMembers() %>
+            'criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
+<% Next %>
+
+            'DataPortal.Delete(criteria)
+        'End Sub
 <% End If
 End If%>	
         Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
@@ -293,7 +311,7 @@ End If%>
         Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.GetUniqueSearchCriteriaMembers().BuildParametersVariablesCriteria() %>)
             Dim criteria As New <%= BusinessClassName %>Criteria()
 <% For Each member As MemberBase In Entity.GetUniqueSearchCriteriaMembers() %>
-            criteria.<%= member.Entity.ResolveCriteriaPropertyName(member.ColumnName, Entity.Table.Name) %> = <%= member.Entity.ResolveCriteriaVariableName(member.ColumnName) %>
+            criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
 <% Next %>
 
             DataPortal.Delete(criteria)
@@ -305,10 +323,10 @@ End If%>
 <% If(Entity.PrimaryKey.IsCompositeKey) Then %>
 		#Region "Protected Overriden Method(s)"
 		
-		' Note: This is needed for Composite Keys. 
-		Private ReadOnly Guid mGuidID = Guid.NewGuid()
-		Protected Overrides Function GetIdValue() As Object
-            Return mGuidID
+		' NOTE: This is needed for Composite Keys. 
+        Private ReadOnly _guidID As Guid = Guid.NewGuid()
+        Protected Overrides Function GetIdValue() As Object
+            Return _guidID
         End Function
         
 		#End Region

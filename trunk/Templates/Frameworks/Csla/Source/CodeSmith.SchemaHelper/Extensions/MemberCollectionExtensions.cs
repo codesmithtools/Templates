@@ -402,19 +402,22 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
+
+
                 string cast = string.Empty;
                 if (member.SystemType.Contains("SmartDate"))
                 {
-                    cast = member.IsNullable ? "(DateTime?)" : "(DateTime)";
-                }
-
-                if (!member.IsIdentity)
-                {
                     if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                        commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3})", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
+                        cast = member.IsNullable ? string.Format("DirectCast({0}.Date, DateTime?))", member.VariableName)
+                                                 : string.Format("DirectCast({0}.Date, DateTime))", member.VariableName);
                     else
-                        commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
+                        cast = member.IsNullable ? string.Format("(DateTime?){0});", member.VariableName)
+                                                 : string.Format("(DateTime){0});", member.VariableName);
                 }
+                else
+                    cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", member.VariableName) : string.Format("{0});", member.VariableName);
+
+                commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
             }
 
             foreach (AssociationMember associationMember in associationMembers)
@@ -422,24 +425,20 @@ namespace CodeSmith.SchemaHelper
                 if (!associationMember.IsIdentity)
                 {
                     string cast = string.Empty;
+                    string variableName = NamingConventions.VariableName(associationMember.ColumnName);
                     if (associationMember.SystemType.Contains("SmartDate"))
                     {
-                        cast = associationMember.IsNullable ? "(DateTime?)" : "(DateTime)";
+                        if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                            cast = associationMember.IsNullable ? string.Format("DirectCast({0}.Date, DateTime?))", variableName)
+                                                                : string.Format("DirectCast({0}.Date, DateTime))", variableName);
+                        else
+                            cast = associationMember.IsNullable ? string.Format("(DateTime?){0});", variableName)
+                                                                : string.Format("(DateTime){0});", variableName);
                     }
-
-                    string output = string.Empty;
-                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                        output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3})",
-                                                  Configuration.Instance.ParameterPrefix,
-                                                  associationMember.ColumnName,
-                                                  cast,
-                                                  NamingConventions.VariableName(associationMember.ColumnName));
                     else
-                        output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});",
-                                                  Configuration.Instance.ParameterPrefix,
-                                                  associationMember.ColumnName,
-                                                  cast,
-                                                  NamingConventions.VariableName(associationMember.ColumnName));
+                        cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", variableName) : string.Format("{0});", variableName);
+
+                    string output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName, cast);
 
                     if (!commandParameters.Contains(output))
                         commandParameters += output;
@@ -463,36 +462,36 @@ namespace CodeSmith.SchemaHelper
                 string cast = string.Empty;
                 if (member.SystemType.Contains("SmartDate"))
                 {
-                    cast = member.IsNullable ? "(DateTime?)" : "(DateTime)";
+                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                        cast = member.IsNullable ? string.Format("DirectCast({0}.Date, DateTime?))", member.VariableName)
+                                                 : string.Format("DirectCast({0}.Date, DateTime))", member.VariableName);
+                    else
+                        cast = member.IsNullable ? string.Format("(DateTime?){0});", member.VariableName)
+                                                 : string.Format("(DateTime){0});", member.VariableName);
                 }
-
-                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3})", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
                 else
-                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});", Configuration.Instance.ParameterPrefix, member.ColumnName, cast, member.VariableName);
+                    cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", member.VariableName) : string.Format("{0});", member.VariableName);
+
+                commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
             }
 
             foreach (AssociationMember associationMember in associationMembers)
             {
                 string cast = string.Empty;
+                string variableName = NamingConventions.VariableName(associationMember.ColumnName);
                 if (associationMember.SystemType.Contains("SmartDate"))
                 {
-                    cast = associationMember.IsNullable ? "(DateTime?)" : "(DateTime)";
+                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                        cast = associationMember.IsNullable ? string.Format("DirectCast({0}.Date, DateTime?))", variableName)
+                                                            : string.Format("DirectCast({0}.Date, DateTime))", variableName);
+                    else
+                        cast = associationMember.IsNullable ? string.Format("(DateTime?){0});", variableName)
+                                                            : string.Format("(DateTime){0});", variableName);
                 }
-
-                string output = string.Empty;
-                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                    output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3})",
-                                              Configuration.Instance.ParameterPrefix,
-                                               associationMember.ColumnName,
-                                              cast,
-                                              NamingConventions.VariableName(associationMember.ColumnName));
                 else
-                    output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3});",
-                                              Configuration.Instance.ParameterPrefix,
-                                               associationMember.ColumnName,
-                                              cast,
-                                              NamingConventions.VariableName(associationMember.ColumnName));
+                    cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", variableName) : string.Format("{0});", variableName);
+
+                string output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName, cast);
 
                 if (!commandParameters.Contains(output))
                     commandParameters += output;
