@@ -13,9 +13,9 @@
 
 <%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
 <%@ Register Name="CriteriaTemplate" Template="Criteria.cst" %>
-<%-- <%@ Register Name="DynamicRootTemplate" Template="DynamicRoot.cst" %>
+<%@ Register Name="DynamicRootTemplate" Template="DynamicRoot.cst" %>
 <%@ Register Name="DynamicRootListTemplate" Template="DynamicRootList.cst" %>
-<%@ Register Name="EditableChildTemplate" Template="EditableChild.cst" %>
+<%-- <%@ Register Name="EditableChildTemplate" Template="EditableChild.cst" %>
 <%@ Register Name="EditableChildListTemplate" Template="EditableChildList.cst" %> --%>
 <%@ Register Name="EditableRootTemplate" Template="EditableRoot.cst" %>
 <%@ Register Name="EditableRootListTemplate" Template="EditableRootList.cst" %>
@@ -29,25 +29,9 @@
 <% Generate() %>
 
 	<%-- 
-
-	'DynamicRootTemplate
-	If Me.DynamicRoot <> Nothing AndAlso Me.DynamicRoot.Count > 0 Then
-		Dim dynamicRootTemplate As DynamicRootTemplate = Me.Create(Of DynamicRootTemplate)()
-		Me.CopyPropertiesTo(dynamicRootTemplate)
-		dynamicRootTemplate.SourceTables = Me.DynamicRoot
-		dynamicRootTemplate.Generate()
-	End If
-
-	'DynamicRootListTemplate
-	If Me.DynamicRootList <> Nothing AndAlso Me.DynamicRootList.Count > 0 Then
-		Dim dynamicRootListTemplate As DynamicRootListTemplate = Me.Create(Of DynamicRootListTemplate)()
-		Me.CopyPropertiesTo(dynamicRootListTemplate)
-		dynamicRootListTemplate.SourceTables = Me.DynamicRootList
-		dynamicRootListTemplate.Generate()
-	End If
-
+	
 	'EditableChildTemplate
-	If Me.EditableChild <> Nothing AndAlso Me.EditableChild.Count > 0 Then
+	If Me.EditableChild Is Nothing AndAlso Me.EditableChild.Count > 0 Then
 		Dim editableChildTemplate As EditableChildTemplate = Me.Create(Of EditableChildTemplate)()
 		Me.CopyPropertiesTo(editableChildTemplate)
 		editableChildTemplate.SourceTables = Me.EditableChild
@@ -55,7 +39,7 @@
 	End If
 
 	'EditableChildListTemplate
-	If Me.EditableChildList <> Nothing AndAlso Me.EditableChildList.Count > 0 Then
+	If Me.EditableChildList Is Nothing AndAlso Me.EditableChildList.Count > 0 Then
 		Dim editableChildListTemplate As EditableChildListTemplate = Me.Create(Of EditableChildListTemplate)()
 		Me.CopyPropertiesTo(editableChildListTemplate)
 		editableChildListTemplate.SourceTables = Me.EditableChildList
@@ -65,7 +49,7 @@
     
     
     'NameValueListTemplate
-	If Me.NameValueList <> Nothing AndAlso Me.NameValueList.Count > 0 Then
+	If Me.NameValueList Is Nothing AndAlso Me.NameValueList.Count > 0 Then
 		Dim nameValueListTemplate As NameValueListTemplate = Me.Create(Of NameValueListTemplate)()
 		Me.CopyPropertiesTo(nameValueListTemplate)
 		nameValueListTemplate.SourceTables = Me.NameValueList
@@ -73,7 +57,7 @@
 	End If
 
 	'ReadOnlyChildTemplate
-	If Me.ReadOnlyChild <> Nothing AndAlso Me.ReadOnlyChild.Count > 0 Then
+	If Me.ReadOnlyChild Is Nothing AndAlso Me.ReadOnlyChild.Count > 0 Then
 		Dim readOnlyChildTemplate As ReadOnlyChildTemplate = Me.Create(Of ReadOnlyChildTemplate)()
 		Me.CopyPropertiesTo(readOnlyChildTemplate)
 		readOnlyChildTemplate.SourceTables = Me.ReadOnlyChild
@@ -81,7 +65,7 @@
 	End If
 
 	'ReadOnlyChildListTemplate
-	If Me.ReadOnlyChildList <> Nothing AndAlso Me.ReadOnlyChildList.Count > 0 Then
+	If Me.ReadOnlyChildList Is Nothing AndAlso Me.ReadOnlyChildList.Count > 0 Then
 		Dim readOnlyChildListTemplate As ReadOnlyChildListTemplate = Me.Create(Of ReadOnlyChildListTemplate)()
 		Me.CopyPropertiesTo(readOnlyChildListTemplate)
 		readOnlyChildListTemplate.SourceTables = Me.ReadOnlyChildList
@@ -89,7 +73,7 @@
 	End If
 
 	'ReadOnlyListTemplate
-	If Me.ReadOnlyList <> Nothing AndAlso Me.ReadOnlyList.Count > 0 Then
+	If Me.ReadOnlyList Is Nothing AndAlso Me.ReadOnlyList.Count > 0 Then
 		Dim readOnlyListTemplate As ReadOnlyListTemplate = Me.Create(Of ReadOnlyListTemplate)()
 		Me.CopyPropertiesTo(readOnlyListTemplate)
 		readOnlyListTemplate.SourceTables = Me.ReadOnlyList
@@ -97,7 +81,7 @@
 	End If
 
 	'ReadOnlyRootTemplate
-	If Me.ReadOnlyRoot <> Nothing AndAlso Me.ReadOnlyRoot.Count > 0 Then
+	If Me.ReadOnlyRoot Is Nothing AndAlso Me.ReadOnlyRoot.Count > 0 Then
 		Dim readOnlyRootTemplate As ReadOnlyRootTemplate = Me.Create(Of ReadOnlyRootTemplate)()
 		Me.CopyPropertiesTo(readOnlyRootTemplate)
 		readOnlyRootTemplate.SourceTables = Me.ReadOnlyRoot
@@ -105,7 +89,7 @@
 	End If
 
 	'SwitchableObjectTemplate
-	If Me.SwitchableObject <> Nothing AndAlso Me.SwitchableObject.Count > 0 Then
+	If Me.SwitchableObject Is Nothing AndAlso Me.SwitchableObject.Count > 0 Then
 		Dim switchableObjectTemplate As SwitchableObjectTemplate = Me.Create(Of SwitchableObjectTemplate)()
 		Me.CopyPropertiesTo(switchableObjectTemplate)
 		switchableObjectTemplate.SourceTables = Me.SwitchableObject
@@ -132,6 +116,22 @@ Public Overrides Sub Generate()
 		Me.CopyPropertiesTo(criteriaTemplate)
 		criteriaTemplate.SourceTables = Me.Criteria
 		criteriaTemplate.Generate()
+	End If
+    
+    'DynamicRootTemplate
+	If Not Me.DynamicRoot Is Nothing AndAlso Me.DynamicRoot.Count > 0 Then
+		Dim dynamicRootTemplate As DynamicRootTemplate = Me.Create(Of DynamicRootTemplate)()
+		Me.CopyPropertiesTo(dynamicRootTemplate)
+		dynamicRootTemplate.SourceTables = Me.DynamicRoot
+		dynamicRootTemplate.Generate()
+	End If
+    
+    'DynamicRootListTemplate
+	If Not Me.DynamicRootList Is Nothing AndAlso Me.DynamicRootList.Count > 0 Then
+		Dim dynamicRootListTemplate As DynamicRootListTemplate = Me.Create(Of DynamicRootListTemplate)()
+		Me.CopyPropertiesTo(dynamicRootListTemplate)
+		dynamicRootListTemplate.SourceTables = Me.DynamicRootList
+		dynamicRootListTemplate.Generate()
 	End If
     
 	'EditableRootTemplate

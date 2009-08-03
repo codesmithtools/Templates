@@ -41,11 +41,10 @@ Namespace <%= BusinessProjectName %>
 <% If (DataAccessImplementation = DataAccessMethod.None) Then %>
 		<RunLocal()> _
 		Protected Sub DataPortal_Create()
-		
 			' TODO: load default values
      	 	' omit Me override If you have no defaults to set
 			
-			base.DataPortal_Create()
+			MyBase.DataPortal_Create()
 
 			ValidationRules.CheckRules()
 		End Sub
@@ -77,7 +76,7 @@ Namespace <%= BusinessProjectName %>
 <% Else If (DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>
 		<RunLocal()> _
 		Protected Overrides Sub DataPortal_Create()
-			'mybase.DataPortal_Create()
+			'MyBase.DataPortal_Create()
 <% If (Entity.PrimaryKey.KeyMember.SystemType = "Guid") Then
         If (UseMemberVariables) Then %>
 			<%= Entity.PrimaryKey.KeyMember.PrivateMemberVariableName %> = Guid.NewGuid()

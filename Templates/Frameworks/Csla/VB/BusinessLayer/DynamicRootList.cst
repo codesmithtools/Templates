@@ -18,53 +18,42 @@
 
 <script runat="template">
 
-Public override void Generate()
-{
+Public Overrides Sub Generate()
+	
     RegisterReferences()
-    
-	foreach(Entity entity in Entities)
-	{
-		#Region DynamicRootList
-		
-		DynamicRootList dynamicRootList = this.Create<DynamicRootList>()
-		this.CopyPropertiesTo(dynamicRootList)
+	
+    For Each entity As Entity In Entities
+		'DynamicRootList
+		Dim dynamicRootList As DynamicRootList = Me.Create(Of DynamicRootList)()
+		Me.CopyPropertiesTo(dynamicRootList)
 		dynamicRootList.SourceTable = entity.Table
-		dynamicRootList.BusinessClassName = string.Format("{0}List", dynamicRootList.BusinessClassName)
-		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", dynamicRootList.BusinessClassName))
-		If Not (System.IO.File.Exists(parentFileName))
-		{
-			dynamicRootList.RenderToFile(parentFileName, false)
-		}
-		
-		#Region DynamicRootList.Generated
-		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", dynamicRootList.BusinessClassName))
-		
-		DynamicRootListGenerated dynamicRootListGenerated = this.Create<DynamicRootListGenerated>()
-		this.CopyPropertiesTo(dynamicRootListGenerated)
+		dynamicRootList.BusinessClassName = String.Format("{0}List", dynamicRootList.BusinessClassName)
+
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", dynamicRootList.BusinessClassName))
+		If Not System.IO.File.Exists(parentFileName) Then
+			dynamicRootList.RenderToFile(parentFileName, False)
+		End If
+
+		'DynamicRootList.Generated
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", dynamicRootList.BusinessClassName))
+
+		Dim dynamicRootListGenerated As DynamicRootListGenerated = Me.Create(Of DynamicRootListGenerated)()
+		Me.CopyPropertiesTo(dynamicRootListGenerated)
 		dynamicRootListGenerated.SourceTable = entity.Table
-		dynamicRootListGenerated.BusinessClassName = string.Format("{0}List", dynamicRootListGenerated.BusinessClassName)
-		
-		dynamicRootListGenerated.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#Region DynamicRootList.DataAccess
-		
-		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", dynamicRootList.BusinessClassName))
-		
-		DynamicRootListDataAccess dynamicRootListDataAccess = this.Create<DynamicRootListDataAccess>()
-		this.CopyPropertiesTo(dynamicRootListDataAccess)
+		dynamicRootListGenerated.BusinessClassName = String.Format("{0}List", dynamicRootListGenerated.BusinessClassName)
+
+		dynamicRootListGenerated.RenderToFile(fileName, parentFileName, True)
+
+		'DynamicRootList.DataAccess
+		fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", dynamicRootList.BusinessClassName))
+
+		Dim dynamicRootListDataAccess As DynamicRootListDataAccess = Me.Create(Of DynamicRootListDataAccess)()
+		Me.CopyPropertiesTo(dynamicRootListDataAccess)
 		dynamicRootListDataAccess.SourceTable = entity.Table
-		dynamicRootListDataAccess.BusinessClassName = string.Format("{0}List", dynamicRootListDataAccess.BusinessClassName)
-		
-		dynamicRootListDataAccess.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#End Region
-	}
-}
+		dynamicRootListDataAccess.BusinessClassName = String.Format("{0}List", dynamicRootListDataAccess.BusinessClassName)
+
+		dynamicRootListDataAccess.RenderToFile(fileName, parentFileName, True)
+	Next
+End Sub
 
 </script>
