@@ -17,50 +17,38 @@
 
 <script runat="template">
 
-Public override void Generate()
-{
-    RegisterReferences()
-    
-	foreach(Entity entity in Entities)
-	{
-		#Region DynamicRoot
-		
-		DynamicRoot dynamicRoot = this.Create<DynamicRoot>()
-		this.CopyPropertiesTo(dynamicRoot)
+Public Overrides Sub Generate()
+	RegisterReferences()
+
+	For Each entity As Entity In Entities
+		'DynamicRoot
+		Dim dynamicRoot As DynamicRoot = Me.Create(Of DynamicRoot)()
+		Me.CopyPropertiesTo(dynamicRoot)
 		dynamicRoot.SourceTable = entity.Table
-		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", dynamicRoot.BusinessClassName))
-		If Not (System.IO.File.Exists(parentFileName))
-		{
-			dynamicRoot.RenderToFile(parentFileName, false)
-		}
-		
-		#Region DynamicRoot.Generated
-		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", dynamicRoot.BusinessClassName))
-		
-		DynamicRootGenerated dynamicRootGenerated = this.Create<DynamicRootGenerated>()
-		this.CopyPropertiesTo(dynamicRootGenerated)
+
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", dynamicRoot.BusinessClassName))
+		If Not System.IO.File.Exists(parentFileName) Then
+			dynamicRoot.RenderToFile(parentFileName, False)
+		End If
+
+		'DynamicRoot.Generated
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", dynamicRoot.BusinessClassName))
+
+		Dim dynamicRootGenerated As DynamicRootGenerated = Me.Create(Of DynamicRootGenerated)()
+		Me.CopyPropertiesTo(dynamicRootGenerated)
 		dynamicRootGenerated.SourceTable = entity.Table
-		
-		dynamicRootGenerated.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#Region DynamicRoot.DataAccess
-		
-		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", dynamicRoot.BusinessClassName))
-		
-		DynamicRootDataAccess dynamicRootDataAccess = this.Create<DynamicRootDataAccess>()
-		this.CopyPropertiesTo(dynamicRootDataAccess)
+
+		dynamicRootGenerated.RenderToFile(fileName, parentFileName, True)
+
+		'DynamicRoot.DataAccess
+		fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", dynamicRoot.BusinessClassName))
+
+		Dim dynamicRootDataAccess As DynamicRootDataAccess = Me.Create(Of DynamicRootDataAccess)()
+		Me.CopyPropertiesTo(dynamicRootDataAccess)
 		dynamicRootDataAccess.SourceTable = entity.Table
-		
-		dynamicRootDataAccess.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#End Region
-	}
-}
+
+		dynamicRootDataAccess.RenderToFile(fileName, parentFileName, True)
+	Next
+End Sub
 
 </script>

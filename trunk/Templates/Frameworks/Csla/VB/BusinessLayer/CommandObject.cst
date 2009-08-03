@@ -27,13 +27,13 @@ Public Overrides Sub Generate()
 		Me.CopyPropertiesTo(commandObject)
 		commandObject.SourceTable = entity.Table
 
-		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Command\{0}.cs", commandObject.BusinessClassName))
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Command\{0}.vb", commandObject.BusinessClassName))
 		If Not System.IO.File.Exists(parentFileName) Then
 			commandObject.RenderToFile(parentFileName, False)
 		End If
 
 		'CommandObject.Generated
-		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Command\{0}.Generated.cs", commandObject.BusinessClassName))
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Command\{0}.Generated.vb", commandObject.BusinessClassName))
 
 		Dim commandObjectGenerated As CommandObjectGenerated = Me.Create(Of CommandObjectGenerated)()
 		Me.CopyPropertiesTo(commandObjectGenerated)
@@ -42,7 +42,7 @@ Public Overrides Sub Generate()
 		commandObjectGenerated.RenderToFile(fileName, parentFileName, True)
 
 		'CommandObject.DataAccess
-		fileName = System.IO.Path.Combine(Location, String.Format("Command\{0}.DataAccess.cs", commandObject.BusinessClassName))
+		fileName = System.IO.Path.Combine(Location, String.Format("Command\{0}.DataAccess.vb", commandObject.BusinessClassName))
 
 		Dim commandObjectDataAccess As CommandObjectDataAccess = Me.Create(Of CommandObjectDataAccess)()
 		Me.CopyPropertiesTo(commandObjectDataAccess)

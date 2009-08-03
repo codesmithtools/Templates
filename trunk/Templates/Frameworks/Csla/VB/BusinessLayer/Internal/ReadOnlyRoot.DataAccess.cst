@@ -37,7 +37,7 @@ Namespace <%= BusinessProjectName %>
 	{
 		#Region "Data Access"
 		
-<% If (DataAccessImplementation == DataAccessMethod.None) { %>
+<% If (DataAccessImplementation = DataAccessMethod.None) Then %>
 Private Sub DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)
 		{
 			' TODO: load values.

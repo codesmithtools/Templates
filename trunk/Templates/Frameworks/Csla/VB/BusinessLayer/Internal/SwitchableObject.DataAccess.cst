@@ -38,13 +38,13 @@ Namespace <%= BusinessProjectName %>
 	{
 		#Region Root Data Access
 		
-<% If (DataAccessImplementation == DataAccessMethod.None) { %>		
+<% If (DataAccessImplementation = DataAccessMethod.None) Then %>		
 		[RunLocal]
 		Protected Overrides Sub DataPortal_Create()
 		{
 			' TODO: load default values
 			' omit this override if you have no defaults to set
-			base.DataPortal.Create()
+			MyBase.DataPortal.Create()
 		}
 		
 		Private Sub DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)
@@ -79,7 +79,7 @@ Namespace <%= BusinessProjectName %>
 		[RunLocal]
 		Protected Overrides Sub DataPortal_Create()
 		{
-			'base.DataPortal_Create()
+			'MyBase.DataPortal_Create()
 
 <% If (Entity.PrimaryKey.KeyMember.SystemType == "Guid") { If (UseMemberVariables) { %>
 			<%= Entity.PrimaryKey.KeyMember.PrivateMemberVariableName %> = Guid.NewGuid()
@@ -171,12 +171,12 @@ Namespace <%= BusinessProjectName %>
 		
 		#Region Child Data Access
 
-<% If (DataAccessImplementation == DataAccessMethod.None) { %>	
+<% If (DataAccessImplementation = DataAccessMethod.None) Then %>	
 		Protected Overrides Sub Child_Create()
 		{
 			' TODO: load default values
 			' omit this override if you have no defaults to set
-			base.Child_Create()
+			MyBase.Child_Create()
 		}
 	
 		Private Sub Child_Fetch(object childData)
@@ -203,7 +203,7 @@ Namespace <%= BusinessProjectName %>
 		{
 			' TODO: load default values
 			' omit this override if you have no defaults to set
-		    'base.Child_Create()
+		    'MyBase.Child_Create()
 		}
 	
 		Private Sub Child_Fetch(ByVal reader As SafeDataReader)
