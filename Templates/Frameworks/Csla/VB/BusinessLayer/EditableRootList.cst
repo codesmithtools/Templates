@@ -29,13 +29,13 @@ Public Overrides Sub Generate()
 		editableRootList.SourceTable = entity.Table
 		editableRootList.BusinessClassName = String.Format("{0}List", editableRootList.BusinessClassName)
 
-		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.cs", editableRootList.BusinessClassName))
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", editableRootList.BusinessClassName))
 		If Not System.IO.File.Exists(parentFileName) Then
 			editableRootList.RenderToFile(parentFileName, False)
 		End If
 
 		'EditableRootList.Generated
-		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.cs", editableRootList.BusinessClassName))
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", editableRootList.BusinessClassName))
 
 		Dim editableRootListGenerated As EditableRootListGenerated = Me.Create(Of EditableRootListGenerated)()
 		Me.CopyPropertiesTo(editableRootListGenerated)
@@ -45,7 +45,7 @@ Public Overrides Sub Generate()
 		editableRootListGenerated.RenderToFile(fileName, parentFileName, True)
 
 		'EditableRootList.DataAccess
-		fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.cs", editableRootList.BusinessClassName))
+		fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", editableRootList.BusinessClassName))
 
 		Dim editableRootListDataAccess As EditableRootListDataAccess = Me.Create(Of EditableRootListDataAccess)()
 		Me.CopyPropertiesTo(editableRootListDataAccess)

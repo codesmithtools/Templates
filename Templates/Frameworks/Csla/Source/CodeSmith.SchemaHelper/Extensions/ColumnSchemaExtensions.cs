@@ -49,9 +49,12 @@ namespace CodeSmith.SchemaHelper
             if (result.Equals("DateTime", StringComparison.InvariantCultureIgnoreCase))
                 result = "SmartDate";
 
-            return (column.AllowDBNull && column.SystemType.IsValueType && canAppendNullable)
-                       ? string.Format("{0}?", result)
-                       : result;
+            bool appendNull = column.AllowDBNull && column.SystemType.IsValueType && canAppendNullable;
+
+            if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                return (appendNull) ? string.Format("System.Nullable(Of {0})", result) : result;
+
+            return (appendNull) ? string.Format("{0}?", result) : result;
         }
 
         #region GetName

@@ -31,7 +31,7 @@ Namespace <%= BusinessProjectName %>
 
 	Public Partial Class <%= BusinessClassName %>
     
-		#Region Data Access
+		#Region "Data Access"
 		
         <RunLocal()> _
 		Protected Overrides Sub DataPortal_Create()
@@ -42,8 +42,8 @@ Namespace <%= BusinessProjectName %>
             
             Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= ChildBusinessClassName %>Fetch(criteria.StateBag)
 	            While reader.Read()
-		            Fetch(reader)
-	            End While
+		            Me.Add(New <%= BusinessProjectName %>.<%= ChildBusinessClassName %>(reader))
+				End While
             End Using
             
             RaiseListChangedEvents = True
