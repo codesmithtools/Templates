@@ -18,53 +18,43 @@
 
 <script runat="template">
 
-Public override void Generate()
-{
-    RegisterReferences()
+Public Overloads Overrides Sub Generate()
+
+	RegisterReferences()
+
+	For Each entity As Entity In Entities
     
-	foreach(Entity entity in Entities)
-	{
-		#Region ReadOnlyList
-		
-		ReadOnlyList readOnlyList = this.Create<ReadOnlyList>()
-		this.CopyPropertiesTo(readOnlyList)
+		'ReadOnlyList
+		Dim readOnlyList As ReadOnlyList = Me.Create(Of ReadOnlyList)()
+		Me.CopyPropertiesTo(readOnlyList)
 		readOnlyList.SourceTable = entity.Table
-		readOnlyList.BusinessClassName = string.Format("{0}List", readOnlyList.BusinessClassName)
-		
-		string parentFileName = System.IO.Path.Combine(Location, string.Format("{0}.cs", readOnlyList.BusinessClassName))
-		If Not (System.IO.File.Exists(parentFileName))
-		{
-			readOnlyList.RenderToFile(parentFileName, false)
-		}
-		
-		#Region ReadOnlyList.Generated
-		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", readOnlyList.BusinessClassName))
-		
-		ReadOnlyListGenerated readOnlyListGenerated = this.Create<ReadOnlyListGenerated>()
-		this.CopyPropertiesTo(readOnlyListGenerated)
+		readOnlyList.BusinessClassName = String.Format("{0}List", readOnlyList.BusinessClassName)
+
+		Dim parentFileName As String = System.IO.Path.Combine(Location, String.Format("{0}.vb", readOnlyList.BusinessClassName))
+		If Not System.IO.File.Exists(parentFileName) Then
+			readOnlyList.RenderToFile(parentFileName, False)
+		End If
+
+		'ReadOnlyList.Generated
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", readOnlyList.BusinessClassName))
+
+		Dim readOnlyListGenerated As ReadOnlyListGenerated = Me.Create(Of ReadOnlyListGenerated)()
+		Me.CopyPropertiesTo(readOnlyListGenerated)
 		readOnlyListGenerated.SourceTable = entity.Table
-		readOnlyListGenerated.BusinessClassName = string.Format("{0}List", readOnlyListGenerated.BusinessClassName)
-		
-		readOnlyListGenerated.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#Region ReadOnlyList.DataAccess
-		
-		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", readOnlyList.BusinessClassName))
-		
-		ReadOnlyListDataAccess readOnlyListDataAccess = this.Create<ReadOnlyListDataAccess>()
-		this.CopyPropertiesTo(readOnlyListDataAccess)
+		readOnlyListGenerated.BusinessClassName = String.Format("{0}List", readOnlyListGenerated.BusinessClassName)
+
+		readOnlyListGenerated.RenderToFile(fileName, parentFileName, True)
+
+		'ReadOnlyList.DataAccess
+		fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", readOnlyList.BusinessClassName))
+
+		Dim readOnlyListDataAccess As ReadOnlyListDataAccess = Me.Create(Of ReadOnlyListDataAccess)()
+		Me.CopyPropertiesTo(readOnlyListDataAccess)
 		readOnlyListDataAccess.SourceTable = entity.Table
-		readOnlyListDataAccess.BusinessClassName = string.Format("{0}List", readOnlyListDataAccess.BusinessClassName)
-		
-		readOnlyListDataAccess.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#End Region
-	}
-}
+		readOnlyListDataAccess.BusinessClassName = String.Format("{0}List", readOnlyListDataAccess.BusinessClassName)
+
+		readOnlyListDataAccess.RenderToFile(fileName, parentFileName, True)
+	Next
+End Sub
 
 </script>

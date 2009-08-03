@@ -21,9 +21,9 @@
 <%@ Register Name="EditableRootListTemplate" Template="EditableRootList.cst" %>
 <%@ Register Name="NameValueListTemplate" Template="NameValueList.cst" %>
 <%@ Register Name="ReadOnlyChildTemplate" Template="ReadOnlyChild.cst" %>
-<%--
 <%@ Register Name="ReadOnlyChildListTemplate" Template="ReadOnlyChildList.cst" %>
 <%@ Register Name="ReadOnlyListTemplate" Template="ReadOnlyList.cst" %>
+<%--
 <%@ Register Name="ReadOnlyRootTemplate" Template="ReadOnlyRoot.cst" %>
 <%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %> --%>
 
@@ -31,22 +31,6 @@
 
 	<%-- 
 	
-	'ReadOnlyChildListTemplate
-	If Me.ReadOnlyChildList Is Nothing AndAlso Me.ReadOnlyChildList.Count > 0 Then
-		Dim readOnlyChildListTemplate As ReadOnlyChildListTemplate = Me.Create(Of ReadOnlyChildListTemplate)()
-		Me.CopyPropertiesTo(readOnlyChildListTemplate)
-		readOnlyChildListTemplate.SourceTables = Me.ReadOnlyChildList
-		readOnlyChildListTemplate.Generate()
-	End If
-
-	'ReadOnlyListTemplate
-	If Me.ReadOnlyList Is Nothing AndAlso Me.ReadOnlyList.Count > 0 Then
-		Dim readOnlyListTemplate As ReadOnlyListTemplate = Me.Create(Of ReadOnlyListTemplate)()
-		Me.CopyPropertiesTo(readOnlyListTemplate)
-		readOnlyListTemplate.SourceTables = Me.ReadOnlyList
-		readOnlyListTemplate.Generate()
-	End If
-
 	'ReadOnlyRootTemplate
 	If Me.ReadOnlyRoot Is Nothing AndAlso Me.ReadOnlyRoot.Count > 0 Then
 		Dim readOnlyRootTemplate As ReadOnlyRootTemplate = Me.Create(Of ReadOnlyRootTemplate)()
@@ -148,6 +132,23 @@ Public Overrides Sub Generate()
 		readOnlyChildTemplate.SourceTables = Me.ReadOnlyChild
 		readOnlyChildTemplate.Generate()
 	End If
+    
+    'ReadOnlyChildListTemplate
+	If Not Me.ReadOnlyChildList Is Nothing AndAlso Me.ReadOnlyChildList.Count > 0 Then
+		Dim readOnlyChildListTemplate As ReadOnlyChildListTemplate = Me.Create(Of ReadOnlyChildListTemplate)()
+		Me.CopyPropertiesTo(readOnlyChildListTemplate)
+		readOnlyChildListTemplate.SourceTables = Me.ReadOnlyChildList
+		readOnlyChildListTemplate.Generate()
+	End If
+    
+    'ReadOnlyListTemplate
+	If Not Me.ReadOnlyList Is Nothing AndAlso Me.ReadOnlyList.Count > 0 Then
+		Dim readOnlyListTemplate As ReadOnlyListTemplate = Me.Create(Of ReadOnlyListTemplate)()
+		Me.CopyPropertiesTo(readOnlyListTemplate)
+		readOnlyListTemplate.SourceTables = Me.ReadOnlyList
+		readOnlyListTemplate.Generate()
+	End If
+    
 End Sub
 
 </script>
