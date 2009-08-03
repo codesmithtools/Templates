@@ -24,19 +24,19 @@ Public override void Generate()
     
 	foreach(Entity entity in Entities)
 	{
-		#region SwitchableObject
+		#Region SwitchableObject
 		
 		SwitchableObject switchableObject = this.Create<SwitchableObject>()
 		this.CopyPropertiesTo(switchableObject)
 		switchableObject.SourceTable = entity.Table
 		
 		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", switchableObject.BusinessClassName))
-		if (!System.IO.File.Exists(parentFileName))
+		If Not (System.IO.File.Exists(parentFileName))
 		{
 			switchableObject.RenderToFile(parentFileName, false)
 		}
 		
-		#region SwitchableObject.Generated
+		#Region SwitchableObject.Generated
 		
 		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", switchableObject.BusinessClassName))
 		
@@ -46,9 +46,9 @@ Public override void Generate()
 		
 		switchableObjectGenerated.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#region SwitchableObject.DataAccess
+		#Region SwitchableObject.DataAccess
 		
 		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", switchableObject.BusinessClassName))
 		
@@ -58,9 +58,9 @@ Public override void Generate()
 		
 		switchableObjectDataAccess.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#endregion
+		#End Region
 	}
 }
 

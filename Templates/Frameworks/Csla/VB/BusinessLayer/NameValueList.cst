@@ -23,7 +23,7 @@ Public override void Generate()
     
 	foreach(Entity entity in Entities)
 	{
-		#region NameValueList
+		#Region NameValueList
 		
 		NameValueList nameValueList = this.Create<NameValueList>()
 		this.CopyPropertiesTo(nameValueList)
@@ -31,12 +31,12 @@ Public override void Generate()
 		nameValueList.BusinessClassName = string.Format("{0}List", nameValueList.BusinessClassName)
 		
 		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", nameValueList.BusinessClassName))
-		if (!System.IO.File.Exists(parentFileName))
+		If Not (System.IO.File.Exists(parentFileName))
 		{
 			nameValueList.RenderToFile(parentFileName, false)
 		}
 		
-		#region NameValueList.Generated
+		#Region NameValueList.Generated
 		
 		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", nameValueList.BusinessClassName))
 		
@@ -47,9 +47,9 @@ Public override void Generate()
 		
 		nameValueListGenerated.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#region NameValueList.DataAccess
+		#Region NameValueList.DataAccess
 		
 		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", nameValueList.BusinessClassName))
 		
@@ -60,9 +60,9 @@ Public override void Generate()
 		
 		nameValueListDataAccess.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#endregion
+		#End Region
 	}
 }
 

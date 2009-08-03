@@ -24,7 +24,7 @@ Public override void Generate()
     
 	foreach(Entity entity in Entities)
 	{
-		#region DynamicRootList
+		#Region DynamicRootList
 		
 		DynamicRootList dynamicRootList = this.Create<DynamicRootList>()
 		this.CopyPropertiesTo(dynamicRootList)
@@ -32,12 +32,12 @@ Public override void Generate()
 		dynamicRootList.BusinessClassName = string.Format("{0}List", dynamicRootList.BusinessClassName)
 		
 		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", dynamicRootList.BusinessClassName))
-		if (!System.IO.File.Exists(parentFileName))
+		If Not (System.IO.File.Exists(parentFileName))
 		{
 			dynamicRootList.RenderToFile(parentFileName, false)
 		}
 		
-		#region DynamicRootList.Generated
+		#Region DynamicRootList.Generated
 		
 		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", dynamicRootList.BusinessClassName))
 		
@@ -48,9 +48,9 @@ Public override void Generate()
 		
 		dynamicRootListGenerated.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#region DynamicRootList.DataAccess
+		#Region DynamicRootList.DataAccess
 		
 		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", dynamicRootList.BusinessClassName))
 		
@@ -61,9 +61,9 @@ Public override void Generate()
 		
 		dynamicRootListDataAccess.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#endregion
+		#End Region
 	}
 }
 

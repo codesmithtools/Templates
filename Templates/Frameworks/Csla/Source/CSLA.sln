@@ -168,6 +168,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{1E
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{AA24549B-F016-4588-9AE9-3A503B4DAD79}"
+	ProjectSection(SolutionItems) = preProject
+		..\VB\WebLayer\Internal\Default.aspx.cst = ..\VB\WebLayer\Internal\Default.aspx.cst
+		..\VB\WebLayer\Internal\Default.aspx.vb.cst = ..\VB\WebLayer\Internal\Default.aspx.vb.cst
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

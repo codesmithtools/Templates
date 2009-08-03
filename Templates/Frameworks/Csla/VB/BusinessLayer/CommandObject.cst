@@ -18,50 +18,38 @@
 
 <script runat="template">
 
-Public override void Generate()
-{
-    RegisterReferences()
-    
-	foreach(Entity entity in Entities)
-	{
-		#region CommandObject
-		
-		CommandObject commandObject = this.Create<CommandObject>()
-		this.CopyPropertiesTo(commandObject)
+Public Overrides Sub Generate()
+	RegisterReferences()
+
+	For Each entity As Entity In Entities
+		'CommandObject
+		Dim commandObject As CommandObject = Me.Create(Of CommandObject)()
+		Me.CopyPropertiesTo(commandObject)
 		commandObject.SourceTable = entity.Table
-		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Command\\{0}.cs", commandObject.BusinessClassName))
-		if (!System.IO.File.Exists(parentFileName))
-		{
-			commandObject.RenderToFile(parentFileName, false)
-		}
-		
-		#region CommandObject.Generated
-		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Command\\{0}.Generated.cs", commandObject.BusinessClassName))
-		
-		CommandObjectGenerated commandObjectGenerated = this.Create<CommandObjectGenerated>()
-		this.CopyPropertiesTo(commandObjectGenerated)
+
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Command\{0}.cs", commandObject.BusinessClassName))
+		If Not System.IO.File.Exists(parentFileName) Then
+			commandObject.RenderToFile(parentFileName, False)
+		End If
+
+		'CommandObject.Generated
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Command\{0}.Generated.cs", commandObject.BusinessClassName))
+
+		Dim commandObjectGenerated As CommandObjectGenerated = Me.Create(Of CommandObjectGenerated)()
+		Me.CopyPropertiesTo(commandObjectGenerated)
 		commandObjectGenerated.SourceTable = entity.Table
-		
-		commandObjectGenerated.RenderToFile(fileName, parentFileName, true)
-		
-		#endregion
-		
-		#region CommandObject.DataAccess
-		
-		fileName = System.IO.Path.Combine(Location, string.Format("Command\\{0}.DataAccess.cs", commandObject.BusinessClassName))
-		
-		CommandObjectDataAccess commandObjectDataAccess = this.Create<CommandObjectDataAccess>()
-		this.CopyPropertiesTo(commandObjectDataAccess)
+
+		commandObjectGenerated.RenderToFile(fileName, parentFileName, True)
+
+		'CommandObject.DataAccess
+		fileName = System.IO.Path.Combine(Location, String.Format("Command\{0}.DataAccess.cs", commandObject.BusinessClassName))
+
+		Dim commandObjectDataAccess As CommandObjectDataAccess = Me.Create(Of CommandObjectDataAccess)()
+		Me.CopyPropertiesTo(commandObjectDataAccess)
 		commandObjectDataAccess.SourceTable = entity.Table
-		
-		commandObjectDataAccess.RenderToFile(fileName, parentFileName, true)
-		
-		#endregion
-		
-		#endregion
-	}
-}
+
+		commandObjectDataAccess.RenderToFile(fileName, parentFileName, True)
+	Next
+End Sub
 
 </script>

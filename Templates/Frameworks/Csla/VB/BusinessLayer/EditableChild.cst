@@ -24,19 +24,19 @@ Public override void Generate()
     
 	foreach(Entity entity in Entities)
 	{
-		#region EditableChild
+		#Region EditableChild
 		
 		EditableChild editableChild = this.Create<EditableChild>()
 		this.CopyPropertiesTo(editableChild)
 		editableChild.SourceTable = entity.Table
 		
         string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", editableChild.BusinessClassName))
-		if (!System.IO.File.Exists(parentFileName))
+		If Not (System.IO.File.Exists(parentFileName))
 		{
 			editableChild.RenderToFile(parentFileName, false)
 		}
 		
-		#region EditableChild.Generated
+		#Region EditableChild.Generated
 		
 		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", editableChild.BusinessClassName))
 		
@@ -46,9 +46,9 @@ Public override void Generate()
 		
 		editableChildGenerated.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#region EditableChild.DataAccess
+		#Region EditableChild.DataAccess
 		
 		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", editableChild.BusinessClassName))
 		
@@ -58,9 +58,9 @@ Public override void Generate()
 		
 		editableChildDataAccess.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#endregion
+		#End Region
 	}
 }
 

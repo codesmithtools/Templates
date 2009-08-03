@@ -24,7 +24,7 @@ Public override void Generate()
     
 	foreach(Entity entity in Entities)
 	{
-		#region EditableChildList
+		#Region EditableChildList
 		
 		EditableChildList editableChildList = this.Create<EditableChildList>()
 		this.CopyPropertiesTo(editableChildList)
@@ -32,12 +32,12 @@ Public override void Generate()
 		editableChildList.BusinessClassName = string.Format("{0}List", editableChildList.BusinessClassName)
 		
 		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", editableChildList.BusinessClassName))
-		if (!System.IO.File.Exists(parentFileName))
+		If Not (System.IO.File.Exists(parentFileName))
 		{
 			editableChildList.RenderToFile(parentFileName, false)
 		}
 		
-		#region EditableChildList.Generated
+		#Region EditableChildList.Generated
 		
 		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", editableChildList.BusinessClassName))
 		
@@ -48,9 +48,9 @@ Public override void Generate()
 		
 		editableChildListGenerated.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#region EditableChildList.DataAccess
+		#Region EditableChildList.DataAccess
 		
 		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", editableChildList.BusinessClassName))
 		
@@ -61,9 +61,9 @@ Public override void Generate()
 		
 		editableChildListDataAccess.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#endregion
+		#End Region
 	}
 }
 
