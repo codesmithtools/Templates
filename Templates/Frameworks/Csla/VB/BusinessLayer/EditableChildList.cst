@@ -18,53 +18,42 @@
 
 <script runat="template">
 
-Public override void Generate()
-{
-    RegisterReferences()
+Public Overloads Overrides Sub Generate()
+	RegisterReferences()
+
+	For Each entity As Entity In Entities
     
-	foreach(Entity entity in Entities)
-	{
-		#Region EditableChildList
-		
-		EditableChildList editableChildList = this.Create<EditableChildList>()
-		this.CopyPropertiesTo(editableChildList)
+		'EditableChildList
+		Dim editableChildList As EditableChildList = Me.Create(Of EditableChildList)()
+		Me.CopyPropertiesTo(editableChildList)
 		editableChildList.SourceTable = entity.Table
-		editableChildList.BusinessClassName = string.Format("{0}List", editableChildList.BusinessClassName)
-		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", editableChildList.BusinessClassName))
-		If Not (System.IO.File.Exists(parentFileName))
-		{
-			editableChildList.RenderToFile(parentFileName, false)
-		}
-		
-		#Region EditableChildList.Generated
-		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", editableChildList.BusinessClassName))
-		
-		EditableChildListGenerated editableChildListGenerated = this.Create<EditableChildListGenerated>()
-		this.CopyPropertiesTo(editableChildListGenerated)
+		editableChildList.BusinessClassName = String.Format("{0}List", editableChildList.BusinessClassName)
+
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", editableChildList.BusinessClassName))
+		If Not System.IO.File.Exists(parentFileName) Then
+			editableChildList.RenderToFile(parentFileName, False)
+		End If
+
+		'EditableChildList.Generated
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", editableChildList.BusinessClassName))
+
+		Dim editableChildListGenerated As EditableChildListGenerated = Me.Create(Of EditableChildListGenerated)()
+		Me.CopyPropertiesTo(editableChildListGenerated)
 		editableChildListGenerated.SourceTable = entity.Table
-		editableChildListGenerated.BusinessClassName = string.Format("{0}List", editableChildListGenerated.BusinessClassName)
-		
-		editableChildListGenerated.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#Region EditableChildList.DataAccess
-		
-		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", editableChildList.BusinessClassName))
-		
-		EditableChildListDataAccess editableChildListDataAccess = this.Create<EditableChildListDataAccess>()
-		this.CopyPropertiesTo(editableChildListDataAccess)
+		editableChildListGenerated.BusinessClassName = String.Format("{0}List", editableChildListGenerated.BusinessClassName)
+
+		editableChildListGenerated.RenderToFile(fileName, parentFileName, True)
+
+		'EditableChildList.DataAccess
+		fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", editableChildList.BusinessClassName))
+
+		Dim editableChildListDataAccess As EditableChildListDataAccess = Me.Create(Of EditableChildListDataAccess)()
+		Me.CopyPropertiesTo(editableChildListDataAccess)
 		editableChildListDataAccess.SourceTable = entity.Table
-		editableChildListDataAccess.BusinessClassName = string.Format("{0}List", editableChildListDataAccess.BusinessClassName)
-		
-		editableChildListDataAccess.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#End Region
-	}
-}
+		editableChildListDataAccess.BusinessClassName = String.Format("{0}List", editableChildListDataAccess.BusinessClassName)
+
+		editableChildListDataAccess.RenderToFile(fileName, parentFileName, True)
+	Next
+End Sub
 
 </script>

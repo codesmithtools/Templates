@@ -73,7 +73,7 @@ Namespace <%= BusinessProjectName %>
         ''' Used for optimistic concurrency.
         ''' </summary>
         <NotUndoable()> _
-        Private <%= Entity.RowVersionMember.SystemType %> _timestamp = new <%= Entity.RowVersionMember.SystemType(true) %>
+        Private <%= Entity.RowVersionMember.SystemType %> _timestamp = new <%= Entity.RowVersionMember.SystemType %>
 <% } %>
 
 <%  foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey){ If (UseMemberVariables){ %>
@@ -110,9 +110,9 @@ Namespace <%= BusinessProjectName %>
 <% } } %>
 <%-- Foreign Keys --%>
 <%  foreach(AssociationMember member in Entity.MembersForeignKey){ string columnName = member.ResolveManyToOneNameConflict(Entity) If (UseMemberVariables){ %>
-		Private static readonly PropertyInfo< <%= member.SystemType(false) %> > <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property = RegisterProperty< <%= member.SystemType(false) %> >(p => p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>)
-		Private <%= member.SystemType(false) %> <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %> = <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property.DefaultValue<%= member.BuildDataObjectField() %>
-		Public <%= member.SystemType(false) %> <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
+		Private static readonly PropertyInfo< <%= member.BaseSystemType %> > <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property = RegisterProperty< <%= member.BaseSystemType %> >(p => p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>)
+		Private <%= member.BaseSystemType %> <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %> = <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property.DefaultValue<%= member.BuildDataObjectField() %>
+		Public <%= member.BaseSystemType %> <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
 		{
 			Get { Return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>) }				
             set
@@ -124,8 +124,8 @@ Namespace <%= BusinessProjectName %>
 		}
 		
 <% } else { %>
-		Private static readonly PropertyInfo< <%= member.SystemType(false) %> > <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property = RegisterProperty< <%= member.SystemType(false) %> >(p => p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>)<%= member.BuildDataObjectField() %>
-		Public <%= member.SystemType(false) %> <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
+		Private static readonly PropertyInfo< <%= member.BaseSystemType %> > <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property = RegisterProperty< <%= member.BaseSystemType %> >(p => p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>)<%= member.BuildDataObjectField() %>
+		Public <%= member.BaseSystemType %> <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
 		{
 			Get { Return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property) }				
             set
