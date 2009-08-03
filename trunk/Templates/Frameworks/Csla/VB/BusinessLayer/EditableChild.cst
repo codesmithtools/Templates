@@ -18,50 +18,38 @@
 
 <script runat="template">
 
-Public override void Generate()
-{
-    RegisterReferences()
-    
-	foreach(Entity entity in Entities)
-	{
-		#Region EditableChild
-		
-		EditableChild editableChild = this.Create<EditableChild>()
-		this.CopyPropertiesTo(editableChild)
+Public Overloads Overrides Sub Generate()
+	RegisterReferences()
+
+	For Each entity As Entity In Entities
+		'EditableChild
+		Dim editableChild As EditableChild = Me.Create(Of EditableChild)()
+		Me.CopyPropertiesTo(editableChild)
 		editableChild.SourceTable = entity.Table
-		
-        string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", editableChild.BusinessClassName))
-		If Not (System.IO.File.Exists(parentFileName))
-		{
-			editableChild.RenderToFile(parentFileName, false)
-		}
-		
-		#Region EditableChild.Generated
-		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", editableChild.BusinessClassName))
-		
-		EditableChildGenerated editableChildGenerated = this.Create<EditableChildGenerated>()
-		this.CopyPropertiesTo(editableChildGenerated)
+
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", editableChild.BusinessClassName))
+		If Not System.IO.File.Exists(parentFileName) Then
+			editableChild.RenderToFile(parentFileName, False)
+		End If
+
+		'EditableChild.Generated
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", editableChild.BusinessClassName))
+
+		Dim editableChildGenerated As EditableChildGenerated = Me.Create(Of EditableChildGenerated)()
+		Me.CopyPropertiesTo(editableChildGenerated)
 		editableChildGenerated.SourceTable = entity.Table
-		
-		editableChildGenerated.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#Region EditableChild.DataAccess
-		
-		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", editableChild.BusinessClassName))
-		
-		EditableChildDataAccess editableChildDataAccess = this.Create<EditableChildDataAccess>()
-		this.CopyPropertiesTo(editableChildDataAccess)
+
+		editableChildGenerated.RenderToFile(fileName, parentFileName, True)
+
+		'EditableChild.DataAccess
+		fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", editableChild.BusinessClassName))
+
+		Dim editableChildDataAccess As EditableChildDataAccess = Me.Create(Of EditableChildDataAccess)()
+		Me.CopyPropertiesTo(editableChildDataAccess)
 		editableChildDataAccess.SourceTable = entity.Table
-		
-		editableChildDataAccess.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#End Region
-	}
-}
+
+		editableChildDataAccess.RenderToFile(fileName, parentFileName, True)
+	Next
+End Sub
 
 </script>

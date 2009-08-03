@@ -18,50 +18,39 @@
 
 <script runat="template">
 
-Public override void Generate()
-{
-    RegisterReferences()
-    
-	foreach(Entity entity in Entities)
-	{
-		#Region ReadOnlyChild
-		
-		ReadOnlyChild readOnlyChild = this.Create<ReadOnlyChild>()
-		this.CopyPropertiesTo(readOnlyChild)
+Public Overloads Overrides Sub Generate()
+
+	RegisterReferences()
+
+	For Each entity As Entity In Entities
+		'ReadOnlyChild
+		Dim readOnlyChild As ReadOnlyChild = Me.Create(Of ReadOnlyChild)()
+		Me.CopyPropertiesTo(readOnlyChild)
 		readOnlyChild.SourceTable = entity.Table
-		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", readOnlyChild.BusinessClassName))
-		If Not (System.IO.File.Exists(parentFileName))
-		{
-			readOnlyChild.RenderToFile(parentFileName, false)
-		}
-		
-		#Region ReadOnlyChild.Generated
-		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", readOnlyChild.BusinessClassName))
-		
-		ReadOnlyChildGenerated readOnlyChildGenerated = this.Create<ReadOnlyChildGenerated>()
-		this.CopyPropertiesTo(readOnlyChildGenerated)
+
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", readOnlyChild.BusinessClassName))
+		If Not System.IO.File.Exists(parentFileName) Then
+			readOnlyChild.RenderToFile(parentFileName, False)
+		End If
+
+		'ReadOnlyChild.Generated
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", readOnlyChild.BusinessClassName))
+
+		Dim readOnlyChildGenerated As ReadOnlyChildGenerated = Me.Create(Of ReadOnlyChildGenerated)()
+		Me.CopyPropertiesTo(readOnlyChildGenerated)
 		readOnlyChildGenerated.SourceTable = entity.Table
-		
-		readOnlyChildGenerated.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#Region ReadOnlyChild.DataAccess
-		
-		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", readOnlyChild.BusinessClassName))
-		
-		ReadOnlyChildDataAccess readOnlyChildDataAccess = this.Create<ReadOnlyChildDataAccess>()
-		this.CopyPropertiesTo(readOnlyChildDataAccess)
+
+		readOnlyChildGenerated.RenderToFile(fileName, parentFileName, True)
+
+		'ReadOnlyChild.DataAccess
+		fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", readOnlyChild.BusinessClassName))
+
+		Dim readOnlyChildDataAccess As ReadOnlyChildDataAccess = Me.Create(Of ReadOnlyChildDataAccess)()
+		Me.CopyPropertiesTo(readOnlyChildDataAccess)
 		readOnlyChildDataAccess.SourceTable = entity.Table
-		
-		readOnlyChildDataAccess.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#End Region
-	}
-}
+
+		readOnlyChildDataAccess.RenderToFile(fileName, parentFileName, True)
+	Next
+End Sub
 
 </script>
