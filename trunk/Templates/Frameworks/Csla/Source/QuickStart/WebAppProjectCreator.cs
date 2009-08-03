@@ -44,6 +44,7 @@ namespace QuickStart
             QuickStartHelper.FindAndReplace(cspPath, @"\$myContextNamespace\$", ProjectBuilder.DataProjectName);
             QuickStartHelper.FindAndReplace(cspPath, @"\$language\$", ProjectBuilder.LanguageFolder);
             QuickStartHelper.FindAndReplace(cspPath, @"\$CSLA\$", CSLAPath);
+            QuickStartHelper.FindAndReplace(cspPath, @"CSharp\\WebLayer\\", "VB\\WebLayer\\");
 
             if (ProjectBuilder.Language == LanguageEnum.VB)
             {

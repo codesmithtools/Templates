@@ -11,9 +11,9 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 
-<%-- <%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
+<%-- <%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>--%>
 <%@ Register Name="CriteriaTemplate" Template="Criteria.cst" %>
-<%@ Register Name="DynamicRootTemplate" Template="DynamicRoot.cst" %>
+<%-- <%@ Register Name="DynamicRootTemplate" Template="DynamicRoot.cst" %>
 <%@ Register Name="DynamicRootListTemplate" Template="DynamicRootList.cst" %>
 <%@ Register Name="EditableChildTemplate" Template="EditableChild.cst" %>
 <%@ Register Name="EditableChildListTemplate" Template="EditableChildList.cst" %> --%>
@@ -34,14 +34,6 @@
 		Me.CopyPropertiesTo(commandObjectTemplate)
 		commandObjectTemplate.SourceTables = Me.CommandObject
 		commandObjectTemplate.Generate()
-	End If
-
-	'CriteriaTemplate
-	If Me.Criteria <> Nothing AndAlso Me.Criteria.Count > 0 Then
-		Dim criteriaTemplate As CriteriaTemplate = Me.Create(Of CriteriaTemplate)()
-		Me.CopyPropertiesTo(criteriaTemplate)
-		criteriaTemplate.SourceTables = Me.Criteria
-		criteriaTemplate.Generate()
 	End If
 
 	'DynamicRootTemplate
@@ -132,6 +124,14 @@
 
 Public Overrides Sub Generate()
 
+    'CriteriaTemplate
+	If Not Me.Criteria Is Nothing AndAlso Me.Criteria.Count > 0 Then
+		Dim criteriaTemplate As CriteriaTemplate = Me.Create(Of CriteriaTemplate)()
+		Me.CopyPropertiesTo(criteriaTemplate)
+		criteriaTemplate.SourceTables = Me.Criteria
+		criteriaTemplate.Generate()
+	End If
+    
 	'EditableRootTemplate
 	If Not Me.EditableRoot Is Nothing AndAlso Me.EditableRoot.Count > 0 Then
 		Dim editableRootTemplate As EditableRootTemplate = Me.Create(Of EditableRootTemplate)()

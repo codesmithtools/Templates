@@ -192,8 +192,8 @@ Next %>
         End Sub
 
         #End Region
-        
-<% If (Entity.HasByteArrayColumn()) Then %>		
+<% If (Entity.HasByteArrayColumn()) Then %>
+
 		#Region "Helper Methods"
 
         ''' <summary>
@@ -221,9 +221,9 @@ Next %>
         End Function
         
         #End Region
+        
 <%  End If
  End If %>
-        
     End Class
     
 End Namespace

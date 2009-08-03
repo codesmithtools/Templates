@@ -11,11 +11,6 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class MemberBaseExtensions
     {
-        public static string SystemType(this MemberBase member, bool isNullable)
-        {
-            return isNullable ? member.SystemType : member.SystemType.TrimEnd(new char[] { '?' });
-        }
-
         public static string BuildObjectInitializer(this MemberBase member)
         {
             return string.Format("{0} = {1}", member.PropertyName, member.VariableName);
@@ -66,13 +61,11 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildParametersVariable(this MemberBase member, bool isNullable)
         {
-            string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
-            
+            string systemType = isNullable ? member.SystemType : member.BaseSystemType;
+
             if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-            {
                 return string.Format("ByVal {0} As {1}", member.VariableName, systemType);
-            } 
-            
+
             return string.Format("{0} {1}", systemType, member.VariableName);
         }
 
@@ -83,12 +76,10 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildParametersVariablesCriteria(this MemberBase member, bool isNullable)
         {
-            string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
+            string systemType = isNullable ? member.SystemType : member.BaseSystemType;
 
             if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-            {
                 return string.Format("ByVal {0} As {1}", member.Entity.ResolveCriteriaVariableName(member.ColumnName), systemType);
-            }
 
             return string.Format("{0} {1}", systemType, member.Entity.ResolveCriteriaVariableName(member.ColumnName));
         }

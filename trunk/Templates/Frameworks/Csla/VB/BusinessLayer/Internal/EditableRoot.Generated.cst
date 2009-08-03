@@ -119,12 +119,12 @@ Next %>
 		Dim columnName As String = member.ResolveManyToOneNameConflict(Entity) 
 		If (UseMemberVariables) Then %>
 		Private Shared <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property As PropertyInfo(Of <%= member.SystemType %> ) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>)
-		Private <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %> As <%= member.SystemType %> = <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property.DefaultValue<%= member.BuildDataObjectField() %>
-		Public Property <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>() As <%= member.SystemType %>
+		Private <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %> As <%= member.BaseSystemType %> = <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property.DefaultValue<%= member.BuildDataObjectField() %>
+		Public Property <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>() As <%= member.BaseSystemType %>
 			Get 
 				Return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>) 
 			End Get				
-            Set (ByVal value As <%= member.SystemType %>)          
+            Set (ByVal value As <%= member.BaseSystemType %>)          
                 OnPropertyChanging("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>")
                 SetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, ByRef <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>, value)
                 OnPropertyChanged("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>")
@@ -132,12 +132,12 @@ Next %>
 		End Property
 		
 <% else %>
-        Private Shared <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>)<%= member.BuildDataObjectField() %>
-		Public Property <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>() As <%= member.SystemType %> 
+        Private Shared <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property As PropertyInfo(Of <%= member.BaseSystemType %>) = RegisterProperty(Of <%= member.BaseSystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>)<%= member.BuildDataObjectField() %>
+		Public Property <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>() As <%= member.BaseSystemType %> 
 			Get  
 				Return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property)				
 			End Get
-            Set (ByVal value As <%= member.SystemType %>)
+            Set (ByVal value As <%= member.BaseSystemType %>)
                 OnPropertyChanging("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>")
                 SetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, value) 
                 OnPropertyChanged("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>")
@@ -313,7 +313,7 @@ End If%>
         Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.GetUniqueSearchCriteriaMembers().BuildParametersVariablesCriteria() %>)
             Dim criteria As New <%= BusinessClassName %>Criteria()
 <% For Each member As MemberBase In Entity.GetUniqueSearchCriteriaMembers() %>
-            criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
+            criteria.<%= member.BuildCriteriaObjectInitializer("") %>
 <% Next %>
 
             DataPortal.Delete(criteria)

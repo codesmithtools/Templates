@@ -55,6 +55,8 @@ namespace QuickStart
             QuickStartHelper.FindAndReplace(cspPath, @"\$myContextNamespace\$", ProjectBuilder.DataProjectName);
             QuickStartHelper.FindAndReplace(cspPath, @"\$language\$", ProjectBuilder.LanguageFolder);
             QuickStartHelper.FindAndReplace(cspPath, @"\$CSLA\$", CSLAPath);
+            QuickStartHelper.FindAndReplace(cspPath, @"CSharp\\BusinessLayer\\", "VB\\BusinessLayer\\");
+            QuickStartHelper.FindAndReplace(cspPath, @"CSharp\\DataAccessLayer\\", "VB\\DataAccessLayer\\");
             
             //The location in the csproj file directly below where we want to insert the csp include
             QuickStartHelper.FindAndReplace(projectPath.FilePath, ProjectInsertRegex,

@@ -61,19 +61,12 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildParametersVariable(this Member member, bool isNullable)
         {
-            string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
-            
+            string systemType = isNullable ? member.SystemType : member.BaseSystemType;
+
             if(Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-            {
                 return string.Format("ByVal {0} As {1}", member.VariableName, systemType);
-            }
 
             return string.Format("{0} {1}", systemType, member.VariableName);
-        }
-
-        public static string SystemType(this Member member, bool includeSize)
-        {
-            return includeSize ? member.SystemType.Replace("[]", string.Format("[{0}]", member.Size)) : member.SystemType;
         }
 
         public static string BuildDataBaseColumn(this Member member)

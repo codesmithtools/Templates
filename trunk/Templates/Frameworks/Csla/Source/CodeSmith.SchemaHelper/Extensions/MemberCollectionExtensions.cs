@@ -402,13 +402,14 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-
+                if (member.IsIdentity)
+                    continue;
 
                 string cast = string.Empty;
                 if (member.SystemType.Contains("SmartDate"))
                 {
                     if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                        cast = member.IsNullable ? string.Format("DirectCast({0}.Date, DateTime?))", member.VariableName)
+                        cast = member.IsNullable ? string.Format("IIf({0}.HasValue, DirectCast({0}.Value.Date, DateTime), System.DBNull.Value))", member.VariableName)
                                                  : string.Format("DirectCast({0}.Date, DateTime))", member.VariableName);
                     else
                         cast = member.IsNullable ? string.Format("(DateTime?){0});", member.VariableName)
@@ -429,7 +430,7 @@ namespace CodeSmith.SchemaHelper
                     if (associationMember.SystemType.Contains("SmartDate"))
                     {
                         if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                            cast = associationMember.IsNullable ? string.Format("DirectCast({0}.Date, DateTime?))", variableName)
+                            cast = associationMember.IsNullable ? string.Format("IIf({0}.HasValue, DirectCast({0}.Value.Date, DateTime), System.DBNull.Value))", variableName)
                                                                 : string.Format("DirectCast({0}.Date, DateTime))", variableName);
                         else
                             cast = associationMember.IsNullable ? string.Format("(DateTime?){0});", variableName)
@@ -463,7 +464,7 @@ namespace CodeSmith.SchemaHelper
                 if (member.SystemType.Contains("SmartDate"))
                 {
                     if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                        cast = member.IsNullable ? string.Format("DirectCast({0}.Date, DateTime?))", member.VariableName)
+                        cast = member.IsNullable ? string.Format("IIf({0}.HasValue, DirectCast({0}.Value.Date, DateTime), System.DBNull.Value))", member.VariableName)
                                                  : string.Format("DirectCast({0}.Date, DateTime))", member.VariableName);
                     else
                         cast = member.IsNullable ? string.Format("(DateTime?){0});", member.VariableName)
@@ -482,7 +483,7 @@ namespace CodeSmith.SchemaHelper
                 if (associationMember.SystemType.Contains("SmartDate"))
                 {
                     if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                        cast = associationMember.IsNullable ? string.Format("DirectCast({0}.Date, DateTime?))", variableName)
+                        cast = associationMember.IsNullable ? string.Format("IIf({0}.HasValue, DirectCast({0}.Value.Date, DateTime), System.DBNull.Value))", variableName)
                                                             : string.Format("DirectCast({0}.Date, DateTime))", variableName);
                     else
                         cast = associationMember.IsNullable ? string.Format("(DateTime?){0});", variableName)

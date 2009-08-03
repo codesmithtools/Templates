@@ -58,6 +58,17 @@ namespace CodeSmith.SchemaHelper
 
         public string SystemType { get; private set; }
 
+        public string BaseSystemType
+        {
+            get
+            {
+                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    return SystemType.Replace("System.Nullable(Of ", string.Empty).Replace(")", string.Empty);
+
+                return SystemType.Replace("?", string.Empty);
+            }
+        }
+
         public string PropertyName
         {
             get { return NamingConventions.PropertyName(Name); }
@@ -107,6 +118,6 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
-        #endregion
+        #endregion    
     }
 }

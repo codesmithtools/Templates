@@ -145,7 +145,7 @@ namespace CodeSmith.SchemaHelper
                     {
                         if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
                             cast = member.IsNullable
-                                       ? string.Format("DirectCast({0}.Date, DateTime?))", member.VariableName)
+                                       ? string.Format("IIf({0}.HasValue, DirectCast({0}.Value.Date, DateTime), System.DBNull.Value))", member.VariableName)
                                        : string.Format("DirectCast({0}.Date, DateTime))", member.VariableName);
                         else 
                             cast = member.IsNullable
@@ -332,7 +332,7 @@ namespace CodeSmith.SchemaHelper
                 if (member.SystemType.Contains("SmartDate"))
                 {
                     if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                        cast = member.IsNullable ? string.Format("DirectCast({0}.Date, DateTime?))", member.VariableName)
+                        cast = member.IsNullable ? string.Format("IIf({0}.HasValue, DirectCast({0}.Value.Date, DateTime), System.DBNull.Value))", member.VariableName)
                                                  : string.Format("DirectCast({0}.Date, DateTime))", member.VariableName);
                     else
                         cast = member.IsNullable ? string.Format("(DateTime?){0});", member.VariableName)
