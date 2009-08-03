@@ -24,19 +24,19 @@ Public override void Generate()
     
 	foreach(Entity entity in Entities)
 	{
-		#region ReadOnlyChild
+		#Region ReadOnlyChild
 		
 		ReadOnlyChild readOnlyChild = this.Create<ReadOnlyChild>()
 		this.CopyPropertiesTo(readOnlyChild)
 		readOnlyChild.SourceTable = entity.Table
 		
 		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", readOnlyChild.BusinessClassName))
-		if (!System.IO.File.Exists(parentFileName))
+		If Not (System.IO.File.Exists(parentFileName))
 		{
 			readOnlyChild.RenderToFile(parentFileName, false)
 		}
 		
-		#region ReadOnlyChild.Generated
+		#Region ReadOnlyChild.Generated
 		
 		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", readOnlyChild.BusinessClassName))
 		
@@ -46,9 +46,9 @@ Public override void Generate()
 		
 		readOnlyChildGenerated.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#region ReadOnlyChild.DataAccess
+		#Region ReadOnlyChild.DataAccess
 		
 		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", readOnlyChild.BusinessClassName))
 		
@@ -58,9 +58,9 @@ Public override void Generate()
 		
 		readOnlyChildDataAccess.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#endregion
+		#End Region
 	}
 }
 

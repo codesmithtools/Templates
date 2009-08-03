@@ -24,7 +24,7 @@ Public override void Generate()
     
 	foreach(Entity entity in Entities)
 	{
-		#region ReadOnlyList
+		#Region ReadOnlyList
 		
 		ReadOnlyList readOnlyList = this.Create<ReadOnlyList>()
 		this.CopyPropertiesTo(readOnlyList)
@@ -32,12 +32,12 @@ Public override void Generate()
 		readOnlyList.BusinessClassName = string.Format("{0}List", readOnlyList.BusinessClassName)
 		
 		string parentFileName = System.IO.Path.Combine(Location, string.Format("{0}.cs", readOnlyList.BusinessClassName))
-		if (!System.IO.File.Exists(parentFileName))
+		If Not (System.IO.File.Exists(parentFileName))
 		{
 			readOnlyList.RenderToFile(parentFileName, false)
 		}
 		
-		#region ReadOnlyList.Generated
+		#Region ReadOnlyList.Generated
 		
 		string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", readOnlyList.BusinessClassName))
 		
@@ -48,9 +48,9 @@ Public override void Generate()
 		
 		readOnlyListGenerated.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#region ReadOnlyList.DataAccess
+		#Region ReadOnlyList.DataAccess
 		
 		fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", readOnlyList.BusinessClassName))
 		
@@ -61,9 +61,9 @@ Public override void Generate()
 		
 		readOnlyListDataAccess.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#endregion
+		#End Region
 	}
 }
 

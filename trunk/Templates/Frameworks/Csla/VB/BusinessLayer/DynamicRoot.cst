@@ -23,19 +23,19 @@ Public override void Generate()
     
 	foreach(Entity entity in Entities)
 	{
-		#region DynamicRoot
+		#Region DynamicRoot
 		
 		DynamicRoot dynamicRoot = this.Create<DynamicRoot>()
 		this.CopyPropertiesTo(dynamicRoot)
 		dynamicRoot.SourceTable = entity.Table
 		
 		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", dynamicRoot.BusinessClassName))
-		if (!System.IO.File.Exists(parentFileName))
+		If Not (System.IO.File.Exists(parentFileName))
 		{
 			dynamicRoot.RenderToFile(parentFileName, false)
 		}
 		
-		#region DynamicRoot.Generated
+		#Region DynamicRoot.Generated
 		
 		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", dynamicRoot.BusinessClassName))
 		
@@ -45,9 +45,9 @@ Public override void Generate()
 		
 		dynamicRootGenerated.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#region DynamicRoot.DataAccess
+		#Region DynamicRoot.DataAccess
 		
 		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", dynamicRoot.BusinessClassName))
 		
@@ -57,9 +57,9 @@ Public override void Generate()
 		
 		dynamicRootDataAccess.RenderToFile(fileName, parentFileName, true)
 		
-		#endregion
+		#End Region
 		
-		#endregion
+		#End Region
 	}
 }
 

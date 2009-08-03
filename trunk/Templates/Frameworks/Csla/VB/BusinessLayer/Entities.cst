@@ -11,7 +11,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 
-<%-- <%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>--%>
+<%@ Register Name="CommandObjectTemplate" Template="CommandObject.cst" %>
 <%@ Register Name="CriteriaTemplate" Template="Criteria.cst" %>
 <%-- <%@ Register Name="DynamicRootTemplate" Template="DynamicRoot.cst" %>
 <%@ Register Name="DynamicRootListTemplate" Template="DynamicRootList.cst" %>
@@ -28,13 +28,7 @@
 
 <% Generate() %>
 
-	<%-- 'CommandObjectTemplate
-	If Me.CommandObject <> Nothing AndAlso Me.CommandObject.Count > 0 Then
-		Dim commandObjectTemplate As CommandObjectTemplate = Me.Create(Of CommandObjectTemplate)()
-		Me.CopyPropertiesTo(commandObjectTemplate)
-		commandObjectTemplate.SourceTables = Me.CommandObject
-		commandObjectTemplate.Generate()
-	End If
+	<%-- 
 
 	'DynamicRootTemplate
 	If Me.DynamicRoot <> Nothing AndAlso Me.DynamicRoot.Count > 0 Then
@@ -124,6 +118,14 @@
 
 Public Overrides Sub Generate()
 
+    'CommandObjectTemplate
+	If Not Me.CommandObject Is Nothing AndAlso Me.CommandObject.Count > 0 Then
+		Dim commandObjectTemplate As CommandObjectTemplate = Me.Create(Of CommandObjectTemplate)()
+		Me.CopyPropertiesTo(commandObjectTemplate)
+		commandObjectTemplate.SourceTables = Me.CommandObject
+		commandObjectTemplate.Generate()
+	End If
+    
     'CriteriaTemplate
 	If Not Me.Criteria Is Nothing AndAlso Me.Criteria.Count > 0 Then
 		Dim criteriaTemplate As CriteriaTemplate = Me.Create(Of CriteriaTemplate)()
