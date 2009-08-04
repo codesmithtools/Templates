@@ -17,7 +17,7 @@
 
 <script runat="template">
 
-Public Overloads Overrides Sub Generate()
+Public Overrides Sub Generate()
 	
     RegisterReferences()
 

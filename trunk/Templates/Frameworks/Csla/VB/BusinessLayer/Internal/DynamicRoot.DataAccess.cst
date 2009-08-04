@@ -56,7 +56,7 @@ Namespace <%= BusinessProjectName %>
 		End Sub
 		
 		<Transactional(TransactionalTypes.TransactionScope)> _
-		Protected Overloads Overrides Sub DataPortal_Insert()
+		Protected Overrides Sub DataPortal_Insert()
 			' TODO: insert values
 		End Sub
 		
@@ -129,7 +129,7 @@ Next %>
         End Sub
 		
 		<Transactional(TransactionalTypes.TransactionScope)> _
-		Protected Overloads Overrides Sub DataPortal_Insert()
+		Protected Overrides Sub DataPortal_Insert()
 			Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Insert(<% If(UseMemberVariables) Then %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertPrivateMemberVariableParameters(Entity.MembersForeignKey) %><% else %><%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertReadPropertyParametersVariables(Entity.MembersForeignKey) %><% End If %>)
 				If reader.Read() Then
 <% If (Entity.HasRowVersionMember) Then %>
