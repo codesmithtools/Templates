@@ -102,8 +102,7 @@ Next %>
 			Get 
 				Return GetProperty(<%= member.PrivateMemberVariableName %>Property)
 			End Get
-<% 
-	If Not member.IsReadOnly Then %>
+<% If Not member.IsReadOnly Then %>
             Set (ByVal value As <%= member.SystemType %>)
                 OnPropertyChanging("<%= member.PropertyName %>")
                 SetProperty(<%= member.PrivateMemberVariableName %>Property, value)
