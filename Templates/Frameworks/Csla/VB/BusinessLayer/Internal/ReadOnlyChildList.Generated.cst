@@ -53,7 +53,7 @@ Namespace <%= BusinessProjectName %>
 <% For Each association As AssociationMember In Entity.ManyToOne
     For Each sc As SearchCriteria In association.ListSearchCriteria %>
         
-        Friend Shared Function <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariable() %>) As <%= BusinessClassName %>
+        Friend Shared Function <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariablesCriteria() %>) As <%= BusinessClassName %>
 	        Dim criteria As New <%= ChildBusinessClassName %>Criteria()
 <% For Each member As MemberBase In sc.Members %>
             criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
