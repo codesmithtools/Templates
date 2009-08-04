@@ -51,7 +51,7 @@ Namespace <%= BusinessProjectName %>
 			MarkOld()
 		End Sub
 		
-        Private Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)     
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)     
 			' TODO: load values
 		End Sub
 		
@@ -84,7 +84,7 @@ Namespace <%= BusinessProjectName %>
 			ValidationRules.CheckRules()
 		End Sub
 		
-		Private Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
+		Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
 		    Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Fetch(criteria.StateBag)
 	            If reader.Read() Then
 		            Fetch(reader)

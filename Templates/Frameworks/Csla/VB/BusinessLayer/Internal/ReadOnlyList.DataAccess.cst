@@ -36,7 +36,7 @@ Namespace <%= BusinessProjectName %>
 		Protected Overrides Sub DataPortal_Create()
         End Sub
 
-        Private Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)            
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)            
 			RaiseListChangedEvents = false
 			IsReadOnly = false
 			
