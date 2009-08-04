@@ -20,7 +20,7 @@ Description: The following template will generate an ASP.Net page.
 
 <script runat="template">
 
-Public Overloads Overrides Sub Generate()
+Public Overrides Sub Generate()
     
     RegisterReferences()
 

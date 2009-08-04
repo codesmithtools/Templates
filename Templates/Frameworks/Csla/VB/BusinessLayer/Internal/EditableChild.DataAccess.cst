@@ -70,6 +70,8 @@ Namespace <%= BusinessProjectName %>
 		
 		Private Sub Child_Fetch(ByVal reader As SafeDataReader)
 			Fetch(reader)
+            
+            MarkAsChild()
 		End Sub
 		
 		Private Sub Child_Insert()

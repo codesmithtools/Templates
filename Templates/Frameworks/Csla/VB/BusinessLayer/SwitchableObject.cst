@@ -18,50 +18,39 @@
 
 <script runat="template">
 
-Public override void Generate()
-{
+Public Overrides Sub Generate()
+	
     RegisterReferences()
-    
-	foreach(Entity entity in Entities)
-	{
-		#Region SwitchableObject
-		
-		SwitchableObject switchableObject = this.Create<SwitchableObject>()
-		this.CopyPropertiesTo(switchableObject)
-		switchableObject.SourceTable = entity.Table
-		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", switchableObject.BusinessClassName))
-		If Not (System.IO.File.Exists(parentFileName))
-		{
-			switchableObject.RenderToFile(parentFileName, false)
-		}
-		
-		#Region SwitchableObject.Generated
-		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", switchableObject.BusinessClassName))
-		
-		SwitchableObjectGenerated switchableObjectGenerated = this.Create<SwitchableObjectGenerated>()
-		this.CopyPropertiesTo(switchableObjectGenerated)
-		switchableObjectGenerated.SourceTable = entity.Table
-		
-		switchableObjectGenerated.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#Region SwitchableObject.DataAccess
-		
-		fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", switchableObject.BusinessClassName))
-		
-		SwitchableObjectDataAccess switchableObjectDataAccess = this.Create<SwitchableObjectDataAccess>()
-		this.CopyPropertiesTo(switchableObjectDataAccess)
-		switchableObjectDataAccess.SourceTable = entity.Table
-		
-		switchableObjectDataAccess.RenderToFile(fileName, parentFileName, true)
-		
-		#End Region
-		
-		#End Region
-	}
-}
 
+	For Each entity As Entity In Entities
+		
+        'SwitchableObject
+		Dim switchableObject As SwitchableObject = Me.Create(Of SwitchableObject)()
+		Me.CopyPropertiesTo(switchableObject)
+		switchableObject.SourceTable = entity.Table
+
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.cs", switchableObject.BusinessClassName))
+		If Not System.IO.File.Exists(parentFileName) Then
+			switchableObject.RenderToFile(parentFileName, False)
+		End If
+
+		'SwitchableObject.Generated
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.cs", switchableObject.BusinessClassName))
+
+		Dim switchableObjectGenerated As SwitchableObjectGenerated = Me.Create(Of SwitchableObjectGenerated)()
+		Me.CopyPropertiesTo(switchableObjectGenerated)
+		switchableObjectGenerated.SourceTable = entity.Table
+
+		switchableObjectGenerated.RenderToFile(fileName, parentFileName, True)
+
+		'SwitchableObject.DataAccess
+		fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.cs", switchableObject.BusinessClassName))
+
+		Dim switchableObjectDataAccess As SwitchableObjectDataAccess = Me.Create(Of SwitchableObjectDataAccess)()
+		Me.CopyPropertiesTo(switchableObjectDataAccess)
+		switchableObjectDataAccess.SourceTable = entity.Table
+
+		switchableObjectDataAccess.RenderToFile(fileName, parentFileName, True)
+	Next
+End Sub
 </script>

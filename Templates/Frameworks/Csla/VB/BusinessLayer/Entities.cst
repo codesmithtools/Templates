@@ -23,31 +23,10 @@
 <%@ Register Name="ReadOnlyChildTemplate" Template="ReadOnlyChild.cst" %>
 <%@ Register Name="ReadOnlyChildListTemplate" Template="ReadOnlyChildList.cst" %>
 <%@ Register Name="ReadOnlyListTemplate" Template="ReadOnlyList.cst" %>
-<%--
 <%@ Register Name="ReadOnlyRootTemplate" Template="ReadOnlyRoot.cst" %>
-<%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %> --%>
+<%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
 
 <% Generate() %>
-
-	<%-- 
-	
-	'ReadOnlyRootTemplate
-	If Me.ReadOnlyRoot Is Nothing AndAlso Me.ReadOnlyRoot.Count > 0 Then
-		Dim readOnlyRootTemplate As ReadOnlyRootTemplate = Me.Create(Of ReadOnlyRootTemplate)()
-		Me.CopyPropertiesTo(readOnlyRootTemplate)
-		readOnlyRootTemplate.SourceTables = Me.ReadOnlyRoot
-		readOnlyRootTemplate.Generate()
-	End If
-
-	'SwitchableObjectTemplate
-	If Me.SwitchableObject Is Nothing AndAlso Me.SwitchableObject.Count > 0 Then
-		Dim switchableObjectTemplate As SwitchableObjectTemplate = Me.Create(Of SwitchableObjectTemplate)()
-		Me.CopyPropertiesTo(switchableObjectTemplate)
-		switchableObjectTemplate.SourceTables = Me.SwitchableObject
-		switchableObjectTemplate.Generate()
-	End If
-    
- --%>
 
 <script runat="template">
 
@@ -147,6 +126,22 @@ Public Overrides Sub Generate()
 		Me.CopyPropertiesTo(readOnlyListTemplate)
 		readOnlyListTemplate.SourceTables = Me.ReadOnlyList
 		readOnlyListTemplate.Generate()
+	End If
+    
+    'ReadOnlyRootTemplate
+	If Not Me.ReadOnlyRoot Is Nothing AndAlso Me.ReadOnlyRoot.Count > 0 Then
+		Dim readOnlyRootTemplate As ReadOnlyRootTemplate = Me.Create(Of ReadOnlyRootTemplate)()
+		Me.CopyPropertiesTo(readOnlyRootTemplate)
+		readOnlyRootTemplate.SourceTables = Me.ReadOnlyRoot
+		readOnlyRootTemplate.Generate()
+	End If
+
+	'SwitchableObjectTemplate
+	If Not Me.SwitchableObject Is Nothing AndAlso Me.SwitchableObject.Count > 0 Then
+		Dim switchableObjectTemplate As SwitchableObjectTemplate = Me.Create(Of SwitchableObjectTemplate)()
+		Me.CopyPropertiesTo(switchableObjectTemplate)
+		switchableObjectTemplate.SourceTables = Me.SwitchableObject
+		switchableObjectTemplate.Generate()
 	End If
     
 End Sub

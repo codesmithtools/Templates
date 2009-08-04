@@ -16,7 +16,7 @@
 
 <script runat="template">
 
-Public Overloads Overrides Sub Generate()
+Public Overrides Sub Generate()
 	If DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
 		'ParameterizedSQL
 		Dim parameterizedSQL As ParameterizedSQL = Me.Create(Of ParameterizedSQL)()

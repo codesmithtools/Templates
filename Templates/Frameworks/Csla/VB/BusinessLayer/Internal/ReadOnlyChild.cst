@@ -45,7 +45,7 @@ Namespace <%= BusinessProjectName %>
 		
 		#Region "Authorization Rules"
 		
-		Protected Overloads Overrides Sub AddAuthorizationRules()
+		Protected Overrides Sub AddAuthorizationRules()
 		
 			' TODO: add authorization rules
 			'AuthorizationRules.AllowWrite(NameProperty, "Role")
