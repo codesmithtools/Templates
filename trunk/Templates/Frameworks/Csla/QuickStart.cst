@@ -3,7 +3,7 @@ Name: Quick Start
 Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="QuickStart.QuickStartCodeTemplate" Description="QuickStart for CSLA 3.6.x" CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="QuickStart.QuickStartCodeTemplate" Description="QuickStart for CSLA 3.7.X" CompilerVersion="v3.5" %>
 
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
 <%@ Register Name="Entities" Template="CSharp\BusinessLayer\Entities.cst" MergeProperties="False" ExcludeProperties="" %>
