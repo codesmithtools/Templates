@@ -146,7 +146,6 @@ namespace PetShop.Business
         /// <summary>
         /// Method to convert all cart items to order line items
         /// </summary>
-        /// <returns>A new array of order line items</returns>
         public void SaveOrderLineItems(int orderId)
         {
             int lineNum = 0;
