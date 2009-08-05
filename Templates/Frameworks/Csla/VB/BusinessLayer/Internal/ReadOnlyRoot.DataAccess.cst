@@ -30,99 +30,95 @@ Imports Csla.Data
 
 Imports <%= DataProjectName %>
 
-Namespace <%= BusinessProjectName %>
+Public Partial Class <%= BusinessClassName %>
 
-	Public Partial Class <%= BusinessClassName %>
+	#Region "Data Access"
     
-		#Region "Data Access"
-        
-        <RunLocal()> _
-		Protected Overrides Sub DataPortal_Create()
-        End Sub
-		
+    <RunLocal()> _
+	Protected Overrides Sub DataPortal_Create()
+    End Sub
+	
 <% If (DataAccessImplementation = DataAccessMethod.None) Then %>
-        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)     
-			' TODO: load values
-		End Sub
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)     
+		' TODO: load values
+	End Sub
 <% Else If (DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>
-		Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
-		    Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Fetch(criteria.StateBag)
-	            If reader.Read() Then
-		            Fetch(reader)
-	            End If
-            End Using
-        End Sub
-		
-		Private Sub Fetch(ByVal reader As SafeDataReader)
+	Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
+	    Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Fetch(criteria.StateBag)
+            If reader.Read() Then
+	            Fetch(reader)
+            End If
+        End Using
+    End Sub
+	
+	Private Sub Fetch(ByVal reader As SafeDataReader)
 <% If Entity.HasRowVersionMember Then %>
-			_timestamp = GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
-			
+		_timestamp = GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+		
 <% End If %>
 <% for each [member] as Member in Entity.MembersNoRowVersionIncludePrimaryKey 
-	If UseMemberVariables Then %>
-			<%= [member].PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>GetBytes(reader)<% End If %>
+If UseMemberVariables Then %>
+		<%= [member].PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>GetBytes(reader)<% End If %>
 <%  else  %>
-			LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
+		LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
 <% End If 
 Next %>
 
 <%-- Many-To-One --%>
 <% for each association As AssociationMember in Entity.ManyToOne
-	If UseMemberVariables Then  %>
-            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>GetBytes(reader)<% End If %>
+If UseMemberVariables Then  %>
+        <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>GetBytes(reader)<% End If %>
 <%  else  %>
-			LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"))<% else %>GetBytes(reader," <%= association.ColumnName %>"))<% End If %>
+		LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"))<% else %>GetBytes(reader," <%= association.ColumnName %>"))<% End If %>
 <% End If
- Next  %>
+Next  %>
 <%-- One-To-Many & Many-To-Many --%>
 <% for each association2 As AssociationMember in Entity.ToManyUnion
-	If Not UseLazyLoading Then %>
+If Not UseLazyLoading Then %>
 
 <% If (UseMemberVariables) Then %>
-			<%= association2.PrivateMemberVariableName %> = New <%= association2.ClassName %>List.NewList()
+		<%= association2.PrivateMemberVariableName %> = New <%= association2.ClassName %>List.NewList()
 <%  else  %>
-			LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList())
+		LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList())
 <% End If
-	End If
+End If
 Next %> 
 
-            MarkAsChild()
-            MarkOld()
-        End Sub
+        MarkAsChild()
+        MarkOld()
+    End Sub
 
-        #End Region
+    #End Region
 <% If (Entity.HasByteArrayColumn()) Then %>
 
-		#Region "Helper Methods"
+	#Region "Helper Methods"
 
-        ''' <summary>
-        ''' Returns the Bytes stored in a binary column.
-        ''' </summary>
-        ''' <param name="reader">The reader.</param>
-        ''' <param name="columnName">The column name.</param>
-        ''' <Returns>Bytes Stored in a column.</Returns>
-        Friend Shared Function GetBytes(reader As SafeDataReader, columnName As String) As Byte()
-            Dim buffer as Var = new byte[1024]
-            Dim fieldOffset as Long = 0
-            
-            using (var stream = new MemoryStream())
-                Dim bytesRead as Long
-            
-                Do While (bytesRead = reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length)) > 0
-                    Dim actualRead as Var = new byte[bytesRead]
-                    Buffer.BlockCopy(buffer, 0, actualRead, 0, (int)bytesRead)
-                    stream.Write(actualRead, 0, actualRead.Length)
-                    fieldOffset += bytesRead
-                Loop
+    ''' <summary>
+    ''' Returns the Bytes stored in a binary column.
+    ''' </summary>
+    ''' <param name="reader">The reader.</param>
+    ''' <param name="columnName">The column name.</param>
+    ''' <Returns>Bytes Stored in a column.</Returns>
+    Friend Shared Function GetBytes(reader As SafeDataReader, columnName As String) As Byte()
+        Dim buffer as Var = new byte[1024]
+        Dim fieldOffset as Long = 0
+        
+        using (var stream = new MemoryStream())
+            Dim bytesRead as Long
+        
+            Do While (bytesRead = reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length)) > 0
+                Dim actualRead as Var = new byte[bytesRead]
+                Buffer.BlockCopy(buffer, 0, actualRead, 0, (int)bytesRead)
+                stream.Write(actualRead, 0, actualRead.Length)
+                fieldOffset += bytesRead
+            Loop
 
-                Return stream.ToArray()
-            End Using
-        End Function
-        
-        #End Region
-        
-<%  End If
- End If %>
-    End Class
+            Return stream.ToArray()
+        End Using
+    End Function
     
-End Namespace
+    #End Region
+    
+<%  End If
+End If %>
+End Class

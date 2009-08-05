@@ -24,55 +24,51 @@ Imports System.Text
 
 Imports Csla
 
-Namespace <%= BusinessProjectName %>
-
-	<Serializable()> _
-	Public Partial Class <%= BusinessClassName %>
-        Inherits CommandBase
-        
-		#Region "Factory Methods"
-		
-		Public Shared Function Execute() As Boolean
-		    If Not CanExecuteCommand() Then
-        		Throw New System.Security.SecurityException("Not authorized to execute command")
-			
-			Dim cmd As New <%= BusinessClassName %>()
-			cmd.BeforeServer()
-			cmd = DataPortal.Execute< <%= BusinessClassName %> >(cmd)
-			cmd.AfterServer()
-			
-			Return cmd.Result
-	    End Function
-
-		Private Sub New()
-		    /* Require use of factory methods */
-        End Sub
-		
-		#End Region
-		
-		#Region "Client-side Code"
-
-		' TODO: add your own fields and properties
-		Private _result As Boolean
-		Public ReadOnly Property Result() As Boolean
-		{
-			Get { Return _result }
-		}
-		
-		Private Sub BeforeServer()
-		{
-			' TODO: implement code to run on client
-			' before server is called
-		}
-		
-		Private Sub AfterServer()
-		{
-			' TODO: implement code to run on client
-			' after server is called
-		}
-		
-		#End Region
-	
-    End Class
+<Serializable()> _
+Public Partial Class <%= BusinessClassName %>
+    Inherits CommandBase
     
-End Namespace
+	#Region "Factory Methods"
+	
+	Public Shared Function Execute() As Boolean
+	    If Not CanExecuteCommand() Then
+    		Throw New System.Security.SecurityException("Not authorized to execute command")
+		
+		Dim cmd As New <%= BusinessClassName %>()
+		cmd.BeforeServer()
+		cmd = DataPortal.Execute< <%= BusinessClassName %> >(cmd)
+		cmd.AfterServer()
+		
+		Return cmd.Result
+    End Function
+
+	Private Sub New()
+	    /* Require use of factory methods */
+    End Sub
+	
+	#End Region
+	
+	#Region "Client-side Code"
+
+	' TODO: add your own fields and properties
+	Private _result As Boolean
+	Public ReadOnly Property Result() As Boolean
+	{
+		Get { Return _result }
+	}
+	
+	Private Sub BeforeServer()
+	{
+		' TODO: implement code to run on client
+		' before server is called
+	}
+	
+	Private Sub AfterServer()
+	{
+		' TODO: implement code to run on client
+		' after server is called
+	}
+	
+	#End Region
+
+End Class

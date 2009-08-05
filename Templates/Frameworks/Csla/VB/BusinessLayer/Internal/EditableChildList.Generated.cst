@@ -26,61 +26,55 @@ Imports System.Collections.Generic
 Imports Csla
 Imports Csla.Data
 
-Namespace <%= BusinessProjectName %>
-
-	<Serializable()> _
-	Public Partial Class <%= BusinessClassName %> 
-        Inherits BusinessListBase(Of <%= BusinessClassName %>, <%= ChildBusinessClassName %>)
-        
-        #Region "Contructor(s)"
-        
-        Private Sub New()
-			AllowNew = true
-            MarkAsChild()
-		End Sub
-        
-        #End Region
-        
-		#Region "Factory Methods" 
-		
-		Friend Shared Function NewList() As <%= BusinessClassName %>
-			Return DataPortal.Create(Of <%= BusinessClassName %>)()
-		End Function
-		
-		Friend Shared Function Get<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>) As <%= BusinessClassName %>
-			Return DataPortal.Fetch(Of <%= BusinessClassName %>)(new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
-		End Function
-        
-        Friend Shared Function GetAll() As <%= BusinessClassName %>
-            Return DataPortal.Fetch(Of <%= BusinessClassName %>)(new <%= ChildBusinessClassName %>Criteria())
-        End Function
+<Serializable()> _
+Public Partial Class <%= BusinessClassName %> 
+    Inherits BusinessListBase(Of <%= BusinessClassName %>, <%= ChildBusinessClassName %>)
+    
+    #Region "Contructor(s)"
+    
+    Private Sub New()
+		AllowNew = true
+        MarkAsChild()
+	End Sub
+    
+    #End Region
+    
+	#Region "Factory Methods" 
+	
+	Friend Shared Function NewList() As <%= BusinessClassName %>
+		Return DataPortal.Create(Of <%= BusinessClassName %>)()
+	End Function
+	
+	Friend Shared Function Get<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>) As <%= BusinessClassName %>
+		Return DataPortal.Fetch(Of <%= BusinessClassName %>)(new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+	End Function
+    
+    Friend Shared Function GetAll() As <%= BusinessClassName %>
+        Return DataPortal.Fetch(Of <%= BusinessClassName %>)(new <%= ChildBusinessClassName %>Criteria())
+    End Function
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each association As AssociationMember In Entity.ManyToOne
-    For Each sc As SearchCriteria In association.ListSearchCriteria %>
-        
-        Friend Shared Function <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariablesCriteria() %>) As <%= BusinessClassName %>
-	        Dim criteria As New <%= ChildBusinessClassName %>Criteria()
+For Each sc As SearchCriteria In association.ListSearchCriteria %>
+    
+    Friend Shared Function <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariablesCriteria() %>) As <%= BusinessClassName %>
+        Dim criteria As New <%= ChildBusinessClassName %>Criteria()
 <% For Each member As MemberBase In sc.Members %>
-            criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
+        criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
 <% Next %>
-            
-            Return DataPortal.Fetch(Of <%= BusinessClassName %>)(criteria)
-        End Function
+        
+        Return DataPortal.Fetch(Of <%= BusinessClassName %>)(criteria)
+    End Function
 <%  Next
 Next %>
-		
-		#End Region
+	
+	#End Region
 
-		#Region "Business Methods"
-		
-		Protected Overrides Function AddNewCore() As Object
-			Dim item As <%= ChildBusinessClassName %> = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
-			Add(item)
-			Return item
-		End Function
-		
-		#End Region
-	    
-        End Class
+	#Region "Business Methods"
+	
+	Protected Overrides Function AddNewCore() As Object
+		Return Me.AddNew()
+	End Function
+	
+	#End Region
     
-End Namespace
+    End Class

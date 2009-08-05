@@ -22,19 +22,15 @@ Imports System.Collections.Generic
 
 Imports Csla
 
-Namespace <%= BusinessProjectName %>
+Public Partial Class <%= BusinessClassName %>
 
-	Public Partial Class <%= BusinessClassName %>
+	#Region "Authorization Rules"
+	
+	Private Shared Sub AddObjectAuthorizationRules()
+	    ' TODO: add authorization rules
+		'AuthorizationRules.AllowGet(typeof(<%= BusinessClassName %>), "Role")
+	End Sub
+	
+	#End Region
     
-		#Region "Authorization Rules"
-		
-		Private Shared Sub AddObjectAuthorizationRules()
-		    ' TODO: add authorization rules
-			'AuthorizationRules.AllowGet(typeof(<%= BusinessClassName %>), "Role")
-		End Sub
-		
-		#End Region
-        
-	End Class
-    
-End Namespace
+End Class

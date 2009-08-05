@@ -23,80 +23,76 @@ Imports Csla
 Imports Csla.Security
 Imports Csla.Validation
 
-Namespace <%= BusinessProjectName %>
+Public Partial Class <%= BusinessClassName %>
 
-	Public Partial Class <%= BusinessClassName %>
+	#Region "Validation Rules"
 	
-		#Region "Validation Rules"
-		
-		''' <summary>
-        ''' All custom rules need to be placed in this method.
-        ''' </summary>
-        ''' <Returns>Return true to override the generated rules If false generated rules will be run.</Returns>
-		Protected Function AddBusinessValidationRules() As Boolean
-			' TODO: add validation rules
-			'ValidationRules.AddRule(RuleMethod, "")
+	''' <summary>
+    ''' All custom rules need to be placed in this method.
+    ''' </summary>
+    ''' <Returns>Return true to override the generated rules If false generated rules will be run.</Returns>
+	Protected Function AddBusinessValidationRules() As Boolean
+		' TODO: add validation rules
+		'ValidationRules.AddRule(RuleMethod, "")
 
-		    Return False
-		End Function
-		
-		#End Region
-		
-		#Region "Authorization Rules"
-		
-		Protected Overrides Sub AddAuthorizationRules()
-			'Dim canWrite As String() = { "AdminUser", "RegularUser" }
-            'Dim canRead As String() = { "AdminUser", "RegularUser", "ReadOnlyUser" }
-            'Dim admin As String() = { "AdminUser" }
+	    Return False
+	End Function
+	
+	#End Region
+	
+	#Region "Authorization Rules"
+	
+	Protected Overrides Sub AddAuthorizationRules()
+		'Dim canWrite As String() = { "AdminUser", "RegularUser" }
+        'Dim canRead As String() = { "AdminUser", "RegularUser", "ReadOnlyUser" }
+        'Dim admin As String() = { "AdminUser" }
 
-            'AuthorizationRules.AllowCreate(GetType(<%= BusinessClassName %>), admin)
-            'AuthorizationRules.AllowDelete(GetType(<%= BusinessClassName %>), admin)
-            'AuthorizationRules.AllowEdit(GetType(<%= BusinessClassName %>), canWrite)
-            'AuthorizationRules.AllowGet(GetType(<%= BusinessClassName %>), canRead)
+        'AuthorizationRules.AllowCreate(GetType(<%= BusinessClassName %>), admin)
+        'AuthorizationRules.AllowDelete(GetType(<%= BusinessClassName %>), admin)
+        'AuthorizationRules.AllowEdit(GetType(<%= BusinessClassName %>), canWrite)
+        'AuthorizationRules.AllowGet(GetType(<%= BusinessClassName %>), canRead)
 
 <% For Each member As Member in Entity.MembersNoRowVersionIncludePrimaryKey %>
-            '<%= member.PropertyName %>
+        '<%= member.PropertyName %>
 <% If Not member.IsReadOnly Then %>
-            'AuthorizationRules.AllowWrite(<%= member.PrivateMemberVariableName %>Property, canWrite)
+        'AuthorizationRules.AllowWrite(<%= member.PrivateMemberVariableName %>Property, canWrite)
 <% End If %>
-            'AuthorizationRules.AllowRead(<%= member.PrivateMemberVariableName %>Property, canRead)
-            
+        'AuthorizationRules.AllowRead(<%= member.PrivateMemberVariableName %>Property, canRead)
+        
 <% Next%>
 <%-- Foreign Keys --%>
 <% For Each member As AssociationMember In Entity.MembersForeignKey 
-    Dim columnName As String = member.ResolveManyToOneNameConflict(Entity) %>
-            '<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
-            'AuthorizationRules.AllowWrite(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, canWrite)
-            'AuthorizationRules.AllowRead(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, canRead)
-            
+Dim columnName As String = member.ResolveManyToOneNameConflict(Entity) %>
+        '<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
+        'AuthorizationRules.AllowWrite(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, canWrite)
+        'AuthorizationRules.AllowRead(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, canRead)
+        
 <% Next%>
 <%-- One-To-Zero-Or-One --%>
 <% For Each association As AssociationMember in Entity.OneToZeroOrOne %>
-            '<%= association.PropertyName %>
-            'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
-            
+        '<%= association.PropertyName %>
+        'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
+        
 <% Next%>
 <%-- Many-To-One --%>
 <% For Each association As AssociationMember in Entity.ManyToOne %>
-            '<%= association.PropertyName %>
-            'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
-            
+        '<%= association.PropertyName %>
+        'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
+        
 <% Next%>
 <%-- Many-To-One --%>
 <% For Each association As AssociationMember in Entity.ToManyUnion %>
-            '<%= association.PropertyName %>
-            'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
-            
-<% Next%>
-		End Sub
-		
-		Private Shared Sub AddObjectAuthorizationRules()
-			' TODO: add authorization rules
-			'AuthorizationRules.AllowEdit(typeof(<%= BusinessClassName %>), "Role")
-		End Sub
-		
-		#End Region
+        '<%= association.PropertyName %>
+        'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
         
-	End Class
+<% Next%>
+	End Sub
+	
+	Private Shared Sub AddObjectAuthorizationRules()
+		' TODO: add authorization rules
+		'AuthorizationRules.AllowEdit(typeof(<%= BusinessClassName %>), "Role")
+	End Sub
+	
+	#End Region
     
-End Namespace
+End Class

@@ -22,10 +22,6 @@ Imports System.Collections.Generic
 
 Imports Csla
 
-Namespace <%= BusinessProjectName %>
+Public Partial Class <%= BusinessClassName %>
 
-	Public Partial Class <%= BusinessClassName %>
-        
-	End Class
-    
-End Namespace
+End Class

@@ -29,13 +29,13 @@ Public Overrides Sub Generate()
 		Me.CopyPropertiesTo(switchableObject)
 		switchableObject.SourceTable = entity.Table
 
-		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.cs", switchableObject.BusinessClassName))
+		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", switchableObject.BusinessClassName))
 		If Not System.IO.File.Exists(parentFileName) Then
 			switchableObject.RenderToFile(parentFileName, False)
 		End If
 
 		'SwitchableObject.Generated
-		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.cs", switchableObject.BusinessClassName))
+		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", switchableObject.BusinessClassName))
 
 		Dim switchableObjectGenerated As SwitchableObjectGenerated = Me.Create(Of SwitchableObjectGenerated)()
 		Me.CopyPropertiesTo(switchableObjectGenerated)
@@ -44,7 +44,7 @@ Public Overrides Sub Generate()
 		switchableObjectGenerated.RenderToFile(fileName, parentFileName, True)
 
 		'SwitchableObject.DataAccess
-		fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.cs", switchableObject.BusinessClassName))
+		fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", switchableObject.BusinessClassName))
 
 		Dim switchableObjectDataAccess As SwitchableObjectDataAccess = Me.Create(Of SwitchableObjectDataAccess)()
 		Me.CopyPropertiesTo(switchableObjectDataAccess)
