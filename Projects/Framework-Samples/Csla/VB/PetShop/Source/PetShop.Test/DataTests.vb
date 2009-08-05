@@ -2,7 +2,6 @@ Imports System
 Imports System.Diagnostics
 Imports Csla.Data
 Imports PetShop.Data
-Imports PetShop.Business.PetShop.Business
 
 Imports NUnit.Framework
 
