@@ -22,32 +22,28 @@ Imports System
 
 Imports Csla
 
-Namespace <%= BusinessProjectName %>
-
-	<Serializable()> _
-	Public Partial Class <%= BusinessClassName %> 
-        Inherits NameValueListBase(Of Integer, String)
-        
-		#Region "Factory Methods"
-
-		Private Shared _list As <%= ChildBusinessClassName %>
-		Public Shared Function Get<%= ChildBusinessClassName %>() As <%= ChildBusinessClassName %>
-			If (_list Is Nothing) Then
-				_list = DataPortal.Fetch(Of <%= ChildBusinessClassName %>)()
-			End If
-            
-			Return _list
-		End Function
-        
-		Public Shared Sub InvalidateCache()
-		    _list = null
-		End Sub
-
-		Private Sub New()
-		End Sub
-		
-		#End Region
-	
-    End Class
+<Serializable()> _
+Public Partial Class <%= BusinessClassName %> 
+    Inherits NameValueListBase(Of Integer, String)
     
-End Namespace
+	#Region "Factory Methods"
+
+	Private Shared _list As <%= ChildBusinessClassName %>
+	Public Shared Function Get<%= ChildBusinessClassName %>() As <%= ChildBusinessClassName %>
+		If (_list Is Nothing) Then
+			_list = DataPortal.Fetch(Of <%= ChildBusinessClassName %>)()
+		End If
+        
+		Return _list
+	End Function
+    
+	Public Shared Sub InvalidateCache()
+	    _list = null
+	End Sub
+
+	Private Sub New()
+	End Sub
+	
+	#End Region
+
+End Class

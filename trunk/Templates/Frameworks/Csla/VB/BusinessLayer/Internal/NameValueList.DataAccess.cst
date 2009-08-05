@@ -26,31 +26,27 @@ Imports Csla.Data
 
 Imports <%= DataProjectName %>
 
-Namespace <%= BusinessProjectName %>
+Public Partial Class <%= BusinessClassName %>
 
-	Public Partial Class <%= BusinessClassName %>
-    
-		#Region "Data Access"
-		
-        <RunLocal()> _
-		Protected Overrides Sub DataPortal_Create()
-        End Sub
-				
-		Private Sub DataPortal_Fetch()
-			RaiseListChangedEvents = false
-			IsReadOnly = false
-			
-			' TODO: load values
-			'object listData = null
-			'foreach(var child in listData)
-			'	Add(new NameValueListBase< int, string >.NameValuePair(item.Key, item.Value))
-			
-			IsReadOnly = true
-			RaiseListChangedEvents = true
-		End Sub
-		
-		#End Region
+	#Region "Data Access"
 	
-    End Class
-    
-End Namespace
+    '<RunLocal()> _
+	'Protected Sub DataPortal_Create()
+    'End Sub
+			
+	Private Sub DataPortal_Fetch()
+		RaiseListChangedEvents = false
+		IsReadOnly = false
+		
+		' TODO: load values
+		'object listData = null
+		'foreach(var child in listData)
+		'	Add(new NameValueListBase< int, string >.NameValuePair(item.Key, item.Value))
+		
+		IsReadOnly = true
+		RaiseListChangedEvents = true
+	End Sub
+	
+	#End Region
+
+End Class

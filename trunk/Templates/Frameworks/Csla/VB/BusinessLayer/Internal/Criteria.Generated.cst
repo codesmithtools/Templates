@@ -30,101 +30,97 @@ Imports Csla
 
 #End Region
 
-Namespace <%= BusinessProjectName %>
+<Serializable()> _
+Public Partial Class <%= BusinessClassName %>
+    Inherits CriteriaBase
 
-    <Serializable()> _
-	Public Partial Class <%= BusinessClassName %>
-        Inherits CriteriaBase
-	
-        #Region "Private Read-Only Members"
-        
-        Private ReadOnly _bag As New Dictionary(Of String, Object)()
-        
-        #End Region
-        
-        #Region "Constructors"
+    #Region "Private Read-Only Members"
+    
+    Private ReadOnly _bag As New Dictionary(Of String, Object)()
+    
+    #End Region
+    
+    #Region "Constructors"
 
-        Public Sub New()
-            MyBase.New(GetType(<%= ChildBusinessClassName %>))
-        End Sub
+    Public Sub New()
+        MyBase.New(GetType(<%= ChildBusinessClassName %>))
+    End Sub
+    
+    Public Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>) 
+        MyBase.New(GetType(<%= ChildBusinessClassName %>))
         
-        Public Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>) 
-            MyBase.New(GetType(<%= ChildBusinessClassName %>))
-            
 <% For Each member As Member In Entity.PrimaryKey.KeyMembers %>
-            <%= member.PropertyName %> = <%= member.VariableName %>
+        <%= member.PropertyName %> = <%= member.VariableName %>
 <% Next %>
-        End Sub
+    End Sub
 
 <% If (Entity.HasRowVersionMember) Then %>
-        Public <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>, <%= Entity.RowVersionMember.SystemType %> timestamp) : this(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>)
-        {
-			Timestamp = timestamp
-        }
+    Public <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>, <%= Entity.RowVersionMember.SystemType %> timestamp) : this(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>)
+    {
+		Timestamp = timestamp
+    }
 <% End If %>
-        
-        #End Region
-        
-		#Region "Public Properties"
-        
-        #Region "Read-Write"
+    
+    #End Region
+    
+	#Region "Public Properties"
+    
+    #Region "Read-Write"
 <% If(Entity.HasRowVersionMember) %>
 
-		''' <summary>
-        ''' Used for optimistic concurrency.
-        ''' </summary>
-        Public Property Timestamp() As <%= Entity.RowVersionMember.SystemType %>
-            Get
-                Return GetValue(Of <%= Entity.RowVersionMember.SystemType %>)("<%= Entity.RowVersionMember.ColumnName %>")
-            End Get
-            
-            Set
-                _bag("<%= Entity.RowVersionMember.ColumnName %>") = value
-            End Set
-		End Property
+	''' <summary>
+    ''' Used for optimistic concurrency.
+    ''' </summary>
+    Public Property Timestamp() As <%= Entity.RowVersionMember.SystemType %>
+        Get
+            Return GetValue(Of <%= Entity.RowVersionMember.SystemType %>)("<%= Entity.RowVersionMember.ColumnName %>")
+        End Get
+        
+        Set
+            _bag("<%= Entity.RowVersionMember.ColumnName %>") = value
+        End Set
+	End Property
 <% End If %>		
 <% For Each member As MemberBase In Entity.GetUniqueSearchCriteriaMembers() %>
-		
-        Public Property <%= member.Entity.ResolveCriteriaPropertyName( member.ColumnName, true ) %>() As <%= member.SystemType %>
-            Get
-                Return GetValue(Of <%= member.SystemType %>)("<%= member.ColumnName %>")
-            End Get
-            Set
-                _bag("<%= member.ColumnName %>") = value
-            End Set
-		End Property
+	
+    Public Property <%= member.Entity.ResolveCriteriaPropertyName( member.ColumnName, true ) %>() As <%= member.SystemType %>
+        Get
+            Return GetValue(Of <%= member.SystemType %>)("<%= member.ColumnName %>")
+        End Get
+        Set
+            _bag("<%= member.ColumnName %>") = value
+        End Set
+	End Property
 <% Next %>
 
-        #End Region
-        
-        #Region "Read-Only"
-        
-        ''' <summary>
-        ''' Returns a list of all the modified properties and values.
-        ''' </summary>
-        Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
-            Get
-                Return _bag
-            End Get
-        End Property
-
-        #End Region
-
-        #End Region
-        
-        #Region "Private Methods"
-        
-        Private Function GetValue(Of T)(name As String) As T
-            Dim value As T
-            If _bag.TryGetValue(name, value) Then
-                Return DirectCast(value, T)
-            End If
-        
-            Return Nothing
-        End Function
-        
-        #End Region
-
-	End Class
+    #End Region
     
-End Namespace
+    #Region "Read-Only"
+    
+    ''' <summary>
+    ''' Returns a list of all the modified properties and values.
+    ''' </summary>
+    Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
+        Get
+            Return _bag
+        End Get
+    End Property
+
+    #End Region
+
+    #End Region
+    
+    #Region "Private Methods"
+    
+    Private Function GetValue(Of T)(name As String) As T
+        Dim value As T
+        If _bag.TryGetValue(name, value) Then
+            Return DirectCast(value, T)
+        End If
+    
+        Return Nothing
+    End Function
+    
+    #End Region
+
+End Class

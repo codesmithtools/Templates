@@ -19,9 +19,5 @@ Option Strict On
 
 Imports System
 
-Namespace <%= BusinessProjectName %>
-
-	Public Partial Class  <%= BusinessClassName %>
-	End Class
-    
-End Namespace
+Public Partial Class  <%= BusinessClassName %>
+End Class

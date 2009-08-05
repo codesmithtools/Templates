@@ -26,30 +26,26 @@ Imports Csla.Data
 
 Imports <%= DataProjectName %>
 
-Namespace <%= BusinessProjectName %>
+Public Partial Class <%= BusinessClassName %>
 
-	Public Partial Class <%= BusinessClassName %>
+	#Region "Data Access"
     
-		#Region "Data Access"
+	'<RunLocal()> _
+	'Protected Sub DataPortal_Create()
+    'End Sub
+    
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
+	    RaiseListChangedEvents = False
         
-		<RunLocal()> _
-		Protected Overrides Sub DataPortal_Create()
-        End Sub
+        Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= ChildBusinessClassName %>Fetch(criteria.StateBag)
+            While reader.Read()
+	            Me.Add(New <%= BusinessProjectName %>.<%= ChildBusinessClassName %>(reader))
+			End While
+        End Using
         
-        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
-		    RaiseListChangedEvents = False
-            
-            Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= ChildBusinessClassName %>Fetch(criteria.StateBag)
-	            While reader.Read()
-		            Me.Add(New <%= BusinessProjectName %>.<%= ChildBusinessClassName %>(reader))
-				End While
-            End Using
-            
-            RaiseListChangedEvents = True
-        End Sub
+        RaiseListChangedEvents = True
+    End Sub
 
-		#End Region
-    
-    End Class
-    
-End Namespace
+	#End Region
+
+End Class
