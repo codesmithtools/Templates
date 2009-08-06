@@ -23,7 +23,6 @@ namespace <%= BaseNamespace %>
     public interface INHibernateSessionManager : IDisposable
     {
         // Methods
-        INHibernateSession CreateSession();
 		ISession CreateISession();
 
         // Properties
@@ -114,10 +113,6 @@ namespace <%= BaseNamespace %>
 
         #region Methods
 
-        public INHibernateSession CreateSession()
-        {
-            return new NHibernateSession(CreateISession());
-        }
         public ISession CreateISession()
         {
             ISession iSession;
@@ -136,18 +131,9 @@ namespace <%= BaseNamespace %>
         {
             get
             {
-                INHibernateSession session = ContextSession;
-
-                // If the thread does not yet have a session, create one.
-                if (session == null)
-                {
-                    session = CreateSession();
-
-                    // Save to CallContext.
-                    ContextSession = session;
-                }
-
-                return session;
+                if(ContextSession == null)
+                    ContextSession = new NHibernateSession();
+                return ContextSession;
             }
         }
         private INHibernateSession ContextSession

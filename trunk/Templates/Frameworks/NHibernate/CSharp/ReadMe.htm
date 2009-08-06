@@ -154,6 +154,24 @@ Download the latest release from GoogleCode.
 <h2><a title="History" name="History"></a>History</h2>
 <p>
 <ul>
+<li>Release 1.1.0
+<ul>
+<li>NHibernateSessions will now close ISessions that are not in use.
+<ul>
+<li>New Feature: Managers now impliment IDisposable.</li>
+<li>New Feature: NHibernateSessions now expose Register and Unregister methods. (ISessions are closed automatically when no objects are registered to use them.)</li>
+<li>Bug Fix: No more ObjectDisposed exceptions from global ISession. (This depends on the proper disposal of managers.)</li>
+</ul>
+</li>
+<li>NHibernateSession API has been updated to be less ISession specific.
+<ul>
+<li>Update: INHibernateSession.BeginTransaction now returns void.</li>
+<li>Update: INHibernateSession.CommitTransaction now returns void.</li>
+<li>Update: INHibernateSession.RollbackTransaction now returns void.</li>
+<li>Removed: INHibernateSessionManager.CreateSession (Use default NHibernateSession constructor instead.)</li>
+</ul>
+</li>
+</ul></li>
 <li>Release 1.0.19
 <ul>
 <li>Bug Fix: Added checking for null/empty ExcludedColumns regex patterns.</li>

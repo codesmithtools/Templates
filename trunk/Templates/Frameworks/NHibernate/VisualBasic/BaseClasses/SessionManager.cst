@@ -23,7 +23,6 @@ Namespace <%= BaseNamespace %>
 	Public Interface INHibernateSessionManager
 		Inherits IDisposable
 		' Methods
-		Function CreateSession() As INHibernateSession
 		Function CreateISession() As ISession
 
 		' Properties
@@ -109,9 +108,6 @@ Namespace <%= BaseNamespace %>
 
 		#region "Methods"
 
-		Public Function CreateSession() As INHibernateSession Implements INHibernateSessionManager.CreateSession
-			Return New NHibernateSession(CreateISession())
-		End Function
 		Public Function CreateISession() As ISession Implements INHibernateSessionManager.CreateISession
 			Dim iSession As ISession
 			SyncLock _sessionFactory
@@ -125,17 +121,10 @@ Namespace <%= BaseNamespace %>
 
 		Public ReadOnly Property Session() As INHibernateSession Implements INHibernateSessionManager.Session
 			Get
-				Dim cSession As INHibernateSession = ContextSession
-
-				' If the thread does not yet have a session, create one.
-				If cSession Is Nothing Then
-					cSession = CreateSession()
-
-					' Save to CallContext.
-					ContextSession = cSession
+				If ContextSession Is Nothing Then
+					ContextSession = New NHibernateSession()
 				End If
-
-				Return cSession
+				Return ContextSession
 			End Get
 		End Property
 		Private Property ContextSession() As INHibernateSession

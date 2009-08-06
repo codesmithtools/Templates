@@ -22,7 +22,9 @@ Imports <%= GetCriterionNamespace(NHibVersion) %>
 
 Namespace <%= BaseNamespace %>
 	Public Interface IManagerBase(Of T, TKey)
-		' Get Methods
+        Inherits IDisposable
+
+        ' Get Methods
 		Function GetById(ByVal Id As TKey) As T
 		Function GetAll() As IList(Of T)
 		Function GetAll(ByVal maxResults As Integer) As IList(Of T)
@@ -53,16 +55,29 @@ Namespace <%= BaseNamespace %>
 
 		Protected _session As INHibernateSession
 		Protected Const defaultMaxResults As Integer = 100
+        
+        Private _disposed As Boolean = False
+        
 #End Region
 
 #region "Constructors"
 
 		Public Sub New()
-			_session = NHibernateSessionManager.Instance.Session
+			Me.New(NHibernateSessionManager.Instance.Session)
 		End Sub
-		Public Sub New(ByVal session As INHibernateSession)
+		Public Sub New(session As INHibernateSession)
 			Me._session = session
+			Me._session.Register(Me)
 		End Sub
+        
+		Protected Overrides Sub Finalize()
+			Try
+				Dispose(True)
+			Finally
+				MyBase.Finalize()
+			End Try
+		End Sub
+        
 #End Region
 
 #region "Get Methods"
@@ -167,5 +182,23 @@ Namespace <%= BaseNamespace %>
 			End Get
 		End Property
 #End Region
+
+#region "IDisposable Members"
+		Public Sub Dispose() Implements IDisposable.Dispose
+			Dispose(False)
+		End Sub
+		Private Sub Dispose(finalizing As Boolean)
+			If Not _disposed Then
+				session.Unregister(Me)
+
+				If Not finalizing Then
+					GC.SuppressFinalize(Me)
+				End If
+
+				_disposed = True
+			End If
+		End Sub
+#End Region
+
 	End Class
 End Namespace

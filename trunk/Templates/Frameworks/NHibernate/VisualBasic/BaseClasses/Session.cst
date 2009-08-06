@@ -23,9 +23,11 @@ Namespace <%= BaseNamespace %>
 		' Methods
 		Sub CommitChanges()
 		Sub Close()
-		Function BeginTransaction() As Boolean
-		Function CommitTransaction() As Boolean
-		Function RollbackTransaction() As Boolean
+		Sub BeginTransaction()
+		Sub CommitTransaction()
+		Sub RollbackTransaction()
+		Sub Register(o As Object)
+		Sub Unregister(o As Object)
 		Function GetISession() As ISession
 
 		' Properties
@@ -35,16 +37,18 @@ Namespace <%= BaseNamespace %>
 
 	Public Class NHibernateSession
 		Implements INHibernateSession
-#region "Declarations"
+		#region "Declarations"
 
 		Protected transaction As ITransaction = Nothing
-		Protected iSession As ISession
+		Protected iSession As ISession = Nothing
+
+		Private _isDisposed As Boolean = False
+		Private _registeredObjects As New List(Of Integer)()
 #End Region
 
-#region "Constructor & Destructor"
+		#region "Constructor & Destructor"
 
-		Public Sub New(ByVal session As ISession)
-			Me.iSession = session
+		Public Sub New()
 		End Sub
 		Protected Overrides Sub Finalize()
 			Try
@@ -55,27 +59,25 @@ Namespace <%= BaseNamespace %>
 		End Sub
 #End Region
 
-#region "IDisposable"
+		#region "IDisposable"
 
-		Private _isDisposed As Boolean = False
 		Public Sub Dispose() Implements IDisposable.Dispose
 			Dispose(False)
 		End Sub
-		Private Sub Dispose(ByVal finalizing As Boolean)
+		Private Sub Dispose(finalizing As Boolean)
 			If Not _isDisposed Then
-				' Close Session
 				Close()
 
-				' Flag as disposed.
-				_isDisposed = True
 				If Not finalizing Then
 					GC.SuppressFinalize(Me)
 				End If
+
+				_isDisposed = True
 			End If
 		End Sub
 #End Region
 
-#region "Methods"
+		#region "Methods"
 
 		Public Sub CommitChanges() Implements INHibernateSession.CommitChanges
 			If HasOpenTransaction Then
@@ -85,64 +87,83 @@ Namespace <%= BaseNamespace %>
 			End If
 		End Sub
 		Public Sub Close() Implements INHibernateSession.Close
+			If iSession Is Nothing Then
+				Return
+			End If
+
+			If HasOpenTransaction Then
+				RollbackTransaction()
+			End If
+
 			If iSession.IsOpen Then
 				iSession.Close()
 			End If
+			iSession.Dispose()
+			iSession = Nothing
 		End Sub
 
-		Public Function BeginTransaction() As Boolean Implements INHibernateSession.BeginTransaction
-			Dim result As Boolean = Not HasOpenTransaction
-			If result Then
-				transaction = iSession.BeginTransaction()
+		Public Sub BeginTransaction() Implements INHibernateSession.BeginTransaction
+			transaction = GetISession().BeginTransaction()
+		End Sub
+		Public Sub CommitTransaction() Implements INHibernateSession.CommitTransaction
+			If transaction Is Nothing Then
+				Return
 			End If
-			Return result
-		End Function
-		Public Function CommitTransaction() As Boolean Implements INHibernateSession.CommitTransaction
-			Dim result As Boolean = HasOpenTransaction
-			If result Then
-				Try
-					transaction.Commit()
-					transaction = Nothing
-				Catch generatedExceptionName As HibernateException
-					transaction.Rollback()
-					transaction = Nothing
-					Throw
-				End Try
-			End If
-			Return result
-		End Function
-		Public Function RollbackTransaction() As Boolean Implements INHibernateSession.RollbackTransaction
-			Dim result As Boolean = HasOpenTransaction
-			If result Then
-				transaction.Rollback()
+
+			Try
+				transaction.Commit()
 				transaction.Dispose()
 				transaction = Nothing
-
-				' I dont know why, but it seems that after you rollback a transaction you need to reset the session.
-				' Personally, I dislike this; I find it inefficent, and it means that I have to expose a method to
-				' get an ISession from the NHibernateSessionManager...does anyone know how to get around this problem?
-				iSession.Close()
-				iSession.Dispose()
-				iSession = NHibernateSessionManager.Instance.CreateISession()
+			Catch generatedExceptionName As HibernateException
+				RollbackTransaction()
+				Throw
+			End Try
+		End Sub
+		Public Sub RollbackTransaction() Implements INHibernateSession.RollbackTransaction
+			If transaction Is Nothing Then
+				Return
 			End If
-			Return result
-		End Function
+
+			transaction.Rollback()
+			transaction.Dispose()
+			transaction = Nothing
+		End Sub
+
+		Public Sub Register(o As Object) Implements INHibernateSession.Register
+			Dim hash As Integer = o.GetHashCode()
+			If Not _registeredObjects.Contains(hash) Then
+				_registeredObjects.Add(hash)
+			End If
+		End Sub
+		Public Sub Unregister(o As Object) Implements INHibernateSession.Unregister
+			Dim hash As Integer = o.GetHashCode()
+			If _registeredObjects.Contains(hash) Then
+				_registeredObjects.Remove(hash)
+			End If
+
+			If _registeredObjects.Count = 0 Then
+				Close()
+			End If
+		End Sub
 
 		Public Function GetISession() As ISession Implements INHibernateSession.GetISession
+			If iSession Is Nothing Then
+				iSession = NHibernateSessionManager.Instance.CreateISession()
+			End If
 			Return iSession
 		End Function
 #End Region
 
-#region "Properties"
+		#region "Properties"
 
 		Public ReadOnly Property HasOpenTransaction() As Boolean Implements INHibernateSession.HasOpenTransaction
 			Get
-				Return (transaction IsNot Nothing AndAlso Not transaction.WasCommitted AndAlso Not transaction.WasRolledBack)
+				Return (transaction IsNot Nothing)
 			End Get
 		End Property
 		Public ReadOnly Property IsOpen() As Boolean Implements INHibernateSession.IsOpen
 			Get
-				Return iSession.IsOpen
+				Return (iSession IsNot Nothing AndAlso iSession.IsOpen)
 			End Get
 		End Property
 #End Region
