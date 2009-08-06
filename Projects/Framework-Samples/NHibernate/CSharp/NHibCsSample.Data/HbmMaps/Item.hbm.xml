@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NHibCsSample.Generated.BusinessObjects" assembly="NHibCsSample.Data">
+	<class name="NHibCsSample.Generated.BusinessObjects.Item, NHibCsSample.Data" table="dbo.Item" lazy="true">
+		<id name="Id" column="ItemId">
+		 	<generator class="assigned" />
+		</id>
+		<property name="ListPrice" column="ListPrice" />
+		<property name="UnitCost" column="UnitCost" />
+		<property name="Status" column="Status" />
+		<property name="Name" column="Name" />
+		<property name="Image" column="Image" />
+		<many-to-one name="Product" column="ProductId" class="Product" />
+		<many-to-one name="Supplier" column="Supplier" class="Supplier" />
+	</class>
+</hibernate-mapping>
