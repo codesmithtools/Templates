@@ -38,16 +38,16 @@
     ''' <param name="email">Email at this address.</param>
     Public Sub New(ByVal firstName As String, ByVal lastName As String, ByVal address1 As String, ByVal address2 As String, ByVal city As String, ByVal state As String, _
      ByVal zip As String, ByVal country As String, ByVal phone As String, ByVal email As String)
-        firstName = firstName
-        lastName = lastName
-        address1 = address1
-        address2 = address2
-        city = city
-        state = state
-        zip = zip
-        country = country
-        phone = phone
-        email = email
+        Me.FirstName = firstName
+        Me.LastName = lastName
+        Me.Address1 = address1
+        Me.Address2 = address2
+        Me.City = city
+        Me.State = state
+        Me.Zip = zip
+        Me.Country = country
+        Me.Phone = phone
+        Me.Email = email
     End Sub
 
     ''' <summary>
@@ -58,16 +58,16 @@
         If Not String.IsNullOrEmpty(profile.Username) AndAlso profile.Accounts.Count > 0 Then
             'Just grab the first account.
             Dim account As Account = profile.Accounts(0)
-            FirstName = account.FirstName
-            LastName = account.LastName
-            Address1 = account.Address1
-            Address2 = account.Address2
-            City = account.City
-            State = account.State
-            Zip = account.Zip
-            Country = account.Country
-            Phone = account.Phone
-            Email = account.Email
+            Me.FirstName = account.FirstName
+            Me.LastName = account.LastName
+            Me.Address1 = account.Address1
+            Me.Address2 = account.Address2
+            Me.City = account.City
+            Me.State = account.State
+            Me.Zip = account.Zip
+            Me.Country = account.Country
+            Me.Phone = account.Phone
+            Me.Email = account.Email
         End If
     End Sub
 #End Region
