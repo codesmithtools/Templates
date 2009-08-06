@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Wish List" Language="vb" AutoEventWireup="false" MasterPageFile="~/Master.Master" CodeBehind="WishList.aspx.vb" Inherits="PetShop.UI.WishList" %>
+﻿<%@ Page Title="Wish List" Language="vb" AutoEventWireup="true" MasterPageFile="~/Master.Master" CodeBehind="WishList.aspx.vb" Inherits="PetShop.UI.WishList" %>
 <%@ Register Src="Controls/WishListControl.ascx" TagName="WishListControl" TagPrefix="PC" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphPage" runat="server">

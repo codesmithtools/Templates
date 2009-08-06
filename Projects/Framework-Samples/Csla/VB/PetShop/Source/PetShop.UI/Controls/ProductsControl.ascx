@@ -1,4 +1,4 @@
-﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="ProductsControl.ascx.vb" Inherits="PetShop.UI.ProductsControl" %>
+﻿<%@ Control Language="vb" AutoEventWireup="true" CodeBehind="ProductsControl.ascx.vb" Inherits="PetShop.UI.ProductsControl" %>
 <%@ OutputCache Duration="100000" VaryByParam="page;categoryId" %>
 
 <div align="center" class="productsPosition">

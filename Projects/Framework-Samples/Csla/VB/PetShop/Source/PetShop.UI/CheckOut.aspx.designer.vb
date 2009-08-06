@@ -15,336 +15,336 @@ Option Explicit On
 
 Partial Public Class CheckOut
 
-    ''' <summary>
-    ''' lblMsg control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected lblMsg As Global.System.Web.UI.WebControls.Label
+    '''<summary>
+    '''lblMsg control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblMsg As Global.System.Web.UI.WebControls.Label
 
-    ''' <summary>
-    ''' wzdCheckOut control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected wzdCheckOut As Global.System.Web.UI.WebControls.Wizard
+    '''<summary>
+    '''wzdCheckOut control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents wzdCheckOut As Global.System.Web.UI.WebControls.Wizard
 
-    ''' <summary>
-    ''' wzdStep1 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected wzdStep1 As Global.System.Web.UI.WebControls.WizardStep
+    '''<summary>
+    '''wzdStep1 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents wzdStep1 As Global.System.Web.UI.WebControls.WizardStep
 
-    ''' <summary>
-    ''' panFicusStep1 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected panFicusStep1 As Global.System.Web.UI.WebControls.Panel
+    '''<summary>
+    '''panFicusStep1 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents panFicusStep1 As Global.System.Web.UI.WebControls.Panel
 
-    ''' <summary>
-    ''' billingForm control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected billingForm As AddressForm
+    '''<summary>
+    '''billingForm control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents billingForm As Global.PetShop.UI.AddressForm
 
-    ''' <summary>
-    ''' StartNextButton control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected StartNextButton As Global.System.Web.UI.WebControls.LinkButton
+    '''<summary>
+    '''StartNextButton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents StartNextButton As Global.System.Web.UI.WebControls.LinkButton
 
-    ''' <summary>
-    ''' wzdStep2 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected wzdStep2 As Global.System.Web.UI.WebControls.WizardStep
+    '''<summary>
+    '''wzdStep2 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents wzdStep2 As Global.System.Web.UI.WebControls.WizardStep
 
-    ''' <summary>
-    ''' panFicusStep2 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected panFicusStep2 As Global.System.Web.UI.WebControls.Panel
+    '''<summary>
+    '''panFicusStep2 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents panFicusStep2 As Global.System.Web.UI.WebControls.Panel
 
-    ''' <summary>
-    ''' chkShipToBilling control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected chkShipToBilling As Global.System.Web.UI.WebControls.CheckBox
+    '''<summary>
+    '''chkShipToBilling control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents chkShipToBilling As Global.System.Web.UI.WebControls.CheckBox
 
-    ''' <summary>
-    ''' shippingForm control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected shippingForm As AddressForm
+    '''<summary>
+    '''shippingForm control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents shippingForm As Global.PetShop.UI.AddressForm
 
-    ''' <summary>
-    ''' StepPreviousButton control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected StepPreviousButton As Global.System.Web.UI.WebControls.LinkButton
+    '''<summary>
+    '''StepPreviousButton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents StepPreviousButton As Global.System.Web.UI.WebControls.LinkButton
 
-    ''' <summary>
-    ''' StepNextButton control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected StepNextButton As Global.System.Web.UI.WebControls.LinkButton
+    '''<summary>
+    '''StepNextButton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents StepNextButton As Global.System.Web.UI.WebControls.LinkButton
 
-    ''' <summary>
-    ''' wzdStep3 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected wzdStep3 As Global.System.Web.UI.WebControls.WizardStep
+    '''<summary>
+    '''wzdStep3 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents wzdStep3 As Global.System.Web.UI.WebControls.WizardStep
 
-    ''' <summary>
-    ''' panFicusStep3 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected panFicusStep3 As Global.System.Web.UI.WebControls.Panel
+    '''<summary>
+    '''panFicusStep3 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents panFicusStep3 As Global.System.Web.UI.WebControls.Panel
 
-    ''' <summary>
-    ''' txtCCNumber control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected txtCCNumber As Global.System.Web.UI.WebControls.TextBox
+    '''<summary>
+    '''txtCCNumber control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtCCNumber As Global.System.Web.UI.WebControls.TextBox
 
-    ''' <summary>
-    ''' valCCNumber control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected valCCNumber As Global.System.Web.UI.WebControls.RequiredFieldValidator
+    '''<summary>
+    '''valCCNumber control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents valCCNumber As Global.System.Web.UI.WebControls.RequiredFieldValidator
 
-    ''' <summary>
-    ''' valCCNumber1 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected valCCNumber1 As Global.System.Web.UI.WebControls.RegularExpressionValidator
+    '''<summary>
+    '''valCCNumber1 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents valCCNumber1 As Global.System.Web.UI.WebControls.RegularExpressionValidator
 
-    ''' <summary>
-    ''' txtExpDate control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected txtExpDate As Global.System.Web.UI.WebControls.TextBox
+    '''<summary>
+    '''txtExpDate control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtExpDate As Global.System.Web.UI.WebControls.TextBox
 
-    ''' <summary>
-    ''' valExpDate control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected valExpDate As Global.System.Web.UI.WebControls.RequiredFieldValidator
+    '''<summary>
+    '''valExpDate control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents valExpDate As Global.System.Web.UI.WebControls.RequiredFieldValidator
 
-    ''' <summary>
-    ''' valExpDate1 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected valExpDate1 As Global.System.Web.UI.WebControls.RegularExpressionValidator
+    '''<summary>
+    '''valExpDate1 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents valExpDate1 As Global.System.Web.UI.WebControls.RegularExpressionValidator
 
-    ''' <summary>
-    ''' valExpDate2 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected valExpDate2 As Global.System.Web.UI.WebControls.CustomValidator
+    '''<summary>
+    '''valExpDate2 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents valExpDate2 As Global.System.Web.UI.WebControls.CustomValidator
 
-    ''' <summary>
-    ''' listCCType control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected listCCType As Global.System.Web.UI.WebControls.DropDownList
+    '''<summary>
+    '''listCCType control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents listCCType As Global.System.Web.UI.WebControls.DropDownList
 
-    ''' <summary>
-    ''' LinkButton1 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected LinkButton1 As Global.System.Web.UI.WebControls.LinkButton
+    '''<summary>
+    '''LinkButton1 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents LinkButton1 As Global.System.Web.UI.WebControls.LinkButton
 
-    ''' <summary>
-    ''' StepNextButton2 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected StepNextButton2 As Global.System.Web.UI.WebControls.LinkButton
+    '''<summary>
+    '''StepNextButton2 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents StepNextButton2 As Global.System.Web.UI.WebControls.LinkButton
 
-    ''' <summary>
-    ''' wzdStep4 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected wzdStep4 As Global.System.Web.UI.WebControls.WizardStep
+    '''<summary>
+    '''wzdStep4 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents wzdStep4 As Global.System.Web.UI.WebControls.WizardStep
 
-    ''' <summary>
-    ''' panFicusStep4 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected panFicusStep4 As Global.System.Web.UI.WebControls.Panel
+    '''<summary>
+    '''panFicusStep4 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents panFicusStep4 As Global.System.Web.UI.WebControls.Panel
 
-    ''' <summary>
-    ''' billingConfirm control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected billingConfirm As AddressConfirm
+    '''<summary>
+    '''billingConfirm control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents billingConfirm As Global.PetShop.UI.AddressConfirm
 
-    ''' <summary>
-    ''' shippingConfirm control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected shippingConfirm As AddressConfirm
+    '''<summary>
+    '''shippingConfirm control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents shippingConfirm As Global.PetShop.UI.AddressConfirm
 
-    ''' <summary>
-    ''' ltlTotal control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected ltlTotal As Global.System.Web.UI.WebControls.Literal
+    '''<summary>
+    '''ltlTotal control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ltlTotal As Global.System.Web.UI.WebControls.Literal
 
-    ''' <summary>
-    ''' ltlCreditCard control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected ltlCreditCard As Global.System.Web.UI.WebControls.Literal
+    '''<summary>
+    '''ltlCreditCard control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ltlCreditCard As Global.System.Web.UI.WebControls.Literal
 
-    ''' <summary>
-    ''' FinishPreviousButton control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected FinishPreviousButton As Global.System.Web.UI.WebControls.LinkButton
+    '''<summary>
+    '''FinishPreviousButton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents FinishPreviousButton As Global.System.Web.UI.WebControls.LinkButton
 
-    ''' <summary>
-    ''' FinishButton control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected FinishButton As Global.System.Web.UI.WebControls.LinkButton
+    '''<summary>
+    '''FinishButton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents FinishButton As Global.System.Web.UI.WebControls.LinkButton
 
-    ''' <summary>
-    ''' wzdStep5 control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected wzdStep5 As Global.System.Web.UI.WebControls.WizardStep
+    '''<summary>
+    '''wzdStep5 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents wzdStep5 As Global.System.Web.UI.WebControls.WizardStep
 
-    ''' <summary>
-    ''' CartListOrdered control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected CartListOrdered As CartList
+    '''<summary>
+    '''CartListOrdered control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents CartListOrdered As Global.PetShop.UI.CartList
 
-    ''' <summary>
-    ''' ItemsOnBackOrder control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected ItemsOnBackOrder As Global.System.Web.UI.WebControls.Literal
+    '''<summary>
+    '''ItemsOnBackOrder control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ItemsOnBackOrder As Global.System.Web.UI.WebControls.Literal
 
-    ''' <summary>
-    ''' ltlTotalComplete control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected ltlTotalComplete As Global.System.Web.UI.WebControls.Literal
+    '''<summary>
+    '''ltlTotalComplete control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ltlTotalComplete As Global.System.Web.UI.WebControls.Literal
 
-    ''' <summary>
-    ''' ltlCreditCardComplete control.
-    ''' </summary>
-    ''' <remarks>
-    ''' Auto-generated field.
-    ''' To modify move field declaration from designer file to code-behind file.
-    ''' </remarks>
-    Protected ltlCreditCardComplete As Global.System.Web.UI.WebControls.Literal
+    '''<summary>
+    '''ltlCreditCardComplete control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ltlCreditCardComplete As Global.System.Web.UI.WebControls.Literal
 End Class

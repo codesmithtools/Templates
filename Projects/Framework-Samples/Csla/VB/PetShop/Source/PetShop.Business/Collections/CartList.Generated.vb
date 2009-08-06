@@ -33,22 +33,22 @@ Public Partial Class CartList
 	#Region "Factory Methods" 
 	
 	Friend Shared Function NewList() As CartList
-		Return DataPortal.Create(Of CartList)()
+		Return DataPortal.CreateChild(Of CartList)()
 	End Function
 	
 	Friend Shared Function GetCartList(ByVal cartId As Integer) As CartList
-		Return DataPortal.Fetch(Of CartList)(new CartCriteria(cartId))
+		Return DataPortal.FetchChild(Of CartList)(new CartCriteria(cartId))
 	End Function
     
     Friend Shared Function GetAll() As CartList
-        Return DataPortal.Fetch(Of CartList)(new CartCriteria())
+        Return DataPortal.FetchChild(Of CartList)(new CartCriteria())
     End Function
     
     Friend Shared Function GetByUniqueID(ByVal uniqueID As Integer) As CartList
         Dim criteria As New CartCriteria()
         criteria.UniqueID = uniqueID
         
-        Return DataPortal.Fetch(Of CartList)(criteria)
+        Return DataPortal.FetchChild(Of CartList)(criteria)
     End Function
 	
 	#End Region

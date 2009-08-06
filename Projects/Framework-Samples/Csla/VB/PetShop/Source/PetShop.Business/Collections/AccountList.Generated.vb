@@ -33,22 +33,22 @@ Public Partial Class AccountList
 	#Region "Factory Methods" 
 	
 	Friend Shared Function NewList() As AccountList
-		Return DataPortal.Create(Of AccountList)()
+		Return DataPortal.CreateChild(Of AccountList)()
 	End Function
 	
 	Friend Shared Function GetAccountList(ByVal accountId As Integer) As AccountList
-		Return DataPortal.Fetch(Of AccountList)(new AccountCriteria(accountId))
+		Return DataPortal.FetchChild(Of AccountList)(new AccountCriteria(accountId))
 	End Function
     
     Friend Shared Function GetAll() As AccountList
-        Return DataPortal.Fetch(Of AccountList)(new AccountCriteria())
+        Return DataPortal.FetchChild(Of AccountList)(new AccountCriteria())
     End Function
     
     Friend Shared Function GetByUniqueID(ByVal uniqueID As Integer) As AccountList
         Dim criteria As New AccountCriteria()
         criteria.UniqueID = uniqueID
         
-        Return DataPortal.Fetch(Of AccountList)(criteria)
+        Return DataPortal.FetchChild(Of AccountList)(criteria)
     End Function
 	
 	#End Region

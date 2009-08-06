@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Error" Language="vb" AutoEventWireup="false" MasterPageFile="~/Master.Master" CodeBehind="Error.aspx.vb" Inherits="PetShop.UI._Error" %>
+﻿<%@ Page Title="Error" Language="vb" AutoEventWireup="true" MasterPageFile="~/Master.Master" CodeBehind="Error.aspx.vb" Inherits="PetShop.UI._Error" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphPage" runat="server">
     <table border="0" cellpadding="0" cellspacing="0" width="387" align="center">

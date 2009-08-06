@@ -1,4 +1,4 @@
-﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="ShoppingCartControl.ascx.vb" Inherits="PetShop.UI.ShoppingCartControl" %>
+﻿<%@ Control Language="vb" AutoEventWireup="true" CodeBehind="ShoppingCartControl.ascx.vb" Inherits="PetShop.UI.ShoppingCartControl" %>
 
 <asp:Panel ID="panFocus" runat="server" DefaultButton="btnTotal">
     <div align="left" class="cartHeader">

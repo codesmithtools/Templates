@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="vb" AutoEventWireup="false" MasterPageFile="~/Master.Master" CodeBehind="UserProfile.aspx.vb" Inherits="PetShop.UI.UserProfile" %>
+﻿<%@ Page Title="" Language="vb" AutoEventWireup="true" MasterPageFile="~/Master.Master" CodeBehind="UserProfile.aspx.vb" Inherits="PetShop.UI.UserProfile" %>
 <%@ Register Src="Controls/AddressForm.ascx" TagName="AddressForm" TagPrefix="PC" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphPage" runat="server">

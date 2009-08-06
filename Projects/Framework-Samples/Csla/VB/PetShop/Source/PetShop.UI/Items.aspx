@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Items" Language="vb" AutoEventWireup="false" MasterPageFile="~/Master.Master" CodeBehind="Items.aspx.vb" Inherits="PetShop.UI.Items" %>
+﻿<%@ Page Title="Items" Language="vb" AutoEventWireup="true" MasterPageFile="~/Master.Master" CodeBehind="Items.aspx.vb" Inherits="PetShop.UI.Items" %>
 
 <%@ Register Src="Controls/ItemsControl.ascx" TagName="ItemsControl" TagPrefix="PC" %>
 

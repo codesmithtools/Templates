@@ -1,4 +1,4 @@
-﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="AddressForm.ascx.vb" Inherits="PetShop.UI.AddressForm" %>
+﻿<%@ Control Language="vb" AutoEventWireup="true" CodeBehind="AddressForm.ascx.vb" Inherits="PetShop.UI.AddressForm" %>
 
 <table border="0" cellpadding="0" cellspacing="0">
     <tr>

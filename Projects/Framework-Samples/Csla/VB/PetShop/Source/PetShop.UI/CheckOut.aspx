@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Check Out" Language="vb" AutoEventWireup="false" MasterPageFile="~/Master.Master" CodeBehind="CheckOut.aspx.vb" Inherits="PetShop.UI.CheckOut" %>
+﻿<%@ Page Title="Check Out" Language="vb" AutoEventWireup="true" MasterPageFile="~/Master.Master" CodeBehind="CheckOut.aspx.vb" Inherits="PetShop.UI.CheckOut" %>
 
 <%@ Register Src="Controls/CartList.ascx" TagName="CartList" TagPrefix="PC" %>
 <%@ Register Src="Controls/AddressConfirm.ascx" TagName="AddressConfirm" TagPrefix="PC" %>
