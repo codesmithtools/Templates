@@ -50,14 +50,14 @@ Public Partial Class <%= BusinessClassName %>
         MyBase.New(GetType(<%= ChildBusinessClassName %>))
         
 <% For Each member As Member In Entity.PrimaryKey.KeyMembers %>
-        <%= member.PropertyName %> = <%= member.VariableName %>
+        Me.<%= member.PropertyName %> = <%= member.VariableName %>
 <% Next %>
     End Sub
 
 <% If (Entity.HasRowVersionMember) Then %>
     Public <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>, <%= Entity.RowVersionMember.SystemType %> timestamp) : this(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>)
     {
-		Timestamp = timestamp
+		Me.Timestamp = timestamp
     }
 <% End If %>
     
