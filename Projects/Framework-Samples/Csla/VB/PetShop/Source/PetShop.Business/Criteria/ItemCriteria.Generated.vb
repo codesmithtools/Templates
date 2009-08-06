@@ -40,7 +40,7 @@ Public Partial Class ItemCriteria
     Public Sub New(ByVal itemId As String) 
         MyBase.New(GetType(Item))
         
-        ItemId = itemId
+        Me.ItemId = itemId
     End Sub
 
     

@@ -150,5 +150,43 @@ Public Partial Class Order
 	End Sub
 	
 	#End Region
-    
+
+#Region "Custom Factory Methods"
+
+    ''' <summary>
+    ''' Uses the profile's uniqueID to look up the order.
+    ''' </summary>
+    ''' <param name="uniqueId">assumes UserId == Profile.UniqueId</param>
+    ''' <returns>an Order.</returns>
+    Public Shared Function GetOrder(ByVal uniqueId As String) As Order
+        Return DataPortal.Fetch(Of Order)(New OrderCriteria())
+    End Function
+
+#End Region
+
+#Region "Properties"
+
+    Private Shared ReadOnly _itemsProperty As PropertyInfo(Of LineItemList) = RegisterProperty(Of LineItemList)(Function(p As Order) p.Items, Csla.RelationshipTypes.LazyLoad)
+    Public ReadOnly Property Items() As LineItemList
+        Get
+            If Not FieldManager.FieldExists(_itemsProperty) Then
+                SetProperty(_itemsProperty, LineItemList.GetLineItemList(OrderId))
+            End If
+
+            Return GetProperty(_itemsProperty)
+        End Get
+    End Property
+
+    Private _creditCard As CreditCard
+    Public Property CreditCard() As CreditCard
+        Get
+            Return _creditCard
+        End Get
+        Set(ByVal value As CreditCard)
+            _creditCard = value
+        End Set
+    End Property
+
+#End Region
+
 End Class

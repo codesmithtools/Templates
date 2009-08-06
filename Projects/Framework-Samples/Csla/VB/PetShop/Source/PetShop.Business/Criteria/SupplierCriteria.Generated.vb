@@ -40,7 +40,7 @@ Public Partial Class SupplierCriteria
     Public Sub New(ByVal suppId As Integer) 
         MyBase.New(GetType(Supplier))
         
-        SuppId = suppId
+        Me.SuppId = suppId
     End Sub
 
     

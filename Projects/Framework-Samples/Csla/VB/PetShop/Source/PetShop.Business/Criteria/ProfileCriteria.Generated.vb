@@ -40,7 +40,7 @@ Public Partial Class ProfileCriteria
     Public Sub New(ByVal uniqueID As Integer) 
         MyBase.New(GetType(Profile))
         
-        UniqueID = uniqueID
+        Me.UniqueID = uniqueID
     End Sub
 
     

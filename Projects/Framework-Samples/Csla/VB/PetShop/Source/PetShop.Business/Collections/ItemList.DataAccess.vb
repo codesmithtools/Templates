@@ -27,7 +27,7 @@ Public Partial Class ItemList
 	'Protected Sub DataPortal_Create()
     'End Sub
     
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As ItemCriteria)
+    Private Shadows Sub Child_Fetch(ByVal criteria As ItemCriteria)
 	    RaiseListChangedEvents = False
         
         Using reader As SafeDataReader = DataAccessLayer.Instance.ItemFetch(criteria.StateBag)

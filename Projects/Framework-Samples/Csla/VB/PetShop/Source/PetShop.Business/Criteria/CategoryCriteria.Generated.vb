@@ -40,7 +40,7 @@ Public Partial Class CategoryCriteria
     Public Sub New(ByVal categoryId As String) 
         MyBase.New(GetType(Category))
         
-        CategoryId = categoryId
+        Me.CategoryId = categoryId
     End Sub
 
     
