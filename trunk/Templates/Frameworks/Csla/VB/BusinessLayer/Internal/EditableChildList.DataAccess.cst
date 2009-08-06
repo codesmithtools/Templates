@@ -34,7 +34,7 @@ Public Partial Class <%= BusinessClassName %>
 	'Protected Sub DataPortal_Create()
     'End Sub
     
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
+    Private Shadows Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
 	    RaiseListChangedEvents = False
         
         Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= ChildBusinessClassName %>Fetch(criteria.StateBag)
