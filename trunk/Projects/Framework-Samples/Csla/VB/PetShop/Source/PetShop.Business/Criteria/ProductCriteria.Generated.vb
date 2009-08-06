@@ -40,7 +40,7 @@ Public Partial Class ProductCriteria
     Public Sub New(ByVal productId As String) 
         MyBase.New(GetType(Product))
         
-        ProductId = productId
+        Me.ProductId = productId
     End Sub
 
     

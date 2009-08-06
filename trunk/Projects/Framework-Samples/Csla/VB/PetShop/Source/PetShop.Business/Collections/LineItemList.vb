@@ -24,6 +24,14 @@ Public Partial Class LineItemList
 		'AuthorizationRules.AllowGet(typeof(LineItemList), "Role")
 	End Sub
 	
-	#End Region
+#End Region
+
+#Region "Custom Factory Method(s)"
+
+    Public Shared Function GetLineItemList(ByVal orderId As Integer) As LineItemList
+        Return DataPortal.Fetch(Of LineItemList)(New LineItemCriteria())
+    End Function
+
+#End Region
     
 End Class

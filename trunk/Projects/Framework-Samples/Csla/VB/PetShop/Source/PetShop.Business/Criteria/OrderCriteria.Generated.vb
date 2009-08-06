@@ -40,7 +40,7 @@ Public Partial Class OrderCriteria
     Public Sub New(ByVal orderId As Integer) 
         MyBase.New(GetType(Order))
         
-        OrderId = orderId
+        Me.OrderId = orderId
     End Sub
 
     

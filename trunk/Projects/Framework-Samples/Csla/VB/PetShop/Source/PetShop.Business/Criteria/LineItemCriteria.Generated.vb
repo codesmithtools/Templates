@@ -40,8 +40,8 @@ Public Partial Class LineItemCriteria
     Public Sub New(ByVal orderId As Integer, ByVal lineNum As Integer) 
         MyBase.New(GetType(LineItem))
         
-        OrderId = orderId
-        LineNum = lineNum
+        Me.OrderId = orderId
+        Me.LineNum = lineNum
     End Sub
 
     

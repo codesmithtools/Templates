@@ -27,7 +27,7 @@ Public Partial Class AccountList
 	'Protected Sub DataPortal_Create()
     'End Sub
     
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As AccountCriteria)
+    Private Shadows Sub Child_Fetch(ByVal criteria As AccountCriteria)
 	    RaiseListChangedEvents = False
         
         Using reader As SafeDataReader = DataAccessLayer.Instance.AccountFetch(criteria.StateBag)

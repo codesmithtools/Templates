@@ -40,7 +40,7 @@ Public Partial Class AccountCriteria
     Public Sub New(ByVal accountId As Integer) 
         MyBase.New(GetType(Account))
         
-        AccountId = accountId
+        Me.AccountId = accountId
     End Sub
 
     

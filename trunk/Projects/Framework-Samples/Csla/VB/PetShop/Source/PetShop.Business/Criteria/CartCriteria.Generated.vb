@@ -40,7 +40,7 @@ Public Partial Class CartCriteria
     Public Sub New(ByVal cartId As Integer) 
         MyBase.New(GetType(Cart))
         
-        CartId = cartId
+        Me.CartId = cartId
     End Sub
 
     

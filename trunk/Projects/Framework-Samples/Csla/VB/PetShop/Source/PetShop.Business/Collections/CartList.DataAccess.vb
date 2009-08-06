@@ -27,7 +27,7 @@ Public Partial Class CartList
 	'Protected Sub DataPortal_Create()
     'End Sub
     
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As CartCriteria)
+    Private Shadows Sub Child_Fetch(ByVal criteria As CartCriteria)
 	    RaiseListChangedEvents = False
         
         Using reader As SafeDataReader = DataAccessLayer.Instance.CartFetch(criteria.StateBag)

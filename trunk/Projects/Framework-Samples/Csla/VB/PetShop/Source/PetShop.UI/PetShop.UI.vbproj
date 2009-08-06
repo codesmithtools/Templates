@@ -82,11 +82,125 @@
     <Import Include="System.Web.UI.HtmlControls" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\PetShop.mdf">
+    </Content>
+    <Content Include="App_Themes\PetShop\StyleSheet.css" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckOut.aspx.designer.vb">
+      <DependentUpon>CheckOut.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CheckOut.aspx.vb">
+      <DependentUpon>CheckOut.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AddressConfirm.ascx.designer.vb">
+      <DependentUpon>AddressConfirm.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AddressConfirm.ascx.vb">
+      <DependentUpon>AddressConfirm.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\AddressForm.ascx.designer.vb">
+      <DependentUpon>AddressForm.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AddressForm.ascx.vb">
+      <DependentUpon>AddressForm.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\BreadCrumbControl.ascx.designer.vb">
+      <DependentUpon>BreadCrumbControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\BreadCrumbControl.ascx.vb">
+      <DependentUpon>BreadCrumbControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\CartList.ascx.designer.vb">
+      <DependentUpon>CartList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CartList.ascx.vb">
+      <DependentUpon>CartList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\CreditCardForm.ascx.designer.vb">
+      <DependentUpon>CreditCardForm.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CreditCardForm.ascx.vb">
+      <DependentUpon>CreditCardForm.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ItemsControl.ascx.designer.vb">
+      <DependentUpon>ItemsControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ItemsControl.ascx.vb">
+      <DependentUpon>ItemsControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\NavigationControl.ascx.designer.vb">
+      <DependentUpon>NavigationControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NavigationControl.ascx.vb">
+      <DependentUpon>NavigationControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ProductsControl.ascx.designer.vb">
+      <DependentUpon>ProductsControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ProductsControl.ascx.vb">
+      <DependentUpon>ProductsControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\SearchControl.ascx.designer.vb">
+      <DependentUpon>SearchControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchControl.ascx.vb">
+      <DependentUpon>SearchControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ShoppingCartControl.ascx.designer.vb">
+      <DependentUpon>ShoppingCartControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ShoppingCartControl.ascx.vb">
+      <DependentUpon>ShoppingCartControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\WishListControl.ascx.designer.vb">
+      <DependentUpon>WishListControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\WishListControl.ascx.vb">
+      <DependentUpon>WishListControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.vb">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Default.aspx.vb">
       <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Error.aspx.designer.vb">
+      <DependentUpon>Error.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Error.aspx.vb">
+      <DependentUpon>Error.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Global.asax.vb">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Items.aspx.designer.vb">
+      <DependentUpon>Items.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Items.aspx.vb">
+      <DependentUpon>Items.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Master.Master.designer.vb">
+      <DependentUpon>Master.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Master.Master.vb">
+      <DependentUpon>Master.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -108,6 +222,55 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="NewUser.aspx.designer.vb">
+      <DependentUpon>NewUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewUser.aspx.vb">
+      <DependentUpon>NewUser.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Products.aspx.designer.vb">
+      <DependentUpon>Products.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Products.aspx.vb">
+      <DependentUpon>Products.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Search.aspx.designer.vb">
+      <DependentUpon>Search.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Search.aspx.vb">
+      <DependentUpon>Search.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="ShoppingCart.aspx.designer.vb">
+      <DependentUpon>ShoppingCart.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ShoppingCart.aspx.vb">
+      <DependentUpon>ShoppingCart.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="SignIn.aspx.designer.vb">
+      <DependentUpon>SignIn.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SignIn.aspx.vb">
+      <DependentUpon>SignIn.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="UserProfile.aspx.designer.vb">
+      <DependentUpon>UserProfile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserProfile.aspx.vb">
+      <DependentUpon>UserProfile.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="WishList.aspx.designer.vb">
+      <DependentUpon>WishList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WishList.aspx.vb">
+      <DependentUpon>WishList.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -118,7 +281,170 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Default.aspx" />
+    <Content Include="App_Data\PetShop_log.ldf">
+      <DependentUpon>PetShop.mdf</DependentUpon>
+    </Content>
+    <Content Include="App_Themes\PetShop\SkinFile.skin" />
+    <Content Include="CheckOut.aspx" />
+    <Content Include="Comm_Images\bg-body.gif" />
+    <Content Include="Comm_Images\bg-labelLists.gif" />
+    <Content Include="Comm_Images\bg-search.gif" />
+    <Content Include="Comm_Images\bg-sign-in.gif" />
+    <Content Include="Comm_Images\button-back.gif" />
+    <Content Include="Comm_Images\button-calculate.gif" />
+    <Content Include="Comm_Images\button-cart-grey.gif" />
+    <Content Include="Comm_Images\button-cart.gif" />
+    <Content Include="Comm_Images\button-checkout.gif" />
+    <Content Include="Comm_Images\button-continue.gif" />
+    <Content Include="Comm_Images\button-delete.gif" />
+    <Content Include="Comm_Images\button-home.gif" />
+    <Content Include="Comm_Images\button-search.gif" />
+    <Content Include="Comm_Images\button-wishlist-grey.gif" />
+    <Content Include="Comm_Images\button-wishlist.gif" />
+    <Content Include="Comm_Images\dotten-line.gif" />
+    <Content Include="Comm_Images\home-bg-body.gif" />
+    <Content Include="Comm_Images\home-fish.gif" />
+    <Content Include="Comm_Images\Logo-home.gif" />
+    <Content Include="Comm_Images\Logo.gif" />
+    <Content Include="Comm_Images\seahorse.gif" />
+    <Content Include="Comm_Images\spacer.gif" />
+    <Content Include="Comm_Images\vertigo-icon.gif" />
+    <Content Include="Controls\AddressConfirm.ascx" />
+    <Content Include="Controls\AddressForm.ascx" />
+    <Content Include="Controls\BreadCrumbControl.ascx" />
+    <Content Include="Controls\CartList.ascx" />
+    <Content Include="Controls\CreditCardForm.ascx" />
+    <Content Include="Controls\ItemsControl.ascx" />
+    <Content Include="Controls\NavigationControl.ascx" />
+    <Content Include="Controls\ProductsControl.ascx" />
+    <Content Include="Controls\SearchControl.ascx" />
+    <Content Include="Controls\ShoppingCartControl.ascx" />
+    <Content Include="Controls\WishListControl.ascx" />
+    <Content Include="Default.aspx" />
+    <Content Include="Error.aspx" />
+    <Content Include="Global.asax" />
+    <Content Include="Items.aspx" />
+    <Content Include="NewUser.aspx" />
+    <Content Include="Products.aspx" />
+    <Content Include="Prod_Images\Backyard\icon-cat.gif" />
+    <Content Include="Prod_Images\Backyard\icon-crab.gif" />
+    <Content Include="Prod_Images\Backyard\icon-goose.gif" />
+    <Content Include="Prod_Images\Backyard\icon-raccoon.gif" />
+    <Content Include="Prod_Images\Backyard\icon-sheep.gif" />
+    <Content Include="Prod_Images\Backyard\icon-skunk.gif" />
+    <Content Include="Prod_Images\Backyard\icon-zebra.gif" />
+    <Content Include="Prod_Images\Backyard\item-cat-patterned.gif" />
+    <Content Include="Prod_Images\Backyard\item-cat-transparent.gif" />
+    <Content Include="Prod_Images\Backyard\item-cat-uncolored.gif" />
+    <Content Include="Prod_Images\Backyard\item-crab-dotted.gif" />
+    <Content Include="Prod_Images\Backyard\item-crab-orange.gif" />
+    <Content Include="Prod_Images\Backyard\item-crab-red.gif" />
+    <Content Include="Prod_Images\Backyard\item-goose-feathered.gif" />
+    <Content Include="Prod_Images\Backyard\item-goose-plucked.gif" />
+    <Content Include="Prod_Images\Backyard\item-raccoon-hairy-tongue.gif" />
+    <Content Include="Prod_Images\Backyard\item-raccoon-long-tongue.gif" />
+    <Content Include="Prod_Images\Backyard\item-raccoon-rough-tongue.gif" />
+    <Content Include="Prod_Images\Backyard\item-sheep-fuzzy.gif" />
+    <Content Include="Prod_Images\Backyard\item-sheep-ironed.gif" />
+    <Content Include="Prod_Images\Backyard\item-skunk-bad-smell.gif" />
+    <Content Include="Prod_Images\Backyard\item-skunk-really-bad-smell.gif" />
+    <Content Include="Prod_Images\Backyard\item-skunk-worst-smell.gif" />
+    <Content Include="Prod_Images\Backyard\item-zebra-large.gif" />
+    <Content Include="Prod_Images\Backyard\item-zebra-medium.gif" />
+    <Content Include="Prod_Images\Backyard\item-zebra-small.gif" />
+    <Content Include="Prod_Images\Backyard\item-zebra-tiny.gif" />
+    <Content Include="Prod_Images\Birds\icon-Duck.gif" />
+    <Content Include="Prod_Images\Birds\icon-Owl.gif" />
+    <Content Include="Prod_Images\Birds\icon-Pelican.gif" />
+    <Content Include="Prod_Images\Birds\icon-Penguin.gif" />
+    <Content Include="Prod_Images\Birds\icon-Pteranodon.gif" />
+    <Content Include="Prod_Images\Birds\item-duck-domestic.gif" />
+    <Content Include="Prod_Images\Birds\item-duck-wild.gif" />
+    <Content Include="Prod_Images\Birds\item-owl-day.gif" />
+    <Content Include="Prod_Images\Birds\item-owl-night.gif" />
+    <Content Include="Prod_Images\Birds\item-pelican-flowerloving.gif" />
+    <Content Include="Prod_Images\Birds\item-pelican-grassloving.gif" />
+    <Content Include="Prod_Images\Birds\item-penguine-adventurous.gif" />
+    <Content Include="Prod_Images\Birds\item-penguine-homey.gif" />
+    <Content Include="Prod_Images\Birds\item-pteranodon-ancient.gif" />
+    <Content Include="Prod_Images\Birds\item-pteranodon-old.gif" />
+    <Content Include="Prod_Images\Bugs\icon-ant.gif" />
+    <Content Include="Prod_Images\Bugs\icon-butterfly.gif" />
+    <Content Include="Prod_Images\Bugs\icon-dragonfly.gif" />
+    <Content Include="Prod_Images\Bugs\icon-frog.gif" />
+    <Content Include="Prod_Images\Bugs\icon-slug.gif" />
+    <Content Include="Prod_Images\Bugs\icon-spider.gif" />
+    <Content Include="Prod_Images\Bugs\item-ant-queen.gif" />
+    <Content Include="Prod_Images\Bugs\item-ant-soldier.gif" />
+    <Content Include="Prod_Images\Bugs\item-ant-worker.gif" />
+    <Content Include="Prod_Images\Bugs\item-butterfly-adult.gif" />
+    <Content Include="Prod_Images\Bugs\item-butterfly-larva.gif" />
+    <Content Include="Prod_Images\Bugs\item-butterfly-pupa.gif" />
+    <Content Include="Prod_Images\Bugs\item-dragonfly-omnivore.gif" />
+    <Content Include="Prod_Images\Bugs\item-dragonfly-vegan.gif" />
+    <Content Include="Prod_Images\Bugs\item-dragonfly-vegetarian.gif" />
+    <Content Include="Prod_Images\Bugs\item-frog-false.gif" />
+    <Content Include="Prod_Images\Bugs\item-frog-true.gif" />
+    <Content Include="Prod_Images\Bugs\item-slug-habitat.gif" />
+    <Content Include="Prod_Images\Bugs\item-slug-naked.gif" />
+    <Content Include="Prod_Images\Bugs\item-spider-Aranielladisplicata.gif" />
+    <Content Include="Prod_Images\Bugs\item-spider-Dysderacrocata.gif" />
+    <Content Include="Prod_Images\Endangered\icon-dino.gif" />
+    <Content Include="Prod_Images\Endangered\icon-fish.gif" />
+    <Content Include="Prod_Images\Endangered\icon-panda.gif" />
+    <Content Include="Prod_Images\Endangered\icon-pet.gif" />
+    <Content Include="Prod_Images\Endangered\icon-skeleton.gif" />
+    <Content Include="Prod_Images\Endangered\item-dino-pointy.gif" />
+    <Content Include="Prod_Images\Endangered\item-dino-shaved.gif" />
+    <Content Include="Prod_Images\Endangered\item-dino-spiky.gif" />
+    <Content Include="Prod_Images\Endangered\item-fish-caught.gif" />
+    <Content Include="Prod_Images\Endangered\item-fish-drunk.gif" />
+    <Content Include="Prod_Images\Endangered\item-fish-lost.gif" />
+    <Content Include="Prod_Images\Endangered\item-panda-exclusive.gif" />
+    <Content Include="Prod_Images\Endangered\item-pet-kitty.gif" />
+    <Content Include="Prod_Images\Endangered\item-pet-rover.gif" />
+    <Content Include="Prod_Images\Endangered\item-pet-thumper.gif" />
+    <Content Include="Prod_Images\Endangered\item-skeleton-aphrodite.gif" />
+    <Content Include="Prod_Images\Endangered\item-skeleton-female.gif" />
+    <Content Include="Prod_Images\Endangered\item-skeleton-hermaphrodite.gif" />
+    <Content Include="Prod_Images\Endangered\item-skeleton-male.gif" />
+    <Content Include="Prod_Images\Fish\icon-Ballonfish.gif" />
+    <Content Include="Prod_Images\Fish\icon-Blindfish.gif" />
+    <Content Include="Prod_Images\Fish\icon-crabfish.gif" />
+    <Content Include="Prod_Images\Fish\icon-eucalyptus.gif" />
+    <Content Include="Prod_Images\Fish\icon-meno.gif" />
+    <Content Include="Prod_Images\Fish\icon-misterno.gif" />
+    <Content Include="Prod_Images\Fish\icon-nosyfish.gif" />
+    <Content Include="Prod_Images\Fish\icon-toothferry.gif" />
+    <Content Include="Prod_Images\Fish\item-balloon-extra-stretch.gif" />
+    <Content Include="Prod_Images\Fish\item-balloon-flammable.gif" />
+    <Content Include="Prod_Images\Fish\item-balloon-natural.gif" />
+    <Content Include="Prod_Images\Fish\item-blindfish-blind.gif" />
+    <Content Include="Prod_Images\Fish\item-blindfish-farsighted.gif" />
+    <Content Include="Prod_Images\Fish\item-blindfish-shortsighted.gif" />
+    <Content Include="Prod_Images\Fish\item-crabfish-ballet.gif" />
+    <Content Include="Prod_Images\Fish\item-crabfish-ballroom.gif" />
+    <Content Include="Prod_Images\Fish\item-crabfish-tabdance.gif" />
+    <Content Include="Prod_Images\Fish\item-eucalyptus-longarms.gif" />
+    <Content Include="Prod_Images\Fish\item-eucalyptus-shortarms.gif" />
+    <Content Include="Prod_Images\Fish\item-meno-camouflage.gif" />
+    <Content Include="Prod_Images\Fish\item-meno-happy.gif" />
+    <Content Include="Prod_Images\Fish\item-meno-worried.gif" />
+    <Content Include="Prod_Images\Fish\item-MisterNo-black.gif" />
+    <Content Include="Prod_Images\Fish\item-MisterNo-sable.gif" />
+    <Content Include="Prod_Images\Fish\item-MisterNo-sepia.gif" />
+    <Content Include="Prod_Images\Fish\item-nosyfish-beastly.gif" />
+    <Content Include="Prod_Images\Fish\item-nosyfish-invidious.gif" />
+    <Content Include="Prod_Images\Fish\item-nosyfish-mean.gif" />
+    <Content Include="Prod_Images\Fish\item-nosyfish-sneaky.gif" />
+    <Content Include="Prod_Images\Fish\item-toothferry-toothless.gif" />
+    <Content Include="Prod_Images\Fish\item-toothferry-withteeth.gif" />
+    <Content Include="Master.Master" />
+    <Content Include="Search.aspx" />
+    <Content Include="ShoppingCart.aspx" />
+    <Content Include="SignIn.aspx" />
+    <Content Include="UserProfile.aspx" />
+    <Content Include="WishList.aspx" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -134,11 +460,12 @@
       <Project>{ED51BE4C-8D49-4E77-BF3F-8B334C1771CD}</Project>
       <Name>PetShop.Business</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PetShop.Controls\PetShop.Controls.vbproj">
+      <Project>{7217E466-4728-4CF8-B736-CA65B779AA26}</Project>
+      <Name>PetShop.Controls</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
