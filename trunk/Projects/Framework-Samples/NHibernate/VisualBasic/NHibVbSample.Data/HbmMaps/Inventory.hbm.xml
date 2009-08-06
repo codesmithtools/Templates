@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NHibVbSample.Generated.BusinessObjects" assembly="NHibVbSample.Data">
+	<class name="NHibVbSample.Generated.BusinessObjects.Inventory, NHibVbSample.Data" table="dbo.Inventory" lazy="true">
+		<id name="Id" column="ItemId">
+		 	<generator class="assigned" />
+		</id>
+		
+		<property name="Qty" column="Qty" />
+	</class>
+</hibernate-mapping>
