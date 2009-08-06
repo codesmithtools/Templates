@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Search" Language="vb" AutoEventWireup="false" MasterPageFile="~/Master.Master" CodeBehind="Search.aspx.vb" Inherits="PetShop.UI.Search" %>
+﻿<%@ Page Title="Search" Language="vb" AutoEventWireup="true" MasterPageFile="~/Master.Master" CodeBehind="Search.aspx.vb" Inherits="PetShop.UI.Search" %>
 <%@ Register Src="Controls/SearchControl.ascx" TagName="SearchControl" TagPrefix="pc" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphPage" runat="server">

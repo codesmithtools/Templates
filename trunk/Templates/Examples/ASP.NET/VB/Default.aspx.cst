@@ -1,7 +1,7 @@
 <%-- 
 Name: ASP.Net Samples
 Author: Blake Niemyjski
-Description: The following template will generate a default default ASP.Net page.
+Description: The following template will generate a default ASP.Net page.
 --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="Html" Description="The following template will generate a default default ASP.Net page." %>
 

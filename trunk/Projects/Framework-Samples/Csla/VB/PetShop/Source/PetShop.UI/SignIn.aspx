@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Sign In" Language="vb" AutoEventWireup="false" MasterPageFile="~/Master.Master" CodeBehind="SignIn.aspx.vb" Inherits="PetShop.UI.SignIn" %>
+﻿<%@ Page Title="Sign In" Language="vb" AutoEventWireup="true" MasterPageFile="~/Master.Master" CodeBehind="SignIn.aspx.vb" Inherits="PetShop.UI.SignIn" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="cphPage" runat="server">
     <div align="center" class="signinPosition">

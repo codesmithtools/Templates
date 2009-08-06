@@ -1,4 +1,4 @@
-﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="CartList.ascx.vb" Inherits="PetShop.UI.CartList" %>
+﻿<%@ Control Language="vb" AutoEventWireup="true" CodeBehind="CartList.ascx.vb" Inherits="PetShop.UI.CartList" %>
 
 <asp:Repeater ID="repOrdered" runat="server">
     <HeaderTemplate>

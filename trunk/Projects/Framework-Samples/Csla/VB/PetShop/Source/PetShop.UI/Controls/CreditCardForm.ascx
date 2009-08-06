@@ -1,4 +1,4 @@
-﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="CreditCardForm.ascx.vb" Inherits="PetShop.UI.CreditCardForm" %>
+﻿<%@ Control Language="vb" AutoEventWireup="true" CodeBehind="CreditCardForm.ascx.vb" Inherits="PetShop.UI.CreditCardForm" %>
 
 <script language="javascript">
         function ClientValidate(source, arguments) {

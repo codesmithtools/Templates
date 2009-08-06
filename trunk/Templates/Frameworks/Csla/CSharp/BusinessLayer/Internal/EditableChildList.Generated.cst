@@ -37,9 +37,9 @@ namespace <%= BusinessProjectName %>
 			return DataPortal.CreateChild< <%= BusinessClassName %> >();
 		}
 		
-		internal static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+		internal static <%= BusinessClassName %> Get<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
 		{
-			return DataPortal.FetchChild< <%= ChildBusinessClassName %> >(
+			return DataPortal.FetchChild< <%= BusinessClassName %> >(
 				new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
 		}
         

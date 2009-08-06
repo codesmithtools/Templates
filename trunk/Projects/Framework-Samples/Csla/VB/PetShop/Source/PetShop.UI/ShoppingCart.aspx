@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Shopping Cart" Language="vb" AutoEventWireup="false" MasterPageFile="~/Master.Master" CodeBehind="ShoppingCart.aspx.vb" Inherits="PetShop.UI.ShoppingCart" %>
+﻿<%@ Page Title="Shopping Cart" Language="vb" AutoEventWireup="true" MasterPageFile="~/Master.Master" CodeBehind="ShoppingCart.aspx.vb" Inherits="PetShop.UI.ShoppingCart" %>
 <%@ Register Src="Controls/ShoppingCartControl.ascx" TagName="ShoppingCartControl" TagPrefix="PC" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="cphPage" runat="server">
 <div align="center" class="cartPosition">   

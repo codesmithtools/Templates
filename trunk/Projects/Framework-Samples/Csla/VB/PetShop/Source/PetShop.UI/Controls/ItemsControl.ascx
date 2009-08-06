@@ -1,4 +1,4 @@
-﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="ItemsControl.ascx.vb" Inherits="PetShop.UI.ItemsControl" %>
+﻿<%@ Control Language="vb" AutoEventWireup="true" CodeBehind="ItemsControl.ascx.vb" Inherits="PetShop.UI.ItemsControl" %>
 <%@ Import Namespace="PetShop.Business"%>
 
 <div class="paging">

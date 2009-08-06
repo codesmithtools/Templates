@@ -1,4 +1,4 @@
-﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="SearchControl.ascx.vb" Inherits="PetShop.UI.SearchControl" %>
+﻿<%@ Control Language="vb" AutoEventWireup="true" CodeBehind="SearchControl.ascx.vb" Inherits="PetShop.UI.SearchControl" %>
 <%@ OutputCache Duration="100000" VaryByParam="page;keywords" Shared="true" %>
 
 <div align="center" class="searchPosition">

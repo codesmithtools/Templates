@@ -1,5 +1,5 @@
-﻿<%@ Page Language="vb" AutoEventWireup="false" CodeBehind="Default.aspx.vb" Inherits="PetShop.UI._Default" %>
-<%@ Register Src="Controls/NavigationControl.ascx" TagName="NavigationControl" TagPrefix="PetShoPControl" %>
+﻿<%@ Page Language="vb" AutoEventWireup="true" CodeBehind="Default.aspx.vb" Inherits="PetShop.UI._Default" %>
+<%@ Register Src="Controls/NavigationControl.ascx" TagName="NavigationControl" TagPrefix="PetShopControl" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -85,9 +85,8 @@
                     </tr>
                     <tr>
                         <td style="padding-left: 20px">
-                            <PetShoPControl:NavigationControl ID="Categories" runat="server"></PetShoPControl:NavigationControl>
-                            <p>
-                                &nbsp;</p>
+                            <PetShopControl:NavigationControl ID="Categories" runat="server"></PetShopControl:NavigationControl>
+                            <p>&nbsp;</p>
                             <br />
                         </td>
                     </tr>

@@ -120,7 +120,7 @@ Public Class CustomList
         'Determin whether next and previous buttons are required
         'Previous button?
         If currentPageIndex > 0 Then
-            writer.Write(String.Format(LINK_PREV, (currentPageIndex - 1) + query))
+            writer.Write(String.Format(LINK_PREV, (_currentPageIndex - 1).ToString() + query))
         End If
 
         'Close the table data tag
@@ -128,7 +128,7 @@ Public Class CustomList
 
         'Next button?
         If currentPageIndex < PageCount Then
-            writer.Write(String.Format(LINK_MORE, (currentPageIndex + 1) + query))
+            writer.Write(String.Format(LINK_MORE, (_currentPageIndex + 1).ToString() + query))
         End If
 
         'Close the table

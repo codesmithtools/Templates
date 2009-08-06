@@ -1,4 +1,4 @@
-﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="NavigationControl.ascx.vb" Inherits="PetShop.UI.NavigationControl" %>
+﻿<%@ Control Language="vb" AutoEventWireup="true" CodeBehind="NavigationControl.ascx.vb" Inherits="PetShop.UI.NavigationControl" %>
 <%@ OutputCache Duration="100000" VaryByParam="*" %>
 
 <asp:Repeater ID="rePCategories" runat="server">

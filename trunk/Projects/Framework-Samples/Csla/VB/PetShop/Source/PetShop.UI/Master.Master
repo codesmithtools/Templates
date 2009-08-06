@@ -1,4 +1,4 @@
-﻿<%@ Master Language="VB" AutoEventWireup="false" CodeBehind="Master.master.vb" Inherits="PetShop.UI.Master" %>
+﻿<%@ Master Language="VB" AutoEventWireup="true" CodeBehind="Master.master.vb" Inherits="PetShop.UI.Master" %>
 
 <%@ Register Src="Controls/BreadCrumbControl.ascx" TagName="BreadCrumbControl" TagPrefix="PetShoPControl" %>
 <%@ Register Src="Controls/NavigationControl.ascx" TagName="NavigationControl" TagPrefix="PetShoPControl" %>

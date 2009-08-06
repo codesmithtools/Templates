@@ -40,11 +40,11 @@ Public Partial Class <%= BusinessClassName %>
     #Region "Factory Methods"
 	
 	Friend Shared Function Get<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>) As <%= BusinessClassName %>
-		Return DataPortal.Fetch(Of <%= BusinessClassName %>)(new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+		Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
 	End Function
     
     Friend Shared Function GetAll() As <%= BusinessClassName %>
-        Return DataPortal.Fetch(Of <%= BusinessClassName %>)(new <%= ChildBusinessClassName %>Criteria())
+        Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(new <%= ChildBusinessClassName %>Criteria())
     End Function
     
 <%-- One-To-Many & Many-To-Many --%>
@@ -57,7 +57,7 @@ For Each sc As SearchCriteria In association.ListSearchCriteria %>
         criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
 <% Next %>
         
-        Return DataPortal.Fetch(Of <%= BusinessClassName %>)(criteria)
+        Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(criteria)
     End Function
 <%  Next
 Next %>

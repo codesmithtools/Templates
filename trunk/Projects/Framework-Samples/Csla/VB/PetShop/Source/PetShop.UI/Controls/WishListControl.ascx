@@ -1,4 +1,4 @@
-﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="WishListControl.ascx.vb" Inherits="PetShop.UI.WishListControl" %>
+﻿<%@ Control Language="vb" AutoEventWireup="true" CodeBehind="WishListControl.ascx.vb" Inherits="PetShop.UI.WishListControl" %>
 
 <div align="left" class="cartHeader">Items in your Wish List</div>
 <asp:Label runat="server" ID="lblMsg" EnableViewState="false"  CssClass="label" />

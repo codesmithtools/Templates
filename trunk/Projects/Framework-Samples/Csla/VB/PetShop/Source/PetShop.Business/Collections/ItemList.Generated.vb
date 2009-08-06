@@ -33,29 +33,29 @@ Public Partial Class ItemList
 	#Region "Factory Methods" 
 	
 	Friend Shared Function NewList() As ItemList
-		Return DataPortal.Create(Of ItemList)()
+		Return DataPortal.CreateChild(Of ItemList)()
 	End Function
 	
 	Friend Shared Function GetItemList(ByVal itemId As String) As ItemList
-		Return DataPortal.Fetch(Of ItemList)(new ItemCriteria(itemId))
+		Return DataPortal.FetchChild(Of ItemList)(new ItemCriteria(itemId))
 	End Function
     
     Friend Shared Function GetAll() As ItemList
-        Return DataPortal.Fetch(Of ItemList)(new ItemCriteria())
+        Return DataPortal.FetchChild(Of ItemList)(new ItemCriteria())
     End Function
     
     Friend Shared Function GetByProductId(ByVal productId As String) As ItemList
         Dim criteria As New ItemCriteria()
         criteria.ProductId = productId
         
-        Return DataPortal.Fetch(Of ItemList)(criteria)
+        Return DataPortal.FetchChild(Of ItemList)(criteria)
     End Function
     
     Friend Shared Function GetBySupplier(ByVal suppId As System.Nullable(Of Integer)) As ItemList
         Dim criteria As New ItemCriteria()
         criteria.SuppId = suppId
         
-        Return DataPortal.Fetch(Of ItemList)(criteria)
+        Return DataPortal.FetchChild(Of ItemList)(criteria)
     End Function
 	
 	#End Region
