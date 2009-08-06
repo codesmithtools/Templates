@@ -21,7 +21,7 @@ using <%= GetCriterionNamespace(NHibVersion) %>;
 
 namespace <%= BaseNamespace %>
 {
-    public interface IManagerBase<T, TKey>
+    public interface IManagerBase<T, TKey> : IDisposable
     {
         // Get Methods
         T GetById(TKey Id);
@@ -54,18 +54,24 @@ namespace <%= BaseNamespace %>
 
         protected INHibernateSession session;
         protected const int defaultMaxResults = 100;
+        
+        private bool _disposed = false;
 
         #endregion
 
         #region Constructors
 
         public ManagerBase()
-        {
-            session = NHibernateSessionManager.Instance.Session;
-        }
+            : this(NHibernateSessionManager.Instance.Session) { }
         public ManagerBase(INHibernateSession session)
         {
             this.session = session;
+            this.session.Register(this);
+        }
+        
+        ~ManagerBase()
+        {
+            Dispose(true);
         }
 
         #endregion
@@ -183,6 +189,27 @@ namespace <%= BaseNamespace %>
         public INHibernateSession Session
         {
             get { return session; }
+        }
+
+        #endregion
+        
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            Dispose(false);
+        }
+        private void Dispose(bool finalizing)
+        {
+            if (!_disposed)
+            {
+                session.Unregister(this);
+
+                if (!finalizing)
+                    GC.SuppressFinalize(this);
+
+                _disposed = true;
+            }
         }
 
         #endregion

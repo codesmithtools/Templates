@@ -24,11 +24,13 @@ namespace <%= BaseNamespace %>
         // Methods
         void CommitChanges();
         void Close();
-        bool BeginTransaction();
-        bool CommitTransaction();
-        bool RollbackTransaction();
+        void BeginTransaction();
+        void CommitTransaction();
+        void RollbackTransaction();
+        void Register(object o);
+        void Unregister(object o);
         ISession GetISession();
-
+        
         // Properties
         bool HasOpenTransaction { get; }
         bool IsOpen { get; }
@@ -39,16 +41,16 @@ namespace <%= BaseNamespace %>
         #region Declarations
 
         protected ITransaction transaction = null;
-        protected ISession iSession;
+        protected ISession iSession = null;
+        
+        private bool _isDisposed = false;
+        private List<int> _registeredObjects = new List<int>();
 
         #endregion
 
         #region Constructor & Destructor
 
-        public NHibernateSession(ISession session)
-        {
-            this.iSession = session;
-        }
+        public NHibernateSession() { }
         ~NHibernateSession()
         {
             Dispose(true);
@@ -58,7 +60,6 @@ namespace <%= BaseNamespace %>
 
         #region IDisposable
 
-        private bool _isDisposed = false;
         public void Dispose()
         {
             Dispose(false);
@@ -67,13 +68,12 @@ namespace <%= BaseNamespace %>
         {
             if (!_isDisposed)
             {
-                // Close Session
                 Close();
 
-                // Flag as disposed.
-                _isDisposed = true;
                 if (!finalizing)
                     GC.SuppressFinalize(this);
+                    
+                _isDisposed = true;
             }
         }
 
@@ -90,59 +90,69 @@ namespace <%= BaseNamespace %>
         }
         public void Close()
         {
+            if (iSession == null)
+                return;
+
+            if (HasOpenTransaction)
+                RollbackTransaction();
+
             if (iSession.IsOpen)
-            {
                 iSession.Close();
-            }
+            iSession.Dispose();
+            iSession = null;
         }
 
-        public bool BeginTransaction()
+        public void BeginTransaction()
         {
-            bool result = !HasOpenTransaction;
-            if (result)
-                transaction = iSession.BeginTransaction();
-            return result;
+            transaction = GetISession().BeginTransaction();
         }
-        public bool CommitTransaction()
+        public void CommitTransaction()
         {
-            bool result = HasOpenTransaction;
-            if (result)
+            if (transaction == null)
+                return;
+
+            try
             {
-                try
-                {
-                    transaction.Commit();
-                    transaction = null;
-                }
-                catch (HibernateException)
-                {
-                    transaction.Rollback();
-                    transaction = null;
-                    throw;
-                }
-            }
-            return result;
-        }
-        public bool RollbackTransaction()
-        {
-            bool result = HasOpenTransaction;
-            if (result)
-            {
-                transaction.Rollback();
+                transaction.Commit();
                 transaction.Dispose();
                 transaction = null;
-
-                // I dont know why, but it seems that after you rollback a transaction you need to reset the session.
-                // Personally, I dislike this; I find it inefficent, and it means that I have to expose a method to
-                // get an ISession from the NHibernateSessionManager...does anyone know how to get around this problem?
-                iSession.Close();
-                iSession.Dispose();
-                iSession = NHibernateSessionManager.Instance.CreateISession();
             }
-            return result;
+            catch (HibernateException)
+            {
+                RollbackTransaction();
+                throw;
+            }
+        }
+        public void RollbackTransaction()
+        {
+            if (transaction == null)
+                return;
+
+            transaction.Rollback();
+            transaction.Dispose();
+            transaction = null;
+        }
+
+        public void Register(object o)
+        {
+            var hash = o.GetHashCode();
+            if (!_registeredObjects.Contains(hash))
+                _registeredObjects.Add(hash);
+        }
+        public void Unregister(object o)
+        {
+            var hash = o.GetHashCode();
+            if (_registeredObjects.Contains(hash))
+                _registeredObjects.Remove(hash);
+
+            if (_registeredObjects.Count == 0)
+                Close();
         }
 
         public ISession GetISession()
         {
+            if (iSession == null)
+                iSession = NHibernateSessionManager.Instance.CreateISession();
             return iSession;
         }
 
@@ -152,14 +162,11 @@ namespace <%= BaseNamespace %>
 
         public bool HasOpenTransaction
         {
-            get
-            {
-                return (transaction != null && !transaction.WasCommitted && !transaction.WasRolledBack);
-            }
+            get { return (transaction != null); }
         }
         public bool IsOpen
         {
-            get { return iSession.IsOpen; }
+            get { return (iSession != null && iSession.IsOpen); }
         }
 
         #endregion
