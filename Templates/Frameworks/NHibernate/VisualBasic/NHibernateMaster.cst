@@ -215,13 +215,31 @@ Private Sub RenderUnitTests(ByVal table As TableSchema)
 	unitTests.RenderToFile(GetOutputFile(fileName, editableFileName), True)
 End Sub
 Private Sub RegisterReferences()
-	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\NHibernate.dll"))
-	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\Castle.Core.dll"))
-	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\Castle.DynamicProxy2.dll"))
-	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\Iesi.Collections.dll"))
-	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\log4net.dll"))
-	Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NUnit\NUnit.Framework.dll"))
-	Me.RegisterReference("System.Web")
+    Select Case Me.NHibernateVersion
+        Case NHibernateVersion.v1_2
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\1.2.1.GA\NHibernate.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\1.2.1.GA\Iesi.Collections.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\1.2.1.GA\log4net.dll"))
+            Exit Select
+    
+        Case NHibernateVersion.v2_0
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.0.1.GA\NHibernate.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.0.1.GA\Castle.Core.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.0.1.GA\Castle.DynamicProxy2.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.0.1.GA\Iesi.Collections.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.0.1.GA\log4net.dll"))
+            Exit Select
+    
+        Case NHibernateVersion.v2_1
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\NHibernate.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\NHibernate.ByteCode.Castle.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\Iesi.Collections.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\log4net.dll"))
+            Exit Select
+    End Select
+    Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NUnit\NUnit.Framework.dll"))
+    Me.RegisterReference("System.Web")
+    
 End Sub
 
 Private Function GetOutputFile(ByVal fileName As String, ByVal dependentUpon As String, ParamArray metaData As Object()) As OutputFile
