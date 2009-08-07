@@ -210,12 +210,30 @@ private void RenderUnitTests(TableSchema table)
 }
 private void RegisterReferences()
 {
-	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\NHibernate.dll"));
-	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\Castle.Core.dll"));
-	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\Castle.DynamicProxy2.dll"));
-	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\Iesi.Collections.dll"));
-	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\log4net.dll"));
-	this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NUnit\NUnit.Framework.dll"));
+    switch(this.NHibernateVersion)
+    {
+        case NHibernateVersion.v1_2:
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\1.2.1.GA\NHibernate.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\1.2.1.GA\Iesi.Collections.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\1.2.1.GA\log4net.dll"));
+            break;
+        
+        case NHibernateVersion.v2_0:
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.0.1.GA\NHibernate.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.0.1.GA\Castle.Core.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.0.1.GA\Castle.DynamicProxy2.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.0.1.GA\Iesi.Collections.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.0.1.GA\log4net.dll"));
+            break;
+        
+        case NHibernateVersion.v2_1:
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1.0.GA\NHibernate.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1.0.GA\NHibernate.ByteCode.Castle.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1.0.GA\Iesi.Collections.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1.0.GA\log4net.dll"));
+            break;
+    }
+    this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NUnit\NUnit.Framework.dll"));
 	this.RegisterReference(@"System.Web");
 }
 
