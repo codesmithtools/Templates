@@ -23,8 +23,8 @@ namespace NHibCsSample.Generated.UnitTests
 			OrderStatus entity = new OrderStatus();
 			
 			
-			entity.OrderId = 54;
-			entity.LineNum = 18;
+			entity.OrderId = 55;
+			entity.LineNum = 40;
 			entity.Timestamp = DateTime.Now;
 			entity.Status = "T";
 			

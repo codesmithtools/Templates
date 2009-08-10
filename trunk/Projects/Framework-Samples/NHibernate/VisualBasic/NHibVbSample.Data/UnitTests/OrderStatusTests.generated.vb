@@ -21,8 +21,8 @@ Namespace NHibVbSample.Generated.UnitTests
 			Dim entity As New OrderStatus()
 
 			
-			entity.OrderId = 61
-			entity.LineNum = 54
+			entity.OrderId = 46
+			entity.LineNum = 29
 			entity.Timestamp = DateTime.Now
 			entity.Status = "T"
 

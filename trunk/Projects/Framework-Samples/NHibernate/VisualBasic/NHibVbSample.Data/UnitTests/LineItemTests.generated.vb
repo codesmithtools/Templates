@@ -21,11 +21,11 @@ Namespace NHibVbSample.Generated.UnitTests
 			Dim entity As New LineItem()
 
 			
-			entity.OrderId = 91
-			entity.LineNum = 67
-			entity.ItemId = "T"
-			entity.Quantity = 63
-			entity.UnitPrice = 70
+			entity.OrderId = 85
+			entity.LineNum = 92
+			entity.ItemId = "Te"
+			entity.Quantity = 56
+			entity.UnitPrice = 11
 
 			Return entity
 		End Function
@@ -67,7 +67,7 @@ Namespace NHibVbSample.Generated.UnitTests
 			Try
 				Dim entityA As LineItem = GetFirstLineItem()
 				
-				entityA.ItemId = "Test T"
+				entityA.ItemId = "Test Tes"
 				
 				manager.Update(entityA)
 

@@ -14,8 +14,8 @@ namespace NHibCsSample.Generated.Base
         void BeginTransaction();
         void CommitTransaction();
         void RollbackTransaction();
-        void Register(object o);
-        void Unregister(object o);
+        void IncrementRefCount();
+        void DecrementRefCount();
         ISession GetISession();
         
         // Properties
@@ -31,7 +31,7 @@ namespace NHibCsSample.Generated.Base
         protected ISession iSession = null;
         
         private bool _isDisposed = false;
-        private List<int> _registeredObjects = new List<int>();
+        private int _refCount = 0;
 
         #endregion
 
@@ -120,19 +120,14 @@ namespace NHibCsSample.Generated.Base
             transaction = null;
         }
 
-        public void Register(object o)
+        public void IncrementRefCount()
         {
-            var hash = o.GetHashCode();
-            if (!_registeredObjects.Contains(hash))
-                _registeredObjects.Add(hash);
+            _refCount++;
         }
-        public void Unregister(object o)
+        public void DecrementRefCount()
         {
-            var hash = o.GetHashCode();
-            if (_registeredObjects.Contains(hash))
-                _registeredObjects.Remove(hash);
-
-            if (_registeredObjects.Count == 0)
+            _refCount--;
+            if (_refCount == 0)
                 Close();
         }
 

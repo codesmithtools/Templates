@@ -31,9 +31,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NHibernate, Version=2.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Frameworks\NHibernate\Common\NHibernate\NHibernate.dll</HintPath>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\Common\NHibernate\2.1.0.GA\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\Common\NHibernate\2.1.0.GA\Castle.DynamicProxy2.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\Common\NHibernate\2.1.0.GA\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\Common\NHibernate\2.1.0.GA\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

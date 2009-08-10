@@ -13,8 +13,8 @@ Namespace NHibVbSample.Generated.Base
 		Sub BeginTransaction()
 		Sub CommitTransaction()
 		Sub RollbackTransaction()
-		Sub Register(o As Object)
-		Sub Unregister(o As Object)
+		Sub IncrementRefCount()
+		Sub DecrementRefCount()
 		Function GetISession() As ISession
 
 		' Properties
@@ -30,7 +30,7 @@ Namespace NHibVbSample.Generated.Base
 		Protected iSession As ISession = Nothing
 
 		Private _isDisposed As Boolean = False
-		Private _registeredObjects As New List(Of Integer)()
+		Private _refCount As Integer = 0
 #End Region
 
 		#region "Constructor & Destructor"
@@ -116,19 +116,12 @@ Namespace NHibVbSample.Generated.Base
 			transaction = Nothing
 		End Sub
 
-		Public Sub Register(o As Object) Implements INHibernateSession.Register
-			Dim hash As Integer = o.GetHashCode()
-			If Not _registeredObjects.Contains(hash) Then
-				_registeredObjects.Add(hash)
-			End If
+		Public Sub IncrementRefCount() Implements INHibernateSession.IncrementRefCount
+			_refCount = _refCount + 1
 		End Sub
-		Public Sub Unregister(o As Object) Implements INHibernateSession.Unregister
-			Dim hash As Integer = o.GetHashCode()
-			If _registeredObjects.Contains(hash) Then
-				_registeredObjects.Remove(hash)
-			End If
-
-			If _registeredObjects.Count = 0 Then
+		Public Sub DecrementRefCount() Implements INHibernateSession.DecrementRefCount
+			_refCount = _refCount - 1
+			If _refCount = 0 Then
 				Close()
 			End If
 		End Sub

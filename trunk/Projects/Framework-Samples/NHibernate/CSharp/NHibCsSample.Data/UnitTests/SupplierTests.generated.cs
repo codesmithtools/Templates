@@ -23,16 +23,16 @@ namespace NHibCsSample.Generated.UnitTests
 			Supplier entity = new Supplier();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = 28;
+			entity.Id = 49;
 			
-			entity.Name = "Test Test Test Test Test Test Test Test";
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test ";
 			entity.Status = "T";
-			entity.Addr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-			entity.Addr2 = "Test Test Test Test Test Test Test Test Test Test Test Tes";
-			entity.City = "Test Test Test Test Test Test Test Test Test Tes";
-			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-			entity.Zip = "T";
-			entity.Phone = "Test Test Test";
+			entity.Addr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test T";
+			entity.Addr2 = "Test Test Test Test Test Test Test Test Test Test Test Te";
+			entity.City = "Test Test Test Test Test Test ";
+			entity.State = "Test Test Test Test Test Test Test Test Te";
+			entity.Zip = "Te";
+			entity.Phone = "Test Test Test Test Test Test Te";
 			
 			return entity;
 		}
@@ -84,7 +84,7 @@ namespace NHibCsSample.Generated.UnitTests
             {
                 Supplier entityA = GetFirstSupplier();
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test Test T";
+				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test Tes";
 				
 				manager.Update(entityA);
 

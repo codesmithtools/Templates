@@ -23,9 +23,9 @@ namespace NHibCsSample.Generated.UnitTests
 			Category entity = new Category();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test T";
+			entity.Id = "Test Tes";
 			
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test T";
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
 			entity.Descn = "Test Test ";
 			
 			return entity;
@@ -78,7 +78,7 @@ namespace NHibCsSample.Generated.UnitTests
             {
                 Category entityA = GetFirstCategory();
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test Test Te";
+				entityA.Name = "Test Test Test Test Test Test Test Test Test Tes";
 				
 				manager.Update(entityA);
 

@@ -5,7 +5,7 @@
   </variables>
   <propertySets>
     <propertySet name="NHibernateMaster" template="..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\NHibernateMaster.cst">
-      <property name="NHibernateVersion">v2_0</property>
+      <property name="NHibernateVersion">v2_1</property>
       <property name="VsVersion">VS_2008</property>
       <property name="AssemblyName">NHibCsSample.Data</property>
       <property name="ManagerNamespace">NHibCsSample.Generated.ManagerObjects</property>

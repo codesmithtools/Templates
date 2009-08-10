@@ -21,11 +21,11 @@ Namespace NHibVbSample.Generated.UnitTests
 			Dim entity As New Product()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test Te"
+			entity.Id = "Test"
 			
-			entity.Name = "Test Test "
+			entity.Name = "Test Test Test Test T"
 			entity.Descn = "Test Test "
-			entity.Image = "Test Test Test Test Test Test Test"
+			entity.Image = "Test Test T"
 			
 			Dim categoryManager As ICategoryManager = managerFactory.GetCategoryManager()
 			entity.Category = categoryManager.GetAll(1)(0)
@@ -70,7 +70,7 @@ Namespace NHibVbSample.Generated.UnitTests
 			Try
 				Dim entityA As Product = GetFirstProduct()
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test Test Test"
+				entityA.Name = "Test Test Test T"
 				
 				manager.Update(entityA)
 
