@@ -66,7 +66,7 @@ namespace <%= BaseNamespace %>
         public ManagerBase(INHibernateSession session)
         {
             this.session = session;
-            this.session.Register(this);
+            this.session.IncrementRefCount();
         }
         
         ~ManagerBase()
@@ -203,7 +203,7 @@ namespace <%= BaseNamespace %>
         {
             if (!_disposed)
             {
-                session.Unregister(this);
+                session.DecrementRefCount();
 
                 if (!finalizing)
                     GC.SuppressFinalize(this);
