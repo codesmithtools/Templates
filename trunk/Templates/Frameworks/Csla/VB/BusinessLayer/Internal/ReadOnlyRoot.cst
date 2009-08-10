@@ -44,7 +44,7 @@ Public Partial Class <%= BusinessClassName %>
 	
 	#Region "Authorization Rules"
 	
-	Protected Overrides Sub AddAuthorizationRules()
+		Protected Overrides Sub AddAuthorizationRules()
 		'Dim canWrite As String() = { "AdminUser", "RegularUser" }
         'Dim canRead As String() = { "AdminUser", "RegularUser", "ReadOnlyUser" }
         'Dim admin As String() = { "AdminUser" }
@@ -55,7 +55,7 @@ Public Partial Class <%= BusinessClassName %>
         'AuthorizationRules.AllowGet(GetType(<%= BusinessClassName %>), canRead)
 
 <% For Each member As Member in Entity.MembersNoRowVersionIncludePrimaryKey %>
-        '<%= member.PropertyName %>
+        ''<%= member.PropertyName %>
 <% If Not member.IsReadOnly Then %>
         'AuthorizationRules.AllowWrite(<%= member.PrivateMemberVariableName %>Property, canWrite)
 <% End If %>
@@ -65,26 +65,26 @@ Public Partial Class <%= BusinessClassName %>
 <%-- Foreign Keys --%>
 <% For Each member As AssociationMember In Entity.MembersForeignKey 
 Dim columnName As String = member.ResolveManyToOneNameConflict(Entity) %>
-        '<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
+        ''<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
         'AuthorizationRules.AllowWrite(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, canWrite)
         'AuthorizationRules.AllowRead(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, canRead)
         
 <% Next%>
 <%-- One-To-Zero-Or-One --%>
 <% For Each association As AssociationMember in Entity.OneToZeroOrOne %>
-        '<%= association.PropertyName %>
+        ''<%= association.PropertyName %>
         'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
         
 <% Next%>
 <%-- Many-To-One --%>
 <% For Each association As AssociationMember in Entity.ManyToOne %>
-        '<%= association.PropertyName %>
+        ''<%= association.PropertyName %>
         'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
         
 <% Next%>
 <%-- Many-To-One --%>
 <% For Each association As AssociationMember in Entity.ToManyUnion %>
-        '<%= association.PropertyName %>
+        ''<%= association.PropertyName %>
         'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
         
 <% Next%>
