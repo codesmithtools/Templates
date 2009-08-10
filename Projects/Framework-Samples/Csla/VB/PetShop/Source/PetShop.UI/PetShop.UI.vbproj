@@ -445,7 +445,6 @@
     <Content Include="SignIn.aspx" />
     <Content Include="UserProfile.aspx" />
     <Content Include="WishList.aspx" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>

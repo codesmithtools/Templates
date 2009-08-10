@@ -83,10 +83,13 @@ Public Partial Class Profile
 	
 #End Region
 
-#Region "Custom Factory Methods"""
+#Region "Custom Factory Methods"
 
     Public Shared Function GetProfile(ByVal username As String) As Profile
-        Return DataPortal.Fetch(Of Profile)(New ProfileCriteria())
+        Dim criteria As New ProfileCriteria()
+        criteria.Username = username
+
+        Return DataPortal.Fetch(Of Profile)(criteria)
     End Function
 
 #End Region

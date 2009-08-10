@@ -27,7 +27,7 @@ Public Class BusinessTests
 
         Dim profile As Profile = profile.NewProfile()
         profile.Username = NAME
-        profile.ApplicationName = "PetShop..Businesss"
+        profile.ApplicationName = "PetShop.Businesss"
         profile.IsAnonymous = False
         profile.LastActivityDate = DateTime.Now
         profile.LastUpdatedDate = DateTime.Now
@@ -77,8 +77,8 @@ Public Class BusinessTests
 
         Dim category As Category = category.NewCategory()
         category.CategoryId = ID
-        category.Name = ""
-        category.Descn = ""
+        category.Name = "test"
+        category.Descn = "unit tests"
 
         Try
             category = category.Save()
@@ -175,7 +175,7 @@ Public Class BusinessTests
         product.CategoryId = ID
         product.Image = "/.png"
         product.Descn = ""
-        product.Name = ""
+        product.Name = "Tests"
 
         Try
             product = product.Save()
@@ -223,8 +223,8 @@ Public Class BusinessTests
         Dim supplier As Supplier = supplier.NewSupplier()
         supplier.Name = NAME
         supplier.Status = "AB"
-        supplier.Addr1 = "One  Way"
-        supplier.Addr2 = "Two  Way"
+        supplier.Addr1 = "One Way"
+        supplier.Addr2 = "Two Way"
         supplier.City = "Dallas"
         supplier.State = "TX"
         supplier.Zip = "90210"
@@ -278,7 +278,7 @@ Public Class BusinessTests
         item.ItemId = ID
         item.Image = "/.png"
         item.ListPrice = 0
-        item.Name = ""
+        item.Name = "item test"
         item.ProductId = ID
         item.Status = ""
         item.SuppId = _supplierId

@@ -159,7 +159,10 @@ Public Partial Class Order
     ''' <param name="uniqueId">assumes UserId == Profile.UniqueId</param>
     ''' <returns>an Order.</returns>
     Public Shared Function GetOrder(ByVal uniqueId As String) As Order
-        Return DataPortal.Fetch(Of Order)(New OrderCriteria())
+        Dim criteria As New OrderCriteria
+        criteria.UserId = uniqueId
+
+        Return DataPortal.Fetch(Of Order)(criteria)
     End Function
 
 #End Region
