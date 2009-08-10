@@ -385,9 +385,6 @@
   <ItemGroup>
     <Content Include="App_Data\PetShop.mdf">
     </Content>
-    <Content Include="App_Data\PetShop_log.ldf">
-      <DependentUpon>PetShop.mdf</DependentUpon>
-    </Content>
     <Content Include="App_Themes\PetShop\SkinFile.skin" />
     <Content Include="CheckOut.aspx" />
     <Content Include="Controls\AddressConfirm.ascx" />

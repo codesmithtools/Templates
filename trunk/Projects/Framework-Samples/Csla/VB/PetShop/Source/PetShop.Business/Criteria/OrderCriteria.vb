@@ -12,5 +12,19 @@ Option Strict On
 
 Imports System
 
-Public Partial Class  OrderCriteria
+Partial Public Class OrderCriteria
+
+#Region "Custom Critiera"
+
+    Public Property UserId() As String
+        Get
+            Return GetValue(Of String)("UserId")
+        End Get
+        Set(ByVal value As String)
+            _bag("UserId") = value
+        End Set
+    End Property
+
+#End Region
+
 End Class

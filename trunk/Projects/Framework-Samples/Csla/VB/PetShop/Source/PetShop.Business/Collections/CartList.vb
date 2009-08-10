@@ -20,7 +20,11 @@ Public Partial Class CartList
 #Region "Custom Factory Methods"
 
     Friend Shared Function GetCart(ByVal uniqueID As Integer, ByVal isShoppingCart As Boolean) As CartList
-        Return DataPortal.FetchChild(Of CartList)(New CartCriteria())
+        Dim criteria As New CartCriteria
+        criteria.UniqueID = uniqueID
+        criteria.IsShoppingCart = isShoppingCart
+
+        Return DataPortal.FetchChild(Of CartList)(criteria)
     End Function
 
 #End Region
