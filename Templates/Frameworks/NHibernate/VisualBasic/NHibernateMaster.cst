@@ -232,6 +232,8 @@ Private Sub RegisterReferences()
     
         Case NHibernateVersion.v2_1
             Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\NHibernate.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\Castle.Core.dll"))
+            Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\Castle.DynamicProxy2.dll"))
             Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\NHibernate.ByteCode.Castle.dll"))
             Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\Iesi.Collections.dll"))
             Me.RegisterReference(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\NHibernate\2.1.0.GA\log4net.dll"))

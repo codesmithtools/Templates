@@ -228,6 +228,8 @@ private void RegisterReferences()
         
         case NHibernateVersion.v2_1:
             this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1.0.GA\NHibernate.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1.0.GA\Castle.Core.dll"));
+            this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1.0.GA\Castle.DynamicProxy2.dll"));
             this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1.0.GA\NHibernate.ByteCode.Castle.dll"));
             this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1.0.GA\Iesi.Collections.dll"));
             this.RegisterReference(Path.Combine(this.CodeTemplateInfo.DirectoryName, @"..\Common\NHibernate\2.1.0.GA\log4net.dll"));
