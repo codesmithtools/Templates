@@ -23,28 +23,28 @@ namespace NHibCsSample.Generated.UnitTests
 			Order entity = new Order();
 			
 			
-			entity.UserId = "Test T";
+			entity.UserId = "Test Test Test Test";
 			entity.OrderDate = DateTime.Now;
-			entity.ShipAddr1 = "Test Test Test ";
-			entity.ShipAddr2 = "Test Test Test Test Test Test Test Test Test Test Test";
-			entity.ShipCity = "Test Test Test Test Test Test Test Test Test Test Test ";
-			entity.ShipState = "Test Test Test Test";
-			entity.ShipZip = "Tes";
-			entity.ShipCountry = "Test Test";
-			entity.BillAddr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-			entity.BillAddr2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
-			entity.BillCity = "Test ";
-			entity.BillState = "Te";
-			entity.BillZip = "Test ";
-			entity.BillCountry = "Test Tes";
-			entity.Courier = "Test";
-			entity.TotalPrice = 70;
-			entity.BillToFirstName = "Test Test Test Test Test Test Test Test Test Test Test";
-			entity.BillToLastName = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-			entity.ShipToFirstName = "Test Test Test Test Test Test Test Test Test Test Test Te";
-			entity.ShipToLastName = "Test Test Test Test Test Test Tes";
-			entity.AuthorizationNumber = 62;
-			entity.Locale = "Test Test Test Tes";
+			entity.ShipAddr1 = "Test Test Test Test Test Test Test Test Test Te";
+			entity.ShipAddr2 = "Test Test Test Test Test";
+			entity.ShipCity = "Test Test Test Test Test Test Test Test T";
+			entity.ShipState = "Test Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.ShipZip = "Test";
+			entity.ShipCountry = "Test Test ";
+			entity.BillAddr1 = "Test Test Test Test Test Test Test Test";
+			entity.BillAddr2 = "Test Test Test Test Test Test Test Test Test Test Test ";
+			entity.BillCity = "Test Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.BillState = "Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
+			entity.BillZip = "Test Test T";
+			entity.BillCountry = "Test Test ";
+			entity.Courier = "Test Test Test Test Test Test Test Te";
+			entity.TotalPrice = 62;
+			entity.BillToFirstName = "Test Test Test Test Test Test Test Test Test Te";
+			entity.BillToLastName = "Test Test Test Test Test Test Test Test Test Test Test Test Test";
+			entity.ShipToFirstName = "Test Test T";
+			entity.ShipToLastName = "Test Test Test ";
+			entity.AuthorizationNumber = 38;
+			entity.Locale = "Te";
 			
 			return entity;
 		}
@@ -96,7 +96,7 @@ namespace NHibCsSample.Generated.UnitTests
             {
                 Order entityA = GetFirstOrder();
 				
-				entityA.UserId = "T";
+				entityA.UserId = "Test Test";
 				
 				manager.Update(entityA);
 

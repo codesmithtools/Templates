@@ -23,13 +23,13 @@ namespace NHibCsSample.Generated.UnitTests
 			Item entity = new Item();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Tes";
+			entity.Id = "T";
 			
-			entity.ListPrice = 28;
-			entity.UnitCost = 21;
+			entity.ListPrice = 73;
+			entity.UnitCost = 40;
 			entity.Status = "T";
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
-			entity.Image = "Test Test Test Test Test Test Test Test T";
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+			entity.Image = "Test Test";
 			
 			IProductManager productManager = managerFactory.GetProductManager();
 			entity.Product = productManager.GetAll(1)[0];
@@ -87,7 +87,7 @@ namespace NHibCsSample.Generated.UnitTests
             {
                 Item entityA = GetFirstItem();
 				
-				entityA.ListPrice = 3;
+				entityA.ListPrice = 2;
 				
 				manager.Update(entityA);
 

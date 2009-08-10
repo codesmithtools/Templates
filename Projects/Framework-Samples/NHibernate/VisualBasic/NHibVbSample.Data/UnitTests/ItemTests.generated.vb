@@ -21,13 +21,13 @@ Namespace NHibVbSample.Generated.UnitTests
 			Dim entity As New Item()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Te"
+			entity.Id = "Test Test"
 			
-			entity.ListPrice = 78
-			entity.UnitCost = 49
+			entity.ListPrice = 94
+			entity.UnitCost = 1
 			entity.Status = "T"
-			entity.Name = "Test Test Test Test Test Test Test Test"
-			entity.Image = "Test Test Test Test Test Test Test Test"
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test T"
+			entity.Image = "Test Test Test Test Test Test Test Test Test Te"
 			
 			Dim productManager As IProductManager = managerFactory.GetProductManager()
 			entity.Product = productManager.GetAll(1)(0)
@@ -75,7 +75,7 @@ Namespace NHibVbSample.Generated.UnitTests
 			Try
 				Dim entityA As Item = GetFirstItem()
 				
-				entityA.ListPrice = 70
+				entityA.ListPrice = 79
 				
 				manager.Update(entityA)
 

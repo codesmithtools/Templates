@@ -23,16 +23,16 @@ namespace NHibCsSample.Generated.UnitTests
 			Account entity = new Account();
 			
 			
-			entity.Email = "Test Test Test Test Test Test Test Test Test Test Test T";
-			entity.FirstName = "Test Test Test Test Test ";
-			entity.LastName = "Test Test Test Test Tes";
-			entity.Address1 = "Test Test Test";
-			entity.Address2 = "Test Test Test Test Test Test ";
-			entity.City = "Test Test Test Test Test Tes";
-			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-			entity.Zip = "Test Tes";
-			entity.Country = "Test T";
-			entity.Phone = "Test";
+			entity.Email = "Test Test Test Test Test Test Test Test Test Test Te";
+			entity.FirstName = "Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.LastName = "Test Tes";
+			entity.Address1 = "Test Test Te";
+			entity.Address2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.City = "Test Test Test Test Test Test Test Test Test";
+			entity.State = "Test Test Test Test Tes";
+			entity.Zip = "Test Test Test T";
+			entity.Country = "Test Test T";
+			entity.Phone = "Test Test Test Te";
 			
 			IProfileManager profileManager = managerFactory.GetProfileManager();
 			entity.Profile = profileManager.GetAll(1)[0];

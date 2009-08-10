@@ -51,7 +51,7 @@ namespace NHibCsSample.Generated.Base
         public ManagerBase(INHibernateSession session)
         {
             this.session = session;
-            this.session.Register(this);
+            this.session.IncrementRefCount();
         }
         
         ~ManagerBase()
@@ -188,7 +188,7 @@ namespace NHibCsSample.Generated.Base
         {
             if (!_disposed)
             {
-                session.Unregister(this);
+                session.DecrementRefCount();
 
                 if (!finalizing)
                     GC.SuppressFinalize(this);

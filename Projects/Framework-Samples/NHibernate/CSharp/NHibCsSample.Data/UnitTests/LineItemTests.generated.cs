@@ -23,11 +23,11 @@ namespace NHibCsSample.Generated.UnitTests
 			LineItem entity = new LineItem();
 			
 			
-			entity.OrderId = 59;
-			entity.LineNum = 3;
-			entity.ItemId = "Test Test";
-			entity.Quantity = 82;
-			entity.UnitPrice = 72;
+			entity.OrderId = 49;
+			entity.LineNum = 79;
+			entity.ItemId = "Test Tes";
+			entity.Quantity = 72;
+			entity.UnitPrice = 2;
 			
 			return entity;
 		}
@@ -79,7 +79,7 @@ namespace NHibCsSample.Generated.UnitTests
             {
                 LineItem entityA = GetFirstLineItem();
 				
-				entityA.ItemId = "Test";
+				entityA.ItemId = "Test T";
 				
 				manager.Update(entityA);
 

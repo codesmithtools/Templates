@@ -31,29 +31,33 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Frameworks\NHibernate\CSharp\..\Common\NHibernate\Castle.Core.dll</HintPath>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NHibernate\2.1.0.GA\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.DynamicProxy2, Version=2.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Frameworks\NHibernate\CSharp\..\Common\NHibernate\Castle.DynamicProxy2.dll</HintPath>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NHibernate\2.1.0.GA\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
-    <Reference Include="Iesi.Collections, Version=1.0.0.3, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Frameworks\NHibernate\CSharp\..\Common\NHibernate\Iesi.Collections.dll</HintPath>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NHibernate\2.1.0.GA\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Frameworks\NHibernate\CSharp\..\Common\NHibernate\log4net.dll</HintPath>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NHibernate\2.1.0.GA\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=2.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Frameworks\NHibernate\CSharp\..\Common\NHibernate\NHibernate.dll</HintPath>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NHibernate\2.1.0.GA\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NHibernate\2.1.0.GA\NHibernate.ByteCode.Castle.dll</HintPath>
     </Reference>
     <Reference Include="NUnit.Framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Frameworks\NHibernate\CSharp\..\Common\NUnit\NUnit.Framework.dll</HintPath>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NUnit\NUnit.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

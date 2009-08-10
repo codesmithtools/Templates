@@ -52,7 +52,7 @@ Namespace NHibVbSample.Generated.Base
 		End Sub
 		Public Sub New(session As INHibernateSession)
 			Me._session = session
-			Me._session.Register(Me)
+			Me._session.IncrementRefCount()
 		End Sub
         
 		Protected Overrides Sub Finalize()
@@ -174,7 +174,7 @@ Namespace NHibVbSample.Generated.Base
 		End Sub
 		Private Sub Dispose(finalizing As Boolean)
 			If Not _disposed Then
-				session.Unregister(Me)
+				session.DecrementRefCount()
 
 				If Not finalizing Then
 					GC.SuppressFinalize(Me)

@@ -21,9 +21,9 @@ Namespace NHibVbSample.Generated.UnitTests
 			Dim entity As New Category()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test Te"
+			entity.Id = "Test T"
 			
-			entity.Name = "T"
+			entity.Name = "Test Test Test Test Tes"
 			entity.Descn = "Test Test "
 
 			Return entity

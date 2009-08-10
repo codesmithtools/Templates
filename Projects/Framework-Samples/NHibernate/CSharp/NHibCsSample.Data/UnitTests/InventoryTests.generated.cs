@@ -23,9 +23,9 @@ namespace NHibCsSample.Generated.UnitTests
 			Inventory entity = new Inventory();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test Tes";
+			entity.Id = "Test Test";
 			
-			entity.Qty = 55;
+			entity.Qty = 76;
 			
 			return entity;
 		}
@@ -77,7 +77,7 @@ namespace NHibCsSample.Generated.UnitTests
             {
                 Inventory entityA = GetFirstInventory();
 				
-				entityA.Qty = 48;
+				entityA.Qty = 75;
 				
 				manager.Update(entityA);
 
