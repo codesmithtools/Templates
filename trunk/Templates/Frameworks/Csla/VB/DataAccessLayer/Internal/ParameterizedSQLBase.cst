@@ -145,9 +145,9 @@ Namespace Base
         #Region "Update"
     
     <% If (entity.Table.ForeignKeyColumns.Count = 0) Then %>
-        Public Overridable Function <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildParametersVariables() %><% If (entity.HasRowVersionMember) Then %>, <%= entity.RowVersionMember.SystemType %> timestamp<% End If %>) As SafeDataReader
+        Public Overridable Function <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildParametersVariables() %><% If (entity.HasRowVersionMember) Then %>, ByVal timestamp As <%= entity.RowVersionMember.SystemType %><% End If %>) As SafeDataReader
     <% Else %>
-        Public Overridable Function <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildParametersVariables(entity.MembersForeignKey) %><% If (entity.HasRowVersionMember) Then %>, <%= entity.RowVersionMember.SystemType %> timestamp<% End If %>) As SafeDataReader
+        Public Overridable Function <%= entity.ClassName %>Update(<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildParametersVariables(entity.MembersForeignKey) %><% If (entity.HasRowVersionMember) Then %>, ByVal timestamp As <%= entity.RowVersionMember.SystemType %><% End If %>) As SafeDataReader
     <% End If %>
     <% If (entity.Table.ForeignKeyColumns.Count = 0) Then %>
             Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoKeysOrRowVersion.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = @p_<%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"

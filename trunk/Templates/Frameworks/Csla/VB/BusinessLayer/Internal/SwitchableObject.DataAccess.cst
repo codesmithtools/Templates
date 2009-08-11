@@ -281,19 +281,19 @@ Next %>
     ''' <param name="reader">The reader.</param>
     ''' <param name="columnName">The column name.</param>
     ''' <Returns>Bytes Stored in a column.</Returns>
-    Friend Shared Function GetBytes(reader As SafeDataReader, columnName As String) As Byte()
-        Dim buffer as Var = new byte[1024]
-        Dim fieldOffset as Long = 0
-        
-        using (var stream = new MemoryStream())
-            Dim bytesRead as Long
-        
-            Do While (bytesRead = reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length)) > 0
-                Dim actualRead as Var = new byte[bytesRead]
-                Buffer.BlockCopy(buffer, 0, actualRead, 0, (int)bytesRead)
+    Friend Shared Function GetBytes(ByVal reader As SafeDataReader, ByVal columnName As String) As Byte()
+        Dim buffer As Byte() = New Byte(1024) {}
+        Dim fieldOffset As Long = 0
+
+        Using stream = New MemoryStream()
+            Dim bytesRead As Long
+
+            While bytesRead = reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length)
+                Dim actualRead As Byte() = New Byte(CInt(bytesRead)) {}
+                buffer.Copy(buffer, 0, actualRead, 0, bytesRead)
                 stream.Write(actualRead, 0, actualRead.Length)
                 fieldOffset += bytesRead
-            Loop
+            End While
 
             Return stream.ToArray()
         End Using

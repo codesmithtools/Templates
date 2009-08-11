@@ -55,10 +55,11 @@ Public Partial Class <%= BusinessClassName %>
     End Sub
 
 <% If (Entity.HasRowVersionMember) Then %>
-    Public <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>, <%= Entity.RowVersionMember.SystemType %> timestamp) : this(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>)
-    {
-		Me.Timestamp = timestamp
-    }
+    Public Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>, ByVal timestamp As <%= Entity.RowVersionMember.SystemType %>)
+    	Me.New(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>)
+        
+        Me.Timestamp = timestamp
+    End Sub
 <% End If %>
     
     #End Region
