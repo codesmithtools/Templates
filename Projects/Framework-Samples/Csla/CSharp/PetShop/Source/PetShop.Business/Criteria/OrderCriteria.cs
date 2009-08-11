@@ -16,11 +16,15 @@ using System;
 namespace PetShop.Business
 {
 	public partial class OrderCriteria
-	{
+    {
+        #region Custom Critiera
+
         public string UserId
         {
             get { return GetValue<string>("UserId"); }
             set { _bag["UserId"] = value; }
         }
+
+        #endregion
     }
 }

@@ -69,7 +69,7 @@ Next %>
     ''' Used for optimistic concurrency.
     ''' </summary>
     <NotUndoable()> _
-    Private <%= Entity.RowVersionMember.SystemType %> _timestamp = New <%= Entity.RowVersionMember.SystemType(True) %>
+    Private _timestamp As <%= Entity.RowVersionMember.SystemType %>
 <% End If %>
 
 <%  For Each member As Member in Entity.MembersNoRowVersionIncludePrimaryKey
