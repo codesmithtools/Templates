@@ -29,6 +29,7 @@ Imports System.IO
 
 Imports Csla
 Imports Csla.Data
+Imports Csla.Validation
 
 Imports <%= DataProjectName %>
 
@@ -38,7 +39,7 @@ Public Partial Class <%= BusinessClassName %>
 
 <% If (DataAccessImplementation = DataAccessMethod.None) Then %>
 	<RunLocal()> _
-	Protected Sub DataPortal_Create()
+	Protected Shadows Sub DataPortal_Create()
 		' TODO: load default values
  	 	' omit Me override If you have no defaults to set
 		
@@ -73,7 +74,7 @@ Public Partial Class <%= BusinessClassName %>
 	
 <% Else If (DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>
 	<RunLocal()> _
-	Protected Overrides Sub DataPortal_Create()
+	Protected Shadows Sub DataPortal_Create()
 		'MyBase.DataPortal_Create()
 <% If (Entity.PrimaryKey.KeyMember.SystemType = "Guid") Then
     If (UseMemberVariables) Then %>
@@ -208,7 +209,7 @@ Next %>
 
             While bytesRead = reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length)
                 Dim actualRead As Byte() = New Byte(CInt(bytesRead)) {}
-                buffer.Copy(buffer, 0, actualRead, 0, bytesRead)
+                Array.Copy(buffer, 0, actualRead, 0, bytesRead)
                 stream.Write(actualRead, 0, actualRead.Length)
                 fieldOffset += bytesRead
             End While

@@ -58,6 +58,17 @@ namespace CodeSmith.SchemaHelper
 
         public string SystemType { get; private set; }
 
+        public string SystemTypeWithSize
+        {
+            get
+            {
+                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    return string.Format("{0}({1})", SystemType, Size);
+
+                return SystemType.Replace("[]", string.Format("[{0}]", Size));
+            }
+        }
+
         public string BaseSystemType
         {
             get

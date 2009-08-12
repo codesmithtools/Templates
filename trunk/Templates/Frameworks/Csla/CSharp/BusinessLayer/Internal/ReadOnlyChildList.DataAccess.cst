@@ -32,7 +32,15 @@ namespace <%= BusinessProjectName %>
 	public partial class <%= BusinessClassName %>
 	{
 		#region Data Access
-				
+		
+        [RunLocal()]
+        protected void Child_Create()
+        {
+            //TODO: load default values
+            //omit this override if you have no defaults to set
+            //MyBase.Child_Create()
+        }
+        
 		private void Child_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
 		{
 			RaiseListChangedEvents = false;

@@ -33,17 +33,18 @@ Public Partial Class <%= BusinessClassName %>
 	Public Shared Function Execute() As Boolean
 	    If Not CanExecuteCommand() Then
     		Throw New System.Security.SecurityException("Not authorized to execute command")
-		
+		End If
+        
 		Dim cmd As New <%= BusinessClassName %>()
 		cmd.BeforeServer()
-		cmd = DataPortal.Execute< <%= BusinessClassName %> >(cmd)
+		cmd = DataPortal.Execute(Of <%= BusinessClassName %>)(cmd)
 		cmd.AfterServer()
 		
 		Return cmd.Result
     End Function
 
 	Private Sub New()
-	    /* Require use of factory methods */
+	    ' Require use of factory methods
     End Sub
 	
 	#End Region
@@ -53,21 +54,20 @@ Public Partial Class <%= BusinessClassName %>
 	' TODO: add your own fields and properties
 	Private _result As Boolean
 	Public ReadOnly Property Result() As Boolean
-	{
-		Get { Return _result }
-	}
+	    Get
+            Return _result
+        End Get
+	End Property
 	
 	Private Sub BeforeServer()
-	{
 		' TODO: implement code to run on client
 		' before server is called
-	}
+	End Sub
 	
 	Private Sub AfterServer()
-	{
 		' TODO: implement code to run on client
 		' after server is called
-	}
+	End Sub
 	
 	#End Region
 

@@ -35,7 +35,7 @@ Public Partial Class <%= BusinessClassName %>
 	#Region "Data Access"
     
     <RunLocal()> _
-	Protected Overrides Sub DataPortal_Create()
+	Protected Sub DataPortal_Create()
     End Sub
 	
 <% If (DataAccessImplementation = DataAccessMethod.None) Then %>
@@ -83,9 +83,6 @@ If Not UseLazyLoading Then %>
 <% End If
 End If
 Next %> 
-
-        MarkAsChild()
-        MarkOld()
     End Sub
 
     #End Region
@@ -108,7 +105,7 @@ Next %>
 
             While bytesRead = reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length)
                 Dim actualRead As Byte() = New Byte(CInt(bytesRead)) {}
-                buffer.Copy(buffer, 0, actualRead, 0, bytesRead)
+                Array.Copy(buffer, 0, actualRead, 0, bytesRead)
                 stream.Write(actualRead, 0, actualRead.Length)
                 fieldOffset += bytesRead
             End While

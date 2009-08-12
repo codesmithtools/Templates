@@ -35,6 +35,14 @@ namespace <%= BusinessProjectName %>
 {
 	public partial class <%= BusinessClassName %>
 	{
+        [RunLocal()]
+        protected void Child_Create()
+        {
+            // TODO: load default values
+            // omit this override if you have no defaults to set
+            //base.Child_Create()
+        }
+        
 		#region Data Access
 <% if(DataAccessImplementation == DataAccessMethod.None) { %>		
 		private void Child_Fetch(object childData)
@@ -68,10 +76,7 @@ namespace <%= BusinessProjectName %>
 			<%= association2.PrivateMemberVariableName %> = new <%= association2.ClassName %>List.NewList();
 <% } else { %>
 			LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList());
-<% } } } %> 
-
-            MarkAsChild();
-            MarkOld();
+<% } } } %>
         }
 		
 <% if(Entity.HasByteArrayColumn()) { %>		

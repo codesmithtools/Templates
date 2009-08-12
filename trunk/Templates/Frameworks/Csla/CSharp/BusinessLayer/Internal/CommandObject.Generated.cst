@@ -52,7 +52,7 @@ namespace <%= BusinessProjectName %>
 		#region Client-side Code
 
 		// TODO: add your own fields and properties
-		private bool _result
+		private bool _result;
 		public bool Result
 		{
 			get { return _result; }

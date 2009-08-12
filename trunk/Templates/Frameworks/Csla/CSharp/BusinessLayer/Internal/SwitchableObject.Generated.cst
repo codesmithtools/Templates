@@ -73,7 +73,7 @@ namespace <%= BusinessProjectName %>
         /// Used for optimistic concurrency.
         /// </summary>
         [NotUndoable]
-        private <%= Entity.RowVersionMember.SystemType %> _timestamp = new <%= Entity.RowVersionMember.SystemType %>;
+        private <%= Entity.RowVersionMember.SystemType %> _timestamp = new <%= Entity.RowVersionMember.SystemTypeWithSize %>;
 <% } %>
 
 <%  foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey){ if (UseMemberVariables){ %>

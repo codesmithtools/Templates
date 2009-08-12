@@ -34,7 +34,7 @@ Public Partial Class <%= BusinessClassName %>
 	'Protected Sub DataPortal_Create()
     'End Sub
 			
-	Private Sub DataPortal_Fetch()
+	Private Shadows Sub DataPortal_Fetch()
 		RaiseListChangedEvents = false
 		IsReadOnly = false
 		

@@ -32,7 +32,12 @@ namespace <%= BusinessProjectName %>
 	public partial class <%= BusinessClassName %>
 	{
 		#region Data Access
-				
+		
+        //[RunLocal()]
+        //protected void DataPortal_Create()
+        //{
+        //}
+        
 		private void DataPortal_Fetch()
 		{
 			RaiseListChangedEvents = false;
