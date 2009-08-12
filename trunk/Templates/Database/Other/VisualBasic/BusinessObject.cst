@@ -36,6 +36,7 @@ Public Class <%= GetClassName(SourceTable) %>
     End Sub
 
     Public Sub New(ByVal id As <%= GetPrimaryKeyType(SourceTable) %>)
+        ' NOTE: If this reference doesn't exist then add SqlService.vb from the template directory to your solution.
         Dim sql As New SqlService()
         sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>", SqlDbType.VarChar, id)
         Dim reader As SqlDataReader = sql.ExecuteSqlReader("SELECT * FROM <%= SourceTable.Name %> WHERE <%= SourceTable.PrimaryKey.MemberColumns(0).Name %> = @<%= SourceTable.PrimaryKey.MemberColumns(0).Name %>")
