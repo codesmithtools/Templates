@@ -76,6 +76,12 @@ namespace <%= BusinessProjectName %>
 		{
             // TODO: delete values
 		}
+        
+        [Transactional(TransactionalTypes.TransactionScope)]
+		protected override void DataPortal_Delete(object criteria)
+		{
+			// TODO: delete values
+		}
 <% } else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL) { %>
 		[RunLocal]
 		protected override void DataPortal_Create()
@@ -183,6 +189,18 @@ namespace <%= BusinessProjectName %>
 		protected override void DataPortal_DeleteSelf()
 		{
             DataPortal_Delete(new <%= BusinessClassName %>Criteria(<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableParameters() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %><% if(Entity.HasRowVersionMember) { %>, _timestamp<% } %>));
+        }
+        
+        [Transactional(TransactionalTypes.TransactionScope)]
+		protected override void DataPortal_Delete(object criteria)
+		{
+			<%= BusinessClassName %>Criteria theCriteria = criteria as <%= BusinessClassName %>Criteria;
+            if (theCriteria != null)
+            {
+				using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Delete(theCriteria.StateBag)) 
+				{
+				}
+			}
         }
 		
 <% if(Entity.HasByteArrayColumn()) { %>		

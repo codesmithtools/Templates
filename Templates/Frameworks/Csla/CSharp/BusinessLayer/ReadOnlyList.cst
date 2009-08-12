@@ -31,7 +31,7 @@ public override void Generate()
 		readOnlyList.SourceTable = entity.Table;
 		readOnlyList.BusinessClassName = string.Format("{0}List", readOnlyList.BusinessClassName);
 		
-		string parentFileName = System.IO.Path.Combine(Location, string.Format("{0}.cs", readOnlyList.BusinessClassName));
+		string parentFileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.cs", readOnlyList.BusinessClassName));
 		if (!System.IO.File.Exists(parentFileName))
 		{
 			readOnlyList.RenderToFile(parentFileName, false);

@@ -33,6 +33,11 @@ namespace <%= BusinessProjectName %>
 	{
 		#region Data Access
 
+        [RunLocal()]
+        private void DataPortal_Create()
+        {
+        }
+        
         private void DataPortal_Fetch(<%= ChildBusinessClassName %>Criteria criteria)             
 		{
 			RaiseListChangedEvents = false;

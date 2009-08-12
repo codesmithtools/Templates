@@ -17,7 +17,10 @@
 #region using declarations
 
 using System;
+
 using Csla;
+using Csla.Security;
+using Csla.Validation;
 
 #endregion
 
@@ -29,8 +32,51 @@ namespace <%= BusinessProjectName %>
 		
 		protected override void AddAuthorizationRules()
 		{
-			// TODO: add authorization rules
-			//AuthorizationRules.AllowRead("Name", "Role");
+            //// More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
+            
+            //string[] canWrite = { "AdminUser", "RegularUser" };
+            //string[] canRead = { "AdminUser", "RegularUser", "ReadOnlyUser" };
+            //string[] admin = { "AdminUser" };
+
+            // AuthorizationRules.AllowCreate(typeof(<%= BusinessClassName %>), admin);
+            // AuthorizationRules.AllowDelete(typeof(<%= BusinessClassName %>), admin);
+            // AuthorizationRules.AllowEdit(typeof(<%= BusinessClassName %>), canWrite);
+            // AuthorizationRules.AllowGet(typeof(<%= BusinessClassName %>), canRead);
+
+<% foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey){ %>
+            //// <%= member.PropertyName %>
+<% if (member.IsReadOnly) { %>
+            // AuthorizationRules.AllowWrite(<%= member.PrivateMemberVariableName %>Property, canWrite);
+<% } %>
+            // AuthorizationRules.AllowRead(<%= member.PrivateMemberVariableName %>Property, canRead);
+        
+<% } %>
+<%-- Foreign Keys --%>
+<% foreach(AssociationMember member in Entity.MembersForeignKey){
+string columnName = member.ResolveManyToOneNameConflict(Entity); %>
+            //// <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
+            // AuthorizationRules.AllowWrite(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, canWrite);
+            // AuthorizationRules.AllowRead(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, canRead);
+        
+<% } %>
+<%-- One-To-Zero-Or-One --%>
+<% foreach(AssociationMember association in Entity.OneToZeroOrOne){ %>
+            //// <%= association.PropertyName %>
+            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
+        
+<% } %>
+<%-- Many-To-One --%>
+<% foreach(AssociationMember association in Entity.ManyToOne){ %>
+            //// <%= association.PropertyName %>
+            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
+        
+<% } %>
+<%-- Many-To-One --%>
+<% foreach(AssociationMember association in Entity.ToManyUnion){ %>
+            //// <%= association.PropertyName %>
+            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
+        
+<% } %>
 		}
 		
 		private static void AddObjectAuthorizationRules()

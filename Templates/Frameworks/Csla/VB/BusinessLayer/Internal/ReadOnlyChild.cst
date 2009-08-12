@@ -44,7 +44,9 @@ Public Partial Class <%= BusinessClassName %>
 	
 	#Region "Authorization Rules"
 	
-		Protected Overrides Sub AddAuthorizationRules()
+	Protected Overrides Sub AddAuthorizationRules()
+		''More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
+	
 		'Dim canWrite As String() = { "AdminUser", "RegularUser" }
         'Dim canRead As String() = { "AdminUser", "RegularUser", "ReadOnlyUser" }
         'Dim admin As String() = { "AdminUser" }

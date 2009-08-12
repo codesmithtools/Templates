@@ -66,6 +66,12 @@ namespace <%= BusinessProjectName %>
 		{
 			// TODO: delete values
 		}
+        
+        [Transactional(TransactionalTypes.TransactionScope)]
+		protected override void DataPortal_Delete(object criteria)
+		{
+			// TODO: delete values
+		}
 <% } else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL) { %>
 		protected override void Child_Create()
 		{
@@ -77,6 +83,8 @@ namespace <%= BusinessProjectName %>
 		private void Child_Fetch(SafeDataReader reader)
 		{
 			Fetch(reader);
+            
+            MarkAsChild();
 		}
 		
 		private void Child_Insert()

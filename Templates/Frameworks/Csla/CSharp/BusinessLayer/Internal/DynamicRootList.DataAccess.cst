@@ -30,7 +30,12 @@ using <%= DataProjectName %>;
 namespace <%= BusinessProjectName %>
 {
 	public partial class <%= BusinessClassName %>
-	{		
+	{	
+        //[RunLocal()]
+        //protected void DataPortal_Create()
+        //{
+        //}
+        
 		#region Data Access
         
 		private void DataPortal_Fetch(<%= ChildBusinessClassName %>Criteria criteria)

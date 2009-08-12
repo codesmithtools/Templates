@@ -38,7 +38,7 @@ Public Partial Class <%= BusinessClassName %>
 	End Function
     
 	Public Shared Sub InvalidateCache()
-	    _list = null
+	    _list = Nothing
 	End Sub
 
 	Private Sub New()
