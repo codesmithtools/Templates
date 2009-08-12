@@ -56,7 +56,9 @@ Public Partial Class AccountList
 	#Region "Business Methods"
 	
 	Protected Overrides Function AddNewCore() As Object
-		Return Me.AddNew()
+		Dim item As Account = PetShop.Business.Account.NewAccount()
+                Me.Add(item)
+                Return item
 	End Function
 	
 	#End Region

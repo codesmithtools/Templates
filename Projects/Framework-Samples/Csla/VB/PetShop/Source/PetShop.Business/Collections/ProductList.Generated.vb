@@ -22,7 +22,9 @@ Public Partial Class ProductList
 	#Region "Business Methods"
 	
 	Protected Overrides Function AddNewCore() As Object
-	    Return Me.AddNew()
+	    Dim item As Product = PetShop.Business.Product.NewProduct()
+            Me.Add(item)
+            Return item
 	End Function
 	
 	#End Region
