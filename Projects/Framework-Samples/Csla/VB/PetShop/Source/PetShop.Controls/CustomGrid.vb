@@ -23,7 +23,7 @@ Public Class CustomGrid
     Private _currentPageIndex As Integer
     Private _itemCount As Integer
 
-    Public Overloads Overrides Property DataSource() As Object
+    Public Overrides Property DataSource() As Object
         Set(ByVal value As Object)
             'This try catch block is to avoid issues with the VS.NET designer
             'The designer will try and bind a datasource which does not derive from ILIST
@@ -83,7 +83,7 @@ Public Class CustomGrid
         OnPageIndexChanged(New DataGridPageChangedEventArgs(Nothing, index))
     End Sub
 
-    Protected Overloads Overrides Sub OnLoad(ByVal e As EventArgs)
+    Protected Overrides Sub OnLoad(ByVal e As EventArgs)
         If Visible Then
             Dim page As String = Context.Request(KEY_PAGE)
             Dim index As Integer = If((page <> Nothing), Integer.Parse(page), 0)
@@ -95,7 +95,7 @@ Public Class CustomGrid
     ''' Overriden method to control how the page is rendered
     ''' </summary>
     ''' <param name="writer"></param>
-    Protected Overloads Overrides Sub Render(ByVal writer As HtmlTextWriter)
+    Protected Overrides Sub Render(ByVal writer As HtmlTextWriter)
 
         'Check there is some data attached
         If _itemCount = 0 Then
@@ -126,7 +126,7 @@ Public Class CustomGrid
         writer.Write(HTML3)
 
         'Next button?
-        If currentPageIndex < PageCount Then
+        If CurrentPageIndex < PageCount Then
             writer.Write(String.Format(LINK_MORE, (_currentPageIndex + 1).ToString() + query))
         End If
 
@@ -134,7 +134,7 @@ Public Class CustomGrid
         writer.Write(HTML4)
     End Sub
 
-    Protected Overloads Overrides Sub OnDataBinding(ByVal e As EventArgs)
+    Protected Overrides Sub OnDataBinding(ByVal e As EventArgs)
 
         'Work out which items we want to render to the page
         Dim start As Integer = _currentPageIndex * _pageSize
@@ -145,12 +145,12 @@ Public Class CustomGrid
         'Add the relevant items from the datasource
         Dim i As Integer = 0
         While i < size
-            page.Add(dataSource(start + i))
+            page.Add(DataSource(start + i))
             System.Math.Max(System.Threading.Interlocked.Increment(i), i - 1)
         End While
 
         'set the base objects datasource
-        MyBase.DataSource = page
+        DataSource = page
         MyBase.OnDataBinding(e)
 
     End Sub

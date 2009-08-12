@@ -83,7 +83,7 @@ Public Class CustomList
         OnPageIndexChanged(New DataGridPageChangedEventArgs(Nothing, index))
     End Sub
 
-    Protected Overloads Overrides Sub OnLoad(ByVal e As EventArgs)
+    Protected Overrides Sub OnLoad(ByVal e As EventArgs)
         If Visible Then
             Dim page As String = Context.Request(KEY_PAGE)
             Dim index As Integer = If((page <> Nothing), Integer.Parse(page), 0)
@@ -96,7 +96,7 @@ Public Class CustomList
     ''' Overriden method to control how the page is rendered
     ''' </summary>
     ''' <param name="writer"></param>
-    Protected Overloads Overrides Sub Render(ByVal writer As HtmlTextWriter)
+    Protected Overrides Sub Render(ByVal writer As HtmlTextWriter)
         'Check there is some data attached
         If _itemCount = 0 Then
             writer.Write(_emptyText)
@@ -119,7 +119,7 @@ Public Class CustomList
 
         'Determin whether next and previous buttons are required
         'Previous button?
-        If currentPageIndex > 0 Then
+        If CurrentPageIndex > 0 Then
             writer.Write(String.Format(LINK_PREV, (_currentPageIndex - 1).ToString() + query))
         End If
 
@@ -127,7 +127,7 @@ Public Class CustomList
         writer.Write(HTML3)
 
         'Next button?
-        If currentPageIndex < PageCount Then
+        If CurrentPageIndex < PageCount Then
             writer.Write(String.Format(LINK_MORE, (_currentPageIndex + 1).ToString() + query))
         End If
 
@@ -135,7 +135,7 @@ Public Class CustomList
         writer.Write(HTML4)
     End Sub
 
-    Protected Overloads Overrides Sub OnDataBinding(ByVal e As EventArgs)
+    Protected Overrides Sub OnDataBinding(ByVal e As EventArgs)
         'Work out which items we want to render to the page
         Dim start As Integer = _currentPageIndex * _pageSize
         Dim size As Integer = Math.Min(_pageSize, _itemCount - start)
@@ -150,7 +150,7 @@ Public Class CustomList
         End While
 
         'set the base objects datasource
-        MyBase.DataSource = page
+        DataSource = page
         MyBase.OnDataBinding(e)
     End Sub
 
