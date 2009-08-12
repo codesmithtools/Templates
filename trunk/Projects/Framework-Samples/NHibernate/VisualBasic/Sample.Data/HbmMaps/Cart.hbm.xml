@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Sample.Data.Generated.BusinessObjects" assembly="Sample.Data">
+	<class name="Sample.Data.Generated.BusinessObjects.Cart, Sample.Data" table="dbo.Cart" lazy="true">
+		<id name="Id" column="CartID">
+		 	<generator class="native" />
+		</id>
+		
+		<property name="ItemId" column="ItemId" />
+		<property name="Name" column="Name" />
+		<property name="Type" column="Type" />
+		<property name="Price" column="Price" />
+		<property name="CategoryId" column="CategoryId" />
+		<property name="ProductId" column="ProductId" />
+		<property name="IsShoppingCart" column="IsShoppingCart" />
+		<property name="Quantity" column="Quantity" />
+		<many-to-one name="Profile" column="UniqueID" class="Profile" />
+	</class>
+</hibernate-mapping>
