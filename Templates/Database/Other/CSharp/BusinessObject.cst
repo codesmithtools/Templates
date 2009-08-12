@@ -37,6 +37,7 @@ namespace <%= this.ClassNamespace %>
 		
 		public <%= GetClassName(SourceTable) %>(<%= GetPrimaryKeyType(SourceTable) %> id)
 		{
+            		// NOTE: If this reference doesn't exist then add SqlService.cs from the template directory to your solution.
 			SqlService sql = new SqlService();
 			sql.AddParameter("@<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>", SqlDbType.<%= GetSqlDbType(SourceTable.PrimaryKey.MemberColumns[0]) %>, id);
 			SqlDataReader reader = sql.ExecuteSqlReader("SELECT * FROM <%= SourceTable.Name %> WHERE <%= SourceTable.PrimaryKey.MemberColumns[0].Name %> = @<%= SourceTable.PrimaryKey.MemberColumns[0].Name %>");
