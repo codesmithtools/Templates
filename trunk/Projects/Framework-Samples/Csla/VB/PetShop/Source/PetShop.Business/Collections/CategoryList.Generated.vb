@@ -48,7 +48,9 @@ Public Partial Class CategoryList
 	#Region "Business Methods"
 	
 	Protected Overrides Function AddNewCore() As Object
-		Return Me.AddNew()
+		Dim item As Category = PetShop.Business.Category.NewCategory()
+                Me.Add(item)
+                Return item
 	End Function
 	
 	#End Region

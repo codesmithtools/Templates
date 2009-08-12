@@ -48,7 +48,9 @@ Public Partial Class ProfileList
 	#Region "Business Methods"
 	
 	Protected Overrides Function AddNewCore() As Object
-		Return Me.AddNew()
+		Dim item As Profile = PetShop.Business.Profile.NewProfile()
+                Me.Add(item)
+                Return item
 	End Function
 	
 	#End Region

@@ -16,6 +16,7 @@ Imports System
 
 Imports Csla
 Imports Csla.Data
+Imports Csla.Validation
 
 Imports PetShop.Data
 
@@ -24,7 +25,7 @@ Public Partial Class OrderStatus
 	#Region "Data Access"
 
 	<RunLocal()> _
-	Protected Overrides Sub DataPortal_Create()
+	Protected Shadows Sub DataPortal_Create()
 		'MyBase.DataPortal_Create()
 
 		ValidationRules.CheckRules()

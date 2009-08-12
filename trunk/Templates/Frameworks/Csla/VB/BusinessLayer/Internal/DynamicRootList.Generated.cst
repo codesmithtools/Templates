@@ -33,7 +33,9 @@ Public Partial Class <%= BusinessClassName %>
 	#Region "Business Methods"
 	
 	Protected Overrides Function AddNewCore() As Object
-	    Return Me.AddNew()
+	    Dim item As <%= ChildBusinessClassName %> = PetShop.Business.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
+            Me.Add(item)
+            Return item
 	End Function
 	
 	#End Region

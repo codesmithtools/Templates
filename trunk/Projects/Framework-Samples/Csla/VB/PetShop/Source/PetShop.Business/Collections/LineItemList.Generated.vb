@@ -48,7 +48,9 @@ Public Partial Class LineItemList
 	#Region "Business Methods"
 	
 	Protected Overrides Function AddNewCore() As Object
-		Return Me.AddNew()
+		Dim item As LineItem = PetShop.Business.LineItem.NewLineItem()
+                Me.Add(item)
+                Return item
 	End Function
 	
 	#End Region

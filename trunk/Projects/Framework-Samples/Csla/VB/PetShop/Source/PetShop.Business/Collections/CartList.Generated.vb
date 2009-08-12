@@ -56,7 +56,9 @@ Public Partial Class CartList
 	#Region "Business Methods"
 	
 	Protected Overrides Function AddNewCore() As Object
-		Return Me.AddNew()
+		Dim item As Cart = PetShop.Business.Cart.NewCart()
+                Me.Add(item)
+                Return item
 	End Function
 	
 	#End Region
