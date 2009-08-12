@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AA6243FE-B36F-4BA4-915A-E47CC69A0F16}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sample.Data</RootNamespace>
+    <AssemblyName>Sample.Data</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NHibernate\2.1.0.GA\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NHibernate\2.1.0.GA\Castle.DynamicProxy2.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NHibernate\2.1.0.GA\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NHibernate\2.1.0.GA\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NHibernate\2.1.0.GA\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NHibernate\2.1.0.GA\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="NUnit.Framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Templates\Frameworks\NHibernate\CSharp\..\Common\NUnit\NUnit.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\BusinessBase.cs" />
+    <Compile Include="Base\ManagerBase.cs" />
+    <Compile Include="Base\NHibernateSession.cs" />
+    <Compile Include="Base\NHibernateSessionManager.cs" />
+    <Compile Include="Base\UnitTestsBase.cs" />
+    <Compile Include="BusinessObjects\Account.cs" />
+    <Compile Include="BusinessObjects\Account.generated.cs">
+      <DependentUpon>Account.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\Cart.cs" />
+    <Compile Include="BusinessObjects\Cart.generated.cs">
+      <DependentUpon>Cart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\Category.cs" />
+    <Compile Include="BusinessObjects\Category.generated.cs">
+      <DependentUpon>Category.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\Inventory.cs" />
+    <Compile Include="BusinessObjects\Inventory.generated.cs">
+      <DependentUpon>Inventory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\Item.cs" />
+    <Compile Include="BusinessObjects\Item.generated.cs">
+      <DependentUpon>Item.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\LineItem.cs" />
+    <Compile Include="BusinessObjects\LineItem.generated.cs">
+      <DependentUpon>LineItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\Order.cs" />
+    <Compile Include="BusinessObjects\Order.generated.cs">
+      <DependentUpon>Order.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\OrderStatus.cs" />
+    <Compile Include="BusinessObjects\OrderStatus.generated.cs">
+      <DependentUpon>OrderStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\Product.cs" />
+    <Compile Include="BusinessObjects\Product.generated.cs">
+      <DependentUpon>Product.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\Profile.cs" />
+    <Compile Include="BusinessObjects\Profile.generated.cs">
+      <DependentUpon>Profile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessObjects\Supplier.cs" />
+    <Compile Include="BusinessObjects\Supplier.generated.cs">
+      <DependentUpon>Supplier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\AccountManager.cs" />
+    <Compile Include="ManagerObjects\AccountManager.Generated.cs">
+      <DependentUpon>AccountManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\CartManager.cs" />
+    <Compile Include="ManagerObjects\CartManager.Generated.cs">
+      <DependentUpon>CartManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\CategoryManager.cs" />
+    <Compile Include="ManagerObjects\CategoryManager.Generated.cs">
+      <DependentUpon>CategoryManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\InventoryManager.cs" />
+    <Compile Include="ManagerObjects\InventoryManager.Generated.cs">
+      <DependentUpon>InventoryManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\ItemManager.cs" />
+    <Compile Include="ManagerObjects\ItemManager.Generated.cs">
+      <DependentUpon>ItemManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\LineItemManager.cs" />
+    <Compile Include="ManagerObjects\LineItemManager.Generated.cs">
+      <DependentUpon>LineItemManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\ManagerFactory.cs" />
+    <Compile Include="ManagerObjects\OrderManager.cs" />
+    <Compile Include="ManagerObjects\OrderManager.Generated.cs">
+      <DependentUpon>OrderManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\OrderStatusManager.cs" />
+    <Compile Include="ManagerObjects\OrderStatusManager.Generated.cs">
+      <DependentUpon>OrderStatusManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\ProductManager.cs" />
+    <Compile Include="ManagerObjects\ProductManager.Generated.cs">
+      <DependentUpon>ProductManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\ProfileManager.cs" />
+    <Compile Include="ManagerObjects\ProfileManager.Generated.cs">
+      <DependentUpon>ProfileManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ManagerObjects\SupplierManager.cs" />
+    <Compile Include="ManagerObjects\SupplierManager.Generated.cs">
+      <DependentUpon>SupplierManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTests\AccountTests.cs" />
+    <Compile Include="UnitTests\AccountTests.generated.cs">
+      <DependentUpon>AccountTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTests\CartTests.cs" />
+    <Compile Include="UnitTests\CartTests.generated.cs">
+      <DependentUpon>CartTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTests\CategoryTests.cs" />
+    <Compile Include="UnitTests\CategoryTests.generated.cs">
+      <DependentUpon>CategoryTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTests\InventoryTests.cs" />
+    <Compile Include="UnitTests\InventoryTests.generated.cs">
+      <DependentUpon>InventoryTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTests\ItemTests.cs" />
+    <Compile Include="UnitTests\ItemTests.generated.cs">
+      <DependentUpon>ItemTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTests\LineItemTests.cs" />
+    <Compile Include="UnitTests\LineItemTests.generated.cs">
+      <DependentUpon>LineItemTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTests\OrderStatusTests.cs" />
+    <Compile Include="UnitTests\OrderStatusTests.generated.cs">
+      <DependentUpon>OrderStatusTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTests\OrderTests.cs" />
+    <Compile Include="UnitTests\OrderTests.generated.cs">
+      <DependentUpon>OrderTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTests\ProductTests.cs" />
+    <Compile Include="UnitTests\ProductTests.generated.cs">
+      <DependentUpon>ProductTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTests\ProfileTests.cs" />
+    <Compile Include="UnitTests\ProfileTests.generated.cs">
+      <DependentUpon>ProfileTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTests\SupplierTests.cs" />
+    <Compile Include="UnitTests\SupplierTests.generated.cs">
+      <DependentUpon>SupplierTests.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NHibernate.csp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\Account.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\Cart.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\Category.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\Inventory.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\Item.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\LineItem.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\Order.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\OrderStatus.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\Product.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\Profile.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HbmMaps\Supplier.hbm.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
