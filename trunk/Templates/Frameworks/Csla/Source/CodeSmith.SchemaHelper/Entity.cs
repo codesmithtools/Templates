@@ -95,7 +95,7 @@ namespace CodeSmith.SchemaHelper
                     ColumnSchema localColumn = tks.PrimaryKeyMemberColumns[0];
 
                     if (!Configuration.Instance.ExcludeTableRegexIsMatch(tks.PrimaryKeyTable.FullName)
-                        && !column.IsPrimaryKeyMember
+                        && (!column.IsPrimaryKeyMember || (column.IsPrimaryKeyMember && column.IsForeignKeyMember))
                         && !_associationMap.ContainsKey(column.Name))
                     {
                         AssociationMember association = new AssociationMember(AssociationType.ManyToOne, tks.PrimaryKeyTable, column, localColumn, this);
@@ -550,7 +550,8 @@ namespace CodeSmith.SchemaHelper
         {
             get
             {
-                var foreignKeys = FKRemoteMemberMap.Values.Where(fk => fk.TableName == this.Table.Name).ToList();
+                //NOTE: fk.IsPrimaryKey == false is a work around for pks that are also fk's.
+                var foreignKeys = FKRemoteMemberMap.Values.Where(fk => fk.TableName == this.Table.Name && fk.IsPrimaryKey == false).ToList();
 
                 List<AssociationMember> members = new List<AssociationMember>(foreignKeys.Count);
                 foreach (var associationMember in foreignKeys)
