@@ -36,6 +36,10 @@
 <%@ Property Category="3.Query" Name="MethodKeySuffix"
     Type="System.String" Default="Key" Optional="False"
     Description="The suffix of the primary key query method names." %>
+    
+<%@ Property Category="3.Query" Name="UniqueMethodPrefix" 
+    Type="System.String" Default="GetBy" Optional="True" 
+    Description="The prefix of query method names." %>
 
 <%@ Map Name="VBKeywordEscape"
     Src="VBKeywordEscape.csmap" Reverse="False"
@@ -68,22 +72,31 @@ Namespace <%= Database.ContextNamespace %>
     ''' </summary>
     Public Module <%= EntityManager.EntityName %>Extensions
 <% For Each method As ManagerMethod In EntityManager.Methods %>
-
 <% If (method.IsKey) Then %>
         ''' <summary>
         ''' Gets an instance by the primary key.
         ''' </summary>
-        <Extension()> _
-        Public Function <%= MethodPrefix %><%= MethodKeySuffix %>(ByVal queryable As IQueryable(Of <%= safeName %>), <%= GetParameters(method) %>) As <%= safeName %>
+        <System.Runtime.CompilerServices.Extension> _
+        Public Function <%= UniqueMethodPrefix %><%= MethodKeySuffix %>(ByVal queryable As IQueryable(Of <%= safeName %>), <%= GetParameters(method) %>) As <%= safeName %>
 
 <% If (method.Columns.Count < 4) Then %>
             Dim entity As System.Data.Linq.Table(Of <%= safeName %>) = CType(queryable, Table(Of <%= safeName %>))
             If (entity IsNot Nothing AndAlso entity.Context.LoadOptions Is Nothing) Then
-                Return Query.<%= MethodPrefix %><%= MethodKeySuffix %>.Invoke(DirectCast(entity.Context, <%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>), <%= GetParametersNames(method) %>)
+                Return Query.<%= UniqueMethodPrefix %><%= MethodKeySuffix %>.Invoke(DirectCast(entity.Context, <%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>), <%= GetParametersNames(method) %>)
             End If
 <% End If '' column count%>
 
             Return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>)
+        End Function
+        
+        ''' <summary>
+        ''' Immediately deletes the entity by the primary key from the underlying data source with a single delete command.
+        ''' </summary>
+        ''' <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
+        ''' <returns>The number of rows deleted from the database.</returns>
+        <System.Runtime.CompilerServices.Extension> _
+        Public Function Delete(ByVal table As System.Data.Linq.Table(Of <%= safeName %>), <%= GetParameters(method) %>) As Integer
+            Return table.Delete(<%= GetLamba(method, 5) %>)
         End Function
 <% Else If (method.IsUnique) Then
     uniqueMethods.Add(method.NameSuffix )%>
@@ -92,13 +105,13 @@ Namespace <%= Database.ContextNamespace %>
         ''' Gets an instance by using a unique index.
         ''' </summary>
         ''' <returns>An instance of the entity or null if not found.</returns>
-        <Extension()> _
-        Public Function <%= MethodPrefix %><%= method.NameSuffix %>(ByVal queryable As IQueryable(Of <%= safeName %>), <%= GetParameters(method) %>) As <%= safeName %>
+        <System.Runtime.CompilerServices.Extension> _
+        Public Function <%= UniqueMethodPrefix %><%= method.NameSuffix %>(ByVal queryable As IQueryable(Of <%= safeName %>), <%= GetParameters(method) %>) As <%= safeName %>
 
 <% If (method.Columns.Count < 4) Then %>
             Dim entity As Table(Of <%= safeName %>) = CType(queryable, Table(Of <%= safeName %>))
             If (entity IsNot Nothing AndAlso entity.Context.LoadOptions Is Nothing) Then
-                Return Query.<%= MethodPrefix %><%= method.NameSuffix %>.Invoke(DirectCast(entity.Context,<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>), <%= GetParametersNames(method) %>)
+                Return Query.<%= UniqueMethodPrefix %><%= method.NameSuffix %>.Invoke(DirectCast(entity.Context,<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>), <%= GetParametersNames(method) %>)
             End If
 <% End If ' column count%>
 
@@ -110,17 +123,19 @@ Namespace <%= Database.ContextNamespace %>
     Dim paramName as string =  GetParamName(c.Member)
     paramName = CleanParamName(paramName)
     
-    If Not c.IsPrimaryKey.Value AndAlso Not uniqueMethods.Contains(c.Member) AndAlso Not c.IsVersion.Value Then
+    If Not c.IsPrimaryKey.Value AndAlso Not c.IsVersion.Value AndAlso c.Type <> "System.Data.Linq.Binary" Then
      %>
 
         ''' <summary>
         ''' Gets a query for <%= c.Member %>.
         ''' </summary>
-        <Extension()> _
-        Public Function <%= MethodPrefix %><%= c.Member %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= VBAlias(c.Type) %>) As IQueryable(Of <%= safeName %>)
-
-            return queryable.Where(Function(<%= GetAlias() %>)<%= GetAlias() %>.<%= c.Member %> = <%= paramName %>)
-
+        <System.Runtime.CompilerServices.Extension> _
+        Public Function <%= MethodPrefix %><%= c.Member %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= GetColumnType(c) %>) As IQueryable(Of <%= safeName %>)
+<% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
+            Return queryable.Where(Function(<%= GetAlias() %>) Object.Equals(<%= GetAlias() %>.<%= c.Member %>, <%= paramName %>))
+<% Else %>
+            Return queryable.Where(Function(<%= GetAlias() %>)<%= GetAlias() %>.<%= c.Member %> = <%= paramName %>)
+<% End If %>
         End Function
 <% End If ' if is  not key
  Next ' foreach method%>
@@ -142,13 +157,13 @@ Namespace <%= Database.ContextNamespace %>
 <% If method.Columns.Count < 4 Then %>
 <% If (method.IsKey) Then %>
 
-            Friend Shared ReadOnly <%= MethodPrefix %><%= MethodKeySuffix %> As Func(Of <%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>) = _
+            Friend Shared ReadOnly <%= UniqueMethodPrefix %><%= MethodKeySuffix %> As Func(Of <%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>) = _
                 CompiledQuery.Compile( _
                     Function(db As <%= DataManager.DataContextName %> , <%= GetParameters(method) %>) _
                         db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>))
 <% Else If method.IsUnique Then %>
 
-            Friend Shared ReadOnly <%= MethodPrefix %><%= method.NameSuffix %> As Func(Of <%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>) = _
+            Friend Shared ReadOnly <%= UniqueMethodPrefix %><%= method.NameSuffix %> As Func(Of <%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>) = _
                 CompiledQuery.Compile( _
                     Function(db As <%= DataManager.DataContextName %> , <%= GetParameters(method) %>) _
                         db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>))
@@ -179,24 +194,24 @@ Public Function CleanParamName(ByVal name As String) As String
     If name <> GetAlias() Then
         Return name
     End If
-    
     Return "my" & StringUtil.ToPascalCase(name)
 End Function
 
 Public Function GetParameters(ByVal method As ManagerMethod) As String
     Dim args As New StringBuilder()
-      For Each column As Column In method.Columns
-            If args.Length > 0 Then
-          args.Append(", ")
+    For Each column As Column In method.Columns
+        If args.Length > 0 Then
+            args.Append(", ")
         End If
 
-    Dim paramName As String = GetParamName(column.Member)
-    paramName = CleanParamName(paramName)
-    
-    args.AppendFormat("ByVal {1} As {0}", VBAlias(column.Type), paramName)
-  Next
+        Dim paramType As String = GetColumnType(column)
+        Dim paramName As String = GetParamName(column.Member)
+        paramName = CleanParamName(paramName)
+        
+        args.AppendFormat("ByVal {1} As {0}", paramType, paramName)
+    Next
 
-  Return args.ToString()
+    Return args.ToString()
 End Function
 
 Public Function GetParametersNames(ByVal method As ManagerMethod) As String
@@ -221,7 +236,8 @@ Public Function GetParametersTypes(ByVal method As ManagerMethod) As String
       args.Append(", ")
     End If
 
-    args.Append(VBAlias(column.Type))
+    Dim paramType As String = GetColumnType(column)
+    args.Append(paramType)
   Next
 
   Return args.ToString()
@@ -242,8 +258,11 @@ Public Function GetLamba(ByVal method As ManagerMethod, ByVal tabCount As Intege
       lamba.Append("AndAlso ")
     End If
 
-    lamba.AppendFormat("{0}.{1} = {2}", GetAlias(), column.Member, paramName)
-
+    If column.CanBeNull.HasValue AndAlso column.CanBeNull.Value Then
+        lamba.AppendFormat("Object.Equals({0}.{1}, {2})", GetAlias(), column.Member, paramName)
+    Else
+        lamba.AppendFormat("{0}.{1} = {2}", GetAlias(), column.Member, paramName)
+    End If
 
   Next
 
@@ -273,5 +292,18 @@ Public Function GetSize(ByVal s As String) As Integer
   Integer.TryParse(temp, size)
   Return size
 End Function
+
+Public Function GetColumnType(ByVal column As Column) As String
+    Dim dataType As String = column.Type
+    
+    If column.CanBeNull.HasValue AndAlso column.CanBeNull.Value = True AndAlso CommonUtility.IsNullableType(dataType) Then
+        dataType = String.Format("{0}?", VBAlias(dataType))
+    Else
+        dataType = VBAlias(dataType)
+    End If
+    
+    Return dataType
+End Function
+
 
 </script>

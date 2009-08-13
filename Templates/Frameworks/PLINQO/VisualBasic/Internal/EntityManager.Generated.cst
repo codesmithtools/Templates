@@ -81,14 +81,6 @@ Namespace <%= ManagerNamespace %>
     ''' </summary>
     Partial Public Class <%= EntityManager.ManagerName %> 
         Inherits CodeSmith.Data.EntityManagerBase(Of <%= DataManager.DataManagerName %>, <%= safeName %>)
-        ''' <summary>
-        ''' Initializes the <see cref="<%= EntityManager.ManagerName %>"/> class.
-        ''' </summary>
-        Shared Sub New()
-           
-            AddRules()
-            
-        End Sub
 
         ''' <summary>
         ''' Initializes the <see cref="<%= EntityManager.ManagerName %>"/> class.
@@ -219,9 +211,6 @@ Namespace <%= ManagerNamespace %>
 <% Next ' foreach method%>
 
         #Region "Extensibility Method Definitions"
-        ''' <summary>Called by the static constructor to add shared rules.</summary>
-        Shared Partial Private Sub AddRules()
-        End Sub
         ''' <summary>Called when the class is created.</summary>
         Partial Private Sub OnCreated()
         End Sub
@@ -285,18 +274,14 @@ Public Function GetParameters(ByVal method As ManagerMethod) As String
         If args.Length > 0 Then
             args.Append(", ")
         End If
-        
+
+        Dim paramType As String = GetColumnType(column)
         Dim paramName As String = GetParamName(column.Member)
         paramName = CleanParamName(paramName)
-    
-        Dim typeName As String = VBAlias(column.Type)
-        If column.CanBeNull.Value = True AndAlso CommonUtility.IsNullableType(column.Type) Then
-            typeName = String.Format("Nullable(Of {0})", typeName)
-        End If
         
-        args.AppendFormat("ByVal {1} As {0}", typeName, paramName)
+        args.AppendFormat("ByVal {1} As {0}", paramType, paramName)
     Next
-    
+
     Return args.ToString()
 End Function
 
@@ -316,44 +301,43 @@ Public Function GetParametersNames(ByVal method As ManagerMethod) As String
 End Function
 
 Public Function GetParametersTypes(ByVal method As ManagerMethod) As String
-    Dim args As New StringBuilder()
-    For Each column As Column In method.Columns
-        If args.Length > 0 Then
-            args.Append(", ")
-        End If
-        
-        Dim typeName As String = VBAlias(column.Type)
-        If column.CanBeNull.Value = True AndAlso CommonUtility.IsNullableType(column.Type) Then
-            typeName = String.Format("Nullable(Of {0})", typeName)
-        End If
-        
-        args.Append(typeName)
-    Next
-    
-    Return args.ToString()
+  Dim args As New StringBuilder()
+  For Each column As Column In method.Columns
+    If args.Length > 0 Then
+      args.Append(", ")
+    End If
+
+    Dim paramType As String = GetColumnType(column)
+    args.Append(paramType)
+  Next
+
+  Return args.ToString()
 End Function
 
 Public Function GetLamba(ByVal method As ManagerMethod, ByVal tabCount As Integer) As String
-    Dim lamba As New StringBuilder()
-    
-    For Each column As Column In method.Columns
-        Dim paramName As String = GetParamName(column.Member)
-        paramName = CleanParamName(paramName)
-    
-        If lamba.Length = 0 Then
-            lamba.AppendFormat("Function({0})", GetAlias())
-        Else
-            lamba.Append(" _" & Chr(13)  & "" & Chr(10) & "")
-            lamba.Append(Chr(9), tabCount)
-            lamba.Append("AndAlso ")
-        End If
-        
-        lamba.AppendFormat("{0}.{1} = {2}", GetAlias(), column.Member, paramName)
-        
+  Dim lamba As New StringBuilder()
 
-    Next
-    
-    Return lamba.ToString()
+  For Each column As Column In method.Columns
+    Dim paramName As String = GetParamName(column.Member)
+    paramName = CleanParamName(paramName)
+
+    If lamba.Length = 0 Then
+      lamba.AppendFormat("Function({0})", GetAlias())
+    Else
+      lamba.Append(" _" & Chr(13) & "" & Chr(10) & "")
+      lamba.Append(Chr(9), tabCount)
+      lamba.Append("AndAlso ")
+    End If
+
+    If column.CanBeNull.HasValue AndAlso column.CanBeNull.Value Then
+        lamba.AppendFormat("Object.Equals({0}.{1}, {2})", GetAlias(), column.Member, paramName)
+    Else
+        lamba.AppendFormat("{0}.{1} = {2}", GetAlias(), column.Member, paramName)
+    End If
+
+  Next
+
+  Return lamba.ToString()
 End Function
 
 Public Function GetParamName(ByVal name as String) As String
@@ -380,4 +364,15 @@ Public Function GetSize(ByVal s As String) As Integer
     Return size
 End Function
 
+Public Function GetColumnType(ByVal column As Column) As String
+    Dim dataType As String = column.Type
+    
+    If column.CanBeNull.HasValue AndAlso column.CanBeNull.Value = True AndAlso CommonUtility.IsNullableType(dataType) Then
+        dataType = String.Format("{0}?", VBAlias(dataType))
+    Else
+        dataType = VBAlias(dataType)
+    End If
+    
+    Return dataType
+End Function
 </script>
