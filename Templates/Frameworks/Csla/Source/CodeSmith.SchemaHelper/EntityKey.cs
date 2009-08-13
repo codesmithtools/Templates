@@ -10,8 +10,7 @@ namespace CodeSmith.SchemaHelper
         #region Constructor(s)
 
         // TODO: Make this private; do construction in static get method and return null if no columns.
-        public EntityKey(TableSchema sourceTable)
-            : this(sourceTable, null) { }
+        public EntityKey(TableSchema sourceTable) : this(sourceTable, null) { }
         public EntityKey(TableSchema sourceTable, Entity entity)
         {
             if (!sourceTable.HasPrimaryKey)
