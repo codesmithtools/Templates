@@ -74,7 +74,7 @@ namespace <%= Database.EntityNamespace %>
 <% if (!string.IsNullOrEmpty(TableName)) { %>
     /// The class representing the <%= TableName %> table.
 <% } else { %>
-    /// Class representing data for the <%= Database.Name %> database.
+    /// Class representing <%= Type.Name %> data.
 <% } %>
     /// </summary>
     <%= GetClassAttributes() %>

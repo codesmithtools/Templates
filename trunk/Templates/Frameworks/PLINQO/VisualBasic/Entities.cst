@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="XML" 
+<%@ CodeTemplate Language="VB" TargetLanguage="Text" 
     Description="Generate Linq to Sql Class File" 
     Debug="True" OutputType="None" CompilerVersion="v3.5" %>
 

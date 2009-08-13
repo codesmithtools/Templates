@@ -19,12 +19,6 @@ Imports CodeSmith.Data.Rules.Validation
 
 Namespace <%= ClassNamespace %>
     Public Partial Class <%= ClassName %>
-        #Region "Extensibility Method Definitions"
-        'static Partial Sub AddRules()
-        '   Add shared rules here
-        'End Sub
-        #End Region
-        
         #Region "Query"
         ' A private class for lazy loading static compiled queries.
         Private Partial Class Query

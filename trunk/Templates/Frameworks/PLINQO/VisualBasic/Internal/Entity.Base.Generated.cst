@@ -87,7 +87,7 @@ Namespace <%= ClassNamespace %>
 
         #Region "Detach Methods"
         ''' <summary>
-        ''' Gets a value indicating whether this instance is Added to the change tracking of <see cref="DataContext"/>.
+        ''' Gets a value indicating whether this instance is Added to the change tracking of <see cref="System.Data.Linq.DataContext"/>.
         ''' </summary>
         ''' <returns>
         ''' <c>true</c> if this instance is Added; otherwise, <c>false</c>.
@@ -97,10 +97,10 @@ Namespace <%= ClassNamespace %>
         End Function
 
         ''' <summary>
-        ''' Remove this instance from the <see cref="DataContext"/>.
+        ''' Remove this instance from the <see cref="System.Data.Linq.DataContext"/>.
         ''' </summary>
         ''' <remarks>
-        ''' Removeing the entity will allow it to be Added to another <see cref="DataContext"/>.
+        ''' Removeing the entity will allow it to be Added to another <see cref="System.Data.Linq.DataContext"/>.
         ''' </remarks>
         Public Overridable Sub Detach()
             PropertyChangingEvent = Nothing
@@ -200,11 +200,11 @@ Namespace <%= ClassNamespace %>
                 End If
 
                 If includeProperty Then
-                    If value <> Nothing Then
+                    If value Is Nothing Then
                         value = value.ToString().Replace(vbCr & vbLf, " ").Replace(ControlChars.Lf, " "C).Replace(ControlChars.Tab, " "C)
-					End If
+                    End If
 
-                    If value <> Nothing AndAlso value.ToString().Length > 50 Then
+                    If value Is Nothing AndAlso value.ToString().Length > 50 Then
                         value = [String].Concat(value.ToString().Substring(0, 50), "...")
                     End If
 
@@ -215,7 +215,7 @@ Namespace <%= ClassNamespace %>
                     sb.Append(prop.Name)
                     sb.Append(" = ")
 
-                    sb.AppendLine(If(value <> Nothing, If(value.ToString().Length > 0, value.ToString(), "<empty>"), "<null>"))
+                    sb.AppendLine(If(value Is Nothing, If(value.ToString().Length > 0, value.ToString(), "<empty>"), "<null>"))
                 End If
             Next
 

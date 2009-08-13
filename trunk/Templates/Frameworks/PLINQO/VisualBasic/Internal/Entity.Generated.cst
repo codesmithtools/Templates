@@ -486,7 +486,7 @@ For Each c As Column in Type.Columns
         enumType = EnumDatabase.Enums.FirstOrDefault(Function(e) e.Name = c.Type)
     End If
     
-    Dim isNullable As Boolean = c.CanBeNull.Value = True AndAlso (CommonUtility.IsNullableType(dataType) OrElse enumType IsNot Nothing)
+    Dim isNullable As Boolean = c.CanBeNull.HasValue AndAlso c.CanBeNull.Value AndAlso (CommonUtility.IsNullableType(c.Type) OrElse enumType IsNot Nothing)
 
     If (isNullable) Then
         dataType = String.Format("Nullable(Of {0})", dataType)
@@ -511,7 +511,7 @@ For Each c As Column in Type.Columns
         ''' <summary>
         ''' Called when serializing.
         ''' </summary>
-        ''' <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
+        ''' <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         <System.Runtime.Serialization.OnSerializing(), _
          System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)> _
         Public Sub OnSerializing(ByVal context As System.Runtime.Serialization.StreamingContext)
@@ -521,7 +521,7 @@ For Each c As Column in Type.Columns
         ''' <summary>
         ''' Called when serializing.
         ''' </summary>
-        ''' <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
+        ''' <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         <System.Runtime.Serialization.OnSerialized(), _
          System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)> _
         Public Sub OnSerialized(ByVal context As System.Runtime.Serialization.StreamingContext)
@@ -532,7 +532,7 @@ For Each c As Column in Type.Columns
         ''' <summary>
         ''' Called when deserializing.
         ''' </summary>
-        ''' <param name="context">The <see cref="StreamingContext"/> for the serialization.</param>
+        ''' <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         <System.Runtime.Serialization.OnDeserializing(), _
          System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)> _
         Public Sub OnDeserializing(ByVal context As System.Runtime.Serialization.StreamingContext)
@@ -565,7 +565,7 @@ For Each c As Column in Type.Columns
         ''' A new object that is a copy of this instance.
         ''' </returns>
         ''' <remarks>
-        ''' This method is equivalent to a Detach from the current <see cref="DataContext"/>.
+        ''' This method is equivalent to a Detach from the current <see cref="System.Data.Linq.DataContext"/>.
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As <%= VBKeywordEscape(Type.Name) %>
@@ -578,10 +578,10 @@ For Each c As Column in Type.Columns
 
 #Region "Detach Methods"
         ''' <summary>
-        ''' Detach this instance from the <see cref="DataContext"/>.
+        ''' Detach this instance from the <see cref="System.Data.Linq.DataContext"/>.
         ''' </summary>
         ''' <remarks>
-        ''' Detaching the entity will allow it to be attached to another <see cref="DataContext"/>.
+        ''' Detaching the entity will allow it to be attached to another <see cref="System.Data.Linq.DataContext"/>.
         ''' </remarks>
         Public Overrides Sub Detach()
 
@@ -677,9 +677,10 @@ Private Sub AppendInheritanceAttribute(ByVal t As LinqToSqlShared.DbmlObjectMode
     If Not String.IsNullOrEmpty(t.InheritanceCode) Then
         s.AppendLine()
         If t.IsInheritanceDefault Then
-            s.AppendFormat("    <System.Data.Linq.Mapping.InheritanceMapping(Code:=""{0}"", Type:=typeof({1}), IsDefault:=true)> _", t.InheritanceCode, t.Name)
+            s.AppendFormat("    <System.Data.Linq.Mapping.InheritanceMapping(Code:=""{0}"", Type:=GetType({1}), IsDefault:=True)> _", t.InheritanceCode, t.Name)
+
         Else
-            s.AppendFormat("    <System.Data.Linq.Mapping.InheritanceMapping(Code:=""{0}"", Type:=typeof({1}))> _", t.InheritanceCode, t.Name)
+            s.AppendFormat("    <System.Data.Linq.Mapping.InheritanceMapping(Code:=""{0}"", Type:=GetType({1}))> _", t.InheritanceCode, t.Name)
         End If
     End If
 
