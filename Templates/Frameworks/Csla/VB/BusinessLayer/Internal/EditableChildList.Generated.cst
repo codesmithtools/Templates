@@ -59,7 +59,7 @@ For Each sc As SearchCriteria In association.ListSearchCriteria %>
     Friend Shared Function <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariablesCriteria() %>) As <%= BusinessClassName %>
         Dim criteria As New <%= ChildBusinessClassName %>Criteria()
 <% For Each member As MemberBase In sc.Members %>
-        criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
+        criteria.<%= association.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
 <% Next %>
         
         Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(criteria)
