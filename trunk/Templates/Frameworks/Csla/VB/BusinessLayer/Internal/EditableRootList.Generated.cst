@@ -71,7 +71,7 @@ Next %>
 	#Region "Business Methods"
 	
 	Protected Overrides Function AddNewCore() As Object
-		Dim item As <%= ChildBusinessClassName %> = PetShop.Business.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
+		Dim item As <%= ChildBusinessClassName %> = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
                 Me.Add(item)
                 Return item
 	End Function
