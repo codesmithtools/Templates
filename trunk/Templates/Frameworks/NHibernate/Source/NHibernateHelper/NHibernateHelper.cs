@@ -137,8 +137,12 @@ namespace NHibernateHelper
         public static bool IsManyToMany(TableSchema table)
         {
             // Bypass logic if table contains Extended Property for ManyToMany
-            if (table.ExtendedProperties.Contains(NHibernateHelper.ExtendedPropertyManyToMany))
-                return true;
+            if (table.ExtendedProperties.Contains(ExtendedPropertyManyToMany))
+            {
+                bool manyToMany;
+                if (Boolean.TryParse(table.ExtendedProperties[ExtendedPropertyManyToMany].Value.ToString(), out manyToMany))
+                    return manyToMany;
+            }
 
             // 1) Table must have Two ForeignKeys.
             //    a) Must be two unique tables.
