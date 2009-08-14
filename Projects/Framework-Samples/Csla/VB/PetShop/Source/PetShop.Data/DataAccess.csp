@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
-    <add key="ConnectionString1" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
+    <add key="ConnectionString1" value="Data Source=.\SQLEXPRESS;Integrated Security=True;Database=PetShop;" />
   </variables>
   <propertySets>
     <propertySet name="DataAccessLayer.cs" output="DataAccessLayer.cs" template="..\..\..\..\..\..\..\Templates\Frameworks\Csla\VB\DataAccessLayer\DataAccessLayer.cst">

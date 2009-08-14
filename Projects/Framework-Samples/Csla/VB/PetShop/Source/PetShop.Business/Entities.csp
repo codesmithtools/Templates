@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
-    <add key="ConnectionString1" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
+    <add key="ConnectionString1" value="Data Source=.\SQLEXPRESS;Integrated Security=True;Database=PetShop;" />
   </variables>
   <propertySets>
     <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\Templates\Frameworks\Csla\VB\BusinessLayer\Entities.cst">
@@ -197,6 +197,7 @@
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
+      <property name="NameValueList" />
     </propertySet>
   </propertySets>
 </codeSmith>
