@@ -112,7 +112,7 @@
 
   <Target Name="Zip" DependsOnTargets="Documentation">
     <Zip Files="@(ZipFiles)"
-         ZipFileName="plinqo-v$(Major).$(Minor).$(Revision).zip" />
+         ZipFileName="plinqo-r$(Revision).zip" />
   </Target>
 
   <Target Name="Commit" DependsOnTargets="Compile">
