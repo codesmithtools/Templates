@@ -10,13 +10,13 @@ namespace CodeSmith.SchemaHelper
     {
         #region Constructor(s)
 
-        public EntityManager(DatabaseSchema database) : this(database.Tables) { }
+        public EntityManager(DatabaseSchema database) : this(database.Tables) {}
         public EntityManager(TableSchemaCollection tables)
         {
             ExcludedTables = new List<TableSchema>();
             Entities = new List<Entity>();
 
-            if (tables != null && tables.Count > 0)
+            if (tables != null && tables.Count > 0 && tables[0].Database != null)
             {
                 Database = tables[0].Database;
                 
@@ -24,8 +24,9 @@ namespace CodeSmith.SchemaHelper
                 {
                     if(table == null)
                         continue;
-                    
-                    if ( Configuration.Instance.ExcludeTableRegexIsMatch( table.FullName ) || table.IsManyToMany() )
+
+                    bool includeManyToMany = table.IsManyToMany() && !Configuration.Instance.IncludeManyToManyEntity;
+                    if (Configuration.Instance.ExcludeTableRegexIsMatch(table.FullName) || includeManyToMany)
                         ExcludedTables.Add( table );
                     else if (!table.HasPrimaryKey)
                         Trace.WriteLine(string.Format("Skipping table: '{0}', no Primary Key was found!", table.Name));

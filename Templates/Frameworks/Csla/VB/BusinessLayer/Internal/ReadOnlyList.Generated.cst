@@ -50,11 +50,9 @@ Public Partial Class <%= BusinessClassName %>
 <% For Each association As AssociationMember In Entity.ManyToOne
 For Each sc As SearchCriteria In association.ListSearchCriteria %>
     
-    Public Shared Function <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariablesCriteria() %>) As <%= BusinessClassName %>
+    Public Shared Function <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariable() %>) As <%= BusinessClassName %>
         Dim criteria As New <%= ChildBusinessClassName %>Criteria()
-<% For Each member As MemberBase In sc.Members %>
-        criteria.<%= association.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
-<% Next %>
+        criteria.<%= association.BuildObjectInitializer() %>
         
         Return DataPortal.Fetch(Of <%= BusinessClassName %>)(criteria)
     End Function

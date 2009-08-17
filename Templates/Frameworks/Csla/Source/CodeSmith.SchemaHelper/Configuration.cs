@@ -42,6 +42,7 @@ namespace CodeSmith.SchemaHelper
             RowVersionColumn = "^((R|r)ow)?(V|v)ersion$";
             VisualStudioVersion = VisualStudioVersion.VS_2008;
             SingularMemberSuffix = "";
+            IncludeManyToManyEntity = true;
 
             IgnoreExpressions = new List<Regex>();
             CleanExpressions = new List<Regex>();
@@ -197,6 +198,8 @@ namespace CodeSmith.SchemaHelper
         public List<Regex> CleanExpressions { get; set; }
 
         public List<Regex> IgnoreExpressions { get; set; }
+
+        public bool IncludeManyToManyEntity { get; set; }
 
         #endregion
     }

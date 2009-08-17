@@ -147,7 +147,7 @@ namespace QuickStart
             {
                 if (!string.IsNullOrEmpty(clean))
                 {
-                    Configuration.Instance.CleanExpressions.Add(new Regex(clean));
+                    Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
                 }
             }
 
