@@ -75,7 +75,7 @@ namespace QuickStart
                 {
                     if (!string.IsNullOrEmpty(clean))
                     {
-                        Configuration.Instance.CleanExpressions.Add(new Regex(clean));
+                        Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
                     }
                 }
 
@@ -102,7 +102,7 @@ namespace QuickStart
                 {
                     if (!string.IsNullOrEmpty(ignore))
                     {
-                        Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore));
+                        Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
                     }
                 }
 
@@ -130,7 +130,10 @@ namespace QuickStart
                 CleanExpressions.Add("^\\w+_");
 
             if (IgnoreExpressions.Count == 0)
+            {
                 IgnoreExpressions.Add("sysdiagrams$");
+                IgnoreExpressions.Add("^dbo.aspnet");
+            }
 
             if (string.IsNullOrEmpty(Location) && SourceTables.Count > 0)
                 Location = Path.Combine(
