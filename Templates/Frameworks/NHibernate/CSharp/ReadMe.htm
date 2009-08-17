@@ -35,7 +35,7 @@
 <h2><a title="Overview" name="Overview"></a>Overview</h2>
 <p>
 The contents of this readme (and QuickStart section) are covered in our <b><a href="http://community.codesmithtools.com/blogs/videotutorials/archive/2008/11/04/using-codesmith-nhibernate-templates.aspx">NHibernate Video Tutorial</a></b>, located on the <a href="http://community.codesmithtools.com/">CodeSmith Community</a> website.<br>
-Also, please check the CodeSmith Examples folder (or <a href="http://codesmith.googlecode.com/svn/trunk/Templates/Examples/NHibernate/">GoogleCode Respository</a>) for a completely preconfigured NHibernate example project.
+Also, please check the CodeSmith Examples folder (or <a href="http://codesmith.googlecode.com/svn/trunk/Projects/Framework-Samples/NHibernate/">GoogleCode Respository</a>) for a completely preconfigured NHibernate example project.
 </p>
 <p>
 These are a collection of CodeSmith templates that generate code to use the NHiberate Framework.<br>
@@ -90,6 +90,8 @@ These templates are designed to produce 5 major things...
 &nbsp; &nbsp; &nbsp; &lt;property name="connection.driver_class"&gt;NHibernate.Driver.SqlClientDriver&lt;/property&gt;<br>
 &nbsp; &nbsp; &nbsp; &lt;property name="connection.connection_string"&gt;&lt;/property&gt;<br>
 &nbsp; &nbsp; &nbsp; &lt;mapping assembly="NHibernate.Generated"/&gt;<br>
+&nbsp; &nbsp; &nbsp; &lt;!-- NHibernate 2.1 --&gt;<br>
+&nbsp; &nbsp; &nbsp; &lt;property name="proxyfactory.factory_class"&gt;NHibernate.ByteCode.Castle.ProxyFactoryFactory, NHibernate.ByteCode.Castle&lt;/property&gt;<br>
 &nbsp; &nbsp; &lt;/session-factory&gt;<br>
 &nbsp; &lt;/hibernate-configuration&gt;<br>
 &lt;/configuration&gt;<br>
@@ -102,33 +104,42 @@ These templates are designed to produce 5 major things...
 To explicitly specify a custom name for either a column or table, add a "cs_alias" value to it's extended properties.
 </p>
 <p>
-To explicitly specify a ManyToMany table, add a "cs_ManyToMany" value to it's extended properties.
+To explicitly define a ManyToMany table, add a "cs_ManyToMany" extended property to the table with a boolean value.<br>
+The value true will always define the table as many to many, while a value of false will ensure it is never defined as many to many.
 </p>
 
 
 <h2><a title="Dependancies" name="Dependancies"></a>Dependancies</h2>
 <p>
-These templates will only build with CodeSmith 5.0.
-</p>
-<p>
-These templates include NHibernate version 2.0.0.Alpha1; but they can also support NHibernate 1.2.1<br>
-NHibernate 1.2.1 Differences:
-<ol>
-<li>Supports legacy Namespaces.</li>
-<li>UnitTests validate deleted rows differently.</li>
-</ol>
-</p>
-<p>
-These templates linclude NUnit 2.4.7 for .Net 2.0
-</p>
-<p>
-These templates support both Visual Studio 2008 and 2005.<br>
-Visual Studio 2005 Differences:
-<ol>
-<li>Does not include partial methods in business ojects.</li>
-</ol>
-</p>
-
+These templates are dependant on the following applications.
+<ul>
+ <li>CodeSmith Professional 5</li>
+ <li>Visual Studio</li>
+ <ul>
+  <li>2008</li>
+  <li>2005</li>
+  <ul>
+   <li>Generation: Does not include partial methods in business ojects.</li>
+  </ul>
+ </ul>
+</ul>
+These templates use the following assemblies.
+<ul>
+ <li>NHibernate</li>
+ <ul>
+  <li>2.1.0.GA</li>
+  <ul>
+   <li>Runtime: Requires "proxyfactory.factory_class" property in config.</li>
+  </ul>
+  <li>2.0.1.GA</li>
+  <li>1.2.1.GA</li>
+  <ul>
+   <li>Generation: Supports legacy Namespaces.</li>
+   <li>Generation: UnitTests validate deleted rows differently.</li>
+  </ul>
+ </ul>
+  <li>NUnit 2.4.7</li>
+</ul>
 
 
 <h2><a title="KnownIssues" name="KnownIssues"></a>Known Issues</h2>
@@ -143,10 +154,8 @@ Visual Studio 2005 Differences:
 
 <h2><a title="Downloads" name="Downloads"></a>Downloads</h2>
 <p>
-Download the latest release from GoogleCode.
-<ul>
-<li><a href="http://codesmith.googlecode.com/svn/trunk/Templates/Frameworks/NHibernate/">http://codesmith.googlecode.com/svn/trunk/Templates/Frameworks/NHibernate/</a></li>
-</ul>
+Download the latest release from GoogleCode.<br>
+<a href="http://codesmith.googlecode.com/svn/trunk/Templates/Frameworks/NHibernate/">http://codesmith.googlecode.com/svn/trunk/Templates/Frameworks/NHibernate/</a>
 </p>
 
 
@@ -154,7 +163,7 @@ Download the latest release from GoogleCode.
 <h2><a title="History" name="History"></a>History</h2>
 <p>
 <ul>
-<li>Release 1.1.2
+<li>Release 1.1.2.r891
 <ul>
 <li>Update: cs_ManyToMany extended property now requires a boolean value...</li>
 <li>New Feature: ...tables may now be marked as NOT many to many.</li>
