@@ -1,1 +1,0 @@
-Launch the PetShop solution and run the web project (PetShop.UI).
