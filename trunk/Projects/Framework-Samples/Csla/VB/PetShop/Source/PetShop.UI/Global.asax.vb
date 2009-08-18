@@ -48,8 +48,8 @@ Public Class Global_asax
     End Sub
 
     Sub Application_Error(ByVal sender As Object, ByVal e As EventArgs)
-        Dim exception As Exception = Server.GetLastError().GetBaseException()
-        EventLog.WriteEntry(".NET Pet Shop 4.0", exception.ToString(), EventLogEntryType.[Error])
+        'Dim exception As Exception = Server.GetLastError().GetBaseException()
+        'EventLog.WriteEntry(".NET Pet Shop 4.0", exception.ToString(), EventLogEntryType.[Error])
     End Sub
 
     Sub Session_End(ByVal sender As Object, ByVal e As EventArgs)
