@@ -23,4 +23,23 @@ Imports Csla
 
 Public Partial Class <%= BusinessClassName %>
 
+    	#Region "Custom Data Access"
+	
+	Private Shadows Sub DataPortal_Fetch()
+		RaiseListChangedEvents = false
+		IsReadOnly = false
+		
+        ' TODO: You will need to update the GetInt32 and GetString values.
+		Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= ChildBusinessClassName %>Fetch(criteria.StateBag)
+            While reader.Read()
+	            Me.Add(New NameValuePair(reader.GetInt32("<%= Entity.PrimaryKey.KeyMember.Name %>"), reader.GetString("<%= Entity.Members(0).Name %>")))
+			End While
+        End Using
+		
+		IsReadOnly = true
+		RaiseListChangedEvents = true
+	End Sub
+	
+	#End Region
+
 End Class

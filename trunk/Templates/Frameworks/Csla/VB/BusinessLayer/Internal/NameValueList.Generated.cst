@@ -28,10 +28,10 @@ Public Partial Class <%= BusinessClassName %>
     
 	#Region "Factory Methods"
 
-	Private Shared _list As <%= ChildBusinessClassName %>
-	Public Shared Function Get<%= ChildBusinessClassName %>() As <%= ChildBusinessClassName %>
+	Private Shared _list As <%= BusinessClassName %>
+	Public Shared Function GetAll() As <%= BusinessClassName %>
 		If (_list Is Nothing) Then
-			_list = DataPortal.Fetch(Of <%= ChildBusinessClassName %>)()
+			_list = DataPortal.Fetch(Of <%= BusinessClassName %>)()
 		End If
         
 		Return _list

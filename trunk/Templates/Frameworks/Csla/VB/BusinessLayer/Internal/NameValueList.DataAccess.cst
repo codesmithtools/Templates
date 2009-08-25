@@ -34,18 +34,7 @@ Public Partial Class <%= BusinessClassName %>
 	'Protected Sub DataPortal_Create()
     'End Sub
 			
-	Private Shadows Sub DataPortal_Fetch()
-		RaiseListChangedEvents = false
-		IsReadOnly = false
-		
-		' TODO: load values
-		'object listData = null
-		'foreach(var child in listData)
-		'	Add(new NameValueListBase< int, string >.NameValuePair(item.Key, item.Value))
-		
-		IsReadOnly = true
-		RaiseListChangedEvents = true
-	End Sub
+	'NOTE: You need to modify the DataPortal_Fetch() method in the non generated partial class.
 	
 	#End Region
 
