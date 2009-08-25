@@ -610,7 +610,7 @@ Public Function GetArguments(ByVal [function] As [Function]) As String
 
         Dim p As Parameter = [function].Parameters(x)
         s.AppendLine(" _")
-        s.AppendFormat("            <System.Data.Linq.Mapping.Parameter(DbType:=""{0}"")> ", p.DbType)
+        s.AppendFormat("            <System.Data.Linq.Mapping.Parameter(Name := ""{0}"", DbType:=""{1}"")> ", p.Name, p.DbType)
         
 
         s.AppendFormat("ByVal {1} As {0}", GetParameterType(p), p.ParameterName)

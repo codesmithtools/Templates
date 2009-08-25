@@ -631,7 +631,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         {
             Parameter p = function.Parameters[x];
             s.AppendLine();
-            s.AppendFormat("            [System.Data.Linq.Mapping.Parameter(DbType=\"{0}\")] ", p.DbType);
+            s.AppendFormat("            [System.Data.Linq.Mapping.Parameter(Name=\"{0}\", DbType=\"{1}\")] ", p.Name, p.DbType);
 
             if (p.Direction != LinqToSqlShared.DbmlObjectModel.ParameterDirection.In)
                 s.Append("ref ");
