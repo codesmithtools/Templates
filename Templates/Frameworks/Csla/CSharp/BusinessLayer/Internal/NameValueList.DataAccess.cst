@@ -38,19 +38,7 @@ namespace <%= BusinessProjectName %>
         //{
         //}
         
-		private void DataPortal_Fetch()
-		{
-			RaiseListChangedEvents = false;
-			IsReadOnly = false;
-			
-			// TODO: load values
-			//object listData = null;
-			//foreach(var child in listData)
-			//	Add(new NameValueListBase< int, string >.NameValuePair(item.Key, item.Value));
-			
-			IsReadOnly = true;
-			RaiseListChangedEvents = true;
-		}
+        //NOTE: You need to modify the DataPortal_Fetch() method in the non generated partial class.
 		
 		#endregion
 	}

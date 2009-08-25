@@ -29,11 +29,11 @@ namespace <%= BusinessProjectName %>
 	{
 		#region Factory Methods 
 
-		private static <%= ChildBusinessClassName %> _list;
-		public static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>()
+		private static <%= BusinessClassName %> _list;
+		public static <%= BusinessClassName %> GetAll()
 		{
 			if(_list == null)
-				_list = DataPortal.Fetch< <%= ChildBusinessClassName %> >();
+				_list = DataPortal.Fetch< <%= BusinessClassName %> >();
 				
 			return _list;
 		}

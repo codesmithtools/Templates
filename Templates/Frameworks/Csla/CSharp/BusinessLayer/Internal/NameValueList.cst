@@ -24,6 +24,27 @@ using Csla;
 namespace <%= BusinessProjectName %>
 {
 	public partial class <%= BusinessClassName %>
-	{		
+	{
+        	#region Custom Data Access
+		
+		private void DataPortal_Fetch()
+		{
+			RaiseListChangedEvents = false;
+			IsReadOnly = false;
+			
+			// TODO: You will need to update the GetInt32 and GetString values.
+			using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= ChildBusinessClassName %>Fetch(criteria.StateBag)) 
+			{
+                while(reader.Read())
+				{	
+                    this.Add(new NameValuePair(reader.GetInt32("<%= Entity.PrimaryKey.KeyMember.Name %>"), reader.GetString("<%= Entity.Members[0].Name %>")));
+				}
+			}
+			
+			IsReadOnly = true;
+			RaiseListChangedEvents = true;
+		}
+		
+		#endregion
 	}
 }
