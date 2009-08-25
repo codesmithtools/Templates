@@ -25,4 +25,26 @@ Imports System
 <Serializable> _
 Public Class <%= DataClassName %>
 	Inherits Base.<%= DataClassName %>Base
+	
+#Region "Instance"
+
+    Public Overloads Shared ReadOnly Property Instance() As DataAccessLayer
+        Get
+            Return Nested.Current
+        End Get
+    End Property
+
+    Private Class Nested
+        Shared Sub New()
+            Current = New DataAccessLayer
+        End Sub
+
+        ''' <summary>
+        ''' Current singleton instance.
+        ''' </summary>
+        Friend Shared ReadOnly Current As DataAccessLayer
+    End Class
+
+#End Region
+
 End Class
