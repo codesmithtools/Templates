@@ -64,9 +64,9 @@ namespace CodeSmith.Data.Rules.Validation
 
             object value = GetPropertyValue(context.TrackedObject.Current);
 
-            if (value is string)
+            if (value is string && value != null)
             {
-                context.Success = !string.IsNullOrEmpty((string)value);
+                context.Success = ((string)value).Trim().Length > 0;
             }
             else if (value is Guid)
             {
