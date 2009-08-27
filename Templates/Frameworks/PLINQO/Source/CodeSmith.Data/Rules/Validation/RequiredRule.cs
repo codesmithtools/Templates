@@ -1,4 +1,5 @@
-﻿using CodeSmith.Data.Properties;
+﻿using System;
+using CodeSmith.Data.Properties;
 
 namespace CodeSmith.Data.Rules.Validation
 {
@@ -46,7 +47,8 @@ namespace CodeSmith.Data.Rules.Validation
         /// <param name="message">The message.</param>
         public RequiredRule(string property, string message)
             : base(property, message)
-        {}
+        {
+        }
 
         /// <summary>
         /// Runs the specified context.
@@ -61,7 +63,19 @@ namespace CodeSmith.Data.Rules.Validation
                 return;
 
             object value = GetPropertyValue(context.TrackedObject.Current);
-            context.Success = (value != null);
+
+            if (value is string)
+            {
+                context.Success = !string.IsNullOrEmpty((string)value);
+            }
+            else if (value is Guid)
+            {
+                context.Success = (Guid)value != Guid.Empty;
+            }
+            else
+            {
+                context.Success = value != null;
+            }
         }
     }
 }
