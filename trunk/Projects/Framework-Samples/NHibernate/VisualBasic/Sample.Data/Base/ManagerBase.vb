@@ -21,6 +21,10 @@ Namespace Sample.Data.Generated.Base
         Function GetByQuery(maxResults As Integer, query As String) As IList(Of T)
         Function GetUniqueByQuery(query As String) As T
 
+        ' Misc Methods
+        Sub SetFetchMode(associationPath As String, mode As FetchMode)
+        Function CreateCriteria() As ICriteria
+
 		' CRUD Methods
 		Function Save(ByVal entity As T) As Object
 		Sub SaveOrUpdate(ByVal entity As T)
@@ -42,6 +46,7 @@ Namespace Sample.Data.Generated.Base
 		Protected Const defaultMaxResults As Integer = 100
         
         Private _disposed As Boolean = False
+        Private _fetchModeMap As New Dictionary(Of String, FetchMode)()
         
 #End Region
 
@@ -82,7 +87,7 @@ Namespace Sample.Data.Generated.Base
 			Return GetByCriteria(defaultMaxResults, criterionList)
 		End Function
 		Public Function GetByCriteria(ByVal maxResults As Integer, ParamArray criterionList As ICriterion()) As IList(Of T) Implements IManagerBase(Of T, TKey).GetByCriteria
-			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(T)).SetMaxResults(maxResults)
+			Dim criteria As ICriteria = CreateCriteria().SetMaxResults(maxResults)
 
 			For Each criterion As ICriterion In criterionList
 				criteria.Add(criterion)
@@ -91,7 +96,7 @@ Namespace Sample.Data.Generated.Base
 			Return criteria.List(Of T)()
 		End Function
         Public Function GetUniqueByCriteria(ParamArray criterionList As ICriterion()) As T Implements IManagerBase(Of T, TKey).GetUniqueByCriteria
-            Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(T))
+            Dim criteria As ICriteria = CreateCriteria()
         
             For Each criterion As ICriterion In criterionList
                 criteria.Add(criterion)
@@ -101,7 +106,7 @@ Namespace Sample.Data.Generated.Base
         End Function
 
         Public Function GetByExample(ByVal exampleObject As T, ParamArray excludePropertyList As String()) As IList(Of T) Implements IManagerBase(Of T, TKey).GetByExample
-			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(T))
+			Dim criteria As ICriteria = CreateCriteria()
 			Dim example As Example = Example.Create(exampleObject)
 
 			For Each excludeProperty As String In excludePropertyList
@@ -123,6 +128,25 @@ Namespace Sample.Data.Generated.Base
         Public Function GetUniqueByQuery(query As String) As T Implements IManagerBase(Of T, TKey).GetUniqueByQuery
             Dim iQuery As IQuery = Session.GetISession().CreateQuery(query)
             Return iQuery.UniqueResult(Of T)()
+        End Function
+#End Region
+
+#region "Misc Methods"
+
+        Public Sub SetFetchMode(associationPath As String, mode As FetchMode) Implements IManagerBase(Of T, TKey).SetFetchMode
+            If Not _fetchModeMap.ContainsKey(associationPath) Then
+                _fetchModeMap.Add(associationPath, mode)
+            End If
+        End Sub
+        
+        Public Function CreateCriteria() As ICriteria Implements IManagerBase(Of T, TKey).CreateCriteria
+            Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(T))
+        
+            For Each pair As KeyValuePair(Of String, NHibernate.FetchMode) In _fetchModeMap
+                criteria = criteria.SetFetchMode(pair.Key, pair.Value)
+            Next
+        
+            Return criteria
         End Function
 #End Region
 

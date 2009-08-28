@@ -52,22 +52,6 @@ namespace Sample.Console
                     // Notice that the category description is now "Good night moon!".
 
                     // ------------------------------------------------------------------------------------
-                    // If we want to eager load associations we need to use the NHibernate ISession.
-
-                    // This makes a single database call.
-                    var eagerResult = categoryManager.Session
-                        .GetISession()
-                        .CreateCriteria(typeof (Category))
-                        .SetFetchMode("Products", NHibernate.FetchMode.Eager)
-                        .SetFetchMode("Products.Items", NHibernate.FetchMode.Eager)
-                        .List<Category>();
-
-                    // These read from pre-loaded collections and make no more database calls.
-                    var eagerCategory = eagerResult[0];
-                    var eagerProduct = eagerCategory.Products[0];
-                    var eagerItem = eagerProduct.Items[0];
-
-                    // ------------------------------------------------------------------------------------
                     // If we want to have multiple sessions open at one time we can explicedly create them.
 
                     // Create the new session.
@@ -129,6 +113,25 @@ namespace Sample.Console
                         categoryManager.Session.CommitChanges();
                         // Notice that it has been deleted.
                     }
+                }
+
+                // ---------------------------------------------------------------------------------------------
+                // If we want to eager load associations we can just use the SetFetchMode method on the manager.
+
+                using (ICategoryManager categoryManager = managerFactory.GetCategoryManager())
+                {
+                    // This will load Products on the Categories.
+                    categoryManager.SetFetchMode("Products", NHibernate.FetchMode.Eager);
+                    // This will load Items on the Products.
+                    categoryManager.SetFetchMode("Products.Items", NHibernate.FetchMode.Eager);
+
+                    // This makes a single database call.
+                    IList<Category> eagerResult = categoryManager.GetAll();
+
+                    // These read from pre-loaded collections and make no more database calls.
+                    Category eagerCategory = eagerResult[0];
+                    Product eagerProduct = eagerCategory.Products[0];
+                    Item eagerItem = eagerProduct.Items[0];
                 }
             }
             catch (Exception ex)

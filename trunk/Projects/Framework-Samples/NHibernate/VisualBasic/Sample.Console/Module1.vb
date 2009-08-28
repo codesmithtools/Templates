@@ -48,17 +48,6 @@ Module Module1
                 ' Notice that the category description is now "Good night moon!".
 
                 ' ------------------------------------------------------------------------------------
-                ' If we want to eager load associations we need to use the NHibernate ISession.
-
-                ' This makes a single database call.
-                Dim eagerResult As IList(Of Category) = categoryManager.Session.GetISession().CreateCriteria(GetType(Category)).SetFetchMode("Products", NHibernate.FetchMode.Eager).SetFetchMode("Products.Items", NHibernate.FetchMode.Eager).List(Of Category)()
-
-                ' These read from pre-loaded collections and make no more database calls.
-                Dim eagerCategory As Category = eagerResult(0)
-                Dim eagerProduct As Product = eagerCategory.Products(0)
-                Dim eagerItem As Item = eagerProduct.Items(0)
-
-                ' ------------------------------------------------------------------------------------
                 ' If we want to have multiple sessions open at one time we can explicedly create them.
 
                 ' Create the new session.
@@ -119,6 +108,24 @@ Module Module1
 
                 End Using
 
+            End Using
+
+            ' ---------------------------------------------------------------------------------------------
+            ' If we want to eager load associations we can just use the SetFetchMode method on the manager.
+
+            Using categoryManager As ICategoryManager = managerFactory.GetCategoryManager()
+                ' This will load Products on the Categories.
+                categoryManager.SetFetchMode("Products", NHibernate.FetchMode.Eager)
+                ' This will load Items on the Products.
+                categoryManager.SetFetchMode("Products.Items", NHibernate.FetchMode.Eager)
+
+                ' This makes a single database call.
+                Dim eagerResult As IList(Of Category) = categoryManager.GetAll()
+
+                ' These read from pre-loaded collections and make no more database calls.
+                Dim eagerCategory As Category = eagerResult(0)
+                Dim eagerProduct As Product = eagerCategory.Products(0)
+                Dim eagerItem As Item = eagerProduct.Items(0)
             End Using
 
         Catch ex As Exception
