@@ -12,12 +12,19 @@ namespace CodeSmith.Data.Rules.Validation
     /// static partial void AddSharedRules()
     /// {
     ///     RuleManager.AddShared<User>(new CustomRule<string>("UserName", "UserName must be unique.", User.UniqueUserName));
+    ///     RuleManager.AddShared<User>(new CustomRule<RuleContext>("UserName", "UserName must be unique.", User.UniqueUserNameContext));
     /// }
     /// //This is called by the custom rule. The first argument is the property value.
     /// private static bool UniqueUserName(string username)
     /// {
     ///     //check user name is unique, return true when valid.
     ///     return true;
+    /// }
+    /// //This is called by the custom rule. The first argument is the RuleContext.
+    /// private static void UniqueUserNameContext(RuleContext context)
+    /// {
+    ///     //check user name is unique, return true when valid.
+    ///     context.Success = true;
     /// }
     /// ]]></code>
     /// </example>
@@ -39,10 +46,22 @@ namespace CodeSmith.Data.Rules.Validation
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="CustomRule&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="method">The method.</param>
+        public CustomRule(string property, string message, Action<RuleContext> method)
+            : base(property, message)
+        {
+            Method = method;
+        }
+
+        /// <summary>
         /// Gets or sets the method.
         /// </summary>
         /// <value>The method.</value>
-        public Predicate<T> Method { get; private set; }
+        public object Method { get; private set; }
 
         /// <summary>
         /// Runs the specified context.
@@ -56,10 +75,17 @@ namespace CodeSmith.Data.Rules.Validation
             if (!CanRun(context.TrackedObject))
                 return;
 
-            var value = GetPropertyValue<T>(context.TrackedObject.Current);
             try
             {
-                context.Success = Method.Invoke(value);
+                if (Method is Action<RuleContext>)
+                {
+                    ((Action<RuleContext>)Method).Invoke(context);
+                }
+                else
+                {
+                    var value = GetPropertyValue<T>(context.TrackedObject.Current);
+                    context.Success = ((Predicate<T>)Method).Invoke(value);
+                }
             }
             catch (Exception ex)
             {
