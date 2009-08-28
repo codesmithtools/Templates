@@ -20,6 +20,10 @@ namespace Sample.Data.Generated.Base
         IList<T> GetByQuery(int maxResults, string query);
         T GetUniqueByQuery(string query);
         
+        // Misc Methods
+        void SetFetchMode(string associationPath, FetchMode mode);
+        ICriteria CreateCriteria();
+        
         // CRUD Methods
         object Save(T entity);
         void SaveOrUpdate(T entity);
@@ -41,6 +45,7 @@ namespace Sample.Data.Generated.Base
         protected const int defaultMaxResults = 100;
         
         private bool _disposed = false;
+        private Dictionary<string, FetchMode> _fetchModeMap = new Dictionary<string, FetchMode>();
 
         #endregion
 
@@ -83,7 +88,7 @@ namespace Sample.Data.Generated.Base
         }
         public IList<T> GetByCriteria(int maxResults, params ICriterion[] criterionList)
         {
-            ICriteria criteria = Session.GetISession().CreateCriteria(typeof(T)).SetMaxResults(maxResults);
+            ICriteria criteria = CreateCriteria().SetMaxResults(maxResults);
 
             foreach (ICriterion criterion in criterionList)
                 criteria.Add(criterion);
@@ -92,7 +97,7 @@ namespace Sample.Data.Generated.Base
         }
         public T GetUniqueByCriteria(params ICriterion[] criterionList)
         {
-            ICriteria criteria = Session.GetISession().CreateCriteria(typeof(T));
+            ICriteria criteria = CreateCriteria();
 
             foreach (ICriterion criterion in criterionList)
                 criteria.Add(criterion);
@@ -102,7 +107,7 @@ namespace Sample.Data.Generated.Base
         
         public IList<T> GetByExample(T exampleObject, params string[] excludePropertyList)
         {
-            ICriteria criteria = Session.GetISession().CreateCriteria(typeof(T));
+            ICriteria criteria = CreateCriteria();
             Example example = Example.Create(exampleObject);
 
             foreach (string excludeProperty in excludePropertyList)
@@ -128,6 +133,26 @@ namespace Sample.Data.Generated.Base
             return iQuery.UniqueResult<T>();
         }
         
+        #endregion
+
+        #region Misc Methods
+
+        public void SetFetchMode(string associationPath, FetchMode mode)
+        {
+            if (!_fetchModeMap.ContainsKey(associationPath))
+                _fetchModeMap.Add(associationPath, mode);
+        }
+
+        public ICriteria CreateCriteria()
+        {
+            ICriteria criteria = Session.GetISession().CreateCriteria(typeof(T));
+
+            foreach (var pair in _fetchModeMap)
+                criteria = criteria.SetFetchMode(pair.Key, pair.Value);
+
+            return criteria;
+        }
+
         #endregion
 
         #region CRUD Methods

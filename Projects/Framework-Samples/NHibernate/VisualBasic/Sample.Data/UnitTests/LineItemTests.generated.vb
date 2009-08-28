@@ -21,11 +21,11 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New LineItem()
 
 			
-			entity.OrderId = 34
-			entity.LineNum = 75
+			entity.OrderId = 78
+			entity.LineNum = 87
 			entity.ItemId = "Test Tes"
-			entity.Quantity = 78
-			entity.UnitPrice = 88
+			entity.Quantity = 40
+			entity.UnitPrice = 42
 
 			Return entity
 		End Function
@@ -67,7 +67,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As LineItem = GetFirstLineItem()
 				
-				entityA.ItemId = "Tes"
+				entityA.ItemId = "T"
 				
 				manager.Update(entityA)
 
