@@ -65,6 +65,13 @@ Public Overloads Overrides Sub Render(ByVal writer As TextWriter)
 		ExcludedTables = New TableSchemaCollection()
 	End If
 
+    For Each table As TableSchema In SourceDatabase.Tables
+        If Not ExcludedTables.Contains(table) AndAlso Not table.HasPrimaryKey Then
+            System.Windows.Forms.MessageBox.Show([String].Format("The table, ""{0}"", has no PrimaryKey; it has been added to the ExcludedTables list.", table.Name), "CodeSmith - NHibernate Template Warning", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning)
+            ExcludedTables.Add(table)
+        End If
+    Next
+
 	For Each table As TableSchema In SourceDatabase.Tables
 		If Not ExcludedTables.Contains(table) AndAlso Not IsManyToMany(table) Then
 			RenderHbmMaps(table)

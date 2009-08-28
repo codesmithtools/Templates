@@ -58,6 +58,17 @@ public override void Render(TextWriter writer)
 	if(ExcludedTables == null)
 		ExcludedTables = new TableSchemaCollection();
 	
+    foreach(TableSchema table in SourceDatabase.Tables)
+        if(!ExcludedTables.Contains(table) && !table.HasPrimaryKey)
+        {
+            System.Windows.Forms.MessageBox.Show(
+                String.Format("The table, \"{0}\", has no PrimaryKey; it has been added to the ExcludedTables list.", table.Name),
+                "CodeSmith - NHibernate Template Warning",
+                System.Windows.Forms.MessageBoxButtons.OK,
+                System.Windows.Forms.MessageBoxIcon.Warning);
+            ExcludedTables.Add(table);
+        }
+    
 	foreach(TableSchema table in SourceDatabase.Tables)
 		if(!ExcludedTables.Contains(table) && !IsManyToMany(table))
 		{
