@@ -86,13 +86,13 @@ namespace QuickStartUtils
         {
             QuickStartUtils.FindAndReplace(Path.Combine(directoryPath, "web.config"), @"<connectionStrings/>",
                 @"<connectionStrings>
-					<add name=""" + DatabaseName() + @"ConnectionString"" connectionString=""" + ProjectBuilder.SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
+					<add name=""" + DatabaseName + @"ConnectionString"" connectionString=""" + ProjectBuilder.SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
 				</connectionStrings>");
         }
 
-        private string DatabaseName()
+        private string DatabaseName
         {
-            return ProjectBuilder.SourceDatabase.Name;
+            get { return StringUtil.ToPascalCase(ProjectBuilder.SourceDatabase.Name); }
         }
 
         private void UpdateGlobal(PathHelper projectPath)
@@ -107,7 +107,7 @@ namespace QuickStartUtils
                 contextReplace = String.Concat(@"model.RegisterContext(typeof(",
                 ProjectBuilder.DataProjectName,
                 @".",
-                DatabaseName(),
+                DatabaseName,
                 @"DataContext), new ContextConfiguration() { ScaffoldAllTables = false });");
             }
             else
@@ -116,7 +116,7 @@ namespace QuickStartUtils
                 contextReplace = String.Concat(@"model.RegisterContext(GetType(",
                 ProjectBuilder.DataProjectName,
                 @".",
-                DatabaseName(),
+                DatabaseName,
                 @"DataContext), New ContextConfiguration() With { .ScaffoldAllTables = False })");
             }
 
@@ -133,7 +133,7 @@ namespace QuickStartUtils
                     ? @" /\* TODO: put your data source class name here \*/ "
                     : @"\[\[class name\]\]";
                 QuickStartUtils.FindAndReplace(fileName, dataContextName,
-                    String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, DatabaseName()));
+                    String.Format("{0}.{1}DataContext", ProjectBuilder.DataProjectName, DatabaseName));
 
                 // Update .svc
                 fileName = Path.Combine(projectPath.DirectoryPath, String.Format("{0}.svc", DataServiceName));
@@ -187,7 +187,7 @@ namespace QuickStartUtils
 
         private string DataServiceName
         {
-            get { return String.Format("{0}DataService", ProjectBuilder.SourceDatabase.Name); }
+            get { return String.Format("{0}DataService", StringUtil.ToPascalCase(ProjectBuilder.SourceDatabase.Name)); }
         }
 
         private void GetCssFile(PathHelper projectPath)
