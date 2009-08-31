@@ -178,7 +178,6 @@ namespace <%= Database.EntityNamespace %>
         [System.Diagnostics.DebuggerNonUserCode]
         <%= Naming.GetModifier(Type.AccessModifier) %> <%= Type.Name %>()
         {
-            OnCreated();
 <% if (IncludeDataContract) { %>
             Initialize();
         }
@@ -197,6 +196,7 @@ namespace <%= Database.EntityNamespace %>
             <%= c.Storage %> = default(System.Data.Linq.Link<<%= c.Type %>>);
 <% } // IsDelayLoaded%>
 <% } // foreach Colum%>
+            OnCreated();
         }
         #endregion
 
