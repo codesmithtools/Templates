@@ -184,7 +184,6 @@ Namespace <%= Database.EntityNamespace %>
         ''' </summary>
         <System.Diagnostics.DebuggerNonUserCode()> _
         <%= StringUtil.ToPascalCase(Naming.GetModifier(Type.AccessModifier)) %> Sub New()
-            OnCreated()
     <% If (IncludeDataContract) Then%>
             Initialize()
         End Sub
@@ -204,6 +203,7 @@ Namespace <%= Database.EntityNamespace %>
             <%= c.Storage %> = Nothing
 <% End If ' IsDelayLoaded%>
 <% Next ' foreach Column%>
+            OnCreated()
         End Sub
 #End Region
 
