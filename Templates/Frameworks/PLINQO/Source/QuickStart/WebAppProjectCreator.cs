@@ -174,13 +174,13 @@ namespace QuickStartUtils
         {
             get
             {
-                return String.Concat(DatabaseName(),
+                return String.Concat(StringUtil.ToPascalCase(DatabaseName()),
                     "DataService");
             }
         }
         private string DataServiceFileName
         {
-            get { return String.Concat(DataServiceName, ".svc"); }
+            get { return String.Concat(StringUtil.ToPascalCase(DataServiceName), ".svc"); }
         }
         private string DataServiceCodeFileName
         {
