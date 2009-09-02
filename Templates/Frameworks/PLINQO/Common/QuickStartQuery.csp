@@ -65,7 +65,8 @@
     </propertySet>
     <propertySet name="Queries" template="$linqToSql$$language$\Queries.cst">
       <property name="QueryDirectory">.\Queries</property>
-      <property name="MethodPrefix">GetBy</property>
+      <property name="MethodPrefix">By</property>
+      <property name="UniqueMethodPrefix">GetBy</property>
       <property name="MethodKeySuffix">Key</property>
       <property name="SourceDatabase">
         <connectionString>$($myDatabase$ConnectionString)</connectionString>
