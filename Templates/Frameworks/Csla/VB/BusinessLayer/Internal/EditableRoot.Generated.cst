@@ -212,7 +212,7 @@ If UseMemberVariables Then %>
 <% End If
 Next  %>
 <%-- One-To-Many & Many-To-Many --%>
-<% For Each association As AssociationMember in Entity.ToManyUnion 
+<% For Each association As AssociationMember in Entity.OneToMany 
 If (UseMemberVariables) Then %>
     Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>List) = RegisterProperty(Of <%= association.ClassName %>List)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, <% If(UseLazyLoading)  %>Csla.RelationshipTypes.LazyLoad<%  else  %>Csla.RelationshipTypes.Child<% End If %>)
 	Private <%= association.PrivateMemberVariableName %> As <%= association.ClassName %>List  = <%= association.PrivateMemberVariableName %>Property.DefaultValue

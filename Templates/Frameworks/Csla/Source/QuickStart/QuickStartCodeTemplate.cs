@@ -194,7 +194,7 @@ namespace QuickStart
 
         public List<Entity> GetListEntities()
         {
-            List<Entity> entities = new List<Entity>(Entities.Count);
+            var entities = new List<Entity>(Entities.Count);
 
             foreach (var entity in Entities)
             {

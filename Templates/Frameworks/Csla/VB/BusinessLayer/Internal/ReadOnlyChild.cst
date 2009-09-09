@@ -84,12 +84,6 @@ Dim columnName As String = member.ResolveManyToOneNameConflict(Entity) %>
         'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
         
 <% Next%>
-<%-- Many-To-One --%>
-<% For Each association As AssociationMember in Entity.ToManyUnion %>
-        ''<%= association.PropertyName %>
-        'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
-        
-<% Next%>
 	End Sub
 	
 	Private Shared Sub AddObjectAuthorizationRules()

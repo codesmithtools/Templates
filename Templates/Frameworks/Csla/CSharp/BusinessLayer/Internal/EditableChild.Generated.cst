@@ -202,7 +202,8 @@ namespace <%= BusinessProjectName %>
 
 <% } } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(AssociationMember association in Entity.ToManyUnion) { if (UseMemberVariables){ %>
+// NOTE: Many-To-Many support coming soon.
+<% foreach(AssociationMember association in Entity.OneToMany) { if (UseMemberVariables){ %>
         private static readonly PropertyInfo< <%= association.ClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= association.ClassName %>List>(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>Csla.RelationshipTypes.LazyLoad<% } else { %>Csla.RelationshipTypes.Child<% } %>);
 		private <%= association.ClassName %>List <%= association.PrivateMemberVariableName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue;
 		public <%= association.ClassName %>List <%= association.PropertyName %>

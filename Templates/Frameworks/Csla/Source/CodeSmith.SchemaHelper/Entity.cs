@@ -93,19 +93,20 @@ namespace CodeSmith.SchemaHelper
                 {
                     ColumnSchema column = tks.ForeignKeyMemberColumns[0];
                     ColumnSchema localColumn = tks.PrimaryKeyMemberColumns[0];
+                    var columnKey = string.Format("{0}-{1}", column.Table, column.Name);
 
                     if (!Configuration.Instance.ExcludeTableRegexIsMatch(tks.PrimaryKeyTable.FullName)
                         && (!column.IsPrimaryKeyMember || (column.IsPrimaryKeyMember && column.IsForeignKeyMember))
-                        && !_associationMap.ContainsKey(column.Name))
+                        && !_associationMap.ContainsKey(columnKey))
                     {
                         AssociationMember association = new AssociationMember(AssociationType.ManyToOne, tks.PrimaryKeyTable, column, localColumn, this);
-                        _associationMap.Add(column.Name, association);
+                        _associationMap.Add(columnKey, association);
 
-                        if (!_fkMemberMap.ContainsKey(column.Name))
-                            _fkMemberMap.Add(column.Name, association.LocalColumn);
+                        if (!_fkMemberMap.ContainsKey(columnKey))
+                            _fkMemberMap.Add(columnKey, association.LocalColumn);
 
-                        if (!_fkRemoteMemberMap.ContainsKey(column.Name))
-                            _fkRemoteMemberMap.Add(column.Name, association);
+                        if (!_fkRemoteMemberMap.ContainsKey(columnKey))
+                            _fkRemoteMemberMap.Add(columnKey, association);
                     }
                 }
             }
@@ -122,8 +123,9 @@ namespace CodeSmith.SchemaHelper
                 else
                 {
                     ColumnSchema column = tks.ForeignKeyMemberColumns[0];
+                    var columnKey = string.Format("{0}-{1}", column.Table, column.Name);
 
-                    if (!column.IsPrimaryKeyMember && !_associationMap.ContainsKey(column.Name))
+                    if (!column.IsPrimaryKeyMember && !_associationMap.ContainsKey(columnKey))
                     {
                         if(tks.PrimaryKeyMemberColumns.Count > 1)
                             throw new Exception("We do not currently support Composite Keys.");
@@ -133,14 +135,14 @@ namespace CodeSmith.SchemaHelper
                         {
                             if (!Configuration.Instance.ExcludeTableRegexIsMatch(column.Table.FullName))
                             {
-                                AssociationMember association = new AssociationMember(AssociationType.OneToMany, column.Table, column, localColumn, this);
-                                _associationMap.Add(column.Name, association);
+                                var association = new AssociationMember(AssociationType.OneToMany, column.Table, column, localColumn, this);
+                                _associationMap.Add(columnKey, association);
 
-                                if (!_fkMemberMap.ContainsKey(column.Name))
-                                    _fkMemberMap.Add(column.Name, association.LocalColumn);
+                                if (!_fkMemberMap.ContainsKey(columnKey))
+                                    _fkMemberMap.Add(columnKey, association.LocalColumn);
 
-                                if (!_fkRemoteMemberMap.ContainsKey(column.Name))
-                                    _fkRemoteMemberMap.Add(column.Name, association);
+                                if (!_fkRemoteMemberMap.ContainsKey(columnKey))
+                                    _fkRemoteMemberMap.Add(columnKey, association);
                             }
                         }
                         else
@@ -148,14 +150,14 @@ namespace CodeSmith.SchemaHelper
                             TableSchema foreignTable = GetToManyTable(column.Table, Table);
                             if (foreignTable != null && !Configuration.Instance.ExcludeTableRegexIsMatch(foreignTable.FullName))
                             {
-                                AssociationMember association = new AssociationMember(AssociationType.ManyToMany, foreignTable, column, localColumn, this);
-                                _associationMap.Add(column.Name, association);
+                                var association = new AssociationMember(AssociationType.ManyToMany, foreignTable, column, localColumn, this);
+                                _associationMap.Add(columnKey, association);
 
-                                if (!_fkMemberMap.ContainsKey(column.Name))
-                                    _fkMemberMap.Add(column.Name, association.LocalColumn);
+                                if (!_fkMemberMap.ContainsKey(columnKey))
+                                    _fkMemberMap.Add(columnKey, association.LocalColumn);
 
-                                if (!_fkRemoteMemberMap.ContainsKey(column.Name))
-                                    _fkRemoteMemberMap.Add(column.Name, association);
+                                if (!_fkRemoteMemberMap.ContainsKey(columnKey))
+                                    _fkRemoteMemberMap.Add(columnKey, association);
                             }
                         }
                     }
@@ -163,19 +165,15 @@ namespace CodeSmith.SchemaHelper
                     {
                         if (!Configuration.Instance.ExcludeTableRegexIsMatch(column.Table.FullName))
                         {
-                            AssociationMember association = new AssociationMember(AssociationType.OneToZeroOrOne,
-                                                                                  column.Table, column, tks.PrimaryKeyMemberColumns[0],
-                                                                                  this);
-                            if (_fkMemberMap.ContainsKey(column.Name))
-                                _associationMap.Add(column.Table + "-" + column.Name, association);
-                            else
-                                _associationMap.Add(column.Name, association);
+                            var association = new AssociationMember(AssociationType.OneToZeroOrOne, column.Table, column, tks.PrimaryKeyMemberColumns[0], this);
+                            if (_fkMemberMap.ContainsKey(columnKey))
+                                _associationMap.Add(columnKey, association);
 
-                            if (!_fkMemberMap.ContainsKey(column.Name))
-                                _fkMemberMap.Add(column.Name, association.LocalColumn);
+                            if (!_fkMemberMap.ContainsKey(columnKey))
+                                _fkMemberMap.Add(columnKey, association.LocalColumn);
 
-                            if (!_fkRemoteMemberMap.ContainsKey(column.Name))
-                                _fkRemoteMemberMap.Add(column.Name, association);
+                            if (!_fkRemoteMemberMap.ContainsKey(columnKey))
+                                _fkRemoteMemberMap.Add(columnKey, association);
                         }
                     }
                 }
@@ -298,16 +296,18 @@ namespace CodeSmith.SchemaHelper
             if (MemberMap.ContainsKey(column.Name))
                 return MemberMap[column.Name];
 
-            if (AssociationMap.ContainsKey(column.Name))
-                return AssociationMap[column.Name];
+            var columnKey = string.Format("{0}-{1}", column.Table, column.Name);
+            if (AssociationMap.ContainsKey(columnKey))
+                return AssociationMap[columnKey];
 
             return null;
         }
 
         public AssociationMember GetAssocitionFromColumn(ColumnSchema column)
         {
-            return (AssociationMap.ContainsKey(column.Name))
-                       ? AssociationMap[column.Name]
+            var columnKey = string.Format("{0}-{1}", column.Table, column.Name);
+            return (AssociationMap.ContainsKey(columnKey))
+                       ? AssociationMap[columnKey]
                        : null;
         }
 
@@ -531,7 +531,7 @@ namespace CodeSmith.SchemaHelper
             {
                 var membersNoRowVersion = MemberMap.Values.Cast<MemberBase>().Where(m => !m.IsRowVersion).ToList().Union(FKRemoteMemberMap.Values.Cast<MemberBase>().Where(fk => fk.TableName == this.Table.Name).Cast<MemberBase>().ToList()).ToList();
 
-                List<MemberBase> members = new List<MemberBase>(membersNoRowVersion.Count);
+                var members = new List<MemberBase>(membersNoRowVersion.Count);
                 foreach (var memberBase in membersNoRowVersion)
                 {
                     string name = memberBase.ColumnName;
@@ -553,7 +553,7 @@ namespace CodeSmith.SchemaHelper
                 //NOTE: fk.IsPrimaryKey == false is a work around for pks that are also fk's.
                 var foreignKeys = FKRemoteMemberMap.Values.Where(fk => fk.TableName == this.Table.Name && fk.IsPrimaryKey == false).ToList();
 
-                List<AssociationMember> members = new List<AssociationMember>(foreignKeys.Count);
+                var members = new List<AssociationMember>(foreignKeys.Count);
                 foreach (var associationMember in foreignKeys)
                 {
                     string name = associationMember.ColumnName;
@@ -567,24 +567,6 @@ namespace CodeSmith.SchemaHelper
                 return members;
             }
         }
-
-        //public List<MemberBase> MembersNoRowVersionIncludePrimaryKeyIncludeRemoteAssociations
-        //{
-        //    get
-        //    {
-        //        var memberUnion = MemberMap.Values.Cast<MemberBase>().Where(m => !m.IsRowVersion).ToList().Union(FKRemoteMemberMap.Values.Cast<MemberBase>()).ToList();
-
-        //        List<MemberBase> members = new List<MemberBase>(memberUnion.Count);
-        //        foreach ( MemberBase memberBase in memberUnion )
-        //        {
-        //            string name = memberBase.ColumnName;
-        //            if (members.Count(m => m.ColumnName == name) == 0)
-        //                members.Add( memberBase );
-        //        }
-
-        //        return members;
-        //    }
-        //}
 
         public List<Member> MembersNoRowVersionNoForeignKeyIncludePrimaryKey
         {
