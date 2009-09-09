@@ -122,17 +122,7 @@ namespace CodeSmith.Data.Linq
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, TimeSpan slidingExpiration, CacheItemPriority priority, DateTime absoluteExpiration)
             where T : class
         {
-            // locally evaluate as much of the query as possible
-            Expression expression = Evaluator.PartialEval(
-                query.Expression,
-                CanBeEvaluatedLocally);
-
-            // use the string representation of the query for the cache key
-            string key = expression.ToString();
-
-            // the key is potentially very long, so use an md5 fingerprint
-            // (fine if the query result data isn't critically sensitive)
-            key = key.ToMd5Fingerprint();
+            var key = GetKey(query);
 
             // try to get the query result from the cache
             var result = HttpRuntime.Cache.Get(key) as List<T>;
@@ -162,6 +152,52 @@ namespace CodeSmith.Data.Linq
                 null); // no removal notification
 
             return result;
+        }
+
+        private static string GetKey<T>(IQueryable<T> query)
+        {
+            // locally evaluate as much of the query as possible
+            Expression expression = Evaluator.PartialEval(
+                query.Expression,
+                CanBeEvaluatedLocally);
+
+            // use the string representation of the query for the cache key
+            string key = expression.ToString();
+
+            // the key is potentially very long, so use an md5 fingerprint
+            // (fine if the query result data isn't critically sensitive)
+            return key.ToMd5Fingerprint();
+        }
+
+        /// <summary>
+        /// Clears the cache.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be cleared.</param>
+        /// <returns>The query.</returns>
+        public static IQueryable<T> ClearCache<T>(this IQueryable<T> query)
+            where T : class
+        {
+            return ClearCache(query, false);
+        }
+
+        /// <summary>
+        /// Only clears the cache if result is null or empty.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be cleared.</param>
+        /// <param name="onlyClearEmpty">A boolean.</param>
+        /// <returns>The query.</returns>
+        public static IQueryable<T> ClearCache<T>(this IQueryable<T> query, bool onlyClearEmpty)
+            where T : class
+        {
+            var key = GetKey(query);
+            var result = HttpRuntime.Cache.Get(key) as List<T>;
+
+            if (!onlyClearEmpty || result == null || result.Count == 0)
+                HttpRuntime.Cache.Remove(key);
+
+            return query;
         }
 
         /// <summary>
