@@ -87,8 +87,9 @@ string columnName = member.ResolveManyToOneNameConflict(Entity); %>
             // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
         
 <% } %>
-<%-- Many-To-One --%>
-<% foreach(AssociationMember association in Entity.ToManyUnion){ %>
+<%-- One-To-Many & Many-To-Many --%>
+// NOTE: Many-To-Many support coming soon.
+<% foreach(AssociationMember association in Entity.OneToMany){ %>
             //// <%= association.PropertyName %>
             // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
         
