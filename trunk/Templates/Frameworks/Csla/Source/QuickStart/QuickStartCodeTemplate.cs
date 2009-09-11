@@ -54,6 +54,8 @@ namespace QuickStart
                 {
                     _database = value;
                     _database.DeepLoad = true;
+                    _database.Refresh();
+
                     OnDatabaseChanged();
                 }
             }
