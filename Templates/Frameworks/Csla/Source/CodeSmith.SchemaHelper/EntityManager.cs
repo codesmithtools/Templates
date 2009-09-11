@@ -19,7 +19,9 @@ namespace CodeSmith.SchemaHelper
             if (tables != null && tables.Count > 0 && tables[0].Database != null)
             {
                 Database = tables[0].Database;
-                
+                Database.DeepLoad = true;
+                Database.Refresh();
+
                 foreach ( TableSchema table in tables )
                 {
                     if(table == null)
