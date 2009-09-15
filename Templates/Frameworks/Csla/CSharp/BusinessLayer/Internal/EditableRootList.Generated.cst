@@ -36,7 +36,6 @@ namespace <%= BusinessProjectName %>
         private <%= BusinessClassName %>()
 		{ 
 			AllowNew = true;
-            MarkAsChild();
 		}
         
         #endregion

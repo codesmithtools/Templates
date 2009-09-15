@@ -34,8 +34,8 @@ Public Partial Class <%= BusinessClassName %>
 	
 	Protected Overrides Function AddNewCore() As Object
 	    Dim item As <%= ChildBusinessClassName %> = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
-            Me.Add(item)
-            Return item
+        Me.Add(item)
+        Return item
 	End Function
 	
 	#End Region
