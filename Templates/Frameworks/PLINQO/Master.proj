@@ -94,7 +94,6 @@
     <CommitFiles Include="Common\Dbml.dll" />
     <CommitFiles Include="Common\Generator.dll" />
     <CommitFiles Include="Common\ICSharpCode.NRefactory.dll" />
-    <CommitFiles Include="Common\ICSharpCode.SharpZipLib.dll" />
     <CommitFiles Include="Common\QuickStartUtils.dll" />
   </ItemGroup>
 
