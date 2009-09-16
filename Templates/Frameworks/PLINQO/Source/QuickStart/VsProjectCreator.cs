@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using ICSharpCode.SharpZipLib.Zip;
+using Ionic.Zip;
 
 namespace QuickStartUtils
 {
@@ -108,9 +105,14 @@ namespace QuickStartUtils
         protected void UnzipFileAndRename(string zipFileName, string targetDirectory, params string[] renameFiles)
         {
             // Unzip Files
-            FastZip fz = new FastZip();
-            string zipFilePath = Path.Combine(ProjectBuilder.ZipFileFolder, zipFileName);
-            fz.ExtractZip(zipFilePath, targetDirectory, "");
+            ZipFile zip = new ZipFile(Path.Combine(ProjectBuilder.ZipFileFolder, zipFileName));
+            foreach (ZipEntry entry in zip)
+            {
+                if (!File.Exists(Path.Combine(targetDirectory, entry.FileName)))
+                {
+                    entry.Extract(targetDirectory);
+                }
+            }
 
             // Delete the vstemplate
             string vstemplate = QuickStartUtils.FindFileInDirectory(".vstemplate", targetDirectory);
