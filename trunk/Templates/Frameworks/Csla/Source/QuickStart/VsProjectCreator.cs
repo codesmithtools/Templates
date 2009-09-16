@@ -2,8 +2,7 @@
 using System.IO;
 
 using CodeSmith.SchemaHelper;
-
-using Ionic.Utils.Zip;
+using Ionic.Zip;
 
 namespace QuickStart
 {
