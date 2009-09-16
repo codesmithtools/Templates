@@ -5,11 +5,9 @@ Description: Used to Quick Start Visual Studio Projects
 --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="True" Description="Template description here." CompilerVersion="v3.5" %>
 <%@ Assembly Name="System" %>
-<%@ Assembly Name="ICSharpCode.SharpZipLib" Path="Common" %>
 <%@ Assembly Name="QuickStartUtils" Path="Common"%>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.Engine" %>
-<%@ Import Namespace="ICSharpCode.SharpZipLib.Zip" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="QuickStartUtils" %>
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
