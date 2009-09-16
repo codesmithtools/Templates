@@ -70,6 +70,21 @@ namespace CodeSmith.Data.Rules
         /// </PermissionSet>
         public override string ToString()
         {
+            return ToString(true);
+        }
+
+        /// <summary>
+        /// Creates and returns a string representation of the current exception.
+        /// </summary>
+        /// <param name="includeState">Boolean</param>
+        /// <returns>
+        /// A string representation of the current exception.
+        /// </returns>
+        /// <PermissionSet>
+        /// 	<IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" PathDiscovery="*AllFiles*"/>
+        /// </PermissionSet>
+        public string ToString(bool includeState)
+        {
             var sb = new StringBuilder();
 
             if (BrokenRules.Count == 1)
@@ -89,13 +104,13 @@ namespace CodeSmith.Data.Rules
                 }
 
                 foreach (BrokenRule rule in entity.Value)
-            {
-                sb.AppendFormat("  - {0}", rule.Message);
-                sb.AppendLine();
+                {
+                    sb.AppendFormat("  - {0}", rule.Message);
+                    sb.AppendLine();
                 }
                 sb.AppendLine();
 
-                if (entity.Key != null && entity.Key is ILinqEntity)
+                if (includeState && entity.Key != null && entity.Key is ILinqEntity)
                 {
                     sb.AppendLine("  State:");
                     sb.AppendLine(((ILinqEntity)entity.Key).ToEntityString(2, "  "));
