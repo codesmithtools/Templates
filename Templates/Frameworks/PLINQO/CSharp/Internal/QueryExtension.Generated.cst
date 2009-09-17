@@ -63,6 +63,7 @@ string safeName =Database.EntityNamespace + "." + EntityManager.EntityName;
 using System;
 using System.Linq;
 using System.Data.Linq;
+using System.Linq.Dynamic;
 
 namespace <%= Database.ContextNamespace %>
 {
@@ -127,13 +128,23 @@ namespace <%= Database.ContextNamespace %>
         /// <summary>
         /// Gets a query for <see cref="<%= EntityManager.EntityName %>.<%= column.Member %>"/>.
         /// </summary>
-        public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= GetColumnType(column) %> <%= paramName %>)
+        public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, params <%= GetColumnType(column) %>[] <%= paramName %>)
         {
+            if (<%= paramName %> == null)
+                <%= paramName %> = new <%= GetColumnType(column) %>[] {<% if (column.CanBeNull == true) { %>null<% } %>};
+
+            if (<%= paramName %>.Length == 0)
+                return queryable;
+                
+            if (<%= paramName %>.Length == 1)
 <% if (column.CanBeNull == true) { %>
-            return queryable.Where(<%= GetAlias() %> => object.Equals(<%= GetAlias() %>.<%= column.Member %>, <%= paramName %>));
+                return queryable.Where(<%= GetAlias() %> => object.Equals(<%= GetAlias() %>.<%= column.Member %>, <%= paramName %>[0]));
 <% } else { %>
-            return queryable.Where(<%= GetAlias() %> => <%= GetAlias() %>.<%= column.Member %> == <%= paramName %>);
+                return queryable.Where(<%= GetAlias() %> => <%= GetAlias() %>.<%= column.Member %> == <%= paramName %>[0]);
 <% } %>
+
+            var expression = DynamicExpression.BuildExpression<<%= safeName %>, bool>("<%= column.Member %>", <%= paramName %>);
+            return queryable.Where(expression);
         }
 <% } // if is  not key
  } // foreach method%>
