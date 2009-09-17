@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
@@ -196,6 +197,43 @@ namespace System.Linq.Dynamic
         public static Type CreateClass(IEnumerable<DynamicProperty> properties)
         {
             return ClassFactory.Instance.GetDynamicClass(properties);
+        }
+
+        public static Expression<Func<T, S>> BuildExpression<T, S>(string identifier, IEnumerable values)
+        {
+            var expression = BuildExpressionString(identifier, values);
+            return ParseLambda<T, S>(expression, null);
+        }
+
+        private const string EQUALS = " = ";
+        private const string OR = " OR ";
+        private const string NULL = "null";
+        private const char QUOTE = '"';
+
+        private static string BuildExpressionString(string identifier, IEnumerable values)
+        {
+            var format = String.Concat(identifier, EQUALS);
+            var expression = new StringBuilder();
+
+            var first = true;
+            foreach (var value in values)
+            {
+                if (first)
+                    first = false;
+                else
+                    expression.Append(OR);
+
+                expression.Append(format);
+
+                if (value == null)
+                    expression.Append(NULL);
+                else if (value is string)
+                    expression.Append(String.Concat(QUOTE, value.ToString(), QUOTE));
+                else
+                    expression.Append(value.ToString());
+            }
+
+            return expression.ToString();
         }
     }
 
