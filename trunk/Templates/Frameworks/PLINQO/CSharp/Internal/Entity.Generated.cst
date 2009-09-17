@@ -42,6 +42,10 @@
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include CodeSmith.Data rules." %>
 
+<%@ Property Category="2.Class" Name="IncludeXmlSerialization"
+    Type="System.Boolean" Default="false" Optional="False"
+    Description="Include Xml serialization support." %>
+
 <%@ Property Name="AssociationNamingSuffix"
     Type="AssociationNamingEnum" Default="ListSuffix" Optional="False"
     Description="Suffix for Many To Many Associations" %>
@@ -209,7 +213,11 @@ foreach(Column column in Type.Columns) {
     string storageSet = column.Storage;
     string valueConvert = "value";
     bool isVersion = column.IsVersion == true && dataType.Equals("System.Data.Linq.Binary");
-
+    bool useByteArray = IncludeXmlSerialization && dataType.Equals("System.Data.Linq.Binary");
+    
+    if (useByteArray)
+        dataType = "byte[]";
+        
     LinqToSqlShared.Generator.DbmlEnum.Enum enumType = EnumDatabase != null
         ? EnumDatabase.Enums.FirstOrDefault(e => e.Name == column.Type) : null;
 
@@ -353,6 +361,18 @@ foreach(Column column in Type.Columns) {
 <% } // HasOtherAssociation %>
             }
         }
+<% if (IncludeXmlSerialization) { %>
+
+        /// <summary>
+        /// Used by the <see cref="System.Xml.Serialization.XmlSerializer"/> to determine if <see cref="<%= a.Member %>"/> should be serialized.
+        /// </summary>
+        /// <returns><c>true</c> if <see cref="<%= a.Member %>"/> should be serialized; otherwise, <c>false</c>.</returns>
+        public bool ShouldSerialize<%= a.Member %>()
+        {
+            return <%= a.Storage %>.HasLoadedOrAssignedValue;
+        }
+<% } %>
+        
 <% } %>
 <% hasSelfAssociation = false; // reset flag %>
 <% foreach(Association a in Type.EntitySetAssociations) {
@@ -377,6 +397,17 @@ foreach(Column column in Type.Columns) {
 <% } %>
             set { <%= a.Storage %>.Assign(value); }
         }
+<% if (IncludeXmlSerialization) { %>
+
+        /// <summary>
+        /// Used by the <see cref="System.Xml.Serialization.XmlSerializer"/> to determine if <see cref="<%= a.Member %>"/> should be serialized.
+        /// </summary>
+        /// <returns><c>true</c> if <see cref="<%= a.Member %>"/> should be serialized; otherwise, <c>false</c>.</returns>
+        public bool ShouldSerialize<%= a.Member %>()
+        {
+            return <%= a.Storage %>.HasLoadedOrAssignedValues;
+        }
+<% } %>
 
         [System.Diagnostics.DebuggerNonUserCode]
         private void On<%= a.Member %>Add(<%= a.Type %> entity)
@@ -518,6 +549,23 @@ foreach(Column column in Type.Columns) {
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
         }
+        
+        /// <summary>
+        /// Deserializes an instance of <see cref="<%= Type.Name %>"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="<%= Type.Name %>"/> instance.</param>
+        /// <returns>An instance of <see cref="<%= Type.Name %>"/> that is deserialized from the XML string.</returns>
+        public static <%= Type.Name %> FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(<%= Type.Name %>));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as <%= Type.Name %>;
+            }
+        }
+
         #endregion
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
 
