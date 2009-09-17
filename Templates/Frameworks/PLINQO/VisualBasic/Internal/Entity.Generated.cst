@@ -41,6 +41,10 @@
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include CodeSmith.Data rules." %>
 
+<%@ Property Category="2.Class" Name="IncludeXmlSerialization"
+    Type="System.Boolean" Default="false" Optional="False"
+    Description="Include Xml serialization support." %>
+
 <%@ Property Name="AssociationNamingSuffix"
     Type="AssociationNamingEnum" Default="ListSuffix" Optional="False"
     Description="Suffix for Many To Many Associations" %>
@@ -216,6 +220,11 @@ For Each c As Column in Type.Columns
     Dim storageSet As String = c.Storage
     Dim valueConvert As String = "value"
     Dim isVersion As Boolean = c.IsVersion.Value = True AndAlso dataType.Equals("System.Data.Linq.Binary")
+    Dim useByteArray As Boolean = IncludeXmlSerialization AndAlso dataType.Equals("System.Data.Linq.Binary")
+
+    If useByteArray Then
+        dataType = "Byte()"
+    End If
 
     Dim enumType As LinqToSqlShared.Generator.DbmlEnum.Enum = Nothing
 
@@ -359,6 +368,16 @@ For Each c As Column in Type.Columns
 <% End If ' HasOtherAssociation %>
             End Set
         End Property
+<% If IncludeXmlSerialization Then %>
+
+        ''' <summary>
+        ''' Used by the <see cref="System.Xml.Serialization.XmlSerializer"/> to determine if <see cref="<%= a.Member %>"/> should be serialized.
+        ''' </summary>
+        ''' <returns><c>true</c> if <see cref="<%= a.Member %>"/> should be serialized; otherwise, <c>false</c>.</returns>
+        Public Function ShouldSerialize<%= a.Member %>() As Boolean
+            Return <%= a.Storage %>.HasLoadedOrAssignedValue
+        End Function
+<% End If 'IncludeXmlSerialization %>
 <% Next %>
 <% For Each a As Association in Type.EntitySetAssociations
         Dim info As AssociationInfo = GetAssociationInfo(a)
@@ -390,6 +409,16 @@ For Each c As Column in Type.Columns
                 <%= a.Storage %>.Assign(value)
             End Set
         End Property
+<% If IncludeXmlSerialization Then %>
+
+        ''' <summary>
+        ''' Used by the <see cref="System.Xml.Serialization.XmlSerializer"/> to determine if <see cref="<%= a.Member %>"/> should be serialized.
+        ''' </summary>
+        ''' <returns><c>true</c> if <see cref="<%= a.Member %>"/> should be serialized; otherwise, <c>false</c>.</returns>
+        Public Function ShouldSerialize<%= a.Member %>() As Boolean
+            Return <%= a.Storage %>.HasLoadedOrAssignedValues
+        End Function
+<% End If 'IncludeXmlSerialization %>
 
         <System.Diagnostics.DebuggerNonUserCode()> _
         Private Sub On<%= a.Member %>Add(ByVal entity As <%= VBKeywordEscape(a.Type) %>)
@@ -538,7 +567,21 @@ For Each c As Column in Type.Columns
         Public Sub OnDeserializing(ByVal context As System.Runtime.Serialization.StreamingContext)
             Initialize()
         End Sub
-
+        
+        ''' <summary>
+        ''' Deserializes an instance of <see cref="<%= Type.Name %>"/> from XML.
+        ''' </summary>
+        ''' <param name="xml">The XML string representing a <see cref="<%= Type.Name %>"/> instance.</param>
+        ''' <returns>An instance of <see cref="<%= Type.Name %>"/> that is deserialized from the XML string.</returns>
+        Public Shared Function FromXml(ByVal xml As String) As <%= Type.Name %>
+            Dim deserializer = New System.Runtime.Serialization.DataContractSerializer(GetType(<%= Type.Name %>))
+            
+            Using sr = New System.IO.StringReader(xml)
+                Using reader = System.Xml.XmlReader.Create(sr)
+                    Return TryCast(deserializer.ReadObject(reader), <%= Type.Name %>)
+                End Using
+            End Using
+        End Function
 #End Region
 <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>
 
