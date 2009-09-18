@@ -113,6 +113,7 @@
     <Compile Include="IDataManager.cs" />
     <Compile Include="IEntityManager.cs" />
     <Compile Include="ILinqEntity.cs" />
+    <Compile Include="Linq\CacheSettings.cs" />
     <Compile Include="Linq\DataContextExtensions.cs" />
     <Compile Include="Linq\DynamicQuery.cs" />
     <Compile Include="Linq\ExpressionVisitor.cs" />
