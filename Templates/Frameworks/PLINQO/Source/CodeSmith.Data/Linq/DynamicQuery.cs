@@ -227,7 +227,7 @@ namespace System.Linq.Dynamic
 
                 if (value == null)
                     expression.Append(NULL);
-                else if (value is string)
+                else if (value is string || value is Enum)
                     expression.Append(String.Concat(QUOTE, value.ToString(), QUOTE));
                 else
                     expression.Append(value.ToString());
