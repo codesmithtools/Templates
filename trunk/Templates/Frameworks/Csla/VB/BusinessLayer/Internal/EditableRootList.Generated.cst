@@ -52,7 +52,14 @@ Public Partial Class <%= BusinessClassName %>
     End Function
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each association As AssociationMember In Entity.ManyToOne
-For Each sc As SearchCriteria In association.ListSearchCriteria %>
+    Dim list As New System.Collections.Generic.List(Of String)
+    For Each sc As SearchCriteria In association.ListSearchCriteria
+        Dim key As String = String.Format("{0}-{1}-{2}-{3}-{4}", association.Name, association.VariableName, association.ColumnName, association.LocalColumn.Name, association.TableName) 
+        If (list.Contains(key)) Then
+            Continue For
+        Else 
+            list.Add(key)
+        End If%>
     
     Public Shared Function <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariable() %>) As <%= BusinessClassName %>
         Dim criteria As New <%= ChildBusinessClassName %>Criteria()
