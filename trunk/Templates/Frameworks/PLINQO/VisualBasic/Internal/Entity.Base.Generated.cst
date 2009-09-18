@@ -245,6 +245,24 @@ Namespace <%= ClassNamespace %>
 
             Return sb.ToString()
         End Function
+
+        ''' <summary>
+        ''' Returns a byte array that represents the current <see cref="T:System.Object"/>. 
+        ''' </summary>
+        ''' <returns>A byte array that represents the current <see cref="T:System.Object"/>.</returns>
+        Public Function ToBinary() As Byte()
+            Dim buffer As Byte()
+            Using ms = New System.IO.MemoryStream()
+                Using writer = System.Xml.XmlDictionaryWriter.CreateBinaryWriter(ms)
+                    Dim serializer = New System.Runtime.Serialization.DataContractSerializer([GetType]())
+                    serializer.WriteObject(writer, Me)
+                    writer.Flush()
+
+                    buffer = ms.ToArray()
+                End Using
+            End Using
+            Return buffer
+        End Function
         #End Region
     End Class
 End Namespace
