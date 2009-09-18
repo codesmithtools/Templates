@@ -5,37 +5,12 @@ using System.Linq.Expressions;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
-using System.Web.Caching;
 
 namespace CodeSmith.Data.Linq
 {
-
-    /// <summary>
-    /// Provides a set of static methods for caching IQueryable queries. 
-    /// </summary>
-    /// <remarks>
-    /// From http://petemontgomery.wordpress.com/2008/08/07/caching-the-results-of-linq-queries/
-    /// </remarks>
     public static class QueryResultCache
     {
-        private static Func<Expression, bool> CanBeEvaluatedLocally
-        {
-            get
-            {
-                return expression =>
-                           {
-                               // don't evaluate parameters
-                               if (expression.NodeType == ExpressionType.Parameter)
-                                   return false;
-
-                               // can't evaluate queries
-                               if (typeof (IQueryable).IsAssignableFrom(expression.Type))
-                                   return false;
-
-                               return true;
-                           };
-            }
-        }
+        #region FromCache Methods
 
         /// <summary>
         /// Returns the result of the query; if possible from the cache, otherwise
@@ -45,9 +20,13 @@ namespace CodeSmith.Data.Linq
         /// <typeparam name="T">The type of the data in the data source.</typeparam>
         /// <param name="query">The query to be materialized.</param>
         /// <returns>The result of the query.</returns>
-        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query) where T : class
+        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query)
+            where T : class
         {
-            return query.FromCache(TimeSpan.FromMinutes(1), CacheItemPriority.Normal);
+            return query.FromCache(new CacheSettings
+            {
+                SlidingExpiration = TimeSpan.FromMinutes(1)
+            });
         }
 
         /// <summary>
@@ -58,55 +37,13 @@ namespace CodeSmith.Data.Linq
         /// <param name="query">The query to be materialized.</param>
         /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
         /// <returns>The result of the query.</returns>
-        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, int duration) where T : class
+        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, int duration)
+            where T : class
         {
-            return query.FromCache(Cache.NoSlidingExpiration, CacheItemPriority.Normal, DateTime.UtcNow.AddSeconds(duration));
-        }
-
-        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, TimeSpan slidingExpiration) where T : class
-        {
-            return query.FromCache(slidingExpiration, CacheItemPriority.Normal);
-        }
-
-        /// <summary>
-        /// Returns the result of the query; if possible from the cache, otherwise
-        /// the query is materialized and the result cached before being returned.
-        /// </summary>
-        /// <typeparam name="T">The type of the data in the data source.</typeparam>
-        /// <param name="query">The query to be materialized.</param>
-        /// <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
-        /// <param name="priority">The cost of the object relative to other items stored in the cache, as expressed by the <see cref="CacheItemPriority"/> enumeration.</param>
-        /// <returns>The result of the query.</returns>
-        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, TimeSpan slidingExpiration, CacheItemPriority priority) where T : class
-        {
-            return query.FromCache(slidingExpiration, priority, Cache.NoAbsoluteExpiration);
-        }
-
-        /// <summary>
-        /// Returns the result of the query; if possible from the cache, otherwise
-        /// the query is materialized and the result cached before being returned.
-        /// </summary>
-        /// <typeparam name="T">The type of the data in the data source.</typeparam>
-        /// <param name="query">The query to be materialized.</param>
-        /// <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
-        /// <returns>The result of the query.</returns>
-        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, DateTime absoluteExpiration) where T : class
-        {
-            return query.FromCache(Cache.NoSlidingExpiration, CacheItemPriority.Normal, absoluteExpiration);
-        }
-
-        /// <summary>
-        /// Returns the result of the query; if possible from the cache, otherwise
-        /// the query is materialized and the result cached before being returned.
-        /// </summary>
-        /// <typeparam name="T">The type of the data in the data source.</typeparam>
-        /// <param name="query">The query to be materialized.</param>
-        /// <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
-        /// <param name="priority">The cost of the object relative to other items stored in the cache, as expressed by the <see cref="CacheItemPriority"/> enumeration.</param>
-        /// <returns>The result of the query.</returns>
-        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, DateTime absoluteExpiration, CacheItemPriority priority) where T : class
-        {
-            return query.FromCache(Cache.NoSlidingExpiration, priority, absoluteExpiration);
+            return query.FromCache(new CacheSettings
+            {
+                Duration = duration
+            });
         }
 
         /// <summary>
@@ -116,10 +53,42 @@ namespace CodeSmith.Data.Linq
         /// <typeparam name="T">The type of the data in the data source.</typeparam>
         /// <param name="query">The query to be materialized.</param>
         /// <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
-        /// <param name="priority">The cost of the object relative to other items stored in the cache, as expressed by the <see cref="CacheItemPriority"/> enumeration.</param>
+        /// <returns>The result of the query.</returns>
+        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, TimeSpan slidingExpiration)
+            where T : class
+        {
+            return query.FromCache(new CacheSettings
+            {
+                SlidingExpiration = slidingExpiration
+            });
+        }
+
+        /// <summary>
+        /// Returns the result of the query; if possible from the cache, otherwise
+        /// the query is materialized and the result cached before being returned.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be materialized.</param>
         /// <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
         /// <returns>The result of the query.</returns>
-        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, TimeSpan slidingExpiration, CacheItemPriority priority, DateTime absoluteExpiration)
+        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, DateTime absoluteExpiration)
+            where T : class
+        {
+            return query.FromCache(new CacheSettings
+            {
+                AbsoluteExpiration = absoluteExpiration
+            });
+        }
+
+        /// <summary>
+        /// Returns the result of the query; if possible from the cache, otherwise
+        /// the query is materialized and the result cached before being returned.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be materialized.</param>
+        /// <param name="settings">Cache settings object.</param>
+        /// <returns>The result of the query.</returns>
+        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, CacheSettings settings)
             where T : class
         {
             var key = GetKey(query);
@@ -134,25 +103,138 @@ namespace CodeSmith.Data.Linq
             result = query.ToList();
 
             //detach for cache
-            foreach (T item in result)
+            foreach (var item in result)
             {
                 var entity = item as ILinqEntity;
                 if (entity != null)
                     entity.Detach();
             }
 
-
             HttpRuntime.Cache.Insert(
                 key,
                 result,
-                null, // no cache dependency
-                absoluteExpiration,
-                slidingExpiration,
-                priority,
-                null); // no removal notification
+                settings.CacheDependency,
+                settings.AbsoluteExpiration,
+                settings.SlidingExpiration,
+                settings.Priority,
+                settings.CacheItemRemovedCallback);
 
             return result;
         }
+
+        #endregion
+
+        #region FromCacheFirstOrDefault
+
+        /// <summary>
+        /// Returns the result of the query; if possible from the cache, otherwise
+        /// the query is materialized and the result cached before being returned.
+        /// The cache entry has a one minute sliding expiration with normal priority.
+        /// Queries, caches, and returns only the first entity.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be materialized.</param>
+        /// <returns>The first or default result of the query.</returns>
+        public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query)
+            where T : class
+        {
+            return query
+                .Take(1)
+                .FromCache()
+                .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Returns the result of the query; if possible from the cache, otherwise
+        /// the query is materialized and the result cached before being returned.
+        /// Queries, caches, and returns only the first entity.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be materialized.</param>
+        /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+        /// <returns>The first or default result of the query.</returns>
+        public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query, int duration)
+            where T : class
+        {
+            return query
+                .Take(1)
+                .FromCache(duration)
+                .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Returns the result of the query; if possible from the cache, otherwise
+        /// the query is materialized and the result cached before being returned.
+        /// Queries, caches, and returns only the first entity.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be materialized.</param>
+        /// <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
+        /// <returns>The first or default result of the query.</returns>
+        public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query, TimeSpan slidingExpiration)
+            where T : class
+        {
+            return query
+                .Take(1)
+                .FromCache(slidingExpiration)
+                .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Returns the result of the query; if possible from the cache, otherwise
+        /// the query is materialized and the result cached before being returned.
+        /// Queries, caches, and returns only the first entity.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be materialized.</param>
+        /// <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
+        /// <returns>The first or default result of the query.</returns>
+        public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query, DateTime absoluteExpiration)
+            where T : class
+        {
+            return query
+                .Take(1)
+                .FromCache(absoluteExpiration)
+                .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Returns the result of the query; if possible from the cache, otherwise
+        /// the query is materialized and the result cached before being returned.
+        /// Queries, caches, and returns only the first entity.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be materialized.</param>
+        /// <param name="settings">Cache settings object.</param>
+        /// <returns>The first or default result of the query.</returns>
+        public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query, CacheSettings settings)
+            where T : class
+        {
+            return query
+                .Take(1)
+                .FromCache(settings)
+                .FirstOrDefault();
+        }
+
+        #endregion
+
+        #region ClearCache
+
+        /// <summary>
+        /// Only clears the cache if result is null or empty.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be cleared.</param>
+        public static void ClearCache<T>(this IQueryable<T> query)
+            where T : class
+        {
+            var key = GetKey(query);
+            HttpRuntime.Cache.Remove(key);
+        }
+
+        #endregion
+
+        #region Private Methods
 
         private static string GetKey<T>(IQueryable<T> query)
         {
@@ -166,44 +248,29 @@ namespace CodeSmith.Data.Linq
 
             // the key is potentially very long, so use an md5 fingerprint
             // (fine if the query result data isn't critically sensitive)
-            return key.ToMd5Fingerprint();
+            return ToMd5Fingerprint(key);
         }
 
-        /// <summary>
-        /// Clears the cache.
-        /// </summary>
-        /// <typeparam name="T">The type of the data in the data source.</typeparam>
-        /// <param name="query">The query to be cleared.</param>
-        /// <returns>The query.</returns>
-        public static IQueryable<T> ClearCache<T>(this IQueryable<T> query)
-            where T : class
+        private static Func<Expression, bool> CanBeEvaluatedLocally
         {
-            return ClearCache(query, false);
+            get
+            {
+                return expression =>
+                {
+                    // don't evaluate parameters
+                    if (expression.NodeType == ExpressionType.Parameter)
+                        return false;
+
+                    // can't evaluate queries
+                    if (typeof(IQueryable).IsAssignableFrom(expression.Type))
+                        return false;
+
+                    return true;
+                };
+            }
         }
 
-        /// <summary>
-        /// Only clears the cache if result is null or empty.
-        /// </summary>
-        /// <typeparam name="T">The type of the data in the data source.</typeparam>
-        /// <param name="query">The query to be cleared.</param>
-        /// <param name="onlyClearEmpty">A boolean.</param>
-        /// <returns>The query.</returns>
-        public static IQueryable<T> ClearCache<T>(this IQueryable<T> query, bool onlyClearEmpty)
-            where T : class
-        {
-            var key = GetKey(query);
-            var result = HttpRuntime.Cache.Get(key) as List<T>;
-
-            if (!onlyClearEmpty || result == null || result.Count == 0)
-                HttpRuntime.Cache.Remove(key);
-
-            return query;
-        }
-
-        /// <summary>
-        /// Creates an MD5 fingerprint of the string.
-        /// </summary>
-        private static string ToMd5Fingerprint(this string s)
+        private static string ToMd5Fingerprint(string s)
         {
             byte[] bytes = Encoding.Unicode.GetBytes(s.ToCharArray());
             byte[] hash = new MD5CryptoServiceProvider().ComputeHash(bytes);
@@ -213,6 +280,8 @@ namespace CodeSmith.Data.Linq
                 (sb, b) => sb.Append(b.ToString("X2")))
                 .ToString();
         }
+
+        #endregion
     }
 
     /// <summary>
