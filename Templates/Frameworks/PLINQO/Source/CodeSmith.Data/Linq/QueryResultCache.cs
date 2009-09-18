@@ -102,6 +102,10 @@ namespace CodeSmith.Data.Linq
             // materialize the query
             result = query.ToList();
 
+            // Don't cache empty result.
+            if (result.Count == 0 && !settings.CacheEmptyResult)
+                return result;
+
             //detach for cache
             foreach (var item in result)
             {
