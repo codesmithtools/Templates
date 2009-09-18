@@ -59,7 +59,11 @@ namespace <%= BusinessProjectName %>
         }
         
         <%-- One-To-Many & Many-To-Many --%>
-<% foreach(AssociationMember association in Entity.ManyToOne) { foreach(SearchCriteria sc in association.ListSearchCriteria) { %>
+<% foreach(AssociationMember association in Entity.ManyToOne) { 
+    System.Collections.Generic.List<string> list = new System.Collections.Generic.List<string>(); 
+    foreach(SearchCriteria sc in association.ListSearchCriteria) { 
+        string key = string.Format("{0}-{1}-{2}-{3}-{4}", association.Name, association.VariableName, association.ColumnName, association.LocalColumn.Name, association.TableName); 
+        if(list.Contains(key)) { continue; } else { list.Add(key); } %>
         
         public static <%= BusinessClassName %> <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariable() %>)
 		{
