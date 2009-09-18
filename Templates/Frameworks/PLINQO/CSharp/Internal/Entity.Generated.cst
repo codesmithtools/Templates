@@ -549,7 +549,7 @@ foreach(Column column in Type.Columns) {
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
         }
-        
+
         /// <summary>
         /// Deserializes an instance of <see cref="<%= Type.Name %>"/> from XML.
         /// </summary>
@@ -566,6 +566,21 @@ foreach(Column column in Type.Columns) {
             }
         }
 
+        /// <summary>
+        /// Deserializes an instance of <see cref="<%= Type.Name %>"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="<%= Type.Name %>"/> instance.</param>
+        /// <returns>An instance of <see cref="<%= Type.Name %>"/> that is deserialized from the byte array.</returns>
+        public static <%= Type.Name %> FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(<%= Type.Name %>));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as <%= Type.Name %>;
+            }
+        }
         #endregion
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
 

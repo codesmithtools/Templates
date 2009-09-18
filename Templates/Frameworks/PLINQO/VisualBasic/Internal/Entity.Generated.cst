@@ -582,6 +582,21 @@ For Each c As Column in Type.Columns
                 End Using
             End Using
         End Function
+
+        ''' <summary>
+        ''' Deserializes an instance of <see cref="<%= Type.Name %>"/>.
+        ''' </summary>
+        ''' <param name="buffer">The byte array representing a <see cref="<%= Type.Name %>"/> instance.</param>
+        ''' <returns>An instance of <see cref="<%= Type.Name %>"/> that is deserialized from the byte array.</returns>
+        Public Shared Function FromBinary(ByVal buffer As Byte()) As <%= Type.Name %>
+            Dim deserializer = New System.Runtime.Serialization.DataContractSerializer(GetType(<%= Type.Name %>))
+
+            Using ms = New System.IO.MemoryStream(buffer)
+                Using reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max)
+                    Return TryCast(deserializer.ReadObject(reader), <%= Type.Name %>)
+                End Using
+            End Using
+        End Function
 #End Region
 <% If Not (String.IsNullOrEmpty(EntityBase)) Then %>
 
