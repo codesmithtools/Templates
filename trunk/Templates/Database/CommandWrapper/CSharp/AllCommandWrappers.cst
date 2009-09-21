@@ -85,7 +85,14 @@ public bool CommandIsExcluded(CommandSchema command)
 
 public override void Render(System.IO.TextWriter writer)
 {
-	this.Progress.MaximumValue = SourceDatabase.Commands.Count;
+    if(SourceDatabase.Commands.Count > 0)
+        this.Progress.MaximumValue = SourceDatabase.Commands.Count;
+    else
+    {
+        Trace.WriteLine("No commands were found! Please choose a DataSource that contains commands.");
+        this.Progress.MaximumValue = 100;
+    }
+    
 	this.Progress.Step = 1;
 	
 	string outputDirectory = Path.Combine(this.CodeTemplateInfo.DirectoryName, this.OutputDirectory);
