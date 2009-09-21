@@ -79,7 +79,13 @@ Public Function CommandIsExcluded(ByVal command As CommandSchema) As Boolean
 End Function
 
 Public Overloads Overrides Sub Render(ByVal writer As System.IO.TextWriter)
-	Me.Progress.MaximumValue = SourceDatabase.Commands.Count
+    If(SourceDatabase.Commands.Count > 0)
+        Me.Progress.MaximumValue = SourceDatabase.Commands.Count
+    Else
+        Trace.WriteLine("No commands were found! Please choose a DataSource that contains commands.")
+        Me.Progress.MaximumValue = 100
+    End If
+	
 	Me.Progress.[Step] = 1
 
 	Dim outputDirectory As String = Path.Combine(Me.CodeTemplateInfo.DirectoryName, Me.OutputDirectory)
