@@ -65,6 +65,7 @@ Imports System
 Imports System.Data.Linq
 Imports System.Linq
 Imports System.Runtime.CompilerServices
+Imports System.Linq.Dynamic
 
 Namespace <%= Database.ContextNamespace %>
     ''' <summary>
@@ -127,15 +128,45 @@ Namespace <%= Database.ContextNamespace %>
      %>
 
         ''' <summary>
-        ''' Gets a query for <%= c.Member %>.
+        ''' Gets a query for <see cref="<%= safeName %>"/>.
         ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="<%= paramName %>"><%= c.Member %> to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension> _
-        Public Function <%= MethodPrefix %><%= c.Member %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= GetColumnType(c) %>) As IQueryable(Of <%= safeName %>)
+        Public Function <%= MethodPrefix %><%= c.Member %>(queryable As IQueryable(Of <%= safeName %>), <%= paramName %> As <%= GetColumnType(c) %>) As IQueryable(Of <%= safeName %>)
 <% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
             Return queryable.Where(Function(<%= GetAlias() %>) Object.Equals(<%= GetAlias() %>.<%= c.Member %>, <%= paramName %>))
 <% Else %>
             Return queryable.Where(Function(<%= GetAlias() %>)<%= GetAlias() %>.<%= c.Member %> = <%= paramName %>)
 <% End If %>
+        End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="<%= safeName %>"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="<%= paramName %>"><%= c.Member %> to search for.</param>
+        ''' <param name="additionalValues">Additional values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension> _
+        Public Function <%= MethodPrefix %><%= c.Member %>(queryable As IQueryable(Of <%= safeName %>), <%= paramName %> As <%= GetColumnType(c) %>, ParamArray additionalValues As <%= GetColumnType(c) %>()) As IQueryable(Of <%= safeName %>)
+            Dim <%= paramName %>List = New List(Of <%= GetColumnType(c) %>)()
+        
+            If additionalValues IsNot Nothing Then
+                <%= paramName %>List.AddRange(additionalValues)
+<% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
+            Else
+                <%= paramName %>List.Add(Nothing)
+<% End If %>
+            End If
+        
+            If <%= paramName %>List.Count = 1 Then
+                Return queryable.<%= MethodPrefix %><%= c.Member %>(<%= paramName %>List(0))
+            End If
+        
+            Dim expression = DynamicExpression.BuildExpression(Of <%= safeName %>, Boolean)("<%= c.Member %>", <%= paramName %>List)
+            Return queryable.Where(expression)
         End Function
 <% End If ' if is  not key
  Next ' foreach method%>
