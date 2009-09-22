@@ -199,41 +199,57 @@ namespace System.Linq.Dynamic
             return ClassFactory.Instance.GetDynamicClass(properties);
         }
 
-        public static Expression<Func<T, S>> BuildExpression<T, S>(string identifier, IEnumerable values)
+        public static Expression<Func<T, S>> BuildExpression<T, S>(string identifier, IList values)
         {
-            var expression = BuildExpressionString(identifier, values);
-            return ParseLambda<T, S>(expression, null);
+            var expression = BuildExpressionString<T>(identifier, values);
+
+            var array = new object[values.Count];
+            for (var i = 0; i < values.Count; i++)
+                array[i] = values[i];
+
+            return ParseLambda<T, S>(expression, array);
         }
 
-        private const string EQUALS = " = ";
-        private const string OR = " OR ";
-        private const string NULL = "null";
-        private const char QUOTE = '"';
+        private const string EQUALS_NULLABLE = "!{0}.HasValue";
+        private const string EQUALS_NULL = "Object.Equals({0}, @{1})";
+        private const string EQUALS_VALUE = "{0} == @{1}";
+        private const string OR = " || ";
 
-        private static string BuildExpressionString(string identifier, IEnumerable values)
+        private static string BuildExpressionString<T>(string identifier, IEnumerable values)
         {
-            var format = String.Concat(identifier, EQUALS);
+            var isNullable = IsPropertyNullable<T>(identifier);
             var expression = new StringBuilder();
+            var count = 0;
 
-            var first = true;
             foreach (var value in values)
             {
-                if (first)
-                    first = false;
-                else
+                if (count > 0)
                     expression.Append(OR);
 
-                expression.Append(format);
-
                 if (value == null)
-                    expression.Append(NULL);
-                else if (value is string || value is Enum)
-                    expression.Append(String.Concat(QUOTE, value.ToString(), QUOTE));
+                {
+                    if (isNullable)
+                        expression.AppendFormat(EQUALS_NULLABLE, identifier);
+                    else
+                        expression.AppendFormat(EQUALS_NULL, identifier, count);
+                }
                 else
-                    expression.Append(value.ToString());
+                    expression.AppendFormat(EQUALS_VALUE, identifier, count);
+                
+                count++;
             }
 
             return expression.ToString();
+        }
+
+        private static bool IsPropertyNullable<T>(string identifier)
+        {
+            var property = typeof(T).GetProperty(identifier);
+            if (property == null || !property.PropertyType.IsGenericType)
+                return false;
+
+            var genericType = property.PropertyType.GetGenericTypeDefinition();
+            return genericType != null && genericType == typeof(Nullable<>);
         }
     }
 
