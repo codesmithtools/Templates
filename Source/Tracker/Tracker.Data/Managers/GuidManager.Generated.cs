@@ -17,16 +17,16 @@ using System.Text;
 namespace Tracker.Data
 {
     /// <summary>
-    /// The manager class for Status.
+    /// The manager class for Guid.
     /// </summary>
-    public partial class StatusManager 
-        : CodeSmith.Data.EntityManagerBase<TrackerDataManager, Tracker.Data.Status>
+    public partial class GuidManager 
+        : CodeSmith.Data.EntityManagerBase<TrackerDataManager, Tracker.Data.Guid>
     {
         /// <summary>
-        /// Initializes the <see cref="StatusManager"/> class.
+        /// Initializes the <see cref="GuidManager"/> class.
         /// </summary>
         /// <param name="manager">The current manager.</param>
-        public StatusManager(TrackerDataManager manager) : base(manager)
+        public GuidManager(TrackerDataManager manager) : base(manager)
         {
             OnCreated();
         }
@@ -42,18 +42,18 @@ namespace Tracker.Data
         /// <summary>
         /// Gets the entity for this manager.
         /// </summary>
-        protected System.Data.Linq.Table<Tracker.Data.Status> Entity
+        protected System.Data.Linq.Table<Tracker.Data.Guid> Entity
         {
-            get { return Manager.Context.Status; }
+            get { return Manager.Context.Guid; }
         }
         
         
         /// <summary>
         /// Creates the key for this entity.
         /// </summary>
-        public static CodeSmith.Data.IEntityKey<int> CreateKey(int id)
+        public static CodeSmith.Data.IEntityKey<System.Guid> CreateKey(System.Guid id)
         {
-            return new CodeSmith.Data.EntityKey<int>(id);
+            return new CodeSmith.Data.EntityKey<System.Guid>(id);
         }
         
         /// <summary>
@@ -64,19 +64,19 @@ namespace Tracker.Data
         /// An instance of the entity or null if not found.
         /// </returns>
         /// <remarks>
-        /// This method is expecting key to be of type IEntityKey&lt;int&gt;.
+        /// This method is expecting key to be of type IEntityKey&lt;System.Guid&gt;.
         /// </remarks>
-        /// <exception cref="ArgumentException">Thrown when key is not of type IEntityKey&lt;int&gt;.</exception>
-        public override Tracker.Data.Status GetByKey(CodeSmith.Data.IEntityKey key)
+        /// <exception cref="ArgumentException">Thrown when key is not of type IEntityKey&lt;System.Guid&gt;.</exception>
+        public override Tracker.Data.Guid GetByKey(CodeSmith.Data.IEntityKey key)
         {
-            if (key is CodeSmith.Data.IEntityKey<int>)
+            if (key is CodeSmith.Data.IEntityKey<System.Guid>)
             {
-                var entityKey = (CodeSmith.Data.IEntityKey<int>)key;
+                var entityKey = (CodeSmith.Data.IEntityKey<System.Guid>)key;
                 return GetByKey(entityKey.Key);
             }
             else
             {
-                throw new ArgumentException("Invalid key, expected key to be of type IEntityKey<int>");
+                throw new ArgumentException("Invalid key, expected key to be of type IEntityKey<System.Guid>");
             }
         }
         
@@ -84,21 +84,21 @@ namespace Tracker.Data
         /// Gets an instance by the primary key.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public Tracker.Data.Status GetByKey(int id)
+        public Tracker.Data.Guid GetByKey(System.Guid id)
         {
             if (Context.LoadOptions == null) 
                 return Query.GetByKey.Invoke(Context, id);
             else
-                return Entity.FirstOrDefault(s => s.Id == id);
+                return Entity.FirstOrDefault(g => g.Id == id);
         }
         
         /// <summary>
         /// Immediately deletes the entity by the primary key from the underlying data source with a single delete command.
         /// </summary>
         /// <returns>The number of rows deleted from the database.</returns>
-        public int Delete(int id)
+        public int Delete(System.Guid id)
         {
-            return Entity.Delete(s => s.Id == id);
+            return Entity.Delete(g => g.Id == id);
         }
 
         #region Extensibility Method Definitions
@@ -113,10 +113,10 @@ namespace Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<Tracker.Data.TrackerDataContext, int, Tracker.Data.Status> GetByKey = 
+            internal static readonly Func<Tracker.Data.TrackerDataContext, System.Guid, Tracker.Data.Guid> GetByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Data.TrackerDataContext db, int id) => 
-                        db.Status.FirstOrDefault(s => s.Id == id));
+                    (Tracker.Data.TrackerDataContext db, System.Guid id) => 
+                        db.Guid.FirstOrDefault(g => g.Id == id));
 
         }
         #endregion

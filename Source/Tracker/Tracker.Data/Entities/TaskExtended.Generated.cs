@@ -41,13 +41,13 @@ namespace Tracker.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public TaskExtended()
         {
-            OnCreated();
             Initialize();
         }
 
         private void Initialize()
         {
             _task = default(System.Data.Linq.EntityRef<Task>);
+            OnCreated();
         }
         #endregion
 
@@ -238,6 +238,7 @@ namespace Tracker.Data
                 }
             }
         }
+        
         #endregion
 
         #region Extensibility Method Definitions
@@ -318,6 +319,38 @@ namespace Tracker.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="TaskExtended"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="TaskExtended"/> instance.</param>
+        /// <returns>An instance of <see cref="TaskExtended"/> that is deserialized from the XML string.</returns>
+        public static TaskExtended FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(TaskExtended));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as TaskExtended;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="TaskExtended"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="TaskExtended"/> instance.</param>
+        /// <returns>An instance of <see cref="TaskExtended"/> that is deserialized from the byte array.</returns>
+        public static TaskExtended FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(TaskExtended));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as TaskExtended;
+            }
         }
         #endregion
 

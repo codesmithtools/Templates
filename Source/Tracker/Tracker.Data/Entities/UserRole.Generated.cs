@@ -41,7 +41,6 @@ namespace Tracker.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public UserRole()
         {
-            OnCreated();
             Initialize();
         }
 
@@ -49,6 +48,7 @@ namespace Tracker.Data
         {
             _role = default(System.Data.Linq.EntityRef<Role>);
             _user = default(System.Data.Linq.EntityRef<User>);
+            OnCreated();
         }
         #endregion
 
@@ -148,6 +148,7 @@ namespace Tracker.Data
                 }
             }
         }
+        
 
         private System.Data.Linq.EntityRef<User> _user;
 
@@ -186,6 +187,7 @@ namespace Tracker.Data
                 }
             }
         }
+        
         #endregion
 
         #region Extensibility Method Definitions
@@ -251,6 +253,38 @@ namespace Tracker.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="UserRole"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="UserRole"/> instance.</param>
+        /// <returns>An instance of <see cref="UserRole"/> that is deserialized from the XML string.</returns>
+        public static UserRole FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(UserRole));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as UserRole;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="UserRole"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="UserRole"/> instance.</param>
+        /// <returns>An instance of <see cref="UserRole"/> that is deserialized from the byte array.</returns>
+        public static UserRole FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(UserRole));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as UserRole;
+            }
         }
         #endregion
 

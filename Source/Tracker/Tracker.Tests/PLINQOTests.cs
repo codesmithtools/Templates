@@ -148,15 +148,15 @@ namespace Tracker.Tests
                 context.Log = Console.Out;
 
                 Task task = context.Manager.Task.GetByKey(UserId);
-                IQueryable<Task> tasks = context.Manager.Task.GetByAssignedIdStatusId(UserId, STATUS_NOT_STARTED);
-                List<Task> taskList = tasks.ToList();
+                //IQueryable<Task> tasks = context.Manager.Task.GetByAssignedIdStatusId(UserId, STATUS_NOT_STARTED);
+                //List<Task> taskList = tasks.ToList();
             }
 
             using (var context = new TrackerDataContext())
             {
                 context.Log = Console.Out;
 
-                Task task = context.Task.ByKey(UserId);
+                Task task = context.Task.GetByKey(UserId);
                 IQueryable<Task> tasks = context.Task
                     .ByAssignedId(UserId)
                     .ByStatusId(STATUS_NOT_STARTED);
@@ -172,7 +172,7 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                User u = context.User.ByKey(UserId);
+                User u = context.User.GetByKey(UserId);
                 Role r = context.Role.ByName("Manager").First();
                 u.RoleList.Add(r);
                 context.SubmitChanges();
@@ -188,7 +188,7 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                User u = context.User.ByKey(UserId);
+                User u = context.User.GetByKey(UserId);
                 Role r = context.Role.ByName("Manager").First();
                 u.RoleList.Add(r);
                 context.SubmitChanges();
@@ -204,7 +204,6 @@ namespace Tracker.Tests
 
         }
 
-
         [Test]
         public void Test_Enum()
         {
@@ -212,7 +211,7 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                var task = context.Task.ByKey(TaskId);
+                var task = context.Task.GetByKey(TaskId);
                 task.PriorityId = Priority.High;
                 context.SubmitChanges();
             }
@@ -225,7 +224,7 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                var user = context.User.ByKey(UserId);
+                var user = context.User.GetByKey(UserId);
                 user.Comment = "Vote Baltar and move to New Caprica";
 
                 var task = new Task()
@@ -273,7 +272,7 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                task = context.Task.ByKey(TaskId);
+                task = context.Task.GetByKey(TaskId);
                 task.Detach();
             }
 
@@ -296,7 +295,7 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                task = context.Task.ByKey(TaskId);
+                task = context.Task.GetByKey(TaskId);
                 task.Detach();
             }
 
@@ -318,7 +317,7 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                var u = context.Task.ByKey(TaskId);
+                var u = context.Task.GetByKey(TaskId);
                 Task taskCopy = u.Clone();
                 taskCopy.Id = 0;
                 context.Task.InsertOnSubmit(taskCopy);
@@ -335,7 +334,7 @@ namespace Tracker.Tests
 
                 // Write to Console/Output ... or break point.
 
-                var task = context.Task.ByKey(TaskId);
+                var task = context.Task.GetByKey(TaskId);
                 var s = task.ToXml();
                 Console.Write(s);
             }

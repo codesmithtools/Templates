@@ -25,14 +25,6 @@ namespace Tracker.Data
         /// <summary>
         /// Initializes the <see cref="TaskManager"/> class.
         /// </summary>
-        static TaskManager()
-        {
-            AddRules();
-        }
-
-        /// <summary>
-        /// Initializes the <see cref="TaskManager"/> class.
-        /// </summary>
         /// <param name="manager">The current manager.</param>
         public TaskManager(TrackerDataManager manager) : base(manager)
         {
@@ -111,17 +103,6 @@ namespace Tracker.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<Tracker.Data.Task> GetByAssignedIdStatusId(int? assignedId, int statusId)
-        {
-            if (Context.LoadOptions == null) 
-                return Query.GetByAssignedIdStatusId.Invoke(Context, assignedId, statusId);
-            else
-                return Entity.Where(t => t.AssignedId == assignedId 
-					&& t.StatusId == statusId);
-        }
-        /// <summary>
-        /// Gets a query by an index.
-        /// </summary>
         public IQueryable<Tracker.Data.Task> GetByStatusId(int statusId)
         {
             if (Context.LoadOptions == null) 
@@ -161,8 +142,6 @@ namespace Tracker.Data
         }
 
         #region Extensibility Method Definitions
-        /// <summary>Called by the static constructor to add shared rules.</summary>
-        static partial void AddRules();
         /// <summary>Called when the class is created.</summary>
         partial void OnCreated();
         #endregion
@@ -178,12 +157,6 @@ namespace Tracker.Data
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Data.TrackerDataContext db, int id) => 
                         db.Task.FirstOrDefault(t => t.Id == id));
-
-            internal static readonly Func<Tracker.Data.TrackerDataContext, int?, int, IQueryable<Tracker.Data.Task>> GetByAssignedIdStatusId = 
-                System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Data.TrackerDataContext db, int? assignedId, int statusId) => 
-                        db.Task.Where(t => t.AssignedId == assignedId 
-							&& t.StatusId == statusId));
 
             internal static readonly Func<Tracker.Data.TrackerDataContext, int, IQueryable<Tracker.Data.Task>> GetByStatusId = 
                 System.Data.Linq.CompiledQuery.Compile(

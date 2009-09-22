@@ -41,7 +41,6 @@ namespace Tracker.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public User()
         {
-            OnCreated();
             Initialize();
         }
 
@@ -51,6 +50,7 @@ namespace Tracker.Data
             _assignedTaskList = new System.Data.Linq.EntitySet<Task>(OnAssignedTaskListAdd, OnAssignedTaskListRemove);
             _createdTaskList = new System.Data.Linq.EntitySet<Task>(OnCreatedTaskListAdd, OnCreatedTaskListRemove);
             _userRoleList = new System.Data.Linq.EntitySet<UserRole>(OnUserRoleListAdd, OnUserRoleListRemove);
+            OnCreated();
         }
         #endregion
 
@@ -406,30 +406,6 @@ namespace Tracker.Data
                 }
             }
         }
-
-        private string _avatarType;
-
-        /// <summary>
-        /// Gets or sets the AvatarType column value.
-        /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "AvatarType", Storage = "_avatarType", DbType = "nvarchar(150)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.ComponentModel.DataAnnotations.StringLength(150)]
-        [System.Runtime.Serialization.DataMember(Order = 16)]
-        public string AvatarType
-        {
-            get { return _avatarType; }
-            set
-            {
-                if (_avatarType != value)
-                {
-                    OnAvatarTypeChanging(value);
-                    SendPropertyChanging("AvatarType");
-                    _avatarType = value;
-                    SendPropertyChanged("AvatarType");
-                    OnAvatarTypeChanged();
-                }
-            }
-        }
         #endregion
 
         #region Association Mapped Properties
@@ -440,7 +416,7 @@ namespace Tracker.Data
         /// Gets or sets the Audit association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Audit", Storage = "_auditList", ThisKey = "Id", OtherKey = "UserId")]
-        [System.Runtime.Serialization.DataMember(Order=17, EmitDefaultValue=false)]
+        [System.Runtime.Serialization.DataMember(Order=16, EmitDefaultValue=false)]
         public System.Data.Linq.EntitySet<Audit> AuditList
         {
             get { return (serializing && !_auditList.HasLoadedOrAssignedValues) ? null : _auditList; }
@@ -469,7 +445,7 @@ namespace Tracker.Data
         /// Gets or sets the Task association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Task", Storage = "_assignedTaskList", ThisKey = "Id", OtherKey = "AssignedId")]
-        [System.Runtime.Serialization.DataMember(Order=18, EmitDefaultValue=false)]
+        [System.Runtime.Serialization.DataMember(Order=17, EmitDefaultValue=false)]
         public System.Data.Linq.EntitySet<Task> AssignedTaskList
         {
             get { return (serializing && !_assignedTaskList.HasLoadedOrAssignedValues) ? null : _assignedTaskList; }
@@ -498,7 +474,7 @@ namespace Tracker.Data
         /// Gets or sets the Task association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Task1", Storage = "_createdTaskList", ThisKey = "Id", OtherKey = "CreatedId")]
-        [System.Runtime.Serialization.DataMember(Order=19, EmitDefaultValue=false)]
+        [System.Runtime.Serialization.DataMember(Order=18, EmitDefaultValue=false)]
         public System.Data.Linq.EntitySet<Task> CreatedTaskList
         {
             get { return (serializing && !_createdTaskList.HasLoadedOrAssignedValues) ? null : _createdTaskList; }
@@ -527,7 +503,7 @@ namespace Tracker.Data
         /// Gets or sets the UserRole association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_UserRole", Storage = "_userRoleList", ThisKey = "Id", OtherKey = "UserId")]
-        [System.Runtime.Serialization.DataMember(Order=20, EmitDefaultValue=false)]
+        [System.Runtime.Serialization.DataMember(Order=19, EmitDefaultValue=false)]
         public System.Data.Linq.EntitySet<UserRole> UserRoleList
         {
             get { return (serializing && !_userRoleList.HasLoadedOrAssignedValues) ? null : _userRoleList; }
@@ -680,11 +656,6 @@ namespace Tracker.Data
         partial void OnLastPasswordChangeDateChanging(Nullable<System.DateTime> value);
         /// <summary>Called after <see cref="LastPasswordChangeDate"/> has Changed.</summary>
         partial void OnLastPasswordChangeDateChanged();
-        /// <summary>Called when <see cref="AvatarType"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnAvatarTypeChanging(string value);
-        /// <summary>Called after <see cref="AvatarType"/> has Changed.</summary>
-        partial void OnAvatarTypeChanged();
 
         #endregion
 
@@ -719,6 +690,38 @@ namespace Tracker.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="User"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="User"/> instance.</param>
+        /// <returns>An instance of <see cref="User"/> that is deserialized from the XML string.</returns>
+        public static User FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(User));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as User;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="User"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="User"/> instance.</param>
+        /// <returns>An instance of <see cref="User"/> that is deserialized from the byte array.</returns>
+        public static User FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(User));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as User;
+            }
         }
         #endregion
 

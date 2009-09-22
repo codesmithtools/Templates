@@ -41,7 +41,6 @@ namespace Tracker.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Task()
         {
-            OnCreated();
             Initialize();
         }
 
@@ -52,6 +51,7 @@ namespace Tracker.Data
             _createdUser = default(System.Data.Linq.EntityRef<User>);
             _taskExtended = default(System.Data.Linq.EntityRef<TaskExtended>);
             _auditList = new System.Data.Linq.EntitySet<Audit>(OnAuditListAdd, OnAuditListRemove);
+            OnCreated();
         }
         #endregion
 
@@ -436,6 +436,7 @@ namespace Tracker.Data
                 }
             }
         }
+        
 
         private System.Data.Linq.EntityRef<User> _assignedUser;
 
@@ -474,6 +475,7 @@ namespace Tracker.Data
                 }
             }
         }
+        
 
         private System.Data.Linq.EntityRef<User> _createdUser;
 
@@ -512,6 +514,7 @@ namespace Tracker.Data
                 }
             }
         }
+        
 
         private System.Data.Linq.EntityRef<TaskExtended> _taskExtended;
 
@@ -545,6 +548,7 @@ namespace Tracker.Data
                 }
             }
         }
+        
 
         private System.Data.Linq.EntitySet<Audit> _auditList;
 
@@ -709,6 +713,38 @@ namespace Tracker.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Task"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Task"/> instance.</param>
+        /// <returns>An instance of <see cref="Task"/> that is deserialized from the XML string.</returns>
+        public static Task FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Task));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Task;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Task"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Task"/> instance.</param>
+        /// <returns>An instance of <see cref="Task"/> that is deserialized from the byte array.</returns>
+        public static Task FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Task));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Task;
+            }
         }
         #endregion
 

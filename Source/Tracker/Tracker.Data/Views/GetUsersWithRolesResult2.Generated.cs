@@ -12,7 +12,7 @@ using System.Linq;
 namespace Tracker.Data
 {
     /// <summary>
-    /// Class representing data for the Tracker database.
+    /// Class representing GetUsersWithRolesResult2 data.
     /// </summary>
     
     [System.Runtime.Serialization.DataContract(IsReference = true)]
@@ -38,12 +38,12 @@ namespace Tracker.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public GetUsersWithRolesResult2()
         {
-            OnCreated();
             Initialize();
         }
 
         private void Initialize()
         {
+            OnCreated();
         }
         #endregion
 
@@ -148,6 +148,38 @@ namespace Tracker.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="GetUsersWithRolesResult2"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="GetUsersWithRolesResult2"/> instance.</param>
+        /// <returns>An instance of <see cref="GetUsersWithRolesResult2"/> that is deserialized from the XML string.</returns>
+        public static GetUsersWithRolesResult2 FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(GetUsersWithRolesResult2));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as GetUsersWithRolesResult2;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="GetUsersWithRolesResult2"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="GetUsersWithRolesResult2"/> instance.</param>
+        /// <returns>An instance of <see cref="GetUsersWithRolesResult2"/> that is deserialized from the byte array.</returns>
+        public static GetUsersWithRolesResult2 FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(GetUsersWithRolesResult2));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as GetUsersWithRolesResult2;
+            }
         }
         #endregion
     }

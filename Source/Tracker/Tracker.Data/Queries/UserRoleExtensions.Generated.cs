@@ -8,8 +8,10 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Data.Linq;
+using System.Linq.Dynamic;
 
 namespace Tracker.Data
 {
@@ -22,11 +24,11 @@ namespace Tracker.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static Tracker.Data.UserRole ByKey(this IQueryable<Tracker.Data.UserRole> queryable, int userId, int roleId)
+        public static Tracker.Data.UserRole GetByKey(this IQueryable<Tracker.Data.UserRole> queryable, int userId, int roleId)
         {
             var entity = queryable as System.Data.Linq.Table<Tracker.Data.UserRole>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((Tracker.Data.TrackerDataContext)entity.Context, userId, roleId);
+                return Query.GetByKey.Invoke((Tracker.Data.TrackerDataContext)entity.Context, userId, roleId);
             
             return queryable.FirstOrDefault(u => u.UserId == userId 
 					&& u.RoleId == roleId);
@@ -42,6 +44,70 @@ namespace Tracker.Data
             return table.Delete(u => u.UserId == userId 
 					&& u.RoleId == roleId);
         }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.UserRole.UserId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="userId">UserId to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Data.UserRole> ByUserId(this IQueryable<Tracker.Data.UserRole> queryable, int userId)
+        {
+            return queryable.Where(u => u.UserId == userId);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.UserRole.UserId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="userId">UserId to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Data.UserRole> ByUserId(this IQueryable<Tracker.Data.UserRole> queryable, int userId, params int[] additionalValues)
+        {
+            var userIdList = new List<int> {userId};
+
+            if (additionalValues != null)
+                userIdList.AddRange(additionalValues);
+
+            if (userIdList.Count == 1)
+                return queryable.ByUserId(userIdList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Data.UserRole, bool>("UserId", userIdList);
+            return queryable.Where(expression);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.UserRole.RoleId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="roleId">RoleId to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Data.UserRole> ByRoleId(this IQueryable<Tracker.Data.UserRole> queryable, int roleId)
+        {
+            return queryable.Where(u => u.RoleId == roleId);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Data.UserRole.RoleId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="roleId">RoleId to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Data.UserRole> ByRoleId(this IQueryable<Tracker.Data.UserRole> queryable, int roleId, params int[] additionalValues)
+        {
+            var roleIdList = new List<int> {roleId};
+
+            if (additionalValues != null)
+                roleIdList.AddRange(additionalValues);
+
+            if (roleIdList.Count == 1)
+                return queryable.ByRoleId(roleIdList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Data.UserRole, bool>("RoleId", roleIdList);
+            return queryable.Where(expression);
+        }
 
         #region Query
         /// <summary>
@@ -50,7 +116,7 @@ namespace Tracker.Data
         private static partial class Query
         {
 
-            internal static readonly Func<Tracker.Data.TrackerDataContext, int, int, Tracker.Data.UserRole> ByKey = 
+            internal static readonly Func<Tracker.Data.TrackerDataContext, int, int, Tracker.Data.UserRole> GetByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Data.TrackerDataContext db, int userId, int roleId) => 
                         db.UserRole.FirstOrDefault(u => u.UserId == userId 
