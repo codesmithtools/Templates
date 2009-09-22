@@ -63,8 +63,6 @@ namespace Tracker.Data
 
             public System.DateTime LastPasswordChangeDate { get; set; }
 
-            public string AvatarType { get; set; }
-
             public EntitySet<Audit> AuditList { get; set; }
 
             public EntitySet<Task> AssignedTaskList { get; set; }

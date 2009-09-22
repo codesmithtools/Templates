@@ -68,6 +68,10 @@
     <Compile Include="Entities\Audit.Generated.cs">
       <DependentUpon>Audit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entities\Guid.cs" />
+    <Compile Include="Entities\Guid.Generated.cs">
+      <DependentUpon>Guid.cs</DependentUpon>
+    </Compile>
     <Compile Include="Entities\Role.cs" />
     <Compile Include="Entities\Role.Generated.cs">
       <DependentUpon>Role.cs</DependentUpon>
@@ -100,6 +104,10 @@
     <Compile Include="Managers\AuditManager.Generated.cs">
       <DependentUpon>AuditManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="Managers\GuidManager.cs" />
+    <Compile Include="Managers\GuidManager.Generated.cs">
+      <DependentUpon>GuidManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Managers\RoleManager.cs" />
     <Compile Include="Managers\RoleManager.Generated.cs">
       <DependentUpon>RoleManager.cs</DependentUpon>
@@ -129,6 +137,10 @@
     <Compile Include="Queries\AuditExtensions.cs" />
     <Compile Include="Queries\AuditExtensions.Generated.cs">
       <DependentUpon>AuditExtensions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Queries\GuidExtensions.cs" />
+    <Compile Include="Queries\GuidExtensions.Generated.cs">
+      <DependentUpon>GuidExtensions.cs</DependentUpon>
     </Compile>
     <Compile Include="Queries\RoleExtensions.cs" />
     <Compile Include="Queries\RoleExtensions.Generated.cs">

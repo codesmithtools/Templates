@@ -41,7 +41,6 @@ namespace Tracker.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Audit()
         {
-            OnCreated();
             Initialize();
         }
 
@@ -49,6 +48,7 @@ namespace Tracker.Data
         {
             _task = default(System.Data.Linq.EntityRef<Task>);
             _user = default(System.Data.Linq.EntityRef<User>);
+            OnCreated();
         }
         #endregion
 
@@ -288,6 +288,7 @@ namespace Tracker.Data
                 }
             }
         }
+        
 
         private System.Data.Linq.EntityRef<User> _user;
 
@@ -326,6 +327,7 @@ namespace Tracker.Data
                 }
             }
         }
+        
         #endregion
 
         #region Extensibility Method Definitions
@@ -421,6 +423,38 @@ namespace Tracker.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Audit"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Audit"/> instance.</param>
+        /// <returns>An instance of <see cref="Audit"/> that is deserialized from the XML string.</returns>
+        public static Audit FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Audit));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Audit;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Audit"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Audit"/> instance.</param>
+        /// <returns>An instance of <see cref="Audit"/> that is deserialized from the byte array.</returns>
+        public static Audit FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Audit));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Audit;
+            }
         }
         #endregion
 

@@ -15,6 +15,12 @@
       <Association Name="User_Audit" Member="User" Storage="_user" ThisKey="UserId" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Guid" Member="Guid">
+    <Type Name="Guid">
+      <Column Name="Id" Storage="_id" Type="System.Guid" DbType="uniqueidentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="AlternateId" Storage="_alternateId" Type="System.Guid" DbType="uniqueidentifier" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.Role" Member="Role">
     <Type Name="Role">
       <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -89,7 +95,6 @@
       <Column Name="LastLoginDate" Storage="_lastLoginDate" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
       <Column Name="LastActivityDate" Storage="_lastActivityDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="LastPasswordChangeDate" Storage="_lastPasswordChangeDate" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
-      <Column Name="AvatarType" Storage="_avatarType" Type="System.String" DbType="nvarchar(150)" CanBeNull="true" />
       <Association Name="User_Audit" Member="AuditList" Storage="_auditList" OtherKey="UserId" Type="Audit" />
       <Association Name="User_Task" Member="AssignedTaskList" Storage="_assignedTaskList" OtherKey="AssignedId" Type="Task" />
       <Association Name="User_Task1" Member="CreatedTaskList" Storage="_createdTaskList" OtherKey="CreatedId" Type="Task" />

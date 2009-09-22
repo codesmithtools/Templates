@@ -132,6 +132,12 @@ namespace Tracker.Data
             get { return GetTable<Tracker.Data.Audit>(); }
         }
         
+        /// <summary>Represents the dbo.Guid table in the underlying database.</summary>
+        public System.Data.Linq.Table<Tracker.Data.Guid> Guid
+        {
+            get { return GetTable<Tracker.Data.Guid>(); }
+        }
+        
         /// <summary>Represents the dbo.Role table in the underlying database.</summary>
         public System.Data.Linq.Table<Tracker.Data.Role> Role
         {
@@ -198,6 +204,15 @@ namespace Tracker.Data
         /// <summary>Called before a <see cref="Audit"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
         partial void DeleteAudit(Tracker.Data.Audit instance);
+        /// <summary>Called before a <see cref="Guid"/> is inserted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void InsertGuid(Tracker.Data.Guid instance);
+        /// <summary>Called before a <see cref="Guid"/> is updated.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void UpdateGuid(Tracker.Data.Guid instance);
+        /// <summary>Called before a <see cref="Guid"/> is deleted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void DeleteGuid(Tracker.Data.Guid instance);
         /// <summary>Called before a <see cref="Role"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
         partial void InsertRole(Tracker.Data.Role instance);
