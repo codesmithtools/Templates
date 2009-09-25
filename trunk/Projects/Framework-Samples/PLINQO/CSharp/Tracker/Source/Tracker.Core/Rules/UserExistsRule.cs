@@ -28,7 +28,7 @@ namespace Tracker.Core.Data.Rules
             using (var dataContext = new TrackerDataContext())
             {
                 dataContext.ObjectTrackingEnabled = false;
-                var user = dataContext.User.ByEmailAddress(currentUser.EmailAddress).FirstOrDefault();
+                var user = dataContext.User.GetByEmailAddress(currentUser.EmailAddress);
                 context.Success = (null == user || user.Id == currentUser.Id);
             }
         }
