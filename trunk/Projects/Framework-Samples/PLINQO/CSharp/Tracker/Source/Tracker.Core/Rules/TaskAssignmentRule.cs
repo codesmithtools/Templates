@@ -39,7 +39,7 @@ namespace Tracker.Core.Data.Rules
                     options.LoadWith<UserRole>(r => r.Role);
                     dataContext.LoadOptions = options;
 
-                    User currentUser = dataContext.User.ByEmailAddress(HttpContext.Current.User.Identity.Name);
+                    User currentUser = dataContext.User.ByEmailAddress(HttpContext.Current.User.Identity.Name).FirstOrDefault();
                     context.Success = (null == dataContext.UserRole.GetUserRole("Newb", currentUser.Id));
                 }
             }

@@ -60,8 +60,8 @@ namespace PLINQO.Mvc.UI.Controllers
                 var options = new DataLoadOptions();
                 options.LoadWith<User>(u => u.UserRoleList);
 
-                var user = context.User.ByKey(userId);
-                var role = context.Role.ByKey(roleId);
+                var user = context.User.GetByKey(userId);
+                var role = context.Role.GetByKey(roleId);
                 user.RoleList.Add(role);
                 context.SubmitChanges();
             }
@@ -76,7 +76,7 @@ namespace PLINQO.Mvc.UI.Controllers
                 options.LoadWith<User>(u => u.UserRoleList);
                 context.LoadOptions = options;
 
-                var user = context.User.ByKey(userId);
+                var user = context.User.GetByKey(userId);
                 var role = user.RoleList.FirstOrDefault(r => r.Id == roleId);
 
                 user.RoleList.Remove(role);
@@ -108,7 +108,7 @@ namespace PLINQO.Mvc.UI.Controllers
                     {
                         using (var context = new TrackerDataContext())
                         {
-                            var user = context.User.ByEmailAddress(emailAddress);
+                            var user = context.User.GetByEmailAddress(emailAddress);
                             TryUpdateModel(user, null, null, new string[] { "FirstName, LastName" });
                             context.SubmitChanges();
                             HttpRuntime.Cache.Remove("Users");
@@ -149,7 +149,7 @@ namespace PLINQO.Mvc.UI.Controllers
                 options.LoadWith<Data.UserRole>(r => r.Role);
                 context.LoadOptions = options;
 
-                user = context.User.ByKey(id);
+                user = context.User.GetByKey(id);
 
             }
 
@@ -170,7 +170,7 @@ namespace PLINQO.Mvc.UI.Controllers
                 options.LoadWith<Data.UserRole>(ur => ur.Role);
                 context.LoadOptions = options;
 
-                user = context.User.ByKey(id);
+                user = context.User.GetByKey(id);
                 user.Detach();
             }
             return Json(user);
@@ -244,7 +244,7 @@ namespace PLINQO.Mvc.UI.Controllers
                     options.LoadWith<Data.UserRole>(u => u.Role);
                     context.LoadOptions = options;
 
-                    user = context.User.ByKey(id);
+                    user = context.User.GetByKey(id);
                     UpdateModel(user);
                     context.SubmitChanges();
 
@@ -270,7 +270,7 @@ namespace PLINQO.Mvc.UI.Controllers
         {
             using (var context = new TrackerDataContext())
             {
-                var user = context.User.ByKey(id);
+                var user = context.User.GetByKey(id);
                 user.AvatarType = null;
                 user.Avatar = null;
                 context.SubmitChanges();
@@ -289,7 +289,7 @@ namespace PLINQO.Mvc.UI.Controllers
                 context.LoadOptions = options;
                 context.ObjectTrackingEnabled = false;
 
-                return GetData(context.User.ByKey(userId));
+                return GetData(context.User.GetByKey(userId));
             }
         }
 
@@ -311,7 +311,7 @@ namespace PLINQO.Mvc.UI.Controllers
             User user = null;
             using (var context = new TrackerDataContext())
             {
-                user = context.User.ByKey(id);
+                user = context.User.GetByKey(id);
                 user.Detach();
             }
 
@@ -329,7 +329,7 @@ namespace PLINQO.Mvc.UI.Controllers
             {
                 using (var context = new TrackerDataContext())
                 {
-                    var user = context.User.ByKey(id);
+                    var user = context.User.GetByKey(id);
                     ModelState.AddModelError("file", "Must select a file to upload.");
                     return View("Edit", GetData(user));
                 }
@@ -341,7 +341,7 @@ namespace PLINQO.Mvc.UI.Controllers
 
             using (var context = new TrackerDataContext())
             {
-                var user = context.User.ByKey(id);
+                var user = context.User.GetByKey(id);
                 user.Avatar = new Binary(buffer);
                 user.AvatarType = file.ContentType;
                 context.SubmitChanges();

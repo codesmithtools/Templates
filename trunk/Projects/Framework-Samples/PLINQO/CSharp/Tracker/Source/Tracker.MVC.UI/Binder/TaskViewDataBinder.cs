@@ -25,7 +25,7 @@ namespace PLINQO.Mvc.UI.Binder
             {
                 if (id != null)
                 {
-                    taskViewData.Task = context.Task.ByKey(id.Value);
+                    taskViewData.Task = context.Task.GetByKey(id.Value);
                     taskViewData.Task.Detach();
                 }
                 else

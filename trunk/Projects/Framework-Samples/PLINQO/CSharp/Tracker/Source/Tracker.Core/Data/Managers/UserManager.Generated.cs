@@ -25,14 +25,6 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Initializes the <see cref="UserManager"/> class.
         /// </summary>
-        static UserManager()
-        {
-            AddRules();
-        }
-
-        /// <summary>
-        /// Initializes the <see cref="UserManager"/> class.
-        /// </summary>
         /// <param name="manager">The current manager.</param>
         public UserManager(TrackerDataManager manager) : base(manager)
         {
@@ -121,8 +113,6 @@ namespace Tracker.Core.Data
         }
 
         #region Extensibility Method Definitions
-        /// <summary>Called by the static constructor to add shared rules.</summary>
-        static partial void AddRules();
         /// <summary>Called when the class is created.</summary>
         partial void OnCreated();
         #endregion

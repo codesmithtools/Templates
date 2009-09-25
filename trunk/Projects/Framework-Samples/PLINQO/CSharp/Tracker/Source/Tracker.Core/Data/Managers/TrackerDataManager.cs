@@ -23,15 +23,8 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="context">An instance of <see cref="Tracker.Core.Data.TrackerDataContext"/> DataContext.</param>
         public TrackerDataManager(Tracker.Core.Data.TrackerDataContext context) : base(context)
-        {
-            _auditManager = new AuditManager(this);
-            _roleManager = new RoleManager(this);
-            _statusManager = new StatusManager(this);
-            _taskManager = new TaskManager(this);
-            _taskExtendedManager = new TaskExtendedManager(this);
-            _userManager = new UserManager(this);
-            _userRoleManager = new UserRoleManager(this);
-        }
+        { }
+        
         #region Managers
         
         private AuditManager _auditManager;
@@ -41,7 +34,13 @@ namespace Tracker.Core.Data
         /// </summary>
         public AuditManager Audit
         {
-            get { return _auditManager; }
+            get
+            {
+                if (_auditManager == null)
+                    _auditManager = new AuditManager(this);
+
+                return _auditManager;
+            }
         }
         
         private RoleManager _roleManager;
@@ -51,7 +50,13 @@ namespace Tracker.Core.Data
         /// </summary>
         public RoleManager Role
         {
-            get { return _roleManager; }
+            get
+            {
+                if (_roleManager == null)
+                    _roleManager = new RoleManager(this);
+
+                return _roleManager;
+            }
         }
         
         private StatusManager _statusManager;
@@ -61,7 +66,13 @@ namespace Tracker.Core.Data
         /// </summary>
         public StatusManager Status
         {
-            get { return _statusManager; }
+            get
+            {
+                if (_statusManager == null)
+                    _statusManager = new StatusManager(this);
+
+                return _statusManager;
+            }
         }
         
         private TaskManager _taskManager;
@@ -71,7 +82,13 @@ namespace Tracker.Core.Data
         /// </summary>
         public TaskManager Task
         {
-            get { return _taskManager; }
+            get
+            {
+                if (_taskManager == null)
+                    _taskManager = new TaskManager(this);
+
+                return _taskManager;
+            }
         }
         
         private TaskExtendedManager _taskExtendedManager;
@@ -81,7 +98,13 @@ namespace Tracker.Core.Data
         /// </summary>
         public TaskExtendedManager TaskExtended
         {
-            get { return _taskExtendedManager; }
+            get
+            {
+                if (_taskExtendedManager == null)
+                    _taskExtendedManager = new TaskExtendedManager(this);
+
+                return _taskExtendedManager;
+            }
         }
         
         private UserManager _userManager;
@@ -91,7 +114,13 @@ namespace Tracker.Core.Data
         /// </summary>
         public UserManager User
         {
-            get { return _userManager; }
+            get
+            {
+                if (_userManager == null)
+                    _userManager = new UserManager(this);
+
+                return _userManager;
+            }
         }
         
         private UserRoleManager _userRoleManager;
@@ -101,7 +130,13 @@ namespace Tracker.Core.Data
         /// </summary>
         public UserRoleManager UserRole
         {
-            get { return _userRoleManager; }
+            get
+            {
+                if (_userRoleManager == null)
+                    _userRoleManager = new UserRoleManager(this);
+
+                return _userRoleManager;
+            }
         }
         #endregion
     }

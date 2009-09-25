@@ -25,14 +25,6 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Initializes the <see cref="TaskManager"/> class.
         /// </summary>
-        static TaskManager()
-        {
-            AddRules();
-        }
-
-        /// <summary>
-        /// Initializes the <see cref="TaskManager"/> class.
-        /// </summary>
         /// <param name="manager">The current manager.</param>
         public TaskManager(TrackerDataManager manager) : base(manager)
         {
@@ -132,12 +124,12 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<Tracker.Core.Data.Task> GetByPriorityId(Priority priorityId)
+        public IQueryable<Tracker.Core.Data.Task> GetByPriority(Priority priority)
         {
             if (Context.LoadOptions == null) 
-                return Query.GetByPriorityId.Invoke(Context, priorityId);
+                return Query.GetByPriority.Invoke(Context, priority);
             else
-                return Entity.Where(t => t.PriorityId == priorityId);
+                return Entity.Where(t => t.Priority == priority);
         }
         /// <summary>
         /// Gets a query by an index.
@@ -161,8 +153,6 @@ namespace Tracker.Core.Data
         }
 
         #region Extensibility Method Definitions
-        /// <summary>Called by the static constructor to add shared rules.</summary>
-        static partial void AddRules();
         /// <summary>Called when the class is created.</summary>
         partial void OnCreated();
         #endregion
@@ -190,10 +180,10 @@ namespace Tracker.Core.Data
                     (Tracker.Core.Data.TrackerDataContext db, int statusId) => 
                         db.Task.Where(t => t.StatusId == statusId));
 
-            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, Priority, IQueryable<Tracker.Core.Data.Task>> GetByPriorityId = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, Priority, IQueryable<Tracker.Core.Data.Task>> GetByPriority = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Core.Data.TrackerDataContext db, Priority priorityId) => 
-                        db.Task.Where(t => t.PriorityId == priorityId));
+                    (Tracker.Core.Data.TrackerDataContext db, Priority priority) => 
+                        db.Task.Where(t => t.Priority == priority));
 
             internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, IQueryable<Tracker.Core.Data.Task>> GetByCreatedId = 
                 System.Data.Linq.CompiledQuery.Compile(

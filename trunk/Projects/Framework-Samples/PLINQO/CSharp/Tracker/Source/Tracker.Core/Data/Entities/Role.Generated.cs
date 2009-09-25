@@ -41,13 +41,13 @@ namespace Tracker.Core.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Role()
         {
-            OnCreated();
             Initialize();
         }
 
         private void Initialize()
         {
             _userRoleList = new System.Data.Linq.EntitySet<UserRole>(OnUserRoleListAdd, OnUserRoleListRemove);
+            OnCreated();
         }
         #endregion
 
@@ -345,6 +345,38 @@ namespace Tracker.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Role"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Role"/> instance.</param>
+        /// <returns>An instance of <see cref="Role"/> that is deserialized from the XML string.</returns>
+        public static Role FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Role));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Role;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Role"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Role"/> instance.</param>
+        /// <returns>An instance of <see cref="Role"/> that is deserialized from the byte array.</returns>
+        public static Role FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Role));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Role;
+            }
         }
         #endregion
 

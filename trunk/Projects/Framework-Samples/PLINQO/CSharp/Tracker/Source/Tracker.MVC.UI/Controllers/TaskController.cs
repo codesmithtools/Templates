@@ -57,10 +57,10 @@ namespace PLINQO.Mvc.UI.Controllers
             Task copiedTask = null;
             using (var context = new TrackerDataContext())
             {
-                Task task = context.Task.ByKey(id);
+                Task task = context.Task.GetByKey(id);
                 copiedTask = task.Clone();
                 copiedTask.Id = 0;
-                copiedTask.CreatedUser = context.User.ByEmailAddress(System.Web.HttpContext.Current.User.Identity.Name);
+                copiedTask.CreatedUser = context.User.GetByEmailAddress(System.Web.HttpContext.Current.User.Identity.Name);
                 context.Task.InsertOnSubmit(copiedTask);
                 context.SubmitChanges();
             }
@@ -88,7 +88,7 @@ namespace PLINQO.Mvc.UI.Controllers
                 options.LoadWith<Task>(t => t.CreatedUser);
                 options.LoadWith<Task>(t => t.Status);
                 context.LoadOptions = options;
-                task = context.Task.ByKey(id);
+                task = context.Task.GetByKey(id);
             }
             return View(task);
         }
@@ -110,7 +110,7 @@ namespace PLINQO.Mvc.UI.Controllers
                     options.LoadWith<Task>(t => t.CreatedUser);
                     context.LoadOptions = options;
 
-                    task = context.Task.ByKey(id);
+                    task = context.Task.GetByKey(id);
                     UpdateModel(task);
                     context.SubmitChanges();
 
@@ -142,7 +142,7 @@ namespace PLINQO.Mvc.UI.Controllers
                 options.LoadWith<Task>(t => t.Status);
                 context.LoadOptions = options;
 
-                task = context.Task.ByKey(id);
+                task = context.Task.GetByKey(id);
                 task.Detach();
             }
             return Json(task);
@@ -192,7 +192,7 @@ namespace PLINQO.Mvc.UI.Controllers
                 options.LoadWith<Task>(t => t.Status);
                 context.LoadOptions = options;
                 context.ObjectTrackingEnabled = false;
-                var task = context.Task.ByKey(id);
+                var task = context.Task.GetByKey(id);
                 return GetData(task);
             }
         }
@@ -209,7 +209,7 @@ namespace PLINQO.Mvc.UI.Controllers
             taskViewData.AssignedUsers = UIHelper.GetUserSelectList(task.AssignedId);
             taskViewData.CreatedUsers = UIHelper.GetUserSelectList(task.CreatedId);
             taskViewData.Statuses = UIHelper.GetStatusSelectList(task.StatusId);
-            taskViewData.Priorities = UIHelper.GetPrioritySelectList(task.PriorityId);
+            taskViewData.Priorities = UIHelper.GetPrioritySelectList(task.Priority);
 
             using (var context = new TrackerDataContext())
             {

@@ -23,7 +23,7 @@
             </p>
             <p>
                 <label for="PriorityId">Priority:</label>
-                <%= Html.DropDownList("PriorityId", Model.Priorities, "Select Priority")%>
+                <%= Html.DropDownList("Priority", Model.Priorities, "Select Priority")%>
                 <%= Html.ValidationMessage("PriorityId", "*")%>
             </p>
             <p>

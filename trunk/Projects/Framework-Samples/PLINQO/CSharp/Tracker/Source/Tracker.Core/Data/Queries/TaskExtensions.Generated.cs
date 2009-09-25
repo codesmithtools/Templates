@@ -8,8 +8,10 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Data.Linq;
+using System.Linq.Dynamic;
 
 namespace Tracker.Core.Data
 {
@@ -22,11 +24,11 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static Tracker.Core.Data.Task ByKey(this IQueryable<Tracker.Core.Data.Task> queryable, int id)
+        public static Tracker.Core.Data.Task GetByKey(this IQueryable<Tracker.Core.Data.Task> queryable, int id)
         {
             var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.Task>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, id);
+                return Query.GetByKey.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, id);
             
             return queryable.FirstOrDefault(t => t.Id == id);
         }
@@ -42,99 +44,431 @@ namespace Tracker.Core.Data
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Task.StatusId"/>.
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.Id"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ById(this IQueryable<Tracker.Core.Data.Task> queryable, int id)
+        {
+            return queryable.Where(t => t.Id == id);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ById(this IQueryable<Tracker.Core.Data.Task> queryable, int id, params int[] additionalValues)
+        {
+            var idList = new List<int> {id};
+
+            if (additionalValues != null)
+                idList.AddRange(additionalValues);
+
+            if (idList.Count == 1)
+                return queryable.ById(idList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("Id", idList);
+            return queryable.Where(expression);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.StatusId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="statusId">StatusId to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByStatusId(this IQueryable<Tracker.Core.Data.Task> queryable, int statusId)
         {
             return queryable.Where(t => t.StatusId == statusId);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Task.PriorityId"/>.
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.StatusId"/>.
         /// </summary>
-        public static IQueryable<Tracker.Core.Data.Task> ByPriorityId(this IQueryable<Tracker.Core.Data.Task> queryable, Priority priorityId)
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="statusId">StatusId to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ByStatusId(this IQueryable<Tracker.Core.Data.Task> queryable, int statusId, params int[] additionalValues)
         {
-            return queryable.Where(t => t.PriorityId == priorityId);
+            var statusIdList = new List<int> {statusId};
+
+            if (additionalValues != null)
+                statusIdList.AddRange(additionalValues);
+
+            if (statusIdList.Count == 1)
+                return queryable.ByStatusId(statusIdList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("StatusId", statusIdList);
+            return queryable.Where(expression);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Task.CreatedId"/>.
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.Priority"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="priority">Priority to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ByPriority(this IQueryable<Tracker.Core.Data.Task> queryable, Priority priority)
+        {
+            return queryable.Where(t => t.Priority == priority);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.Priority"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="priority">Priority to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ByPriority(this IQueryable<Tracker.Core.Data.Task> queryable, Priority priority, params Priority[] additionalValues)
+        {
+            var priorityList = new List<Priority> {priority};
+
+            if (additionalValues != null)
+                priorityList.AddRange(additionalValues);
+
+            if (priorityList.Count == 1)
+                return queryable.ByPriority(priorityList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("Priority", priorityList);
+            return queryable.Where(expression);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.CreatedId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="createdId">CreatedId to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByCreatedId(this IQueryable<Tracker.Core.Data.Task> queryable, int createdId)
         {
             return queryable.Where(t => t.CreatedId == createdId);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Task.Summary"/>.
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.CreatedId"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="createdId">CreatedId to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ByCreatedId(this IQueryable<Tracker.Core.Data.Task> queryable, int createdId, params int[] additionalValues)
+        {
+            var createdIdList = new List<int> {createdId};
+
+            if (additionalValues != null)
+                createdIdList.AddRange(additionalValues);
+
+            if (createdIdList.Count == 1)
+                return queryable.ByCreatedId(createdIdList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("CreatedId", createdIdList);
+            return queryable.Where(expression);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.Summary"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="summary">Summary to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> BySummary(this IQueryable<Tracker.Core.Data.Task> queryable, string summary)
         {
             return queryable.Where(t => t.Summary == summary);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Task.Details"/>.
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.Summary"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="summary">Summary to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> BySummary(this IQueryable<Tracker.Core.Data.Task> queryable, string summary, params string[] additionalValues)
+        {
+            var summaryList = new List<string> {summary};
+
+            if (additionalValues != null)
+                summaryList.AddRange(additionalValues);
+
+            if (summaryList.Count == 1)
+                return queryable.BySummary(summaryList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("Summary", summaryList);
+            return queryable.Where(expression);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.Details"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="details">Details to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByDetails(this IQueryable<Tracker.Core.Data.Task> queryable, string details)
         {
             return queryable.Where(t => object.Equals(t.Details, details));
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Task.StartDate"/>.
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.Details"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="details">Details to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ByDetails(this IQueryable<Tracker.Core.Data.Task> queryable, string details, params string[] additionalValues)
+        {
+            var detailsList = new List<string> {details};
+
+            if (additionalValues != null)
+                detailsList.AddRange(additionalValues);
+            else
+                detailsList.Add(null);
+
+            if (detailsList.Count == 1)
+                return queryable.ByDetails(detailsList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("Details", detailsList);
+            return queryable.Where(expression);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.StartDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="startDate">StartDate to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByStartDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? startDate)
         {
             return queryable.Where(t => object.Equals(t.StartDate, startDate));
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Task.DueDate"/>.
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.StartDate"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="startDate">StartDate to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ByStartDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? startDate, params System.DateTime?[] additionalValues)
+        {
+            var startDateList = new List<System.DateTime?> {startDate};
+
+            if (additionalValues != null)
+                startDateList.AddRange(additionalValues);
+            else
+                startDateList.Add(null);
+
+            if (startDateList.Count == 1)
+                return queryable.ByStartDate(startDateList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("StartDate", startDateList);
+            return queryable.Where(expression);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.DueDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="dueDate">DueDate to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByDueDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? dueDate)
         {
             return queryable.Where(t => object.Equals(t.DueDate, dueDate));
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Task.CompleteDate"/>.
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.DueDate"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="dueDate">DueDate to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ByDueDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? dueDate, params System.DateTime?[] additionalValues)
+        {
+            var dueDateList = new List<System.DateTime?> {dueDate};
+
+            if (additionalValues != null)
+                dueDateList.AddRange(additionalValues);
+            else
+                dueDateList.Add(null);
+
+            if (dueDateList.Count == 1)
+                return queryable.ByDueDate(dueDateList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("DueDate", dueDateList);
+            return queryable.Where(expression);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.CompleteDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="completeDate">CompleteDate to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByCompleteDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? completeDate)
         {
             return queryable.Where(t => object.Equals(t.CompleteDate, completeDate));
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Task.AssignedId"/>.
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.CompleteDate"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="completeDate">CompleteDate to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ByCompleteDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? completeDate, params System.DateTime?[] additionalValues)
+        {
+            var completeDateList = new List<System.DateTime?> {completeDate};
+
+            if (additionalValues != null)
+                completeDateList.AddRange(additionalValues);
+            else
+                completeDateList.Add(null);
+
+            if (completeDateList.Count == 1)
+                return queryable.ByCompleteDate(completeDateList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("CompleteDate", completeDateList);
+            return queryable.Where(expression);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.AssignedId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="assignedId">AssignedId to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByAssignedId(this IQueryable<Tracker.Core.Data.Task> queryable, int? assignedId)
         {
             return queryable.Where(t => object.Equals(t.AssignedId, assignedId));
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Task.CreatedDate"/>.
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.AssignedId"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="assignedId">AssignedId to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ByAssignedId(this IQueryable<Tracker.Core.Data.Task> queryable, int? assignedId, params int?[] additionalValues)
+        {
+            var assignedIdList = new List<int?> {assignedId};
+
+            if (additionalValues != null)
+                assignedIdList.AddRange(additionalValues);
+            else
+                assignedIdList.Add(null);
+
+            if (assignedIdList.Count == 1)
+                return queryable.ByAssignedId(assignedIdList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("AssignedId", assignedIdList);
+            return queryable.Where(expression);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.CreatedDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="createdDate">CreatedDate to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByCreatedDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime createdDate)
         {
             return queryable.Where(t => t.CreatedDate == createdDate);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Task.ModifiedDate"/>.
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.CreatedDate"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="createdDate">CreatedDate to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ByCreatedDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime createdDate, params System.DateTime[] additionalValues)
+        {
+            var createdDateList = new List<System.DateTime> {createdDate};
+
+            if (additionalValues != null)
+                createdDateList.AddRange(additionalValues);
+
+            if (createdDateList.Count == 1)
+                return queryable.ByCreatedDate(createdDateList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("CreatedDate", createdDateList);
+            return queryable.Where(expression);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.ModifiedDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="modifiedDate">ModifiedDate to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByModifiedDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime modifiedDate)
         {
             return queryable.Where(t => t.ModifiedDate == modifiedDate);
         }
         
         /// <summary>
-        /// Gets a query for <see cref="Task.LastModifiedBy"/>.
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.ModifiedDate"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="modifiedDate">ModifiedDate to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ByModifiedDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime modifiedDate, params System.DateTime[] additionalValues)
+        {
+            var modifiedDateList = new List<System.DateTime> {modifiedDate};
+
+            if (additionalValues != null)
+                modifiedDateList.AddRange(additionalValues);
+
+            if (modifiedDateList.Count == 1)
+                return queryable.ByModifiedDate(modifiedDateList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("ModifiedDate", modifiedDateList);
+            return queryable.Where(expression);
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.LastModifiedBy"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lastModifiedBy">LastModifiedBy to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByLastModifiedBy(this IQueryable<Tracker.Core.Data.Task> queryable, string lastModifiedBy)
         {
             return queryable.Where(t => object.Equals(t.LastModifiedBy, lastModifiedBy));
+        }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Task.LastModifiedBy"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lastModifiedBy">LastModifiedBy to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns>IQueryable with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Task> ByLastModifiedBy(this IQueryable<Tracker.Core.Data.Task> queryable, string lastModifiedBy, params string[] additionalValues)
+        {
+            var lastModifiedByList = new List<string> {lastModifiedBy};
+
+            if (additionalValues != null)
+                lastModifiedByList.AddRange(additionalValues);
+            else
+                lastModifiedByList.Add(null);
+
+            if (lastModifiedByList.Count == 1)
+                return queryable.ByLastModifiedBy(lastModifiedByList[0]);
+
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("LastModifiedBy", lastModifiedByList);
+            return queryable.Where(expression);
         }
 
         #region Query
@@ -144,7 +478,7 @@ namespace Tracker.Core.Data
         private static partial class Query
         {
 
-            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.Task> ByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.Task> GetByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, int id) => 
                         db.Task.FirstOrDefault(t => t.Id == id));
