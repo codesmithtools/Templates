@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database Name="Tracker" EntityNamespace="Tracker.Core.Data" ContextNamespace="Tracker.Core.Data" Class="TrackerDataContext" EntityBase="LinqEntityBase" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection ConnectionString="Data Source=.;Initial Catalog=Tracker;Integrated Security=True" SettingsObjectName="Properties.Settings" SettingsPropertyName="TrackerConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="ConnectionString" ConnectionString="Data Source=.;Initial Catalog=Tracker;Integrated Security=True" SettingsObjectName="Properties.Settings" SettingsPropertyName="TrackerConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Audit" Member="Audit">
     <Type Name="Audit">
       <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -43,7 +43,7 @@
     <Type Name="Task">
       <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="StatusId" Storage="_statusId" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
-      <Column Name="PriorityId" Storage="_priorityId" Type="Priority" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="PriorityId" Member="Priority" Storage="_priorityId" Type="Priority" DbType="int NOT NULL" CanBeNull="false" />
       <Column Name="CreatedId" Storage="_createdId" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
       <Column Name="Summary" Storage="_summary" Type="System.String" DbType="nvarchar(255) NOT NULL" CanBeNull="false" />
       <Column Name="Details" Storage="_details" Type="System.String" DbType="nvarchar(2000)" CanBeNull="true" />
@@ -55,11 +55,11 @@
       <Column Name="ModifiedDate" Storage="_modifiedDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />
       <Column Name="LastModifiedBy" Storage="_lastModifiedBy" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Association Name="Task_Audit" Member="AuditList" Storage="_auditList" OtherKey="TaskId" Type="Audit" />
+      <Association Name="Task_TaskExtended" Member="TaskExtended" Storage="_taskExtended" OtherKey="TaskId" Type="TaskExtended" Cardinality="One" />
       <Association Name="Status_Task" Member="Status" Storage="_status" ThisKey="StatusId" Type="Status" IsForeignKey="true" />
       <Association Name="User_Task" Member="AssignedUser" Storage="_assignedUser" ThisKey="AssignedId" Type="User" IsForeignKey="true" />
       <Association Name="User_Task1" Member="CreatedUser" Storage="_createdUser" ThisKey="CreatedId" Type="User" IsForeignKey="true" />
-      <Association Name="Task_TaskExtended" Member="TaskExtended" Storage="_taskExtended" OtherKey="TaskId" Type="TaskExtended" Cardinality="One" />
-      <Association Name="Task_Audit" Member="AuditList" Storage="_auditList" OtherKey="TaskId" Type="Audit" />
     </Type>
   </Table>
   <Table Name="dbo.TaskExtended" Member="TaskExtended">
@@ -91,10 +91,10 @@
       <Column Name="LastActivityDate" Storage="_lastActivityDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="LastPasswordChangeDate" Storage="_lastPasswordChangeDate" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
       <Column Name="AvatarType" Storage="_avatarType" Type="System.String" DbType="nvarchar(150)" CanBeNull="true" />
+      <Association Name="User_Audit" Member="AuditList" Storage="_auditList" OtherKey="UserId" Type="Audit" />
       <Association Name="User_Task" Member="AssignedTaskList" Storage="_assignedTaskList" OtherKey="AssignedId" Type="Task" />
       <Association Name="User_Task1" Member="CreatedTaskList" Storage="_createdTaskList" OtherKey="CreatedId" Type="Task" />
       <Association Name="User_UserRole" Member="UserRoleList" Storage="_userRoleList" OtherKey="UserId" Type="UserRole" />
-      <Association Name="User_Audit" Member="AuditList" Storage="_auditList" OtherKey="UserId" Type="Audit" />
     </Type>
   </Table>
   <Table Name="dbo.UserRole" Member="UserRole">

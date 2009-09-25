@@ -41,17 +41,17 @@ namespace Tracker.Core.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Task()
         {
-            OnCreated();
             Initialize();
         }
 
         private void Initialize()
         {
+            _taskExtended = default(System.Data.Linq.EntityRef<TaskExtended>);
             _status = default(System.Data.Linq.EntityRef<Status>);
             _assignedUser = default(System.Data.Linq.EntityRef<User>);
             _createdUser = default(System.Data.Linq.EntityRef<User>);
-            _taskExtended = default(System.Data.Linq.EntityRef<TaskExtended>);
             _auditList = new System.Data.Linq.EntitySet<Audit>(OnAuditListAdd, OnAuditListRemove);
+            OnCreated();
         }
         #endregion
 
@@ -115,18 +115,18 @@ namespace Tracker.Core.Data
         [System.Data.Linq.Mapping.Column(Name = "PriorityId", Storage = "_priorityId", DbType = "int NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.Runtime.Serialization.DataMember(Order = 3)]
         [System.ComponentModel.DataAnnotations.UIHint("Enumeration")]
-        public Priority PriorityId
+        public Priority Priority
         {
             get { return _priorityId; }
             set
             {
                 if (_priorityId != value)
                 {
-                    OnPriorityIdChanging(value);
-                    SendPropertyChanging("PriorityId");
+                    OnPriorityChanging(value);
+                    SendPropertyChanging("Priority");
                     _priorityId = value;
-                    SendPropertyChanged("PriorityId");
-                    OnPriorityIdChanged();
+                    SendPropertyChanged("Priority");
+                    OnPriorityChanged();
                 }
             }
         }
@@ -399,13 +399,47 @@ namespace Tracker.Core.Data
 
         #region Association Mapped Properties
 
+        private System.Data.Linq.EntityRef<TaskExtended> _taskExtended;
+
+        /// <summary>
+        /// Gets or sets the TaskExtended association.
+        /// </summary>
+        [System.Data.Linq.Mapping.Association(Name = "Task_TaskExtended", Storage = "_taskExtended", ThisKey = "Id", OtherKey = "TaskId", IsUnique = true)]
+        [System.Runtime.Serialization.DataMember(Order = 15, EmitDefaultValue = false)]
+        public TaskExtended TaskExtended
+        {
+            get { return (serializing && !_taskExtended.HasLoadedOrAssignedValue) ? null : _taskExtended.Entity; }
+            set
+            {
+                TaskExtended previousValue = _taskExtended.Entity;
+                if (previousValue != value || _taskExtended.HasLoadedOrAssignedValue == false)
+                {
+                    OnTaskExtendedChanging(value);
+                    SendPropertyChanging("TaskExtended");
+                    if (previousValue != null)
+                    {
+                        _taskExtended.Entity = null;
+                        previousValue.Task = null;
+                    }
+                    _taskExtended.Entity = value;
+                    if (value != null)
+                    {
+                        value.Task = this;
+                    }
+                    SendPropertyChanged("TaskExtended");
+                    OnTaskExtendedChanged();
+                }
+            }
+        }
+        
+
         private System.Data.Linq.EntityRef<Status> _status;
 
         /// <summary>
         /// Gets or sets the Status association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Status_Task", Storage = "_status", ThisKey = "StatusId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
-        [System.Runtime.Serialization.DataMember(Order = 15, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 16, EmitDefaultValue = false)]
         public Status Status
         {
             get { return (serializing && !_status.HasLoadedOrAssignedValue) ? null : _status.Entity; }
@@ -436,6 +470,7 @@ namespace Tracker.Core.Data
                 }
             }
         }
+        
 
         private System.Data.Linq.EntityRef<User> _assignedUser;
 
@@ -443,7 +478,7 @@ namespace Tracker.Core.Data
         /// Gets or sets the User association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Task", Storage = "_assignedUser", ThisKey = "AssignedId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
-        [System.Runtime.Serialization.DataMember(Order = 16, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 17, EmitDefaultValue = false)]
         public User AssignedUser
         {
             get { return (serializing && !_assignedUser.HasLoadedOrAssignedValue) ? null : _assignedUser.Entity; }
@@ -474,6 +509,7 @@ namespace Tracker.Core.Data
                 }
             }
         }
+        
 
         private System.Data.Linq.EntityRef<User> _createdUser;
 
@@ -481,7 +517,7 @@ namespace Tracker.Core.Data
         /// Gets or sets the User association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Task1", Storage = "_createdUser", ThisKey = "CreatedId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
-        [System.Runtime.Serialization.DataMember(Order = 17, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 18, EmitDefaultValue = false)]
         public User CreatedUser
         {
             get { return (serializing && !_createdUser.HasLoadedOrAssignedValue) ? null : _createdUser.Entity; }
@@ -512,39 +548,7 @@ namespace Tracker.Core.Data
                 }
             }
         }
-
-        private System.Data.Linq.EntityRef<TaskExtended> _taskExtended;
-
-        /// <summary>
-        /// Gets or sets the TaskExtended association.
-        /// </summary>
-        [System.Data.Linq.Mapping.Association(Name = "Task_TaskExtended", Storage = "_taskExtended", ThisKey = "Id", OtherKey = "TaskId", IsUnique = true)]
-        [System.Runtime.Serialization.DataMember(Order = 18, EmitDefaultValue = false)]
-        public TaskExtended TaskExtended
-        {
-            get { return (serializing && !_taskExtended.HasLoadedOrAssignedValue) ? null : _taskExtended.Entity; }
-            set
-            {
-                TaskExtended previousValue = _taskExtended.Entity;
-                if (previousValue != value || _taskExtended.HasLoadedOrAssignedValue == false)
-                {
-                    OnTaskExtendedChanging(value);
-                    SendPropertyChanging("TaskExtended");
-                    if (previousValue != null)
-                    {
-                        _taskExtended.Entity = null;
-                        previousValue.Task = null;
-                    }
-                    _taskExtended.Entity = value;
-                    if (value != null)
-                    {
-                        value.Task = this;
-                    }
-                    SendPropertyChanged("TaskExtended");
-                    OnTaskExtendedChanged();
-                }
-            }
-        }
+        
 
         private System.Data.Linq.EntitySet<Audit> _auditList;
 
@@ -595,11 +599,11 @@ namespace Tracker.Core.Data
         partial void OnStatusIdChanging(int value);
         /// <summary>Called after <see cref="StatusId"/> has Changed.</summary>
         partial void OnStatusIdChanged();
-        /// <summary>Called when <see cref="PriorityId"/> is changing.</summary>
+        /// <summary>Called when <see cref="Priority"/> is changing.</summary>
         /// <param name="value">The new value.</param>
-        partial void OnPriorityIdChanging(Priority value);
-        /// <summary>Called after <see cref="PriorityId"/> has Changed.</summary>
-        partial void OnPriorityIdChanged();
+        partial void OnPriorityChanging(Priority value);
+        /// <summary>Called after <see cref="Priority"/> has Changed.</summary>
+        partial void OnPriorityChanged();
         /// <summary>Called when <see cref="CreatedId"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnCreatedIdChanging(int value);
@@ -655,6 +659,11 @@ namespace Tracker.Core.Data
         partial void OnLastModifiedByChanging(string value);
         /// <summary>Called after <see cref="LastModifiedBy"/> has Changed.</summary>
         partial void OnLastModifiedByChanged();
+        /// <summary>Called when <see cref="TaskExtended"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnTaskExtendedChanging(TaskExtended value);
+        /// <summary>Called after <see cref="TaskExtended"/> has Changed.</summary>
+        partial void OnTaskExtendedChanged();
         /// <summary>Called when <see cref="Status"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnStatusChanging(Status value);
@@ -670,11 +679,6 @@ namespace Tracker.Core.Data
         partial void OnCreatedUserChanging(User value);
         /// <summary>Called after <see cref="CreatedUser"/> has Changed.</summary>
         partial void OnCreatedUserChanged();
-        /// <summary>Called when <see cref="TaskExtended"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnTaskExtendedChanging(TaskExtended value);
-        /// <summary>Called after <see cref="TaskExtended"/> has Changed.</summary>
-        partial void OnTaskExtendedChanged();
 
         #endregion
 
@@ -709,6 +713,38 @@ namespace Tracker.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Task"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Task"/> instance.</param>
+        /// <returns>An instance of <see cref="Task"/> that is deserialized from the XML string.</returns>
+        public static Task FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Task));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Task;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Task"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Task"/> instance.</param>
+        /// <returns>An instance of <see cref="Task"/> that is deserialized from the byte array.</returns>
+        public static Task FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Task));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Task;
+            }
         }
         #endregion
 
@@ -758,10 +794,10 @@ namespace Tracker.Core.Data
                 return;
 
             base.Detach();
+            _taskExtended = Detach(_taskExtended);
             _status = Detach(_status);
             _assignedUser = Detach(_assignedUser);
             _createdUser = Detach(_createdUser);
-            _taskExtended = Detach(_taskExtended);
             _auditList = Detach(_auditList, OnAuditListAdd, OnAuditListRemove);
         }
         #endregion

@@ -298,9 +298,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Tracker.Core\Tracker.Core.Data.csproj">
+    <ProjectReference Include="..\Tracker.Core\Tracker.Core.csproj">
       <Project>{2DF2FB49-6A04-4FD5-80D9-C662825787E3}</Project>
-      <Name>Tracker.Core.Data</Name>
+      <Name>Tracker.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

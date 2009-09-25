@@ -41,13 +41,13 @@ namespace Tracker.Core.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Status()
         {
-            OnCreated();
             Initialize();
         }
 
         private void Initialize()
         {
             _taskList = new System.Data.Linq.EntitySet<Task>(OnTaskListAdd, OnTaskListRemove);
+            OnCreated();
         }
         #endregion
 
@@ -328,6 +328,38 @@ namespace Tracker.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Status"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Status"/> instance.</param>
+        /// <returns>An instance of <see cref="Status"/> that is deserialized from the XML string.</returns>
+        public static Status FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Status));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Status;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Status"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Status"/> instance.</param>
+        /// <returns>An instance of <see cref="Status"/> that is deserialized from the byte array.</returns>
+        public static Status FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Status));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Status;
+            }
         }
         #endregion
 

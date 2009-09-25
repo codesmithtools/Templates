@@ -35,7 +35,7 @@ namespace PLINQO.Mvc.UI
             using (var context = new TrackerDataContext())
             {
                 context.ObjectTrackingEnabled = false;
-                user = context.User.ByEmailAddress(currentUserName);
+                user = context.User.GetByEmailAddress(currentUserName);
             }
 
             return user;

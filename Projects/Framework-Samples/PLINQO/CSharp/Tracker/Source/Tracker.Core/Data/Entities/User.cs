@@ -80,13 +80,13 @@ namespace Tracker.Core.Data
 
             public string AvatarType { get; set; }
 
+            public EntitySet<Audit> AuditList { get; set; }
+
             public EntitySet<Task> AssignedTaskList { get; set; }
 
             public EntitySet<Task> CreatedTaskList { get; set; }
 
             public EntitySet<UserRole> UserRoleList { get; set; }
-
-            public EntitySet<Audit> AuditList { get; set; }
 
         }
 

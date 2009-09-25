@@ -60,7 +60,7 @@ namespace Tracker.Tests
                 AssignedId = userId,
                 StatusId = 1,
                 Summary = "Explain the visions that inspire you",
-                PriorityId = Priority.High,
+                Priority = Priority.High,
                 CreatedId = userId,
             };
             using (var context = new TrackerDataContext())
@@ -158,7 +158,7 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                Task task = context.Task.ByKey(SpockId);
+                Task task = context.Task.GetByKey(SpockId);
                 IQueryable<Task> tasks = context.Task.ByAssignedId(SpockId).ByStatusId(STATUS_NOT_STARTED);
                 List<Task> taskList = tasks.ToList();
             }
@@ -171,7 +171,7 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                User u = context.User.ByKey(SpockId);
+                User u = context.User.GetByKey(SpockId);
                 Role r = context.Role.ByName("Manager").First();
                 u.RoleList.Add(r);
                 context.SubmitChanges();
@@ -185,8 +185,8 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                var task = context.Task.ByKey(TaskId);
-                task.PriorityId = Priority.High;
+                var task = context.Task.GetByKey(TaskId);
+                task.Priority = Priority.VeryLow;
                 context.SubmitChanges();
             }
         }
@@ -197,8 +197,8 @@ namespace Tracker.Tests
             using (var context = new TrackerDataContext())
             {
                 context.Log = Console.Out;
-
-                var user = context.User.ByKey(SpockId);
+                context.AuditingEnabled = false;
+                var user = context.User.GetByKey(SpockId);
                 user.Comment = "I love my mom, but I hate Winona Ryder.";
 
                 var task = new Task()
@@ -206,7 +206,7 @@ namespace Tracker.Tests
                     AssignedId = SpockId,
                     CreatedId = SpockId,
                     StatusId = STATUS_NOT_STARTED,
-                    PriorityId = Priority.High,
+                    Priority = Priority.High,
                     Summary = "Punch Kirk in the face!"
                 };
                 context.Task.InsertOnSubmit(task);
@@ -247,7 +247,7 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                task = context.Task.ByKey(TaskId);
+                task = context.Task.GetByKey(TaskId);
                 task.Detach();
             }
 
@@ -270,7 +270,7 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out; 
                 
-                task = context.Task.ByKey(TaskId);
+                task = context.Task.GetByKey(TaskId);
                 task.Detach();
             }
 
@@ -292,7 +292,7 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                var u = context.Task.ByKey(TaskId);
+                var u = context.Task.GetByKey(TaskId);
                 Task taskCopy = u.Clone();
                 taskCopy.Id = 0;
                 context.Task.InsertOnSubmit(taskCopy);
@@ -309,7 +309,7 @@ namespace Tracker.Tests
 
                 // Write to Console/Output ... or break point.
 
-                var task = context.Task.ByKey(TaskId);
+                var task = context.Task.GetByKey(TaskId);
                 var s = task.ToXml();
                 Console.Write(s);
             }
@@ -403,6 +403,5 @@ namespace Tracker.Tests
             }
         }
 
-        
     }
 }

@@ -236,6 +236,24 @@ namespace Tracker.Core.Data
 
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Returns a byte array that represents the current <see cref="T:System.Object"/>. 
+        /// </summary>
+        /// <returns>A byte array that represents the current <see cref="T:System.Object"/>.</returns>
+        public byte[] ToBinary()
+        {
+            byte[] buffer;
+            using (var ms = new System.IO.MemoryStream())
+            using (var writer = System.Xml.XmlDictionaryWriter.CreateBinaryWriter(ms))
+            {
+                var serializer = new System.Runtime.Serialization.DataContractSerializer(GetType());
+                serializer.WriteObject(writer, this);
+                buffer = ms.ToArray();
+            }
+            return buffer;
+        }
+
         #endregion
     }
 }
