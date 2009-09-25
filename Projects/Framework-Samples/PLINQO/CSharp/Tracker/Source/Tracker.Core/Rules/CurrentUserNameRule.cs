@@ -54,7 +54,7 @@ namespace Tracker.Core.Data.Rules
             using (var context = new TrackerDataContext())
             {
                 context.ObjectTrackingEnabled = false;
-                user = context.User.ByEmailAddress(currentUserName).FirstOrDefault();
+                user = context.User.GetByEmailAddress(currentUserName);
             }
 
             return user.Id;

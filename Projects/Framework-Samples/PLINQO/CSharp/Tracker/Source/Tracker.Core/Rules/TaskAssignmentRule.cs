@@ -35,11 +35,11 @@ namespace Tracker.Core.Data.Rules
 
                 using (var dataContext = new TrackerDataContext())
                 {
-                    DataLoadOptions options = new DataLoadOptions();
+                    var options = new DataLoadOptions();
                     options.LoadWith<UserRole>(r => r.Role);
                     dataContext.LoadOptions = options;
 
-                    User currentUser = dataContext.User.ByEmailAddress(HttpContext.Current.User.Identity.Name).FirstOrDefault();
+                    User currentUser = dataContext.User.GetByEmailAddress(HttpContext.Current.User.Identity.Name);
                     context.Success = (null == dataContext.UserRole.GetUserRole("Newb", currentUser.Id));
                 }
             }
