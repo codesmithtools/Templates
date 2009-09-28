@@ -21,6 +21,7 @@ namespace Sample.Data.Generated.Base
         // Properties
         bool HasOpenTransaction { get; }
         bool IsOpen { get; }
+        bool AutoCloseSession { get; set; }
     }
 
     public class NHibernateSession : INHibernateSession
@@ -30,6 +31,7 @@ namespace Sample.Data.Generated.Base
         protected ITransaction transaction = null;
         protected ISession iSession = null;
         
+        private bool _autoCloseSession = true;
         private bool _isDisposed = false;
         private int _refCount = 0;
 
@@ -127,7 +129,7 @@ namespace Sample.Data.Generated.Base
         public void DecrementRefCount()
         {
             _refCount--;
-            if (_refCount == 0)
+            if (_refCount == 0 && AutoCloseSession)
                 Close();
         }
 
@@ -149,6 +151,16 @@ namespace Sample.Data.Generated.Base
         public bool IsOpen
         {
             get { return (iSession != null && iSession.IsOpen); }
+        }
+        public bool AutoCloseSession
+        {
+            get { return _autoCloseSession; }
+            set
+            {
+                _autoCloseSession = value;
+                if (_refCount == 0 && _autoCloseSession)
+                    Close();
+            }
         }
 
         #endregion
