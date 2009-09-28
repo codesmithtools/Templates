@@ -23,8 +23,8 @@ namespace Sample.Data.Generated.UnitTests
 			OrderStatus entity = new OrderStatus();
 			
 			
-			entity.OrderId = 30;
-			entity.LineNum = 25;
+			entity.OrderId = 18;
+			entity.LineNum = 74;
 			entity.Timestamp = DateTime.Now;
 			entity.Status = "T";
 			

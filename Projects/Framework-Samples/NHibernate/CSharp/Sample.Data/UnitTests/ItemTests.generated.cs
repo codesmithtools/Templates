@@ -25,11 +25,11 @@ namespace Sample.Data.Generated.UnitTests
 			// You may need to maually enter this key if there is a constraint violation.
 			entity.Id = "Test ";
 			
-			entity.ListPrice = 53;
-			entity.UnitCost = 37;
+			entity.ListPrice = 13;
+			entity.UnitCost = 17;
 			entity.Status = "T";
-			entity.Name = "Test Test";
-			entity.Image = "Test Test Test Test Test Test Test Test Test Test Test";
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.Image = "Test Test Test Test Test Test Test Test Test Test Test T";
 			
 			IProductManager productManager = managerFactory.GetProductManager();
 			entity.Product = productManager.GetAll(1)[0];
@@ -87,7 +87,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Item entityA = GetFirstItem();
 				
-				entityA.ListPrice = 51;
+				entityA.ListPrice = 14;
 				
 				manager.Update(entityA);
 

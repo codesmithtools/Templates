@@ -20,6 +20,7 @@ Namespace Sample.Data.Generated.Base
 		' Properties
 		ReadOnly Property HasOpenTransaction() As Boolean
 		ReadOnly Property IsOpen() As Boolean
+		Property AutoCloseSession() As Boolean
 	End Interface
 
 	Public Class NHibernateSession
@@ -29,6 +30,7 @@ Namespace Sample.Data.Generated.Base
 		Protected transaction As ITransaction = Nothing
 		Protected iSession As ISession = Nothing
 
+		Private _autoCloseSession As Boolean = True
 		Private _isDisposed As Boolean = False
 		Private _refCount As Integer = 0
 #End Region
@@ -121,8 +123,8 @@ Namespace Sample.Data.Generated.Base
 		End Sub
 		Public Sub DecrementRefCount() Implements INHibernateSession.DecrementRefCount
 			_refCount = _refCount - 1
-			If _refCount = 0 Then
-				Close()
+			If _refCount = 0 AndAlso _autoCloseSession Then
+                Close()
 			End If
 		End Sub
 
@@ -146,6 +148,18 @@ Namespace Sample.Data.Generated.Base
 				Return (iSession IsNot Nothing AndAlso iSession.IsOpen)
 			End Get
 		End Property
+		Public Property AutoCloseSession() As Boolean Implements INHibernateSession.AutoCloseSession
+			Get
+				Return _autoCloseSession
+			End Get
+			Set
+				_autoCloseSession = value
+				If _refCount = 0 AndAlso _autoCloseSession Then
+					Close()
+				End If
+			End Set
+		End Property
+
 #End Region
 	End Class
 End Namespace
