@@ -344,7 +344,7 @@ foreach(Column column in Type.Columns) {
                     else
                     {
 <% for(int i = 0; i < info.AssignColumns.Count; i++) { %>
-                        <%= info.AssignColumns[i].Storage %> = default(<%= GetColumnType(info.OtherColumns[i]) %>);
+                        <%= info.AssignColumns[i].Storage %> = default(<%= GetColumnType(info.AssignColumns[i]) %>);
 <% } %>
 <% } // IsForeignKey %>
                     }
