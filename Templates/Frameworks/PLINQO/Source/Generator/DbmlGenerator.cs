@@ -108,7 +108,7 @@ namespace LinqToSqlShared.Generator
         public Database Create(DatabaseSchema databaseSchema)
         {
             if (File.Exists(settings.MappingFile))
-                _database = Dbml.FromFile(settings.MappingFile);
+                _database = Dbml.CopyWithFilledInDefaults(Dbml.FromFile(settings.MappingFile));
             else
                 _database = new Database();
 
