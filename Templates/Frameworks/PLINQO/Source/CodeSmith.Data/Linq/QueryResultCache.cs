@@ -10,7 +10,7 @@ namespace CodeSmith.Data.Linq
 {
     public static class QueryResultCache
     {
-        #region FromCache Methods
+        #region FromCache
 
         /// <summary>
         /// Returns the result of the query; if possible from the cache, otherwise
@@ -225,22 +225,28 @@ namespace CodeSmith.Data.Linq
         #region ClearCache
 
         /// <summary>
-        /// Only clears the cache if result is null or empty.
+        /// Clears the cache of a given query.
         /// </summary>
         /// <typeparam name="T">The type of the data in the data source.</typeparam>
         /// <param name="query">The query to be cleared.</param>
         public static void ClearCache<T>(this IQueryable<T> query)
             where T : class
         {
-            var key = GetKey(query);
-            HttpRuntime.Cache.Remove(key);
+            HttpRuntime.Cache.Remove(query.GetKey());
         }
 
         #endregion
 
-        #region Private Methods
+        #region GetKey
 
-        private static string GetKey<T>(IQueryable<T> query)
+        /// <summary>
+        /// Gets a unique Md5 key for a query.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to build a key from.</param>
+        /// <returns>A Md5 hash unique to the query.</returns>
+        public static string GetKey<T>(this IQueryable<T> query)
+            where T : class
         {
             // locally evaluate as much of the query as possible
             Expression expression = Evaluator.PartialEval(

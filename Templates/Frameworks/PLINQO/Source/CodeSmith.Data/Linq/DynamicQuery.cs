@@ -210,11 +210,6 @@ namespace System.Linq.Dynamic
             return ParseLambda<T, S>(expression, array);
         }
 
-        private const string EQUALS_NULLABLE = "!{0}.HasValue";
-        private const string EQUALS_NULL = "Object.Equals({0}, @{1})";
-        private const string EQUALS_VALUE = "{0} == @{1}";
-        private const string OR = " || ";
-
         private static string BuildExpressionString<T>(string identifier, IEnumerable values)
         {
             var isNullable = IsPropertyNullable<T>(identifier);
@@ -224,17 +219,17 @@ namespace System.Linq.Dynamic
             foreach (var value in values)
             {
                 if (count > 0)
-                    expression.Append(OR);
+                    expression.Append(" || ");
 
                 if (value == null)
                 {
                     if (isNullable)
-                        expression.AppendFormat(EQUALS_NULLABLE, identifier);
+                        expression.AppendFormat("!{0}.HasValue", identifier);
                     else
-                        expression.AppendFormat(EQUALS_NULL, identifier, count);
+                        expression.AppendFormat("Object.Equals({0}, @{1})", identifier, count);
                 }
                 else
-                    expression.AppendFormat(EQUALS_VALUE, identifier, count);
+                    expression.AppendFormat("{0} == @{1}", identifier, count);
                 
                 count++;
             }
