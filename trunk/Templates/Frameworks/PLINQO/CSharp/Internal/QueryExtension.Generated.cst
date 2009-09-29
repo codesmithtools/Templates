@@ -1,5 +1,5 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8"
-    Description="Linq to Sql Entity Manager Class." %>
+    Description="Linq to Sql Entity Manager Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="Microsoft.Build.Engine" %>
@@ -40,6 +40,10 @@
 <%@ Property Category="3.Query" Name="MethodKeySuffix" 
     Type="System.String" Default="Key" Optional="False" 
     Description="The suffix of the primary key query method names." %>
+
+<%@ Property Name="EnumDatabase"
+    Type="LinqToSqlShared.Generator.DbmlEnum.Database" Optional="True"
+    Description="Enum Collection for Database." %>
 
 <%@ Map Name="CSharpKeyWordEscape" 
     Src="CSharpKeyWordEscape.csmap" Reverse="False" 
@@ -318,7 +322,10 @@ namespace <%= Database.ContextNamespace %>
     {
         string dataType = column.Type;
         
-        if (column.CanBeNull == true && CommonUtility.IsNullableType(dataType))
+        LinqToSqlShared.Generator.DbmlEnum.Enum enumType = EnumDatabase != null
+            ? EnumDatabase.Enums.FirstOrDefault(e => e.Name == column.Type) : null;
+
+        if (column.CanBeNull == true && (CommonUtility.IsNullableType(column.Type) || enumType != null))
             dataType = string.Format("{0}?", CSharpAlias[dataType]);
         else
             dataType = CSharpAlias[dataType];

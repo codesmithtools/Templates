@@ -1,6 +1,6 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="XML" 
     Description="Generate Linq to Sql Query Extension Class File" 
-    Debug="true" OutputType="None" %>
+    Debug="true" OutputType="None" CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="System.Design" %>
 <%@ Assembly Name="System.Data" %>
@@ -72,6 +72,7 @@
         this.CopyPropertiesTo(t);
         t.DataManager = dataManager;
         t.Database = databaseMap;
+        t.EnumDatabase = this.EnumDatabase;
         
         QueryExtensionEditableClass p = this.Create<QueryExtensionEditableClass>();
         p.ClassNamespace = databaseMap.ContextNamespace;
@@ -103,6 +104,32 @@
                 watch.Elapsed.TotalMilliseconds.ToString()));
             
             this.Progress.PerformStep();
+        }
+    }
+    
+    private string _enumXmlFileName = null;
+    private string EnumXmlFileName
+    {
+        get
+        {
+            if(String.IsNullOrEmpty(_enumXmlFileName))
+                _enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile);
+            return _enumXmlFileName;
+        }
+    }
+    
+    private LinqToSqlShared.Generator.DbmlEnum.Database _enumDatabase = null;
+    private bool _isEnumDatabaseLoaded = false;
+    private LinqToSqlShared.Generator.DbmlEnum.Database EnumDatabase
+    {
+        get
+        {
+            if(!_isEnumDatabaseLoaded)
+            {
+                _enumDatabase = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName);
+                _isEnumDatabaseLoaded = true;
+            }
+            return _enumDatabase;
         }
     }
 </script>
