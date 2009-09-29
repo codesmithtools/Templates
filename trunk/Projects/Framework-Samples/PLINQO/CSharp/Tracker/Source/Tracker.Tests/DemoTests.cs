@@ -186,7 +186,7 @@ namespace Tracker.Tests
                 context.Log = Console.Out;
 
                 var task = context.Task.GetByKey(TaskId);
-                task.Priority = Priority.VeryLow;
+                task.Priority = Priority.High;
                 context.SubmitChanges();
             }
         }
