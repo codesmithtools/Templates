@@ -47,7 +47,6 @@ namespace Tracker.Core.Data
         private void Initialize()
         {
             _taskExtended = default(System.Data.Linq.EntityRef<TaskExtended>);
-            _status = default(System.Data.Linq.EntityRef<Status>);
             _assignedUser = default(System.Data.Linq.EntityRef<User>);
             _createdUser = default(System.Data.Linq.EntityRef<User>);
             _auditList = new System.Data.Linq.EntitySet<Audit>(OnAuditListAdd, OnAuditListRemove);
@@ -80,64 +79,13 @@ namespace Tracker.Core.Data
             }
         }
 
-        private int _statusId;
-
-        /// <summary>
-        /// Gets or sets the StatusId column value.
-        /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "StatusId", Storage = "_statusId", DbType = "int NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 2)]
-        public int StatusId
-        {
-            get { return _statusId; }
-            set
-            {
-                if (_statusId != value)
-                {
-                    if (_status.HasLoadedOrAssignedValue)
-                    {
-                        throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-                    }
-                    OnStatusIdChanging(value);
-                    SendPropertyChanging("StatusId");
-                    _statusId = value;
-                    SendPropertyChanged("StatusId");
-                    OnStatusIdChanged();
-                }
-            }
-        }
-
-        private Priority _priorityId;
-
-        /// <summary>
-        /// Gets or sets the PriorityId column value.
-        /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "PriorityId", Storage = "_priorityId", DbType = "int NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 3)]
-        [System.ComponentModel.DataAnnotations.UIHint("Enumeration")]
-        public Priority Priority
-        {
-            get { return _priorityId; }
-            set
-            {
-                if (_priorityId != value)
-                {
-                    OnPriorityChanging(value);
-                    SendPropertyChanging("Priority");
-                    _priorityId = value;
-                    SendPropertyChanged("Priority");
-                    OnPriorityChanged();
-                }
-            }
-        }
-
         private int _createdId;
 
         /// <summary>
         /// Gets or sets the CreatedId column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "CreatedId", Storage = "_createdId", DbType = "int NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 4)]
+        [System.Runtime.Serialization.DataMember(Order = 2)]
         public int CreatedId
         {
             get { return _createdId; }
@@ -165,7 +113,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Summary", Storage = "_summary", DbType = "nvarchar(255) NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.ComponentModel.DataAnnotations.StringLength(255)]
-        [System.Runtime.Serialization.DataMember(Order = 5)]
+        [System.Runtime.Serialization.DataMember(Order = 3)]
         public string Summary
         {
             get { return _summary; }
@@ -189,7 +137,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Details", Storage = "_details", DbType = "nvarchar(2000)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.ComponentModel.DataAnnotations.StringLength(2000)]
-        [System.Runtime.Serialization.DataMember(Order = 6)]
+        [System.Runtime.Serialization.DataMember(Order = 4)]
         public string Details
         {
             get { return _details; }
@@ -212,7 +160,7 @@ namespace Tracker.Core.Data
         /// Gets or sets the StartDate column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "StartDate", Storage = "_startDate", DbType = "datetime", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 7)]
+        [System.Runtime.Serialization.DataMember(Order = 5)]
         public Nullable<System.DateTime> StartDate
         {
             get { return _startDate; }
@@ -235,7 +183,7 @@ namespace Tracker.Core.Data
         /// Gets or sets the DueDate column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "DueDate", Storage = "_dueDate", DbType = "datetime", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 8)]
+        [System.Runtime.Serialization.DataMember(Order = 6)]
         public Nullable<System.DateTime> DueDate
         {
             get { return _dueDate; }
@@ -258,7 +206,7 @@ namespace Tracker.Core.Data
         /// Gets or sets the CompleteDate column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "CompleteDate", Storage = "_completeDate", DbType = "datetime", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 9)]
+        [System.Runtime.Serialization.DataMember(Order = 7)]
         public Nullable<System.DateTime> CompleteDate
         {
             get { return _completeDate; }
@@ -281,7 +229,7 @@ namespace Tracker.Core.Data
         /// Gets or sets the AssignedId column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "AssignedId", Storage = "_assignedId", DbType = "int", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 10)]
+        [System.Runtime.Serialization.DataMember(Order = 8)]
         public Nullable<int> AssignedId
         {
             get { return _assignedId; }
@@ -308,7 +256,7 @@ namespace Tracker.Core.Data
         /// Gets or sets the CreatedDate column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "CreatedDate", Storage = "_createdDate", DbType = "datetime NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 11)]
+        [System.Runtime.Serialization.DataMember(Order = 9)]
         public System.DateTime CreatedDate
         {
             get { return _createdDate; }
@@ -331,7 +279,7 @@ namespace Tracker.Core.Data
         /// Gets or sets the ModifiedDate column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "ModifiedDate", Storage = "_modifiedDate", DbType = "datetime NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 12)]
+        [System.Runtime.Serialization.DataMember(Order = 10)]
         public System.DateTime ModifiedDate
         {
             get { return _modifiedDate; }
@@ -355,7 +303,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         [System.Data.Linq.Mapping.Column(Name = "RowVersion", Storage = "_rowVersion", DbType = "timestamp NOT NULL", IsDbGenerated = true, IsVersion = true, CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 13)]
+        [System.Runtime.Serialization.DataMember(Order = 11)]
         public System.Data.Linq.Binary RowVersion
         {
             get { return _rowVersion; }
@@ -379,7 +327,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "LastModifiedBy", Storage = "_lastModifiedBy", DbType = "nvarchar(50)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.ComponentModel.DataAnnotations.StringLength(50)]
-        [System.Runtime.Serialization.DataMember(Order = 14)]
+        [System.Runtime.Serialization.DataMember(Order = 12)]
         public string LastModifiedBy
         {
             get { return _lastModifiedBy; }
@@ -392,6 +340,54 @@ namespace Tracker.Core.Data
                     _lastModifiedBy = value;
                     SendPropertyChanged("LastModifiedBy");
                     OnLastModifiedByChanged();
+                }
+            }
+        }
+
+        private Status _statusId;
+
+        /// <summary>
+        /// Gets or sets the StatusId column value.
+        /// </summary>
+        [System.Data.Linq.Mapping.Column(Name = "StatusId", Storage = "_statusId", DbType = "int NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
+        [System.Runtime.Serialization.DataMember(Order = 13)]
+        [System.ComponentModel.DataAnnotations.UIHint("Enumeration")]
+        public Status Status
+        {
+            get { return _statusId; }
+            set
+            {
+                if (_statusId != value)
+                {
+                    OnStatusChanging(value);
+                    SendPropertyChanging("Status");
+                    _statusId = value;
+                    SendPropertyChanged("Status");
+                    OnStatusChanged();
+                }
+            }
+        }
+
+        private Nullable<Priority> _priorityId;
+
+        /// <summary>
+        /// Gets or sets the PriorityId column value.
+        /// </summary>
+        [System.Data.Linq.Mapping.Column(Name = "PriorityId", Storage = "_priorityId", DbType = "int", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
+        [System.Runtime.Serialization.DataMember(Order = 14)]
+        [System.ComponentModel.DataAnnotations.UIHint("Enumeration")]
+        public Nullable<Priority> Priority
+        {
+            get { return _priorityId; }
+            set
+            {
+                if (_priorityId != value)
+                {
+                    OnPriorityChanging(value);
+                    SendPropertyChanging("Priority");
+                    _priorityId = value;
+                    SendPropertyChanged("Priority");
+                    OnPriorityChanged();
                 }
             }
         }
@@ -433,52 +429,13 @@ namespace Tracker.Core.Data
         }
         
 
-        private System.Data.Linq.EntityRef<Status> _status;
-
-        /// <summary>
-        /// Gets or sets the Status association.
-        /// </summary>
-        [System.Data.Linq.Mapping.Association(Name = "Status_Task", Storage = "_status", ThisKey = "StatusId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
-        [System.Runtime.Serialization.DataMember(Order = 16, EmitDefaultValue = false)]
-        public Status Status
-        {
-            get { return (serializing && !_status.HasLoadedOrAssignedValue) ? null : _status.Entity; }
-            set
-            {
-                Status previousValue = _status.Entity;
-                if (previousValue != value || _status.HasLoadedOrAssignedValue == false)
-                {
-                    OnStatusChanging(value);
-                    SendPropertyChanging("Status");
-                    if (previousValue != null)
-                    {
-                        _status.Entity = null;
-                        previousValue.TaskList.Remove(this);
-                    }
-                    _status.Entity = value;
-                    if (value != null)
-                    {
-                        value.TaskList.Add(this);
-                        _statusId = value.Id;
-                    }
-                    else
-                    {
-                        _statusId = default(int);
-                    }
-                    SendPropertyChanged("Status");
-                    OnStatusChanged();
-                }
-            }
-        }
-        
-
         private System.Data.Linq.EntityRef<User> _assignedUser;
 
         /// <summary>
         /// Gets or sets the User association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Task", Storage = "_assignedUser", ThisKey = "AssignedId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
-        [System.Runtime.Serialization.DataMember(Order = 17, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 16, EmitDefaultValue = false)]
         public User AssignedUser
         {
             get { return (serializing && !_assignedUser.HasLoadedOrAssignedValue) ? null : _assignedUser.Entity; }
@@ -517,7 +474,7 @@ namespace Tracker.Core.Data
         /// Gets or sets the User association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Task1", Storage = "_createdUser", ThisKey = "CreatedId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
-        [System.Runtime.Serialization.DataMember(Order = 18, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 17, EmitDefaultValue = false)]
         public User CreatedUser
         {
             get { return (serializing && !_createdUser.HasLoadedOrAssignedValue) ? null : _createdUser.Entity; }
@@ -556,7 +513,7 @@ namespace Tracker.Core.Data
         /// Gets or sets the Audit association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Task_Audit", Storage = "_auditList", ThisKey = "Id", OtherKey = "TaskId")]
-        [System.Runtime.Serialization.DataMember(Order=19, EmitDefaultValue=false)]
+        [System.Runtime.Serialization.DataMember(Order=18, EmitDefaultValue=false)]
         public System.Data.Linq.EntitySet<Audit> AuditList
         {
             get { return (serializing && !_auditList.HasLoadedOrAssignedValues) ? null : _auditList; }
@@ -594,16 +551,6 @@ namespace Tracker.Core.Data
         partial void OnIdChanging(int value);
         /// <summary>Called after <see cref="Id"/> has Changed.</summary>
         partial void OnIdChanged();
-        /// <summary>Called when <see cref="StatusId"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnStatusIdChanging(int value);
-        /// <summary>Called after <see cref="StatusId"/> has Changed.</summary>
-        partial void OnStatusIdChanged();
-        /// <summary>Called when <see cref="Priority"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnPriorityChanging(Priority value);
-        /// <summary>Called after <see cref="Priority"/> has Changed.</summary>
-        partial void OnPriorityChanged();
         /// <summary>Called when <see cref="CreatedId"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnCreatedIdChanging(int value);
@@ -659,16 +606,21 @@ namespace Tracker.Core.Data
         partial void OnLastModifiedByChanging(string value);
         /// <summary>Called after <see cref="LastModifiedBy"/> has Changed.</summary>
         partial void OnLastModifiedByChanged();
-        /// <summary>Called when <see cref="TaskExtended"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnTaskExtendedChanging(TaskExtended value);
-        /// <summary>Called after <see cref="TaskExtended"/> has Changed.</summary>
-        partial void OnTaskExtendedChanged();
         /// <summary>Called when <see cref="Status"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnStatusChanging(Status value);
         /// <summary>Called after <see cref="Status"/> has Changed.</summary>
         partial void OnStatusChanged();
+        /// <summary>Called when <see cref="Priority"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnPriorityChanging(Nullable<Priority> value);
+        /// <summary>Called after <see cref="Priority"/> has Changed.</summary>
+        partial void OnPriorityChanged();
+        /// <summary>Called when <see cref="TaskExtended"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnTaskExtendedChanging(TaskExtended value);
+        /// <summary>Called after <see cref="TaskExtended"/> has Changed.</summary>
+        partial void OnTaskExtendedChanged();
         /// <summary>Called when <see cref="AssignedUser"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnAssignedUserChanging(User value);
@@ -795,7 +747,6 @@ namespace Tracker.Core.Data
 
             base.Detach();
             _taskExtended = Detach(_taskExtended);
-            _status = Detach(_status);
             _assignedUser = Detach(_assignedUser);
             _createdUser = Detach(_createdUser);
             _auditList = Detach(_auditList, OnAuditListAdd, OnAuditListRemove);

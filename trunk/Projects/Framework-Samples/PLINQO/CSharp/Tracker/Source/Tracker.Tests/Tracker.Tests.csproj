@@ -61,8 +61,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CacheTests\ClearCacheTests.cs" />
+    <Compile Include="CacheTests\FromCacheFirstOrDefaultTests.cs" />
+    <Compile Include="CacheTests\FromCacheTests.cs" />
+    <Compile Include="CacheTests\RoleTests.cs" />
     <Compile Include="DemoTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryTests\ByDateTimeTests.cs" />
+    <Compile Include="QueryTests\ByEnumTests.cs" />
+    <Compile Include="QueryTests\ByGuidTests.cs" />
+    <Compile Include="QueryTests\ByIntTests.cs" />
+    <Compile Include="QueryTests\ByStringTests.cs" />
+    <Compile Include="QueryTests\TaskTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

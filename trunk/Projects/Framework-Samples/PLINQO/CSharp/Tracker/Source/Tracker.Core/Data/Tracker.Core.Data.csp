@@ -13,38 +13,38 @@
       <property name="IncludeFunctions">True</property>
       <property name="IgnoreList">
         <stringList>
-          <string>^dbo.sysdiagrams$</string>
-          <string>^dbo.sp_</string>
-        </stringList>
+      <string>^dbo.sysdiagrams$</string>
+      <string>^dbo.sp_</string>
+    </stringList>
       </property>
       <property name="CleanExpression">
         <stringList>
-          <string>^\\w+_</string>
-        </stringList>
+      <string>^\\w+_</string>
+    </stringList>
       </property>
       <property name="EnumList">
         <stringList>
-          <string>Priority</string>
-        </stringList>
+      <string>(Priority)|(Status)</string>
+    </stringList>
       </property>
       <property name="EntityBase">LinqEntityBase</property>
       <property name="IncludeDeleteOnNull">False</property>
       <property name="NameColumn">
         <stringList>
-          <string>((N|n)ame)|((T|t)ype(C|c)ode)</string>
-        </stringList>
+      <string>((N|n)ame)|((T|t)ype(C|c)ode)</string>
+    </stringList>
       </property>
       <property name="DescriptionColumm">
         <stringList>
-          <string>(D|d)esc</string>
-        </stringList>
+      <string>(D|d)esc</string>
+    </stringList>
       </property>
       <property name="NamingConventions">
         <NamingProperty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="">
-          <TableNaming>Singular</TableNaming>
-          <EntityNaming>Singular</EntityNaming>
-          <AssociationNaming>ListSuffix</AssociationNaming>
-        </NamingProperty>
+      <TableNaming>Singular</TableNaming>
+      <EntityNaming>Singular</EntityNaming>
+      <AssociationNaming>ListSuffix</AssociationNaming>
+    </NamingProperty>
       </property>
       <property name="SourceDatabase">
         <connectionString>$(TrackerConnectionString)</connectionString>
