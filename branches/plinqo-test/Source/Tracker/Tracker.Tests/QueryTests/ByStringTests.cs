@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using Tracker.Data;
-using Guid=System.Guid;
 
 namespace Tracker.Tests.QueryTests
 {
@@ -74,12 +73,7 @@ namespace Tracker.Tests.QueryTests
         public void TestFixtureTearDown()
         {
             using (var db = new TrackerDataContext())
-            {
-                db.Task.Delete(_taskIds[0]);
-                db.Task.Delete(_taskIds[1]);
-                db.Task.Delete(_taskIds[2]);
-                db.Task.Delete(_taskIds[3]);
-            }
+                db.Task.Delete(t => _taskIds.Contains(t.Id));
         }
 
         [Test]
@@ -103,6 +97,10 @@ namespace Tracker.Tests.QueryTests
                     var g = db.Task.ByDetails(null, _details1, _details2, _details3).ToList();
                     Assert.AreEqual(a.Count + b.Count + c.Count + d.Count, g.Count);
                 }
+            }
+            catch (AssertionException)
+            {
+                throw;
             }
             catch
             {
