@@ -333,18 +333,8 @@ namespace CodeSmith.Data.Audit
 
                     if (v != null || association.OtherKey[i].CanBeNull)
                     {
-                        if (v is Guid)
-                        {
-                            // Hack: work around bug in dynamic query for guids
-                            // ParseException: Operator '==' incompatible with operand types 'Guid' and 'Guid'
-                            sb.AppendFormat("{0}.ToString() == @{1}", association.OtherKey[i].Name, fkeyValues.Count);
-                            fkeyValues.Add(v.ToString());
-                        }
-                        else
-                        {
-                            sb.AppendFormat("{0} == @{1}", association.OtherKey[i].Name, fkeyValues.Count);
-                            fkeyValues.Add(v);
-                        }
+                        sb.AppendFormat("{0} == @{1}", association.OtherKey[i].Name, fkeyValues.Count);
+                        fkeyValues.Add(v);
                     }
                 }
 
