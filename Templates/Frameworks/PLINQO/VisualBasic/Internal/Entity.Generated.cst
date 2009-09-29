@@ -349,7 +349,7 @@ For Each c As Column in Type.Columns
 <% If a.IsForeignKey = True Then %>
 <% Dim i As Integer %>
 <% For  i = 0 To info.AssignColumns.Count - 1 %>
-                        <%= info.AssignColumns(i).Storage %> = value.<%= info.AssignColumns(i).Member %>
+                        <%= info.AssignColumns(i).Storage %> = value.<%= info.OtherColumns(i).Member %>
 <% Next %>
                     Else
 <% For i = 0 To info.AssignColumns.Count - 1%>
