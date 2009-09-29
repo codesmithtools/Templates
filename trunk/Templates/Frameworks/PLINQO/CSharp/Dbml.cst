@@ -118,7 +118,7 @@
         
         GeneratorSettings settings = new GeneratorSettings();
         settings.MappingFile = filePath;
-        settings.ContextNamespace = ContextNamespace;        
+        settings.ContextNamespace = ContextNamespace;
         settings.EntityNamespace = EntityNamespace;
         settings.EntityBase = EntityBase;
         settings.IncludeViews = IncludeViews;
