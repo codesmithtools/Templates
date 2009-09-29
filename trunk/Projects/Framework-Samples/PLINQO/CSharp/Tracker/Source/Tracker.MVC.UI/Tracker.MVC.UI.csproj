@@ -98,42 +98,17 @@
   <ItemGroup>
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
-    <Content Include="Lib\Images\banner.jpg" />
-    <Content Include="Lib\Images\bg.jpg" />
-    <Content Include="Lib\Images\blog.jpg" />
+    <Content Include="Lib\Images\body.jpg" />
     <Content Include="Lib\Images\body_bg.jpg" />
-    <Content Include="Lib\Images\client.jpg" />
-    <Content Include="Lib\Images\footer.jpg" />
-    <Content Include="Lib\Images\home.jpg" />
-    <Content Include="Lib\Images\home_icon.jpg" />
-    <Content Include="Lib\Images\h_line.jpg" />
-    <Content Include="Lib\Images\learn.jpg" />
-    <Content Include="Lib\Images\learnleft.gif" />
-    <Content Include="Lib\Images\learnright.gif" />
-    <Content Include="Lib\Images\learn_over.jpg" />
-    <Content Include="Lib\Images\left_foot.jpg" />
-    <Content Include="Lib\Images\light.jpg" />
-    <Content Include="Lib\Images\logo.jpg" />
-    <Content Include="Lib\Images\navi_left.jpg" />
-    <Content Include="Lib\Images\navi_right.jpg" />
-    <Content Include="Lib\Images\page_bg.jpg" />
-    <Content Include="Lib\Images\rails.jpg" />
-    <Content Include="Lib\Images\right_foot.jpg" />
-    <Content Include="Lib\Images\rpt.jpg" />
-    <Content Include="Lib\Images\studio.jpg" />
-    <Content Include="Lib\Images\tableft1.gif" />
-    <Content Include="Lib\Images\tableft3.gif" />
-    <Content Include="Lib\Images\tabright1.gif" />
-    <Content Include="Lib\Images\tabright3.gif" />
-    <Content Include="Lib\Scripts\date.format.js" />
-    <Content Include="Lib\Scripts\date.js" />
+    <Content Include="Lib\Images\delete.gif" />
+    <Content Include="Lib\Images\details.gif" />
+    <Content Include="Lib\Images\page_white_edit.png" />
     <Content Include="Lib\Scripts\ext-core-debug.js" />
     <Content Include="Lib\Scripts\ext-core.js" />
     <Content Include="Lib\Scripts\JSON.js" />
     <Content Include="Lib\Scripts\Utilities.js" />
     <Content Include="Lib\Styles\site.css" />
     <Content Include="Lib\Xslts\AuditNote.xslt" />
-    <Content Include="Views\Home\Ajax.aspx" />
     <Content Include="Views\Index.aspx" />
     <Content Include="Views\Task\Ajax.aspx" />
     <Content Include="Views\Task\Create.aspx" />
@@ -161,9 +136,6 @@
     <Content Include="Views\Shared\LogOnUserControl.ascx" />
     <Content Include="Views\Shared\Site.Master" />
     <Content Include="Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Lib\Images\Thumbs.db" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
