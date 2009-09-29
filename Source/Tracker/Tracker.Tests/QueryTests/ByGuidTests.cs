@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using NUnit.Framework;
 using Tracker.Data;
 using Guid = System.Guid;
@@ -70,6 +67,10 @@ namespace Tracker.Tests.QueryTests
                     Assert.AreEqual(a.Count + b.Count, d.Count);
                 }
             }
+            catch (AssertionException)
+            {
+                throw;
+            }
             catch
             {
                 Assert.Fail();
@@ -93,6 +94,10 @@ namespace Tracker.Tests.QueryTests
                     var e = db.Guid.ByAlternateId(_guid2Alt, null, _guid3Alt).ToList();
                     Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
                 }
+            }
+            catch (AssertionException)
+            {
+                throw;
             }
             catch
             {

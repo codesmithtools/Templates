@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using Tracker.Data;
 
@@ -14,10 +14,8 @@ namespace Tracker.Tests.QueryTests
         private DateTime _dueDate2 = DateTime.Today.AddDays(2);
         private DateTime _createdDate1;
         private DateTime _createdDate2;
-        private int _taskId1;
-        private int _taskId2;
-        private int _taskId3;
-
+        private List<int> _taskIds = new List<int>();
+        
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
@@ -58,11 +56,11 @@ namespace Tracker.Tests.QueryTests
                 db.Task.InsertOnSubmit(task3);
                 db.SubmitChanges();
 
-                _taskId1 = task1.Id;
+                _taskIds.Add(task1.Id);
                 _createdDate1 = task1.CreatedDate;
-                _taskId2 = task2.Id;
+                _taskIds.Add(task2.Id);
                 _createdDate2 = task2.CreatedDate;
-                _taskId3 = task3.Id;
+                _taskIds.Add(task3.Id);
             }
         }
 
@@ -70,11 +68,7 @@ namespace Tracker.Tests.QueryTests
         public void TestFixtureTearDown()
         {
             using (var db = new TrackerDataContext())
-            {
-                db.Task.Delete(_taskId1);
-                db.Task.Delete(_taskId2);
-                db.Task.Delete(_taskId3);
-            }
+                db.Task.Delete(t => _taskIds.Contains(t.Id));
         }
 
         [Test]
@@ -93,6 +87,10 @@ namespace Tracker.Tests.QueryTests
                     var d = db.Task.ByCreatedDate(_createdDate1, _createdDate2).ToList();
                     Assert.AreEqual(a.Count + b.Count, d.Count);
                 }
+            }
+            catch (AssertionException)
+            {
+                throw;
             }
             catch
             {
@@ -117,6 +115,10 @@ namespace Tracker.Tests.QueryTests
                     var e = db.Task.ByDueDate(_dueDate1, null, _dueDate2).ToList();
                     Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
                 }
+            }
+            catch (AssertionException)
+            {
+                throw;
             }
             catch
             {
