@@ -5,7 +5,7 @@ using CodeSmith.Data.Rules;
 using NUnit.Framework;
 using Tracker.Core.Data;
 using System.Data.Linq;
-using CodeSmith.Data.Linq;  
+using CodeSmith.Data.Linq;
 
 namespace Tracker.Tests
 {
@@ -128,7 +128,7 @@ namespace Tracker.Tests
                 LastName = "Tigh",
                 PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA",
                 PasswordSalt = "=Unc%",
-                EmailAddress = "pavel.chekov@startrek.com",
+                EmailAddress = "ellen.tigh@startrek.com",
                 IsApproved = false
             });
 
@@ -175,7 +175,7 @@ namespace Tracker.Tests
                 Role r = context.Role.ByName("Manager").First();
                 u.RoleList.Add(r);
                 context.SubmitChanges();
-           }
+            }
         }
 
         [Test]
@@ -197,7 +197,6 @@ namespace Tracker.Tests
             using (var context = new TrackerDataContext())
             {
                 context.Log = Console.Out;
-                context.AuditingEnabled = false;
                 var user = context.User.GetByKey(SpockId);
                 user.Comment = "I love my mom, but I hate Winona Ryder.";
 
@@ -268,8 +267,8 @@ namespace Tracker.Tests
             Task task = null;
             using (var context = new TrackerDataContext())
             {
-                context.Log = Console.Out; 
-                
+                context.Log = Console.Out;
+
                 task = context.Task.GetByKey(TaskId);
                 task.Detach();
             }
@@ -337,9 +336,9 @@ namespace Tracker.Tests
             using (var context = new TrackerDataContext())
             {
                 context.Log = Console.Out;
-                
+
                 context.Task.Update(
-                    u => u.StatusId == STATUS_NOT_STARTED, 
+                    u => u.StatusId == STATUS_NOT_STARTED,
                     u2 => new Task() { StatusId = STATUS_DONE });
 
                 var tasks = from t in context.Task
@@ -357,13 +356,13 @@ namespace Tracker.Tests
             {
                 context.Log = Console.Out;
 
-                
+
                 context.User.Delete(JamesId);
 
                 context.User.Delete(u => u.IsApproved == false && u.LastName != "McCoy" && u.EmailAddress.EndsWith("startrek.com"));
 
                 IQueryable<User> usersToDelete = from u in context.User
-                                                 where u.IsApproved == false && u.LastName == "McCoy" 
+                                                 where u.IsApproved == false && u.LastName == "McCoy"
                                                  select u;
                 context.User.Delete(usersToDelete);
             }
