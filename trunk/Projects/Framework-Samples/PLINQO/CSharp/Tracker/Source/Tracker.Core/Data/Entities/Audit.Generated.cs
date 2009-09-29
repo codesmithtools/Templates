@@ -304,7 +304,7 @@ namespace Tracker.Core.Data
                     }
                     else
                     {
-                        _taskId = default(int);
+                        _taskId = default(Nullable<int>);
                     }
                     SendPropertyChanged("Task");
                     OnTaskChanged();
@@ -343,7 +343,7 @@ namespace Tracker.Core.Data
                     }
                     else
                     {
-                        _userId = default(int);
+                        _userId = default(Nullable<int>);
                     }
                     SendPropertyChanged("User");
                     OnUserChanged();

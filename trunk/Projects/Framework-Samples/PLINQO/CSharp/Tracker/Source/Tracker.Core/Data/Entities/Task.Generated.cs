@@ -502,7 +502,7 @@ namespace Tracker.Core.Data
                     }
                     else
                     {
-                        _assignedId = default(int);
+                        _assignedId = default(Nullable<int>);
                     }
                     SendPropertyChanged("AssignedUser");
                     OnAssignedUserChanged();
