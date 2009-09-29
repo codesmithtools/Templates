@@ -132,16 +132,16 @@ namespace Tracker.Core.Data
             get { return GetTable<Tracker.Core.Data.Audit>(); }
         }
         
+        /// <summary>Represents the dbo.Guid table in the underlying database.</summary>
+        public System.Data.Linq.Table<Tracker.Core.Data.Guid> Guid
+        {
+            get { return GetTable<Tracker.Core.Data.Guid>(); }
+        }
+        
         /// <summary>Represents the dbo.Role table in the underlying database.</summary>
         public System.Data.Linq.Table<Tracker.Core.Data.Role> Role
         {
             get { return GetTable<Tracker.Core.Data.Role>(); }
-        }
-        
-        /// <summary>Represents the dbo.Status table in the underlying database.</summary>
-        public System.Data.Linq.Table<Tracker.Core.Data.Status> Status
-        {
-            get { return GetTable<Tracker.Core.Data.Status>(); }
         }
         
         /// <summary>Represents the dbo.Task table in the underlying database.</summary>
@@ -198,6 +198,15 @@ namespace Tracker.Core.Data
         /// <summary>Called before a <see cref="Audit"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
         partial void DeleteAudit(Tracker.Core.Data.Audit instance);
+        /// <summary>Called before a <see cref="Guid"/> is inserted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void InsertGuid(Tracker.Core.Data.Guid instance);
+        /// <summary>Called before a <see cref="Guid"/> is updated.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void UpdateGuid(Tracker.Core.Data.Guid instance);
+        /// <summary>Called before a <see cref="Guid"/> is deleted.</summary>
+        /// <param name="instance">The instance.</param>
+        partial void DeleteGuid(Tracker.Core.Data.Guid instance);
         /// <summary>Called before a <see cref="Role"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
         partial void InsertRole(Tracker.Core.Data.Role instance);
@@ -207,15 +216,6 @@ namespace Tracker.Core.Data
         /// <summary>Called before a <see cref="Role"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
         partial void DeleteRole(Tracker.Core.Data.Role instance);
-        /// <summary>Called before a <see cref="Status"/> is inserted.</summary>
-        /// <param name="instance">The instance.</param>
-        partial void InsertStatus(Tracker.Core.Data.Status instance);
-        /// <summary>Called before a <see cref="Status"/> is updated.</summary>
-        /// <param name="instance">The instance.</param>
-        partial void UpdateStatus(Tracker.Core.Data.Status instance);
-        /// <summary>Called before a <see cref="Status"/> is deleted.</summary>
-        /// <param name="instance">The instance.</param>
-        partial void DeleteStatus(Tracker.Core.Data.Status instance);
         /// <summary>Called before a <see cref="Task"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
         partial void InsertTask(Tracker.Core.Data.Task instance);

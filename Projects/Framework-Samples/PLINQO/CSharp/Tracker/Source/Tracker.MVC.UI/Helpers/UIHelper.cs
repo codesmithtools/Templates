@@ -68,11 +68,9 @@ namespace PLINQO.Mvc.UI
             {
                 IMultipleResults results = context.ExecuteQuery(
                     context.User.OrderBy(u => u.FirstName).ThenBy(u => u.LastName)
-                    , context.Status.OrderBy(s => s.Name)
                     , context.Role.OrderBy(r => r.Name));
 
                 HttpRuntime.Cache.Insert("Users", results.GetResult<User>().ToList());
-                HttpRuntime.Cache.Insert("Statuses", results.GetResult<Status>().ToList());
                 HttpRuntime.Cache.Insert("Roles", results.GetResult<Role>().ToList());
             }
         }
@@ -96,12 +94,16 @@ namespace PLINQO.Mvc.UI
             return new SelectList(filteredRoles, "Id", "Name", selectedValue);
         }
 
-        public static SelectList GetPrioritySelectList(Priority selectedValue)
+        public static SelectList GetPrioritySelectList(Priority? selectedValue)
         {
             var selectListItems = new List<SelectListItem>();
+            selectListItems.Add(new SelectListItem
+                                    {
+                                        Text = " - null - "
+                                    });
             foreach (string priority in Enum.GetNames(typeof(Priority)))
             {
-                var selectListItem = new SelectListItem()
+                var selectListItem = new SelectListItem
                                          {
                                              Text = priority,
                                          };
@@ -124,15 +126,21 @@ namespace PLINQO.Mvc.UI
             return new SelectList(users, "Id", "FullName", selectedValue);
         }
 
-        public static SelectList GetStatusSelectList(int? selectedValue)
+        public static SelectList GetStatusSelectList(Status selectedValue)
         {
-            var statuses = (List<Status>)HttpRuntime.Cache["Statuses"] as List<Status>;
-            if (null == statuses)
+            var selectListItems = new List<SelectListItem>();
+            foreach (string priority in Enum.GetNames(typeof(Status)))
             {
-                RefreshData();
-                statuses = HttpRuntime.Cache["Statuses"] as List<Status>;
+                var selectListItem = new SelectListItem
+                {
+                    Text = priority,
+                };
+
+                selectListItems.Add(selectListItem);
             }
-            return new SelectList(statuses, "Id", "Name", selectedValue);
+            var selectList = new SelectList(selectListItems, "Text", "Text", selectedValue);
+
+            return selectList;
         }
 
         public static string ErrorCodeToString(MembershipCreateStatus createStatus)

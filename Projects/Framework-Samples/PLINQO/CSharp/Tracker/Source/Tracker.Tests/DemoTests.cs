@@ -58,7 +58,7 @@ namespace Tracker.Tests
             var task = new Task()
             {
                 AssignedId = userId,
-                StatusId = 1,
+                Status = Status.InProgress,
                 Summary = "Explain the visions that inspire you",
                 Priority = Priority.High,
                 CreatedId = userId,
@@ -150,8 +150,8 @@ namespace Tracker.Tests
                 context.Log = Console.Out;
 
                 Task task = context.Manager.Task.GetByKey(SpockId);
-                IQueryable<Task> tasks = context.Manager.Task.GetByAssignedIdStatusId(SpockId, STATUS_NOT_STARTED);
-                List<Task> taskList = tasks.ToList();
+                //IQueryable<Task> tasks = context.Manager.Task.GetByAssignedIdStatusId(SpockId, Status.NotStarted);
+                //List<Task> taskList = tasks.ToList();
             }
 
             using (var context = new TrackerDataContext())
@@ -159,7 +159,7 @@ namespace Tracker.Tests
                 context.Log = Console.Out;
 
                 Task task = context.Task.GetByKey(SpockId);
-                IQueryable<Task> tasks = context.Task.ByAssignedId(SpockId).ByStatusId(STATUS_NOT_STARTED);
+                IQueryable<Task> tasks = context.Task.ByAssignedId(SpockId).ByStatus(Status.NotStarted);
                 List<Task> taskList = tasks.ToList();
             }
         }
@@ -204,7 +204,7 @@ namespace Tracker.Tests
                 {
                     AssignedId = SpockId,
                     CreatedId = SpockId,
-                    StatusId = STATUS_NOT_STARTED,
+                    Status = Status.NotStarted,
                     Priority = Priority.High,
                     Summary = "Punch Kirk in the face!"
                 };
@@ -250,7 +250,7 @@ namespace Tracker.Tests
                 task.Detach();
             }
 
-            task.StatusId = STATUS_DONE;
+            task.Status = Status.Done;
 
             using (var context2 = new TrackerDataContext())
             {
@@ -278,7 +278,7 @@ namespace Tracker.Tests
                 context2.Log = Console.Out;
                 // attach, then update properties
                 context2.Task.Attach(task);
-                task.StatusId = STATUS_DONE;
+                task.Status = Status.Done;
 
                 context2.SubmitChanges();
             }
@@ -338,13 +338,13 @@ namespace Tracker.Tests
                 context.Log = Console.Out;
 
                 context.Task.Update(
-                    u => u.StatusId == STATUS_NOT_STARTED,
-                    u2 => new Task() { StatusId = STATUS_DONE });
+                    u => u.Status == Status.NotStarted, 
+                    u2 => new Task() { Status = Status.Done });
 
                 var tasks = from t in context.Task
-                            where t.StatusId == STATUS_DONE
+                            where t.Status == Status.Done
                             select t;
-                context.Task.Update(tasks, u => new Task { StatusId = STATUS_NOT_STARTED });
+                context.Task.Update(tasks, u => new Task { Status = Status.NotStarted });
 
             }
         }

@@ -35,13 +35,24 @@ namespace Tracker.Core.Data
         /// </summary>
         [Description("A Low Priority")]
         [EnumMember]
-        Low = 3,
-        /// <summary>
-        /// All of Tom's Tasks
-        /// </summary>
-        [Description("All of Tom's Tasks")]
+        Low = 3
+    }
+    
+    [DataContract]
+    public enum Status : int
+    {
         [EnumMember]
-        VeryLow = 4
+        NotStarted = 1,
+        [EnumMember]
+        InProgress = 2,
+        [EnumMember]
+        Completed = 3,
+        [EnumMember]
+        WaitingOnSomeoneElse = 4,
+        [EnumMember]
+        Deferred = 5,
+        [EnumMember]
+        Done = 6
     }
     
 }

@@ -103,23 +103,23 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<Tracker.Core.Data.Task> GetByAssignedIdStatusId(int? assignedId, int statusId)
+        public IQueryable<Tracker.Core.Data.Task> GetByAssignedIdStatus(int? assignedId, Status status)
         {
             if (Context.LoadOptions == null) 
-                return Query.GetByAssignedIdStatusId.Invoke(Context, assignedId, statusId);
+                return Query.GetByAssignedIdStatus.Invoke(Context, assignedId, status);
             else
                 return Entity.Where(t => t.AssignedId == assignedId 
-					&& t.StatusId == statusId);
+					&& t.Status == status);
         }
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<Tracker.Core.Data.Task> GetByStatusId(int statusId)
+        public IQueryable<Tracker.Core.Data.Task> GetByStatus(Status status)
         {
             if (Context.LoadOptions == null) 
-                return Query.GetByStatusId.Invoke(Context, statusId);
+                return Query.GetByStatus.Invoke(Context, status);
             else
-                return Entity.Where(t => t.StatusId == statusId);
+                return Entity.Where(t => t.Status == status);
         }
         /// <summary>
         /// Gets a query by an index.
@@ -169,16 +169,16 @@ namespace Tracker.Core.Data
                     (Tracker.Core.Data.TrackerDataContext db, int id) => 
                         db.Task.FirstOrDefault(t => t.Id == id));
 
-            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int?, int, IQueryable<Tracker.Core.Data.Task>> GetByAssignedIdStatusId = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int?, Status, IQueryable<Tracker.Core.Data.Task>> GetByAssignedIdStatus = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Core.Data.TrackerDataContext db, int? assignedId, int statusId) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int? assignedId, Status status) => 
                         db.Task.Where(t => t.AssignedId == assignedId 
-							&& t.StatusId == statusId));
+							&& t.Status == status));
 
-            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, IQueryable<Tracker.Core.Data.Task>> GetByStatusId = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, Status, IQueryable<Tracker.Core.Data.Task>> GetByStatus = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Core.Data.TrackerDataContext db, int statusId) => 
-                        db.Task.Where(t => t.StatusId == statusId));
+                    (Tracker.Core.Data.TrackerDataContext db, Status status) => 
+                        db.Task.Where(t => t.Status == status));
 
             internal static readonly Func<Tracker.Core.Data.TrackerDataContext, Priority, IQueryable<Tracker.Core.Data.Task>> GetByPriority = 
                 System.Data.Linq.CompiledQuery.Compile(

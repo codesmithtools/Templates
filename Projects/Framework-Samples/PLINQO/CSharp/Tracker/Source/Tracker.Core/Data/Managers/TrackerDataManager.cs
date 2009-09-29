@@ -43,6 +43,22 @@ namespace Tracker.Core.Data
             }
         }
         
+        private GuidManager _guidManager;
+
+        /// <summary>
+        /// Gets the manager for Guid.
+        /// </summary>
+        public GuidManager Guid
+        {
+            get
+            {
+                if (_guidManager == null)
+                    _guidManager = new GuidManager(this);
+
+                return _guidManager;
+            }
+        }
+        
         private RoleManager _roleManager;
 
         /// <summary>
@@ -56,22 +72,6 @@ namespace Tracker.Core.Data
                     _roleManager = new RoleManager(this);
 
                 return _roleManager;
-            }
-        }
-        
-        private StatusManager _statusManager;
-
-        /// <summary>
-        /// Gets the manager for Status.
-        /// </summary>
-        public StatusManager Status
-        {
-            get
-            {
-                if (_statusManager == null)
-                    _statusManager = new StatusManager(this);
-
-                return _statusManager;
             }
         }
         

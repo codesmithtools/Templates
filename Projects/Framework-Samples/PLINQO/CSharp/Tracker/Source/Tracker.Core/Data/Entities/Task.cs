@@ -32,11 +32,6 @@ namespace Tracker.Core.Data
 
             public int Id { get; set; }
 
-            [Required(ErrorMessage="Status is Required")]
-            public int StatusId { get; set; }
-
-            public Priority Priority { get; set; }
-
             [CurrentUserName(EntityState.New)]
             public int CreatedId { get; set; }
 
@@ -68,9 +63,11 @@ namespace Tracker.Core.Data
             [CodeSmith.Data.Audit.NotAudited]
             public string LastModifiedBy { get; set; }
 
-            public TaskExtended TaskExtended { get; set; }
-
             public Status Status { get; set; }
+
+            public Priority Priority { get; set; }
+
+            public TaskExtended TaskExtended { get; set; }
 
             public User AssignedUser { get; set; }
 

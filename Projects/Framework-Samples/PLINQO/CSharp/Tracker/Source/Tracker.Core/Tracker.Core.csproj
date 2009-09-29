@@ -64,15 +64,14 @@
       <SubType>Code</SubType>
       <DependentUpon>Audit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\Entities\Guid.cs" />
+    <Compile Include="Data\Entities\Guid.Generated.cs">
+      <DependentUpon>Guid.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\Entities\Role.cs" />
     <Compile Include="Data\Entities\Role.Generated.cs">
       <SubType>Code</SubType>
       <DependentUpon>Role.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Entities\Status.cs" />
-    <Compile Include="Data\Entities\Status.Generated.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>Status.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\Entities\Task.cs" />
     <Compile Include="Data\Entities\Task.Generated.cs">
@@ -104,15 +103,14 @@
       <SubType>Code</SubType>
       <DependentUpon>AuditManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\Managers\GuidManager.cs" />
+    <Compile Include="Data\Managers\GuidManager.Generated.cs">
+      <DependentUpon>GuidManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\Managers\RoleManager.cs" />
     <Compile Include="Data\Managers\RoleManager.Generated.cs">
       <SubType>Code</SubType>
       <DependentUpon>RoleManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Managers\StatusManager.cs" />
-    <Compile Include="Data\Managers\StatusManager.Generated.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>StatusManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\Managers\TaskExtendedManager.cs" />
     <Compile Include="Data\Managers\TaskExtendedManager.Generated.cs">
@@ -140,15 +138,14 @@
       <SubType>Code</SubType>
       <DependentUpon>AuditExtensions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\Queries\GuidExtensions.cs" />
+    <Compile Include="Data\Queries\GuidExtensions.Generated.cs">
+      <DependentUpon>GuidExtensions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\Queries\RoleExtensions.cs" />
     <Compile Include="Data\Queries\RoleExtensions.Generated.cs">
       <SubType>Code</SubType>
       <DependentUpon>RoleExtensions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Queries\StatusExtensions.cs" />
-    <Compile Include="Data\Queries\StatusExtensions.Generated.cs">
-      <SubType>Code</SubType>
-      <DependentUpon>StatusExtensions.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\Queries\TaskExtendedExtensions.cs" />
     <Compile Include="Data\Queries\TaskExtendedExtensions.Generated.cs">

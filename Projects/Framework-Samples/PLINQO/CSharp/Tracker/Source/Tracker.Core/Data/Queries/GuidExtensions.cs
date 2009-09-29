@@ -1,0 +1,19 @@
+﻿using System;
+using System.Data.Linq;
+using System.Linq;
+
+namespace Tracker.Core.Data
+{
+    public static partial class GuidExtensions
+    {
+        //Add query extension methods here.
+        
+        #region Query
+        // A private class for lazy loading static compiled queries.
+        private static partial class Query
+        {
+            // Add your compiled queries here. 
+        } 
+        #endregion
+    }
+}
