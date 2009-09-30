@@ -124,7 +124,7 @@ Namespace <%= Database.ContextNamespace %>
     Dim paramName as string =  GetParamName(c.Member)
     paramName = CleanParamName(paramName)
     
-    If Not c.IsPrimaryKey.Value AndAlso Not c.IsVersion.Value AndAlso c.Type <> "System.Data.Linq.Binary" Then
+    If Not c.IsVersion.Value AndAlso c.Type <> "System.Data.Linq.Binary" Then
      %>
 
         ''' <summary>
