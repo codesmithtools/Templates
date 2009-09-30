@@ -147,7 +147,8 @@ under the file that can be changed.</p>
 <ul>
     <li>Release 1.1.1
 	    <ul>
-            <li>Validation Rules now use the PropertyInfo overload instead of a string.</li>
+            <li>Fixed a bug where FK's to tables in the excluded list could throw a null reference exception.</li>
+	    <li>Validation Rules now use the PropertyInfo overload instead of a string.</li>
             <li>Added the DataPortal_Update() override to the EditableRootList and EditableChildList.</li>
             <li>Fixed a bug where multiple QueryMethods could be generated.</li>
             <li>Fixed a bug where the EditableRootList had MarkAsChild() in the constructor.</li>
