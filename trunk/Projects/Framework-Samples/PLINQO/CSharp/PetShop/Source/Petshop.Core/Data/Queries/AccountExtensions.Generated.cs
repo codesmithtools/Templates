@@ -22,13 +22,13 @@ namespace PetShop.Core.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static PetShop.Core.Data.Account ByKey(this IQueryable<PetShop.Core.Data.Account> queryable, int accountId)
+        public static PetShop.Core.Data.Account ByKey(this IQueryable<PetShop.Core.Data.Account> queryable, int accountID)
         {
             var entity = queryable as System.Data.Linq.Table<PetShop.Core.Data.Account>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((PetShop.Core.Data.PetShopDataContext)entity.Context, accountId);
+                return Query.ByKey.Invoke((PetShop.Core.Data.PetShopDataContext)entity.Context, accountID);
             
-            return queryable.FirstOrDefault(a => a.AccountId == accountId);
+            return queryable.FirstOrDefault(a => a.AccountID == accountID);
         }
 
         /// <summary>
@@ -36,9 +36,9 @@ namespace PetShop.Core.Data
         /// </summary>
         /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         /// <returns>The number of rows deleted from the database.</returns>
-        public static int Delete(this System.Data.Linq.Table<PetShop.Core.Data.Account> table, int accountId)
+        public static int Delete(this System.Data.Linq.Table<PetShop.Core.Data.Account> table, int accountID)
         {
-            return table.Delete(a => a.AccountId == accountId);
+            return table.Delete(a => a.AccountID == accountID);
         }
         
         /// <summary>
@@ -128,6 +128,14 @@ namespace PetShop.Core.Data
         {
             return queryable.Where(a => object.Equals(a.Phone, phone));
         }
+        
+        /// <summary>
+        /// Gets a query for <see cref="Account.Number"/>.
+        /// </summary>
+        public static IQueryable<PetShop.Core.Data.Account> ByNumber(this IQueryable<PetShop.Core.Data.Account> queryable, int? number)
+        {
+            return queryable.Where(a => object.Equals(a.Number, number));
+        }
 
         #region Query
         /// <summary>
@@ -138,8 +146,8 @@ namespace PetShop.Core.Data
 
             internal static readonly Func<PetShop.Core.Data.PetShopDataContext, int, PetShop.Core.Data.Account> ByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PetShop.Core.Data.PetShopDataContext db, int accountId) => 
-                        db.Account.FirstOrDefault(a => a.AccountId == accountId));
+                    (PetShop.Core.Data.PetShopDataContext db, int accountID) => 
+                        db.Account.FirstOrDefault(a => a.AccountID == accountID));
 
         }
         #endregion

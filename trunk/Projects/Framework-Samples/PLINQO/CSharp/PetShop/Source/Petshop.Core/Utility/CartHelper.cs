@@ -113,7 +113,7 @@ namespace PetShop.Core.Utility
 
             using (var context = new PetShopDataContext())
             {
-                context.Cart.Delete(item.CartId);
+                context.Cart.Delete(item.CartID);
             }
             items.Remove(item);
         }

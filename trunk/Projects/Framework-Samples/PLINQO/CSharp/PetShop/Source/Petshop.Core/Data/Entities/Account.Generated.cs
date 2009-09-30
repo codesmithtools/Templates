@@ -18,8 +18,8 @@ namespace PetShop.Core.Data
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
     [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
-    [System.Data.Services.Common.DataServiceKey("AccountId")]
-    [System.Diagnostics.DebuggerDisplay("AccountId: {AccountId}")]
+    [System.Data.Services.Common.DataServiceKey("AccountID")]
+    [System.Diagnostics.DebuggerDisplay("AccountID: {AccountID}")]
     public partial class Account
         : LinqEntityBase, ICloneable
     {
@@ -53,36 +53,13 @@ namespace PetShop.Core.Data
 
         #region Column Mapped Properties
 
-        private int _accountId = default(int);
-
-        /// <summary>
-        /// Gets the AccountId column value.
-        /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "AccountId", Storage = "_accountId", DbType = "int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false)]
-        [System.Runtime.Serialization.DataMember(Order = 1)]
-        public int AccountId
-        {
-            get { return _accountId; }
-            set
-            {
-                if (_accountId != value)
-                {
-                    OnAccountIdChanging(value);
-                    SendPropertyChanging("AccountId");
-                    _accountId = value;
-                    SendPropertyChanged("AccountId");
-                    OnAccountIdChanged();
-                }
-            }
-        }
-
         private int _uniqueID;
 
         /// <summary>
         /// Gets or sets the UniqueID column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "UniqueID", Storage = "_uniqueID", DbType = "int NOT NULL", CanBeNull = false)]
-        [System.Runtime.Serialization.DataMember(Order = 2)]
+        [System.Runtime.Serialization.DataMember(Order = 1)]
         public int UniqueID
         {
             get { return _uniqueID; }
@@ -110,7 +87,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Email", Storage = "_email", DbType = "varchar(80) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(80)]
-        [System.Runtime.Serialization.DataMember(Order = 3)]
+        [System.Runtime.Serialization.DataMember(Order = 2)]
         public string Email
         {
             get { return _email; }
@@ -134,7 +111,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "FirstName", Storage = "_firstName", DbType = "varchar(80) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(80)]
-        [System.Runtime.Serialization.DataMember(Order = 4)]
+        [System.Runtime.Serialization.DataMember(Order = 3)]
         public string FirstName
         {
             get { return _firstName; }
@@ -158,7 +135,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "LastName", Storage = "_lastName", DbType = "varchar(80) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(80)]
-        [System.Runtime.Serialization.DataMember(Order = 5)]
+        [System.Runtime.Serialization.DataMember(Order = 4)]
         public string LastName
         {
             get { return _lastName; }
@@ -182,7 +159,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Address1", Storage = "_address1", DbType = "varchar(80) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(80)]
-        [System.Runtime.Serialization.DataMember(Order = 6)]
+        [System.Runtime.Serialization.DataMember(Order = 5)]
         public string Address1
         {
             get { return _address1; }
@@ -206,7 +183,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Address2", Storage = "_address2", DbType = "varchar(80)")]
         [System.ComponentModel.DataAnnotations.StringLength(80)]
-        [System.Runtime.Serialization.DataMember(Order = 7)]
+        [System.Runtime.Serialization.DataMember(Order = 6)]
         public string Address2
         {
             get { return _address2; }
@@ -230,7 +207,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "City", Storage = "_city", DbType = "varchar(80) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(80)]
-        [System.Runtime.Serialization.DataMember(Order = 8)]
+        [System.Runtime.Serialization.DataMember(Order = 7)]
         public string City
         {
             get { return _city; }
@@ -254,7 +231,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "State", Storage = "_state", DbType = "varchar(80) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(80)]
-        [System.Runtime.Serialization.DataMember(Order = 9)]
+        [System.Runtime.Serialization.DataMember(Order = 8)]
         public string State
         {
             get { return _state; }
@@ -278,7 +255,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Zip", Storage = "_zip", DbType = "varchar(20) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(20)]
-        [System.Runtime.Serialization.DataMember(Order = 10)]
+        [System.Runtime.Serialization.DataMember(Order = 9)]
         public string Zip
         {
             get { return _zip; }
@@ -302,7 +279,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Country", Storage = "_country", DbType = "varchar(20) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(20)]
-        [System.Runtime.Serialization.DataMember(Order = 11)]
+        [System.Runtime.Serialization.DataMember(Order = 10)]
         public string Country
         {
             get { return _country; }
@@ -326,7 +303,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Phone", Storage = "_phone", DbType = "varchar(20)")]
         [System.ComponentModel.DataAnnotations.StringLength(20)]
-        [System.Runtime.Serialization.DataMember(Order = 12)]
+        [System.Runtime.Serialization.DataMember(Order = 11)]
         public string Phone
         {
             get { return _phone; }
@@ -342,6 +319,52 @@ namespace PetShop.Core.Data
                 }
             }
         }
+
+        private int _accountID = default(int);
+
+        /// <summary>
+        /// Gets the AccountID column value.
+        /// </summary>
+        [System.Data.Linq.Mapping.Column(Name = "AccountID", Storage = "_accountID", DbType = "int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false)]
+        [System.Runtime.Serialization.DataMember(Order = 12)]
+        public int AccountID
+        {
+            get { return _accountID; }
+            set
+            {
+                if (_accountID != value)
+                {
+                    OnAccountIDChanging(value);
+                    SendPropertyChanging("AccountID");
+                    _accountID = value;
+                    SendPropertyChanged("AccountID");
+                    OnAccountIDChanged();
+                }
+            }
+        }
+
+        private Nullable<int> _number;
+
+        /// <summary>
+        /// Gets or sets the Number column value.
+        /// </summary>
+        [System.Data.Linq.Mapping.Column(Name = "Number", Storage = "_number", DbType = "int")]
+        [System.Runtime.Serialization.DataMember(Order = 13)]
+        public Nullable<int> Number
+        {
+            get { return _number; }
+            set
+            {
+                if (_number != value)
+                {
+                    OnNumberChanging(value);
+                    SendPropertyChanging("Number");
+                    _number = value;
+                    SendPropertyChanged("Number");
+                    OnNumberChanged();
+                }
+            }
+        }
         #endregion
 
         #region Association Mapped Properties
@@ -352,7 +375,7 @@ namespace PetShop.Core.Data
         /// Gets or sets the Profile association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Profile_Account", Storage = "_profile", ThisKey = "UniqueID", OtherKey = "UniqueID", IsUnique = true, IsForeignKey = true, DeleteRule = "CASCADE")]
-        [System.Runtime.Serialization.DataMember(Order = 13, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 14, EmitDefaultValue = false)]
         public Profile Profile
         {
             get { return (serializing && !_profile.HasLoadedOrAssignedValue) ? null : _profile.Entity; }
@@ -394,11 +417,6 @@ namespace PetShop.Core.Data
         partial void OnValidate(System.Data.Linq.ChangeAction action);
         /// <summary>Called when this instance is created.</summary>
         partial void OnCreated();
-        /// <summary>Called when <see cref="AccountId"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnAccountIdChanging(int value);
-        /// <summary>Called after <see cref="AccountId"/> has Changed.</summary>
-        partial void OnAccountIdChanged();
         /// <summary>Called when <see cref="UniqueID"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnUniqueIDChanging(int value);
@@ -454,6 +472,16 @@ namespace PetShop.Core.Data
         partial void OnPhoneChanging(string value);
         /// <summary>Called after <see cref="Phone"/> has Changed.</summary>
         partial void OnPhoneChanged();
+        /// <summary>Called when <see cref="AccountID"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnAccountIDChanging(int value);
+        /// <summary>Called after <see cref="AccountID"/> has Changed.</summary>
+        partial void OnAccountIDChanged();
+        /// <summary>Called when <see cref="Number"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnNumberChanging(Nullable<int> value);
+        /// <summary>Called after <see cref="Number"/> has Changed.</summary>
+        partial void OnNumberChanged();
         /// <summary>Called when <see cref="Profile"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnProfileChanging(Profile value);

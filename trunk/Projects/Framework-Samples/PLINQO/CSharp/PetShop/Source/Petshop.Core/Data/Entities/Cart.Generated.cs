@@ -18,8 +18,8 @@ namespace PetShop.Core.Data
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
     [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
-    [System.Data.Services.Common.DataServiceKey("CartId")]
-    [System.Diagnostics.DebuggerDisplay("CartId: {CartId}")]
+    [System.Data.Services.Common.DataServiceKey("CartID")]
+    [System.Diagnostics.DebuggerDisplay("CartID: {CartID}")]
     public partial class Cart
         : LinqEntityBase, ICloneable
     {
@@ -53,36 +53,13 @@ namespace PetShop.Core.Data
 
         #region Column Mapped Properties
 
-        private int _cartId = default(int);
-
-        /// <summary>
-        /// Gets the CartId column value.
-        /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "CartId", Storage = "_cartId", DbType = "int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false)]
-        [System.Runtime.Serialization.DataMember(Order = 1)]
-        public int CartId
-        {
-            get { return _cartId; }
-            set
-            {
-                if (_cartId != value)
-                {
-                    OnCartIdChanging(value);
-                    SendPropertyChanging("CartId");
-                    _cartId = value;
-                    SendPropertyChanged("CartId");
-                    OnCartIdChanged();
-                }
-            }
-        }
-
         private int _uniqueID;
 
         /// <summary>
         /// Gets or sets the UniqueID column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "UniqueID", Storage = "_uniqueID", DbType = "int NOT NULL", CanBeNull = false)]
-        [System.Runtime.Serialization.DataMember(Order = 2)]
+        [System.Runtime.Serialization.DataMember(Order = 1)]
         public int UniqueID
         {
             get { return _uniqueID; }
@@ -110,7 +87,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "ItemId", Storage = "_itemId", DbType = "varchar(10) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(10)]
-        [System.Runtime.Serialization.DataMember(Order = 3)]
+        [System.Runtime.Serialization.DataMember(Order = 2)]
         public string ItemId
         {
             get { return _itemId; }
@@ -134,7 +111,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Name", Storage = "_name", DbType = "varchar(80) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(80)]
-        [System.Runtime.Serialization.DataMember(Order = 4)]
+        [System.Runtime.Serialization.DataMember(Order = 3)]
         public string Name
         {
             get { return _name; }
@@ -158,7 +135,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Type", Storage = "_type", DbType = "varchar(80) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(80)]
-        [System.Runtime.Serialization.DataMember(Order = 5)]
+        [System.Runtime.Serialization.DataMember(Order = 4)]
         public string Type
         {
             get { return _type; }
@@ -181,7 +158,7 @@ namespace PetShop.Core.Data
         /// Gets or sets the Price column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Price", Storage = "_price", DbType = "decimal(10,2) NOT NULL", CanBeNull = false)]
-        [System.Runtime.Serialization.DataMember(Order = 6)]
+        [System.Runtime.Serialization.DataMember(Order = 5)]
         public decimal Price
         {
             get { return _price; }
@@ -205,7 +182,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "CategoryId", Storage = "_categoryId", DbType = "varchar(10) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(10)]
-        [System.Runtime.Serialization.DataMember(Order = 7)]
+        [System.Runtime.Serialization.DataMember(Order = 6)]
         public string CategoryId
         {
             get { return _categoryId; }
@@ -229,7 +206,7 @@ namespace PetShop.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "ProductId", Storage = "_productId", DbType = "varchar(10) NOT NULL", CanBeNull = false)]
         [System.ComponentModel.DataAnnotations.StringLength(10)]
-        [System.Runtime.Serialization.DataMember(Order = 8)]
+        [System.Runtime.Serialization.DataMember(Order = 7)]
         public string ProductId
         {
             get { return _productId; }
@@ -252,7 +229,7 @@ namespace PetShop.Core.Data
         /// Gets or sets the IsShoppingCart column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "IsShoppingCart", Storage = "_isShoppingCart", DbType = "bit NOT NULL", CanBeNull = false)]
-        [System.Runtime.Serialization.DataMember(Order = 9)]
+        [System.Runtime.Serialization.DataMember(Order = 8)]
         public bool IsShoppingCart
         {
             get { return _isShoppingCart; }
@@ -275,7 +252,7 @@ namespace PetShop.Core.Data
         /// Gets or sets the Quantity column value.
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "Quantity", Storage = "_quantity", DbType = "int NOT NULL", CanBeNull = false)]
-        [System.Runtime.Serialization.DataMember(Order = 10)]
+        [System.Runtime.Serialization.DataMember(Order = 9)]
         public int Quantity
         {
             get { return _quantity; }
@@ -288,6 +265,29 @@ namespace PetShop.Core.Data
                     _quantity = value;
                     SendPropertyChanged("Quantity");
                     OnQuantityChanged();
+                }
+            }
+        }
+
+        private int _cartID = default(int);
+
+        /// <summary>
+        /// Gets the CartID column value.
+        /// </summary>
+        [System.Data.Linq.Mapping.Column(Name = "CartID", Storage = "_cartID", DbType = "int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false)]
+        [System.Runtime.Serialization.DataMember(Order = 10)]
+        public int CartID
+        {
+            get { return _cartID; }
+            set
+            {
+                if (_cartID != value)
+                {
+                    OnCartIDChanging(value);
+                    SendPropertyChanging("CartID");
+                    _cartID = value;
+                    SendPropertyChanged("CartID");
+                    OnCartIDChanged();
                 }
             }
         }
@@ -343,11 +343,6 @@ namespace PetShop.Core.Data
         partial void OnValidate(System.Data.Linq.ChangeAction action);
         /// <summary>Called when this instance is created.</summary>
         partial void OnCreated();
-        /// <summary>Called when <see cref="CartId"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnCartIdChanging(int value);
-        /// <summary>Called after <see cref="CartId"/> has Changed.</summary>
-        partial void OnCartIdChanged();
         /// <summary>Called when <see cref="UniqueID"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnUniqueIDChanging(int value);
@@ -393,6 +388,11 @@ namespace PetShop.Core.Data
         partial void OnQuantityChanging(int value);
         /// <summary>Called after <see cref="Quantity"/> has Changed.</summary>
         partial void OnQuantityChanged();
+        /// <summary>Called when <see cref="CartID"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnCartIDChanging(int value);
+        /// <summary>Called after <see cref="CartID"/> has Changed.</summary>
+        partial void OnCartIDChanged();
         /// <summary>Called when <see cref="Profile"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnProfileChanging(Profile value);

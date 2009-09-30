@@ -23,8 +23,6 @@ namespace PetShop.Core.Data
         {
             // Only Attributes in the class will be preserved.
 
-            public int AccountId { get; set; }
-
             public int UniqueID { get; set; }
 
             [Required]
@@ -56,6 +54,10 @@ namespace PetShop.Core.Data
 
             [DataType(System.ComponentModel.DataAnnotations.DataType.PhoneNumber)]
             public string Phone { get; set; }
+
+            public int AccountID { get; set; }
+
+            public int Number { get; set; }
 
             public Profile Profile { get; set; }
 
