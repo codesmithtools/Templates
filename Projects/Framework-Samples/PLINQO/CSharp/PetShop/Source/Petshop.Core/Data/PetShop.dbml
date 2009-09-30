@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Database Name="PetShop" EntityNamespace="PetShop.Core.Data" ContextNamespace="PetShop.Core.Data" Class="PetShopDataContext" EntityBase="LinqEntityBase" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+<Database Name="Petshop" EntityNamespace="PetShop.Core.Data" ContextNamespace="PetShop.Core.Data" Class="PetShopDataContext" EntityBase="LinqEntityBase" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="ConnectionString" ConnectionString="Server=.\SQLEXPRESS;Database=Petshop;Integrated Security=True" SettingsObjectName="Properties.Settings" SettingsPropertyName="PetShopConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Account" Member="Account">
     <Type Name="Account">
-      <Column Name="AccountId" Storage="_accountId" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="UniqueID" Storage="_uniqueID" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
       <Column Name="Email" Storage="_email" Type="System.String" DbType="varchar(80) NOT NULL" CanBeNull="false" />
       <Column Name="FirstName" Storage="_firstName" Type="System.String" DbType="varchar(80) NOT NULL" CanBeNull="false" />
@@ -15,12 +14,13 @@
       <Column Name="Zip" Storage="_zip" Type="System.String" DbType="varchar(20) NOT NULL" CanBeNull="false" />
       <Column Name="Country" Storage="_country" Type="System.String" DbType="varchar(20) NOT NULL" CanBeNull="false" />
       <Column Name="Phone" Storage="_phone" Type="System.String" DbType="varchar(20)" CanBeNull="true" />
+      <Column Name="AccountID" Storage="_accountID" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Number" Storage="_number" Type="System.Int32" DbType="int" CanBeNull="true" />
       <Association Name="Profile_Account" Member="Profile" Storage="_profile" ThisKey="UniqueID" Type="Profile" IsForeignKey="true" DeleteRule="CASCADE" />
     </Type>
   </Table>
   <Table Name="dbo.Cart" Member="Cart">
     <Type Name="Cart">
-      <Column Name="CartId" Storage="_cartId" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="UniqueID" Storage="_uniqueID" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
       <Column Name="ItemId" Storage="_itemId" Type="System.String" DbType="varchar(10) NOT NULL" CanBeNull="false" />
       <Column Name="Name" Storage="_name" Type="System.String" DbType="varchar(80) NOT NULL" CanBeNull="false" />
@@ -30,6 +30,7 @@
       <Column Name="ProductId" Storage="_productId" Type="System.String" DbType="varchar(10) NOT NULL" CanBeNull="false" />
       <Column Name="IsShoppingCart" Storage="_isShoppingCart" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
       <Column Name="Quantity" Storage="_quantity" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="CartID" Storage="_cartID" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Association Name="Profile_Cart" Member="Profile" Storage="_profile" ThisKey="UniqueID" Type="Profile" IsForeignKey="true" DeleteRule="CASCADE" />
     </Type>
   </Table>

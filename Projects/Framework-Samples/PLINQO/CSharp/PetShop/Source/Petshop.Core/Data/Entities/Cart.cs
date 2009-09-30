@@ -23,8 +23,6 @@ namespace PetShop.Core.Data
         {
             // Only Attributes in the class will be preserved.
 
-            public int CartId { get; set; }
-
             public int UniqueID { get; set; }
 
             [Required]
@@ -47,6 +45,8 @@ namespace PetShop.Core.Data
             public bool IsShoppingCart { get; set; }
 
             public int Quantity { get; set; }
+
+            public int CartID { get; set; }
 
             public Profile Profile { get; set; }
 

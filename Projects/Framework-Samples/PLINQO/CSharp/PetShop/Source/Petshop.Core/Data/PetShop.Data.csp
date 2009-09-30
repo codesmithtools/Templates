@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
-    <add key="PetShopConnectionString" value="Data Source=.\SQLEXPRESS;Database=PetShop;Integrated Security=True" />
+    <add key="PetShopConnectionString" value="Data Source=localhost;Database=PetShop;Integrated Security=True" />
   </variables>
   <defaultProperties>
     <property name="DbmlFile">PetShop.dbml</property>
