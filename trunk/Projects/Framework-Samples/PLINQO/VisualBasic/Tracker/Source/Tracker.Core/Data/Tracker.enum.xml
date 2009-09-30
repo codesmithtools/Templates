@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Tracker" xmlns="http://tempuri.org/DbmlEnum.xsd">
+  <Enum Name="Priority" Table="dbo.Priority" Type="System.Int32" AccessModifier="Public" Flags="false" IncludeDataContract="true">
+    <Item Name="High" Value="1" Description="A High Priority" DataContractMember="true" />
+    <Item Name="Normal" Value="2" Description="A Normal Priority" DataContractMember="true" />
+    <Item Name="Low" Value="3" Description="A Low Priority" DataContractMember="true" />
+  </Enum>
+  <Enum Name="Status" Table="dbo.Status" Type="System.Int32" AccessModifier="Public" Flags="false" IncludeDataContract="true">
+    <Item Name="NotStarted" Value="1" DataContractMember="true" />
+    <Item Name="InProgress" Value="2" DataContractMember="true" />
+    <Item Name="Completed" Value="3" DataContractMember="true" />
+    <Item Name="WaitingOnSomeoneElse" Value="4" DataContractMember="true" />
+    <Item Name="Deferred" Value="5" DataContractMember="true" />
+    <Item Name="Done" Value="6" DataContractMember="true" />
+  </Enum>
+</Database>
