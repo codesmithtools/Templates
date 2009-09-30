@@ -136,7 +136,8 @@ namespace CodeSmith.SchemaHelper
                             if (!Configuration.Instance.ExcludeTableRegexIsMatch(column.Table.FullName))
                             {
                                 var association = new AssociationMember(AssociationType.OneToMany, column.Table, column, localColumn, this);
-                                _associationMap.Add(columnKey, association);
+                                if (!_associationMap.ContainsKey(columnKey))
+                                    _associationMap.Add(columnKey, association);
 
                                 if (!_fkMemberMap.ContainsKey(columnKey))
                                     _fkMemberMap.Add(columnKey, association.LocalColumn);
@@ -151,7 +152,8 @@ namespace CodeSmith.SchemaHelper
                             if (foreignTable != null && !Configuration.Instance.ExcludeTableRegexIsMatch(foreignTable.FullName))
                             {
                                 var association = new AssociationMember(AssociationType.ManyToMany, foreignTable, column, localColumn, this);
-                                _associationMap.Add(columnKey, association);
+                                if (!_associationMap.ContainsKey(columnKey))
+                                    _associationMap.Add(columnKey, association);
 
                                 if (!_fkMemberMap.ContainsKey(columnKey))
                                     _fkMemberMap.Add(columnKey, association.LocalColumn);
@@ -166,7 +168,7 @@ namespace CodeSmith.SchemaHelper
                         if (!Configuration.Instance.ExcludeTableRegexIsMatch(column.Table.FullName))
                         {
                             var association = new AssociationMember(AssociationType.OneToZeroOrOne, column.Table, column, tks.PrimaryKeyMemberColumns[0], this);
-                            if (_fkMemberMap.ContainsKey(columnKey))
+                            if (!_associationMap.ContainsKey(columnKey))
                                 _associationMap.Add(columnKey, association);
 
                             if (!_fkMemberMap.ContainsKey(columnKey))
@@ -241,7 +243,14 @@ namespace CodeSmith.SchemaHelper
             SearchCriteria searchCriteria = new SearchCriteria(true);
 
             foreach (MemberColumnSchema column in Table.PrimaryKey.MemberColumns)
-                searchCriteria.Members.Add(GetFromColumn(column));
+            {
+                if (column.Table.Equals(Table))
+                {
+                    MemberBase member = GetFromColumn(column);
+                    if (member != null)
+                        searchCriteria.Members.Add(GetFromColumn(column));
+                }
+            }
 
             AddToMap(map, searchCriteria);
         }
@@ -253,8 +262,14 @@ namespace CodeSmith.SchemaHelper
                 SearchCriteria searchCriteria = new SearchCriteria(false);
 
                 foreach (MemberColumnSchema column in tks.ForeignKeyMemberColumns)
+                {
                     if (column.Table.Equals(Table))
-                        searchCriteria.Members.Add(GetFromColumn(column));
+                    {
+                        MemberBase member = GetFromColumn(column);
+                        if(member != null)
+                            searchCriteria.Members.Add(GetFromColumn(column));
+                    }
+                }
 
                 AddToMap(map, searchCriteria);
             }
@@ -267,8 +282,14 @@ namespace CodeSmith.SchemaHelper
                 SearchCriteria searchCriteria = new SearchCriteria(false);
 
                 foreach (MemberColumnSchema column in indexSchema.MemberColumns)
+                {
                     if (column.Table.Equals(Table))
-                        searchCriteria.Members.Add(GetFromColumn(column));
+                    {
+                        MemberBase member = GetFromColumn(column);
+                        if (member != null)
+                            searchCriteria.Members.Add(GetFromColumn(column));
+                    }
+                }
 
                 AddToMap(map, searchCriteria);
             }
@@ -277,7 +298,7 @@ namespace CodeSmith.SchemaHelper
         private static bool AddToMap(IDictionary<string, SearchCriteria> map, SearchCriteria searchCriteria)
         {
             string key = searchCriteria.Key;
-            bool result = (searchCriteria.Members.Count > 0 && !map.ContainsKey(key));
+            bool result = (!string.IsNullOrEmpty(key) && searchCriteria.Members.Count > 0 && !map.ContainsKey(key));
 
             if (result)
                 map.Add(key, searchCriteria);
@@ -539,7 +560,7 @@ namespace CodeSmith.SchemaHelper
                     {
                         members.Add(memberBase);
                     }
-                        
+
                 }
 
                 return members;
