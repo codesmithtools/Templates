@@ -76,7 +76,7 @@ Namespace <%= Database.EntityNamespace %>
                 ExistingFile.CompilationUnit.AcceptVisitor(sourceAttributes, "Metadata")
             End If 
             For Each column As Column In Type.Columns
-                If sourceAttributes.PropertyMap.ContainsKey(column.Name) Then
+                If sourceAttributes.PropertyMap.ContainsKey(column.Member) Then
                     For Each attributeSection As ICSharpCode.NRefactory.Ast.AttributeSection In sourceAttributes.PropertyMap(column.Member).Attributes %>
             <%= ExistingFile.GetSection(attributeSection.StartLocation, attributeSection.EndLocation) %> _
 <%                    Next
