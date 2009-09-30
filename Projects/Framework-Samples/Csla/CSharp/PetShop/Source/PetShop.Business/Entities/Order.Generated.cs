@@ -42,42 +42,42 @@ namespace PetShop.Business
             if(AddBusinessValidationRules())
                 return;
             
-			ValidationRules.AddRule(CommonRules.StringRequired, "UserId");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("UserId", 20));
-			ValidationRules.AddRule(CommonRules.StringRequired, "ShipAddr1");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ShipAddr1", 80));
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ShipAddr2", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "ShipCity");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ShipCity", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "ShipState");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ShipState", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "ShipZip");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ShipZip", 20));
-			ValidationRules.AddRule(CommonRules.StringRequired, "ShipCountry");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ShipCountry", 20));
-			ValidationRules.AddRule(CommonRules.StringRequired, "BillAddr1");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("BillAddr1", 80));
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("BillAddr2", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "BillCity");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("BillCity", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "BillState");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("BillState", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "BillZip");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("BillZip", 20));
-			ValidationRules.AddRule(CommonRules.StringRequired, "BillCountry");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("BillCountry", 20));
-			ValidationRules.AddRule(CommonRules.StringRequired, "Courier");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Courier", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "BillToFirstName");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("BillToFirstName", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "BillToLastName");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("BillToLastName", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "ShipToFirstName");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ShipToFirstName", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "ShipToLastName");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ShipToLastName", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "Locale");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Locale", 20));
+			ValidationRules.AddRule(CommonRules.StringRequired, _userIdProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_userIdProperty, 20));
+			ValidationRules.AddRule(CommonRules.StringRequired, _shipAddr1Property);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_shipAddr1Property, 80));
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_shipAddr2Property, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _shipCityProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_shipCityProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _shipStateProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_shipStateProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _shipZipProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_shipZipProperty, 20));
+			ValidationRules.AddRule(CommonRules.StringRequired, _shipCountryProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_shipCountryProperty, 20));
+			ValidationRules.AddRule(CommonRules.StringRequired, _billAddr1Property);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_billAddr1Property, 80));
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_billAddr2Property, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _billCityProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_billCityProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _billStateProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_billStateProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _billZipProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_billZipProperty, 20));
+			ValidationRules.AddRule(CommonRules.StringRequired, _billCountryProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_billCountryProperty, 20));
+			ValidationRules.AddRule(CommonRules.StringRequired, _courierProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_courierProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _billToFirstNameProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_billToFirstNameProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _billToLastNameProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_billToLastNameProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _shipToFirstNameProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_shipToFirstNameProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _shipToLastNameProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_shipToLastNameProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _localeProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_localeProperty, 20));
 		}
 		
 		#endregion
@@ -380,6 +380,7 @@ namespace PetShop.Business
             }
 		}
 
+// NOTE: Many-To-Many support coming soon.
 		#endregion
 				
 		#region Root Factory Methods 

@@ -46,6 +46,7 @@ Public Partial Class LineItem
 			End If
 		End Using
         
+        FieldManager.UpdateChildren(Me)
 	End Sub
 	
 	<Transactional(TransactionalTypes.TransactionScope)> _
@@ -53,6 +54,7 @@ Public Partial Class LineItem
         Using reader As SafeDataReader = DataAccessLayer.Instance.LineItemUpdate(ReadProperty(_orderIdProperty), ReadProperty(_lineNumProperty), ReadProperty(_itemIdProperty), ReadProperty(_quantityProperty), ReadProperty(_unitPriceProperty))
         End Using
         
+        FieldManager.UpdateChildren(Me)
 	End Sub
 	
 	<Transactional(TransactionalTypes.TransactionScope)> _
@@ -113,6 +115,7 @@ Public Partial Class LineItem
 		LoadProperty(_quantityProperty, reader.GetInt32("Quantity"))
 		LoadProperty(_unitPriceProperty, reader.GetDecimal("UnitPrice"))
 
+		LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
 
         MarkOld()
     End Sub

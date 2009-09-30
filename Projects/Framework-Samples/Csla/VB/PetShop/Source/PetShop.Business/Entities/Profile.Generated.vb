@@ -39,10 +39,10 @@ End Sub
 	
         If AddBusinessValidationRules() Then Exit Sub
        
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "Username")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Username", 256))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "ApplicationName")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("ApplicationName", 256))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _usernameProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_usernameProperty, 256))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _applicationNameProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_applicationNameProperty, 256))
 	End Sub
 	
 	#End Region
@@ -124,17 +124,7 @@ End Sub
         End Set
 	End Property
 	
-	Private Shared ReadOnly _cartProperty As PropertyInfo(Of Cart) = RegisterProperty(Of Cart)(Function(p As Profile) p.Cart, Csla.RelationshipTypes.LazyLoad)
-	Public ReadOnly Property Cart() As Cart
-		Get
-            If Not (FieldManager.FieldExists(_cartProperty))
-                SetProperty(_cartProperty, Cart.GetCart(UniqueID))
-            End If
-            
-               Return GetProperty(_cartProperty) 
-        End Get
-    End Property
-
+' NOTE: Many-To-Many support coming soon.
 	Private Shared ReadOnly _accountsProperty As PropertyInfo(Of AccountList) = RegisterProperty(Of AccountList)(Function(p As Profile) p.Accounts, Csla.RelationshipTypes.LazyLoad)
 	Public ReadOnly Property Accounts() As AccountList 
 		Get
@@ -143,6 +133,17 @@ End Sub
 
             End If
             Return GetProperty(_accountsProperty) 
+        End Get
+    End Property
+    
+	Private Shared ReadOnly _cartsProperty As PropertyInfo(Of CartList) = RegisterProperty(Of CartList)(Function(p As Profile) p.Carts, Csla.RelationshipTypes.LazyLoad)
+	Public ReadOnly Property Carts() As CartList 
+		Get
+            If Not (FieldManager.FieldExists(_cartsProperty)) Then
+                SetProperty(_cartsProperty, CartList.GetByUniqueID(UniqueID))
+
+            End If
+            Return GetProperty(_cartsProperty) 
         End Get
     End Property
     

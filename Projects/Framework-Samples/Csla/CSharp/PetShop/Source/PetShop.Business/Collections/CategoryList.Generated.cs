@@ -27,7 +27,6 @@ namespace PetShop.Business
         private CategoryList()
 		{ 
 			AllowNew = true;
-            MarkAsChild();
 		}
         
         #endregion

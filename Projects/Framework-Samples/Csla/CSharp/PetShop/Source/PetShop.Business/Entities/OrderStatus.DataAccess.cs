@@ -52,6 +52,7 @@ namespace PetShop.Business
 			LoadProperty(_timestampProperty, reader.GetDateTime("Timestamp"));
 			LoadProperty(_statusProperty, reader.GetString("Status"));
 
+			LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"));
 
             MarkOld();
         }
@@ -67,6 +68,7 @@ namespace PetShop.Business
 				}
 			}
             
+            FieldManager.UpdateChildren(this);
 		}
 		
 		[Transactional(TransactionalTypes.TransactionScope)]
@@ -76,6 +78,7 @@ namespace PetShop.Business
             {
             }
             
+            FieldManager.UpdateChildren(this);
 		}
 		
 		[Transactional(TransactionalTypes.TransactionScope)]

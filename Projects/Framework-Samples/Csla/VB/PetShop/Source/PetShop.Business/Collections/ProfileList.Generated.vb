@@ -24,7 +24,6 @@ Public Partial Class ProfileList
     
     Private Sub New()
 		AllowNew = true
-        MarkAsChild()
 	End Sub
     
     #End Region
@@ -49,8 +48,8 @@ Public Partial Class ProfileList
 	
 	Protected Overrides Function AddNewCore() As Object
 		Dim item As Profile = PetShop.Business.Profile.NewProfile()
-                Me.Add(item)
-                Return item
+        Me.Add(item)
+        Return item
 	End Function
 	
 	#End Region

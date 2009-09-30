@@ -42,24 +42,24 @@ namespace PetShop.Business
             if(AddBusinessValidationRules())
                 return;
             
-			ValidationRules.AddRule(CommonRules.StringRequired, "Email");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Email", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "FirstName");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("FirstName", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "LastName");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("LastName", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "Address1");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Address1", 80));
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Address2", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "City");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("City", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "State");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("State", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "Zip");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Zip", 20));
-			ValidationRules.AddRule(CommonRules.StringRequired, "Country");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Country", 20));
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Phone", 20));
+			ValidationRules.AddRule(CommonRules.StringRequired, _emailProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_emailProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _firstNameProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_firstNameProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _lastNameProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_lastNameProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _address1Property);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_address1Property, 80));
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_address2Property, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _cityProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_cityProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _stateProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_stateProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _zipProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_zipProperty, 20));
+			ValidationRules.AddRule(CommonRules.StringRequired, _countryProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_countryProperty, 20));
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_phoneProperty, 20));
 		}
 		
 		#endregion
@@ -218,6 +218,7 @@ namespace PetShop.Business
             }
 		}
 
+// NOTE: Many-To-Many support coming soon.
 		#endregion
 				
 		#region Factory Methods 

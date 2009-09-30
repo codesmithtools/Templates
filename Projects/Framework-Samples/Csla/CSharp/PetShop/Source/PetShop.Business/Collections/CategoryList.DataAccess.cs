@@ -45,6 +45,11 @@ namespace PetShop.Business
             
             RaiseListChangedEvents = true;
 		}
+        
+	        protected override void DataPortal_Update()
+	        {
+	            Child_Update();
+	        }
        
 		#endregion
 	}

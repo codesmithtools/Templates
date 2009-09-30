@@ -39,8 +39,8 @@ End Sub
 	
         If AddBusinessValidationRules() Then Exit Sub
        
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "ItemId")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("ItemId", 10))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _itemIdProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_itemIdProperty, 10))
 	End Sub
 	
 	#End Region
@@ -115,6 +115,19 @@ End Sub
         End Set
 	End Property
 	
+	Private Shared ReadOnly _orderProperty As PropertyInfo(Of Order) = RegisterProperty(Of Order)(Function(p As LineItem) p.Order, Csla.RelationshipTypes.LazyLoad)
+	Public ReadOnly Property Order() As Order
+		Get
+        
+            If Not(FieldManager.FieldExists(_orderProperty))
+                SetProperty(_orderProperty, Order.GetOrder(OrderId))
+            End If
+            
+            Return GetProperty(_orderProperty) 
+        End Get
+    End Property
+    
+' NOTE: Many-To-Many support coming soon.
 	#End Region
 			
 	#Region "Root Factory Methods"

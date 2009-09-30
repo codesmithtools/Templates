@@ -39,24 +39,24 @@ End Sub
 	
         If AddBusinessValidationRules() Then Exit Sub
        
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "Email")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Email", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "FirstName")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("FirstName", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "LastName")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("LastName", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "Address1")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Address1", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Address2", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "City")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("City", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "State")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("State", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "Zip")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Zip", 20))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "Country")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Country", 20))
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Phone", 20))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _emailProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_emailProperty, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _firstNameProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_firstNameProperty, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _lastNameProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_lastNameProperty, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _address1Property)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_address1Property, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_address2Property, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _cityProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_cityProperty, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _stateProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_stateProperty, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _zipProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_zipProperty, 20))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _countryProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_countryProperty, 20))
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_phoneProperty, 20))
 	End Sub
 	
 	#End Region
@@ -227,6 +227,7 @@ End Sub
         End Get
     End Property
     
+' NOTE: Many-To-Many support coming soon.
 	#End Region
 			
 	#Region "Factory Methods"
