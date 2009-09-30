@@ -145,6 +145,20 @@ under the file that can be changed.</p>
 </ul>
 <h2>History</h2>
 <ul>
+    <li>Release 1.1.1
+	    <ul>
+            <li>Validation Rules now use the PropertyInfo overload instead of a string.</li>
+            <li>Added the DataPortal_Update() override to the EditableRootList and EditableChildList.</li>
+            <li>Fixed a bug where multiple QueryMethods could be generated.</li>
+            <li>Fixed a bug where the EditableRootList had MarkAsChild() in the constructor.</li>
+            <li>Fixed a bug where the DatabaseSchema was not being deep loaded properly.</li>
+            <li>Fixed a bug where multiple one to manys on the same FK would cause one to be added as a one to many and one to zero or one.</li>
+            <li>Removed support for many to many (Please contact support for more information, temp change).</li>
+            <li>Patch for ParameterizedSQL.cst which fixes the singleton (contrib: Jamie Clayton).</li>
+            <li>Updated the NameValueList Templates.</li>
+            <li>Removed the zip dependency.</li>
+        </ul>
+	</li>
 	<li>Release 1.1
 	    <ul>
             <li>Visual Basic support</li>

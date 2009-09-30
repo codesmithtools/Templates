@@ -55,9 +55,9 @@ End Sub
 <% 	For Each member As Member in Entity.MembersNoRowVersion %>
 <% If (member.SystemType.ToLower = "string" ) Then  %>
 <% If Not member.IsNullable Then %>
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "<%= member.PropertyName %>")
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, <%= member.PrivateMemberVariableName %>Property)
 <%  End If %>
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("<%= member.PropertyName %>", <%= member.Size %>))
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(<%= member.PrivateMemberVariableName %>Property, <%= member.Size %>))
 <%  End If 
 Next %>
 	End Sub
