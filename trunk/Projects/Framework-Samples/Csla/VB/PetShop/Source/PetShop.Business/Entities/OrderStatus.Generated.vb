@@ -39,8 +39,8 @@ End Sub
 	
         If AddBusinessValidationRules() Then Exit Sub
        
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "Status")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Status", 2))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _statusProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_statusProperty, 2))
 	End Sub
 	
 	#End Region
@@ -102,6 +102,18 @@ End Sub
         End Set
 	End Property
 	
+	Private Shared ReadOnly _orderProperty As PropertyInfo(Of Order) = RegisterProperty(Of Order)(Function(p As OrderStatus) p.Order, Csla.RelationshipTypes.LazyLoad)
+	Public ReadOnly Property Order() As Order
+		Get
+        
+            If Not(FieldManager.FieldExists(_orderProperty))
+                SetProperty(_orderProperty, Order.GetOrder(OrderId))
+            End If
+            
+            Return GetProperty(_orderProperty) 
+        End Get
+    End Property
+    
 	#End Region
 	
 	#Region "Factory Methods"

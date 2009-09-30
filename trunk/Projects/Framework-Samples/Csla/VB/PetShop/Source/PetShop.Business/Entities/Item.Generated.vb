@@ -39,11 +39,11 @@ End Sub
 	
         If AddBusinessValidationRules() Then Exit Sub
        
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Status", 2))
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Name", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Image", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "ProductId")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("ProductId", 10))
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_statusProperty, 2))
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_nameProperty, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_imageProperty, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _productIdProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_productIdProperty, 10))
 	End Sub
 	
 	#End Region
@@ -178,6 +178,7 @@ End Sub
         End Get
     End Property
     
+' NOTE: Many-To-Many support coming soon.
 	#End Region
 			
 	#Region "Root Factory Methods"

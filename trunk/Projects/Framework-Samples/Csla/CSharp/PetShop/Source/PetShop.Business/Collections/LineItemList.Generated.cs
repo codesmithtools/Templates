@@ -27,7 +27,6 @@ namespace PetShop.Business
         private LineItemList()
 		{ 
 			AllowNew = true;
-            MarkAsChild();
 		}
         
         #endregion
@@ -48,6 +47,12 @@ namespace PetShop.Business
         public static LineItemList GetAll()
         {
             return DataPortal.Fetch< LineItemList >(new LineItemCriteria());
+        }
+        
+        public static LineItemList GetByOrderId(int orderId)
+		{
+            return DataPortal.Fetch< LineItemList >(
+                new LineItemCriteria { OrderId = orderId });
         }
 		
 		#endregion

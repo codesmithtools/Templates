@@ -39,13 +39,13 @@ End Sub
 	
         If AddBusinessValidationRules() Then Exit Sub
        
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Name", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Descn", 255))
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Image", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "CategoryId")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("CategoryId", 10))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "ProductId")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("ProductId", 10))
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_nameProperty, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_descnProperty, 255))
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_imageProperty, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _categoryIdProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_categoryIdProperty, 10))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _productIdProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_productIdProperty, 10))
 	End Sub
 	
 	#End Region
@@ -130,6 +130,7 @@ End Sub
         End Get
     End Property
     
+' NOTE: Many-To-Many support coming soon.
 	Private Shared ReadOnly _itemsProperty As PropertyInfo(Of ItemList) = RegisterProperty(Of ItemList)(Function(p As Product) p.Items, Csla.RelationshipTypes.LazyLoad)
 	Public ReadOnly Property Items() As ItemList 
 		Get

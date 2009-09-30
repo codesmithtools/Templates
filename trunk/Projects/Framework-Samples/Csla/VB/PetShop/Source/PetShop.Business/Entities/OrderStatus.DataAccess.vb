@@ -45,6 +45,7 @@ Public Partial Class OrderStatus
 		LoadProperty(_timestampProperty, reader.GetDateTime("Timestamp"))
 		LoadProperty(_statusProperty, reader.GetString("Status"))
 
+		LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
 
         MarkOld()
     End Sub
@@ -57,6 +58,7 @@ Public Partial Class OrderStatus
 			End If
 		End Using
         
+        FieldManager.UpdateChildren(Me)
 	End Sub
 	
 	<Transactional(TransactionalTypes.TransactionScope)> _
@@ -64,6 +66,7 @@ Public Partial Class OrderStatus
         Using reader As SafeDataReader = DataAccessLayer.Instance.OrderStatusUpdate(ReadProperty(_orderIdProperty), ReadProperty(_lineNumProperty), ReadProperty(_timestampProperty), ReadProperty(_statusProperty))
         End Using
         
+        FieldManager.UpdateChildren(Me)
 	End Sub
 	
 	<Transactional(TransactionalTypes.TransactionScope)> _

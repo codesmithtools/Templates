@@ -42,10 +42,10 @@ namespace PetShop.Business
             if(AddBusinessValidationRules())
                 return;
                 
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Name", 80));
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Descn", 255));
-			ValidationRules.AddRule(CommonRules.StringRequired, "CategoryId");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("CategoryId", 10));
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_nameProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_descnProperty, 255));
+			ValidationRules.AddRule(CommonRules.StringRequired, _categoryIdProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_categoryIdProperty, 10));
 		}
 		
 		#endregion

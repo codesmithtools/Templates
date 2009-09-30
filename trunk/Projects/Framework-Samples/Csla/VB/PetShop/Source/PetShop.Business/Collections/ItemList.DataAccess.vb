@@ -38,6 +38,10 @@ Public Partial Class ItemList
         
         RaiseListChangedEvents = True
     End Sub
+    
+    Protected Overrides Sub DataPortal_Update()
+        Child_Update()
+    End Sub
 
 	#End Region
 

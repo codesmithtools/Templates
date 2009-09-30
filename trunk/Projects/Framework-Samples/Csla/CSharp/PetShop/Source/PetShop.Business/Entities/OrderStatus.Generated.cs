@@ -42,8 +42,8 @@ namespace PetShop.Business
             if(AddBusinessValidationRules())
                 return;
                 
-			ValidationRules.AddRule(CommonRules.StringRequired, "Status");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Status", 2));
+			ValidationRules.AddRule(CommonRules.StringRequired, _statusProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_statusProperty, 2));
 		}
 		
 		#endregion
@@ -101,6 +101,18 @@ namespace PetShop.Business
             }
 		}
 		
+		private static readonly PropertyInfo< Order > _orderProperty = RegisterProperty< Order >(p => p.Order, Csla.RelationshipTypes.LazyLoad);
+		public Order Order
+		{
+			get
+            {
+                if(!FieldManager.FieldExists(_orderProperty))
+                    SetProperty(_orderProperty, Order.GetOrder(OrderId));
+
+                   return GetProperty(_orderProperty); 
+            }
+		}
+
 		#endregion
 		
 		#region Factory Methods 

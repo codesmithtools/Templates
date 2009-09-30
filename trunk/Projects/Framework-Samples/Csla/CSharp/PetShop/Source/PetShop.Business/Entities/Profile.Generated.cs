@@ -42,10 +42,10 @@ namespace PetShop.Business
             if(AddBusinessValidationRules())
                 return;
             
-			ValidationRules.AddRule(CommonRules.StringRequired, "Username");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Username", 256));
-			ValidationRules.AddRule(CommonRules.StringRequired, "ApplicationName");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ApplicationName", 256));
+			ValidationRules.AddRule(CommonRules.StringRequired, _usernameProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_usernameProperty, 256));
+			ValidationRules.AddRule(CommonRules.StringRequired, _applicationNameProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_applicationNameProperty, 256));
 		}
 		
 		#endregion
@@ -120,18 +120,7 @@ namespace PetShop.Business
             }
 		}
 		
-		private static readonly PropertyInfo< Cart > _cartProperty = RegisterProperty< Cart >(p => p.Cart, Csla.RelationshipTypes.LazyLoad);
-		public Cart Cart
-		{
-			get
-            {
-                if(!FieldManager.FieldExists(_cartProperty))
-                    SetProperty(_cartProperty, Cart.GetCart(UniqueID));
-
-                   return GetProperty(_cartProperty); 
-            }
-		}
-
+// NOTE: Many-To-Many support coming soon.
 		private static readonly PropertyInfo< AccountList > _accountsProperty = RegisterProperty<AccountList>(p => p.Accounts, Csla.RelationshipTypes.LazyLoad);
 		public AccountList Accounts
 		{
@@ -141,6 +130,18 @@ namespace PetShop.Business
                     SetProperty(_accountsProperty, AccountList.GetByUniqueID(UniqueID));
 
                 return GetProperty(_accountsProperty); 
+            }
+		}
+
+		private static readonly PropertyInfo< CartList > _cartsProperty = RegisterProperty<CartList>(p => p.Carts, Csla.RelationshipTypes.LazyLoad);
+		public CartList Carts
+		{
+			get
+            {
+                if(!FieldManager.FieldExists(_cartsProperty))
+                    SetProperty(_cartsProperty, CartList.GetByUniqueID(UniqueID));
+
+                return GetProperty(_cartsProperty); 
             }
 		}
 

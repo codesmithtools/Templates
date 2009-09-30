@@ -42,8 +42,8 @@ namespace PetShop.Business
             if(AddBusinessValidationRules())
                 return;
             
-			ValidationRules.AddRule(CommonRules.StringRequired, "ItemId");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ItemId", 10));
+			ValidationRules.AddRule(CommonRules.StringRequired, _itemIdProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_itemIdProperty, 10));
 		}
 		
 		#endregion
@@ -113,6 +113,19 @@ namespace PetShop.Business
             }
 		}
 		
+		private static readonly PropertyInfo< Order > _orderProperty = RegisterProperty< Order >(p => p.Order, Csla.RelationshipTypes.LazyLoad);
+		public Order Order
+		{
+			get
+            {
+                if(!FieldManager.FieldExists(_orderProperty))
+                    SetProperty(_orderProperty, Order.GetOrder(OrderId));
+
+                   return GetProperty(_orderProperty); 
+            }
+		}
+
+// NOTE: Many-To-Many support coming soon.
 		#endregion
 				
 		#region Root Factory Methods 

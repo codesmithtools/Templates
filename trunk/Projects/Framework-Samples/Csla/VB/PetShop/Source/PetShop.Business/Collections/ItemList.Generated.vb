@@ -51,7 +51,7 @@ Public Partial Class ItemList
         Return DataPortal.FetchChild(Of ItemList)(criteria)
     End Function
     
-    Friend Shared Function GetBySupplier(ByVal suppId As System.Nullable(Of Integer)) As ItemList
+    Friend Shared Function GetBySupplier(ByVal suppId As Integer) As ItemList
         Dim criteria As New ItemCriteria()
         criteria.SuppId = suppId
         

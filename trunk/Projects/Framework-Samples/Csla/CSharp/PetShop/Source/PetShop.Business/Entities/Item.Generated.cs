@@ -42,11 +42,11 @@ namespace PetShop.Business
             if(AddBusinessValidationRules())
                 return;
             
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Status", 2));
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Name", 80));
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Image", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "ProductId");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ProductId", 10));
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_statusProperty, 2));
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_nameProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_imageProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _productIdProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_productIdProperty, 10));
 		}
 		
 		#endregion
@@ -175,6 +175,7 @@ namespace PetShop.Business
             }
 		}
 
+// NOTE: Many-To-Many support coming soon.
 		#endregion
 				
 		#region Root Factory Methods 

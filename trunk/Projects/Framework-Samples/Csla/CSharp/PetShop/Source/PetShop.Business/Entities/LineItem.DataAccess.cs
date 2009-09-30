@@ -55,6 +55,7 @@ namespace PetShop.Business
 				}
 			}
             
+            FieldManager.UpdateChildren(this);
 		}
 		
 		[Transactional(TransactionalTypes.TransactionScope)]
@@ -64,6 +65,7 @@ namespace PetShop.Business
             {
 			}
             
+            FieldManager.UpdateChildren(this);
 		}
 		
 		[Transactional(TransactionalTypes.TransactionScope)]
@@ -135,6 +137,7 @@ namespace PetShop.Business
 			LoadProperty(_quantityProperty, reader.GetInt32("Quantity"));
 			LoadProperty(_unitPriceProperty, reader.GetDecimal("UnitPrice"));
 
+			LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"));
 
             MarkOld();
         }

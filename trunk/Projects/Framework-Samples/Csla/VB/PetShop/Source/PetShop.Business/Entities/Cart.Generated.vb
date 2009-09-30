@@ -39,16 +39,16 @@ End Sub
 	
         If AddBusinessValidationRules() Then Exit Sub
        
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "ItemId")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("ItemId", 10))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "Name")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Name", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "Type")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("Type", 80))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "CategoryId")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("CategoryId", 10))
-		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, "ProductId")
-		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs("ProductId", 10))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _itemIdProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_itemIdProperty, 10))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _nameProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_nameProperty, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _typeProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_typeProperty, 80))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _categoryIdProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_categoryIdProperty, 10))
+		ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _productIdProperty)
+		ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_productIdProperty, 10))
 	End Sub
 	
 	#End Region
@@ -193,6 +193,7 @@ End Sub
         End Get
     End Property
     
+' NOTE: Many-To-Many support coming soon.
 	#End Region
 			
 	#Region "Factory Methods"

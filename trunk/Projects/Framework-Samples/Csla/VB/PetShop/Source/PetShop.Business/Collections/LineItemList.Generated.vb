@@ -24,7 +24,6 @@ Public Partial Class LineItemList
     
     Private Sub New()
 		AllowNew = true
-        MarkAsChild()
 	End Sub
     
     #End Region
@@ -42,6 +41,13 @@ Public Partial Class LineItemList
     Public Shared Function GetAll() As LineItemList
         Return DataPortal.Fetch(Of LineItemList)(new LineItemCriteria())
     End Function
+    
+    Public Shared Function GetByOrderId(ByVal orderId As Integer) As LineItemList
+        Dim criteria As New LineItemCriteria()
+        criteria.OrderId = orderId
+        
+        Return DataPortal.Fetch(Of LineItemList)(criteria)
+    End Function
 	
 	#End Region
 	
@@ -49,8 +55,8 @@ Public Partial Class LineItemList
 	
 	Protected Overrides Function AddNewCore() As Object
 		Dim item As LineItem = PetShop.Business.LineItem.NewLineItem()
-                Me.Add(item)
-                Return item
+        Me.Add(item)
+        Return item
 	End Function
 	
 	#End Region

@@ -42,16 +42,16 @@ namespace PetShop.Business
             if(AddBusinessValidationRules())
                 return;
             
-			ValidationRules.AddRule(CommonRules.StringRequired, "ItemId");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ItemId", 10));
-			ValidationRules.AddRule(CommonRules.StringRequired, "Name");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Name", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "Type");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("Type", 80));
-			ValidationRules.AddRule(CommonRules.StringRequired, "CategoryId");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("CategoryId", 10));
-			ValidationRules.AddRule(CommonRules.StringRequired, "ProductId");
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("ProductId", 10));
+			ValidationRules.AddRule(CommonRules.StringRequired, _itemIdProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_itemIdProperty, 10));
+			ValidationRules.AddRule(CommonRules.StringRequired, _nameProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_nameProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _typeProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_typeProperty, 80));
+			ValidationRules.AddRule(CommonRules.StringRequired, _categoryIdProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_categoryIdProperty, 10));
+			ValidationRules.AddRule(CommonRules.StringRequired, _productIdProperty);
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_productIdProperty, 10));
 		}
 		
 		#endregion
@@ -186,6 +186,7 @@ namespace PetShop.Business
             }
 		}
 
+// NOTE: Many-To-Many support coming soon.
 		#endregion
 				
 		#region Factory Methods 

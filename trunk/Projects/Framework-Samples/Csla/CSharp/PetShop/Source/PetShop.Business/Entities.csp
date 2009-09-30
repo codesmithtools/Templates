@@ -10,88 +10,88 @@
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Account</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Cart</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Inventory</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Item</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>LineItem</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Orders</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>OrderStatus</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Product</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Profiles</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Supplier</name>
-          </table>
-        </tableList>
+      <table>
+        <owner>dbo</owner>
+        <name>Account</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Cart</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Category</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Inventory</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Item</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>LineItem</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Orders</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>OrderStatus</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Product</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Profiles</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Supplier</name>
+      </table>
+    </tableList>
       </property>
       <property name="DynamicRoot" />
       <property name="EditableChild">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Account</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Cart</name>
-          </table>
-        </tableList>
+      <table>
+        <owner>dbo</owner>
+        <name>Account</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Cart</name>
+      </table>
+    </tableList>
       </property>
       <property name="EditableRoot">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Inventory</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>OrderStatus</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Supplier</name>
-          </table>
-        </tableList>
+      <table>
+        <owner>dbo</owner>
+        <name>Category</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Inventory</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>OrderStatus</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Supplier</name>
+      </table>
+    </tableList>
       </property>
       <property name="ReadOnlyChild" />
       <property name="ReadOnlyRoot" />
@@ -99,96 +99,95 @@
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Item</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>LineItem</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Orders</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Product</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Profiles</name>
-          </table>
-        </tableList>
+      <table>
+        <owner>dbo</owner>
+        <name>Item</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>LineItem</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Orders</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Product</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Profiles</name>
+      </table>
+    </tableList>
       </property>
       <property name="DynamicRootList">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Product</name>
-          </table>
-        </tableList>
+      <table>
+        <owner>dbo</owner>
+        <name>Product</name>
+      </table>
+    </tableList>
       </property>
       <property name="EditableRootList">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>LineItem</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Profiles</name>
-          </table>
-        </tableList>
+      <table>
+        <owner>dbo</owner>
+        <name>Category</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>LineItem</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Profiles</name>
+      </table>
+    </tableList>
       </property>
       <property name="EditableChildList">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Account</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Cart</name>
-          </table>
-          <table>
-            <owner>dbo</owner>
-            <name>Item</name>
-          </table>
-        </tableList>
+      <table>
+        <owner>dbo</owner>
+        <name>Account</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Cart</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Item</name>
+      </table>
+    </tableList>
       </property>
       <property name="ReadOnlyList" />
       <property name="ReadOnlyChildList" />
-      <property name="NameValueList" />
       <property name="SourceDatabase">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
       </property>
       <property name="CleanExpressions">
         <stringList>
-          <string>^\w+_</string>
-        </stringList>
+      <string>^\w+_</string>
+    </stringList>
       </property>
       <property name="IgnoreExpressions">
         <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-          <string>^dbo.AspNet</string>
-        </stringList>
+      <string>sysdiagrams$</string>
+      <string>^dbo.aspnet</string>
+      <string>^dbo.AspNet</string>
+    </stringList>
       </property>
       <property name="LaunchVisualStudio">True</property>
       <property name="Language">CSharp</property>
-      <property name="Location">\</property>
+      <property name="Location">.\</property>
       <property name="SolutionName">PetShop</property>
       <property name="BusinessProjectName">PetShop.Business</property>
       <property name="UseMemberVariables">False</property>
