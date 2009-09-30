@@ -58,9 +58,9 @@ namespace <%= BusinessProjectName %>
 <% 	foreach(Member member in Entity.MembersNoRowVersion){ %>
 <% if(member.SystemType == "string" ) { %>
 <% if(!member.IsNullable) { %>
-			ValidationRules.AddRule(CommonRules.StringRequired, "<%= member.PropertyName %>");
+			ValidationRules.AddRule(CommonRules.StringRequired, <%= member.PrivateMemberVariableName %>Property);
 <% } %>
-			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs("<%= member.PropertyName %>", <%= member.Size %>));
+			ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(<%= member.PrivateMemberVariableName %>Property, <%= member.Size %>));
 <% } } %>
 		}
 		
