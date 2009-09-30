@@ -151,21 +151,22 @@ Namespace <%= Database.ContextNamespace %>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension> _
         Public Function <%= MethodPrefix %><%= c.Member %>(queryable As IQueryable(Of <%= safeName %>), <%= paramName %> As <%= GetColumnType(c) %>, ParamArray additionalValues As <%= GetColumnType(c) %>()) As IQueryable(Of <%= safeName %>)
-            Dim <%= paramName %>List = New List(Of <%= GetColumnType(c) %>)()
+            Dim <%= c.Member %>List = New List(Of <%= GetColumnType(c) %>)()
+            <%= c.Member %>List.Add(<%= paramName %>)
         
             If additionalValues IsNot Nothing Then
-                <%= paramName %>List.AddRange(additionalValues)
+                <%= c.Member %>List.AddRange(additionalValues)
 <% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
             Else
-                <%= paramName %>List.Add(Nothing)
+                <%= c.Member %>List.Add(Nothing)
 <% End If %>
             End If
         
-            If <%= paramName %>List.Count = 1 Then
-                Return queryable.<%= MethodPrefix %><%= c.Member %>(<%= paramName %>List(0))
+            If <%= c.Member %>List.Count = 1 Then
+                Return queryable.<%= MethodPrefix %><%= c.Member %>(<%= c.Member %>List(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of <%= safeName %>, Boolean)("<%= c.Member %>", <%= paramName %>List)
+            Dim expression = DynamicExpression.BuildExpression(Of <%= safeName %>, Boolean)("<%= c.Member %>", <%= c.Member %>List)
             Return queryable.Where(expression)
         End Function
 <% End If ' if is  not key
