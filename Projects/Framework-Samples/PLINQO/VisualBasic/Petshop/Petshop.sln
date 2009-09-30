@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Petshop.Core", "Source\Petshop.Core\Petshop.Core.vbproj", "{03DB88E3-966C-4B39-8A96-E1C079E49879}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Petshop.Test", "Source\Petshop.Test\Petshop.Test.vbproj", "{B227BBF0-F759-4676-96D7-A0E8F2D624CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{03DB88E3-966C-4B39-8A96-E1C079E49879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03DB88E3-966C-4B39-8A96-E1C079E49879}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03DB88E3-966C-4B39-8A96-E1C079E49879}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03DB88E3-966C-4B39-8A96-E1C079E49879}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B227BBF0-F759-4676-96D7-A0E8F2D624CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B227BBF0-F759-4676-96D7-A0E8F2D624CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B227BBF0-F759-4676-96D7-A0E8F2D624CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B227BBF0-F759-4676-96D7-A0E8F2D624CB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
