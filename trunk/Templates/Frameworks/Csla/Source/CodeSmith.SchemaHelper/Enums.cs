@@ -9,6 +9,7 @@ namespace CodeSmith.SchemaHelper
     {
         [Description("C#")]
         CSharp = 0,
+        [Description("VisualBasic")]
         VB = 1
     }
 

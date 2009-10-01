@@ -66,8 +66,8 @@ namespace QuickStart
 
             if (ProjectBuilder.Language == LanguageEnum.VB)
             {
-                QuickStartHelper.FindAndReplace(cspPath, @"CSharp\\BusinessLayer\\", "VB\\BusinessLayer\\");
-                QuickStartHelper.FindAndReplace(cspPath, @"CSharp\\DataAccessLayer\\", "VB\\DataAccessLayer\\");
+                QuickStartHelper.FindAndReplace(cspPath, @"CSharp\\BusinessLayer\\", "VisualBasic\\BusinessLayer\\");
+                QuickStartHelper.FindAndReplace(cspPath, @"CSharp\\DataAccessLayer\\", "VisualBasic\\DataAccessLayer\\");
 
                 // Remove RootNamespace
                 //QuickStartHelper.FindAndReplace(projectPath.FilePath, @"<RootNamespace>.*</RootNamespace>", "<RootNamespace></RootNamespace>");
