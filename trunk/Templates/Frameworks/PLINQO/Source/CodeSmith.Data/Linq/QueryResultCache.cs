@@ -21,7 +21,6 @@ namespace CodeSmith.Data.Linq
         /// <param name="query">The query to be materialized.</param>
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query)
-            where T : class
         {
             return query.FromCache(new CacheSettings
             {
@@ -38,7 +37,6 @@ namespace CodeSmith.Data.Linq
         /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, int duration)
-            where T : class
         {
             return query.FromCache(new CacheSettings
             {
@@ -55,7 +53,6 @@ namespace CodeSmith.Data.Linq
         /// <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, TimeSpan slidingExpiration)
-            where T : class
         {
             return query.FromCache(new CacheSettings
             {
@@ -72,7 +69,6 @@ namespace CodeSmith.Data.Linq
         /// <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, DateTime absoluteExpiration)
-            where T : class
         {
             return query.FromCache(new CacheSettings
             {
@@ -89,7 +85,6 @@ namespace CodeSmith.Data.Linq
         /// <param name="settings">Cache settings object.</param>
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, CacheSettings settings)
-            where T : class
         {
             var key = GetKey(query);
 
@@ -140,7 +135,6 @@ namespace CodeSmith.Data.Linq
         /// <param name="query">The query to be materialized.</param>
         /// <returns>The first or default result of the query.</returns>
         public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query)
-            where T : class
         {
             return query
                 .Take(1)
@@ -158,7 +152,6 @@ namespace CodeSmith.Data.Linq
         /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
         /// <returns>The first or default result of the query.</returns>
         public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query, int duration)
-            where T : class
         {
             return query
                 .Take(1)
@@ -176,7 +169,6 @@ namespace CodeSmith.Data.Linq
         /// <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
         /// <returns>The first or default result of the query.</returns>
         public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query, TimeSpan slidingExpiration)
-            where T : class
         {
             return query
                 .Take(1)
@@ -194,7 +186,6 @@ namespace CodeSmith.Data.Linq
         /// <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
         /// <returns>The first or default result of the query.</returns>
         public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query, DateTime absoluteExpiration)
-            where T : class
         {
             return query
                 .Take(1)
@@ -212,7 +203,6 @@ namespace CodeSmith.Data.Linq
         /// <param name="settings">Cache settings object.</param>
         /// <returns>The first or default result of the query.</returns>
         public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query, CacheSettings settings)
-            where T : class
         {
             return query
                 .Take(1)
@@ -230,7 +220,6 @@ namespace CodeSmith.Data.Linq
         /// <typeparam name="T">The type of the data in the data source.</typeparam>
         /// <param name="query">The query to be cleared.</param>
         public static void ClearCache<T>(this IQueryable<T> query)
-            where T : class
         {
             HttpRuntime.Cache.Remove(query.GetKey());
         }
@@ -246,7 +235,6 @@ namespace CodeSmith.Data.Linq
         /// <param name="query">The query to build a key from.</param>
         /// <returns>A Md5 hash unique to the query.</returns>
         public static string GetKey<T>(this IQueryable<T> query)
-            where T : class
         {
             // locally evaluate as much of the query as possible
             Expression expression = Evaluator.PartialEval(
