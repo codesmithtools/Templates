@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Data.Linq;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
@@ -17,20 +18,22 @@ namespace Petshop.Data
         
         #region Metadata
         
-        private class Metadata
+        internal class Metadata
         {
             // Only Attributes in the class will be preserved.
-            
+
             public int OrderId { get; set; }
-            
+
             public int LineNum { get; set; }
-            
+
             public System.DateTime Timestamp { get; set; }
-            
+
             [Required]
             [StringLength(2)]
             public string Status { get; set; }
-            
+
+            public Orders Orders { get; set; }
+
         }
         
         #endregion
