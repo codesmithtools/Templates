@@ -47,7 +47,7 @@ namespace QuickStart
             
             if (ProjectBuilder.Language == LanguageEnum.VB)
             {
-                QuickStartHelper.FindAndReplace(cspPath, @"CSharp\\WebLayer\\", "VB\\WebLayer\\");
+                QuickStartHelper.FindAndReplace(cspPath, @"CSharp\\WebLayer\\", "VisualBasic\\WebLayer\\");
 
                 QuickStartHelper.FindAndReplace(
                     Path.Combine(projectPath.DirectoryPath, "My Project\\Settings.Designer.vb"),
