@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
-  <propertySets>
-    <propertySet name="PreserveRegionsSample.xml" output="PreserveRegionsSample.xml" template="PreserveRegionsSample.cst" mergeType="PreserveRegions" mergeInit="RegionNameRegex=^[ \t]*(?i:Custom);" />
-  </propertySets>
-</codeSmith>

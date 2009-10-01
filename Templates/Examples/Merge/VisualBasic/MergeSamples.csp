@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
-  <propertySets>
-    <propertySet name="InsertRegionSample.vb" output="InsertRegionSample.vb" template="InsertRegionSample.cst" mergeType="InsertRegion" mergeInit="RegionName=Sample Generated Region;" />
-    <propertySet name="PreserveRegionsSample.vb" output="PreserveRegionsSample.vb" template="PreserveRegionsSample.cst" mergeType="PreserveRegions" mergeInit="RegionNameRegex=^[ \t]*[ \s]*&quot;?(?i:Custom)&quot;?;" />
-  </propertySets>
-</codeSmith>
