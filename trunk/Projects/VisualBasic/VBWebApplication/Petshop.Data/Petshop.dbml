@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Database Name="Petshop" EntityNamespace="Petshop.Data" ContextNamespace="Petshop.Data" Class="PetshopDataContext" EntityBase="LinqEntityBase" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection ConnectionString="Data Source=RBRADSHAW-LT\SQLEXPRESS;Initial Catalog=Petshop;Integrated Security=True" SettingsObjectName="Properties.Settings" SettingsPropertyName="PetshopConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="ConnectionString" ConnectionString="Data Source=RBRADSHAW-LT\SQLEXPRESS;Initial Catalog=Petshop;Integrated Security=True" SettingsObjectName="Properties.Settings" SettingsPropertyName="PetshopConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Account" Member="Account">
     <Type Name="Account">
       <Column Name="AccountID" Storage="_accountID" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -38,7 +38,7 @@
       <Column Name="CategoryId" Storage="_categoryId" Type="System.String" DbType="varchar(10) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Storage="_name" Type="System.String" DbType="varchar(80)" CanBeNull="true" />
       <Column Name="Descn" Storage="_descn" Type="System.String" DbType="varchar(255)" CanBeNull="true" />
-      <Association Name="Category_Product" Member="ProductList" Storage="_productList" OtherKey="CategoryId" Type="Product" />
+      <Association Name="Category_Product" Member="ProductList" Storage="_productList" OtherKey="CategoryId" Type="Product" DeleteOnNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.Inventory" Member="Inventory">
@@ -58,7 +58,7 @@
       <Column Name="Name" Storage="_name" Type="System.String" DbType="varchar(80)" CanBeNull="true" />
       <Column Name="Image" Storage="_image" Type="System.String" DbType="varchar(80)" CanBeNull="true" />
       <Association Name="Product_Item" Member="Product" Storage="_product" ThisKey="ProductId" Type="Product" IsForeignKey="true" DeleteOnNull="true" />
-      <Association Name="Supplier_Item" Member="Supplier1" Storage="_supplier1" ThisKey="Supplier" Type="Supplier" IsForeignKey="true" />
+      <Association Name="Supplier_Item" Member="Supplier1" Storage="_supplier1" ThisKey="Supplier" Type="Supplier" IsForeignKey="true" DeleteOnNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.LineItem" Member="LineItem">
@@ -96,8 +96,8 @@
       <Column Name="ShipToLastName" Storage="_shipToLastName" Type="System.String" DbType="varchar(80) NOT NULL" CanBeNull="false" />
       <Column Name="AuthorizationNumber" Storage="_authorizationNumber" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
       <Column Name="Locale" Storage="_locale" Type="System.String" DbType="varchar(20) NOT NULL" CanBeNull="false" />
-      <Association Name="Orders_LineItem" Member="LineItemList" Storage="_lineItemList" OtherKey="OrderId" Type="LineItem" />
-      <Association Name="Orders_OrderStatus" Member="OrderStatusList" Storage="_orderStatusList" OtherKey="OrderId" Type="OrderStatus" />
+      <Association Name="Orders_LineItem" Member="LineItemList" Storage="_lineItemList" OtherKey="OrderId" Type="LineItem" DeleteOnNull="false" />
+      <Association Name="Orders_OrderStatus" Member="OrderStatusList" Storage="_orderStatusList" OtherKey="OrderId" Type="OrderStatus" DeleteOnNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.OrderStatus" Member="OrderStatus">
@@ -116,7 +116,7 @@
       <Column Name="Name" Storage="_name" Type="System.String" DbType="varchar(80)" CanBeNull="true" />
       <Column Name="Descn" Storage="_descn" Type="System.String" DbType="varchar(255)" CanBeNull="true" />
       <Column Name="Image" Storage="_image" Type="System.String" DbType="varchar(80)" CanBeNull="true" />
-      <Association Name="Product_Item" Member="ItemList" Storage="_itemList" OtherKey="ProductId" Type="Item" />
+      <Association Name="Product_Item" Member="ItemList" Storage="_itemList" OtherKey="ProductId" Type="Item" DeleteOnNull="false" />
       <Association Name="Category_Product" Member="Category" Storage="_category" ThisKey="CategoryId" Type="Category" IsForeignKey="true" DeleteOnNull="true" />
     </Type>
   </Table>
@@ -128,8 +128,8 @@
       <Column Name="IsAnonymous" Storage="_isAnonymous" Type="System.Boolean" DbType="bit" CanBeNull="true" />
       <Column Name="LastActivityDate" Storage="_lastActivityDate" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
       <Column Name="LastUpdatedDate" Storage="_lastUpdatedDate" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
-      <Association Name="Profiles_Account" Member="AccountList" Storage="_accountList" OtherKey="UniqueID" Type="Account" />
-      <Association Name="Profiles_Cart" Member="CartList" Storage="_cartList" OtherKey="UniqueID" Type="Cart" />
+      <Association Name="Profiles_Account" Member="AccountList" Storage="_accountList" OtherKey="UniqueID" Type="Account" DeleteOnNull="false" />
+      <Association Name="Profiles_Cart" Member="CartList" Storage="_cartList" OtherKey="UniqueID" Type="Cart" DeleteOnNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.Supplier" Member="Supplier">
@@ -143,7 +143,7 @@
       <Column Name="State" Storage="_state" Type="System.String" DbType="varchar(80)" CanBeNull="true" />
       <Column Name="Zip" Storage="_zip" Type="System.String" DbType="varchar(5)" CanBeNull="true" />
       <Column Name="Phone" Storage="_phone" Type="System.String" DbType="varchar(40)" CanBeNull="true" />
-      <Association Name="Supplier_Item" Member="ItemList" Storage="_itemList" OtherKey="Supplier" Type="Item" />
+      <Association Name="Supplier_Item" Member="ItemList" Storage="_itemList" OtherKey="Supplier" Type="Item" DeleteOnNull="false" />
     </Type>
   </Table>
 </Database>
