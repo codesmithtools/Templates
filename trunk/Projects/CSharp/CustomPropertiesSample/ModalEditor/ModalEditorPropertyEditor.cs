@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-// Copyright (c) 2002-2008 CodeSmith Tools, LLC.  All rights reserved.
+// Copyright (c) 2002-2009 CodeSmith Tools, LLC.  All rights reserved.
 // 
 // The terms of use for this software are contained in the file
 // named sourcelicense.txt, which can be found in the root of this distribution.
@@ -19,12 +19,12 @@ using System.Drawing.Design;
 
 namespace CodeSmith.Samples
 {
-	public class DropDownEditorPropertyEditor : UITypeEditor
+	public class ModalEditorPropertyEditor : UITypeEditor
 	{
-		private IWindowsFormsEditorService editorService = null;
-		private DropDownEditorPropertyEditorControl _dropDownEditorPropertyEditorControl = null;
+		private IWindowsFormsEditorService editorService;
+		private ModalEditorPropertyEditorForm _modalEditorPropertyEditorForm;
 		
-		public DropDownEditorPropertyEditor(): base()
+		public ModalEditorPropertyEditor(): base()
 		{
 		}
 		
@@ -35,11 +35,17 @@ namespace CodeSmith.Samples
 				editorService = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
 				if (editorService != null) 
 				{
-					if (_dropDownEditorPropertyEditorControl == null) _dropDownEditorPropertyEditorControl = new DropDownEditorPropertyEditorControl();
-					_dropDownEditorPropertyEditorControl.Start(editorService, value);
-					editorService.DropDownControl(_dropDownEditorPropertyEditorControl);
-					
-					return new DropDownEditorProperty(_dropDownEditorPropertyEditorControl.SampleStringTextBox.Text, _dropDownEditorPropertyEditorControl.SampleBooleanCheckBox.Checked);
+					if (_modalEditorPropertyEditorForm == null) _modalEditorPropertyEditorForm = new ModalEditorPropertyEditorForm();
+					_modalEditorPropertyEditorForm.Start(editorService, value);
+					editorService.ShowDialog(_modalEditorPropertyEditorForm);
+					if (_modalEditorPropertyEditorForm.DialogResult == DialogResult.OK)
+					{
+						value = new ModalEditorProperty(_modalEditorPropertyEditorForm.SampleStringTextBox.Text, _modalEditorPropertyEditorForm.SampleBooleanCheckBox.Checked);
+					}
+					else
+					{
+						value = null;
+					}
 				}
 			}
 			
@@ -48,7 +54,7 @@ namespace CodeSmith.Samples
 		
 		public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context) 
 		{
-			return UITypeEditorEditStyle.DropDown;
+			return UITypeEditorEditStyle.Modal;
 		}
 	}
 }

@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //
-// Copyright (c) 2002-2008 CodeSmith Tools, LLC.  All rights reserved.
+// Copyright (c) 2002-2009 CodeSmith Tools, LLC.  All rights reserved.
 // 
 // The terms of use for this software are contained in the file
 // named sourcelicense.txt, which can be found in the root of this distribution.
@@ -17,42 +17,31 @@ using System.ComponentModel;
 
 namespace CodeSmith.Samples
 {
-	[PropertySerializer(typeof(CodeSmith.Samples.DropDownEditorPropertySerializer))]
-	[Editor(typeof(CodeSmith.Samples.DropDownEditorPropertyEditor), typeof(System.Drawing.Design.UITypeEditor))]
+	[PropertySerializer(typeof(DropDownEditorPropertySerializer))]
+	[Editor(typeof(DropDownEditorPropertyEditor), typeof(System.Drawing.Design.UITypeEditor))]
 	public class DropDownEditorProperty
 	{
-		private string _sampleString;
-		private bool _sampleBoolean;
-		
-		public DropDownEditorProperty()
+	    public DropDownEditorProperty()
 		{
 		}
 
 		public DropDownEditorProperty(string sampleString, bool sampleBoolean)
 		{
-			_sampleString = sampleString;
-			_sampleBoolean = sampleBoolean;
+			SampleString = sampleString;
+			SampleBoolean = sampleBoolean;
 		}
-		
-		public string SampleString
-		{
-			get {return _sampleString;}
-			set {_sampleString = value;}
-		}
-		
-		public bool SampleBoolean
-		{
-			get {return _sampleBoolean;}
-			set {_sampleBoolean = value;}
-		}
-		
-		/// <summary>
+
+	    public string SampleString { get; set; }
+
+	    public bool SampleBoolean { get; set; }
+
+	    /// <summary>
 		/// The value that we return here will be shown in the property grid.
 		/// </summary>
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return SampleString + ": " + SampleBoolean;
+			return string.Format("{0}: {1}", SampleString, SampleBoolean);
 		}
 	}
 }
