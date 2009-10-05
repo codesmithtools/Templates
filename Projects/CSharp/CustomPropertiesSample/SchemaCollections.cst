@@ -1,0 +1,34 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeTemplate" CompilerVersion="v3.5" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.Samples" %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.Samples" %>
+<%@ Import Namespace="SchemaExplorer" %>
+
+Tables in the collection: <%= Collection.ToString() %>
+
+Items:
+<% foreach (TableConfiguration item in Collection) { %>
+	<%= item.ToString() %><%= item.SourceView != null ? " (" + item.SourceView.ToString() + ")" : "" %>
+<% } %>
+
+<script runat="template">
+
+private TableConfigurationCollection _collection;
+
+[DefaultValue(null)]
+[Description("Collection of table / view pair")]
+public TableConfigurationCollection Collection {
+	get { 
+		if (_collection == null) {
+			_collection = new TableConfigurationCollection();
+		}
+		return _collection;
+	}
+	set { _collection = value; }
+}
+
+</script>
