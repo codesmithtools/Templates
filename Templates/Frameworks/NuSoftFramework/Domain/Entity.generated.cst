@@ -1,7 +1,7 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" Description="Generates a single entity business class." Debug="True" %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="Database table that this entity should be based on." %>
 <%@ Property Name="TablePrefixes" Type="String" Default="" Optional="True" Category="Context" Description="The table prefix to be cut from the class name" %>
-<%@ Property Name="Namespace" Type="String" Default="Kinetic" Optional="False" Category="Context" Description="The namespace for the business objects" %>
+<%@ Property Name="Namespace" Type="String" Default="Domain" Optional="False" Category="Context" Description="The namespace for the business objects" %>
 <%@ Property Name="DomainNamespace" Type="String" Default="Business" Optional="False" Category="1. Setup" Description="The namespace to be added to the root namespace for the business objects" %>
 <%@ Property Name="SQLType" Type="SqlType" Default="StoredProcedures" Optional="False" Category="Context" Description="Use stored procedures or generated SQL" %>
 <%@ Property Name="IsolationLevel" Type="TransactionIsolationLevelEnum" Default="ReadCommitted" Category="Options" Description="Isolation level to use in generated procedures." %>
@@ -67,8 +67,8 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			{
 				if (this.<%= GetMemberVariableName(column) %> != value) 
 				{
-					this.<%= GetMemberVariableName(column) %> = value;
 					this.IsDirty = true;	
+					this.<%= GetMemberVariableName(column) %> = value;
 					OnPropertyChanged("<%= GetPropertyName(column) %>");
 					<% if(column.IsForeignKeyMember) {
 						foreach(SchemaExplorer.TableKeySchema foreignKey in SourceTable.ForeignKeys) {
@@ -424,7 +424,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			}
 		}%>)
 		{
-            using (IDataHelper helper = ServiceLocator.GetHelper())
+            using (SqlHelper helper = new SqlHelper())
             {
                 try
                 {
@@ -501,7 +501,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			{
 				%>, <%
 			}
-			%>IDataHelper @helper)<%
+			%>SqlHelper @helper)<%
 		} else {
 			isFirstTimeInLoop = true;
 			foreach (ColumnSchema column in GetValidColumns(SourceTable.NonPrimaryKeyColumns)) {  
@@ -515,7 +515,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			{
 				%>, <%
 			}
-			%>IDataHelper @helper)<%
+			%>SqlHelper @helper)<%
 		}%>
 		{
 			<% if(SQLType == SqlType.StoredProcedures) { %>
@@ -524,15 +524,15 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			string commandText = @"<%= "\r\n" %><%= GetInsertSql(SourceTable) %>";
 			<% } %>
 			
-			System.Collections.Generic.List<IDataParameter> parameters = new System.Collections.Generic.List<IDataParameter>();
+			System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
             <%
 			if((bool)SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties["CS_IsIdentity"].Value == false) {
 				foreach (ColumnSchema column in GetValidColumns(SourceTable.PrimaryKey.MemberColumns)) { %>
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= column.Name %>", <%= GetParameterValue(GetCamelCaseName(GetPropertyName(column)), column) %>));
+			parameters.Add(new SqlParameter("@<%= column.Name %>", <%= GetParameterValue(GetCamelCaseName(GetPropertyName(column)), column) %>));
 			<% } 
 			}
 			foreach (ColumnSchema column in GetValidColumns(SourceTable.NonPrimaryKeyColumns)) { %>
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= column.Name %>", <%= GetParameterValue(GetCamelCaseName(GetPropertyName(column)), column) %>));
+			parameters.Add(new SqlParameter("@<%= column.Name %>", <%= GetParameterValue(GetCamelCaseName(GetPropertyName(column)), column) %>));
 			<% } %>
 			
 			@helper.Execute(commandText, <%= GetCommandType() %>, parameters);
@@ -556,7 +556,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			%><%= GetCSharpVariableType(column) %> @<%= GetCamelCaseName(GetPropertyName(column)) %><%
 		} %>)
 		{
-			using (IDataHelper helper = ServiceLocator.GetHelper()) 
+			using (SqlHelper helper = new SqlHelper()) 
 			{
 				try
 				{
@@ -608,7 +608,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		{
 			%>, <%
 		}
-		%>IDataHelper @helper)
+		%>SqlHelper @helper)
 		{
 			<% if(SQLType == SqlType.StoredProcedures) { %>
 			string commandText = "<%= GetClassName(SourceTable) %>Update";
@@ -616,10 +616,10 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			string commandText = @"<%= "\r\n" %><%= GetUpdateSql(SourceTable) %>";
 			<% } %>
 			
-			System.Collections.Generic.List<IDataParameter> parameters = new System.Collections.Generic.List<IDataParameter>();
+			System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
             <%
 			foreach (ColumnSchema column in GetValidColumns(SourceTable)) { %>
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= column.Name %>", <%= GetParameterValue(GetCamelCaseName(GetPropertyName(column)), column) %>));
+			parameters.Add(new SqlParameter("@<%= column.Name %>", <%= GetParameterValue(GetCamelCaseName(GetPropertyName(column)), column) %>));
 			<% } %>
 			
 			@helper.Execute(commandText, <%= GetCommandType() %>, parameters);
@@ -643,7 +643,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			%><%= GetCSharpVariableType(column) %> @<%= GetCamelCaseName(GetPropertyName(column)) %><%
 		} %>)
 		{
-			using (IDataHelper helper = ServiceLocator.GetHelper()) 
+			using (SqlHelper helper = new SqlHelper()) 
 			{
 				try 
 				{
@@ -694,7 +694,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		{
 			%>, <%
 		}
-		%>IDataHelper @helper)
+		%>SqlHelper @helper)
 		{
 			<% if(SQLType == SqlType.StoredProcedures) { %>
 			string commandText = "<%= GetClassName(SourceTable) %>Delete";
@@ -702,10 +702,10 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			string commandText = @"<%= "\r\n" %><%= GetDeleteSql(SourceTable) %>";
 			<% } %>
 			
-			System.Collections.Generic.List<IDataParameter> parameters = new System.Collections.Generic.List<IDataParameter>();
+			System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
             <%
 			foreach (ColumnSchema column in GetValidColumns(SourceTable.PrimaryKey.MemberColumns)) { %>
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= column.Name %>", @<%= GetCamelCaseName(GetPropertyName(column)) %>));
+			parameters.Add(new SqlParameter("@<%= column.Name %>", @<%= GetCamelCaseName(GetPropertyName(column)) %>));
 			<% } %>
 		
 			@helper.Execute(commandText, <%= GetCommandType() %>, parameters);
@@ -743,10 +743,10 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			string commandText = @"<%= "\r\n" %><%= GetGetSql(SourceTable, SQLType) %> " + <%= GetClassName(SourceTable) %>.DefaultSortOrder;
 			<% } %>
 			
-			System.Collections.Generic.List<IDataParameter> parameters = new System.Collections.Generic.List<IDataParameter>();
+			System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
             <%
 			foreach (ColumnSchema column in GetValidColumns(SourceTable.PrimaryKey.MemberColumns)) { %>
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= column.Name %>", <%= GetCamelCaseName(GetPropertyName(column)) %>));
+			parameters.Add(new SqlParameter("@<%= column.Name %>", <%= GetCamelCaseName(GetPropertyName(column)) %>));
 			<% } %>
 			
 			return GetOne<<%= GetClassName(SourceTable) %>>(commandText, parameters);
@@ -765,7 +765,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			string commandText = @"<%= "\r\n" %><%= GetGetAllSql(SourceTable, SQLType) %> " + <%= GetClassName(SourceTable) %>.DefaultSortOrder;
 			<% } %>
 		
-			System.Collections.Generic.List<IDataParameter> parameters = new System.Collections.Generic.List<IDataParameter>();
+			System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
 			
 			return GetList<<%= GetClassName(SourceTable) %>>(commandText, parameters);
 		}
@@ -780,7 +780,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
         /// <returns>The retrieved collection of <%= GetClassName(SourceTable) %> objects.</returns>
         protected static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(string orderBy, int startRowIndex, int pageSize, out long totalRows)
         {
-            return GetList<<%= GetClassName(SourceTable) %>>(SelectFieldList, "FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>]", new List<IDataParameter>(),orderBy,  startRowIndex, pageSize, out totalRows);
+            return GetList<<%= GetClassName(SourceTable) %>>(SelectFieldList, "FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] with (nolock)", new List<SqlParameter>(),orderBy,  startRowIndex, pageSize, out totalRows);
         }
 
 		/// <summary>
@@ -792,7 +792,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
         /// <returns>The retrieved collection of <%= GetClassName(SourceTable) %> objects.</returns>
         public static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(int startRowIndex, int pageSize, out long totalRows)
         {
-            return GetList<<%= GetClassName(SourceTable) %>>(SelectFieldList, "FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>]", new List<IDataParameter>(), null,  startRowIndex, pageSize, out totalRows);
+            return GetList<<%= GetClassName(SourceTable) %>>(SelectFieldList, "FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] with (nolock)", new List<SqlParameter>(), null,  startRowIndex, pageSize, out totalRows);
         }
 		
 		/// <summary>
@@ -804,7 +804,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		/// <returns>The retrieved collection of <%= GetClassName(SourceTable) %> objects.</returns>
 		protected static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(string where, SqlParameter parameter, string orderBy)
 		{
-			System.Collections.Generic.List<IDataParameter> parameters = new System.Collections.Generic.List<IDataParameter>();
+			System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
 			
 			parameters.Add(parameter);
 						
@@ -819,7 +819,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		/// <returns>The retrieved collection of <%= GetClassName(SourceTable) %> objects.</returns>
 		protected static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(string where, SqlParameter parameter)
 		{
-			System.Collections.Generic.List<IDataParameter> parameters = new System.Collections.Generic.List<IDataParameter>();
+			System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
 			
 			parameters.Add(parameter);
 						
@@ -835,7 +835,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		/// <returns>The retrieved collection of <%= GetClassName(SourceTable) %> objects.</returns>
 		protected static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(string prefix, string where, SqlParameter parameter)
 		{
-			System.Collections.Generic.List<IDataParameter> parameters = new System.Collections.Generic.List<IDataParameter>();
+			System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
 			
 			parameters.Add(parameter);
 						
@@ -849,7 +849,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		/// <param name="where">The where clause to use for the query. Should be parameterized and start with "where"</param>
 		/// <param name="parameters">The parameters that are listed in the where clause</param>
 		/// <returns>The retrieved collection of <%= GetClassName(SourceTable) %> objects.</returns>
-		protected static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(string where, System.Collections.Generic.List<IDataParameter> parameters)
+		protected static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(string where, System.Collections.Generic.List<SqlParameter> parameters)
 		{
 			return Get<%= GetPluralClassName(SourceTable) %>(string.Empty, where, parameters, <%= GetClassName(SourceTable) %>.DefaultSortOrder);
 		}
@@ -861,7 +861,7 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		/// <param name="where">The where clause to use for the query. Should be parameterized and start with "where"</param>
 		/// <param name="parameters">The parameters that are listed in the where clause</param>
 		/// <returns>The retrieved collection of <%= GetClassName(SourceTable) %> objects.</returns>
-		protected static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(string prefix, string where, System.Collections.Generic.List<IDataParameter> parameters)
+		protected static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(string prefix, string where, System.Collections.Generic.List<SqlParameter> parameters)
 		{
 			return Get<%= GetPluralClassName(SourceTable) %>(prefix, where, parameters, <%= GetClassName(SourceTable) %>.DefaultSortOrder);
 		}
@@ -874,11 +874,11 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		/// <param name="parameters">The parameters that are listed in the where clause</param>
 		/// <param name="orderBy">the order by clause. Shoudl start with "order by"</param>
 		/// <returns>The retrieved collection of <%= GetClassName(SourceTable) %> objects.</returns>
-		protected static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(string prefix, string where, System.Collections.Generic.List<IDataParameter> parameters, string orderBy)
+		protected static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(string prefix, string where, System.Collections.Generic.List<SqlParameter> parameters, string orderBy)
 		{
 			string commandText = @"SELECT " + prefix + "<%= GetGetAllSql(SourceTable, false, SqlType.Dynamic) %> " + where + " " + orderBy;			
 			
-			using (IDataHelper helper = ServiceLocator.GetHelper()) 
+			using (SqlHelper helper = new SqlHelper()) 
 			{
 				using (IDataReader reader = helper.ExecuteDataReader(commandText, CommandType.Text, parameters))
 				{
@@ -897,9 +897,9 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		/// <param name="pageSize">PageSize</param>
 		/// <param name="totalRows">Total rows</param>
         /// <returns>The retrieved collection of Address objects.</returns>
-        protected static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(string orderBy, string where, System.Collections.Generic.List<IDataParameter> parameters, int startRowIndex, int pageSize, out long totalRows)
+        protected static EntityList<<%= GetClassName(SourceTable) %>> Get<%= GetPluralClassName(SourceTable) %>(string orderBy, string where, System.Collections.Generic.List<SqlParameter> parameters, int startRowIndex, int pageSize, out long totalRows)
         {
-            return GetList<<%= GetClassName(SourceTable) %>>(SelectFieldList, "FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] " + where, parameters, orderBy, startRowIndex, pageSize, out totalRows);			
+            return GetList<<%= GetClassName(SourceTable) %>>(SelectFieldList, "FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] with (nolock) " + where, parameters, orderBy, startRowIndex, pageSize, out totalRows);			
 		}
 		
 		<%
@@ -928,9 +928,9 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			string commandText = @"<%= "\r\n" %><%= GetGetByFKSql(SourceTable, SourceTable.ForeignKeys[i], SQLType) %> " + <%= GetClassName(SourceTable) %>.DefaultSortOrder;
 				<% } %>
 			
-			List<IDataParameter> parameters = new List<IDataParameter>();
+			List<SqlParameter> parameters = new List<SqlParameter>();
 	            <% for (int j = 0; j < SourceTable.ForeignKeys[i].ForeignKeyMemberColumns.Count; j++) { %>
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", @<%= GetCamelCaseName(GetClassNameFromForeignKey(SourceTable.ForeignKeys[i])) %>.<%= GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j]) %>));
+			parameters.Add(new SqlParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", @<%= GetCamelCaseName(GetClassNameFromForeignKey(SourceTable.ForeignKeys[i])) %>.<%= GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j]) %>));
 				<% } %>
 			
 				<% if(isOneToOne) { %>
@@ -955,10 +955,10 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		{
 			string commandText = @"<%= "\r\n" %><%= GetGetByFKSql(SourceTable, SourceTable.ForeignKeys[i], SqlType.Dynamic, false) %> ";
 			
-			List<IDataParameter> parameters = new List<IDataParameter>();
+			List<SqlParameter> parameters = new List<SqlParameter>();
 	            <% for (int j = 0; j < SourceTable.ForeignKeys[i].ForeignKeyMemberColumns.Count; j++) { %>
 				
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", @<%= GetCamelCaseName(GetClassNameFromForeignKey(SourceTable.ForeignKeys[i])) %>.<%= GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j]) %>));
+			parameters.Add(new SqlParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", @<%= GetCamelCaseName(GetClassNameFromForeignKey(SourceTable.ForeignKeys[i])) %>.<%= GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j]) %>));
 				<% } %>
 			
 			return GetList<<%= GetClassName(SourceTable) %>>(SelectFieldList, commandText, parameters, orderBy, startRowIndex, pageSize, out totalRows);
@@ -985,9 +985,9 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		{
 			string commandText = @"<%= "\r\n" %><%= GetGetByFKSql(SourceTable, SourceTable.ForeignKeys[i], SqlType.Dynamic, false) %> ";
 			
-			List<IDataParameter> parameters = new List<IDataParameter>();
+			List<SqlParameter> parameters = new List<SqlParameter>();
 	            <% for (int j = 0; j < SourceTable.ForeignKeys[i].ForeignKeyMemberColumns.Count; j++) { %>
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", @<%= GetCamelCaseName(GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j])) %>));
+			parameters.Add(new SqlParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", @<%= GetCamelCaseName(GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j])) %>));
 				<% } %>
 			
 			return GetList<<%= GetClassName(SourceTable) %>>(SelectFieldList, commandText, parameters, orderBy, startRowIndex, pageSize, out totalRows);
@@ -1006,10 +1006,10 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		{
 			string commandText = @"<%= "\r\n" %><%= GetGetByFKSql(SourceTable, SourceTable.ForeignKeys[i], SqlType.Dynamic, false) %> ";
 			
-			List<IDataParameter> parameters = new List<IDataParameter>();
+			List<SqlParameter> parameters = new List<SqlParameter>();
 	            <% for (int j = 0; j < SourceTable.ForeignKeys[i].ForeignKeyMemberColumns.Count; j++) { %>
 				
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", @<%= GetCamelCaseName(GetClassNameFromForeignKey(SourceTable.ForeignKeys[i])) %>.<%= GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j]) %>));
+			parameters.Add(new SqlParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", @<%= GetCamelCaseName(GetClassNameFromForeignKey(SourceTable.ForeignKeys[i])) %>.<%= GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j]) %>));
 				<% } %>
 			
 			return GetList<<%= GetClassName(SourceTable) %>>(SelectFieldList, commandText, parameters, null, startRowIndex, pageSize, out totalRows);
@@ -1035,9 +1035,9 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 		{
 			string commandText = @"<%= "\r\n" %><%= GetGetByFKSql(SourceTable, SourceTable.ForeignKeys[i], SqlType.Dynamic, false) %> ";
 			
-			List<IDataParameter> parameters = new List<IDataParameter>();
+			List<SqlParameter> parameters = new List<SqlParameter>();
 	            <% for (int j = 0; j < SourceTable.ForeignKeys[i].ForeignKeyMemberColumns.Count; j++) { %>
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", @<%= GetCamelCaseName(GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j])) %>));
+			parameters.Add(new SqlParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", @<%= GetCamelCaseName(GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j])) %>));
 				<% } %>
 			
 			return GetList<<%= GetClassName(SourceTable) %>>(SelectFieldList, commandText, parameters, null, startRowIndex, pageSize, out totalRows);
@@ -1083,9 +1083,9 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			string commandText = @"<%= "\r\n" %><%= GetGetByFKSql(SourceTable, SourceTable.ForeignKeys[i], SQLType) %> " + <%= GetClassName(SourceTable) %>.DefaultSortOrder;
 				<% } %>
 			
-			List<IDataParameter> parameters = new List<IDataParameter>();
+			List<SqlParameter> parameters = new List<SqlParameter>();
 	            <% for (int j = 0; j < SourceTable.ForeignKeys[i].ForeignKeyMemberColumns.Count; j++) { %>
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", @<%= GetCamelCaseName(GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j])) %>));
+			parameters.Add(new SqlParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", @<%= GetCamelCaseName(GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j])) %>));
 				<% } %>
 			
 				<% if(isOneToOne) { %>
@@ -1127,12 +1127,12 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			string commandText = @"<%= "\r\n" %><%= GetDeleteByFKSql(SourceTable, SourceTable.ForeignKeys[i]) %>";
 				<% } %>
 			
-			System.Collections.Generic.List<IDataParameter> parameters = new System.Collections.Generic.List<IDataParameter>();
+			System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
     	        <% for (int j = 0; j < SourceTable.ForeignKeys[i].ForeignKeyMemberColumns.Count; j++) { %>
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", <%= GetCamelCaseName(GetClassName(SourceTable.ForeignKeys[i].PrimaryKeyTable)) %>.<%= GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j]) %>));
+			parameters.Add(new SqlParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", <%= GetCamelCaseName(GetClassName(SourceTable.ForeignKeys[i].PrimaryKeyTable)) %>.<%= GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j]) %>));
 				<% } %>
 			
-			using (IDataHelper helper = ServiceLocator.GetHelper()) 
+			using (SqlHelper helper = new SqlHelper()) 
 			{
 				helper.Execute(commandText, <%= GetCommandType() %>, parameters);
 			}
@@ -1158,12 +1158,12 @@ namespace <%= Namespace %>.<%= DomainNamespace %>
 			string commandText = @"<%= "\r\n" %><%= GetDeleteByFKSql(SourceTable, SourceTable.ForeignKeys[i]) %>";
 				<% } %>
 			
-			System.Collections.Generic.List<IDataParameter> parameters = new System.Collections.Generic.List<IDataParameter>();
+			System.Collections.Generic.List<SqlParameter> parameters = new System.Collections.Generic.List<SqlParameter>();
             	<% for (int j = 0; j < SourceTable.ForeignKeys[i].ForeignKeyMemberColumns.Count; j++) { %>
-			parameters.Add(ServiceLocator.GetDataParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", <%= GetCamelCaseName(GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j])) %>));
+			parameters.Add(new SqlParameter("@<%= SourceTable.ForeignKeys[i].ForeignKeyMemberColumns[j].Name %>", <%= GetCamelCaseName(GetPropertyName(SourceTable.ForeignKeys[i].PrimaryKeyMemberColumns[j])) %>));
 				<% } %>
 			
-			using (IDataHelper helper = ServiceLocator.GetHelper()) 
+			using (SqlHelper helper = new SqlHelper()) 
 			{
 				helper.Execute(commandText, <%= GetCommandType() %>, parameters);
 			}

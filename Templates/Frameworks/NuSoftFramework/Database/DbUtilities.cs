@@ -21,7 +21,7 @@ public string GetGetSql(TableSchema SourceTable, SqlType sqlType)
 	{
 		statement += GetTableColumnList(GetValidColumns(SourceTable.Columns)) + " \r\n";
 	}
-	statement += "FROM [" + SourceTable.Owner + "].[" + SourceTable.Name + "] \r\n";
+	statement += "FROM [" + SourceTable.Owner + "].[" + SourceTable.Name + "] with (nolock) \r\n";
 	statement += "WHERE \r\n";
 	statement += GetWhereClauseForColumnsEqualsSqlParameterList(SourceTable.PrimaryKey.MemberColumns);
 	return statement;
@@ -54,7 +54,7 @@ public string GetGetAllSql(TableSchema SourceTable, bool IncludeSelectStatement,
 	{
 		statement += GetTableColumnList(GetValidColumns(SourceTable.Columns)) + " \r\n";
 	}
-	statement += "FROM [" + SourceTable.Owner + "].[" + SourceTable.Name + "]";
+	statement += "FROM [" + SourceTable.Owner + "].[" + SourceTable.Name + "] with (nolock)";
 	return statement;
 }
 
@@ -88,7 +88,7 @@ public string GetGetByFKSql(TableSchema SourceTable, TableKeySchema FKTable, Sql
         }
 
 	statement += "FROM \r\n";
-	statement += "\t[" + SourceTable.Owner + "].[" + SourceTable.Name + "] \r\n";
+	statement += "\t[" + SourceTable.Owner + "].[" + SourceTable.Name + "] with (nolock) \r\n";
 	statement += "WHERE \r\n";
 	statement += GetWhereClauseForColumnsEqualsSqlParameterList(FKTable.ForeignKeyMemberColumns);
 	return statement;
@@ -415,6 +415,7 @@ public string GetSqlParameterStatement(ColumnSchema column, bool isOutput, bool 
 				}														// mjj.n
 				break;
 			}
+			case DbType.Binary:
 			case DbType.AnsiString:
 			case DbType.AnsiStringFixedLength:
 			case DbType.String:
@@ -426,28 +427,13 @@ public string GetSqlParameterStatement(ColumnSchema column, bool isOutput, bool 
 					{
 						param += "(" + column.Size + ")";
 					}
-                    else
-                    {
-                            param += "(MAX)";
-                    }
+                                        else
+                                        {
+                                                param += "(MAX)";
+                                        }
 				}
 				break;
 			}
-            case DbType.Binary:
-            {
-                if (column.NativeType == "varbinary")
-                {
-                    if (column.Size > 0)
-                    {
-                        param += "(" + column.Size + ")";
-                    }
-                    else
-                    {
-                        param += "(MAX)";
-                    }
-                }
-                break;
-            }
 		}
 	}
 	
