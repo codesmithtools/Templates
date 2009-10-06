@@ -11,6 +11,7 @@
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="System.Design" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
+
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="CodeSmith.CustomProperties" %>
