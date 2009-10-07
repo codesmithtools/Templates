@@ -1,6 +1,6 @@
 ﻿'------------------------------------------------------------------------------
 '
-' Copyright (c) 2002-2008 CodeSmith Tools, LLC.  All rights reserved.
+' Copyright (c) 2002-2009 CodeSmith Tools, LLC.  All rights reserved.
 ' 
 ' The terms of use for this software are contained in the file
 ' named sourcelicense.txt, which can be found in the root of this distribution.
@@ -15,15 +15,16 @@ Imports System
 Imports CodeSmith.Engine
 Imports System.ComponentModel
 
-Namespace CodeSmith.Samples
-    <PropertySerializer(GetType(ModalEditorPropertySerializer))> _
-    <Editor(GetType(ModalEditorPropertyEditor), GetType(System.Drawing.Design.UITypeEditor))> _
-    Public Class ModalEditorProperty
+Namespace DropDownEditor
+
+    <PropertySerializer(GetType(DropDownEditorPropertySerializer))> _
+    <Editor(GetType(DropDownEditorPropertyEditor), GetType(System.Drawing.Design.UITypeEditor))> _
+    Public Class DropDownEditorProperty
+
         Dim _sampleString As String
-        Private _sampleBoolean As Boolean
+        Dim _sampleBoolean As Boolean
 
         Public Sub New()
-
         End Sub
 
         Public Sub New(ByVal sampleString As String, ByVal sampleBoolean As Boolean)
@@ -40,6 +41,7 @@ Namespace CodeSmith.Samples
             End Set
         End Property
 
+
         Public Property SampleBoolean() As Boolean
             Get
                 Return _sampleBoolean
@@ -49,6 +51,7 @@ Namespace CodeSmith.Samples
             End Set
         End Property
 
+
         ''' <summary>
         ''' The value that we return here will be shown in the property grid.
         ''' </summary>
@@ -56,7 +59,7 @@ Namespace CodeSmith.Samples
         Public Overrides Function ToString() As String
             Return SampleString + ": " + SampleBoolean
         End Function
-
     End Class
-		
+
 End Namespace
+
