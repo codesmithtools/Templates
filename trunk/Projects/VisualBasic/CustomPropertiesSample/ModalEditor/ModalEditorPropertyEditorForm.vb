@@ -1,6 +1,6 @@
 ﻿'------------------------------------------------------------------------------
 '
-' Copyright (c) 2002-2008 CodeSmith Tools, LLC.  All rights reserved.
+' Copyright (c) 2002-2009 CodeSmith Tools, LLC.  All rights reserved.
 ' 
 ' The terms of use for this software are contained in the file
 ' named sourcelicense.txt, which can be found in the root of this distribution.
@@ -10,15 +10,11 @@
 ' You must not remove this notice, or any other, from this software.
 '
 '------------------------------------------------------------------------------
-
 Imports System
-Imports System.Drawing
-Imports System.Collections
-Imports System.ComponentModel
-Imports System.Windows.Forms
 Imports System.Windows.Forms.Design
 
-Namespace CodeSmith.Samples
+Namespace ModalEditor
+
     ''' <summary>
     ''' Summary description for ModalEditorPropertyEditorForm.
     ''' </summary>

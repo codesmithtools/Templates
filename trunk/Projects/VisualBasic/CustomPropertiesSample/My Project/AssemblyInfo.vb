@@ -2,34 +2,15 @@
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
-' General Information about an assembly is controlled through the following 
-' set of attributes. Change these attribute values to modify the information
-' associated with an assembly.
-
-' Review the values of the assembly attributes
-
-<Assembly: AssemblyTitle("SampleCustomProperties")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("SampleCustomProperties")> 
-<Assembly: AssemblyCopyright("Copyright ©  2008")> 
+'<assembly: AssemblyTitle("CodeSmith.Samples.dll")>
+<Assembly: AssemblyDescription("CodeSmith is a template-based code generation system.")> 
+<Assembly: AssemblyConfiguration("")> 
+<Assembly: AssemblyCompany("CodeSmith Tools, LLC")> 
+<Assembly: AssemblyProduct("CodeSmith")> 
+<Assembly: AssemblyCopyright("Copyright (c) 2002-2009 CodeSmith Tools, LLC.  All rights reserved.")> 
 <Assembly: AssemblyTrademark("")> 
-
-<Assembly: ComVisible(False)>
-
-'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("4ad49ac9-8ffb-4a2a-ab79-cc5e3a89d15c")> 
-
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")> 
-
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
+<Assembly: AssemblyCulture("")> 
+<Assembly: ComVisible(False)> 
+<Assembly: Guid("9cf405ed-5c12-4ce8-bd2c-d5fb14ad1f18")> 
+<Assembly: AssemblyVersion("5.0.0.0")> 
+<Assembly: AssemblyFileVersion("5.0.0.0")> 

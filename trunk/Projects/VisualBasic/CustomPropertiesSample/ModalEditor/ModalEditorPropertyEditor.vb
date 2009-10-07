@@ -1,6 +1,6 @@
-'------------------------------------------------------------------------------
+﻿'------------------------------------------------------------------------------
 '
-' Copyright (c) 2002-2008 CodeSmith Tools, LLC.  All rights reserved.
+' Copyright (c) 2002-2009 CodeSmith Tools, LLC.  All rights reserved.
 ' 
 ' The terms of use for this software are contained in the file
 ' named sourcelicense.txt, which can be found in the root of this distribution.
@@ -17,11 +17,13 @@ Imports System.Windows.Forms
 Imports System.Windows.Forms.Design
 Imports System.Drawing.Design
 
-Namespace CodeSmith.Samples
-    Public Class DropDownEditorPropertyEditor
+Namespace ModalEditor
+
+    Public Class ModalEditorPropertyEditor
         Inherits UITypeEditor
-        Dim editorService As IWindowsFormsEditorService
-        Dim _dropDownEditorPropertyEditorControl As DropDownEditorPropertyEditorControl
+
+        Private editorService As IWindowsFormsEditorService
+        Private _modalEditorPropertyEditorForm As ModalEditorPropertyEditorForm
 
         Public Sub New()
             MyBase.New()
@@ -31,14 +33,17 @@ Namespace CodeSmith.Samples
             If Not IsNothing(provider) Then
                 editorService = provider.GetService(GetType(IWindowsFormsEditorService))
                 If Not IsNothing(editorService) Then
-                    If IsNothing(_dropDownEditorPropertyEditorControl) Then
-                        _dropDownEditorPropertyEditorControl = New DropDownEditorPropertyEditorControl()
+                    If IsNothing(_modalEditorPropertyEditorForm) Then
+                        _modalEditorPropertyEditorForm = New ModalEditorPropertyEditorForm()
                     End If
 
-                    _dropDownEditorPropertyEditorControl.Start(editorService, value)
-                    editorService.DropDownControl(_dropDownEditorPropertyEditorControl)
-
-                    Return New DropDownEditorProperty(_dropDownEditorPropertyEditorControl.SampleStringTextBox.Text, _dropDownEditorPropertyEditorControl.SampleBooleanCheckBox.Checked)
+                    _modalEditorPropertyEditorForm.Start(editorService, value)
+                    editorService.ShowDialog(_modalEditorPropertyEditorForm)
+                    If _modalEditorPropertyEditorForm.DialogResult = DialogResult.OK Then
+                        value = New ModalEditorProperty(_modalEditorPropertyEditorForm.SampleStringTextBox.Text, _modalEditorPropertyEditorForm.SampleBooleanCheckBox.Checked)
+                    Else
+                        value = Nothing
+                    End If
                 End If
             End If
 
@@ -46,8 +51,8 @@ Namespace CodeSmith.Samples
         End Function
 
         Public Overrides Function GetEditStyle(ByVal context As ITypeDescriptorContext) As UITypeEditorEditStyle
-            Return UITypeEditorEditStyle.DropDown
+            Return UITypeEditorEditStyle.Modal
         End Function
     End Class
-		
+
 End Namespace

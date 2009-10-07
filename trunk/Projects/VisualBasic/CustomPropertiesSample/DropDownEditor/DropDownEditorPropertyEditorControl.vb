@@ -1,6 +1,6 @@
 ﻿'------------------------------------------------------------------------------
 '
-' Copyright (c) 2002-2008 CodeSmith Tools, LLC.  All rights reserved.
+' Copyright (c) 2002-2009 CodeSmith Tools, LLC.  All rights reserved.
 ' 
 ' The terms of use for this software are contained in the file
 ' named sourcelicense.txt, which can be found in the root of this distribution.
@@ -12,14 +12,10 @@
 '------------------------------------------------------------------------------
 
 Imports System
-Imports System.Collections
-Imports System.ComponentModel
-Imports System.Drawing
-Imports System.Data
-Imports System.Windows.Forms
 Imports System.Windows.Forms.Design
 
-Namespace CodeSmith.Samples
+Namespace DropDownEditor
+
     ''' <summary>
     ''' Summary description for DropDownEditorPropertyEditorControl.
     ''' </summary>
@@ -95,5 +91,6 @@ Namespace CodeSmith.Samples
         End Sub
 #End Region
     End Class
+
 End Namespace
 

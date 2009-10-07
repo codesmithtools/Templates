@@ -1,0 +1,35 @@
+<%--
+Name: An example of a custom UIType a DropDownList.
+Author: Blake Niemyjski
+Description: An example of a custom UIType a DropDownList.
+--%>
+<%@ CodeTemplate Language="VB" TargetLanguage="Text"CompilerVersion="v3.5" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Optional="False" Category="Required" OnChanged="OnSourceDatabaseChanged" %>
+<%@ Property Name="SelectedTable" Type="CodeSmith.Samples.DropDownList.DropDownListProperty" Optional="True" Category="DropDownList Example" %>
+
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.Samples" %>
+<%@ Assembly Name="SchemaExplorer" %>
+
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.Samples.DropDownList" %>
+<%@ Import Namespace="SchemaExplorer" %>
+
+<% For Each str As String In SelectedTable.Values %>
+<%= str %>
+<% Next %>
+
+<script runat="template">
+
+Public Sub OnSourceDatabaseChanged(sender As Object, args As System.EventArgs)
+	SelectedTable = New DropDownListProperty()
+
+	If Not SourceDatabase Is Nothing Then
+		For Each table As TableSchema In SourceDatabase.Tables
+			SelectedTable.Values.Add(table.FullName)
+		Next
+	End If
+End Sub
+
+</script>
