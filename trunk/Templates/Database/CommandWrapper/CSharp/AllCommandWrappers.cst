@@ -2,28 +2,29 @@
 * Author: Eric J. Smith
 * Description: This template will generate wrappers for all stored procedures in a database.
 ------------------------------------------------------------------------------------------%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Description="This template will generate wrappers for all stored procedures in a database." %>
+<%@ CodeTemplate OutputType="None" Language="C#" TargetLanguage="Text" Description="This template will generate wrappers for all stored procedures in a database." %>
 
 <%-- Required Properties  --%>
-<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Required" Description="Database that the stored procedures wrappers should be based on." %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Required" Description="Database that the stored procedures wrappers should be based on." OnChanged="OnSourceDatabaseChanged" DeepLoad="True" %>
 <%@ Property Name="ResultSchema" Type="CommandWrapperTemplate.ResultSchemaEnum" Category="Required" Default="StronglyTyped"  Description="Determines what type of result schema should be used for the wrapper class." %>
 <%@ Property Name="Accessibility" Type="CommandWrapperTemplate.AccessibilityEnum" Category="Required" Default="Public" Description="The accessibility of the generated classes." %>
 
 <%-- Optional Properties  --%>
-<%@ Property Name="ExcludedCommands" Type="StringCollection" Default="" Optional="True" Category="Optional" Description="If supplied, any matching commands will not get wrappers generated. (* is treated as a wildcard)" %>
+<%@ Property Name="IgnoreExpressions" Type="StringCollection" Default="" Optional="True" Category="Optional" Description="If supplied, any matching commands will not get wrappers generated. (* is treated as a wildcard)" %>
 
 <%-- Register the StoredProcedures template and have it's properties merged into this template.  --%>
-<%@ Register Template="CommandWrapperClass.cst" Name="CommandWrapperTemplate" MergeProperties="True" ExcludeProperties="SourceCommand,BatchMode,CommandClassName,ResultRowClassName,Accessibility" %>
+<%@ Register Template="CommandWrapperClass.cst" Name="CommandWrapperTemplate" MergeProperties="True" ExcludeProperties="SourceCommand,BatchMode,CommandClassName,ResultRowClassName,Accessibility,OutputFile" %>
 
 <%-- Register referenced assemblies.  --%>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="SchemaExplorer" %>
 
 <%-- Import commonly used namespaces. --%>
-<%@ Import Namespace="CodeSmith.CustomProperties" %>
-<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
 
 <script runat="template">
 
@@ -39,7 +40,7 @@ public string OutputDirectory
 	{
 		// default to the directory that the template is located in
 		if (_outputDirectory.Length == 0) 
-			return this.CodeTemplateInfo.DirectoryName + "output\\";
+			return ".\\";
 		
 		return _outputDirectory;
 	}
@@ -53,37 +54,34 @@ public string OutputDirectory
 	} 
 }
 
-private Regex _excludedCommandRegex = null;
+private List<Regex> _expressions = null;
 public bool CommandIsExcluded(CommandSchema command)
 {
-	if (_excludedCommandRegex == null)
+	if (IgnoreExpressions != null && IgnoreExpressions.Count > 0)
 	{
-		if (ExcludedCommands != null && ExcludedCommands.Count > 0)
-		{
-			string excluded = String.Empty;
-			for (int i = 0; i < ExcludedCommands.Count; i++)
-			{
-				if (ExcludedCommands[i].Trim().Length > 0)
-				{
-					excluded += "(" + Regex.Escape(ExcludedCommands[i]).Replace("\\*", ".*?") + ")|";
-				}
-			}
-			
-			if (excluded.Length > 0)
-			{
-				excluded = excluded.Substring(0, excluded.Length - 1);
-				_excludedCommandRegex = new Regex(excluded, RegexOptions.IgnoreCase);
-			}
-		}
+        if(_expressions == null)
+        {
+            _expressions = new List<Regex>();
+            foreach (string ignore in IgnoreExpressions)
+            {
+                if (!string.IsNullOrEmpty(ignore))
+                {
+                    _expressions.Add(new Regex(ignore.Trim(), RegexOptions.IgnoreCase));
+                }
+            }
+        }
+        
+        foreach (Regex regex in _expressions)
+        {
+            if (regex.IsMatch(command.FullName))
+                return true;
+        }
 	}
-	
-	if (_excludedCommandRegex != null && _excludedCommandRegex.IsMatch(command.Name)) 
-		return true;
-	
+    
 	return false;
 }
 
-public override void Render(System.IO.TextWriter writer)
+public override void Render(TextWriter writer)
 {
     if(SourceDatabase.Commands.Count > 0)
         this.Progress.MaximumValue = SourceDatabase.Commands.Count;
@@ -95,7 +93,7 @@ public override void Render(System.IO.TextWriter writer)
     
 	this.Progress.Step = 1;
 	
-	string outputDirectory = Path.Combine(this.CodeTemplateInfo.DirectoryName, this.OutputDirectory);
+	string outputDirectory = Path.GetFullPath(this.OutputDirectory);
 	
 	// Create Directory if it doesn't already exist.
 	if (!Directory.Exists(outputDirectory)) 
@@ -108,11 +106,12 @@ public override void Render(System.IO.TextWriter writer)
 			Trace.WriteLine("Generating wrapper for " + SourceDatabase.Commands[i].FullName + "...");
 			try
 			{
-				CommandWrapperTemplate commandWrapperTemplate = new CommandWrapperTemplate();
+				CommandWrapperTemplate commandWrapperTemplate = this.Create<CommandWrapperTemplate>();
 				this.CopyPropertiesTo(commandWrapperTemplate);
 				commandWrapperTemplate.SourceCommand = SourceDatabase.Commands[i];
-				string outputPath = outputDirectory + commandWrapperTemplate.GetFileName();
-				commandWrapperTemplate.RenderToFile(outputPath, true);
+                
+                string path = Path.Combine(outputDirectory, commandWrapperTemplate.GetFileName());
+                commandWrapperTemplate.RenderToFile(path, true);
 			}
 			catch (Exception e)
 			{
@@ -123,4 +122,24 @@ public override void Render(System.IO.TextWriter writer)
 		this.Progress.PerformStep();
 	}
 }
+
+public void OnSourceDatabaseChanged(object sender, System.EventArgs args)
+{
+    if(SourceDatabase == null) return;
+    
+    if (string.IsNullOrEmpty(TargetNamespace))
+    {
+        TargetNamespace = SourceDatabase.Name;
+    }
+    
+    if(IgnoreExpressions == null)
+        IgnoreExpressions = new StringCollection();
+    
+    if (IgnoreExpressions.Count == 0)
+    {
+        IgnoreExpressions.Add("^dbo.aspnet");
+        IgnoreExpressions.Add("^dbo.vw_aspnet");
+    }
+}
+    
 </script>
