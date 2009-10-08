@@ -20,54 +20,6 @@
       </table>
       <table>
         <owner>dbo</owner>
-        <name>aspnet_Applications</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>aspnet_Membership</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>aspnet_Paths</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>aspnet_PersonalizationAllUsers</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>aspnet_PersonalizationPerUser</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>aspnet_Profile</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>aspnet_Roles</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>aspnet_SchemaVersions</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>AspNet_SqlCacheTablesForChangeNotification</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>aspnet_Users</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>aspnet_UsersInRoles</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>aspnet_WebEvent_Events</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
         <name>Cart</name>
       </table>
       <table>

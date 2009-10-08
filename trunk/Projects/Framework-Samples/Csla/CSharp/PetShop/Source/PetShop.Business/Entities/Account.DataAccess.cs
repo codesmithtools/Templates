@@ -33,11 +33,19 @@ namespace PetShop.Business
 			//base.Child_Create();
 		}
 		
-		private void Child_Fetch(SafeDataReader reader)
+		private void Child_Fetch(object criteria)
 		{
-			Fetch(reader);
-            
-            MarkAsChild();
+			AccountCriteria theCriteria = criteria as AccountCriteria;
+            if (theCriteria != null)
+            {
+				using(SafeDataReader reader = DataAccessLayer.Instance.AccountFetch(theCriteria.StateBag)) 
+				{
+					if(reader.Read())
+					{	
+						Fetch(reader);
+					}
+				}
+			}
 		}
 		
 		private void Child_Insert()

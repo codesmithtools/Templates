@@ -72,9 +72,7 @@ End Sub
 			Return GetProperty(_itemIdProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ItemId")
             SetProperty(_itemIdProperty, value)
-            OnPropertyChanged("ItemId")
         End Set
 	End Property
 	
@@ -85,9 +83,7 @@ End Sub
 			Return GetProperty(_nameProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Name")
             SetProperty(_nameProperty, value)
-            OnPropertyChanged("Name")
         End Set
 	End Property
 	
@@ -98,9 +94,7 @@ End Sub
 			Return GetProperty(_typeProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Type")
             SetProperty(_typeProperty, value)
-            OnPropertyChanged("Type")
         End Set
 	End Property
 	
@@ -111,9 +105,7 @@ End Sub
 			Return GetProperty(_priceProperty)
 		End Get
         Set (ByVal value As Decimal)
-            OnPropertyChanging("Price")
             SetProperty(_priceProperty, value)
-            OnPropertyChanged("Price")
         End Set
 	End Property
 	
@@ -124,9 +116,7 @@ End Sub
 			Return GetProperty(_categoryIdProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("CategoryId")
             SetProperty(_categoryIdProperty, value)
-            OnPropertyChanged("CategoryId")
         End Set
 	End Property
 	
@@ -137,9 +127,7 @@ End Sub
 			Return GetProperty(_productIdProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ProductId")
             SetProperty(_productIdProperty, value)
-            OnPropertyChanged("ProductId")
         End Set
 	End Property
 	
@@ -150,9 +138,7 @@ End Sub
 			Return GetProperty(_isShoppingCartProperty)
 		End Get
         Set (ByVal value As Boolean)
-            OnPropertyChanging("IsShoppingCart")
             SetProperty(_isShoppingCartProperty, value)
-            OnPropertyChanged("IsShoppingCart")
         End Set
 	End Property
 	
@@ -163,9 +149,7 @@ End Sub
 			Return GetProperty(_quantityProperty)
 		End Get
         Set (ByVal value As Integer)
-            OnPropertyChanging("Quantity")
             SetProperty(_quantityProperty, value)
-            OnPropertyChanged("Quantity")
         End Set
 	End Property
 	
@@ -175,9 +159,7 @@ End Sub
 			Return GetProperty(_uniqueIDProperty)				
 		End Get
         Set (ByVal value As Integer)
-            OnPropertyChanging("UniqueID")
             SetProperty(_uniqueIDProperty, value) 
-            OnPropertyChanged("UniqueID")
         End Set
 	End Property
 	

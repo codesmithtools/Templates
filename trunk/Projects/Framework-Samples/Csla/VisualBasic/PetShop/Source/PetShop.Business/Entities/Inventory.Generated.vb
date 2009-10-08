@@ -54,9 +54,7 @@ End Sub
 			Return GetProperty(_itemIdProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ItemId")
             SetProperty(_itemIdProperty, value)
-            OnPropertyChanged("ItemId")
         End Set
 	End Property
 	
@@ -67,9 +65,7 @@ End Sub
 			Return GetProperty(_qtyProperty)
 		End Get
         Set (ByVal value As Integer)
-            OnPropertyChanging("Qty")
             SetProperty(_qtyProperty, value)
-            OnPropertyChanged("Qty")
         End Set
 	End Property
 	

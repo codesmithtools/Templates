@@ -59,9 +59,7 @@ End Sub
 			Return GetProperty(_itemIdProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ItemId")
             SetProperty(_itemIdProperty, value)
-            OnPropertyChanged("ItemId")
         End Set
 	End Property
 	
@@ -72,9 +70,7 @@ End Sub
 			Return GetProperty(_listPriceProperty)
 		End Get
         Set (ByVal value As System.Nullable(Of Decimal))
-            OnPropertyChanging("ListPrice")
             SetProperty(_listPriceProperty, value)
-            OnPropertyChanged("ListPrice")
         End Set
 	End Property
 	
@@ -85,9 +81,7 @@ End Sub
 			Return GetProperty(_unitCostProperty)
 		End Get
         Set (ByVal value As System.Nullable(Of Decimal))
-            OnPropertyChanging("UnitCost")
             SetProperty(_unitCostProperty, value)
-            OnPropertyChanged("UnitCost")
         End Set
 	End Property
 	
@@ -98,9 +92,7 @@ End Sub
 			Return GetProperty(_statusProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Status")
             SetProperty(_statusProperty, value)
-            OnPropertyChanged("Status")
         End Set
 	End Property
 	
@@ -111,9 +103,7 @@ End Sub
 			Return GetProperty(_nameProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Name")
             SetProperty(_nameProperty, value)
-            OnPropertyChanged("Name")
         End Set
 	End Property
 	
@@ -124,9 +114,7 @@ End Sub
 			Return GetProperty(_imageProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Image")
             SetProperty(_imageProperty, value)
-            OnPropertyChanged("Image")
         End Set
 	End Property
 	
@@ -136,9 +124,7 @@ End Sub
 			Return GetProperty(_productIdProperty)				
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ProductId")
             SetProperty(_productIdProperty, value) 
-            OnPropertyChanged("ProductId")
         End Set
 	End Property
 	
@@ -148,9 +134,7 @@ End Sub
 			Return GetProperty(_suppIdProperty)				
 		End Get
         Set (ByVal value As Integer)
-            OnPropertyChanging("SuppId")
             SetProperty(_suppIdProperty, value) 
-            OnPropertyChanged("SuppId")
         End Set
 	End Property
 	

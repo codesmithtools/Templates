@@ -4,7 +4,7 @@
     <add key="ConnectionString1" value="Data Source=.\SQLEXPRESS;Integrated Security=True;Database=PetShop;" />
   </variables>
   <propertySets>
-    <propertySet name="DataAccessLayer.cs" output="DataAccessLayer.cs" template="..\..\..\..\..\..\..\Templates\Frameworks\Csla\VB\DataAccessLayer\DataAccessLayer.cst">
+    <propertySet name="DataAccessLayer.cs" output="DataAccessLayer.cs" template="..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\DataAccessLayer\DataAccessLayer.cst">
       <property name="DataAccessImplementation">ParameterizedSQL</property>
       <property name="DataProjectName">PetShop.Data</property>
       <property name="DataClassName">DataAccessLayer</property>
@@ -72,7 +72,7 @@
       <string>^dbo.AspNet</string>
     </stringList>
       </property>
-      <property name="Location">A:\Google.CodeSmith.Templates\trunk\Projects\Framework-Samples\Csla\VB\PetShop\Source\PetShop.Data</property>
+      <property name="Location">.\</property>
     </propertySet>
   </propertySets>
 </codeSmith>

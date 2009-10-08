@@ -83,8 +83,15 @@ Public Partial Class Product
 		'MyBase.Child_Create()
     End Sub
 	
-	Private Sub Child_Fetch(ByVal reader As SafeDataReader)
-		Fetch(reader)
+	Private Sub Child_Fetch(ByVal criteria As Object)
+		Dim theCriteria As ProductCriteria = DirectCast(criteria, ProductCriteria)
+        If Not theCriteria Is Nothing Then
+			Using reader As SafeDataReader = DataAccessLayer.Instance.ProductFetch(theCriteria.StateBag)
+				If reader.Read() Then
+					Fetch(reader)
+				End If
+			End Using
+		End If
         
         MarkAsChild()
 	End Sub

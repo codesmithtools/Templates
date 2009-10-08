@@ -63,6 +63,19 @@ namespace PetShop.Test
         }
 
         [Test]
+        public void FetchProfileWithChild()
+        {
+            Stopwatch watch = Stopwatch.StartNew();
+
+            Profile profile = Profile.GetProfile(NAME);
+            var cart = profile.Carts; 
+
+            Assert.IsTrue(profile.Username == NAME);
+
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+        }
+
+        [Test]
         public void UpdateProfile()
         {
             Stopwatch watch = Stopwatch.StartNew();

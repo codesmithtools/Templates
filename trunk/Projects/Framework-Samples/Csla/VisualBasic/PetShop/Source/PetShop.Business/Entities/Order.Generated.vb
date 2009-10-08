@@ -98,9 +98,7 @@ End Sub
 			Return GetProperty(_userIdProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("UserId")
             SetProperty(_userIdProperty, value)
-            OnPropertyChanged("UserId")
         End Set
 	End Property
 	
@@ -111,9 +109,7 @@ End Sub
 			Return GetProperty(_orderDateProperty)
 		End Get
         Set (ByVal value As SmartDate)
-            OnPropertyChanging("OrderDate")
             SetProperty(_orderDateProperty, value)
-            OnPropertyChanged("OrderDate")
         End Set
 	End Property
 	
@@ -124,9 +120,7 @@ End Sub
 			Return GetProperty(_shipAddr1Property)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ShipAddr1")
             SetProperty(_shipAddr1Property, value)
-            OnPropertyChanged("ShipAddr1")
         End Set
 	End Property
 	
@@ -137,9 +131,7 @@ End Sub
 			Return GetProperty(_shipAddr2Property)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ShipAddr2")
             SetProperty(_shipAddr2Property, value)
-            OnPropertyChanged("ShipAddr2")
         End Set
 	End Property
 	
@@ -150,9 +142,7 @@ End Sub
 			Return GetProperty(_shipCityProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ShipCity")
             SetProperty(_shipCityProperty, value)
-            OnPropertyChanged("ShipCity")
         End Set
 	End Property
 	
@@ -163,9 +153,7 @@ End Sub
 			Return GetProperty(_shipStateProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ShipState")
             SetProperty(_shipStateProperty, value)
-            OnPropertyChanged("ShipState")
         End Set
 	End Property
 	
@@ -176,9 +164,7 @@ End Sub
 			Return GetProperty(_shipZipProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ShipZip")
             SetProperty(_shipZipProperty, value)
-            OnPropertyChanged("ShipZip")
         End Set
 	End Property
 	
@@ -189,9 +175,7 @@ End Sub
 			Return GetProperty(_shipCountryProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ShipCountry")
             SetProperty(_shipCountryProperty, value)
-            OnPropertyChanged("ShipCountry")
         End Set
 	End Property
 	
@@ -202,9 +186,7 @@ End Sub
 			Return GetProperty(_billAddr1Property)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("BillAddr1")
             SetProperty(_billAddr1Property, value)
-            OnPropertyChanged("BillAddr1")
         End Set
 	End Property
 	
@@ -215,9 +197,7 @@ End Sub
 			Return GetProperty(_billAddr2Property)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("BillAddr2")
             SetProperty(_billAddr2Property, value)
-            OnPropertyChanged("BillAddr2")
         End Set
 	End Property
 	
@@ -228,9 +208,7 @@ End Sub
 			Return GetProperty(_billCityProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("BillCity")
             SetProperty(_billCityProperty, value)
-            OnPropertyChanged("BillCity")
         End Set
 	End Property
 	
@@ -241,9 +219,7 @@ End Sub
 			Return GetProperty(_billStateProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("BillState")
             SetProperty(_billStateProperty, value)
-            OnPropertyChanged("BillState")
         End Set
 	End Property
 	
@@ -254,9 +230,7 @@ End Sub
 			Return GetProperty(_billZipProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("BillZip")
             SetProperty(_billZipProperty, value)
-            OnPropertyChanged("BillZip")
         End Set
 	End Property
 	
@@ -267,9 +241,7 @@ End Sub
 			Return GetProperty(_billCountryProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("BillCountry")
             SetProperty(_billCountryProperty, value)
-            OnPropertyChanged("BillCountry")
         End Set
 	End Property
 	
@@ -280,9 +252,7 @@ End Sub
 			Return GetProperty(_courierProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Courier")
             SetProperty(_courierProperty, value)
-            OnPropertyChanged("Courier")
         End Set
 	End Property
 	
@@ -293,9 +263,7 @@ End Sub
 			Return GetProperty(_totalPriceProperty)
 		End Get
         Set (ByVal value As Decimal)
-            OnPropertyChanging("TotalPrice")
             SetProperty(_totalPriceProperty, value)
-            OnPropertyChanged("TotalPrice")
         End Set
 	End Property
 	
@@ -306,9 +274,7 @@ End Sub
 			Return GetProperty(_billToFirstNameProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("BillToFirstName")
             SetProperty(_billToFirstNameProperty, value)
-            OnPropertyChanged("BillToFirstName")
         End Set
 	End Property
 	
@@ -319,9 +285,7 @@ End Sub
 			Return GetProperty(_billToLastNameProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("BillToLastName")
             SetProperty(_billToLastNameProperty, value)
-            OnPropertyChanged("BillToLastName")
         End Set
 	End Property
 	
@@ -332,9 +296,7 @@ End Sub
 			Return GetProperty(_shipToFirstNameProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ShipToFirstName")
             SetProperty(_shipToFirstNameProperty, value)
-            OnPropertyChanged("ShipToFirstName")
         End Set
 	End Property
 	
@@ -345,9 +307,7 @@ End Sub
 			Return GetProperty(_shipToLastNameProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ShipToLastName")
             SetProperty(_shipToLastNameProperty, value)
-            OnPropertyChanged("ShipToLastName")
         End Set
 	End Property
 	
@@ -358,9 +318,7 @@ End Sub
 			Return GetProperty(_authorizationNumberProperty)
 		End Get
         Set (ByVal value As Integer)
-            OnPropertyChanging("AuthorizationNumber")
             SetProperty(_authorizationNumberProperty, value)
-            OnPropertyChanged("AuthorizationNumber")
         End Set
 	End Property
 	
@@ -371,9 +329,7 @@ End Sub
 			Return GetProperty(_localeProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Locale")
             SetProperty(_localeProperty, value)
-            OnPropertyChanged("Locale")
         End Set
 	End Property
 	

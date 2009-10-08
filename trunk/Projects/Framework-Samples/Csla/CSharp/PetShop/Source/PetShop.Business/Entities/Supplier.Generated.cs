@@ -65,9 +65,7 @@ namespace PetShop.Business
 			get { return GetProperty(_suppIdProperty); }				
             set
             {
-                OnPropertyChanging("SuppId");
                 SetProperty(_suppIdProperty, value);
-                OnPropertyChanged("SuppId");
             }
 		}
 		
@@ -77,9 +75,7 @@ namespace PetShop.Business
 			get { return GetProperty(_nameProperty); }				
             set
             {
-                OnPropertyChanging("Name");
                 SetProperty(_nameProperty, value);
-                OnPropertyChanged("Name");
             }
 		}
 		
@@ -89,9 +85,7 @@ namespace PetShop.Business
 			get { return GetProperty(_statusProperty); }				
             set
             {
-                OnPropertyChanging("Status");
                 SetProperty(_statusProperty, value);
-                OnPropertyChanged("Status");
             }
 		}
 		
@@ -101,9 +95,7 @@ namespace PetShop.Business
 			get { return GetProperty(_addr1Property); }				
             set
             {
-                OnPropertyChanging("Addr1");
                 SetProperty(_addr1Property, value);
-                OnPropertyChanged("Addr1");
             }
 		}
 		
@@ -113,9 +105,7 @@ namespace PetShop.Business
 			get { return GetProperty(_addr2Property); }				
             set
             {
-                OnPropertyChanging("Addr2");
                 SetProperty(_addr2Property, value);
-                OnPropertyChanged("Addr2");
             }
 		}
 		
@@ -125,9 +115,7 @@ namespace PetShop.Business
 			get { return GetProperty(_cityProperty); }				
             set
             {
-                OnPropertyChanging("City");
                 SetProperty(_cityProperty, value);
-                OnPropertyChanged("City");
             }
 		}
 		
@@ -137,9 +125,7 @@ namespace PetShop.Business
 			get { return GetProperty(_stateProperty); }				
             set
             {
-                OnPropertyChanging("State");
                 SetProperty(_stateProperty, value);
-                OnPropertyChanged("State");
             }
 		}
 		
@@ -149,9 +135,7 @@ namespace PetShop.Business
 			get { return GetProperty(_zipProperty); }				
             set
             {
-                OnPropertyChanging("Zip");
                 SetProperty(_zipProperty, value);
-                OnPropertyChanged("Zip");
             }
 		}
 		
@@ -161,9 +145,7 @@ namespace PetShop.Business
 			get { return GetProperty(_phoneProperty); }				
             set
             {
-                OnPropertyChanging("Phone");
                 SetProperty(_phoneProperty, value);
-                OnPropertyChanged("Phone");
             }
 		}
 		

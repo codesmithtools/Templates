@@ -30,10 +30,15 @@ Public Partial Class Account
 		'MyBase.Child_Create()
     End Sub
 	
-	Private Sub Child_Fetch(ByVal reader As SafeDataReader)
-		Fetch(reader)
-        
-        MarkAsChild()
+	Private Sub Child_Fetch(ByVal criteria As Object)
+		Dim theCriteria As AccountCriteria = DirectCast(criteria, AccountCriteria)
+        If Not theCriteria Is Nothing Then
+			Using reader As SafeDataReader = DataAccessLayer.Instance.AccountFetch(theCriteria.StateBag)
+				If reader.Read() Then
+					Fetch(reader)
+				End If
+			End Using
+		End If
 	End Sub
 	
 	Private Sub Child_Insert()

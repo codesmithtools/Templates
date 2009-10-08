@@ -56,9 +56,7 @@ End Sub
 			Return GetProperty(_orderIdProperty)
 		End Get
         Set (ByVal value As Integer)
-            OnPropertyChanging("OrderId")
             SetProperty(_orderIdProperty, value)
-            OnPropertyChanged("OrderId")
         End Set
 	End Property
 	
@@ -70,9 +68,7 @@ End Sub
 			Return GetProperty(_lineNumProperty)
 		End Get
         Set (ByVal value As Integer)
-            OnPropertyChanging("LineNum")
             SetProperty(_lineNumProperty, value)
-            OnPropertyChanged("LineNum")
         End Set
 	End Property
 	
@@ -83,9 +79,7 @@ End Sub
 			Return GetProperty(_itemIdProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ItemId")
             SetProperty(_itemIdProperty, value)
-            OnPropertyChanged("ItemId")
         End Set
 	End Property
 	
@@ -96,9 +90,7 @@ End Sub
 			Return GetProperty(_quantityProperty)
 		End Get
         Set (ByVal value As Integer)
-            OnPropertyChanging("Quantity")
             SetProperty(_quantityProperty, value)
-            OnPropertyChanged("Quantity")
         End Set
 	End Property
 	
@@ -109,9 +101,7 @@ End Sub
 			Return GetProperty(_unitPriceProperty)
 		End Get
         Set (ByVal value As Decimal)
-            OnPropertyChanging("UnitPrice")
             SetProperty(_unitPriceProperty, value)
-            OnPropertyChanged("UnitPrice")
         End Set
 	End Property
 	
