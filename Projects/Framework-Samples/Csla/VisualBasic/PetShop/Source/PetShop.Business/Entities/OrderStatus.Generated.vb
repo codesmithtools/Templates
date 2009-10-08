@@ -56,9 +56,7 @@ End Sub
 			Return GetProperty(_orderIdProperty)
 		End Get
         Set (ByVal value As Integer)
-            OnPropertyChanging("OrderId")
             SetProperty(_orderIdProperty, value)
-            OnPropertyChanged("OrderId")
         End Set
 	End Property
 	
@@ -70,9 +68,7 @@ End Sub
 			Return GetProperty(_lineNumProperty)
 		End Get
         Set (ByVal value As Integer)
-            OnPropertyChanging("LineNum")
             SetProperty(_lineNumProperty, value)
-            OnPropertyChanged("LineNum")
         End Set
 	End Property
 	
@@ -83,9 +79,7 @@ End Sub
 			Return GetProperty(_timestampProperty)
 		End Get
         Set (ByVal value As SmartDate)
-            OnPropertyChanging("Timestamp")
             SetProperty(_timestampProperty, value)
-            OnPropertyChanged("Timestamp")
         End Set
 	End Property
 	
@@ -96,9 +90,7 @@ End Sub
 			Return GetProperty(_statusProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Status")
             SetProperty(_statusProperty, value)
-            OnPropertyChanged("Status")
         End Set
 	End Property
 	

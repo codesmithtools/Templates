@@ -80,9 +80,7 @@ End Sub
 			Return GetProperty(_emailProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Email")
             SetProperty(_emailProperty, value)
-            OnPropertyChanged("Email")
         End Set
 	End Property
 	
@@ -93,9 +91,7 @@ End Sub
 			Return GetProperty(_firstNameProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("FirstName")
             SetProperty(_firstNameProperty, value)
-            OnPropertyChanged("FirstName")
         End Set
 	End Property
 	
@@ -106,9 +102,7 @@ End Sub
 			Return GetProperty(_lastNameProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("LastName")
             SetProperty(_lastNameProperty, value)
-            OnPropertyChanged("LastName")
         End Set
 	End Property
 	
@@ -119,9 +113,7 @@ End Sub
 			Return GetProperty(_address1Property)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Address1")
             SetProperty(_address1Property, value)
-            OnPropertyChanged("Address1")
         End Set
 	End Property
 	
@@ -132,9 +124,7 @@ End Sub
 			Return GetProperty(_address2Property)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Address2")
             SetProperty(_address2Property, value)
-            OnPropertyChanged("Address2")
         End Set
 	End Property
 	
@@ -145,9 +135,7 @@ End Sub
 			Return GetProperty(_cityProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("City")
             SetProperty(_cityProperty, value)
-            OnPropertyChanged("City")
         End Set
 	End Property
 	
@@ -158,9 +146,7 @@ End Sub
 			Return GetProperty(_stateProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("State")
             SetProperty(_stateProperty, value)
-            OnPropertyChanged("State")
         End Set
 	End Property
 	
@@ -171,9 +157,7 @@ End Sub
 			Return GetProperty(_zipProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Zip")
             SetProperty(_zipProperty, value)
-            OnPropertyChanged("Zip")
         End Set
 	End Property
 	
@@ -184,9 +168,7 @@ End Sub
 			Return GetProperty(_countryProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Country")
             SetProperty(_countryProperty, value)
-            OnPropertyChanged("Country")
         End Set
 	End Property
 	
@@ -197,9 +179,7 @@ End Sub
 			Return GetProperty(_phoneProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Phone")
             SetProperty(_phoneProperty, value)
-            OnPropertyChanged("Phone")
         End Set
 	End Property
 	
@@ -209,9 +189,7 @@ End Sub
 			Return GetProperty(_uniqueIDProperty)				
 		End Get
         Set (ByVal value As Integer)
-            OnPropertyChanging("UniqueID")
             SetProperty(_uniqueIDProperty, value) 
-            OnPropertyChanged("UniqueID")
         End Set
 	End Property
 	

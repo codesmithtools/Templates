@@ -4,7 +4,7 @@
     <add key="ConnectionString1" value="Data Source=.\SQLEXPRESS;Integrated Security=True;Database=PetShop;" />
   </variables>
   <propertySets>
-    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\Templates\Frameworks\Csla\VB\BusinessLayer\Entities.cst">
+    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\Entities.cst">
       <property name="CommandObject" />
       <property name="Criteria">
         <connectionString>$(ConnectionString1)</connectionString>
@@ -187,7 +187,7 @@
       </property>
       <property name="LaunchVisualStudio">True</property>
       <property name="Language">VB</property>
-      <property name="Location">A:\Google.CodeSmith.Templates\trunk\Projects\Framework-Samples\Csla\VB\PetShop\Source\PetShop.Business</property>
+      <property name="Location">.\</property>
       <property name="SolutionName">PetShop</property>
       <property name="BusinessProjectName">PetShop.Business</property>
       <property name="UseMemberVariables">False</property>
@@ -197,7 +197,6 @@
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
-      <property name="NameValueList" />
     </propertySet>
   </propertySets>
 </codeSmith>

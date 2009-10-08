@@ -60,9 +60,7 @@ namespace PetShop.Business
 			get { return GetProperty(_categoryIdProperty); }				
             set
             {
-                OnPropertyChanging("CategoryId");
                 SetProperty(_categoryIdProperty, value);
-                OnPropertyChanged("CategoryId");
             }
 		}
 		
@@ -72,9 +70,7 @@ namespace PetShop.Business
 			get { return GetProperty(_nameProperty); }				
             set
             {
-                OnPropertyChanging("Name");
                 SetProperty(_nameProperty, value);
-                OnPropertyChanged("Name");
             }
 		}
 		
@@ -84,9 +80,7 @@ namespace PetShop.Business
 			get { return GetProperty(_descnProperty); }				
             set
             {
-                OnPropertyChanging("Descn");
                 SetProperty(_descnProperty, value);
-                OnPropertyChanged("Descn");
             }
 		}
 		

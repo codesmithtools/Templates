@@ -56,9 +56,7 @@ namespace PetShop.Business
 			get { return GetProperty(_itemIdProperty); }				
             set
             {
-                OnPropertyChanging("ItemId");
                 SetProperty(_itemIdProperty, value);
-                OnPropertyChanged("ItemId");
             }
 		}
 		
@@ -68,9 +66,7 @@ namespace PetShop.Business
 			get { return GetProperty(_qtyProperty); }				
             set
             {
-                OnPropertyChanging("Qty");
                 SetProperty(_qtyProperty, value);
-                OnPropertyChanged("Qty");
             }
 		}
 		

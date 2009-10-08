@@ -66,9 +66,7 @@ namespace PetShop.Business
 			get { return GetProperty(_usernameProperty); }				
             set
             { 
-                OnPropertyChanging("Username");
                 SetProperty(_usernameProperty, value); 
-                OnPropertyChanged("Username");
             }
 		}
 		
@@ -78,9 +76,7 @@ namespace PetShop.Business
 			get { return GetProperty(_applicationNameProperty); }				
             set
             { 
-                OnPropertyChanging("ApplicationName");
                 SetProperty(_applicationNameProperty, value); 
-                OnPropertyChanged("ApplicationName");
             }
 		}
 		
@@ -90,9 +86,7 @@ namespace PetShop.Business
 			get { return GetProperty(_isAnonymousProperty); }				
             set
             { 
-                OnPropertyChanging("IsAnonymous");
                 SetProperty(_isAnonymousProperty, value); 
-                OnPropertyChanged("IsAnonymous");
             }
 		}
 		
@@ -102,9 +96,7 @@ namespace PetShop.Business
 			get { return GetProperty(_lastActivityDateProperty); }				
             set
             { 
-                OnPropertyChanging("LastActivityDate");
                 SetProperty(_lastActivityDateProperty, value); 
-                OnPropertyChanged("LastActivityDate");
             }
 		}
 		
@@ -114,9 +106,7 @@ namespace PetShop.Business
 			get { return GetProperty(_lastUpdatedDateProperty); }				
             set
             { 
-                OnPropertyChanging("LastUpdatedDate");
                 SetProperty(_lastUpdatedDateProperty, value); 
-                OnPropertyChanged("LastUpdatedDate");
             }
 		}
 		

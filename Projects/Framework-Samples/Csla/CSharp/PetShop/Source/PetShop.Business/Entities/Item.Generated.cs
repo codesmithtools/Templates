@@ -61,9 +61,7 @@ namespace PetShop.Business
 			get { return GetProperty(_itemIdProperty); }				
             set
             { 
-                OnPropertyChanging("ItemId");
                 SetProperty(_itemIdProperty, value); 
-                OnPropertyChanged("ItemId");
             }
 		}
 		
@@ -73,9 +71,7 @@ namespace PetShop.Business
 			get { return GetProperty(_listPriceProperty); }				
             set
             { 
-                OnPropertyChanging("ListPrice");
                 SetProperty(_listPriceProperty, value); 
-                OnPropertyChanged("ListPrice");
             }
 		}
 		
@@ -85,9 +81,7 @@ namespace PetShop.Business
 			get { return GetProperty(_unitCostProperty); }				
             set
             { 
-                OnPropertyChanging("UnitCost");
                 SetProperty(_unitCostProperty, value); 
-                OnPropertyChanged("UnitCost");
             }
 		}
 		
@@ -97,9 +91,7 @@ namespace PetShop.Business
 			get { return GetProperty(_statusProperty); }				
             set
             { 
-                OnPropertyChanging("Status");
                 SetProperty(_statusProperty, value); 
-                OnPropertyChanged("Status");
             }
 		}
 		
@@ -109,9 +101,7 @@ namespace PetShop.Business
 			get { return GetProperty(_nameProperty); }				
             set
             { 
-                OnPropertyChanging("Name");
                 SetProperty(_nameProperty, value); 
-                OnPropertyChanged("Name");
             }
 		}
 		
@@ -121,9 +111,7 @@ namespace PetShop.Business
 			get { return GetProperty(_imageProperty); }				
             set
             { 
-                OnPropertyChanging("Image");
                 SetProperty(_imageProperty, value); 
-                OnPropertyChanged("Image");
             }
 		}
 		
@@ -133,9 +121,7 @@ namespace PetShop.Business
 			get { return GetProperty(_productIdProperty); }				
             set
             { 
-                OnPropertyChanging("ProductId");
                 SetProperty(_productIdProperty, value); 
-                OnPropertyChanged("ProductId");
             }
 		}
 		
@@ -145,9 +131,7 @@ namespace PetShop.Business
 			get { return GetProperty(_suppIdProperty); }				
             set
             { 
-                OnPropertyChanging("SuppId");
                 SetProperty(_suppIdProperty, value); 
-                OnPropertyChanged("SuppId");
             }
 		}
 		

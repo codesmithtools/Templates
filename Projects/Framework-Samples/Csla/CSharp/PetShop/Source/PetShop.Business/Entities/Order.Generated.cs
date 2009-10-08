@@ -98,9 +98,7 @@ namespace PetShop.Business
 			get { return GetProperty(_userIdProperty); }				
             set
             { 
-                OnPropertyChanging("UserId");
                 SetProperty(_userIdProperty, value); 
-                OnPropertyChanged("UserId");
             }
 		}
 		
@@ -110,9 +108,7 @@ namespace PetShop.Business
 			get { return GetProperty(_orderDateProperty); }				
             set
             { 
-                OnPropertyChanging("OrderDate");
                 SetProperty(_orderDateProperty, value); 
-                OnPropertyChanged("OrderDate");
             }
 		}
 		
@@ -122,9 +118,7 @@ namespace PetShop.Business
 			get { return GetProperty(_shipAddr1Property); }				
             set
             { 
-                OnPropertyChanging("ShipAddr1");
                 SetProperty(_shipAddr1Property, value); 
-                OnPropertyChanged("ShipAddr1");
             }
 		}
 		
@@ -134,9 +128,7 @@ namespace PetShop.Business
 			get { return GetProperty(_shipAddr2Property); }				
             set
             { 
-                OnPropertyChanging("ShipAddr2");
                 SetProperty(_shipAddr2Property, value); 
-                OnPropertyChanged("ShipAddr2");
             }
 		}
 		
@@ -146,9 +138,7 @@ namespace PetShop.Business
 			get { return GetProperty(_shipCityProperty); }				
             set
             { 
-                OnPropertyChanging("ShipCity");
                 SetProperty(_shipCityProperty, value); 
-                OnPropertyChanged("ShipCity");
             }
 		}
 		
@@ -158,9 +148,7 @@ namespace PetShop.Business
 			get { return GetProperty(_shipStateProperty); }				
             set
             { 
-                OnPropertyChanging("ShipState");
                 SetProperty(_shipStateProperty, value); 
-                OnPropertyChanged("ShipState");
             }
 		}
 		
@@ -170,9 +158,7 @@ namespace PetShop.Business
 			get { return GetProperty(_shipZipProperty); }				
             set
             { 
-                OnPropertyChanging("ShipZip");
                 SetProperty(_shipZipProperty, value); 
-                OnPropertyChanged("ShipZip");
             }
 		}
 		
@@ -182,9 +168,7 @@ namespace PetShop.Business
 			get { return GetProperty(_shipCountryProperty); }				
             set
             { 
-                OnPropertyChanging("ShipCountry");
                 SetProperty(_shipCountryProperty, value); 
-                OnPropertyChanged("ShipCountry");
             }
 		}
 		
@@ -194,9 +178,7 @@ namespace PetShop.Business
 			get { return GetProperty(_billAddr1Property); }				
             set
             { 
-                OnPropertyChanging("BillAddr1");
                 SetProperty(_billAddr1Property, value); 
-                OnPropertyChanged("BillAddr1");
             }
 		}
 		
@@ -206,9 +188,7 @@ namespace PetShop.Business
 			get { return GetProperty(_billAddr2Property); }				
             set
             { 
-                OnPropertyChanging("BillAddr2");
                 SetProperty(_billAddr2Property, value); 
-                OnPropertyChanged("BillAddr2");
             }
 		}
 		
@@ -218,9 +198,7 @@ namespace PetShop.Business
 			get { return GetProperty(_billCityProperty); }				
             set
             { 
-                OnPropertyChanging("BillCity");
                 SetProperty(_billCityProperty, value); 
-                OnPropertyChanged("BillCity");
             }
 		}
 		
@@ -230,9 +208,7 @@ namespace PetShop.Business
 			get { return GetProperty(_billStateProperty); }				
             set
             { 
-                OnPropertyChanging("BillState");
                 SetProperty(_billStateProperty, value); 
-                OnPropertyChanged("BillState");
             }
 		}
 		
@@ -242,9 +218,7 @@ namespace PetShop.Business
 			get { return GetProperty(_billZipProperty); }				
             set
             { 
-                OnPropertyChanging("BillZip");
                 SetProperty(_billZipProperty, value); 
-                OnPropertyChanged("BillZip");
             }
 		}
 		
@@ -254,9 +228,7 @@ namespace PetShop.Business
 			get { return GetProperty(_billCountryProperty); }				
             set
             { 
-                OnPropertyChanging("BillCountry");
                 SetProperty(_billCountryProperty, value); 
-                OnPropertyChanged("BillCountry");
             }
 		}
 		
@@ -266,9 +238,7 @@ namespace PetShop.Business
 			get { return GetProperty(_courierProperty); }				
             set
             { 
-                OnPropertyChanging("Courier");
                 SetProperty(_courierProperty, value); 
-                OnPropertyChanged("Courier");
             }
 		}
 		
@@ -278,9 +248,7 @@ namespace PetShop.Business
 			get { return GetProperty(_totalPriceProperty); }				
             set
             { 
-                OnPropertyChanging("TotalPrice");
                 SetProperty(_totalPriceProperty, value); 
-                OnPropertyChanged("TotalPrice");
             }
 		}
 		
@@ -290,9 +258,7 @@ namespace PetShop.Business
 			get { return GetProperty(_billToFirstNameProperty); }				
             set
             { 
-                OnPropertyChanging("BillToFirstName");
                 SetProperty(_billToFirstNameProperty, value); 
-                OnPropertyChanged("BillToFirstName");
             }
 		}
 		
@@ -302,9 +268,7 @@ namespace PetShop.Business
 			get { return GetProperty(_billToLastNameProperty); }				
             set
             { 
-                OnPropertyChanging("BillToLastName");
                 SetProperty(_billToLastNameProperty, value); 
-                OnPropertyChanged("BillToLastName");
             }
 		}
 		
@@ -314,9 +278,7 @@ namespace PetShop.Business
 			get { return GetProperty(_shipToFirstNameProperty); }				
             set
             { 
-                OnPropertyChanging("ShipToFirstName");
                 SetProperty(_shipToFirstNameProperty, value); 
-                OnPropertyChanged("ShipToFirstName");
             }
 		}
 		
@@ -326,9 +288,7 @@ namespace PetShop.Business
 			get { return GetProperty(_shipToLastNameProperty); }				
             set
             { 
-                OnPropertyChanging("ShipToLastName");
                 SetProperty(_shipToLastNameProperty, value); 
-                OnPropertyChanged("ShipToLastName");
             }
 		}
 		
@@ -338,9 +298,7 @@ namespace PetShop.Business
 			get { return GetProperty(_authorizationNumberProperty); }				
             set
             { 
-                OnPropertyChanging("AuthorizationNumber");
                 SetProperty(_authorizationNumberProperty, value); 
-                OnPropertyChanged("AuthorizationNumber");
             }
 		}
 		
@@ -350,9 +308,7 @@ namespace PetShop.Business
 			get { return GetProperty(_localeProperty); }				
             set
             { 
-                OnPropertyChanging("Locale");
                 SetProperty(_localeProperty, value); 
-                OnPropertyChanged("Locale");
             }
 		}
 		

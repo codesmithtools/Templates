@@ -58,9 +58,7 @@ End Sub
 			Return GetProperty(_categoryIdProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("CategoryId")
             SetProperty(_categoryIdProperty, value)
-            OnPropertyChanged("CategoryId")
         End Set
 	End Property
 	
@@ -71,9 +69,7 @@ End Sub
 			Return GetProperty(_nameProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Name")
             SetProperty(_nameProperty, value)
-            OnPropertyChanged("Name")
         End Set
 	End Property
 	
@@ -84,9 +80,7 @@ End Sub
 			Return GetProperty(_descnProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Descn")
             SetProperty(_descnProperty, value)
-            OnPropertyChanged("Descn")
         End Set
 	End Property
 	

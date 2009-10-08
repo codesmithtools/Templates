@@ -82,8 +82,15 @@ Public Partial Class Order
 		'MyBase.Child_Create()
     End Sub
 	
-	Private Sub Child_Fetch(ByVal reader As SafeDataReader)
-		Fetch(reader)
+	Private Sub Child_Fetch(ByVal criteria As Object)
+		Dim theCriteria As OrderCriteria = DirectCast(criteria, OrderCriteria)
+        If Not theCriteria Is Nothing Then
+			Using reader As SafeDataReader = DataAccessLayer.Instance.OrderFetch(theCriteria.StateBag)
+				If reader.Read() Then
+					Fetch(reader)
+				End If
+			End Using
+		End If
         
         MarkAsChild()
 	End Sub

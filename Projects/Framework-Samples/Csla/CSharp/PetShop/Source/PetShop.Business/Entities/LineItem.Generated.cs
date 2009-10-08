@@ -58,9 +58,7 @@ namespace PetShop.Business
 			get { return GetProperty(_orderIdProperty); }				
             set
             { 
-                OnPropertyChanging("OrderId");
                 SetProperty(_orderIdProperty, value); 
-                OnPropertyChanged("OrderId");
             }
 		}
 		
@@ -71,9 +69,7 @@ namespace PetShop.Business
 			get { return GetProperty(_lineNumProperty); }				
             set
             { 
-                OnPropertyChanging("LineNum");
                 SetProperty(_lineNumProperty, value); 
-                OnPropertyChanged("LineNum");
             }
 		}
 		
@@ -83,9 +79,7 @@ namespace PetShop.Business
 			get { return GetProperty(_itemIdProperty); }				
             set
             { 
-                OnPropertyChanging("ItemId");
                 SetProperty(_itemIdProperty, value); 
-                OnPropertyChanged("ItemId");
             }
 		}
 		
@@ -95,9 +89,7 @@ namespace PetShop.Business
 			get { return GetProperty(_quantityProperty); }				
             set
             { 
-                OnPropertyChanging("Quantity");
                 SetProperty(_quantityProperty, value); 
-                OnPropertyChanged("Quantity");
             }
 		}
 		
@@ -107,9 +99,7 @@ namespace PetShop.Business
 			get { return GetProperty(_unitPriceProperty); }				
             set
             { 
-                OnPropertyChanging("UnitPrice");
                 SetProperty(_unitPriceProperty, value); 
-                OnPropertyChanged("UnitPrice");
             }
 		}
 		

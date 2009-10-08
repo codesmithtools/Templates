@@ -66,9 +66,7 @@ End Sub
 			Return GetProperty(_usernameProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("Username")
             SetProperty(_usernameProperty, value)
-            OnPropertyChanged("Username")
         End Set
 	End Property
 	
@@ -79,9 +77,7 @@ End Sub
 			Return GetProperty(_applicationNameProperty)
 		End Get
         Set (ByVal value As String)
-            OnPropertyChanging("ApplicationName")
             SetProperty(_applicationNameProperty, value)
-            OnPropertyChanged("ApplicationName")
         End Set
 	End Property
 	
@@ -92,9 +88,7 @@ End Sub
 			Return GetProperty(_isAnonymousProperty)
 		End Get
         Set (ByVal value As System.Nullable(Of Boolean))
-            OnPropertyChanging("IsAnonymous")
             SetProperty(_isAnonymousProperty, value)
-            OnPropertyChanged("IsAnonymous")
         End Set
 	End Property
 	
@@ -105,9 +99,7 @@ End Sub
 			Return GetProperty(_lastActivityDateProperty)
 		End Get
         Set (ByVal value As System.Nullable(Of SmartDate))
-            OnPropertyChanging("LastActivityDate")
             SetProperty(_lastActivityDateProperty, value)
-            OnPropertyChanged("LastActivityDate")
         End Set
 	End Property
 	
@@ -118,9 +110,7 @@ End Sub
 			Return GetProperty(_lastUpdatedDateProperty)
 		End Get
         Set (ByVal value As System.Nullable(Of SmartDate))
-            OnPropertyChanging("LastUpdatedDate")
             SetProperty(_lastUpdatedDateProperty, value)
-            OnPropertyChanged("LastUpdatedDate")
         End Set
 	End Property
 	

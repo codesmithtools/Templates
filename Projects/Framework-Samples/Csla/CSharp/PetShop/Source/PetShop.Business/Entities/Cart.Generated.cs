@@ -72,9 +72,7 @@ namespace PetShop.Business
 			get { return GetProperty(_itemIdProperty); }				
             set
             { 
-                OnPropertyChanging("ItemId");
                 SetProperty(_itemIdProperty, value); 
-                OnPropertyChanged("ItemId");
             }
 		}
         
@@ -84,9 +82,7 @@ namespace PetShop.Business
 			get { return GetProperty(_nameProperty); }				
             set
             { 
-                OnPropertyChanging("Name");
                 SetProperty(_nameProperty, value); 
-                OnPropertyChanged("Name");
             }
 		}
         
@@ -96,9 +92,7 @@ namespace PetShop.Business
 			get { return GetProperty(_typeProperty); }				
             set
             { 
-                OnPropertyChanging("Type");
                 SetProperty(_typeProperty, value); 
-                OnPropertyChanged("Type");
             }
 		}
         
@@ -108,9 +102,7 @@ namespace PetShop.Business
 			get { return GetProperty(_priceProperty); }				
             set
             { 
-                OnPropertyChanging("Price");
                 SetProperty(_priceProperty, value); 
-                OnPropertyChanged("Price");
             }
 		}
         
@@ -120,9 +112,7 @@ namespace PetShop.Business
 			get { return GetProperty(_categoryIdProperty); }				
             set
             { 
-                OnPropertyChanging("CategoryId");
                 SetProperty(_categoryIdProperty, value); 
-                OnPropertyChanged("CategoryId");
             }
 		}
         
@@ -132,9 +122,7 @@ namespace PetShop.Business
 			get { return GetProperty(_productIdProperty); }				
             set
             { 
-                OnPropertyChanging("ProductId");
                 SetProperty(_productIdProperty, value); 
-                OnPropertyChanged("ProductId");
             }
 		}
         
@@ -144,9 +132,7 @@ namespace PetShop.Business
 			get { return GetProperty(_isShoppingCartProperty); }				
             set
             { 
-                OnPropertyChanging("IsShoppingCart");
                 SetProperty(_isShoppingCartProperty, value); 
-                OnPropertyChanged("IsShoppingCart");
             }
 		}
         
@@ -156,9 +142,7 @@ namespace PetShop.Business
 			get { return GetProperty(_quantityProperty); }				
             set
             { 
-                OnPropertyChanging("Quantity");
                 SetProperty(_quantityProperty, value); 
-                OnPropertyChanged("Quantity");
             }
 		}
         
@@ -168,9 +152,7 @@ namespace PetShop.Business
 			get { return GetProperty(_uniqueIDProperty); }				
             set
             { 
-                OnPropertyChanging("UniqueID");
                 SetProperty(_uniqueIDProperty, value); 
-                OnPropertyChanged("UniqueID");
             }
 		}
 		
