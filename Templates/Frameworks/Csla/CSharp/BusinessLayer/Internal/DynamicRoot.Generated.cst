@@ -89,9 +89,7 @@ namespace <%= BusinessProjectName %>
 <% if(!member.IsReadOnly) { %>
             set
             {
-                OnPropertyChanging("<%= member.PropertyName %>");
                 SetProperty(<%= member.PrivateMemberVariableName %>Property, ref <%= member.PrivateMemberVariableName %>, value);
-                OnPropertyChanged("<%= member.PropertyName %>");
             }
 <% } %>
 		}
@@ -104,9 +102,7 @@ namespace <%= BusinessProjectName %>
 <% if(!member.IsReadOnly) { %>
             set
             { 
-                OnPropertyChanging("<%= member.PropertyName %>");
                 SetProperty(<%= member.PrivateMemberVariableName %>Property, value); 
-                OnPropertyChanged("<%= member.PropertyName %>");
             }
 <% } %>
 		}
@@ -121,9 +117,7 @@ namespace <%= BusinessProjectName %>
 			get { return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>); }				
             set
             {
-                OnPropertyChanging("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>");
                 SetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, ref <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>, value);
-                OnPropertyChanged("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>");
             }
 		}
 		
@@ -134,9 +128,7 @@ namespace <%= BusinessProjectName %>
 			get { return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property); }				
             set
             { 
-                OnPropertyChanging("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>");
                 SetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, value); 
-                OnPropertyChanged("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>");
             }
 		}
 		

@@ -86,10 +86,8 @@ If UseMemberVariables Then %>
 		End Get
 <% If Not member.IsReadOnly Then %>
         Set (value As <%= member.SystemType %>)
-            OnPropertyChanging("<%= member.PropertyName %>")
             SetProperty(<%= member.PrivateMemberVariableName %>Property, ByRef <%= member.PrivateMemberVariableName %>, value)
-            OnPropertyChanged("<%= member.PropertyName %>")
-		End Set
+	End Set
 <% End If %>
 	
 	
@@ -103,9 +101,7 @@ If UseMemberVariables Then %>
 <% 
 If Not member.IsReadOnly Then %>
         Set (ByVal value As <%= member.SystemType %>)
-            OnPropertyChanging("<%= member.PropertyName %>")
             SetProperty(<%= member.PrivateMemberVariableName %>Property, value)
-            OnPropertyChanged("<%= member.PropertyName %>")
         End Set
 <% End If 
 End If %>
@@ -123,9 +119,7 @@ End If %>
 			Return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>) 
 		End Get				
         Set (ByVal value As <%= member.BaseSystemType %>)          
-            OnPropertyChanging("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>")
             SetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, ByRef <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>, value)
-            OnPropertyChanged("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>")
         End Set
 	End Property
 	
@@ -136,9 +130,7 @@ End If %>
 			Return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property)				
 		End Get
         Set (ByVal value As <%= member.BaseSystemType %>)
-            OnPropertyChanging("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>")
             SetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, value) 
-            OnPropertyChanged("<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>")
         End Set
 	End Property
 	
