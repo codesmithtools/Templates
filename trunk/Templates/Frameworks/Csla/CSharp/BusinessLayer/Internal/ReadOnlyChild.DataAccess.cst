@@ -50,9 +50,19 @@ namespace <%= BusinessProjectName %>
 			// TODO: load values from childData
 		}
 <% } else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL) { %>
-		private void Child_Fetch(SafeDataReader reader)
+		private void Child_Fetch(object criteria)
 		{
-			Fetch(reader);
+			<%= BusinessClassName %>Criteria theCriteria = criteria as <%= BusinessClassName %>Criteria;
+            if (theCriteria != null)
+            {
+				using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Fetch(theCriteria.StateBag)) 
+				{
+					if(reader.Read())
+					{	
+						Fetch(reader);
+					}
+				}
+			}
 		}
         
         private void Fetch(SafeDataReader reader)

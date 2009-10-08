@@ -72,10 +72,15 @@ Public Partial Class <%= BusinessClassName %>
 		'MyBase.Child_Create()
     End Sub
 	
-	Private Sub Child_Fetch(ByVal reader As SafeDataReader)
-		Fetch(reader)
-        
-        MarkAsChild()
+	Private Sub Child_Fetch(ByVal criteria As Object)
+		Dim theCriteria As <%= BusinessClassName %>Criteria = DirectCast(criteria, <%= BusinessClassName %>Criteria)
+        If Not theCriteria Is Nothing Then
+			Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Fetch(theCriteria.StateBag)
+				If reader.Read() Then
+					Fetch(reader)
+				End If
+			End Using
+		End If
 	End Sub
 	
 	Private Sub Child_Insert()

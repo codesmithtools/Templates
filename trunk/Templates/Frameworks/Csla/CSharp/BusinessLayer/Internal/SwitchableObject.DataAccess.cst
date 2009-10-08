@@ -206,11 +206,21 @@ namespace <%= BusinessProjectName %>
 		    //base.Child_Create();
 		}
 	
-		private void Child_Fetch(SafeDataReader reader)
+		private void Child_Fetch(object criteria)
 		{
-			Fetch(reader);
-            
-            MarkAsChild();
+			<%= BusinessClassName %>Criteria theCriteria = criteria as <%= BusinessClassName %>Criteria;
+            if (theCriteria != null)
+            {
+				using(SafeDataReader reader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Fetch(theCriteria.StateBag)) 
+				{
+					if(reader.Read())
+					{	
+						Fetch(reader);
+					}
+				}
+			}
+			
+			MarkAsChild();
 		}
 		
 		private void Child_Insert()
