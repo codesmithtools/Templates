@@ -89,16 +89,90 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VB", "VB", "{580D643C-0950-4C43-BF66-4724D24C673D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessLayer", "BusinessLayer", "{8AF4CEEA-7B24-40A5-87C2-1A934E4A0F54}"
+	ProjectSection(SolutionItems) = preProject
+		..\VisualBasic\BusinessLayer\CommandObject.cst = ..\VisualBasic\BusinessLayer\CommandObject.cst
+		..\VisualBasic\BusinessLayer\Criteria.cst = ..\VisualBasic\BusinessLayer\Criteria.cst
+		..\VisualBasic\BusinessLayer\DynamicRoot.cst = ..\VisualBasic\BusinessLayer\DynamicRoot.cst
+		..\VisualBasic\BusinessLayer\DynamicRootList.cst = ..\VisualBasic\BusinessLayer\DynamicRootList.cst
+		..\VisualBasic\BusinessLayer\EditableChild.cst = ..\VisualBasic\BusinessLayer\EditableChild.cst
+		..\VisualBasic\BusinessLayer\EditableChildList.cst = ..\VisualBasic\BusinessLayer\EditableChildList.cst
+		..\VisualBasic\BusinessLayer\EditableRoot.cst = ..\VisualBasic\BusinessLayer\EditableRoot.cst
+		..\VisualBasic\BusinessLayer\EditableRootList.cst = ..\VisualBasic\BusinessLayer\EditableRootList.cst
+		..\VisualBasic\BusinessLayer\Entities.cst = ..\VisualBasic\BusinessLayer\Entities.cst
+		..\VisualBasic\BusinessLayer\NameValueList.cst = ..\VisualBasic\BusinessLayer\NameValueList.cst
+		..\VisualBasic\BusinessLayer\ReadOnlyChild.cst = ..\VisualBasic\BusinessLayer\ReadOnlyChild.cst
+		..\VisualBasic\BusinessLayer\ReadOnlyChildList.cst = ..\VisualBasic\BusinessLayer\ReadOnlyChildList.cst
+		..\VisualBasic\BusinessLayer\ReadOnlyList.cst = ..\VisualBasic\BusinessLayer\ReadOnlyList.cst
+		..\VisualBasic\BusinessLayer\ReadOnlyRoot.cst = ..\VisualBasic\BusinessLayer\ReadOnlyRoot.cst
+		..\VisualBasic\BusinessLayer\SwitchableObject.cst = ..\VisualBasic\BusinessLayer\SwitchableObject.cst
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{D033080D-12D9-4DC3-91CB-274675B2BC80}"
+	ProjectSection(SolutionItems) = preProject
+		..\VisualBasic\BusinessLayer\Internal\CommandObject.cst = ..\VisualBasic\BusinessLayer\Internal\CommandObject.cst
+		..\VisualBasic\BusinessLayer\Internal\CommandObject.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\CommandObject.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\CommandObject.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\CommandObject.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\Criteria.cst = ..\VisualBasic\BusinessLayer\Internal\Criteria.cst
+		..\VisualBasic\BusinessLayer\Internal\Criteria.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\Criteria.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\DynamicRoot.cst = ..\VisualBasic\BusinessLayer\Internal\DynamicRoot.cst
+		..\VisualBasic\BusinessLayer\Internal\DynamicRoot.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\DynamicRoot.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\DynamicRoot.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\DynamicRoot.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\DynamicRootList.cst = ..\VisualBasic\BusinessLayer\Internal\DynamicRootList.cst
+		..\VisualBasic\BusinessLayer\Internal\DynamicRootList.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\DynamicRootList.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\DynamicRootList.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\DynamicRootList.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\EditableChild.cst = ..\VisualBasic\BusinessLayer\Internal\EditableChild.cst
+		..\VisualBasic\BusinessLayer\Internal\EditableChild.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\EditableChild.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\EditableChild.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\EditableChild.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\EditableChildList.cst = ..\VisualBasic\BusinessLayer\Internal\EditableChildList.cst
+		..\VisualBasic\BusinessLayer\Internal\EditableChildList.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\EditableChildList.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\EditableChildList.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\EditableChildList.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\EditableRoot.cst = ..\VisualBasic\BusinessLayer\Internal\EditableRoot.cst
+		..\VisualBasic\BusinessLayer\Internal\EditableRoot.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\EditableRoot.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\EditableRoot.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\EditableRoot.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\EditableRootList.cst = ..\VisualBasic\BusinessLayer\Internal\EditableRootList.cst
+		..\VisualBasic\BusinessLayer\Internal\EditableRootList.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\EditableRootList.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\EditableRootList.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\EditableRootList.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\NameValueList.cst = ..\VisualBasic\BusinessLayer\Internal\NameValueList.cst
+		..\VisualBasic\BusinessLayer\Internal\NameValueList.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\NameValueList.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\NameValueList.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\NameValueList.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\ReadOnlyChild.cst = ..\VisualBasic\BusinessLayer\Internal\ReadOnlyChild.cst
+		..\VisualBasic\BusinessLayer\Internal\ReadOnlyChild.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\ReadOnlyChild.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\ReadOnlyChild.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\ReadOnlyChild.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\ReadOnlyChildList.cst = ..\VisualBasic\BusinessLayer\Internal\ReadOnlyChildList.cst
+		..\VisualBasic\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\ReadOnlyChildList.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\ReadOnlyChildList.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\ReadOnlyList.cst = ..\VisualBasic\BusinessLayer\Internal\ReadOnlyList.cst
+		..\VisualBasic\BusinessLayer\Internal\ReadOnlyList.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\ReadOnlyList.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\ReadOnlyList.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\ReadOnlyList.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\ReadOnlyRoot.cst = ..\VisualBasic\BusinessLayer\Internal\ReadOnlyRoot.cst
+		..\VisualBasic\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\ReadOnlyRoot.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\ReadOnlyRoot.Generated.cst
+		..\VisualBasic\BusinessLayer\Internal\SwitchableObject.cst = ..\VisualBasic\BusinessLayer\Internal\SwitchableObject.cst
+		..\VisualBasic\BusinessLayer\Internal\SwitchableObject.DataAccess.cst = ..\VisualBasic\BusinessLayer\Internal\SwitchableObject.DataAccess.cst
+		..\VisualBasic\BusinessLayer\Internal\SwitchableObject.Generated.cst = ..\VisualBasic\BusinessLayer\Internal\SwitchableObject.Generated.cst
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebLayer", "WebLayer", "{B3F774E2-9D8D-4780-A9F5-D54958DEF3E8}"
+	ProjectSection(SolutionItems) = preProject
+		..\VisualBasic\WebLayer\Default.aspx.cst = ..\VisualBasic\WebLayer\Default.aspx.cst
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccessLayer", "DataAccessLayer", "{AB7EA04C-C7E9-447A-9277-B677409B54BA}"
+	ProjectSection(SolutionItems) = preProject
+		..\VisualBasic\DataAccessLayer\DataAccessLayer.cst = ..\VisualBasic\DataAccessLayer\DataAccessLayer.cst
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{1EBCD6D8-6E9E-41EB-8968-F1ABAD8CB1CE}"
+	ProjectSection(SolutionItems) = preProject
+		..\VisualBasic\DataAccessLayer\Internal\ParameterizedSQL.cst = ..\VisualBasic\DataAccessLayer\Internal\ParameterizedSQL.cst
+		..\VisualBasic\DataAccessLayer\Internal\ParameterizedSQLBase.cst = ..\VisualBasic\DataAccessLayer\Internal\ParameterizedSQLBase.cst
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{AA24549B-F016-4588-9AE9-3A503B4DAD79}"
+	ProjectSection(SolutionItems) = preProject
+		..\VisualBasic\WebLayer\Internal\Default.aspx.cst = ..\VisualBasic\WebLayer\Internal\Default.aspx.cst
+		..\VisualBasic\WebLayer\Internal\Default.aspx.vb.cst = ..\VisualBasic\WebLayer\Internal\Default.aspx.vb.cst
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.Tests", "CodeSmith.SchemaHelper.Tests\CodeSmith.SchemaHelper.Tests.csproj", "{209FCE36-FF4D-45C0-991A-D96B86ED3F1A}"
 EndProject
