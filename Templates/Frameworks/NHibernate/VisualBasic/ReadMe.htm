@@ -165,152 +165,105 @@ Download the latest release from GoogleCode.<br>
 <h2><a title="History" name="History"></a>History</h2>
 <p>
 <ul>
-<li>Release 1.1.4.r953
-<ul>
-<li>New Feature: Added AutoCloseSession property to INHibernateSession.</li>
-</ul></li>
-<li>Release 1.1.3.r908
-<ul>
-<li>New Feature: Added SetFetchMode method to ManagerBase, providing an easy way to eager load entities with the managers.</li>
-<li>New Feature: Added error checking for Tables without primary keys, now automatically adds them to ExcludeTables list during generation.</li>
-</ul></li>
-<li>Release 1.1.2.r891
-<ul>
-<li>Update: cs_ManyToMany extended property now requires a boolean value...</li>
-<li>New Feature: ...tables may now be marked as NOT many to many.</li>
-</ul></li>
-<li>Release 1.1.1
-<ul>
-<li>Bug Fix: Added missing assemblies for NHibernate 2.1.</li>
-<li class="style1">Update: NHibernateSession API.
-<ul>
-<li>Register to IncrementRefCount.</li>
-<li>Unregister to DecrementRefCount.</li>
-</ul>
-</li>
-</ul></li>
-<li>Release 1.1.0
-<ul>
-<li>Added support for NHibernate 2.1! Now includes versions...
-<ul>
-<li>2.1.0.GA</li>
-<li>2.0.1.GA</li>
-<li>1.2.1.GA</li>
-</ul>
-</li>
-<li>NHibernateSessions will now close ISessions that are not in use.
-<ul>
-<li>New Feature: Managers now impliment IDisposable.</li>
-<li>New Feature: NHibernateSessions now expose Register and Unregister methods. (ISessions are closed automatically when no objects are registered to use them.)</li>
-<li>Bug Fix: No more ObjectDisposed exceptions from global ISession. (This depends on the proper disposal of managers.)</li>
-</ul>
-</li>
-<li class="style1">NHibernateSession API has been updated to be less ISession specific.
-<ul>
-<li>Update: INHibernateSession.BeginTransaction now returns void.</li>
-<li>Update: INHibernateSession.CommitTransaction now returns void.</li>
-<li>Update: INHibernateSession.RollbackTransaction now returns void.</li>
-<li>Removed: INHibernateSessionManager.CreateSession (Use default NHibernateSession constructor instead.)</li>
-</ul>
-</li>
-</ul></li>
-<li>Release 1.0.19
-<ul>
-<li>Bug Fix: Added checking for null/empty ExcludedColumns regex patterns.</li>
-</ul></li>
-<li>Release 1.0.18
-<ul>
-<li>New Feature: Added ExcludedColumn property, used to specify Regular Expressions that will prevent generation of members from matching columns.</li>
-</ul></li>
-<li>Release 1.0.17
-<ul>
-<li>Bug Fix: Now Association Columns will get properties when their table is excluded.</li>
-</ul></li>
-<li>Release 1.0.16
-<ul>
-<li>Bug Fix: Updated version column logic to prevent primary key property duplication on generation.</li>
-</ul></li>
-<li>Release 1.0.15
-<ul>
-<li>Bug Fix: Changed default HBM Bag Inverse attribute to false to fix many to many persistence issue.</li>
-</ul></li>
-<li>Release 1.0.14
-<ul>
-<li>New Feature: Added Query Methods to Managers.</li>
-<li>New Feature: Added Unique Query & Criteria Methods to Managers.</li>
-<li class="style2">Update: Removed automatic flush on session close.</li>
-</ul></li>
-<li>Release 1.0.13
-<ul>
-<li>Bug Fix: SearchCritera was including foreign keys columns even when their associated tables were excluded.</li>
-</ul></li>
-<li>Release 1.0.12
-<ul>
-<li>Added Evict Method to Manager Objects.</li>
-</ul></li>
-<li>Release 1.0.11
-<ul>
-<li>Bug Fix: Updated UnitTests to use only non key and version columns for Update.</li>
-</ul></li>
-<li>Release 1.0.10
-<ul>
-<li>Bug Fix: Removed MembersPrimaryKeyUnion and integrated logic with Members list; this should prevent redundant properties from being created for primary key columns.</li>
-</ul></li>
-<li>Release 1.0.9
-<ul>
-<li>Update Row Version Regex; now accepts only columns named "RowVersion" or "Version".</li>
-</ul></li>
-<li>Release 1.0.8
-<ul>
-<li>Fix Row Version rutime bug in HBM.</li>
-</ul></li>
-<li>Release 1.0.7
-<ul>
-<li>Add Row Version support in HBM.</li>
-</ul></li>
-<li>Release 1.0.6
-<ul>
-<li>Added Nullable Column/Type support.</li>
-</ul></li>
-<li>Release 1.0.5
-<ul>
-<li class="style1">Reworked variable naming system.
-<ul>
-<li>Bug Fix: Column names will no be set to singluar for no reason.</li>
-<li>Bug Fix: Better duplicate member name prevention.</li>
-</ul></li>
-<li>Updated ManyToMany logic.
-<ul>
-<li>Added RowVersion Regex.</li>
-<li>Added Extended Data override (cs_ManyToMany).</li>
-</ul></li>
-</ul></li>
-<li>Release 1.0.4
-<ul>
-<li>Updated HBM files to use Table.FullName.</li>
-</ul></li>
-<li>Release 1.0.3
-<ul>
-<li>Updated ManyToMany logic.</li>
-</ul></li>
-<li>Release 1.0.2
-<ul>
-<li class="style1">Improved logic that prevents duplication of columns and associations in the business entities.</li>
-<li>Improved logic for processing Primary Keys columns</li>
-<li>Refactored code to use common NHibernateHelper assembly.</li>
-</ul></li>
-<li>Release 1.0.1
-<ul>
-<li>Bug Fix: We now support creating unit test data for varchar(max).</li>
-<li>New Feature: Any table or column name can be overriden by added "cs_alias" to it's extended properties.
-<ul>
-<li>Bug Fix: We now support one table having two foreign keys tied to the same table.</li>
-</ul></li>
-</ul></li>
-<li>Release 1.0.0
-<ul>
-<li>Initial release.</li>
-</ul></li>
+ <li>Release 1.1.5.r1020
+  <ul>
+   <li>New Feature: Added VersionColumn property to configure VersionRegex.</li>
+   <li>Bug Fix: Added better error message when a subtemplate is called without being configured by the master.</li>
+   <li>Bug Fix: ManyToMany tables no longer require a primary key.</li>
+  </ul>
+ </li>
+ <li>Release 1.1.4.r953
+  <ul>
+   <li>New Feature: Added AutoCloseSession property to INHibernateSession.</li>
+  </ul>
+ </li>
+ <li>Release 1.1.3.r908
+  <ul>
+   <li>New Feature: Added SetFetchMode method to ManagerBase, providing an easy way to eager load entities with the managers.</li>
+   <li>New Feature: Added error checking for Tables without primary keys, now automatically adds them to ExcludeTables list during generation.</li>
+  </ul>
+ </li>
+ <li>Release 1.1.2.r891
+  <ul>
+   <li>Update: cs_ManyToMany extended property now requires a boolean value...</li>
+   <li>New Feature: ...tables may now be marked as NOT many to many.</li>
+  </ul>
+ </li>
+ <li>Release 1.1.1.r865
+  <ul>
+   <li>Bug Fix: Added missing assemblies for NHibernate 2.1.</li>
+   <li class="style1">Update: NHibernateSession API.
+    <ul>
+     <li>Register to IncrementRefCount.</li>
+     <li>Unregister to DecrementRefCount.</li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li>Release 1.1.0.r859
+  <ul>
+   <li>New Features
+    <ul>
+     <li>Added support for NHibernate 2.1! Now includes versions..
+      <ul>
+       <li><a href="http://2.1.0.GA">2.1.0.GA</a></li>
+       <li><a href="http://2.0.1.GA">2.0.1.GA</a></li>
+       <li><a href="http://1.2.1.GA">1.2.1.GA</a></li>
+      </ul>
+     </li>
+     <li>NHibernateSessions now close ISessions that are not in use.</li>
+     <li>Managers now implement IDisposable.</li>
+     <li>New Manager Members
+      <ul>
+       <li>Query</li>
+       <li>UniqueQuery</li>
+       <li>Cirteria</li>
+       <li>Evict</li>
+      </ul>
+     </li>
+     <li>Added ExcludedColumn property to templates.</li>
+     <li>Added Row Version support in HBM.</li>
+     <li>Added Nullable Column/Type support.</li>
+     <li>Added Extended Property (&quot;cs_alias&quot;) to override table and column names.</li>
+     <li>Updated ManyToMany logic.</li>
+    </ul>
+   </li>
+   <li>Bug Fixes
+    <ul>
+     <li>No more ObjectDisposed exceptions from global ISession. (This depends on the proper disposal of managers.)</li>
+     <li>Added checking for null/empty ExcludedColumns regex patterns.</li>
+     <li>Now Association Columns will get properties when their table is excluded.</li>
+     <li>Updated version column logic to prevent primary key property duplication on generation.</li>
+     <li>Changed default HBM Bag Inverse attribute to false to fix many to many persistence issue.</li>
+     <li>SearchCritera was including foreign keys columns even when their associated tables were excluded.</li>
+     <li>Updated UnitTests to use only non key and version columns for Update.</li>
+     <li>Removed MembersPrimaryKeyUnion and integrated logic with Members list; this should prevent redundant properties from being created for primary key columns.</li>
+     <li>Fix Row Version rutime bug in HBM.</li>
+     <li>Column names will no be set to singluar for no reason.</li>
+     <li>Better duplicate member name prevention.</li>
+     <li>prevents duplication of columns and associations in the business entities</li>
+     <li>Now support creating unit test data for varchar(max).</li>
+     <li>Now support one table having two foreign keys tied to the same table.</li>
+    </ul>
+   </li>
+   <li>Misc
+    <ul>
+     <li>Update: INHibernateSession.BeginTransaction now returns void.</li>
+     <li>Update: INHibernateSession.CommitTransaction now returns void.</li>
+     <li>Update: INHibernateSession.RollbackTransaction now returns void.</li>
+     <li>Removed: INHibernateSessionManager.CreateSession (Use default NHibernateSession constructor instead.)</li>
+     <li>Update: Removed automatic flush on session close.</li>
+     <li>Update: Row Version Regex; now accepts only columns named &quot;RowVersion&quot; or &quot;Version&quot;.</li>
+     <li>Update: HBM files use Table.FullName.</li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li>Release 1.0.0
+  <ul>
+   <li>Initial release.</li>
+  </ul>
+ </li>
 </ul>
 </p>
 <p>
