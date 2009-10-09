@@ -10,6 +10,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Property Name="ExcludedColumns" Type="CodeSmith.CustomProperties.StringCollection" Default="" Optional="True" Category="1b. Database Options" Description="A collection of regular expressions; a match will excluded a column." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." Filter="SourceTable" %>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
+<%@ Property Name="VersionColumn" Type="System.String" Default="^((R|r)ow)?(V|v)ersion$" Optional="True" Category="1b. Database Options" Description="A regular expression; a match will mark a column as a version column." %>
 
 <%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v2_0" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
 <%@ Property Name="VsVersion" Type="VisualStudioVersion" Default="VS_2008" Optional="False" Category="2. Versions" Description="The version of Visual Studio to generate for." %>
@@ -58,7 +59,7 @@ Public Overloads Overrides Sub Render(ByVal writer As TextWriter)
     Else
         ec = New String(0) {}
     End If
-    HelperInit(Me.TablePrefix, Me.SystemVB, Me.KeyWords, ec)
+    HelperInit(Me.TablePrefix, Me.SystemVB, Me.KeyWords, ec, Me.VersionColumn)
 	
 	Me.tablePrefix = Me.TablePrefix
 	If ExcludedTables Is Nothing Then
@@ -66,7 +67,7 @@ Public Overloads Overrides Sub Render(ByVal writer As TextWriter)
 	End If
 
     For Each table As TableSchema In SourceDatabase.Tables
-        If Not ExcludedTables.Contains(table) AndAlso Not table.HasPrimaryKey Then
+        If Not ExcludedTables.Contains(table) AndAlso Not table.HasPrimaryKey AndAlso Not IsManyToMany(table) Then
             System.Windows.Forms.MessageBox.Show([String].Format("The table, ""{0}"", has no PrimaryKey; it has been added to the ExcludedTables list.", table.Name), "CodeSmith - NHibernate Template Warning", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning)
             ExcludedTables.Add(table)
         End If
@@ -80,9 +81,9 @@ Public Overloads Overrides Sub Render(ByVal writer As TextWriter)
 			RenderUnitTests(table)
 		End If
 	Next
+    
 	RenderBaseClasses()
 	RenderManagerFactory()
-
 	RegisterReferences()
 End Sub
 

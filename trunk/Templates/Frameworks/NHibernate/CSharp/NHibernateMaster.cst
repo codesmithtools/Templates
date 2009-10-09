@@ -10,6 +10,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Property Name="ExcludedColumns" Type="CodeSmith.CustomProperties.StringCollection" Default="" Optional="True" Category="1b. Database Options" Description="A collection of regular expressions; a match will excluded a column." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." Filter="SourceTable"%>
 <%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
+<%@ Property Name="VersionColumn" Type="System.String" Default="^((R|r)ow)?(V|v)ersion$" Optional="True" Category="1b. Database Options" Description="A regular expression; a match will mark a column as a version column." %>
 
 <%@ Property Name="NHibernateVersion" Type="NHibernateVersion" Default="v2_0" Optional="False" Category="2. Versions" Description="The version of NHibernate to generate for." %>
 <%@ Property Name="VsVersion" Type="VisualStudioVersion" Default="VS_2008" Optional="False" Category="2. Versions" Description="The version of Visual Studio to generate for." %>
@@ -53,13 +54,13 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 public override void Render(TextWriter writer)
 {
     string[] excludedColumns = (ExcludedColumns != null) ? ExcludedColumns.ToArray() : new string[0]{};
-	HelperInit(this.TablePrefix, this.SystemCSharp, this.KeyWords, excludedColumns);
+	HelperInit(this.TablePrefix, this.SystemCSharp, this.KeyWords, excludedColumns, this.VersionColumn);
 	
 	if(ExcludedTables == null)
 		ExcludedTables = new TableSchemaCollection();
 	
     foreach(TableSchema table in SourceDatabase.Tables)
-        if(!ExcludedTables.Contains(table) && !table.HasPrimaryKey)
+        if(!ExcludedTables.Contains(table) && !table.HasPrimaryKey && !IsManyToMany(table))
         {
             System.Windows.Forms.MessageBox.Show(
                 String.Format("The table, \"{0}\", has no PrimaryKey; it has been added to the ExcludedTables list.", table.Name),
@@ -77,9 +78,9 @@ public override void Render(TextWriter writer)
 			RenderManagerObjects(table);
 			RenderUnitTests(table);
 		}
+        
 	RenderBaseClasses();
 	RenderManagerFactory();
-	
 	RegisterReferences();
 }
 

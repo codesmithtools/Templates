@@ -15,17 +15,6 @@ namespace NHibernateHelper
         internal const string ExtendedPropertyName = "cs_alias";
         internal const string ExtendedPropertyManyToMany = "cs_ManyToMany";
 
-        private static Regex _versionRegex = null;
-        public static Regex VersionRegex
-        {
-            get
-            {
-                if(_versionRegex == null)
-                    _versionRegex = new Regex("^((R|r)ow)?(V|v)ersion$", RegexOptions.Compiled);
-                return _versionRegex;
-            }
-        }
-
         private const string SingularMemberSuffix = "Member";
         internal const string ListSuffix = "List";
 
@@ -38,21 +27,18 @@ namespace NHibernateHelper
         /// </summary>
         /// <param name="tablePrefix">TablePrefix Property</param>
         /// <param name="namingProperty">NamingContentions Property</param>
-        public static void HelperInit(string tablePrefix, MapCollection systemCSharpAliasMap, MapCollection csharpKeyWordEscapeMap, string[] excludedColumns) //, NamingProperty namingConventions)
+        public static void HelperInit(string tablePrefix, MapCollection systemCSharpAliasMap, MapCollection csharpKeyWordEscapeMap, string[] excludedColumns, string versionRegex) //, NamingProperty namingConventions)
         {
             _tablePrefix = tablePrefix;
 
             SystemCSharpAliasMap = systemCSharpAliasMap;
             CsharpKeyWordEscapeMap = csharpKeyWordEscapeMap;
+            VersionRegex = new Regex(versionRegex, RegexOptions.Compiled);
 
             _excludedColumns = new List<Regex>();
             foreach (var s in excludedColumns)
-            {
                 if (!String.IsNullOrEmpty(s) && s.Trim().Length > 0)
-                {
                     _excludedColumns.Add(new Regex(s, RegexOptions.Compiled));
-                }
-            }
 
             //_tableNaming = namingConventions.TableNaming;
             //_entityNaming = namingConventions.EntityNaming;
@@ -64,6 +50,7 @@ namespace NHibernateHelper
 
         internal static MapCollection CsharpKeyWordEscapeMap { get; set; }
         internal static MapCollection SystemCSharpAliasMap { get; set; }
+        internal static Regex VersionRegex { get; set; }
 
         private static List<Regex> _excludedColumns = null;
         internal static bool IsExcludedColumn(string s)
@@ -118,6 +105,11 @@ namespace NHibernateHelper
 
         internal static string ValidateName(string memberName)
         {
+            // This is not the best place to put this, but I know that it is the first place
+            // to blow up when the HelperInit has not been run by the master template.
+            if (CsharpKeyWordEscapeMap == null)
+                throw new Exception("Subtemplates may only be called via NHiberanteMaster.cst");
+
             return (CsharpKeyWordEscapeMap.ContainsKey(memberName))
                 ? CsharpKeyWordEscapeMap[memberName]
                 : memberName;
