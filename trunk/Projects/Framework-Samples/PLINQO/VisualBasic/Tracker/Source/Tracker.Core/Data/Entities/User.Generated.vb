@@ -829,7 +829,7 @@ Namespace Tracker.Core.Data
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As User
-            Return DirectCast(DirectCast(Me, ICloneable), User).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable).Clone(), User)
         End Function
 #End Region
 

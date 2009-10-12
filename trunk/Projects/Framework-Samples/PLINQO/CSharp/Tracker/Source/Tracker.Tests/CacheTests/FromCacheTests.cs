@@ -19,7 +19,7 @@ namespace Tracker.Tests.CacheTests
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetKey();
+                    var key = query.GetHashKey();
                     var roles = query.FromCache();
                     
                     var cache = HttpRuntime.Cache.Get(key);
@@ -45,7 +45,7 @@ namespace Tracker.Tests.CacheTests
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetKey(); 
+                    var key = query.GetHashKey(); 
                     var roles = query.FromCache(2);
                     
                     var cache1 = HttpRuntime.Cache.Get(key);
@@ -76,7 +76,7 @@ namespace Tracker.Tests.CacheTests
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetKey();
+                    var key = query.GetHashKey();
                     var roles = query.FromCache(DateTime.UtcNow.AddSeconds(2));
 
                     var cache1 = HttpRuntime.Cache.Get(key);
@@ -107,7 +107,7 @@ namespace Tracker.Tests.CacheTests
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetKey();
+                    var key = query.GetHashKey();
                     var roles = query.FromCache(new TimeSpan(0, 0, 2));
 
                     var cache1 = HttpRuntime.Cache.Get(key);
@@ -151,7 +151,7 @@ namespace Tracker.Tests.CacheTests
                 {
                     var guid = System.Guid.NewGuid().ToString();
                     var query = db.Role.Where(r => r.Name == guid);
-                    var key = query.GetKey();
+                    var key = query.GetHashKey();
                     var roles = query.FromCache(new CacheSettings(2, false));
 
                     Assert.IsNotNull(roles);
@@ -180,7 +180,7 @@ namespace Tracker.Tests.CacheTests
                 {
                     var guid = System.Guid.NewGuid().ToString();
                     var query = db.Role.Where(r => r.Name == guid);
-                    var key = query.GetKey();
+                    var key = query.GetHashKey();
                     var roles = query.FromCache(new CacheSettings(2, true));
 
                     Assert.IsNotNull(roles);

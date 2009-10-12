@@ -87,6 +87,7 @@
     <Compile Include="CacheTests\FromCacheFirstOrDefaultTests.vb" />
     <Compile Include="CacheTests\FromCacheTests.vb" />
     <Compile Include="CacheTests\RoleTests.vb" />
+    <Compile Include="DemoTests.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
