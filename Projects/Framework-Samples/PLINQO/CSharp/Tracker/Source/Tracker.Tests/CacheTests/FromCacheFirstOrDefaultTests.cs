@@ -143,20 +143,50 @@ namespace Tracker.Tests.CacheTests
         }
 
         [Test]
+        public void NoCacheEmptyResultTest()
+        {
+            try
+            {
+                using (var db = new TrackerDataContext())
+                {
+                    var guid = System.Guid.NewGuid().ToString();
+                    var query = db.Role.Where(r => r.Name == guid);
+                    var key = query.Take(1).GetKey();
+                    var role = query.FromCacheFirstOrDefault(new CacheSettings(2, false));
+
+                    Assert.IsNull(role);
+
+                    var cache = HttpRuntime.Cache.Get(key);
+                    Assert.IsNull(cache);
+                }
+            }
+            catch (AssertionException)
+            {
+                throw;
+            }
+            catch
+            {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
         public void CacheEmptyResultTest()
         {
             try
             {
                 using (var db = new TrackerDataContext())
                 {
-                    var query = db.Role.Where(r => r.Name == System.Guid.NewGuid().ToString());
+                    var guid = System.Guid.NewGuid().ToString();
+                    var query = db.Role.Where(r => r.Name == guid);
                     var key = query.Take(1).GetKey();
-                    var role = query.FromCacheFirstOrDefault(new CacheSettings { Duration = 2, CacheEmptyResult = false });
+                    var role = query.FromCacheFirstOrDefault(new CacheSettings(2, true));
 
                     Assert.IsNull(role);
 
-                    var cache = HttpRuntime.Cache.Get(key);
-                    Assert.IsNull(cache);
+                    var cache = HttpRuntime.Cache.Get(key) as List<Role>;
+                    Assert.IsNotNull(cache);
+                    Assert.AreEqual(0, cache.Count());
                 }
             }
             catch (AssertionException)

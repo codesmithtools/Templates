@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using CodeSmith.Data.Linq;
@@ -142,21 +143,52 @@ namespace Tracker.Tests.CacheTests
         }
 
         [Test]
-        public void CacheEmptyResultTest()
+        public void NoCacheEmptyResultTest()
         {
             try
             {
                 using (var db = new TrackerDataContext())
                 {
-                    var query = db.Role.Where(r => r.Name == System.Guid.NewGuid().ToString());
+                    var guid = System.Guid.NewGuid().ToString();
+                    var query = db.Role.Where(r => r.Name == guid);
                     var key = query.GetKey();
-                    var roles = query.FromCache(new CacheSettings { Duration = 2, CacheEmptyResult = false } );
+                    var roles = query.FromCache(new CacheSettings(2, false));
 
                     Assert.IsNotNull(roles);
                     Assert.AreEqual(0, roles.Count());
 
                     var cache = HttpRuntime.Cache.Get(key);
                     Assert.IsNull(cache);
+                }
+            }
+            catch (AssertionException)
+            {
+                throw;
+            }
+            catch
+            {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void CacheEmptyResultTest()
+        {
+            try
+            {
+                using (var db = new TrackerDataContext())
+                {
+                    var guid = System.Guid.NewGuid().ToString();
+                    var query = db.Role.Where(r => r.Name == guid);
+                    var key = query.GetKey();
+                    var roles = query.FromCache(new CacheSettings(2, true));
+
+                    Assert.IsNotNull(roles);
+                    Assert.AreEqual(0, roles.Count());
+
+                    var cache = HttpRuntime.Cache.Get(key) as List<Role>;
+                    Assert.IsNotNull(cache);
+                    Assert.AreEqual(0, cache.Count());
                 }
             }
             catch (AssertionException)

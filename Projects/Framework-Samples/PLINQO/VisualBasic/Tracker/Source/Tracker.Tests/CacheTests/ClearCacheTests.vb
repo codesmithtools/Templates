@@ -13,16 +13,16 @@ Namespace Tracker.Tests.CacheTests
             Try
                 Using db = New TrackerDataContext()
                     Dim query = db.Role.Where(Function(r) r.Name = "Test Role")
-                    Dim key = query.GetKey()
+                    Dim key = query.GetHashKey()
                     Dim roles = query.FromCache()
 
-                    Dim cache1 = HttpRuntime.Cache.[Get](key)
+                    Dim cache1 = HttpRuntime.Cache(key)
                     Assert.IsNotNull(cache1)
                     Assert.AreSame(roles, cache1)
 
                     query.ClearCache()
 
-                    Dim cache2 = HttpRuntime.Cache.[Get](key)
+                    Dim cache2 = HttpRuntime.Cache(key)
                     Assert.IsNull(cache2)
                 End Using
             Catch generatedExceptionName As AssertionException
