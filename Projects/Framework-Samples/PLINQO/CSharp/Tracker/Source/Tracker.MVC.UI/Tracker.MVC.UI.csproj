@@ -98,6 +98,7 @@
   <ItemGroup>
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Lib\Images\anonymous.gif" />
     <Content Include="Lib\Images\body.jpg" />
     <Content Include="Lib\Images\body_bg.jpg" />
     <Content Include="Lib\Images\delete.gif" />

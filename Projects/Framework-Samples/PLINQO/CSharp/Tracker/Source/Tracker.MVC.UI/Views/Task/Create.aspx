@@ -28,8 +28,8 @@
             </p>
             <p>
                 <label for="StatusId">Status:</label>
-                 <%= Html.DropDownList("StatusId", Model.Statuses, "Select Status")%>
-                <%= Html.ValidationMessage("StatusId", "*") %>
+                 <%= Html.DropDownList("Status", Model.Statuses, "Select Status")%>
+                <%= Html.ValidationMessage("Status", "*") %>
             </p>
             <p>
                 <label for="Summary">Summary:</label>

@@ -1,4 +1,5 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<TaskListViewData>" %>
+<%@ Import Namespace="PLINQO.Mvc.UI"%>
 <%@ Import Namespace="PLINQO.Mvc.UI.Models"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
@@ -72,7 +73,7 @@
                 <a class="image-action-link" href="<%= Url.Action("Delete", new {id = item.Id}) %>"><img src="/lib/images/delete.gif" alt="Delete" /></a>
             </td>
             <td><%=Html.Encode(item.Id)%></td>
-            <td><%=Html.Encode(item.Status.Name)%></td>
+            <td><%=Html.Encode(UIHelper.GetDescription(item.Status))%></td>
             <%
            if (item.AssignedUser != null) {%>
             <td><%=Html.Encode(item.AssignedUser.FirstName + " " + item.AssignedUser.LastName)%></td>

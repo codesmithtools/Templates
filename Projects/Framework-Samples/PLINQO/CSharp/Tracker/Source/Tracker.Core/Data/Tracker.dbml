@@ -30,7 +30,7 @@
       <Column Name="CreatedDate" Storage="_createdDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="ModifiedDate" Storage="_modifiedDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />
-      <Association Name="Role_UserRole" Member="UserRoleList" Storage="_userRoleList" OtherKey="RoleId" Type="UserRole" />
+      <Association Name="Role_UserRole" Member="UserRoleList" Storage="_userRoleList" OtherKey="RoleId" Type="UserRole" DeleteOnNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.Task" Member="Task">
@@ -49,8 +49,8 @@
       <Column Name="LastModifiedBy" Storage="_lastModifiedBy" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
       <Column Name="StatusId" Member="Status" Storage="_statusId" Type="Status" DbType="int NOT NULL" CanBeNull="false" />
       <Column Name="PriorityId" Member="Priority" Storage="_priorityId" Type="Priority" DbType="int" CanBeNull="true" />
-      <Association Name="Task_Audit" Member="AuditList" Storage="_auditList" OtherKey="TaskId" Type="Audit" />
-      <Association Name="Task_TaskExtended" Member="TaskExtended" Storage="_taskExtended" OtherKey="TaskId" Type="TaskExtended" Cardinality="One" />
+      <Association Name="Task_Audit" Member="AuditList" Storage="_auditList" OtherKey="TaskId" Type="Audit" DeleteOnNull="false" />
+      <Association Name="Task_TaskExtended" Member="TaskExtended" Storage="_taskExtended" OtherKey="TaskId" Type="TaskExtended" Cardinality="One" DeleteOnNull="false" />
       <Association Name="User_Task" Member="AssignedUser" Storage="_assignedUser" ThisKey="AssignedId" Type="User" IsForeignKey="true" />
       <Association Name="User_Task1" Member="CreatedUser" Storage="_createdUser" ThisKey="CreatedId" Type="User" IsForeignKey="true" />
     </Type>
@@ -84,10 +84,10 @@
       <Column Name="LastActivityDate" Storage="_lastActivityDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="LastPasswordChangeDate" Storage="_lastPasswordChangeDate" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
       <Column Name="AvatarType" Storage="_avatarType" Type="System.String" DbType="nvarchar(150)" CanBeNull="true" />
-      <Association Name="User_Audit" Member="AuditList" Storage="_auditList" OtherKey="UserId" Type="Audit" />
-      <Association Name="User_Task" Member="AssignedTaskList" Storage="_assignedTaskList" OtherKey="AssignedId" Type="Task" />
-      <Association Name="User_Task1" Member="CreatedTaskList" Storage="_createdTaskList" OtherKey="CreatedId" Type="Task" />
-      <Association Name="User_UserRole" Member="UserRoleList" Storage="_userRoleList" OtherKey="UserId" Type="UserRole" />
+      <Association Name="User_Audit" Member="AuditList" Storage="_auditList" OtherKey="UserId" Type="Audit" DeleteOnNull="false" />
+      <Association Name="User_Task" Member="AssignedTaskList" Storage="_assignedTaskList" OtherKey="AssignedId" Type="Task" DeleteOnNull="false" />
+      <Association Name="User_Task1" Member="CreatedTaskList" Storage="_createdTaskList" OtherKey="CreatedId" Type="Task" DeleteOnNull="false" />
+      <Association Name="User_UserRole" Member="UserRoleList" Storage="_userRoleList" OtherKey="UserId" Type="UserRole" DeleteOnNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.UserRole" Member="UserRole">
