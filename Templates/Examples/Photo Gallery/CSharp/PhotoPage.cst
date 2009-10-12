@@ -1,0 +1,47 @@
+<%-- 
+Name: Gallery Generator
+Author: Blake Niemyjski
+Description: Generates a photo gallery.
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="html" CompilerVersion="v3.5" Description="Tempalte that generates the gallery photo page." %>
+<%@ Property Name="Name" Type="System.String" Default="Photo1" Optional="False" Category="1. Required" Description="The name of your photo."%>
+<%@ Property Name="Description" Type="System.String" Default="Description" Optional="False" Category="1. Required" Description="The description of your photo."%>
+<%@ Property Name="Path" Type="System.String" Default="My Photo Gallery" Optional="False" Category="1. Required" Description="The path to the current photo."%>
+<%@ Property Name="PreviousImage" Type="System.String" Default="My Photo Gallery" Optional="True" Category="2. Optional" Description="The path to the previous photo."%>
+<%@ Property Name="NextImage" Type="System.String" Default="My Photo Gallery" Optional="True" Category="2. Optionald" Description="The path to the next photo."%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title><%=Description%></title>
+    <style>
+    .container
+    {
+        width: 750px;
+        margin: 0px auto;
+        position: relative;
+        top: -90px;
+        left: 20px;
+    }
+
+    .container img
+    {
+        width: 750px;
+    }
+
+    .container p
+    {
+        text-align: center;
+        font-size: 2em;
+    }
+    </style>
+</head>
+<body>
+<div style="font-size:x-large; padding: 30px;"><a href="default.html">Back to Gallery</a></div><br />
+<div class="container">
+      <img src="<%=Path%>" alt="<%=Name%>" />
+      <p><%=Description%></p>
+      <% if(!string.IsNullOrEmpty(PreviousImage)) { %><span style="float:left;"><a href="<%= PreviousImage %>">Previous</a></span><%}%><% if(!string.IsNullOrEmpty(NextImage)) { %><span style="float:right;"><a href="<%= NextImage %>">Next</a></span><%}%>
+</div>
+</body>
+</html>
