@@ -15,62 +15,79 @@ Namespace Tracker.Tests.QueryTests
         <TestFixtureSetUp()> _
         Public Sub TestFixtureSetUp()
             Using db = New TrackerDataContext()
+                Dim users = New List(Of User)()
+                users.Add(New User With { _
+                    .FirstName = "Testie McTester", _
+                    .LastName = "The First", _
+                    .PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA", _
+                    .PasswordSalt = "=Unc%", _
+                    .EmailAddress = "one@test.com", _
+                    .IsApproved = False, _
+                    .LastActivityDate = DateTime.Now})
+                users.Add(New User() With { _
+                    .FirstName = "Testie McTester", _
+                    .LastName = "The Second", _
+                    .PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA", _
+                    .PasswordSalt = "=Unc%", _
+                    .EmailAddress = "two@test.com", _
+                    .IsApproved = False, _
+                    .LastActivityDate = DateTime.Now})
+                users.Add(New User() With { _
+                    .FirstName = "Testie McTester", _
+                    .LastName = "The Third", _
+                    .PasswordHash = "aM/Vndh7cYd3Mxq7msArjl9YU8zoR6fF+sVTSUCcsJi2bx+cwOI0/Bkr5hfq9vYfTe3/rlgPpSMg108acpw+qA", _
+                    .PasswordSalt = "=Unc%", _
+                    .EmailAddress = "three@test.com", _
+                    .IsApproved = False, _
+                    .LastActivityDate = DateTime.Now})
+                db.User.InsertAllOnSubmit(users)
+                db.SubmitChanges()
+                userIds = users.[Select](Function(u) u.Id).ToList()
+
                 dueDates.Add(DateTime.Today.AddDays(1))
                 dueDates.Add(DateTime.Today.AddDays(2))
 
-                userIds = db.User.[Select](Function(u) u.Id).Take(3).ToList()
-
-                Dim task1 = New Task()
-                task1.CreatedId = userIds(0)
-                task1.Priority = Nothing
-                task1.Status = Status.NotStarted
-                task1.Summary = "Test"
-                task1.AssignedId = Nothing
-                task1.DueDate = Nothing
-                task1.Details = Nothing
-
-                Dim task2 = New Task()
-                task2.CreatedId = userIds(1)
-                task2.Priority = Priority.Normal
-                task2.Status = Status.InProgress
-                task2.Summary = "Test"
-                task2.AssignedId = userIds(0)
-                task2.DueDate = dueDates(0)
-                task2.Details = String.Empty
-
-                Dim task3 = New Task()
-                task3.CreatedId = userIds(2)
-                task3.Priority = Priority.High
-                task3.Status = Status.Completed
-                task3.Summary = "Test"
-                task3.AssignedId = userIds(1)
-                task3.DueDate = dueDates(1)
-                task3.Details = "Hello world!"
-
-                Dim task4 = New Task()
-                task4.CreatedId = userIds(2)
-                task4.Priority = Priority.High
-                task4.Status = Status.Completed
-                task4.Summary = "Test"
-                task4.AssignedId = userIds(1)
-                task4.DueDate = Nothing
-                task4.Details = "Goodnight moon!"
-
-                db.Task.InsertOnSubmit(task1)
+                Dim tasks = New List(Of Task)()
+                tasks.Add(New Task With { _
+                    .CreatedId = userIds(0), _
+                    .Priority = Nothing, _
+                    .Status = Status.NotStarted, _
+                    .Summary = "Test", _
+                    .AssignedId = Nothing, _
+                    .DueDate = Nothing, _
+                    .Details = Nothing})
+                tasks.Add(New Task With { _
+                    .CreatedId = userIds(1), _
+                    .Priority = Priority.Normal, _
+                    .Status = Status.InProgress, _
+                    .Summary = "Test", _
+                    .AssignedId = userIds(0), _
+                    .DueDate = dueDates(0), _
+                    .Details = String.Empty})
+                tasks.Add(New Task With { _
+                    .CreatedId = userIds(2), _
+                    .Priority = Priority.High, _
+                    .Status = Status.Completed, _
+                    .Summary = "Test", _
+                    .AssignedId = userIds(1), _
+                    .DueDate = dueDates(1), _
+                    .Details = "Hello world!"})
+                tasks.Add(New Task With { _
+                    .CreatedId = userIds(2), _
+                    .Priority = Priority.High, _
+                    .Status = Status.Completed, _
+                    .Summary = "Test", _
+                    .AssignedId = userIds(1), _
+                    .DueDate = Nothing, _
+                    .Details = "Goodnight moon!"})
+                db.Task.InsertAllOnSubmit(tasks.Take(1))
                 db.SubmitChanges()
                 System.Threading.Thread.Sleep(1000)
-                db.Task.InsertOnSubmit(task2)
-                db.Task.InsertOnSubmit(task3)
+                db.Task.InsertAllOnSubmit(tasks.Skip(1))
                 db.SubmitChanges()
 
-                _taskIds.Add(task1.Id)
-                _taskIds.Add(task2.Id)
-                _taskIds.Add(task3.Id)
-                _taskIds.Add(task4.Id)
-                createDates.Add(task1.CreatedDate)
-                createDates.Add(task2.CreatedDate)
-                createDates.Add(task3.CreatedDate)
-                createDates.Add(task4.CreatedDate)
+                _taskIds = tasks.[Select](Function(t) t.Id).ToList()
+                createDates = tasks.[Select](Function(t) t.CreatedDate).ToList()
             End Using
         End Sub
 
@@ -78,6 +95,7 @@ Namespace Tracker.Tests.QueryTests
         Public Sub TestFixtureTearDown()
             Using db = New TrackerDataContext()
                 db.Task.Delete(Function(t) _taskIds.Contains(t.Id))
+                db.User.Delete(Function(u) userIds.Contains(u.Id))
             End Using
         End Sub
 

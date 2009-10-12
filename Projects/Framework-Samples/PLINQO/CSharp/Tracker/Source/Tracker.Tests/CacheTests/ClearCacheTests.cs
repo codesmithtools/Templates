@@ -17,7 +17,7 @@ namespace Tracker.Tests.CacheTests
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetKey();
+                    var key = query.GetHashKey();
                     var roles = query.FromCache();
 
                     var cache1 = HttpRuntime.Cache.Get(key);

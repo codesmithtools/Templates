@@ -34,6 +34,7 @@ namespace Tracker.Tests
         [SetUp]
         public void Setup()
         {
+            TearDown();
             CreateUsers();
             CreateTask(SpockId);
         }
@@ -43,12 +44,11 @@ namespace Tracker.Tests
         {
             using (var context = new TrackerDataContext())
             {
-                context.UserRole.Delete(r => r.UserId == SpockId);
-                context.UserRole.Delete(r => r.User.EmailAddress.EndsWith("startrek.com") && r.UserId == SpockId);
-                context.Audit.Delete(a => a.TaskId == TaskId || a.UserId == SpockId);
-                context.Task.Delete(a => a.CreatedId == SpockId || a.AssignedId == SpockId);
-                context.Task.Delete(TaskId);
-                context.User.Delete(SpockId);
+                context.Audit.Delete(a => a.User.EmailAddress.EndsWith("startrek.com"));
+                context.UserRole.Delete(ur => ur.User.EmailAddress.EndsWith("startrek.com"));
+                context.Task.Delete(t =>
+                    t.AssignedUser.EmailAddress.EndsWith("startrek.com") ||
+                    t.CreatedUser.EmailAddress.EndsWith("startrek.com"));
                 context.User.Delete(u => u.EmailAddress.EndsWith("startrek.com"));
             }
         }
