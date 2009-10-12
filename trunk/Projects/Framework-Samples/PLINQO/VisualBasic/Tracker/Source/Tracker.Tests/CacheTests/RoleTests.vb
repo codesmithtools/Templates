@@ -14,7 +14,7 @@ Namespace Tracker.Tests.CacheTests
                 Dim role1 = New Role()
                 role1.Name = "Test Role"
                 Dim role2 = New Role()
-                role2.Name = "Ruck Roll"
+                role2.Name = "Duck Roll"
 
                 db.Role.InsertOnSubmit(role1)
                 db.Role.InsertOnSubmit(role2)
