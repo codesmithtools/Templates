@@ -627,7 +627,7 @@ For Each c As Column in Type.Columns
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As <%= VBKeywordEscape(Type.Name) %>
-            Return DirectCast(DirectCast(Me, ICloneable), <%= VBKeywordEscape(Type.Name) %>).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable).Clone(), <%= VBKeywordEscape(Type.Name) %>)
         End Function
 #End Region
 <% End If 'EntityBase %>
