@@ -86,7 +86,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, CacheSettings settings)
         {
-            var key = GetKey(query);
+            var key = query.GetHashKey();
 
             // try to get the query result from the cache
             var result = HttpRuntime.Cache.Get(key) as List<T>;
@@ -221,12 +221,12 @@ namespace CodeSmith.Data.Linq
         /// <param name="query">The query to be cleared.</param>
         public static void ClearCache<T>(this IQueryable<T> query)
         {
-            HttpRuntime.Cache.Remove(query.GetKey());
+            HttpRuntime.Cache.Remove(query.GetHashKey());
         }
 
         #endregion
 
-        #region GetKey
+        #region GetHashKey
 
         /// <summary>
         /// Gets a unique Md5 key for a query.
@@ -234,7 +234,7 @@ namespace CodeSmith.Data.Linq
         /// <typeparam name="T">The type of the data in the data source.</typeparam>
         /// <param name="query">The query to build a key from.</param>
         /// <returns>A Md5 hash unique to the query.</returns>
-        public static string GetKey<T>(this IQueryable<T> query)
+        public static string GetHashKey<T>(this IQueryable<T> query)
         {
             // locally evaluate as much of the query as possible
             Expression expression = Evaluator.PartialEval(
