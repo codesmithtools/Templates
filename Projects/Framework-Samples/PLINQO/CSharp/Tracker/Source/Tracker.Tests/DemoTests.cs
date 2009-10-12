@@ -150,8 +150,8 @@ namespace Tracker.Tests
                 context.Log = Console.Out;
 
                 Task task = context.Manager.Task.GetByKey(SpockId);
-                //IQueryable<Task> tasks = context.Manager.Task.GetByAssignedIdStatusId(SpockId, Status.NotStarted);
-                //List<Task> taskList = tasks.ToList();
+                IQueryable<Task> tasks = context.Manager.Task.GetByAssignedIdStatus(SpockId, Status.NotStarted);
+                List<Task> taskList = tasks.ToList();
             }
 
             using (var context = new TrackerDataContext())
