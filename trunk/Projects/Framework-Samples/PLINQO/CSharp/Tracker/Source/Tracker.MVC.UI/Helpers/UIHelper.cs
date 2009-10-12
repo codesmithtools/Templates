@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -75,6 +77,22 @@ namespace PLINQO.Mvc.UI
             }
         }
 
+        public static SelectList GetPrioritySelectList(Priority? selectedValue)
+        {
+            var selectListItems = new List<SelectListItem>();
+            foreach (string priority in Enum.GetNames(typeof(Priority)))
+            {
+                selectListItems.Add(new SelectListItem
+                    {
+                        Value = priority,
+                        Text = GetDescription((Priority)Enum.Parse(typeof(Priority), priority)),
+                    });
+            }
+            var selectList = new SelectList(selectListItems, "Value", "Text", selectedValue);
+
+            return selectList;
+        }
+
         public static SelectList GetRoleSelectList(int? selectedValue, List<Role> userRoles)
         {
             var roles = HttpRuntime.Cache["Roles"] as List<Role>;
@@ -87,30 +105,27 @@ namespace PLINQO.Mvc.UI
             var filteredRoles = new List<Role>();
             roles.ForEach(delegate(Role role)
             {
-              if (!userRoles.Exists(ur => ur.Id == role.Id))
-                  filteredRoles.Add(role);
+                if (!userRoles.Exists(ur => ur.Id == role.Id))
+                    filteredRoles.Add(role);
             });
 
             return new SelectList(filteredRoles, "Id", "Name", selectedValue);
         }
 
-        public static SelectList GetPrioritySelectList(Priority? selectedValue)
+        public static SelectList GetStatusSelectList(Status selectedValue)
         {
             var selectListItems = new List<SelectListItem>();
-            selectListItems.Add(new SelectListItem
-                                    {
-                                        Text = " - null - "
-                                    });
-            foreach (string priority in Enum.GetNames(typeof(Priority)))
+            foreach (string status in Enum.GetNames(typeof(Status)))
             {
                 var selectListItem = new SelectListItem
-                                         {
-                                             Text = priority,
-                                         };
+                {
+                    Value = status,
+                    Text = GetDescription((Status)Enum.Parse(typeof(Status), status))
+                };
 
                 selectListItems.Add(selectListItem);
             }
-            var selectList = new SelectList(selectListItems, "Text", "Text", selectedValue);
+            var selectList = new SelectList(selectListItems, "Value", "Text", selectedValue);
 
             return selectList;
         }
@@ -126,21 +141,12 @@ namespace PLINQO.Mvc.UI
             return new SelectList(users, "Id", "FullName", selectedValue);
         }
 
-        public static SelectList GetStatusSelectList(Status selectedValue)
+        #region Utility Methods
+        public static string GetDescription(Enum value)
         {
-            var selectListItems = new List<SelectListItem>();
-            foreach (string priority in Enum.GetNames(typeof(Status)))
-            {
-                var selectListItem = new SelectListItem
-                {
-                    Text = priority,
-                };
-
-                selectListItems.Add(selectListItem);
-            }
-            var selectList = new SelectList(selectListItems, "Text", "Text", selectedValue);
-
-            return selectList;
+            FieldInfo fi = value.GetType().GetField(value.ToString());
+            var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            return (attributes.Length > 0) ? attributes[0].Description : value.ToString();
         }
 
         public static string ErrorCodeToString(MembershipCreateStatus createStatus)
@@ -180,5 +186,6 @@ namespace PLINQO.Mvc.UI
                     return "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
             }
         }
+        #endregion
     }
 }

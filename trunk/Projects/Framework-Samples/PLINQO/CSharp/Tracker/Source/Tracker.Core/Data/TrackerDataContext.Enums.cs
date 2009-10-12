@@ -19,21 +19,21 @@ namespace Tracker.Core.Data
     public enum Priority : int
     {
         /// <summary>
-        /// A High Priority
+        /// High
         /// </summary>
-        [Description("A High Priority")]
+        [Description("High")]
         [EnumMember]
         High = 1,
         /// <summary>
-        /// A Normal Priority
+        /// Normal
         /// </summary>
-        [Description("A Normal Priority")]
+        [Description("Normal")]
         [EnumMember]
         Normal = 2,
         /// <summary>
-        /// A Low Priority
+        /// Low
         /// </summary>
-        [Description("A Low Priority")]
+        [Description("Low")]
         [EnumMember]
         Low = 3
     }
@@ -41,16 +41,40 @@ namespace Tracker.Core.Data
     [DataContract]
     public enum Status : int
     {
+        /// <summary>
+        /// Not Started
+        /// </summary>
+        [Description("Not Started")]
         [EnumMember]
         NotStarted = 1,
+        /// <summary>
+        /// In Progress
+        /// </summary>
+        [Description("In Progress")]
         [EnumMember]
         InProgress = 2,
+        /// <summary>
+        /// Completed
+        /// </summary>
+        [Description("Completed")]
         [EnumMember]
         Completed = 3,
+        /// <summary>
+        /// Waiting on someone else
+        /// </summary>
+        [Description("Waiting on someone else")]
         [EnumMember]
         WaitingOnSomeoneElse = 4,
+        /// <summary>
+        /// Deferred
+        /// </summary>
+        [Description("Deferred")]
         [EnumMember]
         Deferred = 5,
+        /// <summary>
+        /// Done
+        /// </summary>
+        [Description("Done")]
         [EnumMember]
         Done = 6
     }
