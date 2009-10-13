@@ -2,6 +2,17 @@
 <%@ Import Namespace="PLINQO.Mvc.UI.Models"%>
 <%@ Import Namespace="PLINQO.Mvc.UI.Controllers"%>
 
+<asp:content id="HeadContent" contentplaceholderid="HeadContent" runat="server">
+<link href="/lib/styles/smoothness/jquery-ui-1.7.2.custom.css" rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript">
+    $(document).ready(function() {
+        $("#StartDate").datepicker();
+        $("#DueDate").datepicker();
+        $("#CompleteDate").datepicker();
+    });
+</script>
+</asp:content>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Create
 </asp:Content>
@@ -24,7 +35,7 @@
             <p>
                 <label for="PriorityId">Priority:</label>
                 <%= Html.DropDownList("Priority", Model.Priorities, "Select Priority")%>
-                <%= Html.ValidationMessage("PriorityId", "*")%>
+                <%= Html.ValidationMessage("Priority", "*")%>
             </p>
             <p>
                 <label for="StatusId">Status:</label>

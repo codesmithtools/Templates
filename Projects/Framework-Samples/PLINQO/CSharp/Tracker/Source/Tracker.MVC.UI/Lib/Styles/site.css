@@ -390,3 +390,8 @@ th
 {
     width:320px;
 }
+
+#ui-datepicker-div
+{
+    font-size: 10px;
+}

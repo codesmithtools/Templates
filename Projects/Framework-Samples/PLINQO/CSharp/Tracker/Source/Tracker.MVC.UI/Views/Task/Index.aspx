@@ -44,7 +44,7 @@
 
     <div style="padding: 0 0 6px 0">
         Select: <a id="select-all-tasks" value="false" href="#">All</a> <a id="unselect-all-tasks" value="false" href="#">None</a>
-        <%=Html.DropDownList("StatusId", Model.Statuses, "Select Status")%>
+        <%=Html.DropDownList("Status", Model.Statuses, "Select Status")%>
         <input type="submit" value="Save All" />
     </div>
     <table>

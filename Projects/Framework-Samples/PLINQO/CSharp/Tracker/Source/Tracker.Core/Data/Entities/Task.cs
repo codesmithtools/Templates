@@ -63,8 +63,10 @@ namespace Tracker.Core.Data
             [CodeSmith.Data.Audit.NotAudited]
             public string LastModifiedBy { get; set; }
 
+            [Required(ErrorMessage = "Status is Required")]
             public Status Status { get; set; }
 
+            [Required(ErrorMessage = "Priority is Required")]
             public Priority Priority { get; set; }
 
             public TaskExtended TaskExtended { get; set; }
