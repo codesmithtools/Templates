@@ -344,6 +344,12 @@ namespace LinqToSqlShared.Generator
 
         private void CreateAssociation(Table foreignTable, TableKeySchema tableKeySchema)
         {
+            if (Settings.IsIgnored(tableKeySchema.PrimaryKeyTable.FullName))
+            {
+                Debug.WriteLine("Skipping Association because one of the tables is skipped: " + tableKeySchema.Name);
+                return;
+            }
+
             Table primaryTable = GetTable(tableKeySchema.PrimaryKeyTable, false);
 
             string primaryClass = primaryTable.Type.Name;
@@ -873,7 +879,10 @@ namespace LinqToSqlShared.Generator
             column.DbType = GetDbType(columnSchema);
             column.CanBeNull = columnSchema.AllowDBNull;
             column.IsVersion = IsRowVersion(columnSchema);
-            column.IsDbGenerated = IsDbGenerated(columnSchema);
+
+            if (!column.IsDbGenerated.HasValue)
+                column.IsDbGenerated = IsDbGenerated(columnSchema);
+
             column.IsProcessed = true;
         }
 
