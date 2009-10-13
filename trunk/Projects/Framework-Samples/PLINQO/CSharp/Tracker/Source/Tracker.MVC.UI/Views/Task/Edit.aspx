@@ -2,6 +2,23 @@
 <%@ Import Namespace="PLINQO.Mvc.UI.Models"%>
 <%@ Import Namespace="PLINQO.Mvc.UI.Controllers"%>
 
+<asp:content id="HeadContent" contentplaceholderid="HeadContent" runat="server">
+
+<link href="/lib/styles/smoothness/jquery-ui-1.7.2.custom.css" rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript">
+    Date.format = 'm/d/yyyy';
+
+    $(document).ready(function() {
+        $.datepicker.setDefaults({dateFormat: 'm/d/yy'});
+        $("#StartDate").datepicker();
+        $("#DueDate").datepicker();
+        $("#CompleteDate").datepicker();
+        
+    });
+</script>
+
+</asp:content>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 	Editing Task #<%=Model.Task.Id %>
 </asp:Content>
@@ -44,17 +61,17 @@
             </p>
             <p>
                 <label for="StartDate">Start Date:</label>
-                <%= Html.TextBox("StartDate", String.Format("{0:g}", Model.Task.StartDate)) %>
+                <%= Html.TextBox("StartDate", String.Format("{0:g}", Model.Task.StartDate.HasValue ? Model.Task.StartDate.Value.ToShortDateString() : String.Empty)) %>
                 <%= Html.ValidationMessage("StartDate", "*") %>
             </p>
             <p>
                 <label for="DueDate">Due Date:</label>
-                <%= Html.TextBox("DueDate", String.Format("{0:g}", Model.Task.DueDate)) %>
+                <%= Html.TextBox("DueDate", String.Format("{0:g}", Model.Task.DueDate.HasValue ? Model.Task.DueDate.Value.ToShortDateString() : String.Empty)) %>
                 <%= Html.ValidationMessage("DueDate", "*") %>
             </p>
             <p>
                 <label for="CompleteDate">Complete Date:</label>
-                <%= Html.TextBox("CompleteDate", String.Format("{0:g}", Model.Task.CompleteDate)) %>
+                <%= Html.TextBox("CompleteDate", String.Format("{0:g}", Model.Task.CompleteDate.HasValue ? Model.Task.CompleteDate.Value.ToShortDateString() : String.Empty)) %>
                 <%= Html.ValidationMessage("CompleteDate", "*") %>
             </p>
             <p>

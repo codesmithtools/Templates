@@ -32,6 +32,8 @@ namespace PLINQO.Mvc.UI.Controllers
         {
             try
             {
+                Nullable<System.DateTime> date = new DateTime();
+                
                 using (var context = new TrackerDataContext())
                 {
                     context.Task.InsertOnSubmit(task);
