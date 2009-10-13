@@ -37,7 +37,6 @@
 
 using System;
 using System.Data;
-using System.Data.SqlTypes;
 using System.Data.SqlClient;
 <% if (this.ResultSchema == ResultSchemaEnum.StronglyTyped && this.ReturnsResultSet) { %>
 using System.Collections.ObjectModel;
@@ -85,7 +84,7 @@ namespace <%= TargetNamespace %>
 		
 		#region Public Properties
 		<% for (int i = 0; i < SourceCommand.CommandResults[0].Columns.Count; i++) { %>
-		public <%= GetSqlType(SourceCommand.CommandResults[0].Columns[i].DataType) %> <%= GetPropertyName(SourceCommand.CommandResults[0].Columns[i]) %>
+		public <%= GetNativeType(SourceCommand.CommandResults[0].Columns[i]) %> <%= GetPropertyName(SourceCommand.CommandResults[0].Columns[i]) %>
 		{
 			get {return <%= GetMemberVariableName(SourceCommand.CommandResults[0].Columns[i]) %>;}
 			set {<%= GetMemberVariableName(SourceCommand.CommandResults[0].Columns[i]) %> = value;}
@@ -105,14 +104,13 @@ namespace <%= TargetNamespace %>
 		#region Member Variables
         
 		protected string _connectionString = String.Empty;
-        protected SqlConnection _connection = null;
-        protected SqlTransaction _transaction = null;
+        protected SqlConnection _connection;
+        protected SqlTransaction _transaction;
 		protected bool _ownsConnection = true;
 		protected int _recordsAffected = -1;
-		protected int _returnValue = 0;
+		protected int _returnValue;
 		<% foreach (ParameterSchema parameter in SourceCommand.NonReturnValueParameters) { %>
 		<%= GetMemberVariableDeclarationStatement(parameter) %>
-		protected bool <%= GetMemberVariableName(parameter) %>Set = false;
 		<% } %>
 		
         #endregion
@@ -192,13 +190,12 @@ namespace <%= TargetNamespace %>
 		/// <summary>
 		/// <%= SourceCommand.NonReturnValueParameters[i].Description %>
 		/// </summary>
-		public <%= GetSqlType(SourceCommand.NonReturnValueParameters[i].DataType) %> <%= GetPropertyName(SourceCommand.NonReturnValueParameters[i]) %>
+		public <%= GetNativeType(SourceCommand.NonReturnValueParameters[i]) %> <%= GetPropertyName(SourceCommand.NonReturnValueParameters[i]) %>
 		{
 			get {return <%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>;}
 			set
 			{
 				<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %> = value;
-				<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>Set = true;
 			}
 		}
 		<% if (i < SourceCommand.NonReturnValueParameters.Count - 1) Response.Write("\r\n"); %>		
@@ -215,11 +212,9 @@ namespace <%= TargetNamespace %>
 				_ownsConnection = false;
                 return this.Connection;
             }
-            else
-            {
- 				System.Diagnostics.Debug.Assert(this.ConnectionString.Length != 0, "You must first set the ConnectioString property before calling an Execute method.");
-            	return new SqlConnection(this.ConnectionString);
-            }
+            
+            System.Diagnostics.Debug.Assert(this.ConnectionString.Length != 0, "You must first set the ConnectioString property before calling an Execute method.");
+            return new SqlConnection(this.ConnectionString);
         }
         
 		#endregion
@@ -251,7 +246,7 @@ namespace <%= TargetNamespace %>
 				<% for (int i = 0; i < SourceCommand.NonReturnValueParameters.Count; i++) { %>
 				SqlParameter <%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %> = cmd.Parameters.Add("<%= SourceCommand.NonReturnValueParameters[i].Name %>", SqlDbType.<%= GetSqlDbType(SourceCommand.NonReturnValueParameters[i].NativeType) %>);
 				<% if (SourceCommand.NonReturnValueParameters[i].Direction != ParameterDirection.Input) { %>
-				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>Set == true)
+				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>Set)
 				{
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters[i].Direction.ToString() %>;
 				}
@@ -263,10 +258,11 @@ namespace <%= TargetNamespace %>
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters[i].Direction.ToString() %>;
 				<% } %>
 				<% BuildParameterExtraStatements(SourceCommand.NonReturnValueParameters[i]); %>
-				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>Set == true || this.<%= GetPropertyName(SourceCommand.NonReturnValueParameters[i]) %>.IsNull == false)
-				{
-					<%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Value = <%= GetPropertyName(SourceCommand.NonReturnValueParameters[i]) %>;
-				}
+				if (<%= BuildNullCheckStatement(SourceCommand.NonReturnValueParameters[i]) %>)
+				    <%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Value = <%= GetPropertyName(SourceCommand.NonReturnValueParameters[i]) %><%=BuildNullValueStatement(SourceCommand.NonReturnValueParameters[i])%>;
+				else
+                    <%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Value = DBNull.Value;
+                
 				<% if (i < SourceCommand.NonReturnValueParameters.Count - 1) Response.Write("\t\t\t\t\r\n"); %>
 				<% } %>
 				#endregion
@@ -292,25 +288,25 @@ namespace <%= TargetNamespace %>
 				<% for (int i = 0; i < SourceCommand.AllOutputParameters.Count; i++) { %>
 				if (<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %> != null && <%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value != null)
 				{
-					if (<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value is <%= GetSqlType(SourceCommand.AllOutputParameters[i].DataType) %>)
+					if (<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value is <%= GetNativeType(SourceCommand.AllOutputParameters[i]) %>)
 					{
-						this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = (<%= GetSqlType(SourceCommand.AllOutputParameters[i].DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value;
+						this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = (<%= GetNativeType(SourceCommand.AllOutputParameters[i]) %>)<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value;
 					}
 					else
 					{
 						if (<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value != DBNull.Value)
 						{
-							this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = new <%= GetSqlType(SourceCommand.AllOutputParameters[i].DataType) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters[i].DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value);
+							this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = new <%= GetNativeType(SourceCommand.AllOutputParameters[i]) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters[i].DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value);
 						}
 						else
 						{
-							this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = <%= GetSqlType(SourceCommand.AllOutputParameters[i].DataType) %>.Null;
+							this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = <%= GetNativeType(SourceCommand.AllOutputParameters[i]) %>.Null;
 						}
 					}
 				}
 				else
 				{
-					this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = <%= GetMemberVariableDefaultValue(SourceCommand.AllOutputParameters[i].DataType) %>;
+					this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = null;
 				}
 				<% if (i < SourceCommand.AllOutputParameters.Count - 1) Response.Write("\t\t\t\t\r\n"); %>
 				<% } %>
@@ -349,7 +345,7 @@ namespace <%= TargetNamespace %>
 				<% for (int i = 0; i < SourceCommand.NonReturnValueParameters.Count; i++) { %>
 				SqlParameter <%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %> = cmd.Parameters.Add("<%= SourceCommand.NonReturnValueParameters[i].Name %>", SqlDbType.<%= GetSqlDbType(SourceCommand.NonReturnValueParameters[i].NativeType) %>);
 				<% if (SourceCommand.NonReturnValueParameters[i].Direction != ParameterDirection.Input) { %>
-				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>Set == true)
+				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>Set)
 				{
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters[i].Direction.ToString() %>;
 				}
@@ -361,10 +357,11 @@ namespace <%= TargetNamespace %>
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters[i].Direction.ToString() %>;
 				<% } %>
 				<% BuildParameterExtraStatements(SourceCommand.NonReturnValueParameters[i]); %>
-				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>Set == true || this.<%= GetPropertyName(SourceCommand.NonReturnValueParameters[i]) %>.IsNull == false)
-				{
-					<%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Value = <%= GetPropertyName(SourceCommand.NonReturnValueParameters[i]) %>;
-				}
+				if (<%= BuildNullCheckStatement(SourceCommand.NonReturnValueParameters[i]) %>)
+				    <%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Value = <%= GetPropertyName(SourceCommand.NonReturnValueParameters[i]) %><%=BuildNullValueStatement(SourceCommand.NonReturnValueParameters[i])%>;
+				else
+                    <%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Value = DBNull.Value;
+                
 				<% if (i < SourceCommand.NonReturnValueParameters.Count - 1) Response.Write("\t\t\t\t\r\n"); %>
 				<% } %>
 				#endregion
@@ -386,25 +383,25 @@ namespace <%= TargetNamespace %>
 				<% for (int i = 0; i < SourceCommand.AllOutputParameters.Count; i++) { %>
 				if (<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %> != null && <%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value != null)
 				{
-					if (<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value is <%= GetSqlType(SourceCommand.AllOutputParameters[i].DataType) %>)
+					if (<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value is <%= GetNativeType(SourceCommand.AllOutputParameters[i]) %>)
 					{
-						this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = (<%= GetSqlType(SourceCommand.AllOutputParameters[i].DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value;
+						this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = (<%= GetNativeType(SourceCommand.AllOutputParameters[i]) %>)<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value;
 					}
 					else
 					{
 						if (<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value != DBNull.Value)
 						{
-							this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = new <%= GetSqlType(SourceCommand.AllOutputParameters[i].DataType) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters[i].DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value);
+							this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = new <%= GetNativeType(SourceCommand.AllOutputParameters[i]) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters[i].DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value);
 						}
 						else
 						{
-							this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = <%= GetSqlType(SourceCommand.AllOutputParameters[i].DataType) %>.Null;
+							this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = <%= GetNativeType(SourceCommand.AllOutputParameters[i]) %>.Null;
 						}
 					}
 				}
 				else
 				{
-					this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = <%= GetMemberVariableDefaultValue(SourceCommand.AllOutputParameters[i].DataType) %>;
+					this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = null;
 				}
 				<% if (i < SourceCommand.AllOutputParameters.Count - 1) Response.Write("\t\t\t\t\r\n"); %>
 				<% } %>
@@ -458,7 +455,7 @@ namespace <%= TargetNamespace %>
 				<% for (int i = 0; i < SourceCommand.NonReturnValueParameters.Count; i++) { %>
 				SqlParameter <%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %> = cmd.Parameters.Add("<%= SourceCommand.NonReturnValueParameters[i].Name %>", SqlDbType.<%= GetSqlDbType(SourceCommand.NonReturnValueParameters[i].NativeType) %>);
 				<% if (SourceCommand.NonReturnValueParameters[i].Direction != ParameterDirection.Input) { %>
-				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>Set == true)
+				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>Set)
 				{
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters[i].Direction.ToString() %>;
 				}
@@ -470,10 +467,11 @@ namespace <%= TargetNamespace %>
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters[i].Direction.ToString() %>;
 				<% } %>
 				<% BuildParameterExtraStatements(SourceCommand.NonReturnValueParameters[i]); %>
-				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>Set == true || this.<%= GetPropertyName(SourceCommand.NonReturnValueParameters[i]) %>.IsNull == false)
-				{
-					<%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Value = <%= GetPropertyName(SourceCommand.NonReturnValueParameters[i]) %>;
-				}
+				if (<%= BuildNullCheckStatement(SourceCommand.NonReturnValueParameters[i]) %>)
+                    <%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Value = <%= GetPropertyName(SourceCommand.NonReturnValueParameters[i]) %><%=BuildNullValueStatement(SourceCommand.NonReturnValueParameters[i])%>;
+				else
+                    <%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Value = DBNull.Value;
+                
 				<% if (i < SourceCommand.NonReturnValueParameters.Count - 1) Response.Write("\t\t\t\t\r\n"); %>
 				<% } %>
 				#endregion
@@ -513,25 +511,25 @@ namespace <%= TargetNamespace %>
 				<% for (int i = 0; i < SourceCommand.AllOutputParameters.Count; i++) { %>
 				if (<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %> != null && <%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value != null)
 				{
-					if (<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value is <%= GetSqlType(SourceCommand.AllOutputParameters[i].DataType) %>)
+					if (<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value is <%= GetNativeType(SourceCommand.AllOutputParameters[i]) %>)
 					{
-						this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = (<%= GetSqlType(SourceCommand.AllOutputParameters[i].DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value;
+						this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = (<%= GetNativeType(SourceCommand.AllOutputParameters[i]) %>)<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value;
 					}
 					else
 					{
 						if (<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value != DBNull.Value)
 						{
-							this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = new <%= GetSqlType(SourceCommand.AllOutputParameters[i].DataType) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters[i].DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value);
+							this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = new <%= GetNativeType(SourceCommand.AllOutputParameters[i]) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters[i].DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters[i].Name) %>.Value);
 						}
 						else
 						{
-							this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = <%= GetSqlType(SourceCommand.AllOutputParameters[i].DataType) %>.Null;
+							this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = <%= GetNativeType(SourceCommand.AllOutputParameters[i]) %>.Null;
 						}
 					}
 				}
 				else
 				{
-					this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = <%= GetMemberVariableDefaultValue(SourceCommand.AllOutputParameters[i].DataType) %>;
+					this.<%= GetPropertyName(SourceCommand.AllOutputParameters[i]) %> = null;
 				}
 				<% if (i < SourceCommand.AllOutputParameters.Count - 1) Response.Write("\t\t\t\t\r\n"); %>
 				<% } %>
@@ -746,6 +744,7 @@ public string GetPropertyName(ParameterSchema parameter)
 #endregion
 
 #region Miscellaneous
+
 public override string GetFileName()
 {
 	return this.GetClassName() + ".cs";
@@ -854,7 +853,7 @@ public string BuildParameterList()
 	builder.Append("string connectionString,\r\n\t\t\t\t");
 	for (int i = 0; i < SourceCommand.InputParameters.Count; i++)
 	{
-		builder.Append(GetSqlType(SourceCommand.InputParameters[i].DataType));
+		builder.Append(GetNativeType(SourceCommand.InputParameters[i]));
 		builder.Append(" ");
 		builder.Append(GetCamelCaseName(SourceCommand.InputParameters[i].Name));
 		builder.Append(",\r\n\t\t\t\t");
@@ -862,7 +861,7 @@ public string BuildParameterList()
 	for (int i = 0; i < SourceCommand.InputOutputParameters.Count; i++)
 	{
 		builder.Append("ref ");
-		builder.Append(GetSqlType(SourceCommand.InputOutputParameters[i].DataType));
+		builder.Append(GetNativeType(SourceCommand.InputOutputParameters[i]));
 		builder.Append(" ");
 		builder.Append(GetCamelCaseName(SourceCommand.InputOutputParameters[i].Name));
 		builder.Append(",\r\n\t\t\t\t");
@@ -870,7 +869,7 @@ public string BuildParameterList()
 	for (int i = 0; i < SourceCommand.OutputParameters.Count; i++)
 	{
 		builder.Append("ref ");
-		builder.Append(GetSqlType(SourceCommand.OutputParameters[i].DataType));
+		builder.Append(GetNativeType(SourceCommand.OutputParameters[i]));
 		builder.Append(" ");
 		builder.Append(GetCamelCaseName(SourceCommand.OutputParameters[i].Name));
 		builder.Append(",\r\n\t\t\t\t");
@@ -884,6 +883,23 @@ public string BuildParameterList()
 	{
 		return "";
 	}
+}
+
+public string BuildNullCheckStatement(ParameterSchema parameter)
+{
+    if(GetNativeType(parameter).Equals("string", StringComparison.InvariantCultureIgnoreCase))
+        return string.Format("!string.IsNullOrEmpty({0})", GetPropertyName(parameter));
+        
+    return string.Format("{0}.HasValue", GetPropertyName(parameter));
+}
+
+// If the value type is a string then don't include the .Value.
+public string BuildNullValueStatement(ParameterSchema parameter)
+{
+    if(GetNativeType(parameter).Equals("string", StringComparison.InvariantCultureIgnoreCase))
+        return string.Empty;
+        
+    return ".Value";
 }
 
 public string AssignPropertyValues(string objectName)
@@ -935,6 +951,7 @@ public string GetPropertyValues(string objectName)
 #endregion
 
 #region Declaration Statements
+
 public string GetMemberVariableDeclarationStatement(CommandResultColumnSchema column)
 {
 	return GetMemberVariableDeclarationStatement("protected", column);
@@ -943,10 +960,10 @@ public string GetMemberVariableDeclarationStatement(CommandResultColumnSchema co
 public string GetMemberVariableDeclarationStatement(string protectionLevel, CommandResultColumnSchema column)
 {
 	string statement = protectionLevel + " ";
-	statement += GetSqlType(column.DataType) + " " + GetMemberVariableName(column);
+	statement += GetNativeType(column) + " " + GetMemberVariableName(column);
 	
-	string defaultValue = GetMemberVariableDefaultValue(column.DataType);
-	if (defaultValue != "")
+	string defaultValue = null;
+	if (!string.IsNullOrEmpty(defaultValue))
 	{
 		statement += " = " + defaultValue;
 	}
@@ -964,10 +981,10 @@ public string GetMemberVariableDeclarationStatement(ParameterSchema parameter)
 public string GetMemberVariableDeclarationStatement(string protectionLevel, ParameterSchema parameter)
 {
 	string statement = protectionLevel + " ";
-	statement += GetSqlType(parameter.DataType) + " " + GetMemberVariableName(parameter);
+	statement += GetNativeType(parameter) + " " + GetMemberVariableName(parameter);
 	
-	string defaultValue = GetMemberVariableDefaultValue(parameter.DataType);
-	if (defaultValue != "")
+	string defaultValue = null;
+	if (!string.IsNullOrEmpty(defaultValue))
 	{
 		statement += " = " + defaultValue;
 	}
@@ -992,66 +1009,22 @@ public string GetReaderAssignmentStatement(CommandResultColumnSchema column, int
 
 #region Lookups
 
-public string GetMemberVariableDefaultValue(DbType dbType)
+public string GetNativeType(ParameterSchema parameter)
 {
-	switch (dbType)
-	{
-		case DbType.AnsiString: return "SqlString.Null";
-		case DbType.AnsiStringFixedLength: return "SqlString.Null";
-		case DbType.Binary: return "SqlBinary.Null";
-		case DbType.Boolean: return "SqlBoolean.Null";
-		case DbType.Byte: return "SqlByte.Null";
-		case DbType.Currency: return "SqlMoney.Null";
-		case DbType.Date: return "SqlDateTime.Null";
-		case DbType.Time: return "SqlDateTime.Null";
-		case DbType.DateTime: return "SqlDateTime.Null";
-		case DbType.Decimal: return "SqlDecimal.Null";
-		case DbType.Double: return "SqlDouble.Null";
-		case DbType.Guid: return "SqlGuid.Null";
-		case DbType.Int16: return "SqlInt16.Null";
-		case DbType.Int32: return "SqlInt32.Null";
-		case DbType.Int64: return "SqlInt64.Null";
-		case DbType.Object: return "null";
-		case DbType.Single: return "SqlSingle.Null";
-		case DbType.String: return "SqlString.Null";
-		case DbType.StringFixedLength: return "SqlString.Null";
-		case DbType.VarNumeric: return "SqlDecimal.Null";
-		default:
-		{
-			return "__UNKNOWN__" + dbType.ToString();
-		}
-	}
+    string result = this.GetCSharpVariableType(parameter);
+    if(result.Equals("string", StringComparison.InvariantCultureIgnoreCase))
+        return result;
+    
+    return string.Format("{0}?", result);
 }
 
-public string GetSqlType(DbType dbType)
+public string GetNativeType(CommandResultColumnSchema column)
 {
-	switch (dbType)
-	{
-		case DbType.AnsiString: return "SqlString";
-		case DbType.AnsiStringFixedLength: return "SqlString";
-		case DbType.Binary: return "SqlBinary";
-		case DbType.Boolean: return "SqlBoolean";
-		case DbType.Byte: return "SqlByte";
-		case DbType.Currency: return "SqlMoney";
-		case DbType.Date: return "SqlDateTime";
-		case DbType.Time: return "SqlDateTime";
-		case DbType.DateTime: return "SqlDateTime";
-		case DbType.Decimal: return "SqlDecimal";
-		case DbType.Double: return "SqlDouble";
-		case DbType.Guid: return "SqlGuid";
-		case DbType.Int16: return "SqlInt16";
-		case DbType.Int32: return "SqlInt32";
-		case DbType.Int64: return "SqlInt64";
-		case DbType.Object: return "object";
-		case DbType.Single: return "SqlSingle";
-		case DbType.String: return "SqlString";
-		case DbType.StringFixedLength: return "SqlString";
-		case DbType.VarNumeric: return "SqlDecimal";
-		default:
-		{
-			return "__UNKNOWN__" + dbType.ToString();
-		}
-	}
+    string result = this.GetCSharpVariableType(column);
+    if(result.Equals("string", StringComparison.InvariantCultureIgnoreCase))
+        return result;
+    
+    return string.Format("{0}?", result);
 }
 
 public string GetAccessModifier()
