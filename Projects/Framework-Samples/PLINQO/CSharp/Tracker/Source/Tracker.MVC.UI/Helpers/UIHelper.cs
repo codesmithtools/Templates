@@ -10,11 +10,9 @@ using System.Web.Mvc;
 using System.Web.Security;
 using System.Xml;
 using System.Xml.Xsl;
+using CodeSmith.Data.Linq;
 using Tracker.Core.Data;
-using IMultipleResults=System.Data.Linq.IMultipleResults;
-using System.Data.Linq;
 using System.Security.Principal;
-
 
 namespace PLINQO.Mvc.UI
 {
@@ -64,19 +62,6 @@ namespace PLINQO.Mvc.UI
             return audits;
         }
 
-        public static void RefreshData()
-        {
-            using (var context = new TrackerDataContext())
-            {
-                IMultipleResults results = context.ExecuteQuery(
-                    context.User.OrderBy(u => u.FirstName).ThenBy(u => u.LastName)
-                    , context.Role.OrderBy(r => r.Name));
-
-                HttpRuntime.Cache.Insert("Users", results.GetResult<User>().ToList());
-                HttpRuntime.Cache.Insert("Roles", results.GetResult<Role>().ToList());
-            }
-        }
-
         public static SelectList GetPrioritySelectList(Priority? selectedValue)
         {
             var selectListItems = new List<SelectListItem>();
@@ -95,19 +80,19 @@ namespace PLINQO.Mvc.UI
 
         public static SelectList GetRoleSelectList(int? selectedValue, List<Role> userRoles)
         {
-            var roles = HttpRuntime.Cache["Roles"] as List<Role>;
-            if (null == roles)
+            List<Role> roles;
+            using (var context = new TrackerDataContext())
             {
-                RefreshData();
-                roles = (HttpRuntime.Cache["Roles"] as List<Role>);
+                context.ObjectTrackingEnabled = false;
+                roles = context.Role
+                    .OrderBy(r => r.Name)
+                    .FromCache()
+                    .ToList();
             }
 
-            var filteredRoles = new List<Role>();
-            roles.ForEach(delegate(Role role)
-            {
-                if (!userRoles.Exists(ur => ur.Id == role.Id))
-                    filteredRoles.Add(role);
-            });
+            var filteredRoles = roles
+                .Where(r => !userRoles.Exists(ur => ur.Id == r.Id))
+                .ToList();
 
             return new SelectList(filteredRoles, "Id", "Name", selectedValue);
         }
@@ -132,12 +117,17 @@ namespace PLINQO.Mvc.UI
 
         public static SelectList GetUserSelectList(int? selectedValue)
         {
-            var users = HttpRuntime.Cache["Users"] as List<User>;
-            if (null == users)
+            List<User> users;
+            using (var context = new TrackerDataContext())
             {
-                RefreshData();
-                users = HttpRuntime.Cache["Users"] as List<User>;
+                context.ObjectTrackingEnabled = false;
+                users = context.User
+                    .OrderBy(u => u.FirstName)
+                    .ThenBy(u => u.LastName)
+                    .FromCache()
+                    .ToList();
             }
+
             return new SelectList(users, "Id", "FullName", selectedValue);
         }
 
