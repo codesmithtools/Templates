@@ -33,14 +33,14 @@ namespace Tracker.Core.Data.Rules
             {
                 var task = (Task) context.TrackedObject.Current;
 
-                using (var dataContext = new TrackerDataContext())
+                using (var db = new TrackerDataContext())
                 {
                     var options = new DataLoadOptions();
                     options.LoadWith<UserRole>(r => r.Role);
-                    dataContext.LoadOptions = options;
+                    db.LoadOptions = options;
 
-                    User currentUser = dataContext.User.GetByEmailAddress(HttpContext.Current.User.Identity.Name);
-                    context.Success = (null == dataContext.UserRole.GetUserRole("Newb", currentUser.Id));
+                    User currentUser = db.User.GetByEmailAddress(HttpContext.Current.User.Identity.Name);
+                    context.Success = (null == db.UserRole.GetUserRole("Newb", currentUser.Id));
                 }
             }
         }

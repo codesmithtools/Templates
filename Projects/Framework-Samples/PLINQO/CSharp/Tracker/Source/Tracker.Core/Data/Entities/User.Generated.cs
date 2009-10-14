@@ -50,6 +50,7 @@ namespace Tracker.Core.Data
             _assignedTaskList = new System.Data.Linq.EntitySet<Task>(OnAssignedTaskListAdd, OnAssignedTaskListRemove);
             _createdTaskList = new System.Data.Linq.EntitySet<Task>(OnCreatedTaskListAdd, OnCreatedTaskListRemove);
             _userRoleList = new System.Data.Linq.EntitySet<UserRole>(OnUserRoleListAdd, OnUserRoleListRemove);
+            _avatar = default(System.Data.Linq.Link<System.Data.Linq.Binary>);
             OnCreated();
         }
         #endregion
@@ -151,23 +152,24 @@ namespace Tracker.Core.Data
             }
         }
 
-        private System.Data.Linq.Binary _avatar;
+        private System.Data.Linq.Link<System.Data.Linq.Binary> _avatar;
 
         /// <summary>
         /// Gets or sets the Avatar column value.
         /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         [System.Data.Linq.Mapping.Column(Name = "Avatar", Storage = "_avatar", DbType = "varbinary(MAX)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.Runtime.Serialization.DataMember(Order = 5)]
         public System.Data.Linq.Binary Avatar
         {
-            get { return _avatar; }
+            get { return _avatar.Value; }
             set
             {
-                if (_avatar != value)
+                if (_avatar.Value != value)
                 {
                     OnAvatarChanging(value);
                     SendPropertyChanging("Avatar");
-                    _avatar = value;
+                    _avatar.Value = value;
                     SendPropertyChanged("Avatar");
                     OnAvatarChanged();
                 }
@@ -804,6 +806,7 @@ namespace Tracker.Core.Data
             _assignedTaskList = Detach(_assignedTaskList, OnAssignedTaskListAdd, OnAssignedTaskListRemove);
             _createdTaskList = Detach(_createdTaskList, OnCreatedTaskListAdd, OnCreatedTaskListRemove);
             _userRoleList = Detach(_userRoleList, OnUserRoleListAdd, OnUserRoleListRemove);
+            _avatar = Detach(_avatar);
         }
         #endregion
     }

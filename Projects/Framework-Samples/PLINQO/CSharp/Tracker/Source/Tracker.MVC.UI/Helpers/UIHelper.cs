@@ -32,10 +32,10 @@ namespace PLINQO.Mvc.UI
             if ((currentUser != null) && (currentUser.Identity != null))
                 currentUserName = currentUser.Identity.Name;
 
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.ObjectTrackingEnabled = false;
-                user = context.User.GetByEmailAddress(currentUserName);
+                db.ObjectTrackingEnabled = false;
+                user = db.User.GetByEmailAddress(currentUserName);
             }
 
             return user;
@@ -81,10 +81,10 @@ namespace PLINQO.Mvc.UI
         public static SelectList GetRoleSelectList(int? selectedValue, List<Role> userRoles)
         {
             List<Role> roles;
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.ObjectTrackingEnabled = false;
-                roles = context.Role
+                db.ObjectTrackingEnabled = false;
+                roles = db.Role
                     .OrderBy(r => r.Name)
                     .FromCache()
                     .ToList();
@@ -118,10 +118,10 @@ namespace PLINQO.Mvc.UI
         public static SelectList GetUserSelectList(int? selectedValue)
         {
             List<User> users;
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.ObjectTrackingEnabled = false;
-                users = context.User
+                db.ObjectTrackingEnabled = false;
+                users = db.User
                     .OrderBy(u => u.FirstName)
                     .ThenBy(u => u.LastName)
                     .FromCache()

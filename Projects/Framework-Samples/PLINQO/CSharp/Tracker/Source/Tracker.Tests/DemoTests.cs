@@ -42,14 +42,14 @@ namespace Tracker.Tests
         [TearDown]
         public void TearDown()
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Audit.Delete(a => a.User.EmailAddress.EndsWith("startrek.com"));
-                context.UserRole.Delete(ur => ur.User.EmailAddress.EndsWith("startrek.com"));
-                context.Task.Delete(t =>
+                db.Audit.Delete(a => a.User.EmailAddress.EndsWith("startrek.com"));
+                db.UserRole.Delete(ur => ur.User.EmailAddress.EndsWith("startrek.com"));
+                db.Task.Delete(t =>
                     t.AssignedUser.EmailAddress.EndsWith("startrek.com") ||
                     t.CreatedUser.EmailAddress.EndsWith("startrek.com"));
-                context.User.Delete(u => u.EmailAddress.EndsWith("startrek.com"));
+                db.User.Delete(u => u.EmailAddress.EndsWith("startrek.com"));
             }
         }
 
@@ -63,10 +63,10 @@ namespace Tracker.Tests
                 Priority = Priority.High,
                 CreatedId = userId,
             };
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Task.InsertOnSubmit(task);
-                context.SubmitChanges();
+                db.Task.InsertOnSubmit(task);
+                db.SubmitChanges();
                 TaskId = task.Id;
             }
         }
@@ -83,10 +83,10 @@ namespace Tracker.Tests
                 IsApproved = true
             };
 
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.User.InsertOnSubmit(user);
-                context.SubmitChanges();
+                db.User.InsertOnSubmit(user);
+                db.SubmitChanges();
                 SpockId = user.Id;
             }
 
@@ -132,11 +132,11 @@ namespace Tracker.Tests
                 IsApproved = false
             });
 
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.User.InsertAllOnSubmit(users);
-                context.SubmitChanges();
-                JamesId = context.User.ByFirstName("James").ByLastName("Kirk").First().Id;
+                db.User.InsertAllOnSubmit(users);
+                db.SubmitChanges();
+                JamesId = db.User.ByFirstName("James").ByLastName("Kirk").First().Id;
             }
         }
 
@@ -145,59 +145,72 @@ namespace Tracker.Tests
         [Test]
         public void Test_Manager_And_Query_Gets()
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
+                db.Log = Console.Out;
 
-                Task task = context.Manager.Task.GetByKey(SpockId);
-                IQueryable<Task> tasks = context.Manager.Task.GetByAssignedIdStatus(SpockId, Status.NotStarted);
+                Task task = db.Manager.Task.GetByKey(SpockId);
+                IQueryable<Task> tasks = db.Manager.Task.GetByAssignedIdStatus(SpockId, Status.NotStarted);
                 List<Task> taskList = tasks.ToList();
             }
 
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
+                db.Log = Console.Out;
 
-                Task task = context.Task.GetByKey(SpockId);
-                IQueryable<Task> tasks = context.Task.ByAssignedId(SpockId).ByStatus(Status.NotStarted);
+                Task task = db.Task.GetByKey(SpockId);
+                IQueryable<Task> tasks = db.Task.ByAssignedId(SpockId).ByStatus(Status.NotStarted);
                 List<Task> taskList = tasks.ToList();
             }
         }
 
         [Test]
+        public void Test_Query_Advanced()
+        {
+            using (var db = new TrackerDataContext())
+            {
+                db.Log = Console.Out;
+
+                var priorites = db.Task.Where(t => !t.Priority.HasValue || t.Priority.Value == Priority.High).ToList();
+                var something = db.Task.ByPriority(null, Priority.High).ToList();
+            }
+        }
+
+
+        [Test]
         public void Test_Many_To_Many()
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
+                db.Log = Console.Out;
 
-                User u = context.User.GetByKey(SpockId);
-                Role r = context.Role.ByName("Manager").First();
+                User u = db.User.GetByKey(SpockId);
+                Role r = db.Role.ByName("Manager").First();
                 u.RoleList.Add(r);
-                context.SubmitChanges();
+                db.SubmitChanges();
             }
         }
 
         [Test]
         public void Test_Enum()
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
+                db.Log = Console.Out;
 
-                var task = context.Task.GetByKey(TaskId);
+                var task = db.Task.GetByKey(TaskId);
                 task.Priority = Priority.High;
-                context.SubmitChanges();
+                db.SubmitChanges();
             }
         }
 
         [Test]
         public void Test_Auditing()
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
-                var user = context.User.GetByKey(SpockId);
+                db.Log = Console.Out;
+                var user = db.User.GetByKey(SpockId);
                 user.Comment = "I love my mom, but I hate Winona Ryder.";
 
                 var task = new Task()
@@ -208,9 +221,9 @@ namespace Tracker.Tests
                     Priority = Priority.High,
                     Summary = "Punch Kirk in the face!"
                 };
-                context.Task.InsertOnSubmit(task);
-                context.SubmitChanges();
-                Console.Write(context.LastAudit.ToXml());
+                db.Task.InsertOnSubmit(task);
+                db.SubmitChanges();
+                Console.Write(db.LastAudit.ToXml());
             }
         }
 
@@ -220,14 +233,14 @@ namespace Tracker.Tests
             int brokenRules = 0;
             try
             {
-                using (var context = new TrackerDataContext())
+                using (var db = new TrackerDataContext())
                 {
-                    context.Log = Console.Out;
+                    db.Log = Console.Out;
 
                     User user = new User();
                     user.EmailAddress = "spock@startrek.com";
-                    context.User.InsertOnSubmit(user);
-                    context.SubmitChanges();
+                    db.User.InsertOnSubmit(user);
+                    db.SubmitChanges();
                 }
             }
             catch (BrokenRuleException e)
@@ -242,11 +255,11 @@ namespace Tracker.Tests
         public void Test_Entity_Detach()
         {
             Task task = null;
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
+                db.Log = Console.Out;
 
-                task = context.Task.GetByKey(TaskId);
+                task = db.Task.GetByKey(TaskId);
                 task.Detach();
             }
 
@@ -265,11 +278,11 @@ namespace Tracker.Tests
         public void Test_Entity_Detach_Update()
         {
             Task task = null;
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
+                db.Log = Console.Out;
 
-                task = context.Task.GetByKey(TaskId);
+                task = db.Task.GetByKey(TaskId);
                 task.Detach();
             }
 
@@ -287,28 +300,28 @@ namespace Tracker.Tests
         [Test]
         public void Test_Entity_Clone()
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
+                db.Log = Console.Out;
 
-                var u = context.Task.GetByKey(TaskId);
+                var u = db.Task.GetByKey(TaskId);
                 Task taskCopy = u.Clone();
                 taskCopy.Id = 0;
-                context.Task.InsertOnSubmit(taskCopy);
-                context.SubmitChanges();
+                db.Task.InsertOnSubmit(taskCopy);
+                db.SubmitChanges();
             }
         }
 
         [Test]
         public void Test_Serialization()
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
+                db.Log = Console.Out;
 
                 // Write to Console/Output ... or break point.
 
-                var task = context.Task.GetByKey(TaskId);
+                var task = db.Task.GetByKey(TaskId);
                 var s = task.ToXml();
                 Console.Write(s);
             }
@@ -317,34 +330,34 @@ namespace Tracker.Tests
         [Test]
         public void Test_Query_Result_Cache()
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
                 //By default, the cached results use a one minute sliding expiration with
                 //no absolute expiration.
-                var tasks = context.Task.ByAssignedId(SpockId).FromCache();
-                var cachedTasks = context.Task.ByAssignedId(SpockId).FromCache();
+                var tasks = db.Task.ByAssignedId(SpockId).FromCache();
+                var cachedTasks = db.Task.ByAssignedId(SpockId).FromCache();
 
                 //query result is now cached 300 seconds
-                var approvedUsers = context.User.ByIsApproved(true).FromCache(300);
-                var cachedApprovedUsers = context.User.ByIsApproved(true).FromCache(300);
+                var approvedUsers = db.User.ByIsApproved(true).FromCache(300);
+                var cachedApprovedUsers = db.User.ByIsApproved(true).FromCache(300);
             }
         }
 
         [Test]
         public void Test_Batch_Update()
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
+                db.Log = Console.Out;
 
-                context.Task.Update(
+                db.Task.Update(
                     u => u.Status == Status.NotStarted, 
                     u2 => new Task() { Status = Status.Done });
 
-                var tasks = from t in context.Task
+                var tasks = from t in db.Task
                             where t.Status == Status.Done
                             select t;
-                context.Task.Update(tasks, u => new Task { Status = Status.NotStarted });
+                db.Task.Update(tasks, u => new Task { Status = Status.NotStarted });
 
             }
         }
@@ -352,28 +365,28 @@ namespace Tracker.Tests
         [Test]
         public void Test_Batch_Delete()
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
+                db.Log = Console.Out;
 
 
-                context.User.Delete(JamesId);
+                db.User.Delete(JamesId);
 
-                context.User.Delete(u => u.IsApproved == false && u.LastName != "McCoy" && u.EmailAddress.EndsWith("startrek.com"));
+                db.User.Delete(u => u.IsApproved == false && u.LastName != "McCoy" && u.EmailAddress.EndsWith("startrek.com"));
 
-                IQueryable<User> usersToDelete = from u in context.User
+                IQueryable<User> usersToDelete = from u in db.User
                                                  where u.IsApproved == false && u.LastName == "McCoy"
                                                  select u;
-                context.User.Delete(usersToDelete);
+                db.User.Delete(usersToDelete);
             }
         }
 
         [Test]
         public void Test_Stored_Procedure_with_Multiple_Results()
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
+                db.Log = Console.Out;
 
                 // Create Procedure [dbo].[GetUsersWithRoles]
                 // As
@@ -381,7 +394,7 @@ namespace Tracker.Tests
                 // Select * From UserRole
                 // GO
 
-                var results = context.GetUsersWithRoles();
+                var results = db.GetUsersWithRoles();
                 List<User> users = results.GetResult<User>().ToList();
                 List<UserRole> roles = results.GetResult<UserRole>().ToList();
             }
@@ -390,17 +403,18 @@ namespace Tracker.Tests
         [Test]
         public void Test_Batch_Queries()
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Log = Console.Out;
+                db.Log = Console.Out;
 
-                var q1 = from u in context.User select u;
-                var q2 = from ur in context.UserRole select ur;
-                IMultipleResults results = context.ExecuteQuery(q1, q2);
+                var q1 = from u in db.User select u;
+                var q2 = from ur in db.UserRole select ur;
+                IMultipleResults results = db.ExecuteQuery(q1, q2);
                 List<User> users = results.GetResult<User>().ToList();
                 List<UserRole> roles = results.GetResult<UserRole>().ToList();
+                
             }
         }
 
-    }
+   }
 }

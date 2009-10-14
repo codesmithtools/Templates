@@ -55,32 +55,33 @@ namespace PLINQO.Mvc.UI.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddRole(int userId, int roleId)
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
                 var options = new DataLoadOptions();
                 options.LoadWith<User>(u => u.UserRoleList);
 
-                var user = context.User.GetByKey(userId);
-                var role = context.Role.GetByKey(roleId);
+                var user = db.User.GetByKey(userId);
+                var role = db.Role.GetByKey(roleId);
                 user.RoleList.Add(role);
-                context.SubmitChanges();
+                db.SubmitChanges();
             }
             return RedirectToAction("Edit", new { id = userId });
         }
 
         public ActionResult RemoveRole(int userId, int roleId)
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
                 var options = new DataLoadOptions();
                 options.LoadWith<User>(u => u.UserRoleList);
-                context.LoadOptions = options;
+                options.LoadWith<UserRole>(r => r.Role);
+                db.LoadOptions = options;
 
-                var user = context.User.GetByKey(userId);
+                var user = db.User.GetByKey(userId);
                 var role = user.RoleList.FirstOrDefault(r => r.Id == roleId);
 
                 user.RoleList.Remove(role);
-                context.SubmitChanges();
+                db.SubmitChanges();
             }
             return RedirectToAction("Edit", new { id = userId });
         }
@@ -106,11 +107,11 @@ namespace PLINQO.Mvc.UI.Controllers
                     MembershipCreateStatus createStatus = MembershipService.CreateUser(emailAddress, password, emailAddress);
                     if (createStatus == MembershipCreateStatus.Success)
                     {
-                        using (var context = new TrackerDataContext())
+                        using (var db = new TrackerDataContext())
                         {
-                            var user = context.User.GetByEmailAddress(emailAddress);
+                            var user = db.User.GetByEmailAddress(emailAddress);
                             TryUpdateModel(user, null, null, new string[] { "FirstName, LastName" });
-                            context.SubmitChanges();
+                            db.SubmitChanges();
                             HttpRuntime.Cache.Remove("Users");
                             return RedirectToAction("Edit", new { id = user.Id });
                         }
@@ -142,14 +143,14 @@ namespace PLINQO.Mvc.UI.Controllers
         public ActionResult Details(int id)
         {
             Data.User user = null;
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                DataLoadOptions options = new DataLoadOptions();
+                var options = new DataLoadOptions();
                 options.LoadWith<Data.User>(u => u.UserRoleList);
                 options.LoadWith<Data.UserRole>(r => r.Role);
-                context.LoadOptions = options;
+                db.LoadOptions = options;
 
-                user = context.User.GetByKey(id);
+                user = db.User.GetByKey(id);
 
             }
 
@@ -162,15 +163,15 @@ namespace PLINQO.Mvc.UI.Controllers
         public ActionResult Get(int id)
         {
             User user = null;
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.DeferredLoadingEnabled = false;
-                DataLoadOptions options = new DataLoadOptions();
+                db.DeferredLoadingEnabled = false;
+                var options = new DataLoadOptions();
                 options.LoadWith<Data.User>(u => u.UserRoleList);
                 options.LoadWith<Data.UserRole>(ur => ur.Role);
-                context.LoadOptions = options;
+                db.LoadOptions = options;
 
-                user = context.User.GetByKey(id);
+                user = db.User.GetByKey(id);
                 user.Detach();
             }
             return Json(user);
@@ -182,9 +183,9 @@ namespace PLINQO.Mvc.UI.Controllers
         public ActionResult Index()
         {
             List<User> users = null;
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                users = context.User.OrderBy(u => u.EmailAddress).ToList();
+                users = db.User.OrderBy(u => u.EmailAddress).ToList();
             }
             return View(users);
         }
@@ -195,24 +196,24 @@ namespace PLINQO.Mvc.UI.Controllers
 
             if (user != null && user.Id != id)
             {
-                using (var context = new TrackerDataContext())
+                using (var db = new TrackerDataContext())
                 using (var scope = new TransactionScope())
                 {
-                    context.UserRole.Delete(r => r.UserId == id);
-                    context.Audit.Delete(a => a.UserId == id);
+                    db.UserRole.Delete(r => r.UserId == id);
+                    db.Audit.Delete(a => a.UserId == id);
 
-                    var q1 = from a in context.Audit
-                             join t in context.Task on a.TaskId equals t.Id
-                             join u in context.User on t.CreatedId equals u.Id into created
+                    var q1 = from a in db.Audit
+                             join t in db.Task on a.TaskId equals t.Id
+                             join u in db.User on t.CreatedId equals u.Id into created
                              from x in created.DefaultIfEmpty()
-                             join u in context.User on t.AssignedId equals u.Id into assigned
+                             join u in db.User on t.AssignedId equals u.Id into assigned
                              from y in assigned.DefaultIfEmpty()
                              where t.AssignedId != null || t.CreatedId != null
                              select a;
 
-                    context.Audit.Delete(q1);
-                    context.Task.Delete(a => a.CreatedId == id || a.AssignedId == id);
-                    context.User.Delete(id);
+                    db.Audit.Delete(q1);
+                    db.Task.Delete(a => a.CreatedId == id || a.AssignedId == id);
+                    db.User.Delete(id);
                     scope.Complete();
                 }
             }
@@ -237,28 +238,40 @@ namespace PLINQO.Mvc.UI.Controllers
             var userViewData = new UserViewData();
             try
             {
-                using (var context = new TrackerDataContext())
+                using (var db = new TrackerDataContext())
                 {
                     var options = new DataLoadOptions();
                     options.LoadWith<Data.User>(u => u.UserRoleList);
                     options.LoadWith<Data.UserRole>(u => u.Role);
-                    context.LoadOptions = options;
+                    db.LoadOptions = options;
 
-                    user = context.User.GetByKey(id);
+                    user = db.User.GetByKey(id);
                     UpdateModel(user);
-                    context.SubmitChanges();
 
-                    var audit = new Audit(context.LastAudit);
+                    if (!db.GetChangeSet().Updates.Contains(user))
+                    {
+                        var trackedUser = new CodeSmith.Data.TrackedObject {Current = user, IsChanged = true};
+                        var ruleManager = new RuleManager();
+                        ruleManager.Run(trackedUser);
+
+                        if (ruleManager.BrokenRules.Count > 0)
+                            throw new BrokenRuleException(ruleManager.BrokenRules);
+                    }
+
+                    db.SubmitChanges();
+
+                    var audit = new Audit(db.LastAudit);
                     audit.User = user;
-                    context.Audit.InsertOnSubmit(audit);
-                    context.SubmitChanges();
-
-                    HttpRuntime.Cache.Remove("Users");
+                    db.Audit.InsertOnSubmit(audit);
+                    db.SubmitChanges();
                 }
                 return RedirectToAction("Edit", new { id = id });
             }
             catch (BrokenRuleException e)
             {
+                if (user != null)
+                    user.Detach();
+
                 foreach (BrokenRule rule in e.BrokenRules)
                     ModelState.AddModelError(rule.Context.Rule.TargetProperty, rule.Message);
                 return View(GetData(user));
@@ -268,12 +281,12 @@ namespace PLINQO.Mvc.UI.Controllers
 
         public ActionResult RemoveAvatar(int id)
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                var user = context.User.GetByKey(id);
+                var user = db.User.GetByKey(id);
                 user.AvatarType = null;
                 user.Avatar = null;
-                context.SubmitChanges();
+                db.SubmitChanges();
             }
             return RedirectToAction("Edit", new { id = id });
         }
@@ -281,15 +294,16 @@ namespace PLINQO.Mvc.UI.Controllers
 
         public UserViewData GetData(int userId)
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
                 var options = new DataLoadOptions();
+                options.LoadWith<Data.User>(u => u.Avatar);
                 options.LoadWith<Data.User>(u => u.UserRoleList);
                 options.LoadWith<Data.UserRole>(u => u.Role);
-                context.LoadOptions = options;
-                context.ObjectTrackingEnabled = false;
+                db.LoadOptions = options;
+                db.ObjectTrackingEnabled = false;
 
-                return GetData(context.User.GetByKey(userId));
+                return GetData(db.User.GetByKey(userId));
             }
         }
 
@@ -297,10 +311,10 @@ namespace PLINQO.Mvc.UI.Controllers
         {
             var userViewData = new UserViewData();
             userViewData.User = user;
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
                 userViewData.Roles = UIHelper.GetRoleSelectList(null, user.RoleList.ToList());
-                userViewData.Audits = UIHelper.TransformAudits(context.Audit.ByUserId(user.Id).OrderByDescending(a => a.Date).ToList());
+                userViewData.Audits = UIHelper.TransformAudits(db.Audit.ByUserId(user.Id).OrderByDescending(a => a.Date).ToList());
             }
             return userViewData;
         }
@@ -309,16 +323,21 @@ namespace PLINQO.Mvc.UI.Controllers
         public ActionResult Avatar(int id)
         {
             User user = null;
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                user = context.User.GetByKey(id);
-                user.Detach();
+                var userAvatar = (from u in db.User
+                             where u.Id == id
+                             select new
+                                        {
+                                            u.Avatar,
+                                            u.AvatarType
+                                        }).FirstOrDefault();
+
+                if (string.IsNullOrEmpty(userAvatar.AvatarType) || null == userAvatar.Avatar || userAvatar.Avatar.Length == 0)
+                    return File(Server.MapPath("/lib/images/anonymous.gif"), "image/gif");
+
+                return File(userAvatar.Avatar.ToArray(), userAvatar.AvatarType);
             }
-
-            if (null == user || string.IsNullOrEmpty(user.AvatarType) || null == user.Avatar || user.Avatar.Length == 0)
-                return File(Server.MapPath("/lib/images/anonymous.gif"), "image/gif");
-
-            return File(user.Avatar.ToArray(), user.AvatarType);
         }
 
 
@@ -327,9 +346,9 @@ namespace PLINQO.Mvc.UI.Controllers
         {
             if (Request.Files.Count != 1)
             {
-                using (var context = new TrackerDataContext())
+                using (var db = new TrackerDataContext())
                 {
-                    var user = context.User.GetByKey(id);
+                    var user = db.User.GetByKey(id);
                     ModelState.AddModelError("file", "Must select a file to upload.");
                     return View("Edit", GetData(user));
                 }
@@ -339,18 +358,17 @@ namespace PLINQO.Mvc.UI.Controllers
             var buffer = new byte[file.ContentLength];
             file.InputStream.Read(buffer, 0, buffer.Length);
 
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                var user = context.User.GetByKey(id);
+                var user = db.User.GetByKey(id);
                 user.Avatar = new Binary(buffer);
                 user.AvatarType = file.ContentType;
-                context.SubmitChanges();
+                db.SubmitChanges();
 
-                var audit = new Audit(context.LastAudit);
+                var audit = new Audit(db.LastAudit);
                 audit.User = user;
-                context.Audit.InsertOnSubmit(audit);
-                context.SubmitChanges();
-
+                db.Audit.InsertOnSubmit(audit);
+                db.SubmitChanges();
             }
 
             return RedirectToAction("Edit", new { id = id });
