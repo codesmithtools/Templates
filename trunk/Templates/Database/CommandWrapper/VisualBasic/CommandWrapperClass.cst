@@ -584,9 +584,9 @@ End Namespace
 #Region "Name Helpers"
 
 Public Function GetClassName() As String
-	If (CommandClassName <> Nothing AndAlso CommandClassName.Length > 0) Then
+	If Not(String.IsNullOrEmpty(CommandClassName)) Then
 		Return CommandClassName
-	Else
+	Else If Not (SourceCommand is Nothing)
 		Dim className As String = SourceCommand.Name
 		If (className.StartsWith(Me.CommandPrefix)) Then
 			className = className.Substring(Me.CommandPrefix.Length - 1)
@@ -595,6 +595,8 @@ Public Function GetClassName() As String
 		className = className.Replace("_", "")
 		Return className
 	End If
+    
+        Return "WrapperClass"
 End Function
 
 Public Function GetRowClassName() As String
