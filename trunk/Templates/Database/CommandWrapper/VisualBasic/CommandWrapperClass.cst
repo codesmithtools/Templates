@@ -37,7 +37,6 @@
 
 Imports System
 Imports System.Data
-Imports System.Data.SqlTypes
 Imports System.Data.SqlClient
 <% If (Me.ResultSchema = ResultSchemaEnum.StronglyTyped AndAlso Me.ReturnsResultSet) Then %>
 Imports System.Collections.ObjectModel
@@ -81,7 +80,7 @@ Namespace <%= TargetNamespace %>
 		
 		#Region "Public Properties"
 		<% For i as Int32 = 0 To (SourceCommand.CommandResults(0).Columns.Count - 1) %>
-		Public Property <%= GetPropertyName(SourceCommand.CommandResults(0).Columns(i)) %> As <%= GetSqlType(SourceCommand.CommandResults(0).Columns(i).DataType) %>
+		Public Property <%= GetPropertyName(SourceCommand.CommandResults(0).Columns(i)) %> As <%= GetNativeType(SourceCommand.CommandResults(0).Columns(i)) %>
 			Get
 				Return <%= GetMemberVariableName(SourceCommand.CommandResults(0).Columns(i)) %>
 			End Get
@@ -111,7 +110,6 @@ Namespace <%= TargetNamespace %>
 		Protected _returnValue As Int32 = 0
 		<% For Each parameter As ParameterSchema In SourceCommand.NonReturnValueParameters %>
 		<%= GetMemberVariableDeclarationStatement(parameter) %>
-		Protected <%= GetMemberVariableName(parameter) %>Set As Boolean = false
 		<% Next %>
 		#End Region
 		
@@ -120,16 +118,16 @@ Namespace <%= TargetNamespace %>
 		End Sub
 		
 		Public Sub New(connectionString As String)
-			ConnectionString = connectionString
+			Me.ConnectionString = connectionString
 		End Sub
 		
 		Public Sub New(connection As SqlConnection)
-			Connection = connection
+			Me.Connection = connection
 		End Sub
 		
 		Public Sub New(connection As SqlConnection, transaction As SqlTransaction)
-			Connection = connection
-			Transaction = transaction
+			Me.Connection = connection
+			Me.Transaction = transaction
 		End Sub
 		
 		#End Region
@@ -195,13 +193,12 @@ Namespace <%= TargetNamespace %>
 		' <summary>
 		' <%= SourceCommand.NonReturnValueParameters(i).Description %>
 		' </summary>
-		Public Property <%= GetPropertyName(SourceCommand.NonReturnValueParameters(i)) %> As <%= GetSqlType(SourceCommand.NonReturnValueParameters(i).DataType) %>
+		Public Property <%= GetPropertyName(SourceCommand.NonReturnValueParameters(i)) %> As <%= GetNativeType(SourceCommand.NonReturnValueParameters(i)) %>
 			Get
 				Return <%= GetMemberVariableName(SourceCommand.NonReturnValueParameters(i)) %>
 			End Get
 			Set
 				<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters(i)) %> = value
-				<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters(i)) %>Set = true
 			End Set
 		End Property
 		<% If (i < SourceCommand.NonReturnValueParameters.Count - 1) Then Response.Write(vbNewLine) %>		
@@ -256,9 +253,11 @@ Namespace <%= TargetNamespace %>
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters(i).Direction.ToString() %>
 				<% End If %>
 				<% BuildParameterExtraStatements(SourceCommand.NonReturnValueParameters(i)) %>
-				If (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters(i)) %>Set = True OrElse <%= GetPropertyName(SourceCommand.NonReturnValueParameters(i)) %>.IsNull = False) Then
-					<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Value = <%= GetPropertyName(SourceCommand.NonReturnValueParameters(i)) %>
-				End If
+				If (<%= BuildNullCheckStatement(SourceCommand.NonReturnValueParameters(i)) %>) Then
+					<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Value = <%= GetPropertyName(SourceCommand.NonReturnValueParameters(i)) %><%=BuildNullValueStatement(SourceCommand.NonReturnValueParameters(i))%>
+				Else
+                    <%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Value = DBNull.Value
+                End If
 				<% If (i < SourceCommand.NonReturnValueParameters.Count - 1) Then Response.Write(vbTab + vbTab + vbTab + vbTab + vbNewLine) %>
 				<% Next %>
 				'"End Populate Parameters"
@@ -279,17 +278,17 @@ Namespace <%= TargetNamespace %>
 				
 				<% For i As Int32 = 0 To (SourceCommand.AllOutputParameters.Count - 1) %>
 				If (Not <%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %> Not Is Nothing AndAlso <%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value Is Nothing) Then
-					If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value is <%= GetSqlType(SourceCommand.AllOutputParameters(i).DataType) %>) Then
-						<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = (<%= GetSqlType(SourceCommand.AllOutputParameters(i).DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value
+					If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value is <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>) Then
+						<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = (<%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value
 					Else
 						If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value <> DBNull.Value)
-							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = New <%= GetSqlType(SourceCommand.AllOutputParameters(i).DataType) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters(i).DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value)
+							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = New <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters(i).DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value)
 						Else
-							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetSqlType(SourceCommand.AllOutputParameters(i).DataType) %>.Null
+							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>.Null
 						End If
 					End If
 				Else
-					<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetMemberVariableDefaultValue(SourceCommand.AllOutputParameters(i).DataType) %>
+					<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = Nothing
 				End If}
 				<% If (i < SourceCommand.AllOutputParameters.Count - 1) Then Response.Write(vbTab + vbTab + vbTab + vbTab + vbNewLine) %>
 				<% Next %>
@@ -334,9 +333,11 @@ Namespace <%= TargetNamespace %>
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters(i).Direction.ToString() %>
 				<% End If %>
 				<% BuildParameterExtraStatements(SourceCommand.NonReturnValueParameters(i)) %>
-				If (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters(i)) %>Set = True OrElse <%= GetPropertyName(SourceCommand.NonReturnValueParameters(i)) %>.IsNull = False) Then
-					<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Value = <%= GetPropertyName(SourceCommand.NonReturnValueParameters(i)) %>
-				End If
+				If (<%= BuildNullCheckStatement(SourceCommand.NonReturnValueParameters(i)) %>) Then
+					<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Value = <%= GetPropertyName(SourceCommand.NonReturnValueParameters(i)) %><%=BuildNullValueStatement(SourceCommand.NonReturnValueParameters(i))%>
+				Else
+                    <%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Value = DBNull.Value
+                End If
 				<% If (i < SourceCommand.NonReturnValueParameters.Count - 1) Then Response.Write(vbTab + vbTab + vbTab + vbTab + vbNewLine) %>
 				<% Next %>
 				'"End Populate Parameters"
@@ -356,17 +357,17 @@ Namespace <%= TargetNamespace %>
 				
 				<% For i As Int32 = 0 To (SourceCommand.AllOutputParameters.Count - 1) %>
 				If Not (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %> Not Is Nothing AndAlso <%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value Is Nothing) Then
-					If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value is <%= GetSqlType(SourceCommand.AllOutputParameters(i).DataType) %>) Then
-						<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = (<%= GetSqlType(SourceCommand.AllOutputParameters(i).DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value
+					If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value is <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>) Then
+						<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = (<%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value
 					Else
 						If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value <> DBNull.Value) Then
-							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = New <%= GetSqlType(SourceCommand.AllOutputParameters(i).DataType) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters(i).DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value)
+							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = New <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters(i).DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value)
 						Else
-							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetSqlType(SourceCommand.AllOutputParameters(i).DataType) %>.Null
+							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>.Null
 						End If
 					End If
 				Else
-					<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetMemberVariableDefaultValue(SourceCommand.AllOutputParameters(i).DataType) %>
+					<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = Nothing
 				End If
 				<% If (i < SourceCommand.AllOutputParameters.Count - 1) Then Response.Write(vbTab + vbTab + vbTab + vbTab + vbNewLine) %>
 				<% Next %>
@@ -422,9 +423,11 @@ Namespace <%= TargetNamespace %>
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters(i).Direction.ToString() %>
 				<% End If %>
 				<% BuildParameterExtraStatements(SourceCommand.NonReturnValueParameters(i)) %>
-				If (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters(i)) %>Set = True OrElse <%= GetPropertyName(SourceCommand.NonReturnValueParameters(i)) %>.IsNull = False) Then
-					<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Value = <%= GetPropertyName(SourceCommand.NonReturnValueParameters(i)) %>
-				End If
+				If (<%= BuildNullCheckStatement(SourceCommand.NonReturnValueParameters(i)) %>) Then
+					<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Value = <%= GetPropertyName(SourceCommand.NonReturnValueParameters(i)) %><%=BuildNullValueStatement(SourceCommand.NonReturnValueParameters(i))%>
+				Else
+                    <%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Value = DBNull.Value
+                End If
 				<% If (i < SourceCommand.NonReturnValueParameters.Count - 1) Then Response.Write(vbTab + vbTab + vbTab + vbTab + vbNewLine) %>
 				<% Next %>
 				
@@ -455,17 +458,17 @@ Namespace <%= TargetNamespace %>
 				
 				<% For i As Int32 = 0 To (SourceCommand.AllOutputParameters.Count - 1) %>
 				If (Not <%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %> Is Nothing AndAlso <%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value Is Nothing) Then
-					If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value is <%= GetSqlType(SourceCommand.AllOutputParameters(i).DataType) %>) Then
-						<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = (<%= GetSqlType(SourceCommand.AllOutputParameters(i).DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value
+					If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value is <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>) Then
+						<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = (<%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value
 					Else
 						If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value <> DBNull.Value)
-							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = New <%= GetSqlType(SourceCommand.AllOutputParameters(i).DataType) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters(i).DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value)
+							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = New <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters(i).DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value)
 						Else
-							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetSqlType(SourceCommand.AllOutputParameters(i).DataType) %>.Null
+							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>.Null
 						End If
 					End If
 				Else
-					<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetMemberVariableDefaultValue(SourceCommand.AllOutputParameters(i).DataType) %>
+					<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = Nothing
 				End If
 				<% If (i < SourceCommand.AllOutputParameters.Count - 1) Then Response.Write(vbTab + vbTab + vbTab + vbTab + vbNewLine) %>
 				<% Next %>
@@ -743,20 +746,20 @@ Public Function BuildParameterList() As String
 	For i As Int32 = 0 To (SourceCommand.InputParameters.Count - 1)
 		builder.Append(GetCamelCaseName(SourceCommand.InputParameters(i).Name))
 		builder.Append(" As ")
-		builder.Append(GetSqlType(SourceCommand.InputParameters(i).DataType))
+		builder.Append(GetNativeType(SourceCommand.InputParameters(i)))
 		builder.Append(", ")
 	Next
 	For i As Int32 = 0 To (SourceCommand.InputOutputParameters.Count - 1)
 		builder.Append(GetCamelCaseName(SourceCommand.InputOutputParameters(i).Name))
 		builder.Append(" As ref ")
-		builder.Append(GetSqlType(SourceCommand.InputOutputParameters(i).DataType))
+		builder.Append(GetNativeType(SourceCommand.InputOutputParameters(i)))
 		builder.Append(", ")
 	Next
 
 	For i As Int32 = 0 To (SourceCommand.OutputParameters.Count - 1)
 		builder.Append(GetCamelCaseName(SourceCommand.OutputParameters(i).Name))
 		builder.Append("As ref ")
-		builder.Append(GetSqlType(SourceCommand.OutputParameters(i).DataType))
+		builder.Append(GetNativeType(SourceCommand.OutputParameters(i)))
 		builder.Append(", ")
 	Next
 	
@@ -765,6 +768,41 @@ Public Function BuildParameterList() As String
 	Else
 		Return String.Empty
 	End If
+End Function
+
+Public Function BuildNullCheckStatement(parameter As ParameterSchema) As String
+	If GetNativeType(parameter).Equals("string", StringComparison.InvariantCultureIgnoreCase) Then
+		Return String.Format("Not String.IsNullOrEmpty({0})", GetPropertyName(parameter))
+	End If
+
+	Return String.Format("{0}.HasValue", GetPropertyName(parameter))
+End Function
+
+' If the value type is a string then don't include the .Value.
+Public Function BuildNullValueStatement(parameter As ParameterSchema) As String
+	If GetNativeType(parameter).Equals("string", StringComparison.InvariantCultureIgnoreCase) Then
+		Return String.Empty
+	End If
+
+	Return ".Value"
+End Function
+
+Public Function GetNativeType(parameter As ParameterSchema) As String
+	Dim result As String = Me.GetVBVariableType(parameter)
+	If result.Equals("string", StringComparison.InvariantCultureIgnoreCase) Then
+		Return result
+	End If
+
+	Return String.Format("Nullable(Of {0})", result)
+End Function
+
+Public Function GetNativeType(column As CommandResultColumnSchema) As String
+	Dim result As String = Me.GetVBVariableType(column)
+	If result.Equals("string", StringComparison.InvariantCultureIgnoreCase) Then
+		Return result
+	End If
+
+	Return String.Format("Nullable(Of {0})", result)
 End Function
 
 Public Function AssignPropertyValues(objectName As String) As String
@@ -816,10 +854,10 @@ End Function
 Public Shadows Function GetMemberVariableDeclarationStatement(protectionLevel As String, column As CommandResultColumnSchema) As String
 
 	Dim statement As String = protectionLevel + " "
-	statement += GetMemberVariableName(column) + " As " + GetSqlType(column.DataType)
+	statement += GetMemberVariableName(column) + " As " + GetNativeType(column)
 	
-	Dim DefaultValue As String = GetMemberVariableDefaultValue(column.DataType)
-	If (DefaultValue <> "") Then
+	Dim DefaultValue As String = Nothing
+	If Not (String.IsNullOrEmpty(DefaultValue)) Then
 		statement += " = " + DefaultValue
 	End If
 	
@@ -835,10 +873,10 @@ End Function
 Public Shadows Function GetMemberVariableDeclarationStatement(protectionLevel As String, parameter As ParameterSchema) As String
 
 	Dim statement As String = protectionLevel + " "
-	statement += GetMemberVariableName(parameter) + " As " + GetSqlType(parameter.DataType)
+	statement += GetMemberVariableName(parameter) + " As " + GetNativeType(parameter)
 	
-	Dim DefaultValue As String= GetMemberVariableDefaultValue(parameter.DataType)
-	If (DefaultValue <> "") Then
+	Dim DefaultValue As String = Nothing
+	If Not (String.IsNullOrEmpty(DefaultValue)) Then
 		statement += " = " + DefaultValue
 	End If
 	
@@ -861,103 +899,6 @@ End Function
 #End Region
 
 #Region "Lookups"
-
-Public Shadows Function GetMemberVariableDefaultValue(myDbType As DbType) As String
-
-	Select Case (myDbType)
-		Case DbType.AnsiString
-			Return "SqlString.Null"
-		Case DbType.AnsiStringFixedLength
-			Return "SqlString.Null"
-		Case DbType.Binary
-			Return "SqlBinary.Null"
-		Case DbType.Boolean
-			Return "SqlBoolean.Null"
-		Case DbType.Byte
-			Return "SqlByte.Null"
-		Case DbType.Currency
-			Return "SqlMoney.Null"
-		Case DbType.Date
-			Return "SqlDateTime.Null"
-		Case DbType.Time
-			Return "SqlDateTime.Null"
-		Case DbType.DateTime
-			Return "SqlDateTime.Null"
-		Case DbType.Decimal
-			Return "SqlDecimal.Null"
-		Case DbType.Double
-			Return "SqlDouble.Null"
-		Case DbType.Guid
-			Return "SqlGuid.Null"
-		Case DbType.Int16
-			Return "SqlInt16.Null"
-		Case DbType.Int32
-			Return "SqlInt32.Null"
-		Case DbType.Int64
-			Return "SqlInt64.Null"
-		Case DbType.Object
-			Return "Nothing"
-		Case DbType.Single
-			Return "SqlSingle.Null"
-		Case DbType.String
-			Return "SqlString.Null"
-		Case DbType.StringFixedLength
-			Return "SqlString.Null"
-		Case DbType.VarNumeric
-			Return "SqlDecimal.Null"
-		Case Else
-			Return "__UNKNOWN__" + myDbType.ToString()
-		
-	End Select
-End Function
-
-Public Function GetSqlType(myDbType As DbType) As String
-
-	Select Case (myDbType)
-		Case DbType.AnsiString
-			Return "SqlString"
-		Case DbType.AnsiStringFixedLength
-			Return "SqlString"
-		Case DbType.Binary
-			Return "SqlBinary"
-		Case DbType.Boolean
-			Return "SqlBoolean"
-		Case DbType.Byte
-			Return "SqlByte"
-		Case DbType.Currency
-			Return "SqlMoney"
-		Case DbType.Date
-			Return "SqlDateTime"
-		Case DbType.Time
-			Return "SqlDateTime"
-		Case DbType.DateTime
-			Return "SqlDateTime"
-		Case DbType.Decimal
-			Return "SqlDecimal"
-		Case DbType.Double
-			Return "SqlDouble"
-		Case DbType.Guid
-			Return "SqlGuid"
-		Case DbType.Int16
-			Return "SqlInt16"
-		Case DbType.Int32
-			Return "SqlInt32"
-		Case DbType.Int64
-			Return "SqlInt64"
-		Case DbType.Object
-			Return "object"
-		Case DbType.Single
-			Return "SqlSingle"
-		Case DbType.String
-			Return "SqlString"
-		Case DbType.StringFixedLength
-			Return "SqlString"
-		Case DbType.VarNumeric
-			Return "SqlDecimal"
-		Case Else
-			Return "__UNKNOWN__" + myDbType.ToString()
-	End Select
-End Function
 
 Public Function GetAccessModifier() As String
     Select Case (Accessibility)
