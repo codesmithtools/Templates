@@ -55,7 +55,7 @@
                 <%= Html.ValidationMessage("PriorityId", "*")%>
             </p>
             <p>
-                <label for="StatusId">StatusId:</label>
+                <label for="Status">Status:</label>
                  <%= Html.DropDownList("Status", Model.Statuses)%>
                 <%= Html.ValidationMessage("Status", "*") %>
             </p>
@@ -113,7 +113,7 @@
 
     <%if( Model.Audits.Count > 0) {%>
     <div class="audit-notes">
-    <% foreach (Audit audit in Model.Audits) {%>
+    <% foreach (var audit in Model.Audits) {%>
     <%if(!String.IsNullOrEmpty(audit.HtmlContent)) {%>
     <div class="audit-note">
     <%=audit.HtmlContent %>

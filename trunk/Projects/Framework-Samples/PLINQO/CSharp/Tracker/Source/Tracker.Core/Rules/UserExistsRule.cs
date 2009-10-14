@@ -25,10 +25,10 @@ namespace Tracker.Core.Data.Rules
         {
             var currentUser = (User)context.TrackedObject.Current;
 
-            using (var dataContext = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                dataContext.ObjectTrackingEnabled = false;
-                var user = dataContext.User.GetByEmailAddress(currentUser.EmailAddress);
+                db.ObjectTrackingEnabled = false;
+                var user = db.User.GetByEmailAddress(currentUser.EmailAddress);
                 context.Success = (null == user || user.Id == currentUser.Id);
             }
         }

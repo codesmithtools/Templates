@@ -51,10 +51,10 @@ namespace Tracker.Core.Data.Rules
             if ((currentUser != null) && (currentUser.Identity != null))
                 currentUserName = currentUser.Identity.Name;
 
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.ObjectTrackingEnabled = false;
-                user = context.User.GetByEmailAddress(currentUserName);
+                db.ObjectTrackingEnabled = false;
+                user = db.User.GetByEmailAddress(currentUserName);
             }
 
             return user.Id;

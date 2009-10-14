@@ -72,7 +72,7 @@
       <Column Name="EmailAddress" Storage="_emailAddress" Type="System.String" DbType="nvarchar(250) NOT NULL" CanBeNull="false" />
       <Column Name="FirstName" Storage="_firstName" Type="System.String" DbType="nvarchar(200)" CanBeNull="true" />
       <Column Name="LastName" Storage="_lastName" Type="System.String" DbType="nvarchar(200)" CanBeNull="true" />
-      <Column Name="Avatar" Storage="_avatar" Type="System.Data.Linq.Binary" DbType="varbinary(MAX)" CanBeNull="true" />
+      <Column Name="Avatar" Storage="_avatar" Type="System.Data.Linq.Binary" DbType="varbinary(MAX)" CanBeNull="true" IsDelayLoaded="true" />
       <Column Name="CreatedDate" Storage="_createdDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="ModifiedDate" Storage="_modifiedDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />

@@ -34,15 +34,15 @@ namespace PLINQO.Mvc.UI.Controllers
             {
                 Nullable<System.DateTime> date = new DateTime();
                 
-                using (var context = new TrackerDataContext())
+                using (var db = new TrackerDataContext())
                 {
-                    context.Task.InsertOnSubmit(task);
-                    context.SubmitChanges();
+                    db.Task.InsertOnSubmit(task);
+                    db.SubmitChanges();
 
-                    var audit = new Audit(context.LastAudit);
+                    var audit = new Audit(db.LastAudit);
                     audit.Task = task;
-                    context.Audit.InsertOnSubmit(audit);
-                    context.SubmitChanges();
+                    db.Audit.InsertOnSubmit(audit);
+                    db.SubmitChanges();
                 }
                 return RedirectToAction("Edit", new { id = task.Id });
             }
@@ -57,14 +57,14 @@ namespace PLINQO.Mvc.UI.Controllers
         public ActionResult CopyTask(int id)
         {
             Task copiedTask = null;
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                Task task = context.Task.GetByKey(id);
+                Task task = db.Task.GetByKey(id);
                 copiedTask = task.Clone();
                 copiedTask.Id = 0;
-                copiedTask.CreatedUser = context.User.GetByEmailAddress(System.Web.HttpContext.Current.User.Identity.Name);
-                context.Task.InsertOnSubmit(copiedTask);
-                context.SubmitChanges();
+                copiedTask.CreatedUser = db.User.GetByEmailAddress(System.Web.HttpContext.Current.User.Identity.Name);
+                db.Task.InsertOnSubmit(copiedTask);
+                db.SubmitChanges();
             }
 
             return RedirectToAction("Edit", new {id = copiedTask.Id});
@@ -72,10 +72,10 @@ namespace PLINQO.Mvc.UI.Controllers
 
         public ActionResult Delete(int id)
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Audit.Delete(a => a.TaskId == id);
-                context.Task.Delete(id);
+                db.Audit.Delete(a => a.TaskId == id);
+                db.Task.Delete(id);
             }
             return RedirectToAction("Index");
         }
@@ -83,13 +83,13 @@ namespace PLINQO.Mvc.UI.Controllers
         public ActionResult Details(int id)
         {
             Task task = null;
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
                 var options = new DataLoadOptions();
                 options.LoadWith<Task>(t => t.AssignedUser);
                 options.LoadWith<Task>(t => t.CreatedUser);
-                context.LoadOptions = options;
-                task = context.Task.GetByKey(id);
+                db.LoadOptions = options;
+                task = db.Task.GetByKey(id);
             }
             return View(task);
         }
@@ -105,20 +105,20 @@ namespace PLINQO.Mvc.UI.Controllers
             Task task = null;
             try
             {
-                using (var context = new TrackerDataContext())
+                using (var db = new TrackerDataContext())
                 {
                     var options = new DataLoadOptions();
                     options.LoadWith<Task>(t => t.CreatedUser);
-                    context.LoadOptions = options;
+                    db.LoadOptions = options;
 
-                    task = context.Task.GetByKey(id);
+                    task = db.Task.GetByKey(id);
                     UpdateModel(task);
-                    context.SubmitChanges();
+                    db.SubmitChanges();
 
-                    var audit = new Audit(context.LastAudit);
+                    var audit = new Audit(db.LastAudit);
                     audit.Task = task;
-                    context.Audit.InsertOnSubmit(audit);
-                    context.SubmitChanges();
+                    db.Audit.InsertOnSubmit(audit);
+                    db.SubmitChanges();
                 }
 
                 return RedirectToAction("Edit", new { id = task.Id });
@@ -135,14 +135,14 @@ namespace PLINQO.Mvc.UI.Controllers
         public ActionResult Get(int id)
         {
             Task task = null;
-            using(var context = new TrackerDataContext())
+            using(var db = new TrackerDataContext())
             {
                 var options = new DataLoadOptions();
                 options.LoadWith<Task>(t => t.CreatedUser);
                 options.LoadWith<Task>(t => t.AssignedUser);
-                context.LoadOptions = options;
+                db.LoadOptions = options;
 
-                task = context.Task.GetByKey(id);
+                task = db.Task.GetByKey(id);
                 task.Detach();
             }
             return Json(task);
@@ -151,14 +151,14 @@ namespace PLINQO.Mvc.UI.Controllers
         public ActionResult Index()
         {
             var taskListViewData = new TaskListViewData();
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
                 var options = new DataLoadOptions();
                 options.LoadWith<Task>(t => t.AssignedUser);
                 options.LoadWith<Task>(t => t.CreatedUser);
-                context.LoadOptions = options;
+                db.LoadOptions = options;
 
-                taskListViewData.Tasks = context.Task.OrderByDescending(t => t.CreatedDate).ToList();
+                taskListViewData.Tasks = db.Task.OrderByDescending(t => t.CreatedDate).ToList();
                 taskListViewData.Statuses = UIHelper.GetStatusSelectList(Status.NotStarted);
             }
             return View(taskListViewData);
@@ -167,9 +167,9 @@ namespace PLINQO.Mvc.UI.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult UpdateStatus(Status status, List<int> selectedTasks)
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.Task.Update(t => selectedTasks.Contains(t.Id), t2 => new Task { Status = status });
+                db.Task.Update(t => selectedTasks.Contains(t.Id), t2 => new Task { Status = status });
             }
 
             return RedirectToAction("Index");
@@ -183,14 +183,14 @@ namespace PLINQO.Mvc.UI.Controllers
 
         public TaskViewData GetData(int id)
         {
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
                 var options = new DataLoadOptions();
                 options.LoadWith<Task>(t => t.AssignedUser);
                 options.LoadWith<Task>(t => t.CreatedUser);
-                context.LoadOptions = options;
-                context.ObjectTrackingEnabled = false;
-                var task = context.Task.GetByKey(id);
+                db.LoadOptions = options;
+                db.ObjectTrackingEnabled = false;
+                var task = db.Task.GetByKey(id);
                 return GetData(task);
             }
         }
@@ -209,10 +209,10 @@ namespace PLINQO.Mvc.UI.Controllers
             taskViewData.Statuses = UIHelper.GetStatusSelectList(task.Status);
             taskViewData.Priorities = UIHelper.GetPrioritySelectList(task.Priority);
 
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
-                context.ObjectTrackingEnabled = false;
-                taskViewData.Audits = UIHelper.TransformAudits(context.Audit.ByTaskId(task.Id).OrderByDescending(a => a.Date).ToList());
+                db.ObjectTrackingEnabled = false;
+                taskViewData.Audits = UIHelper.TransformAudits(db.Audit.ByTaskId(task.Id).OrderByDescending(a => a.Date).ToList());
             }
             return taskViewData;
         }

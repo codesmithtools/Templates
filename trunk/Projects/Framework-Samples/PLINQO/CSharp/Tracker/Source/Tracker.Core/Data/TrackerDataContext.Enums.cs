@@ -19,21 +19,21 @@ namespace Tracker.Core.Data
     public enum Priority : int
     {
         /// <summary>
-        /// High
+        /// A High Priority
         /// </summary>
-        [Description("High")]
+        [Description("A High Priority")]
         [EnumMember]
         High = 1,
         /// <summary>
-        /// Normal
+        /// A Normal Priority
         /// </summary>
-        [Description("Normal")]
+        [Description("A Normal Priority")]
         [EnumMember]
         Normal = 2,
         /// <summary>
-        /// Low
+        /// A Low Priority
         /// </summary>
-        [Description("Low")]
+        [Description("A Low Priority")]
         [EnumMember]
         Low = 3
     }

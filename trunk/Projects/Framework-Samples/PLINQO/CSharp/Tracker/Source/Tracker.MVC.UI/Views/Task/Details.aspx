@@ -22,7 +22,7 @@
         </p>
         <p>
             Status:
-            <%=Html.Encode(Model.Status.Name)%>
+            <%=Html.Encode(Model.Status)%>
         </p>
         <p>
             Created By:
@@ -38,15 +38,15 @@
         </p>
         <p>
             Start Date:
-            <%=Html.Encode(String.Format("{0:g}", Model.StartDate))%>
+            <%=Html.Encode(String.Format("{0:g}", Model.StartDate != null ? Model.StartDate.Value.ToShortDateString() : String.Empty))%>
         </p>
         <p>
             Due Date:
-            <%=Html.Encode(String.Format("{0:g}", Model.DueDate))%>
+            <%=Html.Encode(String.Format("{0:g}", Model.DueDate != null ? Model.DueDate.Value.ToShortDateString() : String.Empty))%>
         </p>
         <p>
             Complete Date:
-            <%=Html.Encode(String.Format("{0:g}", Model.CompleteDate))%>
+            <%=Html.Encode(String.Format("{0:g}", Model.CompleteDate != null ? Model.CompleteDate.Value.ToShortDateString() : String.Empty))%>
         </p>
         <p>
             Assigned To:
@@ -56,11 +56,11 @@
         </p>
         <p>
             CreatedDate:
-            <%= Html.Encode(String.Format("{0:g}", Model.CreatedDate)) %>
+            <%= Html.Encode(String.Format("{0:g}", Model.CreatedDate.ToShortDateString())) %>
         </p>
         <p>
             ModifiedDate:
-            <%= Html.Encode(String.Format("{0:g}", Model.ModifiedDate)) %>
+            <%= Html.Encode(String.Format("{0:g}", Model.ModifiedDate.ToShortDateString())) %>
         </p>
         <p>
             Last Modified By:

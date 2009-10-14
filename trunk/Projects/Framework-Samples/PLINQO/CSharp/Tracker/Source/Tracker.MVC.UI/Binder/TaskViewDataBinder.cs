@@ -21,11 +21,11 @@ namespace PLINQO.Mvc.UI.Binder
             if (controllerContext.RouteData.Values["Id"].ToString().Length > 0)
                 id = Int32.Parse(controllerContext.RouteData.Values["Id"].ToString());
 
-            using (var context = new TrackerDataContext())
+            using (var db = new TrackerDataContext())
             {
                 if (id != null)
                 {
-                    taskViewData.Task = context.Task.GetByKey(id.Value);
+                    taskViewData.Task = db.Task.GetByKey(id.Value);
                     taskViewData.Task.Detach();
                 }
                 else
