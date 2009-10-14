@@ -660,11 +660,11 @@ namespace <%= TargetNamespace %>
 #region Name Helpers
 public string GetClassName()
 {
-	if (CommandClassName != null && CommandClassName.Length > 0)
+	if(!string.IsNullOrEmpty(CommandClassName))
 	{
 		return CommandClassName;
 	}
-	else
+	else if(SourceCommand != null)
 	{
 		string className = SourceCommand.Name;
 		if (className.StartsWith(this.CommandPrefix)) className = className.Substring(this.CommandPrefix.Length - 1);
@@ -672,6 +672,8 @@ public string GetClassName()
 		className = className.Replace("_", "");
 		return className;
 	}
+    
+    return "WrapperClass";
 }
 
 public string GetRowClassName()
