@@ -125,7 +125,9 @@ namespace CodeSmith.SchemaHelper
                     ColumnSchema column = tks.ForeignKeyMemberColumns[0];
                     var columnKey = string.Format("{0}-{1}", column.Table, column.Name);
 
-                    if (!column.IsPrimaryKeyMember && !_associationMap.ContainsKey(columnKey))
+                    //Added a check to see if the FK is also a Foreign composite key (http://community.codesmithtools.com/forums/t/10266.aspx).
+                    bool isFKAlsoComposite = column.Table.PrimaryKey.MemberColumns.Count > 1 && column.IsPrimaryKeyMember && column.IsForeignKeyMember;
+                    if ((!column.IsPrimaryKeyMember || isFKAlsoComposite) && !_associationMap.ContainsKey(columnKey))
                     {
                         if(tks.PrimaryKeyMemberColumns.Count > 1)
                             throw new Exception("We do not currently support Composite Keys.");

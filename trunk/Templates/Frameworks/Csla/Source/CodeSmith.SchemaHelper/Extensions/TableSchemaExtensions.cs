@@ -108,6 +108,10 @@ namespace CodeSmith.SchemaHelper
             //    c) A DateTime stamp (CreateDate, EditDate, etc).
             //    d) Name matches Version Regex.
 
+            // has to be at least 2 columns
+            if (table.Columns.Count < 2)
+                return false;
+
             if (table.ForeignKeys.Count != 2)
                 return false;
 
