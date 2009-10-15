@@ -284,7 +284,7 @@ Namespace <%= TargetNamespace %>
 						If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value <> DBNull.Value)
 							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = New <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters(i).DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value)
 						Else
-							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>.Null
+							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = Nothing
 						End If
 					End If
 				Else
@@ -363,7 +363,7 @@ Namespace <%= TargetNamespace %>
 						If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value <> DBNull.Value) Then
 							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = New <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters(i).DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value)
 						Else
-							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>.Null
+							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = Nothing
 						End If
 					End If
 				Else
@@ -414,7 +414,7 @@ Namespace <%= TargetNamespace %>
 				<% For i As Int32 = 0 To (SourceCommand.NonReturnValueParameters.Count - 1) %>
 				Dim <%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %> As SqlParameter = cmd.Parameters.Add("<%= SourceCommand.NonReturnValueParameters(i).Name %>", SqlDbType.<%= GetSqlDbType(SourceCommand.NonReturnValueParameters(i).NativeType) %>)
 				<% If (SourceCommand.NonReturnValueParameters(i).Direction <> ParameterDirection.Input) Then %>
-				If (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters(i)) %>Set = True) Then
+				If (<%= BuildNullCheckStatement(SourceCommand.NonReturnValueParameters(i)) %>) Then
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters(i).Direction.ToString() %>
 				Else
 					<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Direction = ParameterDirection.Output
@@ -452,19 +452,19 @@ Namespace <%= TargetNamespace %>
 				<% End If %>
 				
 				'"Get Output Parameters"
-				If (Not prmReturnValue.Value Is Nothing AndAlso Not prmReturnValue.Value Is DBNull.Value) Then 
+				If Not (prmReturnValue.Value Is Nothing AndAlso prmReturnValue.Value Is DBNull.Value) Then 
 					_returnValue = CType(prmReturnValue.Value, Int32)
 				End If
 				
 				<% For i As Int32 = 0 To (SourceCommand.AllOutputParameters.Count - 1) %>
-				If (Not <%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %> Is Nothing AndAlso <%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value Is Nothing) Then
-					If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value is <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>) Then
-						<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = (<%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value
+				If Not (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %> Is Nothing AndAlso <%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value Is Nothing) Then
+					If (TypeOf <%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value Is <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>) Then
+						<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value
 					Else
-						If (<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value <> DBNull.Value)
-							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = New <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>((<%= GetCSharpVariableType(SourceCommand.AllOutputParameters(i).DataType) %>)<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value)
+						If Not(<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value Is DBNull.Value)
+							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = New <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>(<%= GetParameterName(SourceCommand.AllOutputParameters(i).Name) %>.Value)
 						Else
-							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = <%= GetNativeType(SourceCommand.AllOutputParameters(i)) %>.Null
+							<%= GetPropertyName(SourceCommand.AllOutputParameters(i)) %> = Nothing
 						End If
 					End If
 				Else
@@ -688,12 +688,12 @@ Public Sub BuildXmlCommentParameterList()
 		builder.Append(GetCamelCaseName(SourceCommand.InputParameters(i).Name))
 		builder.Append(""">")
 		builder.Append(SourceCommand.InputParameters(i).Description)
-		builder.Append("'</param>" + vbNewLine)
+		builder.Append("</param>" + vbNewLine)
 	Next
 	
 	For i As Int32 = 0 To (SourceCommand.InputOutputParameters.Count - 1)
 		builder.Append(vbTab + vbTab + " ")
-		builder.Append("<param name=""")
+		builder.Append("'<param name=""")
 		builder.Append(GetCamelCaseName(SourceCommand.InputOutputParameters(i).Name))
 		builder.Append(""">")
 		builder.Append(SourceCommand.InputOutputParameters(i).Description)
@@ -702,7 +702,7 @@ Public Sub BuildXmlCommentParameterList()
 	
 	For i As Int32 = 0 To (SourceCommand.OutputParameters.Count - 1)
 		builder.Append(vbTab + vbTab + " ")
-		builder.Append("<param name=""")
+		builder.Append("'<param name=""")
 		builder.Append(GetCamelCaseName(SourceCommand.OutputParameters(i).Name))
 		builder.Append(""">")
 		builder.Append(SourceCommand.OutputParameters(i).Description)
@@ -744,28 +744,28 @@ End Sub
 
 Public Function BuildParameterList() As String
 	Dim builder As System.Text.StringBuilder = New System.Text.StringBuilder()
-	builder.Append("connectionString As String, ")
+	builder.Append("ByVal connectionString As String, ")
 	For i As Int32 = 0 To (SourceCommand.InputParameters.Count - 1)
-		builder.Append(GetCamelCaseName(SourceCommand.InputParameters(i).Name))
+		builder.Append("ByVal " + GetCamelCaseName(SourceCommand.InputParameters(i).Name))
 		builder.Append(" As ")
 		builder.Append(GetNativeType(SourceCommand.InputParameters(i)))
 		builder.Append(", ")
 	Next
 	For i As Int32 = 0 To (SourceCommand.InputOutputParameters.Count - 1)
-		builder.Append(GetCamelCaseName(SourceCommand.InputOutputParameters(i).Name))
-		builder.Append(" As ref ")
+		builder.Append("ByRef " + GetCamelCaseName(SourceCommand.InputOutputParameters(i).Name))
+		builder.Append(" As ")
 		builder.Append(GetNativeType(SourceCommand.InputOutputParameters(i)))
 		builder.Append(", ")
 	Next
 
 	For i As Int32 = 0 To (SourceCommand.OutputParameters.Count - 1)
-		builder.Append(GetCamelCaseName(SourceCommand.OutputParameters(i).Name))
-		builder.Append("As ref ")
+		builder.Append("ByRef " + GetCamelCaseName(SourceCommand.OutputParameters(i).Name))
+		builder.Append("As ")
 		builder.Append(GetNativeType(SourceCommand.OutputParameters(i)))
 		builder.Append(", ")
 	Next
 	
-	if (builder.ToString().Length > 0)
+	If (builder.ToString().Length > 0)
 		Return builder.ToString().Substring(0, builder.Length - 2)
 	Else
 		Return String.Empty
