@@ -20,6 +20,7 @@ namespace Tracker.Core.Data
 
         static partial void AddSharedRules()
         {
+            RuleManager.AddShared<Task>(new TaskStartDateDueDateRule());
             RuleManager.AddShared<Task>(new TaskAssignmentRule());
         }
 

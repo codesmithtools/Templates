@@ -150,7 +150,7 @@ namespace Tracker.Tests
                 db.Log = Console.Out;
 
                 Task task = db.Manager.Task.GetByKey(SpockId);
-                IQueryable<Task> tasks = db.Manager.Task.GetByAssignedIdStatus(SpockId, Status.NotStarted);
+                IQueryable<Task> tasks = db.Manager.Task.GetByAssignedIdStatus(SpockId, Status.InProgress);
                 List<Task> taskList = tasks.ToList();
             }
 
@@ -159,7 +159,7 @@ namespace Tracker.Tests
                 db.Log = Console.Out;
 
                 Task task = db.Task.GetByKey(SpockId);
-                IQueryable<Task> tasks = db.Task.ByAssignedId(SpockId).ByStatus(Status.NotStarted);
+                IQueryable<Task> tasks = db.Task.ByAssignedId(SpockId).ByStatus(Status.InProgress);
                 List<Task> taskList = tasks.ToList();
             }
         }
@@ -175,7 +175,6 @@ namespace Tracker.Tests
                 var something = db.Task.ByPriority(null, Priority.High).ToList();
             }
         }
-
 
         [Test]
         public void Test_Many_To_Many()

@@ -201,6 +201,7 @@
     <Compile Include="Rules\CurrentUserNameRule.cs" />
     <Compile Include="Rules\TaskAssignmentAttribute.cs" />
     <Compile Include="Rules\TaskAssignmentRule.cs" />
+    <Compile Include="Rules\TaskStartDateDueDateRule.cs" />
     <Compile Include="Rules\UserExistsRule.cs" />
   </ItemGroup>
   <ItemGroup>
