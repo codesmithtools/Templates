@@ -112,7 +112,6 @@ namespace PLINQO.Mvc.UI.Controllers
                             var user = db.User.GetByEmailAddress(emailAddress);
                             TryUpdateModel(user, null, null, new string[] { "FirstName, LastName" });
                             db.SubmitChanges();
-                            HttpRuntime.Cache.Remove("Users");
                             return RedirectToAction("Edit", new { id = user.Id });
                         }
                     }
