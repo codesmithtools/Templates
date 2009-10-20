@@ -37,28 +37,7 @@ Namespace Base
     <Serializable> _
     Public Class <%= DataClassName %>
         Inherits BusinessBase(Of <%= DataClassName %>)
-    
-        #Region "Instance"
-    
-        Public Shared ReadOnly Property Instance() As <%= DataClassName %>
-            Get
-                Return Nested.Current
-            End Get
-        End Property
-    
-        Private Class Nested
-            Shared Sub New()
-                Current = New <%= DataClassName %>()
-            End Sub
-    
-            ''' <summary>
-            ''' Current singleton instance.
-            ''' </summary>
-            Friend Shared ReadOnly Current As <%= DataClassName %>
-        End Class
-    
-        #End Region
-    
+        
         #Region "Methods"
     
         Private _connectionString As String = String.Empty
@@ -183,7 +162,7 @@ Namespace Base
     <% If (entity.Table.ForeignKeyColumns.Count = 0) Then%>
             Dim commandText As String = String.Format("SELECT <%= entity.MembersPrimaryKeyUnion.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", BuildWhereStatement(bag))
     <% Else %>
-            Dim commandText As String = String.Format("SELECT <%= entity.MembersManyUnion.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", BuildWhereStatement(bag))
+            Dim commandText As String = String.Format("SELECT <%= entity.MembersIncludePrimaryKeyForeignKey.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", BuildWhereStatement(bag))
     <% End If%>
             Using command As New SqlCommand(commandText, GetSqlConnection())
                 command.Parameters.AddRange(SqlParameters(bag))

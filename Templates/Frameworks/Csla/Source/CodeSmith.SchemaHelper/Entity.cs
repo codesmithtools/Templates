@@ -617,6 +617,26 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
+        public List<MemberBase> MembersIncludePrimaryKeyForeignKey
+        {
+            get
+            {
+                var list = MemberMap.Values.Cast<MemberBase>().ToList().Union(FKRemoteMemberMap.Values.Cast<MemberBase>().Where(fk => fk.TableName == this.Table.Name).Cast<MemberBase>().ToList()).ToList();
+
+                var members = new List<MemberBase>(list.Count);
+                foreach (var memberBase in list)
+                {
+                    string name = memberBase.ColumnName;
+                    if (members.Count(m => m.ColumnName == name) == 0)
+                    {
+                        members.Add(memberBase);
+                    }
+                }
+
+                return members;
+            }
+        }
+
         public List<AssociationMember> ManyToOne
         {
             get

@@ -28,5 +28,26 @@ namespace <%= DataProjectName %>
 	[Serializable]
 	public class <%= DataClassName %> : <%= DataClassName %>Base
 	{
+        #region Instance
+		
+		public static <%= DataClassName %> Instance
+        {
+            get { return Nested.Current; }
+        }
+		
+		private class Nested
+        {
+            static Nested()
+            {
+                Current = new <%= DataClassName %>();
+            }
+
+            /// <summary>
+            /// Current singleton instance.
+            /// </summary>
+            internal readonly static <%= DataClassName %> Current;
+        }
+		
+		#endregion
     }
 }
