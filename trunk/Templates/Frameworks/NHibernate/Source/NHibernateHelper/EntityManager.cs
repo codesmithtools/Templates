@@ -116,32 +116,32 @@ namespace NHibernateHelper
                 {
                     ColumnSchema column = tks.ForeignKeyMemberColumns[0];
 
-                    if (!column.IsPrimaryKeyMember && !_associationMap.ContainsKey(column) && !NHibernateHelper.IsExcludedColumn(column.Name))
+                    if (_associationMap.ContainsKey(column) || NHibernateHelper.IsExcludedColumn(column.Name))
+                        return;
+
+                    if (NHibernateHelper.IsManyToMany(column.Table))
                     {
-                        if (!NHibernateHelper.IsManyToMany(column.Table))
+                        TableSchema foreignTable = GetToManyTable(column.Table, _sourceTable);
+                        if (!_excludedTables.Contains(foreignTable))
                         {
-                            if (!_excludedTables.Contains(column.Table))
-                            {
-                                EntityAssociation association = new EntityAssociation(AssociationTypeEnum.OneToMany, column.Table, column);
-                                _associationMap.Add(column, association);
-                            }
-                            else
-                            {
-                                GetMember(column);
-                            }
+                            EntityAssociation association = new EntityAssociation(AssociationTypeEnum.ManyToMany, foreignTable, column);
+                            _associationMap.Add(column, association);
                         }
                         else
                         {
-                            TableSchema foreignTable = GetToManyTable(column.Table, _sourceTable);
-                            if (!_excludedTables.Contains(foreignTable))
-                            {
-                                EntityAssociation association = new EntityAssociation(AssociationTypeEnum.ManyToMany, foreignTable, column);
-                                _associationMap.Add(column, association);
-                            }
-                            else
-                            {
-                                GetMember(column);
-                            }
+                            GetMember(column);
+                        }
+                    }
+                    else if (!column.IsPrimaryKeyMember)
+                    {
+                        if (!_excludedTables.Contains(column.Table))
+                        {
+                            EntityAssociation association = new EntityAssociation(AssociationTypeEnum.OneToMany, column.Table, column);
+                            _associationMap.Add(column, association);
+                        }
+                        else
+                        {
+                            GetMember(column);
                         }
                     }
                 }
