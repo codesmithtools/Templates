@@ -21,6 +21,7 @@ namespace QuickStart
         #region Private Member(s)
 
         private DatabaseSchema _database;
+        private string _solutionName;
 
         #endregion
 
@@ -66,7 +67,7 @@ namespace QuickStart
         [Optional]
         [DefaultValue("^\\w+_")]
         public CodeSmith.CustomProperties.StringCollection CleanExpressions { get; set; }
-        
+
         [Category("1. DataSource")]
         [Description("List of regular expressions to ignore tables when generating.")]
         [Optional]
@@ -100,7 +101,18 @@ namespace QuickStart
         [Category("2. Solution")]
         [Description("Name of the project to be generated.")]
         [DefaultValue("")]
-        public string SolutionName { get; set; }
+        public string SolutionName
+        {
+            get { return _solutionName; }
+            set
+            {
+                if (value != null)
+                {
+                    _solutionName = value;
+                    OnSolutionNameChanged();
+                }
+            }
+        }
 
         #endregion
 
@@ -239,7 +251,7 @@ namespace QuickStart
         {
             if (CleanExpressions.Count == 0)
                 CleanExpressions.Add("^\\w+_");
-            
+
             if (IgnoreExpressions.Count == 0)
             {
                 IgnoreExpressions.Add("sysdiagrams$");
@@ -272,22 +284,36 @@ namespace QuickStart
             if (string.IsNullOrEmpty(SolutionName))
                 SolutionName = SourceDatabase.Namespace();
 
+            if (string.IsNullOrEmpty(Location))
+                Location = Path.Combine(CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory, Path.Combine("CSLA", SourceDatabase.Name));
+        }
+
+        public virtual void OnSolutionNameChanged()
+        {
+            if (string.IsNullOrEmpty(SolutionName))
+            {
+                return;
+            }
+
             if (string.IsNullOrEmpty(BusinessProjectName))
-                BusinessProjectName = string.Format("{0}.Business", SourceDatabase.Namespace());
+            {
+                BusinessProjectName = string.Format("{0}.Business", SolutionName);
+            }
 
             if (string.IsNullOrEmpty(DataProjectName))
-                DataProjectName = string.Format("{0}.Data", SourceDatabase.Namespace());
+            {
+                DataProjectName = string.Format("{0}.Data", SolutionName);
+            }
 
             if (string.IsNullOrEmpty(InterfaceProjectName))
-                InterfaceProjectName = string.Format("{0}.UI", SourceDatabase.Namespace());
+            {
+                InterfaceProjectName = string.Format("{0}.UI", SolutionName);
+            }
 
-            //if (string.IsNullOrEmpty(TestProjectName))
-            //    TestProjectName = string.Format("{0}.Test", SourceDatabase.Namespace());
-
-            if (string.IsNullOrEmpty(Location))
-                Location = Path.Combine(
-                    CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory,
-                    Path.Combine("CSLA", SourceDatabase.Name));
+            // if (string.IsNullOrEmpty(TestProjectName))
+            // {
+            //     TestProjectName = string.Format("{0}.Test", SolutionName);
+            // }
         }
 
         #endregion
