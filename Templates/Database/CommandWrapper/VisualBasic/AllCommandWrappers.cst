@@ -5,12 +5,13 @@
 <%@ CodeTemplate OutputType="None" Language="VB" TargetLanguage="Text" Description="This template will generate wrappers for all stored procedures in a database." %>
 
 <%-- Required Properties  --%>
-<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Required" Description="Database that the stored procedures wrappers should be based on." OnChanged="OnSourceDatabaseChanged" DeepLoad="True" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Required" Description="Database that the stored procedures wrappers should be based on." OnChanged="OnSourceDatabaseChanged" DeepLoad="True" IncludeFunctions="True" %>
 <%@ Property Name="ResultSchema" Type="CommandWrapperTemplate.ResultSchemaEnum" Category="Required" Default="StronglyTyped"  Description="Determines what type of result schema should be used for the wrapper class." %>
 <%@ Property Name="Accessibility" Type="CommandWrapperTemplate.AccessibilityEnum" Category="Required" Default="Public" Description="The accessibility of the generated classes." %>
 
 <%-- Optional Properties  --%>
 <%@ Property Name="IgnoreExpressions" Type="StringCollection" Default="" Optional="True" Category="Optional" Description="If supplied, any matching commands will not get wrappers generated. (* is treated as a wildcard)" %>
+<%@ Property Name="IncludeFunctions" Type="System.Boolean" Default="True" Optional="True" Category="Optional" Description="When set to true SQL Functions will be included." OnChanged="OnIncludeFunctionsChanged" %>
 
 <%-- Register the StoredProcedures template and have it's properties merged into this template.  --%>
 <%@ Register Template="CommandWrapperClass.cst" Name="CommandWrapperTemplate" MergeProperties="True" ExcludeProperties="SourceCommand,BatchMode,CommandClassName,ResultRowClassName,Accessibility" %>
@@ -88,31 +89,31 @@ Public Overloads Overrides Sub Render(ByVal writer As System.IO.TextWriter)
 		Directory.CreateDirectory(outputDirectory)
 	End If
 
-	Dim i As Integer = 0
-	While i < SourceDatabase.Commands.Count
-		If Not CommandIsExcluded(SourceDatabase.Commands(i)) Then
-			Trace.WriteLine("Generating wrapper for " + SourceDatabase.Commands(i).FullName + "...")
+    For Each cmd As CommandSchema in SourceDatabase.Commands
+	    If Not CommandIsExcluded(cmd) Then
+			Trace.WriteLine("Generating wrapper for " + cmd.FullName + "...")
 			Try
                 Dim commandWrapperTemplate As CommandWrapperTemplate = Me.Create(Of CommandWrapperTemplate)()
                 Me.CopyPropertiesTo(commandWrapperTemplate)
-                commandWrapperTemplate.SourceCommand = SourceDatabase.Commands(i)
+                commandWrapperTemplate.SourceCommand = cmd
     
                 Dim path As String = System.IO.Path.Combine(outputDirectory, commandWrapperTemplate.GetFileName())
                 commandWrapperTemplate.RenderToFile(path, True)
 		    Catch e As Exception
-				Trace.WriteLine("Unable to generate wrapper for " + SourceDatabase.Commands(i).FullName + "" & Chr(13) & "" & Chr(10) & "" + e.ToString() + "" & Chr(13) & "" & Chr(10) & "")
+				Trace.WriteLine("Unable to generate wrapper for " + cmd.FullName + "" & Chr(13) & "" & Chr(10) & "" + e.ToString() + "" & Chr(13) & "" & Chr(10) & "")
 			End Try
 		End If
 
 		Me.Progress.PerformStep()
-		System.Math.Max(System.Threading.Interlocked.Increment(i),i - 1)
-	End While
+	Next
 End Sub
 
 Public Sub OnSourceDatabaseChanged(sender As Object, args As System.EventArgs)
 	If SourceDatabase Is Nothing Then
 		Return
 	End If
+    
+    SourceDatabase.IncludeFunctions = IncludeFunctions
 
 	If String.IsNullOrEmpty(TargetNamespace) Then
 		TargetNamespace = SourceDatabase.Name
@@ -127,4 +128,13 @@ Public Sub OnSourceDatabaseChanged(sender As Object, args As System.EventArgs)
 		IgnoreExpressions.Add("^dbo.vw_aspnet")
 	End If
 End Sub
+
+Public Sub OnIncludeFunctionsChanged(sender As Object, args As System.EventArgs)
+	If SourceDatabase Is Nothing Then
+		Return
+	End If
+    
+    SourceDatabase.IncludeFunctions = IncludeFunctions
+End Sub
+
 </script>

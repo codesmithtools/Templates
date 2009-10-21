@@ -5,12 +5,14 @@
 <%@ CodeTemplate OutputType="None" Language="C#" TargetLanguage="Text" Description="This template will generate wrappers for all stored procedures in a database." %>
 
 <%-- Required Properties  --%>
-<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Required" Description="Database that the stored procedures wrappers should be based on." OnChanged="OnSourceDatabaseChanged" DeepLoad="True" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Required" Description="Database that the stored procedures wrappers should be based on." OnChanged="OnSourceDatabaseChanged" DeepLoad="True" IncludeFunctions="True" %>
 <%@ Property Name="ResultSchema" Type="CommandWrapperTemplate.ResultSchemaEnum" Category="Required" Default="StronglyTyped"  Description="Determines what type of result schema should be used for the wrapper class." %>
 <%@ Property Name="Accessibility" Type="CommandWrapperTemplate.AccessibilityEnum" Category="Required" Default="Public" Description="The accessibility of the generated classes." %>
 
 <%-- Optional Properties  --%>
 <%@ Property Name="IgnoreExpressions" Type="StringCollection" Default="" Optional="True" Category="Optional" Description="If supplied, any matching commands will not get wrappers generated. (* is treated as a wildcard)" %>
+<%@ Property Name="IncludeFunctions" Type="System.Boolean" Default="True" Optional="True" Category="Optional" Description="When set to true SQL Functions will be included." OnChanged="OnIncludeFunctionsChanged" %>
+
 
 <%-- Register the StoredProcedures template and have it's properties merged into this template.  --%>
 <%@ Register Template="CommandWrapperClass.cst" Name="CommandWrapperTemplate" MergeProperties="True" ExcludeProperties="SourceCommand,BatchMode,CommandClassName,ResultRowClassName,Accessibility,OutputFile" %>
@@ -99,23 +101,23 @@ public override void Render(TextWriter writer)
 	if (!Directory.Exists(outputDirectory)) 
 		Directory.CreateDirectory(outputDirectory);
 	
-	for (int i = 0; i < SourceDatabase.Commands.Count; i++)
+	foreach (CommandSchema command in SourceDatabase.Commands)
 	{
-		if (!CommandIsExcluded(SourceDatabase.Commands[i]))
+		if (!CommandIsExcluded(command))
 		{
-			Trace.WriteLine("Generating wrapper for " + SourceDatabase.Commands[i].FullName + "...");
+			Trace.WriteLine("Generating wrapper for " + command.FullName + "...");
 			try
 			{
 				CommandWrapperTemplate commandWrapperTemplate = this.Create<CommandWrapperTemplate>();
 				this.CopyPropertiesTo(commandWrapperTemplate);
-				commandWrapperTemplate.SourceCommand = SourceDatabase.Commands[i];
+				commandWrapperTemplate.SourceCommand = command;
                 
                 string path = Path.Combine(outputDirectory, commandWrapperTemplate.GetFileName());
                 commandWrapperTemplate.RenderToFile(path, true);
 			}
 			catch (Exception e)
 			{
-				Trace.WriteLine("Unable to generate wrapper for " + SourceDatabase.Commands[i].FullName + "\r\n" + e.ToString() + "\r\n");
+				Trace.WriteLine("Unable to generate wrapper for " + command.FullName + "\r\n" + e.ToString() + "\r\n");
 			}
 		}
 		
@@ -126,6 +128,7 @@ public override void Render(TextWriter writer)
 public void OnSourceDatabaseChanged(object sender, System.EventArgs args)
 {
     if(SourceDatabase == null) return;
+    SourceDatabase.IncludeFunctions = IncludeFunctions;
     
     if (string.IsNullOrEmpty(TargetNamespace))
     {
@@ -140,6 +143,13 @@ public void OnSourceDatabaseChanged(object sender, System.EventArgs args)
         IgnoreExpressions.Add("^dbo.aspnet");
         IgnoreExpressions.Add("^dbo.vw_aspnet");
     }
+}
+
+public void OnIncludeFunctionsChanged(object sender, System.EventArgs args)
+{
+    if(SourceDatabase == null) return;
+    
+    SourceDatabase.IncludeFunctions = IncludeFunctions;
 }
     
 </script>
