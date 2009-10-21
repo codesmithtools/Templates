@@ -5,7 +5,7 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="CodeSmith.BaseTemplates.SqlCodeTemplate" Description="This template will generate wrappers for a stored procedure in a database." %>
 
 <%-- Required Properties  --%>
-<%@ Property Name="SourceCommand" Type="SchemaExplorer.CommandSchema" Category="Required" Description="Command that the wrapper class should wrap." %>
+<%@ Property Name="SourceCommand" Type="SchemaExplorer.CommandSchema" Category="Required" Description="Command that the wrapper class should wrap." IncludeFunctions="True" %>
 <%@ Property Name="Accessibility" Type="AccessibilityEnum" Default="Public" Category="Required" Description="The accessibility of the generated classes." %>
 <%@ Property Name="ResultSchema" Type="ResultSchemaEnum" Default="StronglyTyped" Category="Required" Description="Determines what type of result schema should be used for the wrapper class." %>
 <%@ Property Name="TargetNamespace" Type="System.String" Category="Required" Description="Namespace that the generated classes should be a member of." %>
@@ -108,7 +108,7 @@ namespace <%= TargetNamespace %>
         protected SqlTransaction _transaction;
 		protected bool _ownsConnection = true;
 		protected int _recordsAffected = -1;
-		protected int _returnValue;
+		protected <%= GetReturnValueDataType() %> _returnValue;
 		<% foreach (ParameterSchema parameter in SourceCommand.NonReturnValueParameters) { %>
 		<%= GetMemberVariableDeclarationStatement(parameter) %>
 		<% } %>
@@ -173,7 +173,7 @@ namespace <%= TargetNamespace %>
 		/// <summary>
 		/// Gets the return value from the <%= SourceCommand.Name %> stored procedure.
 		/// </summary>
-		public int ReturnValue
+		public <%= GetReturnValueDataType() %> ReturnValue
 		{
 			get {return _returnValue;}
 		}
@@ -236,17 +236,23 @@ namespace <%= TargetNamespace %>
 			{
 				cmd.Connection = cn;
 				cmd.Transaction = this.Transaction;
+<% if(!IsTableValuedFunction) { %>
 				cmd.CommandText = "[<%= SourceCommand.Owner %>].[<%= SourceCommand.Name %>]";
 				cmd.CommandType = CommandType.StoredProcedure;
-				
+<% } else {%>
+                cmd.CommandText = "SELECT * FROM [<%= SourceCommand.Owner %>].[<%= SourceCommand.Name %>](<%=BuildArgumentList()%>)";
+				cmd.CommandType = CommandType.Text;
+<%}%>
+
 				#region Populate Parameters
+                
 				SqlParameter prmReturnValue = cmd.Parameters.Add("@RETURN_VALUE", SqlDbType.Int);
 				prmReturnValue.Direction = ParameterDirection.ReturnValue;
 				
 				<% for (int i = 0; i < SourceCommand.NonReturnValueParameters.Count; i++) { %>
 				SqlParameter <%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %> = cmd.Parameters.Add("<%= SourceCommand.NonReturnValueParameters[i].Name %>", SqlDbType.<%= GetSqlDbType(SourceCommand.NonReturnValueParameters[i].NativeType) %>);
 				<% if (SourceCommand.NonReturnValueParameters[i].Direction != ParameterDirection.Input) { %>
-				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>Set)
+				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %><%= BuildNullCheckStatement(SourceCommand.NonReturnValueParameters[i]) %>)
 				{
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters[i].Direction.ToString() %>;
 				}
@@ -282,7 +288,7 @@ namespace <%= TargetNamespace %>
 				#region Get Output Parameters
 				if (prmReturnValue.Value != null && prmReturnValue.Value != DBNull.Value)
 				{
-					_returnValue = (int)prmReturnValue.Value;
+					_returnValue = (<%= GetReturnValueDataType() %>)prmReturnValue.Value;
 				}
 				
 				<% for (int i = 0; i < SourceCommand.AllOutputParameters.Count; i++) { %>
@@ -335,8 +341,13 @@ namespace <%= TargetNamespace %>
 			{
 				cmd.Connection = cn;
 				cmd.Transaction = this.Transaction;
+<% if(!IsTableValuedFunction) { %>
 				cmd.CommandText = "[<%= SourceCommand.Owner %>].[<%= SourceCommand.Name %>]";
 				cmd.CommandType = CommandType.StoredProcedure;
+<% } else {%>
+                cmd.CommandText = "SELECT * FROM [<%= SourceCommand.Owner %>].[<%= SourceCommand.Name %>](<%=BuildArgumentList()%>)";
+				cmd.CommandType = CommandType.Text;
+<%}%>
 				
 				#region Populate Parameters
 				SqlParameter prmReturnValue = cmd.Parameters.Add("@RETURN_VALUE", SqlDbType.Int);
@@ -345,7 +356,7 @@ namespace <%= TargetNamespace %>
 				<% for (int i = 0; i < SourceCommand.NonReturnValueParameters.Count; i++) { %>
 				SqlParameter <%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %> = cmd.Parameters.Add("<%= SourceCommand.NonReturnValueParameters[i].Name %>", SqlDbType.<%= GetSqlDbType(SourceCommand.NonReturnValueParameters[i].NativeType) %>);
 				<% if (SourceCommand.NonReturnValueParameters[i].Direction != ParameterDirection.Input) { %>
-				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %>Set)
+				if (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters[i]) %><%= BuildNullCheckStatement(SourceCommand.NonReturnValueParameters[i]) %>)
 				{
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters[i].Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters[i].Direction.ToString() %>;
 				}
@@ -377,7 +388,7 @@ namespace <%= TargetNamespace %>
 				#region Get Output Parameters
 				if (prmReturnValue.Value != null && prmReturnValue.Value != DBNull.Value)
 				{
-					_returnValue = (int)prmReturnValue.Value;
+					_returnValue = (<%= GetReturnValueDataType() %>)prmReturnValue.Value;
 				}
 				
 				<% for (int i = 0; i < SourceCommand.AllOutputParameters.Count; i++) { %>
@@ -445,8 +456,13 @@ namespace <%= TargetNamespace %>
 			{
 				cmd.Connection = cn;
 				cmd.Transaction = this.Transaction;
+<% if(!IsTableValuedFunction) { %>
 				cmd.CommandText = "[<%= SourceCommand.Owner %>].[<%= SourceCommand.Name %>]";
 				cmd.CommandType = CommandType.StoredProcedure;
+<% } else {%>
+                cmd.CommandText = "SELECT * FROM [<%= SourceCommand.Owner %>].[<%= SourceCommand.Name %>](<%=BuildArgumentList()%>)";
+				cmd.CommandType = CommandType.Text;
+<%}%>
 				
 				#region Populate Parameters
 				SqlParameter prmReturnValue = cmd.Parameters.Add("@RETURN_VALUE", SqlDbType.Int);
@@ -505,7 +521,7 @@ namespace <%= TargetNamespace %>
 				#region Get Output Parameters
 				if (prmReturnValue.Value != null && prmReturnValue.Value != DBNull.Value)
 				{
-					_returnValue = (int)prmReturnValue.Value;
+					_returnValue = (<%= GetReturnValueDataType() %>)prmReturnValue.Value;
 				}
 				
 				<% for (int i = 0; i < SourceCommand.AllOutputParameters.Count; i++) { %>
@@ -887,6 +903,25 @@ public string BuildParameterList()
 	}
 }
 
+public string BuildArgumentList()
+{
+	System.Text.StringBuilder builder = new System.Text.StringBuilder();
+	for (int i = 0; i < SourceCommand.NonReturnValueParameters.Count; i++)
+	{
+        builder.Append(SourceCommand.NonReturnValueParameters[i].Name);
+		builder.Append(", ");
+	}
+	
+	if (builder.ToString().Length > 0)
+	{
+		return builder.ToString().Substring(0, builder.Length - 2);
+	}
+	else
+	{
+		return "";
+	}
+}
+
 public string BuildNullCheckStatement(ParameterSchema parameter)
 {
     if(GetNativeType(parameter).Equals("string", StringComparison.InvariantCultureIgnoreCase))
@@ -950,6 +985,16 @@ public string GetPropertyValues(string objectName)
 	}
 }
 
+public string GetReturnValueDataType()
+{
+    if(SourceCommand.Parameters.Contains("@RETURN_VALUE") && SourceCommand.Parameters["@RETURN_VALUE"] != null)
+    {
+        return SourceCommand.Parameters["@RETURN_VALUE"].SystemType.ToString();
+    }
+    
+    return "int";
+}
+
 #endregion
 
 #region Declaration Statements
@@ -1010,6 +1055,20 @@ public string GetReaderAssignmentStatement(CommandResultColumnSchema column, int
 #endregion
 
 #region Lookups
+
+public bool IsTableValuedFunction
+{
+    get
+    {
+        if (SourceCommand == null || !SourceCommand.ExtendedProperties.Contains("CS_IsTableValuedFunction"))
+            return false;
+
+        bool temp;
+        bool.TryParse(SourceCommand.ExtendedProperties["CS_IsTableValuedFunction"].Value.ToString(), out temp);
+
+        return temp;
+    }
+}
 
 public string GetNativeType(ParameterSchema parameter)
 {

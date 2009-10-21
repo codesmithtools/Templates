@@ -5,7 +5,7 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="CodeSmith.BaseTemplates.VBSqlCodeTemplate" Description="This template will generate wrappers for a stored procedure in a database." %>
 
 <%-- Required Properties  --%>
-<%@ Property Name="SourceCommand" Type="SchemaExplorer.CommandSchema" Category="Required" Description="Command that the wrapper class should wrap." %>
+<%@ Property Name="SourceCommand" Type="SchemaExplorer.CommandSchema" Category="Required" Description="Command that the wrapper class should wrap." IncludeFunctions="True" %>
 <%@ Property Name="Accessibility" Type="AccessibilityEnum" Default="Public" Category="Required" Description="The accessibility of the generated classes." %>
 <%@ Property Name="ResultSchema" Type="ResultSchemaEnum" Default="StronglyTyped" Category="Required" Description="Determines what type of result schema should be used for the wrapper class." %>
 <%@ Property Name="TargetNamespace" Type="System.String" Category="Required" Description="Namespace that the generated classes should be a member of." %>
@@ -107,7 +107,7 @@ Namespace <%= TargetNamespace %>
         Protected _transaction As SqlTransaction = Nothing
 		Protected _ownsConnection As Boolean = true
 		Protected _recordsAffected As Int32= -1
-		Protected _returnValue As Int32 = 0
+		Protected _returnValue As <%= GetReturnValueDataType() %>
 		<% For Each parameter As ParameterSchema In SourceCommand.NonReturnValueParameters %>
 		<%= GetMemberVariableDeclarationStatement(parameter) %>
 		<% Next %>
@@ -174,7 +174,7 @@ Namespace <%= TargetNamespace %>
 		' <summary>
 		' Gets the Return value from the <%= SourceCommand.Name %> stored procedure.
 		' </summary>
-		Public ReadOnly Property ReturnValue As Int32
+		Public ReadOnly Property ReturnValue As <%= GetReturnValueDataType() %>
 			Get
 				Return _returnValue
 			End Get
@@ -234,17 +234,23 @@ Namespace <%= TargetNamespace %>
 			Try
 				cmd.Connection = cn
 				cmd.Transaction = Transaction
+<% If Not(IsTableValuedFunction) Then %>
 				cmd.CommandText = "[<%= SourceCommand.Owner %>].[<%= SourceCommand.Name %>]"
 				cmd.CommandType = CommandType.StoredProcedure
+<% Else %>
+                cmd.CommandText = "SELECT * FROM [<%= SourceCommand.Owner %>].[<%= SourceCommand.Name %>](<%=BuildArgumentList()%>)"
+				cmd.CommandType = CommandType.Text
+<% End If %>
 				
 				'"Populate Parameters"
+                
 				Dim prmReturnValue As SqlParameter = cmd.Parameters.Add("@RETURN_VALUE", SqlDbType.Int)
 				prmReturnValue.Direction = ParameterDirection.ReturnValue
 				
 				<% For i As Int32 = 0 To (SourceCommand.NonReturnValueParameters.Count - 1) %>
 				Dim <%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %> As SqlParameter = cmd.Parameters.Add("<%= SourceCommand.NonReturnValueParameters(i).Name %>", SqlDbType.<%= GetSqlDbType(SourceCommand.NonReturnValueParameters(i).NativeType) %>)
 				<% If (SourceCommand.NonReturnValueParameters(i).Direction <> ParameterDirection.Input) Then %>
-				If (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters(i)) %>Set = True) Then
+				If (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters(i)) %><%=BuildNullValueStatement(SourceCommand.NonReturnValueParameters(i))%>) Then
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters(i).Direction.ToString() %>
 				Else
 					<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Direction = ParameterDirection.Output
@@ -273,7 +279,7 @@ Namespace <%= TargetNamespace %>
 				
 				'"Get Output Parameters
 				If (Not prmReturnValue.Value Is Nothing AndAlso Not prmReturnValue.Value Is DBNull.Value)
-					_returnValue = CType(prmReturnValue.Value, Int32)
+					_returnValue = CType(prmReturnValue.Value, <%= GetReturnValueDataType() %>)
 				End If
 				
 				<% For i As Int32 = 0 To (SourceCommand.AllOutputParameters.Count - 1) %>
@@ -314,8 +320,13 @@ Namespace <%= TargetNamespace %>
 
 				cmd.Connection = cn
 				cmd.Transaction = Transaction
+<% If Not(IsTableValuedFunction) Then %>
 				cmd.CommandText = "[<%= SourceCommand.Owner %>].[<%= SourceCommand.Name %>]"
 				cmd.CommandType = CommandType.StoredProcedure
+<% Else %>
+                cmd.CommandText = "SELECT * FROM [<%= SourceCommand.Owner %>].[<%= SourceCommand.Name %>](<%=BuildArgumentList()%>)"
+				cmd.CommandType = CommandType.Text
+<% End If %>
 				
 				'"Populate Parameters"
 				Dim prmReturnValue As SqlParameter = cmd.Parameters.Add("@RETURN_VALUE", SqlDbType.Int)
@@ -324,7 +335,7 @@ Namespace <%= TargetNamespace %>
 				<% For i As Int32 = 0 To (SourceCommand.NonReturnValueParameters.Count - 1) %>
 				Dim <%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %> As SqlParameter = cmd.Parameters.Add("<%= SourceCommand.NonReturnValueParameters(i).Name %>", SqlDbType.<%= GetSqlDbType(SourceCommand.NonReturnValueParameters(i).NativeType) %>)
 				<% If (SourceCommand.NonReturnValueParameters(i).Direction <> ParameterDirection.Input) Then %>
-				If (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters(i)) %>Set = True) Then
+				If (<%= GetMemberVariableName(SourceCommand.NonReturnValueParameters(i)) %><%=BuildNullValueStatement(SourceCommand.NonReturnValueParameters(i))%>) Then
 				<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Direction = ParameterDirection.<%= SourceCommand.NonReturnValueParameters(i).Direction.ToString() %>
 				Else
 					<%= GetParameterName(SourceCommand.NonReturnValueParameters(i).Name) %>.Direction = ParameterDirection.Output
@@ -352,7 +363,7 @@ Namespace <%= TargetNamespace %>
 				
 				'"Get Output Parameters
 				If (Not prmReturnValue.Value Is Nothing AndAlso Not prmReturnValue.Value Is DBNull.Value) Then
-					_returnValue = CType(prmReturnValue.Value, Int32)
+					_returnValue = CType(prmReturnValue.Value, <%= GetReturnValueDataType() %>)
 				End If
 				
 				<% For i As Int32 = 0 To (SourceCommand.AllOutputParameters.Count - 1) %>
@@ -404,8 +415,13 @@ Namespace <%= TargetNamespace %>
 			Try
 				cmd.Connection = cn
 				cmd.Transaction = Transaction
+<% If Not(IsTableValuedFunction) Then %>
 				cmd.CommandText = "[<%= SourceCommand.Owner %>].[<%= SourceCommand.Name %>]"
 				cmd.CommandType = CommandType.StoredProcedure
+<% Else %>
+                cmd.CommandText = "SELECT * FROM [<%= SourceCommand.Owner %>].[<%= SourceCommand.Name %>](<%=BuildArgumentList()%>)"
+				cmd.CommandType = CommandType.Text
+<% End If %>
 				
 				'"Populate Parameters"
 				Dim prmReturnValue As SqlParameter = cmd.Parameters.Add("@RETURN_VALUE", SqlDbType.Int)
@@ -453,7 +469,7 @@ Namespace <%= TargetNamespace %>
 				
 				'"Get Output Parameters"
 				If Not (prmReturnValue.Value Is Nothing AndAlso prmReturnValue.Value Is DBNull.Value) Then 
-					_returnValue = CType(prmReturnValue.Value, Int32)
+					_returnValue = CType(prmReturnValue.Value, <%= GetReturnValueDataType() %>)
 				End If
 				
 				<% For i As Int32 = 0 To (SourceCommand.AllOutputParameters.Count - 1) %>
@@ -780,6 +796,22 @@ Public Function BuildNullCheckStatement(parameter As ParameterSchema) As String
 	Return String.Format("{0}.HasValue", GetPropertyName(parameter))
 End Function
 
+Public Function BuildArgumentList() As String
+	Dim builder As New System.Text.StringBuilder()
+	Dim i As Integer = 0
+	While i < SourceCommand.NonReturnValueParameters.Count
+		builder.Append(SourceCommand.NonReturnValueParameters(i).Name)
+		builder.Append(", ")
+		System.Math.Max(System.Threading.Interlocked.Increment(i),i - 1)
+	End While
+
+	If builder.ToString().Length > 0 Then
+		Return builder.ToString().Substring(0, builder.Length - 2)
+	Else
+		Return ""
+	End If
+End Function
+
 ' If the value type is a string then don't include the .Value.
 Public Function BuildNullValueStatement(parameter As ParameterSchema) As String
 	If GetNativeType(parameter).Equals("string", StringComparison.InvariantCultureIgnoreCase) Then
@@ -846,6 +878,15 @@ Public Function GetPropertyValues(objectName As String) As String
 		Return String.Empty
 	End If
 End Function
+
+Public Function GetReturnValueDataType() As String
+	If SourceCommand.Parameters.Contains("@RETURN_VALUE") AndAlso Not SourceCommand.Parameters("@RETURN_VALUE") Is Nothing Then
+		Return SourceCommand.Parameters("@RETURN_VALUE").SystemType.ToString()
+	End If
+
+	Return "Integer"
+End Function
+
 #End Region
 
 #Region "Declaration Statements"
@@ -901,6 +942,19 @@ End Function
 #End Region
 
 #Region "Lookups"
+
+Public ReadOnly Property IsTableValuedFunction() As Boolean
+	Get
+		If SourceCommand Is Nothing OrElse Not SourceCommand.ExtendedProperties.Contains("CS_IsTableValuedFunction") Then
+			Return False
+		End If
+
+		Dim temp As Boolean
+		Boolean.TryParse(SourceCommand.ExtendedProperties("CS_IsTableValuedFunction").Value.ToString(), temp)
+
+		Return temp
+	End Get
+End Property
 
 Public Function GetAccessModifier() As String
     Select Case (Accessibility)
