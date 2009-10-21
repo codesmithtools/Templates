@@ -575,7 +575,7 @@ namespace <%= TargetNamespace %>
 			<%= AssignPropertyValues(GetCamelCaseName(GetClassName())) %>
 			#endregion
 			
-			SqlDataReader reader = <%= GetCamelCaseName(GetClassName()) %>.ExecuteReader();
+			SqlDataReader reader = <%= GetCamelCaseName(GetClassName()) %>.<%= this.ReturnsResultSet && this.ResultSchema == ResultSchemaEnum.ADO ? "Execute" : "ExecuteReader" %>();
 			
 			#region Get Property Values
 			<%= GetPropertyValues(GetCamelCaseName(GetClassName())) %>

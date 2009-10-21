@@ -505,7 +505,7 @@ Namespace <%= TargetNamespace %>
 			<%= AssignPropertyValues(GetCamelCaseName(GetClassName())) %>
 			'"End Assign Property Values"
 			
-			Dim reader As SqlDataReader = <%= GetCamelCaseName(GetClassName()) %>.ExecuteReader()
+			Dim reader As SqlDataReader = <%= GetCamelCaseName(GetClassName()) %>.<%= IIf(ReturnsResultSet AndAlso ResultSchema = ResultSchemaEnum.ADO , "Execute" , "ExecuteReader") %>()
 			
 			'"Get Property Values"
 			<%= GetPropertyValues(GetCamelCaseName(GetClassName())) %>
