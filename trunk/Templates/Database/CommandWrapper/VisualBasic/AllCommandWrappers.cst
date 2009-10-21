@@ -2,7 +2,7 @@
 * Author: Eric J. Smith
 * Description: This template will generate wrappers for all stored procedures in a database.
 ------------------------------------------------------------------------------------------%>
-<%@ CodeTemplate Language="VB" TargetLanguage="Text" Description="This template will generate wrappers for all stored procedures in a database." %>
+<%@ CodeTemplate OutputType="None" Language="VB" TargetLanguage="Text" Description="This template will generate wrappers for all stored procedures in a database." %>
 
 <%-- Required Properties  --%>
 <%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Required" Description="Database that the stored procedures wrappers should be based on." OnChanged="OnSourceDatabaseChanged" DeepLoad="True" %>
@@ -13,7 +13,7 @@
 <%@ Property Name="IgnoreExpressions" Type="StringCollection" Default="" Optional="True" Category="Optional" Description="If supplied, any matching commands will not get wrappers generated. (* is treated as a wildcard)" %>
 
 <%-- Register the StoredProcedures template and have it's properties merged into this template.  --%>
-<%@ Register Template="CommandWrapperClass.cst" Name="CommandWrapperTemplate" MergeProperties="True" ExcludeProperties="SourceCommand,BatchMode,CommandClassName,ResultRowClassName,Accessibility,OutputFile" %>
+<%@ Register Template="CommandWrapperClass.cst" Name="CommandWrapperTemplate" MergeProperties="True" ExcludeProperties="SourceCommand,BatchMode,CommandClassName,ResultRowClassName,Accessibility" %>
 
 <%-- Register referenced assemblies.  --%>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
