@@ -47,9 +47,9 @@ namespace CodeSmith.Data.Audit
         }
 
         /// <summary>
-        /// Returns an xml string of the <see cref="AuditLog"/>.
+        /// Returns an XML string of the <see cref="AuditLog"/>.
         /// </summary>
-        /// <returns>An xml string of the <see cref="AuditLog"/>.</returns>
+        /// <returns>An XML string of the <see cref="AuditLog"/>.</returns>
         public string ToXml()
         {
             var settings = new XmlWriterSettings();
@@ -68,6 +68,23 @@ namespace CodeSmith.Data.Audit
             }
 
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// Returns an <see cref="AuditLog"/> object created from an XML string.
+        /// </summary>
+        /// <param name="auditLog">
+        /// An XML string
+        /// </param>
+        /// <returns>
+        /// An <see cref="AuditLog"/> object created from an XML string.
+        /// </returns>
+        public static AuditLog FromXml(string auditLog)
+        {
+            using (var reader = new StringReader(auditLog))
+            {
+                return _serializer.Deserialize(reader) as AuditLog;
+            }
         }
     }
 }
