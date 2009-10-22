@@ -143,7 +143,11 @@ If UseMemberVariables then %>
 		Get
 <% If UseLazyLoading Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.LocalColumn.PropertyName %>))
+		If (Me.IsNew) Then
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>())
+                Else
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.LocalColumn.PropertyName %>))
+                End If
             End If
             
 <% End If %> 
@@ -157,7 +161,11 @@ If UseMemberVariables then %>
 		Get
 <% If UseLazyLoading Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.LocalColumn.PropertyName %>))
+                If (Me.IsNew) Then
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>())
+                Else
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.LocalColumn.PropertyName %>))
+                End If
             End If
             
 <% End If %>  
@@ -176,7 +184,11 @@ If UseMemberVariables Then %>
 		Get
 <% If UseLazyLoading Then  %>
             If Not(FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.ResolveManyToOneNameConflict(Entity)) %>))
+                If (Me.IsNew) Then
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>())
+                Else
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.ResolveManyToOneNameConflict(Entity)) %>))
+                End If
             End If
             
 <% End If %> 
@@ -191,7 +203,11 @@ If UseMemberVariables Then %>
         
 <% If UseLazyLoading Then %>
             If Not(FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.ResolveManyToOneNameConflict(Entity)) %>))
+                If (Me.IsNew) Then
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>())
+                Else
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.ResolveManyToOneNameConflict(Entity)) %>))
+                End If
             End If
             
 <% End If %>  
@@ -202,7 +218,6 @@ If UseMemberVariables Then %>
 <% End If
 Next  %>
 <%-- One-To-Many & Many-To-Many --%>
-' NOTE: Many-To-Many support coming soon.
 <% For Each association As AssociationMember in Entity.OneToMany 
 If (UseMemberVariables) Then %>
     Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>List) = RegisterProperty(Of <%= association.ClassName %>List)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, <% If(UseLazyLoading)  %>Csla.RelationshipTypes.LazyLoad<%  else  %>Csla.RelationshipTypes.Child<% End If %>)
@@ -212,11 +227,17 @@ If (UseMemberVariables) Then %>
 <% If(UseLazyLoading) Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property)) Then
 <% If Not string.IsNullOrEmpty(association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name)) Then %>
-                SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name) %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>))
-
+                If (Me.IsNew) Then
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.NewList())
+                Else
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name) %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>))
+                End If
 <% else %>
-                SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>))
-
+                If (Me.IsNew) Then
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.NewList())
+                Else
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>))
+                End If
 <% End If %>
             End If
 <% End If%> 
@@ -232,13 +253,21 @@ If (UseMemberVariables) Then %>
 <% If(UseLazyLoading) Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property)) Then
 <% If Not string.IsNullOrEmpty(association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.ColumnName))  %>
-                SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.ColumnName) %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>))
-
+                If (Me.IsNew) Then
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.NewList())
+                Else
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.ColumnName) %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>))
+                End If
 <% else %>
-                SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>))
+                If (Me.IsNew) Then
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.NewList())
+                Else
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>))
+                End If
 <% End If %>
             End If
-<% End If%>   
+            
+<% End If%>
             Return GetProperty(<%= association.PrivateMemberVariableName %>Property) 
         End Get
     End Property

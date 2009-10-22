@@ -139,7 +139,12 @@ namespace <%= BusinessProjectName %>
             {
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.LocalColumn.PropertyName %>));
+                {
+                    if(this.IsNew)
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>());
+                    else
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.LocalColumn.PropertyName %>));
+                }
 
 <% } %> 
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.PrivateMemberVariableName %>); 
@@ -154,10 +159,14 @@ namespace <%= BusinessProjectName %>
             {
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.LocalColumn.PropertyName %>));
-
+                {
+                    if(this.IsNew)
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>());
+                    else
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.LocalColumn.PropertyName %>));
+                }
 <% } %>  
-                   return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
+				return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
             }
 		}
 
@@ -172,8 +181,13 @@ namespace <%= BusinessProjectName %>
             {
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.ResolveManyToOneNameConflict(Entity)) %>));
-
+                {
+                    if(this.IsNew)
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>());
+                    else
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.ResolveManyToOneNameConflict(Entity)) %>));
+                }
+                
 <% } %> 
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.PrivateMemberVariableName %>); 
             }
@@ -187,7 +201,12 @@ namespace <%= BusinessProjectName %>
             {
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.ResolveManyToOneNameConflict(Entity)) %>));
+                {
+                    if(this.IsNew)
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>());
+                    else
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.Get<%= association.ClassName %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.ResolveManyToOneNameConflict(Entity)) %>));
+                }
 
 <% } %>  
                    return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
@@ -196,21 +215,29 @@ namespace <%= BusinessProjectName %>
 
 <% } } %>
 <%-- One-To-Many & Many-To-Many --%>
-// NOTE: Many-To-Many support coming soon.
 <% foreach(AssociationMember association in Entity.OneToMany) { if (UseMemberVariables){ %>
         private static readonly PropertyInfo< <%= association.ClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= association.ClassName %>List>(p => p.<%= association.PropertyName %>, <% if(UseLazyLoading) { %>Csla.RelationshipTypes.LazyLoad<% } else { %>Csla.RelationshipTypes.Child<% } %>);
 		private <%= association.ClassName %>List <%= association.PrivateMemberVariableName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue;
 		public <%= association.ClassName %>List <%= association.PropertyName %>
 		{
 			get
-            {  
+            { 
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
+                {
 <% if(!string.IsNullOrEmpty(association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name))) { %>
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name) %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
+                    if(this.IsNew)
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.NewList());
+                    else
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name) %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
+                }
 
 <% } else { %>
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
+                    if(this.IsNew)
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.NewList());
+                    else
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
+                }
 
 <% } } %> 
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.PrivateMemberVariableName %>); 
@@ -225,11 +252,20 @@ namespace <%= BusinessProjectName %>
             {
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
+                {
 <% if(!string.IsNullOrEmpty(association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.ColumnName))) { %>
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.ColumnName) %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
-
+                    if(this.IsNew)
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.NewList());
+                    else
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.ColumnName) %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
+                }
+                
 <% } else { %>
-                    SetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
+                    if(this.IsNew)
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.NewList());
+                    else
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.Get<%= association.ClassName %>List(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
+                }
 
 <% } } %>   
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
