@@ -86,7 +86,7 @@ If UseMemberVariables Then %>
 		End Get
 <% If Not member.IsReadOnly Then %>
         Set (value As <%= member.SystemType %>)
-            SetProperty(<%= member.PrivateMemberVariableName %>Property, ByRef <%= member.PrivateMemberVariableName %>, value)
+            SetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>, value)
 	End Set
 <% End If %>
 	
@@ -119,7 +119,7 @@ End If %>
 			Return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>) 
 		End Get				
         Set (ByVal value As <%= member.BaseSystemType %>)          
-            SetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, ByRef <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>, value)
+            SetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>, value)
         End Set
 	End Property
 	
