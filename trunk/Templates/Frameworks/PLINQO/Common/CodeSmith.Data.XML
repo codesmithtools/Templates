@@ -434,9 +434,20 @@
         </member>
         <member name="M:CodeSmith.Data.Audit.AuditLog.ToXml">
             <summary>
-            Returns an xml string of the <see cref="T:CodeSmith.Data.Audit.AuditLog"/>.
+            Returns an XML string of the <see cref="T:CodeSmith.Data.Audit.AuditLog"/>.
             </summary>
-            <returns>An xml string of the <see cref="T:CodeSmith.Data.Audit.AuditLog"/>.</returns>
+            <returns>An XML string of the <see cref="T:CodeSmith.Data.Audit.AuditLog"/>.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Audit.AuditLog.FromXml(System.String)">
+            <summary>
+            Returns an <see cref="T:CodeSmith.Data.Audit.AuditLog"/> object created from an XML string.
+            </summary>
+            <param name="auditLog">
+            An XML string
+            </param>
+            <returns>
+            An <see cref="T:CodeSmith.Data.Audit.AuditLog"/> object created from an XML string.
+            </returns>
         </member>
         <member name="P:CodeSmith.Data.Audit.AuditLog.Username">
             <summary>
