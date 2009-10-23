@@ -67,7 +67,7 @@
   </Target>
 
   <Target Name="Compile" DependsOnTargets="Version">
-    <MSBuild Projects="Source\NHibernate.sln"
+    <MSBuild Projects="Source\NHibernateHelper.sln"
              Properties="Configuration=$(BuildConfiguration)" />
   </Target>
 
