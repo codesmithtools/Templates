@@ -107,6 +107,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Audit\NotAuditedAttribute.cs" />
+    <Compile Include="Collections\ConcurrentDictionary.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="EntityKey.cs" />
     <Compile Include="DataManagerBase.cs" />
     <Compile Include="EntityManagerBase.cs" />

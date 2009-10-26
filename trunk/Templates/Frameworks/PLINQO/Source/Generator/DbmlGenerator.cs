@@ -789,29 +789,53 @@ namespace LinqToSqlShared.Generator
             isEnum = false;
             wasEnum = false;
 
-            if (columnSchema != null && columnSchema.IsForeignKeyMember)
-                foreach (TableKeySchema tableKeySchema in columnSchema.Table.ForeignKeys)
-                    if (tableKeySchema.ForeignKeyMemberColumns.Contains(columnSchema))
-                    {
-                        // Is Enum
-                        if (Settings.IsEnum(tableKeySchema.PrimaryKeyTable))
-                        {
-                            name = GetEnum(tableKeySchema.PrimaryKeyTable).Name;
-                            isEnum = true;
-                        }
+            if (columnSchema == null || !columnSchema.IsForeignKeyMember)
+                return name;
 
-                        // Was Enum
-                        DbmlEnum.Enum existingEnum = _existingEnumDatabase.Enums.Where(e => e.Table == tableKeySchema.PrimaryKeyTable.FullName).FirstOrDefault();
-                        if (existingEnum != null)
-                        {
-                            if (String.IsNullOrEmpty(name))
-                                name = existingEnum.Name;
-                            wasEnum = true;
-                        }
+            foreach (TableKeySchema tableKeySchema in columnSchema.Table.ForeignKeys)
+            {
+                // find columns ...
+                ColumnSchema primaryColumn = null;
+                for (int i = 0; i < tableKeySchema.ForeignKeyMemberColumns.Count; i++)
+                {
+                    if (tableKeySchema.ForeignKeyMemberColumns[i].Column != columnSchema) 
+                        continue;
 
-                        if (isEnum || wasEnum)
-                            break;
-                    }
+                    primaryColumn = tableKeySchema.PrimaryKeyMemberColumns[i].Column;
+                    break;
+                }
+
+                if (primaryColumn == null)
+                    continue;
+
+                // Is Enum
+                TableSchema primaryKeyTable = tableKeySchema.PrimaryKeyTable;
+
+                if (Settings.IsEnum(primaryKeyTable))
+                {
+                    name = GetEnum(primaryKeyTable).Name;
+                    isEnum = true;
+                }
+
+                // Was Enum
+                DbmlEnum.Enum existingEnum = _existingEnumDatabase.Enums
+                    .Where(e => e.Table == primaryKeyTable.FullName)
+                    .FirstOrDefault();
+
+                if (existingEnum != null)
+                {
+                    if (String.IsNullOrEmpty(name))
+                        name = existingEnum.Name;
+                    wasEnum = true;
+                }
+
+                if (isEnum || wasEnum)
+                    break;
+
+                // find column in pktable, if that is fkey too, check that parent.
+                if (primaryColumn.IsForeignKeyMember)
+                    return IsOrWasEnumAssociation(primaryColumn, out isEnum, out wasEnum);
+            }
 
             return name;
         }
