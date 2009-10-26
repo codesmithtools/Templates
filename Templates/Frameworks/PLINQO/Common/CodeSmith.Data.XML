@@ -549,6 +549,48 @@
             <seealso cref="T:CodeSmith.Data.Audit.AlwaysAuditAttribute"/>
             <seealso cref="T:CodeSmith.Data.Audit.AuditManager"/>
         </member>
+        <member name="M:CodeSmith.Data.Collections.ConcurrentDictionary`2.AddOrUpdate(`0,`1,System.Func{`0,`1,`1})">
+            <summary>Adds a key/value pair to the ConcurrentDictionary if the key does not already exist, or updates a key/value pair in the ConcurrentDictionary if the key already exists.</summary>
+            <returns>The new value for the key. This will be either be the result of addValueFactory (if the key was absent) or the result of updateValueFactory (if the key was present).</returns>
+            <param name="key">The key to be added or whose value should be updated</param>
+            <param name="addValue">The value to be added for an absent key</param>
+            <param name="updateValueFactory">The function used to generate a new value for an existing key based on the key's existing value</param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="key" /> is a null reference (Nothing in Visual Basic).-or-<paramref name="updateValueFactory" /> is a null reference (Nothing in Visual Basic).
+            </exception>
+            <exception cref="T:System.OverflowException">The dictionary contains too many elements.</exception>
+        </member>
+        <member name="M:CodeSmith.Data.Collections.ConcurrentDictionary`2.AddOrUpdate(`0,System.Func{`0,`1},System.Func{`0,`1,`1})">
+            <summary>Adds a key/value pair to the ConcurrentDictionary if the key does not already exist, or updates a key/value pair in the ConcurrentDictionary if the key already exists.</summary>
+            <returns>The new value for the key. This will be either be the result of addValueFactory (if the key was absent) or the result of updateValueFactory (if the key was present).</returns>
+            <param name="key">The key to be added or whose value should be updated</param>
+            <param name="addValueFactory">The function used to generate a value for an absent key</param>
+            <param name="updateValueFactory">The function used to generate a new value for an existing key based on the key's existing value</param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="key" /> is a null reference (Nothing in Visual Basic).-or-<paramref name="addValueFactory" /> is a null reference (Nothing in Visual Basic).-or-<paramref name="updateValueFactory" /> is a null reference (Nothing in Visual Basic).
+            </exception>
+            <exception cref="T:System.OverflowException">The dictionary contains too many elements.</exception>
+        </member>
+        <member name="M:CodeSmith.Data.Collections.ConcurrentDictionary`2.GetOrAdd(`0,`1)">
+            <summary>Adds a key/value pair to the ConcurrentDictionary if the key does not already exist.</summary>
+            <returns>The value for the key. This will be either the existing value for the key if the key is already in the dictionary, or the new value if the key was not in the dictionary.</returns>
+            <param name="key">The key of the element to add.</param>
+            <param name="value">the value to be added, if the key does not already exist</param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="key" /> is a null reference (Nothing in Visual Basic).
+            </exception>
+            <exception cref="T:System.OverflowException">The dictionary contains too many elements.</exception>
+        </member>
+        <member name="M:CodeSmith.Data.Collections.ConcurrentDictionary`2.GetOrAdd(`0,System.Func{`0,`1})">
+            <summary>Adds a key/value pair to the ConcurrentDictionary if the key does not already exist.</summary>
+            <returns>The value for the key. This will be either the existing value for the key if the key is already in the dictionary, or the new value for the key as returned by valueFactory if the key was not in the dictionary.</returns>
+            <param name="key">The key of the element to add.</param>
+            <param name="valueFactory">The function used to generate a value for the key</param>
+            <exception cref="T:System.ArgumentNullException">
+            <paramref name="key" /> is a null reference (Nothing in Visual Basic).-or-<paramref name="valueFactory" /> is a null reference (Nothing in Visual Basic).
+            </exception>
+            <exception cref="T:System.OverflowException">The dictionary contains too many elements.</exception>
+        </member>
         <member name="T:CodeSmith.Data.IEntityKey">
             <summary>Interface for an entity key.</summary>
         </member>
@@ -859,7 +901,7 @@
             the cache.
             </summary>
         </member>
-        <member name="M:System.Data.Linq.DataContextExtensions.ExecuteQuery(System.Data.Linq.DataContext,System.Linq.IQueryable[])">
+        <member name="M:CodeSmith.Data.Linq.DataContextExtensions.ExecuteQuery(System.Data.Linq.DataContext,System.Linq.IQueryable[])">
             <summary>
             Batches together multiple <see cref="T:System.Linq.IQueryable"/> queries into a single <see cref="T:System.Data.Common.DbCommand"/> and returns all data in
             a single round trip to the database.
@@ -870,7 +912,7 @@
             <exception cref="T:System.ArgumentNullException">Thrown when context or queries are null.</exception>
             <exception cref="T:System.InvalidOperationException">Thrown when context.Connection is invalid.</exception>
         </member>
-        <member name="M:System.Data.Linq.DataContextExtensions.CombineCommands(System.Collections.Generic.IEnumerable{System.Data.Common.DbCommand})">
+        <member name="M:CodeSmith.Data.Linq.DataContextExtensions.CombineCommands(System.Collections.Generic.IEnumerable{System.Data.Common.DbCommand})">
             <summary>
             Combines multiple SELECT commands into a single <see cref="T:System.Data.SqlClient.SqlCommand"/> so that all statements can be executed in a 
             single round trip to the database and return multiple result sets.
@@ -878,7 +920,7 @@
             <param name="selectCommands">Represents a collection of commands to be batched together.</param>
             <returns>Returns a single <see cref="T:System.Data.SqlClient.SqlCommand"/> that executes all SELECT statements at once.</returns>
         </member>
-        <member name="M:System.Data.Linq.DataContextExtensions.CloneParameter(System.Data.Common.DbParameter)">
+        <member name="M:CodeSmith.Data.Linq.DataContextExtensions.CloneParameter(System.Data.Common.DbParameter)">
             <summary>
             Returns a clone (via copying all properties) of an existing <see cref="T:System.Data.Common.DbParameter"/>.
             </summary>
@@ -1087,12 +1129,12 @@
             </summary>
             <value>The total item count.</value>
         </member>
-        <member name="T:System.Linq.PagingExtensions">
+        <member name="T:CodeSmith.Data.Linq.PagingExtensions">
             <summary>
             Paging extension methods.
             </summary>
         </member>
-        <member name="M:System.Linq.PagingExtensions.Paginate``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)">
+        <member name="M:CodeSmith.Data.Linq.PagingExtensions.Paginate``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)">
             <summary>
             Paginates the specified query.
             </summary>
@@ -1102,7 +1144,7 @@
             <param name="pageSize">The size of the page.</param>
             <returns>An <see cref="T:System.Linq.IQueryable`1"/> with Skip and Take set.</returns>
         </member>
-        <member name="M:System.Linq.PagingExtensions.ToPagedList``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)">
+        <member name="M:CodeSmith.Data.Linq.PagingExtensions.ToPagedList``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)">
             <summary>
             Converts the source to a <see cref="T:CodeSmith.Data.Linq.PagedList`1"/>.
             </summary>
@@ -1112,7 +1154,7 @@
             <param name="pageSize">The size of the page.</param>
             <returns>A new instance of <see cref="T:CodeSmith.Data.Linq.PagedList`1"/>.</returns>
         </member>
-        <member name="M:System.Linq.PagingExtensions.ToPagedList``1(System.Linq.IQueryable{``0},System.Int32,System.Int32,System.Int32)">
+        <member name="M:CodeSmith.Data.Linq.PagingExtensions.ToPagedList``1(System.Linq.IQueryable{``0},System.Int32,System.Int32,System.Int32)">
             <summary>
             Converts the source to a <see cref="T:CodeSmith.Data.Linq.PagedList`1"/>.
             </summary>
@@ -1123,7 +1165,7 @@
             <param name="totalCount">The total count.</param>
             <returns>A new instance of <see cref="T:CodeSmith.Data.Linq.PagedList`1"/>.</returns>
         </member>
-        <member name="M:System.Linq.PagingExtensions.ToPagedList``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
+        <member name="M:CodeSmith.Data.Linq.PagingExtensions.ToPagedList``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32)">
             <summary>
             Converts the source to a <see cref="T:CodeSmith.Data.Linq.PagedList`1"/>.
             </summary>
@@ -1133,7 +1175,7 @@
             <param name="pageSize">The size of the page.</param>
             <returns>A new instance of <see cref="T:CodeSmith.Data.Linq.PagedList`1"/>.</returns>
         </member>
-        <member name="M:System.Linq.PagingExtensions.ToPagedList``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32,System.Int32)">
+        <member name="M:CodeSmith.Data.Linq.PagingExtensions.ToPagedList``1(System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int32,System.Int32)">
             <summary>
             Converts the source to a <see cref="T:CodeSmith.Data.Linq.PagedList`1"/>.
             </summary>
@@ -1278,7 +1320,7 @@
             </summary>
         </member>
         <!-- Badly formed XML comment ignored for member "T:CodeSmith.Data.Linq.Evaluator.SubtreeEvaluator" -->
-        <member name="M:System.Data.Linq.TableExtensions.Delete``1(System.Data.Linq.Table{``0},System.Linq.IQueryable{``0})">
+        <member name="M:CodeSmith.Data.Linq.TableExtensions.Delete``1(System.Data.Linq.Table{``0},System.Linq.IQueryable{``0})">
             <summary>
             Immediately deletes all entities from the collection with a single delete command.
             </summary>
@@ -1291,7 +1333,7 @@
             <para>Additionally, to improve performance, instead of creating a delete command for each item in <paramref name="entities"/>, a single delete command is created.</para>
             </remarks>
         </member>
-        <member name="M:System.Data.Linq.TableExtensions.Delete``1(System.Data.Linq.Table{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+        <member name="M:CodeSmith.Data.Linq.TableExtensions.Delete``1(System.Data.Linq.Table{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
             <summary>
             Immediately deletes all entities from the collection with a single delete command.
             </summary>
@@ -1300,7 +1342,7 @@
             <param name="filter">Represents a filter of items to be deleted in <paramref name="table"/>.</param>
             <returns>The number of rows deleted from the database.</returns>
         </member>
-        <member name="M:System.Data.Linq.TableExtensions.Update``1(System.Data.Linq.Table{``0},System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``0}})">
+        <member name="M:CodeSmith.Data.Linq.TableExtensions.Update``1(System.Data.Linq.Table{``0},System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``0}})">
             <summary>
             Immediately updates all entities in the collection with a single update command based on a <typeparamref name="TEntity"/> created from a Lambda expression.
             </summary>
@@ -1314,7 +1356,7 @@
             <para>Additionally, to improve performance, instead of creating an update command for each item in <paramref name="entities"/>, a single update command is created.</para>
             </remarks>
         </member>
-        <member name="M:System.Data.Linq.TableExtensions.Update``1(System.Data.Linq.Table{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,``0}})">
+        <member name="M:CodeSmith.Data.Linq.TableExtensions.Update``1(System.Data.Linq.Table{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``0,``0}})">
             <summary>
             Immediately updates all entities in the collection with a single update command based on a <typeparamref name="TEntity"/> created from a Lambda expression.
             </summary>
