@@ -16,8 +16,8 @@ namespace CodeSmith.Data.Rules
     /// </summary>
     public class RuleManager
     {
-        private static RuleCollection _sharedBusinessRules;
-        private RuleCollection _businessRules;
+        private static readonly RuleCollection _sharedBusinessRules = new RuleCollection();
+        private readonly RuleCollection _businessRules = new RuleCollection();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RuleManager"/> class.
@@ -40,13 +40,10 @@ namespace CodeSmith.Data.Rules
         /// <param name="rule">The rule to add.</param>
         public void Add<TEntity>(IRule rule)
         {
-            if (_businessRules == null)
-                _businessRules = new RuleCollection();
-
             if (_businessRules.ContainsKey(typeof(TEntity)))
                 _businessRules[typeof(TEntity)].Add(rule);
             else
-                _businessRules.Add(typeof(TEntity), new List<IRule> { rule });
+                _businessRules.TryAdd(typeof(TEntity), new List<IRule> { rule });
         }
 
         /// <summary>
@@ -56,13 +53,10 @@ namespace CodeSmith.Data.Rules
         /// <param name="rule">The rule to add.</param>
         public static void AddShared<TEntity>(IRule rule)
         {
-            if (_sharedBusinessRules == null)
-                _sharedBusinessRules = new RuleCollection();
-
             if (_sharedBusinessRules.ContainsKey(typeof(TEntity)))
                 _sharedBusinessRules[typeof(TEntity)].Add(rule);
             else
-                _sharedBusinessRules.Add(typeof(TEntity), new List<IRule> { rule });
+                _sharedBusinessRules.TryAdd(typeof(TEntity), new List<IRule> { rule });
         }
 
         /// <summary>

@@ -17,7 +17,7 @@
 
 <%@ Property Category="1.Database" Name="SourceDatabase"
     Type="SchemaExplorer.DatabaseSchema" Optional="False"
-    OnChanged="OnSourceDatabaseChanged" DeepLoad="true"
+    OnChanged="OnSourceDatabaseChanged" DeepLoad="true" IncludeFunctions="true"
     Description="The source database for Linq to Sql." %>
 
 <%@ Property Category="1.Database" Name="IncludeViews"

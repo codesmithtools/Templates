@@ -15,17 +15,13 @@ namespace CodeSmith.Data.Linq
         /// <summary>
         /// Returns the result of the query; if possible from the cache, otherwise
         /// the query is materialized and the result cached before being returned.
-        /// The cache entry has a one minute sliding expiration with normal priority.
         /// </summary>
         /// <typeparam name="T">The type of the data in the data source.</typeparam>
         /// <param name="query">The query to be materialized.</param>
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query)
         {
-            return query.FromCache(new CacheSettings
-            {
-                SlidingExpiration = TimeSpan.FromMinutes(1)
-            });
+            return query.FromCache(new CacheSettings());
         }
 
         /// <summary>
