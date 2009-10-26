@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web.Caching;
 
 namespace CodeSmith.Data.Linq
@@ -11,23 +8,19 @@ namespace CodeSmith.Data.Linq
     /// </summary>
     public class CacheSettings
     {
-        #region Private Members
-
-        private TimeSpan _slidingExpiration = Cache.NoSlidingExpiration;
-        private CacheItemPriority _priority = CacheItemPriority.Normal;
-        private DateTime _absoluteExpiration = Cache.NoAbsoluteExpiration;
-        private bool _cacheEmptyResult = true;
-        private CacheDependency _cacheDependency = null;
-        private CacheItemRemovedCallback _cacheItemRemovedCallback = null;
-
-        #endregion
 
         #region Constructors
 
         /// <summary>
         /// Creates a CacheSettings object with default/empty values.
         /// </summary>
-        public CacheSettings() { }
+        public CacheSettings()
+        {
+            CacheEmptyResult = true;
+            AbsoluteExpiration = Cache.NoAbsoluteExpiration;
+            Priority = CacheItemPriority.Normal;
+            SlidingExpiration = Cache.NoSlidingExpiration;
+        }
 
         /// <summary>
         /// Creates a CacheSettings object with default values for Sliding Expiration.
@@ -36,6 +29,8 @@ namespace CodeSmith.Data.Linq
         /// <param name="cacheEmptyResult">Sets Cache Empty Result</param>
         public CacheSettings(TimeSpan slidingExpiration, bool cacheEmptyResult)
         {
+            AbsoluteExpiration = Cache.NoAbsoluteExpiration;
+            Priority = CacheItemPriority.Normal;
             SlidingExpiration = slidingExpiration;
             CacheEmptyResult = cacheEmptyResult;
         }
@@ -47,6 +42,8 @@ namespace CodeSmith.Data.Linq
         /// <param name="priority">Sets Priority</param>
         public CacheSettings(TimeSpan slidingExpiration, CacheItemPriority priority)
         {
+            CacheEmptyResult = true;
+            AbsoluteExpiration = Cache.NoAbsoluteExpiration;
             SlidingExpiration = slidingExpiration;
             Priority = priority;
         }
@@ -58,6 +55,8 @@ namespace CodeSmith.Data.Linq
         /// <param name="cacheEmptyResult">Sets Cache Empty Result</param>
         public CacheSettings(DateTime absoluteExpiration, bool cacheEmptyResult)
         {
+            Priority = CacheItemPriority.Normal;
+            SlidingExpiration = Cache.NoSlidingExpiration;
             AbsoluteExpiration = absoluteExpiration;
             CacheEmptyResult = cacheEmptyResult;
         }
@@ -69,6 +68,8 @@ namespace CodeSmith.Data.Linq
         /// <param name="priority">Sets Priority</param>
         public CacheSettings(DateTime absoluteExpiration, CacheItemPriority priority)
         {
+            CacheEmptyResult = true;
+            SlidingExpiration = Cache.NoSlidingExpiration;
             AbsoluteExpiration = absoluteExpiration;
             Priority = priority;
         }
@@ -80,6 +81,9 @@ namespace CodeSmith.Data.Linq
         /// <param name="cacheEmptyResult">Sets Cache Empty Result</param>
         public CacheSettings(int duration, bool cacheEmptyResult)
         {
+            AbsoluteExpiration = Cache.NoAbsoluteExpiration;
+            Priority = CacheItemPriority.Normal;
+            SlidingExpiration = Cache.NoSlidingExpiration;
             Duration = duration;
             CacheEmptyResult = cacheEmptyResult;
         }
@@ -91,6 +95,9 @@ namespace CodeSmith.Data.Linq
         /// <param name="priority">Sets Priority</param>
         public CacheSettings(int duration, CacheItemPriority priority)
         {
+            CacheEmptyResult = true;
+            AbsoluteExpiration = Cache.NoAbsoluteExpiration;
+            SlidingExpiration = Cache.NoSlidingExpiration;
             Duration = duration;
             Priority = priority;
         }
@@ -106,12 +113,12 @@ namespace CodeSmith.Data.Linq
         {
             get
             {
-                var timeSpan = DateTime.UtcNow.Subtract(_absoluteExpiration);
+                var timeSpan = DateTime.UtcNow.Subtract(AbsoluteExpiration);
                 return Convert.ToInt32(timeSpan.TotalSeconds);
             }
             set
             {
-                _absoluteExpiration = DateTime.UtcNow.AddSeconds(value);
+                AbsoluteExpiration = DateTime.UtcNow.AddSeconds(value);
             }
         }
 
@@ -123,11 +130,7 @@ namespace CodeSmith.Data.Linq
         /// it was last accessed. If you are using sliding expiration, the
         /// absoluteExpiration parameter must be System.Web.Caching.Cache.NoAbsoluteExpiration.
         /// </summary>
-        public TimeSpan SlidingExpiration
-        {
-            get { return _slidingExpiration; }
-            set { _slidingExpiration = value; }
-        }
+        public TimeSpan SlidingExpiration { get; set; }
 
         /// <summary>
         /// Used for setting System.Web.Caching.Cache.Insert parameter priority:
@@ -136,11 +139,7 @@ namespace CodeSmith.Data.Linq
         /// used by the cache when it evicts objects; objects with a lower cost are removed
         /// from the cache before objects with a higher cost.
         /// </summary>
-        public CacheItemPriority Priority
-        {
-            get { return _priority; }
-            set { _priority = value; }
-        }
+        public CacheItemPriority Priority { get; set; }
 
         /// <summary>
         /// Used for setting System.Web.Caching.Cache.Insert parameter absoluteExpiration:
@@ -150,20 +149,12 @@ namespace CodeSmith.Data.Linq
         /// for this parameter value. If you are using absolute expiration, the
         /// slidingExpiration parameter must be System.Web.Caching.Cache.NoSlidingExpiration.
         /// </summary>
-        public DateTime AbsoluteExpiration
-        {
-            get { return _absoluteExpiration; }
-            set { _absoluteExpiration = value; }
-        }
+        public DateTime AbsoluteExpiration { get; set; }
 
         /// <summary>
         /// Used to determine if an empty result should be cached.
         /// </summary>
-        public bool CacheEmptyResult
-        {
-            get { return _cacheEmptyResult; }
-            set { _cacheEmptyResult = value; }
-        }
+        public bool CacheEmptyResult { get; set; }
 
         /// <summary>
         /// Used for setting System.Web.Caching.Cache.Insert parameter dependencies:
@@ -171,11 +162,7 @@ namespace CodeSmith.Data.Linq
         /// object becomes invalid and is removed from the cache. If there are no
         /// dependencies, this parameter contains null.
         /// </summary>
-        public CacheDependency CacheDependency
-        {
-            get { return _cacheDependency; }
-            set { _cacheDependency = value; }
-        }
+        public CacheDependency CacheDependency { get; set; }
 
         /// <summary>
         /// Used for setting System.Web.Caching.Cache.Insert parameter onRemoveCallback:
@@ -183,11 +170,7 @@ namespace CodeSmith.Data.Linq
         /// cache. You can use this to notify applications when their objects are deleted from
         /// the cache.
         /// </summary>
-        public CacheItemRemovedCallback CacheItemRemovedCallback
-        {
-            get { return _cacheItemRemovedCallback; }
-            set { _cacheItemRemovedCallback = value; }
-        }
+        public CacheItemRemovedCallback CacheItemRemovedCallback { get; set; }
 
         #endregion
     }

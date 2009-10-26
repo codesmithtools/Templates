@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using CodeSmith.Data.Linq;
 using System.Text;
 
 namespace CodeSmith.Data.Linq

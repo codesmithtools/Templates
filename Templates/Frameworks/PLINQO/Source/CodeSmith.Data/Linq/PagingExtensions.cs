@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
-using CodeSmith.Data.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Data.Linq;
 
-namespace System.Linq
+namespace CodeSmith.Data.Linq
 {
     /// <summary>
     /// Paging extension methods.

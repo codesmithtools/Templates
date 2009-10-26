@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
+using System.Data.Linq;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Transactions;
 
-namespace System.Data.Linq
+namespace CodeSmith.Data.Linq
 {
     //http://www.aneyfamily.com/terryandann/post/2008/04/LINQ-to-SQL-Batch-UpdatesDeletes-Fix-for-Could-not-translate-expression.aspx
     public static class DataContextExtensions

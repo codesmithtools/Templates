@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Linq;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using System;
 
 namespace CodeSmith.Data.Audit
 {
