@@ -11,7 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Linq;
-using System.Linq.Dynamic;
+using CodeSmith.Data.Linq;
+using CodeSmith.Data.Linq.Dynamic;
 
 namespace Tracker.Core.Data
 {

@@ -3,6 +3,7 @@ using System.Data.Linq;
 using System.Web;
 using NUnit.Framework;
 using Tracker.Core.Data;
+using CodeSmith.Data.Linq;
 
 namespace Tracker.Tests.CacheTests
 {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Linq;
 using System.Linq;
 using NUnit.Framework;
 using Tracker.Core.Data;
+using CodeSmith.Data.Linq;
 
 namespace Tracker.Tests.QueryTests
 {
