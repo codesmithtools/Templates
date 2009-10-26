@@ -10,6 +10,7 @@ using PLINQO.Mvc.UI.Binder;
 using PLINQO.Mvc.UI.Models;
 using Tracker.Core.Data;
 using System.Data.Linq;
+using CodeSmith.Data.Linq;
 
 namespace PLINQO.Mvc.UI.Controllers
 {
