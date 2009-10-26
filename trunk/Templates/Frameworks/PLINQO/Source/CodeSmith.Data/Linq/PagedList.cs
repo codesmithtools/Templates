@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Data.Linq;
 
 namespace CodeSmith.Data.Linq
 {
@@ -147,7 +147,7 @@ namespace CodeSmith.Data.Linq
             IsLastPage = (PageIndex >= (PageCount - 1));
 
             if (TotalItemCount > 0)
-                AddRange(source.Skip((pageIndex) * pageSize).Take(pageSize).ToList());
+                AddRange((source).Skip((pageIndex) * pageSize).Take(pageSize).ToList());
         }
     }
 }

@@ -605,13 +605,15 @@ namespace LinqToSqlShared.Generator
                 function.Method = MakeUnique(FunctionNames, methodName);
             }
 
+            ParameterSchema returnParameter = null;
+
             function.Parameters.Clear();
             foreach (ParameterSchema p in commandSchema.Parameters)
             {
                 if (p.Direction == System.Data.ParameterDirection.ReturnValue)
-                    continue;
-
-                CreateParameter(function, p);
+                    returnParameter = p;
+                else
+                    CreateParameter(function, p);
             }
 
             try
@@ -644,6 +646,11 @@ namespace LinqToSqlShared.Generator
             {
                 function.Return.Type = commandSchema.ReturnValueParameter.SystemType.ToString();
                 function.Return.DbType = GetDbType(commandSchema.ReturnValueParameter);
+            }
+            else if (returnParameter != null)
+            {
+                function.Return.Type = returnParameter.SystemType.ToString();
+                function.Return.DbType = GetDbType(returnParameter);
             }
             else
             {
@@ -798,7 +805,7 @@ namespace LinqToSqlShared.Generator
                 ColumnSchema primaryColumn = null;
                 for (int i = 0; i < tableKeySchema.ForeignKeyMemberColumns.Count; i++)
                 {
-                    if (tableKeySchema.ForeignKeyMemberColumns[i].Column != columnSchema) 
+                    if (tableKeySchema.ForeignKeyMemberColumns[i].Column != columnSchema)
                         continue;
 
                     primaryColumn = tableKeySchema.PrimaryKeyMemberColumns[i].Column;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data.Linq;
+using CodeSmith.Data.Linq;
 
 namespace CodeSmith.Data.Serialization
 {

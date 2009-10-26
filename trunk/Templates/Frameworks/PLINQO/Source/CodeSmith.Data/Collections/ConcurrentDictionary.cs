@@ -111,6 +111,15 @@ namespace CodeSmith.Data.Collections
             }
         }
 
+        /// <summary>Adds a key/value pair to the ConcurrentDictionary if the key does not already exist, or updates a key/value pair in the ConcurrentDictionary if the key already exists.</summary>
+        /// <returns>The new value for the key. This will be either be the result of addValueFactory (if the key was absent) or the result of updateValueFactory (if the key was present).</returns>
+        /// <param name="key">The key to be added or whose value should be updated</param>
+        /// <param name="addValue">The value to be added for an absent key</param>
+        /// <param name="updateValueFactory">The function used to generate a new value for an existing key based on the key's existing value</param>
+        /// <exception cref="T:System.ArgumentNullException">
+        /// <paramref name="key" /> is a null reference (Nothing in Visual Basic).-or-<paramref name="updateValueFactory" /> is a null reference (Nothing in Visual Basic).
+        /// </exception>
+        /// <exception cref="T:System.OverflowException">The dictionary contains too many elements.</exception>
         public TValue AddOrUpdate(TKey key, TValue addValue, Func<TKey, TValue, TValue> updateValueFactory)
         {
             TValue updateValue = default(TValue);
@@ -138,6 +147,15 @@ namespace CodeSmith.Data.Collections
             return updateValue;
         }
 
+        /// <summary>Adds a key/value pair to the ConcurrentDictionary if the key does not already exist, or updates a key/value pair in the ConcurrentDictionary if the key already exists.</summary>
+        /// <returns>The new value for the key. This will be either be the result of addValueFactory (if the key was absent) or the result of updateValueFactory (if the key was present).</returns>
+        /// <param name="key">The key to be added or whose value should be updated</param>
+        /// <param name="addValueFactory">The function used to generate a value for an absent key</param>
+        /// <param name="updateValueFactory">The function used to generate a new value for an existing key based on the key's existing value</param>
+        /// <exception cref="T:System.ArgumentNullException">
+        /// <paramref name="key" /> is a null reference (Nothing in Visual Basic).-or-<paramref name="addValueFactory" /> is a null reference (Nothing in Visual Basic).-or-<paramref name="updateValueFactory" /> is a null reference (Nothing in Visual Basic).
+        /// </exception>
+        /// <exception cref="T:System.OverflowException">The dictionary contains too many elements.</exception>
         public TValue AddOrUpdate(TKey key, Func<TKey, TValue> addValueFactory, Func<TKey, TValue, TValue> updateValueFactory)
         {
             TValue updateValue;
@@ -266,6 +284,14 @@ namespace CodeSmith.Data.Collections
             return readOnlyCollection;
         }
 
+        /// <summary>Adds a key/value pair to the ConcurrentDictionary if the key does not already exist.</summary>
+        /// <returns>The value for the key. This will be either the existing value for the key if the key is already in the dictionary, or the new value if the key was not in the dictionary.</returns>
+        /// <param name="key">The key of the element to add.</param>
+        /// <param name="value">the value to be added, if the key does not already exist</param>
+        /// <exception cref="T:System.ArgumentNullException">
+        /// <paramref name="key" /> is a null reference (Nothing in Visual Basic).
+        /// </exception>
+        /// <exception cref="T:System.OverflowException">The dictionary contains too many elements.</exception>
         public TValue GetOrAdd(TKey key, TValue value)
         {
             TValue resultingValue;
@@ -276,6 +302,14 @@ namespace CodeSmith.Data.Collections
             return resultingValue;
         }
 
+        /// <summary>Adds a key/value pair to the ConcurrentDictionary if the key does not already exist.</summary>
+        /// <returns>The value for the key. This will be either the existing value for the key if the key is already in the dictionary, or the new value for the key as returned by valueFactory if the key was not in the dictionary.</returns>
+        /// <param name="key">The key of the element to add.</param>
+        /// <param name="valueFactory">The function used to generate a value for the key</param>
+        /// <exception cref="T:System.ArgumentNullException">
+        /// <paramref name="key" /> is a null reference (Nothing in Visual Basic).-or-<paramref name="valueFactory" /> is a null reference (Nothing in Visual Basic).
+        /// </exception>
+        /// <exception cref="T:System.OverflowException">The dictionary contains too many elements.</exception>
         public TValue GetOrAdd(TKey key, Func<TKey, TValue> valueFactory)
         {
             TValue resultingValue;
