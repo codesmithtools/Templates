@@ -81,9 +81,17 @@ namespace CodeSmith.Data.Audit
         /// </returns>
         public static AuditLog FromXml(string auditLog)
         {
-            using (var reader = new StringReader(auditLog))
+            try
             {
-                return _serializer.Deserialize(reader) as AuditLog;
+                using (var reader = new StringReader(auditLog))
+                {
+                    return _serializer.Deserialize(reader) as AuditLog;
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO: handle me
+                return new AuditLog();
             }
         }
     }
