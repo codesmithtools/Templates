@@ -113,7 +113,8 @@ namespace LinqToSqlShared.Generator
             return column.NativeType.Equals("int", System.StringComparison.OrdinalIgnoreCase)
                 || column.NativeType.Equals("bigint", System.StringComparison.OrdinalIgnoreCase)
                 || column.NativeType.Equals("tinyint", System.StringComparison.OrdinalIgnoreCase)
-                || column.NativeType.Equals("byte", System.StringComparison.OrdinalIgnoreCase);
+                || column.NativeType.Equals("byte", System.StringComparison.OrdinalIgnoreCase)
+                || column.NativeType.Equals("smallint", System.StringComparison.OrdinalIgnoreCase);
         }
 
         public string GetEnumNameColumnName(TableSchema table)
