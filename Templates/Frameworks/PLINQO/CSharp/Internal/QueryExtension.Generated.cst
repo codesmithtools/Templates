@@ -216,7 +216,7 @@ namespace <%= Database.ContextNamespace %>
         if (name != GetAlias())
             return name;
             
-        return "my" + StringUtil.ToPascalCase(name);        
+        return "my" + StringUtil.ToPascalCase(name);
     }
 
     public string GetParameters(ManagerMethod method)
@@ -227,7 +227,7 @@ namespace <%= Database.ContextNamespace %>
             if (args.Length > 0)
                 args.Append(", ");
             
-            string paramName = CommonUtility.GetParameterName(column.Member);
+            string paramName = StringUtil.ToCamelCase(column.Member);
             paramName = CleanParamName(paramName);
             
             string paramType = GetColumnType(column);
@@ -248,7 +248,7 @@ namespace <%= Database.ContextNamespace %>
             if (args.Length > 0)
                 args.Append(", ");
             
-            string paramName = CommonUtility.GetParameterName(column.Member);
+            string paramName = StringUtil.ToCamelCase(column.Member);
             paramName = CleanParamName(paramName);
             args.Append(CSharpKeyWordEscape[paramName]);
         }

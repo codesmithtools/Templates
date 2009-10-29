@@ -276,7 +276,7 @@ namespace <%= ManagerNamespace %>
             if (args.Length > 0)
                 args.Append(", ");
             
-            string paramName = CommonUtility.GetParameterName(column.Member);
+            string paramName = StringUtil.ToCamelCase(column.Member);
             paramName = CleanParamName(paramName);
             
             string typeName = CSharpAlias[column.Type];
@@ -299,7 +299,7 @@ namespace <%= ManagerNamespace %>
             if (args.Length > 0)
                 args.Append(", ");
             
-            string paramName = CommonUtility.GetParameterName(column.Member);
+            string paramName = StringUtil.ToCamelCase(column.Member);
             paramName = CleanParamName(paramName);
             args.Append(CSharpKeyWordEscape[paramName]);
         }
@@ -332,7 +332,7 @@ namespace <%= ManagerNamespace %>
         
         foreach(Column column in method.Columns)
         {
-            string paramName = CommonUtility.GetParameterName(column.Member);
+            string paramName = StringUtil.ToCamelCase(column.Member);
             paramName = CleanParamName(paramName);
             paramName = CSharpKeyWordEscape[paramName];
             

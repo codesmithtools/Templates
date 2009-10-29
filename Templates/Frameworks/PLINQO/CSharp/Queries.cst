@@ -42,9 +42,9 @@
     Template="Internal\QueryExtension.Generated.cst" 
     MergeProperties="true" ExcludeProperties="Database, DataManager,EntityManager,Table" %>
 
-<script runat="template">    
+<script runat="template">
     public void Generate()
-    {        
+    {
         if (!Directory.Exists(this.QueryDirectory))
             Directory.CreateDirectory(this.QueryDirectory);
 
