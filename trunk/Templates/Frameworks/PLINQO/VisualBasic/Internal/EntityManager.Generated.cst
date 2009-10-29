@@ -343,7 +343,7 @@ Public Function GetLamba(ByVal method As ManagerMethod, ByVal tabCount As Intege
 End Function
 
 Public Function GetParamName(ByVal name as String) As String
-    Dim paramName As String = CommonUtility.GetParameterName(name)
+    Dim paramName As String = StringUtil.ToCamelCase(name)
     If String.IsNullOrEmpty(MethodPrefix) Then
         paramName = "my" + name
     End If
