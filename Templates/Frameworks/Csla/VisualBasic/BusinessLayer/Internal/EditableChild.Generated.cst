@@ -32,9 +32,9 @@ Public Partial Class <%= BusinessClassName %>
 
     #Region "Contructor(s)"
 
-	Private Sub New()
-    	' require use of factory method 
-End Sub
+    Private Sub New()
+    	MarkAsChild()
+    End Sub
     
     Friend Sub New(Byval reader As SafeDataReader)
 <% If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>

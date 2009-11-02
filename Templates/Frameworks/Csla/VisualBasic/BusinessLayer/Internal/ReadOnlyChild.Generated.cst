@@ -34,8 +34,8 @@ Public Partial Class <%= BusinessClassName %>
 
     #Region "Contructor(s)"
 
-	Private Sub New()
-    	' require use of factory method 
+    Private Sub New()
+	MarkAsChild()
     End Sub
     
     Friend Sub New(Byval reader As SafeDataReader)
