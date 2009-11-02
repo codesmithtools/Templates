@@ -227,7 +227,7 @@ namespace <%= BusinessProjectName %>
                     if(this.IsNew)
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.NewList());
                     else
-                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.LocalColumn.Name) %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>List.<%= association.AssociationEntity().FindOneToManyOrManyToManyListSearchCriteria(association.ColumnName) %>(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(association.LocalColumn.ColumnName) %>));
                 }
 
 <% } else { %>
