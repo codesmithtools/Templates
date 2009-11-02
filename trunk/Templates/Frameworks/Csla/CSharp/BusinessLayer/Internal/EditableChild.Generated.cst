@@ -34,8 +34,10 @@ namespace <%= BusinessProjectName %>
 	{
         #region Contructor(s)
 
-		private <%= BusinessClassName %>()
-		{ /* Require use of factory methods */ }
+	private <%= BusinessClassName %>()
+	{
+		MarkAsChild();
+        }
         
         internal <%= BusinessClassName %>(SafeDataReader reader)
         {
