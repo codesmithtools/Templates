@@ -57,9 +57,9 @@ namespace <%= Database.ContextNamespace %>
     /// The <see cref="System.Data.Linq.DataContext"/> class for the <%= Database.Name %> database.
     /// </summary>
     <%= Naming.GetModifier(Database.AccessModifier) %> partial class <%= Database.Class %> 
-        : System.Data.Linq.DataContext<% if (IncludeIUpdatable) { %>, System.Data.Services.IUpdatable<% } %>
+        : CodeSmith.Data.Linq.DataContextBase<% if (IncludeIUpdatable) { %>, System.Data.Services.IUpdatable<% } %>
     {
-        private static readonly System.Data.Linq.Mapping.MappingSource mappingCache = new System.Data.Linq.Mapping.AttributeMappingSource();
+        public static readonly System.Data.Linq.Mapping.MappingSource MappingCache = new System.Data.Linq.Mapping.AttributeMappingSource();
         
         #region ConnectionString
         private const string CONNECTION_NAME = "<%= DefaultConnectionString == null ? Database.Connection.SettingsPropertyName : DefaultConnectionString%>";
@@ -114,7 +114,7 @@ namespace <%= Database.ContextNamespace %>
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
         <%= Naming.GetModifier(Database.AccessModifier) %> <%= Database.Class %>()
-            : base(ConnectionString, mappingCache)
+            : base(ConnectionString, MappingCache)
         {
             OnCreated();
         }
@@ -125,7 +125,7 @@ namespace <%= Database.ContextNamespace %>
         /// <param name="connection">The connection string.</param>
         [System.Diagnostics.DebuggerNonUserCode]
         <%= Naming.GetModifier(Database.AccessModifier) %> <%= Database.Class %>(string connection)
-            : base(connection, mappingCache)
+            : base(connection, MappingCache)
         {
             OnCreated();
         }
@@ -136,7 +136,7 @@ namespace <%= Database.ContextNamespace %>
         /// <param name="connection">The database connection.</param>
         [System.Diagnostics.DebuggerNonUserCode]
         <%= Naming.GetModifier(Database.AccessModifier) %> <%= Database.Class %>(System.Data.IDbConnection connection)
-            : base(connection, mappingCache)
+            : base(connection, MappingCache)
         {
             OnCreated();
         }
