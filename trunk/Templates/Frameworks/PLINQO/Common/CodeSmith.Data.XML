@@ -1215,7 +1215,7 @@
             An instance of <see cref="T:CodeSmith.Data.Linq.FutureCount"/> to use to access the count later.
             </returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.DataContextBase.CodeSmith#Data#Linq#IFutureContext#ExecuteFutureQueries">
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.ExecuteFutureQueries">
             <summary>
             Executes the future queries.
             </summary>
