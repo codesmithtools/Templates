@@ -912,6 +912,28 @@
             <exception cref="T:System.ArgumentNullException">Thrown when context or queries are null.</exception>
             <exception cref="T:System.InvalidOperationException">Thrown when context.Connection is invalid.</exception>
         </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextExtensions.ExecuteQuery(System.Data.Linq.DataContext,System.Collections.Generic.IEnumerable{System.Linq.IQueryable})">
+            <summary>
+            Batches together multiple <see cref="T:System.Linq.IQueryable"/> queries into a single <see cref="T:System.Data.Common.DbCommand"/> and returns all data in
+            a single round trip to the database.
+            </summary>
+            <param name="context">The <see cref="T:System.Data.Linq.DataContext"/> to execute the batch select against.</param>
+            <param name="queries">Represents a collections of SELECT queries to execute.</param>
+            <returns>Returns an <see cref="T:System.Data.Linq.IMultipleResults"/> object containing all results.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when context or queries are null.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when context.Connection is invalid.</exception>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextExtensions.ExecuteQuery(System.Data.Linq.DataContext,System.Collections.Generic.IEnumerable{System.Data.Common.DbCommand})">
+            <summary>
+            Batches together multiple <see cref="T:System.Linq.IQueryable"/> queries into a single <see cref="T:System.Data.Common.DbCommand"/> and returns all data in
+            a single round trip to the database.
+            </summary>
+            <param name="context">The <see cref="T:System.Data.Linq.DataContext"/> to execute the batch select against.</param>
+            <param name="commands">The list of commands to execute.</param>
+            <returns>Returns an <see cref="T:System.Data.Linq.IMultipleResults"/> object containing all results.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when context or queries are null.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when context.Connection is invalid.</exception>
+        </member>
         <member name="M:CodeSmith.Data.Linq.DataContextExtensions.CombineCommands(System.Collections.Generic.IEnumerable{System.Data.Common.DbCommand})">
             <summary>
             Combines multiple SELECT commands into a single <see cref="T:System.Data.SqlClient.SqlCommand"/> so that all statements can be executed in a 
@@ -939,6 +961,307 @@
             Expression visitor
             (from http://blogs.msdn.com/mattwar/archive/2007/07/31/linq-building-an-iqueryable-provider-part-ii.aspx)
             </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.FutureCount">
+            <summary>
+            Provides for defering the execution of a count query to a batch of queries.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.IFutureQuery">
+            <summary>
+            Interface for defering the future execution of a batch of queries.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.IFutureQuery.GetCommand(System.Data.Linq.DataContext)">
+            <summary>
+            Gets the data command for this query.
+            </summary>
+            <param name="dataContext">The data context to get the command from.</param>
+            <returns>The requested command object.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.IFutureQuery.SetResult(System.Data.Linq.IMultipleResults)">
+            <summary>
+            Sets the underling value after the query has been executed.
+            </summary>
+            <param name="result">The <see cref="T:System.Data.Linq.IMultipleResults"/> to get the result from.</param>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.IFutureQuery.IsLoaded">
+            <summary>
+            Gets a value indicating whether this instance is loaded.
+            </summary>
+            <value><c>true</c> if this instance is loaded; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.IFutureQuery.Query">
+            <summary>
+            Gets the query source to use when materializing.
+            </summary>
+            <value>The query source to use when materializing.</value>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.#ctor(System.Linq.IQueryable,System.Action)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
+            </summary>
+            <param name="query">The query source to use when materializing.</param>
+            <param name="loadAction">The action to execute when the query is accessed.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.GetResult">
+            <summary>
+            Gets the result by invoking the <see cref="P:CodeSmith.Data.Linq.FutureQueryBase`1.LoadAction"/> if not already loaded.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.CodeSmith#Data#Linq#IFutureQuery#GetCommand(System.Data.Linq.DataContext)">
+            <summary>
+            Gets the data command for this query.
+            </summary>
+            <param name="dataContext">The data context to get the command from.</param>
+            <returns>The requested command object.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.GetCommand(System.Data.Linq.DataContext)">
+            <summary>
+            Gets the data command for this query.
+            </summary>
+            <param name="dataContext">The data context to get the command from.</param>
+            <returns>The requested command object.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.CodeSmith#Data#Linq#IFutureQuery#SetResult(System.Data.Linq.IMultipleResults)">
+            <summary>
+            Sets the underling value after the query has been executed.
+            </summary>
+            <param name="result">The <see cref="T:System.Data.Linq.IMultipleResults"/> to get the result from.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.SetResult(System.Data.Linq.IMultipleResults)">
+            <summary>
+            Sets the underling value after the query has been executed.
+            </summary>
+            <param name="result">The <see cref="T:System.Data.Linq.IMultipleResults"/> to get the result from.</param>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.LoadAction">
+            <summary>
+            Gets the action to execute when the query is accessed.
+            </summary>
+            <value>The load action.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.IsLoaded">
+            <summary>
+            Gets a value indicating whether this instance is loaded.
+            </summary>
+            <value><c>true</c> if this instance is loaded; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.CodeSmith#Data#Linq#IFutureQuery#Query">
+            <summary>
+            Gets the query source to use when materializing.
+            </summary>
+            <value>The query source to use when materializing.</value>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureCount.#ctor(System.Linq.IQueryable,System.Action)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureCount"/> class.
+            </summary>
+            <param name="query">The query source to use when materializing.</param>
+            <param name="loadAction">The action to execute when the query is accessed.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureCount.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureCount"/> class.
+            </summary>
+            <param name="underlyingValue">The underlying value.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureCount.GetCommand(System.Data.Linq.DataContext)">
+            <summary>
+            Gets the data command for this query.
+            </summary>
+            <param name="dataContext">The data context to get the command from.</param>
+            <returns>The requested command object.</returns>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.FutureCount.Value">
+            <summary>
+            Gets or sets the value assigned to or loaded by the query.
+            </summary>
+            <value>The value.</value>
+            <returns>
+            The value of this deferred property.
+            </returns>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.FutureQuery`1">
+            <summary>
+            Provides for defering the execution to a batch of queries.
+            </summary>
+            <typeparam name="T">The type for the future query.</typeparam>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQuery`1.#ctor(System.Linq.IQueryable{`0},System.Action)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
+            </summary>
+            <param name="query">The query source to use when materializing.</param>
+            <param name="loadAction">The action to execute when the query is accessed.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQuery`1.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQuery`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.DataContextBase">
+            <summary>
+            A base class for DataContext that includes future query support.
+            </summary>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.IFutureContext">
+            <summary>
+            An interface for future queries from a <see cref="T:System.Data.Linq.DataContext"/>.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.IFutureContext.AddFutureQuery``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Adds the query to the <see cref="P:CodeSmith.Data.Linq.IFutureContext.FutureQueries"/> queue.
+            </summary>
+            <typeparam name="T">The type of the query.</typeparam>
+            <param name="query">The query as the source.</param>
+            <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> to use to access the query later.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.IFutureContext.AddFutureValueQuery``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Adds the query to the <see cref="P:CodeSmith.Data.Linq.IFutureContext.FutureQueries"/> queue.
+            </summary>
+            <typeparam name="T">The type of the query.</typeparam>
+            <param name="query">The query as the source.</param>
+            <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> to use to access the query later.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.IFutureContext.AddFutureCountQuery``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Adds the query to the <see cref="P:CodeSmith.Data.Linq.IFutureContext.FutureQueries"/> queue.
+            </summary>
+            <typeparam name="T">The type of the query.</typeparam>
+            <param name="query">The query as the source.</param>
+            <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureCount"/> to use to access the query later.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.IFutureContext.ExecuteFutureQueries">
+            <summary>
+            Executes the future queries.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.IFutureContext.FutureQueries">
+            <summary>
+            Gets the future queries.
+            </summary>
+            <value>The future queries.</value>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.DataContextBase"/> class.
+            </summary>
+            <param name="fileOrServerOrConnection">The file or server or connection.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.#ctor(System.String,System.Data.Linq.Mapping.MappingSource)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.DataContextBase"/> class.
+            </summary>
+            <param name="fileOrServerOrConnection">The file or server or connection.</param>
+            <param name="mapping">The mapping.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.#ctor(System.Data.IDbConnection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.DataContextBase"/> class.
+            </summary>
+            <param name="connection">The connection.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.#ctor(System.Data.IDbConnection,System.Data.Linq.Mapping.MappingSource)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.DataContextBase"/> class.
+            </summary>
+            <param name="connection">The connection.</param>
+            <param name="mapping">The mapping.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.CodeSmith#Data#Linq#IFutureContext#AddFutureQuery``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Adds the query to the <see cref="P:CodeSmith.Data.Linq.DataContextBase.FutureQueries"/> queue.
+            </summary>
+            <typeparam name="T">The type of the query.</typeparam>
+            <param name="query">The query as the source.</param>
+            <returns>
+            An instance of <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> to use to access the query later.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.CodeSmith#Data#Linq#IFutureContext#AddFutureValueQuery``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Adds the query to the <see cref="P:CodeSmith.Data.Linq.DataContextBase.FutureQueries"/> queue.
+            </summary>
+            <typeparam name="T">The type of the query.</typeparam>
+            <param name="query">The query as the source.</param>
+            <returns>
+            An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> to use to access the query later.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.CodeSmith#Data#Linq#IFutureContext#AddFutureCountQuery``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Adds the query to the <see cref="P:CodeSmith.Data.Linq.DataContextBase.FutureQueries"/> queue.
+            </summary>
+            <typeparam name="T">The type of the query.</typeparam>
+            <param name="query">The query as the source.</param>
+            <returns>
+            An instance of <see cref="T:CodeSmith.Data.Linq.FutureCount"/> to use to access the count later.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextBase.CodeSmith#Data#Linq#IFutureContext#ExecuteFutureQueries">
+            <summary>
+            Executes the future queries.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.DataContextBase.FutureQueries">
+            <summary>
+            Gets the readonly future queries list.
+            </summary>
+            <value>The future queries.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.FutureExtensions">
+            <summary>
+            Extension methods for future queries.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.Future``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Provides for defering the execution of the <paramref name="source" /> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains elements from the input sequence.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCount``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Provides for defering the execution of the <paramref name="source" /> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
+            <returns>An instance of FutureCount that contains the result of the query.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureFirstOrDefault``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Provides for defering the execution of the <paramref name="source" /> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
+            <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.</returns>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.FutureValue`1.Value">
+            <summary>
+            Gets or sets the value assigned to or loaded by the query.
+            </summary>
+            <returns>
+            The value of this deferred property.
+            </returns>
         </member>
         <member name="T:CodeSmith.Data.Linq.IPagedList">
             <summary>
@@ -1987,9 +2310,47 @@
             </summary>
             <value>The rule to run.</value>
         </member>
+        <member name="T:CodeSmith.Data.Rules.RuleList">
+            <summary>
+            A collection of rules
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.RuleList.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RuleList"/> class.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.RuleList.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RuleList"/> class.
+            </summary>
+            <param name="capacity">The capacity.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.RuleList.#ctor(System.Collections.Generic.IEnumerable{CodeSmith.Data.Rules.IRule})">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.RuleList"/> class.
+            </summary>
+            <param name="collection">The collection whose elements are copied to the new list.</param>
+            <exception cref="T:System.ArgumentNullException">
+            	<paramref name="collection"/> is null.
+            </exception>
+        </member>
+        <member name="P:CodeSmith.Data.Rules.RuleList.IsProcessed">
+            <summary>
+            Gets or sets a value indicating whether this instance is processed.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is processed; otherwise, <c>false</c>.
+            </value>
+        </member>
         <member name="T:CodeSmith.Data.Rules.RuleManager">
             <summary>
             A class to manage rules.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.RuleManager.#cctor">
+            <summary>
+            Initializes the <see cref="T:CodeSmith.Data.Rules.RuleManager"/> class.
             </summary>
         </member>
         <member name="M:CodeSmith.Data.Rules.RuleManager.#ctor">
@@ -2010,6 +2371,13 @@
             </summary>
             <typeparam name="TEntity">The type of the entity.</typeparam>
             <param name="rule">The rule to add.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.RuleManager.AddShared(CodeSmith.Data.Rules.IRule,System.Type)">
+            <summary>
+            Adds the shared global rules.
+            </summary>
+            <param name="rule">The rule to add.</param>
+            <param name="entityType">The type of the entity</param>
         </member>
         <member name="M:CodeSmith.Data.Rules.RuleManager.AddShared``1">
             <summary>
@@ -2044,6 +2412,23 @@
             </summary>
             <param name="trackedObject">The <see cref="T:CodeSmith.Data.TrackedObject"/> to run rules on.</param>
             <returns><c>true</c> if rules ran successfully; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.RuleManager.Run(System.Object)">
+            <summary>
+            Run the rules for the specified entity.
+            </summary>
+            <param name="entity">The entity to run validation for.</param>
+            <returns><c>true</c> if rules ran successfully; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.RuleManager.Run(System.Object,System.Boolean)">
+            <summary>
+            Run the rules for the specified entity.
+            </summary>
+            <param name="entity">The entity to run validation for.</param>
+            <param name="modified">if set to <c>true</c> [modified].</param>
+            <returns>
+            	<c>true</c> if rules ran successfully; otherwise, <c>false</c>.
+            </returns>
         </member>
         <member name="M:CodeSmith.Data.Rules.RuleManager.Run(System.Data.Linq.DataContext)">
             <summary>
