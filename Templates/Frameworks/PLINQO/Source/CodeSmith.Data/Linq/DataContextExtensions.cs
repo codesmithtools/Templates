@@ -25,7 +25,7 @@ namespace CodeSmith.Data.Linq
         /// <exception cref="InvalidOperationException">Thrown when context.Connection is invalid.</exception>
         public static IMultipleResults ExecuteQuery(this DataContext context, params IQueryable[] queries)
         {
-            return ExecuteQuery(context, queries);
+            return ExecuteQuery(context, queries.ToList());
         }
 
         /// <summary>
