@@ -22,6 +22,20 @@ namespace CodeSmith.Data.Linq
         /// <exception cref="InvalidOperationException">Thrown when context.Connection is invalid.</exception>
         public static IMultipleResults ExecuteQuery(this DataContext context, params IQueryable[] queries)
         {
+            return ExecuteQuery(context, queries);
+        }
+
+        /// <summary>
+        /// Batches together multiple <see cref="IQueryable"/> queries into a single <see cref="DbCommand"/> and returns all data in
+        /// a single round trip to the database.
+        /// </summary>
+        /// <param name="context">The <see cref="DataContext"/> to execute the batch select against.</param>
+        /// <param name="queries">Represents a collections of SELECT queries to execute.</param>
+        /// <returns>Returns an <see cref="IMultipleResults"/> object containing all results.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when context or queries are null.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when context.Connection is invalid.</exception>
+        public static IMultipleResults ExecuteQuery(this DataContext context, IEnumerable<IQueryable> queries)
+        {
             if (context == null)
                 throw new ArgumentNullException("context");
             if (queries == null)
@@ -32,7 +46,21 @@ namespace CodeSmith.Data.Linq
             foreach (var query in queries)
                 commandList.Add(context.GetCommand(query));
 
-            using (SqlCommand batchCommand = CombineCommands(commandList))
+            return ExecuteQuery(context, commandList);
+        }
+
+        /// <summary>
+        /// Batches together multiple <see cref="IQueryable"/> queries into a single <see cref="DbCommand"/> and returns all data in
+        /// a single round trip to the database.
+        /// </summary>
+        /// <param name="context">The <see cref="DataContext"/> to execute the batch select against.</param>
+        /// <param name="commands">The list of commands to execute.</param>
+        /// <returns>Returns an <see cref="IMultipleResults"/> object containing all results.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when context or queries are null.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when context.Connection is invalid.</exception>
+        public static IMultipleResults ExecuteQuery(this DataContext context, IEnumerable<DbCommand> commands)
+        {
+            using (SqlCommand batchCommand = CombineCommands(commands))
             {
                 batchCommand.Connection = context.Connection as SqlConnection;
 

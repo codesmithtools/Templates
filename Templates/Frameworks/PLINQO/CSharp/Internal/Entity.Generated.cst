@@ -131,9 +131,7 @@ namespace <%= Database.EntityNamespace %>
         /// </summary>
         static <%= Type.Name %>()
         {
-            <%if(Framework == FrameworkEnum.v35_SP1) { %>
-            CodeSmith.Data.Rules.RuleManager.AddShared<<%= Type.Name %>>();
-            <% } else {
+            <%if(Framework != FrameworkEnum.v35_SP1) { 
                 const string lengthFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Validation.LengthRule(\"{1}\", {2}));";
                 const string requiredFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Validation.RequiredRule(\"{1}\"));";
                 const string sqlDateFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Validation.RangeRule<DateTime>(\"{1}\", System.Data.SqlTypes.SqlDateTime.MinValue.Value, System.Data.SqlTypes.SqlDateTime.MaxValue.Value));";
@@ -169,7 +167,7 @@ namespace <%= Database.EntityNamespace %>
                     }
                 }
                 Response.IndentLevel = indent;
-                }%>
+            }%>
             AddSharedRules();
         }
         #endregion
