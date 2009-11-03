@@ -115,7 +115,7 @@ namespace CodeSmith.Data.Linq
         /// <summary>
         /// Executes the future queries.
         /// </summary>
-        void IFutureContext.ExecuteFutureQueries()
+        public void ExecuteFutureQueries()
         {
             if (_futureQueries.Count == 0)
                 return;
