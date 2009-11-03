@@ -120,6 +120,14 @@
     <Compile Include="Linq\DataContextExtensions.cs" />
     <Compile Include="Linq\DynamicQuery.cs" />
     <Compile Include="Linq\ExpressionVisitor.cs" />
+    <Compile Include="Linq\FutureCount.cs" />
+    <Compile Include="Linq\FutureQuery.cs" />
+    <Compile Include="Linq\DataContextBase.cs" />
+    <Compile Include="Linq\FutureExtensions.cs" />
+    <Compile Include="Linq\FutureQueryBase.cs" />
+    <Compile Include="Linq\FutureValue.cs" />
+    <Compile Include="Linq\IFutureContext.cs" />
+    <Compile Include="Linq\IFutureQuery.cs" />
     <Compile Include="Linq\IPagedList.cs" />
     <Compile Include="Linq\PagedList.cs" />
     <Compile Include="Linq\PagingExtensions.cs" />
@@ -144,6 +152,7 @@
     <Compile Include="Rules\PropertyRuleBase.cs" />
     <Compile Include="Rules\RuleCollection.cs" />
     <Compile Include="Rules\RuleContext.cs" />
+    <Compile Include="Rules\RuleList.cs" />
     <Compile Include="Rules\RuleManager.cs" />
     <Compile Include="Rules\Security\AuthorizationRuleBase.cs" />
     <Compile Include="Rules\Security\CreateRule.cs" />

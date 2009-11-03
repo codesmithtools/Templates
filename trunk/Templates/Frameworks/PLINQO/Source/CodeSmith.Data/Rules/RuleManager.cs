@@ -14,8 +14,16 @@ namespace CodeSmith.Data.Rules
     /// </summary>
     public class RuleManager
     {
-        private static readonly RuleCollection _sharedBusinessRules = new RuleCollection();
-        private readonly RuleCollection _businessRules = new RuleCollection();
+        private static readonly RuleCollection _sharedBusinessRules;
+        private readonly RuleCollection _businessRules;
+
+        /// <summary>
+        /// Initializes the <see cref="RuleManager"/> class.
+        /// </summary>
+        static RuleManager()
+        {
+            _sharedBusinessRules = new RuleCollection();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RuleManager"/> class.
@@ -23,6 +31,7 @@ namespace CodeSmith.Data.Rules
         public RuleManager()
         {
             BrokenRules = new BrokenRuleCollection();
+            _businessRules = new RuleCollection();
         }
 
         /// <summary>
@@ -41,7 +50,7 @@ namespace CodeSmith.Data.Rules
             if (_businessRules.ContainsKey(typeof(TEntity)))
                 _businessRules[typeof(TEntity)].Add(rule);
             else
-                _businessRules.TryAdd(typeof(TEntity), new List<IRule> { rule });
+                _businessRules.TryAdd(typeof(TEntity), new RuleList { rule });
         }
 
         /// <summary>
@@ -51,10 +60,20 @@ namespace CodeSmith.Data.Rules
         /// <param name="rule">The rule to add.</param>
         public static void AddShared<TEntity>(IRule rule)
         {
-            if (_sharedBusinessRules.ContainsKey(typeof(TEntity)))
-                _sharedBusinessRules[typeof(TEntity)].Add(rule);
-            else
-                _sharedBusinessRules.TryAdd(typeof(TEntity), new List<IRule> { rule });
+            AddShared(rule, typeof(TEntity));
+        }
+
+        /// <summary>
+        /// Adds the shared global rules.
+        /// </summary>
+        /// <param name="rule">The rule to add.</param>
+        /// <param name="entityType">The type of the entity</param>
+        private static void AddShared(IRule rule, Type entityType)
+        {
+            if (!_sharedBusinessRules.ContainsKey(entityType))
+                _sharedBusinessRules.TryAdd(entityType, new RuleList());
+
+            _sharedBusinessRules[entityType].Add(rule);
         }
 
         /// <summary>
@@ -63,8 +82,21 @@ namespace CodeSmith.Data.Rules
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         public static void AddShared<TEntity>()
         {
-            Type entityType = typeof(TEntity);
+            AddShared(typeof(TEntity));
+        }
+
+        private static void AddShared(Type entityType)
+        {
             Type metadata = null;
+
+            if (!_sharedBusinessRules.ContainsKey(entityType))
+                _sharedBusinessRules.TryAdd(entityType, new RuleList());
+
+            //don't do anything if the properties have already been processed.
+            if (_sharedBusinessRules[entityType].IsProcessed)
+                return;
+
+            _sharedBusinessRules[entityType].IsProcessed = true;
 
             var metadataTypeAttribute =
                 entityType.GetCustomAttributes(typeof(MetadataTypeAttribute), true).FirstOrDefault() as MetadataTypeAttribute;
@@ -84,40 +116,45 @@ namespace CodeSmith.Data.Rules
                     if (attribute is RuleAttributeBase)
                     {
                         var ruleAttribute = (RuleAttributeBase)attribute;
-                        AddShared<TEntity>(ruleAttribute.CreateRule(property.Name));
+                        AddShared(ruleAttribute.CreateRule(property.Name), entityType);
                     }
                     else if (attribute is ValidationAttribute)
-                        AddValidation<TEntity>(property.Name, attribute);
+                        AddValidation(property.Name, attribute, entityType);
             }
         }
 
         private static void AddValidation<TEntity>(string property, Attribute attribute)
         {
+            AddValidation(property, attribute, typeof(TEntity));
+        }
+
+        private static void AddValidation(string property, Attribute attribute, Type entityType)
+        {
             if (attribute is StringLengthAttribute)
             {
                 var validationAttribute = (StringLengthAttribute)attribute;
                 if (string.IsNullOrEmpty(validationAttribute.ErrorMessage))
-                    AddShared<TEntity>(new LengthRule(property, validationAttribute.MaximumLength));
+                    AddShared(new LengthRule(property, validationAttribute.MaximumLength), entityType);
                 else
-                    AddShared<TEntity>(new LengthRule(property, validationAttribute.ErrorMessage,
-                                                      validationAttribute.MaximumLength));
+                    AddShared(new LengthRule(property, validationAttribute.ErrorMessage,
+                                                      validationAttribute.MaximumLength), entityType);
             }
             else if (attribute is RequiredAttribute)
             {
                 var validationAttribute = (RequiredAttribute)attribute;
                 if (string.IsNullOrEmpty(validationAttribute.ErrorMessage))
-                    AddShared<TEntity>(new RequiredRule(property));
+                    AddShared(new RequiredRule(property), entityType);
                 else
-                    AddShared<TEntity>(new RequiredRule(property, validationAttribute.ErrorMessage));
+                    AddShared(new RequiredRule(property, validationAttribute.ErrorMessage), entityType);
             }
             else if (attribute is RegularExpressionAttribute)
             {
                 var validationAttribute = (RegularExpressionAttribute)attribute;
                 if (string.IsNullOrEmpty(validationAttribute.ErrorMessage))
-                    AddShared<TEntity>(new RegexRule(property, validationAttribute.Pattern));
+                    AddShared(new RegexRule(property, validationAttribute.Pattern), entityType);
                 else
-                    AddShared<TEntity>(new RegexRule(property, validationAttribute.ErrorMessage,
-                                                     validationAttribute.Pattern));
+                    AddShared(new RegexRule(property, validationAttribute.ErrorMessage,
+                                                     validationAttribute.Pattern), entityType);
             }
             else if (attribute is RangeAttribute)
             {
@@ -126,14 +163,14 @@ namespace CodeSmith.Data.Rules
                 {
                     var rangeRule = Activator.CreateInstance(typeof(RangeRule<>).MakeGenericType(validationAttribute.OperandType),
                                                  property, validationAttribute.Minimum, validationAttribute.Maximum) as PropertyRuleBase;
-                    AddShared<TEntity>(rangeRule);
+                    AddShared(rangeRule, entityType);
                 }
 
                 else
                 {
                     var rangeRule = Activator.CreateInstance(typeof(RangeRule<>).MakeGenericType(validationAttribute.OperandType),
                                                  property, validationAttribute.ErrorMessage, validationAttribute.Minimum, validationAttribute.Maximum) as PropertyRuleBase;
-                    AddShared<TEntity>(rangeRule);
+                    AddShared(rangeRule, entityType);
                 }
             }
         }
@@ -181,7 +218,10 @@ namespace CodeSmith.Data.Rules
         {
             var rules = new List<IRule>();
 
-            if (_sharedBusinessRules != null && _sharedBusinessRules.ContainsKey(type))
+            //ensure the properties were processed.
+            AddShared(type);
+
+            if (_sharedBusinessRules.ContainsKey(type))
                 rules.AddRange(_sharedBusinessRules[type]);
             if (_businessRules != null && _businessRules.ContainsKey(type))
                 rules.AddRange(_businessRules[type]);
@@ -244,6 +284,36 @@ namespace CodeSmith.Data.Rules
         }
 
         /// <summary>
+        /// Run the rules for the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity to run validation for.</param>
+        /// <returns><c>true</c> if rules ran successfully; otherwise, <c>false</c>.</returns>
+        public bool Run(object entity)
+        {
+            return Run(entity, true);
+        }
+
+        /// <summary>
+        /// Run the rules for the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity to run validation for.</param>
+        /// <param name="modified">if set to <c>true</c> [modified].</param>
+        /// <returns>
+        /// 	<c>true</c> if rules ran successfully; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Run(object entity, bool modified)
+        {
+            TrackedObject trackedObject = new TrackedObject();
+
+            trackedObject.Current = entity;
+            trackedObject.IsNew = !modified;
+            trackedObject.IsDeleted = false;
+            trackedObject.IsChanged = modified;
+
+            return Run(trackedObject);
+        }
+
+        /// <summary>
         /// Run the rules for the the changed objects in the <see cref="DataContext"/>.
         /// </summary>
         /// <param name="dataContext">The <see cref="DataContext"/> to get the <see cref="ChangeSet"/> from and run rules against.</param>
@@ -267,8 +337,8 @@ namespace CodeSmith.Data.Rules
                 if (o != null)
                 {
                     var metaType = dataContext.Mapping.GetMetaType(o.GetType());
-                    var type = metaType.InheritanceRoot == null 
-                        ? metaType.Type 
+                    var type = metaType.InheritanceRoot == null
+                        ? metaType.Type
                         : metaType.InheritanceRoot.Type;
 
                     ITable table = dataContext.GetTable(type);
