@@ -32,16 +32,26 @@ namespace LinqToSqlShared.Generator
         private static readonly Regex CleanNumberPrefix = new Regex(@"^\d+");
 
         // must be sorted
-        private static readonly string[] ExistingContextProperties = new[] {
-        "ChangeConflicts", "CommandTimeout", "Connection", 
-        "DeferredLoadingEnabled", 
-        "LoadOptions", "Log", 
-        "Manager", "Mapping", 
-        "ObjectTrackingEnabled", 
-        "Provider", 
-        "RuleManager",
-        "Services", 
-        "Transaction"};
+        private static readonly string[] ExistingContextProperties = new[] 
+        {
+            "ChangeConflicts", "CommandTimeout", "Connection", 
+            "DeferredLoadingEnabled", 
+            "LoadOptions", "Log", 
+            "Manager", "Mapping", 
+            "ObjectTrackingEnabled", 
+            "Provider", 
+            "RuleManager",
+            "Services", 
+            "Transaction"
+        };
+
+        private static readonly string[] FunctionProperties = new[]
+        {
+            "CS_IsScalarFunction", 
+            "CS_IsTableValuedFunction", 
+            "CS_IsInlineTableValuedFunction", 
+            "CS_IsMultiStatementTableValuedFunction"
+        };
 
         #region Properties
 
@@ -605,6 +615,8 @@ namespace LinqToSqlShared.Generator
                 function.Method = MakeUnique(FunctionNames, methodName);
             }
 
+            function.IsComposable = IsFunction(commandSchema);
+
             ParameterSchema returnParameter = null;
 
             function.Parameters.Clear();
@@ -1040,6 +1052,26 @@ namespace LinqToSqlShared.Generator
         }
 
         #region Column Flag Helpers
+
+        private static bool IsFunction(SchemaObjectBase command)
+        {
+            bool isFunction;
+            string temp;
+
+            foreach (var name in FunctionProperties)
+            {
+                if (!command.ExtendedProperties.Contains(name))
+                    continue;
+
+                temp = command.ExtendedProperties[name].Value.ToString();
+                bool.TryParse(temp, out isFunction);
+
+                if (isFunction)
+                    return true;
+            }
+
+            return false;
+        }
 
         private static bool IsRowVersion(DataObjectBase column)
         {

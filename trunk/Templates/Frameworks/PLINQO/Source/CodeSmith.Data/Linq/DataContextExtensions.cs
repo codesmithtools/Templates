@@ -116,7 +116,7 @@ namespace CodeSmith.Data.Linq
                 {
                     DbParameter param = paramList[currentParam];
                     DbParameter newParam = CloneParameter(param);
-                    string newParamName = param.ParameterName.Replace("@", string.Format("@q{0}_", commandCount));
+                    string newParamName = param.ParameterName.Replace("@", string.Format("@q{0}", commandCount));
                     commandText = commandText.Replace(param.ParameterName, newParamName);
                     newParam.ParameterName = newParamName;
                     newParamList.Add(newParam);

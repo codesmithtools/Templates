@@ -8,8 +8,8 @@
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
 
-<%@ Property Category="1.Mapping" Name="Database" 
-    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False" 
+<%@ Property Category="1.Mapping" Name="Database"
+    Type="LinqToSqlShared.DbmlObjectModel.Database" Optional="False"
     Description="Database schema instance. Must be set by parent template" %>
 
 <%@ Property Category="2.Class" Name="Framework"
@@ -23,7 +23,7 @@
 <%@ Property Category="2.Class" Name="IncludeDataRules"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Include CodeSmith.Data rules." %>
-    
+
 <%@ Property Category="2.Class" Name="DefaultConnectionString"
     Type="System.String" Optional="True"
     Description="Default Connection String Name for DatabaseContext." %>
@@ -32,12 +32,12 @@
     Type="System.Boolean" Default="False" Optional="True"
     Description="Flag indicating if the default state of the AuditingEnabled property." %>
 
-<%@ Map Name="CSharpKeyWordEscape" 
-    Src="CSharpKeyWordEscape.csmap" Reverse="False" 
+<%@ Map Name="CSharpKeyWordEscape"
+    Src="CSharpKeyWordEscape.csmap" Reverse="False"
     Description="Mapping to escape c# keywords" %>
 
-<%@ Map Name="CSharpAlias" 
-    Src="System-CSharpAlias.csmap" Reverse="False" 
+<%@ Map Name="CSharpAlias"
+    Src="System-CSharpAlias.csmap" Reverse="False"
     Description="Convert system data types to c# alias" %>
 
 //------------------------------------------------------------------------------
@@ -56,11 +56,11 @@ namespace <%= Database.ContextNamespace %>
     /// <summary>
     /// The <see cref="System.Data.Linq.DataContext"/> class for the <%= Database.Name %> database.
     /// </summary>
-    <%= Naming.GetModifier(Database.AccessModifier) %> partial class <%= Database.Class %> 
+    <%= Naming.GetModifier(Database.AccessModifier) %> partial class <%= Database.Class %>
         : CodeSmith.Data.Linq.DataContextBase<% if (IncludeIUpdatable) { %>, System.Data.Services.IUpdatable<% } %>
     {
         public static readonly System.Data.Linq.Mapping.MappingSource MappingCache = new System.Data.Linq.Mapping.AttributeMappingSource();
-        
+
         #region ConnectionString
         private const string CONNECTION_NAME = "<%= DefaultConnectionString == null ? Database.Connection.SettingsPropertyName : DefaultConnectionString%>";
         private static volatile string _connectionString;
@@ -72,7 +72,7 @@ namespace <%= Database.ContextNamespace %>
         /// <code><![CDATA[
         /// <configuration>
         ///     <connectionStrings>
-        ///         <add name="<%= Database.Connection.SettingsPropertyName %>" 
+        ///         <add name="<%= Database.Connection.SettingsPropertyName %>"
         ///             connectionString="Data Source=(local);Initial Catalog=DATABASE;Integrated Security=True"
         ///             providerName="System.Data.SqlClient" />
         ///     </connectionStrings>
@@ -105,9 +105,9 @@ namespace <%= Database.ContextNamespace %>
                 throw new System.Configuration.ConfigurationErrorsException(message);
             }
             return settings.ConnectionString;
-        } 
+        }
         #endregion
-        
+
         #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
@@ -118,7 +118,7 @@ namespace <%= Database.ContextNamespace %>
         {
             OnCreated();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         /// </summary>
@@ -129,7 +129,7 @@ namespace <%= Database.ContextNamespace %>
         {
             OnCreated();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         /// </summary>
@@ -140,7 +140,7 @@ namespace <%= Database.ContextNamespace %>
         {
             OnCreated();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         /// </summary>
@@ -152,7 +152,7 @@ namespace <%= Database.ContextNamespace %>
         {
             OnCreated();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         /// </summary>
@@ -165,7 +165,7 @@ namespace <%= Database.ContextNamespace %>
             OnCreated();
         }
         #endregion
-        
+
         #region Tables
 <% foreach (Table table in Database.Tables) { %>
         /// <summary>Represents the <%= table.Name %> table in the underlying database.</summary>
@@ -173,7 +173,7 @@ namespace <%= Database.ContextNamespace %>
         {
             get { return GetTable<<%= Database.EntityNamespace %>.<%= table.Type.Name %>>(); }
         }
-        
+
 <% } %>
         #endregion
 
@@ -185,21 +185,29 @@ namespace <%= Database.ContextNamespace %>
         <%= Naming.GetModifier(function.AccessModifier, function.Modifier) %> <%= GetReturnType(function) %> <%= function.Method %>(<%= GetArguments(function) %>)
         {
             var methodInfo = (System.Reflection.MethodInfo)System.Reflection.MethodInfo.GetCurrentMethod();
+<% if (IsTableFunction(function)) { %>
+            var result = this.CreateMethodCallQuery<<%= GetResultName(function) %>>(this, methodInfo<%= GetArgumentNames(function) %>);
+<% } else { %>
             var result = this.ExecuteMethodCall(this, methodInfo<%= GetArgumentNames(function) %>);
-<% 
+<% } %>
+<%
 for(int x = 0; x < function.Parameters.Count; x++) {
     Parameter p = function.Parameters[x];
 
     if (p.Direction == LinqToSqlShared.DbmlObjectModel.ParameterDirection.In)
         continue;
-    
+
     //set out params
     Response.WriteLine("            {0} = (({1})(result.GetParameterValue({2})));",
         p.ParameterName, GetParameterType(p), x);
 }
 %>
-            
+
+<% if (IsTableFunction(function)) { %>
+            return result;
+<% } else { %>
             return ((<%= GetReturnType(function) %>)(result.ReturnValue));
+<% } %>
         }
 
 <% } %>
@@ -221,7 +229,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
 <% } %>
         #endregion
         <% if (IncludeIUpdatable) { %>
-        
+
         #region IUpdatable Members
         /// <summary>
         /// Adds the specified value to the collection.
@@ -247,8 +255,8 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         void System.Data.Services.IUpdatable.ClearChanges()
         {
             var mi = GetType().GetMethod("ClearCache",
-                System.Reflection.BindingFlags.Instance | 
-                System.Reflection.BindingFlags.NonPublic | 
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.NonPublic |
                 System.Reflection.BindingFlags.InvokeMethod);
 
             if (mi != null)
@@ -484,7 +492,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         public CodeSmith.Data.Rules.RuleManager RuleManager
         {
             get { return _ruleManager; }
-        } 
+        }
 
         /// <summary>
         /// Sends changes made to retrieved objects to the underlying database.
@@ -496,7 +504,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
 
             if (!isValid)
                 throw new CodeSmith.Data.Rules.BrokenRuleException(RuleManager.BrokenRules);
-            
+
             PopulateLastAudit();
             BeforeSubmitChanges();
             base.SubmitChanges(failureMode);
@@ -549,7 +557,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         }
         #endregion
         <% } %>
-        
+
         /// <summary>
         /// Sends changes made to retrieved objects to the underlying database.
         /// </summary>
@@ -577,6 +585,11 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         get { return (this.Framework == FrameworkEnum.v35_SP1 && this.IncludeDataServices); }
     }
 
+    public bool IsTableFunction(Function f)
+    {
+        return f.IsComposable == true && f.Types.Count > 0;
+    }
+
     public string CreateAttribute(Function f)
     {
         StringBuilder s = new StringBuilder();
@@ -585,48 +598,51 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         if (f.IsComposable == true)
             s.Append(", IsComposable=true");
         s.Append(")]");
-        
+
         if (f.Types.Count == 0 && f.Return != null)
             s.AppendFormat("\r\n        [return: System.Data.Linq.Mapping.Parameter(DbType=\"{0}\")]", f.Return.DbType);
         else if (f.HasMultipleResults == true)
-            foreach(var t in f.Types)
+            foreach(LinqToSqlShared.DbmlObjectModel.Type t in f.Types)
                 s.AppendFormat("\r\n        [System.Data.Linq.Mapping.ResultType(typeof({0}.{1}))]", Database.EntityNamespace, t.Name);
-            
+
         return s.ToString();
     }
+
     public string GetName(Table table)
     {
         string name = string.IsNullOrEmpty(table.Member) ? table.Type.Name : table.Member;
         return name;
     }
-    
+
     public string GetReturnType(Function function)
     {
         StringBuilder s = new StringBuilder();
-        
-        if (function.Types.Count == 0)
+
+        if (IsTableFunction(function))
+            s.AppendFormat("System.Linq.IQueryable<{0}>", GetResultName(function));
+        else if (function.Types.Count == 0)
             s.Append(CSharpAlias[function.Return.Type]);
         else if (function.HasMultipleResults == true)
             s.Append("System.Data.Linq.IMultipleResults");
         else
             s.AppendFormat("System.Data.Linq.ISingleResult<{0}>", GetResultName(function));
-        
+
         return s.ToString();
     }
-    
+
     public string GetResultName(Function function)
     {
         if (function.Types.Count == 0)
             return string.Empty;
-        
+
         LinqToSqlShared.DbmlObjectModel.Type resultType = function.Types[0];
         return Database.EntityNamespace + "." + function.Types[0].Name;
     }
-    
+
     public string GetArguments(Function function)
     {
         StringBuilder s = new StringBuilder();
-        
+
         for(int x = 0; x < function.Parameters.Count; x++)
         {
             Parameter p = function.Parameters[x];
@@ -635,16 +651,16 @@ for(int x = 0; x < function.Parameters.Count; x++) {
 
             if (p.Direction != LinqToSqlShared.DbmlObjectModel.ParameterDirection.In)
                 s.Append("ref ");
-            
+
             s.AppendFormat("{0} {1}",GetParameterType(p), CSharpKeyWordEscape[p.ParameterName]);
-                
+
             if (x < function.Parameters.Count - 1)
                 s.Append(", ");
         }
-        
+
         return s.ToString();
     }
-    
+
     public string GetParameterType(Parameter p)
     {
         if (CommonUtility.IsNullableType(p.Type))
@@ -652,11 +668,11 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         else
             return CSharpAlias[p.Type];
     }
-    
+
     public string GetArgumentNames(Function function)
     {
         StringBuilder s = new StringBuilder();
-        
+
         for(int x = 0; x < function.Parameters.Count; x++)
         {
             if (x < function.Parameters.Count)
@@ -665,7 +681,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             Parameter p = function.Parameters[x];
             s.Append(CSharpKeyWordEscape[p.ParameterName]);
         }
-        
+
         return s.ToString();
     }
 </script>
