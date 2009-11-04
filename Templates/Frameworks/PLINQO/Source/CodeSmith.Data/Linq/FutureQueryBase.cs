@@ -7,6 +7,10 @@ using System.Linq;
 
 namespace CodeSmith.Data.Linq
 {
+    /// <summary>
+    /// Base class for future quries.
+    /// </summary>
+    /// <typeparam name="T">The type for the future query.</typeparam>
     public class FutureQueryBase<T> : IFutureQuery
     {
         private readonly Action _loadAction;
