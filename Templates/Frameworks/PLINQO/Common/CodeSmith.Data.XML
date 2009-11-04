@@ -967,6 +967,12 @@
             Provides for defering the execution of a count query to a batch of queries.
             </summary>
         </member>
+        <member name="T:CodeSmith.Data.Linq.FutureQueryBase`1">
+            <summary>
+            Base class for future quries.
+            </summary>
+            <typeparam name="T">The type for the future query.</typeparam>
+        </member>
         <member name="T:CodeSmith.Data.Linq.IFutureQuery">
             <summary>
             Interface for defering the future execution of a batch of queries.
@@ -1254,6 +1260,25 @@
             <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
             <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
             <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.</returns>
+        </member>
+        <member name="T:CodeSmith.Data.Linq.FutureValue`1">
+            <summary>
+            Provides for defering the execution of a query to a batch of queries.
+            </summary>
+            <typeparam name="T">The type for the future query.</typeparam>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(System.Linq.IQueryable,System.Action)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> class.
+            </summary>
+            <param name="query">The query source to use when materializing.</param>
+            <param name="loadAction">The action to execute when the query is accessed.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> class.
+            </summary>
+            <param name="underlyingValue">The underlying value.</param>
         </member>
         <member name="P:CodeSmith.Data.Linq.FutureValue`1.Value">
             <summary>
