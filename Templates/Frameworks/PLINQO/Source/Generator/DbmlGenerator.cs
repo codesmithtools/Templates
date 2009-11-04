@@ -852,7 +852,7 @@ namespace LinqToSqlShared.Generator
                     break;
 
                 // find column in pktable, if that is fkey too, check that parent.
-                if (primaryColumn.IsForeignKeyMember)
+                if (primaryColumn.IsForeignKeyMember && primaryColumn != dataObject)
                     return IsOrWasEnumAssociation(primaryColumn, out isEnum, out wasEnum);
             }
 
