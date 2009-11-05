@@ -1,5 +1,6 @@
 ﻿using System;
 using CodeSmith.Data.Properties;
+using System.Data.SqlTypes;
 
 namespace CodeSmith.Data.Rules.Validation
 {
@@ -71,6 +72,10 @@ namespace CodeSmith.Data.Rules.Validation
             else if (value is Guid)
             {
                 context.Success = (Guid)value != Guid.Empty;
+            }
+            else if (value is DateTime)
+            {
+                context.Success = (DateTime)value > (DateTime)SqlDateTime.MinValue;
             }
             else
             {
