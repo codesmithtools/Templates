@@ -65,7 +65,7 @@ namespace CodeSmith.Data.Linq
         {
             using (SqlCommand batchCommand = CombineCommands(commands))
             {
-                LogCommand(context.Log, batchCommand);
+                LogCommand(context, batchCommand);
 
                 batchCommand.Connection = context.Connection as SqlConnection;
 
@@ -166,36 +166,17 @@ namespace CodeSmith.Data.Linq
             return destination;
         }
 
-        private static void LogCommand(TextWriter writer, DbCommand cmd)
+        private static void LogCommand(DataContext context, DbCommand cmd)
         {
-            if (writer == null)
+            if (context.Log == null)
                 return;
 
-            writer.WriteLine(cmd.CommandText);
-            foreach (DbParameter parameter in cmd.Parameters)
-            {
-                int precision = 0;
-                int scale = 0;
-
-                PropertyInfo precisionProperty = parameter.GetType().GetProperty("Precision");
-                if (precisionProperty != null)
-                    precision = (int)Convert.ChangeType(precisionProperty.GetValue(parameter, null), typeof(int), CultureInfo.InvariantCulture);
-
-                PropertyInfo scaleProperty = parameter.GetType().GetProperty("Scale");
-                if (scaleProperty != null)
-                    scale = (int)Convert.ChangeType(scaleProperty.GetValue(parameter, null), typeof(int), CultureInfo.InvariantCulture);
-
-                SqlParameter sqlParameter = parameter as SqlParameter;
-
-                writer.WriteLine("-- {0}: {1} {2} (Size = {3}; Prec = {4}; Scale = {5}) [{6}]",
-                    parameter.ParameterName,
-                    parameter.Direction,
-                    (sqlParameter == null) ? parameter.DbType.ToString() : sqlParameter.SqlDbType.ToString(),
-                    parameter.Size.ToString(CultureInfo.CurrentCulture),
-                    precision, scale,
-                    (sqlParameter == null) ? parameter.Value : sqlParameter.SqlValue);
-            }
-            writer.WriteLine();
+            PropertyInfo providerProperty = context.GetType().GetProperty("Provider", BindingFlags.Instance | BindingFlags.NonPublic);
+            object provider = providerProperty.GetValue(context, null);
+            
+            MethodInfo logCommandMethod = provider.GetType().GetMethod("LogCommand", BindingFlags.Instance | BindingFlags.NonPublic);
+            
+            logCommandMethod.Invoke(provider, new object[] { context.Log, cmd });
         }
     }
 }
