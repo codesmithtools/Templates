@@ -174,7 +174,7 @@ namespace CodeSmith.Data.Linq
             PropertyInfo providerProperty = context.GetType().GetProperty("Provider", BindingFlags.Instance | BindingFlags.NonPublic);
             object provider = providerProperty.GetValue(context, null);
             
-            MethodInfo logCommandMethod = provider.GetType().GetMethod("LogCommand", BindingFlags.Instance | BindingFlags.NonPublic);
+            MethodInfo logCommandMethod = provider.GetType().BaseType.GetMethod("LogCommand", BindingFlags.Instance | BindingFlags.NonPublic);
             
             logCommandMethod.Invoke(provider, new object[] { context.Log, cmd });
         }
