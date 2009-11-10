@@ -94,7 +94,7 @@ namespace CodeSmith.Data.Linq
         }
 
         /// <summary>
-        /// Combines multiple SELECT commands into a single <see cref="SqlCommand"/> so that all statements can be executed in a 
+        /// Combines multiple SELECT commands into a single <see cref="SqlCommand"/> so that all statements can be executed in a
         /// single round trip to the database and return multiple result sets.
         /// </summary>
         /// <param name="selectCommands">Represents a collection of commands to be batched together.</param>
@@ -168,14 +168,24 @@ namespace CodeSmith.Data.Linq
 
         private static void LogCommand(DataContext context, DbCommand cmd)
         {
-            if (context.Log == null)
+            if (context.Log == null || cmd == null)
                 return;
 
             PropertyInfo providerProperty = context.GetType().GetProperty("Provider", BindingFlags.Instance | BindingFlags.NonPublic);
             object provider = providerProperty.GetValue(context, null);
-            
-            MethodInfo logCommandMethod = provider.GetType().BaseType.GetMethod("LogCommand", BindingFlags.Instance | BindingFlags.NonPublic);
-            
+
+            if (provider == null)
+                throw new ArgumentException("Unable to get Provider property from context.", "context");
+            Type providerType = provider.GetType();
+            MethodInfo logCommandMethod = providerType.GetMethod("LogCommand", BindingFlags.Instance | BindingFlags.NonPublic);
+            while (logCommandMethod == null && providerType.BaseType != null)
+            {
+                providerType = providerType.BaseType;
+                logCommandMethod = providerType.GetMethod("LogCommand", BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+            if (logCommandMethod == null)
+                throw new InvalidOperationException("Unable to get LogCommand method from the provider.");
+
             logCommandMethod.Invoke(provider, new object[] { context.Log, cmd });
         }
     }
