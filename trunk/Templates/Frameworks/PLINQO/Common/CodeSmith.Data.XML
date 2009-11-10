@@ -936,7 +936,7 @@
         </member>
         <member name="M:CodeSmith.Data.Linq.DataContextExtensions.CombineCommands(System.Collections.Generic.IEnumerable{System.Data.Common.DbCommand})">
             <summary>
-            Combines multiple SELECT commands into a single <see cref="T:System.Data.SqlClient.SqlCommand"/> so that all statements can be executed in a 
+            Combines multiple SELECT commands into a single <see cref="T:System.Data.SqlClient.SqlCommand"/> so that all statements can be executed in a
             single round trip to the database and return multiple result sets.
             </summary>
             <param name="selectCommands">Represents a collection of commands to be batched together.</param>
