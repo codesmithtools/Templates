@@ -63,18 +63,18 @@ namespace CodeSmith.Data.Linq
         /// <exception cref="InvalidOperationException">Thrown when context.Connection is invalid.</exception>
         public static IMultipleResults ExecuteQuery(this DataContext context, IEnumerable<DbCommand> commands)
         {
-            using (SqlCommand batchCommand = CombineCommands(commands))
+            using (DbCommand batchCommand = CombineCommands(context, commands))
             {
                 LogCommand(context, batchCommand);
 
-                batchCommand.Connection = context.Connection as SqlConnection;
+                batchCommand.Connection = context.Connection;
 
 
                 if (batchCommand.Connection == null)
                     throw new InvalidOperationException("The DataContext must contain a valid SqlConnection.");
 
                 if (context.Transaction != null)
-                    batchCommand.Transaction = context.Transaction as SqlTransaction;
+                    batchCommand.Transaction = context.Transaction;
 
                 DbDataReader dr;
 
@@ -99,10 +99,10 @@ namespace CodeSmith.Data.Linq
         /// </summary>
         /// <param name="selectCommands">Represents a collection of commands to be batched together.</param>
         /// <returns>Returns a single <see cref="SqlCommand"/> that executes all SELECT statements at once.</returns>
-        private static SqlCommand CombineCommands(IEnumerable<DbCommand> selectCommands)
+        private static DbCommand CombineCommands(DataContext context, IEnumerable<DbCommand> selectCommands)
         {
-            var batchCommand = new SqlCommand();
-            SqlParameterCollection newParamList = batchCommand.Parameters;
+            var batchCommand = context.Connection.CreateCommand();
+            DbParameterCollection newParamList = batchCommand.Parameters;
 
             int commandCount = 0;
 
