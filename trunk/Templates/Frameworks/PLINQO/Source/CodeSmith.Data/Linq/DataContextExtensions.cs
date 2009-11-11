@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace CodeSmith.Data.Linq
 {
@@ -103,12 +104,19 @@ namespace CodeSmith.Data.Linq
         {
             var batchCommand = context.Connection.CreateCommand();
             DbParameterCollection newParamList = batchCommand.Parameters;
+            var sql = new StringBuilder();
 
             int commandCount = 0;
 
             foreach (DbCommand cmd in selectCommands)
             {
-                string commandText = cmd.CommandText;
+                if (commandCount > 0)
+                    sql.AppendLine();
+
+                sql.AppendFormat("-- Query #{0}", commandCount + 1);
+                sql.AppendLine();
+                sql.AppendLine();
+
                 DbParameterCollection paramList = cmd.Parameters;
                 int paramCount = paramList.Count;
 
@@ -117,16 +125,17 @@ namespace CodeSmith.Data.Linq
                     DbParameter param = paramList[currentParam];
                     DbParameter newParam = CloneParameter(param);
                     string newParamName = param.ParameterName.Replace("@", string.Format("@q{0}", commandCount));
-                    commandText = commandText.Replace(param.ParameterName, newParamName);
+                    cmd.CommandText = cmd.CommandText.Replace(param.ParameterName, newParamName);
                     newParam.ParameterName = newParamName;
                     newParamList.Add(newParam);
                 }
-                if (batchCommand.CommandText.Length > 0)
-                    batchCommand.CommandText += ";" + Environment.NewLine;
 
-                batchCommand.CommandText += commandText;
+                sql.Append(cmd.CommandText.Trim());
+                sql.AppendLine(";");
                 commandCount++;
             }
+
+            batchCommand.CommandText = sql.ToString();
 
             return batchCommand;
         }
