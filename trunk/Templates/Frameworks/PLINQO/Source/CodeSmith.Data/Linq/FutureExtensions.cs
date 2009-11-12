@@ -18,7 +18,7 @@ namespace CodeSmith.Data.Linq
         /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
         /// <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
         /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains elements from the input sequence.</returns>
-        public static IEnumerable<T> Future<T>(this IQueryable<T> source) where T : class
+        public static IEnumerable<T> Future<T>(this IQueryable<T> source)
         {
             if (source == null)
                 return source;
@@ -37,7 +37,7 @@ namespace CodeSmith.Data.Linq
         /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
         /// <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
         /// <returns>An instance of FutureCount that contains the result of the query.</returns>
-        public static FutureCount FutureCount<T>(this IQueryable<T> source) where T : class
+        public static FutureCount FutureCount<T>(this IQueryable<T> source)
         {
             if (source == null)
                 return new FutureCount(0);
@@ -56,7 +56,7 @@ namespace CodeSmith.Data.Linq
         /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
         /// <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
         /// <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.</returns>
-        public static FutureValue<T> FutureFirstOrDefault<T>(this IQueryable<T> source) where T : class
+        public static FutureValue<T> FutureFirstOrDefault<T>(this IQueryable<T> source)
         {
             if (source == null)
                 return new FutureValue<T>(default(T));

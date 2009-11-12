@@ -177,23 +177,31 @@ namespace CodeSmith.Data.Linq
 
         private static void LogCommand(DataContext context, DbCommand cmd)
         {
-            if (context.Log == null || cmd == null)
+            if (context == null || context.Log == null || cmd == null)
                 return;
 
-            PropertyInfo providerProperty = context.GetType().GetProperty("Provider", BindingFlags.Instance | BindingFlags.NonPublic);
+            var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+
+            PropertyInfo providerProperty = context.GetType().GetProperty("Provider", flags);
+            if (providerProperty == null)
+                return;
+
             object provider = providerProperty.GetValue(context, null);
 
             if (provider == null)
-                throw new ArgumentException("Unable to get Provider property from context.", "context");
+                return;
+
             Type providerType = provider.GetType();
-            MethodInfo logCommandMethod = providerType.GetMethod("LogCommand", BindingFlags.Instance | BindingFlags.NonPublic);
+            MethodInfo logCommandMethod = providerType.GetMethod("LogCommand", flags);
+
             while (logCommandMethod == null && providerType.BaseType != null)
             {
                 providerType = providerType.BaseType;
-                logCommandMethod = providerType.GetMethod("LogCommand", BindingFlags.Instance | BindingFlags.NonPublic);
+                logCommandMethod = providerType.GetMethod("LogCommand", flags);
             }
+
             if (logCommandMethod == null)
-                throw new InvalidOperationException("Unable to get LogCommand method from the provider.");
+                return;
 
             logCommandMethod.Invoke(provider, new object[] { context.Log, cmd });
         }
