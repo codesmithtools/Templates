@@ -171,7 +171,7 @@ namespace CodeSmith.Data.Audit
         {
             var modifiedMembers = table.GetModifiedMembers(entity);
 
-            foreach (var dataMember in metaType.DataMembers)
+            foreach (var dataMember in metaType.PersistentDataMembers)
             {
                 if (dataMember.IsVersion || dataMember.IsAssociation || HasNotAuditedAttribute(dataMember.Member))
                     continue;
