@@ -199,14 +199,11 @@ namespace CodeSmith.Data.Linq.Dynamic
             return ClassFactory.Instance.GetDynamicClass(properties);
         }
 
-        public static Expression<Func<T, S>> BuildExpression<T, S>(string identifier, IList values)
+        public static Expression<Func<T, S>> BuildExpression<T, S>(string identifier, IEnumerable values)
         {
             var expression = BuildExpressionString<T>(identifier, values);
-
-            var array = new object[values.Count];
-            for (var i = 0; i < values.Count; i++)
-                array[i] = values[i];
-
+            var array = values.Cast<object>().ToArray();
+            
             return ParseLambda<T, S>(expression, array);
         }
 
