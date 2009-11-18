@@ -582,7 +582,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
 <script runat="template">
     public bool IncludeIUpdatable
     {
-        get { return (this.Framework == FrameworkEnum.v35_SP1 && this.IncludeDataServices); }
+        get { return this.IncludeDataServices; }
     }
 
     public bool IsTableFunction(Function f)

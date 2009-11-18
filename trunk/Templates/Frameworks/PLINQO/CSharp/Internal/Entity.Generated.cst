@@ -83,9 +83,8 @@ namespace <%= Database.EntityNamespace %>
     /// </summary>
     <%= GetClassAttributes() %>
 <% if (IncludeDataContract) { %>
-    [System.Runtime.Serialization.DataContract(<% if (Framework == FrameworkEnum.v35_SP1) { %>IsReference = true<% } %>)]
+    [System.Runtime.Serialization.DataContract(IsReference = true)]
 <% } %>
-<% if (this.Framework == FrameworkEnum.v35_SP1) { %>
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
     [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
     <% if(IncludeDataServices) { %>
@@ -102,7 +101,6 @@ namespace <%= Database.EntityNamespace %>
     [System.Data.Services.Common.DataServiceKey(<%= dataServiceKey.ToString() %>)]
 <% } %>
     <% } %>
-<%}%>
 <%
     StringBuilder sb = new StringBuilder();
     foreach(Column column in Type.PrimaryKeyColumns)
@@ -131,43 +129,6 @@ namespace <%= Database.EntityNamespace %>
         /// </summary>
         static <%= Type.Name %>()
         {
-            <%if(Framework != FrameworkEnum.v35_SP1) { 
-                const string lengthFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Validation.LengthRule(\"{1}\", {2}));";
-                const string requiredFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Validation.RequiredRule(\"{1}\"));";
-                const string sqlDateFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Validation.RangeRule<DateTime>(\"{1}\", System.Data.SqlTypes.SqlDateTime.MinValue.Value, System.Data.SqlTypes.SqlDateTime.MaxValue.Value));";
-                const string createDateFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Assign.NowRule(\"{1}\", CodeSmith.Data.Rules.EntityState.New));";
-                const string modifyDateFormat = "CodeSmith.Data.Rules.RuleManager.AddShared<{0}>(new CodeSmith.Data.Rules.Assign.NowRule(\"{1}\", CodeSmith.Data.Rules.EntityState.Dirty));";
-
-                int indent = Response.IndentLevel;
-                Response.IndentLevel = 3;
-                foreach(Column c in Type.Columns) {
-
-                    if (!c.CanBeNull == true && c.IsDbGenerated == false)
-                    {
-                        if (c.Type.Contains("String"))
-                        {
-                            Response.WriteLine(string.Format(requiredFormat, Type.Name, c.Member));
-                        }
-                        else if (c.Type.Contains("DateTime"))
-                        {
-                            if (c.Member.Contains("Create"))
-                                Response.WriteLine(string.Format(createDateFormat, Type.Name, c.Member));
-                            else if (c.Member.Contains("Modify") || c.Member.Contains("Modified"))
-                                Response.WriteLine(string.Format(modifyDateFormat, Type.Name, c.Member));
-                            else
-                                Response.WriteLine(string.Format(sqlDateFormat, Type.Name, c.Member));
-                        }
-                    }
-
-                    if (c.Type.Contains("String"))
-                    {
-                        int size = GetSize(c.DbType);
-                        if (0 < size && size < 8000)
-                            Response.WriteLine(string.Format(lengthFormat, Type.Name, c.Member, size));
-                    }
-                }
-                Response.IndentLevel = indent;
-            }%>
             AddSharedRules();
         }
         #endregion
@@ -178,7 +139,7 @@ namespace <%= Database.EntityNamespace %>
         /// Initializes a new instance of the <see cref="<%= Type.Name %>"/> class.
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
-        <%= Naming.GetModifier(Type.AccessModifier) %> <%= Type.Name %>()
+        public <%= Type.Name %>()
         {
 <% if (IncludeDataContract) { %>
             Initialize();
@@ -263,7 +224,7 @@ foreach(Column column in Type.Columns) {
 <% if (IncludeDataContract) { %>
         [System.Runtime.Serialization.DataMember(Order = <%= ++DataMemberCount %>)]
 <% } %>
-<% if( this.Framework == FrameworkEnum.v35_SP1 && enumType != null) { %>
+<% if(enumType != null) { %>
         [System.ComponentModel.DataAnnotations.UIHint("Enumeration")]
 <% } %>
         <%= Naming.GetModifier(column.AccessModifier, column.Modifier) %> <%= dataType %> <%= column.Member %>
@@ -842,7 +803,7 @@ foreach(Column column in Type.Columns) {
 
         string prefix = String.Concat(Environment.NewLine, "        ");
 
-        if (this.Framework == FrameworkEnum.v35_SP1 && c.Type.Contains("String"))
+        if (c.Type.Contains("String"))
         {
             int size = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(c.DbType);
             if (0 < size && size < 8000)
