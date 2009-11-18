@@ -37,7 +37,7 @@ namespace <%= ClassNamespace %>
     /// A base class for Linq entities that implements notification events.
     /// </summary>
     <%if (IncludeDataContract) { %>
-    [System.Runtime.Serialization.DataContract(<%if (Framework == FrameworkEnum.v35_SP1) { %> IsReference = true <%}%>)]
+    [System.Runtime.Serialization.DataContract(IsReference = true)]
     <%}%>
     public abstract partial class <%= ClassName %> :
         CodeSmith.Data.ILinqEntity,
