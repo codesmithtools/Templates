@@ -117,6 +117,8 @@
     <Compile Include="IEntityManager.cs" />
     <Compile Include="ILinqEntity.cs" />
     <Compile Include="Linq\CacheSettings.cs" />
+    <Compile Include="Linq\ComparisonOperator.cs" />
+    <Compile Include="Linq\ContainmentOperator.cs" />
     <Compile Include="Linq\DataContextExtensions.cs" />
     <Compile Include="Linq\DynamicQuery.cs" />
     <Compile Include="Linq\ExpressionVisitor.cs" />
@@ -131,6 +133,7 @@
     <Compile Include="Linq\IPagedList.cs" />
     <Compile Include="Linq\PagedList.cs" />
     <Compile Include="Linq\PagingExtensions.cs" />
+    <Compile Include="Linq\QueryExtensions.cs" />
     <Compile Include="Linq\QueryResultCache.cs" />
     <Compile Include="Linq\TableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
