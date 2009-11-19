@@ -197,6 +197,13 @@
             </summary>
             <param name="state">State of the object that can be assigned.</param>
         </member>
+        <member name="M:CodeSmith.Data.Attributes.NowAttribute.#ctor(CodeSmith.Data.Rules.EntityState,CodeSmith.Data.Rules.Assign.NowTimeZone)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Attributes.NowAttribute"/> class.
+            </summary>
+            <param name="state">State of the object that can be assigned.</param>
+            <param name="timeZone">The time zone.</param>
+        </member>
         <member name="M:CodeSmith.Data.Attributes.NowAttribute.CreateRule(System.String)">
             <summary>
             Creates the rule.
@@ -2028,6 +2035,21 @@
             </summary>
             <param name="context">The rule context.</param>
         </member>
+        <member name="T:CodeSmith.Data.Rules.Assign.NowTimeZone">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.Assign.NowTimeZone.Local">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Rules.Assign.NowTimeZone.UTC">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:CodeSmith.Data.Rules.Assign.NowRule">
             <summary>
             Assigns the current date time to the property when the entity is committed from the <see cref="T:System.Data.Linq.DataContext"/>.
@@ -2063,12 +2085,27 @@
             </summary>
             <param name="property">The property.</param>
         </member>
+        <member name="M:CodeSmith.Data.Rules.Assign.NowRule.#ctor(System.String,CodeSmith.Data.Rules.Assign.NowTimeZone)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.NowRule"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="timeZone">The time zone.</param>
+        </member>
         <member name="M:CodeSmith.Data.Rules.Assign.NowRule.#ctor(System.String,CodeSmith.Data.Rules.EntityState)">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.NowRule"/> class.
             </summary>
             <param name="property">The property.</param>
             <param name="assignState">State of the object that can be assigned.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Rules.Assign.NowRule.#ctor(System.String,CodeSmith.Data.Rules.EntityState,CodeSmith.Data.Rules.Assign.NowTimeZone)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Rules.Assign.NowRule"/> class.
+            </summary>
+            <param name="property">The property.</param>
+            <param name="assignState">State of the object that can be assigned.</param>
+            <param name="timeZone">The time zone.</param>
         </member>
         <member name="M:CodeSmith.Data.Rules.Assign.NowRule.Run(CodeSmith.Data.Rules.RuleContext)">
             <summary>
