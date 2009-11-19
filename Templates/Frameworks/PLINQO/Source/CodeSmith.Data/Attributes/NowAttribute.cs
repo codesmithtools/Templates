@@ -28,16 +28,30 @@ namespace CodeSmith.Data.Attributes
         /// Initializes a new instance of the <see cref="NowAttribute"/> class.
         /// </summary>
         public NowAttribute()
-        {}
+            : this(EntityState.Dirty, NowTimeZone.Local)
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NowAttribute"/> class.
         /// </summary>
         /// <param name="state">State of the object that can be assigned.</param>
         public NowAttribute(EntityState state)
+            : this(state, NowTimeZone.Local)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NowAttribute"/> class.
+        /// </summary>
+        /// <param name="state">State of the object that can be assigned.</param>
+        /// <param name="timeZone">The time zone.</param>
+        public NowAttribute(EntityState state, NowTimeZone timeZone)
         {
             State = state;
+            TimeZone = timeZone;
         }
+
+
+        public NowTimeZone TimeZone { get; set; }
 
         /// <summary>
         /// Creates the rule.
@@ -46,7 +60,7 @@ namespace CodeSmith.Data.Attributes
         /// <returns>A new instance of the rule.</returns>
         public override IRule CreateRule(string property)
         {
-            return new NowRule(property, State);
+            return new NowRule(property, State, TimeZone);
         }
 
         /// <summary>
