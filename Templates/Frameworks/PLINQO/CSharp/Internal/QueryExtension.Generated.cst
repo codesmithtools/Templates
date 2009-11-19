@@ -149,6 +149,91 @@ namespace <%= Database.ContextNamespace %>
             return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == <%= paramName %>);
 <% } %>
         }
+<% if (columnType == "string") { %>
+
+        /// <summary>
+        /// Gets a query for <see cref="<%= safeName %>.<%= column.Member %>"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="<%= paramName %>"><%= column.Member %> to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= columnType %> <%= paramName %>, ContainmentOperator containmentOperator)
+        {
+            if (<%= paramName %> == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+                throw new ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %>.Contains(<%= paramName %>));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %>.StartsWith(<%= paramName %>));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %>.EndsWith(<%= paramName %>));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %>.Contains(<%= paramName %>) == false);
+<% if (column.CanBeNull == true) { %>
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>) == false);
+                default:
+                    return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>));
+<% } else { %>
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != <%= paramName %>);
+                default:
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == <%= paramName %>);
+<% } %>
+            }
+        }
+<% } else { %>
+
+        /// <summary>
+        /// Gets a query for <see cref="<%= safeName %>.<%= column.Member %>"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="<%= paramName %>"><%= column.Member %> to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= columnType %> <%= paramName %>, ComparisonOperator comparisonOperator)
+        {
+<% if (column.CanBeNull == true) { %>
+            if (<%= paramName %> == null && (comparisonOperator != ComparisonOperator.Equals || comparisonOperator != ComparisonOperator.NotEquals))
+                throw new ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
+
+<% } %>
+            switch (comparisonOperator)
+            {
+<% if (columnType == "System.Guid" || columnType == "bool") { %>
+                case ComparisonOperator.GreaterThan:
+                case ComparisonOperator.GreaterThanOrEquals:
+                case ComparisonOperator.LessThan:
+                case ComparisonOperator.LessThanOrEquals:
+                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support <%= columnType %> type.", "comparisonOperator");
+<% } else { %>
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(<%= alias %> => <%= paramName %> > <%= alias %>.<%= column.Member %>);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(<%= alias %> => <%= paramName %> >= <%= alias %>.<%= column.Member %>);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(<%= alias %> => <%= paramName %> < <%= alias %>.<%= column.Member %>);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(<%= alias %> => <%= paramName %> <= <%= alias %>.<%= column.Member %>);
+<% } %>
+<% if (column.CanBeNull == true) { %>
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>) == false);
+                default:
+                    return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>));
+<% } else { %>
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != <%= paramName %>);
+                default:
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == <%= paramName %>);
+<% } %>
+            }
+        }
+<% } %>
 
         /// <summary>
         /// Gets a query for <see cref="<%= safeName %>.<%= column.Member %>"/>.
@@ -159,7 +244,7 @@ namespace <%= Database.ContextNamespace %>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= columnType %> <%= paramName %>, params <%= columnType %>[] additionalValues)
         {
-            var <%= paramName %>List = new List<<%= columnType %>> {<%= paramName %>};
+            var <%= paramName %>List = new List<<%= columnType %>> { <%= paramName %> };
 
             if (additionalValues != null)
                 <%= paramName %>List.AddRange(additionalValues);
