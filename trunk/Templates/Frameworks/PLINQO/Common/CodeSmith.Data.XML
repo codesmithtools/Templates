@@ -1017,6 +1017,25 @@
             <param name="query">The query source to use when materializing.</param>
             <param name="loadAction">The action to execute when the query is accessed.</param>
         </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Linq.CacheSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
+            </summary>
+            <param name="query">The query source to use when materializing.</param>
+            <param name="loadAction">The action to execute when the query is accessed.</param>
+            <param name="cacheSettings">The cache settings.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.CheckCache">
+            <summary>
+            Checks the cache for the results.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.GetKey">
+            <summary>
+            Gets the key used when caching the results.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.GetResult">
             <summary>
             Gets the result by invoking the <see cref="P:CodeSmith.Data.Linq.FutureQueryBase`1.LoadAction"/> if not already loaded.
@@ -1076,11 +1095,25 @@
             <param name="query">The query source to use when materializing.</param>
             <param name="loadAction">The action to execute when the query is accessed.</param>
         </member>
+        <member name="M:CodeSmith.Data.Linq.FutureCount.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Linq.CacheSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureCount"/> class.
+            </summary>
+            <param name="query">The query source to use when materializing.</param>
+            <param name="loadAction">The action to execute when the query is accessed.</param>
+            <param name="cacheSettings">The cache settings.</param>
+        </member>
         <member name="M:CodeSmith.Data.Linq.FutureCount.#ctor(System.Int32)">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureCount"/> class.
             </summary>
             <param name="underlyingValue">The underlying value.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureCount.GetKey">
+            <summary>
+            Gets the key used when caching the results.
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:CodeSmith.Data.Linq.FutureCount.GetCommand(System.Data.Linq.DataContext)">
             <summary>
@@ -1111,6 +1144,14 @@
             <param name="query">The query source to use when materializing.</param>
             <param name="loadAction">The action to execute when the query is accessed.</param>
         </member>
+        <member name="M:CodeSmith.Data.Linq.FutureQuery`1.#ctor(System.Linq.IQueryable{`0},System.Action,CodeSmith.Data.Linq.CacheSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
+            </summary>
+            <param name="query">The query source to use when materializing.</param>
+            <param name="loadAction">The action to execute when the query is accessed.</param>
+            <param name="cacheSettings">The cache settings.</param>
+        </member>
         <member name="M:CodeSmith.Data.Linq.FutureQuery`1.GetEnumerator">
             <summary>
             Returns an enumerator that iterates through the collection.
@@ -1136,30 +1177,6 @@
             <summary>
             An interface for future queries from a <see cref="T:System.Data.Linq.DataContext"/>.
             </summary>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.IFutureContext.AddFutureQuery``1(System.Linq.IQueryable{``0})">
-            <summary>
-            Adds the query to the <see cref="P:CodeSmith.Data.Linq.IFutureContext.FutureQueries"/> queue.
-            </summary>
-            <typeparam name="T">The type of the query.</typeparam>
-            <param name="query">The query as the source.</param>
-            <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> to use to access the query later.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.IFutureContext.AddFutureValueQuery``1(System.Linq.IQueryable{``0})">
-            <summary>
-            Adds the query to the <see cref="P:CodeSmith.Data.Linq.IFutureContext.FutureQueries"/> queue.
-            </summary>
-            <typeparam name="T">The type of the query.</typeparam>
-            <param name="query">The query as the source.</param>
-            <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> to use to access the query later.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.IFutureContext.AddFutureCountQuery``1(System.Linq.IQueryable{``0})">
-            <summary>
-            Adds the query to the <see cref="P:CodeSmith.Data.Linq.IFutureContext.FutureQueries"/> queue.
-            </summary>
-            <typeparam name="T">The type of the query.</typeparam>
-            <param name="query">The query as the source.</param>
-            <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureCount"/> to use to access the query later.</returns>
         </member>
         <member name="M:CodeSmith.Data.Linq.IFutureContext.ExecuteFutureQueries">
             <summary>
@@ -1198,36 +1215,6 @@
             <param name="connection">The connection.</param>
             <param name="mapping">The mapping.</param>
         </member>
-        <member name="M:CodeSmith.Data.Linq.DataContextBase.CodeSmith#Data#Linq#IFutureContext#AddFutureQuery``1(System.Linq.IQueryable{``0})">
-            <summary>
-            Adds the query to the <see cref="P:CodeSmith.Data.Linq.DataContextBase.FutureQueries"/> queue.
-            </summary>
-            <typeparam name="T">The type of the query.</typeparam>
-            <param name="query">The query as the source.</param>
-            <returns>
-            An instance of <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> to use to access the query later.
-            </returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.DataContextBase.CodeSmith#Data#Linq#IFutureContext#AddFutureValueQuery``1(System.Linq.IQueryable{``0})">
-            <summary>
-            Adds the query to the <see cref="P:CodeSmith.Data.Linq.DataContextBase.FutureQueries"/> queue.
-            </summary>
-            <typeparam name="T">The type of the query.</typeparam>
-            <param name="query">The query as the source.</param>
-            <returns>
-            An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> to use to access the query later.
-            </returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.DataContextBase.CodeSmith#Data#Linq#IFutureContext#AddFutureCountQuery``1(System.Linq.IQueryable{``0})">
-            <summary>
-            Adds the query to the <see cref="P:CodeSmith.Data.Linq.DataContextBase.FutureQueries"/> queue.
-            </summary>
-            <typeparam name="T">The type of the query.</typeparam>
-            <param name="query">The query as the source.</param>
-            <returns>
-            An instance of <see cref="T:CodeSmith.Data.Linq.FutureCount"/> to use to access the count later.
-            </returns>
-        </member>
         <member name="M:CodeSmith.Data.Linq.DataContextBase.ExecuteFutureQueries">
             <summary>
             Executes the future queries.
@@ -1252,6 +1239,17 @@
             <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
             <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains elements from the input sequence.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.Future``1(System.Linq.IQueryable{``0},CodeSmith.Data.Linq.CacheSettings)">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="cacheSettings">The cache settings.</param>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
+            </returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCount``1(System.Linq.IQueryable{``0})">
             <summary>
             Provides for defering the execution of the <paramref name="source" /> query to a batch of future queries.
@@ -1260,6 +1258,17 @@
             <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
             <returns>An instance of FutureCount that contains the result of the query.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCount``1(System.Linq.IQueryable{``0},CodeSmith.Data.Linq.CacheSettings)">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="cacheSettings">The cache settings.</param>
+            <returns>
+            An instance of FutureCount that contains the result of the query.
+            </returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureFirstOrDefault``1(System.Linq.IQueryable{``0})">
             <summary>
             Provides for defering the execution of the <paramref name="source" /> query to a batch of future queries.
@@ -1267,6 +1276,17 @@
             <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
             <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
             <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureFirstOrDefault``1(System.Linq.IQueryable{``0},CodeSmith.Data.Linq.CacheSettings)">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="cacheSettings">The cache settings.</param>
+            <returns>
+            An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
+            </returns>
         </member>
         <member name="T:CodeSmith.Data.Linq.FutureValue`1">
             <summary>
@@ -1280,6 +1300,14 @@
             </summary>
             <param name="query">The query source to use when materializing.</param>
             <param name="loadAction">The action to execute when the query is accessed.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Linq.CacheSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> class.
+            </summary>
+            <param name="query">The query source to use when materializing.</param>
+            <param name="loadAction">The action to execute when the query is accessed.</param>
+            <param name="cacheSettings">The cache settings.</param>
         </member>
         <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(`0)">
             <summary>
@@ -1652,11 +1680,10 @@
             <typeparam name="T">The type of the data in the data source.</typeparam>
             <param name="query">The query to be cleared.</param>
         </member>
-        <member name="M:CodeSmith.Data.Linq.QueryResultCache.GetHashKey``1(System.Linq.IQueryable{``0})">
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.GetHashKey(System.Linq.IQueryable)">
             <summary>
             Gets a unique Md5 key for a query.
             </summary>
-            <typeparam name="T">The type of the data in the data source.</typeparam>
             <param name="query">The query to build a key from.</param>
             <returns>A Md5 hash unique to the query.</returns>
         </member>
