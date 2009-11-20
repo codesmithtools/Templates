@@ -23,7 +23,17 @@ namespace CodeSmith.Data.Linq
         /// <param name="query">The query source to use when materializing.</param>
         /// <param name="loadAction">The action to execute when the query is accessed.</param>
         public FutureCount(IQueryable query, Action loadAction)
-            : base(query, loadAction)
+            : this(query, loadAction, null)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FutureCount"/> class.
+        /// </summary>
+        /// <param name="query">The query source to use when materializing.</param>
+        /// <param name="loadAction">The action to execute when the query is accessed.</param>
+        /// <param name="cacheSettings">The cache settings.</param>
+        public FutureCount(IQueryable query, Action loadAction, CacheSettings cacheSettings)
+            : base(query, loadAction, cacheSettings)
         { }
 
         /// <summary>
@@ -35,6 +45,16 @@ namespace CodeSmith.Data.Linq
         {
             _underlyingValue = underlyingValue;
             _hasValue = true;
+        }
+
+        /// <summary>
+        /// Gets the key used when caching the results.
+        /// </summary>
+        /// <returns></returns>
+        protected override string GetKey()
+        {
+            // override the key because the sql is changed later
+            return base.GetKey() + "-Count()";
         }
 
         /// <summary>

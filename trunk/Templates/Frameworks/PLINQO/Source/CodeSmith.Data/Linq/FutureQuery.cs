@@ -18,7 +18,17 @@ namespace CodeSmith.Data.Linq
         /// <param name="query">The query source to use when materializing.</param>
         /// <param name="loadAction">The action to execute when the query is accessed.</param>
         public FutureQuery(IQueryable<T> query, Action loadAction)
-            : base(query, loadAction)
+            : base(query, loadAction, null)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FutureQuery&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="query">The query source to use when materializing.</param>
+        /// <param name="loadAction">The action to execute when the query is accessed.</param>
+        /// <param name="cacheSettings">The cache settings.</param>
+        public FutureQuery(IQueryable<T> query, Action loadAction, CacheSettings cacheSettings)
+            : base(query, loadAction, cacheSettings)
         { }
 
         /// <summary>

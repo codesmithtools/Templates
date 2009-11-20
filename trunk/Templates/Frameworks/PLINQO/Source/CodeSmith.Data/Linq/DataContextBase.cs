@@ -23,7 +23,7 @@ namespace CodeSmith.Data.Linq
         /// <value>The future queries.</value>
         public IList<IFutureQuery> FutureQueries
         {
-            get { return _futureQueries.AsReadOnly(); }
+            get { return _futureQueries; }
         }
 
         /// <summary>
@@ -60,58 +60,6 @@ namespace CodeSmith.Data.Linq
             : base(connection, mapping)
         { }
 
-
-        /// <summary>
-        /// Adds the query to the <see cref="FutureQueries"/> queue.
-        /// </summary>
-        /// <typeparam name="T">The type of the query.</typeparam>
-        /// <param name="query">The query as the source.</param>
-        /// <returns>
-        /// An instance of <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> to use to access the query later.
-        /// </returns>
-        FutureQuery<T> IFutureContext.AddFutureQuery<T>(IQueryable<T> query)
-        {
-            var futureContext = (IFutureContext)this;
-            var future = new FutureQuery<T>(query, futureContext.ExecuteFutureQueries);
-            _futureQueries.Add(future);
-
-            return future;
-        }
-
-        /// <summary>
-        /// Adds the query to the <see cref="FutureQueries"/> queue.
-        /// </summary>
-        /// <typeparam name="T">The type of the query.</typeparam>
-        /// <param name="query">The query as the source.</param>
-        /// <returns>
-        /// An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> to use to access the query later.
-        /// </returns>
-        FutureValue<T> IFutureContext.AddFutureValueQuery<T>(IQueryable<T> query)
-        {
-            var futureContext = (IFutureContext)this;
-            var future = new FutureValue<T>(query, futureContext.ExecuteFutureQueries);
-            _futureQueries.Add(future);
-
-            return future;
-        }
-
-        /// <summary>
-        /// Adds the query to the <see cref="FutureQueries"/> queue.
-        /// </summary>
-        /// <typeparam name="T">The type of the query.</typeparam>
-        /// <param name="query">The query as the source.</param>
-        /// <returns>
-        /// An instance of <see cref="T:CodeSmith.Data.Linq.FutureCount"/> to use to access the count later.
-        /// </returns>
-        FutureCount IFutureContext.AddFutureCountQuery<T>(IQueryable<T> query)
-        {
-            var futureContext = (IFutureContext)this;
-            var future = new FutureCount(query, futureContext.ExecuteFutureQueries);
-            _futureQueries.Add(future);
-
-            return future;
-        }
-
         /// <summary>
         /// Executes the future queries.
         /// </summary>
@@ -120,12 +68,23 @@ namespace CodeSmith.Data.Linq
             if (_futureQueries.Count == 0)
                 return;
 
+            // Get all the db comands
             var queries = new List<DbCommand>();
+            var futures = new List<IFutureQuery>();
             foreach (var future in _futureQueries)
-                queries.Add(future.GetCommand(this));
+            {
+                if (future.IsLoaded)
+                    continue;
+                
+                var command = future.GetCommand(this);
+                // keep queries and futures in sync to apply result later
+                queries.Add(command);
+                futures.Add(future);
+            }
 
+            // run all non cached queries
             using (IMultipleResults results = this.ExecuteQuery(queries))
-                foreach (IFutureQuery future in _futureQueries)
+                foreach (IFutureQuery future in futures)
                     future.SetResult(results);
 
             // once all queries processed, clear from queue
