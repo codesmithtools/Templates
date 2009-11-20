@@ -204,7 +204,7 @@ namespace <%= Database.ContextNamespace %>
 <% } %>
             switch (comparisonOperator)
             {
-<% if (columnType == "System.Guid" || columnType == "bool") { %>
+<% if (column.Type == "System.Guid" || column.Type == "System.Boolean") { %>
                 case ComparisonOperator.GreaterThan:
                 case ComparisonOperator.GreaterThanOrEquals:
                 case ComparisonOperator.LessThan:
