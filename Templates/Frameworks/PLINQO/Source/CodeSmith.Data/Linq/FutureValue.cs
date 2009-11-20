@@ -24,7 +24,17 @@ namespace CodeSmith.Data.Linq
         /// <param name="query">The query source to use when materializing.</param>
         /// <param name="loadAction">The action to execute when the query is accessed.</param>
         public FutureValue(IQueryable query, Action loadAction)
-            : base(query, loadAction)
+            : this(query, loadAction, null)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> class.
+        /// </summary>
+        /// <param name="query">The query source to use when materializing.</param>
+        /// <param name="loadAction">The action to execute when the query is accessed.</param>
+        /// <param name="cacheSettings">The cache settings.</param>
+        public FutureValue(IQueryable query, Action loadAction, CacheSettings cacheSettings)
+            : base(query, loadAction, cacheSettings)
         { }
 
         /// <summary>

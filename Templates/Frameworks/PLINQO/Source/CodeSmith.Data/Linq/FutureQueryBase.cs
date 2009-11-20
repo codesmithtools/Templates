@@ -17,6 +17,7 @@ namespace CodeSmith.Data.Linq
         private readonly IQueryable _query;
         private IEnumerable<T> _result;
         private bool _isLoaded;
+        private CacheSettings _cacheSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FutureQuery&lt;T&gt;"/> class.
@@ -24,10 +25,48 @@ namespace CodeSmith.Data.Linq
         /// <param name="query">The query source to use when materializing.</param>
         /// <param name="loadAction">The action to execute when the query is accessed.</param>
         public FutureQueryBase(IQueryable query, Action loadAction)
+            : this(query, loadAction, null)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FutureQuery&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="query">The query source to use when materializing.</param>
+        /// <param name="loadAction">The action to execute when the query is accessed.</param>
+        /// <param name="cacheSettings">The cache settings.</param>
+        public FutureQueryBase(IQueryable query, Action loadAction, CacheSettings cacheSettings)
         {
             _query = query;
             _loadAction = loadAction;
+            _cacheSettings = cacheSettings;
             _result = null;
+        }
+
+        /// <summary>
+        /// Checks the cache for the results.
+        /// </summary>
+        private void CheckCache()
+        {
+            if (_cacheSettings == null)
+                return;
+
+            string key = GetKey();
+            ICollection<T> cached = QueryResultCache.GetResultCache<T>(key);
+
+            if (cached == null)
+                return;
+
+            _isLoaded = true;
+            _result = cached;
+        }
+
+        /// <summary>
+        /// Gets the key used when caching the results.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string GetKey()
+        {
+            return _query.GetHashKey();
         }
 
         /// <summary>
@@ -45,7 +84,14 @@ namespace CodeSmith.Data.Linq
         /// <value><c>true</c> if this instance is loaded; otherwise, <c>false</c>.</value>
         public bool IsLoaded
         {
-            get { return _isLoaded; }
+            get
+            {
+                if (_isLoaded)
+                    return _isLoaded;
+
+                CheckCache();
+                return _isLoaded;
+            }
         }
 
         /// <summary>
@@ -65,20 +111,20 @@ namespace CodeSmith.Data.Linq
         /// </returns>
         protected virtual IEnumerable<T> GetResult()
         {
-
-            if (!IsLoaded)
+            if (IsLoaded)
+                return _result;
+            
+            // no load action, run query directly
+            if (LoadAction == null)
             {
-                if (LoadAction != null)
-                {
-                    LoadAction.Invoke();
-                }
-                else
-                {
-                    _isLoaded = true;
-                    _result = _query as IEnumerable<T>;
-                }
+                _isLoaded = true;
+                _result = _query as IEnumerable<T>;
+                return _result;
             }
 
+            // invoke the load action on the datacontext
+            // result will be set with a callback to SetResult
+            LoadAction.Invoke();
             return _result;
         }
 
@@ -120,10 +166,18 @@ namespace CodeSmith.Data.Linq
             _isLoaded = true;
             var resultSet = result.GetResult<T>();
 
-            _result = resultSet != null
+            var resultList = resultSet != null
                           ? resultSet.ToList()
                           : new List<T>();
 
+            _result = resultList;
+           
+            if (_cacheSettings == null)
+                return;
+
+            // cache the result 
+            string key = GetKey();
+            QueryResultCache.SetResultCache(key, _cacheSettings, resultList);
         }
     }
 }

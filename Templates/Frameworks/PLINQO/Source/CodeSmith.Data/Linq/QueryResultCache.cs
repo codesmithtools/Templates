@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Cryptography;
@@ -85,7 +89,7 @@ namespace CodeSmith.Data.Linq
             var key = query.GetHashKey();
 
             // try to get the query result from the cache
-            var result = HttpRuntime.Cache.Get(key) as List<T>;
+            var result = GetResultCache<T>(key);
 
             if (result != null)
                 return result;
@@ -93,30 +97,10 @@ namespace CodeSmith.Data.Linq
             // materialize the query
             result = query.ToList();
 
-            // Don't cache empty result.
-            if (result.Count == 0 && !settings.CacheEmptyResult)
-                return result;
-
-            //detach for cache
-            foreach (var item in result)
-            {
-                var entity = item as ILinqEntity;
-                if (entity != null)
-                    entity.Detach();
-            }
-
-            HttpRuntime.Cache.Insert(
-                key,
-                result,
-                settings.CacheDependency,
-                settings.AbsoluteExpiration,
-                settings.SlidingExpiration,
-                settings.Priority,
-                settings.CacheItemRemovedCallback);
+            SetResultCache(key, settings, result);
 
             return result;
         }
-
         #endregion
 
         #region FromCacheFirstOrDefault
@@ -222,15 +206,51 @@ namespace CodeSmith.Data.Linq
 
         #endregion
 
+        internal static void SetResultCache<T>(string key, CacheSettings settings, ICollection<T> result)
+        {
+            // Don't cache empty result.
+            if (result.Count == 0 && !settings.CacheEmptyResult)
+                return;
+
+            //detach for cache
+            foreach (var item in result)
+            {
+                var entity = item as ILinqEntity;
+                if (entity != null)
+                    entity.Detach();
+            }
+#if DEBUG
+            Debug.WriteLine("Cache Insert for key " + key);
+#endif
+
+            HttpRuntime.Cache.Insert(
+                key,
+                result,
+                settings.CacheDependency,
+                settings.AbsoluteExpiration,
+                settings.SlidingExpiration,
+                settings.Priority,
+                settings.CacheItemRemovedCallback);
+        }
+
+        internal static ICollection<T> GetResultCache<T>(string key)
+        {
+            var collection = HttpRuntime.Cache.Get(key) as ICollection<T>;
+#if DEBUG
+            if (collection != null)
+                Debug.WriteLine("Cache Hit for key " + key);
+#endif
+            return collection;
+        }
+
         #region GetHashKey
 
         /// <summary>
         /// Gets a unique Md5 key for a query.
         /// </summary>
-        /// <typeparam name="T">The type of the data in the data source.</typeparam>
         /// <param name="query">The query to build a key from.</param>
         /// <returns>A Md5 hash unique to the query.</returns>
-        public static string GetHashKey<T>(this IQueryable<T> query)
+        public static string GetHashKey(this IQueryable query)
         {
             // locally evaluate as much of the query as possible
             Expression expression = Evaluator.PartialEval(
