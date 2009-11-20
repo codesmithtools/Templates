@@ -54,8 +54,6 @@ namespace Tracker.Core.Data
 
             public int TaskId { get; set; }
 
-            public string Myxml { get; set; }
-
             public Task Task { get; set; }
 
             public User User { get; set; }

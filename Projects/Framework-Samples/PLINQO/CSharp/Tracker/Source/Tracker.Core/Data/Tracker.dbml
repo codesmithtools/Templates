@@ -11,7 +11,6 @@
       <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />
       <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int" CanBeNull="true" />
       <Column Name="TaskId" Storage="_taskId" Type="System.Int32" DbType="int" CanBeNull="true" />
-      <Column Name="myxml" Member="Myxml" Storage="_myxml" Type="System.String" DbType="xml" CanBeNull="true" />
       <Association Name="Task_Audit" Member="Task" Storage="_task" ThisKey="TaskId" Type="Task" IsForeignKey="true" />
       <Association Name="User_Audit" Member="User" Storage="_user" ThisKey="UserId" Type="User" IsForeignKey="true" />
     </Type>
@@ -121,9 +120,5 @@
       <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
       <Column Name="RoleId" Storage="_roleId" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
     </ElementType>
-  </Function>
-  <Function Name="dbo.GetOne" Method="GetOne">
-    <Parameter Name="@param" Parameter="param" Type="System.Int32" DbType="int" />
-    <Return Type="System.Int32" DbType="int" />
   </Function>
 </Database>

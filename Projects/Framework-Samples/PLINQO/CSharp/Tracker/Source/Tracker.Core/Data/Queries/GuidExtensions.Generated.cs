@@ -30,7 +30,7 @@ namespace Tracker.Core.Data
             var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.Guid>;
             if (entity != null && entity.Context.LoadOptions == null)
                 return Query.GetByKey.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, id);
-            
+
             return queryable.FirstOrDefault(g => g.Id == id);
         }
 
@@ -43,28 +43,51 @@ namespace Tracker.Core.Data
         {
             return table.Delete(g => g.Id == id);
         }
-        
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.Guid.Id"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="id">Id to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Guid> ById(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid id)
         {
             return queryable.Where(g => g.Id == id);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Guid.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Guid> ById(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid id, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                case ComparisonOperator.GreaterThanOrEquals:
+                case ComparisonOperator.LessThan:
+                case ComparisonOperator.LessThanOrEquals:
+                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support System.Guid type.", "comparisonOperator");
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(g => g.Id != id);
+                default:
+                    return queryable.Where(g => g.Id == id);
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.Guid.Id"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="id">Id to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Guid> ById(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid id, params System.Guid[] additionalValues)
         {
-            var idList = new List<System.Guid> {id};
+            var idList = new List<System.Guid> { id };
 
             if (additionalValues != null)
                 idList.AddRange(additionalValues);
@@ -72,31 +95,68 @@ namespace Tracker.Core.Data
             if (idList.Count == 1)
                 return queryable.ById(idList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Guid, bool>("Id", idList);
-            return queryable.Where(expression);
+            return queryable.ById(idList);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Guid.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Guid> ById(this IQueryable<Tracker.Core.Data.Guid> queryable, IEnumerable<System.Guid> values)
+        {
+            return queryable.Where(g => values.Contains(g.Id));
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.Guid.AlternateId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="alternateId">AlternateId to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Guid> ByAlternateId(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid? alternateId)
         {
+            // using object equals to support nulls
             return queryable.Where(g => object.Equals(g.AlternateId, alternateId));
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Guid.AlternateId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="alternateId">AlternateId to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Guid> ByAlternateId(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid? alternateId, ComparisonOperator comparisonOperator)
+        {
+            if (alternateId == null && (comparisonOperator != ComparisonOperator.Equals || comparisonOperator != ComparisonOperator.NotEquals))
+                throw new ArgumentNullException("alternateId", "Parameter 'alternateId' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
+
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                case ComparisonOperator.GreaterThanOrEquals:
+                case ComparisonOperator.LessThan:
+                case ComparisonOperator.LessThanOrEquals:
+                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support System.Guid? type.", "comparisonOperator");
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(g => object.Equals(g.AlternateId, alternateId) == false);
+                default:
+                    return queryable.Where(g => object.Equals(g.AlternateId, alternateId));
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.Guid.AlternateId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="alternateId">AlternateId to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Guid> ByAlternateId(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid? alternateId, params System.Guid?[] additionalValues)
         {
-            var alternateIdList = new List<System.Guid?> {alternateId};
+            var alternateIdList = new List<System.Guid?> { alternateId };
 
             if (additionalValues != null)
                 alternateIdList.AddRange(additionalValues);
@@ -106,7 +166,19 @@ namespace Tracker.Core.Data
             if (alternateIdList.Count == 1)
                 return queryable.ByAlternateId(alternateIdList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Guid, bool>("AlternateId", alternateIdList);
+            return queryable.ByAlternateId(alternateIdList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Guid.AlternateId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Guid> ByAlternateId(this IQueryable<Tracker.Core.Data.Guid> queryable, IEnumerable<System.Guid?> values)
+        {
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Guid, bool>("AlternateId", values);
             return queryable.Where(expression);
         }
 
@@ -117,9 +189,9 @@ namespace Tracker.Core.Data
         private static partial class Query
         {
 
-            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, System.Guid, Tracker.Core.Data.Guid> GetByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, System.Guid, Tracker.Core.Data.Guid> GetByKey =
                 System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Core.Data.TrackerDataContext db, System.Guid id) => 
+                    (Tracker.Core.Data.TrackerDataContext db, System.Guid id) =>
                         db.Guid.FirstOrDefault(g => g.Id == id));
 
         }

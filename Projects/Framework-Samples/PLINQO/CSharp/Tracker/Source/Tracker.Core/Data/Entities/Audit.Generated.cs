@@ -29,7 +29,6 @@ namespace Tracker.Core.Data
         /// </summary>
         static Audit()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<Audit>();
             AddSharedRules();
         }
         #endregion
@@ -247,29 +246,6 @@ namespace Tracker.Core.Data
                 }
             }
         }
-
-        private string _myxml;
-
-        /// <summary>
-        /// Gets or sets the myxml column value.
-        /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "myxml", Storage = "_myxml", DbType = "xml", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
-        [System.Runtime.Serialization.DataMember(Order = 9)]
-        public string Myxml
-        {
-            get { return _myxml; }
-            set
-            {
-                if (_myxml != value)
-                {
-                    OnMyxmlChanging(value);
-                    SendPropertyChanging("Myxml");
-                    _myxml = value;
-                    SendPropertyChanged("Myxml");
-                    OnMyxmlChanged();
-                }
-            }
-        }
         #endregion
 
         #region Association Mapped Properties
@@ -280,7 +256,7 @@ namespace Tracker.Core.Data
         /// Gets or sets the Task association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Task_Audit", Storage = "_task", ThisKey = "TaskId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
-        [System.Runtime.Serialization.DataMember(Order = 10, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 9, EmitDefaultValue = false)]
         public Task Task
         {
             get { return (serializing && !_task.HasLoadedOrAssignedValue) ? null : _task.Entity; }
@@ -319,7 +295,7 @@ namespace Tracker.Core.Data
         /// Gets or sets the User association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Audit", Storage = "_user", ThisKey = "UserId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
-        [System.Runtime.Serialization.DataMember(Order = 11, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 10, EmitDefaultValue = false)]
         public User User
         {
             get { return (serializing && !_user.HasLoadedOrAssignedValue) ? null : _user.Entity; }
@@ -402,11 +378,6 @@ namespace Tracker.Core.Data
         partial void OnTaskIdChanging(Nullable<int> value);
         /// <summary>Called after <see cref="TaskId"/> has Changed.</summary>
         partial void OnTaskIdChanged();
-        /// <summary>Called when <see cref="Myxml"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnMyxmlChanging(string value);
-        /// <summary>Called after <see cref="Myxml"/> has Changed.</summary>
-        partial void OnMyxmlChanged();
         /// <summary>Called when <see cref="Task"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnTaskChanging(Task value);

@@ -15,7 +15,7 @@ namespace Tracker.Core.Data
     /// <summary>
     /// A base class for Linq entities that implements notification events.
     /// </summary>
-    [System.Runtime.Serialization.DataContract( IsReference = true )]
+    [System.Runtime.Serialization.DataContract(IsReference = true)]
     public abstract partial class LinqEntityBase :
         CodeSmith.Data.ILinqEntity,
         System.ComponentModel.INotifyPropertyChanging,

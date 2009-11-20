@@ -29,7 +29,6 @@ namespace Tracker.Core.Data
         /// </summary>
         static UserRole()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<UserRole>();
             AddSharedRules();
         }
         #endregion

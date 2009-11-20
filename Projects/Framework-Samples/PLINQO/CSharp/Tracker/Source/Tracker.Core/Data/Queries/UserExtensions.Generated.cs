@@ -30,7 +30,7 @@ namespace Tracker.Core.Data
             var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.User>;
             if (entity != null && entity.Context.LoadOptions == null)
                 return Query.GetByKey.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, id);
-            
+
             return queryable.FirstOrDefault(u => u.Id == id);
         }
 
@@ -43,7 +43,7 @@ namespace Tracker.Core.Data
         {
             return table.Delete(u => u.Id == id);
         }
-        
+
         /// <summary>
         /// Gets an instance by using a unique index.
         /// </summary>
@@ -56,28 +56,54 @@ namespace Tracker.Core.Data
 
             return queryable.FirstOrDefault(u => u.EmailAddress == emailAddress);
         }
-        
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.Id"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="id">Id to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ById(this IQueryable<Tracker.Core.Data.User> queryable, int id)
         {
             return queryable.Where(u => u.Id == id);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="id">Id to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ById(this IQueryable<Tracker.Core.Data.User> queryable, int id, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(u => id > u.Id);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(u => id >= u.Id);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(u => id < u.Id);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(u => id <= u.Id);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(u => u.Id != id);
+                default:
+                    return queryable.Where(u => u.Id == id);
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.Id"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="id">Id to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ById(this IQueryable<Tracker.Core.Data.User> queryable, int id, params int[] additionalValues)
         {
-            var idList = new List<int> {id};
+            var idList = new List<int> { id };
 
             if (additionalValues != null)
                 idList.AddRange(additionalValues);
@@ -85,31 +111,70 @@ namespace Tracker.Core.Data
             if (idList.Count == 1)
                 return queryable.ById(idList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("Id", idList);
-            return queryable.Where(expression);
+            return queryable.ById(idList);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.Id"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ById(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<int> values)
+        {
+            return queryable.Where(u => values.Contains(u.Id));
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.EmailAddress"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="emailAddress">EmailAddress to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByEmailAddress(this IQueryable<Tracker.Core.Data.User> queryable, string emailAddress)
         {
             return queryable.Where(u => u.EmailAddress == emailAddress);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.EmailAddress"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="emailAddress">EmailAddress to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByEmailAddress(this IQueryable<Tracker.Core.Data.User> queryable, string emailAddress, ContainmentOperator containmentOperator)
+        {
+            if (emailAddress == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+                throw new ArgumentNullException("emailAddress", "Parameter 'emailAddress' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(u => u.EmailAddress.Contains(emailAddress));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(u => u.EmailAddress.StartsWith(emailAddress));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(u => u.EmailAddress.EndsWith(emailAddress));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(u => u.EmailAddress.Contains(emailAddress) == false);
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(u => u.EmailAddress != emailAddress);
+                default:
+                    return queryable.Where(u => u.EmailAddress == emailAddress);
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.EmailAddress"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="emailAddress">EmailAddress to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByEmailAddress(this IQueryable<Tracker.Core.Data.User> queryable, string emailAddress, params string[] additionalValues)
         {
-            var emailAddressList = new List<string> {emailAddress};
+            var emailAddressList = new List<string> { emailAddress };
 
             if (additionalValues != null)
                 emailAddressList.AddRange(additionalValues);
@@ -117,31 +182,71 @@ namespace Tracker.Core.Data
             if (emailAddressList.Count == 1)
                 return queryable.ByEmailAddress(emailAddressList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("EmailAddress", emailAddressList);
-            return queryable.Where(expression);
+            return queryable.ByEmailAddress(emailAddressList);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.EmailAddress"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByEmailAddress(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<string> values)
+        {
+            return queryable.Where(u => values.Contains(u.EmailAddress));
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.FirstName"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="firstName">FirstName to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByFirstName(this IQueryable<Tracker.Core.Data.User> queryable, string firstName)
         {
+            // using object equals to support nulls
             return queryable.Where(u => object.Equals(u.FirstName, firstName));
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.FirstName"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="firstName">FirstName to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByFirstName(this IQueryable<Tracker.Core.Data.User> queryable, string firstName, ContainmentOperator containmentOperator)
+        {
+            if (firstName == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+                throw new ArgumentNullException("firstName", "Parameter 'firstName' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(u => u.FirstName.Contains(firstName));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(u => u.FirstName.StartsWith(firstName));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(u => u.FirstName.EndsWith(firstName));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(u => u.FirstName.Contains(firstName) == false);
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(u => object.Equals(u.FirstName, firstName) == false);
+                default:
+                    return queryable.Where(u => object.Equals(u.FirstName, firstName));
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.FirstName"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="firstName">FirstName to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByFirstName(this IQueryable<Tracker.Core.Data.User> queryable, string firstName, params string[] additionalValues)
         {
-            var firstNameList = new List<string> {firstName};
+            var firstNameList = new List<string> { firstName };
 
             if (additionalValues != null)
                 firstNameList.AddRange(additionalValues);
@@ -151,31 +256,73 @@ namespace Tracker.Core.Data
             if (firstNameList.Count == 1)
                 return queryable.ByFirstName(firstNameList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("FirstName", firstNameList);
+            return queryable.ByFirstName(firstNameList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.FirstName"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByFirstName(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<string> values)
+        {
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("FirstName", values);
             return queryable.Where(expression);
         }
-        
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.LastName"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="lastName">LastName to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByLastName(this IQueryable<Tracker.Core.Data.User> queryable, string lastName)
         {
+            // using object equals to support nulls
             return queryable.Where(u => object.Equals(u.LastName, lastName));
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.LastName"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lastName">LastName to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByLastName(this IQueryable<Tracker.Core.Data.User> queryable, string lastName, ContainmentOperator containmentOperator)
+        {
+            if (lastName == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+                throw new ArgumentNullException("lastName", "Parameter 'lastName' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(u => u.LastName.Contains(lastName));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(u => u.LastName.StartsWith(lastName));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(u => u.LastName.EndsWith(lastName));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(u => u.LastName.Contains(lastName) == false);
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(u => object.Equals(u.LastName, lastName) == false);
+                default:
+                    return queryable.Where(u => object.Equals(u.LastName, lastName));
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.LastName"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="lastName">LastName to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByLastName(this IQueryable<Tracker.Core.Data.User> queryable, string lastName, params string[] additionalValues)
         {
-            var lastNameList = new List<string> {lastName};
+            var lastNameList = new List<string> { lastName };
 
             if (additionalValues != null)
                 lastNameList.AddRange(additionalValues);
@@ -185,31 +332,69 @@ namespace Tracker.Core.Data
             if (lastNameList.Count == 1)
                 return queryable.ByLastName(lastNameList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("LastName", lastNameList);
+            return queryable.ByLastName(lastNameList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.LastName"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByLastName(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<string> values)
+        {
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("LastName", values);
             return queryable.Where(expression);
         }
-        
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.CreatedDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="createdDate">CreatedDate to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByCreatedDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime createdDate)
         {
             return queryable.Where(u => u.CreatedDate == createdDate);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.CreatedDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="createdDate">CreatedDate to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByCreatedDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime createdDate, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(u => createdDate > u.CreatedDate);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(u => createdDate >= u.CreatedDate);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(u => createdDate < u.CreatedDate);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(u => createdDate <= u.CreatedDate);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(u => u.CreatedDate != createdDate);
+                default:
+                    return queryable.Where(u => u.CreatedDate == createdDate);
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.CreatedDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="createdDate">CreatedDate to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByCreatedDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime createdDate, params System.DateTime[] additionalValues)
         {
-            var createdDateList = new List<System.DateTime> {createdDate};
+            var createdDateList = new List<System.DateTime> { createdDate };
 
             if (additionalValues != null)
                 createdDateList.AddRange(additionalValues);
@@ -217,31 +402,67 @@ namespace Tracker.Core.Data
             if (createdDateList.Count == 1)
                 return queryable.ByCreatedDate(createdDateList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("CreatedDate", createdDateList);
-            return queryable.Where(expression);
+            return queryable.ByCreatedDate(createdDateList);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.CreatedDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByCreatedDate(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<System.DateTime> values)
+        {
+            return queryable.Where(u => values.Contains(u.CreatedDate));
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.ModifiedDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="modifiedDate">ModifiedDate to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByModifiedDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime modifiedDate)
         {
             return queryable.Where(u => u.ModifiedDate == modifiedDate);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.ModifiedDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="modifiedDate">ModifiedDate to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByModifiedDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime modifiedDate, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(u => modifiedDate > u.ModifiedDate);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(u => modifiedDate >= u.ModifiedDate);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(u => modifiedDate < u.ModifiedDate);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(u => modifiedDate <= u.ModifiedDate);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(u => u.ModifiedDate != modifiedDate);
+                default:
+                    return queryable.Where(u => u.ModifiedDate == modifiedDate);
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.ModifiedDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="modifiedDate">ModifiedDate to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByModifiedDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime modifiedDate, params System.DateTime[] additionalValues)
         {
-            var modifiedDateList = new List<System.DateTime> {modifiedDate};
+            var modifiedDateList = new List<System.DateTime> { modifiedDate };
 
             if (additionalValues != null)
                 modifiedDateList.AddRange(additionalValues);
@@ -249,31 +470,70 @@ namespace Tracker.Core.Data
             if (modifiedDateList.Count == 1)
                 return queryable.ByModifiedDate(modifiedDateList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("ModifiedDate", modifiedDateList);
-            return queryable.Where(expression);
+            return queryable.ByModifiedDate(modifiedDateList);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.ModifiedDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByModifiedDate(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<System.DateTime> values)
+        {
+            return queryable.Where(u => values.Contains(u.ModifiedDate));
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.PasswordHash"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="passwordHash">PasswordHash to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByPasswordHash(this IQueryable<Tracker.Core.Data.User> queryable, string passwordHash)
         {
             return queryable.Where(u => u.PasswordHash == passwordHash);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.PasswordHash"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="passwordHash">PasswordHash to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByPasswordHash(this IQueryable<Tracker.Core.Data.User> queryable, string passwordHash, ContainmentOperator containmentOperator)
+        {
+            if (passwordHash == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+                throw new ArgumentNullException("passwordHash", "Parameter 'passwordHash' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(u => u.PasswordHash.Contains(passwordHash));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(u => u.PasswordHash.StartsWith(passwordHash));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(u => u.PasswordHash.EndsWith(passwordHash));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(u => u.PasswordHash.Contains(passwordHash) == false);
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(u => u.PasswordHash != passwordHash);
+                default:
+                    return queryable.Where(u => u.PasswordHash == passwordHash);
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.PasswordHash"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="passwordHash">PasswordHash to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByPasswordHash(this IQueryable<Tracker.Core.Data.User> queryable, string passwordHash, params string[] additionalValues)
         {
-            var passwordHashList = new List<string> {passwordHash};
+            var passwordHashList = new List<string> { passwordHash };
 
             if (additionalValues != null)
                 passwordHashList.AddRange(additionalValues);
@@ -281,31 +541,70 @@ namespace Tracker.Core.Data
             if (passwordHashList.Count == 1)
                 return queryable.ByPasswordHash(passwordHashList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("PasswordHash", passwordHashList);
-            return queryable.Where(expression);
+            return queryable.ByPasswordHash(passwordHashList);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.PasswordHash"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByPasswordHash(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<string> values)
+        {
+            return queryable.Where(u => values.Contains(u.PasswordHash));
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.PasswordSalt"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="passwordSalt">PasswordSalt to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByPasswordSalt(this IQueryable<Tracker.Core.Data.User> queryable, string passwordSalt)
         {
             return queryable.Where(u => u.PasswordSalt == passwordSalt);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.PasswordSalt"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="passwordSalt">PasswordSalt to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByPasswordSalt(this IQueryable<Tracker.Core.Data.User> queryable, string passwordSalt, ContainmentOperator containmentOperator)
+        {
+            if (passwordSalt == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+                throw new ArgumentNullException("passwordSalt", "Parameter 'passwordSalt' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(u => u.PasswordSalt.Contains(passwordSalt));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(u => u.PasswordSalt.StartsWith(passwordSalt));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(u => u.PasswordSalt.EndsWith(passwordSalt));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(u => u.PasswordSalt.Contains(passwordSalt) == false);
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(u => u.PasswordSalt != passwordSalt);
+                default:
+                    return queryable.Where(u => u.PasswordSalt == passwordSalt);
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.PasswordSalt"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="passwordSalt">PasswordSalt to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByPasswordSalt(this IQueryable<Tracker.Core.Data.User> queryable, string passwordSalt, params string[] additionalValues)
         {
-            var passwordSaltList = new List<string> {passwordSalt};
+            var passwordSaltList = new List<string> { passwordSalt };
 
             if (additionalValues != null)
                 passwordSaltList.AddRange(additionalValues);
@@ -313,31 +612,71 @@ namespace Tracker.Core.Data
             if (passwordSaltList.Count == 1)
                 return queryable.ByPasswordSalt(passwordSaltList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("PasswordSalt", passwordSaltList);
-            return queryable.Where(expression);
+            return queryable.ByPasswordSalt(passwordSaltList);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.PasswordSalt"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByPasswordSalt(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<string> values)
+        {
+            return queryable.Where(u => values.Contains(u.PasswordSalt));
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.Comment"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="comment">Comment to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByComment(this IQueryable<Tracker.Core.Data.User> queryable, string comment)
         {
+            // using object equals to support nulls
             return queryable.Where(u => object.Equals(u.Comment, comment));
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.Comment"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="comment">Comment to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByComment(this IQueryable<Tracker.Core.Data.User> queryable, string comment, ContainmentOperator containmentOperator)
+        {
+            if (comment == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+                throw new ArgumentNullException("comment", "Parameter 'comment' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(u => u.Comment.Contains(comment));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(u => u.Comment.StartsWith(comment));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(u => u.Comment.EndsWith(comment));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(u => u.Comment.Contains(comment) == false);
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(u => object.Equals(u.Comment, comment) == false);
+                default:
+                    return queryable.Where(u => object.Equals(u.Comment, comment));
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.Comment"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="comment">Comment to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByComment(this IQueryable<Tracker.Core.Data.User> queryable, string comment, params string[] additionalValues)
         {
-            var commentList = new List<string> {comment};
+            var commentList = new List<string> { comment };
 
             if (additionalValues != null)
                 commentList.AddRange(additionalValues);
@@ -347,31 +686,66 @@ namespace Tracker.Core.Data
             if (commentList.Count == 1)
                 return queryable.ByComment(commentList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("Comment", commentList);
+            return queryable.ByComment(commentList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.Comment"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByComment(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<string> values)
+        {
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("Comment", values);
             return queryable.Where(expression);
         }
-        
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.IsApproved"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="isApproved">IsApproved to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByIsApproved(this IQueryable<Tracker.Core.Data.User> queryable, bool isApproved)
         {
             return queryable.Where(u => u.IsApproved == isApproved);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.IsApproved"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="isApproved">IsApproved to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByIsApproved(this IQueryable<Tracker.Core.Data.User> queryable, bool isApproved, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                case ComparisonOperator.GreaterThanOrEquals:
+                case ComparisonOperator.LessThan:
+                case ComparisonOperator.LessThanOrEquals:
+                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support bool type.", "comparisonOperator");
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(u => u.IsApproved != isApproved);
+                default:
+                    return queryable.Where(u => u.IsApproved == isApproved);
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.IsApproved"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="isApproved">IsApproved to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByIsApproved(this IQueryable<Tracker.Core.Data.User> queryable, bool isApproved, params bool[] additionalValues)
         {
-            var isApprovedList = new List<bool> {isApproved};
+            var isApprovedList = new List<bool> { isApproved };
 
             if (additionalValues != null)
                 isApprovedList.AddRange(additionalValues);
@@ -379,31 +753,71 @@ namespace Tracker.Core.Data
             if (isApprovedList.Count == 1)
                 return queryable.ByIsApproved(isApprovedList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("IsApproved", isApprovedList);
-            return queryable.Where(expression);
+            return queryable.ByIsApproved(isApprovedList);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.IsApproved"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByIsApproved(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<bool> values)
+        {
+            return queryable.Where(u => values.Contains(u.IsApproved));
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.LastLoginDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="lastLoginDate">LastLoginDate to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByLastLoginDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime? lastLoginDate)
         {
+            // using object equals to support nulls
             return queryable.Where(u => object.Equals(u.LastLoginDate, lastLoginDate));
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.LastLoginDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lastLoginDate">LastLoginDate to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByLastLoginDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime? lastLoginDate, ComparisonOperator comparisonOperator)
+        {
+            if (lastLoginDate == null && (comparisonOperator != ComparisonOperator.Equals || comparisonOperator != ComparisonOperator.NotEquals))
+                throw new ArgumentNullException("lastLoginDate", "Parameter 'lastLoginDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
+
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(u => lastLoginDate > u.LastLoginDate);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(u => lastLoginDate >= u.LastLoginDate);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(u => lastLoginDate < u.LastLoginDate);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(u => lastLoginDate <= u.LastLoginDate);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(u => object.Equals(u.LastLoginDate, lastLoginDate) == false);
+                default:
+                    return queryable.Where(u => object.Equals(u.LastLoginDate, lastLoginDate));
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.LastLoginDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="lastLoginDate">LastLoginDate to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByLastLoginDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime? lastLoginDate, params System.DateTime?[] additionalValues)
         {
-            var lastLoginDateList = new List<System.DateTime?> {lastLoginDate};
+            var lastLoginDateList = new List<System.DateTime?> { lastLoginDate };
 
             if (additionalValues != null)
                 lastLoginDateList.AddRange(additionalValues);
@@ -413,31 +827,69 @@ namespace Tracker.Core.Data
             if (lastLoginDateList.Count == 1)
                 return queryable.ByLastLoginDate(lastLoginDateList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("LastLoginDate", lastLoginDateList);
+            return queryable.ByLastLoginDate(lastLoginDateList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.LastLoginDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByLastLoginDate(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<System.DateTime?> values)
+        {
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("LastLoginDate", values);
             return queryable.Where(expression);
         }
-        
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.LastActivityDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="lastActivityDate">LastActivityDate to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByLastActivityDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime lastActivityDate)
         {
             return queryable.Where(u => u.LastActivityDate == lastActivityDate);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.LastActivityDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lastActivityDate">LastActivityDate to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByLastActivityDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime lastActivityDate, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(u => lastActivityDate > u.LastActivityDate);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(u => lastActivityDate >= u.LastActivityDate);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(u => lastActivityDate < u.LastActivityDate);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(u => lastActivityDate <= u.LastActivityDate);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(u => u.LastActivityDate != lastActivityDate);
+                default:
+                    return queryable.Where(u => u.LastActivityDate == lastActivityDate);
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.LastActivityDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="lastActivityDate">LastActivityDate to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByLastActivityDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime lastActivityDate, params System.DateTime[] additionalValues)
         {
-            var lastActivityDateList = new List<System.DateTime> {lastActivityDate};
+            var lastActivityDateList = new List<System.DateTime> { lastActivityDate };
 
             if (additionalValues != null)
                 lastActivityDateList.AddRange(additionalValues);
@@ -445,31 +897,71 @@ namespace Tracker.Core.Data
             if (lastActivityDateList.Count == 1)
                 return queryable.ByLastActivityDate(lastActivityDateList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("LastActivityDate", lastActivityDateList);
-            return queryable.Where(expression);
+            return queryable.ByLastActivityDate(lastActivityDateList);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.LastActivityDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByLastActivityDate(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<System.DateTime> values)
+        {
+            return queryable.Where(u => values.Contains(u.LastActivityDate));
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.LastPasswordChangeDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="lastPasswordChangeDate">LastPasswordChangeDate to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime? lastPasswordChangeDate)
         {
+            // using object equals to support nulls
             return queryable.Where(u => object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate));
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.LastPasswordChangeDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lastPasswordChangeDate">LastPasswordChangeDate to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime? lastPasswordChangeDate, ComparisonOperator comparisonOperator)
+        {
+            if (lastPasswordChangeDate == null && (comparisonOperator != ComparisonOperator.Equals || comparisonOperator != ComparisonOperator.NotEquals))
+                throw new ArgumentNullException("lastPasswordChangeDate", "Parameter 'lastPasswordChangeDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
+
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(u => lastPasswordChangeDate > u.LastPasswordChangeDate);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(u => lastPasswordChangeDate >= u.LastPasswordChangeDate);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(u => lastPasswordChangeDate < u.LastPasswordChangeDate);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(u => lastPasswordChangeDate <= u.LastPasswordChangeDate);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(u => object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate) == false);
+                default:
+                    return queryable.Where(u => object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate));
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.LastPasswordChangeDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="lastPasswordChangeDate">LastPasswordChangeDate to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime? lastPasswordChangeDate, params System.DateTime?[] additionalValues)
         {
-            var lastPasswordChangeDateList = new List<System.DateTime?> {lastPasswordChangeDate};
+            var lastPasswordChangeDateList = new List<System.DateTime?> { lastPasswordChangeDate };
 
             if (additionalValues != null)
                 lastPasswordChangeDateList.AddRange(additionalValues);
@@ -479,31 +971,73 @@ namespace Tracker.Core.Data
             if (lastPasswordChangeDateList.Count == 1)
                 return queryable.ByLastPasswordChangeDate(lastPasswordChangeDateList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("LastPasswordChangeDate", lastPasswordChangeDateList);
+            return queryable.ByLastPasswordChangeDate(lastPasswordChangeDateList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.LastPasswordChangeDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<System.DateTime?> values)
+        {
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("LastPasswordChangeDate", values);
             return queryable.Where(expression);
         }
-        
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.AvatarType"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="avatarType">AvatarType to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByAvatarType(this IQueryable<Tracker.Core.Data.User> queryable, string avatarType)
         {
+            // using object equals to support nulls
             return queryable.Where(u => object.Equals(u.AvatarType, avatarType));
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.AvatarType"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="avatarType">AvatarType to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByAvatarType(this IQueryable<Tracker.Core.Data.User> queryable, string avatarType, ContainmentOperator containmentOperator)
+        {
+            if (avatarType == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+                throw new ArgumentNullException("avatarType", "Parameter 'avatarType' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(u => u.AvatarType.Contains(avatarType));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(u => u.AvatarType.StartsWith(avatarType));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(u => u.AvatarType.EndsWith(avatarType));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(u => u.AvatarType.Contains(avatarType) == false);
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(u => object.Equals(u.AvatarType, avatarType) == false);
+                default:
+                    return queryable.Where(u => object.Equals(u.AvatarType, avatarType));
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.User.AvatarType"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="avatarType">AvatarType to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByAvatarType(this IQueryable<Tracker.Core.Data.User> queryable, string avatarType, params string[] additionalValues)
         {
-            var avatarTypeList = new List<string> {avatarType};
+            var avatarTypeList = new List<string> { avatarType };
 
             if (additionalValues != null)
                 avatarTypeList.AddRange(additionalValues);
@@ -513,7 +1047,19 @@ namespace Tracker.Core.Data
             if (avatarTypeList.Count == 1)
                 return queryable.ByAvatarType(avatarTypeList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("AvatarType", avatarTypeList);
+            return queryable.ByAvatarType(avatarTypeList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.User.AvatarType"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.User> ByAvatarType(this IQueryable<Tracker.Core.Data.User> queryable, IEnumerable<string> values)
+        {
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.User, bool>("AvatarType", values);
             return queryable.Where(expression);
         }
 
@@ -524,14 +1070,14 @@ namespace Tracker.Core.Data
         private static partial class Query
         {
 
-            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.User> GetByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.User> GetByKey =
                 System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Core.Data.TrackerDataContext db, int id) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int id) =>
                         db.User.FirstOrDefault(u => u.Id == id));
 
-            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, string, Tracker.Core.Data.User> GetByEmailAddress = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, string, Tracker.Core.Data.User> GetByEmailAddress =
                 System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Core.Data.TrackerDataContext db, string emailAddress) => 
+                    (Tracker.Core.Data.TrackerDataContext db, string emailAddress) =>
                         db.User.FirstOrDefault(u => u.EmailAddress == emailAddress));
 
         }

@@ -30,7 +30,7 @@ namespace Tracker.Core.Data
             var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.UserRole>;
             if (entity != null && entity.Context.LoadOptions == null)
                 return Query.GetByKey.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, userId, roleId);
-            
+
             return queryable.FirstOrDefault(u => u.UserId == userId 
 					&& u.RoleId == roleId);
         }
@@ -45,28 +45,54 @@ namespace Tracker.Core.Data
             return table.Delete(u => u.UserId == userId 
 					&& u.RoleId == roleId);
         }
-        
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.UserRole.UserId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="userId">UserId to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.UserRole> ByUserId(this IQueryable<Tracker.Core.Data.UserRole> queryable, int userId)
         {
             return queryable.Where(u => u.UserId == userId);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.UserRole.UserId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="userId">UserId to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.UserRole> ByUserId(this IQueryable<Tracker.Core.Data.UserRole> queryable, int userId, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(u => userId > u.UserId);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(u => userId >= u.UserId);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(u => userId < u.UserId);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(u => userId <= u.UserId);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(u => u.UserId != userId);
+                default:
+                    return queryable.Where(u => u.UserId == userId);
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.UserRole.UserId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="userId">UserId to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.UserRole> ByUserId(this IQueryable<Tracker.Core.Data.UserRole> queryable, int userId, params int[] additionalValues)
         {
-            var userIdList = new List<int> {userId};
+            var userIdList = new List<int> { userId };
 
             if (additionalValues != null)
                 userIdList.AddRange(additionalValues);
@@ -74,31 +100,67 @@ namespace Tracker.Core.Data
             if (userIdList.Count == 1)
                 return queryable.ByUserId(userIdList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.UserRole, bool>("UserId", userIdList);
-            return queryable.Where(expression);
+            return queryable.ByUserId(userIdList);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.UserRole.UserId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.UserRole> ByUserId(this IQueryable<Tracker.Core.Data.UserRole> queryable, IEnumerable<int> values)
+        {
+            return queryable.Where(u => values.Contains(u.UserId));
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.UserRole.RoleId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="roleId">RoleId to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.UserRole> ByRoleId(this IQueryable<Tracker.Core.Data.UserRole> queryable, int roleId)
         {
             return queryable.Where(u => u.RoleId == roleId);
         }
-        
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.UserRole.RoleId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="roleId">RoleId to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.UserRole> ByRoleId(this IQueryable<Tracker.Core.Data.UserRole> queryable, int roleId, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(u => roleId > u.RoleId);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(u => roleId >= u.RoleId);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(u => roleId < u.RoleId);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(u => roleId <= u.RoleId);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(u => u.RoleId != roleId);
+                default:
+                    return queryable.Where(u => u.RoleId == roleId);
+            }
+        }
+
         /// <summary>
         /// Gets a query for <see cref="Tracker.Core.Data.UserRole.RoleId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="roleId">RoleId to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns>IQueryable with additional where clause.</returns>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.UserRole> ByRoleId(this IQueryable<Tracker.Core.Data.UserRole> queryable, int roleId, params int[] additionalValues)
         {
-            var roleIdList = new List<int> {roleId};
+            var roleIdList = new List<int> { roleId };
 
             if (additionalValues != null)
                 roleIdList.AddRange(additionalValues);
@@ -106,8 +168,18 @@ namespace Tracker.Core.Data
             if (roleIdList.Count == 1)
                 return queryable.ByRoleId(roleIdList[0]);
 
-            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.UserRole, bool>("RoleId", roleIdList);
-            return queryable.Where(expression);
+            return queryable.ByRoleId(roleIdList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.UserRole.RoleId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.UserRole> ByRoleId(this IQueryable<Tracker.Core.Data.UserRole> queryable, IEnumerable<int> values)
+        {
+            return queryable.Where(u => values.Contains(u.RoleId));
         }
 
         #region Query
@@ -117,9 +189,9 @@ namespace Tracker.Core.Data
         private static partial class Query
         {
 
-            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, int, Tracker.Core.Data.UserRole> GetByKey = 
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, int, Tracker.Core.Data.UserRole> GetByKey =
                 System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Core.Data.TrackerDataContext db, int userId, int roleId) => 
+                    (Tracker.Core.Data.TrackerDataContext db, int userId, int roleId) =>
                         db.UserRole.FirstOrDefault(u => u.UserId == userId 
 							&& u.RoleId == roleId));
 
