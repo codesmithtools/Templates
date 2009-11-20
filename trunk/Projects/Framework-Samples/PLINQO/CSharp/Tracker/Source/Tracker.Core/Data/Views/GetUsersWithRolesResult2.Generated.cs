@@ -26,7 +26,6 @@ namespace Tracker.Core.Data
         /// </summary>
         static GetUsersWithRolesResult2()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<GetUsersWithRolesResult2>();
             AddSharedRules();
         }
         #endregion

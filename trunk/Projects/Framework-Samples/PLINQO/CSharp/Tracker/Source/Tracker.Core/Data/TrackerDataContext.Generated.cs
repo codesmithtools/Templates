@@ -15,11 +15,11 @@ namespace Tracker.Core.Data
     /// <summary>
     /// The <see cref="System.Data.Linq.DataContext"/> class for the Tracker database.
     /// </summary>
-    public partial class TrackerDataContext 
-        : System.Data.Linq.DataContext, System.Data.Services.IUpdatable
+    public partial class TrackerDataContext
+        : CodeSmith.Data.Linq.DataContextBase, System.Data.Services.IUpdatable
     {
-        private static readonly System.Data.Linq.Mapping.MappingSource mappingCache = new System.Data.Linq.Mapping.AttributeMappingSource();
-        
+        public static readonly System.Data.Linq.Mapping.MappingSource MappingCache = new System.Data.Linq.Mapping.AttributeMappingSource();
+
         #region ConnectionString
         private const string CONNECTION_NAME = "TrackerConnectionString";
         private static volatile string _connectionString;
@@ -31,7 +31,7 @@ namespace Tracker.Core.Data
         /// <code><![CDATA[
         /// <configuration>
         ///     <connectionStrings>
-        ///         <add name="TrackerConnectionString" 
+        ///         <add name="TrackerConnectionString"
         ///             connectionString="Data Source=(local);Initial Catalog=DATABASE;Integrated Security=True"
         ///             providerName="System.Data.SqlClient" />
         ///     </connectionStrings>
@@ -64,42 +64,42 @@ namespace Tracker.Core.Data
                 throw new System.Configuration.ConfigurationErrorsException(message);
             }
             return settings.ConnectionString;
-        } 
+        }
         #endregion
-        
+
         #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerDataContext"/> class.
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
         public TrackerDataContext()
-            : base(ConnectionString, mappingCache)
+            : base(ConnectionString, MappingCache)
         {
             OnCreated();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerDataContext"/> class.
         /// </summary>
         /// <param name="connection">The connection string.</param>
         [System.Diagnostics.DebuggerNonUserCode]
         public TrackerDataContext(string connection)
-            : base(connection, mappingCache)
+            : base(connection, MappingCache)
         {
             OnCreated();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerDataContext"/> class.
         /// </summary>
         /// <param name="connection">The database connection.</param>
         [System.Diagnostics.DebuggerNonUserCode]
         public TrackerDataContext(System.Data.IDbConnection connection)
-            : base(connection, mappingCache)
+            : base(connection, MappingCache)
         {
             OnCreated();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerDataContext"/> class.
         /// </summary>
@@ -111,7 +111,7 @@ namespace Tracker.Core.Data
         {
             OnCreated();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TrackerDataContext"/> class.
         /// </summary>
@@ -124,50 +124,50 @@ namespace Tracker.Core.Data
             OnCreated();
         }
         #endregion
-        
+
         #region Tables
         /// <summary>Represents the dbo.Audit table in the underlying database.</summary>
         public System.Data.Linq.Table<Tracker.Core.Data.Audit> Audit
         {
             get { return GetTable<Tracker.Core.Data.Audit>(); }
         }
-        
+
         /// <summary>Represents the dbo.Guid table in the underlying database.</summary>
         public System.Data.Linq.Table<Tracker.Core.Data.Guid> Guid
         {
             get { return GetTable<Tracker.Core.Data.Guid>(); }
         }
-        
+
         /// <summary>Represents the dbo.Role table in the underlying database.</summary>
         public System.Data.Linq.Table<Tracker.Core.Data.Role> Role
         {
             get { return GetTable<Tracker.Core.Data.Role>(); }
         }
-        
+
         /// <summary>Represents the dbo.Task table in the underlying database.</summary>
         public System.Data.Linq.Table<Tracker.Core.Data.Task> Task
         {
             get { return GetTable<Tracker.Core.Data.Task>(); }
         }
-        
+
         /// <summary>Represents the dbo.TaskExtended table in the underlying database.</summary>
         public System.Data.Linq.Table<Tracker.Core.Data.TaskExtended> TaskExtended
         {
             get { return GetTable<Tracker.Core.Data.TaskExtended>(); }
         }
-        
+
         /// <summary>Represents the dbo.User table in the underlying database.</summary>
         public System.Data.Linq.Table<Tracker.Core.Data.User> User
         {
             get { return GetTable<Tracker.Core.Data.User>(); }
         }
-        
+
         /// <summary>Represents the dbo.UserRole table in the underlying database.</summary>
         public System.Data.Linq.Table<Tracker.Core.Data.UserRole> UserRole
         {
             get { return GetTable<Tracker.Core.Data.UserRole>(); }
         }
-        
+
         #endregion
 
         #region Functions
@@ -180,21 +180,8 @@ namespace Tracker.Core.Data
         {
             var methodInfo = (System.Reflection.MethodInfo)System.Reflection.MethodInfo.GetCurrentMethod();
             var result = this.ExecuteMethodCall(this, methodInfo);
-            
-            return ((System.Data.Linq.IMultipleResults)(result.ReturnValue));
-        }
 
-        /// <summary>Method that is mapped to the dbo.GetOne database procedure.</summary>
-        /// <returns></returns>
-        [System.Data.Linq.Mapping.Function(Name="dbo.GetOne")]
-        [return: System.Data.Linq.Mapping.Parameter(DbType="int")]
-        public int GetOne(
-            [System.Data.Linq.Mapping.Parameter(Name="@param", DbType="int")] int? param)
-        {
-            var methodInfo = (System.Reflection.MethodInfo)System.Reflection.MethodInfo.GetCurrentMethod();
-            var result = this.ExecuteMethodCall(this, methodInfo, param);
-            
-            return ((int)(result.ReturnValue));
+            return ((System.Data.Linq.IMultipleResults)(result.ReturnValue));
         }
 
         #endregion
@@ -266,7 +253,7 @@ namespace Tracker.Core.Data
         /// <param name="instance">The instance.</param>
         partial void DeleteUserRole(Tracker.Core.Data.UserRole instance);
         #endregion
-        
+
         #region IUpdatable Members
         /// <summary>
         /// Adds the specified value to the collection.
@@ -292,8 +279,8 @@ namespace Tracker.Core.Data
         void System.Data.Services.IUpdatable.ClearChanges()
         {
             var mi = GetType().GetMethod("ClearCache",
-                System.Reflection.BindingFlags.Instance | 
-                System.Reflection.BindingFlags.NonPublic | 
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.NonPublic |
                 System.Reflection.BindingFlags.InvokeMethod);
 
             if (mi != null)
@@ -527,7 +514,7 @@ namespace Tracker.Core.Data
         public CodeSmith.Data.Rules.RuleManager RuleManager
         {
             get { return _ruleManager; }
-        } 
+        }
 
         /// <summary>
         /// Sends changes made to retrieved objects to the underlying database.
@@ -539,7 +526,7 @@ namespace Tracker.Core.Data
 
             if (!isValid)
                 throw new CodeSmith.Data.Rules.BrokenRuleException(RuleManager.BrokenRules);
-            
+
             PopulateLastAudit();
             BeforeSubmitChanges();
             base.SubmitChanges(failureMode);
@@ -591,7 +578,7 @@ namespace Tracker.Core.Data
             _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(this);
         }
         #endregion
-        
+
         /// <summary>
         /// Sends changes made to retrieved objects to the underlying database.
         /// </summary>

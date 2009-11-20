@@ -29,7 +29,6 @@ namespace Tracker.Core.Data
         /// </summary>
         static Task()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<Task>();
             AddSharedRules();
         }
         #endregion

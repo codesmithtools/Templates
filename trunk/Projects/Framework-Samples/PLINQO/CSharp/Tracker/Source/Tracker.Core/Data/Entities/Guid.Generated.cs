@@ -29,7 +29,6 @@ namespace Tracker.Core.Data
         /// </summary>
         static Guid()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<Guid>();
             AddSharedRules();
         }
         #endregion
