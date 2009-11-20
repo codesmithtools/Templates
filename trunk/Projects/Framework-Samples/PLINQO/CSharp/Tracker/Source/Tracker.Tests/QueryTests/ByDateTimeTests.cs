@@ -44,7 +44,7 @@ namespace Tracker.Tests.QueryTests
             {
                 using (var db = new TrackerDataContext())
                 {
-                    var a = db.Task.ByDueDate(null).ToList();
+                    var a = db.Task.ByDueDate((DateTime?)null).ToList();
                     var b = db.Task.ByDueDate(dueDates[0]).ToList();
                     var c = db.Task.ByDueDate(dueDates[1]).ToList();
 

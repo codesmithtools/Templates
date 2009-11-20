@@ -43,7 +43,7 @@ namespace Tracker.Tests.QueryTests
             {
                 using (var db = new TrackerDataContext())
                 {
-                    var a = db.Task.ByAssignedId(null).ToList();
+                    var a = db.Task.ByAssignedId((int?)null).ToList();
                     var b = db.Task.ByAssignedId(userIds[1]).ToList();
                     var c = db.Task.ByAssignedId(userIds[2]).ToList();
 

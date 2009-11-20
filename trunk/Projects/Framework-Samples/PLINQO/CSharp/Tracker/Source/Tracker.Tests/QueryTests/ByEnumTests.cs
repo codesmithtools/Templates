@@ -44,7 +44,7 @@ namespace Tracker.Tests.QueryTests
             {
                 using (var db = new TrackerDataContext())
                 {
-                    var a = db.Task.ByPriority(null).ToList();
+                    var a = db.Task.ByPriority((Priority?)null).ToList();
                     var b = db.Task.ByPriority(Priority.Normal).ToList();
                     var c = db.Task.ByPriority(Priority.High).ToList();
 

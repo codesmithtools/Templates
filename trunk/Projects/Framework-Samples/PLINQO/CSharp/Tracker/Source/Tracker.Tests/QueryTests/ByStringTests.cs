@@ -17,7 +17,7 @@ namespace Tracker.Tests.QueryTests
             {
                 using (var db = new TrackerDataContext())
                 {
-                    var a = db.Task.ByDetails(null).ToList();
+                    var a = db.Task.ByDetails((string)null).ToList();
                     var b = db.Task.ByDetails(String.Empty).ToList();
                     var c = db.Task.ByDetails("Hello world!").ToList();
                     var d = db.Task.ByDetails("Goodnight moon!").ToList();
