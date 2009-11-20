@@ -84,7 +84,7 @@ namespace Tracker.Tests.QueryTests
             {
                 using (var db = new TrackerDataContext())
                 {
-                    var a = db.Guid.ByAlternateId(null).ToList();
+                    var a = db.Guid.ByAlternateId((Guid?)null).ToList();
                     var b = db.Guid.ByAlternateId(_guid2Alt).ToList();
                     var c = db.Guid.ByAlternateId(_guid3Alt).ToList();
 
