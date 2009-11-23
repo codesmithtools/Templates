@@ -1,0 +1,10 @@
+<%-- 
+Name: Partial Template.
+Author: Blake Niemyjski
+Description: Shows off how to use a code behind as a partial class.
+--%>
+<%@ CodeTemplate Language="VB" TargetLanguage="Text" Src="PartialCodeBehind.vb" ClassName="PartialTemplate" NameSpace="MyCustomNameSpace" CompilerVersion="v3.5" Description="Shows off how to use a code behind as a partial class." %>
+<%@ Property Name="PropertyInTemplate" Type="System.String" Default="Test" Optional="False" Category="Required" Description="This property is in the Template." %>
+
+PropertyInTemplate: <%= PropertyInTemplate %>
+PropertyInCodeBehind: <%= PropertyInCodeBehind %>
