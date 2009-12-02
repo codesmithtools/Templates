@@ -556,6 +556,93 @@
             <seealso cref="T:CodeSmith.Data.Audit.AlwaysAuditAttribute"/>
             <seealso cref="T:CodeSmith.Data.Audit.AuditManager"/>
         </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Caching.CacheManager"/> class.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.Register``1(System.String,System.Boolean)">
+            <summary>
+            Registers the specified provider name.
+            </summary>
+            <typeparam name="T">The type of the provider.</typeparam>
+            <param name="providerName">Name of the provider.</param>
+            <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
+            <returns>A new instance of the provider.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.Register``1">
+            <summary>
+            Registers the specified provider name.
+            </summary>
+            <typeparam name="T">The type of the provider.</typeparam>
+            <returns>A new instance of the provider.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.Register``1(System.Boolean)">
+            <summary>
+            Registers the specified provider name.
+            </summary>
+            <typeparam name="T">The type of the provider.</typeparam>
+            <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
+            <returns>A new instance of the provider.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.GetProvider(System.String)">
+            <summary>
+            Gets the provider by name. If <paramref name="providerName"/> is <see langword="null"/>, <see cref="P:CodeSmith.Data.Caching.CacheManager.DefaultProvider"/> is returned.
+            </summary>
+            <param name="providerName">Name of the provider.</param>
+            <returns>An instance of the provider.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.GetProvider``1">
+            <summary>
+            Gets the provider by the type.
+            </summary>
+            <typeparam name="T">The type of the provider.</typeparam>
+            <returns>An instance of the provider.</returns>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.CacheManager.Current">
+            <summary>
+            Gets the current singleton instance of <see cref="T:CodeSmith.Data.Caching.CacheManager"/>.
+            </summary>
+            <value>The current singleton instance.</value>
+            <remarks>
+            An instance of <see cref="T:CodeSmith.Data.Caching.CacheManager"/> wont be created until the very first 
+            call to the sealed class. This is a CLR optimization that
+            provides a properly lazy-loading singleton. 
+            </remarks>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.CacheManager.DefaultProvider">
+            <summary>
+            Gets or sets the default provider.
+            </summary>
+            <value>The default provider.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Caching.CacheManager.Nested">
+            <summary>
+            Nested class to lazy-load singleton.
+            </summary>
+        </member>
+        <member name="F:CodeSmith.Data.Caching.CacheManager.Nested.Current">
+            <summary>
+            Current singleton instance.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManagerSection.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Caching.CacheManagerSection"/> class.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.CacheManagerSection.DefaultProvider">
+            <summary>
+            Gets or sets the default provider.
+            </summary>
+            <value>The default provider.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.CacheManagerSection.Providers">
+            <summary>
+            Gets the providers to configure jobs.
+            </summary>
+            <value>The job configuration providers.</value>
+        </member>
         <member name="M:CodeSmith.Data.Collections.ConcurrentDictionary`2.AddOrUpdate(`0,`1,System.Func{`0,`1,`1})">
             <summary>Adds a key/value pair to the ConcurrentDictionary if the key does not already exist, or updates a key/value pair in the ConcurrentDictionary if the key already exists.</summary>
             <returns>The new value for the key. This will be either be the result of addValueFactory (if the key was absent) or the result of updateValueFactory (if the key was present).</returns>
@@ -801,64 +888,64 @@
             </summary>
             <value>The manager.</value>
         </member>
-        <member name="T:CodeSmith.Data.Linq.CacheSettings">
+        <member name="T:CodeSmith.Data.Caching.CacheSettings">
             <summary>
             Settings Object for QueryResultCache.FromCache Methods
             </summary>
         </member>
-        <member name="M:CodeSmith.Data.Linq.CacheSettings.#ctor">
+        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor">
             <summary>
             Creates a CacheSettings object with default/empty values.
             </summary>
         </member>
-        <member name="M:CodeSmith.Data.Linq.CacheSettings.#ctor(System.TimeSpan,System.Boolean)">
+        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.TimeSpan,System.Boolean)">
             <summary>
             Creates a CacheSettings object with default values for Sliding Expiration.
             </summary>
             <param name="slidingExpiration">Sets Sliding Expiration</param>
             <param name="cacheEmptyResult">Sets Cache Empty Result</param>
         </member>
-        <member name="M:CodeSmith.Data.Linq.CacheSettings.#ctor(System.TimeSpan,System.Web.Caching.CacheItemPriority)">
+        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.TimeSpan,System.Web.Caching.CacheItemPriority)">
             <summary>
             Creates a CacheSettings object with default values for Sliding Expiration.
             </summary>
             <param name="slidingExpiration">Sets Sliding Expiration</param>
             <param name="priority">Sets Priority</param>
         </member>
-        <member name="M:CodeSmith.Data.Linq.CacheSettings.#ctor(System.DateTime,System.Boolean)">
+        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.DateTime,System.Boolean)">
             <summary>
             Creates a CacheSettings object with default values for Absolute Expiration.
             </summary>
             <param name="absoluteExpiration">Sets Absolute Expiration</param>
             <param name="cacheEmptyResult">Sets Cache Empty Result</param>
         </member>
-        <member name="M:CodeSmith.Data.Linq.CacheSettings.#ctor(System.DateTime,System.Web.Caching.CacheItemPriority)">
+        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.DateTime,System.Web.Caching.CacheItemPriority)">
             <summary>
             Creates a CacheSettings object with default values for Absolute Expiration.
             </summary>
             <param name="absoluteExpiration">Sets Absolute Expiration</param>
             <param name="priority">Sets Priority</param>
         </member>
-        <member name="M:CodeSmith.Data.Linq.CacheSettings.#ctor(System.Int32,System.Boolean)">
+        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.Int32,System.Boolean)">
             <summary>
             Creates a CacheSettings object with default values for Duration.
             </summary>
             <param name="duration">Sets Duration</param>
             <param name="cacheEmptyResult">Sets Cache Empty Result</param>
         </member>
-        <member name="M:CodeSmith.Data.Linq.CacheSettings.#ctor(System.Int32,System.Web.Caching.CacheItemPriority)">
+        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.Int32,System.Web.Caching.CacheItemPriority)">
             <summary>
             Creates a CacheSettings object with default values for Duration.
             </summary>
             <param name="duration">Sets Duration</param>
             <param name="priority">Sets Priority</param>
         </member>
-        <member name="P:CodeSmith.Data.Linq.CacheSettings.Duration">
+        <member name="P:CodeSmith.Data.Caching.CacheSettings.Duration">
             <summary>
             The Absolute Expiration represented as (Duration) seconds from now.
             </summary>
         </member>
-        <member name="P:CodeSmith.Data.Linq.CacheSettings.SlidingExpiration">
+        <member name="P:CodeSmith.Data.Caching.CacheSettings.SlidingExpiration">
             <summary>
             Used for setting System.Web.Caching.Cache.Insert parameter slidingExpiration:
             The interval between the time the inserted object was last accessed and the
@@ -868,7 +955,7 @@
             absoluteExpiration parameter must be System.Web.Caching.Cache.NoAbsoluteExpiration.
             </summary>
         </member>
-        <member name="P:CodeSmith.Data.Linq.CacheSettings.Priority">
+        <member name="P:CodeSmith.Data.Caching.CacheSettings.Priority">
             <summary>
             Used for setting System.Web.Caching.Cache.Insert parameter priority:
             The cost of the object relative to other items stored in the cache, as
@@ -877,7 +964,7 @@
             from the cache before objects with a higher cost.
             </summary>
         </member>
-        <member name="P:CodeSmith.Data.Linq.CacheSettings.AbsoluteExpiration">
+        <member name="P:CodeSmith.Data.Caching.CacheSettings.AbsoluteExpiration">
             <summary>
             Used for setting System.Web.Caching.Cache.Insert parameter absoluteExpiration:
             The time at which the inserted object expires and is removed from the cache. To
@@ -887,12 +974,12 @@
             slidingExpiration parameter must be System.Web.Caching.Cache.NoSlidingExpiration.
             </summary>
         </member>
-        <member name="P:CodeSmith.Data.Linq.CacheSettings.CacheEmptyResult">
+        <member name="P:CodeSmith.Data.Caching.CacheSettings.CacheEmptyResult">
             <summary>
             Used to determine if an empty result should be cached.
             </summary>
         </member>
-        <member name="P:CodeSmith.Data.Linq.CacheSettings.CacheDependency">
+        <member name="P:CodeSmith.Data.Caching.CacheSettings.CacheDependency">
             <summary>
             Used for setting System.Web.Caching.Cache.Insert parameter dependencies:
             The file or cache key dependencies for the item. When any dependency changes, the
@@ -900,13 +987,19 @@
             dependencies, this parameter contains null.
             </summary>
         </member>
-        <member name="P:CodeSmith.Data.Linq.CacheSettings.CacheItemRemovedCallback">
+        <member name="P:CodeSmith.Data.Caching.CacheSettings.CacheItemRemovedCallback">
             <summary>
             Used for setting System.Web.Caching.Cache.Insert parameter onRemoveCallback:
             A delegate that, if provided, will be called when an object is removed from the
             cache. You can use this to notify applications when their objects are deleted from
             the cache.
             </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.CacheSettings.Provider">
+            <summary>
+            Gets or sets the cache provider name.
+            </summary>
+            <value>The cache provider name.</value>
         </member>
         <member name="M:CodeSmith.Data.Linq.DataContextExtensions.ExecuteQuery(System.Data.Linq.DataContext,System.Linq.IQueryable[])">
             <summary>
@@ -1017,7 +1110,7 @@
             <param name="query">The query source to use when materializing.</param>
             <param name="loadAction">The action to execute when the query is accessed.</param>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Linq.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.FutureQueryBase`1.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
             </summary>
@@ -1095,7 +1188,7 @@
             <param name="query">The query source to use when materializing.</param>
             <param name="loadAction">The action to execute when the query is accessed.</param>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureCount.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Linq.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.FutureCount.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureCount"/> class.
             </summary>
@@ -1144,7 +1237,7 @@
             <param name="query">The query source to use when materializing.</param>
             <param name="loadAction">The action to execute when the query is accessed.</param>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQuery`1.#ctor(System.Linq.IQueryable{`0},System.Action,CodeSmith.Data.Linq.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.FutureQuery`1.#ctor(System.Linq.IQueryable{`0},System.Action,CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
             </summary>
@@ -1239,7 +1332,7 @@
             <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
             <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains elements from the input sequence.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureExtensions.Future``1(System.Linq.IQueryable{``0},CodeSmith.Data.Linq.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.Future``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
             </summary>
@@ -1258,7 +1351,7 @@
             <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
             <returns>An instance of FutureCount that contains the result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCount``1(System.Linq.IQueryable{``0},CodeSmith.Data.Linq.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCount``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
             </summary>
@@ -1277,7 +1370,7 @@
             <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
             <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureFirstOrDefault``1(System.Linq.IQueryable{``0},CodeSmith.Data.Linq.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureFirstOrDefault``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
             </summary>
@@ -1301,7 +1394,7 @@
             <param name="query">The query source to use when materializing.</param>
             <param name="loadAction">The action to execute when the query is accessed.</param>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Linq.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> class.
             </summary>
@@ -1608,7 +1701,7 @@
             <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
             <returns>The result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},CodeSmith.Data.Linq.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
             the query is materialized and the result cached before being returned.
@@ -1662,7 +1755,7 @@
             <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
             <returns>The first or default result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault``1(System.Linq.IQueryable{``0},CodeSmith.Data.Linq.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
             the query is materialized and the result cached before being returned.
@@ -1679,6 +1772,14 @@
             </summary>
             <typeparam name="T">The type of the data in the data source.</typeparam>
             <param name="query">The query to be cleared.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.ClearCache``1(System.Linq.IQueryable{``0},System.String)">
+            <summary>
+            Clears the cache of a given query.
+            </summary>
+            <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be cleared.</param>
+            <param name="provider">The name of the cache provider.</param>
         </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.GetHashKey(System.Linq.IQueryable)">
             <summary>
