@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using CodeSmith.Data.Caching;
 
 namespace CodeSmith.Data.Linq
 {
@@ -89,7 +90,7 @@ namespace CodeSmith.Data.Linq
             var key = query.GetHashKey();
 
             // try to get the query result from the cache
-            var result = GetResultCache<T>(key);
+            var result = GetResultCache<T>(key, settings.Provider);
 
             if (result != null)
                 return result;
@@ -201,7 +202,20 @@ namespace CodeSmith.Data.Linq
         /// <param name="query">The query to be cleared.</param>
         public static void ClearCache<T>(this IQueryable<T> query)
         {
-            HttpRuntime.Cache.Remove(query.GetHashKey());
+            ClearCache(query, null);
+        }
+
+        /// <summary>
+        /// Clears the cache of a given query.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be cleared.</param>
+        /// <param name="provider">The name of the cache provider.</param>
+        public static void ClearCache<T>(this IQueryable<T> query, string provider)
+        {
+            ICacheProvider cacheProvider = CacheManager.Current.GetProvider(provider);
+            string key = query.GetHashKey();
+            cacheProvider.Remove(key);            
         }
 
         #endregion
@@ -222,20 +236,15 @@ namespace CodeSmith.Data.Linq
 #if DEBUG
             Debug.WriteLine("Cache Insert for key " + key);
 #endif
-
-            HttpRuntime.Cache.Insert(
-                key,
-                result,
-                settings.CacheDependency,
-                settings.AbsoluteExpiration,
-                settings.SlidingExpiration,
-                settings.Priority,
-                settings.CacheItemRemovedCallback);
+            ICacheProvider provider = CacheManager.Current.GetProvider(settings.Provider);
+            provider.Save(key, result, settings);
         }
 
-        internal static ICollection<T> GetResultCache<T>(string key)
+        internal static ICollection<T> GetResultCache<T>(string key, string provider)
         {
-            var collection = HttpRuntime.Cache.Get(key) as ICollection<T>;
+            ICacheProvider cacheProvider = CacheManager.Current.GetProvider(provider);
+            var collection = cacheProvider.Get<ICollection<T>>(key) as ICollection<T>;
+
 #if DEBUG
             if (collection != null)
                 Debug.WriteLine("Cache Hit for key " + key);

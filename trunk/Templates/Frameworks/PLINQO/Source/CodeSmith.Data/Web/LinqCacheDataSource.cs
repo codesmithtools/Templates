@@ -88,7 +88,8 @@ namespace CodeSmith.Data.Web
 
             Debug.WriteLine("Cache Insert: " + key);
             Context.Cache.Insert(key, e.Result, null,
-                                 DateTime.Now.AddSeconds(Duration), Cache.NoSlidingExpiration);
+                                 DateTime.Now.AddSeconds(Duration), 
+                                 System.Web.Caching.Cache.NoSlidingExpiration);
         }
 
         private string GetKey()

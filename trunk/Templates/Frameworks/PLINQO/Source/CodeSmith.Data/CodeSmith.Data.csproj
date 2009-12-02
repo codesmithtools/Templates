@@ -64,6 +64,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -107,6 +108,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Audit\NotAuditedAttribute.cs" />
+    <Compile Include="Caching\CacheManager.cs" />
+    <Compile Include="Caching\CacheManagerSection.cs" />
+    <Compile Include="Caching\CacheProvider.cs" />
+    <Compile Include="Caching\CacheProviderCollection.cs" />
+    <Compile Include="Caching\HttpCacheProvider.cs" />
+    <Compile Include="Caching\ICacheProvider.cs" />
     <Compile Include="Collections\ConcurrentDictionary.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -116,7 +123,7 @@
     <Compile Include="IDataManager.cs" />
     <Compile Include="IEntityManager.cs" />
     <Compile Include="ILinqEntity.cs" />
-    <Compile Include="Linq\CacheSettings.cs" />
+    <Compile Include="Caching\CacheSettings.cs" />
     <Compile Include="Linq\ComparisonOperator.cs" />
     <Compile Include="Linq\ContainmentOperator.cs" />
     <Compile Include="Linq\DataContextExtensions.cs" />

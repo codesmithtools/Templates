@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Linq;
+using CodeSmith.Data.Caching;
 
 namespace CodeSmith.Data.Linq
 {

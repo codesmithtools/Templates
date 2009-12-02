@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Data.Linq;
 using System.Diagnostics;
 using System.Linq;
+using CodeSmith.Data.Caching;
 
 namespace CodeSmith.Data.Linq
 {
@@ -51,7 +52,7 @@ namespace CodeSmith.Data.Linq
                 return;
 
             string key = GetKey();
-            ICollection<T> cached = QueryResultCache.GetResultCache<T>(key);
+            ICollection<T> cached = QueryResultCache.GetResultCache<T>(key, _cacheSettings.Provider);
 
             if (cached == null)
                 return;
