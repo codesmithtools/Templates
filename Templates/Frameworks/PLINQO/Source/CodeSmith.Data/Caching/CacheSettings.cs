@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.Caching;
 
-namespace CodeSmith.Data.Linq
+namespace CodeSmith.Data.Caching
 {
     /// <summary>
     /// Settings Object for QueryResultCache.FromCache Methods
@@ -17,9 +17,9 @@ namespace CodeSmith.Data.Linq
         public CacheSettings()
         {
             CacheEmptyResult = true;
-            AbsoluteExpiration = Cache.NoAbsoluteExpiration;
+            AbsoluteExpiration = System.Web.Caching.Cache.NoAbsoluteExpiration;
+            SlidingExpiration = System.Web.Caching.Cache.NoSlidingExpiration;
             Priority = CacheItemPriority.Normal;
-            SlidingExpiration = Cache.NoSlidingExpiration;
         }
 
         /// <summary>
@@ -28,9 +28,8 @@ namespace CodeSmith.Data.Linq
         /// <param name="slidingExpiration">Sets Sliding Expiration</param>
         /// <param name="cacheEmptyResult">Sets Cache Empty Result</param>
         public CacheSettings(TimeSpan slidingExpiration, bool cacheEmptyResult)
+            : this()
         {
-            AbsoluteExpiration = Cache.NoAbsoluteExpiration;
-            Priority = CacheItemPriority.Normal;
             SlidingExpiration = slidingExpiration;
             CacheEmptyResult = cacheEmptyResult;
         }
@@ -41,9 +40,8 @@ namespace CodeSmith.Data.Linq
         /// <param name="slidingExpiration">Sets Sliding Expiration</param>
         /// <param name="priority">Sets Priority</param>
         public CacheSettings(TimeSpan slidingExpiration, CacheItemPriority priority)
+            : this()
         {
-            CacheEmptyResult = true;
-            AbsoluteExpiration = Cache.NoAbsoluteExpiration;
             SlidingExpiration = slidingExpiration;
             Priority = priority;
         }
@@ -54,9 +52,8 @@ namespace CodeSmith.Data.Linq
         /// <param name="absoluteExpiration">Sets Absolute Expiration</param>
         /// <param name="cacheEmptyResult">Sets Cache Empty Result</param>
         public CacheSettings(DateTime absoluteExpiration, bool cacheEmptyResult)
+            : this()
         {
-            Priority = CacheItemPriority.Normal;
-            SlidingExpiration = Cache.NoSlidingExpiration;
             AbsoluteExpiration = absoluteExpiration;
             CacheEmptyResult = cacheEmptyResult;
         }
@@ -67,9 +64,8 @@ namespace CodeSmith.Data.Linq
         /// <param name="absoluteExpiration">Sets Absolute Expiration</param>
         /// <param name="priority">Sets Priority</param>
         public CacheSettings(DateTime absoluteExpiration, CacheItemPriority priority)
+            : this()
         {
-            CacheEmptyResult = true;
-            SlidingExpiration = Cache.NoSlidingExpiration;
             AbsoluteExpiration = absoluteExpiration;
             Priority = priority;
         }
@@ -80,10 +76,8 @@ namespace CodeSmith.Data.Linq
         /// <param name="duration">Sets Duration</param>
         /// <param name="cacheEmptyResult">Sets Cache Empty Result</param>
         public CacheSettings(int duration, bool cacheEmptyResult)
+            : this()
         {
-            AbsoluteExpiration = Cache.NoAbsoluteExpiration;
-            Priority = CacheItemPriority.Normal;
-            SlidingExpiration = Cache.NoSlidingExpiration;
             Duration = duration;
             CacheEmptyResult = cacheEmptyResult;
         }
@@ -94,10 +88,8 @@ namespace CodeSmith.Data.Linq
         /// <param name="duration">Sets Duration</param>
         /// <param name="priority">Sets Priority</param>
         public CacheSettings(int duration, CacheItemPriority priority)
+            : this()
         {
-            CacheEmptyResult = true;
-            AbsoluteExpiration = Cache.NoAbsoluteExpiration;
-            SlidingExpiration = Cache.NoSlidingExpiration;
             Duration = duration;
             Priority = priority;
         }
@@ -172,6 +164,11 @@ namespace CodeSmith.Data.Linq
         /// </summary>
         public CacheItemRemovedCallback CacheItemRemovedCallback { get; set; }
 
+        /// <summary>
+        /// Gets or sets the cache provider name.
+        /// </summary>
+        /// <value>The cache provider name.</value>
+        public string Provider { get; set; }
         #endregion
     }
 }

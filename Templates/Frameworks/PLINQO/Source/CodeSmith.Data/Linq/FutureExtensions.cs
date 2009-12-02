@@ -4,6 +4,7 @@ using System.Data.Linq;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using CodeSmith.Data.Caching;
 
 namespace CodeSmith.Data.Linq
 {
