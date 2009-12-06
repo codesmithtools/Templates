@@ -13,6 +13,9 @@ using CodeSmith.Data.Caching;
 
 namespace CodeSmith.Data.Linq
 {
+    /// <summary>
+    /// Extension methods for caching IQuerable objects.
+    /// </summary>
     public static class QueryResultCache
     {
         #region FromCache
@@ -26,7 +29,8 @@ namespace CodeSmith.Data.Linq
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query)
         {
-            return query.FromCache(new CacheSettings());
+            CacheSettings cacheSettings = CacheManager.Current.DefaultProfile ?? new CacheSettings();
+            return query.FromCache(cacheSettings);
         }
 
         /// <summary>
@@ -39,10 +43,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, int duration)
         {
-            return query.FromCache(new CacheSettings
-            {
-                Duration = duration
-            });
+            return query.FromCache(new CacheSettings(duration));
         }
 
         /// <summary>
@@ -51,30 +52,12 @@ namespace CodeSmith.Data.Linq
         /// </summary>
         /// <typeparam name="T">The type of the data in the data source.</typeparam>
         /// <param name="query">The query to be materialized.</param>
-        /// <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
+        /// <param name="profileName">Name of the cache profile to use.</param>
         /// <returns>The result of the query.</returns>
-        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, TimeSpan slidingExpiration)
+        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, string profileName)
         {
-            return query.FromCache(new CacheSettings
-            {
-                SlidingExpiration = slidingExpiration
-            });
-        }
-
-        /// <summary>
-        /// Returns the result of the query; if possible from the cache, otherwise
-        /// the query is materialized and the result cached before being returned.
-        /// </summary>
-        /// <typeparam name="T">The type of the data in the data source.</typeparam>
-        /// <param name="query">The query to be materialized.</param>
-        /// <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
-        /// <returns>The result of the query.</returns>
-        public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, DateTime absoluteExpiration)
-        {
-            return query.FromCache(new CacheSettings
-            {
-                AbsoluteExpiration = absoluteExpiration
-            });
+            CacheSettings cacheSettings = CacheManager.Current.GetProfile(profileName);            
+            return query.FromCache(cacheSettings);
         }
 
         /// <summary>
@@ -147,30 +130,13 @@ namespace CodeSmith.Data.Linq
         /// </summary>
         /// <typeparam name="T">The type of the data in the data source.</typeparam>
         /// <param name="query">The query to be materialized.</param>
-        /// <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
+        /// <param name="profileName">Name of the cache profile to use.</param>
         /// <returns>The first or default result of the query.</returns>
-        public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query, TimeSpan slidingExpiration)
+        public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query, string profileName)
         {
             return query
                 .Take(1)
-                .FromCache(slidingExpiration)
-                .FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Returns the result of the query; if possible from the cache, otherwise
-        /// the query is materialized and the result cached before being returned.
-        /// Queries, caches, and returns only the first entity.
-        /// </summary>
-        /// <typeparam name="T">The type of the data in the data source.</typeparam>
-        /// <param name="query">The query to be materialized.</param>
-        /// <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
-        /// <returns>The first or default result of the query.</returns>
-        public static T FromCacheFirstOrDefault<T>(this IQueryable<T> query, DateTime absoluteExpiration)
-        {
-            return query
-                .Take(1)
-                .FromCache(absoluteExpiration)
+                .FromCache(profileName)
                 .FirstOrDefault();
         }
 
@@ -243,7 +209,7 @@ namespace CodeSmith.Data.Linq
         internal static ICollection<T> GetResultCache<T>(string key, string provider)
         {
             ICacheProvider cacheProvider = CacheManager.Current.GetProvider(provider);
-            var collection = cacheProvider.Get<ICollection<T>>(key) as ICollection<T>;
+            var collection = cacheProvider.Get<ICollection<T>>(key);
 
 #if DEBUG
             if (collection != null)
@@ -302,135 +268,6 @@ namespace CodeSmith.Data.Linq
             return hash.Aggregate(new StringBuilder(32),
                 (sb, b) => sb.Append(b.ToString("X2")))
                 .ToString();
-        }
-
-        #endregion
-    }
-
-    /// <summary>
-    /// Enables the partial evalutation of queries.
-    /// From http://msdn.microsoft.com/en-us/library/bb546158.aspx
-    /// </summary>
-    internal static class Evaluator
-    {
-        /// <summary>
-        /// Performs evaluation & replacement of independent sub-trees
-        /// </summary>
-        ///<param name="expression">The root of the expression tree.</param>
-        ///<param name="fnCanBeEvaluated">A function that decides whether a given expression node can be part of the local function.</param>
-        /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
-        public static Expression PartialEval(Expression expression, Func<Expression, bool> fnCanBeEvaluated)
-        {
-            return new SubtreeEvaluator(new Nominator(fnCanBeEvaluated).Nominate(expression)).Eval(expression);
-        }
-
-        /// <summary>
-        /// Performs evaluation & replacement of independent sub-trees
-        /// </summary>
-        ///<param name="expression">The root of the expression tree.</param>
-        /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
-        public static Expression PartialEval(Expression expression)
-        {
-            return PartialEval(expression, CanBeEvaluatedLocally);
-        }
-
-        private static bool CanBeEvaluatedLocally(Expression expression)
-        {
-            return expression.NodeType != ExpressionType.Parameter;
-        }
-
-        #region Nested type: Nominator
-
-        /// <summary>
-        /// Performs bottom-up analysis to determine which nodes can possibly
-        /// be part of an evaluated sub-tree.
-        /// </summary>
-        private class Nominator : ExpressionVisitor
-        {
-            private HashSet<Expression> candidates;
-            private bool cannotBeEvaluated;
-            private Func<Expression, bool> fnCanBeEvaluated;
-
-            internal Nominator(Func<Expression, bool> fnCanBeEvaluated)
-            {
-                this.fnCanBeEvaluated = fnCanBeEvaluated;
-            }
-
-            internal HashSet<Expression> Nominate(Expression expression)
-            {
-                candidates = new HashSet<Expression>();
-                Visit(expression);
-                return candidates;
-            }
-
-            protected override Expression Visit(Expression expression)
-            {
-                if (expression != null)
-                {
-                    bool saveCannotBeEvaluated = cannotBeEvaluated;
-                    cannotBeEvaluated = false;
-                    base.Visit(expression);
-                    if (!cannotBeEvaluated)
-                    {
-                        if (fnCanBeEvaluated(expression))
-                        {
-                            candidates.Add(expression);
-                        }
-                        else
-                        {
-                            cannotBeEvaluated = true;
-                        }
-                    }
-                    cannotBeEvaluated |= saveCannotBeEvaluated;
-                }
-                return expression;
-            }
-        }
-
-        #endregion
-
-        #region Nested type: SubtreeEvaluator
-
-        /// <summary>
-        /// Evaluates & replaces sub-trees when first candidate is reached (top-down)
-        /// </summary>
-        private class SubtreeEvaluator : ExpressionVisitor
-        {
-            private HashSet<Expression> candidates;
-
-            internal SubtreeEvaluator(HashSet<Expression> candidates)
-            {
-                this.candidates = candidates;
-            }
-
-            internal Expression Eval(Expression exp)
-            {
-                return Visit(exp);
-            }
-
-            protected override Expression Visit(Expression exp)
-            {
-                if (exp == null)
-                {
-                    return null;
-                }
-                if (candidates.Contains(exp))
-                {
-                    return Evaluate(exp);
-                }
-                return base.Visit(exp);
-            }
-
-            private Expression Evaluate(Expression e)
-            {
-                if (e.NodeType == ExpressionType.Constant)
-                {
-                    return e;
-                }
-                LambdaExpression lambda = Expression.Lambda(e);
-                Delegate fn = lambda.Compile();
-                return Expression.Constant(fn.DynamicInvoke(null), e.Type);
-            }
         }
 
         #endregion

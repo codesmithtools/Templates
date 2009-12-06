@@ -17,9 +17,9 @@ namespace CodeSmith.Data.Caching
         }
 
         /// <summary>
-        /// Gets or sets the default provider.
+        /// Gets or sets the default provider name.
         /// </summary>
-        /// <value>The default provider.</value>
+        /// <value>The default provider name.</value>
         [ConfigurationProperty("defaultProvider", DefaultValue = "HttpCacheProvider")]
         [StringValidator(MinLength = 1)]
         public string DefaultProvider
@@ -29,9 +29,33 @@ namespace CodeSmith.Data.Caching
         }
 
         /// <summary>
-        /// Gets the providers to configure jobs.
+        /// Gets or sets the default profile name.
         /// </summary>
-        /// <value>The job configuration providers.</value>
+        /// <value>The default profile name.</value>
+        [ConfigurationProperty("defaultProfile")]
+        public string DefaultProfile
+        {
+            get { return base["defaultProfile"] as string; }
+            set { base["defaultProfile"] = value; }
+        }
+
+        /// <summary>
+        /// Gets the cache profiles.
+        /// </summary>
+        /// <value>The cache profiles.</value>
+        [ConfigurationProperty("profiles")]
+        public ProfileElementCollection Profiles
+        {
+            get
+            {
+                return this["profiles"] as ProfileElementCollection;
+            }
+        }
+
+        /// <summary>
+        /// Gets the cache providers.
+        /// </summary>
+        /// <value>The cache providers.</value>
         [ConfigurationProperty("providers")]
         public ProviderSettingsCollection Providers
         {

@@ -10,6 +10,7 @@
 <%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="LinqToSqlShared.DbmlObjectModel" %>
 <%@ Import Namespace="LinqToSqlShared.Generator" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
 
 <%@ Property Category="2.Class" Name="OutputDirectory"
     Type="System.String" Default="" Optional="True"
@@ -25,6 +26,15 @@
     Type="System.String" Default="" Optional="True"
     Description="The folder to save the generated view files."
     Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Category="2.Class" Name="InterfaceDirectory"
+    Type="System.String" Default="" Optional="True"
+    Description="The folder to save the generated interface files."
+    Editor="System.Windows.Forms.Design.FolderNameEditor, System.Design, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
+
+<%@ Property Category="2.Class" Name="InterfaceNamespace"
+    Type="System.String" Default="" Optional="True"
+    Description="The namespace for the interfaces.  Leave blank to not generate them." %>
 
 <%@ Property Category="1.Mapping" Name="DbmlFile"
     Type="System.String" Default="Database.dbml" Optional="False"
@@ -55,6 +65,10 @@
     Template="Internal\Entity.Editable.cst"
     MergeProperties="False" %>
 
+<%@ Register Name="EntityInterface"
+    Template="Internal\Entity.Interface.cst"
+    MergeProperties="True" ExcludeProperties="Database,TableName,Type, EntityBase" %>
+
 <%@ Register Name="EnumClass"
     Template="Internal\Enums.cst"
     MergeProperties="False" %>
@@ -81,6 +95,7 @@
         CreateEntityBaseClass(database);
         CreateDataContextClass(database);
         CreateEntityClasses(database);
+        CreateInterfaces(database);
 
         this.RegisterReference("System.Data.Linq");
         this.RegisterReference("System.Configuration");
@@ -241,6 +256,7 @@
             NotFoundParent = type.Name,
             MergeImports = true
         };
+
         partialClass.Type = type;
         Response.WriteLine(parentFileName);
         partialClass.RenderToFile(parentFileName, insertClassMergeStrategy);
@@ -262,6 +278,84 @@
 
             CreateEntity(entityClass, partialClass, childType, rootDirectory);
         }
+    }
+
+    public void CreateInterfaces(Database database)
+    {
+        EntityInterface t = this.Create<EntityInterface>();
+        this.CopyPropertiesTo(t);
+
+        if (string.IsNullOrEmpty(this.InterfaceNamespace))
+            return;
+
+        t.Database = database;
+        t.EnumDatabase = this.EnumDatabase;
+
+        string path = InterfaceDirectory;
+
+        if ( String.IsNullOrEmpty(path) )
+            path = OutputDirectory;
+
+        foreach(Table tableMap in database.Tables)
+        {
+            Stopwatch watch = Stopwatch.StartNew();
+
+             Debug.WriteLine(string.Format(
+                "Creating Interface '{0}' ...",
+                tableMap.Type.Name));
+
+            t.TableName = tableMap.Name;
+
+            CreateInterface(t, tableMap.Type, path);
+
+            Debug.WriteLine(string.Format(
+                "Created '{0}' in {1} ms.",
+                tableMap.Type.Name,
+                watch.Elapsed.TotalMilliseconds.ToString()));
+
+            this.Progress.PerformStep();
+        }
+
+        /*
+          I wasn't quite what what this did, so left it alone and the impact on interfaces.
+          I don't have any functions in my DB.
+
+        string viewPath = string.IsNullOrEmpty(ViewDirectory) ? OutputDirectory : ViewDirectory;
+        foreach(Function function in database.Functions)
+        {
+            foreach(LinqToSqlShared.DbmlObjectModel.Type resultType in function.Types)
+            {
+                if (!generatedEntities.Contains(resultType.Name))
+                {
+                    t.TableName = string.Empty;
+                    t.EntityBase = string.Empty;
+                    t.Framework = this.Framework;
+                    p.EntityBase = string.Empty;
+
+                    CreateEntity(t, p, resultType, viewPath);
+                }
+            }
+        }*/
+    }
+
+    public void CreateInterface(
+        EntityInterface entityClass,
+        LinqToSqlShared.DbmlObjectModel.Type type,
+        string directory)
+    {
+        string className = "I"+ type.Name;
+        generatedEntities.Add(className);
+
+        string fileName = className + ".cs";
+        fileName = Path.Combine(directory, fileName);
+
+        Response.WriteLine(fileName);
+        Debug.WriteLine(string.Format("Creating Interface Class '{0}' ...",  className));
+
+        entityClass.Type = type;
+        entityClass.RenderToFile(fileName, true);
+
+        this.Progress.PerformStep();
     }
 
     public void CreateEnums(Database database, string parentFile)
@@ -301,7 +395,6 @@
             return _enumDatabase;
         }
     }
-
 </script>
 Generating Linq to Sql Entities ...
 <% Generate(); %>

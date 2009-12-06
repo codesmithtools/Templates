@@ -9,7 +9,7 @@ using CodeSmith.Data.Caching;
 namespace CodeSmith.Data.Linq
 {
     /// <summary>
-    /// Base class for future quries.
+    /// Base class for future queries.
     /// </summary>
     /// <typeparam name="T">The type for the future query.</typeparam>
     public class FutureQueryBase<T> : IFutureQuery
