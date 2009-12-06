@@ -23,6 +23,11 @@
 <%@ Property Category="2.Class" Name="Framework"
     Type="LinqToSqlShared.Generator.FrameworkEnum" Default="v35_SP1" Optional="False"
     Description="Which version of the .Net Framework is being generated for." %>
+    
+<%@ Property Category="2.Class" Name="InterfaceNamespace" 
+    Type="System.String" Default="" Optional="True" 
+    Description="The namespace for the interfaces.  Leave blank to not generate them." %>
+
 
 <%@ Property Category="2.Class" Name="ExistingFile"
     Type="CodeFileParser" Optional="True" %>
@@ -45,7 +50,8 @@ using CodeSmith.Data.Rules;
 
 namespace <%= Database.EntityNamespace %>
 {
-    <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
+    <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %> 
+    <% if(!string.IsNullOrEmpty(this.InterfaceNamespace)) { %> : <% =this.InterfaceNamespace %>.I<%=Type.Name%> <%}%>
     {
         // For more information about the features contained in this class, please visit our GoogleCode Wiki at...
         // http://code.google.com/p/codesmith/wiki/PLINQO

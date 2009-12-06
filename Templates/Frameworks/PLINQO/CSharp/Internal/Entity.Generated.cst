@@ -22,6 +22,10 @@
     Type="System.String" Default="" Optional="True"
     Description="The name of the table this class is mapped to." %>
 
+<%@ Property Category="2.Class" Name="InterfaceNamespace" 
+    Type="System.String" Default="" Optional="True" 
+    Description="The namespace for the interfaces.  Leave blank to not generate them." %>
+
 <%@ Property Category="2.Class" Name="EntityBase"
     Type="System.String" Default="LinqEntityBase" Optional="True"
     Description="The base class for the entity." %>
@@ -119,7 +123,7 @@ namespace <%= Database.EntityNamespace %>
 <% } %>
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
-        : <%= EntityBase %><% if (IncludeDataContract) { %>, ICloneable<% } %>
+        : <%= EntityBase %><% if (IncludeDataContract) { %>, ICloneable<% } %><% if(!string.IsNullOrEmpty(this.InterfaceNamespace)) { %>, <% =this.InterfaceNamespace %>.I<%=Type.Name%> <%}%> 
 <% } %>
     {
 <% if (IncludeDataRules) { %>
@@ -265,7 +269,7 @@ foreach(Column column in Type.Columns) {
         private System.Data.Linq.EntityRef<<%= a.Type %>> <%= a.Storage %>;
 
         /// <summary>
-        /// Gets or sets the <%= a.Type %> association.
+        /// Gets or sets the <see cref="<%= a.Type %>"/> association.
         /// </summary>
         <%= CreateAttribute(a) %>
 <% if (IncludeDataContract) { %>
@@ -341,7 +345,7 @@ foreach(Column column in Type.Columns) {
         private System.Data.Linq.EntitySet<<%= a.Type %>> <%= a.Storage %>;
 
         /// <summary>
-        /// Gets or sets the <%= a.Type %> association.
+        /// Gets or sets the <see cref="<%= a.Type %>"/> association.
         /// </summary>
         <%= CreateAttribute(a) %>
 <% if (IncludeDataContract) { %>

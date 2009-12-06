@@ -21,7 +21,50 @@ namespace CodeSmith.Data.Linq
         /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains elements from the input sequence.</returns>
         public static IEnumerable<T> Future<T>(this IQueryable<T> source)
         {
-            return Future(source, null);
+            return FutureCache(source, (CacheSettings)null);
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <returns>
+        /// An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
+        /// </returns>
+        public static IEnumerable<T> FutureCache<T>(this IQueryable<T> source)
+        {
+            var cacheSettings = CacheManager.Current.DefaultProfile ?? new CacheSettings();
+            return FutureCache(source, cacheSettings);
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <param name="profileName">Name of the cache profile to use.</param>
+        /// <returns>
+        /// An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
+        /// </returns>
+        public static IEnumerable<T> FutureCache<T>(this IQueryable<T> source, string profileName)
+        {
+            CacheSettings cacheSettings = CacheManager.Current.GetProfile(profileName);
+            return FutureCache(source, cacheSettings);
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+        /// <returns>
+        /// An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
+        /// </returns>
+        public static IEnumerable<T> FutureCache<T>(this IQueryable<T> source, int duration)
+        {
+            return FutureCache(source, new CacheSettings(duration));
         }
 
         /// <summary>
@@ -33,7 +76,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>
         /// An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
         /// </returns>
-        public static IEnumerable<T> Future<T>(this IQueryable<T> source, CacheSettings cacheSettings)
+        public static IEnumerable<T> FutureCache<T>(this IQueryable<T> source, CacheSettings cacheSettings)
         {
             if (source == null)
                 return source;
@@ -47,6 +90,7 @@ namespace CodeSmith.Data.Linq
             return future;
         }
 
+
         /// <summary>
         /// Provides for defering the execution of the <paramref name="source" /> query to a batch of future queries.
         /// </summary>
@@ -55,7 +99,50 @@ namespace CodeSmith.Data.Linq
         /// <returns>An instance of FutureCount that contains the result of the query.</returns>
         public static FutureCount FutureCount<T>(this IQueryable<T> source)
         {
-            return FutureCount(source, null);
+            return FutureCacheCount(source, (CacheSettings)null);
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <returns>
+        /// An instance of FutureCount that contains the result of the query.
+        /// </returns>
+        public static FutureCount FutureCacheCount<T>(this IQueryable<T> source)
+        {
+            var cacheSettings = CacheManager.Current.DefaultProfile ?? new CacheSettings();
+            return FutureCacheCount(source, cacheSettings);
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <param name="profileName">Name of the cache profile to use.</param>
+        /// <returns>
+        /// An instance of FutureCount that contains the result of the query.
+        /// </returns>
+        public static FutureCount FutureCacheCount<T>(this IQueryable<T> source, string profileName)
+        {
+            CacheSettings cacheSettings = CacheManager.Current.GetProfile(profileName);
+            return FutureCacheCount(source, cacheSettings);
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+        /// <returns>
+        /// An instance of FutureCount that contains the result of the query.
+        /// </returns>
+        public static FutureCount FutureCacheCount<T>(this IQueryable<T> source, int duration)
+        {
+            return FutureCacheCount(source, new CacheSettings(duration));
         }
 
         /// <summary>
@@ -67,7 +154,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>
         /// An instance of FutureCount that contains the result of the query.
         /// </returns>
-        public static FutureCount FutureCount<T>(this IQueryable<T> source, CacheSettings cacheSettings)
+        public static FutureCount FutureCacheCount<T>(this IQueryable<T> source, CacheSettings cacheSettings)
         {
             if (source == null)
                 return new FutureCount(0);
@@ -81,6 +168,7 @@ namespace CodeSmith.Data.Linq
             return future;
         }
 
+
         /// <summary>
         /// Provides for defering the execution of the <paramref name="source" /> query to a batch of future queries.
         /// </summary>
@@ -89,7 +177,50 @@ namespace CodeSmith.Data.Linq
         /// <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.</returns>
         public static FutureValue<T> FutureFirstOrDefault<T>(this IQueryable<T> source)
         {
-            return FutureFirstOrDefault<T>(source, null);
+            return FutureCacheFirstOrDefault(source, (CacheSettings)null);
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <returns>
+        /// An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
+        /// </returns>
+        public static FutureValue<T> FutureCacheFirstOrDefault<T>(this IQueryable<T> source)
+        {
+            var cacheSettings = CacheManager.Current.DefaultProfile ?? new CacheSettings();
+            return FutureCacheFirstOrDefault(source, cacheSettings);
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <param name="profileName">Name of the cache profile to use.</param>
+        /// <returns>
+        /// An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
+        /// </returns>
+        public static FutureValue<T> FutureCacheFirstOrDefault<T>(this IQueryable<T> source, string profileName)
+        {
+            CacheSettings cacheSettings = CacheManager.Current.GetProfile(profileName);
+            return FutureCacheFirstOrDefault(source, cacheSettings);
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+        /// <returns>
+        /// An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
+        /// </returns>
+        public static FutureValue<T> FutureCacheFirstOrDefault<T>(this IQueryable<T> source, int duration)
+        {
+            return FutureCacheFirstOrDefault(source, new CacheSettings(duration));
         }
 
         /// <summary>
@@ -101,7 +232,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>
         /// An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
         /// </returns>
-        public static FutureValue<T> FutureFirstOrDefault<T>(this IQueryable<T> source, CacheSettings cacheSettings)
+        public static FutureValue<T> FutureCacheFirstOrDefault<T>(this IQueryable<T> source, CacheSettings cacheSettings)
         {
             if (source == null)
                 return new FutureValue<T>(default(T));

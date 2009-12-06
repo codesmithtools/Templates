@@ -11,16 +11,20 @@ namespace CodeSmith.Data.Caching
     public class CacheManager
     {
         private readonly ConcurrentDictionary<string, ICacheProvider> _providers;
+        private readonly ConcurrentDictionary<string, CacheSettings> _profiles;
 
         #region Singleton
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheManager"/> class.
         /// </summary>
-        protected CacheManager()
+        public CacheManager()
         {
             _providers = new ConcurrentDictionary<string, ICacheProvider>();
+            _profiles = new ConcurrentDictionary<string, CacheSettings>();
+
             Register<HttpCacheProvider>(true);
+            DefaultProfile = new CacheSettings();
             Initialize();
         }
 
@@ -58,17 +62,30 @@ namespace CodeSmith.Data.Caching
                 return;
 
             //load providers
-            var cacheProviders = new CacheProviderCollection();
-            ProvidersHelper.InstantiateProviders(cacheSection.Providers, cacheProviders, typeof(CacheProvider));
-            foreach (CacheProvider provider in cacheProviders)
-                _providers.TryAdd(provider.Name, provider);
+            if (cacheSection.Providers.Count > 0)
+            {
+                var cacheProviders = new CacheProviderCollection();
+                ProvidersHelper.InstantiateProviders(cacheSection.Providers, cacheProviders, typeof (CacheProvider));
+                foreach (CacheProvider provider in cacheProviders)
+                    _providers.TryAdd(provider.Name, provider);
 
-            if (string.IsNullOrEmpty(cacheSection.DefaultProvider))
-                return;
+                ICacheProvider cacheProvider;
+                if (!string.IsNullOrEmpty(cacheSection.DefaultProvider))
+                    if (Providers.TryGetValue(cacheSection.DefaultProvider, out cacheProvider))
+                        DefaultProvider = cacheProvider;
+            }
 
-            ICacheProvider cacheProvider;
-            if (_providers.TryGetValue(cacheSection.DefaultProvider, out cacheProvider))
-                DefaultProvider = cacheProvider;
+            //load profiles
+            if (cacheSection.Profiles.Count > 0)
+            {
+                foreach (ProfileElement profile in cacheSection.Profiles)
+                    _profiles.TryAdd(profile.Name, profile.ToCacheSettings());
+
+                CacheSettings cacheSettings;
+                if (!string.IsNullOrEmpty(cacheSection.DefaultProfile))
+                    if (Profiles.TryGetValue(cacheSection.DefaultProfile, out cacheSettings))
+                        DefaultProfile = cacheSettings;
+            }
         }
 
         /// <summary>
@@ -76,6 +93,18 @@ namespace CodeSmith.Data.Caching
         /// </summary>
         /// <value>The default provider.</value>
         public ICacheProvider DefaultProvider { get; private set; }
+
+        public IDictionary<string, ICacheProvider> Providers
+        {
+            get { return _providers; }
+        }
+
+        public CacheSettings DefaultProfile { get; private set; }
+
+        public IDictionary<string, CacheSettings> Profiles
+        {
+            get { return _profiles; }
+        }
 
         /// <summary>
         /// Registers the specified provider name.
@@ -125,7 +154,7 @@ namespace CodeSmith.Data.Caching
                 return DefaultProvider;
 
             ICacheProvider provider;
-            if (!_providers.TryGetValue(providerName, out provider))
+            if (!Providers.TryGetValue(providerName, out provider))
                 throw new ArgumentException(string.Format(
                     "Unable to locate cache provider '{0}'.", providerName), "providerName");
 
@@ -140,6 +169,24 @@ namespace CodeSmith.Data.Caching
         public ICacheProvider GetProvider<T>() where T : ICacheProvider
         {
             return GetProvider(typeof(T).Name);
+        }
+
+        /// <summary>
+        /// Gets an instance of <see cref="CacheSettings"/> based on the profile name. 
+        /// If the profile name is not found, the <see cref="DefaultProfile"/> is used.
+        /// </summary>
+        /// <param name="profileName">Name of the cache profile.</param>
+        /// <returns>An instance of <see cref="CacheSettings"/>.</returns>
+        public CacheSettings GetProfile(string profileName)
+        {
+            CacheSettings cacheSettings;
+            Profiles.TryGetValue(profileName, out cacheSettings);
+
+            // throw error?
+            if (cacheSettings == null)
+                cacheSettings = DefaultProfile ?? new CacheSettings();
+
+            return cacheSettings;
         }
 
     }

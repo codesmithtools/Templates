@@ -11,12 +11,28 @@ namespace CodeSmith.Data.Caching
     {
         public override void Save<T>(string key, T data, CacheSettings settings)
         {
+            DateTime absoluteExpiration = System.Web.Caching.Cache.NoAbsoluteExpiration;
+            TimeSpan slidingExpiration = System.Web.Caching.Cache.NoSlidingExpiration;
+            
+            switch (settings.Mode)
+            {
+                case CacheExpirationMode.Duration:
+                    absoluteExpiration = DateTime.UtcNow.Add(settings.Duration);
+                    break;
+                case CacheExpirationMode.Sliding:
+                    slidingExpiration = settings.Duration;
+                    break;
+                case CacheExpirationMode.Absolute:
+                    absoluteExpiration = settings.AbsoluteExpiration;
+                    break;
+            }
+            
             HttpRuntime.Cache.Insert(
                key,
                data,
                settings.CacheDependency,
-               settings.AbsoluteExpiration,
-               settings.SlidingExpiration,
+               absoluteExpiration,
+               slidingExpiration,
                settings.Priority,
                settings.CacheItemRemovedCallback);
         }

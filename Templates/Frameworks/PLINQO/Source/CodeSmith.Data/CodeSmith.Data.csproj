@@ -110,6 +110,8 @@
     <Compile Include="Audit\NotAuditedAttribute.cs" />
     <Compile Include="Caching\CacheManager.cs" />
     <Compile Include="Caching\CacheManagerSection.cs" />
+    <Compile Include="Caching\ProfileElement.cs" />
+    <Compile Include="Caching\ProfileElementCollection.cs" />
     <Compile Include="Caching\CacheProvider.cs" />
     <Compile Include="Caching\CacheProviderCollection.cs" />
     <Compile Include="Caching\HttpCacheProvider.cs" />
@@ -128,6 +130,7 @@
     <Compile Include="Linq\ContainmentOperator.cs" />
     <Compile Include="Linq\DataContextExtensions.cs" />
     <Compile Include="Linq\DynamicQuery.cs" />
+    <Compile Include="Linq\Evaluator.cs" />
     <Compile Include="Linq\ExpressionVisitor.cs" />
     <Compile Include="Linq\FutureCount.cs" />
     <Compile Include="Linq\FutureQuery.cs" />
