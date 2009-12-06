@@ -599,6 +599,14 @@
             <typeparam name="T">The type of the provider.</typeparam>
             <returns>An instance of the provider.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.GetProfile(System.String)">
+            <summary>
+            Gets an instance of <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> based on the profile name. 
+            If the profile name is not found, the <see cref="P:CodeSmith.Data.Caching.CacheManager.DefaultProfile"/> is used.
+            </summary>
+            <param name="profileName">Name of the cache profile.</param>
+            <returns>An instance of <see cref="T:CodeSmith.Data.Caching.CacheSettings"/>.</returns>
+        </member>
         <member name="P:CodeSmith.Data.Caching.CacheManager.Current">
             <summary>
             Gets the current singleton instance of <see cref="T:CodeSmith.Data.Caching.CacheManager"/>.
@@ -633,15 +641,86 @@
         </member>
         <member name="P:CodeSmith.Data.Caching.CacheManagerSection.DefaultProvider">
             <summary>
-            Gets or sets the default provider.
+            Gets or sets the default provider name.
             </summary>
-            <value>The default provider.</value>
+            <value>The default provider name.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.CacheManagerSection.DefaultProfile">
+            <summary>
+            Gets or sets the default profile name.
+            </summary>
+            <value>The default profile name.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.CacheManagerSection.Profiles">
+            <summary>
+            Gets the cache profiles.
+            </summary>
+            <value>The cache profiles.</value>
         </member>
         <member name="P:CodeSmith.Data.Caching.CacheManagerSection.Providers">
             <summary>
-            Gets the providers to configure jobs.
+            Gets the cache providers.
             </summary>
-            <value>The job configuration providers.</value>
+            <value>The cache providers.</value>
+        </member>
+        <member name="T:CodeSmith.Data.Caching.ProfileElement">
+            <summary>
+            Profile configuration element.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.ProfileElement.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Caching.ProfileElement"/> class.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.ProfileElement.Name">
+            <summary>
+            Gets or sets the name of the profile.
+            </summary>
+            <value>The name of the profile.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.ProfileElement.Description">
+            <summary>
+            Gets or sets the description for the profile.
+            </summary>
+            <value>The description for the profile.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.ProfileElement.Duration">
+            <summary>
+            Gets or sets the expiration duration.
+            </summary>
+            <value>The expiration duration.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.ProfileElement.Provider">
+            <summary>
+            Gets or sets the cache provider name.
+            </summary>
+            <value>The cache provider name.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.ProfileElement.IsSlidingExpiration">
+            <summary>
+            Gets or sets a value indicating whether the cache is sliding expiration.
+            </summary>
+            <value>
+            	<c>true</c> if the cache is sliding expiration; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.ProfileElementCollection.CreateNewElement">
+            <summary>
+            When overridden in a derived class, creates a new <see cref="T:System.Configuration.ConfigurationElement"/>.
+            </summary>
+            <returns>
+            A new <see cref="T:System.Configuration.ConfigurationElement"/>.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.ProfileElementCollection.GetElementKey(System.Configuration.ConfigurationElement)">
+            <summary>
+            Gets the element key for a specified configuration element when overridden in a derived class.
+            </summary>
+            <param name="element">The <see cref="T:System.Configuration.ConfigurationElement"/> to return the key for.</param>
+            <returns>
+            An <see cref="T:System.Object"/> that acts as the key for the specified <see cref="T:System.Configuration.ConfigurationElement"/>.
+            </returns>
         </member>
         <member name="M:CodeSmith.Data.Collections.ConcurrentDictionary`2.AddOrUpdate(`0,`1,System.Func{`0,`1,`1})">
             <summary>Adds a key/value pair to the ConcurrentDictionary if the key does not already exist, or updates a key/value pair in the ConcurrentDictionary if the key already exists.</summary>
@@ -895,65 +974,26 @@
         </member>
         <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor">
             <summary>
-            Creates a CacheSettings object with default/empty values.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> class.
             </summary>
         </member>
-        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.TimeSpan,System.Boolean)">
+        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.Int32)">
             <summary>
-            Creates a CacheSettings object with default values for Sliding Expiration.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> class with the specified duration.
             </summary>
-            <param name="slidingExpiration">Sets Sliding Expiration</param>
-            <param name="cacheEmptyResult">Sets Cache Empty Result</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
         </member>
-        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.TimeSpan,System.Web.Caching.CacheItemPriority)">
+        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.DateTime)">
             <summary>
-            Creates a CacheSettings object with default values for Sliding Expiration.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> class with the specified absolute expiration.
             </summary>
-            <param name="slidingExpiration">Sets Sliding Expiration</param>
-            <param name="priority">Sets Priority</param>
+            <param name="absoluteExpiration">The absolute DateTime the cache will expire.</param>
         </member>
-        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.DateTime,System.Boolean)">
+        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.TimeSpan)">
             <summary>
-            Creates a CacheSettings object with default values for Absolute Expiration.
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> class with the specified sliding expiration.
             </summary>
-            <param name="absoluteExpiration">Sets Absolute Expiration</param>
-            <param name="cacheEmptyResult">Sets Cache Empty Result</param>
-        </member>
-        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.DateTime,System.Web.Caching.CacheItemPriority)">
-            <summary>
-            Creates a CacheSettings object with default values for Absolute Expiration.
-            </summary>
-            <param name="absoluteExpiration">Sets Absolute Expiration</param>
-            <param name="priority">Sets Priority</param>
-        </member>
-        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.Int32,System.Boolean)">
-            <summary>
-            Creates a CacheSettings object with default values for Duration.
-            </summary>
-            <param name="duration">Sets Duration</param>
-            <param name="cacheEmptyResult">Sets Cache Empty Result</param>
-        </member>
-        <member name="M:CodeSmith.Data.Caching.CacheSettings.#ctor(System.Int32,System.Web.Caching.CacheItemPriority)">
-            <summary>
-            Creates a CacheSettings object with default values for Duration.
-            </summary>
-            <param name="duration">Sets Duration</param>
-            <param name="priority">Sets Priority</param>
-        </member>
-        <member name="P:CodeSmith.Data.Caching.CacheSettings.Duration">
-            <summary>
-            The Absolute Expiration represented as (Duration) seconds from now.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Caching.CacheSettings.SlidingExpiration">
-            <summary>
-            Used for setting System.Web.Caching.Cache.Insert parameter slidingExpiration:
-            The interval between the time the inserted object was last accessed and the
-            time at which that object expires. If this value is the equivalent of 20
-            minutes, the object will expire and be removed from the cache 20 minutes after
-            it was last accessed. If you are using sliding expiration, the
-            absoluteExpiration parameter must be System.Web.Caching.Cache.NoAbsoluteExpiration.
-            </summary>
+            <param name="slidingExpiration">The sliding expiration.</param>
         </member>
         <member name="P:CodeSmith.Data.Caching.CacheSettings.Priority">
             <summary>
@@ -962,16 +1002,6 @@
             expressed by the System.Web.Caching.CacheItemPriority enumeration. This value is
             used by the cache when it evicts objects; objects with a lower cost are removed
             from the cache before objects with a higher cost.
-            </summary>
-        </member>
-        <member name="P:CodeSmith.Data.Caching.CacheSettings.AbsoluteExpiration">
-            <summary>
-            Used for setting System.Web.Caching.Cache.Insert parameter absoluteExpiration:
-            The time at which the inserted object expires and is removed from the cache. To
-            avoid possible issues with local time such as changes from standard time to
-            daylight saving time, use System.DateTime.UtcNow rather than System.DateTime.Now
-            for this parameter value. If you are using absolute expiration, the
-            slidingExpiration parameter must be System.Web.Caching.Cache.NoSlidingExpiration.
             </summary>
         </member>
         <member name="P:CodeSmith.Data.Caching.CacheSettings.CacheEmptyResult">
@@ -1049,17 +1079,32 @@
             <param name="src">The <see cref="T:System.Data.Common.DbParameter"/> to clone.</param>
             <returns>Returns a clone (via copying all properties) of an existing <see cref="T:System.Data.Common.DbParameter"/>.</returns>
         </member>
-        <member name="T:CodeSmith.Data.Linq.ExpressionVisitor`1">
+        <member name="T:CodeSmith.Data.Linq.Evaluator">
             <summary>
-            This class visits every Parameter expression in an expression tree and calls a delegate
-            to optionally replace the parameter.  This is useful where two expression trees need to
-            be merged (and they don't share the same ParameterExpressions).
+            Enables the partial evalutation of queries.
+            From http://msdn.microsoft.com/en-us/library/bb546158.aspx
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:CodeSmith.Data.Linq.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})" -->
+        <!-- Badly formed XML comment ignored for member "M:CodeSmith.Data.Linq.Evaluator.PartialEval(System.Linq.Expressions.Expression)" -->
+        <member name="T:CodeSmith.Data.Linq.Evaluator.Nominator">
+            <summary>
+            Performs bottom-up analysis to determine which nodes can possibly
+            be part of an evaluated sub-tree.
             </summary>
         </member>
         <member name="T:CodeSmith.Data.Linq.ExpressionVisitor">
             <summary>
             Expression visitor
             (from http://blogs.msdn.com/mattwar/archive/2007/07/31/linq-building-an-iqueryable-provider-part-ii.aspx)
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:CodeSmith.Data.Linq.Evaluator.SubtreeEvaluator" -->
+        <member name="T:CodeSmith.Data.Linq.ExpressionVisitor`1">
+            <summary>
+            This class visits every Parameter expression in an expression tree and calls a delegate
+            to optionally replace the parameter.  This is useful where two expression trees need to
+            be merged (and they don't share the same ParameterExpressions).
             </summary>
         </member>
         <member name="T:CodeSmith.Data.Linq.FutureCount">
@@ -1069,7 +1114,7 @@
         </member>
         <member name="T:CodeSmith.Data.Linq.FutureQueryBase`1">
             <summary>
-            Base class for future quries.
+            Base class for future queries.
             </summary>
             <typeparam name="T">The type for the future query.</typeparam>
         </member>
@@ -1332,7 +1377,39 @@
             <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
             <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains elements from the input sequence.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureExtensions.Future``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCache``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCache``1(System.Linq.IQueryable{``0},System.String)">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCache``1(System.Linq.IQueryable{``0},System.Int32)">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCache``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
             </summary>
@@ -1351,7 +1428,39 @@
             <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
             <returns>An instance of FutureCount that contains the result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCount``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCacheCount``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <returns>
+            An instance of FutureCount that contains the result of the query.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCacheCount``1(System.Linq.IQueryable{``0},System.String)">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <returns>
+            An instance of FutureCount that contains the result of the query.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCacheCount``1(System.Linq.IQueryable{``0},System.Int32)">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <returns>
+            An instance of FutureCount that contains the result of the query.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCacheCount``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
             </summary>
@@ -1370,7 +1479,39 @@
             <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
             <returns>An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureFirstOrDefault``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCacheFirstOrDefault``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <returns>
+            An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.String)">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <returns>
+            An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.Int32)">
+            <summary>
+            Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <returns>
+            An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureExtensions.FutureCacheFirstOrDefault``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
             </summary>
@@ -1662,6 +1803,11 @@
             <param name="totalCount">The total count.</param>
             <returns>A new instance of <see cref="T:CodeSmith.Data.Linq.PagedList`1"/>.</returns>
         </member>
+        <member name="T:CodeSmith.Data.Linq.QueryResultCache">
+            <summary>
+            Extension methods for caching IQuerable objects.
+            </summary>
+        </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0})">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
@@ -1681,24 +1827,14 @@
             <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
             <returns>The result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},System.TimeSpan)">
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},System.String)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
             the query is materialized and the result cached before being returned.
             </summary>
             <typeparam name="T">The type of the data in the data source.</typeparam>
             <param name="query">The query to be materialized.</param>
-            <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
-            <returns>The result of the query.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},System.DateTime)">
-            <summary>
-            Returns the result of the query; if possible from the cache, otherwise
-            the query is materialized and the result cached before being returned.
-            </summary>
-            <typeparam name="T">The type of the data in the data source.</typeparam>
-            <param name="query">The query to be materialized.</param>
-            <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
             <returns>The result of the query.</returns>
         </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
@@ -1733,7 +1869,7 @@
             <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
             <returns>The first or default result of the query.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.TimeSpan)">
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.String)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
             the query is materialized and the result cached before being returned.
@@ -1741,18 +1877,7 @@
             </summary>
             <typeparam name="T">The type of the data in the data source.</typeparam>
             <param name="query">The query to be materialized.</param>
-            <param name="slidingExpiration">The interval between the time that the cached object was last accessed and the time at which that object expires.</param>
-            <returns>The first or default result of the query.</returns>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.DateTime)">
-            <summary>
-            Returns the result of the query; if possible from the cache, otherwise
-            the query is materialized and the result cached before being returned.
-            Queries, caches, and returns only the first entity.
-            </summary>
-            <typeparam name="T">The type of the data in the data source.</typeparam>
-            <param name="query">The query to be materialized.</param>
-            <param name="absoluteExpiration">The time at which the inserted object expires and is removed from the cache.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
             <returns>The first or default result of the query.</returns>
         </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
@@ -1788,21 +1913,6 @@
             <param name="query">The query to build a key from.</param>
             <returns>A Md5 hash unique to the query.</returns>
         </member>
-        <member name="T:CodeSmith.Data.Linq.Evaluator">
-            <summary>
-            Enables the partial evalutation of queries.
-            From http://msdn.microsoft.com/en-us/library/bb546158.aspx
-            </summary>
-        </member>
-        <!-- Badly formed XML comment ignored for member "M:CodeSmith.Data.Linq.Evaluator.PartialEval(System.Linq.Expressions.Expression,System.Func{System.Linq.Expressions.Expression,System.Boolean})" -->
-        <!-- Badly formed XML comment ignored for member "M:CodeSmith.Data.Linq.Evaluator.PartialEval(System.Linq.Expressions.Expression)" -->
-        <member name="T:CodeSmith.Data.Linq.Evaluator.Nominator">
-            <summary>
-            Performs bottom-up analysis to determine which nodes can possibly
-            be part of an evaluated sub-tree.
-            </summary>
-        </member>
-        <!-- Badly formed XML comment ignored for member "T:CodeSmith.Data.Linq.Evaluator.SubtreeEvaluator" -->
         <member name="M:CodeSmith.Data.Linq.TableExtensions.Delete``1(System.Data.Linq.Table{``0},System.Linq.IQueryable{``0})">
             <summary>
             Immediately deletes all entities from the collection with a single delete command.
