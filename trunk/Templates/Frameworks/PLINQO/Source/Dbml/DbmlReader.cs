@@ -36,20 +36,29 @@ namespace LinqToSqlShared.DbmlObjectModel
             public Database FileToDbml(string filename)
             {
                 Database database = null;
-                using (var stream = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
+                try
                 {
-                    functionIds = GetAllFunctionIds(stream);
-                    using (var reader = new XmlTextReader(stream))
+                    using (var stream = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
                     {
-                        while (reader.Read())
+                        functionIds = GetAllFunctionIds(stream);
+                        using (var reader = new XmlTextReader(stream))
                         {
-                            if (((reader.NodeType == XmlNodeType.Element)
-                                 && (reader.Name == "Database")) && IsInNamespace(reader))
+                            while (reader.Read())
                             {
-                                database = ReadDatabase(reader);
+                                if (((reader.NodeType == XmlNodeType.Element)
+                                     && (reader.Name == "Database")) && IsInNamespace(reader))
+                                {
+                                    database = ReadDatabase(reader);
+                                }
                             }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    throw new ApplicationException(
+                        string.Format("Error loading the dbml file '{0}'. Please verify the dbml file exists and is an xml file.", filename), 
+                        ex);
                 }
 
                 if (database == null)
