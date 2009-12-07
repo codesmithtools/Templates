@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CodeSmith.Data.Linq;
 using NUnit.Framework;
 using Tracker.Core.Data;
-using CodeSmith.Data.Linq;
 
 namespace Tracker.Tests.FutureTests
 {
@@ -74,7 +74,7 @@ namespace Tracker.Tests.FutureTests
             // this should already be loaded
             Assert.IsTrue(((IFutureQuery)q2).IsLoaded);
 
-            var count = q2.Value;
+            int count = q2;
             Assert.Greater(count, 0);
         }
 
@@ -136,7 +136,7 @@ namespace Tracker.Tests.FutureTests
             Assert.AreEqual(3, db.FutureQueries.Count);
 
             // this triggers the loading of all the future queries
-            var user = q1.Value;
+            User user = q1;
             Assert.IsNotNull(user);
 
             // should be cleared at this point

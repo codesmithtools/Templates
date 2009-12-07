@@ -21,7 +21,7 @@ namespace Tracker.Core.Data
     [System.Data.Services.Common.DataServiceKey("Id")]
     [System.Diagnostics.DebuggerDisplay("Id: {Id}")]
     public partial class User
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.IUser  
     {
         #region Static Constructor
         /// <summary>
@@ -438,7 +438,7 @@ namespace Tracker.Core.Data
         private System.Data.Linq.EntitySet<Audit> _auditList;
 
         /// <summary>
-        /// Gets or sets the Audit association.
+        /// Gets or sets the <see cref="Audit"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Audit", Storage = "_auditList", ThisKey = "Id", OtherKey = "UserId")]
         [System.Runtime.Serialization.DataMember(Order=17, EmitDefaultValue=false)]
@@ -467,7 +467,7 @@ namespace Tracker.Core.Data
         private System.Data.Linq.EntitySet<Task> _assignedTaskList;
 
         /// <summary>
-        /// Gets or sets the Task association.
+        /// Gets or sets the <see cref="Task"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Task", Storage = "_assignedTaskList", ThisKey = "Id", OtherKey = "AssignedId")]
         [System.Runtime.Serialization.DataMember(Order=18, EmitDefaultValue=false)]
@@ -496,7 +496,7 @@ namespace Tracker.Core.Data
         private System.Data.Linq.EntitySet<Task> _createdTaskList;
 
         /// <summary>
-        /// Gets or sets the Task association.
+        /// Gets or sets the <see cref="Task"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Task1", Storage = "_createdTaskList", ThisKey = "Id", OtherKey = "CreatedId")]
         [System.Runtime.Serialization.DataMember(Order=19, EmitDefaultValue=false)]
@@ -525,7 +525,7 @@ namespace Tracker.Core.Data
         private System.Data.Linq.EntitySet<UserRole> _userRoleList;
 
         /// <summary>
-        /// Gets or sets the UserRole association.
+        /// Gets or sets the <see cref="UserRole"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_UserRole", Storage = "_userRoleList", ThisKey = "Id", OtherKey = "UserId")]
         [System.Runtime.Serialization.DataMember(Order=20, EmitDefaultValue=false)]

@@ -21,7 +21,7 @@ namespace Tracker.Core.Data
     [System.Data.Services.Common.DataServiceKey("TaskId")]
     [System.Diagnostics.DebuggerDisplay("TaskId: {TaskId}")]
     public partial class TaskExtended
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.ITaskExtended  
     {
         #region Static Constructor
         /// <summary>
@@ -203,7 +203,7 @@ namespace Tracker.Core.Data
         private System.Data.Linq.EntityRef<Task> _task;
 
         /// <summary>
-        /// Gets or sets the Task association.
+        /// Gets or sets the <see cref="Task"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Task_TaskExtended", Storage = "_task", ThisKey = "TaskId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 7, EmitDefaultValue = false)]

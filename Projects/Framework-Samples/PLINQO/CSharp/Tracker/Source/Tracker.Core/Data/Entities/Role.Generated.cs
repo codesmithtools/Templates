@@ -21,7 +21,7 @@ namespace Tracker.Core.Data
     [System.Data.Services.Common.DataServiceKey("Id")]
     [System.Diagnostics.DebuggerDisplay("Id: {Id}")]
     public partial class Role
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.IRole  
     {
         #region Static Constructor
         /// <summary>
@@ -199,7 +199,7 @@ namespace Tracker.Core.Data
         private System.Data.Linq.EntitySet<UserRole> _userRoleList;
 
         /// <summary>
-        /// Gets or sets the UserRole association.
+        /// Gets or sets the <see cref="UserRole"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Role_UserRole", Storage = "_userRoleList", ThisKey = "Id", OtherKey = "RoleId")]
         [System.Runtime.Serialization.DataMember(Order=7, EmitDefaultValue=false)]

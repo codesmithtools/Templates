@@ -7,10 +7,10 @@ using CodeSmith.Data.Linq;
 using NUnit.Framework;
 using Tracker.Core.Data;
 
-namespace Tracker.Tests.CacheTests
+namespace Tracker.Memcached.Tests.CacheTests
 {
     [TestFixture]
-    public class FromCacheTests : RoleTests
+    public class FromCacheFirstOrDefaultTests : MemcachedTestBase
     {
         [Test]
         public void SimpleTest()
@@ -20,12 +20,12 @@ namespace Tracker.Tests.CacheTests
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetHashKey();
-                    var roles = query.FromCache();
+                    var key = query.Take(1).GetHashKey();
+                    var role = query.FromCacheFirstOrDefault();
 
-                    var cache = HttpRuntime.Cache.Get(key);
+                    var cache = HttpRuntime.Cache.Get(key) as List<Role>;
                     Assert.IsNotNull(cache);
-                    Assert.AreSame(roles, cache);
+                    Assert.AreSame(role, cache.FirstOrDefault());
                 }
             }
             catch (AssertionException)
@@ -46,12 +46,12 @@ namespace Tracker.Tests.CacheTests
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetHashKey();
-                    var roles = query.FromCache(2);
+                    var key = query.Take(1).GetHashKey();
+                    var role = query.FromCacheFirstOrDefault(2);
 
-                    var cache1 = HttpRuntime.Cache.Get(key);
+                    var cache1 = HttpRuntime.Cache.Get(key) as List<Role>;
                     Assert.IsNotNull(cache1);
-                    Assert.AreSame(roles, cache1);
+                    Assert.AreSame(role, cache1.FirstOrDefault());
 
                     System.Threading.Thread.Sleep(2500);
 
@@ -77,12 +77,12 @@ namespace Tracker.Tests.CacheTests
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetHashKey();
-                    var roles = query.FromCache(2);
+                    var key = query.Take(1).GetHashKey();
+                    var role = query.FromCacheFirstOrDefault(2);
 
-                    var cache1 = HttpRuntime.Cache.Get(key);
+                    var cache1 = HttpRuntime.Cache.Get(key) as List<Role>;
                     Assert.IsNotNull(cache1);
-                    Assert.AreSame(roles, cache1);
+                    Assert.AreSame(role, cache1.FirstOrDefault());
 
                     System.Threading.Thread.Sleep(2500);
 
@@ -108,24 +108,24 @@ namespace Tracker.Tests.CacheTests
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetHashKey();
-                    var roles = query.FromCache(new CacheSettings(TimeSpan.FromSeconds(2)));
+                    var key = query.Take(1).GetHashKey();
+                    var role = query.FromCacheFirstOrDefault(new CacheSettings(TimeSpan.FromSeconds(2)));
 
-                    var cache1 = HttpRuntime.Cache.Get(key);
+                    var cache1 = HttpRuntime.Cache.Get(key) as List<Role>;
                     Assert.IsNotNull(cache1);
-                    Assert.AreSame(roles, cache1);
+                    Assert.AreSame(role, cache1.FirstOrDefault());
 
                     System.Threading.Thread.Sleep(1500);
 
-                    var cache2 = HttpRuntime.Cache.Get(key);
+                    var cache2 = HttpRuntime.Cache.Get(key) as List<Role>;
                     Assert.IsNotNull(cache2);
-                    Assert.AreSame(roles, cache2);
+                    Assert.AreSame(role, cache2.FirstOrDefault());
 
                     System.Threading.Thread.Sleep(1500);
 
-                    var cache3 = HttpRuntime.Cache.Get(key);
+                    var cache3 = HttpRuntime.Cache.Get(key) as List<Role>;
                     Assert.IsNotNull(cache3);
-                    Assert.AreSame(roles, cache3);
+                    Assert.AreSame(role, cache3.FirstOrDefault());
 
                     System.Threading.Thread.Sleep(2500);
 
@@ -152,11 +152,10 @@ namespace Tracker.Tests.CacheTests
                 {
                     var guid = System.Guid.NewGuid().ToString();
                     var query = db.Role.Where(r => r.Name == guid);
-                    var key = query.GetHashKey();
-                    var roles = query.FromCache(new CacheSettings(2) { CacheEmptyResult = false });
+                    var key = query.Take(1).GetHashKey();
+                    var role = query.FromCacheFirstOrDefault(new CacheSettings(2) { CacheEmptyResult = false });
 
-                    Assert.IsNotNull(roles);
-                    Assert.AreEqual(0, roles.Count());
+                    Assert.IsNull(role);
 
                     var cache = HttpRuntime.Cache.Get(key);
                     Assert.IsNull(cache);
@@ -181,11 +180,10 @@ namespace Tracker.Tests.CacheTests
                 {
                     var guid = System.Guid.NewGuid().ToString();
                     var query = db.Role.Where(r => r.Name == guid);
-                    var key = query.GetHashKey();
-                    var roles = query.FromCache(new CacheSettings(2) { CacheEmptyResult = true });
+                    var key = query.Take(1).GetHashKey();
+                    var role = query.FromCacheFirstOrDefault(new CacheSettings(2));
 
-                    Assert.IsNotNull(roles);
-                    Assert.AreEqual(0, roles.Count());
+                    Assert.IsNull(role);
 
                     var cache = HttpRuntime.Cache.Get(key) as List<Role>;
                     Assert.IsNotNull(cache);
