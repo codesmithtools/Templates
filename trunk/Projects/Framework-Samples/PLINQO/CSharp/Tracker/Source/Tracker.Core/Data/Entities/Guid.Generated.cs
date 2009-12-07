@@ -21,7 +21,7 @@ namespace Tracker.Core.Data
     [System.Data.Services.Common.DataServiceKey("Id")]
     [System.Diagnostics.DebuggerDisplay("Id: {Id}")]
     public partial class Guid
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.IGuid  
     {
         #region Static Constructor
         /// <summary>

@@ -21,7 +21,7 @@ namespace Tracker.Core.Data
     [System.Data.Services.Common.DataServiceKey("Id")]
     [System.Diagnostics.DebuggerDisplay("Id: {Id}")]
     public partial class Task
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.ITask  
     {
         #region Static Constructor
         /// <summary>
@@ -397,7 +397,7 @@ namespace Tracker.Core.Data
         private System.Data.Linq.EntityRef<TaskExtended> _taskExtended;
 
         /// <summary>
-        /// Gets or sets the TaskExtended association.
+        /// Gets or sets the <see cref="TaskExtended"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Task_TaskExtended", Storage = "_taskExtended", ThisKey = "Id", OtherKey = "TaskId", IsUnique = true)]
         [System.Runtime.Serialization.DataMember(Order = 15, EmitDefaultValue = false)]
@@ -431,7 +431,7 @@ namespace Tracker.Core.Data
         private System.Data.Linq.EntityRef<User> _assignedUser;
 
         /// <summary>
-        /// Gets or sets the User association.
+        /// Gets or sets the <see cref="User"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Task", Storage = "_assignedUser", ThisKey = "AssignedId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 16, EmitDefaultValue = false)]
@@ -470,7 +470,7 @@ namespace Tracker.Core.Data
         private System.Data.Linq.EntityRef<User> _createdUser;
 
         /// <summary>
-        /// Gets or sets the User association.
+        /// Gets or sets the <see cref="User"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Task1", Storage = "_createdUser", ThisKey = "CreatedId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 17, EmitDefaultValue = false)]
@@ -509,7 +509,7 @@ namespace Tracker.Core.Data
         private System.Data.Linq.EntitySet<Audit> _auditList;
 
         /// <summary>
-        /// Gets or sets the Audit association.
+        /// Gets or sets the <see cref="Audit"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Task_Audit", Storage = "_auditList", ThisKey = "Id", OtherKey = "TaskId")]
         [System.Runtime.Serialization.DataMember(Order=18, EmitDefaultValue=false)]

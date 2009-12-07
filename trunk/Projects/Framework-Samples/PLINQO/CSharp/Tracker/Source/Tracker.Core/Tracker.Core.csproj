@@ -8,8 +8,8 @@
     <ProjectGuid>{2DF2FB49-6A04-4FD5-80D9-C662825787E3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tracker.Core.Data</RootNamespace>
-    <AssemblyName>Tracker.Core.Data</AssemblyName>
+    <RootNamespace>Tracker.Core</RootNamespace>
+    <AssemblyName>Tracker.Core</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -89,6 +89,13 @@
       <SubType>Code</SubType>
       <DependentUpon>UserRole.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\Interfaces\IAudit.cs" />
+    <Compile Include="Data\Interfaces\IGuid.cs" />
+    <Compile Include="Data\Interfaces\IRole.cs" />
+    <Compile Include="Data\Interfaces\ITask.cs" />
+    <Compile Include="Data\Interfaces\ITaskExtended.cs" />
+    <Compile Include="Data\Interfaces\IUser.cs" />
+    <Compile Include="Data\Interfaces\IUserRole.cs" />
     <Compile Include="Data\LinqEntityBase.cs" />
     <Compile Include="Data\LinqEntityBase.Generated.cs">
       <SubType>Code</SubType>

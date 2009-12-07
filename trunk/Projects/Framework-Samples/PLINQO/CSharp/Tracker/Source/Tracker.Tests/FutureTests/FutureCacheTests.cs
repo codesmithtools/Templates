@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CodeSmith.Data.Caching;
 using NUnit.Framework;
 using Tracker.Core.Data;
 using CodeSmith.Data.Linq;
@@ -17,16 +18,16 @@ namespace Tracker.Tests.FutureTests
             var db = new TrackerDataContext();
             db.Log = Console.Out;
 
-            CacheSettings cache = new CacheSettings(120, false);
+            CacheSettings cache = new CacheSettings(120);
             
             // build up queries
             var q1 = db.User
                 .ByEmailAddress("one@test.com")
-                .Future(cache);
+                .FutureCache(cache);
 
             var q2 = db.Task
                 .Where(t => t.Summary == "Test")
-                .Future(cache);
+                .FutureCache(cache);
 
             // this triggers the loading of all the future queries
             var users = q1.ToList();
@@ -41,11 +42,11 @@ namespace Tracker.Tests.FutureTests
             // queries are loaded and cached, run same queries again...
             var c1 = db.User
                 .ByEmailAddress("one@test.com")
-                .Future(cache);
+                .FutureCache(cache);
 
             var c2 = db.Task
                 .Where(t => t.Summary == "Test")
-                .Future(cache);
+                .FutureCache(cache);
 
             // should be loaded because it came from cache
             Assert.IsTrue(((IFutureQuery)c1).IsLoaded);
@@ -64,16 +65,16 @@ namespace Tracker.Tests.FutureTests
             var db = new TrackerDataContext();
             db.Log = Console.Out;
 
-            CacheSettings cache = new CacheSettings(120, false);
+            CacheSettings cache = new CacheSettings(120);
 
             // build up queries
             var q1 = db.User
                 .ByEmailAddress("one@test.com")
-                .Future(cache);
+                .FutureCache(cache);
 
             var q2 = db.Task
                 .Where(t => t.Summary == "Test")
-                .FutureCount(cache);
+                .FutureCacheCount(cache);
 
             // this triggers the loading of all the future queries
             var users = q1.ToList();
@@ -88,11 +89,11 @@ namespace Tracker.Tests.FutureTests
             // queries are loaded and cached, run same queries again...
             var c1 = db.User
                 .ByEmailAddress("one@test.com")
-                .Future(cache);
+                .FutureCache(cache);
 
             var c2 = db.Task
                 .Where(t => t.Summary == "Test")
-                .FutureCount(cache);
+                .FutureCacheCount(cache);
 
             // should be loaded because it came from cache
             Assert.IsTrue(((IFutureQuery)c1).IsLoaded);
@@ -111,16 +112,16 @@ namespace Tracker.Tests.FutureTests
             var db = new TrackerDataContext();
             db.Log = Console.Out;
 
-            CacheSettings cache = new CacheSettings(120, false);
+            CacheSettings cache = new CacheSettings(120);
 
             // build up queries
             var q1 = db.User
                 .ByEmailAddress("one@test.com")
-                .Future(cache);
+                .FutureCache(cache);
 
             var q2 = db.Task
                 .Where(t => t.Summary == "Test")
-                .FutureCount(cache);
+                .FutureCacheCount(cache);
 
             // access q2 first to trigger loading, testing loading from FutureCount
             // this triggers the loading of all the future queries
@@ -136,11 +137,11 @@ namespace Tracker.Tests.FutureTests
             // queries are loaded and cached, run same queries again...
             var c1 = db.User
                 .ByEmailAddress("one@test.com")
-                .Future(cache);
+                .FutureCache(cache);
 
             var c2 = db.Task
                 .Where(t => t.Summary == "Test")
-                .FutureCount(cache);
+                .FutureCacheCount(cache);
 
             // should be loaded because it came from cache
             Assert.IsTrue(((IFutureQuery)c1).IsLoaded);
@@ -159,21 +160,21 @@ namespace Tracker.Tests.FutureTests
             var db = new TrackerDataContext();
             db.Log = Console.Out;
 
-            CacheSettings cache = new CacheSettings(120, false);
+            CacheSettings cache = new CacheSettings(120);
             
             // build up queries
             var q1 = db.User
                 .ByEmailAddress("one@test.com")
-                .FutureFirstOrDefault(cache);
+                .FutureCacheFirstOrDefault(cache);
 
             var q2 = db.Task
                 .Where(t => t.Summary == "Test")
-                .FutureCount(cache);
+                .FutureCacheCount(cache);
 
             // duplicate query except count
             var q3 = db.Task
                 .Where(t => t.Summary == "Test")
-                .Future(cache);
+                .FutureCache(cache);
 
             // this triggers the loading of all the future queries
             var user = q1.Value;
@@ -191,15 +192,15 @@ namespace Tracker.Tests.FutureTests
             // queries are loaded and cached, run same queries again...
             var c1 = db.User
                 .ByEmailAddress("one@test.com")
-                .FutureFirstOrDefault(cache);
+                .FutureCacheFirstOrDefault(cache);
 
             var c2 = db.Task
                 .Where(t => t.Summary == "Test")
-                .FutureCount(cache);
+                .FutureCacheCount(cache);
 
             var c3 = db.Task
                 .Where(t => t.Summary == "Test")
-                .Future(cache);
+                .FutureCache(cache);
 
             // should be loaded because it came from cache
             Assert.IsTrue(((IFutureQuery)c1).IsLoaded);
@@ -222,21 +223,21 @@ namespace Tracker.Tests.FutureTests
             var db = new TrackerDataContext();
             db.Log = Console.Out;
 
-            CacheSettings cache = new CacheSettings(120, false);
+            CacheSettings cache = new CacheSettings(120);
             
             // build up queries
             var q1 = db.User
                 .Where(u => u.EmailAddress == "one@test.com")
-                .FutureFirstOrDefault(cache);
+                .FutureCacheFirstOrDefault(cache);
 
             var q2 = db.Task
                 .Where(t => t.Summary == "Test")
-                .FutureCount(cache);
+                .FutureCacheCount(cache);
 
             // duplicate query except count
             var q3 = db.Task
                 .Where(t => t.Summary == "Test")
-                .Future(cache);
+                .FutureCache(cache);
 
             // access q2 first to trigger loading, testing loading from FutureCount
             // this triggers the loading of all the future queries
@@ -255,15 +256,15 @@ namespace Tracker.Tests.FutureTests
             // queries are loaded and cached, run same queries again...
             var c1 = db.User
                 .ByEmailAddress("one@test.com")
-                .FutureFirstOrDefault(cache);
+                .FutureCacheFirstOrDefault(cache);
 
             var c2 = db.Task
                 .Where(t => t.Summary == "Test")
-                .FutureCount(cache);
+                .FutureCacheCount(cache);
 
             var c3 = db.Task
                 .Where(t => t.Summary == "Test")
-                .Future(cache);
+                .FutureCache(cache);
 
             // should be loaded because it came from cache
             Assert.IsTrue(((IFutureQuery)c1).IsLoaded);
@@ -278,6 +279,38 @@ namespace Tracker.Tests.FutureTests
 
             tasks = c3.ToList();
             Assert.IsNotNull(tasks);
+        }
+
+        [Test]
+        public void FromCacheFutre()
+        {
+            var db = new TrackerDataContext();
+            db.Log = Console.Out;
+
+            CacheSettings cache = new CacheSettings(120);
+
+            // build up queries
+            var q1 = db.Task
+                .Where(t => t.Summary == "Test")
+                .FromCache(cache)
+                .ToList();
+
+            // duplicate query except count
+            var q2 = db.Task
+                .Where(t => t.Summary == "Test")
+                .FutureCache(120);
+
+            var q3 = db.Task
+                .Where(t => t.Summary == "Test")
+                .FutureCacheCount(cache);
+
+            var count = q3.Value;
+            Assert.Greater(count, 0);
+
+            var tasks = q2.ToList();
+            Assert.IsNotNull(tasks);
+            Assert.AreEqual(q1.Count, tasks.Count);
+
         }
     }
 }

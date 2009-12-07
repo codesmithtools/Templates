@@ -21,7 +21,7 @@ namespace Tracker.Core.Data
     [System.Data.Services.Common.DataServiceKey("Id")]
     [System.Diagnostics.DebuggerDisplay("Id: {Id}")]
     public partial class Audit
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.IAudit  
     {
         #region Static Constructor
         /// <summary>
@@ -253,7 +253,7 @@ namespace Tracker.Core.Data
         private System.Data.Linq.EntityRef<Task> _task;
 
         /// <summary>
-        /// Gets or sets the Task association.
+        /// Gets or sets the <see cref="Task"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Task_Audit", Storage = "_task", ThisKey = "TaskId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 9, EmitDefaultValue = false)]
@@ -292,7 +292,7 @@ namespace Tracker.Core.Data
         private System.Data.Linq.EntityRef<User> _user;
 
         /// <summary>
-        /// Gets or sets the User association.
+        /// Gets or sets the <see cref="User"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_Audit", Storage = "_user", ThisKey = "UserId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 10, EmitDefaultValue = false)]

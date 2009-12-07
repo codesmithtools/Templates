@@ -58,10 +58,13 @@
       <property name="IncludeDataRules">True</property>
       <property name="AuditingEnabled">True</property>
       <property name="IncludeDataContract">True</property>
+      <property name="IncludeXmlSerialization">False</property>
       <property name="AssociationNamingSuffix">ListSuffix</property>
       <property name="OutputDirectory">.\Entities</property>
       <property name="BaseDirectory">.\</property>
       <property name="ViewDirectory">.\Views</property>
+      <property name="InterfaceDirectory">.\Interfaces</property>
+      <property name="InterfaceNamespace">Tracker.Core.Data.Interfaces</property>
     </propertySet>
     <propertySet name="Managers" template="..\..\Templates\PLINQO\CSharp\Managers.cst">
       <property name="ManagerDirectory">.\Managers</property>
