@@ -25,7 +25,7 @@ namespace CodeSmith.Data.Linq
         /// <param name="query">The query source to use when materializing.</param>
         /// <param name="loadAction">The action to execute when the query is accessed.</param>
         public FutureValue(IQueryable query, Action loadAction)
-            : this(query, loadAction, null)
+            : base(query, loadAction, null)
         { }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace CodeSmith.Data.Linq
         /// </summary>
         /// <param name="underlyingValue">The underlying value.</param>
         public FutureValue(T underlyingValue)
-            : base(null, null)
+            : base(null, null, null)
         {
             _underlyingValue = underlyingValue;
             _hasValue = true;
@@ -77,6 +77,16 @@ namespace CodeSmith.Data.Linq
                 _underlyingValue = value;
                 _hasValue = true;
             }
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="FutureValue{T}"/> to <see cref="T"/>.
+        /// </summary>
+        /// <param name="futureValue">The future value.</param>
+        /// <returns>The result of forcing this lazy value.</returns>
+        public static implicit operator T(FutureValue<T> futureValue)
+        {
+            return futureValue.Value;
         }
 
         #region Debug Proxy
