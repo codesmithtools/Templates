@@ -114,7 +114,7 @@ namespace CodeSmith.Data.Linq
         {
             if (IsLoaded)
                 return _result;
-            
+
             // no load action, run query directly
             if (LoadAction == null)
             {
@@ -172,7 +172,7 @@ namespace CodeSmith.Data.Linq
                           : new List<T>();
 
             _result = resultList;
-           
+
             if (_cacheSettings == null)
                 return;
 
