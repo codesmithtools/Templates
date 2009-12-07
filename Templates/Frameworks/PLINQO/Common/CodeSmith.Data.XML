@@ -1112,6 +1112,12 @@
             Provides for defering the execution of a count query to a batch of queries.
             </summary>
         </member>
+        <member name="T:CodeSmith.Data.Linq.FutureValue`1">
+            <summary>
+            Provides for defering the execution of a query to a batch of queries.
+            </summary>
+            <typeparam name="T">The type for the future query.</typeparam>
+        </member>
         <member name="T:CodeSmith.Data.Linq.FutureQueryBase`1">
             <summary>
             Base class for future queries.
@@ -1226,6 +1232,42 @@
             </summary>
             <value>The query source to use when materializing.</value>
         </member>
+        <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(System.Linq.IQueryable,System.Action)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> class.
+            </summary>
+            <param name="query">The query source to use when materializing.</param>
+            <param name="loadAction">The action to execute when the query is accessed.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Caching.CacheSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> class.
+            </summary>
+            <param name="query">The query source to use when materializing.</param>
+            <param name="loadAction">The action to execute when the query is accessed.</param>
+            <param name="cacheSettings">The cache settings.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> class.
+            </summary>
+            <param name="underlyingValue">The underlying value.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureValue`1.op_Implicit(CodeSmith.Data.Linq.FutureValue{`0})~`0">
+            <summary>
+            Performs an implicit conversion from <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> to <see cref="!:T"/>.
+            </summary>
+            <param name="futureValue">The future value.</param>
+            <returns>The result of forcing this lazy value.</returns>
+        </member>
+        <member name="P:CodeSmith.Data.Linq.FutureValue`1.Value">
+            <summary>
+            Gets or sets the value assigned to or loaded by the query.
+            </summary>
+            <returns>
+            The value of this deferred property.
+            </returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.FutureCount.#ctor(System.Linq.IQueryable,System.Action)">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureCount"/> class.
@@ -1259,15 +1301,6 @@
             </summary>
             <param name="dataContext">The data context to get the command from.</param>
             <returns>The requested command object.</returns>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.FutureCount.Value">
-            <summary>
-            Gets or sets the value assigned to or loaded by the query.
-            </summary>
-            <value>The value.</value>
-            <returns>
-            The value of this deferred property.
-            </returns>
         </member>
         <member name="T:CodeSmith.Data.Linq.FutureQuery`1">
             <summary>
@@ -1520,41 +1553,6 @@
             <param name="cacheSettings">The cache settings.</param>
             <returns>
             An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
-            </returns>
-        </member>
-        <member name="T:CodeSmith.Data.Linq.FutureValue`1">
-            <summary>
-            Provides for defering the execution of a query to a batch of queries.
-            </summary>
-            <typeparam name="T">The type for the future query.</typeparam>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(System.Linq.IQueryable,System.Action)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> class.
-            </summary>
-            <param name="query">The query source to use when materializing.</param>
-            <param name="loadAction">The action to execute when the query is accessed.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Caching.CacheSettings)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> class.
-            </summary>
-            <param name="query">The query source to use when materializing.</param>
-            <param name="loadAction">The action to execute when the query is accessed.</param>
-            <param name="cacheSettings">The cache settings.</param>
-        </member>
-        <member name="M:CodeSmith.Data.Linq.FutureValue`1.#ctor(`0)">
-            <summary>
-            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> class.
-            </summary>
-            <param name="underlyingValue">The underlying value.</param>
-        </member>
-        <member name="P:CodeSmith.Data.Linq.FutureValue`1.Value">
-            <summary>
-            Gets or sets the value assigned to or loaded by the query.
-            </summary>
-            <returns>
-            The value of this deferred property.
             </returns>
         </member>
         <member name="T:CodeSmith.Data.Linq.IPagedList">
