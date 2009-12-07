@@ -20,8 +20,8 @@ namespace CodeSmith.Data.Caching
         /// </summary>
         public CacheManager()
         {
-            _providers = new ConcurrentDictionary<string, ICacheProvider>();
-            _profiles = new ConcurrentDictionary<string, CacheSettings>();
+            _providers = new ConcurrentDictionary<string, ICacheProvider>(StringComparer.OrdinalIgnoreCase);
+            _profiles = new ConcurrentDictionary<string, CacheSettings>(StringComparer.OrdinalIgnoreCase);
 
             Register<HttpCacheProvider>(true);
             DefaultProfile = new CacheSettings();

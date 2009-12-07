@@ -263,6 +263,11 @@ namespace LinqToSqlShared.Generator
             string descriptionColumn = settings.GetEnumDescriptionColumnName(tableSchema);
 
             DataTable table = tableSchema.GetTableData();
+            if (table.Rows.Count == 0)
+                throw new ApplicationException(string.Format(
+                    "Table '{0}' was identified as an enum table but does not contain any rows. Please insert rows into the table or ignore the table.",
+                    tableSchema.FullName));
+
             foreach (DataRow row in table.Rows)
             {
                 long value = Int64.Parse(row[primaryKey].ToString());
