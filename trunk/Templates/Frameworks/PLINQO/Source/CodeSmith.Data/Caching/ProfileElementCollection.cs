@@ -6,6 +6,9 @@ using System.Text;
 
 namespace CodeSmith.Data.Caching
 {
+    /// <summary>
+    /// A collection for <see cref="ProfileElement"/>.
+    /// </summary>
     public class ProfileElementCollection : ConfigurationElementCollection
     {
         /// <summary>

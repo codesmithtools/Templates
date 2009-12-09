@@ -6,6 +6,9 @@ using System.Text;
 
 namespace CodeSmith.Data.Caching
 {
+    /// <summary>
+    /// A class for CacheManager configuration settings section.
+    /// </summary>
     public class CacheManagerSection : ConfigurationSection
     {
         /// <summary>
