@@ -86,13 +86,11 @@ Public Sub Generate()
     If Me.IncludeDataContract Then
         Me.RegisterReference("System.Runtime.Serialization")
     End If
-    If Me.Framework = FrameworkEnum.v35_SP1 Then
-        Me.RegisterReference("System.Web.DynamicData")
-        Me.RegisterReference("System.ComponentModel.DataAnnotations")
-        If IncludeDataServices Then
-            Me.RegisterReference("System.Data.Services")
-            Me.RegisterReference("System.Data.Services.Client")
-        End If
+    Me.RegisterReference("System.Web.DynamicData")
+    Me.RegisterReference("System.ComponentModel.DataAnnotations")
+    If IncludeDataServices Then
+        Me.RegisterReference("System.Data.Services")
+        Me.RegisterReference("System.Data.Services.Client")
     End If
     Me.RegisterReference(Path.GetFullPath(Path.Combine(Me.CodeTemplateInfo.DirectoryName, "..\Common\CodeSmith.Data.dll")))
 End Sub

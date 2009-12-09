@@ -80,12 +80,9 @@ Namespace <%= Database.EntityNamespace %>
 <% End If %>
     ''' </summary>
     <%= GetClassAttributes() %>
-<% If (IncludeDataContract ANDALSO Framework = FrameworkEnum.v35) Then %>
-    <System.Runtime.Serialization.DataContractAttribute()> _
-<% Else If (IncludeDataContract ANDALSO Framework = FrameworkEnum.v35_SP1) Then%>
+<% If (IncludeDataContract) Then%>
     <System.Runtime.Serialization.DataContract(IsReference:=True)> _
 <% End If %>
-<% If (Me.Framework = FrameworkEnum.v35_SP1) Then %>
     <System.ComponentModel.DataAnnotations.ScaffoldTable(True)> _
     <System.ComponentModel.DataAnnotations.MetadataType(GetType(<%= VBKeywordEscape(Type.Name) %>.Metadata))> _
    <% If (IncludeDataServices) Then %>
@@ -103,7 +100,6 @@ Namespace <%= Database.EntityNamespace %>
     <System.Data.Services.Common.DataServiceKey(<%= dataServiceKey.ToString() %>)> _
 <% End If %>
    <% End If %>
-<% End If %>
 <%
     Dim sb As StringBuilder = new StringBuilder()
     For Each [column] As Column In Type.PrimaryKeyColumns
@@ -135,48 +131,6 @@ Namespace <%= Database.EntityNamespace %>
         ''' Initializes the <see cref="<%= VBKeywordEscape(Type.Name) %>"/> class.
         ''' </summary>
         Shared Sub New()
-            <%If(Framework = FrameworkEnum.v35_SP1) Then %>
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of <%= VBKeywordEscape(Type.Name) %>)()
-            <% Else
-                Const lengthFormat As String = "CodeSmith.Data.Rules.RuleManager.AddShared(Of {0})(new CodeSmith.Data.Rules.Validation.LengthRule(""{1}"", {2}))"
-                Const  requiredFormat As String = "CodeSmith.Data.Rules.RuleManager.AddShared(Of {0})(new CodeSmith.Data.Rules.Validation.RequiredRule(""{1}""))"
-                Const sqlDateFormat As String = "CodeSmith.Data.Rules.RuleManager.AddShared(Of {0})(new CodeSmith.Data.Rules.Validation.RangeRule<DateTime>(""{1}"", System.Data.SqlTypes.SqlDateTime.MinValue.Value, System.Data.SqlTypes.SqlDateTime.MaxValue.Value))"
-                Const createDateFormat As String = "CodeSmith.Data.Rules.RuleManager.AddShared(Of {0})(new CodeSmith.Data.Rules.Assign.NowRule(""{1}"", CodeSmith.Data.Rules.EntityState.New))"
-                Const modifyDateFormat As String = "CodeSmith.Data.Rules.RuleManager.AddShared(Of {0})(new CodeSmith.Data.Rules.Assign.NowRule(""{1}"", CodeSmith.Data.Rules.EntityState.Dirty))"
-
-                Dim indent As Integer = Response.IndentLevel
-                Response.IndentLevel = 3
-                For Each c As Column In Type.Columns
-
-                    If Not c.CanBeNull.Value AndAlso Not c.IsDbGenerated.Value Then
-
-                        If (c.Type.Contains("String")) Then
-
-                            Response.WriteLine(String.Format(requiredFormat, Type.Name, c.Member))
-
-                        Else If (c.Type.Contains("DateTime")) Then
-
-                            If (c.Member.Contains("Create")) Then
-                                Response.WriteLine(String.Format(createDateFormat, Type.Name, c.Member))
-                            Else If (c.Member.Contains("Modify") OrElse c.Member.Contains("Modified")) Then
-                                Response.WriteLine(String.Format(modifyDateFormat, Type.Name, c.Member))
-                            Else
-                                Response.WriteLine(String.Format(sqlDateFormat, Type.Name, c.Member))
-                            End If
-                        End If
-                    End If
-
-                    If (c.Type.Contains("String")) Then
-
-                        Dim size As Integer = (c.DbType).Length
-                        If (0 < size AndAlso size < 8000) Then
-                            Response.WriteLine(String.Format(lengthFormat, Type.Name, c.Member, size))
-                        End If
-                    End If
-
-                Next
-                Response.IndentLevel = indent
-                End If%>
             AddSharedRules()
         End Sub
 #End Region
@@ -271,7 +225,7 @@ For Each c As Column in Type.Columns
 <% If (c.IsDelayLoaded = True) Then %>
         <System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)> _
 <% End If %>
-<% If (Me.Framework = FrameworkEnum.v35_SP1) AndAlso (enumType IsNot Nothing) Then %>
+<% If (enumType IsNot Nothing) Then %>
         <System.ComponentModel.DataAnnotations.UIHint("Enumeration")> _
 <% End If %>
         <%= CreateAttributes(c) %>
@@ -827,7 +781,7 @@ Public Function CreateAttributes(ByVal c As Column) As String
 
    Dim prefix As String = [String].Concat(Environment.NewLine, "        ")
 
-   If Me.Framework = FrameworkEnum.v35_SP1 AndAlso c.Type.Contains("String") Then
+   If c.Type.Contains("String") Then
       Dim size As Integer = LinqToSqlShared.Generator.CommonUtility.GetColumnSize(c.DbType)
       If 0 < size AndAlso size < 8000 Then
          s.AppendFormat("{0}<ComponentModel.DataAnnotations.StringLength({1})> _", prefix, size)

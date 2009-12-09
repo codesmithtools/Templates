@@ -1,6 +1,6 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="XML" 
     Description="Generate Linq to Sql Query Extension Class File" 
-    Debug="True"  OutputType="None" %>
+    Debug="True"  OutputType="None" CompilerVersion="v3.5"%>
 
 <%@ Assembly Name="System.Design" %>
 <%@ Assembly Name="SchemaExplorer" %>
@@ -61,7 +61,8 @@ Public Sub CreateQueryClasses(ByVal databaseMap As Database, ByVal dataManager A
   Me.CopyPropertiesTo(t)
   t.DataManager = dataManager
   t.Database = databaseMap
-  
+  t.EnumDatabase = EnumDatabase
+
   For Each manager As EntityManager In dataManager.Managers
     Dim watch As Stopwatch = Stopwatch.StartNew()
     
@@ -81,6 +82,30 @@ Public Sub CreateQueryClasses(ByVal databaseMap As Database, ByVal dataManager A
     Me.Progress.PerformStep()
   Next
 End Sub
+
+Private _enumXmlFileName As String = Nothing
+
+Private ReadOnly Property EnumXmlFileName() As String
+? ? Get
+? ? ? ? If [String].IsNullOrEmpty(_enumXmlFileName) Then
+? ? ? ? ? ? _enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile)
+? ? ? ? End If
+? ? ? ? Return _enumXmlFileName
+? ? End Get
+End Property
+
+Private _enumDatabase As LinqToSqlShared.Generator.DbmlEnum.Database = Nothing
+Private _isEnumDatabaseLoaded As Boolean = False
+
+Private ReadOnly Property EnumDatabase() As LinqToSqlShared.Generator.DbmlEnum.Database
+? ? Get
+? ? ? ? If Not _isEnumDatabaseLoaded Then
+? ? ? ? ? ? _enumDatabase = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName)
+? ? ? ? ? ? _isEnumDatabaseLoaded = True
+? ? ? ? End If
+? ? ? ? Return _enumDatabase
+? ? End Get
+End Property
 
 </script>
 Generating Linq to Sql Queries ...
