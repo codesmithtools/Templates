@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using System.Web.Configuration;
 using CodeSmith.Data.Collections;
 
 namespace CodeSmith.Data.Caching
 {
+    /// <summary>
+    /// A class to manage cached items via a provider.
+    /// </summary>
     public class CacheManager
     {
         private readonly ConcurrentDictionary<string, ICacheProvider> _providers;
@@ -89,18 +90,30 @@ namespace CodeSmith.Data.Caching
         }
 
         /// <summary>
-        /// Gets or sets the default provider.
+        /// Gets the default provider.
         /// </summary>
         /// <value>The default provider.</value>
         public ICacheProvider DefaultProvider { get; private set; }
 
+        /// <summary>
+        /// Gets the list of cache providers.
+        /// </summary>
+        /// <value>The cache providers.</value>
         public IDictionary<string, ICacheProvider> Providers
         {
             get { return _providers; }
         }
 
+        /// <summary>
+        /// Gets the default profile.
+        /// </summary>
+        /// <value>The default profile.</value>
         public CacheSettings DefaultProfile { get; private set; }
 
+        /// <summary>
+        /// Gets the list of cache profiles.
+        /// </summary>
+        /// <value>The list of cache profiles.</value>
         public IDictionary<string, CacheSettings> Profiles
         {
             get { return _profiles; }

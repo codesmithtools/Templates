@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 
 namespace CodeSmith.Data.Caching
 {
@@ -77,6 +74,10 @@ namespace CodeSmith.Data.Caching
             set { this["isSlidingExpiration"] = value; }
         }
 
+        /// <summary>
+        /// Converts the profile element to a <see cref="CacheSettings"/> instance.
+        /// </summary>
+        /// <returns>An instance of <see cref="CacheSettings"/>.</returns>
         public CacheSettings ToCacheSettings()
         {
             var cache = new CacheSettings();
