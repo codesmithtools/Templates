@@ -37,7 +37,7 @@ Namespace <%= ClassNamespace %>
     ''' A base class for Linq entities that implements notification events.
     ''' </summary>
     <%If IncludeDataContract Then %>
-    <System.Runtime.Serialization.DataContract(<%If Framework = FrameworkEnum.v35_SP1 Then %> IsReference:=True <%End If%>)> _
+    <System.Runtime.Serialization.DataContract(IsReference:=True)> _
     <%End If%>
     Public Partial MustInherit Class <%= ClassName %>
        Implements System.ComponentModel.INotifyPropertyChanging

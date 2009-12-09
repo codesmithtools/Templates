@@ -56,12 +56,12 @@ Namespace <%= Database.ContextNamespace %>
     ''' The DataContext class for the <%= Database.Name %> database.
     ''' </summary>
     <%= Naming.GetModifier(Database.AccessModifier) %> Partial Class <%= Database.Class %> 
-        Inherits System.Data.Linq.DataContext
+        Inherits CodeSmith.Data.Linq.DataContextBase
 <% If (IncludeIUpdatable) Then %>
         Implements System.Data.Services.IUpdatable
 <% End If %>
 
-        Private Shared ReadOnly mappingCache As System.Data.Linq.Mapping.MappingSource = New System.Data.Linq.Mapping.AttributeMappingSource()
+        Public Shared ReadOnly MappingCache As System.Data.Linq.Mapping.MappingSource = New System.Data.Linq.Mapping.AttributeMappingSource()
 
         #Region "ConnectionString"
         Private Const CONNECTION_NAME As String = "<%= IIF(DefaultConnectionString IS NOTHING, Database.Connection.SettingsPropertyName, DefaultConnectionString) %>"
@@ -112,7 +112,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' </summary>
         <System.Diagnostics.DebuggerNonUserCode> _
         <%= Naming.GetModifier(Database.AccessModifier) %> Sub New()
-            MyBase.New(ConnectionString, mappingCache)
+            MyBase.New(ConnectionString, MappingCache)
             OnCreated()
         End Sub
 
@@ -123,7 +123,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="connection">The connection string.</param>
         <System.Diagnostics.DebuggerNonUserCode> _
         <%= Naming.GetModifier(Database.AccessModifier) %> Sub New(ByVal connection As String)
-            MyBase.New(connection, mappingCache)
+            MyBase.New(connection, MappingCache)
             OnCreated()
         End Sub
         
@@ -133,7 +133,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="connection">The database connection.</param>
         <System.Diagnostics.DebuggerNonUserCode> _
         <%= Naming.GetModifier(Database.AccessModifier) %> Sub New(ByVal connection As System.Data.IDbConnection)
-            MyBase.New(connection, mappingCache)
+            MyBase.New(connection, MappingCache)
             OnCreated()
         End Sub
         
@@ -178,10 +178,12 @@ Namespace <%= Database.ContextNamespace %>
         ''' <returns></returns>
         <%= CreateAttribute(f) %>
         <%= Naming.GetModifier(f.AccessModifier, f.Modifier) %> Function <%= f.Method %>(<%= GetArguments(f) %>) As <%= GetReturnType(f) %>
-
-            Dim result As System.Data.Linq.IExecuteResult = Me.ExecuteMethodCall(Me, _
-                (DirectCast(System.Reflection.MethodInfo.GetCurrentMethod(), System.Reflection.MethodInfo))<%= GetArgumentNames(f) %>)
-            
+            Dim methodInfo = DirectCast(System.Reflection.MethodInfo.GetCurrentMethod(), System.Reflection.MethodInfo)
+<% If (IsTableFunction(f)) Then %>
+            Dim result = Me.CreateMethodCallQuery(Of <%= GetResultName(f) %>)(Me, methodInfo<%= GetArgumentNames(f) %>)
+<% Else %>
+            Dim result As System.Data.Linq.IExecuteResult = Me.ExecuteMethodCall(Me, methodInfo<%= GetArgumentNames(f) %>)
+<% End If %>
 <% 
 Dim x As Integer
 For x = 0 TO f.Parameters.Count - 1
@@ -196,8 +198,11 @@ For x = 0 TO f.Parameters.Count - 1
     Response.WriteLine("            {0} = (DirectCast(result.GetParameterValue({2}),{1}))",p.ParameterName, GetParameterType(p), x)
 Next
 %>
-            
+<% If (IsTableFunction(f)) Then %>
+            Return result
+<% Else %>
             Return (DirectCast((result.ReturnValue),<%= GetReturnType(f) %>))
+<% End If %>
         End Function
 
 <% Next %>
@@ -552,9 +557,13 @@ End Namespace
 <script runat="template">
 Public ReadOnly Property IncludeIUpdatable() As Boolean
     Get
-        Return (Me.Framework = FrameworkEnum.v35_SP1 AndAlso Me.IncludeDataServices)
+        Return (Me.IncludeDataServices)
     End Get
 End Property
+
+Public Function IsTableFunction(ByVal f As [Function]) As Boolean
+    Return f.IsComposable = True AndAlso f.Types.Count > 0
+End Function
 
 Public Function CreateAttribute(ByVal f As [Function]) As String
     Dim s As New StringBuilder()
@@ -580,42 +589,44 @@ Public Function GetName(ByVal table As Table) As String
 End Function
 
 
-Public Function GetReturnType(ByVal [function] As [Function]) As String
+Public Function GetReturnType(ByVal f As [Function]) As String
     Dim s As New StringBuilder()
 
-    If [function].Types.Count = 0 Then
-        s.Append(VBAlias([function].[Return].Type))
-    ElseIf [function].HasMultipleResults.Value = True Then
+    If IsTableFunction(f) Then
+        s.AppendFormat("System.Linq.IQueryable(Of {0})", GetResultName(f))
+    ElseIf f.Types.Count = 0 Then
+        s.Append(VBAlias(f.[Return].Type))
+    ElseIf f.HasMultipleResults.Value = True Then
         s.Append("System.Data.Linq.IMultipleResults")
     Else
-        s.AppendFormat("System.Data.Linq.ISingleResult(Of {0})", GetResultName([function]))
+        s.AppendFormat("System.Data.Linq.ISingleResult(Of {0})", GetResultName(f))
     End If
     
     Return s.ToString()
 End Function
 
-Public Function GetResultName(ByVal [function] As [Function]) As String
-    If [function].Types.Count = 0 Then
+Public Function GetResultName(ByVal f As [Function]) As String
+    If f.Types.Count = 0 Then
         Return String.Empty
     End If
     
-    Dim resultType As LinqToSqlShared.DbmlObjectModel.Type = [function].Types(0)
-    Return [function].Types(0).Name
+    Dim resultType As LinqToSqlShared.DbmlObjectModel.Type = f.Types(0)
+    Return f.Types(0).Name
 End Function
 
-Public Function GetArguments(ByVal [function] As [Function]) As String
+Public Function GetArguments(ByVal f As [Function]) As String
     Dim s As New StringBuilder()
-    For x As Integer = 0 To [function].Parameters.Count - 1
+    For x As Integer = 0 To f.Parameters.Count - 1
         
 
-        Dim p As Parameter = [function].Parameters(x)
+        Dim p As Parameter = f.Parameters(x)
         s.AppendLine(" _")
         s.AppendFormat("            <System.Data.Linq.Mapping.Parameter(Name := ""{0}"", DbType:=""{1}"")> ", p.Name, p.DbType)
         
 
         s.AppendFormat("ByVal {1} As {0}", GetParameterType(p), p.ParameterName)
         
-        If x < [function].Parameters.Count - 1 Then
+        If x < f.Parameters.Count - 1 Then
             s.Append(", ")
         End If
     Next
@@ -632,15 +643,15 @@ Public Function GetParameterType(ByVal p As Parameter) As String
     End If
 End Function
 
-Public Function GetArgumentNames(ByVal [function] As [Function]) As String
+Public Function GetArgumentNames(ByVal f As [Function]) As String
     Dim s As New StringBuilder()
-    For x As Integer = 0 To [function].Parameters.Count - 1
+    For x As Integer = 0 To f.Parameters.Count - 1
      
-        If x < [function].Parameters.Count Then
+        If x < f.Parameters.Count Then
             s.Append(", ")
         End If
         
-        Dim p As Parameter = [function].Parameters(x)
+        Dim p As Parameter = f.Parameters(x)
         s.Append(p.ParameterName)
     Next
     

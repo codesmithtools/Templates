@@ -1,6 +1,6 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="XML" 
     Description="Generate Linq to Sql Class File" 
-    Debug="true" OutputType="None" %>
+    Debug="true" OutputType="None" CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="System.Design" %>
 <%@ Assembly Name="CodeSmith.CustomProperties" %>

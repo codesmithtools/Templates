@@ -44,11 +44,9 @@ Imports System.Linq
 Imports System.Collections.Generic
 Imports System.Text
 Imports System.Data.Linq
-<%If(Framework = FrameworkEnum.v35_SP1)Then%>
 Imports System.ComponentModel.DataAnnotations
 Imports CodeSmith.Data.Attributes
 Imports CodeSmith.Data.Rules
-<%End If%>
 
 Namespace <%= Database.EntityNamespace %>
     
@@ -59,7 +57,6 @@ Namespace <%= Database.EntityNamespace %>
         ' Also, you can watch our Video Tutorials at...
         ' http://community.codesmithtools.com/
         
-<% If (Framework = FrameworkEnum.v35_SP1) Then %>
         #Region "Metadata"
         
         <CodeSmith.Data.Audit.Audit()> _
@@ -139,7 +136,6 @@ Namespace <%= Database.EntityNamespace %>
         End Class
         
         #End Region
-<%        End If%>    
     
     End Class
 
