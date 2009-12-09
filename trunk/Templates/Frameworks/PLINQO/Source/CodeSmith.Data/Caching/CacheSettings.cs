@@ -3,11 +3,28 @@ using System.Web.Caching;
 
 namespace CodeSmith.Data.Caching
 {
+    /// <summary>
+    /// The cache expiration mode.
+    /// </summary>
     public enum CacheExpirationMode
     {
+        /// <summary>
+        /// The cache item will not expire.
+        /// </summary>
         None,
+        /// <summary>
+        /// The cache item will expire using the Duration property to calculate
+        /// the absolute expiration from DateTime.UtcNow.
+        /// </summary>
         Duration,
+        /// <summary>
+        /// The cache item will expire using the Duration property as the
+        /// sliding expiration.
+        /// </summary>
         Sliding,
+        /// <summary>
+        /// The cache item will expire on the AbsoluteExpiration DateTime.
+        /// </summary>
         Absolute
     }
 
@@ -61,56 +78,41 @@ namespace CodeSmith.Data.Caching
 
         #endregion
 
-        ///// <summary>
-        ///// The Absolute Expiration represented as a Duration from DateTime.UtcNow.
-        ///// </summary>
-        //public TimeSpan AbsoluteExpirationDuration { get; set; }
-
-        //private DateTime? _absoluteExpiration;
-
-        ///// <summary>
-        ///// Used for setting System.Web.Caching.Cache.Insert parameter absoluteExpiration:
-        ///// The time at which the inserted object expires and is removed from the cache. To
-        ///// avoid possible issues with local time such as changes from standard time to
-        ///// daylight saving time, use System.DateTime.UtcNow rather than System.DateTime.Now
-        ///// for this parameter value. If you are using absolute expiration, the
-        ///// slidingExpiration parameter must be System.Web.Caching.Cache.NoSlidingExpiration.
-        ///// </summary>
-        //public DateTime AbsoluteExpiration
-        //{
-        //    get
-        //    {
-        //        if (_absoluteExpiration.HasValue)
-        //            return _absoluteExpiration.Value;
-
-        //        return AbsoluteExpirationDuration == TimeSpan.Zero
-        //            ? Cache.NoAbsoluteExpiration
-        //            : DateTime.UtcNow.Add(AbsoluteExpirationDuration);
-        //    }
-        //    set
-        //    {
-        //        _absoluteExpiration = value;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Used for setting System.Web.Caching.Cache.Insert parameter slidingExpiration:
-        ///// The interval between the time the inserted object was last accessed and the
-        ///// time at which that object expires. If this value is the equivalent of 20
-        ///// minutes, the object will expire and be removed from the cache 20 minutes after
-        ///// it was last accessed. If you are using sliding expiration, the
-        ///// absoluteExpiration parameter must be System.Web.Caching.Cache.NoAbsoluteExpiration.
-        ///// </summary>
-        //public TimeSpan SlidingExpiration { get; set; }
-
+        /// <summary>
+        /// Gets or sets the cache expiration mode.
+        /// </summary>
+        /// <value>The cache expiration mode.</value>
         public CacheExpirationMode Mode { get; set; }
 
+        /// <summary>
+        /// Gets or sets the cache duration.
+        /// </summary>
+        /// <value>The cache duration.</value>
+        /// <remarks>
+        /// <para>
+        /// When Mode is Sliding, Duration is the interval between the time the
+        /// inserted object was last accessed and the time at which that object expires.
+        /// </para>
+        /// <para>
+        /// When Mode is Duration, Duration is used to calculate the absolute expiration
+        /// from DateTime.UtcNow.
+        /// </para>
+        /// </remarks>
         public TimeSpan Duration { get; set; }
 
+        /// <summary>
+        /// Gets or sets the absolute expiration.
+        /// </summary>
+        /// <value>The absolute expiration.</value>
+        /// <remarks>
+        /// The time at which the inserted object expires and is removed from the cache. To
+        /// avoid possible issues with local time such as changes from standard time to
+        /// daylight saving time, use System.DateTime.UtcNow rather than System.DateTime.Now
+        /// for this parameter value.
+        /// </remarks>
         public DateTime AbsoluteExpiration { get; set; }
 
         /// <summary>
-        /// Used for setting System.Web.Caching.Cache.Insert parameter priority:
         /// The cost of the object relative to other items stored in the cache, as
         /// expressed by the System.Web.Caching.CacheItemPriority enumeration. This value is
         /// used by the cache when it evicts objects; objects with a lower cost are removed
@@ -124,7 +126,6 @@ namespace CodeSmith.Data.Caching
         public bool CacheEmptyResult { get; set; }
 
         /// <summary>
-        /// Used for setting System.Web.Caching.Cache.Insert parameter dependencies:
         /// The file or cache key dependencies for the item. When any dependency changes, the
         /// object becomes invalid and is removed from the cache. If there are no
         /// dependencies, this parameter contains null.
@@ -132,7 +133,6 @@ namespace CodeSmith.Data.Caching
         public CacheDependency CacheDependency { get; set; }
 
         /// <summary>
-        /// Used for setting System.Web.Caching.Cache.Insert parameter onRemoveCallback:
         /// A delegate that, if provided, will be called when an object is removed from the
         /// cache. You can use this to notify applications when their objects are deleted from
         /// the cache.
