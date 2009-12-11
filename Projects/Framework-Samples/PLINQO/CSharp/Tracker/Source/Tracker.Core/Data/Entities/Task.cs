@@ -6,8 +6,8 @@ using System.Text;
 using System.ComponentModel.DataAnnotations;
 using CodeSmith.Data.Attributes;
 using CodeSmith.Data.Rules;
-using Tracker.Core.Data.Rules;
-using Tracker.Core.Data.Rules.Attributes;
+using Tracker.Core.Rules;
+using Tracker.Core.Rules.Attributes;
 
 namespace Tracker.Core.Data
 {

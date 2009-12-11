@@ -542,6 +542,82 @@ namespace Tracker.Core.Data
             return queryable.Where(expression);
         }
 
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Audit.Myxml"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="myxml">Myxml to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, string myxml)
+        {
+            // using object equals to support nulls
+            return queryable.Where(a => object.Equals(a.Myxml, myxml));
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Audit.Myxml"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="myxml">Myxml to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, string myxml, ContainmentOperator containmentOperator)
+        {
+            if (myxml == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+                throw new ArgumentNullException("myxml", "Parameter 'myxml' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(a => a.Myxml.Contains(myxml));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(a => a.Myxml.StartsWith(myxml));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(a => a.Myxml.EndsWith(myxml));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(a => a.Myxml.Contains(myxml) == false);
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(a => object.Equals(a.Myxml, myxml) == false);
+                default:
+                    return queryable.Where(a => object.Equals(a.Myxml, myxml));
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Audit.Myxml"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="myxml">Myxml to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, string myxml, params string[] additionalValues)
+        {
+            var myxmlList = new List<string> { myxml };
+
+            if (additionalValues != null)
+                myxmlList.AddRange(additionalValues);
+            else
+                myxmlList.Add(null);
+
+            if (myxmlList.Count == 1)
+                return queryable.ByMyxml(myxmlList[0]);
+
+            return queryable.ByMyxml(myxmlList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="Tracker.Core.Data.Audit.Myxml"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, IEnumerable<string> values)
+        {
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Audit, bool>("Myxml", values);
+            return queryable.Where(expression);
+        }
+
         #region Query
         /// <summary>
         /// A private class for lazy loading static compiled queries.

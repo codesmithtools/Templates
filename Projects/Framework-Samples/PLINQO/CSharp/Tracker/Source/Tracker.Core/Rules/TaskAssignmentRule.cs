@@ -7,6 +7,7 @@ using System.Web;
 using CodeSmith.Data.Attributes;
 using CodeSmith.Data.Rules;
 using System.Data.Linq;
+using Tracker.Core.Data;
 
 namespace Tracker.Core.Rules
 {

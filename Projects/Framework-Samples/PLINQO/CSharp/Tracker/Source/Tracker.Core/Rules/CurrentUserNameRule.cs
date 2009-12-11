@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Web.Hosting;
 using CodeSmith.Data.Rules;
+using Tracker.Core.Data;
 
 namespace Tracker.Core.Rules
 {
