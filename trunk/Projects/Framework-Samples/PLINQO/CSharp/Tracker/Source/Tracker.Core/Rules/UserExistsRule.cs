@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CodeSmith.Data.Rules;
+using Tracker.Core.Data;
 
 namespace Tracker.Core.Rules
 {

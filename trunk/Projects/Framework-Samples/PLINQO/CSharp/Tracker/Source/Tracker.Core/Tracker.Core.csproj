@@ -76,8 +76,6 @@
       <DependentUpon>Role.cs</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Entities\Status.cs" />
-    <Compile Include="Data\Entities\Status.Generated.cs" />
     <Compile Include="Data\Entities\Task.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -155,8 +153,6 @@
       <DependentUpon>RoleManager.cs</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Managers\StatusManager.cs" />
-    <Compile Include="Data\Managers\StatusManager.Generated.cs" />
     <Compile Include="Data\Managers\TaskExtendedManager.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -209,8 +205,6 @@
       <DependentUpon>RoleExtensions.cs</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Queries\StatusExtensions.cs" />
-    <Compile Include="Data\Queries\StatusExtensions.Generated.cs" />
     <Compile Include="Data\Queries\TaskExtendedExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -238,11 +232,6 @@
     <Compile Include="Data\Queries\UserRoleExtensions.Generated.cs">
       <DependentUpon>UserRoleExtensions.cs</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\Tracker.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Tracker.dbml</DependentUpon>
     </Compile>
     <Compile Include="Data\TrackerDataContext.cs">
       <SubType>Code</SubType>
@@ -309,8 +298,6 @@
     <None Include="Data\Tracker.Core.Data.csp" />
     <None Include="Data\Tracker.dbml">
       <SubType>Designer</SubType>
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>Tracker.designer.cs</LastGenOutput>
     </None>
     <None Include="Data\Tracker.dbml.layout">
       <DependentUpon>Tracker.dbml</DependentUpon>
