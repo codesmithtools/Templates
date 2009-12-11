@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using CodeSmith.Data.Rules;
 
-namespace Tracker.Core.Data.Rules
+namespace Tracker.Core.Rules
 {
     public class TaskStartDateDueDateRule : IRule
     {
