@@ -6,7 +6,7 @@ using CodeSmith.Data.Attributes;
 using CodeSmith.Data.Rules;
 using CodeSmith.Data.Rules.Assign;
 
-namespace Tracker.Core.Data.Rules
+namespace Tracker.Core.Rules
 {
     public class CurrentUserNameAttribute : RuleAttributeBase
     {

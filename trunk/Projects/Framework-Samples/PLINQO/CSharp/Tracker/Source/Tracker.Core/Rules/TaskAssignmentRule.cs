@@ -8,7 +8,7 @@ using CodeSmith.Data.Attributes;
 using CodeSmith.Data.Rules;
 using System.Data.Linq;
 
-namespace Tracker.Core.Data.Rules
+namespace Tracker.Core.Rules
 {
     public class TaskAssignmentRule : IRule
     {

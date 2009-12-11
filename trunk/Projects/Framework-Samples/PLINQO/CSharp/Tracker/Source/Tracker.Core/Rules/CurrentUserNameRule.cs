@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Hosting;
 using CodeSmith.Data.Rules;
 
-namespace Tracker.Core.Data.Rules
+namespace Tracker.Core.Rules
 {
     public class CurrentUserNameRule : PropertyRuleBase
     {

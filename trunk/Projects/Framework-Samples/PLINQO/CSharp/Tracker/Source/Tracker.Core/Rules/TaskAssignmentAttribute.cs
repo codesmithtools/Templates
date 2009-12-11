@@ -5,7 +5,7 @@ using System.Text;
 using CodeSmith.Data.Attributes;
 using CodeSmith.Data.Rules;
 
-namespace Tracker.Core.Data.Rules.Attributes
+namespace Tracker.Core.Rules.Attributes
 {
     public class TaskAssignmentAttribute : RuleAttributeBase
     {

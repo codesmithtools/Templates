@@ -10,7 +10,7 @@ using System.Configuration;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace Tracker.Core.Data.Providers
+namespace Tracker.Core.Providers
 {
     public sealed class CustomMembershipProvider : MembershipProvider
     {

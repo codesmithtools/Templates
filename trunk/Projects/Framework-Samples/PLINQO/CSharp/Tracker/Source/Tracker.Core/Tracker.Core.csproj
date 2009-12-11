@@ -55,148 +55,236 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Entities\Audit.cs" />
-    <Compile Include="Data\Entities\Audit.Generated.cs">
+    <Compile Include="Data\Entities\Audit.cs">
       <SubType>Code</SubType>
-      <DependentUpon>Audit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\Entities\Guid.cs" />
+    <Compile Include="Data\Entities\Audit.Generated.cs">
+      <DependentUpon>Audit.cs</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Entities\Guid.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Entities\Guid.Generated.cs">
       <DependentUpon>Guid.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Entities\Role.cs" />
+    <Compile Include="Data\Entities\Role.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Entities\Role.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>Role.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Entities\Task.cs" />
+    <Compile Include="Data\Entities\Status.cs" />
+    <Compile Include="Data\Entities\Status.Generated.cs" />
+    <Compile Include="Data\Entities\Task.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Entities\Task.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>Task.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Entities\TaskExtended.cs" />
+    <Compile Include="Data\Entities\TaskExtended.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Entities\TaskExtended.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>TaskExtended.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Entities\User.cs" />
+    <Compile Include="Data\Entities\User.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Entities\User.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>User.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Entities\UserRole.cs" />
+    <Compile Include="Data\Entities\UserRole.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Entities\UserRole.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>UserRole.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Interfaces\IAudit.cs" />
-    <Compile Include="Data\Interfaces\IGuid.cs" />
-    <Compile Include="Data\Interfaces\IRole.cs" />
-    <Compile Include="Data\Interfaces\ITask.cs" />
-    <Compile Include="Data\Interfaces\ITaskExtended.cs" />
-    <Compile Include="Data\Interfaces\IUser.cs" />
-    <Compile Include="Data\Interfaces\IUserRole.cs" />
-    <Compile Include="Data\LinqEntityBase.cs" />
+    <Compile Include="Data\Interfaces\IAudit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Interfaces\IGuid.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Interfaces\IRole.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Interfaces\ITask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Interfaces\ITaskExtended.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Interfaces\IUser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Interfaces\IUserRole.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\LinqEntityBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\LinqEntityBase.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>LinqEntityBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Managers\AuditManager.cs" />
-    <Compile Include="Data\Managers\AuditManager.Generated.cs">
       <SubType>Code</SubType>
-      <DependentUpon>AuditManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\Managers\GuidManager.cs" />
+    <Compile Include="Data\Managers\AuditManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Managers\AuditManager.Generated.cs">
+      <DependentUpon>AuditManager.cs</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Managers\GuidManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Managers\GuidManager.Generated.cs">
       <DependentUpon>GuidManager.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Managers\RoleManager.cs" />
+    <Compile Include="Data\Managers\RoleManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Managers\RoleManager.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>RoleManager.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Managers\TaskExtendedManager.cs" />
+    <Compile Include="Data\Managers\StatusManager.cs" />
+    <Compile Include="Data\Managers\StatusManager.Generated.cs" />
+    <Compile Include="Data\Managers\TaskExtendedManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Managers\TaskExtendedManager.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>TaskExtendedManager.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Managers\TaskManager.cs" />
+    <Compile Include="Data\Managers\TaskManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Managers\TaskManager.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>TaskManager.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Managers\TrackerDataManager.cs" />
-    <Compile Include="Data\Managers\UserManager.cs" />
+    <Compile Include="Data\Managers\TrackerDataManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Managers\UserManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Managers\UserManager.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>UserManager.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Managers\UserRoleManager.cs" />
+    <Compile Include="Data\Managers\UserRoleManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Managers\UserRoleManager.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>UserRoleManager.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Queries\AuditExtensions.cs" />
-    <Compile Include="Data\Queries\AuditExtensions.Generated.cs">
       <SubType>Code</SubType>
-      <DependentUpon>AuditExtensions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\Queries\GuidExtensions.cs" />
+    <Compile Include="Data\Queries\AuditExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Queries\AuditExtensions.Generated.cs">
+      <DependentUpon>AuditExtensions.cs</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Queries\GuidExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Queries\GuidExtensions.Generated.cs">
       <DependentUpon>GuidExtensions.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Queries\RoleExtensions.cs" />
+    <Compile Include="Data\Queries\RoleExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Queries\RoleExtensions.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>RoleExtensions.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Queries\TaskExtendedExtensions.cs" />
+    <Compile Include="Data\Queries\StatusExtensions.cs" />
+    <Compile Include="Data\Queries\StatusExtensions.Generated.cs" />
+    <Compile Include="Data\Queries\TaskExtendedExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Queries\TaskExtendedExtensions.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>TaskExtendedExtensions.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Queries\TaskExtensions.cs" />
+    <Compile Include="Data\Queries\TaskExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Queries\TaskExtensions.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>TaskExtensions.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Queries\UserExtensions.cs" />
+    <Compile Include="Data\Queries\UserExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Queries\UserExtensions.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>UserExtensions.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Queries\UserRoleExtensions.cs" />
+    <Compile Include="Data\Queries\UserRoleExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Queries\UserRoleExtensions.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>UserRoleExtensions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Data\TrackerDataContext.cs" />
-    <Compile Include="Data\TrackerDataContext.Enums.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Tracker.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Tracker.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="Data\TrackerDataContext.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\TrackerDataContext.Enums.cs">
       <DependentUpon>TrackerDataContext.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data\TrackerDataContext.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>TrackerDataContext.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data\TrackerDataContext.Manager.cs">
-      <SubType>Code</SubType>
       <DependentUpon>TrackerDataContext.cs</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Views\GetUsersWithRolesResult1.cs" />
+    <Compile Include="Data\Views\GetUsersWithRolesResult1.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Views\GetUsersWithRolesResult1.Generated.cs">
-      <SubType>Code</SubType>
       <DependentUpon>GetUsersWithRolesResult1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Data\Views\GetUsersWithRolesResult2.cs" />
-    <Compile Include="Data\Views\GetUsersWithRolesResult2.Generated.cs">
       <SubType>Code</SubType>
-      <DependentUpon>GetUsersWithRolesResult2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Data\Views\ReturnMultiplResultSetsResult1.cs" />
-    <Compile Include="Data\Views\ReturnMultiplResultSetsResult1.Generated.cs" />
-    <Compile Include="Data\Views\ReturnMultiplResultSetsResult2.cs" />
-    <Compile Include="Data\Views\ReturnMultiplResultSetsResult2.Generated.cs" />
+    <Compile Include="Data\Views\GetUsersWithRolesResult2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Views\GetUsersWithRolesResult2.Generated.cs">
+      <DependentUpon>GetUsersWithRolesResult2.cs</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Views\ReturnMultiplResultSetsResult1.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Views\ReturnMultiplResultSetsResult1.Generated.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Views\ReturnMultiplResultSetsResult2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Views\ReturnMultiplResultSetsResult2.Generated.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -221,6 +309,11 @@
     <None Include="Data\Tracker.Core.Data.csp" />
     <None Include="Data\Tracker.dbml">
       <SubType>Designer</SubType>
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>Tracker.designer.cs</LastGenOutput>
+    </None>
+    <None Include="Data\Tracker.dbml.layout">
+      <DependentUpon>Tracker.dbml</DependentUpon>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -228,20 +321,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\Tracker.dbml.layout">
-      <DependentUpon>Tracker.dbml</DependentUpon>
-    </None>
+    <ProjectReference Include="..\Templates\PLINQO\Source\CodeSmith.Data\CodeSmith.Data.csproj">
+      <Project>{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}</Project>
+      <Name>CodeSmith.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Tracker.enum.xml">
       <DependentUpon>Tracker.dbml</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Templates\PLINQO\Source\CodeSmith.Data\CodeSmith.Data.csproj">
-      <Project>{389DE9AF-2491-4C91-A3A3-FB15FFD8515B}</Project>
-      <Name>CodeSmith.Data</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
