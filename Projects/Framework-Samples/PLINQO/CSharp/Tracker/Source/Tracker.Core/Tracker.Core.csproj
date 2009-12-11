@@ -251,5 +251,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.targets" />
 </Project>
