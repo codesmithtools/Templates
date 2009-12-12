@@ -561,7 +561,7 @@
             A class to manage cached items via a provider.
             </summary>
         </member>
-        <member name="M:CodeSmith.Data.Caching.CacheManager.#ctor">
+        <member name="M:CodeSmith.Data.Caching.CacheManager.#cctor">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Caching.CacheManager"/> class.
             </summary>
@@ -573,6 +573,16 @@
             <typeparam name="T">The type of the provider.</typeparam>
             <param name="providerName">Name of the provider.</param>
             <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
+            <returns>A new instance of the provider.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.Register``1(System.String,System.Boolean,System.Func{System.String,CodeSmith.Data.Caching.ICacheProvider})">
+            <summary>
+            Registers the specified provider name.
+            </summary>
+            <typeparam name="T">The type of the provider.</typeparam>
+            <param name="providerName">Name of the provider.</param>
+            <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
+            <param name="createFactory">The factory to create a new provider.</param>
             <returns>A new instance of the provider.</returns>
         </member>
         <member name="M:CodeSmith.Data.Caching.CacheManager.Register``1">
@@ -590,9 +600,15 @@
             <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
             <returns>A new instance of the provider.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.GetProvider">
+            <summary>
+            Gets the default cache provider.
+            </summary>
+            <returns>An instance of the provider.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Caching.CacheManager.GetProvider(System.String)">
             <summary>
-            Gets the provider by name. If <paramref name="providerName"/> is <see langword="null"/>, <see cref="P:CodeSmith.Data.Caching.CacheManager.DefaultProvider"/> is returned.
+            Gets the provider by name. If <paramref name="providerName"/> is <see langword="null"/>, <see cref="!:DefaultProvider"/> is returned.
             </summary>
             <param name="providerName">Name of the provider.</param>
             <returns>An instance of the provider.</returns>
@@ -604,58 +620,19 @@
             <typeparam name="T">The type of the provider.</typeparam>
             <returns>An instance of the provider.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.GetProfile">
+            <summary>
+            Gets an instance of <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> based the default profile.
+            </summary>
+            <returns>An instance of <see cref="T:CodeSmith.Data.Caching.CacheSettings"/>.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Caching.CacheManager.GetProfile(System.String)">
             <summary>
             Gets an instance of <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> based on the profile name. 
-            If the profile name is not found, the <see cref="P:CodeSmith.Data.Caching.CacheManager.DefaultProfile"/> is used.
+            If the profile name is not found, the default profile is used.
             </summary>
             <param name="profileName">Name of the cache profile.</param>
             <returns>An instance of <see cref="T:CodeSmith.Data.Caching.CacheSettings"/>.</returns>
-        </member>
-        <member name="P:CodeSmith.Data.Caching.CacheManager.Current">
-            <summary>
-            Gets the current singleton instance of <see cref="T:CodeSmith.Data.Caching.CacheManager"/>.
-            </summary>
-            <value>The current singleton instance.</value>
-            <remarks>
-            An instance of <see cref="T:CodeSmith.Data.Caching.CacheManager"/> wont be created until the very first 
-            call to the sealed class. This is a CLR optimization that
-            provides a properly lazy-loading singleton. 
-            </remarks>
-        </member>
-        <member name="P:CodeSmith.Data.Caching.CacheManager.DefaultProvider">
-            <summary>
-            Gets the default provider.
-            </summary>
-            <value>The default provider.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Caching.CacheManager.Providers">
-            <summary>
-            Gets the list of cache providers.
-            </summary>
-            <value>The cache providers.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Caching.CacheManager.DefaultProfile">
-            <summary>
-            Gets the default profile.
-            </summary>
-            <value>The default profile.</value>
-        </member>
-        <member name="P:CodeSmith.Data.Caching.CacheManager.Profiles">
-            <summary>
-            Gets the list of cache profiles.
-            </summary>
-            <value>The list of cache profiles.</value>
-        </member>
-        <member name="T:CodeSmith.Data.Caching.CacheManager.Nested">
-            <summary>
-            Nested class to lazy-load singleton.
-            </summary>
-        </member>
-        <member name="F:CodeSmith.Data.Caching.CacheManager.Nested.Current">
-            <summary>
-            Current singleton instance.
-            </summary>
         </member>
         <member name="T:CodeSmith.Data.Caching.CacheManagerSection">
             <summary>
@@ -771,7 +748,15 @@
             An interface defining a cache provider.
             </summary>
         </member>
-        <member name="M:CodeSmith.Data.Caching.ICacheProvider.Save``1(System.String,``0,CodeSmith.Data.Caching.CacheSettings)">
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.Set``1(System.String,``0)">
+            <summary>
+            Saves the specified key to the cache provider.
+            </summary>
+            <typeparam name="T">The type for data being saved,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="data">The data to be cached in the provider.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.Set``1(System.String,``0,CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Saves the specified key to the cache provider.
             </summary>
@@ -786,6 +771,13 @@
             </summary>
             <param name="key">The key used to store the data in the cache provider.</param>
         </member>
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.Remove(System.String,System.String)">
+            <summary>
+            Removes the combined key and group name from the cache provider.
+            </summary>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="groupName">Name of the group.</param>
+        </member>
         <member name="M:CodeSmith.Data.Caching.ICacheProvider.Get``1(System.String)">
             <summary>
             Gets the data cached for specified key.
@@ -794,7 +786,50 @@
             <param name="key">The key used to store the data in the cache provider.</param>
             <returns>An instance of T if the item exists in the cache, otherwise <see langword="null"/>.</returns>
         </member>
-        <member name="M:CodeSmith.Data.Caching.CacheProvider.Save``1(System.String,``0,CodeSmith.Data.Caching.CacheSettings)">
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.Get``1(System.String,System.String)">
+            <summary>
+            Gets the data cached for the combined key and group name.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="groupName">Name of the group.</param>
+            <returns>
+            An instance of T if the item exists in the cache, otherwise <see langword="null"/>.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.GetGroupVersion(System.String)">
+            <summary>
+            Gets the group value from the cache provider.
+            </summary>
+            <param name="groupName">Name of the group.</param>
+            <returns>The value of the group name to append to a key.</returns>
+            <remarks>
+            The group value is used to combine with the key to aid in expiring keys based on group.
+            </remarks>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.GetGroupKey(System.String,System.String)">
+            <summary>
+            Gets the combined key based on the specified key and group name.
+            </summary>
+            <param name="key">The key to be combined.</param>
+            <param name="groupName">Name of the group.</param>
+            <returns>The combined key based on the specified key and group name.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.InvalidateGroup(System.String)">
+            <summary>
+            Invalidates the cache items for the specified group name.
+            </summary>
+            <param name="groupName">Name of the group.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.Set``1(System.String,``0)">
+            <summary>
+            Saves the specified key to the cache provider.
+            </summary>
+            <typeparam name="T">The type for data being saved,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="data">The data to be cached in the provider.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.Set``1(System.String,``0,CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Saves the specified key to the cache provider.
             </summary>
@@ -809,6 +844,19 @@
             </summary>
             <param name="key">The key used to store the data in the cache provider.</param>
         </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.Remove(System.String,System.String)">
+            <summary>
+            Removes the combined key and group name from the cache provider.
+            </summary>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="groupName">Name of the group.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.InvalidateGroup(System.String)">
+            <summary>
+            Invalidates the cache items for the specified group name.
+            </summary>
+            <param name="groupName">The group used to store the data in the cache provider.</param>
+        </member>
         <member name="M:CodeSmith.Data.Caching.CacheProvider.Get``1(System.String)">
             <summary>
             Gets the data cached for specified key.
@@ -817,6 +865,37 @@
             <param name="key">The key used to store the data in the cache provider.</param>
             <returns>
             An instance of T if the item exists in the cache, otherwise <see langword="null"/>.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.Get``1(System.String,System.String)">
+            <summary>
+            Gets the data cached for the combined key and group name.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="groupName">Name of the group.</param>
+            <returns>
+            An instance of T if the item exists in the cache, otherwise <see langword="null"/>.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.GetGroupVersion(System.String)">
+            <summary>
+            Gets the group version from the cache provider.
+            </summary>
+            <param name="groupName">The group name.</param>
+            <returns>The value of the group name to append to a key.</returns>
+            <remarks>
+            The group version is used to combine with the key to aid in expiring keys based on group.
+            </remarks>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.GetGroupKey(System.String,System.String)">
+            <summary>
+            Gets the combined key based on the specified key and group name.
+            </summary>
+            <param name="key">The key to be combined.</param>
+            <param name="groupName">Name of the group.</param>
+            <returns>
+            The combined key based on the specified key and group name.
             </returns>
         </member>
         <member name="T:CodeSmith.Data.Caching.CacheProviderCollection">
@@ -849,7 +928,7 @@
             The default cache provider using System.Web.Cache to as the cache store.
             </summary>
         </member>
-        <member name="M:CodeSmith.Data.Caching.HttpCacheProvider.Save``1(System.String,``0,CodeSmith.Data.Caching.CacheSettings)">
+        <member name="M:CodeSmith.Data.Caching.HttpCacheProvider.Set``1(System.String,``0,CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Saves the specified key to the cache provider.
             </summary>
@@ -1174,6 +1253,22 @@
             </summary>
             <param name="slidingExpiration">The sliding expiration.</param>
         </member>
+        <member name="M:CodeSmith.Data.Caching.CacheSettings.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheSettings.System#ICloneable#Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
         <member name="P:CodeSmith.Data.Caching.CacheSettings.Mode">
             <summary>
             Gets or sets the cache expiration mode.
@@ -1240,6 +1335,12 @@
             Gets or sets the cache provider name.
             </summary>
             <value>The cache provider name.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Caching.CacheSettings.Group">
+            <summary>
+            Gets or sets the cache group name.
+            </summary>
+            <value>The cache group name.</value>
         </member>
         <member name="M:CodeSmith.Data.Linq.DataContextExtensions.ExecuteQuery(System.Data.Linq.DataContext,System.Linq.IQueryable[])">
             <summary>
@@ -1844,9 +1945,9 @@
             </summary>
             <typeparam name="T">The type of the items in the list.</typeparam>
             <remarks>
-            When this collection is created, IQueryable Skip and Take is
-            caculated and called on the source list. Also, if total count 
-            is not specified, IQueryable Count is called.
+            When this collection is created, <see cref="T:System.Linq.IQueryable"/> Skip and Take is
+            calculated and called on the source list. Also, if total count 
+            is not specified, <see cref="T:System.Linq.IQueryable"/> Count is called.
             </remarks>
         </member>
         <member name="M:CodeSmith.Data.Linq.PagedList`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Int32,System.Int32)">
@@ -2011,6 +2112,26 @@
             <param name="totalCount">The total count.</param>
             <returns>A new instance of <see cref="T:CodeSmith.Data.Linq.PagedList`1"/>.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.QueryExtensions.GetDataContext(System.Linq.IQueryable)">
+            <summary>
+            Gets the <see cref="T:System.Data.Linq.DataContext"/> that created the query.
+            </summary>
+            <param name="query">The query to look for the <see cref="T:System.Data.Linq.DataContext"/> on.</param>
+            <returns>
+            The instance of the <see cref="T:System.Data.Linq.DataContext"/> that created the query. 
+            If the query was not created by a <see cref="T:System.Data.Linq.DataContext"/>, 
+            <see langword="null"/> is returned. 
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.QueryExtensions.SupportsFutureQuery(System.Linq.IQueryable)">
+            <summary>
+            Determines whether the specified query supports a future query extension.
+            </summary>
+            <param name="query">The query.</param>
+            <returns>
+            	<c>true</c> if query supports a future query; otherwise, <c>false</c>.
+            </returns>
+        </member>
         <member name="T:CodeSmith.Data.Linq.QueryResultCache">
             <summary>
             Extension methods for caching IQuerable objects.
@@ -2120,6 +2241,22 @@
             </summary>
             <param name="query">The query to build a key from.</param>
             <returns>A Md5 hash unique to the query.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.ToBinary``1(System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Converts the collection to a binary array by serializing.
+            </summary>
+            <typeparam name="T">The type of items in the collection.</typeparam>
+            <param name="collection">The collection to convert.</param>
+            <returns>A serialized binary array of the collection.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.ToCollection``1(System.Byte[])">
+            <summary>
+            Converts the byte array to a collection by deserializing.
+            </summary>
+            <typeparam name="T">The type of items in the collection.</typeparam>
+            <param name="buffer">The byte array to convert.</param>
+            <returns>An instance of <see cref="T:System.Collections.Generic.ICollection`1"/> deserialized from the byte array.</returns>
         </member>
         <member name="M:CodeSmith.Data.Linq.TableExtensions.Delete``1(System.Data.Linq.Table{``0},System.Linq.IQueryable{``0})">
             <summary>
