@@ -31,7 +31,7 @@ namespace CodeSmith.Data.Caching
     /// <summary>
     /// Settings Object for QueryResultCache.FromCache Methods
     /// </summary>
-    public class CacheSettings
+    public class CacheSettings : ICloneable
     {
         #region Constructors
 
@@ -61,6 +61,7 @@ namespace CodeSmith.Data.Caching
         /// </summary>
         /// <param name="absoluteExpiration">The absolute DateTime the cache will expire.</param>
         public CacheSettings(DateTime absoluteExpiration)
+            : this()
         {
             AbsoluteExpiration = absoluteExpiration;
             Mode = CacheExpirationMode.Absolute;
@@ -71,6 +72,7 @@ namespace CodeSmith.Data.Caching
         /// </summary>
         /// <param name="slidingExpiration">The sliding expiration.</param>
         public CacheSettings(TimeSpan slidingExpiration)
+            : this()
         {
             Duration = slidingExpiration;
             Mode = CacheExpirationMode.Sliding;
@@ -144,5 +146,58 @@ namespace CodeSmith.Data.Caching
         /// </summary>
         /// <value>The cache provider name.</value>
         public string Provider { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cache group name.
+        /// </summary>
+        /// <value>The cache group name.</value>
+        public string Group { get; set; }
+
+
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a copy of this instance.
+        /// </returns>
+        public CacheSettings Clone()
+        {
+            var clone = new CacheSettings
+            {
+                AbsoluteExpiration = AbsoluteExpiration,
+                CacheDependency = CacheDependency,
+                CacheEmptyResult = CacheEmptyResult,
+                CacheItemRemovedCallback = CacheItemRemovedCallback,
+                Duration = Duration,
+                Mode = Mode,
+                Priority = Priority,
+                Provider = Provider,
+                Group = Group
+            };
+
+            return clone;
+        }
+
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a copy of this instance.
+        /// </returns>
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        
+    }
+
+    public static class CacheSettingsExtensions
+    {
+        public static CacheSettings WithGroup(this CacheSettings settings, string groupName)
+        {
+            settings.Group = groupName;
+            return settings;
+        }
     }
 }

@@ -11,52 +11,25 @@ namespace CodeSmith.Data.Caching
     /// </summary>
     public class CacheManager
     {
-        private readonly ConcurrentDictionary<string, ICacheProvider> _providers;
-        private readonly ConcurrentDictionary<string, CacheSettings> _profiles;
-
-        #region Singleton
+        private static readonly ConcurrentDictionary<string, ICacheProvider> _providers;
+        private static readonly ConcurrentDictionary<string, CacheSettings> _profiles;
+        private static CacheSettings _defaultProfile;
+        private static ICacheProvider _defaultProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheManager"/> class.
         /// </summary>
-        public CacheManager()
+        static CacheManager()
         {
             _providers = new ConcurrentDictionary<string, ICacheProvider>(StringComparer.OrdinalIgnoreCase);
             _profiles = new ConcurrentDictionary<string, CacheSettings>(StringComparer.OrdinalIgnoreCase);
 
             Register<HttpCacheProvider>(true);
-            DefaultProfile = new CacheSettings();
+            _defaultProfile = new CacheSettings();
             Initialize();
         }
 
-        /// <summary>
-        /// Gets the current singleton instance of <see cref="CacheManager"/>.
-        /// </summary>
-        /// <value>The current singleton instance.</value>
-        /// <remarks>
-        /// An instance of <see cref="CacheManager"/> wont be created until the very first 
-        /// call to the sealed class. This is a CLR optimization that
-        /// provides a properly lazy-loading singleton. 
-        /// </remarks>
-        public static CacheManager Current
-        {
-            get { return Nested.Current; }
-        }
-
-        /// <summary>
-        /// Nested class to lazy-load singleton.
-        /// </summary>
-        private class Nested
-        {
-            /// <summary>
-            /// Current singleton instance.
-            /// </summary>
-            internal readonly static CacheManager Current = new CacheManager();
-        }
-
-        #endregion
-
-        private void Initialize()
+        private static void Initialize()
         {
             var cacheSection = ConfigurationManager.GetSection("cacheManager") as CacheManagerSection;
             if (cacheSection == null)
@@ -66,14 +39,14 @@ namespace CodeSmith.Data.Caching
             if (cacheSection.Providers.Count > 0)
             {
                 var cacheProviders = new CacheProviderCollection();
-                ProvidersHelper.InstantiateProviders(cacheSection.Providers, cacheProviders, typeof (CacheProvider));
+                ProvidersHelper.InstantiateProviders(cacheSection.Providers, cacheProviders, typeof(CacheProvider));
                 foreach (CacheProvider provider in cacheProviders)
                     _providers.TryAdd(provider.Name, provider);
 
                 ICacheProvider cacheProvider;
                 if (!string.IsNullOrEmpty(cacheSection.DefaultProvider))
-                    if (Providers.TryGetValue(cacheSection.DefaultProvider, out cacheProvider))
-                        DefaultProvider = cacheProvider;
+                    if (_providers.TryGetValue(cacheSection.DefaultProvider, out cacheProvider))
+                        _defaultProvider = cacheProvider;
             }
 
             //load profiles
@@ -84,39 +57,9 @@ namespace CodeSmith.Data.Caching
 
                 CacheSettings cacheSettings;
                 if (!string.IsNullOrEmpty(cacheSection.DefaultProfile))
-                    if (Profiles.TryGetValue(cacheSection.DefaultProfile, out cacheSettings))
-                        DefaultProfile = cacheSettings;
+                    if (_profiles.TryGetValue(cacheSection.DefaultProfile, out cacheSettings))
+                        _defaultProfile = cacheSettings;
             }
-        }
-
-        /// <summary>
-        /// Gets the default provider.
-        /// </summary>
-        /// <value>The default provider.</value>
-        public ICacheProvider DefaultProvider { get; private set; }
-
-        /// <summary>
-        /// Gets the list of cache providers.
-        /// </summary>
-        /// <value>The cache providers.</value>
-        public IDictionary<string, ICacheProvider> Providers
-        {
-            get { return _providers; }
-        }
-
-        /// <summary>
-        /// Gets the default profile.
-        /// </summary>
-        /// <value>The default profile.</value>
-        public CacheSettings DefaultProfile { get; private set; }
-
-        /// <summary>
-        /// Gets the list of cache profiles.
-        /// </summary>
-        /// <value>The list of cache profiles.</value>
-        public IDictionary<string, CacheSettings> Profiles
-        {
-            get { return _profiles; }
         }
 
         /// <summary>
@@ -126,11 +69,25 @@ namespace CodeSmith.Data.Caching
         /// <param name="providerName">Name of the provider.</param>
         /// <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
         /// <returns>A new instance of the provider.</returns>
-        public ICacheProvider Register<T>(string providerName, bool defaultProvider) where T : ICacheProvider, new()
+        public static ICacheProvider Register<T>(string providerName, bool defaultProvider) where T : ICacheProvider, new()
         {
-            ICacheProvider provider = _providers.GetOrAdd(providerName, k => new T());
+            return Register<T>(providerName, defaultProvider, k => new T());
+        }
+
+        /// <summary>
+        /// Registers the specified provider name.
+        /// </summary>
+        /// <typeparam name="T">The type of the provider.</typeparam>
+        /// <param name="providerName">Name of the provider.</param>
+        /// <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
+        /// <param name="createFactory">The factory to create a new provider.</param>
+        /// <returns>A new instance of the provider.</returns>
+        public static ICacheProvider Register<T>(string providerName, bool defaultProvider, Func<string, ICacheProvider> createFactory) where T : ICacheProvider, new()
+        {
+
+            var provider = _providers.GetOrAdd(providerName, createFactory);
             if (defaultProvider)
-                DefaultProvider = provider;
+                _defaultProvider = provider;
 
             return provider;
         }
@@ -140,7 +97,7 @@ namespace CodeSmith.Data.Caching
         /// </summary>
         /// <typeparam name="T">The type of the provider.</typeparam>
         /// <returns>A new instance of the provider.</returns>
-        public ICacheProvider Register<T>() where T : ICacheProvider, new()
+        public static ICacheProvider Register<T>() where T : ICacheProvider, new()
         {
             return Register<T>(false);
         }
@@ -151,9 +108,18 @@ namespace CodeSmith.Data.Caching
         /// <typeparam name="T">The type of the provider.</typeparam>
         /// <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
         /// <returns>A new instance of the provider.</returns>
-        public ICacheProvider Register<T>(bool defaultProvider) where T : ICacheProvider, new()
+        public static ICacheProvider Register<T>(bool defaultProvider) where T : ICacheProvider, new()
         {
             return Register<T>(typeof(T).Name, defaultProvider);
+        }
+
+        /// <summary>
+        /// Gets the default cache provider.
+        /// </summary>
+        /// <returns>An instance of the provider.</returns>
+        public static ICacheProvider GetProvider()
+        {
+            return GetProvider(null);
         }
 
         /// <summary>
@@ -161,13 +127,13 @@ namespace CodeSmith.Data.Caching
         /// </summary>
         /// <param name="providerName">Name of the provider.</param>
         /// <returns>An instance of the provider.</returns>
-        public ICacheProvider GetProvider(string providerName)
+        public static ICacheProvider GetProvider(string providerName)
         {
             if (string.IsNullOrEmpty(providerName))
-                return DefaultProvider;
+                return _defaultProvider;
 
             ICacheProvider provider;
-            if (!Providers.TryGetValue(providerName, out provider))
+            if (!_providers.TryGetValue(providerName, out provider))
                 throw new ArgumentException(string.Format(
                     "Unable to locate cache provider '{0}'.", providerName), "providerName");
 
@@ -179,27 +145,40 @@ namespace CodeSmith.Data.Caching
         /// </summary>
         /// <typeparam name="T">The type of the provider.</typeparam>
         /// <returns>An instance of the provider.</returns>
-        public ICacheProvider GetProvider<T>() where T : ICacheProvider
+        public static ICacheProvider GetProvider<T>() where T : ICacheProvider
         {
             return GetProvider(typeof(T).Name);
         }
 
         /// <summary>
+        /// Gets an instance of <see cref="CacheSettings"/> based the default profile.
+        /// </summary>
+        /// <returns>An instance of <see cref="CacheSettings"/>.</returns>
+        public static CacheSettings GetProfile()
+        {
+            return GetProfile(null);
+        }
+
+        /// <summary>
         /// Gets an instance of <see cref="CacheSettings"/> based on the profile name. 
-        /// If the profile name is not found, the <see cref="DefaultProfile"/> is used.
+        /// If the profile name is not found, the default profile is used.
         /// </summary>
         /// <param name="profileName">Name of the cache profile.</param>
         /// <returns>An instance of <see cref="CacheSettings"/>.</returns>
-        public CacheSettings GetProfile(string profileName)
+        public static CacheSettings GetProfile(string profileName)
         {
+            if (string.IsNullOrEmpty(profileName))
+                return _defaultProfile.Clone();
+
             CacheSettings cacheSettings;
-            Profiles.TryGetValue(profileName, out cacheSettings);
+            _profiles.TryGetValue(profileName, out cacheSettings);
 
-            // throw error?
             if (cacheSettings == null)
-                cacheSettings = DefaultProfile ?? new CacheSettings();
+                cacheSettings = _defaultProfile;
 
-            return cacheSettings;
+            return (cacheSettings == null)
+                ? new CacheSettings()
+                : cacheSettings.Clone();
         }
 
     }

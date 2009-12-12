@@ -10,9 +10,9 @@ namespace CodeSmith.Data.Linq
     /// </summary>
     /// <typeparam name="T">The type of the items in the list.</typeparam>
     /// <remarks>
-    /// When this collection is created, IQueryable Skip and Take is
-    /// caculated and called on the source list. Also, if total count 
-    /// is not specified, IQueryable Count is called.
+    /// When this collection is created, <see cref="IQueryable"/> Skip and Take is
+    /// calculated and called on the source list. Also, if total count 
+    /// is not specified, <see cref="IQueryable"/> Count is called.
     /// </remarks>
     public class PagedList<T> : List<T>, IPageList<T>
     {
@@ -70,33 +70,33 @@ namespace CodeSmith.Data.Linq
         /// <value>
         /// 	<c>true</c> if this instance has previous page; otherwise, <c>false</c>.
         /// </value>
-        public bool HasPreviousPage { get; private set; }
+        public bool HasPreviousPage { get { return (PageIndex > 0); } }
         /// <summary>
         /// Gets a value indicating whether this instance has next page.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if this instance has next page; otherwise, <c>false</c>.
         /// </value>
-        public bool HasNextPage { get; private set; }
+        public bool HasNextPage { get { return (PageIndex < (PageCount - 1)); } }
         /// <summary>
         /// Gets a value indicating whether this instance is first page.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if this instance is first page; otherwise, <c>false</c>.
         /// </value>
-        public bool IsFirstPage { get; private set; }
+        public bool IsFirstPage { get { return (PageIndex <= 0); } }
         /// <summary>
         /// Gets a value indicating whether this instance is last page.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if this instance is last page; otherwise, <c>false</c>.
         /// </value>
-        public bool IsLastPage { get; private set; }
+        public bool IsLastPage { get { return (PageIndex >= (PageCount - 1)); } }
         /// <summary>
         /// Gets the total page count.
         /// </summary>
         /// <value>The total page count.</value>
-        public int PageCount { get; private set; }
+        public int PageCount { get { return TotalItemCount > 0 ? (int)Math.Ceiling(TotalItemCount / (double)PageSize) : 0; } }
         /// <summary>
         /// Gets the zero based index of the page.
         /// </summary>
@@ -132,22 +132,50 @@ namespace CodeSmith.Data.Linq
             if (pageIndex < 0)
                 throw new ArgumentOutOfRangeException("pageIndex", "PageIndex cannot be below 0.");
             if (pageSize < 1)
-                throw new ArgumentOutOfRangeException("pageIndex", "PageSize cannot be less than 1.");
+                throw new ArgumentOutOfRangeException("pageSize", "PageSize cannot be less than 1.");
 
             if (source == null)
                 source = new List<T>().AsQueryable();
 
-            TotalItemCount = totalCount.HasValue ? totalCount.Value : source.Count();
             PageSize = pageSize;
             PageIndex = pageIndex;
-            PageCount = TotalItemCount > 0 ? (int)Math.Ceiling(TotalItemCount / (double)PageSize) : 0;
-            HasPreviousPage = (PageIndex > 0);
-            HasNextPage = (PageIndex < (PageCount - 1));
-            IsFirstPage = (PageIndex <= 0);
-            IsLastPage = (PageIndex >= (PageCount - 1));
 
-            if (TotalItemCount > 0)
-                AddRange((source).Skip((pageIndex) * pageSize).Take(pageSize).ToList());
+            int skip = (pageIndex) * pageSize;
+
+            if (totalCount.HasValue)
+            {
+                TotalItemCount = totalCount.Value;
+                AddPage(source, skip, pageSize);
+                return;
+            }
+
+            if (!source.SupportsFutureQuery())
+            {
+                // runs 2 queries
+                TotalItemCount = source.Count();
+                AddPage(source, skip, pageSize);
+                return;
+            }
+            
+            // use Future to batch the queries
+            var q1 = source.FutureCount();
+            var q2 = source.Skip(skip).Take(pageSize).Future();
+
+            // runs batch query
+            TotalItemCount = q1.Value;
+            if (TotalItemCount == 0)
+                return;
+            
+            AddRange(q2);
+        }
+
+        private void AddPage(IQueryable<T> source, int skip, int pageSize)
+        {
+            if (TotalItemCount == 0)
+                return;
+
+            IQueryable<T> page = (source).Skip(skip).Take(pageSize);
+            AddRange(page.ToList());
         }
     }
 }

@@ -34,7 +34,7 @@ namespace CodeSmith.Data.Linq
         /// </returns>
         public static IEnumerable<T> FutureCache<T>(this IQueryable<T> source)
         {
-            var cacheSettings = CacheManager.Current.DefaultProfile ?? new CacheSettings();
+            var cacheSettings = CacheManager.GetProfile();
             return FutureCache(source, cacheSettings);
         }
 
@@ -49,7 +49,7 @@ namespace CodeSmith.Data.Linq
         /// </returns>
         public static IEnumerable<T> FutureCache<T>(this IQueryable<T> source, string profileName)
         {
-            CacheSettings cacheSettings = CacheManager.Current.GetProfile(profileName);
+            CacheSettings cacheSettings = CacheManager.GetProfile(profileName);
             return FutureCache(source, cacheSettings);
         }
 
@@ -112,7 +112,7 @@ namespace CodeSmith.Data.Linq
         /// </returns>
         public static FutureCount FutureCacheCount<T>(this IQueryable<T> source)
         {
-            var cacheSettings = CacheManager.Current.DefaultProfile ?? new CacheSettings();
+            var cacheSettings = CacheManager.GetProfile();
             return FutureCacheCount(source, cacheSettings);
         }
 
@@ -127,7 +127,7 @@ namespace CodeSmith.Data.Linq
         /// </returns>
         public static FutureCount FutureCacheCount<T>(this IQueryable<T> source, string profileName)
         {
-            CacheSettings cacheSettings = CacheManager.Current.GetProfile(profileName);
+            CacheSettings cacheSettings = CacheManager.GetProfile(profileName);
             return FutureCacheCount(source, cacheSettings);
         }
 
@@ -190,7 +190,7 @@ namespace CodeSmith.Data.Linq
         /// </returns>
         public static FutureValue<T> FutureCacheFirstOrDefault<T>(this IQueryable<T> source)
         {
-            var cacheSettings = CacheManager.Current.DefaultProfile ?? new CacheSettings();
+            var cacheSettings = CacheManager.GetProfile();
             return FutureCacheFirstOrDefault(source, cacheSettings);
         }
 
@@ -205,7 +205,7 @@ namespace CodeSmith.Data.Linq
         /// </returns>
         public static FutureValue<T> FutureCacheFirstOrDefault<T>(this IQueryable<T> source, string profileName)
         {
-            CacheSettings cacheSettings = CacheManager.Current.GetProfile(profileName);
+            CacheSettings cacheSettings = CacheManager.GetProfile(profileName);
             return FutureCacheFirstOrDefault(source, cacheSettings);
         }
 

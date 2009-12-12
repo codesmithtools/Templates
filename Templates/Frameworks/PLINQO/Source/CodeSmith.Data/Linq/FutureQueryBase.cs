@@ -52,7 +52,7 @@ namespace CodeSmith.Data.Linq
                 return;
 
             string key = GetKey();
-            ICollection<T> cached = QueryResultCache.GetResultCache<T>(key, _cacheSettings.Provider);
+            ICollection<T> cached = QueryResultCache.GetResultCache<T>(key, _cacheSettings);
 
             if (cached == null)
                 return;
