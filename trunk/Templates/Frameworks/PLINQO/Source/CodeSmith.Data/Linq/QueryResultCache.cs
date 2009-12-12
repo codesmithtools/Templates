@@ -4,11 +4,14 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Xml;
 using CodeSmith.Data.Caching;
 
 namespace CodeSmith.Data.Linq
@@ -29,8 +32,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query)
         {
-            CacheSettings cacheSettings = CacheManager.Current.DefaultProfile ?? new CacheSettings();
-            return query.FromCache(cacheSettings);
+            return query.FromCache((CacheSettings)null);
         }
 
         /// <summary>
@@ -56,7 +58,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, string profileName)
         {
-            CacheSettings cacheSettings = CacheManager.Current.GetProfile(profileName);            
+            CacheSettings cacheSettings = CacheManager.GetProfile(profileName);
             return query.FromCache(cacheSettings);
         }
 
@@ -70,10 +72,13 @@ namespace CodeSmith.Data.Linq
         /// <returns>The result of the query.</returns>
         public static IEnumerable<T> FromCache<T>(this IQueryable<T> query, CacheSettings settings)
         {
+            if (settings == null)
+                settings = CacheManager.GetProfile();
+
             var key = query.GetHashKey();
 
             // try to get the query result from the cache
-            var result = GetResultCache<T>(key, settings.Provider);
+            var result = GetResultCache<T>(key, settings);
 
             if (result != null)
                 return result;
@@ -179,15 +184,21 @@ namespace CodeSmith.Data.Linq
         /// <param name="provider">The name of the cache provider.</param>
         public static void ClearCache<T>(this IQueryable<T> query, string provider)
         {
-            ICacheProvider cacheProvider = CacheManager.Current.GetProvider(provider);
+            ICacheProvider cacheProvider = CacheManager.GetProvider(provider);
             string key = query.GetHashKey();
-            cacheProvider.Remove(key);            
+            cacheProvider.Remove(key);
         }
 
         #endregion
 
         internal static void SetResultCache<T>(string key, CacheSettings settings, ICollection<T> result)
         {
+            if (settings == null)
+                settings = CacheManager.GetProfile();
+
+            if (result == null)
+                return;
+
             // Don't cache empty result.
             if (result.Count == 0 && !settings.CacheEmptyResult)
                 return;
@@ -199,21 +210,32 @@ namespace CodeSmith.Data.Linq
                 if (entity != null)
                     entity.Detach();
             }
+
+            // store as byte array to make it save to store in all providers
+            byte[] buffer = result.ToBinary();
+
+            ICacheProvider cacheProvider = CacheManager.GetProvider(settings.Provider);
+            cacheProvider.Set(key, buffer, settings);
 #if DEBUG
-            Debug.WriteLine("Cache Insert for key " + key);
+            var groupKey = cacheProvider.GetGroupKey(key, settings.Group);
+            Debug.WriteLine("Cache Insert for key " + groupKey);
 #endif
-            ICacheProvider provider = CacheManager.Current.GetProvider(settings.Provider);
-            provider.Save(key, result, settings);
         }
 
-        internal static ICollection<T> GetResultCache<T>(string key, string provider)
+        internal static ICollection<T> GetResultCache<T>(string key, CacheSettings settings)
         {
-            ICacheProvider cacheProvider = CacheManager.Current.GetProvider(provider);
-            var collection = cacheProvider.Get<ICollection<T>>(key);
+            if (settings == null)
+                settings = CacheManager.GetProfile();
 
+            ICacheProvider cacheProvider = CacheManager.GetProvider(settings.Provider);
+            byte[] buffer = cacheProvider.Get<byte[]>(key, settings.Group);
+
+            // stored as byte array to make safe for all providers
+            var collection = buffer.ToCollection<T>();
 #if DEBUG
+            var groupKey = cacheProvider.GetGroupKey(key, settings.Group);
             if (collection != null)
-                Debug.WriteLine("Cache Hit for key " + key);
+                Debug.WriteLine("Cache Hit for key " + groupKey);
 #endif
             return collection;
         }
@@ -271,5 +293,54 @@ namespace CodeSmith.Data.Linq
         }
 
         #endregion
+
+        /// <summary>
+        /// Converts the collection to a binary array by serializing.
+        /// </summary>
+        /// <typeparam name="T">The type of items in the collection.</typeparam>
+        /// <param name="collection">The collection to convert.</param>
+        /// <returns>A serialized binary array of the collection.</returns>
+        public static byte[] ToBinary<T>(this ICollection<T> collection)
+        {
+            if (collection == null)
+                return null;
+
+            var serializer = new DataContractSerializer(typeof(ICollection<T>));
+
+            byte[] buffer;
+            using (var ms = new MemoryStream())
+            using (var writer = XmlDictionaryWriter.CreateBinaryWriter(ms))
+            {
+                serializer.WriteObject(writer, collection);
+                writer.Flush();
+                buffer = ms.ToArray();
+            }
+
+            return buffer;
+        }
+
+        /// <summary>
+        /// Converts the byte array to a collection by deserializing.
+        /// </summary>
+        /// <typeparam name="T">The type of items in the collection.</typeparam>
+        /// <param name="buffer">The byte array to convert.</param>
+        /// <returns>An instance of <see cref="T:System.Collections.Generic.ICollection`1"/> deserialized from the byte array.</returns>
+        public static ICollection<T> ToCollection<T>(this byte[] buffer)
+        {
+            if (buffer == null || buffer.Length == 0)
+                return null;
+
+            var serializer = new DataContractSerializer(typeof(ICollection<T>));
+            object value;
+
+            using (var ms = new MemoryStream(buffer))
+            using (var reader = XmlDictionaryReader.CreateBinaryReader(ms, XmlDictionaryReaderQuotas.Max))
+            {
+                ms.Position = 0;
+                value = serializer.ReadObject(reader);
+            }
+
+            return value as ICollection<T>;
+        }
     }
 }

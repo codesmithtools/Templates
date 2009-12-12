@@ -48,7 +48,7 @@ namespace CodeSmith.Data.Linq
         protected override string GetKey()
         {
             // override the key because the sql is changed later
-            return base.GetKey() + "-Count()";
+            return base.GetKey() + "_count";
         }
 
         /// <summary>

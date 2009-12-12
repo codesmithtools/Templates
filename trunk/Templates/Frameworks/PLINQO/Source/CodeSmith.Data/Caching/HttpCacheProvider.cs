@@ -19,7 +19,7 @@ namespace CodeSmith.Data.Caching
         /// <param name="key">The key used to store the data in the cache provider.</param>
         /// <param name="data">The data to be cached in the provider.</param>
         /// <param name="settings">The <see cref="CacheSettings"/> to be used when storing in the provider.</param>
-        public override void Save<T>(string key, T data, CacheSettings settings)
+        public override void Set<T>(string key, T data, CacheSettings settings)
         {
             DateTime absoluteExpiration = System.Web.Caching.Cache.NoAbsoluteExpiration;
             TimeSpan slidingExpiration = System.Web.Caching.Cache.NoSlidingExpiration;
@@ -36,9 +36,11 @@ namespace CodeSmith.Data.Caching
                     absoluteExpiration = settings.AbsoluteExpiration;
                     break;
             }
-            
+
+            string groupKey = GetGroupKey(key, settings.Group);
+
             HttpRuntime.Cache.Insert(
-               key,
+               groupKey,
                data,
                settings.CacheDependency,
                absoluteExpiration,
