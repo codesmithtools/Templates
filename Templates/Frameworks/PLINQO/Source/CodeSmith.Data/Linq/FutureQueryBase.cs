@@ -146,7 +146,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>The requested command object.</returns>
         protected virtual DbCommand GetCommand(DataContext dataContext)
         {
-            return dataContext.GetCommand(_query);
+            return dataContext.GetCommand(_query, true);
         }
 
         /// <summary>
