@@ -15,189 +15,150 @@ namespace Tracker.Tests.CacheTests
         [Test]
         public void SimpleTest()
         {
-            try
+            using (var db = new TrackerDataContext())
             {
-                using (var db = new TrackerDataContext())
-                {
-                    var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.Take(1).GetHashKey();
-                    var role = query.FromCacheFirstOrDefault();
+                var query = db.Role.Where(r => r.Name == "Test Role");
+                var key = query.Take(1).GetHashKey();
+                var role = query.FromCacheFirstOrDefault();
 
-                    var cache = HttpRuntime.Cache.Get(key) as List<Role>;
-                    Assert.IsNotNull(cache);
-                    Assert.AreSame(role, cache.FirstOrDefault());
-                }
+                var cache = HttpRuntime.Cache.Get(key) as byte[];
+                Assert.IsNotNull(cache);
+
+                var list = cache.ToCollection<Role>();
+                Assert.IsNotNull(list);
+                Assert.AreEqual(role.Id, list.FirstOrDefault().Id);
             }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
         [Test]
         public void DurationTest()
         {
-            try
+            using (var db = new TrackerDataContext())
             {
-                using (var db = new TrackerDataContext())
-                {
-                    var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.Take(1).GetHashKey();
-                    var role = query.FromCacheFirstOrDefault(2);
+                var query = db.Role.Where(r => r.Name == "Test Role");
+                var key = query.Take(1).GetHashKey();
+                var role = query.FromCacheFirstOrDefault(2);
 
-                    var cache1 = HttpRuntime.Cache.Get(key) as List<Role>;
-                    Assert.IsNotNull(cache1);
-                    Assert.AreSame(role, cache1.FirstOrDefault());
+                var cache = HttpRuntime.Cache.Get(key) as byte[];
+                Assert.IsNotNull(cache);
 
-                    System.Threading.Thread.Sleep(2500);
+                var list = cache.ToCollection<Role>();
+                Assert.IsNotNull(list);
+                Assert.AreEqual(role.Id, list.FirstOrDefault().Id);
 
-                    var cache2 = HttpRuntime.Cache.Get(key);
-                    Assert.IsNull(cache2);
-                }
+                System.Threading.Thread.Sleep(2500);
+
+                cache = HttpRuntime.Cache.Get(key) as byte[]; 
+                Assert.IsNull(cache);
             }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
         [Test]
         public void AbsoluteExpirationTest()
         {
-            try
+            using (var db = new TrackerDataContext())
             {
-                using (var db = new TrackerDataContext())
-                {
-                    var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.Take(1).GetHashKey();
-                    var role = query.FromCacheFirstOrDefault(2);
+                var query = db.Role.Where(r => r.Name == "Test Role");
+                var key = query.Take(1).GetHashKey();
+                var role = query.FromCacheFirstOrDefault(2);
 
-                    var cache1 = HttpRuntime.Cache.Get(key) as List<Role>;
-                    Assert.IsNotNull(cache1);
-                    Assert.AreSame(role, cache1.FirstOrDefault());
+                var cache = HttpRuntime.Cache.Get(key) as byte[];
+                Assert.IsNotNull(cache);
 
-                    System.Threading.Thread.Sleep(2500);
+                var list = cache.ToCollection<Role>();
+                Assert.IsNotNull(list);
+                Assert.AreEqual(role.Id, list.FirstOrDefault().Id);
 
-                    var cache2 = HttpRuntime.Cache.Get(key);
-                    Assert.IsNull(cache2);
-                }
+                System.Threading.Thread.Sleep(2500);
+
+                cache = HttpRuntime.Cache.Get(key) as byte[];
+                Assert.IsNull(cache);
             }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
         [Test]
         public void SlidingExpirationTest()
         {
-            try
+            using (var db = new TrackerDataContext())
             {
-                using (var db = new TrackerDataContext())
-                {
-                    var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.Take(1).GetHashKey();
-                    var role = query.FromCacheFirstOrDefault(new CacheSettings(TimeSpan.FromSeconds(2)));
+                var query = db.Role.Where(r => r.Name == "Test Role");
+                var key = query.Take(1).GetHashKey();
+                var role = query.FromCacheFirstOrDefault(new CacheSettings(TimeSpan.FromSeconds(2)));
 
-                    var cache1 = HttpRuntime.Cache.Get(key) as List<Role>;
-                    Assert.IsNotNull(cache1);
-                    Assert.AreSame(role, cache1.FirstOrDefault());
+                var cache = HttpRuntime.Cache.Get(key) as byte[];
+                Assert.IsNotNull(cache);
 
-                    System.Threading.Thread.Sleep(1500);
+                var list = cache.ToCollection<Role>();
+                Assert.IsNotNull(list);
+                Assert.AreEqual(role.Id, list.FirstOrDefault().Id);
 
-                    var cache2 = HttpRuntime.Cache.Get(key) as List<Role>;
-                    Assert.IsNotNull(cache2);
-                    Assert.AreSame(role, cache2.FirstOrDefault());
+                System.Threading.Thread.Sleep(1500);
 
-                    System.Threading.Thread.Sleep(1500);
+                cache = HttpRuntime.Cache.Get(key) as byte[];
+                Assert.IsNotNull(cache);
 
-                    var cache3 = HttpRuntime.Cache.Get(key) as List<Role>;
-                    Assert.IsNotNull(cache3);
-                    Assert.AreSame(role, cache3.FirstOrDefault());
+                list = cache.ToCollection<Role>();
+                Assert.IsNotNull(list);
+                Assert.AreEqual(role.Id, list.FirstOrDefault().Id);
 
-                    System.Threading.Thread.Sleep(2500);
+                System.Threading.Thread.Sleep(1500);
 
-                    var cache4 = HttpRuntime.Cache.Get(key);
-                    Assert.IsNull(cache4);
-                }
+                cache = HttpRuntime.Cache.Get(key) as byte[];
+                Assert.IsNotNull(cache);
+
+                list = cache.ToCollection<Role>();
+                Assert.IsNotNull(list);
+                Assert.AreEqual(role.Id, list.FirstOrDefault().Id);
+
+                System.Threading.Thread.Sleep(2500);
+
+                cache = HttpRuntime.Cache.Get(key) as byte[];
+                Assert.IsNull(cache);
             }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
         [Test]
         public void NoCacheEmptyResultTest()
         {
-            try
+            using (var db = new TrackerDataContext())
             {
-                using (var db = new TrackerDataContext())
-                {
-                    var guid = System.Guid.NewGuid().ToString();
-                    var query = db.Role.Where(r => r.Name == guid);
-                    var key = query.Take(1).GetHashKey();
-                    var role = query.FromCacheFirstOrDefault(new CacheSettings(2) { CacheEmptyResult = false });
+                var guid = System.Guid.NewGuid().ToString();
+                var query = db.Role.Where(r => r.Name == guid);
+                var key = query.Take(1).GetHashKey();
+                var role = query.FromCacheFirstOrDefault(new CacheSettings(2) { CacheEmptyResult = false });
 
-                    Assert.IsNull(role);
+                Assert.IsNull(role);
 
-                    var cache = HttpRuntime.Cache.Get(key);
-                    Assert.IsNull(cache);
-                }
+                var cache = HttpRuntime.Cache.Get(key);
+                Assert.IsNull(cache);
             }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
         [Test]
         public void CacheEmptyResultTest()
         {
-            try
+            using (var db = new TrackerDataContext())
             {
-                using (var db = new TrackerDataContext())
-                {
-                    var guid = System.Guid.NewGuid().ToString();
-                    var query = db.Role.Where(r => r.Name == guid);
-                    var key = query.Take(1).GetHashKey();
-                    var role = query.FromCacheFirstOrDefault(new CacheSettings(2) { CacheEmptyResult = true });
+                var guid = System.Guid.NewGuid().ToString();
+                var query = db.Role.Where(r => r.Name == guid);
+                var key = query.Take(1).GetHashKey();
+                var role = query.FromCacheFirstOrDefault(new CacheSettings(2) { CacheEmptyResult = true });
 
-                    Assert.IsNull(role);
+                Assert.IsNull(role);
 
-                    var cache = HttpRuntime.Cache.Get(key) as List<Role>;
-                    Assert.IsNotNull(cache);
-                    Assert.AreEqual(0, cache.Count());
-                }
+                var cache = HttpRuntime.Cache.Get(key) as byte[];
+                Assert.IsNotNull(cache);
+
+                var list = cache.ToCollection<Role>();
+                Assert.IsNotNull(list);
+                Assert.AreEqual(0, list.Count);
             }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
     }
 }

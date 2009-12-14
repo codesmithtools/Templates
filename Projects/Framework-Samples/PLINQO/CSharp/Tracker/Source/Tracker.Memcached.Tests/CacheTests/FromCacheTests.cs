@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Web;
+using System.Xml;
 using CodeSmith.Data.Caching;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Memcached;
@@ -20,15 +23,19 @@ namespace Tracker.Memcached.Tests.CacheTests
             using (var db = new TrackerDataContext())
             {
                 var query = db.Role.Where(r => r.Name == "Duck Roll");
-                var key = query.GetHashKey();
                 var roles = query.FromCache().ToList();
 
-                Assert.IsInstanceOf(typeof(MemcachedProvider), CacheManager.Current.DefaultProvider);
+                Assert.IsInstanceOf(typeof(MemcachedProvider), CacheManager.GetProvider());
 
-                var cache = CacheManager.Current.DefaultProvider.Get<ICollection<Role>>(key);
+                var key = CacheManager.GetProvider().GetGroupKey(query.GetHashKey(), null);
 
+                var cache = CacheManager.GetProvider().Get<byte[]>(key);
                 Assert.IsNotNull(cache);
-                Assert.AreEqual(roles.Count, cache.Count);
+
+                var list = cache.ToCollection<Role>();
+                Assert.IsNotNull(list);
+                Assert.AreEqual(roles.Count, list.Count);
+
             }
 
         }
@@ -42,12 +49,14 @@ namespace Tracker.Memcached.Tests.CacheTests
                 var key = query.GetHashKey();
                 var roles = query.FromCache("Long").ToList();
 
-                Assert.IsInstanceOf(typeof(MemcachedProvider), CacheManager.Current.DefaultProvider);
+                Assert.IsInstanceOf(typeof(MemcachedProvider), CacheManager.GetProvider());
 
-                var cache = CacheManager.Current.DefaultProvider.Get<ICollection<Role>>(key);
-
+                var cache = CacheManager.GetProvider().Get<byte[]>(key);
                 Assert.IsNotNull(cache);
-                Assert.AreEqual(roles.Count, cache.Count);
+
+                var list = cache.ToCollection<Role>();
+                Assert.IsNotNull(list);
+                Assert.AreEqual(roles.Count, list.Count);
             }
         }
 
@@ -61,16 +70,20 @@ namespace Tracker.Memcached.Tests.CacheTests
                 var key = query.GetHashKey();
                 var roles = query.FromCache(2).ToList();
 
-                Assert.IsInstanceOf(typeof(MemcachedProvider), CacheManager.Current.DefaultProvider);
+                Assert.IsInstanceOf(typeof(MemcachedProvider), CacheManager.GetProvider());
 
-                var cache1 = CacheManager.Current.DefaultProvider.Get<ICollection<Role>>(key);
-                Assert.IsNotNull(cache1);
-                Assert.AreEqual(roles.Count, cache1.Count);
+                var cache = CacheManager.GetProvider().Get<byte[]>(key);
+                Assert.IsNotNull(cache);
+
+                var list = cache.ToCollection<Role>();
+                Assert.IsNotNull(list);
+                Assert.AreEqual(roles.Count, list.Count);
 
                 System.Threading.Thread.Sleep(3000);
 
-                var cache2 = CacheManager.Current.DefaultProvider.Get<ICollection<Role>>(key);
-                Assert.IsNull(cache2);
+                cache = CacheManager.GetProvider().Get<byte[]>(key);
+                Assert.IsNull(cache);
+                
             }
 
         }
@@ -83,18 +96,21 @@ namespace Tracker.Memcached.Tests.CacheTests
             {
                 var query = db.Role.Where(r => r.Name == "Test Role");
                 var key = query.GetHashKey();
-                var roles = query.FromCache(2).ToList();
+                var roles = query.FromCache(new CacheSettings(DateTime.Now.AddSeconds(2))).ToList();
 
-                Assert.IsInstanceOf(typeof(MemcachedProvider), CacheManager.Current.DefaultProvider);
+                Assert.IsInstanceOf(typeof(MemcachedProvider), CacheManager.GetProvider());
 
-                var cache1 = CacheManager.Current.DefaultProvider.Get<ICollection<Role>>(key);
-                Assert.IsNotNull(cache1);
-                Assert.AreEqual(roles.Count, cache1.Count);
+                var cache = CacheManager.GetProvider().Get<byte[]>(key);
+                Assert.IsNotNull(cache);
+
+                var list = cache.ToCollection<Role>();
+                Assert.IsNotNull(list);
+                Assert.AreEqual(roles.Count, list.Count);
 
                 System.Threading.Thread.Sleep(3000);
 
-                var cache2 = CacheManager.Current.DefaultProvider.Get<ICollection<Role>>(key);
-                Assert.IsNull(cache2);
+                cache = CacheManager.GetProvider().Get<byte[]>(key);
+                Assert.IsNull(cache);
             }
 
         }
@@ -109,16 +125,19 @@ namespace Tracker.Memcached.Tests.CacheTests
                 var key = query.GetHashKey();
                 var roles = query.FromCache(new CacheSettings(TimeSpan.FromSeconds(2))).ToList();
 
-                Assert.IsInstanceOf(typeof(MemcachedProvider), CacheManager.Current.DefaultProvider);
+                Assert.IsInstanceOf(typeof(MemcachedProvider), CacheManager.GetProvider());
 
-                var cache1 = CacheManager.Current.DefaultProvider.Get<ICollection<Role>>(key);
-                Assert.IsNotNull(cache1);
-                Assert.AreEqual(roles.Count, cache1.Count);
+                var cache = CacheManager.GetProvider().Get<byte[]>(key);
+                Assert.IsNotNull(cache);
+
+                var list = cache.ToCollection<Role>();
+                Assert.IsNotNull(list);
+                Assert.AreEqual(roles.Count, list.Count);
 
                 System.Threading.Thread.Sleep(3000);
 
-                var cache4 = CacheManager.Current.DefaultProvider.Get<ICollection<Role>>(key);
-                Assert.IsNull(cache4);
+                cache = CacheManager.GetProvider().Get<byte[]>(key);
+                Assert.IsNull(cache);
             }
 
         }
@@ -137,13 +156,15 @@ namespace Tracker.Memcached.Tests.CacheTests
                 Assert.IsNotNull(roles);
                 Assert.AreEqual(0, roles.Count());
 
-                Assert.IsInstanceOf(typeof(MemcachedProvider), CacheManager.Current.DefaultProvider);
+                Assert.IsInstanceOf(typeof(MemcachedProvider), CacheManager.GetProvider());
 
 
-                var cache = CacheManager.Current.DefaultProvider.Get<ICollection<Role>>(key);
+                var cache = CacheManager.GetProvider().Get<ICollection<Role>>(key);
                 Assert.IsNull(cache);
             }
 
         }
+
+
     }
 }

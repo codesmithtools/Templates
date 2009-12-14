@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11.5, 10" name="Tracker">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11.5, 8.5" name="Tracker">
   <DataContextMoniker Name="/TrackerDataContext" />
   <nestedChildShapes>
-    <classShape Id="073db1d3-a04d-4591-b92a-d8c3ddf225d2" absoluteBounds="3.5, 1.5, 2, 2.5401025390625005">
+    <classShape Id="073db1d3-a04d-4591-b92a-d8c3ddf225d2" absoluteBounds="3.5, 1.5, 2, 2.3478011067708335">
       <DataClassMoniker Name="/TrackerDataContext/Audit" />
       <nestedChildShapes>
-        <elementListCompartment Id="e1ec1f47-fbc7-466b-9656-31f63aa27566" absoluteBounds="3.515, 1.96, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="e1ec1f47-fbc7-466b-9656-31f63aa27566" absoluteBounds="3.515, 1.96, 1.9700000000000002, 1.7878011067708333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <classShape Id="aaeec296-5694-4bef-ac0e-2182430a97c3" absoluteBounds="0.75, 0.75, 2, 1.9631982421875005">
@@ -59,7 +59,7 @@
         <classShapeMoniker Id="92c53575-81ab-4caf-b8f8-e9d2521917e9" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.75 : 4.58255126953125); (6.5 : 4.58255126953125)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(2.75 : 4.58255126953125); (3.22916666666667 : 4.58255126953125 : JumpStart); (3.39583333333333 : 4.58255126953125 : JumpEnd); (6.5 : 4.58255126953125)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/TrackerDataContext/User/User_Task1" />
       <nodes>
         <classShapeMoniker Id="7c519ac6-bfa4-48c3-b869-483c3f605dc7" />

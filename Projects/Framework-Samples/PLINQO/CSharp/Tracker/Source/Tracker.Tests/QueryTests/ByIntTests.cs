@@ -12,8 +12,7 @@ namespace Tracker.Tests.QueryTests
         [Test]
         public void ByTest()
         {
-            try
-            {
+
                 using (var db = new TrackerDataContext())
                 {
                     var a = db.Task.ByCreatedId(userIds[1]).ToList();
@@ -25,22 +24,13 @@ namespace Tracker.Tests.QueryTests
                     var d = db.Task.ByCreatedId(userIds[1], userIds[2]).ToList();
                     Assert.AreEqual(a.Count + b.Count, d.Count);
                 }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
         [Test]
         public void ByNullableTest()
         {
-            try
-            {
+
                 using (var db = new TrackerDataContext())
                 {
                     var a = db.Task.ByAssignedId((int?)null).ToList();
@@ -53,15 +43,7 @@ namespace Tracker.Tests.QueryTests
                     var e = db.Task.ByAssignedId(userIds[1], null, userIds[2]).ToList();
                     Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
                 }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
     }
 }

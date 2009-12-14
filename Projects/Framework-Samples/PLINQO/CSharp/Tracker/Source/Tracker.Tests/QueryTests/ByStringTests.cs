@@ -13,8 +13,7 @@ namespace Tracker.Tests.QueryTests
         [Test]
         public void ByNullableTest()
         {
-            try
-            {
+
                 using (var db = new TrackerDataContext())
                 {
                     var a = db.Task.ByDetails((string)null).ToList();
@@ -31,15 +30,7 @@ namespace Tracker.Tests.QueryTests
                     var g = db.Task.ByDetails(null, String.Empty, "Hello world!", "Goodnight moon!").ToList();
                     Assert.AreEqual(a.Count + b.Count + c.Count + d.Count, g.Count);
                 }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
     }

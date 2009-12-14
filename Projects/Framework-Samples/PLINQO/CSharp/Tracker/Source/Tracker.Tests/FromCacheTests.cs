@@ -13,8 +13,7 @@ namespace Tracker.Tests.CacheTests
         [Test]
         public void SimpleTest()
         {
-            try
-            {
+
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
@@ -25,22 +24,13 @@ namespace Tracker.Tests.CacheTests
                     Assert.IsNotNull(cache);
                     Assert.AreSame(roles, cache);
                 }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
         [Test]
         public void DurationTest()
         {
-            try
-            {
+
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
@@ -56,22 +46,13 @@ namespace Tracker.Tests.CacheTests
                     var cache2 = HttpRuntime.Cache.Get(key);
                     Assert.IsNull(cache2);
                 }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
         [Test]
         public void AbsoluteExpirationTest()
         {
-            try
-            {
+
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
@@ -87,22 +68,13 @@ namespace Tracker.Tests.CacheTests
                     var cache2 = HttpRuntime.Cache.Get(key);
                     Assert.IsNull(cache2);
                 }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
         [Test]
         public void SlidingExpirationTest()
         {
-            try
-            {
+
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == "Test Role");
@@ -130,22 +102,13 @@ namespace Tracker.Tests.CacheTests
                     var cache4 = HttpRuntime.Cache.Get(key);
                     Assert.IsNull(cache4);
                 }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
         [Test]
         public void CacheEmptyResultTest()
         {
-            try
-            {
+
                 using (var db = new TrackerDataContext())
                 {
                     var query = db.Role.Where(r => r.Name == System.Guid.NewGuid().ToString());
@@ -158,15 +121,7 @@ namespace Tracker.Tests.CacheTests
                     var cache = HttpRuntime.Cache.Get(key);
                     Assert.IsNull(cache);
                 }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
     }
 }

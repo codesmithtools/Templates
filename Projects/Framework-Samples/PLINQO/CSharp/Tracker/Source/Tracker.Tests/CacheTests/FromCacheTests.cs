@@ -15,191 +15,150 @@ namespace Tracker.Tests.CacheTests
         [Test]
         public void SimpleTest()
         {
-            try
-            {
-                using (var db = new TrackerDataContext())
-                {
-                    var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetHashKey();
-                    var roles = query.FromCache();
+            var db = new TrackerDataContext { Log = Console.Out };
 
-                    var cache = HttpRuntime.Cache.Get(key);
-                    Assert.IsNotNull(cache);
-                    Assert.AreSame(roles, cache);
-                }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+            var query = db.Role.Where(r => r.Name == "Test Role");
+            var roles = query.FromCache().ToList();
+
+            Assert.IsInstanceOf(typeof(HttpCacheProvider), CacheManager.GetProvider());
+
+            var key = CacheManager.GetProvider().GetGroupKey(query.GetHashKey(), null);
+
+            var cache = CacheManager.GetProvider().Get<byte[]>(key);
+            Assert.IsNotNull(cache);
+
+            var list = cache.ToCollection<Role>();
+            Assert.IsNotNull(list);
+            Assert.AreEqual(roles.Count, list.Count);
         }
 
         [Test]
         public void DurationTest()
         {
-            try
-            {
-                using (var db = new TrackerDataContext())
-                {
-                    var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetHashKey();
-                    var roles = query.FromCache(2);
+            var db = new TrackerDataContext { Log = Console.Out };
 
-                    var cache1 = HttpRuntime.Cache.Get(key);
-                    Assert.IsNotNull(cache1);
-                    Assert.AreSame(roles, cache1);
+            var query = db.Role.Where(r => r.Name == "Test Role");
+            var key = query.GetHashKey();
+            var roles = query.FromCache(2).ToList();
 
-                    System.Threading.Thread.Sleep(2500);
+            var cache = CacheManager.GetProvider().Get<byte[]>(key);
+            Assert.IsNotNull(cache);
 
-                    var cache2 = HttpRuntime.Cache.Get(key);
-                    Assert.IsNull(cache2);
-                }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+            var list = cache.ToCollection<Role>();
+            Assert.IsNotNull(list);
+            Assert.AreEqual(roles.Count, list.Count);
+
+            System.Threading.Thread.Sleep(3000);
+
+            cache = CacheManager.GetProvider().Get<byte[]>(key);
+            Assert.IsNull(cache);
         }
 
         [Test]
         public void AbsoluteExpirationTest()
         {
-            try
-            {
-                using (var db = new TrackerDataContext())
-                {
-                    var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetHashKey();
-                    var roles = query.FromCache(2);
+            var db = new TrackerDataContext { Log = Console.Out };
 
-                    var cache1 = HttpRuntime.Cache.Get(key);
-                    Assert.IsNotNull(cache1);
-                    Assert.AreSame(roles, cache1);
+            var query = db.Role.Where(r => r.Name == "Test Role");
+            var key = query.GetHashKey();
+            var roles = query.FromCache(2).ToList();
 
-                    System.Threading.Thread.Sleep(2500);
+            var cache = CacheManager.GetProvider().Get<byte[]>(key);
+            Assert.IsNotNull(cache);
 
-                    var cache2 = HttpRuntime.Cache.Get(key);
-                    Assert.IsNull(cache2);
-                }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+            var list = cache.ToCollection<Role>();
+            Assert.IsNotNull(list);
+            Assert.AreEqual(roles.Count, list.Count);
+
+            System.Threading.Thread.Sleep(3000);
+
+            cache = CacheManager.GetProvider().Get<byte[]>(key);
+            Assert.IsNull(cache);
         }
 
         [Test]
         public void SlidingExpirationTest()
         {
-            try
-            {
-                using (var db = new TrackerDataContext())
-                {
-                    var query = db.Role.Where(r => r.Name == "Test Role");
-                    var key = query.GetHashKey();
-                    var roles = query.FromCache(new CacheSettings(TimeSpan.FromSeconds(2)));
+            var db = new TrackerDataContext { Log = Console.Out };
 
-                    var cache1 = HttpRuntime.Cache.Get(key);
-                    Assert.IsNotNull(cache1);
-                    Assert.AreSame(roles, cache1);
+            var query = db.Role.Where(r => r.Name == "Test Role");
+            var key = query.GetHashKey();
+            var roles = query
+                .FromCache(new CacheSettings(TimeSpan.FromSeconds(2)))
+                .ToList();
 
-                    System.Threading.Thread.Sleep(1500);
+            var cache = HttpRuntime.Cache.Get(key) as byte[];
+            Assert.IsNotNull(cache);
 
-                    var cache2 = HttpRuntime.Cache.Get(key);
-                    Assert.IsNotNull(cache2);
-                    Assert.AreSame(roles, cache2);
+            var list = cache.ToCollection<Role>();
+            Assert.IsNotNull(list);
+            Assert.AreEqual(roles.Count, list.Count);
 
-                    System.Threading.Thread.Sleep(1500);
+            System.Threading.Thread.Sleep(1500);
 
-                    var cache3 = HttpRuntime.Cache.Get(key);
-                    Assert.IsNotNull(cache3);
-                    Assert.AreSame(roles, cache3);
+            cache = HttpRuntime.Cache.Get(key) as byte[];
+            Assert.IsNotNull(cache);
 
-                    System.Threading.Thread.Sleep(2500);
+            list = cache.ToCollection<Role>();
+            Assert.IsNotNull(list);
+            Assert.AreEqual(roles.Count, list.Count);
 
-                    var cache4 = HttpRuntime.Cache.Get(key);
-                    Assert.IsNull(cache4);
-                }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+            System.Threading.Thread.Sleep(1500);
+
+            cache = HttpRuntime.Cache.Get(key) as byte[];
+            Assert.IsNotNull(cache);
+
+            list = cache.ToCollection<Role>();
+            Assert.IsNotNull(list);
+            Assert.AreEqual(roles.Count, list.Count);
+
+            System.Threading.Thread.Sleep(2500);
+
+            cache = HttpRuntime.Cache.Get(key) as byte[];
+            Assert.IsNull(cache);
+
         }
 
         [Test]
         public void NoCacheEmptyResultTest()
         {
-            try
-            {
-                using (var db = new TrackerDataContext())
-                {
-                    var guid = System.Guid.NewGuid().ToString();
-                    var query = db.Role.Where(r => r.Name == guid);
-                    var key = query.GetHashKey();
-                    var roles = query.FromCache(new CacheSettings(2) { CacheEmptyResult = false });
+            var db = new TrackerDataContext { Log = Console.Out };
 
-                    Assert.IsNotNull(roles);
-                    Assert.AreEqual(0, roles.Count());
+            var guid = System.Guid.NewGuid().ToString();
+            var query = db.Role.Where(r => r.Name == guid);
+            var key = query.GetHashKey();
+            var roles = query
+                .FromCache(new CacheSettings(2) { CacheEmptyResult = false })
+                .ToList(); ;
 
-                    var cache = HttpRuntime.Cache.Get(key);
-                    Assert.IsNull(cache);
-                }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+            Assert.IsNotNull(roles);
+            Assert.AreEqual(0, roles.Count());
+
+            var cache = HttpRuntime.Cache.Get(key);
+            Assert.IsNull(cache);
         }
 
         [Test]
         public void CacheEmptyResultTest()
         {
-            try
-            {
-                using (var db = new TrackerDataContext())
-                {
-                    var guid = System.Guid.NewGuid().ToString();
-                    var query = db.Role.Where(r => r.Name == guid);
-                    var key = query.GetHashKey();
-                    var roles = query.FromCache(new CacheSettings(2) { CacheEmptyResult = true });
+            var db = new TrackerDataContext { Log = Console.Out };
 
-                    Assert.IsNotNull(roles);
-                    Assert.AreEqual(0, roles.Count());
+            var guid = System.Guid.NewGuid().ToString();
+            var query = db.Role.Where(r => r.Name == guid);
+            var key = query.GetHashKey();
+            var roles = query
+                .FromCache(new CacheSettings(2) { CacheEmptyResult = true })
+                .ToList(); ;
 
-                    var cache = HttpRuntime.Cache.Get(key) as List<Role>;
-                    Assert.IsNotNull(cache);
-                    Assert.AreEqual(0, cache.Count());
-                }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+            Assert.IsNotNull(roles);
+
+            var cache = HttpRuntime.Cache.Get(key) as byte[];
+            Assert.IsNotNull(cache);
+
+            var list = cache.ToCollection<Role>();
+            Assert.IsNotNull(list);
+            Assert.AreEqual(0, list.Count);
+
         }
     }
 }

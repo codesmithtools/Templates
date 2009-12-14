@@ -53,56 +53,38 @@ namespace Tracker.Tests.QueryTests
         [Test]
         public void ByTest()
         {
-            try
-            {
-                using (var db = new TrackerDataContext())
-                {
-                    var a = db.Guid.ById(_guid1Id).ToList();
-                    var b = db.Guid.ById(_guid2Id).ToList();
 
-                    var c = db.Guid.ById(_guid1Id, null).ToList();
-                    Assert.AreEqual(a.Count, c.Count);
+            using (var db = new TrackerDataContext())
+            {
+                var a = db.Guid.ById(_guid1Id).ToList();
+                var b = db.Guid.ById(_guid2Id).ToList();
 
-                    var d = db.Guid.ById(_guid1Id, _guid2Id).ToList();
-                    Assert.AreEqual(a.Count + b.Count, d.Count);
-                }
+                var c = db.Guid.ById(_guid1Id, null).ToList();
+                Assert.AreEqual(a.Count, c.Count);
+
+                var d = db.Guid.ById(_guid1Id, _guid2Id).ToList();
+                Assert.AreEqual(a.Count + b.Count, d.Count);
             }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
         [Test]
         public void ByNullableTest()
         {
-            try
-            {
-                using (var db = new TrackerDataContext())
-                {
-                    var a = db.Guid.ByAlternateId((Guid?)null).ToList();
-                    var b = db.Guid.ByAlternateId(_guid2Alt).ToList();
-                    var c = db.Guid.ByAlternateId(_guid3Alt).ToList();
 
-                    var d = db.Guid.ByAlternateId(_guid2Alt, null).ToList();
-                    Assert.AreEqual(a.Count + b.Count, d.Count);
+            using (var db = new TrackerDataContext())
+            {
+                var a = db.Guid.ByAlternateId((Guid?)null).ToList();
+                var b = db.Guid.ByAlternateId(_guid2Alt).ToList();
+                var c = db.Guid.ByAlternateId(_guid3Alt).ToList();
 
-                    var e = db.Guid.ByAlternateId(_guid2Alt, null, _guid3Alt).ToList();
-                    Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
-                }
+                var d = db.Guid.ByAlternateId(_guid2Alt, null).ToList();
+                Assert.AreEqual(a.Count + b.Count, d.Count);
+
+                var e = db.Guid.ByAlternateId(_guid2Alt, null, _guid3Alt).ToList();
+                Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
             }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
     }
 }

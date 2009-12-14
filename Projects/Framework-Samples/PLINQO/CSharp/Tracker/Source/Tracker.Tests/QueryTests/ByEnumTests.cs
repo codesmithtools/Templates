@@ -13,8 +13,6 @@ namespace Tracker.Tests.QueryTests
         [Test]
         public void ByTest()
         {
-            try
-            {
                 using (var db = new TrackerDataContext())
                 {
                     var a = db.Task.ByStatus(Status.InProgress).ToList();
@@ -26,22 +24,12 @@ namespace Tracker.Tests.QueryTests
                     var d = db.Task.ByStatus(Status.InProgress, Status.NotStarted).ToList();
                     Assert.AreEqual(a.Count + b.Count, d.Count);
                 }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
 
         [Test]
         public void ByNullableTest()
         {
-            try
-            {
                 using (var db = new TrackerDataContext())
                 {
                     var a = db.Task.ByPriority((Priority?)null).ToList();
@@ -54,15 +42,7 @@ namespace Tracker.Tests.QueryTests
                     var e = db.Task.ByPriority(Priority.Normal, null, Priority.High).ToList();
                     Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
                 }
-            }
-            catch (AssertionException)
-            {
-                throw;
-            }
-            catch
-            {
-                Assert.Fail();
-            }
+
         }
     }
 }
