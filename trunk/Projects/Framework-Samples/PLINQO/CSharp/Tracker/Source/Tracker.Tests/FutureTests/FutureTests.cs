@@ -12,6 +12,25 @@ namespace Tracker.Tests.FutureTests
     public class FutureTests : FutureBase
     {
         [Test]
+        public void PageTest()
+        {
+            var db = new TrackerDataContext();
+            db.Log = Console.Out;
+
+            // base query
+            var q = db.Task.ByPriority(Priority.Normal);
+            // get total count
+            var q1 = q.FutureCount();
+            // get first page
+            var q2 = q.Skip(0).Take(10).Future();
+            // triggers sql execute as a batch
+            int total = q1.Value;
+            var tasks = q2.ToList();
+
+            Assert.IsNotNull(tasks);
+        }
+
+        [Test]
         public void SimpleTest()
         {
             var db = new TrackerDataContext();
@@ -44,6 +63,8 @@ namespace Tracker.Tests.FutureTests
             Assert.IsNotNull(tasks);
 
         }
+
+
 
         [Test]
         public void FutureCountTest()

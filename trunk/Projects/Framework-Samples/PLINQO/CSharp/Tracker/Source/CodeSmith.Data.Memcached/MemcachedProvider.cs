@@ -10,35 +10,26 @@ namespace CodeSmith.Data.Memcached
 {
     public class MemcachedProvider : CacheProvider
     {
-        public override void Save<T>(string key, T data, CacheSettings settings)
+        public override void Set<T>(string key, T data, CacheSettings settings)
         {
             if (data == null)
                 return;
 
-            var serializer = new DataContractSerializer(typeof(T));
-
-            byte[] buffer;
-            using (var ms = new MemoryStream())
-            using (var writer = XmlDictionaryWriter.CreateBinaryWriter(ms))
-            {
-                serializer.WriteObject(writer, data);
-                writer.Flush();
-                buffer = ms.ToArray();
-            }
+            string groupKey = GetGroupKey(key, settings.Group);
 
             switch (settings.Mode)
             {
                 case CacheExpirationMode.Duration:
-                    Client.Store(StoreMode.Set, key, buffer, 0, buffer.Length, DateTime.UtcNow.Add(settings.Duration));
+                    Client.Store(StoreMode.Set, groupKey, data, DateTime.UtcNow.Add(settings.Duration));
                     break;
                 case CacheExpirationMode.Sliding:
-                    Client.Store(StoreMode.Set, key, buffer, 0, buffer.Length, settings.Duration);
+                    Client.Store(StoreMode.Set, groupKey, data, settings.Duration);
                     break;
                 case CacheExpirationMode.Absolute:
-                    Client.Store(StoreMode.Set, key, buffer, 0, buffer.Length, settings.AbsoluteExpiration);
+                    Client.Store(StoreMode.Set, groupKey, data, settings.AbsoluteExpiration);
                     break;
                 default:
-                    Client.Store(StoreMode.Set, key, buffer, 0, buffer.Length);
+                    Client.Store(StoreMode.Set, groupKey, data);
                     break;
             }
         }
@@ -52,20 +43,8 @@ namespace CodeSmith.Data.Memcached
         {
             var serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(T));
 
-            byte[] buffer = Client.Get(key) as byte[];
-
-            if (buffer == null || buffer.Length == 0)
-                return default(T);
-
-            object value;
-            using (var ms = new MemoryStream(buffer))
-            using (var reader = XmlDictionaryReader.CreateBinaryReader(ms, XmlDictionaryReaderQuotas.Max))
-            {
-                ms.Position = 0;
-                value = serializer.ReadObject(reader);
-            }
-
-            return value == null ? default(T) : (T)value;
+            object data = Client.Get(key);
+            return data == null ? default(T) : (T)data;
         }
 
 

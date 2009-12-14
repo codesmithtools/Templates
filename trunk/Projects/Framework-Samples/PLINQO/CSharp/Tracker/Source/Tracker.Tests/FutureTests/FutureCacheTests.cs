@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using CodeSmith.Data.Caching;
@@ -12,6 +13,43 @@ namespace Tracker.Tests.FutureTests
     [TestFixture]
     public class FutureCacheTests : FutureBase
     {
+        [Test]
+        public void ExecuteBatch()
+        {
+            var db = new TrackerDataContext();
+            db.Log = Console.Out;
+
+            // build up queries
+
+            var q1 = db.Task.Take(10).ToList();
+
+
+            var q2 = db.Task.Take(10);
+
+            var dbCommand = db.GetCommand(q2, true);
+
+
+            var result = db.ExecuteQuery<Task>(dbCommand.CommandText);
+            var list = result.ToList();
+
+        }
+
+        [Test]
+        public void SqlCommand()
+        {
+            var db = new TrackerDataContext();
+            db.Log = Console.Out;
+
+            var result = db.GetUsersWithTasks();
+
+            var users = result.GetResult<User>().ToList();
+            var tasks = result.GetResult<Task>().ToList();
+
+            Assert.IsNotNull(tasks);
+
+
+        }
+        
         [Test]
         public void FutureTest()
         {
@@ -69,11 +107,11 @@ namespace Tracker.Tests.FutureTests
 
             // build up queries
             var q1 = db.User
-                .ByEmailAddress("one@test.com")
+                .ByEmailAddress("two@test.com")
                 .FutureCache(cache);
 
             var q2 = db.Task
-                .Where(t => t.Summary == "Test")
+                .Where(t => t.Details == "Hello world!")
                 .FutureCacheCount(cache);
 
             // this triggers the loading of all the future queries
@@ -88,11 +126,11 @@ namespace Tracker.Tests.FutureTests
 
             // queries are loaded and cached, run same queries again...
             var c1 = db.User
-                .ByEmailAddress("one@test.com")
+                .ByEmailAddress("two@test.com")
                 .FutureCache(cache);
 
             var c2 = db.Task
-                .Where(t => t.Summary == "Test")
+                .Where(t => t.Details == "Hello world!")
                 .FutureCacheCount(cache);
 
             // should be loaded because it came from cache

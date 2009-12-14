@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Data.Linq;
+using System.IO;
+using System.Runtime.Serialization;
 using System.Web;
+using System.Xml;
 using NUnit.Framework;
 using Tracker.Core.Data;
 using CodeSmith.Data.Linq;

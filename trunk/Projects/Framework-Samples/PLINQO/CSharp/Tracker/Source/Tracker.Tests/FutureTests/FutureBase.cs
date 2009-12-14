@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Xml;
 using CodeSmith.Data.Linq;
 using NUnit.Framework;
 using Tracker.Core.Data;
@@ -19,6 +22,8 @@ namespace Tracker.Tests.FutureTests
         {
             using (var db = new TrackerDataContext())
             {
+                
+
                 var users = new List<User>();
                 users.Add(new User
                 {
@@ -47,6 +52,15 @@ namespace Tracker.Tests.FutureTests
                     EmailAddress = "three@test.com",
                     IsApproved = false
                 });
+
+                var emails = users.Select(u => u.EmailAddress).ToArray();
+
+                var existing = from u in db.User
+                               where emails.Contains(u.EmailAddress)
+                               select u;
+
+                db.User.Delete(existing);
+
                 db.User.InsertAllOnSubmit(users);
                 db.SubmitChanges();
                 userIds = users.Select(u => u.Id).ToList();

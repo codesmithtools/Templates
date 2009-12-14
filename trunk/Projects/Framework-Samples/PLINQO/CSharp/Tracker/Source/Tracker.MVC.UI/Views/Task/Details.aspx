@@ -64,7 +64,7 @@
         </p>
         <p>
             Last Modified By:
-            <%= Html.Encode(Model.LastModifiedBy) %>
+            <%= Html.Encode(Model.LastModified) %>
         </p>
     </fieldset>
     <p>
