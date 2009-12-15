@@ -33,8 +33,8 @@
     Template="Internal\QueryExtension.Generated.cst" 
     MergeProperties="true" ExcludeProperties="Database, DataManager,EntityManager,Table" %>
 
-<script runat="template">    
-    Public Sub Generate()
+<script runat="template">
+Public Sub Generate()
   If Not Directory.Exists(Me.QueryDirectory) Then
     Directory.CreateDirectory(Me.QueryDirectory)
   End If
@@ -86,25 +86,25 @@ End Sub
 Private _enumXmlFileName As String = Nothing
 
 Private ReadOnly Property EnumXmlFileName() As String
-? ? Get
-? ? ? ? If [String].IsNullOrEmpty(_enumXmlFileName) Then
-? ? ? ? ? ? _enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile)
-? ? ? ? End If
-? ? ? ? Return _enumXmlFileName
-? ? End Get
+    Get
+        If [String].IsNullOrEmpty(_enumXmlFileName) Then
+            _enumXmlFileName = DbmlGenerator.GetEnumXmlFileName(DbmlFile)
+        End If
+        Return _enumXmlFileName
+    End Get
 End Property
 
 Private _enumDatabase As LinqToSqlShared.Generator.DbmlEnum.Database = Nothing
 Private _isEnumDatabaseLoaded As Boolean = False
 
 Private ReadOnly Property EnumDatabase() As LinqToSqlShared.Generator.DbmlEnum.Database
-? ? Get
-? ? ? ? If Not _isEnumDatabaseLoaded Then
-? ? ? ? ? ? _enumDatabase = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName)
-? ? ? ? ? ? _isEnumDatabaseLoaded = True
-? ? ? ? End If
-? ? ? ? Return _enumDatabase
-? ? End Get
+    Get
+        If Not _isEnumDatabaseLoaded Then
+            _enumDatabase = LinqToSqlShared.Generator.DbmlEnum.Database.DeserializeFromFile(EnumXmlFileName)
+            _isEnumDatabaseLoaded = True
+        End If
+        Return _enumDatabase
+    End Get
 End Property
 
 </script>
