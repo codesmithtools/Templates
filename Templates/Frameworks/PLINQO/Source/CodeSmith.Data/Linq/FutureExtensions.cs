@@ -81,10 +81,7 @@ namespace CodeSmith.Data.Linq
             if (source == null)
                 return source;
 
-            var db = source.GetDataContext() as IFutureContext;
-            if (db == null)
-                throw new ArgumentException("The source must originate from a DataContext that implements IFutureContext.", "source");
-
+            IFutureContext db = GetFutureContext(source);
             var future = new FutureQuery<T>(source, db.ExecuteFutureQueries, cacheSettings);
             db.FutureQueries.Add(future);
             return future;
@@ -159,10 +156,7 @@ namespace CodeSmith.Data.Linq
             if (source == null)
                 return new FutureCount(0);
 
-            var db = source.GetDataContext() as IFutureContext;
-            if (db == null)
-                throw new ArgumentException("The source must originate from a DataContext that implements IFutureContext.", "source");
-
+            IFutureContext db = GetFutureContext(source);
             var future = new FutureCount(source, db.ExecuteFutureQueries, cacheSettings);
             db.FutureQueries.Add(future);
             return future;
@@ -240,13 +234,25 @@ namespace CodeSmith.Data.Linq
             // make sure to only get the first value
             var firstQuery = source.Take(1);
 
-            var db = source.GetDataContext() as IFutureContext;
-            if (db == null)
-                throw new ArgumentException("The source must originate from a DataContext that implements IFutureContext.", "source");
-
+            IFutureContext db = GetFutureContext(source); 
             var future = new FutureValue<T>(firstQuery, db.ExecuteFutureQueries, cacheSettings);
             db.FutureQueries.Add(future);
             return future;
+        }
+
+        private static IFutureContext GetFutureContext(IQueryable source)
+        {
+            DataContext context = source.GetDataContext();
+            if (context == null)
+                throw new ArgumentException("The source must originate from a DataContext that implements IFutureContext.", "source");
+            if (context.LoadOptions != null)
+                throw new NotSupportedException("Future queries are not supported when the DataContext has LoadOptions.");
+
+            IFutureContext futureContext = context as IFutureContext;
+            if (futureContext == null)
+                throw new ArgumentException("The source must originate from a DataContext that implements IFutureContext.", "source");
+
+            return futureContext;
         }
 
     }
