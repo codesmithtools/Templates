@@ -1546,6 +1546,12 @@
             </summary>
             <value><c>true</c> if this instance is loaded; otherwise, <c>false</c>.</value>
         </member>
+        <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.Exception">
+            <summary>
+            Gets or sets the query execute exception. 
+            </summary>
+            <value>The query execute exception.</value>      
+        </member>
         <member name="P:CodeSmith.Data.Linq.FutureQueryBase`1.CodeSmith#Data#Linq#IFutureQuery#Query">
             <summary>
             Gets the query source to use when materializing.
