@@ -42,6 +42,9 @@ namespace CodeSmith.Data.Linq
         {
             var result = GetResult();
 
+            if (Exception != null)
+                throw new FutureException("An error occurred executing the future query.", Exception);
+
             return result == null 
                 ? new List<T>().GetEnumerator() 
                 : result.GetEnumerator();
