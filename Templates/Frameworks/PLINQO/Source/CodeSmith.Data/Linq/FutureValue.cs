@@ -64,11 +64,13 @@ namespace CodeSmith.Data.Linq
                 {
                     _hasValue = true;
                     var result = GetResult();
-                    if (result == null)
-                        return _underlyingValue;
-
-                    _underlyingValue = result.FirstOrDefault();
+                    
+                    if (result != null)
+                        _underlyingValue = result.FirstOrDefault();
                 }
+
+                if (Exception != null)
+                    throw new FutureException("An error occurred executing the future query.", Exception);
 
                 return _underlyingValue;
             }

@@ -19,7 +19,7 @@ namespace CodeSmith.Data.Linq
         /// <typeparam name="T">The type of the elements of <paramref name="source" />.</typeparam>
         /// <param name="source">An <see cref="T:System.Linq.IQueryable`1" /> to add to the batch of future queries.</param>
         /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains elements from the input sequence.</returns>
-        public static IEnumerable<T> Future<T>(this IQueryable<T> source)
+        public static FutureQuery<T> Future<T>(this IQueryable<T> source)
         {
             return FutureCache(source, (CacheSettings)null);
         }
@@ -32,7 +32,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>
         /// An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
         /// </returns>
-        public static IEnumerable<T> FutureCache<T>(this IQueryable<T> source)
+        public static FutureQuery<T> FutureCache<T>(this IQueryable<T> source)
         {
             var cacheSettings = CacheManager.GetProfile();
             return FutureCache(source, cacheSettings);
@@ -47,7 +47,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>
         /// An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
         /// </returns>
-        public static IEnumerable<T> FutureCache<T>(this IQueryable<T> source, string profileName)
+        public static FutureQuery<T> FutureCache<T>(this IQueryable<T> source, string profileName)
         {
             CacheSettings cacheSettings = CacheManager.GetProfile(profileName);
             return FutureCache(source, cacheSettings);
@@ -62,7 +62,7 @@ namespace CodeSmith.Data.Linq
         /// <returns>
         /// An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
         /// </returns>
-        public static IEnumerable<T> FutureCache<T>(this IQueryable<T> source, int duration)
+        public static FutureQuery<T> FutureCache<T>(this IQueryable<T> source, int duration)
         {
             return FutureCache(source, new CacheSettings(duration));
         }
@@ -76,10 +76,10 @@ namespace CodeSmith.Data.Linq
         /// <returns>
         /// An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
         /// </returns>
-        public static IEnumerable<T> FutureCache<T>(this IQueryable<T> source, CacheSettings cacheSettings)
+        public static FutureQuery<T> FutureCache<T>(this IQueryable<T> source, CacheSettings cacheSettings)
         {
             if (source == null)
-                return source;
+                throw new ArgumentNullException("source");
 
             IFutureContext db = GetFutureContext(source);
             var future = new FutureQuery<T>(source, db.ExecuteFutureQueries, cacheSettings);

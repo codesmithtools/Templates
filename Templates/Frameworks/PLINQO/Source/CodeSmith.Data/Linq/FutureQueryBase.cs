@@ -96,6 +96,12 @@ namespace CodeSmith.Data.Linq
         }
 
         /// <summary>
+        /// Gets or sets the query execute exception. 
+        /// </summary>
+        /// <value>The query execute exception.</value>      
+        public Exception Exception { get; set; }
+
+        /// <summary>
         /// Gets the query source to use when materializing.
         /// </summary>
         /// <value>The query source to use when materializing.</value>
@@ -165,15 +171,21 @@ namespace CodeSmith.Data.Linq
         protected virtual void SetResult(IMultipleResults result)
         {
             _isLoaded = true;
-            var resultSet = result.GetResult<T>();
+            List<T> resultList = null;
 
-            var resultList = resultSet != null
-                          ? resultSet.ToList()
-                          : new List<T>();
+            try
+            {
+                var resultSet = result.GetResult<T>();
+                resultList = resultSet != null ? resultSet.ToList() : new List<T>();
+                _result = resultList;
 
-            _result = resultList;
+            }
+            catch (Exception ex)
+            {
+                Exception = ex;
+            }
 
-            if (_cacheSettings == null)
+            if (_cacheSettings == null || resultList == null)
                 return;
 
             // cache the result 

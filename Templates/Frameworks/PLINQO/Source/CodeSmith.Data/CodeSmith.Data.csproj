@@ -133,6 +133,7 @@
     <Compile Include="Linq\Evaluator.cs" />
     <Compile Include="Linq\ExpressionVisitor.cs" />
     <Compile Include="Linq\FutureCount.cs" />
+    <Compile Include="Linq\FutureException.cs" />
     <Compile Include="Linq\FutureQuery.cs" />
     <Compile Include="Linq\DataContextBase.cs" />
     <Compile Include="Linq\FutureExtensions.cs" />
