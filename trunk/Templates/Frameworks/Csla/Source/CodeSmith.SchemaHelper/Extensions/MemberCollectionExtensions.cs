@@ -527,6 +527,14 @@ namespace CodeSmith.SchemaHelper
                 setStatements += string.Format(" [{0}] = {1}{2},", name, Configuration.Instance.ParameterPrefix, name);
             }
 
+            foreach (AssociationMember associationMember in associationMembers)
+            {
+                string output = string.Format(" [{0}] = {1}{2},", associationMember.ColumnName, Configuration.Instance.ParameterPrefix, NamingConventions.VariableName(associationMember.ColumnName));
+
+                if (!setStatements.Contains(output))
+                    setStatements += output;
+            }
+
             return setStatements.TrimStart(new[] { '\t', '\n' }).TrimEnd(new[] { ',' });
         }
 
