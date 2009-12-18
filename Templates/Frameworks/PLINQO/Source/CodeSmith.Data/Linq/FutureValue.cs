@@ -13,7 +13,6 @@ namespace CodeSmith.Data.Linq
     /// </summary>
     /// <typeparam name="T">The type for the future query.</typeparam>
     [DebuggerDisplay("IsLoaded={IsLoaded}, Value={ValueForDebugDisplay}")]
-    [DebuggerTypeProxy(typeof(FutureValueDebugView<>))]
     public class FutureValue<T> : FutureQueryBase<T>
     {
         private T _underlyingValue = default(T);
@@ -64,7 +63,7 @@ namespace CodeSmith.Data.Linq
                 {
                     _hasValue = true;
                     var result = GetResult();
-                    
+
                     if (result != null)
                         _underlyingValue = result.FirstOrDefault();
                 }
@@ -91,37 +90,14 @@ namespace CodeSmith.Data.Linq
             return futureValue.Value;
         }
 
-        #region Debug Proxy
+        /// <summary>
+        /// Gets the value for debug display.
+        /// </summary>
+        /// <value>The value for debug display.</value>
         internal T ValueForDebugDisplay
         {
             get { return _underlyingValue; }
         }
-
-        internal sealed class FutureValueDebugView<TDebug>
-        {
-            private readonly FutureValue<TDebug> _future;
-
-            public FutureValueDebugView(FutureValue<TDebug> future)
-            {
-                _future = future;
-            }
-
-            public TDebug Value
-            {
-                get { return _future.ValueForDebugDisplay; }
-            }
-
-            public bool IsLoaded
-            {
-                get { return _future.IsLoaded; }
-            }
-
-            public IQueryable Query
-            {
-                get { return ((IFutureQuery)_future).Query; }
-            }
-        }
-        #endregion
     }
 
 

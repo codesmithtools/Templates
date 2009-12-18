@@ -245,8 +245,6 @@ namespace CodeSmith.Data.Linq
             DataContext context = source.GetDataContext();
             if (context == null)
                 throw new ArgumentException("The source must originate from a DataContext that implements IFutureContext.", "source");
-            if (context.LoadOptions != null)
-                throw new NotSupportedException("Future queries are not supported when the DataContext has LoadOptions.");
 
             IFutureContext futureContext = context as IFutureContext;
             if (futureContext == null)

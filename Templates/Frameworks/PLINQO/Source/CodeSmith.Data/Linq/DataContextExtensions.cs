@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.Linq;
+using System.Data.Linq.Mapping;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
@@ -109,9 +110,9 @@ namespace CodeSmith.Data.Linq
             if (!isForTranslate)
                 return dbCommand;
 
-            var metaType = context.Mapping.GetMetaType(query.ElementType);
+            MetaType metaType = context.Mapping.GetMetaType(query.ElementType);
             if (metaType != null && metaType.IsEntity)
-                dbCommand.CommandText = RemoveColumnAlias(dbCommand.CommandText);
+                dbCommand.CommandText = RemoveColumnAlias(dbCommand.CommandText, metaType);
 
             return dbCommand;
         }
@@ -197,7 +198,7 @@ namespace CodeSmith.Data.Linq
             return destination;
         }
 
-        private static string RemoveColumnAlias(string sql)
+        private static string RemoveColumnAlias(string sql, MetaType metaType)
         {
             // Work around issue with DataContext.Translate not supporting column aliases.
 
@@ -207,10 +208,19 @@ namespace CodeSmith.Data.Linq
             string selectText = sql.Substring(0, fromIndex);
             string fromText = sql.Substring(fromIndex);
 
-            // remove column alias because DataContext.Translate doesn't work with them
-            string select = Regex.Replace(selectText, @"(\[(?:[^\]]|\]\])+\]\.\[(?:[^\]]|\]\])+\]) AS \[(?:[^\]]|\]\])+\]", "$1");
+            foreach (MetaDataMember member in metaType.PersistentDataMembers)
+            {
+                if (member.IsAssociation || member.Name == member.MappedName)
+                    continue;
 
-            return select + fromText;
+                // remove column alias because DataContext.Translate doesn't work with them
+                string search = string.Format("[{0}] AS [{1}]", member.MappedName, member.Name);
+                string replace = string.Format("[{0}]", member.MappedName);
+
+                selectText = selectText.Replace(search, replace);
+            }
+
+            return selectText + fromText;
         }
 
         private static void LogCommand(DataContext context, DbCommand cmd)
