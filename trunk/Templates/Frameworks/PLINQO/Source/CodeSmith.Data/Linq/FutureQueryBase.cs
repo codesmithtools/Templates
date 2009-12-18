@@ -12,6 +12,7 @@ namespace CodeSmith.Data.Linq
     /// Base class for future queries.
     /// </summary>
     /// <typeparam name="T">The type for the future query.</typeparam>
+    [DebuggerDisplay("IsLoaded={IsLoaded}")]
     public class FutureQueryBase<T> : IFutureQuery
     {
         private readonly Action _loadAction;

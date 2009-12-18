@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Linq;
+using System.Diagnostics;
 using System.Linq;
 using CodeSmith.Data.Caching;
 
@@ -11,24 +11,25 @@ namespace CodeSmith.Data.Linq
     /// Provides for defering the execution to a batch of queries.
     /// </summary>
     /// <typeparam name="T">The type for the future query.</typeparam>
+    [DebuggerDisplay("IsLoaded={IsLoaded}")]
     public class FutureQuery<T> : FutureQueryBase<T>, IEnumerable<T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FutureQuery&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
         /// </summary>
         /// <param name="query">The query source to use when materializing.</param>
         /// <param name="loadAction">The action to execute when the query is accessed.</param>
-        public FutureQuery(IQueryable<T> query, Action loadAction)
+        public FutureQuery(IQueryable query, Action loadAction)
             : base(query, loadAction, null)
         { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FutureQuery&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
         /// </summary>
         /// <param name="query">The query source to use when materializing.</param>
         /// <param name="loadAction">The action to execute when the query is accessed.</param>
         /// <param name="cacheSettings">The cache settings.</param>
-        public FutureQuery(IQueryable<T> query, Action loadAction, CacheSettings cacheSettings)
+        public FutureQuery(IQueryable query, Action loadAction, CacheSettings cacheSettings)
             : base(query, loadAction, cacheSettings)
         { }
 
@@ -45,8 +46,8 @@ namespace CodeSmith.Data.Linq
             if (Exception != null)
                 throw new FutureException("An error occurred executing the future query.", Exception);
 
-            return result == null 
-                ? new List<T>().GetEnumerator() 
+            return result == null
+                ? new List<T>().GetEnumerator()
                 : result.GetEnumerator();
         }
 

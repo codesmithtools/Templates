@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
-using System.Linq;
-using System.Text;
 
 namespace CodeSmith.Data.Linq
 {
@@ -75,7 +71,7 @@ namespace CodeSmith.Data.Linq
             {
                 if (future.IsLoaded)
                     continue;
-                
+
                 var command = future.GetCommand(this);
                 // keep queries and futures in sync to apply result later
                 queries.Add(command);

@@ -17,10 +17,10 @@ namespace CodeSmith.Data.Linq
     public class PagedList<T> : List<T>, IPageList<T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PagedList&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.PagedList`1"/> class.
         /// </summary>
         /// <param name="source">The source list of items.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="pageIndex">The zero based index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         public PagedList(IEnumerable<T> source, int pageIndex, int pageSize)
             : this(source, pageIndex, pageSize, null)
@@ -28,10 +28,10 @@ namespace CodeSmith.Data.Linq
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PagedList&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.PagedList`1"/> class.
         /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="source">The source list of items.</param>
+        /// <param name="pageIndex">The zero based index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalCount">The total count.</param>
         public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int? totalCount)
@@ -40,10 +40,10 @@ namespace CodeSmith.Data.Linq
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PagedList&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.PagedList`1"/> class.
         /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="source">The source list of items.</param>
+        /// <param name="pageIndex">The zero based index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         public PagedList(IQueryable<T> source, int pageIndex, int pageSize)
             : this(source, pageIndex, pageSize, null)
@@ -51,10 +51,10 @@ namespace CodeSmith.Data.Linq
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PagedList&lt;T&gt;"/> class.
+        /// Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.PagedList`1"/> class.
         /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="source">The source list of items.</param>
+        /// <param name="pageIndex">The zero based index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
         /// <param name="totalCount">The total count.</param>
         public PagedList(IQueryable<T> source, int pageIndex, int pageSize, int? totalCount)
@@ -123,10 +123,10 @@ namespace CodeSmith.Data.Linq
         /// <summary>
         /// Initializes the specified source.
         /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="pageIndex">Index of the page.</param>
+        /// <param name="source">The source list of items.</param>
+        /// <param name="pageIndex">The zero based index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="totalCount">The total count.</param>
+        /// <param name="totalCount">The total item count.</param>
         protected void Initialize(IQueryable<T> source, int pageIndex, int pageSize, int? totalCount)
         {
             if (pageIndex < 0)

@@ -2,8 +2,6 @@
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using CodeSmith.Data.Caching;
 
 namespace CodeSmith.Data.Linq
