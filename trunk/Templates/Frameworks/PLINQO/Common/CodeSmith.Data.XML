@@ -1594,6 +1594,12 @@
             The value of this deferred property.
             </returns>
         </member>
+        <member name="P:CodeSmith.Data.Linq.FutureValue`1.ValueForDebugDisplay">
+            <summary>
+            Gets the value for debug display.
+            </summary>
+            <value>The value for debug display.</value>
+        </member>
         <member name="M:CodeSmith.Data.Linq.FutureCount.#ctor(System.Linq.IQueryable,System.Action)">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureCount"/> class.
@@ -1628,20 +1634,56 @@
             <param name="dataContext">The data context to get the command from.</param>
             <returns>The requested command object.</returns>
         </member>
+        <member name="T:CodeSmith.Data.Linq.FutureException">
+            <summary>
+            An exception during future query execution.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureException"/> class.
+            </summary>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.FutureException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="info"/> parameter is null.
+            </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">
+            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
+            </exception>
+        </member>
         <member name="T:CodeSmith.Data.Linq.FutureQuery`1">
             <summary>
             Provides for defering the execution to a batch of queries.
             </summary>
             <typeparam name="T">The type for the future query.</typeparam>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQuery`1.#ctor(System.Linq.IQueryable{`0},System.Action)">
+        <member name="M:CodeSmith.Data.Linq.FutureQuery`1.#ctor(System.Linq.IQueryable,System.Action)">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
             </summary>
             <param name="query">The query source to use when materializing.</param>
             <param name="loadAction">The action to execute when the query is accessed.</param>
         </member>
-        <member name="M:CodeSmith.Data.Linq.FutureQuery`1.#ctor(System.Linq.IQueryable{`0},System.Action,CodeSmith.Data.Caching.CacheSettings)">
+        <member name="M:CodeSmith.Data.Linq.FutureQuery`1.#ctor(System.Linq.IQueryable,System.Action,CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.FutureQuery`1"/> class.
             </summary>
@@ -1970,15 +2012,15 @@
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.PagedList`1"/> class.
             </summary>
             <param name="source">The source list of items.</param>
-            <param name="pageIndex">Index of the page.</param>
+            <param name="pageIndex">The zero based index of the page.</param>
             <param name="pageSize">Size of the page.</param>
         </member>
         <member name="M:CodeSmith.Data.Linq.PagedList`1.#ctor(System.Collections.Generic.IEnumerable{`0},System.Int32,System.Int32,System.Nullable{System.Int32})">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.PagedList`1"/> class.
             </summary>
-            <param name="source">The source.</param>
-            <param name="pageIndex">Index of the page.</param>
+            <param name="source">The source list of items.</param>
+            <param name="pageIndex">The zero based index of the page.</param>
             <param name="pageSize">Size of the page.</param>
             <param name="totalCount">The total count.</param>
         </member>
@@ -1986,16 +2028,16 @@
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.PagedList`1"/> class.
             </summary>
-            <param name="source">The source.</param>
-            <param name="pageIndex">Index of the page.</param>
+            <param name="source">The source list of items.</param>
+            <param name="pageIndex">The zero based index of the page.</param>
             <param name="pageSize">Size of the page.</param>
         </member>
         <member name="M:CodeSmith.Data.Linq.PagedList`1.#ctor(System.Linq.IQueryable{`0},System.Int32,System.Int32,System.Nullable{System.Int32})">
             <summary>
             Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.PagedList`1"/> class.
             </summary>
-            <param name="source">The source.</param>
-            <param name="pageIndex">Index of the page.</param>
+            <param name="source">The source list of items.</param>
+            <param name="pageIndex">The zero based index of the page.</param>
             <param name="pageSize">Size of the page.</param>
             <param name="totalCount">The total count.</param>
         </member>
@@ -2003,10 +2045,10 @@
             <summary>
             Initializes the specified source.
             </summary>
-            <param name="source">The source.</param>
-            <param name="pageIndex">Index of the page.</param>
+            <param name="source">The source list of items.</param>
+            <param name="pageIndex">The zero based index of the page.</param>
             <param name="pageSize">Size of the page.</param>
-            <param name="totalCount">The total count.</param>
+            <param name="totalCount">The total item count.</param>
         </member>
         <member name="P:CodeSmith.Data.Linq.PagedList`1.HasPreviousPage">
             <summary>
