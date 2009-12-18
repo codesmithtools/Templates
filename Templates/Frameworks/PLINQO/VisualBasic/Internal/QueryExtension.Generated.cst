@@ -82,7 +82,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' <summary>
         ''' Gets an instance by the primary key.
         ''' </summary>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function <%= UniqueMethodPrefix %><%= MethodKeySuffix %>(ByVal queryable As IQueryable(Of <%= safeName %>), <%= GetParameters(method) %>) As <%= safeName %>
 
 <% If (method.Columns.Count < 4) Then %>
@@ -100,7 +100,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' </summary>
         ''' <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         ''' <returns>The number of rows deleted from the database.</returns>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function Delete(ByVal table As System.Data.Linq.Table(Of <%= safeName %>), <%= GetParameters(method) %>) As Integer
             Return table.Delete(<%= GetLamba(method, 5) %>)
         End Function
@@ -111,7 +111,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' Gets an instance by using a unique index.
         ''' </summary>
         ''' <returns>An instance of the entity or null if not found.</returns>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function <%= UniqueMethodPrefix %><%= method.NameSuffix %>(ByVal queryable As IQueryable(Of <%= safeName %>), <%= GetParameters(method) %>) As <%= safeName %>
 
 <% If (method.Columns.Count < 4) Then %>
@@ -132,6 +132,7 @@ Namespace <%= Database.ContextNamespace %>
     Dim columnType As String = GetColumnType(c)
     Dim myAlias As String = GetAlias()
 
+    Dim functionName as String = MethodPrefix & c.Member 
     If Not c.IsVersion.Value AndAlso c.Type <> "System.Data.Linq.Binary" Then
      %>
 
@@ -141,8 +142,8 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="<%= paramName %>"><%= c.Member %> to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function <%= MethodPrefix %><%= c.Member %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>) As IQueryable(Of <%= safeName %>)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>) As IQueryable(Of <%= safeName %>)
 <% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
             Return queryable.Where(Function(<%= myAlias %>) Object.Equals(<%= myAlias %>.<%= c.Member %>, <%= paramName %>))
 <% Else %>
@@ -157,8 +158,8 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="<%= paramName %>"><%= c.Member %> to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function <%= MethodPrefix %><%= c.Member %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>, ByVal ParamArray additionalValues As <%= columnType %>()) As IQueryable(Of <%= safeName %>)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>, ByVal ParamArray additionalValues As <%= columnType %>()) As IQueryable(Of <%= safeName %>)
             Dim values = New List(Of <%= columnType %>)()
             values.Add(<%= paramName %>)
         
@@ -171,10 +172,10 @@ Namespace <%= Database.ContextNamespace %>
             End If
         
             If values.Count = 1 Then
-                Return queryable.<%= MethodPrefix %><%= c.Member %>(values(0))
+                Return queryable.<%= functionName %>(values(0))
             End If
         
-            Return queryable.<%= MethodPrefix %><%= c.Member %>(values)
+            Return queryable.<%= functionName %>(values)
         End Function
         
         ''' <summary>
@@ -183,8 +184,8 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="values">The values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function <%= MethodPrefix %><%= c.Member %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal values As IEnumerable(Of <%= columnType %>)) As IQueryable(Of <%= safeName %>)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal values As IEnumerable(Of <%= columnType %>)) As IQueryable(Of <%= safeName %>)
 <% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
                 ' creating dynmic expression to support nulls
                 Dim expression = DynamicExpression.BuildExpression(Of <%= safeName %>, Boolean)("<%= c.Member %>", values)
@@ -202,8 +203,8 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="<%= paramName %>"><%= c.Member %> to search for.</param>
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function <%= MethodPrefix %><%= c.Member %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>, ByVal containment As ContainmentOperator) As IQueryable(Of <%= safeName %>)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>, ByVal containment As ContainmentOperator) As IQueryable(Of <%= safeName %>)
             If <%= paramName %> Is Nothing AndAlso (containment <> ContainmentOperator.Equals OrElse containment <> ContainmentOperator.NotEquals) Then
                 Throw New ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
@@ -239,8 +240,8 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="<%= paramName %>"><%= c.Member %> to search for.</param>
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function <%= MethodPrefix %><%= c.Member %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>, ByVal comparison As ComparisonOperator) As IQueryable(Of <%= safeName %>)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>, ByVal comparison As ComparisonOperator) As IQueryable(Of <%= safeName %>)
 <% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
             If <%= paramName %> Is Nothing AndAlso (comparison <> ComparisonOperator.Equals OrElse comparison <> ComparisonOperator.NotEquals) Then
                 Throw New ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
