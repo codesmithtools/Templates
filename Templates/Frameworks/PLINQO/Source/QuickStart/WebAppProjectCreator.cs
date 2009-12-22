@@ -72,9 +72,10 @@ namespace QuickStartUtils
         private void UpdateWebConfig(string directoryPath)
         {
             QuickStartUtils.FindAndReplace(Path.Combine(directoryPath, "web.config"), @"<connectionStrings/>",
-                @"<connectionStrings>
-					<add name=""" + DatabaseName() + @"ConnectionString"" connectionString=""" + ProjectBuilder.SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
-				</connectionStrings>");
+                string.Format(@"<connectionStrings>
+					<add name=""{0}ConnectionString"" connectionString=""{1}"" providerName=""System.Data.SqlClient""/>
+				</connectionStrings>", 
+                    DatabaseName(), QuickStartUtils.ModifyConnectionString(ProjectBuilder.SourceDatabase.ConnectionString)));
         }
 
         private string DatabaseName()

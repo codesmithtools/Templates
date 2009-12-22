@@ -128,5 +128,14 @@ namespace QuickStartUtils
                 }
             }
         }
+
+        public static string ModifyConnectionString(string connectionString)
+        {
+            if (connectionString.Contains("MultipleActiveResultSets"))
+                return connectionString;
+
+            string s = connectionString.Trim();
+            return s + (s.EndsWith(";") ? "MultipleActiveResultSets=true;" : ";MultipleActiveResultSets=true;");
+        }
     }
 }
