@@ -249,9 +249,8 @@ namespace PLINQO.Mvc.UI.Controllers
 
                     if (!db.GetChangeSet().Updates.Contains(user))
                     {
-                        var trackedUser = new CodeSmith.Data.TrackedObject {Current = user, IsChanged = true};
                         var ruleManager = new RuleManager();
-                        ruleManager.Run(trackedUser);
+                        ruleManager.Run(user);
 
                         if (ruleManager.BrokenRules.Count > 0)
                             throw new BrokenRuleException(ruleManager.BrokenRules);
