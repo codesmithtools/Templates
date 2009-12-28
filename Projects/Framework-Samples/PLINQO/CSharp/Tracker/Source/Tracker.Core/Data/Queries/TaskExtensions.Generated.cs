@@ -200,7 +200,7 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> BySummary(this IQueryable<Tracker.Core.Data.Task> queryable, string summary, ContainmentOperator containmentOperator)
         {
-            if (summary == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+            if (summary == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("summary", "Parameter 'summary' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
 
             switch (containmentOperator)
@@ -272,7 +272,7 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByDetails(this IQueryable<Tracker.Core.Data.Task> queryable, string details, ContainmentOperator containmentOperator)
         {
-            if (details == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+            if (details == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("details", "Parameter 'details' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
 
             switch (containmentOperator)
@@ -348,7 +348,7 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByStartDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? startDate, ComparisonOperator comparisonOperator)
         {
-            if (startDate == null && (comparisonOperator != ComparisonOperator.Equals || comparisonOperator != ComparisonOperator.NotEquals))
+            if (startDate == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
                 throw new ArgumentNullException("startDate", "Parameter 'startDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
 
             switch (comparisonOperator)
@@ -424,7 +424,7 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByDueDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? dueDate, ComparisonOperator comparisonOperator)
         {
-            if (dueDate == null && (comparisonOperator != ComparisonOperator.Equals || comparisonOperator != ComparisonOperator.NotEquals))
+            if (dueDate == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
                 throw new ArgumentNullException("dueDate", "Parameter 'dueDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
 
             switch (comparisonOperator)
@@ -500,7 +500,7 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByCompleteDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? completeDate, ComparisonOperator comparisonOperator)
         {
-            if (completeDate == null && (comparisonOperator != ComparisonOperator.Equals || comparisonOperator != ComparisonOperator.NotEquals))
+            if (completeDate == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
                 throw new ArgumentNullException("completeDate", "Parameter 'completeDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
 
             switch (comparisonOperator)
@@ -576,7 +576,7 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByAssignedId(this IQueryable<Tracker.Core.Data.Task> queryable, int? assignedId, ComparisonOperator comparisonOperator)
         {
-            if (assignedId == null && (comparisonOperator != ComparisonOperator.Equals || comparisonOperator != ComparisonOperator.NotEquals))
+            if (assignedId == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
                 throw new ArgumentNullException("assignedId", "Parameter 'assignedId' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
 
             switch (comparisonOperator)
@@ -788,7 +788,7 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByLastModifiedBy(this IQueryable<Tracker.Core.Data.Task> queryable, string lastModifiedBy, ContainmentOperator containmentOperator)
         {
-            if (lastModifiedBy == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+            if (lastModifiedBy == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("lastModifiedBy", "Parameter 'lastModifiedBy' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
 
             switch (containmentOperator)
@@ -932,7 +932,7 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByPriority(this IQueryable<Tracker.Core.Data.Task> queryable, Priority? priority, ComparisonOperator comparisonOperator)
         {
-            if (priority == null && (comparisonOperator != ComparisonOperator.Equals || comparisonOperator != ComparisonOperator.NotEquals))
+            if (priority == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
                 throw new ArgumentNullException("priority", "Parameter 'priority' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
 
             switch (comparisonOperator)

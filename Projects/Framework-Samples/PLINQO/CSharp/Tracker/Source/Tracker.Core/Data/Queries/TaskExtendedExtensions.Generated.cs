@@ -133,7 +133,7 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.TaskExtended> ByBrowser(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, string browser, ContainmentOperator containmentOperator)
         {
-            if (browser == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+            if (browser == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("browser", "Parameter 'browser' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
 
             switch (containmentOperator)
@@ -209,7 +209,7 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.TaskExtended> ByOs(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, string os, ContainmentOperator containmentOperator)
         {
-            if (os == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+            if (os == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("os", "Parameter 'os' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
 
             switch (containmentOperator)

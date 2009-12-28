@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Linq;
 using System.IO;
 using System.Runtime.Serialization;
@@ -17,7 +18,7 @@ namespace Tracker.Tests.CacheTests
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
                 var role1 = new Role
                 {
@@ -40,7 +41,7 @@ namespace Tracker.Tests.CacheTests
         [TestFixtureTearDown]
         public void TestFixtureTearDown()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
                 db.Role.Delete(r => _roleIds.Contains(r.Id));
         }
 
@@ -59,7 +60,7 @@ namespace Tracker.Tests.CacheTests
         [TearDown]
         public void TearDown()
         {
-            
+
         }
     }
 }

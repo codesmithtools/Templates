@@ -8,42 +8,37 @@ using Tracker.Core.Data;
 namespace Tracker.Tests.QueryTests
 {
     [TestFixture]
-    public class ByDateTimeTests : TaskTests
+    public class ByDateTimeTests : TestBase
     {
         [Test]
         public void ByTest()
         {
+            using (var db = new TrackerDataContext { Log = Console.Out })
+            {
+                var a = db.Task.ByCreatedDate(CreateDates[0]).ToList();
+                var b = db.Task.ByCreatedDate(CreateDates[1]).ToList();
 
-                using (var db = new TrackerDataContext())
-                {
-                    var a = db.Task.ByCreatedDate(createDates[0]).ToList();
-                    var b = db.Task.ByCreatedDate(createDates[1]).ToList();
-
-                    var c = db.Task.ByCreatedDate(createDates[0], null).ToList();
-                    Assert.AreEqual(a.Count, c.Count);
-
-                    var d = db.Task.ByCreatedDate(createDates[0], createDates[1]).ToList();
-                    Assert.AreEqual(a.Count + b.Count, d.Count);
-                }
-
+                var c = db.Task.ByCreatedDate(CreateDates[0], null).ToList();
+                Assert.AreEqual(a.Count, c.Count);
+            }
         }
 
         [Test]
         public void ByNullableTest()
         {
 
-                using (var db = new TrackerDataContext())
-                {
-                    var a = db.Task.ByDueDate((DateTime?)null).ToList();
-                    var b = db.Task.ByDueDate(dueDates[0]).ToList();
-                    var c = db.Task.ByDueDate(dueDates[1]).ToList();
+            using (var db = new TrackerDataContext { Log = Console.Out })
+            {
+                var a = db.Task.ByDueDate((DateTime?)null).ToList();
+                var b = db.Task.ByDueDate(DueDates[0]).ToList();
+                var c = db.Task.ByDueDate(DueDates[1]).ToList();
 
-                    var d = db.Task.ByDueDate(dueDates[0], null).ToList();
-                    Assert.AreEqual(a.Count + b.Count, d.Count);
+                var d = db.Task.ByDueDate(DueDates[0], null).ToList();
+                Assert.AreEqual(a.Count + b.Count, d.Count);
 
-                    var e = db.Task.ByDueDate(dueDates[0], null, dueDates[1]).ToList();
-                    Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
-                }
+                var e = db.Task.ByDueDate(DueDates[0], null, DueDates[1]).ToList();
+                Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
+            }
 
         }
     }

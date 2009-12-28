@@ -132,7 +132,7 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Role> ByName(this IQueryable<Tracker.Core.Data.Role> queryable, string name, ContainmentOperator containmentOperator)
         {
-            if (name == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+            if (name == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("name", "Parameter 'name' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
 
             switch (containmentOperator)
@@ -204,7 +204,7 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Role> ByDescription(this IQueryable<Tracker.Core.Data.Role> queryable, string description, ContainmentOperator containmentOperator)
         {
-            if (description == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+            if (description == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("description", "Parameter 'description' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
 
             switch (containmentOperator)
