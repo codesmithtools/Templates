@@ -14,7 +14,7 @@ namespace Tracker.Tests.QueryTests
         public void ByNullableTest()
         {
 
-                using (var db = new TrackerDataContext())
+                using (var db = new TrackerDataContext {Log = Console.Out})
                 {
                     var a = db.Task.ByDetails((string)null).ToList();
                     var b = db.Task.ByDetails(String.Empty).ToList();

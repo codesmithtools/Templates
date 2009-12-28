@@ -65,8 +65,8 @@
     <Compile Include="CacheTests\FromCacheGroupTests.cs" />
     <Compile Include="CacheTests\FromCacheTests.cs" />
     <Compile Include="CacheTests\RoleTests.cs" />
+    <Compile Include="DebugTest.cs" />
     <Compile Include="DemoTests.cs" />
-    <Compile Include="FutureTests\FutureBase.cs" />
     <Compile Include="FutureTests\FutureCacheTests.cs" />
     <Compile Include="FutureTests\FutureTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,7 +75,8 @@
     <Compile Include="QueryTests\ByGuidTests.cs" />
     <Compile Include="QueryTests\ByIntTests.cs" />
     <Compile Include="QueryTests\ByStringTests.cs" />
-    <Compile Include="QueryTests\TaskTests.cs" />
+    <Compile Include="QueryTests\OperatorTests.cs" />
+    <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

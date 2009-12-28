@@ -15,7 +15,7 @@ namespace Tracker.Tests.CacheTests
         [Test]
         public void SimpleTest()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext {Log = Console.Out})
             {
                 var query = db.Role.Where(r => r.Name == "Test Role");
                 var key = query.Take(1).GetHashKey();
@@ -34,7 +34,7 @@ namespace Tracker.Tests.CacheTests
         [Test]
         public void DurationTest()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext {Log = Console.Out})
             {
                 var query = db.Role.Where(r => r.Name == "Test Role");
                 var key = query.Take(1).GetHashKey();
@@ -58,7 +58,7 @@ namespace Tracker.Tests.CacheTests
         [Test]
         public void AbsoluteExpirationTest()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext {Log = Console.Out})
             {
                 var query = db.Role.Where(r => r.Name == "Test Role");
                 var key = query.Take(1).GetHashKey();
@@ -82,7 +82,7 @@ namespace Tracker.Tests.CacheTests
         [Test]
         public void SlidingExpirationTest()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext {Log = Console.Out})
             {
                 var query = db.Role.Where(r => r.Name == "Test Role");
                 var key = query.Take(1).GetHashKey();
@@ -124,7 +124,7 @@ namespace Tracker.Tests.CacheTests
         [Test]
         public void NoCacheEmptyResultTest()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext {Log = Console.Out})
             {
                 var guid = System.Guid.NewGuid().ToString();
                 var query = db.Role.Where(r => r.Name == guid);
@@ -142,7 +142,7 @@ namespace Tracker.Tests.CacheTests
         [Test]
         public void CacheEmptyResultTest()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext {Log = Console.Out})
             {
                 var guid = System.Guid.NewGuid().ToString();
                 var query = db.Role.Where(r => r.Name == guid);

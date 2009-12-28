@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 using System.Text;
 using CodeSmith.Data.Linq;
@@ -9,32 +10,33 @@ using Tracker.Core.Data;
 namespace Tracker.Tests.FutureTests
 {
     [TestFixture]
-    public class FutureTests : FutureBase
+    public class FutureTests : TestBase
     {
         [Test]
         public void PageTest()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             // base query
-            var q = db.Task.ByPriority(Priority.Normal);
+            var q = db.Task
+                .ByPriority(Priority.Normal)
+                .OrderByDescending(t => t.CreatedDate);
+
             // get total count
             var q1 = q.FutureCount();
             // get first page
             var q2 = q.Skip(0).Take(10).Future();
             // triggers sql execute as a batch
-            int total = q1.Value;
             var tasks = q2.ToList();
-
+            int total = q1.Value;
+           
             Assert.IsNotNull(tasks);
         }
 
         [Test]
         public void SimpleTest()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             // build up queries
 
@@ -55,7 +57,7 @@ namespace Tracker.Tests.FutureTests
 
             // should be cleared at this point
             Assert.AreEqual(0, db.FutureQueries.Count);
-            
+
             // this should already be loaded
             Assert.IsTrue(((IFutureQuery)q2).IsLoaded);
 
@@ -64,13 +66,10 @@ namespace Tracker.Tests.FutureTests
 
         }
 
-
-
         [Test]
         public void FutureCountTest()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             // build up queries
 
@@ -102,8 +101,7 @@ namespace Tracker.Tests.FutureTests
         [Test]
         public void FutureCountReverseTest()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             // build up queries
 
@@ -128,16 +126,15 @@ namespace Tracker.Tests.FutureTests
 
             // this should already be loaded
             Assert.IsTrue(((IFutureQuery)q1).IsLoaded);
-            
+
             var users = q1.ToList();
-            Assert.IsNotNull(users);            
+            Assert.IsNotNull(users);
         }
 
         [Test]
         public void FutureValueTest()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             // build up queries
             var q1 = db.User
@@ -176,9 +173,7 @@ namespace Tracker.Tests.FutureTests
         [Test]
         public void FutureValueReverseTest()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
-
+            var db = new TrackerDataContext { Log = Console.Out };
             // build up queries
 
             var q1 = db.User

@@ -8,12 +8,12 @@ using Tracker.Core.Data;
 namespace Tracker.Tests.QueryTests
 {
     [TestFixture]
-    public class ByEnumTests : TaskTests
+    public class ByEnumTests : TestBase
     {
         [Test]
         public void ByTest()
         {
-                using (var db = new TrackerDataContext())
+                using (var db = new TrackerDataContext {Log = Console.Out})
                 {
                     var a = db.Task.ByStatus(Status.InProgress).ToList();
                     var b = db.Task.ByStatus(Status.NotStarted).ToList();
@@ -30,7 +30,7 @@ namespace Tracker.Tests.QueryTests
         [Test]
         public void ByNullableTest()
         {
-                using (var db = new TrackerDataContext())
+                using (var db = new TrackerDataContext {Log = Console.Out})
                 {
                     var a = db.Task.ByPriority((Priority?)null).ToList();
                     var b = db.Task.ByPriority(Priority.Normal).ToList();

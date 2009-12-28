@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Tracker.Core.Data;
 using Guid = System.Guid;
@@ -17,7 +18,7 @@ namespace Tracker.Tests.QueryTests
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
                 db.Guid.InsertOnSubmit(new Core.Data.Guid
                 {
@@ -42,7 +43,7 @@ namespace Tracker.Tests.QueryTests
         [TestFixtureTearDown]
         public void TestFixtureTearDown()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
                 db.Guid.Delete(_guid1Id);
                 db.Guid.Delete(_guid2Id);
@@ -54,7 +55,7 @@ namespace Tracker.Tests.QueryTests
         public void ByTest()
         {
 
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
                 var a = db.Guid.ById(_guid1Id).ToList();
                 var b = db.Guid.ById(_guid2Id).ToList();
@@ -72,7 +73,7 @@ namespace Tracker.Tests.QueryTests
         public void ByNullableTest()
         {
 
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
                 var a = db.Guid.ByAlternateId((Guid?)null).ToList();
                 var b = db.Guid.ByAlternateId(_guid2Alt).ToList();

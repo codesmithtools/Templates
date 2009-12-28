@@ -42,7 +42,7 @@ namespace Tracker.Tests
         [TearDown]
         public void TearDown()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
                 db.Audit.Delete(a => a.User.EmailAddress.EndsWith("startrek.com"));
                 db.UserRole.Delete(ur => ur.User.EmailAddress.EndsWith("startrek.com"));
@@ -63,7 +63,7 @@ namespace Tracker.Tests
                 Priority = Priority.High,
                 CreatedId = userId,
             };
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
                 db.Task.InsertOnSubmit(task);
                 db.SubmitChanges();
@@ -83,7 +83,7 @@ namespace Tracker.Tests
                 IsApproved = true
             };
 
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
                 db.User.InsertOnSubmit(user);
                 db.SubmitChanges();
@@ -132,7 +132,7 @@ namespace Tracker.Tests
                 IsApproved = false
             });
 
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
                 db.User.InsertAllOnSubmit(users);
                 db.SubmitChanges();
@@ -145,19 +145,15 @@ namespace Tracker.Tests
         [Test]
         public void Test_Manager_And_Query_Gets()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
                 Task task = db.Manager.Task.GetByKey(SpockId);
                 IQueryable<Task> tasks = db.Manager.Task.GetByAssignedIdStatus(SpockId, Status.InProgress);
                 List<Task> taskList = tasks.ToList();
             }
 
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
                 Task task = db.Task.GetByKey(SpockId);
                 IQueryable<Task> tasks = db.Task.ByAssignedId(SpockId).ByStatus(Status.InProgress);
                 List<Task> taskList = tasks.ToList();
@@ -167,10 +163,8 @@ namespace Tracker.Tests
         [Test]
         public void Test_Query_Advanced()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
                 var priorites = db.Task.Where(t => !t.Priority.HasValue || t.Priority.Value == Priority.High).ToList();
                 var something = db.Task.ByPriority(null, Priority.High).ToList();
             }
@@ -179,10 +173,8 @@ namespace Tracker.Tests
         [Test]
         public void Test_Many_To_Many()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
                 User u = db.User.GetByKey(SpockId);
                 Role r = db.Role.ByName("Manager").First();
                 u.RoleList.Add(r);
@@ -193,10 +185,8 @@ namespace Tracker.Tests
         [Test]
         public void Test_Enum()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
                 var task = db.Task.GetByKey(TaskId);
                 task.Priority = Priority.High;
                 db.SubmitChanges();
@@ -206,9 +196,8 @@ namespace Tracker.Tests
         [Test]
         public void Test_Auditing()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
                 var user = db.User.GetByKey(SpockId);
                 user.Comment = "I love my mom, but I hate Winona Ryder.";
 
@@ -232,10 +221,8 @@ namespace Tracker.Tests
             int brokenRules = 0;
             try
             {
-                using (var db = new TrackerDataContext())
+                using (var db = new TrackerDataContext { Log = Console.Out })
                 {
-                    db.Log = Console.Out;
-
                     User user = new User();
                     user.EmailAddress = "spock@startrek.com";
                     db.User.InsertOnSubmit(user);
@@ -254,10 +241,8 @@ namespace Tracker.Tests
         public void Test_Entity_Detach()
         {
             Task task = null;
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
                 task = db.Task.GetByKey(TaskId);
                 task.Detach();
             }
@@ -277,10 +262,8 @@ namespace Tracker.Tests
         public void Test_Entity_Detach_Update()
         {
             Task task = null;
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
                 task = db.Task.GetByKey(TaskId);
                 task.Detach();
             }
@@ -299,10 +282,8 @@ namespace Tracker.Tests
         [Test]
         public void Test_Entity_Clone()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
                 var u = db.Task.GetByKey(TaskId);
                 Task taskCopy = u.Clone();
                 taskCopy.Id = 0;
@@ -314,10 +295,8 @@ namespace Tracker.Tests
         [Test]
         public void Test_Serialization()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
                 // Write to Console/Output ... or break point.
 
                 var task = db.Task.GetByKey(TaskId);
@@ -329,7 +308,7 @@ namespace Tracker.Tests
         [Test]
         public void Test_Query_Result_Cache()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
                 //By default, the cached results use a one minute sliding expiration with
                 //no absolute expiration.
@@ -345,12 +324,10 @@ namespace Tracker.Tests
         [Test]
         public void Test_Batch_Update()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
                 db.Task.Update(
-                    u => u.Status == Status.NotStarted, 
+                    u => u.Status == Status.NotStarted,
                     u2 => new Task() { Status = Status.Done });
 
                 var tasks = from t in db.Task
@@ -364,11 +341,8 @@ namespace Tracker.Tests
         [Test]
         public void Test_Batch_Delete()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
-
                 db.User.Delete(JamesId);
 
                 db.User.Delete(u => u.IsApproved == false && u.LastName != "McCoy" && u.EmailAddress.EndsWith("startrek.com"));
@@ -383,10 +357,8 @@ namespace Tracker.Tests
         [Test]
         public void Test_Stored_Procedure_with_Multiple_Results()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
                 // Create Procedure [dbo].[GetUsersWithRoles]
                 // As
                 // Select * From [User]
@@ -402,18 +374,31 @@ namespace Tracker.Tests
         [Test]
         public void Test_Batch_Queries()
         {
-            using (var db = new TrackerDataContext())
+            using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                db.Log = Console.Out;
-
                 var q1 = from u in db.User select u;
                 var q2 = from ur in db.UserRole select ur;
                 IMultipleResults results = db.ExecuteQuery(q1, q2);
                 List<User> users = results.GetResult<User>().ToList();
                 List<UserRole> roles = results.GetResult<UserRole>().ToList();
-                
+
             }
         }
 
-   }
+        [Test]
+        public void Test_ToPagedList()
+        {
+            using (var db = new TrackerDataContext { Log = Console.Out })
+            {
+                var q1 = from u in db.User 
+                         orderby u.EmailAddress
+                         select u;
+
+                var users = q1.ToPagedList(0, 5);
+
+                Assert.IsNotNull(users);
+                Assert.AreEqual(5, users.Count);
+            }
+        }
+    }
 }

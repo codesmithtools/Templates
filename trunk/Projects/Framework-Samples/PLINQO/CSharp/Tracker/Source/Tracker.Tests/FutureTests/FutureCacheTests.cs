@@ -11,13 +11,12 @@ using CodeSmith.Data.Linq;
 namespace Tracker.Tests.FutureTests
 {
     [TestFixture]
-    public class FutureCacheTests : FutureBase
+    public class FutureCacheTests : TestBase
     {
         [Test]
         public void ExecuteBatch()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             // build up queries
 
@@ -37,8 +36,7 @@ namespace Tracker.Tests.FutureTests
         [Test]
         public void SqlCommand()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             var result = db.GetUsersWithTasks();
 
@@ -49,15 +47,14 @@ namespace Tracker.Tests.FutureTests
 
 
         }
-        
+
         [Test]
         public void FutureTest()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             CacheSettings cache = new CacheSettings(120);
-            
+
             // build up queries
             var q1 = db.User
                 .ByEmailAddress("one@test.com")
@@ -100,8 +97,7 @@ namespace Tracker.Tests.FutureTests
         [Test]
         public void FutureCountTest()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             CacheSettings cache = new CacheSettings(120);
 
@@ -147,8 +143,7 @@ namespace Tracker.Tests.FutureTests
         [Test]
         public void FutureCountReverseTest()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             CacheSettings cache = new CacheSettings(120);
 
@@ -195,11 +190,10 @@ namespace Tracker.Tests.FutureTests
         [Test]
         public void FutureValueTest()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             CacheSettings cache = new CacheSettings(120);
-            
+
             // build up queries
             var q1 = db.User
                 .ByEmailAddress("one@test.com")
@@ -258,11 +252,10 @@ namespace Tracker.Tests.FutureTests
         [Test]
         public void FutureValueReverseTest()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             CacheSettings cache = new CacheSettings(120);
-            
+
             // build up queries
             var q1 = db.User
                 .Where(u => u.EmailAddress == "one@test.com")
@@ -322,8 +315,7 @@ namespace Tracker.Tests.FutureTests
         [Test]
         public void FromCacheFutre()
         {
-            var db = new TrackerDataContext();
-            db.Log = Console.Out;
+            var db = new TrackerDataContext { Log = Console.Out };
 
             CacheSettings cache = new CacheSettings(120);
 
