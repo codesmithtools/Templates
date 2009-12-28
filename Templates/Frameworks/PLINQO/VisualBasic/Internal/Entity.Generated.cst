@@ -138,7 +138,7 @@ Namespace <%= Database.EntityNamespace %>
 
 #Region "Default Constructor"
         ''' <summary>
-        ''' Initializes a new instance of the <see cref="<%= Type.Name %>"/> class.
+        ''' Initializes a new instance of the <see cref="<%= VBKeywordEscape(Type.Name) %>"/> class.
         ''' </summary>
         <System.Diagnostics.DebuggerNonUserCode()> _
         <%= StringUtil.ToPascalCase(Naming.GetModifier(Type.AccessModifier)) %> Sub New()
@@ -523,31 +523,31 @@ For Each c As Column in Type.Columns
         End Sub
         
         ''' <summary>
-        ''' Deserializes an instance of <see cref="<%= Type.Name %>"/> from XML.
+        ''' Deserializes an instance of <see cref="<%= VBKeywordEscape(Type.Name) %>"/> from XML.
         ''' </summary>
-        ''' <param name="xml">The XML string representing a <see cref="<%= Type.Name %>"/> instance.</param>
-        ''' <returns>An instance of <see cref="<%= Type.Name %>"/> that is deserialized from the XML string.</returns>
-        Public Shared Function FromXml(ByVal xml As String) As <%= Type.Name %>
-            Dim deserializer = New System.Runtime.Serialization.DataContractSerializer(GetType(<%= Type.Name %>))
+        ''' <param name="xml">The XML string representing a <see cref="<%= VBKeywordEscape(Type.Name) %>"/> instance.</param>
+        ''' <returns>An instance of <see cref="<%= VBKeywordEscape(Type.Name) %>"/> that is deserialized from the XML string.</returns>
+        Public Shared Function FromXml(ByVal xml As String) As <%= VBKeywordEscape(Type.Name) %>
+            Dim deserializer = New System.Runtime.Serialization.DataContractSerializer(GetType(<%= VBKeywordEscape(Type.Name) %>))
             
             Using sr = New System.IO.StringReader(xml)
                 Using reader = System.Xml.XmlReader.Create(sr)
-                    Return TryCast(deserializer.ReadObject(reader), <%= Type.Name %>)
+                    Return TryCast(deserializer.ReadObject(reader), <%= VBKeywordEscape(Type.Name) %>)
                 End Using
             End Using
         End Function
 
         ''' <summary>
-        ''' Deserializes an instance of <see cref="<%= Type.Name %>"/>.
+        ''' Deserializes an instance of <see cref="<%= VBKeywordEscape(Type.Name) %>"/>.
         ''' </summary>
-        ''' <param name="buffer">The byte array representing a <see cref="<%= Type.Name %>"/> instance.</param>
-        ''' <returns>An instance of <see cref="<%= Type.Name %>"/> that is deserialized from the byte array.</returns>
-        Public Shared Function FromBinary(ByVal buffer As Byte()) As <%= Type.Name %>
-            Dim deserializer = New System.Runtime.Serialization.DataContractSerializer(GetType(<%= Type.Name %>))
+        ''' <param name="buffer">The byte array representing a <see cref="<%= VBKeywordEscape(Type.Name) %>"/> instance.</param>
+        ''' <returns>An instance of <see cref="<%= VBKeywordEscape(Type.Name) %>"/> that is deserialized from the byte array.</returns>
+        Public Shared Function FromBinary(ByVal buffer As Byte()) As <%= VBKeywordEscape(Type.Name) %>
+            Dim deserializer = New System.Runtime.Serialization.DataContractSerializer(GetType(<%= VBKeywordEscape(Type.Name) %>))
 
             Using ms = New System.IO.MemoryStream(buffer)
                 Using reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max)
-                    Return TryCast(deserializer.ReadObject(reader), <%= Type.Name %>)
+                    Return TryCast(deserializer.ReadObject(reader), <%= VBKeywordEscape(Type.Name) %>)
                 End Using
             End Using
         End Function
