@@ -160,7 +160,7 @@ namespace <%= Database.ContextNamespace %>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= columnType %> <%= paramName %>, ContainmentOperator containmentOperator)
         {
-            if (<%= paramName %> == null && (containmentOperator != ContainmentOperator.Equals || containmentOperator != ContainmentOperator.NotEquals))
+            if (<%= paramName %> == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
 
             switch (containmentOperator)
@@ -198,7 +198,7 @@ namespace <%= Database.ContextNamespace %>
         public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= columnType %> <%= paramName %>, ComparisonOperator comparisonOperator)
         {
 <% if (column.CanBeNull == true) { %>
-            if (<%= paramName %> == null && (comparisonOperator != ComparisonOperator.Equals || comparisonOperator != ComparisonOperator.NotEquals))
+            if (<%= paramName %> == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
                 throw new ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
 
 <% } %>

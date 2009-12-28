@@ -205,7 +205,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
         Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>, ByVal containment As ContainmentOperator) As IQueryable(Of <%= safeName %>)
-            If <%= paramName %> Is Nothing AndAlso (containment <> ContainmentOperator.Equals OrElse containment <> ContainmentOperator.NotEquals) Then
+            If <%= paramName %> Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
             
@@ -243,7 +243,7 @@ Namespace <%= Database.ContextNamespace %>
         <System.Runtime.CompilerServices.Extension()> _
         Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>, ByVal comparison As ComparisonOperator) As IQueryable(Of <%= safeName %>)
 <% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
-            If <%= paramName %> Is Nothing AndAlso (comparison <> ComparisonOperator.Equals OrElse comparison <> ComparisonOperator.NotEquals) Then
+            If <%= paramName %> Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
                 Throw New ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
             End If
             
