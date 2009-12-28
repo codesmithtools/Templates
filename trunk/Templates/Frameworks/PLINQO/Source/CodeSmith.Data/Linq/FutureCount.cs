@@ -2,6 +2,8 @@
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using CodeSmith.Data.Caching;
 
 namespace CodeSmith.Data.Linq
@@ -12,6 +14,8 @@ namespace CodeSmith.Data.Linq
     [DebuggerDisplay("IsLoaded={IsLoaded}, Value={ValueForDebugDisplay}")]
     public class FutureCount : FutureValue<int>
     {
+        private static MethodInfo _countMethod;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FutureCount"/> class.
         /// </summary>
@@ -56,20 +60,50 @@ namespace CodeSmith.Data.Linq
         /// <returns>The requested command object.</returns>
         protected override DbCommand GetCommand(System.Data.Linq.DataContext dataContext)
         {
-            var command = base.GetCommand(dataContext);
-            if (command == null)
-                return command;
+            IFutureQuery futureQuery = this;
+            var source = futureQuery.Query;
 
-            // rewrite the comand text to count(*)
-            string commandText = command.CommandText;
+            // get static count method
+            FindCountMethod();
+            // create count expression
+            var genericCount = _countMethod.MakeGenericMethod(new[] { source.ElementType });
+            var expression = Expression.Call(null, genericCount, source.Expression);
 
-            // hard coded search, matches pattern in SqlFormatter
-            string fromText = commandText.Substring(commandText.IndexOf("\r\nFROM "));
-            string countText = "SELECT COUNT(*) AS [value] " + fromText;
+            // get provider from DataContext
+            Type contextType = dataContext.GetType();
+            PropertyInfo providerProperty = contextType.GetProperty("Provider", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (providerProperty == null)
+                throw new FutureException("Failed to get the DataContext.Provider property.");
 
-            command.CommandText = countText;
+            object provider = providerProperty.GetValue(dataContext, null);
+            if (provider == null)
+                throw new FutureException("Failed to get the DataContext provider instance.");
 
-            return command;
+            Type providerType = provider.GetType().GetInterface("IProvider");
+            if (providerType == null)
+                throw new FutureException("Failed to cast the DataContext provider to IProvider.");
+
+            MethodInfo commandMethod = providerType.GetMethod("GetCommand", BindingFlags.Instance | BindingFlags.Public);
+            if (commandMethod == null)
+                throw new FutureException("Failed to get the GetCommand method from the DataContext provider.");
+
+            // run the GetCommand method from the provider directly
+            var commandObject = commandMethod.Invoke(provider, new object[] { expression });
+            return commandObject as DbCommand;
+        }
+
+        private static void FindCountMethod()
+        {
+            if (_countMethod != null)
+                return;
+
+            var type = typeof(Queryable);
+
+            _countMethod = (from m in type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                            where m.Name == "Count"
+                              && m.IsGenericMethod
+                              && m.GetParameters().Length == 1
+                            select m).FirstOrDefault();
         }
     }
 
