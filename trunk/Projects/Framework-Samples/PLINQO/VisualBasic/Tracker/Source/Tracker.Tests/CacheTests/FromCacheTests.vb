@@ -1,9 +1,12 @@
-﻿Imports System
+Imports System.Collections.Generic
 Imports System.Linq
+Imports System.Threading
 Imports System.Web
+Imports CodeSmith.Data.Caching
 Imports CodeSmith.Data.Linq
 Imports NUnit.Framework
 Imports Tracker.Core.Data
+Imports Guid = System.Guid
 
 Namespace Tracker.Tests.CacheTests
     <TestFixture()> _
@@ -11,150 +14,157 @@ Namespace Tracker.Tests.CacheTests
         Inherits RoleTests
         <Test()> _
         Public Sub SimpleTest()
-            Try
-                Using db = New TrackerDataContext()
-                    Dim query = db.Role.Where(Function(r) r.Name = "Test Role")
-                    Dim key = query.GetHashKey()
-                    Dim roles = query.FromCache()
+            Dim db As New TrackerDataContext() With { _
+             .Log = Console.Out _
+            }
 
-                    Dim cache = HttpRuntime.Cache(key)
-                    Assert.IsNotNull(cache)
-                    Assert.AreSame(roles, cache)
-                End Using
-            Catch generatedExceptionName As AssertionException
-                Throw
-            Catch
-                Assert.Fail()
-            End Try
+            Dim query As IQueryable(Of Role) = db.Role.Where(Function(r) r.Name = "Test Role")
+            Dim roles As List(Of Role) = query.FromCache().ToList()
+
+            Assert.IsInstanceOf(GetType(HttpCacheProvider), CacheManager.GetProvider())
+
+            Dim key As String = CacheManager.GetProvider().GetGroupKey(query.GetHashKey(), Nothing)
+
+            Dim cache As Byte() = CacheManager.GetProvider().[Get](Of Byte())(key)
+            Assert.IsNotNull(cache)
+
+            Dim list As ICollection(Of Role) = cache.ToCollection(Of Role)()
+            Assert.IsNotNull(list)
+            Assert.AreEqual(roles.Count, list.Count)
         End Sub
 
         <Test()> _
         Public Sub DurationTest()
-            Try
-                Using db = New TrackerDataContext()
-                    Dim query = db.Role.Where(Function(r) r.Name = "Test Role")
-                    Dim key = query.GetHashKey()
-                    Dim roles = query.FromCache(2)
+            Dim db As New TrackerDataContext() With { _
+             .Log = Console.Out _
+            }
 
-                    Dim cache1 = HttpRuntime.Cache(key)
-                    Assert.IsNotNull(cache1)
-                    Assert.AreSame(roles, cache1)
+            Dim query As IQueryable(Of Role) = db.Role.Where(Function(r) r.Name = "Test Role")
+            Dim key As String = query.GetHashKey()
+            Dim roles As List(Of Role) = query.FromCache(2).ToList()
 
-                    System.Threading.Thread.Sleep(2500)
+            Dim cache As Byte() = CacheManager.GetProvider().[Get](Of Byte())(key)
+            Assert.IsNotNull(cache)
 
-                    Dim cache2 = HttpRuntime.Cache(key)
-                    Assert.IsNull(cache2)
-                End Using
-            Catch generatedExceptionName As AssertionException
-                Throw
-            Catch
-                Assert.Fail()
-            End Try
+            Dim list As ICollection(Of Role) = cache.ToCollection(Of Role)()
+            Assert.IsNotNull(list)
+            Assert.AreEqual(roles.Count, list.Count)
+
+            Thread.Sleep(3000)
+
+            cache = CacheManager.GetProvider().[Get](Of Byte())(key)
+            Assert.IsNull(cache)
         End Sub
 
         <Test()> _
         Public Sub AbsoluteExpirationTest()
-            Try
-                Using db = New TrackerDataContext()
-                    Dim query = db.Role.Where(Function(r) r.Name = "Test Role")
-                    Dim key = query.GetHashKey()
-                    Dim roles = query.FromCache(DateTime.UtcNow.AddSeconds(2))
+            Dim db As New TrackerDataContext() With { _
+             .Log = Console.Out _
+            }
 
-                    Dim cache1 = HttpRuntime.Cache(key)
-                    Assert.IsNotNull(cache1)
-                    Assert.AreSame(roles, cache1)
+            Dim query As IQueryable(Of Role) = db.Role.Where(Function(r) r.Name = "Test Role")
+            Dim key As String = query.GetHashKey()
+            Dim roles As List(Of Role) = query.FromCache(2).ToList()
 
-                    System.Threading.Thread.Sleep(2500)
+            Dim cache As Byte() = CacheManager.GetProvider().[Get](Of Byte())(key)
+            Assert.IsNotNull(cache)
 
-                    Dim cache2 = HttpRuntime.Cache(key)
-                    Assert.IsNull(cache2)
-                End Using
-            Catch generatedExceptionName As AssertionException
-                Throw
-            Catch
-                Assert.Fail()
-            End Try
+            Dim list As ICollection(Of Role) = cache.ToCollection(Of Role)()
+            Assert.IsNotNull(list)
+            Assert.AreEqual(roles.Count, list.Count)
+
+            Thread.Sleep(3000)
+
+            cache = CacheManager.GetProvider().[Get](Of Byte())(key)
+            Assert.IsNull(cache)
         End Sub
 
         <Test()> _
         Public Sub SlidingExpirationTest()
-            Try
-                Using db = New TrackerDataContext()
-                    Dim query = db.Role.Where(Function(r) r.Name = "Test Role")
-                    Dim key = query.GetHashKey()
-                    Dim roles = query.FromCache(New TimeSpan(0, 0, 2))
+            Dim db As New TrackerDataContext() With { _
+             .Log = Console.Out _
+            }
 
-                    Dim cache1 = HttpRuntime.Cache(key)
-                    Assert.IsNotNull(cache1)
-                    Assert.AreSame(roles, cache1)
+            Dim query As IQueryable(Of Role) = db.Role.Where(Function(r) r.Name = "Test Role")
+            Dim key As String = query.GetHashKey()
+            Dim roles As List(Of Role) = query.FromCache(New CacheSettings(TimeSpan.FromSeconds(2))).ToList()
 
-                    System.Threading.Thread.Sleep(1500)
+            Dim cache As Byte() = TryCast(HttpRuntime.Cache.[Get](key), Byte())
+            Assert.IsNotNull(cache)
 
-                    Dim cache2 = HttpRuntime.Cache(key)
-                    Assert.IsNotNull(cache2)
-                    Assert.AreSame(roles, cache2)
+            Dim list As ICollection(Of Role) = cache.ToCollection(Of Role)()
+            Assert.IsNotNull(list)
+            Assert.AreEqual(roles.Count, list.Count)
 
-                    System.Threading.Thread.Sleep(1500)
+            Thread.Sleep(1500)
 
-                    Dim cache3 = HttpRuntime.Cache(key)
-                    Assert.IsNotNull(cache3)
-                    Assert.AreSame(roles, cache3)
+            cache = TryCast(HttpRuntime.Cache.[Get](key), Byte())
+            Assert.IsNotNull(cache)
 
-                    System.Threading.Thread.Sleep(2500)
+            list = cache.ToCollection(Of Role)()
+            Assert.IsNotNull(list)
+            Assert.AreEqual(roles.Count, list.Count)
 
-                    Dim cache4 = HttpRuntime.Cache(key)
-                    Assert.IsNull(cache4)
-                End Using
-            Catch generatedExceptionName As AssertionException
-                Throw
-            Catch
-                Assert.Fail()
-            End Try
+            Thread.Sleep(1500)
+
+            cache = TryCast(HttpRuntime.Cache.[Get](key), Byte())
+            Assert.IsNotNull(cache)
+
+            list = cache.ToCollection(Of Role)()
+            Assert.IsNotNull(list)
+            Assert.AreEqual(roles.Count, list.Count)
+
+            Thread.Sleep(2500)
+
+            cache = TryCast(HttpRuntime.Cache.[Get](key), Byte())
+            Assert.IsNull(cache)
         End Sub
 
         <Test()> _
         Public Sub NoCacheEmptyResultTest()
-            Try
-                Using db = New TrackerDataContext()
-                    Dim guid = System.Guid.NewGuid().ToString()
-                    Dim query = db.Role.Where(Function(r) r.Name = guid)
-                    Dim key = query.GetHashKey()
-                    Dim roles = query.FromCache(New CacheSettings(2, False))
+            Dim db As New TrackerDataContext() With { _
+             .Log = Console.Out _
+            }
 
-                    Assert.IsNotNull(roles)
-                    Assert.AreEqual(0, roles.Count())
+            Dim guid__1 As String = Guid.NewGuid().ToString()
+            Dim query As IQueryable(Of Role) = db.Role.Where(Function(r) r.Name = guid__1)
+            Dim key As String = query.GetHashKey()
+            Dim roles As List(Of Role) = query.FromCache(New CacheSettings(2) With { _
+             .CacheEmptyResult = False _
+            }).ToList()
 
-                    Dim cache = HttpRuntime.Cache(key)
-                    Assert.IsNull(cache)
-                End Using
-            Catch generatedExceptionName As AssertionException
-                Throw
-            Catch
-                Assert.Fail()
-            End Try
+
+
+            Assert.IsNotNull(roles)
+            Assert.AreEqual(0, roles.Count())
+
+            Dim cache As Object = HttpRuntime.Cache.[Get](key)
+            Assert.IsNull(cache)
         End Sub
 
         <Test()> _
         Public Sub CacheEmptyResultTest()
-            Try
-                Using db = New TrackerDataContext()
-                    Dim guid = System.Guid.NewGuid().ToString()
-                    Dim query = db.Role.Where(Function(r) r.Name = guid)
-                    Dim key = query.GetHashKey()
-                    Dim roles = query.FromCache(New CacheSettings(2, True))
+            Dim db As New TrackerDataContext() With { _
+             .Log = Console.Out _
+            }
 
-                    Assert.IsNotNull(roles)
-                    Assert.AreEqual(0, roles.Count())
+            Dim guid__1 As String = Guid.NewGuid().ToString()
+            Dim query As IQueryable(Of Role) = db.Role.Where(Function(r) r.Name = guid__1)
+            Dim key As String = query.GetHashKey()
+            Dim roles As List(Of Role) = query.FromCache(New CacheSettings(2) With { _
+             .CacheEmptyResult = True _
+            }).ToList()
 
-                    Dim cache = TryCast(HttpRuntime.Cache(key), List(Of Role))
-                    Assert.IsNotNull(cache)
-                    Assert.AreEqual(0, cache.Count())
-                End Using
-            Catch generatedExceptionName As AssertionException
-                Throw
-            Catch
-                Assert.Fail()
-            End Try
+
+
+            Assert.IsNotNull(roles)
+
+            Dim cache As Byte() = TryCast(HttpRuntime.Cache.[Get](key), Byte())
+            Assert.IsNotNull(cache)
+
+            Dim list As ICollection(Of Role) = cache.ToCollection(Of Role)()
+            Assert.IsNotNull(list)
+            Assert.AreEqual(0, list.Count)
         End Sub
     End Class
 End Namespace

@@ -28,7 +28,6 @@ Namespace Tracker.Core.Data
         ''' Initializes the <see cref="Guid"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of Guid)()
             AddSharedRules()
         End Sub
 #End Region

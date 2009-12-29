@@ -12,7 +12,8 @@ Imports System
 Imports System.Data.Linq
 Imports System.Linq
 Imports System.Runtime.CompilerServices
-Imports System.Linq.Dynamic
+Imports CodeSmith.Data.Linq
+Imports CodeSmith.Data.Linq.Dynamic
 
 Namespace Tracker.Core.Data
     ''' <summary>
@@ -22,7 +23,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets an instance by the primary key.
         ''' </summary>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function GetByKey(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal id As Integer) As Tracker.Core.Data.User
 
             Dim entity As System.Data.Linq.Table(Of Tracker.Core.Data.User) = CType(queryable, Table(Of Tracker.Core.Data.User))
@@ -38,7 +39,7 @@ Namespace Tracker.Core.Data
         ''' </summary>
         ''' <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         ''' <returns>The number of rows deleted from the database.</returns>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function Delete(ByVal table As System.Data.Linq.Table(Of Tracker.Core.Data.User), ByVal id As Integer) As Integer
             Return table.Delete(Function(u)u.Id = id)
         End Function
@@ -47,7 +48,7 @@ Namespace Tracker.Core.Data
         ''' Gets an instance by using a unique index.
         ''' </summary>
         ''' <returns>An instance of the entity or null if not found.</returns>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function GetByEmailAddress(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal emailAddress As String) As Tracker.Core.Data.User
 
             Dim entity As Table(Of Tracker.Core.Data.User) = CType(queryable, Table(Of Tracker.Core.Data.User))
@@ -64,8 +65,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="id">Id to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ById(queryable As IQueryable(Of Tracker.Core.Data.User), id As Integer) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal id As Integer) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u)u.Id = id)
         End Function
         
@@ -76,22 +77,58 @@ Namespace Tracker.Core.Data
         ''' <param name="id">Id to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ById(queryable As IQueryable(Of Tracker.Core.Data.User), id As Integer, ParamArray additionalValues As Integer()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim IdList = New List(Of Integer)()
-            IdList.Add(id)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal id As Integer, ByVal ParamArray additionalValues As Integer()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of Integer)()
+            values.Add(id)
         
             If additionalValues IsNot Nothing Then
-                IdList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If IdList.Count = 1 Then
-                Return queryable.ById(IdList(0))
+            If values.Count = 1 Then
+                Return queryable.ById(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("Id", IdList)
-            Return queryable.Where(expression)
+            Return queryable.ById(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of Integer)) As IQueryable(Of Tracker.Core.Data.User)
+                Return queryable.Where(Function(u) values.Contains(u.Id))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="id">Id to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal id As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(u) id > u.Id)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(u) id >= u.Id)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(u) id < u.Id)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(u) id <= u.Id)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(u) u.Id <> id)
+                Case Else
+                    Return queryable.Where(Function(u) u.Id = id)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -99,8 +136,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="emailAddress">EmailAddress to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByEmailAddress(queryable As IQueryable(Of Tracker.Core.Data.User), emailAddress As String) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByEmailAddress(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal emailAddress As String) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u)u.EmailAddress = emailAddress)
         End Function
         
@@ -111,22 +148,62 @@ Namespace Tracker.Core.Data
         ''' <param name="emailAddress">EmailAddress to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByEmailAddress(queryable As IQueryable(Of Tracker.Core.Data.User), emailAddress As String, ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim EmailAddressList = New List(Of String)()
-            EmailAddressList.Add(emailAddress)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByEmailAddress(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal emailAddress As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of String)()
+            values.Add(emailAddress)
         
             If additionalValues IsNot Nothing Then
-                EmailAddressList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If EmailAddressList.Count = 1 Then
-                Return queryable.ByEmailAddress(EmailAddressList(0))
+            If values.Count = 1 Then
+                Return queryable.ByEmailAddress(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("EmailAddress", EmailAddressList)
-            Return queryable.Where(expression)
+            Return queryable.ByEmailAddress(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByEmailAddress(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of String)) As IQueryable(Of Tracker.Core.Data.User)
+                Return queryable.Where(Function(u) values.Contains(u.EmailAddress))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="emailAddress">EmailAddress to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByEmailAddress(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal emailAddress As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+            If emailAddress Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("emailAddress", "Parameter 'emailAddress' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(u) u.EmailAddress.Contains(emailAddress))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(u) u.EmailAddress.StartsWith(emailAddress))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(u) u.EmailAddress.EndsWith(emailAddress))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(u) u.EmailAddress.Contains(emailAddress) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(u) u.EmailAddress <> emailAddress)
+                Case Else
+                    Return queryable.Where(Function(u) u.EmailAddress = emailAddress)
+            End Select
+        End Function
+        
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -134,8 +211,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="firstName">FirstName to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByFirstName(queryable As IQueryable(Of Tracker.Core.Data.User), firstName As String) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByFirstName(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal firstName As String) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u) Object.Equals(u.FirstName, firstName))
         End Function
         
@@ -146,24 +223,66 @@ Namespace Tracker.Core.Data
         ''' <param name="firstName">FirstName to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByFirstName(queryable As IQueryable(Of Tracker.Core.Data.User), firstName As String, ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim FirstNameList = New List(Of String)()
-            FirstNameList.Add(firstName)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByFirstName(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal firstName As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of String)()
+            values.Add(firstName)
         
             If additionalValues IsNot Nothing Then
-                FirstNameList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             Else
-                FirstNameList.Add(Nothing)
+                values.Add(Nothing)
             End If
         
-            If FirstNameList.Count = 1 Then
-                Return queryable.ByFirstName(FirstNameList(0))
+            If values.Count = 1 Then
+                Return queryable.ByFirstName(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("FirstName", FirstNameList)
-            Return queryable.Where(expression)
+            Return queryable.ByFirstName(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByFirstName(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of String)) As IQueryable(Of Tracker.Core.Data.User)
+                ' creating dynmic expression to support nulls
+                Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("FirstName", values)
+                Return queryable.Where(expression)
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="firstName">FirstName to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByFirstName(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal firstName As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+            If firstName Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("firstName", "Parameter 'firstName' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(u) u.FirstName.Contains(firstName))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(u) u.FirstName.StartsWith(firstName))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(u) u.FirstName.EndsWith(firstName))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(u) u.FirstName.Contains(firstName) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(u) Object.Equals(u.FirstName, firstName) = False)
+                Case Else
+                    Return queryable.Where(Function(u) Object.Equals(u.FirstName, firstName))
+            End Select
+        End Function
+        
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -171,8 +290,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="lastName">LastName to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByLastName(queryable As IQueryable(Of Tracker.Core.Data.User), lastName As String) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastName(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastName As String) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u) Object.Equals(u.LastName, lastName))
         End Function
         
@@ -183,24 +302,66 @@ Namespace Tracker.Core.Data
         ''' <param name="lastName">LastName to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByLastName(queryable As IQueryable(Of Tracker.Core.Data.User), lastName As String, ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim LastNameList = New List(Of String)()
-            LastNameList.Add(lastName)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastName(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastName As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of String)()
+            values.Add(lastName)
         
             If additionalValues IsNot Nothing Then
-                LastNameList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             Else
-                LastNameList.Add(Nothing)
+                values.Add(Nothing)
             End If
         
-            If LastNameList.Count = 1 Then
-                Return queryable.ByLastName(LastNameList(0))
+            If values.Count = 1 Then
+                Return queryable.ByLastName(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("LastName", LastNameList)
-            Return queryable.Where(expression)
+            Return queryable.ByLastName(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastName(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of String)) As IQueryable(Of Tracker.Core.Data.User)
+                ' creating dynmic expression to support nulls
+                Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("LastName", values)
+                Return queryable.Where(expression)
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="lastName">LastName to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastName(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastName As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+            If lastName Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("lastName", "Parameter 'lastName' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(u) u.LastName.Contains(lastName))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(u) u.LastName.StartsWith(lastName))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(u) u.LastName.EndsWith(lastName))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(u) u.LastName.Contains(lastName) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(u) Object.Equals(u.LastName, lastName) = False)
+                Case Else
+                    Return queryable.Where(Function(u) Object.Equals(u.LastName, lastName))
+            End Select
+        End Function
+        
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -208,8 +369,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="createdDate">CreatedDate to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByCreatedDate(queryable As IQueryable(Of Tracker.Core.Data.User), createdDate As Date) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal createdDate As Date) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u)u.CreatedDate = createdDate)
         End Function
         
@@ -220,22 +381,58 @@ Namespace Tracker.Core.Data
         ''' <param name="createdDate">CreatedDate to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByCreatedDate(queryable As IQueryable(Of Tracker.Core.Data.User), createdDate As Date, ParamArray additionalValues As Date()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim CreatedDateList = New List(Of Date)()
-            CreatedDateList.Add(createdDate)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal createdDate As Date, ByVal ParamArray additionalValues As Date()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of Date)()
+            values.Add(createdDate)
         
             If additionalValues IsNot Nothing Then
-                CreatedDateList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If CreatedDateList.Count = 1 Then
-                Return queryable.ByCreatedDate(CreatedDateList(0))
+            If values.Count = 1 Then
+                Return queryable.ByCreatedDate(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("CreatedDate", CreatedDateList)
-            Return queryable.Where(expression)
+            Return queryable.ByCreatedDate(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of Date)) As IQueryable(Of Tracker.Core.Data.User)
+                Return queryable.Where(Function(u) values.Contains(u.CreatedDate))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="createdDate">CreatedDate to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal createdDate As Date, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(u) createdDate > u.CreatedDate)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(u) createdDate >= u.CreatedDate)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(u) createdDate < u.CreatedDate)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(u) createdDate <= u.CreatedDate)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(u) u.CreatedDate <> createdDate)
+                Case Else
+                    Return queryable.Where(Function(u) u.CreatedDate = createdDate)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -243,8 +440,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="modifiedDate">ModifiedDate to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByModifiedDate(queryable As IQueryable(Of Tracker.Core.Data.User), modifiedDate As Date) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByModifiedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal modifiedDate As Date) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u)u.ModifiedDate = modifiedDate)
         End Function
         
@@ -255,22 +452,58 @@ Namespace Tracker.Core.Data
         ''' <param name="modifiedDate">ModifiedDate to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByModifiedDate(queryable As IQueryable(Of Tracker.Core.Data.User), modifiedDate As Date, ParamArray additionalValues As Date()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim ModifiedDateList = New List(Of Date)()
-            ModifiedDateList.Add(modifiedDate)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByModifiedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal modifiedDate As Date, ByVal ParamArray additionalValues As Date()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of Date)()
+            values.Add(modifiedDate)
         
             If additionalValues IsNot Nothing Then
-                ModifiedDateList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If ModifiedDateList.Count = 1 Then
-                Return queryable.ByModifiedDate(ModifiedDateList(0))
+            If values.Count = 1 Then
+                Return queryable.ByModifiedDate(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("ModifiedDate", ModifiedDateList)
-            Return queryable.Where(expression)
+            Return queryable.ByModifiedDate(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByModifiedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of Date)) As IQueryable(Of Tracker.Core.Data.User)
+                Return queryable.Where(Function(u) values.Contains(u.ModifiedDate))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="modifiedDate">ModifiedDate to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByModifiedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal modifiedDate As Date, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(u) modifiedDate > u.ModifiedDate)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(u) modifiedDate >= u.ModifiedDate)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(u) modifiedDate < u.ModifiedDate)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(u) modifiedDate <= u.ModifiedDate)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(u) u.ModifiedDate <> modifiedDate)
+                Case Else
+                    Return queryable.Where(Function(u) u.ModifiedDate = modifiedDate)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -278,8 +511,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="passwordHash">PasswordHash to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByPasswordHash(queryable As IQueryable(Of Tracker.Core.Data.User), passwordHash As String) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByPasswordHash(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal passwordHash As String) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u)u.PasswordHash = passwordHash)
         End Function
         
@@ -290,22 +523,62 @@ Namespace Tracker.Core.Data
         ''' <param name="passwordHash">PasswordHash to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByPasswordHash(queryable As IQueryable(Of Tracker.Core.Data.User), passwordHash As String, ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim PasswordHashList = New List(Of String)()
-            PasswordHashList.Add(passwordHash)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByPasswordHash(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal passwordHash As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of String)()
+            values.Add(passwordHash)
         
             If additionalValues IsNot Nothing Then
-                PasswordHashList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If PasswordHashList.Count = 1 Then
-                Return queryable.ByPasswordHash(PasswordHashList(0))
+            If values.Count = 1 Then
+                Return queryable.ByPasswordHash(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("PasswordHash", PasswordHashList)
-            Return queryable.Where(expression)
+            Return queryable.ByPasswordHash(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByPasswordHash(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of String)) As IQueryable(Of Tracker.Core.Data.User)
+                Return queryable.Where(Function(u) values.Contains(u.PasswordHash))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="passwordHash">PasswordHash to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByPasswordHash(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal passwordHash As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+            If passwordHash Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("passwordHash", "Parameter 'passwordHash' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(u) u.PasswordHash.Contains(passwordHash))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(u) u.PasswordHash.StartsWith(passwordHash))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(u) u.PasswordHash.EndsWith(passwordHash))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(u) u.PasswordHash.Contains(passwordHash) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(u) u.PasswordHash <> passwordHash)
+                Case Else
+                    Return queryable.Where(Function(u) u.PasswordHash = passwordHash)
+            End Select
+        End Function
+        
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -313,8 +586,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="passwordSalt">PasswordSalt to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByPasswordSalt(queryable As IQueryable(Of Tracker.Core.Data.User), passwordSalt As String) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByPasswordSalt(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal passwordSalt As String) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u)u.PasswordSalt = passwordSalt)
         End Function
         
@@ -325,22 +598,62 @@ Namespace Tracker.Core.Data
         ''' <param name="passwordSalt">PasswordSalt to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByPasswordSalt(queryable As IQueryable(Of Tracker.Core.Data.User), passwordSalt As String, ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim PasswordSaltList = New List(Of String)()
-            PasswordSaltList.Add(passwordSalt)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByPasswordSalt(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal passwordSalt As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of String)()
+            values.Add(passwordSalt)
         
             If additionalValues IsNot Nothing Then
-                PasswordSaltList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If PasswordSaltList.Count = 1 Then
-                Return queryable.ByPasswordSalt(PasswordSaltList(0))
+            If values.Count = 1 Then
+                Return queryable.ByPasswordSalt(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("PasswordSalt", PasswordSaltList)
-            Return queryable.Where(expression)
+            Return queryable.ByPasswordSalt(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByPasswordSalt(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of String)) As IQueryable(Of Tracker.Core.Data.User)
+                Return queryable.Where(Function(u) values.Contains(u.PasswordSalt))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="passwordSalt">PasswordSalt to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByPasswordSalt(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal passwordSalt As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+            If passwordSalt Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("passwordSalt", "Parameter 'passwordSalt' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(u) u.PasswordSalt.Contains(passwordSalt))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(u) u.PasswordSalt.StartsWith(passwordSalt))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(u) u.PasswordSalt.EndsWith(passwordSalt))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(u) u.PasswordSalt.Contains(passwordSalt) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(u) u.PasswordSalt <> passwordSalt)
+                Case Else
+                    Return queryable.Where(Function(u) u.PasswordSalt = passwordSalt)
+            End Select
+        End Function
+        
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -348,8 +661,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="comment">Comment to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByComment(queryable As IQueryable(Of Tracker.Core.Data.User), comment As String) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByComment(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal comment As String) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u) Object.Equals(u.Comment, comment))
         End Function
         
@@ -360,24 +673,66 @@ Namespace Tracker.Core.Data
         ''' <param name="comment">Comment to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByComment(queryable As IQueryable(Of Tracker.Core.Data.User), comment As String, ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim CommentList = New List(Of String)()
-            CommentList.Add(comment)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByComment(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal comment As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of String)()
+            values.Add(comment)
         
             If additionalValues IsNot Nothing Then
-                CommentList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             Else
-                CommentList.Add(Nothing)
+                values.Add(Nothing)
             End If
         
-            If CommentList.Count = 1 Then
-                Return queryable.ByComment(CommentList(0))
+            If values.Count = 1 Then
+                Return queryable.ByComment(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("Comment", CommentList)
-            Return queryable.Where(expression)
+            Return queryable.ByComment(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByComment(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of String)) As IQueryable(Of Tracker.Core.Data.User)
+                ' creating dynmic expression to support nulls
+                Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("Comment", values)
+                Return queryable.Where(expression)
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="comment">Comment to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByComment(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal comment As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+            If comment Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("comment", "Parameter 'comment' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(u) u.Comment.Contains(comment))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(u) u.Comment.StartsWith(comment))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(u) u.Comment.EndsWith(comment))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(u) u.Comment.Contains(comment) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(u) Object.Equals(u.Comment, comment) = False)
+                Case Else
+                    Return queryable.Where(Function(u) Object.Equals(u.Comment, comment))
+            End Select
+        End Function
+        
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -385,8 +740,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="isApproved">IsApproved to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByIsApproved(queryable As IQueryable(Of Tracker.Core.Data.User), isApproved As Boolean) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByIsApproved(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal isApproved As Boolean) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u)u.IsApproved = isApproved)
         End Function
         
@@ -397,22 +752,52 @@ Namespace Tracker.Core.Data
         ''' <param name="isApproved">IsApproved to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByIsApproved(queryable As IQueryable(Of Tracker.Core.Data.User), isApproved As Boolean, ParamArray additionalValues As Boolean()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim IsApprovedList = New List(Of Boolean)()
-            IsApprovedList.Add(isApproved)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByIsApproved(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal isApproved As Boolean, ByVal ParamArray additionalValues As Boolean()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of Boolean)()
+            values.Add(isApproved)
         
             If additionalValues IsNot Nothing Then
-                IsApprovedList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If IsApprovedList.Count = 1 Then
-                Return queryable.ByIsApproved(IsApprovedList(0))
+            If values.Count = 1 Then
+                Return queryable.ByIsApproved(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("IsApproved", IsApprovedList)
-            Return queryable.Where(expression)
+            Return queryable.ByIsApproved(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByIsApproved(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of Boolean)) As IQueryable(Of Tracker.Core.Data.User)
+                Return queryable.Where(Function(u) values.Contains(u.IsApproved))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="isApproved">IsApproved to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByIsApproved(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal isApproved As Boolean, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan, ComparisonOperator.GreaterThanOrEquals, ComparisonOperator.LessThan, ComparisonOperator.LessThanOrEquals
+                    Throw New ArgumentException("Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Boolean type.", "comparison")
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(u) u.IsApproved <> isApproved)
+                Case Else
+                    Return queryable.Where(Function(u) u.IsApproved = isApproved)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -420,8 +805,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="lastLoginDate">LastLoginDate to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByLastLoginDate(queryable As IQueryable(Of Tracker.Core.Data.User), lastLoginDate As Date?) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastLoginDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastLoginDate As Date?) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u) Object.Equals(u.LastLoginDate, lastLoginDate))
         End Function
         
@@ -432,24 +817,66 @@ Namespace Tracker.Core.Data
         ''' <param name="lastLoginDate">LastLoginDate to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByLastLoginDate(queryable As IQueryable(Of Tracker.Core.Data.User), lastLoginDate As Date?, ParamArray additionalValues As Date?()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim LastLoginDateList = New List(Of Date?)()
-            LastLoginDateList.Add(lastLoginDate)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastLoginDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastLoginDate As Date?, ByVal ParamArray additionalValues As Date?()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of Date?)()
+            values.Add(lastLoginDate)
         
             If additionalValues IsNot Nothing Then
-                LastLoginDateList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             Else
-                LastLoginDateList.Add(Nothing)
+                values.Add(Nothing)
             End If
         
-            If LastLoginDateList.Count = 1 Then
-                Return queryable.ByLastLoginDate(LastLoginDateList(0))
+            If values.Count = 1 Then
+                Return queryable.ByLastLoginDate(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("LastLoginDate", LastLoginDateList)
-            Return queryable.Where(expression)
+            Return queryable.ByLastLoginDate(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastLoginDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of Date?)) As IQueryable(Of Tracker.Core.Data.User)
+                ' creating dynmic expression to support nulls
+                Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("LastLoginDate", values)
+                Return queryable.Where(expression)
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="lastLoginDate">LastLoginDate to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastLoginDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastLoginDate As Date?, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+            If lastLoginDate Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
+                Throw New ArgumentNullException("lastLoginDate", "Parameter 'lastLoginDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
+            End If
+            
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(u) lastLoginDate > u.LastLoginDate)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(u) lastLoginDate >= u.LastLoginDate)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(u) lastLoginDate < u.LastLoginDate)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(u) lastLoginDate <= u.LastLoginDate)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(u) Object.Equals(u.LastLoginDate, lastLoginDate) = False)
+                Case Else
+                    Return queryable.Where(Function(u) Object.Equals(u.LastLoginDate, lastLoginDate))
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -457,8 +884,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="lastActivityDate">LastActivityDate to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByLastActivityDate(queryable As IQueryable(Of Tracker.Core.Data.User), lastActivityDate As Date) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastActivityDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastActivityDate As Date) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u)u.LastActivityDate = lastActivityDate)
         End Function
         
@@ -469,22 +896,58 @@ Namespace Tracker.Core.Data
         ''' <param name="lastActivityDate">LastActivityDate to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByLastActivityDate(queryable As IQueryable(Of Tracker.Core.Data.User), lastActivityDate As Date, ParamArray additionalValues As Date()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim LastActivityDateList = New List(Of Date)()
-            LastActivityDateList.Add(lastActivityDate)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastActivityDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastActivityDate As Date, ByVal ParamArray additionalValues As Date()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of Date)()
+            values.Add(lastActivityDate)
         
             If additionalValues IsNot Nothing Then
-                LastActivityDateList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If LastActivityDateList.Count = 1 Then
-                Return queryable.ByLastActivityDate(LastActivityDateList(0))
+            If values.Count = 1 Then
+                Return queryable.ByLastActivityDate(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("LastActivityDate", LastActivityDateList)
-            Return queryable.Where(expression)
+            Return queryable.ByLastActivityDate(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastActivityDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of Date)) As IQueryable(Of Tracker.Core.Data.User)
+                Return queryable.Where(Function(u) values.Contains(u.LastActivityDate))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="lastActivityDate">LastActivityDate to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastActivityDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastActivityDate As Date, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(u) lastActivityDate > u.LastActivityDate)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(u) lastActivityDate >= u.LastActivityDate)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(u) lastActivityDate < u.LastActivityDate)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(u) lastActivityDate <= u.LastActivityDate)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(u) u.LastActivityDate <> lastActivityDate)
+                Case Else
+                    Return queryable.Where(Function(u) u.LastActivityDate = lastActivityDate)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -492,8 +955,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="lastPasswordChangeDate">LastPasswordChangeDate to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByLastPasswordChangeDate(queryable As IQueryable(Of Tracker.Core.Data.User), lastPasswordChangeDate As Date?) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastPasswordChangeDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastPasswordChangeDate As Date?) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u) Object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate))
         End Function
         
@@ -504,24 +967,66 @@ Namespace Tracker.Core.Data
         ''' <param name="lastPasswordChangeDate">LastPasswordChangeDate to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByLastPasswordChangeDate(queryable As IQueryable(Of Tracker.Core.Data.User), lastPasswordChangeDate As Date?, ParamArray additionalValues As Date?()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim LastPasswordChangeDateList = New List(Of Date?)()
-            LastPasswordChangeDateList.Add(lastPasswordChangeDate)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastPasswordChangeDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastPasswordChangeDate As Date?, ByVal ParamArray additionalValues As Date?()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of Date?)()
+            values.Add(lastPasswordChangeDate)
         
             If additionalValues IsNot Nothing Then
-                LastPasswordChangeDateList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             Else
-                LastPasswordChangeDateList.Add(Nothing)
+                values.Add(Nothing)
             End If
         
-            If LastPasswordChangeDateList.Count = 1 Then
-                Return queryable.ByLastPasswordChangeDate(LastPasswordChangeDateList(0))
+            If values.Count = 1 Then
+                Return queryable.ByLastPasswordChangeDate(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("LastPasswordChangeDate", LastPasswordChangeDateList)
-            Return queryable.Where(expression)
+            Return queryable.ByLastPasswordChangeDate(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastPasswordChangeDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of Date?)) As IQueryable(Of Tracker.Core.Data.User)
+                ' creating dynmic expression to support nulls
+                Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("LastPasswordChangeDate", values)
+                Return queryable.Where(expression)
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="lastPasswordChangeDate">LastPasswordChangeDate to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLastPasswordChangeDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastPasswordChangeDate As Date?, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+            If lastPasswordChangeDate Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
+                Throw New ArgumentNullException("lastPasswordChangeDate", "Parameter 'lastPasswordChangeDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
+            End If
+            
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(u) lastPasswordChangeDate > u.LastPasswordChangeDate)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(u) lastPasswordChangeDate >= u.LastPasswordChangeDate)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(u) lastPasswordChangeDate < u.LastPasswordChangeDate)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(u) lastPasswordChangeDate <= u.LastPasswordChangeDate)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(u) Object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate) = False)
+                Case Else
+                    Return queryable.Where(Function(u) Object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate))
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
@@ -529,8 +1034,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="avatarType">AvatarType to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByAvatarType(queryable As IQueryable(Of Tracker.Core.Data.User), avatarType As String) As IQueryable(Of Tracker.Core.Data.User)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByAvatarType(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal avatarType As String) As IQueryable(Of Tracker.Core.Data.User)
             Return queryable.Where(Function(u) Object.Equals(u.AvatarType, avatarType))
         End Function
         
@@ -541,24 +1046,66 @@ Namespace Tracker.Core.Data
         ''' <param name="avatarType">AvatarType to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByAvatarType(queryable As IQueryable(Of Tracker.Core.Data.User), avatarType As String, ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
-            Dim AvatarTypeList = New List(Of String)()
-            AvatarTypeList.Add(avatarType)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByAvatarType(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal avatarType As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.User)
+            Dim values = New List(Of String)()
+            values.Add(avatarType)
         
             If additionalValues IsNot Nothing Then
-                AvatarTypeList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             Else
-                AvatarTypeList.Add(Nothing)
+                values.Add(Nothing)
             End If
         
-            If AvatarTypeList.Count = 1 Then
-                Return queryable.ByAvatarType(AvatarTypeList(0))
+            If values.Count = 1 Then
+                Return queryable.ByAvatarType(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("AvatarType", AvatarTypeList)
-            Return queryable.Where(expression)
+            Return queryable.ByAvatarType(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByAvatarType(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal values As IEnumerable(Of String)) As IQueryable(Of Tracker.Core.Data.User)
+                ' creating dynmic expression to support nulls
+                Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.User, Boolean)("AvatarType", values)
+                Return queryable.Where(expression)
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.User"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="avatarType">AvatarType to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByAvatarType(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal avatarType As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+            If avatarType Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("avatarType", "Parameter 'avatarType' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(u) u.AvatarType.Contains(avatarType))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(u) u.AvatarType.StartsWith(avatarType))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(u) u.AvatarType.EndsWith(avatarType))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(u) u.AvatarType.Contains(avatarType) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(u) Object.Equals(u.AvatarType, avatarType) = False)
+                Case Else
+                    Return queryable.Where(Function(u) Object.Equals(u.AvatarType, avatarType))
+            End Select
+        End Function
+        
 
         'Insert User Defined Extensions here.
         'Anything outside of this Region will be lost at regeneration

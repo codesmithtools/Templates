@@ -28,7 +28,6 @@ Namespace Tracker.Core.Data
         ''' Initializes the <see cref="User"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of User)()
             AddSharedRules()
         End Sub
 #End Region
