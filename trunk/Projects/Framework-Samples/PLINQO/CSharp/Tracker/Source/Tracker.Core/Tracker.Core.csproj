@@ -248,31 +248,13 @@
       <DependentUpon>TrackerDataContext.cs</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Views\GetUsersWithRolesResult1.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Data\Views\GetUsersWithRolesResult1.cs" />
     <Compile Include="Data\Views\GetUsersWithRolesResult1.Generated.cs">
       <DependentUpon>GetUsersWithRolesResult1.cs</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Views\GetUsersWithRolesResult2.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Data\Views\GetUsersWithRolesResult2.cs" />
     <Compile Include="Data\Views\GetUsersWithRolesResult2.Generated.cs">
       <DependentUpon>GetUsersWithRolesResult2.cs</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\Views\ReturnMultiplResultSetsResult1.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\Views\ReturnMultiplResultSetsResult1.Generated.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\Views\ReturnMultiplResultSetsResult2.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\Views\ReturnMultiplResultSetsResult2.Generated.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

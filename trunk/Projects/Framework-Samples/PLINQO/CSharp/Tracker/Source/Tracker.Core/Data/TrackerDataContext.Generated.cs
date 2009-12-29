@@ -184,17 +184,17 @@ namespace Tracker.Core.Data
             return ((System.Data.Linq.IMultipleResults)(result.ReturnValue));
         }
 
-        /// <summary>Method that is mapped to the dbo.GetUsersWithTasks database procedure.</summary>
+        /// <summary>Method that is mapped to the dbo.GetOne database procedure.</summary>
         /// <returns></returns>
-        [System.Data.Linq.Mapping.Function(Name="dbo.GetUsersWithTasks")]
-        [System.Data.Linq.Mapping.ResultType(typeof(Tracker.Core.Data.User))]
-        [System.Data.Linq.Mapping.ResultType(typeof(Tracker.Core.Data.Task))]
-        public System.Data.Linq.IMultipleResults GetUsersWithTasks()
+        [System.Data.Linq.Mapping.Function(Name="dbo.GetOne", IsComposable=true)]
+        [return: System.Data.Linq.Mapping.Parameter(DbType="int")]
+        public int GetOne(
+            [System.Data.Linq.Mapping.Parameter(Name="@param", DbType="int")] int? param)
         {
             var methodInfo = (System.Reflection.MethodInfo)System.Reflection.MethodInfo.GetCurrentMethod();
-            var result = this.ExecuteMethodCall(this, methodInfo);
+            var result = this.ExecuteMethodCall(this, methodInfo, param);
 
-            return ((System.Data.Linq.IMultipleResults)(result.ReturnValue));
+            return ((int)(result.ReturnValue));
         }
 
         #endregion

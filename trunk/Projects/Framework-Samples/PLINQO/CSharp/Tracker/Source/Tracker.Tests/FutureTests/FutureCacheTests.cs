@@ -34,21 +34,6 @@ namespace Tracker.Tests.FutureTests
         }
 
         [Test]
-        public void SqlCommand()
-        {
-            var db = new TrackerDataContext { Log = Console.Out };
-
-            var result = db.GetUsersWithTasks();
-
-            var users = result.GetResult<User>().ToList();
-            var tasks = result.GetResult<Task>().ToList();
-
-            Assert.IsNotNull(tasks);
-
-
-        }
-
-        [Test]
         public void FutureTest()
         {
             var db = new TrackerDataContext { Log = Console.Out };

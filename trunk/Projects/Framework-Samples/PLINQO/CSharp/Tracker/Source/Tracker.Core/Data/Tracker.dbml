@@ -11,6 +11,7 @@
       <Column Name="RowVersion" Storage="_rowVersion" Type="System.Data.Linq.Binary" DbType="timestamp NOT NULL" CanBeNull="false" IsVersion="true" />
       <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int" CanBeNull="true" />
       <Column Name="TaskId" Storage="_taskId" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="myxml" Member="Myxml" Storage="_myxml" Type="System.String" DbType="xml" CanBeNull="true" />
       <Association Name="Task_Audit" Member="Task" Storage="_task" ThisKey="TaskId" Type="Task" IsForeignKey="true" />
       <Association Name="User_Audit" Member="User" Storage="_user" ThisKey="UserId" Type="User" IsForeignKey="true" />
     </Type>
@@ -33,7 +34,7 @@
     </Type>
   </Table>
   <Table Name="dbo.Task" Member="Task">
-    <Type Name="Task" Id="ID2">
+    <Type Name="Task">
       <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="CreatedId" Storage="_createdId" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
       <Column Name="Summary" Storage="_summary" Type="System.String" DbType="nvarchar(255) NOT NULL" CanBeNull="false" />
@@ -66,7 +67,7 @@
     </Type>
   </Table>
   <Table Name="dbo.User" Member="User">
-    <Type Name="User" Id="ID1">
+    <Type Name="User">
       <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="EmailAddress" Storage="_emailAddress" Type="System.String" DbType="nvarchar(250) NOT NULL" CanBeNull="false" />
       <Column Name="FirstName" Storage="_firstName" Type="System.String" DbType="nvarchar(200)" CanBeNull="true" />
@@ -121,8 +122,8 @@
       <Column Name="RoleId" Storage="_roleId" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.GetUsersWithTasks" Method="GetUsersWithTasks">
-    <ElementType IdRef="ID1" />
-    <ElementType IdRef="ID2" />
+  <Function Name="dbo.GetOne" Method="GetOne" IsComposable="true">
+    <Parameter Name="@param" Parameter="param" Type="System.Int32" DbType="int" />
+    <Return Type="System.Int32" DbType="int" />
   </Function>
 </Database>
