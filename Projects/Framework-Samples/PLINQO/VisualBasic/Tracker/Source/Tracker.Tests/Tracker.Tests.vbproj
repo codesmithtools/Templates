@@ -41,7 +41,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Templates\PLINQO\Common\CodeSmith.Data.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+    <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\nunit.framework.dll</HintPath>
     </Reference>
@@ -85,9 +85,13 @@
   <ItemGroup>
     <Compile Include="CacheTests\ClearCacheTests.vb" />
     <Compile Include="CacheTests\FromCacheFirstOrDefaultTests.vb" />
+    <Compile Include="CacheTests\FromCacheGroupTests.vb" />
     <Compile Include="CacheTests\FromCacheTests.vb" />
     <Compile Include="CacheTests\RoleTests.vb" />
+    <Compile Include="DebugTest.vb" />
     <Compile Include="DemoTests.vb" />
+    <Compile Include="FutureTests\FutureCacheTests.vb" />
+    <Compile Include="FutureTests\FutureTests.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -108,7 +112,8 @@
     <Compile Include="QueryTests\ByGuidTests.vb" />
     <Compile Include="QueryTests\ByIntTests.vb" />
     <Compile Include="QueryTests\ByStringTests.vb" />
-    <Compile Include="QueryTests\TaskTests.vb" />
+    <Compile Include="QueryTests\OperatorTests.vb" />
+    <Compile Include="TestBase.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

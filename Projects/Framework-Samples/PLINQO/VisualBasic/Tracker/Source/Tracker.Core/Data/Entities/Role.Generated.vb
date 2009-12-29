@@ -28,7 +28,6 @@ Namespace Tracker.Core.Data
         ''' Initializes the <see cref="Role"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of Role)()
             AddSharedRules()
         End Sub
 #End Region
@@ -82,7 +81,7 @@ Namespace Tracker.Core.Data
         <System.Data.Linq.Mapping.Column(Name:="Name", Storage:="_name", DbType:="nvarchar(50) NOT NULL", CanBeNull:=False, UpdateCheck:=System.Data.Linq.Mapping.UpdateCheck.Never)> _
         <ComponentModel.DataAnnotations.StringLength(50)> _
         <System.Runtime.Serialization.DataMember(Order:=2)> _
-        Public Property Name() As String
+        Public Property [Name]() As String
             Get
                 Return _name
             End Get

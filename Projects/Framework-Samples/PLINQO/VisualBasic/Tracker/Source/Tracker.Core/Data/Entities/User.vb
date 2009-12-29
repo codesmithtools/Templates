@@ -135,6 +135,7 @@ Namespace Tracker.Core.Data
                 End Set
             End Property
             
+            <Now(EntityState.Dirty)> _
             Public Property LastActivityDate() As Object
                 Get
                     Return Nothing

@@ -12,7 +12,8 @@ Imports System
 Imports System.Data.Linq
 Imports System.Linq
 Imports System.Runtime.CompilerServices
-Imports System.Linq.Dynamic
+Imports CodeSmith.Data.Linq
+Imports CodeSmith.Data.Linq.Dynamic
 
 Namespace Tracker.Core.Data
     ''' <summary>
@@ -22,7 +23,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets an instance by the primary key.
         ''' </summary>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function GetByKey(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal id As System.Guid) As Tracker.Core.Data.Guid
 
             Dim entity As System.Data.Linq.Table(Of Tracker.Core.Data.Guid) = CType(queryable, Table(Of Tracker.Core.Data.Guid))
@@ -38,7 +39,7 @@ Namespace Tracker.Core.Data
         ''' </summary>
         ''' <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         ''' <returns>The number of rows deleted from the database.</returns>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function Delete(ByVal table As System.Data.Linq.Table(Of Tracker.Core.Data.Guid), ByVal id As System.Guid) As Integer
             Return table.Delete(Function(g)g.Id = id)
         End Function
@@ -49,8 +50,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="id">Id to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ById(queryable As IQueryable(Of Tracker.Core.Data.Guid), id As System.Guid) As IQueryable(Of Tracker.Core.Data.Guid)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal id As System.Guid) As IQueryable(Of Tracker.Core.Data.Guid)
             Return queryable.Where(Function(g)g.Id = id)
         End Function
         
@@ -61,22 +62,52 @@ Namespace Tracker.Core.Data
         ''' <param name="id">Id to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ById(queryable As IQueryable(Of Tracker.Core.Data.Guid), id As System.Guid, ParamArray additionalValues As System.Guid()) As IQueryable(Of Tracker.Core.Data.Guid)
-            Dim IdList = New List(Of System.Guid)()
-            IdList.Add(id)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal id As System.Guid, ByVal ParamArray additionalValues As System.Guid()) As IQueryable(Of Tracker.Core.Data.Guid)
+            Dim values = New List(Of System.Guid)()
+            values.Add(id)
         
             If additionalValues IsNot Nothing Then
-                IdList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If IdList.Count = 1 Then
-                Return queryable.ById(IdList(0))
+            If values.Count = 1 Then
+                Return queryable.ById(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.Guid, Boolean)("Id", IdList)
-            Return queryable.Where(expression)
+            Return queryable.ById(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.Guid"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal values As IEnumerable(Of System.Guid)) As IQueryable(Of Tracker.Core.Data.Guid)
+                Return queryable.Where(Function(g) values.Contains(g.Id))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.Guid"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="id">Id to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal id As System.Guid, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.Guid)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan, ComparisonOperator.GreaterThanOrEquals, ComparisonOperator.LessThan, ComparisonOperator.LessThanOrEquals
+                    Throw New ArgumentException("Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support System.Guid type.", "comparison")
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(g) g.Id <> id)
+                Case Else
+                    Return queryable.Where(Function(g) g.Id = id)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.Guid"/>.
@@ -84,8 +115,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="alternateId">AlternateId to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByAlternateId(queryable As IQueryable(Of Tracker.Core.Data.Guid), alternateId As System.Guid?) As IQueryable(Of Tracker.Core.Data.Guid)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByAlternateId(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal alternateId As System.Guid?) As IQueryable(Of Tracker.Core.Data.Guid)
             Return queryable.Where(Function(g) Object.Equals(g.AlternateId, alternateId))
         End Function
         
@@ -96,24 +127,60 @@ Namespace Tracker.Core.Data
         ''' <param name="alternateId">AlternateId to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByAlternateId(queryable As IQueryable(Of Tracker.Core.Data.Guid), alternateId As System.Guid?, ParamArray additionalValues As System.Guid?()) As IQueryable(Of Tracker.Core.Data.Guid)
-            Dim AlternateIdList = New List(Of System.Guid?)()
-            AlternateIdList.Add(alternateId)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByAlternateId(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal alternateId As System.Guid?, ByVal ParamArray additionalValues As System.Guid?()) As IQueryable(Of Tracker.Core.Data.Guid)
+            Dim values = New List(Of System.Guid?)()
+            values.Add(alternateId)
         
             If additionalValues IsNot Nothing Then
-                AlternateIdList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             Else
-                AlternateIdList.Add(Nothing)
+                values.Add(Nothing)
             End If
         
-            If AlternateIdList.Count = 1 Then
-                Return queryable.ByAlternateId(AlternateIdList(0))
+            If values.Count = 1 Then
+                Return queryable.ByAlternateId(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.Guid, Boolean)("AlternateId", AlternateIdList)
-            Return queryable.Where(expression)
+            Return queryable.ByAlternateId(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.Guid"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByAlternateId(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal values As IEnumerable(Of System.Guid?)) As IQueryable(Of Tracker.Core.Data.Guid)
+                ' creating dynmic expression to support nulls
+                Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.Guid, Boolean)("AlternateId", values)
+                Return queryable.Where(expression)
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.Guid"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="alternateId">AlternateId to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByAlternateId(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal alternateId As System.Guid?, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.Guid)
+            If alternateId Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
+                Throw New ArgumentNullException("alternateId", "Parameter 'alternateId' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
+            End If
+            
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan, ComparisonOperator.GreaterThanOrEquals, ComparisonOperator.LessThan, ComparisonOperator.LessThanOrEquals
+                    Throw New ArgumentException("Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support System.Guid? type.", "comparison")
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(g) Object.Equals(g.AlternateId, alternateId) = False)
+                Case Else
+                    Return queryable.Where(Function(g) Object.Equals(g.AlternateId, alternateId))
+            End Select
+        End Function
+
 
         'Insert User Defined Extensions here.
         'Anything outside of this Region will be lost at regeneration

@@ -1,4 +1,5 @@
-﻿Imports System.Linq
+Imports System.Collections.Generic
+Imports System.Linq
 Imports NUnit.Framework
 Imports Tracker.Core.Data
 Imports Guid = System.Guid
@@ -6,29 +7,29 @@ Imports Guid = System.Guid
 Namespace Tracker.Tests.QueryTests
     <TestFixture()> _
     Public Class ByGuidTests
-        Private _guid1Id As Guid = Guid.NewGuid()
-        Private _guid2Id As Guid = Guid.NewGuid()
-        Private _guid2Alt As Guid = Guid.NewGuid()
-        Private _guid3Id As Guid = Guid.NewGuid()
-        Private _guid3Alt As Guid = Guid.NewGuid()
+        Private ReadOnly _guid1Id As Guid = Guid.NewGuid()
+        Private ReadOnly _guid2Id As Guid = Guid.NewGuid()
+        Private ReadOnly _guid2Alt As Guid = Guid.NewGuid()
+        Private ReadOnly _guid3Id As Guid = Guid.NewGuid()
+        Private ReadOnly _guid3Alt As Guid = Guid.NewGuid()
 
         <TestFixtureSetUp()> _
         Public Sub TestFixtureSetUp()
-            Using db = New TrackerDataContext()
-                Dim guid1 = New Core.Data.Guid()
-                guid1.Id = _guid1Id
-                guid1.AlternateId = Nothing
-                db.Guid.InsertOnSubmit(guid1)
-
-                Dim guid2 = New Core.Data.Guid()
-                guid2.Id = _guid2Id
-                guid2.AlternateId = _guid2Alt
-                db.Guid.InsertOnSubmit(guid2)
-
-                Dim guid3 = New Core.Data.Guid()
-                guid3.Id = _guid3Id
-                guid3.AlternateId = _guid3Alt
-                db.Guid.InsertOnSubmit(guid3)
+            Using db As New TrackerDataContext() With { _
+             .Log = Console.Out _
+            }
+                db.Guid.InsertOnSubmit(New Tracker.Core.Data.Guid() With { _
+                 .Id = _guid1Id, _
+                 .AlternateId = Nothing _
+                })
+                db.Guid.InsertOnSubmit(New Tracker.Core.Data.Guid() With { _
+                 .Id = _guid2Id, _
+                 .AlternateId = _guid2Alt _
+                })
+                db.Guid.InsertOnSubmit(New Tracker.Core.Data.Guid() With { _
+                 .Id = _guid3Id, _
+                 .AlternateId = _guid3Alt _
+                })
 
                 db.SubmitChanges()
             End Using
@@ -36,7 +37,9 @@ Namespace Tracker.Tests.QueryTests
 
         <TestFixtureTearDown()> _
         Public Sub TestFixtureTearDown()
-            Using db = New TrackerDataContext()
+            Using db As New TrackerDataContext() With { _
+             .Log = Console.Out _
+            }
                 db.Guid.Delete(_guid1Id)
                 db.Guid.Delete(_guid2Id)
                 db.Guid.Delete(_guid3Id)
@@ -45,43 +48,35 @@ Namespace Tracker.Tests.QueryTests
 
         <Test()> _
         Public Sub ByTest()
-            Try
-                Using db = New TrackerDataContext()
-                    Dim a = db.Guid.ById(_guid1Id).ToList()
-                    Dim b = db.Guid.ById(_guid2Id).ToList()
+            Using db As New TrackerDataContext() With { _
+             .Log = Console.Out _
+            }
+                Dim a As List(Of Tracker.Core.Data.Guid) = db.Guid.ById(_guid1Id).ToList()
+                Dim b As List(Of Tracker.Core.Data.Guid) = db.Guid.ById(_guid2Id).ToList()
 
-                    Dim c = db.Guid.ById(_guid1Id, Nothing).ToList()
-                    Assert.AreEqual(a.Count, c.Count)
+                'Dim c As List(Of Tracker.Core.Data.Guid) = db.Guid.ById(_guid1Id, CType(Nothing, System.Nullable(Of Guid))).ToList()
+                'Assert.AreEqual(a.Count, c.Count)
 
-                    Dim d = db.Guid.ById(_guid1Id, _guid2Id).ToList()
-                    Assert.AreEqual(a.Count + b.Count, d.Count)
-                End Using
-            Catch generatedExceptionName As AssertionException
-                Throw
-            Catch
-                Assert.Fail()
-            End Try
+                Dim d As List(Of Tracker.Core.Data.Guid) = db.Guid.ById(_guid1Id, _guid2Id).ToList()
+                Assert.AreEqual(a.Count + b.Count, d.Count)
+            End Using
         End Sub
 
         <Test()> _
         Public Sub ByNullableTest()
-            Try
-                Using db = New TrackerDataContext()
-                    Dim a = db.Guid.ByAlternateId(Nothing).ToList()
-                    Dim b = db.Guid.ByAlternateId(_guid2Alt).ToList()
-                    Dim c = db.Guid.ByAlternateId(_guid3Alt).ToList()
+            Using db As New TrackerDataContext() With { _
+             .Log = Console.Out _
+            }
+                Dim a As List(Of Tracker.Core.Data.Guid) = db.Guid.ByAlternateId(CType(Nothing, System.Nullable(Of Guid))).ToList()
+                Dim b As List(Of Tracker.Core.Data.Guid) = db.Guid.ByAlternateId(_guid2Alt).ToList()
+                Dim c As List(Of Tracker.Core.Data.Guid) = db.Guid.ByAlternateId(_guid3Alt).ToList()
 
-                    Dim d = db.Guid.ByAlternateId(_guid2Alt, Nothing).ToList()
-                    Assert.AreEqual(a.Count + b.Count, d.Count)
+                Dim d As List(Of Tracker.Core.Data.Guid) = db.Guid.ByAlternateId(_guid2Alt, CType(Nothing, System.Nullable(Of Guid))).ToList()
+                Assert.AreEqual(a.Count + b.Count, d.Count)
 
-                    Dim e = db.Guid.ByAlternateId(_guid2Alt, Nothing, _guid3Alt).ToList()
-                    Assert.AreEqual(a.Count + b.Count + c.Count, e.Count)
-                End Using
-            Catch generatedExceptionName As AssertionException
-                Throw
-            Catch
-                Assert.Fail()
-            End Try
+                Dim e As List(Of Tracker.Core.Data.Guid) = db.Guid.ByAlternateId(_guid2Alt, CType(Nothing, System.Nullable(Of Guid)), _guid3Alt).ToList()
+                Assert.AreEqual(a.Count + b.Count + c.Count, e.Count)
+            End Using
         End Sub
     End Class
 End Namespace

@@ -15,10 +15,10 @@ Namespace Tracker.Core.Data
     ''' The DataContext class for the Tracker database.
     ''' </summary>
     public Partial Class TrackerDataContext 
-        Inherits System.Data.Linq.DataContext
+        Inherits CodeSmith.Data.Linq.DataContextBase
         Implements System.Data.Services.IUpdatable
 
-        Private Shared ReadOnly mappingCache As System.Data.Linq.Mapping.MappingSource = New System.Data.Linq.Mapping.AttributeMappingSource()
+        Public Shared ReadOnly MappingCache As System.Data.Linq.Mapping.MappingSource = New System.Data.Linq.Mapping.AttributeMappingSource()
 
         #Region "ConnectionString"
         Private Const CONNECTION_NAME As String = "TrackerConnectionString"
@@ -69,7 +69,7 @@ Namespace Tracker.Core.Data
         ''' </summary>
         <System.Diagnostics.DebuggerNonUserCode> _
         public Sub New()
-            MyBase.New(ConnectionString, mappingCache)
+            MyBase.New(ConnectionString, MappingCache)
             OnCreated()
         End Sub
 
@@ -80,7 +80,7 @@ Namespace Tracker.Core.Data
         ''' <param name="connection">The connection string.</param>
         <System.Diagnostics.DebuggerNonUserCode> _
         public Sub New(ByVal connection As String)
-            MyBase.New(connection, mappingCache)
+            MyBase.New(connection, MappingCache)
             OnCreated()
         End Sub
         
@@ -90,7 +90,7 @@ Namespace Tracker.Core.Data
         ''' <param name="connection">The database connection.</param>
         <System.Diagnostics.DebuggerNonUserCode> _
         public Sub New(ByVal connection As System.Data.IDbConnection)
-            MyBase.New(connection, mappingCache)
+            MyBase.New(connection, MappingCache)
             OnCreated()
         End Sub
         
@@ -176,12 +176,19 @@ Namespace Tracker.Core.Data
         <System.Data.Linq.Mapping.ResultType(GetType(Tracker.Core.Data.GetUsersWithRolesResult1))> _
         <System.Data.Linq.Mapping.ResultType(GetType(Tracker.Core.Data.GetUsersWithRolesResult2))> _
         public Function GetUsersWithRoles() As System.Data.Linq.IMultipleResults
-
-            Dim result As System.Data.Linq.IExecuteResult = Me.ExecuteMethodCall(Me, _
-                (DirectCast(System.Reflection.MethodInfo.GetCurrentMethod(), System.Reflection.MethodInfo)))
-            
-            
+            Dim methodInfo = DirectCast(System.Reflection.MethodInfo.GetCurrentMethod(), System.Reflection.MethodInfo)
+            Dim result As System.Data.Linq.IExecuteResult = Me.ExecuteMethodCall(Me, methodInfo)
             Return (DirectCast((result.ReturnValue),System.Data.Linq.IMultipleResults))
+        End Function
+
+        ''' <summary>Method that is mapped to the dbo.GetOne database procedure.</summary>
+        ''' <returns></returns>
+        <System.Data.Linq.Mapping.Function(Name:="dbo.GetOne", IsComposable:=true)> _
+        public Function GetOne( _
+            <System.Data.Linq.Mapping.Parameter(Name := "@param", DbType:="int")> ByVal param As Integer?) As Integer
+            Dim methodInfo = DirectCast(System.Reflection.MethodInfo.GetCurrentMethod(), System.Reflection.MethodInfo)
+            Dim result As System.Data.Linq.IExecuteResult = Me.ExecuteMethodCall(Me, methodInfo, param)
+            Return (DirectCast((result.ReturnValue),Integer))
         End Function
 
         #End Region

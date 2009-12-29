@@ -13,6 +13,8 @@ Imports System.Collections.Generic
 Imports System.Data.Linq
 Imports System.Linq
 Imports System.Text
+Imports CodeSmith.Data.Linq
+Imports CodeSmith.Data.Linq.Dynamic
 
 Namespace Tracker.Core.Data
     ''' <summary>

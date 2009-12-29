@@ -12,7 +12,8 @@ Imports System
 Imports System.Data.Linq
 Imports System.Linq
 Imports System.Runtime.CompilerServices
-Imports System.Linq.Dynamic
+Imports CodeSmith.Data.Linq
+Imports CodeSmith.Data.Linq.Dynamic
 
 Namespace Tracker.Core.Data
     ''' <summary>
@@ -22,7 +23,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets an instance by the primary key.
         ''' </summary>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function GetByKey(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal userId As Integer, ByVal roleId As Integer) As Tracker.Core.Data.UserRole
 
             Dim entity As System.Data.Linq.Table(Of Tracker.Core.Data.UserRole) = CType(queryable, Table(Of Tracker.Core.Data.UserRole))
@@ -39,7 +40,7 @@ Namespace Tracker.Core.Data
         ''' </summary>
         ''' <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         ''' <returns>The number of rows deleted from the database.</returns>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function Delete(ByVal table As System.Data.Linq.Table(Of Tracker.Core.Data.UserRole), ByVal userId As Integer, ByVal roleId As Integer) As Integer
             Return table.Delete(Function(u)u.UserId = userId _
 					AndAlso u.RoleId = roleId)
@@ -51,8 +52,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="userId">UserId to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByUserId(queryable As IQueryable(Of Tracker.Core.Data.UserRole), userId As Integer) As IQueryable(Of Tracker.Core.Data.UserRole)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByUserId(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal userId As Integer) As IQueryable(Of Tracker.Core.Data.UserRole)
             Return queryable.Where(Function(u)u.UserId = userId)
         End Function
         
@@ -63,22 +64,58 @@ Namespace Tracker.Core.Data
         ''' <param name="userId">UserId to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByUserId(queryable As IQueryable(Of Tracker.Core.Data.UserRole), userId As Integer, ParamArray additionalValues As Integer()) As IQueryable(Of Tracker.Core.Data.UserRole)
-            Dim UserIdList = New List(Of Integer)()
-            UserIdList.Add(userId)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByUserId(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal userId As Integer, ByVal ParamArray additionalValues As Integer()) As IQueryable(Of Tracker.Core.Data.UserRole)
+            Dim values = New List(Of Integer)()
+            values.Add(userId)
         
             If additionalValues IsNot Nothing Then
-                UserIdList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If UserIdList.Count = 1 Then
-                Return queryable.ByUserId(UserIdList(0))
+            If values.Count = 1 Then
+                Return queryable.ByUserId(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.UserRole, Boolean)("UserId", UserIdList)
-            Return queryable.Where(expression)
+            Return queryable.ByUserId(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.UserRole"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByUserId(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal values As IEnumerable(Of Integer)) As IQueryable(Of Tracker.Core.Data.UserRole)
+                Return queryable.Where(Function(u) values.Contains(u.UserId))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.UserRole"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="userId">UserId to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByUserId(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal userId As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.UserRole)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(u) userId > u.UserId)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(u) userId >= u.UserId)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(u) userId < u.UserId)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(u) userId <= u.UserId)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(u) u.UserId <> userId)
+                Case Else
+                    Return queryable.Where(Function(u) u.UserId = userId)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.UserRole"/>.
@@ -86,8 +123,8 @@ Namespace Tracker.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="roleId">RoleId to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByRoleId(queryable As IQueryable(Of Tracker.Core.Data.UserRole), roleId As Integer) As IQueryable(Of Tracker.Core.Data.UserRole)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByRoleId(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal roleId As Integer) As IQueryable(Of Tracker.Core.Data.UserRole)
             Return queryable.Where(Function(u)u.RoleId = roleId)
         End Function
         
@@ -98,22 +135,58 @@ Namespace Tracker.Core.Data
         ''' <param name="roleId">RoleId to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByRoleId(queryable As IQueryable(Of Tracker.Core.Data.UserRole), roleId As Integer, ParamArray additionalValues As Integer()) As IQueryable(Of Tracker.Core.Data.UserRole)
-            Dim RoleIdList = New List(Of Integer)()
-            RoleIdList.Add(roleId)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByRoleId(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal roleId As Integer, ByVal ParamArray additionalValues As Integer()) As IQueryable(Of Tracker.Core.Data.UserRole)
+            Dim values = New List(Of Integer)()
+            values.Add(roleId)
         
             If additionalValues IsNot Nothing Then
-                RoleIdList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If RoleIdList.Count = 1 Then
-                Return queryable.ByRoleId(RoleIdList(0))
+            If values.Count = 1 Then
+                Return queryable.ByRoleId(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of Tracker.Core.Data.UserRole, Boolean)("RoleId", RoleIdList)
-            Return queryable.Where(expression)
+            Return queryable.ByRoleId(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.UserRole"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByRoleId(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal values As IEnumerable(Of Integer)) As IQueryable(Of Tracker.Core.Data.UserRole)
+                Return queryable.Where(Function(u) values.Contains(u.RoleId))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="Tracker.Core.Data.UserRole"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="roleId">RoleId to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByRoleId(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal roleId As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.UserRole)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(u) roleId > u.RoleId)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(u) roleId >= u.RoleId)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(u) roleId < u.RoleId)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(u) roleId <= u.RoleId)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(u) u.RoleId <> roleId)
+                Case Else
+                    Return queryable.Where(Function(u) u.RoleId = roleId)
+            End Select
+        End Function
+
 
         'Insert User Defined Extensions here.
         'Anything outside of this Region will be lost at regeneration
