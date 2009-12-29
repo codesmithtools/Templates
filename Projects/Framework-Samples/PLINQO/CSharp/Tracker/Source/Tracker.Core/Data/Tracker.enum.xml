@@ -4,7 +4,6 @@
     <Item Name="High" Value="1" Description="A High Priority" DataContractMember="true" />
     <Item Name="Normal" Value="2" Description="A Normal Priority" DataContractMember="true" />
     <Item Name="Low" Value="3" Description="A Low Priority" DataContractMember="true" />
-    <Item Name="VeryLow" Value="4" Description="A Very Low Priority(All of Tom's tasks)" DataContractMember="true" />
   </Enum>
   <Enum Name="Status" Table="dbo.Status" Type="System.Int32" AccessModifier="Public" Flags="false" IncludeDataContract="true">
     <Item Name="NotStarted" Value="1" Description="Not Started" DataContractMember="true" />

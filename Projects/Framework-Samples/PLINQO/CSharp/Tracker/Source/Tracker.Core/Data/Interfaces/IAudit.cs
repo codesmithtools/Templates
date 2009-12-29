@@ -49,6 +49,10 @@ namespace Tracker.Core.Data.Interfaces
         /// </summary>
         Nullable<int> TaskId { get; set; }
         /// <summary>
+        /// Gets or sets the myxml column value.
+        /// </summary>
+        string Myxml { get; set; }
+        /// <summary>
         /// Gets or sets the <see cref="Task"/> association.
         /// </summary>
         Task Task { get; set; }

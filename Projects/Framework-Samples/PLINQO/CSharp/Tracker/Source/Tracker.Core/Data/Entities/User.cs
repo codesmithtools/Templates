@@ -27,7 +27,6 @@ namespace Tracker.Core.Data
         {
             CodeSmith.Data.Rules.RuleManager.AddShared<User>(new UserExistsRule());
         }
-
         #region Metadata
 
         [CodeSmith.Data.Audit.Audit]
@@ -37,6 +36,7 @@ namespace Tracker.Core.Data
 
             public int Id { get; set; }
 
+            [Required]
             [DataType(System.ComponentModel.DataAnnotations.DataType.EmailAddress)]
             public string EmailAddress { get; set; }
 
