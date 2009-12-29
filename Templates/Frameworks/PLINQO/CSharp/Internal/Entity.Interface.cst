@@ -91,15 +91,15 @@ namespace <%= this.InterfaceNamespace %>
 <% } %>
 <% foreach(Association association in Type.EntityRefAssociations) { %>
         /// <summary>
-        /// Gets or sets the <see cref="<%= association.Type %>"/> association.
+        /// Gets or sets the <see cref="T:<%= Database.EntityNamespace %>.<%= association.Type %>"/> association.
         /// </summary>
-        <%= association.Type %> <%=association.Member%> { get; set; }
+        <%= Database.EntityNamespace %>.<%= association.Type %> <%=association.Member%> { get; set; }
 <% } %>
 <% foreach(Association association in Type.EntitySetAssociations) { %>
         /// <summary>
-        /// Gets or sets the <see cref="<%= association.Type %>"/> association.
+        /// Gets or sets the <see cref="T:<%= Database.EntityNamespace %>.<%= association.Type %>"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<<%= association.Type %>> <%=association.Member%> { get; set; }
+        System.Data.Linq.EntitySet<<%= Database.EntityNamespace %>.<%= association.Type %>> <%=association.Member%> { get; set; }
 <% } %>
     }
 }
