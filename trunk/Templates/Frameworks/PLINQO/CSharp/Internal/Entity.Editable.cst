@@ -50,8 +50,7 @@ using CodeSmith.Data.Rules;
 
 namespace <%= Database.EntityNamespace %>
 {
-    <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %> 
-    <% if(!string.IsNullOrEmpty(this.InterfaceNamespace)) { %> : <% =this.InterfaceNamespace %>.I<%=Type.Name%> <%}%>
+    <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
     {
         // For more information about the features contained in this class, please visit our GoogleCode Wiki at...
         // http://code.google.com/p/codesmith/wiki/PLINQO
