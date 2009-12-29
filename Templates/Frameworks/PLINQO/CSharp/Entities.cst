@@ -222,8 +222,10 @@
                 {
                     t.TableName = string.Empty;
                     t.EntityBase = string.Empty;
+                    t.InterfaceNamespace = string.Empty;
                     t.Framework = this.Framework;
                     p.EntityBase = string.Empty;
+                    p.InterfaceNamespace = string.Empty;
 
                     CreateEntity(t, p, resultType, viewPath);
                 }
@@ -315,27 +317,6 @@
 
             this.Progress.PerformStep();
         }
-
-        /*
-          I wasn't quite what what this did, so left it alone and the impact on interfaces.
-          I don't have any functions in my DB.
-
-        string viewPath = string.IsNullOrEmpty(ViewDirectory) ? OutputDirectory : ViewDirectory;
-        foreach(Function function in database.Functions)
-        {
-            foreach(LinqToSqlShared.DbmlObjectModel.Type resultType in function.Types)
-            {
-                if (!generatedEntities.Contains(resultType.Name))
-                {
-                    t.TableName = string.Empty;
-                    t.EntityBase = string.Empty;
-                    t.Framework = this.Framework;
-                    p.EntityBase = string.Empty;
-
-                    CreateEntity(t, p, resultType, viewPath);
-                }
-            }
-        }*/
     }
 
     public void CreateInterface(
