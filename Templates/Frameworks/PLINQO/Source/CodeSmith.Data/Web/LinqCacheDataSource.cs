@@ -64,8 +64,9 @@ namespace CodeSmith.Data.Web
             if (!EnableCache)
                 return;
 
+            var provider = Caching.CacheManager.GetProvider();
             string key = GetKey();
-            object source = Context.Cache[key];
+            object source = provider.Get<object>(key);
             if (source == null)
                 return;
 
@@ -81,15 +82,14 @@ namespace CodeSmith.Data.Web
             if (e.Exception != null || e.Result == null)
                 return;
 
+            var provider = Caching.CacheManager.GetProvider();
             string key = GetKey();
-            object source = Context.Cache[key];
+            object source = provider.Get<object>(key);
             if (source != null)
                 return;
 
             Debug.WriteLine("Cache Insert: " + key);
-            Context.Cache.Insert(key, e.Result, null,
-                                 DateTime.Now.AddSeconds(Duration), 
-                                 System.Web.Caching.Cache.NoSlidingExpiration);
+            provider.Set(key, source);
         }
 
         private string GetKey()

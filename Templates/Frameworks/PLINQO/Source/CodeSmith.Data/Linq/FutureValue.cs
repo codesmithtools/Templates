@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Linq;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using CodeSmith.Data.Caching;
 
 namespace CodeSmith.Data.Linq
@@ -12,10 +9,21 @@ namespace CodeSmith.Data.Linq
     /// Provides for defering the execution of a query to a batch of queries.
     /// </summary>
     /// <typeparam name="T">The type for the future query.</typeparam>
-    [DebuggerDisplay("IsLoaded={IsLoaded}, Value={ValueForDebugDisplay}")]
+    /// <example>The following is an example of how to use FutureValue.
+    /// <code><![CDATA[
+    /// var db = new TrackerDataContext { Log = Console.Out };
+    /// // build up queries
+    /// var q1 = db.User.ByEmailAddress("one@test.com").FutureFirstOrDefault();
+    /// var q2 = db.Task.Where(t => t.Summary == "Test").Future();
+    /// // this triggers the loading of all the future queries
+    /// User user = q1.Value;
+    /// var tasks = q2.ToList();
+    /// ]]>
+    /// </code>
+    /// </example>
+    [DebuggerDisplay("IsLoaded={IsLoaded}, Value={UnderlingValue}")]
     public class FutureValue<T> : FutureQueryBase<T>
     {
-        private T _underlyingValue = default(T);
         private bool _hasValue = false;
 
         /// <summary>
@@ -44,7 +52,7 @@ namespace CodeSmith.Data.Linq
         public FutureValue(T underlyingValue)
             : base(null, null, null)
         {
-            _underlyingValue = underlyingValue;
+            UnderlingValue = underlyingValue;
             _hasValue = true;
         }
 
@@ -65,23 +73,23 @@ namespace CodeSmith.Data.Linq
                     var result = GetResult();
 
                     if (result != null)
-                        _underlyingValue = result.FirstOrDefault();
+                        UnderlingValue = result.FirstOrDefault();
                 }
 
                 if (Exception != null)
                     throw new FutureException("An error occurred executing the future query.", Exception);
 
-                return _underlyingValue;
+                return UnderlingValue;
             }
             set
             {
-                _underlyingValue = value;
+                UnderlingValue = value;
                 _hasValue = true;
             }
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="FutureValue{T}"/> to <see cref="T"/>.
+        /// Performs an implicit conversion from <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> to <see cref="T"/>.
         /// </summary>
         /// <param name="futureValue">The future value.</param>
         /// <returns>The result of forcing this lazy value.</returns>
@@ -91,13 +99,10 @@ namespace CodeSmith.Data.Linq
         }
 
         /// <summary>
-        /// Gets the value for debug display.
+        /// Gets the underling value. This property will not trigger the loading of the future query.
         /// </summary>
-        /// <value>The value for debug display.</value>
-        internal T ValueForDebugDisplay
-        {
-            get { return _underlyingValue; }
-        }
+        /// <value>The underling value.</value>
+        internal T UnderlingValue { get; private set; }
     }
 
 
