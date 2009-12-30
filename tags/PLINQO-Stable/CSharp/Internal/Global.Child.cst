@@ -1,0 +1,63 @@
+﻿<%-- 
+Name: DynamicGlobal
+Author: Reggie Bradshaw
+Description: Used to generate the Global.asax file for a Dynamic Data project
+--%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="" Inherits="" Debug="False" Encoding="UTF-8" Description="" %>
+<%@ Property Name="ClassNamespace" Type="System.String" Default="" Optional="false" Description="Namspace of the generated class"%> 
+<%@ Property Name="InlineEditing" Type="System.Boolean" Default="false" Optional="false" Description="Default to Inline Grid Editing for Webpages" %>
+<%@ Property Name="ContextNamespace" Type="System.String" Default="" Optional="false" Description="The namespace where the Data Context is found"%>
+<%@ Property Name="DataContextName" Type="System.String" Default="" Optional="False" Description="Name of the Data Context"%>
+using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.SessionState;
+using System.Xml.Linq;
+using System.Web.Routing;
+using System.Web.DynamicData;
+using <%=ContextNamespace%>;
+
+namespace <%=ClassNamespace%>
+{
+    public class Global : System.Web.HttpApplication
+    {
+        public static void RegisterRoutes(RouteCollection routes)
+        {
+            MetaModel model = new MetaModel();
+
+            
+            model.RegisterContext(typeof(<%=DataContextName%>), new ContextConfiguration() { ScaffoldAllTables = false});
+
+            <%if(!InlineEditing) { %>
+            routes.Add(new DynamicDataRoute("{table}/{action}.aspx")
+            {
+                Constraints = new RouteValueDictionary(new { action = "List|Details|Edit|Insert" }),
+                Model = model
+            });
+            <% }
+            else { %>
+            routes.Add(new DynamicDataRoute("{table}/ListDetails.aspx") {
+                Action = PageAction.List,
+                ViewName = "ListDetails",
+                Model = model
+            });
+
+            routes.Add(new DynamicDataRoute("{table}/ListDetails.aspx") {
+                Action = PageAction.Details,
+                ViewName = "ListDetails",
+                Model = model
+            });
+            <% } %>
+        }
+
+        void Application_Start(object sender, EventArgs e)
+        {
+            RegisterRoutes(RouteTable.Routes);
+        }
+
+    }
+}
