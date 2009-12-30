@@ -11,6 +11,22 @@ namespace CodeSmith.Data.Linq
     /// <summary>
     /// Provides for defering the execution of a count query to a batch of queries.
     /// </summary>
+    /// <example>The following is an example of how to use FutureCount to page a 
+    /// list and get the total count in one call.
+    /// <code><![CDATA[
+    /// var db = new TrackerDataContext { Log = Console.Out };
+    /// // base query
+    /// var q = db.Task.ByPriority(Priority.Normal).OrderBy(t => t.CreatedDate);
+    /// // get total count
+    /// var q1 = q.FutureCount();
+    /// // get first page
+    /// var q2 = q.Skip(0).Take(10).Future();
+    /// // triggers sql execute as a batch
+    /// var tasks = q2.ToList();
+    /// int total = q1.Value;
+    /// ]]>
+    /// </code>
+    /// </example>
     [DebuggerDisplay("IsLoaded={IsLoaded}, Value={ValueForDebugDisplay}")]
     public class FutureCount : FutureValue<int>
     {

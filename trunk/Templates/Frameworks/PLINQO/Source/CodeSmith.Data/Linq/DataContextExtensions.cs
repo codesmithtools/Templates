@@ -121,8 +121,11 @@ namespace CodeSmith.Data.Linq
         /// Combines multiple SELECT commands into a single <see cref="SqlCommand"/> so that all statements can be executed in a
         /// single round trip to the database and return multiple result sets.
         /// </summary>
+        /// <param name="context">The DataContext to get the command from.</param>
         /// <param name="selectCommands">Represents a collection of commands to be batched together.</param>
-        /// <returns>Returns a single <see cref="SqlCommand"/> that executes all SELECT statements at once.</returns>
+        /// <returns>
+        /// Returns a single <see cref="SqlCommand"/> that executes all SELECT statements at once.
+        /// </returns>
         private static DbCommand CombineCommands(DataContext context, IEnumerable<DbCommand> selectCommands)
         {
             var batchCommand = context.Connection.CreateCommand();

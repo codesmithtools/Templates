@@ -9,6 +9,34 @@ namespace CodeSmith.Data.Caching
     /// <summary>
     /// A class to manage cached items via a provider.
     /// </summary>
+    /// <example>The following example gets an item to the default cache provider.
+    /// <code><![CDATA[
+    /// // get the default provider
+    /// var provider = CacheManager.GetProvider();
+    /// provider.Set("key", "some cached data");
+    /// var data = provider.Get<string>("key");
+    /// ]]>
+    /// </code>
+    /// </example>
+    /// <example>The following example uses CacheManager to expire a cache group.
+    /// <code><![CDATA[
+    /// var db = new TrackerDataContext { Log = Console.Out };
+    /// // get a CacheSettings instance using the default profile with a group of 'Role'.
+    /// var cache = CacheManager.GetProfile().WithGroup("Role");
+    /// 
+    /// // queries that can be cached
+    /// var roles = db.Role
+    ///     .Where(r => r.Name == "Test Role")
+    ///     .FromCache(cache);
+    /// var role = db.Role
+    ///     .ByName("Duck Roll")
+    ///     .FromCacheFirstOrDefault(cache);
+    /// 
+    /// // after you make some update, expire group using InvalidateGroup
+    /// CacheManager.GetProvider().InvalidateGroup("Role");
+    /// ]]>
+    /// </code>
+    /// </example>
     public class CacheManager
     {
         private static readonly ConcurrentDictionary<string, ICacheProvider> _providers;
@@ -123,7 +151,7 @@ namespace CodeSmith.Data.Caching
         }
 
         /// <summary>
-        /// Gets the provider by name. If <paramref name="providerName"/> is <see langword="null"/>, <see cref="DefaultProvider"/> is returned.
+        /// Gets the provider by name. If <paramref name="providerName"/> is <see langword="null"/>, the default provider is returned.
         /// </summary>
         /// <param name="providerName">Name of the provider.</param>
         /// <returns>An instance of the provider.</returns>

@@ -11,6 +11,18 @@ namespace CodeSmith.Data.Linq
     /// Provides for defering the execution to a batch of queries.
     /// </summary>
     /// <typeparam name="T">The type for the future query.</typeparam>
+    /// <example>The following is an example of how to use FutureQuery.
+    /// <code><![CDATA[
+    /// var db = new TrackerDataContext { Log = Console.Out };
+    /// // build up queries
+    /// var q1 = db.User.ByEmailAddress("one@test.com").Future();
+    /// var q2 = db.Task.Where(t => t.Summary == "Test").Future();
+    /// // this triggers the loading of all the future queries as a batch
+    /// var users = q1.ToList();
+    /// var tasks = q2.ToList();
+    /// ]]>
+    /// </code>
+    /// </example>    
     [DebuggerDisplay("IsLoaded={IsLoaded}")]
     public class FutureQuery<T> : FutureQueryBase<T>, IEnumerable<T>
     {
