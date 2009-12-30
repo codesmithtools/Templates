@@ -661,12 +661,12 @@ namespace LinqToSqlShared.Generator
 
             if (commandSchema.ReturnValueParameter != null)
             {
-                function.Return.Type = commandSchema.ReturnValueParameter.SystemType.ToString();
+                function.Return.Type = GetSystemType(commandSchema.ReturnValueParameter);
                 function.Return.DbType = GetDbType(commandSchema.ReturnValueParameter);
             }
             else if (returnParameter != null)
             {
-                function.Return.Type = returnParameter.SystemType.ToString();
+                function.Return.Type = GetSystemType(returnParameter);
                 function.Return.DbType = GetDbType(returnParameter);
             }
             else
@@ -734,8 +734,7 @@ namespace LinqToSqlShared.Generator
             }
             else
             {
-                parameter = new Parameter(parameterSchema.Name,
-                    parameterSchema.SystemType.ToString());
+                parameter = new Parameter(parameterSchema.Name, GetSystemType(parameterSchema));
                 function.Parameters.Add(parameter);
             }
 
@@ -749,7 +748,7 @@ namespace LinqToSqlShared.Generator
                 parameter.ParameterName = ToParameterName(parameterName);
             }
 
-            parameter.Type = parameterSchema.SystemType.ToString();
+            parameter.Type = GetSystemType(parameterSchema);
             parameter.DbType = GetDbType(parameterSchema);
 
             switch (parameterSchema.Direction)
