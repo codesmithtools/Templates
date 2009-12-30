@@ -40,7 +40,7 @@ Public Partial Class <%= BusinessClassName %>
     
     Friend Sub New(Byval reader As SafeDataReader)
 <% If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>
-        Fetch(reader)
+        Map(reader)
 <% End If %>
     End Sub
     
