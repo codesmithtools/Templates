@@ -53,29 +53,15 @@ namespace <%= BusinessProjectName %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= Entity.ClassName %>Fetch"))
+                using (SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+
+                    using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
-                        command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
-                        command.Transaction = transaction;
-
-                        try
+                        while(reader.Read())
                         {
-                            using(var reader = new SafeDataReader(command.ExecuteReader()))
-                            {
-                                while(reader.Read())
-                                {
-                                    this.Add(new <%= ChildBusinessClassName %>(reader));
-                                }
-                            }
-
-                            transaction.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            transaction.Rollback("<%= Entity.ClassName %>Fetch");
-                            throw;
+                            this.Add(new <%= ChildBusinessClassName %>(reader));
                         }
                     }
                 }
