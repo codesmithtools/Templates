@@ -103,15 +103,6 @@ namespace QuickStart
         public DataAccessMethod DataAccessImplementation { get; set; }
 
         [Category("4. Data Project")]
-        [Description("The Name Space for the Data Project.")]
-        public string DataProjectName { get; set; }
-
-        [Category("4. Data Project")]
-        [Description("The name of the Data Access class.")]
-        [DefaultValue("DataAccessLayer")]
-        public string DataClassName { get; set; }
-
-        [Category("4. Data Project")]
         [Description("The value all sql parameters should be prefixed with.")]
         [DefaultValue("@p_")]
         public string ParameterPrefix
@@ -158,9 +149,6 @@ namespace QuickStart
 
             if (string.IsNullOrEmpty(BusinessProjectName))
                 BusinessProjectName = string.Format("{0}.Business", SourceTable.Namespace());
-
-            if (string.IsNullOrEmpty(DataProjectName))
-                DataProjectName = string.Format("{0}.DataAccess", SourceTable.Namespace());
         }
 
         #endregion
@@ -169,7 +157,6 @@ namespace QuickStart
 
         public override void RegisterReferences()
         {
-            RegisterReference(DataProjectName);
             RegisterReference(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\Csla.dll"));
         }
 

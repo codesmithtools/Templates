@@ -16,7 +16,8 @@ namespace CodeSmith.SchemaHelper
     public enum VisualStudioVersion : byte
     {
         VS_2005 = 0,
-        VS_2008 = 1
+        VS_2008 = 1,
+        VS_2010 = 2
     }
 
     public enum AssociationType : byte

@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Description="CSLA 3.7.X Entities" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Description="CSLA 3.8.X Entities" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
@@ -33,116 +33,116 @@
 Public Overrides Sub Generate()
 
     'CommandObjectTemplate
-	If Not Me.CommandObject Is Nothing AndAlso Me.CommandObject.Count > 0 Then
-		Dim commandObjectTemplate As CommandObjectTemplate = Me.Create(Of CommandObjectTemplate)()
-		Me.CopyPropertiesTo(commandObjectTemplate)
-		commandObjectTemplate.SourceTables = Me.CommandObject
-		commandObjectTemplate.Generate()
-	End If
+    If Not Me.CommandObject Is Nothing AndAlso Me.CommandObject.Count > 0 Then
+        Dim commandObjectTemplate As CommandObjectTemplate = Me.Create(Of CommandObjectTemplate)()
+        Me.CopyPropertiesTo(commandObjectTemplate)
+        commandObjectTemplate.SourceTables = Me.CommandObject
+        commandObjectTemplate.Generate()
+    End If
     
     'CriteriaTemplate
-	If Not Me.Criteria Is Nothing AndAlso Me.Criteria.Count > 0 Then
-		Dim criteriaTemplate As CriteriaTemplate = Me.Create(Of CriteriaTemplate)()
-		Me.CopyPropertiesTo(criteriaTemplate)
-		criteriaTemplate.SourceTables = Me.Criteria
-		criteriaTemplate.Generate()
-	End If
+    If Not Me.Criteria Is Nothing AndAlso Me.Criteria.Count > 0 Then
+        Dim criteriaTemplate As CriteriaTemplate = Me.Create(Of CriteriaTemplate)()
+        Me.CopyPropertiesTo(criteriaTemplate)
+        criteriaTemplate.SourceTables = Me.Criteria
+        criteriaTemplate.Generate()
+    End If
     
     'DynamicRootTemplate
-	If Not Me.DynamicRoot Is Nothing AndAlso Me.DynamicRoot.Count > 0 Then
-		Dim dynamicRootTemplate As DynamicRootTemplate = Me.Create(Of DynamicRootTemplate)()
-		Me.CopyPropertiesTo(dynamicRootTemplate)
-		dynamicRootTemplate.SourceTables = Me.DynamicRoot
-		dynamicRootTemplate.Generate()
-	End If
+    If Not Me.DynamicRoot Is Nothing AndAlso Me.DynamicRoot.Count > 0 Then
+        Dim dynamicRootTemplate As DynamicRootTemplate = Me.Create(Of DynamicRootTemplate)()
+        Me.CopyPropertiesTo(dynamicRootTemplate)
+        dynamicRootTemplate.SourceTables = Me.DynamicRoot
+        dynamicRootTemplate.Generate()
+    End If
     
     'DynamicRootListTemplate
-	If Not Me.DynamicRootList Is Nothing AndAlso Me.DynamicRootList.Count > 0 Then
-		Dim dynamicRootListTemplate As DynamicRootListTemplate = Me.Create(Of DynamicRootListTemplate)()
-		Me.CopyPropertiesTo(dynamicRootListTemplate)
-		dynamicRootListTemplate.SourceTables = Me.DynamicRootList
-		dynamicRootListTemplate.Generate()
-	End If
+    If Not Me.DynamicRootList Is Nothing AndAlso Me.DynamicRootList.Count > 0 Then
+        Dim dynamicRootListTemplate As DynamicRootListTemplate = Me.Create(Of DynamicRootListTemplate)()
+        Me.CopyPropertiesTo(dynamicRootListTemplate)
+        dynamicRootListTemplate.SourceTables = Me.DynamicRootList
+        dynamicRootListTemplate.Generate()
+    End If
     
     'EditableChildTemplate
-	If Not Me.EditableChild Is Nothing AndAlso Me.EditableChild.Count > 0 Then
-		Dim editableChildTemplate As EditableChildTemplate = Me.Create(Of EditableChildTemplate)()
-		Me.CopyPropertiesTo(editableChildTemplate)
-		editableChildTemplate.SourceTables = Me.EditableChild
-		editableChildTemplate.Generate()
-	End If
+    If Not Me.EditableChild Is Nothing AndAlso Me.EditableChild.Count > 0 Then
+        Dim editableChildTemplate As EditableChildTemplate = Me.Create(Of EditableChildTemplate)()
+        Me.CopyPropertiesTo(editableChildTemplate)
+        editableChildTemplate.SourceTables = Me.EditableChild
+        editableChildTemplate.Generate()
+    End If
     
     'EditableChildListTemplate
-	If Not Me.EditableChildList Is Nothing AndAlso Me.EditableChildList.Count > 0 Then
-		Dim editableChildListTemplate As EditableChildListTemplate = Me.Create(Of EditableChildListTemplate)()
-		Me.CopyPropertiesTo(editableChildListTemplate)
-		editableChildListTemplate.SourceTables = Me.EditableChildList
-		editableChildListTemplate.Generate()
-	End If
+    If Not Me.EditableChildList Is Nothing AndAlso Me.EditableChildList.Count > 0 Then
+        Dim editableChildListTemplate As EditableChildListTemplate = Me.Create(Of EditableChildListTemplate)()
+        Me.CopyPropertiesTo(editableChildListTemplate)
+        editableChildListTemplate.SourceTables = Me.EditableChildList
+        editableChildListTemplate.Generate()
+    End If
     
-	'EditableRootTemplate
-	If Not Me.EditableRoot Is Nothing AndAlso Me.EditableRoot.Count > 0 Then
-		Dim editableRootTemplate As EditableRootTemplate = Me.Create(Of EditableRootTemplate)()
-		Me.CopyPropertiesTo(editableRootTemplate)
-		editableRootTemplate.SourceTables = Me.EditableRoot
-		editableRootTemplate.Generate()
-	End If
+    'EditableRootTemplate
+    If Not Me.EditableRoot Is Nothing AndAlso Me.EditableRoot.Count > 0 Then
+        Dim editableRootTemplate As EditableRootTemplate = Me.Create(Of EditableRootTemplate)()
+        Me.CopyPropertiesTo(editableRootTemplate)
+        editableRootTemplate.SourceTables = Me.EditableRoot
+        editableRootTemplate.Generate()
+    End If
 
-	'EditableRootListTemplate
-	If Not Me.EditableRootList Is Nothing AndAlso Me.EditableRootList.Count > 0 Then
-		Dim editableRootListTemplate As EditableRootListTemplate = Me.Create(Of EditableRootListTemplate)()
-		Me.CopyPropertiesTo(editableRootListTemplate)
-		editableRootListTemplate.SourceTables = Me.EditableRootList
-		editableRootListTemplate.Generate()
-	End If
+    'EditableRootListTemplate
+    If Not Me.EditableRootList Is Nothing AndAlso Me.EditableRootList.Count > 0 Then
+        Dim editableRootListTemplate As EditableRootListTemplate = Me.Create(Of EditableRootListTemplate)()
+        Me.CopyPropertiesTo(editableRootListTemplate)
+        editableRootListTemplate.SourceTables = Me.EditableRootList
+        editableRootListTemplate.Generate()
+    End If
 
     'NameValueListTemplate
-	If Not Me.NameValueList Is Nothing AndAlso Me.NameValueList.Count > 0 Then
-		Dim nameValueListTemplate As NameValueListTemplate = Me.Create(Of NameValueListTemplate)()
-		Me.CopyPropertiesTo(nameValueListTemplate)
-		nameValueListTemplate.SourceTables = Me.NameValueList
-		nameValueListTemplate.Generate()
-	End If
+    If Not Me.NameValueList Is Nothing AndAlso Me.NameValueList.Count > 0 Then
+        Dim nameValueListTemplate As NameValueListTemplate = Me.Create(Of NameValueListTemplate)()
+        Me.CopyPropertiesTo(nameValueListTemplate)
+        nameValueListTemplate.SourceTables = Me.NameValueList
+        nameValueListTemplate.Generate()
+    End If
     
     'ReadOnlyChildTemplate
-	If Not Me.ReadOnlyChild Is Nothing AndAlso Me.ReadOnlyChild.Count > 0 Then
-		Dim readOnlyChildTemplate As ReadOnlyChildTemplate = Me.Create(Of ReadOnlyChildTemplate)()
-		Me.CopyPropertiesTo(readOnlyChildTemplate)
-		readOnlyChildTemplate.SourceTables = Me.ReadOnlyChild
-		readOnlyChildTemplate.Generate()
-	End If
+    If Not Me.ReadOnlyChild Is Nothing AndAlso Me.ReadOnlyChild.Count > 0 Then
+        Dim readOnlyChildTemplate As ReadOnlyChildTemplate = Me.Create(Of ReadOnlyChildTemplate)()
+        Me.CopyPropertiesTo(readOnlyChildTemplate)
+        readOnlyChildTemplate.SourceTables = Me.ReadOnlyChild
+        readOnlyChildTemplate.Generate()
+    End If
     
     'ReadOnlyChildListTemplate
-	If Not Me.ReadOnlyChildList Is Nothing AndAlso Me.ReadOnlyChildList.Count > 0 Then
-		Dim readOnlyChildListTemplate As ReadOnlyChildListTemplate = Me.Create(Of ReadOnlyChildListTemplate)()
-		Me.CopyPropertiesTo(readOnlyChildListTemplate)
-		readOnlyChildListTemplate.SourceTables = Me.ReadOnlyChildList
-		readOnlyChildListTemplate.Generate()
-	End If
+    If Not Me.ReadOnlyChildList Is Nothing AndAlso Me.ReadOnlyChildList.Count > 0 Then
+        Dim readOnlyChildListTemplate As ReadOnlyChildListTemplate = Me.Create(Of ReadOnlyChildListTemplate)()
+        Me.CopyPropertiesTo(readOnlyChildListTemplate)
+        readOnlyChildListTemplate.SourceTables = Me.ReadOnlyChildList
+        readOnlyChildListTemplate.Generate()
+    End If
     
     'ReadOnlyListTemplate
-	If Not Me.ReadOnlyList Is Nothing AndAlso Me.ReadOnlyList.Count > 0 Then
-		Dim readOnlyListTemplate As ReadOnlyListTemplate = Me.Create(Of ReadOnlyListTemplate)()
-		Me.CopyPropertiesTo(readOnlyListTemplate)
-		readOnlyListTemplate.SourceTables = Me.ReadOnlyList
-		readOnlyListTemplate.Generate()
-	End If
+    If Not Me.ReadOnlyList Is Nothing AndAlso Me.ReadOnlyList.Count > 0 Then
+        Dim readOnlyListTemplate As ReadOnlyListTemplate = Me.Create(Of ReadOnlyListTemplate)()
+        Me.CopyPropertiesTo(readOnlyListTemplate)
+        readOnlyListTemplate.SourceTables = Me.ReadOnlyList
+        readOnlyListTemplate.Generate()
+    End If
     
     'ReadOnlyRootTemplate
-	If Not Me.ReadOnlyRoot Is Nothing AndAlso Me.ReadOnlyRoot.Count > 0 Then
-		Dim readOnlyRootTemplate As ReadOnlyRootTemplate = Me.Create(Of ReadOnlyRootTemplate)()
-		Me.CopyPropertiesTo(readOnlyRootTemplate)
-		readOnlyRootTemplate.SourceTables = Me.ReadOnlyRoot
-		readOnlyRootTemplate.Generate()
-	End If
+    If Not Me.ReadOnlyRoot Is Nothing AndAlso Me.ReadOnlyRoot.Count > 0 Then
+        Dim readOnlyRootTemplate As ReadOnlyRootTemplate = Me.Create(Of ReadOnlyRootTemplate)()
+        Me.CopyPropertiesTo(readOnlyRootTemplate)
+        readOnlyRootTemplate.SourceTables = Me.ReadOnlyRoot
+        readOnlyRootTemplate.Generate()
+    End If
 
-	'SwitchableObjectTemplate
-	If Not Me.SwitchableObject Is Nothing AndAlso Me.SwitchableObject.Count > 0 Then
-		Dim switchableObjectTemplate As SwitchableObjectTemplate = Me.Create(Of SwitchableObjectTemplate)()
-		Me.CopyPropertiesTo(switchableObjectTemplate)
-		switchableObjectTemplate.SourceTables = Me.SwitchableObject
-		switchableObjectTemplate.Generate()
-	End If
+    'SwitchableObjectTemplate
+    If Not Me.SwitchableObject Is Nothing AndAlso Me.SwitchableObject.Count > 0 Then
+        Dim switchableObjectTemplate As SwitchableObjectTemplate = Me.Create(Of SwitchableObjectTemplate)()
+        Me.CopyPropertiesTo(switchableObjectTemplate)
+        switchableObjectTemplate.SourceTables = Me.SwitchableObject
+        switchableObjectTemplate.Generate()
+    End If
     
 End Sub
 

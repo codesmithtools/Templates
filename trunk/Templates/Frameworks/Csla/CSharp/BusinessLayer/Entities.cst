@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Description="CSLA 3.7.X Entities" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Description="CSLA 3.8.X Entities" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
@@ -25,6 +25,8 @@
 <%@ Register Name="ReadOnlyListTemplate" Template="ReadOnlyList.cst" %>
 <%@ Register Name="ReadOnlyRootTemplate" Template="ReadOnlyRoot.cst" %>
 <%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
+
+<%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
 
 <% Generate(); %>
 
@@ -198,7 +200,23 @@ public override void Generate()
         switchableObjectTemplate.Generate();
     }
     
-    #endregion    
+    #endregion
+    
+    #region ADOHelperTemplate
+    
+    if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
+    {
+        ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
+        this.CopyPropertiesTo(ADOHelper);
+        
+        string fileName = System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs");
+        if (!System.IO.File.Exists(fileName))
+        {
+            ADOHelper.RenderToFile(fileName, false);
+        }
+    }
+    
+    #endregion
 }
 
 </script>

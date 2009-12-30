@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.7.X EditableRootList" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X EditableRootList" %>
 
 <%@ Register Name="EditableRootList" Template="Internal\EditableRootList.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="EditableRootListDataAccess" Template="Internal\EditableRootList.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
@@ -19,40 +19,40 @@
 <script runat="template">
 
 Public Overrides Sub Generate()
-	RegisterReferences()
+    RegisterReferences()
 
-	For Each entity As Entity In Entities
+    For Each entity As Entity In Entities
     
-		'EditableRootList
-		Dim editableRootList As EditableRootList = Me.Create(Of EditableRootList)()
-		Me.CopyPropertiesTo(editableRootList)
-		editableRootList.SourceTable = entity.Table
-		editableRootList.BusinessClassName = String.Format("{0}List", editableRootList.BusinessClassName)
+        'EditableRootList
+        Dim editableRootList As EditableRootList = Me.Create(Of EditableRootList)()
+        Me.CopyPropertiesTo(editableRootList)
+        editableRootList.SourceTable = entity.Table
+        editableRootList.BusinessClassName = String.Format("{0}List", editableRootList.BusinessClassName)
 
-		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", editableRootList.BusinessClassName))
-		If Not System.IO.File.Exists(parentFileName) Then
-			editableRootList.RenderToFile(parentFileName, False)
-		End If
+        Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", editableRootList.BusinessClassName))
+        If Not System.IO.File.Exists(parentFileName) Then
+            editableRootList.RenderToFile(parentFileName, False)
+        End If
 
-		'EditableRootList.Generated
-		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", editableRootList.BusinessClassName))
+        'EditableRootList.Generated
+        Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", editableRootList.BusinessClassName))
 
-		Dim editableRootListGenerated As EditableRootListGenerated = Me.Create(Of EditableRootListGenerated)()
-		Me.CopyPropertiesTo(editableRootListGenerated)
-		editableRootListGenerated.SourceTable = entity.Table
-		editableRootListGenerated.BusinessClassName = String.Format("{0}List", editableRootListGenerated.BusinessClassName)
+        Dim editableRootListGenerated As EditableRootListGenerated = Me.Create(Of EditableRootListGenerated)()
+        Me.CopyPropertiesTo(editableRootListGenerated)
+        editableRootListGenerated.SourceTable = entity.Table
+        editableRootListGenerated.BusinessClassName = String.Format("{0}List", editableRootListGenerated.BusinessClassName)
 
-		editableRootListGenerated.RenderToFile(fileName, parentFileName, True)
+        editableRootListGenerated.RenderToFile(fileName, parentFileName, True)
 
-		'EditableRootList.DataAccess
-		fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", editableRootList.BusinessClassName))
+        'EditableRootList.DataAccess
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", editableRootList.BusinessClassName))
 
-		Dim editableRootListDataAccess As EditableRootListDataAccess = Me.Create(Of EditableRootListDataAccess)()
-		Me.CopyPropertiesTo(editableRootListDataAccess)
-		editableRootListDataAccess.SourceTable = entity.Table
-		editableRootListDataAccess.BusinessClassName = String.Format("{0}List", editableRootListDataAccess.BusinessClassName)
-		editableRootListDataAccess.RenderToFile(fileName, parentFileName, True)
-	Next
+        Dim editableRootListDataAccess As EditableRootListDataAccess = Me.Create(Of EditableRootListDataAccess)()
+        Me.CopyPropertiesTo(editableRootListDataAccess)
+        editableRootListDataAccess.SourceTable = entity.Table
+        editableRootListDataAccess.BusinessClassName = String.Format("{0}List", editableRootListDataAccess.BusinessClassName)
+        editableRootListDataAccess.RenderToFile(fileName, parentFileName, True)
+    Next
 End Sub
 
 </script>

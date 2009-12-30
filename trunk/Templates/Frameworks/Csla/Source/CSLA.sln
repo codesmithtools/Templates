@@ -37,12 +37,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessLayer", "BusinessLa
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccessLayer", "DataAccessLayer", "{C2E439BE-629B-4069-9A36-A61F1D793E94}"
-	ProjectSection(SolutionItems) = preProject
-		..\CSharp\DataAccessLayer\DataAccessLayer.cst = ..\CSharp\DataAccessLayer\DataAccessLayer.cst
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{670B086B-ECFC-4769-85FC-FA19DC00E5B9}"
 	ProjectSection(SolutionItems) = preProject
+		..\CSharp\BusinessLayer\Internal\ADOHelper.cst = ..\CSharp\BusinessLayer\Internal\ADOHelper.cst
 		..\CSharp\BusinessLayer\Internal\CommandObject.cst = ..\CSharp\BusinessLayer\Internal\CommandObject.cst
 		..\CSharp\BusinessLayer\Internal\CommandObject.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\CommandObject.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\CommandObject.Generated.cst = ..\CSharp\BusinessLayer\Internal\CommandObject.Generated.cst
@@ -50,39 +48,50 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{67
 		..\CSharp\BusinessLayer\Internal\Criteria.Generated.cst = ..\CSharp\BusinessLayer\Internal\Criteria.Generated.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRoot.cst = ..\CSharp\BusinessLayer\Internal\DynamicRoot.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRoot.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\DynamicRoot.DataAccess.cst
+		..\CSharp\BusinessLayer\Internal\DynamicRoot.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\DynamicRoot.DataAccess.ParameterizedSQL.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRoot.Generated.cst = ..\CSharp\BusinessLayer\Internal\DynamicRoot.Generated.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRootList.cst = ..\CSharp\BusinessLayer\Internal\DynamicRootList.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRootList.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\DynamicRootList.DataAccess.cst
+		..\CSharp\BusinessLayer\Internal\DynamicRootList.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\DynamicRootList.DataAccess.ParameterizedSQL.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRootList.Generated.cst = ..\CSharp\BusinessLayer\Internal\DynamicRootList.Generated.cst
 		..\CSharp\BusinessLayer\Internal\EditableChild.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.cst
 		..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.cst
+		..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.ParameterizedSQL.cst
 		..\CSharp\BusinessLayer\Internal\EditableChild.Generated.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.Generated.cst
 		..\CSharp\BusinessLayer\Internal\EditableChildList.cst = ..\CSharp\BusinessLayer\Internal\EditableChildList.cst
 		..\CSharp\BusinessLayer\Internal\EditableChildList.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\EditableChildList.DataAccess.cst
+		..\CSharp\BusinessLayer\Internal\EditableChildList.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\EditableChildList.DataAccess.ParameterizedSQL.cst
 		..\CSharp\BusinessLayer\Internal\EditableChildList.Generated.cst = ..\CSharp\BusinessLayer\Internal\EditableChildList.Generated.cst
 		..\CSharp\BusinessLayer\Internal\EditableRoot.cst = ..\CSharp\BusinessLayer\Internal\EditableRoot.cst
 		..\CSharp\BusinessLayer\Internal\EditableRoot.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\EditableRoot.DataAccess.cst
+		..\CSharp\BusinessLayer\Internal\EditableRoot.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\EditableRoot.DataAccess.ParameterizedSQL.cst
 		..\CSharp\BusinessLayer\Internal\EditableRoot.Generated.cst = ..\CSharp\BusinessLayer\Internal\EditableRoot.Generated.cst
 		..\CSharp\BusinessLayer\Internal\EditableRootList.cst = ..\CSharp\BusinessLayer\Internal\EditableRootList.cst
 		..\CSharp\BusinessLayer\Internal\EditableRootList.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\EditableRootList.DataAccess.cst
+		..\CSharp\BusinessLayer\Internal\EditableRootList.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\EditableRootList.DataAccess.ParameterizedSQL.cst
 		..\CSharp\BusinessLayer\Internal\EditableRootList.Generated.cst = ..\CSharp\BusinessLayer\Internal\EditableRootList.Generated.cst
 		..\CSharp\BusinessLayer\Internal\NameValueList.cst = ..\CSharp\BusinessLayer\Internal\NameValueList.cst
 		..\CSharp\BusinessLayer\Internal\NameValueList.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\NameValueList.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\NameValueList.Generated.cst = ..\CSharp\BusinessLayer\Internal\NameValueList.Generated.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChild.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChild.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChild.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChild.DataAccess.cst
+		..\CSharp\BusinessLayer\Internal\ReadOnlyChild.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChild.DataAccess.ParameterizedSQL.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChild.Generated.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChild.Generated.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.cst
+		..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.ParameterizedSQL.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.Generated.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.Generated.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyList.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyList.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyList.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyList.DataAccess.cst
+		..\CSharp\BusinessLayer\Internal\ReadOnlyList.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyList.DataAccess.ParameterizedSQL.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyList.Generated.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyList.Generated.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.cst
+		..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.ParameterizedSQL.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.Generated.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.Generated.cst
 		..\CSharp\BusinessLayer\Internal\SwitchableObject.cst = ..\CSharp\BusinessLayer\Internal\SwitchableObject.cst
 		..\CSharp\BusinessLayer\Internal\SwitchableObject.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\SwitchableObject.DataAccess.cst
+		..\CSharp\BusinessLayer\Internal\SwitchableObject.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\SwitchableObject.DataAccess.ParameterizedSQL.cst
 		..\CSharp\BusinessLayer\Internal\SwitchableObject.Generated.cst = ..\CSharp\BusinessLayer\Internal\SwitchableObject.Generated.cst
 	EndProjectSection
 EndProject

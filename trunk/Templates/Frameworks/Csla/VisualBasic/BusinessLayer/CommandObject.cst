@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.7.X CommandObject" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X CommandObject" %>
 
 <%@ Register Name="CommandObject" Template="Internal\CommandObject.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="CommandObjectDataAccess" Template="Internal\CommandObject.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
@@ -19,37 +19,37 @@
 <script runat="template">
 
 Public Overrides Sub Generate()
-	RegisterReferences()
+    RegisterReferences()
 
-	For Each entity As Entity In Entities
-		'CommandObject
-		Dim commandObject As CommandObject = Me.Create(Of CommandObject)()
-		Me.CopyPropertiesTo(commandObject)
-		commandObject.SourceTable = entity.Table
+    For Each entity As Entity In Entities
+        'CommandObject
+        Dim commandObject As CommandObject = Me.Create(Of CommandObject)()
+        Me.CopyPropertiesTo(commandObject)
+        commandObject.SourceTable = entity.Table
 
-		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Command\{0}.vb", commandObject.BusinessClassName))
-		If Not System.IO.File.Exists(parentFileName) Then
-			commandObject.RenderToFile(parentFileName, False)
-		End If
+        Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Command\{0}.vb", commandObject.BusinessClassName))
+        If Not System.IO.File.Exists(parentFileName) Then
+            commandObject.RenderToFile(parentFileName, False)
+        End If
 
-		'CommandObject.Generated
-		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Command\{0}.Generated.vb", commandObject.BusinessClassName))
+        'CommandObject.Generated
+        Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Command\{0}.Generated.vb", commandObject.BusinessClassName))
 
-		Dim commandObjectGenerated As CommandObjectGenerated = Me.Create(Of CommandObjectGenerated)()
-		Me.CopyPropertiesTo(commandObjectGenerated)
-		commandObjectGenerated.SourceTable = entity.Table
+        Dim commandObjectGenerated As CommandObjectGenerated = Me.Create(Of CommandObjectGenerated)()
+        Me.CopyPropertiesTo(commandObjectGenerated)
+        commandObjectGenerated.SourceTable = entity.Table
 
-		commandObjectGenerated.RenderToFile(fileName, parentFileName, True)
+        commandObjectGenerated.RenderToFile(fileName, parentFileName, True)
 
-		'CommandObject.DataAccess
-		fileName = System.IO.Path.Combine(Location, String.Format("Command\{0}.DataAccess.vb", commandObject.BusinessClassName))
+        'CommandObject.DataAccess
+        fileName = System.IO.Path.Combine(Location, String.Format("Command\{0}.DataAccess.vb", commandObject.BusinessClassName))
 
-		Dim commandObjectDataAccess As CommandObjectDataAccess = Me.Create(Of CommandObjectDataAccess)()
-		Me.CopyPropertiesTo(commandObjectDataAccess)
-		commandObjectDataAccess.SourceTable = entity.Table
+        Dim commandObjectDataAccess As CommandObjectDataAccess = Me.Create(Of CommandObjectDataAccess)()
+        Me.CopyPropertiesTo(commandObjectDataAccess)
+        commandObjectDataAccess.SourceTable = entity.Table
 
-		commandObjectDataAccess.RenderToFile(fileName, parentFileName, True)
-	Next
+        commandObjectDataAccess.RenderToFile(fileName, parentFileName, True)
+    Next
 End Sub
 
 </script>

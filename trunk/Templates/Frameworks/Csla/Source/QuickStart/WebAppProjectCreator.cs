@@ -68,8 +68,8 @@ namespace QuickStart
         {
             QuickStartHelper.FindAndReplace(Path.Combine(directoryPath, "web.config"), @"<connectionStrings/>",
                 @"<connectionStrings>
-					<add name=""" + ProjectBuilder.SourceDatabase.Name + @"ConnectionString"" connectionString=""" + ProjectBuilder.SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
-				</connectionStrings>");
+                    <add name=""" + ProjectBuilder.SourceDatabase.Name + @"ConnectionString"" connectionString=""" + ProjectBuilder.SourceDatabase.ConnectionString + @""" providerName=""System.Data.SqlClient""/>
+                </connectionStrings>");
         }
 
         private void AddReferences(PathHelper projectPath)
