@@ -671,7 +671,24 @@ routing.</p>
 </ul>
 <h2>History</h2>
 <ul>
-    <li>Release 3.1<ul>
+    <li>Release 4.0<ul>
+		<li>Added Future Query support</li>
+		<li>Added cache provider support</li>
+		<li>Added query extensions for ComparisonOperator and 
+		ContainmentOperator</li>
+		<li>Fix bugs with ExecuteQuery as a batch</li>
+		<li>Update VB templates to match C#</li>
+		<li>refactor RuleManager to lazy load shared rules</li>
+		<li>refactor namespaces in CodeSmith.Data.Linq</li>
+		<li>add support for user defined functions</li>
+		<li>refactor query extensions with overload to take an IEnumerable&lt;T&gt;</li>
+		<li>bug fixes posted on
+		<a href="http://code.google.com/p/codesmith/issues/list?can=1&amp;q=framework:PLINQO+status:fixed+label:plinqo-4.0&amp;sort=-id&amp;colspec=ID+Type+Status+Stars+Priority+Framework+Owner+Summary&amp;cells=tiles">
+		google code</a></li>
+		<li>other misc bug fixes</li>
+	</ul>
+    </li>
+	<li>Release 3.1<ul>
         <li>Added query result caching.</li>
         <li>Added a new AlwaysAuditAttribute to make it possible to always audit a property 
             even if it hasn&#39;t changed.</li>
