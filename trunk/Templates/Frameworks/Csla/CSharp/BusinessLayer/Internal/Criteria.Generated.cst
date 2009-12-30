@@ -100,6 +100,24 @@ namespace <%= BusinessProjectName %>
 
         #endregion
         
+        #region Overrides
+        
+        public override string ToString()
+        {
+            if (_bag.Count == 0)
+                return "No criterion was specified";
+
+            var result = string.Empty;
+            foreach (KeyValuePair<string, object> key in _bag)
+            {
+                result += string.Format("[{0}] = '{1}' AND ", key.Key, key.Value);
+            }
+
+            return result.Remove(result.Length - 5, 5);
+        }
+
+        #endregion
+        
         #region Private Methods
         
         private T GetValue<T>(string name)

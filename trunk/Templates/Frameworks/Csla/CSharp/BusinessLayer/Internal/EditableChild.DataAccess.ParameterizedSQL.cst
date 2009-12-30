@@ -55,9 +55,9 @@ namespace <%= BusinessProjectName %>
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
-                        {
                             Fetch(reader);
-                        }
+                        else
+                            throw new Exception(string.Format("The record was not found in '<%= Entity.Table.Name %>' using the following criteria: {0}.", criteria));
                     }
                 }
             }
