@@ -13,7 +13,7 @@ using System;
 namespace PetShop.Core.Data
 {
     /// <summary>
-    /// The <see cref="System.Data.Linq.DataContext"/> class for the Petshop database.
+    /// The <see cref="System.Data.Linq.DataContext"/> class for the PetShop database.
     /// </summary>
     public partial class PetShopDataContext 
         : System.Data.Linq.DataContext, System.Data.Services.IUpdatable

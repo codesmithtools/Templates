@@ -18,8 +18,8 @@ namespace PetShop.Core.Data
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
     [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
-    [System.Data.Services.Common.DataServiceKey("CartID")]
-    [System.Diagnostics.DebuggerDisplay("CartID: {CartID}")]
+    [System.Data.Services.Common.DataServiceKey("CartId")]
+    [System.Diagnostics.DebuggerDisplay("CartId: {CartId}")]
     public partial class Cart
         : LinqEntityBase, ICloneable
     {
@@ -269,25 +269,25 @@ namespace PetShop.Core.Data
             }
         }
 
-        private int _cartID = default(int);
+        private int _cartId = default(int);
 
         /// <summary>
-        /// Gets the CartID column value.
+        /// Gets the CartId column value.
         /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "CartID", Storage = "_cartID", DbType = "int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false)]
+        [System.Data.Linq.Mapping.Column(Name = "CartId", Storage = "_cartId", DbType = "int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false)]
         [System.Runtime.Serialization.DataMember(Order = 10)]
-        public int CartID
+        public int CartId
         {
-            get { return _cartID; }
+            get { return _cartId; }
             set
             {
-                if (_cartID != value)
+                if (_cartId != value)
                 {
-                    OnCartIDChanging(value);
-                    SendPropertyChanging("CartID");
-                    _cartID = value;
-                    SendPropertyChanged("CartID");
-                    OnCartIDChanged();
+                    OnCartIdChanging(value);
+                    SendPropertyChanging("CartId");
+                    _cartId = value;
+                    SendPropertyChanged("CartId");
+                    OnCartIdChanged();
                 }
             }
         }
@@ -388,11 +388,11 @@ namespace PetShop.Core.Data
         partial void OnQuantityChanging(int value);
         /// <summary>Called after <see cref="Quantity"/> has Changed.</summary>
         partial void OnQuantityChanged();
-        /// <summary>Called when <see cref="CartID"/> is changing.</summary>
+        /// <summary>Called when <see cref="CartId"/> is changing.</summary>
         /// <param name="value">The new value.</param>
-        partial void OnCartIDChanging(int value);
-        /// <summary>Called after <see cref="CartID"/> has Changed.</summary>
-        partial void OnCartIDChanged();
+        partial void OnCartIdChanging(int value);
+        /// <summary>Called after <see cref="CartId"/> has Changed.</summary>
+        partial void OnCartIdChanged();
         /// <summary>Called when <see cref="Profile"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnProfileChanging(Profile value);

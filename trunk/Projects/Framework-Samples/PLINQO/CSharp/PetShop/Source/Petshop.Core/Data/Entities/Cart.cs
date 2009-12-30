@@ -46,7 +46,7 @@ namespace PetShop.Core.Data
 
             public int Quantity { get; set; }
 
-            public int CartID { get; set; }
+            public int CartId { get; set; }
 
             public Profile Profile { get; set; }
 

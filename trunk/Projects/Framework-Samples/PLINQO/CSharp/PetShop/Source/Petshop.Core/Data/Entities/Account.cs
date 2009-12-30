@@ -55,9 +55,7 @@ namespace PetShop.Core.Data
             [DataType(System.ComponentModel.DataAnnotations.DataType.PhoneNumber)]
             public string Phone { get; set; }
 
-            public int AccountID { get; set; }
-
-            public int Number { get; set; }
+            public int AccountId { get; set; }
 
             public Profile Profile { get; set; }
 

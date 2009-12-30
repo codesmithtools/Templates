@@ -22,13 +22,13 @@ namespace PetShop.Core.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static PetShop.Core.Data.Cart ByKey(this IQueryable<PetShop.Core.Data.Cart> queryable, int cartID)
+        public static PetShop.Core.Data.Cart ByKey(this IQueryable<PetShop.Core.Data.Cart> queryable, int cartId)
         {
             var entity = queryable as System.Data.Linq.Table<PetShop.Core.Data.Cart>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((PetShop.Core.Data.PetShopDataContext)entity.Context, cartID);
+                return Query.ByKey.Invoke((PetShop.Core.Data.PetShopDataContext)entity.Context, cartId);
             
-            return queryable.FirstOrDefault(c => c.CartID == cartID);
+            return queryable.FirstOrDefault(c => c.CartId == cartId);
         }
 
         /// <summary>
@@ -36,9 +36,9 @@ namespace PetShop.Core.Data
         /// </summary>
         /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         /// <returns>The number of rows deleted from the database.</returns>
-        public static int Delete(this System.Data.Linq.Table<PetShop.Core.Data.Cart> table, int cartID)
+        public static int Delete(this System.Data.Linq.Table<PetShop.Core.Data.Cart> table, int cartId)
         {
-            return table.Delete(c => c.CartID == cartID);
+            return table.Delete(c => c.CartId == cartId);
         }
         
         /// <summary>
@@ -122,8 +122,8 @@ namespace PetShop.Core.Data
 
             internal static readonly Func<PetShop.Core.Data.PetShopDataContext, int, PetShop.Core.Data.Cart> ByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PetShop.Core.Data.PetShopDataContext db, int cartID) => 
-                        db.Cart.FirstOrDefault(c => c.CartID == cartID));
+                    (PetShop.Core.Data.PetShopDataContext db, int cartId) => 
+                        db.Cart.FirstOrDefault(c => c.CartId == cartId));
 
         }
         #endregion

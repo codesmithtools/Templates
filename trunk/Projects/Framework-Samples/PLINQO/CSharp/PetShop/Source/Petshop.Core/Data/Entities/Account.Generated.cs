@@ -18,8 +18,8 @@ namespace PetShop.Core.Data
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
     [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
-    [System.Data.Services.Common.DataServiceKey("AccountID")]
-    [System.Diagnostics.DebuggerDisplay("AccountID: {AccountID}")]
+    [System.Data.Services.Common.DataServiceKey("AccountId")]
+    [System.Diagnostics.DebuggerDisplay("AccountId: {AccountId}")]
     public partial class Account
         : LinqEntityBase, ICloneable
     {
@@ -320,48 +320,25 @@ namespace PetShop.Core.Data
             }
         }
 
-        private int _accountID = default(int);
+        private int _accountId = default(int);
 
         /// <summary>
-        /// Gets the AccountID column value.
+        /// Gets the AccountId column value.
         /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "AccountID", Storage = "_accountID", DbType = "int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false)]
+        [System.Data.Linq.Mapping.Column(Name = "AccountId", Storage = "_accountId", DbType = "int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false)]
         [System.Runtime.Serialization.DataMember(Order = 12)]
-        public int AccountID
+        public int AccountId
         {
-            get { return _accountID; }
+            get { return _accountId; }
             set
             {
-                if (_accountID != value)
+                if (_accountId != value)
                 {
-                    OnAccountIDChanging(value);
-                    SendPropertyChanging("AccountID");
-                    _accountID = value;
-                    SendPropertyChanged("AccountID");
-                    OnAccountIDChanged();
-                }
-            }
-        }
-
-        private Nullable<int> _number;
-
-        /// <summary>
-        /// Gets or sets the Number column value.
-        /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "Number", Storage = "_number", DbType = "int")]
-        [System.Runtime.Serialization.DataMember(Order = 13)]
-        public Nullable<int> Number
-        {
-            get { return _number; }
-            set
-            {
-                if (_number != value)
-                {
-                    OnNumberChanging(value);
-                    SendPropertyChanging("Number");
-                    _number = value;
-                    SendPropertyChanged("Number");
-                    OnNumberChanged();
+                    OnAccountIdChanging(value);
+                    SendPropertyChanging("AccountId");
+                    _accountId = value;
+                    SendPropertyChanged("AccountId");
+                    OnAccountIdChanged();
                 }
             }
         }
@@ -375,7 +352,7 @@ namespace PetShop.Core.Data
         /// Gets or sets the Profile association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Profile_Account", Storage = "_profile", ThisKey = "UniqueID", OtherKey = "UniqueID", IsUnique = true, IsForeignKey = true, DeleteRule = "CASCADE")]
-        [System.Runtime.Serialization.DataMember(Order = 14, EmitDefaultValue = false)]
+        [System.Runtime.Serialization.DataMember(Order = 13, EmitDefaultValue = false)]
         public Profile Profile
         {
             get { return (serializing && !_profile.HasLoadedOrAssignedValue) ? null : _profile.Entity; }
@@ -472,16 +449,11 @@ namespace PetShop.Core.Data
         partial void OnPhoneChanging(string value);
         /// <summary>Called after <see cref="Phone"/> has Changed.</summary>
         partial void OnPhoneChanged();
-        /// <summary>Called when <see cref="AccountID"/> is changing.</summary>
+        /// <summary>Called when <see cref="AccountId"/> is changing.</summary>
         /// <param name="value">The new value.</param>
-        partial void OnAccountIDChanging(int value);
-        /// <summary>Called after <see cref="AccountID"/> has Changed.</summary>
-        partial void OnAccountIDChanged();
-        /// <summary>Called when <see cref="Number"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnNumberChanging(Nullable<int> value);
-        /// <summary>Called after <see cref="Number"/> has Changed.</summary>
-        partial void OnNumberChanged();
+        partial void OnAccountIdChanging(int value);
+        /// <summary>Called after <see cref="AccountId"/> has Changed.</summary>
+        partial void OnAccountIdChanged();
         /// <summary>Called when <see cref="Profile"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         partial void OnProfileChanging(Profile value);
