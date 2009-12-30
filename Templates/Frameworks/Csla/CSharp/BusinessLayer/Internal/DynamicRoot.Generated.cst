@@ -46,7 +46,7 @@ namespace <%= BusinessProjectName %>
         internal <%= BusinessClassName %>(SafeDataReader reader)
         {
 <% if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
-            Fetch(reader);
+            Map(reader);
 <% } %>
         }
         

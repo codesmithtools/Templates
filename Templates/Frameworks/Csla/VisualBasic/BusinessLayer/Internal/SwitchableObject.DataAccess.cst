@@ -87,7 +87,7 @@ End If%>
     Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
         Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Fetch(criteria.StateBag)
             If reader.Read() Then
-                Fetch(reader)
+                Map(reader)
             End If
         End Using
     End Sub
@@ -192,7 +192,7 @@ Next %>
         If Not theCriteria Is Nothing Then
             Using reader As SafeDataReader = <%= DataClassName %>.Instance.<%= BusinessClassName %>Fetch(theCriteria.StateBag)
                 If reader.Read() Then
-                    Fetch(reader)
+                    Map(reader)
                 End If
             End Using
         End If
@@ -242,7 +242,7 @@ Next %>
     #End Region
 
 <% If (DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>
-    Private Sub Fetch(ByVal reader As SafeDataReader)
+    Private Sub Map(ByVal reader As SafeDataReader)
 <% If Entity.HasRowVersionMember Then %>
         _timestamp = GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
         
