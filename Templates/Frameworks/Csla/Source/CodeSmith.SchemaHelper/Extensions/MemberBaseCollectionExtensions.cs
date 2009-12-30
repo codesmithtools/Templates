@@ -146,18 +146,18 @@ namespace CodeSmith.SchemaHelper
                         if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
                             cast = member.IsNullable
                                        ? string.Format("IIf({0}.HasValue, DirectCast({0}.Value.Date, DateTime), System.DBNull.Value))", member.VariableName)
-                                       : string.Format("DirectCast({0}.Date, DateTime))", member.VariableName);
+                                       : string.Format("DirectCast({0}.Date, DateTime))", member.PropertyName);
                         else 
                             cast = member.IsNullable
-                                       ? string.Format("(DateTime?){0});", member.VariableName)
-                                       : string.Format("(DateTime){0});", member.VariableName);
+                                       ? string.Format("(DateTime?){0});", member.PropertyName)
+                                       : string.Format("(DateTime){0});", member.PropertyName);
                     }
                     else
                         cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB
-                                   ? string.Format("{0})", member.VariableName)
-                                   : string.Format("{0});", member.VariableName);
+                                   ? string.Format("{0})", member.PropertyName)
+                                   : string.Format("{0});", member.PropertyName);
 
-                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
+                    commandParameters += string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
                 }
             }
 
@@ -328,20 +328,20 @@ namespace CodeSmith.SchemaHelper
 
             foreach (MemberBase member in members)
             {
-                string cast = string.Empty;
+                string cast;
                 if (member.SystemType.Contains("SmartDate"))
                 {
                     if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                        cast = member.IsNullable ? string.Format("IIf({0}.HasValue, DirectCast({0}.Value.Date, DateTime), System.DBNull.Value))", member.VariableName)
-                                                 : string.Format("DirectCast({0}.Date, DateTime))", member.VariableName);
+                        cast = member.IsNullable ? string.Format("IIf({0}.HasValue, DirectCast({0}.Value.Date, DateTime), System.DBNull.Value))", member.PropertyName)
+                                                 : string.Format("DirectCast({0}.Date, DateTime))", member.PropertyName);
                     else
-                        cast = member.IsNullable ? string.Format("(DateTime?){0});", member.VariableName)
-                                                 : string.Format("(DateTime){0});", member.VariableName);
+                        cast = member.IsNullable ? string.Format("(DateTime?){0});", member.PropertyName)
+                                                 : string.Format("(DateTime){0});", member.PropertyName);
                 }
                 else
-                    cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", member.VariableName) : string.Format("{0});", member.VariableName);
+                    cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", member.PropertyName) : string.Format("{0});", member.PropertyName);
 
-                commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
+                commandParameters += string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
             }
 
             return commandParameters.TrimStart(new[] { '\t', '\n' });

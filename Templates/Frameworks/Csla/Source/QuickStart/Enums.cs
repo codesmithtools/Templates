@@ -7,7 +7,9 @@ namespace QuickStart
     public enum DataAccessMethod : byte 
     {
         None = 0,
-        ParameterizedSQL = 1
+        ParameterizedSQL = 1,
+        ObjectFactoryNone = 10,
+        ObjectFactoryParameterizedSQL = 11
     }
 
     public enum ProjectTypeEnum : byte

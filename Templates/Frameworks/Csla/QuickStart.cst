@@ -3,7 +3,7 @@ Name: Quick Start
 Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
 --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="QuickStart.QuickStartCodeTemplate" Description="QuickStart for CSLA 3.7.X" CompilerVersion="v3.5" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="Text" Inherits="QuickStart.QuickStartCodeTemplate" Description="QuickStart for CSLA 3.8.X" CompilerVersion="v3.5" %>
 
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
 <%@ Register Name="Entities" Template="CSharp\BusinessLayer\Entities.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -29,7 +29,7 @@ The <%= SolutionName %> Solution has been created at <%= Location %>.
 
 public override void Generate()
 {
-	// Make sure Location is FullPath
+    // Make sure Location is FullPath
     Location = Path.GetFullPath(Location);
 
     // Check For Existing Project
@@ -47,39 +47,43 @@ public override void Generate()
     if (!Directory.Exists(Location))
         Directory.CreateDirectory(Location);
 
-	#region Render CSP's
-	
-	Entities entityCSP = this.Create<Entities>();
-	this.CopyPropertiesTo(entityCSP);
-	entityCSP.Location = Path.Combine(this.Location, this.BusinessProjectName);
-	entityCSP.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Entities.csp"));
-	
-	DataAccess dataAccess = this.Create<DataAccess>();
-	this.CopyPropertiesTo(dataAccess);
-	dataAccess.SourceTables = SourceDatabase.Tables;
-	dataAccess.Location = Path.Combine(this.Location, this.DataProjectName);
-	dataAccess.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\DataAccess.csp"));
+    #region Render CSP's
+    
+    Entities entityCSP = this.Create<Entities>();
+    this.CopyPropertiesTo(entityCSP);
+    entityCSP.Location = Path.Combine(this.Location, this.BusinessProjectName);
+    entityCSP.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Entities.csp"));
+    
+    DataAccess dataAccess = this.Create<DataAccess>();
+    this.CopyPropertiesTo(dataAccess);
+    dataAccess.SourceTables = SourceDatabase.Tables;
+    dataAccess.Location = Path.Combine(this.Location, this.DataProjectName);
+    dataAccess.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\DataAccess.csp"));
 
     Web web = this.Create<Web>();
-	this.CopyPropertiesTo(web);
-	web.Location = Path.Combine(this.Location, this.InterfaceProjectName);
-	web.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Web.csp"));
+    this.CopyPropertiesTo(web);
+    web.Location = Path.Combine(this.Location, this.InterfaceProjectName);
+    web.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Web.csp"));
 
-	#endregion
+    #endregion
 
     List<SolutionItem> solutionItems = new List<SolutionItem>();
     ProjectBuilderSettings pbs = CreateProjectBuilderSettings();
-
-    // Create Data Project
-    DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs);
-	dataProjectCreator.CspFileName = "DataAccess.csp";
-    SolutionItem dataProject = dataProjectCreator.CreateProject(this.DataProjectName);
-    solutionItems.Add(dataProject);
 	
-	// Create Business Project
+	// Only create the data project if object factory is used.
+	if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
+    {
+		// Create Data Project
+		DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs);
+		dataProjectCreator.CspFileName = "DataAccess.csp";
+		dataProjectCreator.ProjectReferences.Add(this.BusinessProjectName);
+		SolutionItem dataProject = dataProjectCreator.CreateProject(this.DataProjectName);
+		solutionItems.Add(dataProject);
+	}
+	    
+    // Create Business Project
     DataProjectCreator businessProjectCreator = new DataProjectCreator(pbs);
-	businessProjectCreator.CspFileName = "Entities.csp";
-    businessProjectCreator.ProjectReferences.Add(this.DataProjectName);
+    businessProjectCreator.CspFileName = "Entities.csp";
     SolutionItem businessProject = businessProjectCreator.CreateProject(this.BusinessProjectName);
     solutionItems.Add(businessProject);
 
@@ -93,9 +97,9 @@ public override void Generate()
     // Create UnitTests Project
     //if(IncludeTestProject)
     //{
-    //	UnitTestProjectCreator unitTestProjectCreator = new UnitTestProjectCreator(pbs);
-    //	SolutionItem unitTestsProject = unitTestProjectCreator.CreateProject(this.TestProjectName, dataProject);
-    //	solutionItems.Add(unitTestsProject);
+    //    UnitTestProjectCreator unitTestProjectCreator = new UnitTestProjectCreator(pbs);
+    //    SolutionItem unitTestsProject = unitTestProjectCreator.CreateProject(this.TestProjectName, dataProject);
+    //    solutionItems.Add(unitTestsProject);
     //}
 
     // Create Solution

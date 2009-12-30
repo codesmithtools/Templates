@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.7.X NameValueList" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X NameValueList" %>
 
 <%@ Register Name="NameValueList" Template="Internal\NameValueList.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="NameValueListDataAccess" Template="Internal\NameValueList.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
@@ -19,40 +19,40 @@
 
 Public Overrides Sub Generate()
 
-	RegisterReferences()
+    RegisterReferences()
 
-	For Each entity As Entity In Entities
-		'NameValueList
-		Dim nameValueList As NameValueList = Me.Create(Of NameValueList)()
-		Me.CopyPropertiesTo(nameValueList)
-		nameValueList.SourceTable = entity.Table
-		nameValueList.BusinessClassName = String.Format("{0}List", nameValueList.BusinessClassName)
+    For Each entity As Entity In Entities
+        'NameValueList
+        Dim nameValueList As NameValueList = Me.Create(Of NameValueList)()
+        Me.CopyPropertiesTo(nameValueList)
+        nameValueList.SourceTable = entity.Table
+        nameValueList.BusinessClassName = String.Format("{0}List", nameValueList.BusinessClassName)
 
-		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", nameValueList.BusinessClassName))
-		If Not System.IO.File.Exists(parentFileName) Then
-			nameValueList.RenderToFile(parentFileName, False)
-		End If
+        Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", nameValueList.BusinessClassName))
+        If Not System.IO.File.Exists(parentFileName) Then
+            nameValueList.RenderToFile(parentFileName, False)
+        End If
 
-		'NameValueList.Generated
-		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", nameValueList.BusinessClassName))
+        'NameValueList.Generated
+        Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", nameValueList.BusinessClassName))
 
-		Dim nameValueListGenerated As NameValueListGenerated = Me.Create(Of NameValueListGenerated)()
-		Me.CopyPropertiesTo(nameValueListGenerated)
-		nameValueListGenerated.SourceTable = entity.Table
-		nameValueListGenerated.BusinessClassName = String.Format("{0}List", nameValueListGenerated.BusinessClassName)
+        Dim nameValueListGenerated As NameValueListGenerated = Me.Create(Of NameValueListGenerated)()
+        Me.CopyPropertiesTo(nameValueListGenerated)
+        nameValueListGenerated.SourceTable = entity.Table
+        nameValueListGenerated.BusinessClassName = String.Format("{0}List", nameValueListGenerated.BusinessClassName)
 
-		nameValueListGenerated.RenderToFile(fileName, parentFileName, True)
+        nameValueListGenerated.RenderToFile(fileName, parentFileName, True)
 
-		'NameValueList.DataAccess
-		fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", nameValueList.BusinessClassName))
+        'NameValueList.DataAccess
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", nameValueList.BusinessClassName))
 
-		Dim nameValueListDataAccess As NameValueListDataAccess = Me.Create(Of NameValueListDataAccess)()
-		Me.CopyPropertiesTo(nameValueListDataAccess)
-		nameValueListDataAccess.SourceTable = entity.Table
-		nameValueListDataAccess.BusinessClassName = String.Format("{0}List", nameValueListDataAccess.BusinessClassName)
+        Dim nameValueListDataAccess As NameValueListDataAccess = Me.Create(Of NameValueListDataAccess)()
+        Me.CopyPropertiesTo(nameValueListDataAccess)
+        nameValueListDataAccess.SourceTable = entity.Table
+        nameValueListDataAccess.BusinessClassName = String.Format("{0}List", nameValueListDataAccess.BusinessClassName)
 
-		nameValueListDataAccess.RenderToFile(fileName, parentFileName, True)
-	Next
+        nameValueListDataAccess.RenderToFile(fileName, parentFileName, True)
+    Next
 End Sub
 
 </script>

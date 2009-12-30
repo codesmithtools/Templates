@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.7.X EditableChild" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X EditableChild" %>
 
 <%@ Register Name="EditableChild" Template="Internal\EditableChild.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="EditableChildDataAccess" Template="Internal\EditableChild.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
@@ -19,37 +19,37 @@
 <script runat="template">
 
 Public Overrides Sub Generate()
-	RegisterReferences()
+    RegisterReferences()
 
-	For Each entity As Entity In Entities
-		'EditableChild
-		Dim editableChild As EditableChild = Me.Create(Of EditableChild)()
-		Me.CopyPropertiesTo(editableChild)
-		editableChild.SourceTable = entity.Table
+    For Each entity As Entity In Entities
+        'EditableChild
+        Dim editableChild As EditableChild = Me.Create(Of EditableChild)()
+        Me.CopyPropertiesTo(editableChild)
+        editableChild.SourceTable = entity.Table
 
-		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", editableChild.BusinessClassName))
-		If Not System.IO.File.Exists(parentFileName) Then
-			editableChild.RenderToFile(parentFileName, False)
-		End If
+        Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", editableChild.BusinessClassName))
+        If Not System.IO.File.Exists(parentFileName) Then
+            editableChild.RenderToFile(parentFileName, False)
+        End If
 
-		'EditableChild.Generated
-		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", editableChild.BusinessClassName))
+        'EditableChild.Generated
+        Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", editableChild.BusinessClassName))
 
-		Dim editableChildGenerated As EditableChildGenerated = Me.Create(Of EditableChildGenerated)()
-		Me.CopyPropertiesTo(editableChildGenerated)
-		editableChildGenerated.SourceTable = entity.Table
+        Dim editableChildGenerated As EditableChildGenerated = Me.Create(Of EditableChildGenerated)()
+        Me.CopyPropertiesTo(editableChildGenerated)
+        editableChildGenerated.SourceTable = entity.Table
 
-		editableChildGenerated.RenderToFile(fileName, parentFileName, True)
+        editableChildGenerated.RenderToFile(fileName, parentFileName, True)
 
-		'EditableChild.DataAccess
-		fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", editableChild.BusinessClassName))
+        'EditableChild.DataAccess
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", editableChild.BusinessClassName))
 
-		Dim editableChildDataAccess As EditableChildDataAccess = Me.Create(Of EditableChildDataAccess)()
-		Me.CopyPropertiesTo(editableChildDataAccess)
-		editableChildDataAccess.SourceTable = entity.Table
+        Dim editableChildDataAccess As EditableChildDataAccess = Me.Create(Of EditableChildDataAccess)()
+        Me.CopyPropertiesTo(editableChildDataAccess)
+        editableChildDataAccess.SourceTable = entity.Table
 
-		editableChildDataAccess.RenderToFile(fileName, parentFileName, True)
-	Next
+        editableChildDataAccess.RenderToFile(fileName, parentFileName, True)
+    Next
 End Sub
 
 </script>

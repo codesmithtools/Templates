@@ -53,6 +53,7 @@ namespace QuickStart
         public virtual void RegisterReferences()
         {
             RegisterReference(Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\Csla.dll")));
+            RegisterReference("System.Configuration");
         }
 
         #endregion

@@ -24,24 +24,24 @@ Public Overrides Sub Generate()
     
     RegisterReferences()
 
-	Dim parentFileName As String = System.IO.Path.Combine(Me.Location, "Default.aspx")
+    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, "Default.aspx")
 
-	Dim sourceView As SourceViewTemplate = Me.Create(Of SourceViewTemplate)()
-	Me.CopyPropertiesTo(sourceView)
+    Dim sourceView As SourceViewTemplate = Me.Create(Of SourceViewTemplate)()
+    Me.CopyPropertiesTo(sourceView)
 
-	If Not System.IO.File.Exists(parentFileName) Then
-		sourceView.RenderToFile(parentFileName, False)
-	End If
+    If Not System.IO.File.Exists(parentFileName) Then
+        sourceView.RenderToFile(parentFileName, False)
+    End If
 
-	'CodeBehindTemplate
-	Dim fileName As String = System.IO.Path.Combine(Location, "Default.aspx.vb")
+    'CodeBehindTemplate
+    Dim fileName As String = System.IO.Path.Combine(Location, "Default.aspx.vb")
 
-	Dim codeBehind As CodeBehindTemplate = Me.Create(Of CodeBehindTemplate)()
-	Me.CopyPropertiesTo(codeBehind)
+    Dim codeBehind As CodeBehindTemplate = Me.Create(Of CodeBehindTemplate)()
+    Me.CopyPropertiesTo(codeBehind)
 
-	If Not System.IO.File.Exists(fileName) Then
-		codeBehind.RenderToFile(fileName, parentFileName, False)
-	End If
+    If Not System.IO.File.Exists(fileName) Then
+        codeBehind.RenderToFile(fileName, parentFileName, False)
+    End If
 
 End Sub
 

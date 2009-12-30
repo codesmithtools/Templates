@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.7.X CommandObject" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X CommandObject" %>
 
 <%@ Register Name="CommandObject" Template="Internal\CommandObject.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="CommandObjectDataAccess" Template="Internal\CommandObject.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
@@ -22,46 +22,46 @@ public override void Generate()
 {
     RegisterReferences();
     
-	foreach(Entity entity in Entities)
-	{
-		#region CommandObject
-		
-		CommandObject commandObject = this.Create<CommandObject>();
-		this.CopyPropertiesTo(commandObject);
-		commandObject.SourceTable = entity.Table;
-		
-		string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Command\\{0}.cs", commandObject.BusinessClassName));
-		if (!System.IO.File.Exists(parentFileName))
-		{
-			commandObject.RenderToFile(parentFileName, false);
-		}
-		
-		#region CommandObject.Generated
-		
-		string fileName = System.IO.Path.Combine(Location, string.Format("Command\\{0}.Generated.cs", commandObject.BusinessClassName));
-		
-		CommandObjectGenerated commandObjectGenerated = this.Create<CommandObjectGenerated>();
-		this.CopyPropertiesTo(commandObjectGenerated);
-		commandObjectGenerated.SourceTable = entity.Table;
-		
-		commandObjectGenerated.RenderToFile(fileName, parentFileName, true);
-		
-		#endregion
-		
-		#region CommandObject.DataAccess
-		
-		fileName = System.IO.Path.Combine(Location, string.Format("Command\\{0}.DataAccess.cs", commandObject.BusinessClassName));
-		
-		CommandObjectDataAccess commandObjectDataAccess = this.Create<CommandObjectDataAccess>();
-		this.CopyPropertiesTo(commandObjectDataAccess);
-		commandObjectDataAccess.SourceTable = entity.Table;
-		
-		commandObjectDataAccess.RenderToFile(fileName, parentFileName, true);
-		
-		#endregion
-		
-		#endregion
-	}
+    foreach(Entity entity in Entities)
+    {
+        #region CommandObject
+        
+        CommandObject commandObject = this.Create<CommandObject>();
+        this.CopyPropertiesTo(commandObject);
+        commandObject.SourceTable = entity.Table;
+        
+        string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Command\\{0}.cs", commandObject.BusinessClassName));
+        if (!System.IO.File.Exists(parentFileName))
+        {
+            commandObject.RenderToFile(parentFileName, false);
+        }
+        
+        #region CommandObject.Generated
+        
+        string fileName = System.IO.Path.Combine(Location, string.Format("Command\\{0}.Generated.cs", commandObject.BusinessClassName));
+        
+        CommandObjectGenerated commandObjectGenerated = this.Create<CommandObjectGenerated>();
+        this.CopyPropertiesTo(commandObjectGenerated);
+        commandObjectGenerated.SourceTable = entity.Table;
+        
+        commandObjectGenerated.RenderToFile(fileName, parentFileName, true);
+        
+        #endregion
+        
+        #region CommandObject.DataAccess
+        
+        fileName = System.IO.Path.Combine(Location, string.Format("Command\\{0}.DataAccess.cs", commandObject.BusinessClassName));
+        
+        CommandObjectDataAccess commandObjectDataAccess = this.Create<CommandObjectDataAccess>();
+        this.CopyPropertiesTo(commandObjectDataAccess);
+        commandObjectDataAccess.SourceTable = entity.Table;
+        
+        commandObjectDataAccess.RenderToFile(fileName, parentFileName, true);
+        
+        #endregion
+        
+        #endregion
+    }
 }
 
 </script>

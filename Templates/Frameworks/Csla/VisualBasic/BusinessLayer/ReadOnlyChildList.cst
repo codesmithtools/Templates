@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.7.X ReadOnlyChildList" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X ReadOnlyChildList" %>
 
 <%@ Register Name="ReadOnlyChildList" Template="Internal\ReadOnlyChildList.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="ReadOnlyChildListDataAccess" Template="Internal\ReadOnlyChildList.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
@@ -19,42 +19,42 @@
 <script runat="template">
 
 Public Overrides Sub Generate()
-	
+    
     RegisterReferences()
 
-	For Each entity As Entity In Entities
+    For Each entity As Entity In Entities
     
-		'ReadOnlyChildList
-		Dim readOnlyChildList As ReadOnlyChildList = Me.Create(Of ReadOnlyChildList)()
-		Me.CopyPropertiesTo(readOnlyChildList)
-		readOnlyChildList.SourceTable = entity.Table
-		readOnlyChildList.BusinessClassName = String.Format("{0}List", readOnlyChildList.BusinessClassName)
+        'ReadOnlyChildList
+        Dim readOnlyChildList As ReadOnlyChildList = Me.Create(Of ReadOnlyChildList)()
+        Me.CopyPropertiesTo(readOnlyChildList)
+        readOnlyChildList.SourceTable = entity.Table
+        readOnlyChildList.BusinessClassName = String.Format("{0}List", readOnlyChildList.BusinessClassName)
 
-		Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", readOnlyChildList.BusinessClassName))
-		If Not System.IO.File.Exists(parentFileName) Then
-			readOnlyChildList.RenderToFile(parentFileName, False)
-		End If
+        Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", readOnlyChildList.BusinessClassName))
+        If Not System.IO.File.Exists(parentFileName) Then
+            readOnlyChildList.RenderToFile(parentFileName, False)
+        End If
 
-		'ReadOnlyChildList.Generated
-		Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", readOnlyChildList.BusinessClassName))
+        'ReadOnlyChildList.Generated
+        Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", readOnlyChildList.BusinessClassName))
 
-		Dim readOnlyChildListGenerated As ReadOnlyChildListGenerated = Me.Create(Of ReadOnlyChildListGenerated)()
-		Me.CopyPropertiesTo(readOnlyChildListGenerated)
-		readOnlyChildListGenerated.SourceTable = entity.Table
-		readOnlyChildListGenerated.BusinessClassName = String.Format("{0}List", readOnlyChildListGenerated.BusinessClassName)
+        Dim readOnlyChildListGenerated As ReadOnlyChildListGenerated = Me.Create(Of ReadOnlyChildListGenerated)()
+        Me.CopyPropertiesTo(readOnlyChildListGenerated)
+        readOnlyChildListGenerated.SourceTable = entity.Table
+        readOnlyChildListGenerated.BusinessClassName = String.Format("{0}List", readOnlyChildListGenerated.BusinessClassName)
 
-		readOnlyChildListGenerated.RenderToFile(fileName, parentFileName, True)
+        readOnlyChildListGenerated.RenderToFile(fileName, parentFileName, True)
 
-		'ReadOnlyChildList.DataAccess
-		fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", readOnlyChildList.BusinessClassName))
+        'ReadOnlyChildList.DataAccess
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", readOnlyChildList.BusinessClassName))
 
-		Dim readOnlyChildListDataAccess As ReadOnlyChildListDataAccess = Me.Create(Of ReadOnlyChildListDataAccess)()
-		Me.CopyPropertiesTo(readOnlyChildListDataAccess)
-		readOnlyChildListDataAccess.SourceTable = entity.Table
-		readOnlyChildListDataAccess.BusinessClassName = String.Format("{0}List", readOnlyChildListDataAccess.BusinessClassName)
+        Dim readOnlyChildListDataAccess As ReadOnlyChildListDataAccess = Me.Create(Of ReadOnlyChildListDataAccess)()
+        Me.CopyPropertiesTo(readOnlyChildListDataAccess)
+        readOnlyChildListDataAccess.SourceTable = entity.Table
+        readOnlyChildListDataAccess.BusinessClassName = String.Format("{0}List", readOnlyChildListDataAccess.BusinessClassName)
 
-		readOnlyChildListDataAccess.RenderToFile(fileName, parentFileName, True)
-	Next
+        readOnlyChildListDataAccess.RenderToFile(fileName, parentFileName, True)
+    Next
 End Sub
 
 </script>
