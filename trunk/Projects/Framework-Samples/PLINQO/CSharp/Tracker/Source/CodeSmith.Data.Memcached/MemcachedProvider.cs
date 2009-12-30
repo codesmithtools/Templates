@@ -41,8 +41,6 @@ namespace CodeSmith.Data.Memcached
 
         public override T Get<T>(string key)
         {
-            var serializer = new System.Runtime.Serialization.DataContractSerializer(typeof(T));
-
             object data = Client.Get(key);
             return data == null ? default(T) : (T)data;
         }
