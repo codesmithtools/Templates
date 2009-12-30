@@ -42,30 +42,16 @@ namespace <%= BusinessProjectName %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= Entity.ClassName %>Fetch"))
+                using (SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    using (SqlCommand command = new SqlCommand(commandText, connection))
-                    {
-                        command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
-                        command.Transaction = transaction;
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
 
-                        try
+                    using(var reader = new SafeDataReader(command.ExecuteReader()))
+                    {
+                        while(reader.Read())
                         {
-                            using(var reader = new SafeDataReader(command.ExecuteReader()))
-                            {
-                                while(reader.Read())
-                                {
-                                    // TODO: You will need to update the GetInt32 and GetString values.
-                                    this.Add(new NameValuePair(reader.GetInt32("<%= Entity.PrimaryKey.KeyMember.Name %>"), reader.GetString("<%= Entity.Members[0].Name %>")));
-                                }
-                            }
-                            
-                            transaction.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            transaction.Rollback("<%= Entity.ClassName %>Fetch");
-                            throw;
+                            // TODO: You will need to update the GetInt32 and GetString values.
+                            this.Add(new NameValuePair(reader.GetInt32("<%= Entity.PrimaryKey.KeyMember.Name %>"), reader.GetString("<%= Entity.Members[0].Name %>")));
                         }
                     }
                 }
