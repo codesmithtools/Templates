@@ -167,9 +167,9 @@ namespace CodeSmith.Data.Linq
         /// </summary>
         /// <typeparam name="T">The type of the data in the data source.</typeparam>
         /// <param name="query">The query to be cleared.</param>
-        public static void ClearCache<T>(this IQueryable<T> query)
+        public static bool ClearCache<T>(this IQueryable<T> query)
         {
-            ClearCache(query, null);
+            return ClearCache(query, null, null);
         }
 
         /// <summary>
@@ -177,12 +177,29 @@ namespace CodeSmith.Data.Linq
         /// </summary>
         /// <typeparam name="T">The type of the data in the data source.</typeparam>
         /// <param name="query">The query to be cleared.</param>
+        /// <param name="group">The name of the cache group.</param>
+        public static bool ClearCache<T>(this IQueryable<T> query, string group)
+        {
+            return ClearCache(query, group, null);
+        }
+
+        /// <summary>
+        /// Clears the cache of a given query.
+        /// </summary>
+        /// <typeparam name="T">The type of the data in the data source.</typeparam>
+        /// <param name="query">The query to be cleared.</param>
+        /// <param name="group">The cache group.</param>
         /// <param name="provider">The name of the cache provider.</param>
-        public static void ClearCache<T>(this IQueryable<T> query, string provider)
+        public static bool ClearCache<T>(this IQueryable<T> query, string group, string provider)
         {
             ICacheProvider cacheProvider = CacheManager.GetProvider(provider);
             string key = query.GetHashKey();
-            cacheProvider.Remove(key);
+
+            // A group was specified, use it.
+            if (!String.IsNullOrEmpty(group))
+                return cacheProvider.Remove(key, group);
+
+            return cacheProvider.Remove(key);
         }
 
         #endregion
@@ -199,7 +216,7 @@ namespace CodeSmith.Data.Linq
             if (result.Count == 0 && !settings.CacheEmptyResult)
                 return;
 
-            //detach for cache
+            // detach for cache
             foreach (var item in result)
             {
                 var entity = item as ILinqEntity;
@@ -207,11 +224,8 @@ namespace CodeSmith.Data.Linq
                     entity.Detach();
             }
 
-            // store as byte array to make it save to store in all providers
-            byte[] buffer = result.ToBinary();
-
             ICacheProvider cacheProvider = CacheManager.GetProvider(settings.Provider);
-            cacheProvider.Set(key, buffer, settings);
+            cacheProvider.Set(key, result, settings);
 #if DEBUG
             var groupKey = cacheProvider.GetGroupKey(key, settings.Group);
             Debug.WriteLine("Cache Insert for key " + groupKey);
@@ -224,10 +238,8 @@ namespace CodeSmith.Data.Linq
                 settings = CacheManager.GetProfile();
 
             ICacheProvider cacheProvider = CacheManager.GetProvider(settings.Provider);
-            byte[] buffer = cacheProvider.Get<byte[]>(key, settings.Group);
+            var collection = cacheProvider.Get<ICollection<T>>(key, settings.Group);
 
-            // stored as byte array to make safe for all providers
-            var collection = buffer.ToCollection<T>();
 #if DEBUG
             var groupKey = cacheProvider.GetGroupKey(key, settings.Group);
             if (collection != null)
@@ -289,54 +301,5 @@ namespace CodeSmith.Data.Linq
         }
 
         #endregion
-
-        /// <summary>
-        /// Converts the collection to a binary array by serializing.
-        /// </summary>
-        /// <typeparam name="T">The type of items in the collection.</typeparam>
-        /// <param name="collection">The collection to convert.</param>
-        /// <returns>A serialized binary array of the collection.</returns>
-        public static byte[] ToBinary<T>(this ICollection<T> collection)
-        {
-            if (collection == null)
-                return null;
-
-            var serializer = new DataContractSerializer(typeof(ICollection<T>));
-
-            byte[] buffer;
-            using (var ms = new MemoryStream())
-            using (var writer = XmlDictionaryWriter.CreateBinaryWriter(ms))
-            {
-                serializer.WriteObject(writer, collection);
-                writer.Flush();
-                buffer = ms.ToArray();
-            }
-
-            return buffer;
-        }
-
-        /// <summary>
-        /// Converts the byte array to a collection by deserializing.
-        /// </summary>
-        /// <typeparam name="T">The type of items in the collection.</typeparam>
-        /// <param name="buffer">The byte array to convert.</param>
-        /// <returns>An instance of <see cref="T:System.Collections.Generic.ICollection`1"/> deserialized from the byte array.</returns>
-        public static ICollection<T> ToCollection<T>(this byte[] buffer)
-        {
-            if (buffer == null || buffer.Length == 0)
-                return null;
-
-            var serializer = new DataContractSerializer(typeof(ICollection<T>));
-            object value;
-
-            using (var ms = new MemoryStream(buffer))
-            using (var reader = XmlDictionaryReader.CreateBinaryReader(ms, XmlDictionaryReaderQuotas.Max))
-            {
-                ms.Position = 0;
-                value = serializer.ReadObject(reader);
-            }
-
-            return value as ICollection<T>;
-        }
     }
 }
