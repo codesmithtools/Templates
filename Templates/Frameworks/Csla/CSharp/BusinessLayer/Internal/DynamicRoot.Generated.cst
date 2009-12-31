@@ -38,18 +38,20 @@ namespace <%= BusinessProjectName %>
 
         private <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
-        
+
         private <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         {
         }
-        
+
+<% if(DataAccessImplementation == DataAccessMethod.None || DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
         internal <%= BusinessClassName %>(SafeDataReader reader)
         {
-<% if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
+<%if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
             Map(reader);
 <% } %>
         }
-        
+
+<% } %>
         #endregion
         
         #region Validation Rules

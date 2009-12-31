@@ -2,6 +2,7 @@
 
 <%@ Register Name="SwitchableObject" Template="Internal\SwitchableObject.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="SwitchableObjectDataAccess" Template="Internal\SwitchableObject.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="SwitchableObjectDataAccessParameterized" Template="Internal\SwitchableObject.DataAccess.ParameterizedSQL.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="SwitchableObjectGenerated" Template="Internal\SwitchableObject.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
@@ -45,12 +46,19 @@ Public Overrides Sub Generate()
 
         'SwitchableObject.DataAccess
         fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", switchableObject.BusinessClassName))
-
-        Dim switchableObjectDataAccess As SwitchableObjectDataAccess = Me.Create(Of SwitchableObjectDataAccess)()
-        Me.CopyPropertiesTo(switchableObjectDataAccess)
-        switchableObjectDataAccess.SourceTable = entity.Table
-
-        switchableObjectDataAccess.RenderToFile(fileName, parentFileName, True)
+        If DataAccessImplementation = DataAccessMethod.None Then
+            Dim switchableObjectDataAccess As SwitchableObjectDataAccess = Me.Create(Of SwitchableObjectDataAccess)()
+            Me.CopyPropertiesTo(switchableObjectDataAccess)
+            switchableObjectDataAccess.SourceTable = entity.Table
+    
+            switchableObjectDataAccess.RenderToFile(fileName, parentFileName, True)
+        ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+            Dim switchableObjectDataAccessParameterized As SwitchableObjectDataAccessParameterized = Me.Create(Of SwitchableObjectDataAccessParameterized)()
+            Me.CopyPropertiesTo(switchableObjectDataAccessParameterized)
+            switchableObjectDataAccessParameterized.SourceTable = entity.Table
+    
+            switchableObjectDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
+        End If
     Next
 End Sub
 </script>

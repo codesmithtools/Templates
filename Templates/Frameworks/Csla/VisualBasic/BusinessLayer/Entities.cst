@@ -26,6 +26,8 @@
 <%@ Register Name="ReadOnlyRootTemplate" Template="ReadOnlyRoot.cst" %>
 <%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
 
+<%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
+
 <% Generate() %>
 
 <script runat="template">
@@ -144,6 +146,16 @@ Public Overrides Sub Generate()
         switchableObjectTemplate.Generate()
     End If
     
+    'ADOHelperTemplate
+    If DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+        Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
+        Me.CopyPropertiesTo(ADOHelper)
+    
+        Dim fileName As String = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
+        If Not System.IO.File.Exists(fileName) Then
+            ADOHelper.RenderToFile(fileName, False)
+        End If
+    End If
 End Sub
 
 </script>

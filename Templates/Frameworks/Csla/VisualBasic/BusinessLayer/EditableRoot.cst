@@ -2,6 +2,7 @@
 
 <%@ Register Name="EditableRoot" Template="Internal\EditableRoot.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="EditableRootDataAccess" Template="Internal\EditableRoot.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="EditableRootDataAccessParameterized" Template="Internal\EditableRoot.DataAccess.ParameterizedSQL.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="EditableRootGenerated" Template="Internal\EditableRoot.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
@@ -45,11 +46,20 @@ Public Overrides Sub Generate()
 
         'EditableRoot.DataAccess
         fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", editableRoot.BusinessClassName))
+        If DataAccessImplementation = DataAccessMethod.None Then
+            Dim editableRootDataAccess As EditableRootDataAccess = Me.Create(Of EditableRootDataAccess)()
+            Me.CopyPropertiesTo(editableRootDataAccess)
+            editableRootDataAccess.SourceTable = entity.Table
+        
+            editableRootDataAccess.RenderToFile(fileName, parentFileName, True)
+        ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+            Dim editableRootDataAccessParameterized As EditableRootDataAccessParameterized = Me.Create(Of EditableRootDataAccessParameterized)()
+            Me.CopyPropertiesTo(editableRootDataAccessParameterized)
+            editableRootDataAccessParameterized.SourceTable = entity.Table
+        
+            editableRootDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
+        End If
 
-        Dim editableRootDataAccess As EditableRootDataAccess = Me.Create(Of EditableRootDataAccess)()
-        Me.CopyPropertiesTo(editableRootDataAccess)
-        editableRootDataAccess.SourceTable = entity.Table
-        editableRootDataAccess.RenderToFile(fileName, parentFileName, True)
     Next
 
 End Sub

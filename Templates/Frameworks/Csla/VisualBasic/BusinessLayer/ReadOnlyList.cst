@@ -2,6 +2,7 @@
 
 <%@ Register Name="ReadOnlyList" Template="Internal\ReadOnlyList.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="ReadOnlyListDataAccess" Template="Internal\ReadOnlyList.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="ReadOnlyListDataAccessParameterized" Template="Internal\ReadOnlyList.DataAccess.ParameterizedSQL.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="ReadOnlyListGenerated" Template="Internal\ReadOnlyList.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
@@ -47,13 +48,21 @@ Public Overrides Sub Generate()
 
         'ReadOnlyList.DataAccess
         fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", readOnlyList.BusinessClassName))
-
-        Dim readOnlyListDataAccess As ReadOnlyListDataAccess = Me.Create(Of ReadOnlyListDataAccess)()
-        Me.CopyPropertiesTo(readOnlyListDataAccess)
-        readOnlyListDataAccess.SourceTable = entity.Table
-        readOnlyListDataAccess.BusinessClassName = String.Format("{0}List", readOnlyListDataAccess.BusinessClassName)
-
-        readOnlyListDataAccess.RenderToFile(fileName, parentFileName, True)
+        If DataAccessImplementation = DataAccessMethod.None Then
+            Dim readOnlyListDataAccess As ReadOnlyListDataAccess = Me.Create(Of ReadOnlyListDataAccess)()
+            Me.CopyPropertiesTo(readOnlyListDataAccess)
+            readOnlyListDataAccess.SourceTable = entity.Table
+            readOnlyListDataAccess.BusinessClassName = String.Format("{0}List", readOnlyListDataAccess.BusinessClassName)
+    
+            readOnlyListDataAccess.RenderToFile(fileName, parentFileName, True)
+        ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+            Dim readOnlyListDataAccessParameterized As ReadOnlyListDataAccessParameterized = Me.Create(Of ReadOnlyListDataAccessParameterized)()
+            Me.CopyPropertiesTo(readOnlyListDataAccessParameterized)
+            readOnlyListDataAccessParameterized.SourceTable = entity.Table
+            readOnlyListDataAccessParameterized.BusinessClassName = String.Format("{0}List", readOnlyListDataAccessParameterized.BusinessClassName)
+    
+            readOnlyListDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
+        End If
     Next
 End Sub
 

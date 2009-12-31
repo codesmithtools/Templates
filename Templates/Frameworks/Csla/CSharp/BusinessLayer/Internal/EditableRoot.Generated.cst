@@ -48,7 +48,7 @@ namespace <%= BusinessProjectName %>
             Map(reader);
 <% } %>
         }
-        
+
 <% } %>
         #endregion
         
