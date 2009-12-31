@@ -43,6 +43,7 @@ namespace CodeSmith.Data.Caching
             CacheEmptyResult = true;
             Priority = CacheItemPriority.Normal;
             Mode = CacheExpirationMode.None;
+            Group = CacheManager.DefaultGroup;
         }
 
         /// <summary>
@@ -164,16 +165,19 @@ namespace CodeSmith.Data.Caching
         {
             var clone = new CacheSettings
             {
-                AbsoluteExpiration = AbsoluteExpiration,
-                CacheDependency = CacheDependency,
-                CacheEmptyResult = CacheEmptyResult,
-                CacheItemRemovedCallback = CacheItemRemovedCallback,
-                Duration = Duration,
                 Mode = Mode,
+                Duration = Duration,
+                AbsoluteExpiration = AbsoluteExpiration,
                 Priority = Priority,
+                CacheEmptyResult = CacheEmptyResult,
+                CacheDependency = CacheDependency,
+                CacheItemRemovedCallback = CacheItemRemovedCallback,
                 Provider = Provider,
                 Group = Group
             };
+
+            if (String.IsNullOrEmpty(Group))
+                clone.Group = CacheManager.DefaultGroup;
 
             return clone;
         }
@@ -189,7 +193,35 @@ namespace CodeSmith.Data.Caching
             return Clone();
         }
 
-        
+        /// <summary>
+        /// Creates a new CacheSettings object using the duration specified.
+        /// </summary>
+        /// <param name="duration">The duration to store the data in the cache.</param>
+        /// <returns>A new CacheSettings object with the specified duration.</returns>
+        public static CacheSettings FromDuration(int duration)
+        {
+            return new CacheSettings(duration);
+        }
+
+        /// <summary>
+        /// Creates a new CacheSettings object using the duration specified.
+        /// </summary>
+        /// <param name="expiration">The date to expire the data in the cache.</param>
+        /// <returns>A new CacheSettings object with the specified duration.</returns>
+        public static CacheSettings FromAbsolute(DateTime expiration)
+        {
+            return new CacheSettings(expiration);
+        }
+
+        /// <summary>
+        /// Creates a new CacheSettings object using the named profile.
+        /// </summary>
+        /// <param name="profile">The cache profile name.</param>
+        /// <returns>A new CacheSettings object with settings from the named profile.</returns>
+        public static CacheSettings FromProfile(string profile)
+        {
+            return CacheManager.GetProfile(profile);
+        }
     }
 
     public static class CacheSettingsExtensions

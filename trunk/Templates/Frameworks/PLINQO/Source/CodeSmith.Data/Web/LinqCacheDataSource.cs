@@ -2,8 +2,8 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
-using System.Web.Caching;
 using System.Web.UI.WebControls;
+using CodeSmith.Data.Caching;
 
 namespace CodeSmith.Data.Web
 {
@@ -41,9 +41,22 @@ namespace CodeSmith.Data.Web
         }
 
         /// <summary>
+        /// Gets or sets the name of the cache profile to use. This will override the Duration property.
+        /// </summary>
+        [Category("CacheProfile")]
+        [Description("The name of the cache profile to use.")]
+        public string CacheProfile
+        {
+            get
+            {
+                return ViewState["CacheProfile"] as string;
+            }
+            set { ViewState["CacheProfile"] = value; }
+        }
+
+        /// <summary>
         /// Gets or sets the time, in seconds, that the query is cached.
         /// </summary>
-        [DefaultValue(30)]
         [Category("Cache")]
         [Description("The time, in seconds, that the query is cached.")]
         public int Duration
@@ -52,9 +65,9 @@ namespace CodeSmith.Data.Web
             {
                 object result = ViewState["Duration"];
                 if (result != null)
-                    return (int) result;
+                    return (int)result;
 
-                return 30;
+                return 0;
             }
             set { ViewState["Duration"] = value; }
         }
@@ -64,9 +77,8 @@ namespace CodeSmith.Data.Web
             if (!EnableCache)
                 return;
 
-            var provider = Caching.CacheManager.GetProvider();
             string key = GetKey();
-            object source = provider.Get<object>(key);
+            object source = CacheManager.Get<object>(key);
             if (source == null)
                 return;
 
@@ -82,14 +94,18 @@ namespace CodeSmith.Data.Web
             if (e.Exception != null || e.Result == null)
                 return;
 
-            var provider = Caching.CacheManager.GetProvider();
             string key = GetKey();
-            object source = provider.Get<object>(key);
+            object source = CacheManager.Get<object>(key);
             if (source != null)
                 return;
 
             Debug.WriteLine("Cache Insert: " + key);
-            provider.Set(key, source);
+            if (!String.IsNullOrEmpty(CacheProfile))
+                CacheManager.Set(key, source, CacheManager.GetProfile(CacheProfile));
+            else if (Duration > 0)
+                CacheManager.Set(key, source, CacheSettings.FromDuration(Duration));
+            else
+                CacheManager.Set(key, source);
         }
 
         private string GetKey()
