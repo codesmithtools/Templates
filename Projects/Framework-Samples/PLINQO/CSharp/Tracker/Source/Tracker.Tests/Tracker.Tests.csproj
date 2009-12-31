@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CacheTests\CacheManagerTests.cs" />
     <Compile Include="CacheTests\ClearCacheTests.cs" />
     <Compile Include="CacheTests\FromCacheFirstOrDefaultTests.cs" />
     <Compile Include="CacheTests\FromCacheGroupTests.cs" />

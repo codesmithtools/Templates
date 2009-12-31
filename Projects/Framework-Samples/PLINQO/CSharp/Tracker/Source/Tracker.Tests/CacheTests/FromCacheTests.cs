@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using CodeSmith.Data.Caching;
 using CodeSmith.Data.Linq;
 using NUnit.Framework;
@@ -15,65 +14,72 @@ namespace Tracker.Tests.CacheTests
         [Test]
         public void SimpleTest()
         {
-            var db = new TrackerDataContext { Log = Console.Out };
+            using (var db = new TrackerDataContext())
+            {
+                var query = db.Role.Where(r => r.Name == "Duck Roll");
+                var roles = query.FromCache().ToList();
 
-            var query = db.Role.Where(r => r.Name == "Test Role");
-            var roles = query.FromCache().ToList();
+                var key = query.GetHashKey();
 
-            Assert.IsInstanceOf(typeof(HttpCacheProvider), CacheManager.GetProvider());
+                var cache = CacheManager.Get<ICollection<Role>>(key);
+                Assert.IsNotNull(cache);
+                Assert.AreEqual(roles.Count, cache.Count);
+            }
+        }
 
-            var key = CacheManager.GetProvider().GetGroupKey(query.GetHashKey(), null);
+        [Test]
+        public void LongProfile()
+        {
+            using (var db = new TrackerDataContext())
+            {
+                var query = db.Role.Where(r => r.Name == "Duck Roll");
+                var key = query.GetHashKey();
+                var roles = query.FromCache("Long").ToList();
 
-            var cache = CacheManager.GetProvider().Get<byte[]>(key);
-            Assert.IsNotNull(cache);
-
-            var list = cache.ToCollection<Role>();
-            Assert.IsNotNull(list);
-            Assert.AreEqual(roles.Count, list.Count);
+                var cache = CacheManager.Get<ICollection<Role>>(key);
+                Assert.IsNotNull(cache);
+                Assert.AreEqual(roles.Count, cache.Count);
+            }
         }
 
         [Test]
         public void DurationTest()
         {
-            var db = new TrackerDataContext { Log = Console.Out };
+            using (var db = new TrackerDataContext())
+            {
+                var query = db.Role.Where(r => r.Name == "Test Role");
+                var key = query.GetHashKey();
+                var roles = query.FromCache(CacheSettings.FromDuration(2)).ToList();
 
-            var query = db.Role.Where(r => r.Name == "Test Role");
-            var key = query.GetHashKey();
-            var roles = query.FromCache(2).ToList();
+                var cache = CacheManager.Get<ICollection<Role>>(key);
+                Assert.IsNotNull(cache);
+                Assert.AreEqual(roles.Count, cache.Count);
 
-            var cache = CacheManager.GetProvider().Get<byte[]>(key);
-            Assert.IsNotNull(cache);
+                System.Threading.Thread.Sleep(3000);
 
-            var list = cache.ToCollection<Role>();
-            Assert.IsNotNull(list);
-            Assert.AreEqual(roles.Count, list.Count);
-
-            System.Threading.Thread.Sleep(3000);
-
-            cache = CacheManager.GetProvider().Get<byte[]>(key);
-            Assert.IsNull(cache);
+                cache = CacheManager.Get<ICollection<Role>>(key);
+                Assert.IsNull(cache);
+            }
         }
 
         [Test]
         public void AbsoluteExpirationTest()
         {
-            var db = new TrackerDataContext { Log = Console.Out };
+            using (var db = new TrackerDataContext())
+            {
+                var query = db.Role.Where(r => r.Name == "Test Role");
+                var key = query.GetHashKey();
+                var roles = query.FromCache(new CacheSettings(DateTime.Now.AddSeconds(2))).ToList();
 
-            var query = db.Role.Where(r => r.Name == "Test Role");
-            var key = query.GetHashKey();
-            var roles = query.FromCache(2).ToList();
+                var cache = CacheManager.Get<ICollection<Role>>(key);
+                Assert.IsNotNull(cache);
+                Assert.AreEqual(roles.Count, cache.Count);
 
-            var cache = CacheManager.GetProvider().Get<byte[]>(key);
-            Assert.IsNotNull(cache);
+                System.Threading.Thread.Sleep(3000);
 
-            var list = cache.ToCollection<Role>();
-            Assert.IsNotNull(list);
-            Assert.AreEqual(roles.Count, list.Count);
-
-            System.Threading.Thread.Sleep(3000);
-
-            cache = CacheManager.GetProvider().Get<byte[]>(key);
-            Assert.IsNull(cache);
+                cache = CacheManager.Get<ICollection<Role>>(key);
+                Assert.IsNull(cache);
+            }
         }
 
         [Test]
@@ -87,34 +93,25 @@ namespace Tracker.Tests.CacheTests
                 .FromCache(new CacheSettings(TimeSpan.FromSeconds(2)))
                 .ToList();
 
-            var cache = HttpRuntime.Cache.Get(key) as byte[];
+            var cache = CacheManager.Get<ICollection<Role>>(key);
             Assert.IsNotNull(cache);
-
-            var list = cache.ToCollection<Role>();
-            Assert.IsNotNull(list);
-            Assert.AreEqual(roles.Count, list.Count);
+            Assert.AreEqual(roles.Count, cache.Count);
 
             System.Threading.Thread.Sleep(1500);
 
-            cache = HttpRuntime.Cache.Get(key) as byte[];
+            cache = CacheManager.Get<ICollection<Role>>(key);
             Assert.IsNotNull(cache);
-
-            list = cache.ToCollection<Role>();
-            Assert.IsNotNull(list);
-            Assert.AreEqual(roles.Count, list.Count);
+            Assert.AreEqual(roles.Count, cache.Count);
 
             System.Threading.Thread.Sleep(1500);
 
-            cache = HttpRuntime.Cache.Get(key) as byte[];
+            cache = CacheManager.Get<ICollection<Role>>(key);
             Assert.IsNotNull(cache);
-
-            list = cache.ToCollection<Role>();
-            Assert.IsNotNull(list);
-            Assert.AreEqual(roles.Count, list.Count);
+            Assert.AreEqual(roles.Count, cache.Count);
 
             System.Threading.Thread.Sleep(2500);
 
-            cache = HttpRuntime.Cache.Get(key) as byte[];
+            cache = CacheManager.Get<ICollection<Role>>(key);
             Assert.IsNull(cache);
 
         }
@@ -122,20 +119,19 @@ namespace Tracker.Tests.CacheTests
         [Test]
         public void NoCacheEmptyResultTest()
         {
-            var db = new TrackerDataContext { Log = Console.Out };
+            using (var db = new TrackerDataContext())
+            {
+                var guid = System.Guid.NewGuid().ToString();
+                var query = db.Role.Where(r => r.Name == guid);
+                var key = query.GetHashKey();
+                var roles = query.FromCache(new CacheSettings(2) { CacheEmptyResult = false });
 
-            var guid = System.Guid.NewGuid().ToString();
-            var query = db.Role.Where(r => r.Name == guid);
-            var key = query.GetHashKey();
-            var roles = query
-                .FromCache(new CacheSettings(2) { CacheEmptyResult = false })
-                .ToList(); ;
+                Assert.IsNotNull(roles);
+                Assert.AreEqual(0, roles.Count());
 
-            Assert.IsNotNull(roles);
-            Assert.AreEqual(0, roles.Count());
-
-            var cache = HttpRuntime.Cache.Get(key);
-            Assert.IsNull(cache);
+                var cache = CacheManager.Get<ICollection<Role>>(key);
+                Assert.IsNull(cache);
+            }
         }
 
         [Test]
@@ -152,12 +148,9 @@ namespace Tracker.Tests.CacheTests
 
             Assert.IsNotNull(roles);
 
-            var cache = HttpRuntime.Cache.Get(key) as byte[];
+            var cache = CacheManager.Get<ICollection<Role>>(key);
             Assert.IsNotNull(cache);
-
-            var list = cache.ToCollection<Role>();
-            Assert.IsNotNull(list);
-            Assert.AreEqual(0, list.Count);
+            Assert.AreEqual(0, cache.Count);
 
         }
     }

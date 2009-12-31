@@ -1,8 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Xml;
+using System.Collections;
 using CodeSmith.Data.Caching;
+using CodeSmith.Data.Linq;
 using Enyim.Caching;
 using Enyim.Caching.Memcached;
 
@@ -15,36 +14,38 @@ namespace CodeSmith.Data.Memcached
             if (data == null)
                 return;
 
+            object cacheData = data;
+
+            if (!data.GetType().IsPrimitive)
+                cacheData = data.ToBinary();
+
             string groupKey = GetGroupKey(key, settings.Group);
 
             switch (settings.Mode)
             {
                 case CacheExpirationMode.Duration:
-                    Client.Store(StoreMode.Set, groupKey, data, DateTime.UtcNow.Add(settings.Duration));
+                    Client.Store(StoreMode.Set, groupKey, cacheData, DateTime.UtcNow.Add(settings.Duration));
                     break;
                 case CacheExpirationMode.Sliding:
-                    Client.Store(StoreMode.Set, groupKey, data, settings.Duration);
-                    break;
+                    throw new NotSupportedException("Memcached does not support sliding expirations.");
                 case CacheExpirationMode.Absolute:
-                    Client.Store(StoreMode.Set, groupKey, data, settings.AbsoluteExpiration);
+                    Client.Store(StoreMode.Set, groupKey, cacheData, settings.AbsoluteExpiration);
                     break;
                 default:
-                    Client.Store(StoreMode.Set, groupKey, data);
+                    Client.Store(StoreMode.Set, groupKey, cacheData);
                     break;
             }
         }
 
-        public override void Remove(string key)
+        public override bool Remove(string key, string group)
         {
-            Client.Remove(key);
+            return Client.Remove(GetGroupKey(key, group));
         }
 
-        public override T Get<T>(string key)
+        public override object Get(string key, string group)
         {
-            object data = Client.Get(key);
-            return data == null ? default(T) : (T)data;
+            return Client.Get(GetGroupKey(key, group));
         }
-
 
         private static MemcachedClient Client
         {
