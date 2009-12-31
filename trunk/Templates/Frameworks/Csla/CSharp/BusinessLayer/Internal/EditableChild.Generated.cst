@@ -34,18 +34,20 @@ namespace <%= BusinessProjectName %>
     {
         #region Contructor(s)
 
-    private <%= BusinessClassName %>()
-    {
-        MarkAsChild();
+        private <%= BusinessClassName %>()
+        {
+            MarkAsChild();
         }
         
+<% if(DataAccessImplementation == DataAccessMethod.None || DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
         internal <%= BusinessClassName %>(SafeDataReader reader)
         {
-<% if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
+<%if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
             Map(reader);
 <% } %>
         }
-        
+
+<% } %>
         #endregion
         
         #region Validation Rules

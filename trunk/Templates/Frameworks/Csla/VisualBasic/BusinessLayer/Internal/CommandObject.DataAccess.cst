@@ -24,18 +24,12 @@ Imports System
 Imports Csla
 Imports Csla.Data
 
-Imports <%= DataProjectName %>
-
 Public Partial Class <%= BusinessClassName %>
-    
-    #Region "Data Access"
-            
+
     Protected Overrides Sub DataPortal_Execute()
         ' TODO: implement code to run on server
         ' and set result value(s)
         _result = True
     End Sub
-    
-    #End Region
 
 End Class

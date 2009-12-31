@@ -2,6 +2,7 @@
 
 <%@ Register Name="DynamicRootList" Template="Internal\DynamicRootList.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="DynamicRootListDataAccess" Template="Internal\DynamicRootList.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="DynamicRootListDataAccessParameterized" Template="Internal\DynamicRootList.DataAccess.ParameterizedSQL.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="DynamicRootListGenerated" Template="Internal\DynamicRootList.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
@@ -46,13 +47,21 @@ Public Overrides Sub Generate()
 
         'DynamicRootList.DataAccess
         fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", dynamicRootList.BusinessClassName))
-
-        Dim dynamicRootListDataAccess As DynamicRootListDataAccess = Me.Create(Of DynamicRootListDataAccess)()
-        Me.CopyPropertiesTo(dynamicRootListDataAccess)
-        dynamicRootListDataAccess.SourceTable = entity.Table
-        dynamicRootListDataAccess.BusinessClassName = String.Format("{0}List", dynamicRootListDataAccess.BusinessClassName)
-
-        dynamicRootListDataAccess.RenderToFile(fileName, parentFileName, True)
+        If DataAccessImplementation = DataAccessMethod.None Then
+            Dim dynamicRootListDataAccess As DynamicRootListDataAccess = Me.Create(Of DynamicRootListDataAccess)()
+            Me.CopyPropertiesTo(dynamicRootListDataAccess)
+            dynamicRootListDataAccess.SourceTable = entity.Table
+            dynamicRootListDataAccess.BusinessClassName = String.Format("{0}List", dynamicRootListDataAccess.BusinessClassName)
+    
+            dynamicRootListDataAccess.RenderToFile(fileName, parentFileName, True)
+        ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+            Dim dynamicRootListDataAccessParameterized As DynamicRootListDataAccessParameterized = Me.Create(Of DynamicRootListDataAccessParameterized)()
+            Me.CopyPropertiesTo(dynamicRootListDataAccessParameterized)
+            dynamicRootListDataAccessParameterized.SourceTable = entity.Table
+            dynamicRootListDataAccessParameterized.BusinessClassName = String.Format("{0}List", dynamicRootListDataAccessParameterized.BusinessClassName)
+    
+            dynamicRootListDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
+        End If
     Next
 End Sub
 

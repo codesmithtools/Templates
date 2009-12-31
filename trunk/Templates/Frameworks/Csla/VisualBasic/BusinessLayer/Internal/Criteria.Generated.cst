@@ -39,7 +39,7 @@ Public Partial Class <%= BusinessClassName %>
     Private ReadOnly _bag As New Dictionary(Of String, Object)()
     
     #End Region
-    
+
     #Region "Constructors"
 
     Public Sub New()
@@ -63,7 +63,7 @@ Public Partial Class <%= BusinessClassName %>
 <% End If %>
     
     #End Region
-    
+
     #Region "Public Properties"
     
     #Region "Read-Write"
@@ -110,7 +110,24 @@ Public Partial Class <%= BusinessClassName %>
     #End Region
 
     #End Region
-    
+
+    #region "Overrides"
+
+    Public Overrides Function ToString() As String
+        If _bag.Count = 0 Then
+            Return "No criterion was specified"
+        End If
+
+        Dim result As String = String.Empty
+        For Each key As KeyValuePair(Of String, Object) In _bag
+            result += String.Format("[{0}] = '{1}' AND ", key.Key, key.Value)
+        Next
+
+        Return result.Remove(result.Length - 5, 5)
+    End Function
+
+    #End Region
+
     #Region "Private Methods"
     
     Private Function GetValue(Of T)(name As String) As T

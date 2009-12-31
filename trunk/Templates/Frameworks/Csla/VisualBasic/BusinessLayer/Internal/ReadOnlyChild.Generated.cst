@@ -35,15 +35,17 @@ Public Partial Class <%= BusinessClassName %>
     #Region "Contructor(s)"
 
     Private Sub New()
-    MarkAsChild()
+        MarkAsChild()
     End Sub
-    
+
+<% If(DataAccessImplementation = DataAccessMethod.None Or DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>
     Friend Sub New(Byval reader As SafeDataReader)
-<% If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>
+<%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>
         Map(reader)
 <% End If %>
     End Sub
-    
+
+<% End If %>
     #End Region
 
     #Region "Business Methods"

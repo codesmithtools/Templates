@@ -131,7 +131,7 @@ Namespace Base
     <% If (entity.Table.ForeignKeyColumns.Count = 0) Then %>
             Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoKeysOrRowVersion.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = @p_<%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
     <% Else %>
-            Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoRowVersion.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = @p_<%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
+            Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoKeysOrRowVersion.BuildSetStatements(entity.MembersForeignKey) %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = @p_<%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
     <% End If %>
             Using command As New SqlCommand(commandText, GetSqlConnection())
     <% If (entity.Table.ForeignKeyColumns.Count = 0) Then %>
@@ -160,12 +160,12 @@ Namespace Base
         
         Public Overridable Function <%= entity.ClassName %>Fetch(ByVal bag As Dictionary(Of String, Object)) As SafeDataReader
     <% If (entity.Table.ForeignKeyColumns.Count = 0) Then%>
-            Dim commandText As String = String.Format("SELECT <%= entity.MembersPrimaryKeyUnion.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(bag))
+            Dim commandText As String = String.Format("SELECT <%= entity.MembersPrimaryKeyUnion.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
     <% Else %>
-            Dim commandText As String = String.Format("SELECT <%= entity.MembersIncludePrimaryKeyForeignKey.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(bag))
+            Dim commandText As String = String.Format("SELECT <%= entity.MembersIncludePrimaryKeyForeignKey.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
     <% End If%>
             Using command As New SqlCommand(commandText, GetSqlConnection())
-                command.Parameters.AddRange(SqlParameters(bag))
+                command.Parameters.AddRange(SqlParameters(criteria.StateBag))
                 
                 Return new SafeDataReader(command.ExecuteReader())
             End Using
@@ -176,9 +176,9 @@ Namespace Base
         #Region "Delete"
         
         Public Overridable Function <%= entity.ClassName %>Delete(ByVal bag As Dictionary(Of String, Object)) As SafeDataReader
-            Dim commandText As String = String.Format("DELETE FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(bag))
+            Dim commandText As String = String.Format("DELETE FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
             Using command As New SqlCommand(commandText, GetSqlConnection())
-                command.Parameters.AddRange(SqlParameters(bag))
+                command.Parameters.AddRange(SqlParameters(criteria.StateBag))
                 
                 Dim reader As New SafeDataReader(command.ExecuteReader())
     
