@@ -19,7 +19,8 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="System.IO" %>
 
-<%@ Property Name="UseDeferredDeletion" Type="System.Boolean" Default="False" Category="3. Business Project" Description="Changes how the Business Objects are deleted, defaults to immediate deletion" %>
+<%@ Property Name="IncludeInterfaceProject" Type="System.Boolean" Default="True" Category="5. Interface Project" Description="If true, the Interface Project will be included in the generated solution." %>
+<%@ Property Name="UseDeferredDeletion" Type="System.Boolean" Default="False" Category="3. Business Project" Description="Changes how the Business Objects are deleted, defaults to immediate deletion." %>
 
 <% Generate(); %>
 
@@ -54,33 +55,39 @@ public override void Generate()
     entityCSP.Location = Path.Combine(this.Location, this.BusinessProjectName);
     entityCSP.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Entities.csp"));
     
-    DataAccess dataAccess = this.Create<DataAccess>();
-    this.CopyPropertiesTo(dataAccess);
-    dataAccess.SourceTables = SourceDatabase.Tables;
-    dataAccess.Location = Path.Combine(this.Location, this.DataProjectName);
-    dataAccess.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\DataAccess.csp"));
-
-    Web web = this.Create<Web>();
-    this.CopyPropertiesTo(web);
-    web.Location = Path.Combine(this.Location, this.InterfaceProjectName);
-    web.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Web.csp"));
+    if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
+    {
+        DataAccess dataAccess = this.Create<DataAccess>();
+        this.CopyPropertiesTo(dataAccess);
+        dataAccess.SourceTables = SourceDatabase.Tables;
+        dataAccess.Location = Path.Combine(this.Location, this.DataProjectName);
+        dataAccess.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\DataAccess.csp"));
+    }
+    
+    if(IncludeInterfaceProject)
+    {
+        Web web = this.Create<Web>();
+        this.CopyPropertiesTo(web);
+        web.Location = Path.Combine(this.Location, this.InterfaceProjectName);
+        web.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Web.csp"));
+    }
 
     #endregion
 
     List<SolutionItem> solutionItems = new List<SolutionItem>();
     ProjectBuilderSettings pbs = CreateProjectBuilderSettings();
-	
-	// Only create the data project if object factory is used.
-	if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
+
+    // Only create the data project if object factory is used.
+    if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
     {
-		// Create Data Project
-		DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs);
-		dataProjectCreator.CspFileName = "DataAccess.csp";
-		dataProjectCreator.ProjectReferences.Add(this.BusinessProjectName);
-		SolutionItem dataProject = dataProjectCreator.CreateProject(this.DataProjectName);
-		solutionItems.Add(dataProject);
-	}
-	    
+        // Create Data Project
+        DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs);
+        dataProjectCreator.CspFileName = "DataAccess.csp";
+        dataProjectCreator.ProjectReferences.Add(this.BusinessProjectName);
+        SolutionItem dataProject = dataProjectCreator.CreateProject(this.DataProjectName);
+        solutionItems.Add(dataProject);
+    }
+        
     // Create Business Project
     DataProjectCreator businessProjectCreator = new DataProjectCreator(pbs);
     businessProjectCreator.CspFileName = "Entities.csp";
@@ -88,12 +95,15 @@ public override void Generate()
     solutionItems.Add(businessProject);
 
     // Create UI Project
-    WebAppProjectCreator webAppCreator = new WebAppProjectCreator(pbs);
-    webAppCreator.CspFileName = "Web.csp";
-    webAppCreator.ProjectReferences.Add(this.BusinessProjectName);
-    SolutionItem webAppProject = webAppCreator.CreateProject(this.InterfaceProjectName);
-    solutionItems.Add(webAppProject);
-    
+    if(IncludeInterfaceProject)
+    {
+        WebAppProjectCreator webAppCreator = new WebAppProjectCreator(pbs);
+        webAppCreator.CspFileName = "Web.csp";
+        webAppCreator.ProjectReferences.Add(this.BusinessProjectName);
+        SolutionItem webAppProject = webAppCreator.CreateProject(this.InterfaceProjectName);
+        solutionItems.Add(webAppProject);
+    }
+
     // Create UnitTests Project
     //if(IncludeTestProject)
     //{
