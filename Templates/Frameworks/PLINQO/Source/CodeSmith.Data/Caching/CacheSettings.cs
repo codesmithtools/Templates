@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Web.Caching;
 
 namespace CodeSmith.Data.Caching
@@ -154,7 +155,6 @@ namespace CodeSmith.Data.Caching
         /// <value>The cache group name.</value>
         public string Group { get; set; }
 
-
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>
@@ -226,9 +226,60 @@ namespace CodeSmith.Data.Caching
 
     public static class CacheSettingsExtensions
     {
-        public static CacheSettings WithGroup(this CacheSettings settings, string groupName)
+        public static CacheSettings WithDuration(this CacheSettings settings, int duration)
         {
-            settings.Group = groupName;
+            settings.Duration = TimeSpan.FromSeconds(duration);
+            settings.Mode = CacheExpirationMode.Duration;
+            return settings;
+        }
+
+        public static CacheSettings WithDuration(this CacheSettings settings, TimeSpan duration)
+        {
+            settings.Duration = duration;
+            settings.Mode = CacheExpirationMode.Duration;
+            return settings;
+        }
+
+        public static CacheSettings WithAbsoluteExpiration(this CacheSettings settings, DateTime absoluteExpiration)
+        {
+            settings.AbsoluteExpiration = absoluteExpiration;
+            settings.Mode = CacheExpirationMode.Absolute;
+            return settings;
+        }
+
+        public static CacheSettings WithPriority(this CacheSettings settings, CacheItemPriority priority)
+        {
+            settings.Priority = priority;
+            return settings;
+        }
+
+        public static CacheSettings WithCacheEmptyResult(this CacheSettings settings, bool cacheEmptyResult)
+        {
+            settings.CacheEmptyResult = cacheEmptyResult;
+            return settings;
+        }
+
+        public static CacheSettings WithCacheDependency(this CacheSettings settings, CacheDependency cacheDependency)
+        {
+            settings.CacheDependency = cacheDependency;
+            return settings;
+        }
+
+        public static CacheSettings WithCacheItemRemovedCallback(this CacheSettings settings, CacheItemRemovedCallback cacheItemRemovedCallback)
+        {
+            settings.CacheItemRemovedCallback = cacheItemRemovedCallback;
+            return settings;
+        }
+
+        public static CacheSettings WithProvider(this CacheSettings settings, string provider)
+        {
+            settings.Provider = provider;
+            return settings;
+        }
+
+        public static CacheSettings WithGroup(this CacheSettings settings, string group)
+        {
+            settings.Group = group;
             return settings;
         }
     }
