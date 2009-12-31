@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Data.Linq;
 using System.Diagnostics;
-using System.Web;
 using CodeSmith.Data.Caching;
-using CodeSmith.Data.Memcached;
 using NUnit.Framework;
 using Tracker.Core.Data;
 using CodeSmith.Data.Linq;
@@ -14,7 +11,6 @@ namespace Tracker.Memcached.Tests.CacheTests
     {
         private List<int> _roleIds = new List<int>();
         private Process _memcached;
-
 
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
@@ -61,13 +57,7 @@ namespace Tracker.Memcached.Tests.CacheTests
         [SetUp]
         public void SetUp()
         {
-            var keys = new List<string>();
-
-            var enumerator = HttpRuntime.Cache.GetEnumerator();
-            while (enumerator.MoveNext())
-                keys.Add(enumerator.Key as string);
-
-            keys.ForEach(k => HttpRuntime.Cache.Remove(k));
+            CacheManager.InvalidateGroup();
         }
 
         [TearDown]

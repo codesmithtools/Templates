@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using CodeSmith.Data.Caching;
 using CodeSmith.Data.Linq;
 using NUnit.Framework;
 using Tracker.Core.Data;
@@ -13,22 +15,49 @@ namespace Tracker.Tests.CacheTests
         [Test]
         public void SimpleTest()
         {
-
-            using (var db = new TrackerDataContext { Log = Console.Out })
+            using (var db = new TrackerDataContext())
             {
                 var query = db.Role.Where(r => r.Name == "Test Role");
                 var key = query.GetHashKey();
-                var roles = query.FromCache();
+                var roles = query.FromCache().ToList();
 
-                var cache1 = HttpRuntime.Cache.Get(key);
+                var runtimeCache = HttpRuntime.Cache.Get(CacheManager.DefaultProvider.GetGroupKey(key));
+                Assert.IsNotNull(runtimeCache);
+                
+                var cache1 = CacheManager.Get<ICollection<Role>>(key);
                 Assert.IsNotNull(cache1);
+                Assert.AreEqual(roles.Count, cache1.Count);
 
-                query.ClearCache();
+                bool success = query.ClearCache();
+                Assert.IsTrue(success);
+                success = query.ClearCache();
+                Assert.IsFalse(success);
 
-                var cache2 = HttpRuntime.Cache.Get(key);
+                var cache2 = CacheManager.Get<ICollection<Role>>(key);
                 Assert.IsNull(cache2);
             }
+        }
 
+        [Test]
+        public void SimpleTestWithGroup()
+        {
+            using (var db = new TrackerDataContext())
+            {
+                CacheManager.InvalidateGroup("group1");
+
+                var query = db.Role.Where(r => r.Name == "Test Role");
+                var key = query.GetHashKey();
+                var roles = query.FromCache(CacheManager.GetProfile().WithGroup("group1")).ToList();
+
+                var cache1 = CacheManager.Get<ICollection<Role>>(key, "group1");
+                Assert.IsNotNull(cache1);
+                Assert.AreEqual(roles.Count, cache1.Count);
+
+                query.ClearCache("group1");
+
+                var cache2 = CacheManager.Get<ICollection<Role>>(key, "group1");
+                Assert.IsNull(cache2);
+            }
         }
     }
 }

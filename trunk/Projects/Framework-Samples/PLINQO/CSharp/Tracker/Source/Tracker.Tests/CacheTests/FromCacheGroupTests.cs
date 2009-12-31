@@ -41,7 +41,7 @@ namespace Tracker.Tests.CacheTests
             Assert.IsNotNull(role2);
 
             // some update expire tag
-            CacheManager.GetProvider().InvalidateGroup("Role");
+            CacheManager.InvalidateGroup("Role");
 
             var roles3 = db.Role
                 .Where(r => r.Name == "Test Role")
