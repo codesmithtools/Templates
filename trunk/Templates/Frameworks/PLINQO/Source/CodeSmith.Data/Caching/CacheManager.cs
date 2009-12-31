@@ -247,9 +247,9 @@ namespace CodeSmith.Data.Caching
         /// <param name="key">The key used to store the data in the cache provider.</param>
         /// <param name="data">The data to be cached in the provider.</param>
         /// <param name="duration">The duration to store the data in the cache.</param>
-        public void Set<T>(string key, T data, int duration)
+        public static void Set<T>(string key, T data, int duration)
         {
-            DefaultProvider.Set(key, data, new CacheSettings(duration));
+            DefaultProvider.Set(key, data, CacheSettings.FromDuration(duration));
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace CodeSmith.Data.Caching
         /// <param name="key">The key used to store the data in the cache provider.</param>
         /// <param name="data">The data to be cached in the provider.</param>
         /// <param name="profile">The name of the cache profile to use.</param>
-        public void Set<T>(string key, T data, string profile)
+        public static void Set<T>(string key, T data, string profile)
         {
             CacheSettings settings = GetProfile(profile);
             GetProvider(settings.Provider).Set(key, data, settings);
