@@ -210,5 +210,21 @@ namespace Tracker.Tests.FutureTests
             Assert.IsNotNull(tasks);
 
         }
+
+        [Test]
+        public void Test_ToPagedList()
+        {
+            try
+            {
+                using (var db = new TrackerDataContext())
+                {
+                    db.User.Select(t => new {Id = t.Id, FullName = t.FirstName}).ToPagedList(1, 3);
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
     }
 }

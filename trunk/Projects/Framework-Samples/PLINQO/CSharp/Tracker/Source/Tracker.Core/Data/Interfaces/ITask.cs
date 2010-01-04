@@ -73,20 +73,20 @@ namespace Tracker.Core.Data.Interfaces
         /// </summary>
         Nullable<Priority> Priority { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="TaskExtended"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.TaskExtended"/> association.
         /// </summary>
-        TaskExtended TaskExtended { get; set; }
+        Tracker.Core.Data.TaskExtended TaskExtended { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="User"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.User"/> association.
         /// </summary>
-        User AssignedUser { get; set; }
+        Tracker.Core.Data.User AssignedUser { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="User"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.User"/> association.
         /// </summary>
-        User CreatedUser { get; set; }
+        Tracker.Core.Data.User CreatedUser { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="Audit"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Audit"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<Audit> AuditList { get; set; }
+        System.Data.Linq.EntitySet<Tracker.Core.Data.Audit> AuditList { get; set; }
     }
 }

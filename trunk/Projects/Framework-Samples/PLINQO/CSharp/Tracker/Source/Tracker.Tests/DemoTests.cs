@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Rules;
+using HibernatingRhinos.Profiler.Appender.LinqToSql;
 using NUnit.Framework;
 using Tracker.Core.Data;
 using System.Data.Linq;
@@ -34,6 +35,8 @@ namespace Tracker.Tests
         [SetUp]
         public void Setup()
         {
+            LinqToSqlProfiler.SetupProfilingFor<TrackerDataContext>(TrackerDataContext.MappingCache);
+            LinqToSqlProfiler.Initialize();
             TearDown();
             CreateUsers();
             CreateTask(SpockId);
@@ -154,9 +157,17 @@ namespace Tracker.Tests
 
             using (var db = new TrackerDataContext { Log = Console.Out })
             {
-                Task task = db.Task.GetByKey(SpockId);
-                IQueryable<Task> tasks = db.Task.ByAssignedId(SpockId).ByStatus(Status.InProgress);
-                List<Task> taskList = tasks.ToList();
+                try
+                {
+                    Task task = db.Task.GetByKey(SpockId);
+                    IQueryable<Task> tasks = db.Task.ByAssignedId(SpockId).ByStatus(Status.InProgress);
+                    //tasks = tasks.OrderBy(t => t.CompleteDate);
+                    var list = tasks.ToPagedList<Task>(1, 10);
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
         }
 
