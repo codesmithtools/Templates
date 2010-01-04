@@ -27,7 +27,7 @@
 <%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
 
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
-
+<%@ Register Name="FactoryNamesTemplate" Template="Internal\FactoryNames.cst" %>
 <% Generate(); %>
 
 <script runat="template">
@@ -215,8 +215,26 @@ public override void Generate()
             ADOHelper.RenderToFile(fileName, false);
         }
     }
-    
+
     #endregion
+    
+    #region FactoryNamesTemplate
+
+    if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
+    {
+        FactoryNamesTemplate factoryNames = this.Create<FactoryNamesTemplate>();
+        this.CopyPropertiesTo(factoryNames);
+        factoryNames.SourceTables = this.Criteria;
+
+        string fileName = System.IO.Path.Combine(this.Location, "Factory\\FactoryNames.cs");
+        if (!System.IO.File.Exists(fileName))
+        {
+            factoryNames.RenderToFile(fileName, false);
+        }
+    }
+
+    #endregion
+
 }
 
 </script>

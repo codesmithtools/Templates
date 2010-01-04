@@ -27,6 +27,8 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
+<% if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
+
         #region Custom Data Access
 
         private void DataPortal_Fetch()
@@ -68,5 +70,7 @@ namespace <%= BusinessProjectName %>
         }
 
         #endregion
+
+<% } %>
     }
 }
