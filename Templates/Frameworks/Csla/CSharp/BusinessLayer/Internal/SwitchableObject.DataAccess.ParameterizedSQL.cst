@@ -257,7 +257,7 @@ namespace <%= BusinessProjectName %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= Entity.ClassName %>Insert"))
+                using (SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= Entity.ClassName %>ChildInsert"))
                 {
                     using(SqlCommand command = new SqlCommand(commandText, connection))
                     {
@@ -286,7 +286,7 @@ namespace <%= BusinessProjectName %>
                         }
                         catch (Exception)
                         {
-                            transaction.Rollback("<%= Entity.ClassName %>Insert");
+                            transaction.Rollback("<%= Entity.ClassName %>ChildInsert");
                             throw;
                         }
                     }
@@ -304,7 +304,7 @@ namespace <%= BusinessProjectName %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= Entity.ClassName %>Update"))
+                using (SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= Entity.ClassName %>ChildUpdate"))
                 {
                     using(SqlCommand command = new SqlCommand(commandText, connection))
                     {
@@ -335,7 +335,7 @@ namespace <%= BusinessProjectName %>
                         }
                         catch (Exception)
                         {
-                            transaction.Rollback("<%= Entity.ClassName %>Update");
+                            transaction.Rollback("<%= Entity.ClassName %>ChildUpdate");
                             throw;
                         }
                     }
