@@ -25,6 +25,9 @@ using Csla;
 namespace <%= BusinessProjectName %>
 {
     [Serializable]
+<% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL){ %>
+    [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>FactoryName)]
+<% } %>
     public partial class <%= BusinessClassName %> : NameValueListBase< int, string >
     {
         #region Factory Methods 
