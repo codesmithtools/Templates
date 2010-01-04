@@ -230,7 +230,7 @@ Next %>
         Const commandText As String = "INSERT INTO [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] (<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseColumns(entity.MembersForeignKey) %>) VALUES (<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseParameters(entity.MembersForeignKey) %>)<%= entity.BuildInsertSelectStatement() %>"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= entity.Table.Name %>Insert")
+            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= entity.Table.Name %>ChildInsert")
                 Using command As New SqlCommand(commandText, connection)
                     <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(entity.MembersForeignKey) %>
                     command.Transaction = transaction
@@ -256,7 +256,7 @@ Next %>
 
                         transaction.Commit()
                     Catch generatedExceptionName As Exception
-                        transaction.Rollback("<%= entity.Table.Name %>Insert")
+                        transaction.Rollback("<%= entity.Table.Name %>ChildInsert")
                         Throw
                     End Try
                 End Using
@@ -272,7 +272,7 @@ Next %>
 <% End If %>
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= entity.Table.Name %>Update")
+            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= entity.Table.Name %>ChildUpdate")
                 Using command As New SqlCommand(commandText, connection)
 <% If (entity.Table.ForeignKeyColumns.Count = 0) Then %>
                     <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
@@ -300,7 +300,7 @@ Next %>
 
                         transaction.Commit()
                     Catch generatedExceptionName As Exception
-                        transaction.Rollback("<%= entity.Table.Name %>Update")
+                        transaction.Rollback("<%= entity.Table.Name %>ChildUpdate")
                         Throw
                     End Try
                 End Using
