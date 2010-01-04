@@ -223,10 +223,6 @@ namespace CodeSmith.Data.Caching
             {
                 return _defaultProvider;
             }
-            set
-            {
-                _defaultProvider = value;
-            }
         }
 
         /// <summary>

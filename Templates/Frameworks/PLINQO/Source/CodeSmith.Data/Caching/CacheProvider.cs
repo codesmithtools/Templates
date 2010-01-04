@@ -205,7 +205,7 @@ namespace CodeSmith.Data.Caching
         /// <param name="key">The key used to store the data in the cache provider.</param>
         /// <param name="group">The name of the cache group.</param>
         /// <returns>True if the item exists.</returns>
-        public bool Exists(string key, string group)
+        public virtual bool Exists(string key, string group)
         {
             return Get(key, group) != null;
         }
