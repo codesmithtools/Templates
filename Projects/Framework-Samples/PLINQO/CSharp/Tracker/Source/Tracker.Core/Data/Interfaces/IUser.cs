@@ -81,20 +81,20 @@ namespace Tracker.Core.Data.Interfaces
         /// </summary>
         string AvatarType { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="Audit"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Audit"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<Audit> AuditList { get; set; }
+        System.Data.Linq.EntitySet<Tracker.Core.Data.Audit> AuditList { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="Task"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Task"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<Task> AssignedTaskList { get; set; }
+        System.Data.Linq.EntitySet<Tracker.Core.Data.Task> AssignedTaskList { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="Task"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Task"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<Task> CreatedTaskList { get; set; }
+        System.Data.Linq.EntitySet<Tracker.Core.Data.Task> CreatedTaskList { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="UserRole"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.UserRole"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<UserRole> UserRoleList { get; set; }
+        System.Data.Linq.EntitySet<Tracker.Core.Data.UserRole> UserRoleList { get; set; }
     }
 }

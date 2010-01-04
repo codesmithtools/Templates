@@ -41,8 +41,8 @@ namespace Tracker.Core.Data.Interfaces
         /// </summary>
         System.Data.Linq.Binary RowVersion { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="UserRole"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.UserRole"/> association.
         /// </summary>
-        System.Data.Linq.EntitySet<UserRole> UserRoleList { get; set; }
+        System.Data.Linq.EntitySet<Tracker.Core.Data.UserRole> UserRoleList { get; set; }
     }
 }

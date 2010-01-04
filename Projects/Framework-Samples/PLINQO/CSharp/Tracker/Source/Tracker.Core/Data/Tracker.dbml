@@ -122,8 +122,4 @@
       <Column Name="RoleId" Storage="_roleId" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
-  <Function Name="dbo.GetOne" Method="GetOne" IsComposable="true">
-    <Parameter Name="@param" Parameter="param" Type="System.Int32" DbType="int" />
-    <Return Type="System.Int32" DbType="int" />
-  </Function>
 </Database>

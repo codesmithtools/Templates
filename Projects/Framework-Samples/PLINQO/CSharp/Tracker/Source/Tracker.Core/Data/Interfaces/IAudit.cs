@@ -53,12 +53,12 @@ namespace Tracker.Core.Data.Interfaces
         /// </summary>
         string Myxml { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="Task"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.Task"/> association.
         /// </summary>
-        Task Task { get; set; }
+        Tracker.Core.Data.Task Task { get; set; }
         /// <summary>
-        /// Gets or sets the <see cref="User"/> association.
+        /// Gets or sets the <see cref="T:Tracker.Core.Data.User"/> association.
         /// </summary>
-        User User { get; set; }
+        Tracker.Core.Data.User User { get; set; }
     }
 }
