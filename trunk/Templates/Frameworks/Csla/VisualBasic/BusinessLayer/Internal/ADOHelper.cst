@@ -42,7 +42,7 @@ Public Class ADOHelper
     Public Shared ReadOnly Property ConnectionString() As String
         Get
             If String.IsNullOrEmpty(_connectionString) Then
-                _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings("PetShopConnectionString").ConnectionString
+                _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings("<%= SourceDatabase.Name %>ConnectionString").ConnectionString
             End If
 
             Return _connectionString

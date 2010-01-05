@@ -426,7 +426,7 @@ namespace CodeSmith.SchemaHelper
                 if (!associationMember.IsIdentity)
                 {
                     string cast;
-                    string propertyName = NamingConventions.PropertyName(associationMember.ColumnName);
+                    string propertyName = string.Format("{0}.{1}", associationMember.VariableName, NamingConventions.PropertyName(associationMember.LocalColumn.Name));
                     if (associationMember.SystemType.Contains("SmartDate"))
                     {
                         if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
@@ -439,7 +439,7 @@ namespace CodeSmith.SchemaHelper
                     else
                         cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", propertyName) : string.Format("{0});", propertyName);
 
-                    string output = string.Format("\n\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName, cast);
+                    string output = string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName, cast);
 
                     if (!commandParameters.Contains(output))
                         commandParameters += output;

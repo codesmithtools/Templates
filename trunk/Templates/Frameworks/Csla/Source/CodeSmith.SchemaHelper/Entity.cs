@@ -595,7 +595,7 @@ namespace CodeSmith.SchemaHelper
         {
             get
             {
-                return MemberMap.Values.Where(m => !m.IsRowVersion && !m.IsForeignKey).ToList();
+                return MembersNoRowVersionIncludePrimaryKey.Where(m => !m.IsForeignKey).ToList();
             }
         }
 
