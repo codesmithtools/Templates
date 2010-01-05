@@ -105,35 +105,25 @@ Next %>
         Const commandText As String = "INSERT INTO [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] (<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseColumns(entity.MembersForeignKey) %>) VALUES (<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseParameters(entity.MembersForeignKey) %>)<%= entity.BuildInsertSelectStatement() %>"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= entity.Table.Name %>Insert")
-                Using command As New SqlCommand(commandText, connection)
-                    <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(entity.MembersForeignKey) %>
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(entity.MembersForeignKey) %>
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            If reader.Read() Then
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
 <% If (Entity.HasRowVersionMember) Then %>
-                                _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
 
 <% If (Entity.PrimaryKey.IsIdentity) Then %>
 <% for each [member] As Member in Entity.PrimaryKey.KeyMembers
 If(UseMemberVariables) Then %>
-                                <%= [member].PrivateMemberVariableName %> = <%If Not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+                        <%= [member].PrivateMemberVariableName %> = <%If Not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
 <% else %>
-                                LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <% If NOT [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
+                        LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <% If NOT [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
 <%  End If
 Next %>
 <% End If %>
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("<%= entity.Table.Name %>Insert")
-                        Throw
-                    End Try
+                    End If
                 End Using
             End Using
         End Using
@@ -152,37 +142,27 @@ Next %>
 <% End If %>
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= entity.Table.Name %>Update")
-                Using command As New SqlCommand(commandText, connection)
+            Using command As New SqlCommand(commandText, connection)
 <% If (entity.Table.ForeignKeyColumns.Count = 0) Then %>
-                    <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
+                <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
 <% Else %>
-                    <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(entity.MembersForeignKey) %>
+                <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(entity.MembersForeignKey) %>
 <% End If %>
 <% If (entity.HasRowVersionMember) Then %>
-                    command.Parameters.AddWithValue("@p_<%= entity.RowVersionMember.ColumnName %>", _timestamp)
+                command.Parameters.AddWithValue("@p_<%= entity.RowVersionMember.ColumnName %>", _timestamp)
 <% End If %>
-                    command.Transaction = transaction
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    If reader.RecordsAffected = 0 Then
+                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
 <% If (Entity.HasRowVersionMember) Then %>
 
-                            If reader.Read() then
-                                _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
-                            End If
+                    If reader.Read() then
+                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+                    End If
 <% End If %>
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("<%= entity.Table.Name %>Update")
-                        Throw
-                    End Try
                 End Using
             End Using
         End Using
@@ -202,24 +182,14 @@ Next %>
         Dim commandText As String = String.Format("DELETE FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= entity.Table.Name %>Delete")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("<%= entity.Table.Name %>Delete")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    If reader.RecordsAffected = 0 Then
+                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
                 End Using
             End Using
         End Using
