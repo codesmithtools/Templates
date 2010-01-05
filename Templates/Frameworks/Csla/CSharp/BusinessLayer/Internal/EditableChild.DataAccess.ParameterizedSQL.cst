@@ -63,7 +63,7 @@ namespace <%= BusinessProjectName %>
             }
         }
 
-        private void Child_Insert()
+        private void Child_Insert(<%= Entity.ManyToOne.BuildChildInsertParametersVariables() %>)
         {
             const string commandText = "INSERT INTO [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] (<%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseColumns(Entity.MembersForeignKey) %>) VALUES (<%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseParameters(Entity.MembersForeignKey) %>)<%= Entity.BuildInsertSelectStatement() %>";
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
@@ -73,7 +73,7 @@ namespace <%= BusinessProjectName %>
                 {
                     using(SqlCommand command = new SqlCommand(commandText, connection))
                     {
-                        <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
+                        <%= Entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
                         command.Transaction = transaction;
                         
                         try

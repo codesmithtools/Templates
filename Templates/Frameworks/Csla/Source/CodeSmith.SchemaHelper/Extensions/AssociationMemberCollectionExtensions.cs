@@ -37,6 +37,21 @@ namespace CodeSmith.SchemaHelper
             return parameters.TrimStart(new[] { ',', ' ' });
         }
 
+        public static string BuildChildInsertParametersVariables(this List<AssociationMember> members)
+        {
+            string parameters = string.Empty;
+
+            foreach (AssociationMember member in members)
+            {
+                if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    parameters += string.Format(", ByVal {0} As {1}", member.VariableName, member.ClassName);
+                else
+                    parameters += string.Format(", {0} {1}", member.ClassName, member.VariableName);
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
         public static string BuildObjectInitializer(this List<AssociationMember> members)
         {
             string parameters = string.Empty;

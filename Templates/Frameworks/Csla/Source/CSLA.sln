@@ -56,6 +56,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{67
 		..\CSharp\BusinessLayer\Internal\DynamicRootList.Generated.cst = ..\CSharp\BusinessLayer\Internal\DynamicRootList.Generated.cst
 		..\CSharp\BusinessLayer\Internal\EditableChild.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.cst
 		..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.cst
+		..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.ParameterizedSQL.cst
 		..\CSharp\BusinessLayer\Internal\EditableChild.Generated.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.Generated.cst
 		..\CSharp\BusinessLayer\Internal\EditableChildList.cst = ..\CSharp\BusinessLayer\Internal\EditableChildList.cst
 		..\CSharp\BusinessLayer\Internal\EditableChildList.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\EditableChildList.DataAccess.cst
