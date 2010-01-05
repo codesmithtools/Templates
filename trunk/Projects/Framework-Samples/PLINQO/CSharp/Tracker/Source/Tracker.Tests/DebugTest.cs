@@ -111,5 +111,28 @@ namespace Tracker.Tests
 
             Assert.IsNotNull(commandObject);
         }
+
+        [Test]
+        public void ToPageList()
+        {
+            var db = new TrackerDataContext { Log = Console.Out };
+
+            var q = db.User.Select(t => new
+            {
+                Id = t.Id,
+                FullName = t.FirstName
+            })
+            .Skip(1)
+            .Take(3)
+            .Future();
+
+            var users = q.ToList();
+
+            var userList = db.User.Select(t => new
+            {
+                Id = t.Id,
+                FullName = t.FirstName
+            }).ToPagedList(1, 3);
+        }
     }
 }

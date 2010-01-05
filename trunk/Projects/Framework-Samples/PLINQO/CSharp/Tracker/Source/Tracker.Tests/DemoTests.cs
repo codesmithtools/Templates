@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeSmith.Data.Rules;
-using HibernatingRhinos.Profiler.Appender.LinqToSql;
 using NUnit.Framework;
 using Tracker.Core.Data;
 using System.Data.Linq;
@@ -35,8 +34,6 @@ namespace Tracker.Tests
         [SetUp]
         public void Setup()
         {
-            LinqToSqlProfiler.SetupProfilingFor<TrackerDataContext>(TrackerDataContext.MappingCache);
-            LinqToSqlProfiler.Initialize();
             TearDown();
             CreateUsers();
             CreateTask(SpockId);

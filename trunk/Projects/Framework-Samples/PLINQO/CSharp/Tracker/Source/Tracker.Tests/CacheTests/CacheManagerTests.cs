@@ -8,7 +8,7 @@ using Tracker.Core.Data;
 namespace Tracker.Tests.CacheTests
 {
     [TestFixture]
-    public class CacheManagerTests : RoleTests
+    public class CacheManagerTests
     {
         [Test]
         public void NumberTest()
