@@ -78,37 +78,23 @@ namespace <%= BusinessProjectName %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= Entity.ClassName %>Insert"))
+                using(SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    using(SqlCommand command = new SqlCommand(commandText, connection))
+                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
+                    
+                    using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
-                        <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
-                        command.Transaction = transaction;
-                        
-                        try
+                        if(reader.Read())
                         {
-                            using(var reader = new SafeDataReader(command.ExecuteReader()))
-                            {
-                                if(reader.Read())
-                                {
 <% if(Entity.HasRowVersionMember) { %>
-                                    _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } %>
 <% if(Entity.PrimaryKey.IsIdentity) { %>
 <% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(UseMemberVariables) { %>
-                                    <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
+                            <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
 <% } else { %>
-                                    LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>ADOHelper.GetBytes(reader," <%= member.ColumnName %>"));<% } %>
+                            LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>ADOHelper.GetBytes(reader," <%= member.ColumnName %>"));<% } %>
 <% } } } %>
-                                }
-                            }
-
-                            transaction.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            transaction.Rollback("<%= Entity.ClassName %>Insert");
-                            throw;
                         }
                     }
                 }
@@ -130,40 +116,26 @@ namespace <%= BusinessProjectName %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= Entity.ClassName %>Update"))
+                using(SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    using(SqlCommand command = new SqlCommand(commandText, connection))
-                    {
 <% if(Entity.Table.ForeignKeyColumns.Count == 0) { %>
-                        <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
+                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
 <% } else { %>
-                        <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(Entity.MembersForeignKey) %>
+                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(Entity.MembersForeignKey) %>
 <% } %>
 <% if(Entity.HasRowVersionMember) { %>
-                        command.Parameters.AddWithValue("@p_<%= Entity.RowVersionMember.ColumnName %>", timestamp);
+                    command.Parameters.AddWithValue("@p_<%= Entity.RowVersionMember.ColumnName %>", timestamp);
 <% } %>
-                        command.Transaction = transaction;
 
-                        try
-                        {
-                            using(var reader = new SafeDataReader(command.ExecuteReader()))
-                            {
-                                //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                                if(reader.RecordsAffected == 0)
-                                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+                    using(var reader = new SafeDataReader(command.ExecuteReader()))
+                    {
+                        //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                        if(reader.RecordsAffected == 0)
+                            throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 
 <% if(Entity.HasRowVersionMember) { %>
-                                _timestamp = reader.Timestamp;
+                        _timestamp = reader.Timestamp;
 <% } %>
-                            }
-
-                            transaction.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            transaction.Rollback("<%= Entity.ClassName %>Update");
-                            throw;
-                        }
                     }
                 }
             }
@@ -186,29 +158,15 @@ namespace <%= BusinessProjectName %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= Entity.ClassName %>Delete"))
+                using (SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    using (SqlCommand command = new SqlCommand(commandText, connection))
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+
+                    using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
-                        command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
-                        command.Transaction = transaction;
-
-                        try
-                        {
-                            using(var reader = new SafeDataReader(command.ExecuteReader()))
-                            {
-                                //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                                if(reader.RecordsAffected == 0)
-                                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-                            }
-
-                            transaction.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            transaction.Rollback("<%= Entity.ClassName %>Delete");
-                            throw;
-                        }
+                        //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                        if(reader.RecordsAffected == 0)
+                            throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
                     }
                 }
             }
@@ -257,37 +215,23 @@ namespace <%= BusinessProjectName %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= Entity.ClassName %>ChildInsert"))
+                using(SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    using(SqlCommand command = new SqlCommand(commandText, connection))
+                    <%= Entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
+                    
+                    using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
-                        <%= Entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
-                        command.Transaction = transaction;
-                        
-                        try
+                        if(reader.Read())
                         {
-                            using(var reader = new SafeDataReader(command.ExecuteReader()))
-                            {
-                                if(reader.Read())
-                                {
 <% if(Entity.HasRowVersionMember) { %>
-                                    _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } %>
 <% if(Entity.PrimaryKey.IsIdentity) { %>
 <% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(UseMemberVariables) { %>
-                                    <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
+                            <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
 <% } else { %>
-                                    LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>ADOHelper.GetBytes(reader," <%= member.ColumnName %>"));<% } %>
+                            LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>ADOHelper.GetBytes(reader," <%= member.ColumnName %>"));<% } %>
 <% } } } %>
-                                }
-                            }
-
-                            transaction.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            transaction.Rollback("<%= Entity.ClassName %>ChildInsert");
-                            throw;
                         }
                     }
                 }
@@ -304,40 +248,26 @@ namespace <%= BusinessProjectName %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "<%= Entity.ClassName %>ChildUpdate"))
+                using(SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    using(SqlCommand command = new SqlCommand(commandText, connection))
-                    {
 <% if(Entity.Table.ForeignKeyColumns.Count == 0) { %>
-                        <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
+                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
 <% } else { %>
-                        <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(Entity.MembersForeignKey) %>
+                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(Entity.MembersForeignKey) %>
 <% } %>
 <% if(Entity.HasRowVersionMember) { %>
-                        command.Parameters.AddWithValue("@p_<%= Entity.RowVersionMember.ColumnName %>", timestamp);
+                    command.Parameters.AddWithValue("@p_<%= Entity.RowVersionMember.ColumnName %>", timestamp);
 <% } %>
-                        command.Transaction = transaction;
 
-                        try
-                        {
-                            using(var reader = new SafeDataReader(command.ExecuteReader()))
-                            {
-                                //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                                if(reader.RecordsAffected == 0)
-                                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+                    using(var reader = new SafeDataReader(command.ExecuteReader()))
+                    {
+                        //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                        if(reader.RecordsAffected == 0)
+                            throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 
 <% if(Entity.HasRowVersionMember) { %>
-                                _timestamp = reader.Timestamp;
+                        _timestamp = reader.Timestamp;
 <% } %>
-                            }
-
-                            transaction.Commit();
-                        }
-                        catch (Exception)
-                        {
-                            transaction.Rollback("<%= Entity.ClassName %>ChildUpdate");
-                            throw;
-                        }
                     }
                 }
             }
