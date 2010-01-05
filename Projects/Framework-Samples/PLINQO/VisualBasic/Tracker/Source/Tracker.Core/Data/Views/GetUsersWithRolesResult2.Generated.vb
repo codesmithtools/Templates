@@ -24,7 +24,6 @@ Namespace Tracker.Core.Data
         ''' Initializes the <see cref="GetUsersWithRolesResult2"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of GetUsersWithRolesResult2)()
             AddSharedRules()
         End Sub
 #End Region

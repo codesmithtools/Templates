@@ -81,7 +81,7 @@ Namespace Tracker.Core.Data
         <System.Data.Linq.Mapping.Column(Name:="Name", Storage:="_name", DbType:="nvarchar(50) NOT NULL", CanBeNull:=False, UpdateCheck:=System.Data.Linq.Mapping.UpdateCheck.Never)> _
         <ComponentModel.DataAnnotations.StringLength(50)> _
         <System.Runtime.Serialization.DataMember(Order:=2)> _
-        Public Property [Name]() As String
+        Public Property Name() As String
             Get
                 Return _name
             End Get
