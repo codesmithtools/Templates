@@ -119,24 +119,24 @@ Namespace Tracker.Core.Data
         ''' Gets a query for <see cref="Tracker.Core.Data.Role"/>.
         ''' </summary>
         ''' <param name="queryable">Query to append where clause.</param>
-        ''' <param name="myName">Name to search for.</param>
+        ''' <param name="name">Name to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByName(ByVal queryable As IQueryable(Of Tracker.Core.Data.Role), ByVal myName As String) As IQueryable(Of Tracker.Core.Data.Role)
-            Return queryable.Where(Function(r)r.Name = myName)
+        Public Function ByName(ByVal queryable As IQueryable(Of Tracker.Core.Data.Role), ByVal name As String) As IQueryable(Of Tracker.Core.Data.Role)
+            Return queryable.Where(Function(r)r.Name = name)
         End Function
         
         ''' <summary>
         ''' Gets a query for <see cref="Tracker.Core.Data.Role"/>.
         ''' </summary>
         ''' <param name="queryable">Query to append where clause.</param>
-        ''' <param name="myName">Name to search for.</param>
+        ''' <param name="name">Name to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByName(ByVal queryable As IQueryable(Of Tracker.Core.Data.Role), ByVal myName As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.Role)
+        Public Function ByName(ByVal queryable As IQueryable(Of Tracker.Core.Data.Role), ByVal name As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of Tracker.Core.Data.Role)
             Dim values = New List(Of String)()
-            values.Add(myName)
+            values.Add(name)
         
             If additionalValues IsNot Nothing Then
                 values.AddRange(additionalValues)
@@ -164,28 +164,28 @@ Namespace Tracker.Core.Data
         ''' Gets a query for <see cref="Tracker.Core.Data.Role"/>.
         ''' </summary>
         ''' <param name="queryable">Query to append where clause.</param>
-        ''' <param name="myName">Name to search for.</param>
+        ''' <param name="name">Name to search for.</param>
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByName(ByVal queryable As IQueryable(Of Tracker.Core.Data.Role), ByVal myName As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.Role)
-            If myName Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
-                Throw New ArgumentNullException("myName", "Parameter 'myName' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+        Public Function ByName(ByVal queryable As IQueryable(Of Tracker.Core.Data.Role), ByVal name As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.Role)
+            If name Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("name", "Parameter 'name' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
             
             Select Case containment
                 Case ContainmentOperator.Contains
-                    Return queryable.Where(Function(r) r.Name.Contains(myName))
+                    Return queryable.Where(Function(r) r.Name.Contains(name))
                 Case ContainmentOperator.StartsWith
-                    Return queryable.Where(Function(r) r.Name.StartsWith(myName))
+                    Return queryable.Where(Function(r) r.Name.StartsWith(name))
                 Case ContainmentOperator.EndsWith
-                    Return queryable.Where(Function(r) r.Name.EndsWith(myName))
+                    Return queryable.Where(Function(r) r.Name.EndsWith(name))
                 Case ContainmentOperator.NotContains
-                    Return queryable.Where(Function(r) r.Name.Contains(myName) = False)
+                    Return queryable.Where(Function(r) r.Name.Contains(name) = False)
                 Case ContainmentOperator.NotEquals
-                    Return queryable.Where(Function(r) r.Name <> myName)
+                    Return queryable.Where(Function(r) r.Name <> name)
                 Case Else
-                    Return queryable.Where(Function(r) r.Name = myName)
+                    Return queryable.Where(Function(r) r.Name = name)
             End Select
         End Function
         
