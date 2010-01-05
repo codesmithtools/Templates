@@ -12,7 +12,8 @@ Imports System
 Imports System.Data.Linq
 Imports System.Linq
 Imports System.Runtime.CompilerServices
-Imports System.Linq.Dynamic
+Imports CodeSmith.Data.Linq
+Imports CodeSmith.Data.Linq.Dynamic
 
 Namespace PetShop.Core.Data
     ''' <summary>
@@ -22,7 +23,7 @@ Namespace PetShop.Core.Data
         ''' <summary>
         ''' Gets an instance by the primary key.
         ''' </summary>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function GetByKey(ByVal queryable As IQueryable(Of PetShop.Core.Data.Inventory), ByVal itemId As String) As PetShop.Core.Data.Inventory
 
             Dim entity As System.Data.Linq.Table(Of PetShop.Core.Data.Inventory) = CType(queryable, Table(Of PetShop.Core.Data.Inventory))
@@ -38,7 +39,7 @@ Namespace PetShop.Core.Data
         ''' </summary>
         ''' <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         ''' <returns>The number of rows deleted from the database.</returns>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function Delete(ByVal table As System.Data.Linq.Table(Of PetShop.Core.Data.Inventory), ByVal itemId As String) As Integer
             Return table.Delete(Function(i)i.ItemId = itemId)
         End Function
@@ -49,8 +50,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="itemId">ItemId to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByItemId(queryable As IQueryable(Of PetShop.Core.Data.Inventory), itemId As String) As IQueryable(Of PetShop.Core.Data.Inventory)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByItemId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Inventory), ByVal itemId As String) As IQueryable(Of PetShop.Core.Data.Inventory)
             Return queryable.Where(Function(i)i.ItemId = itemId)
         End Function
         
@@ -61,22 +62,62 @@ Namespace PetShop.Core.Data
         ''' <param name="itemId">ItemId to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByItemId(queryable As IQueryable(Of PetShop.Core.Data.Inventory), itemId As String, ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.Inventory)
-            Dim ItemIdList = New List(Of String)()
-            ItemIdList.Add(itemId)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByItemId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Inventory), ByVal itemId As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.Inventory)
+            Dim values = New List(Of String)()
+            values.Add(itemId)
         
             If additionalValues IsNot Nothing Then
-                ItemIdList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If ItemIdList.Count = 1 Then
-                Return queryable.ByItemId(ItemIdList(0))
+            If values.Count = 1 Then
+                Return queryable.ByItemId(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Inventory, Boolean)("ItemId", ItemIdList)
-            Return queryable.Where(expression)
+            Return queryable.ByItemId(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Inventory"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByItemId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Inventory), ByVal values As IEnumerable(Of String)) As IQueryable(Of PetShop.Core.Data.Inventory)
+                Return queryable.Where(Function(i) values.Contains(i.ItemId))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Inventory"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="itemId">ItemId to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByItemId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Inventory), ByVal itemId As String, ByVal containment As ContainmentOperator) As IQueryable(Of PetShop.Core.Data.Inventory)
+            If itemId Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("itemId", "Parameter 'itemId' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(i) i.ItemId.Contains(itemId))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(i) i.ItemId.StartsWith(itemId))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(i) i.ItemId.EndsWith(itemId))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(i) i.ItemId.Contains(itemId) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(i) i.ItemId <> itemId)
+                Case Else
+                    Return queryable.Where(Function(i) i.ItemId = itemId)
+            End Select
+        End Function
+        
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.Inventory"/>.
@@ -84,8 +125,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="qty">Qty to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByQty(queryable As IQueryable(Of PetShop.Core.Data.Inventory), qty As Integer) As IQueryable(Of PetShop.Core.Data.Inventory)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByQty(ByVal queryable As IQueryable(Of PetShop.Core.Data.Inventory), ByVal qty As Integer) As IQueryable(Of PetShop.Core.Data.Inventory)
             Return queryable.Where(Function(i)i.Qty = qty)
         End Function
         
@@ -96,22 +137,58 @@ Namespace PetShop.Core.Data
         ''' <param name="qty">Qty to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByQty(queryable As IQueryable(Of PetShop.Core.Data.Inventory), qty As Integer, ParamArray additionalValues As Integer()) As IQueryable(Of PetShop.Core.Data.Inventory)
-            Dim QtyList = New List(Of Integer)()
-            QtyList.Add(qty)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByQty(ByVal queryable As IQueryable(Of PetShop.Core.Data.Inventory), ByVal qty As Integer, ByVal ParamArray additionalValues As Integer()) As IQueryable(Of PetShop.Core.Data.Inventory)
+            Dim values = New List(Of Integer)()
+            values.Add(qty)
         
             If additionalValues IsNot Nothing Then
-                QtyList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If QtyList.Count = 1 Then
-                Return queryable.ByQty(QtyList(0))
+            If values.Count = 1 Then
+                Return queryable.ByQty(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Inventory, Boolean)("Qty", QtyList)
-            Return queryable.Where(expression)
+            Return queryable.ByQty(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Inventory"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByQty(ByVal queryable As IQueryable(Of PetShop.Core.Data.Inventory), ByVal values As IEnumerable(Of Integer)) As IQueryable(Of PetShop.Core.Data.Inventory)
+                Return queryable.Where(Function(i) values.Contains(i.Qty))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Inventory"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="qty">Qty to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByQty(ByVal queryable As IQueryable(Of PetShop.Core.Data.Inventory), ByVal qty As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of PetShop.Core.Data.Inventory)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(i) qty > i.Qty)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(i) qty >= i.Qty)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(i) qty < i.Qty)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(i) qty <= i.Qty)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(i) i.Qty <> qty)
+                Case Else
+                    Return queryable.Where(Function(i) i.Qty = qty)
+            End Select
+        End Function
+
 
         'Insert User Defined Extensions here.
         'Anything outside of this Region will be lost at regeneration

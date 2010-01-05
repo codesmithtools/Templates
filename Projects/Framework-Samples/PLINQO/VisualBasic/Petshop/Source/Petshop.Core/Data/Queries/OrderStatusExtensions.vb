@@ -12,7 +12,8 @@ Imports System
 Imports System.Data.Linq
 Imports System.Linq
 Imports System.Runtime.CompilerServices
-Imports System.Linq.Dynamic
+Imports CodeSmith.Data.Linq
+Imports CodeSmith.Data.Linq.Dynamic
 
 Namespace PetShop.Core.Data
     ''' <summary>
@@ -22,7 +23,7 @@ Namespace PetShop.Core.Data
         ''' <summary>
         ''' Gets an instance by the primary key.
         ''' </summary>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function GetByKey(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal orderId As Integer, ByVal lineNum As Integer) As PetShop.Core.Data.OrderStatus
 
             Dim entity As System.Data.Linq.Table(Of PetShop.Core.Data.OrderStatus) = CType(queryable, Table(Of PetShop.Core.Data.OrderStatus))
@@ -39,7 +40,7 @@ Namespace PetShop.Core.Data
         ''' </summary>
         ''' <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         ''' <returns>The number of rows deleted from the database.</returns>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function Delete(ByVal table As System.Data.Linq.Table(Of PetShop.Core.Data.OrderStatus), ByVal orderId As Integer, ByVal lineNum As Integer) As Integer
             Return table.Delete(Function(o)o.OrderId = orderId _
 					AndAlso o.LineNum = lineNum)
@@ -51,8 +52,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="orderId">OrderId to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByOrderId(queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), orderId As Integer) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByOrderId(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal orderId As Integer) As IQueryable(Of PetShop.Core.Data.OrderStatus)
             Return queryable.Where(Function(o)o.OrderId = orderId)
         End Function
         
@@ -63,22 +64,58 @@ Namespace PetShop.Core.Data
         ''' <param name="orderId">OrderId to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByOrderId(queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), orderId As Integer, ParamArray additionalValues As Integer()) As IQueryable(Of PetShop.Core.Data.OrderStatus)
-            Dim OrderIdList = New List(Of Integer)()
-            OrderIdList.Add(orderId)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByOrderId(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal orderId As Integer, ByVal ParamArray additionalValues As Integer()) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+            Dim values = New List(Of Integer)()
+            values.Add(orderId)
         
             If additionalValues IsNot Nothing Then
-                OrderIdList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If OrderIdList.Count = 1 Then
-                Return queryable.ByOrderId(OrderIdList(0))
+            If values.Count = 1 Then
+                Return queryable.ByOrderId(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.OrderStatus, Boolean)("OrderId", OrderIdList)
-            Return queryable.Where(expression)
+            Return queryable.ByOrderId(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.OrderStatus"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByOrderId(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal values As IEnumerable(Of Integer)) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+                Return queryable.Where(Function(o) values.Contains(o.OrderId))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.OrderStatus"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="orderId">OrderId to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByOrderId(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal orderId As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(o) orderId > o.OrderId)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(o) orderId >= o.OrderId)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(o) orderId < o.OrderId)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(o) orderId <= o.OrderId)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(o) o.OrderId <> orderId)
+                Case Else
+                    Return queryable.Where(Function(o) o.OrderId = orderId)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.OrderStatus"/>.
@@ -86,8 +123,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="lineNum">LineNum to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByLineNum(queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), lineNum As Integer) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLineNum(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal lineNum As Integer) As IQueryable(Of PetShop.Core.Data.OrderStatus)
             Return queryable.Where(Function(o)o.LineNum = lineNum)
         End Function
         
@@ -98,22 +135,58 @@ Namespace PetShop.Core.Data
         ''' <param name="lineNum">LineNum to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByLineNum(queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), lineNum As Integer, ParamArray additionalValues As Integer()) As IQueryable(Of PetShop.Core.Data.OrderStatus)
-            Dim LineNumList = New List(Of Integer)()
-            LineNumList.Add(lineNum)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLineNum(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal lineNum As Integer, ByVal ParamArray additionalValues As Integer()) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+            Dim values = New List(Of Integer)()
+            values.Add(lineNum)
         
             If additionalValues IsNot Nothing Then
-                LineNumList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If LineNumList.Count = 1 Then
-                Return queryable.ByLineNum(LineNumList(0))
+            If values.Count = 1 Then
+                Return queryable.ByLineNum(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.OrderStatus, Boolean)("LineNum", LineNumList)
-            Return queryable.Where(expression)
+            Return queryable.ByLineNum(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.OrderStatus"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLineNum(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal values As IEnumerable(Of Integer)) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+                Return queryable.Where(Function(o) values.Contains(o.LineNum))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.OrderStatus"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="lineNum">LineNum to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByLineNum(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal lineNum As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(o) lineNum > o.LineNum)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(o) lineNum >= o.LineNum)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(o) lineNum < o.LineNum)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(o) lineNum <= o.LineNum)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(o) o.LineNum <> lineNum)
+                Case Else
+                    Return queryable.Where(Function(o) o.LineNum = lineNum)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.OrderStatus"/>.
@@ -121,8 +194,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="timestamp">Timestamp to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByTimestamp(queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), timestamp As Date) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByTimestamp(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal timestamp As Date) As IQueryable(Of PetShop.Core.Data.OrderStatus)
             Return queryable.Where(Function(o)o.Timestamp = timestamp)
         End Function
         
@@ -133,22 +206,58 @@ Namespace PetShop.Core.Data
         ''' <param name="timestamp">Timestamp to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByTimestamp(queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), timestamp As Date, ParamArray additionalValues As Date()) As IQueryable(Of PetShop.Core.Data.OrderStatus)
-            Dim TimestampList = New List(Of Date)()
-            TimestampList.Add(timestamp)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByTimestamp(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal timestamp As Date, ByVal ParamArray additionalValues As Date()) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+            Dim values = New List(Of Date)()
+            values.Add(timestamp)
         
             If additionalValues IsNot Nothing Then
-                TimestampList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If TimestampList.Count = 1 Then
-                Return queryable.ByTimestamp(TimestampList(0))
+            If values.Count = 1 Then
+                Return queryable.ByTimestamp(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.OrderStatus, Boolean)("Timestamp", TimestampList)
-            Return queryable.Where(expression)
+            Return queryable.ByTimestamp(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.OrderStatus"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByTimestamp(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal values As IEnumerable(Of Date)) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+                Return queryable.Where(Function(o) values.Contains(o.Timestamp))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.OrderStatus"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="timestamp">Timestamp to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByTimestamp(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal timestamp As Date, ByVal comparison As ComparisonOperator) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(o) timestamp > o.Timestamp)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(o) timestamp >= o.Timestamp)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(o) timestamp < o.Timestamp)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(o) timestamp <= o.Timestamp)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(o) o.Timestamp <> timestamp)
+                Case Else
+                    Return queryable.Where(Function(o) o.Timestamp = timestamp)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.OrderStatus"/>.
@@ -156,8 +265,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="status">Status to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByStatus(queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), status As String) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByStatus(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal status As String) As IQueryable(Of PetShop.Core.Data.OrderStatus)
             Return queryable.Where(Function(o)o.Status = status)
         End Function
         
@@ -168,22 +277,62 @@ Namespace PetShop.Core.Data
         ''' <param name="status">Status to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByStatus(queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), status As String, ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.OrderStatus)
-            Dim StatusList = New List(Of String)()
-            StatusList.Add(status)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByStatus(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal status As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+            Dim values = New List(Of String)()
+            values.Add(status)
         
             If additionalValues IsNot Nothing Then
-                StatusList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If StatusList.Count = 1 Then
-                Return queryable.ByStatus(StatusList(0))
+            If values.Count = 1 Then
+                Return queryable.ByStatus(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.OrderStatus, Boolean)("Status", StatusList)
-            Return queryable.Where(expression)
+            Return queryable.ByStatus(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.OrderStatus"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByStatus(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal values As IEnumerable(Of String)) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+                Return queryable.Where(Function(o) values.Contains(o.Status))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.OrderStatus"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="status">Status to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByStatus(ByVal queryable As IQueryable(Of PetShop.Core.Data.OrderStatus), ByVal status As String, ByVal containment As ContainmentOperator) As IQueryable(Of PetShop.Core.Data.OrderStatus)
+            If status Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("status", "Parameter 'status' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(o) o.Status.Contains(status))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(o) o.Status.StartsWith(status))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(o) o.Status.EndsWith(status))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(o) o.Status.Contains(status) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(o) o.Status <> status)
+                Case Else
+                    Return queryable.Where(Function(o) o.Status = status)
+            End Select
+        End Function
+        
 
         'Insert User Defined Extensions here.
         'Anything outside of this Region will be lost at regeneration

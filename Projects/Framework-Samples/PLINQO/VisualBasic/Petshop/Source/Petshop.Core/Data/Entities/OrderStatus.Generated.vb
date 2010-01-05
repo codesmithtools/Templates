@@ -28,7 +28,6 @@ Namespace PetShop.Core.Data
         ''' Initializes the <see cref="OrderStatus"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of OrderStatus)()
             AddSharedRules()
         End Sub
 #End Region
@@ -43,7 +42,6 @@ Namespace PetShop.Core.Data
         End Sub
 
         Private Sub Initialize()
-            _orders = Nothing
             OnCreated()
         End Sub
 #End Region
@@ -63,9 +61,6 @@ Namespace PetShop.Core.Data
             End Get
             Set(ByVal value As Integer)
                 If ((Me._orderId = value) = False) Then
-                    If (_orders.HasLoadedOrAssignedValue) Then
-                        Throw New System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException()
-                    End If
                     OnOrderIdChanging(value)
                     SendPropertyChanging("OrderId")
                     _orderId = value
@@ -145,40 +140,6 @@ Namespace PetShop.Core.Data
 
 #Region "Association Mapped Properties"
 
-        Private  _orders As System.Data.Linq.EntityRef(Of Orders)
-
-        ''' <summary>
-        ''' Gets or sets the Orders association.
-        ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="Orders_OrderStatus", Storage:="_orders", ThisKey:="OrderId", OtherKey:="OrderId", IsUnique:=true, IsForeignKey:=true)> _
-        <System.Runtime.Serialization.DataMember(Order:=5, EmitDefaultValue:=False)> _
-        Public Property Orders() As Orders
-            Get
-                If (serializing AndAlso Not _orders.HasLoadedOrAssignedValue) Then
-                    Return Nothing
-                Else
-                    Return _orders.Entity
-                End If
-            End Get
-            Set(ByVal value As Orders)
-                Dim previousValue As Orders = _orders.Entity
-                If ((Object.Equals(previousValue, value) = False) OrElse (Me._orders.HasLoadedOrAssignedValue = False)) Then
-                    SendPropertyChanging("Orders")
-                    If ((previousValue Is Nothing) = False) Then
-                        _orders.Entity = Nothing
-                        previousValue.OrderStatusList.Remove(Me)
-                    End If
-                    _orders.Entity = value
-                    If ((value Is Nothing) = False) Then
-                        value.OrderStatusList.Add(Me)
-                        _orderId = value.OrderId
-                    Else
-                        _orderId = Nothing
-                    End If
-                    SendPropertyChanged("Orders")
-                End If
-            End Set
-        End Property
 #End Region
 
 #Region "Extensibility Method Definitions"
@@ -317,7 +278,7 @@ Namespace PetShop.Core.Data
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As OrderStatus
-            Return DirectCast(DirectCast(Me, ICloneable), OrderStatus).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable).Clone(), OrderStatus)
         End Function
 #End Region
 
@@ -335,7 +296,6 @@ Namespace PetShop.Core.Data
             End If
 
             MyBase.Detach()
-            _orders = Detach(_orders)
         End Sub
 #End Region
     End Class

@@ -28,7 +28,6 @@ Namespace PetShop.Core.Data
         ''' Initializes the <see cref="Cart"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of Cart)()
             AddSharedRules()
         End Sub
 #End Region
@@ -277,6 +276,28 @@ Namespace PetShop.Core.Data
                 End If
             End Set
         End Property
+
+        Private _createdDate As Nullable(Of Date)
+
+        ''' <summary>
+        ''' Gets or sets the CreatedDate column value.
+        ''' </summary>
+        <System.Data.Linq.Mapping.Column(Name:="CreatedDate", Storage:="_createdDate", DbType:="datetime")> _
+        <System.Runtime.Serialization.DataMember(Order:=11)> _
+        Public Property CreatedDate() As Nullable(Of Date)
+            Get
+                Return _createdDate
+            End Get
+            Set(ByVal value As Nullable(Of Date))
+                If (Me._createdDate.Equals(value) = False) Then
+                    OnCreatedDateChanging(value)
+                    SendPropertyChanging("CreatedDate")
+                    _createdDate = value
+                    SendPropertyChanged("CreatedDate")
+                    OnCreatedDateChanged()
+                End If
+            End Set
+        End Property
 #End Region
 
 #Region "Association Mapped Properties"
@@ -287,7 +308,7 @@ Namespace PetShop.Core.Data
         ''' Gets or sets the Profile association.
         ''' </summary>
         <System.Data.Linq.Mapping.Association(Name:="Profile_Cart", Storage:="_profile", ThisKey:="UniqueID", OtherKey:="UniqueID", IsUnique:=true, IsForeignKey:=true, DeleteRule:="CASCADE")> _
-        <System.Runtime.Serialization.DataMember(Order:=11, EmitDefaultValue:=False)> _
+        <System.Runtime.Serialization.DataMember(Order:=12, EmitDefaultValue:=False)> _
         Public Property Profile() As Profile
             Get
                 If (serializing AndAlso Not _profile.HasLoadedOrAssignedValue) Then
@@ -401,6 +422,13 @@ Namespace PetShop.Core.Data
         ''' <summary>Called after Quantity has Changed.</summary>
         Partial Private Sub OnQuantityChanged()
         End Sub
+        ''' <summary>Called when CreatedDate is changing.</summary>
+        ''' <param name="value">The new value.</param>
+        Partial Private Sub OnCreatedDateChanging(ByVal value As Nullable(Of Date))
+        End Sub
+        ''' <summary>Called after CreatedDate has Changed.</summary>
+        Partial Private Sub OnCreatedDateChanged()
+        End Sub
 #End Region
 
 #Region "Serialization"
@@ -495,7 +523,7 @@ Namespace PetShop.Core.Data
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As Cart
-            Return DirectCast(DirectCast(Me, ICloneable), Cart).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable).Clone(), Cart)
         End Function
 #End Region
 

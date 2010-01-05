@@ -12,7 +12,8 @@ Imports System
 Imports System.Data.Linq
 Imports System.Linq
 Imports System.Runtime.CompilerServices
-Imports System.Linq.Dynamic
+Imports CodeSmith.Data.Linq
+Imports CodeSmith.Data.Linq.Dynamic
 
 Namespace PetShop.Core.Data
     ''' <summary>
@@ -22,7 +23,7 @@ Namespace PetShop.Core.Data
         ''' <summary>
         ''' Gets an instance by the primary key.
         ''' </summary>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function GetByKey(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal cartID As Integer) As PetShop.Core.Data.Cart
 
             Dim entity As System.Data.Linq.Table(Of PetShop.Core.Data.Cart) = CType(queryable, Table(Of PetShop.Core.Data.Cart))
@@ -38,7 +39,7 @@ Namespace PetShop.Core.Data
         ''' </summary>
         ''' <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         ''' <returns>The number of rows deleted from the database.</returns>
-        <System.Runtime.CompilerServices.Extension> _
+        <System.Runtime.CompilerServices.Extension()> _
         Public Function Delete(ByVal table As System.Data.Linq.Table(Of PetShop.Core.Data.Cart), ByVal cartID As Integer) As Integer
             Return table.Delete(Function(c)c.CartID = cartID)
         End Function
@@ -49,8 +50,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="cartID">CartID to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByCartID(queryable As IQueryable(Of PetShop.Core.Data.Cart), cartID As Integer) As IQueryable(Of PetShop.Core.Data.Cart)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCartID(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal cartID As Integer) As IQueryable(Of PetShop.Core.Data.Cart)
             Return queryable.Where(Function(c)c.CartID = cartID)
         End Function
         
@@ -61,22 +62,58 @@ Namespace PetShop.Core.Data
         ''' <param name="cartID">CartID to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByCartID(queryable As IQueryable(Of PetShop.Core.Data.Cart), cartID As Integer, ParamArray additionalValues As Integer()) As IQueryable(Of PetShop.Core.Data.Cart)
-            Dim CartIDList = New List(Of Integer)()
-            CartIDList.Add(cartID)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCartID(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal cartID As Integer, ByVal ParamArray additionalValues As Integer()) As IQueryable(Of PetShop.Core.Data.Cart)
+            Dim values = New List(Of Integer)()
+            values.Add(cartID)
         
             If additionalValues IsNot Nothing Then
-                CartIDList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If CartIDList.Count = 1 Then
-                Return queryable.ByCartID(CartIDList(0))
+            If values.Count = 1 Then
+                Return queryable.ByCartID(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Cart, Boolean)("CartID", CartIDList)
-            Return queryable.Where(expression)
+            Return queryable.ByCartID(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCartID(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal values As IEnumerable(Of Integer)) As IQueryable(Of PetShop.Core.Data.Cart)
+                Return queryable.Where(Function(c) values.Contains(c.CartID))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="cartID">CartID to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCartID(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal cartID As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of PetShop.Core.Data.Cart)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(c) cartID > c.CartID)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(c) cartID >= c.CartID)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(c) cartID < c.CartID)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(c) cartID <= c.CartID)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(c) c.CartID <> cartID)
+                Case Else
+                    Return queryable.Where(Function(c) c.CartID = cartID)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
@@ -84,8 +121,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="uniqueID">UniqueID to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByUniqueID(queryable As IQueryable(Of PetShop.Core.Data.Cart), uniqueID As Integer) As IQueryable(Of PetShop.Core.Data.Cart)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByUniqueID(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal uniqueID As Integer) As IQueryable(Of PetShop.Core.Data.Cart)
             Return queryable.Where(Function(c)c.UniqueID = uniqueID)
         End Function
         
@@ -96,22 +133,58 @@ Namespace PetShop.Core.Data
         ''' <param name="uniqueID">UniqueID to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByUniqueID(queryable As IQueryable(Of PetShop.Core.Data.Cart), uniqueID As Integer, ParamArray additionalValues As Integer()) As IQueryable(Of PetShop.Core.Data.Cart)
-            Dim UniqueIDList = New List(Of Integer)()
-            UniqueIDList.Add(uniqueID)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByUniqueID(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal uniqueID As Integer, ByVal ParamArray additionalValues As Integer()) As IQueryable(Of PetShop.Core.Data.Cart)
+            Dim values = New List(Of Integer)()
+            values.Add(uniqueID)
         
             If additionalValues IsNot Nothing Then
-                UniqueIDList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If UniqueIDList.Count = 1 Then
-                Return queryable.ByUniqueID(UniqueIDList(0))
+            If values.Count = 1 Then
+                Return queryable.ByUniqueID(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Cart, Boolean)("UniqueID", UniqueIDList)
-            Return queryable.Where(expression)
+            Return queryable.ByUniqueID(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByUniqueID(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal values As IEnumerable(Of Integer)) As IQueryable(Of PetShop.Core.Data.Cart)
+                Return queryable.Where(Function(c) values.Contains(c.UniqueID))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="uniqueID">UniqueID to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByUniqueID(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal uniqueID As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of PetShop.Core.Data.Cart)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(c) uniqueID > c.UniqueID)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(c) uniqueID >= c.UniqueID)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(c) uniqueID < c.UniqueID)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(c) uniqueID <= c.UniqueID)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(c) c.UniqueID <> uniqueID)
+                Case Else
+                    Return queryable.Where(Function(c) c.UniqueID = uniqueID)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
@@ -119,8 +192,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="itemId">ItemId to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByItemId(queryable As IQueryable(Of PetShop.Core.Data.Cart), itemId As String) As IQueryable(Of PetShop.Core.Data.Cart)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByItemId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal itemId As String) As IQueryable(Of PetShop.Core.Data.Cart)
             Return queryable.Where(Function(c)c.ItemId = itemId)
         End Function
         
@@ -131,22 +204,62 @@ Namespace PetShop.Core.Data
         ''' <param name="itemId">ItemId to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByItemId(queryable As IQueryable(Of PetShop.Core.Data.Cart), itemId As String, ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.Cart)
-            Dim ItemIdList = New List(Of String)()
-            ItemIdList.Add(itemId)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByItemId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal itemId As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.Cart)
+            Dim values = New List(Of String)()
+            values.Add(itemId)
         
             If additionalValues IsNot Nothing Then
-                ItemIdList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If ItemIdList.Count = 1 Then
-                Return queryable.ByItemId(ItemIdList(0))
+            If values.Count = 1 Then
+                Return queryable.ByItemId(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Cart, Boolean)("ItemId", ItemIdList)
-            Return queryable.Where(expression)
+            Return queryable.ByItemId(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByItemId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal values As IEnumerable(Of String)) As IQueryable(Of PetShop.Core.Data.Cart)
+                Return queryable.Where(Function(c) values.Contains(c.ItemId))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="itemId">ItemId to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByItemId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal itemId As String, ByVal containment As ContainmentOperator) As IQueryable(Of PetShop.Core.Data.Cart)
+            If itemId Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("itemId", "Parameter 'itemId' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(c) c.ItemId.Contains(itemId))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(c) c.ItemId.StartsWith(itemId))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(c) c.ItemId.EndsWith(itemId))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(c) c.ItemId.Contains(itemId) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(c) c.ItemId <> itemId)
+                Case Else
+                    Return queryable.Where(Function(c) c.ItemId = itemId)
+            End Select
+        End Function
+        
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
@@ -154,8 +267,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="name">Name to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByName(queryable As IQueryable(Of PetShop.Core.Data.Cart), name As String) As IQueryable(Of PetShop.Core.Data.Cart)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByName(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal name As String) As IQueryable(Of PetShop.Core.Data.Cart)
             Return queryable.Where(Function(c)c.Name = name)
         End Function
         
@@ -166,22 +279,62 @@ Namespace PetShop.Core.Data
         ''' <param name="name">Name to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByName(queryable As IQueryable(Of PetShop.Core.Data.Cart), name As String, ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.Cart)
-            Dim NameList = New List(Of String)()
-            NameList.Add(name)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByName(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal name As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.Cart)
+            Dim values = New List(Of String)()
+            values.Add(name)
         
             If additionalValues IsNot Nothing Then
-                NameList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If NameList.Count = 1 Then
-                Return queryable.ByName(NameList(0))
+            If values.Count = 1 Then
+                Return queryable.ByName(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Cart, Boolean)("Name", NameList)
-            Return queryable.Where(expression)
+            Return queryable.ByName(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByName(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal values As IEnumerable(Of String)) As IQueryable(Of PetShop.Core.Data.Cart)
+                Return queryable.Where(Function(c) values.Contains(c.Name))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="name">Name to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByName(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal name As String, ByVal containment As ContainmentOperator) As IQueryable(Of PetShop.Core.Data.Cart)
+            If name Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("name", "Parameter 'name' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(c) c.Name.Contains(name))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(c) c.Name.StartsWith(name))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(c) c.Name.EndsWith(name))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(c) c.Name.Contains(name) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(c) c.Name <> name)
+                Case Else
+                    Return queryable.Where(Function(c) c.Name = name)
+            End Select
+        End Function
+        
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
@@ -189,8 +342,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="type">Type to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByType(queryable As IQueryable(Of PetShop.Core.Data.Cart), type As String) As IQueryable(Of PetShop.Core.Data.Cart)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByType(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal type As String) As IQueryable(Of PetShop.Core.Data.Cart)
             Return queryable.Where(Function(c)c.Type = type)
         End Function
         
@@ -201,22 +354,62 @@ Namespace PetShop.Core.Data
         ''' <param name="type">Type to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByType(queryable As IQueryable(Of PetShop.Core.Data.Cart), type As String, ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.Cart)
-            Dim TypeList = New List(Of String)()
-            TypeList.Add(type)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByType(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal type As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.Cart)
+            Dim values = New List(Of String)()
+            values.Add(type)
         
             If additionalValues IsNot Nothing Then
-                TypeList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If TypeList.Count = 1 Then
-                Return queryable.ByType(TypeList(0))
+            If values.Count = 1 Then
+                Return queryable.ByType(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Cart, Boolean)("Type", TypeList)
-            Return queryable.Where(expression)
+            Return queryable.ByType(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByType(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal values As IEnumerable(Of String)) As IQueryable(Of PetShop.Core.Data.Cart)
+                Return queryable.Where(Function(c) values.Contains(c.Type))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="type">Type to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByType(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal type As String, ByVal containment As ContainmentOperator) As IQueryable(Of PetShop.Core.Data.Cart)
+            If type Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("type", "Parameter 'type' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(c) c.Type.Contains(type))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(c) c.Type.StartsWith(type))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(c) c.Type.EndsWith(type))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(c) c.Type.Contains(type) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(c) c.Type <> type)
+                Case Else
+                    Return queryable.Where(Function(c) c.Type = type)
+            End Select
+        End Function
+        
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
@@ -224,8 +417,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="price">Price to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByPrice(queryable As IQueryable(Of PetShop.Core.Data.Cart), price As Decimal) As IQueryable(Of PetShop.Core.Data.Cart)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByPrice(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal price As Decimal) As IQueryable(Of PetShop.Core.Data.Cart)
             Return queryable.Where(Function(c)c.Price = price)
         End Function
         
@@ -236,22 +429,58 @@ Namespace PetShop.Core.Data
         ''' <param name="price">Price to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByPrice(queryable As IQueryable(Of PetShop.Core.Data.Cart), price As Decimal, ParamArray additionalValues As Decimal()) As IQueryable(Of PetShop.Core.Data.Cart)
-            Dim PriceList = New List(Of Decimal)()
-            PriceList.Add(price)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByPrice(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal price As Decimal, ByVal ParamArray additionalValues As Decimal()) As IQueryable(Of PetShop.Core.Data.Cart)
+            Dim values = New List(Of Decimal)()
+            values.Add(price)
         
             If additionalValues IsNot Nothing Then
-                PriceList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If PriceList.Count = 1 Then
-                Return queryable.ByPrice(PriceList(0))
+            If values.Count = 1 Then
+                Return queryable.ByPrice(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Cart, Boolean)("Price", PriceList)
-            Return queryable.Where(expression)
+            Return queryable.ByPrice(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByPrice(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal values As IEnumerable(Of Decimal)) As IQueryable(Of PetShop.Core.Data.Cart)
+                Return queryable.Where(Function(c) values.Contains(c.Price))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="price">Price to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByPrice(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal price As Decimal, ByVal comparison As ComparisonOperator) As IQueryable(Of PetShop.Core.Data.Cart)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(c) price > c.Price)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(c) price >= c.Price)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(c) price < c.Price)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(c) price <= c.Price)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(c) c.Price <> price)
+                Case Else
+                    Return queryable.Where(Function(c) c.Price = price)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
@@ -259,8 +488,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="categoryId">CategoryId to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByCategoryId(queryable As IQueryable(Of PetShop.Core.Data.Cart), categoryId As String) As IQueryable(Of PetShop.Core.Data.Cart)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCategoryId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal categoryId As String) As IQueryable(Of PetShop.Core.Data.Cart)
             Return queryable.Where(Function(c)c.CategoryId = categoryId)
         End Function
         
@@ -271,22 +500,62 @@ Namespace PetShop.Core.Data
         ''' <param name="categoryId">CategoryId to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByCategoryId(queryable As IQueryable(Of PetShop.Core.Data.Cart), categoryId As String, ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.Cart)
-            Dim CategoryIdList = New List(Of String)()
-            CategoryIdList.Add(categoryId)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCategoryId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal categoryId As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.Cart)
+            Dim values = New List(Of String)()
+            values.Add(categoryId)
         
             If additionalValues IsNot Nothing Then
-                CategoryIdList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If CategoryIdList.Count = 1 Then
-                Return queryable.ByCategoryId(CategoryIdList(0))
+            If values.Count = 1 Then
+                Return queryable.ByCategoryId(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Cart, Boolean)("CategoryId", CategoryIdList)
-            Return queryable.Where(expression)
+            Return queryable.ByCategoryId(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCategoryId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal values As IEnumerable(Of String)) As IQueryable(Of PetShop.Core.Data.Cart)
+                Return queryable.Where(Function(c) values.Contains(c.CategoryId))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="categoryId">CategoryId to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCategoryId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal categoryId As String, ByVal containment As ContainmentOperator) As IQueryable(Of PetShop.Core.Data.Cart)
+            If categoryId Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("categoryId", "Parameter 'categoryId' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(c) c.CategoryId.Contains(categoryId))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(c) c.CategoryId.StartsWith(categoryId))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(c) c.CategoryId.EndsWith(categoryId))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(c) c.CategoryId.Contains(categoryId) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(c) c.CategoryId <> categoryId)
+                Case Else
+                    Return queryable.Where(Function(c) c.CategoryId = categoryId)
+            End Select
+        End Function
+        
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
@@ -294,8 +563,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="productId">ProductId to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByProductId(queryable As IQueryable(Of PetShop.Core.Data.Cart), productId As String) As IQueryable(Of PetShop.Core.Data.Cart)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByProductId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal productId As String) As IQueryable(Of PetShop.Core.Data.Cart)
             Return queryable.Where(Function(c)c.ProductId = productId)
         End Function
         
@@ -306,22 +575,62 @@ Namespace PetShop.Core.Data
         ''' <param name="productId">ProductId to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByProductId(queryable As IQueryable(Of PetShop.Core.Data.Cart), productId As String, ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.Cart)
-            Dim ProductIdList = New List(Of String)()
-            ProductIdList.Add(productId)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByProductId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal productId As String, ByVal ParamArray additionalValues As String()) As IQueryable(Of PetShop.Core.Data.Cart)
+            Dim values = New List(Of String)()
+            values.Add(productId)
         
             If additionalValues IsNot Nothing Then
-                ProductIdList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If ProductIdList.Count = 1 Then
-                Return queryable.ByProductId(ProductIdList(0))
+            If values.Count = 1 Then
+                Return queryable.ByProductId(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Cart, Boolean)("ProductId", ProductIdList)
-            Return queryable.Where(expression)
+            Return queryable.ByProductId(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByProductId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal values As IEnumerable(Of String)) As IQueryable(Of PetShop.Core.Data.Cart)
+                Return queryable.Where(Function(c) values.Contains(c.ProductId))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="productId">ProductId to search for.</param>
+        ''' <param name="containment">The containment operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByProductId(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal productId As String, ByVal containment As ContainmentOperator) As IQueryable(Of PetShop.Core.Data.Cart)
+            If productId Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
+                Throw New ArgumentNullException("productId", "Parameter 'productId' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
+            End If
+            
+            Select Case containment
+                Case ContainmentOperator.Contains
+                    Return queryable.Where(Function(c) c.ProductId.Contains(productId))
+                Case ContainmentOperator.StartsWith
+                    Return queryable.Where(Function(c) c.ProductId.StartsWith(productId))
+                Case ContainmentOperator.EndsWith
+                    Return queryable.Where(Function(c) c.ProductId.EndsWith(productId))
+                Case ContainmentOperator.NotContains
+                    Return queryable.Where(Function(c) c.ProductId.Contains(productId) = False)
+                Case ContainmentOperator.NotEquals
+                    Return queryable.Where(Function(c) c.ProductId <> productId)
+                Case Else
+                    Return queryable.Where(Function(c) c.ProductId = productId)
+            End Select
+        End Function
+        
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
@@ -329,8 +638,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="isShoppingCart">IsShoppingCart to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByIsShoppingCart(queryable As IQueryable(Of PetShop.Core.Data.Cart), isShoppingCart As Boolean) As IQueryable(Of PetShop.Core.Data.Cart)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByIsShoppingCart(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal isShoppingCart As Boolean) As IQueryable(Of PetShop.Core.Data.Cart)
             Return queryable.Where(Function(c)c.IsShoppingCart = isShoppingCart)
         End Function
         
@@ -341,22 +650,52 @@ Namespace PetShop.Core.Data
         ''' <param name="isShoppingCart">IsShoppingCart to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByIsShoppingCart(queryable As IQueryable(Of PetShop.Core.Data.Cart), isShoppingCart As Boolean, ParamArray additionalValues As Boolean()) As IQueryable(Of PetShop.Core.Data.Cart)
-            Dim IsShoppingCartList = New List(Of Boolean)()
-            IsShoppingCartList.Add(isShoppingCart)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByIsShoppingCart(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal isShoppingCart As Boolean, ByVal ParamArray additionalValues As Boolean()) As IQueryable(Of PetShop.Core.Data.Cart)
+            Dim values = New List(Of Boolean)()
+            values.Add(isShoppingCart)
         
             If additionalValues IsNot Nothing Then
-                IsShoppingCartList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If IsShoppingCartList.Count = 1 Then
-                Return queryable.ByIsShoppingCart(IsShoppingCartList(0))
+            If values.Count = 1 Then
+                Return queryable.ByIsShoppingCart(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Cart, Boolean)("IsShoppingCart", IsShoppingCartList)
-            Return queryable.Where(expression)
+            Return queryable.ByIsShoppingCart(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByIsShoppingCart(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal values As IEnumerable(Of Boolean)) As IQueryable(Of PetShop.Core.Data.Cart)
+                Return queryable.Where(Function(c) values.Contains(c.IsShoppingCart))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="isShoppingCart">IsShoppingCart to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByIsShoppingCart(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal isShoppingCart As Boolean, ByVal comparison As ComparisonOperator) As IQueryable(Of PetShop.Core.Data.Cart)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan, ComparisonOperator.GreaterThanOrEquals, ComparisonOperator.LessThan, ComparisonOperator.LessThanOrEquals
+                    Throw New ArgumentException("Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Boolean type.", "comparison")
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(c) c.IsShoppingCart <> isShoppingCart)
+                Case Else
+                    Return queryable.Where(Function(c) c.IsShoppingCart = isShoppingCart)
+            End Select
+        End Function
+
 
         ''' <summary>
         ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
@@ -364,8 +703,8 @@ Namespace PetShop.Core.Data
         ''' <param name="queryable">Query to append where clause.</param>
         ''' <param name="quantity">Quantity to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByQuantity(queryable As IQueryable(Of PetShop.Core.Data.Cart), quantity As Integer) As IQueryable(Of PetShop.Core.Data.Cart)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByQuantity(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal quantity As Integer) As IQueryable(Of PetShop.Core.Data.Cart)
             Return queryable.Where(Function(c)c.Quantity = quantity)
         End Function
         
@@ -376,22 +715,137 @@ Namespace PetShop.Core.Data
         ''' <param name="quantity">Quantity to search for.</param>
         ''' <param name="additionalValues">Additional values to search for.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
-        <System.Runtime.CompilerServices.Extension> _
-        Public Function ByQuantity(queryable As IQueryable(Of PetShop.Core.Data.Cart), quantity As Integer, ParamArray additionalValues As Integer()) As IQueryable(Of PetShop.Core.Data.Cart)
-            Dim QuantityList = New List(Of Integer)()
-            QuantityList.Add(quantity)
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByQuantity(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal quantity As Integer, ByVal ParamArray additionalValues As Integer()) As IQueryable(Of PetShop.Core.Data.Cart)
+            Dim values = New List(Of Integer)()
+            values.Add(quantity)
         
             If additionalValues IsNot Nothing Then
-                QuantityList.AddRange(additionalValues)
+                values.AddRange(additionalValues)
             End If
         
-            If QuantityList.Count = 1 Then
-                Return queryable.ByQuantity(QuantityList(0))
+            If values.Count = 1 Then
+                Return queryable.ByQuantity(values(0))
             End If
         
-            Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Cart, Boolean)("Quantity", QuantityList)
-            Return queryable.Where(expression)
+            Return queryable.ByQuantity(values)
         End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByQuantity(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal values As IEnumerable(Of Integer)) As IQueryable(Of PetShop.Core.Data.Cart)
+                Return queryable.Where(Function(c) values.Contains(c.Quantity))
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="quantity">Quantity to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByQuantity(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal quantity As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of PetShop.Core.Data.Cart)
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(c) quantity > c.Quantity)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(c) quantity >= c.Quantity)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(c) quantity < c.Quantity)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(c) quantity <= c.Quantity)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(c) c.Quantity <> quantity)
+                Case Else
+                    Return queryable.Where(Function(c) c.Quantity = quantity)
+            End Select
+        End Function
+
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="createdDate">CreatedDate to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal createdDate As Date?) As IQueryable(Of PetShop.Core.Data.Cart)
+            Return queryable.Where(Function(c) Object.Equals(c.CreatedDate, createdDate))
+        End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="createdDate">CreatedDate to search for.</param>
+        ''' <param name="additionalValues">Additional values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal createdDate As Date?, ByVal ParamArray additionalValues As Date?()) As IQueryable(Of PetShop.Core.Data.Cart)
+            Dim values = New List(Of Date?)()
+            values.Add(createdDate)
+        
+            If additionalValues IsNot Nothing Then
+                values.AddRange(additionalValues)
+            Else
+                values.Add(Nothing)
+            End If
+        
+            If values.Count = 1 Then
+                Return queryable.ByCreatedDate(values(0))
+            End If
+        
+            Return queryable.ByCreatedDate(values)
+        End Function
+        
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="values">The values to search for.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal values As IEnumerable(Of Date?)) As IQueryable(Of PetShop.Core.Data.Cart)
+                ' creating dynmic expression to support nulls
+                Dim expression = DynamicExpression.BuildExpression(Of PetShop.Core.Data.Cart, Boolean)("CreatedDate", values)
+                Return queryable.Where(expression)
+        End Function
+
+        ''' <summary>
+        ''' Gets a query for <see cref="PetShop.Core.Data.Cart"/>.
+        ''' </summary>
+        ''' <param name="queryable">Query to append where clause.</param>
+        ''' <param name="createdDate">CreatedDate to search for.</param>
+        ''' <param name="comparison">The comparison operator.</param>
+        ''' <returns>IQueryable with additional where clause.</returns>
+        <System.Runtime.CompilerServices.Extension()> _
+        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of PetShop.Core.Data.Cart), ByVal createdDate As Date?, ByVal comparison As ComparisonOperator) As IQueryable(Of PetShop.Core.Data.Cart)
+            If createdDate Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
+                Throw New ArgumentNullException("createdDate", "Parameter 'createdDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
+            End If
+            
+            Select Case comparison
+                Case ComparisonOperator.GreaterThan
+                    Return queryable.Where(Function(c) createdDate > c.CreatedDate)
+                Case ComparisonOperator.GreaterThanOrEquals
+                    Return queryable.Where(Function(c) createdDate >= c.CreatedDate)
+                Case ComparisonOperator.LessThan
+                    Return queryable.Where(Function(c) createdDate < c.CreatedDate)
+                Case ComparisonOperator.LessThanOrEquals
+                    Return queryable.Where(Function(c) createdDate <= c.CreatedDate)
+                Case ComparisonOperator.NotEquals
+                    Return queryable.Where(Function(c) Object.Equals(c.CreatedDate, createdDate) = False)
+                Case Else
+                    Return queryable.Where(Function(c) Object.Equals(c.CreatedDate, createdDate))
+            End Select
+        End Function
+
 
         'Insert User Defined Extensions here.
         'Anything outside of this Region will be lost at regeneration

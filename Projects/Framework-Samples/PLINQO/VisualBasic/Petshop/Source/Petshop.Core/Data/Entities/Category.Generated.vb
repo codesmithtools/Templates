@@ -28,7 +28,6 @@ Namespace PetShop.Core.Data
         ''' Initializes the <see cref="Category"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of Category)()
             AddSharedRules()
         End Sub
 #End Region
@@ -43,9 +42,6 @@ Namespace PetShop.Core.Data
         End Sub
 
         Private Sub Initialize()
-            _productList = New System.Data.Linq.EntitySet(Of Product)( _
-                New System.Action(Of Product)(AddressOf Me.OnProductListAdd), _
-                New System.Action(Of Product)(AddressOf Me.OnProductListRemove))
             OnCreated()
         End Sub
 #End Region
@@ -123,41 +119,6 @@ Namespace PetShop.Core.Data
 #End Region
 
 #Region "Association Mapped Properties"
-
-
-        Private _productList As System.Data.Linq.EntitySet(Of Product)
-
-        ''' <summary>
-        ''' Gets or sets the Product association.
-        ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="Category_Product", Storage:="_productList", ThisKey:="CategoryId", OtherKey:="CategoryId")> _
-        <System.Runtime.Serialization.DataMember(Order:=4, EmitDefaultValue:=False)> _
-        Public Property ProductList() As System.Data.Linq.EntitySet(Of Product)
-            Get
-                If (serializing AndAlso Not _productList.HasLoadedOrAssignedValues) Then
-                    Return Nothing
-                Else
-                    Return _productList
-                End If
-            End Get
-            Set(ByVal value As System.Data.Linq.EntitySet(Of Product))
-                _productList.Assign(value)
-            End Set
-        End Property
-
-        <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub OnProductListAdd(ByVal entity As Product)
-            SendPropertyChanging(Nothing)
-            entity.Category = Me
-            SendPropertyChanged(Nothing)
-        End Sub
-
-        <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub OnProductListRemove(ByVal entity As Product)
-            SendPropertyChanging(Nothing)
-            entity.Category = Nothing
-            SendPropertyChanged(Nothing)
-        End Sub
 
 #End Region
 
@@ -290,7 +251,7 @@ Namespace PetShop.Core.Data
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As Category
-            Return DirectCast(DirectCast(Me, ICloneable), Category).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable).Clone(), Category)
         End Function
 #End Region
 
@@ -308,7 +269,6 @@ Namespace PetShop.Core.Data
             End If
 
             MyBase.Detach()
-            _productList = Detach(_productList, AddressOf OnProductListAdd, AddressOf OnProductListRemove)
         End Sub
 #End Region
     End Class

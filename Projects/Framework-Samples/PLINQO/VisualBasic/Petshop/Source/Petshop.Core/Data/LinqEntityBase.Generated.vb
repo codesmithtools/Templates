@@ -15,7 +15,7 @@ Namespace PetShop.Core.Data
     ''' <summary>
     ''' A base class for Linq entities that implements notification events.
     ''' </summary>
-    <System.Runtime.Serialization.DataContract( IsReference:=True )> _
+    <System.Runtime.Serialization.DataContract(IsReference:=True)> _
     Public Partial MustInherit Class LinqEntityBase
        Implements System.ComponentModel.INotifyPropertyChanging
        Implements System.ComponentModel.INotifyPropertyChanged

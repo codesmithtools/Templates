@@ -28,7 +28,6 @@ Namespace PetShop.Core.Data
         ''' Initializes the <see cref="Inventory"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of Inventory)()
             AddSharedRules()
         End Sub
 #End Region
@@ -221,7 +220,7 @@ Namespace PetShop.Core.Data
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As Inventory
-            Return DirectCast(DirectCast(Me, ICloneable), Inventory).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable).Clone(), Inventory)
         End Function
 #End Region
 

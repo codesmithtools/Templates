@@ -28,7 +28,6 @@ Namespace PetShop.Core.Data
         ''' Initializes the <see cref="Item"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of Item)()
             AddSharedRules()
         End Sub
 #End Region
@@ -43,8 +42,6 @@ Namespace PetShop.Core.Data
         End Sub
 
         Private Sub Initialize()
-            _product = Nothing
-            _supplier1 = Nothing
             OnCreated()
         End Sub
 #End Region
@@ -88,9 +85,6 @@ Namespace PetShop.Core.Data
             End Get
             Set(ByVal value As String)
                 If (String.Equals(Me._productId, value) = False) Then
-                    If (_product.HasLoadedOrAssignedValue) Then
-                        Throw New System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException()
-                    End If
                     OnProductIdChanging(value)
                     SendPropertyChanging("ProductId")
                     _productId = value
@@ -157,9 +151,6 @@ Namespace PetShop.Core.Data
             End Get
             Set(ByVal value As Nullable(Of Integer))
                 If (Me._supplier.Equals(value) = False) Then
-                    If (_supplier1.HasLoadedOrAssignedValue) Then
-                        Throw New System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException()
-                    End If
                     OnSupplierChanging(value)
                     SendPropertyChanging("Supplier")
                     _supplier = value
@@ -241,74 +232,6 @@ Namespace PetShop.Core.Data
 
 #Region "Association Mapped Properties"
 
-        Private  _product As System.Data.Linq.EntityRef(Of Product)
-
-        ''' <summary>
-        ''' Gets or sets the Product association.
-        ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="Product_Item", Storage:="_product", ThisKey:="ProductId", OtherKey:="ProductId", IsUnique:=true, IsForeignKey:=true)> _
-        <System.Runtime.Serialization.DataMember(Order:=9, EmitDefaultValue:=False)> _
-        Public Property Product() As Product
-            Get
-                If (serializing AndAlso Not _product.HasLoadedOrAssignedValue) Then
-                    Return Nothing
-                Else
-                    Return _product.Entity
-                End If
-            End Get
-            Set(ByVal value As Product)
-                Dim previousValue As Product = _product.Entity
-                If ((Object.Equals(previousValue, value) = False) OrElse (Me._product.HasLoadedOrAssignedValue = False)) Then
-                    SendPropertyChanging("Product")
-                    If ((previousValue Is Nothing) = False) Then
-                        _product.Entity = Nothing
-                        previousValue.ItemList.Remove(Me)
-                    End If
-                    _product.Entity = value
-                    If ((value Is Nothing) = False) Then
-                        value.ItemList.Add(Me)
-                        _productId = value.ProductId
-                    Else
-                        _productId = Nothing
-                    End If
-                    SendPropertyChanged("Product")
-                End If
-            End Set
-        End Property
-        Private  _supplier1 As System.Data.Linq.EntityRef(Of Supplier)
-
-        ''' <summary>
-        ''' Gets or sets the Supplier association.
-        ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="Supplier_Item", Storage:="_supplier1", ThisKey:="Supplier", OtherKey:="SuppId", IsUnique:=true, IsForeignKey:=true)> _
-        <System.Runtime.Serialization.DataMember(Order:=10, EmitDefaultValue:=False)> _
-        Public Property Supplier1() As Supplier
-            Get
-                If (serializing AndAlso Not _supplier1.HasLoadedOrAssignedValue) Then
-                    Return Nothing
-                Else
-                    Return _supplier1.Entity
-                End If
-            End Get
-            Set(ByVal value As Supplier)
-                Dim previousValue As Supplier = _supplier1.Entity
-                If ((Object.Equals(previousValue, value) = False) OrElse (Me._supplier1.HasLoadedOrAssignedValue = False)) Then
-                    SendPropertyChanging("Supplier1")
-                    If ((previousValue Is Nothing) = False) Then
-                        _supplier1.Entity = Nothing
-                        previousValue.ItemList.Remove(Me)
-                    End If
-                    _supplier1.Entity = value
-                    If ((value Is Nothing) = False) Then
-                        value.ItemList.Add(Me)
-                        _supplier = value.SuppId
-                    Else
-                        _supplier = Nothing
-                    End If
-                    SendPropertyChanged("Supplier1")
-                End If
-            End Set
-        End Property
 #End Region
 
 #Region "Extensibility Method Definitions"
@@ -475,7 +398,7 @@ Namespace PetShop.Core.Data
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As Item
-            Return DirectCast(DirectCast(Me, ICloneable), Item).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable).Clone(), Item)
         End Function
 #End Region
 
@@ -493,8 +416,6 @@ Namespace PetShop.Core.Data
             End If
 
             MyBase.Detach()
-            _product = Detach(_product)
-            _supplier1 = Detach(_supplier1)
         End Sub
 #End Region
     End Class

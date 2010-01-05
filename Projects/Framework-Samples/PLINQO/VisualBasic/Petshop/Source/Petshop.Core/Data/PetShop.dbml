@@ -15,7 +15,6 @@
       <Column Name="Zip" Storage="_zip" Type="System.String" DbType="varchar(20) NOT NULL" CanBeNull="false" />
       <Column Name="Country" Storage="_country" Type="System.String" DbType="varchar(20) NOT NULL" CanBeNull="false" />
       <Column Name="Phone" Storage="_phone" Type="System.String" DbType="varchar(20)" CanBeNull="true" />
-      <Column Name="Number" Storage="_number" Type="System.Int32" DbType="int" CanBeNull="true" />
       <Association Name="Profile_Account" Member="Profile" Storage="_profile" ThisKey="UniqueID" Type="Profile" IsForeignKey="true" DeleteRule="CASCADE" />
     </Type>
   </Table>
@@ -31,6 +30,7 @@
       <Column Name="ProductId" Storage="_productId" Type="System.String" DbType="varchar(10) NOT NULL" CanBeNull="false" />
       <Column Name="IsShoppingCart" Storage="_isShoppingCart" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
       <Column Name="Quantity" Storage="_quantity" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedDate" Storage="_createdDate" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
       <Association Name="Profile_Cart" Member="Profile" Storage="_profile" ThisKey="UniqueID" Type="Profile" IsForeignKey="true" DeleteRule="CASCADE" />
     </Type>
   </Table>
@@ -39,7 +39,6 @@
       <Column Name="CategoryId" Storage="_categoryId" Type="System.String" DbType="varchar(10) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Storage="_name" Type="System.String" DbType="varchar(80)" CanBeNull="true" />
       <Column Name="Descn" Storage="_descn" Type="System.String" DbType="varchar(255)" CanBeNull="true" />
-      <Association Name="Category_Product" Member="ProductList" Storage="_productList" OtherKey="CategoryId" Type="Product" DeleteOnNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.Inventory" Member="Inventory">
@@ -58,8 +57,6 @@
       <Column Name="Status" Storage="_status" Type="System.String" DbType="varchar(2)" CanBeNull="true" />
       <Column Name="Name" Storage="_name" Type="System.String" DbType="varchar(80)" CanBeNull="true" />
       <Column Name="Image" Storage="_image" Type="System.String" DbType="varchar(80)" CanBeNull="true" />
-      <Association Name="Product_Item" Member="Product" Storage="_product" ThisKey="ProductId" Type="Product" IsForeignKey="true" />
-      <Association Name="Supplier_Item" Member="Supplier1" Storage="_supplier1" ThisKey="Supplier" Type="Supplier" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.LineItem" Member="LineItem">
@@ -69,7 +66,6 @@
       <Column Name="ItemId" Storage="_itemId" Type="System.String" DbType="varchar(10) NOT NULL" CanBeNull="false" />
       <Column Name="Quantity" Storage="_quantity" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
       <Column Name="UnitPrice" Storage="_unitPrice" Type="System.Decimal" DbType="decimal(10,2) NOT NULL" CanBeNull="false" />
-      <Association Name="Orders_LineItem" Member="Orders" Storage="_orders" ThisKey="OrderId" Type="Orders" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Orders" Member="Orders">
@@ -97,8 +93,6 @@
       <Column Name="ShipToLastName" Storage="_shipToLastName" Type="System.String" DbType="varchar(80) NOT NULL" CanBeNull="false" />
       <Column Name="AuthorizationNumber" Storage="_authorizationNumber" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
       <Column Name="Locale" Storage="_locale" Type="System.String" DbType="varchar(20) NOT NULL" CanBeNull="false" />
-      <Association Name="Orders_LineItem" Member="LineItemList" Storage="_lineItemList" OtherKey="OrderId" Type="LineItem" DeleteOnNull="false" />
-      <Association Name="Orders_OrderStatus" Member="OrderStatusList" Storage="_orderStatusList" OtherKey="OrderId" Type="OrderStatus" DeleteOnNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.OrderStatus" Member="OrderStatus">
@@ -107,7 +101,6 @@
       <Column Name="LineNum" Storage="_lineNum" Type="System.Int32" DbType="int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Timestamp" Storage="_timestamp" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="Status" Storage="_status" Type="System.String" DbType="varchar(2) NOT NULL" CanBeNull="false" />
-      <Association Name="Orders_OrderStatus" Member="Orders" Storage="_orders" ThisKey="OrderId" Type="Orders" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Product" Member="Product">
@@ -117,8 +110,10 @@
       <Column Name="Name" Storage="_name" Type="System.String" DbType="varchar(80)" CanBeNull="true" />
       <Column Name="Descn" Storage="_descn" Type="System.String" DbType="varchar(255)" CanBeNull="true" />
       <Column Name="Image" Storage="_image" Type="System.String" DbType="varchar(80)" CanBeNull="true" />
-      <Association Name="Product_Item" Member="ItemList" Storage="_itemList" OtherKey="ProductId" Type="Item" DeleteOnNull="false" />
-      <Association Name="Category_Product" Member="Category" Storage="_category" ThisKey="CategoryId" Type="Category" IsForeignKey="true" />
+      <Column Name="CreateDate" Storage="_createDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Storage="_password" Type="System.String" DbType="varchar(80) NOT NULL" CanBeNull="false" />
+      <Column Name="FullDescn" Storage="_fullDescn" Type="System.String" DbType="varchar(512)" CanBeNull="true" />
+      <Column Name="Newbie" Storage="_newbie" Type="System.Boolean" DbType="bit" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Profiles" Member="Profile">
@@ -144,7 +139,6 @@
       <Column Name="State" Storage="_state" Type="System.String" DbType="varchar(80)" CanBeNull="true" />
       <Column Name="Zip" Storage="_zip" Type="System.String" DbType="varchar(5)" CanBeNull="true" />
       <Column Name="Phone" Storage="_phone" Type="System.String" DbType="varchar(40)" CanBeNull="true" />
-      <Association Name="Supplier_Item" Member="ItemList" Storage="_itemList" OtherKey="Supplier" Type="Item" DeleteOnNull="false" />
     </Type>
   </Table>
 </Database>

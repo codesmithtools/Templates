@@ -28,7 +28,6 @@ Namespace PetShop.Core.Data
         ''' Initializes the <see cref="Product"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of Product)()
             AddSharedRules()
         End Sub
 #End Region
@@ -43,10 +42,6 @@ Namespace PetShop.Core.Data
         End Sub
 
         Private Sub Initialize()
-            _category = Nothing
-            _itemList = New System.Data.Linq.EntitySet(Of Item)( _
-                New System.Action(Of Item)(AddressOf Me.OnItemListAdd), _
-                New System.Action(Of Item)(AddressOf Me.OnItemListRemove))
             OnCreated()
         End Sub
 #End Region
@@ -90,9 +85,6 @@ Namespace PetShop.Core.Data
             End Get
             Set(ByVal value As String)
                 If (String.Equals(Me._categoryId, value) = False) Then
-                    If (_category.HasLoadedOrAssignedValue) Then
-                        Throw New System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException()
-                    End If
                     OnCategoryIdChanging(value)
                     SendPropertyChanging("CategoryId")
                     _categoryId = value
@@ -170,78 +162,99 @@ Namespace PetShop.Core.Data
                 End If
             End Set
         End Property
+
+        Private _createDate As Date
+
+        ''' <summary>
+        ''' Gets or sets the CreateDate column value.
+        ''' </summary>
+        <System.Data.Linq.Mapping.Column(Name:="CreateDate", Storage:="_createDate", DbType:="datetime NOT NULL", CanBeNull:=False)> _
+        <System.Runtime.Serialization.DataMember(Order:=6)> _
+        Public Property CreateDate() As Date
+            Get
+                Return _createDate
+            End Get
+            Set(ByVal value As Date)
+                If ((Me._createDate = value) = False) Then
+                    OnCreateDateChanging(value)
+                    SendPropertyChanging("CreateDate")
+                    _createDate = value
+                    SendPropertyChanged("CreateDate")
+                    OnCreateDateChanged()
+                End If
+            End Set
+        End Property
+
+        Private _password As String
+
+        ''' <summary>
+        ''' Gets or sets the Password column value.
+        ''' </summary>
+        <System.Data.Linq.Mapping.Column(Name:="Password", Storage:="_password", DbType:="varchar(80) NOT NULL", CanBeNull:=False)> _
+        <ComponentModel.DataAnnotations.StringLength(80)> _
+        <System.Runtime.Serialization.DataMember(Order:=7)> _
+        Public Property Password() As String
+            Get
+                Return _password
+            End Get
+            Set(ByVal value As String)
+                If (String.Equals(Me._password, value) = False) Then
+                    OnPasswordChanging(value)
+                    SendPropertyChanging("Password")
+                    _password = value
+                    SendPropertyChanged("Password")
+                    OnPasswordChanged()
+                End If
+            End Set
+        End Property
+
+        Private _fullDescn As String
+
+        ''' <summary>
+        ''' Gets or sets the FullDescn column value.
+        ''' </summary>
+        <System.Data.Linq.Mapping.Column(Name:="FullDescn", Storage:="_fullDescn", DbType:="varchar(512)")> _
+        <ComponentModel.DataAnnotations.StringLength(512)> _
+        <System.Runtime.Serialization.DataMember(Order:=8)> _
+        Public Property FullDescn() As String
+            Get
+                Return _fullDescn
+            End Get
+            Set(ByVal value As String)
+                If (String.Equals(Me._fullDescn, value) = False) Then
+                    OnFullDescnChanging(value)
+                    SendPropertyChanging("FullDescn")
+                    _fullDescn = value
+                    SendPropertyChanged("FullDescn")
+                    OnFullDescnChanged()
+                End If
+            End Set
+        End Property
+
+        Private _newbie As Nullable(Of Boolean)
+
+        ''' <summary>
+        ''' Gets or sets the Newbie column value.
+        ''' </summary>
+        <System.Data.Linq.Mapping.Column(Name:="Newbie", Storage:="_newbie", DbType:="bit")> _
+        <System.Runtime.Serialization.DataMember(Order:=9)> _
+        Public Property Newbie() As Nullable(Of Boolean)
+            Get
+                Return _newbie
+            End Get
+            Set(ByVal value As Nullable(Of Boolean))
+                If (Me._newbie.Equals(value) = False) Then
+                    OnNewbieChanging(value)
+                    SendPropertyChanging("Newbie")
+                    _newbie = value
+                    SendPropertyChanged("Newbie")
+                    OnNewbieChanged()
+                End If
+            End Set
+        End Property
 #End Region
 
 #Region "Association Mapped Properties"
-
-        Private  _category As System.Data.Linq.EntityRef(Of Category)
-
-        ''' <summary>
-        ''' Gets or sets the Category association.
-        ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="Category_Product", Storage:="_category", ThisKey:="CategoryId", OtherKey:="CategoryId", IsUnique:=true, IsForeignKey:=true)> _
-        <System.Runtime.Serialization.DataMember(Order:=6, EmitDefaultValue:=False)> _
-        Public Property Category() As Category
-            Get
-                If (serializing AndAlso Not _category.HasLoadedOrAssignedValue) Then
-                    Return Nothing
-                Else
-                    Return _category.Entity
-                End If
-            End Get
-            Set(ByVal value As Category)
-                Dim previousValue As Category = _category.Entity
-                If ((Object.Equals(previousValue, value) = False) OrElse (Me._category.HasLoadedOrAssignedValue = False)) Then
-                    SendPropertyChanging("Category")
-                    If ((previousValue Is Nothing) = False) Then
-                        _category.Entity = Nothing
-                        previousValue.ProductList.Remove(Me)
-                    End If
-                    _category.Entity = value
-                    If ((value Is Nothing) = False) Then
-                        value.ProductList.Add(Me)
-                        _categoryId = value.CategoryId
-                    Else
-                        _categoryId = Nothing
-                    End If
-                    SendPropertyChanged("Category")
-                End If
-            End Set
-        End Property
-
-        Private _itemList As System.Data.Linq.EntitySet(Of Item)
-
-        ''' <summary>
-        ''' Gets or sets the Item association.
-        ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="Product_Item", Storage:="_itemList", ThisKey:="ProductId", OtherKey:="ProductId")> _
-        <System.Runtime.Serialization.DataMember(Order:=7, EmitDefaultValue:=False)> _
-        Public Property ItemList() As System.Data.Linq.EntitySet(Of Item)
-            Get
-                If (serializing AndAlso Not _itemList.HasLoadedOrAssignedValues) Then
-                    Return Nothing
-                Else
-                    Return _itemList
-                End If
-            End Get
-            Set(ByVal value As System.Data.Linq.EntitySet(Of Item))
-                _itemList.Assign(value)
-            End Set
-        End Property
-
-        <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub OnItemListAdd(ByVal entity As Item)
-            SendPropertyChanging(Nothing)
-            entity.Product = Me
-            SendPropertyChanged(Nothing)
-        End Sub
-
-        <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub OnItemListRemove(ByVal entity As Item)
-            SendPropertyChanging(Nothing)
-            entity.Product = Nothing
-            SendPropertyChanged(Nothing)
-        End Sub
 
 #End Region
 
@@ -293,6 +306,34 @@ Namespace PetShop.Core.Data
         End Sub
         ''' <summary>Called after Image has Changed.</summary>
         Partial Private Sub OnImageChanged()
+        End Sub
+        ''' <summary>Called when CreateDate is changing.</summary>
+        ''' <param name="value">The new value.</param>
+        Partial Private Sub OnCreateDateChanging(ByVal value As Date)
+        End Sub
+        ''' <summary>Called after CreateDate has Changed.</summary>
+        Partial Private Sub OnCreateDateChanged()
+        End Sub
+        ''' <summary>Called when Password is changing.</summary>
+        ''' <param name="value">The new value.</param>
+        Partial Private Sub OnPasswordChanging(ByVal value As String)
+        End Sub
+        ''' <summary>Called after Password has Changed.</summary>
+        Partial Private Sub OnPasswordChanged()
+        End Sub
+        ''' <summary>Called when FullDescn is changing.</summary>
+        ''' <param name="value">The new value.</param>
+        Partial Private Sub OnFullDescnChanging(ByVal value As String)
+        End Sub
+        ''' <summary>Called after FullDescn has Changed.</summary>
+        Partial Private Sub OnFullDescnChanged()
+        End Sub
+        ''' <summary>Called when Newbie is changing.</summary>
+        ''' <param name="value">The new value.</param>
+        Partial Private Sub OnNewbieChanging(ByVal value As Nullable(Of Boolean))
+        End Sub
+        ''' <summary>Called after Newbie has Changed.</summary>
+        Partial Private Sub OnNewbieChanged()
         End Sub
 #End Region
 
@@ -388,7 +429,7 @@ Namespace PetShop.Core.Data
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As Product
-            Return DirectCast(DirectCast(Me, ICloneable), Product).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable).Clone(), Product)
         End Function
 #End Region
 
@@ -406,8 +447,6 @@ Namespace PetShop.Core.Data
             End If
 
             MyBase.Detach()
-            _category = Detach(_category)
-            _itemList = Detach(_itemList, AddressOf OnItemListAdd, AddressOf OnItemListRemove)
         End Sub
 #End Region
     End Class
