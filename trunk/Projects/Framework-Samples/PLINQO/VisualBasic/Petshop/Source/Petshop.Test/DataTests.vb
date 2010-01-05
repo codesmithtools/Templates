@@ -368,7 +368,7 @@ Namespace PetShop.Test
             item.Name = ""
             item.ProductId = ID
             item.Status = ""
-            item.Supplier1.SuppId = _supplierId
+            item.Supplier = _supplierId
             item.UnitCost = 0
 
             Try

@@ -28,7 +28,6 @@ Namespace PetShop.Core.Data
         ''' Initializes the <see cref="Account"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of Account)()
             AddSharedRules()
         End Sub
 #End Region
@@ -326,28 +325,6 @@ Namespace PetShop.Core.Data
                 End If
             End Set
         End Property
-
-        Private _number As Nullable(Of Integer)
-
-        ''' <summary>
-        ''' Gets or sets the Number column value.
-        ''' </summary>
-        <System.Data.Linq.Mapping.Column(Name:="Number", Storage:="_number", DbType:="int")> _
-        <System.Runtime.Serialization.DataMember(Order:=13)> _
-        Public Property Number() As Nullable(Of Integer)
-            Get
-                Return _number
-            End Get
-            Set(ByVal value As Nullable(Of Integer))
-                If (Me._number.Equals(value) = False) Then
-                    OnNumberChanging(value)
-                    SendPropertyChanging("Number")
-                    _number = value
-                    SendPropertyChanged("Number")
-                    OnNumberChanged()
-                End If
-            End Set
-        End Property
 #End Region
 
 #Region "Association Mapped Properties"
@@ -358,7 +335,7 @@ Namespace PetShop.Core.Data
         ''' Gets or sets the Profile association.
         ''' </summary>
         <System.Data.Linq.Mapping.Association(Name:="Profile_Account", Storage:="_profile", ThisKey:="UniqueID", OtherKey:="UniqueID", IsUnique:=true, IsForeignKey:=true, DeleteRule:="CASCADE")> _
-        <System.Runtime.Serialization.DataMember(Order:=14, EmitDefaultValue:=False)> _
+        <System.Runtime.Serialization.DataMember(Order:=13, EmitDefaultValue:=False)> _
         Public Property Profile() As Profile
             Get
                 If (serializing AndAlso Not _profile.HasLoadedOrAssignedValue) Then
@@ -486,13 +463,6 @@ Namespace PetShop.Core.Data
         ''' <summary>Called after Phone has Changed.</summary>
         Partial Private Sub OnPhoneChanged()
         End Sub
-        ''' <summary>Called when Number is changing.</summary>
-        ''' <param name="value">The new value.</param>
-        Partial Private Sub OnNumberChanging(ByVal value As Nullable(Of Integer))
-        End Sub
-        ''' <summary>Called after Number has Changed.</summary>
-        Partial Private Sub OnNumberChanged()
-        End Sub
 #End Region
 
 #Region "Serialization"
@@ -587,7 +557,7 @@ Namespace PetShop.Core.Data
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As Account
-            Return DirectCast(DirectCast(Me, ICloneable), Account).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable).Clone(), Account)
         End Function
 #End Region
 

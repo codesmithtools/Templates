@@ -28,7 +28,6 @@ Namespace PetShop.Core.Data
         ''' Initializes the <see cref="Supplier"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of Supplier)()
             AddSharedRules()
         End Sub
 #End Region
@@ -43,9 +42,6 @@ Namespace PetShop.Core.Data
         End Sub
 
         Private Sub Initialize()
-            _itemList = New System.Data.Linq.EntitySet(Of Item)( _
-                New System.Action(Of Item)(AddressOf Me.OnItemListAdd), _
-                New System.Action(Of Item)(AddressOf Me.OnItemListRemove))
             OnCreated()
         End Sub
 #End Region
@@ -261,41 +257,6 @@ Namespace PetShop.Core.Data
 
 #Region "Association Mapped Properties"
 
-
-        Private _itemList As System.Data.Linq.EntitySet(Of Item)
-
-        ''' <summary>
-        ''' Gets or sets the Item association.
-        ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="Supplier_Item", Storage:="_itemList", ThisKey:="SuppId", OtherKey:="Supplier")> _
-        <System.Runtime.Serialization.DataMember(Order:=10, EmitDefaultValue:=False)> _
-        Public Property ItemList() As System.Data.Linq.EntitySet(Of Item)
-            Get
-                If (serializing AndAlso Not _itemList.HasLoadedOrAssignedValues) Then
-                    Return Nothing
-                Else
-                    Return _itemList
-                End If
-            End Get
-            Set(ByVal value As System.Data.Linq.EntitySet(Of Item))
-                _itemList.Assign(value)
-            End Set
-        End Property
-
-        <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub OnItemListAdd(ByVal entity As Item)
-            SendPropertyChanging(Nothing)
-            entity.Supplier1 = Me
-            SendPropertyChanged(Nothing)
-        End Sub
-
-        <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub OnItemListRemove(ByVal entity As Item)
-            SendPropertyChanging(Nothing)
-            entity.Supplier1 = Nothing
-            SendPropertyChanged(Nothing)
-        End Sub
-
 #End Region
 
 #Region "Extensibility Method Definitions"
@@ -469,7 +430,7 @@ Namespace PetShop.Core.Data
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As Supplier
-            Return DirectCast(DirectCast(Me, ICloneable), Supplier).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable).Clone(), Supplier)
         End Function
 #End Region
 
@@ -487,7 +448,6 @@ Namespace PetShop.Core.Data
             End If
 
             MyBase.Detach()
-            _itemList = Detach(_itemList, AddressOf OnItemListAdd, AddressOf OnItemListRemove)
         End Sub
 #End Region
     End Class

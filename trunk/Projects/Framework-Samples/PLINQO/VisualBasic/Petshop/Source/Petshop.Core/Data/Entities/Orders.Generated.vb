@@ -28,7 +28,6 @@ Namespace PetShop.Core.Data
         ''' Initializes the <see cref="Orders"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of Orders)()
             AddSharedRules()
         End Sub
 #End Region
@@ -43,12 +42,6 @@ Namespace PetShop.Core.Data
         End Sub
 
         Private Sub Initialize()
-            _lineItemList = New System.Data.Linq.EntitySet(Of LineItem)( _
-                New System.Action(Of LineItem)(AddressOf Me.OnLineItemListAdd), _
-                New System.Action(Of LineItem)(AddressOf Me.OnLineItemListRemove))
-            _orderStatusList = New System.Data.Linq.EntitySet(Of OrderStatus)( _
-                New System.Action(Of OrderStatus)(AddressOf Me.OnOrderStatusListAdd), _
-                New System.Action(Of OrderStatus)(AddressOf Me.OnOrderStatusListRemove))
             OnCreated()
         End Sub
 #End Region
@@ -583,76 +576,6 @@ Namespace PetShop.Core.Data
 
 #Region "Association Mapped Properties"
 
-
-        Private _lineItemList As System.Data.Linq.EntitySet(Of LineItem)
-
-        ''' <summary>
-        ''' Gets or sets the LineItem association.
-        ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="Orders_LineItem", Storage:="_lineItemList", ThisKey:="OrderId", OtherKey:="OrderId")> _
-        <System.Runtime.Serialization.DataMember(Order:=24, EmitDefaultValue:=False)> _
-        Public Property LineItemList() As System.Data.Linq.EntitySet(Of LineItem)
-            Get
-                If (serializing AndAlso Not _lineItemList.HasLoadedOrAssignedValues) Then
-                    Return Nothing
-                Else
-                    Return _lineItemList
-                End If
-            End Get
-            Set(ByVal value As System.Data.Linq.EntitySet(Of LineItem))
-                _lineItemList.Assign(value)
-            End Set
-        End Property
-
-        <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub OnLineItemListAdd(ByVal entity As LineItem)
-            SendPropertyChanging(Nothing)
-            entity.Orders = Me
-            SendPropertyChanged(Nothing)
-        End Sub
-
-        <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub OnLineItemListRemove(ByVal entity As LineItem)
-            SendPropertyChanging(Nothing)
-            entity.Orders = Nothing
-            SendPropertyChanged(Nothing)
-        End Sub
-
-
-        Private _orderStatusList As System.Data.Linq.EntitySet(Of OrderStatus)
-
-        ''' <summary>
-        ''' Gets or sets the OrderStatus association.
-        ''' </summary>
-        <System.Data.Linq.Mapping.Association(Name:="Orders_OrderStatus", Storage:="_orderStatusList", ThisKey:="OrderId", OtherKey:="OrderId")> _
-        <System.Runtime.Serialization.DataMember(Order:=25, EmitDefaultValue:=False)> _
-        Public Property OrderStatusList() As System.Data.Linq.EntitySet(Of OrderStatus)
-            Get
-                If (serializing AndAlso Not _orderStatusList.HasLoadedOrAssignedValues) Then
-                    Return Nothing
-                Else
-                    Return _orderStatusList
-                End If
-            End Get
-            Set(ByVal value As System.Data.Linq.EntitySet(Of OrderStatus))
-                _orderStatusList.Assign(value)
-            End Set
-        End Property
-
-        <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub OnOrderStatusListAdd(ByVal entity As OrderStatus)
-            SendPropertyChanging(Nothing)
-            entity.Orders = Me
-            SendPropertyChanged(Nothing)
-        End Sub
-
-        <System.Diagnostics.DebuggerNonUserCode()> _
-        Private Sub OnOrderStatusListRemove(ByVal entity As OrderStatus)
-            SendPropertyChanging(Nothing)
-            entity.Orders = Nothing
-            SendPropertyChanged(Nothing)
-        End Sub
-
 #End Region
 
 #Region "Extensibility Method Definitions"
@@ -924,7 +847,7 @@ Namespace PetShop.Core.Data
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As Orders
-            Return DirectCast(DirectCast(Me, ICloneable), Orders).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable).Clone(), Orders)
         End Function
 #End Region
 
@@ -942,8 +865,6 @@ Namespace PetShop.Core.Data
             End If
 
             MyBase.Detach()
-            _lineItemList = Detach(_lineItemList, AddressOf OnLineItemListAdd, AddressOf OnLineItemListRemove)
-            _orderStatusList = Detach(_orderStatusList, AddressOf OnOrderStatusListAdd, AddressOf OnOrderStatusListRemove)
         End Sub
 #End Region
     End Class

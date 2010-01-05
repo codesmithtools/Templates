@@ -15,10 +15,10 @@ Namespace PetShop.Core.Data
     ''' The DataContext class for the Petshop database.
     ''' </summary>
     public Partial Class PetshopDataContext 
-        Inherits System.Data.Linq.DataContext
+        Inherits CodeSmith.Data.Linq.DataContextBase
         Implements System.Data.Services.IUpdatable
 
-        Private Shared ReadOnly mappingCache As System.Data.Linq.Mapping.MappingSource = New System.Data.Linq.Mapping.AttributeMappingSource()
+        Public Shared ReadOnly MappingCache As System.Data.Linq.Mapping.MappingSource = New System.Data.Linq.Mapping.AttributeMappingSource()
 
         #Region "ConnectionString"
         Private Const CONNECTION_NAME As String = "PetshopConnectionString"
@@ -69,7 +69,7 @@ Namespace PetShop.Core.Data
         ''' </summary>
         <System.Diagnostics.DebuggerNonUserCode> _
         public Sub New()
-            MyBase.New(ConnectionString, mappingCache)
+            MyBase.New(ConnectionString, MappingCache)
             OnCreated()
         End Sub
 
@@ -80,7 +80,7 @@ Namespace PetShop.Core.Data
         ''' <param name="connection">The connection string.</param>
         <System.Diagnostics.DebuggerNonUserCode> _
         public Sub New(ByVal connection As String)
-            MyBase.New(connection, mappingCache)
+            MyBase.New(connection, MappingCache)
             OnCreated()
         End Sub
         
@@ -90,7 +90,7 @@ Namespace PetShop.Core.Data
         ''' <param name="connection">The database connection.</param>
         <System.Diagnostics.DebuggerNonUserCode> _
         public Sub New(ByVal connection As System.Data.IDbConnection)
-            MyBase.New(connection, mappingCache)
+            MyBase.New(connection, MappingCache)
             OnCreated()
         End Sub
         

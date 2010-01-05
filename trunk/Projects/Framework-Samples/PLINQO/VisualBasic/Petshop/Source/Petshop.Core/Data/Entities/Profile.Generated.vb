@@ -28,7 +28,6 @@ Namespace PetShop.Core.Data
         ''' Initializes the <see cref="Profile"/> class.
         ''' </summary>
         Shared Sub New()
-            CodeSmith.Data.Rules.RuleManager.AddShared(Of Profile)()
             AddSharedRules()
         End Sub
 #End Region
@@ -414,7 +413,7 @@ Namespace PetShop.Core.Data
         ''' Only loaded EntityRef and EntitySet child accessions will be cloned.
         ''' </remarks>
         Public Function Clone() As Profile
-            Return DirectCast(DirectCast(Me, ICloneable), Profile).Clone()
+            Return DirectCast(DirectCast(Me, ICloneable).Clone(), Profile)
         End Function
 #End Region
 
