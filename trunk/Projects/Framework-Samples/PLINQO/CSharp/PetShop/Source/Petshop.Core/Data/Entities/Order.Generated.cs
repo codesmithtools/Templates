@@ -21,7 +21,7 @@ namespace PetShop.Core.Data
     [System.Data.Services.Common.DataServiceKey("OrderId")]
     [System.Diagnostics.DebuggerDisplay("OrderId: {OrderId}")]
     public partial class Order
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable 
     {
         #region Static Constructor
         /// <summary>
@@ -29,7 +29,6 @@ namespace PetShop.Core.Data
         /// </summary>
         static Order()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<Order>();
             AddSharedRules();
         }
         #endregion
@@ -41,7 +40,6 @@ namespace PetShop.Core.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Order()
         {
-            OnCreated();
             Initialize();
         }
 
@@ -49,6 +47,7 @@ namespace PetShop.Core.Data
         {
             _lineItemList = new System.Data.Linq.EntitySet<LineItem>(OnLineItemListAdd, OnLineItemListRemove);
             _orderStatusList = new System.Data.Linq.EntitySet<OrderStatus>(OnOrderStatusListAdd, OnOrderStatusListRemove);
+            OnCreated();
         }
         #endregion
 
@@ -608,7 +607,7 @@ namespace PetShop.Core.Data
         private System.Data.Linq.EntitySet<LineItem> _lineItemList;
 
         /// <summary>
-        /// Gets or sets the LineItem association.
+        /// Gets or sets the <see cref="LineItem"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Order_LineItem", Storage = "_lineItemList", ThisKey = "OrderId", OtherKey = "OrderId")]
         [System.Runtime.Serialization.DataMember(Order=24, EmitDefaultValue=false)]
@@ -637,7 +636,7 @@ namespace PetShop.Core.Data
         private System.Data.Linq.EntitySet<OrderStatus> _orderStatusList;
 
         /// <summary>
-        /// Gets or sets the OrderStatus association.
+        /// Gets or sets the <see cref="OrderStatus"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Order_OrderStatus", Storage = "_orderStatusList", ThisKey = "OrderId", OtherKey = "OrderId")]
         [System.Runtime.Serialization.DataMember(Order=25, EmitDefaultValue=false)]
@@ -822,6 +821,38 @@ namespace PetShop.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Order"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Order"/> instance.</param>
+        /// <returns>An instance of <see cref="Order"/> that is deserialized from the XML string.</returns>
+        public static Order FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Order));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Order;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Order"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Order"/> instance.</param>
+        /// <returns>An instance of <see cref="Order"/> that is deserialized from the byte array.</returns>
+        public static Order FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Order));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Order;
+            }
         }
         #endregion
 

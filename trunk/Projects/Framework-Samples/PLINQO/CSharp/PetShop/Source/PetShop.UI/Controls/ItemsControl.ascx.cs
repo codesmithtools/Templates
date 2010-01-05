@@ -16,7 +16,7 @@ namespace PetShop.UI.Controls
             var inventory = new Inventory();
             using( var context = new PetShopDataContext())
             {
-                inventory = context.Inventory.ByKey(itemId);
+                inventory = context.Inventory.GetByKey(itemId);
                 inventory.Detach();
             }
             return inventory;

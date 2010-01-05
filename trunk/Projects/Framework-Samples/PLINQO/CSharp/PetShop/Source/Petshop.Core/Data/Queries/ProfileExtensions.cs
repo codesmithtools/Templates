@@ -16,7 +16,7 @@ namespace PetShop.Core.Data
         {
             var entity = queryable as System.Data.Linq.Table<PetShop.Core.Data.Profile>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByUsernameApplicationName.Invoke((PetShop.Core.Data.PetShopDataContext)entity.Context, username, PetShopConstants.APPLICATION_NAME);
+                return Query.GetByUsernameApplicationName.Invoke((PetShop.Core.Data.PetShopDataContext)entity.Context, username, PetShopConstants.APPLICATION_NAME);
 
             return queryable.FirstOrDefault(p => p.Username == username
                     && p.ApplicationName == PetShopConstants.APPLICATION_NAME);

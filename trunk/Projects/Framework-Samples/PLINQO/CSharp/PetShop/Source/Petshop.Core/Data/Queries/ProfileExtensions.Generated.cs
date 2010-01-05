@@ -8,8 +8,11 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Data.Linq;
+using CodeSmith.Data.Linq;
+using CodeSmith.Data.Linq.Dynamic;
 
 namespace PetShop.Core.Data
 {
@@ -22,12 +25,12 @@ namespace PetShop.Core.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static PetShop.Core.Data.Profile ByKey(this IQueryable<PetShop.Core.Data.Profile> queryable, int uniqueID)
+        public static PetShop.Core.Data.Profile GetByKey(this IQueryable<PetShop.Core.Data.Profile> queryable, int uniqueID)
         {
             var entity = queryable as System.Data.Linq.Table<PetShop.Core.Data.Profile>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((PetShop.Core.Data.PetShopDataContext)entity.Context, uniqueID);
-            
+                return Query.GetByKey.Invoke((PetShop.Core.Data.PetShopDataContext)entity.Context, uniqueID);
+
             return queryable.FirstOrDefault(p => p.UniqueID == uniqueID);
         }
 
@@ -40,59 +43,454 @@ namespace PetShop.Core.Data
         {
             return table.Delete(p => p.UniqueID == uniqueID);
         }
-        
+
         /// <summary>
         /// Gets an instance by using a unique index.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public static PetShop.Core.Data.Profile ByUsernameApplicationName(this IQueryable<PetShop.Core.Data.Profile> queryable, string username, string applicationName)
+        public static PetShop.Core.Data.Profile GetByUsernameApplicationName(this IQueryable<PetShop.Core.Data.Profile> queryable, string username, string applicationName)
         {
             var entity = queryable as System.Data.Linq.Table<PetShop.Core.Data.Profile>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByUsernameApplicationName.Invoke((PetShop.Core.Data.PetShopDataContext)entity.Context, username, applicationName);
+                return Query.GetByUsernameApplicationName.Invoke((PetShop.Core.Data.PetShopDataContext)entity.Context, username, applicationName);
 
             return queryable.FirstOrDefault(p => p.Username == username 
 					&& p.ApplicationName == applicationName);
         }
-        
+
         /// <summary>
-        /// Gets a query for <see cref="Profile.Username"/>.
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.UniqueID"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="uniqueID">UniqueID to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByUniqueID(this IQueryable<PetShop.Core.Data.Profile> queryable, int uniqueID)
+        {
+            return queryable.Where(p => p.UniqueID == uniqueID);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.UniqueID"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="uniqueID">UniqueID to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByUniqueID(this IQueryable<PetShop.Core.Data.Profile> queryable, int uniqueID, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(p => uniqueID > p.UniqueID);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(p => uniqueID >= p.UniqueID);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(p => uniqueID < p.UniqueID);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(p => uniqueID <= p.UniqueID);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(p => p.UniqueID != uniqueID);
+                default:
+                    return queryable.Where(p => p.UniqueID == uniqueID);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.UniqueID"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="uniqueID">UniqueID to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByUniqueID(this IQueryable<PetShop.Core.Data.Profile> queryable, int uniqueID, params int[] additionalValues)
+        {
+            var uniqueIDList = new List<int> { uniqueID };
+
+            if (additionalValues != null)
+                uniqueIDList.AddRange(additionalValues);
+
+            if (uniqueIDList.Count == 1)
+                return queryable.ByUniqueID(uniqueIDList[0]);
+
+            return queryable.ByUniqueID(uniqueIDList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.UniqueID"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByUniqueID(this IQueryable<PetShop.Core.Data.Profile> queryable, IEnumerable<int> values)
+        {
+            return queryable.Where(p => values.Contains(p.UniqueID));
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.Username"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="username">Username to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<PetShop.Core.Data.Profile> ByUsername(this IQueryable<PetShop.Core.Data.Profile> queryable, string username)
         {
             return queryable.Where(p => p.Username == username);
         }
-        
+
         /// <summary>
-        /// Gets a query for <see cref="Profile.ApplicationName"/>.
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.Username"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="username">Username to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByUsername(this IQueryable<PetShop.Core.Data.Profile> queryable, string username, ContainmentOperator containmentOperator)
+        {
+            if (username == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
+                throw new ArgumentNullException("username", "Parameter 'username' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(p => p.Username.Contains(username));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(p => p.Username.StartsWith(username));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(p => p.Username.EndsWith(username));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(p => p.Username.Contains(username) == false);
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(p => p.Username != username);
+                default:
+                    return queryable.Where(p => p.Username == username);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.Username"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="username">Username to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByUsername(this IQueryable<PetShop.Core.Data.Profile> queryable, string username, params string[] additionalValues)
+        {
+            var usernameList = new List<string> { username };
+
+            if (additionalValues != null)
+                usernameList.AddRange(additionalValues);
+
+            if (usernameList.Count == 1)
+                return queryable.ByUsername(usernameList[0]);
+
+            return queryable.ByUsername(usernameList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.Username"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByUsername(this IQueryable<PetShop.Core.Data.Profile> queryable, IEnumerable<string> values)
+        {
+            return queryable.Where(p => values.Contains(p.Username));
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.ApplicationName"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="applicationName">ApplicationName to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<PetShop.Core.Data.Profile> ByApplicationName(this IQueryable<PetShop.Core.Data.Profile> queryable, string applicationName)
         {
             return queryable.Where(p => p.ApplicationName == applicationName);
         }
-        
+
         /// <summary>
-        /// Gets a query for <see cref="Profile.IsAnonymous"/>.
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.ApplicationName"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="applicationName">ApplicationName to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByApplicationName(this IQueryable<PetShop.Core.Data.Profile> queryable, string applicationName, ContainmentOperator containmentOperator)
+        {
+            if (applicationName == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
+                throw new ArgumentNullException("applicationName", "Parameter 'applicationName' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(p => p.ApplicationName.Contains(applicationName));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(p => p.ApplicationName.StartsWith(applicationName));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(p => p.ApplicationName.EndsWith(applicationName));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(p => p.ApplicationName.Contains(applicationName) == false);
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(p => p.ApplicationName != applicationName);
+                default:
+                    return queryable.Where(p => p.ApplicationName == applicationName);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.ApplicationName"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="applicationName">ApplicationName to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByApplicationName(this IQueryable<PetShop.Core.Data.Profile> queryable, string applicationName, params string[] additionalValues)
+        {
+            var applicationNameList = new List<string> { applicationName };
+
+            if (additionalValues != null)
+                applicationNameList.AddRange(additionalValues);
+
+            if (applicationNameList.Count == 1)
+                return queryable.ByApplicationName(applicationNameList[0]);
+
+            return queryable.ByApplicationName(applicationNameList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.ApplicationName"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByApplicationName(this IQueryable<PetShop.Core.Data.Profile> queryable, IEnumerable<string> values)
+        {
+            return queryable.Where(p => values.Contains(p.ApplicationName));
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.IsAnonymous"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="isAnonymous">IsAnonymous to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<PetShop.Core.Data.Profile> ByIsAnonymous(this IQueryable<PetShop.Core.Data.Profile> queryable, bool? isAnonymous)
         {
+            // using object equals to support nulls
             return queryable.Where(p => object.Equals(p.IsAnonymous, isAnonymous));
         }
-        
+
         /// <summary>
-        /// Gets a query for <see cref="Profile.LastActivityDate"/>.
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.IsAnonymous"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="isAnonymous">IsAnonymous to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByIsAnonymous(this IQueryable<PetShop.Core.Data.Profile> queryable, bool? isAnonymous, ComparisonOperator comparisonOperator)
+        {
+            if (isAnonymous == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
+                throw new ArgumentNullException("isAnonymous", "Parameter 'isAnonymous' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
+
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                case ComparisonOperator.GreaterThanOrEquals:
+                case ComparisonOperator.LessThan:
+                case ComparisonOperator.LessThanOrEquals:
+                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support bool? type.", "comparisonOperator");
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(p => object.Equals(p.IsAnonymous, isAnonymous) == false);
+                default:
+                    return queryable.Where(p => object.Equals(p.IsAnonymous, isAnonymous));
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.IsAnonymous"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="isAnonymous">IsAnonymous to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByIsAnonymous(this IQueryable<PetShop.Core.Data.Profile> queryable, bool? isAnonymous, params bool?[] additionalValues)
+        {
+            var isAnonymousList = new List<bool?> { isAnonymous };
+
+            if (additionalValues != null)
+                isAnonymousList.AddRange(additionalValues);
+            else
+                isAnonymousList.Add(null);
+
+            if (isAnonymousList.Count == 1)
+                return queryable.ByIsAnonymous(isAnonymousList[0]);
+
+            return queryable.ByIsAnonymous(isAnonymousList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.IsAnonymous"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByIsAnonymous(this IQueryable<PetShop.Core.Data.Profile> queryable, IEnumerable<bool?> values)
+        {
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<PetShop.Core.Data.Profile, bool>("IsAnonymous", values);
+            return queryable.Where(expression);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.LastActivityDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lastActivityDate">LastActivityDate to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<PetShop.Core.Data.Profile> ByLastActivityDate(this IQueryable<PetShop.Core.Data.Profile> queryable, System.DateTime? lastActivityDate)
         {
+            // using object equals to support nulls
             return queryable.Where(p => object.Equals(p.LastActivityDate, lastActivityDate));
         }
-        
+
         /// <summary>
-        /// Gets a query for <see cref="Profile.LastUpdatedDate"/>.
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.LastActivityDate"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lastActivityDate">LastActivityDate to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByLastActivityDate(this IQueryable<PetShop.Core.Data.Profile> queryable, System.DateTime? lastActivityDate, ComparisonOperator comparisonOperator)
+        {
+            if (lastActivityDate == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
+                throw new ArgumentNullException("lastActivityDate", "Parameter 'lastActivityDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
+
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(p => lastActivityDate > p.LastActivityDate);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(p => lastActivityDate >= p.LastActivityDate);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(p => lastActivityDate < p.LastActivityDate);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(p => lastActivityDate <= p.LastActivityDate);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(p => object.Equals(p.LastActivityDate, lastActivityDate) == false);
+                default:
+                    return queryable.Where(p => object.Equals(p.LastActivityDate, lastActivityDate));
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.LastActivityDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lastActivityDate">LastActivityDate to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByLastActivityDate(this IQueryable<PetShop.Core.Data.Profile> queryable, System.DateTime? lastActivityDate, params System.DateTime?[] additionalValues)
+        {
+            var lastActivityDateList = new List<System.DateTime?> { lastActivityDate };
+
+            if (additionalValues != null)
+                lastActivityDateList.AddRange(additionalValues);
+            else
+                lastActivityDateList.Add(null);
+
+            if (lastActivityDateList.Count == 1)
+                return queryable.ByLastActivityDate(lastActivityDateList[0]);
+
+            return queryable.ByLastActivityDate(lastActivityDateList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.LastActivityDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByLastActivityDate(this IQueryable<PetShop.Core.Data.Profile> queryable, IEnumerable<System.DateTime?> values)
+        {
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<PetShop.Core.Data.Profile, bool>("LastActivityDate", values);
+            return queryable.Where(expression);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.LastUpdatedDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lastUpdatedDate">LastUpdatedDate to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<PetShop.Core.Data.Profile> ByLastUpdatedDate(this IQueryable<PetShop.Core.Data.Profile> queryable, System.DateTime? lastUpdatedDate)
         {
+            // using object equals to support nulls
             return queryable.Where(p => object.Equals(p.LastUpdatedDate, lastUpdatedDate));
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.LastUpdatedDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lastUpdatedDate">LastUpdatedDate to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByLastUpdatedDate(this IQueryable<PetShop.Core.Data.Profile> queryable, System.DateTime? lastUpdatedDate, ComparisonOperator comparisonOperator)
+        {
+            if (lastUpdatedDate == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
+                throw new ArgumentNullException("lastUpdatedDate", "Parameter 'lastUpdatedDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
+
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(p => lastUpdatedDate > p.LastUpdatedDate);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(p => lastUpdatedDate >= p.LastUpdatedDate);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(p => lastUpdatedDate < p.LastUpdatedDate);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(p => lastUpdatedDate <= p.LastUpdatedDate);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(p => object.Equals(p.LastUpdatedDate, lastUpdatedDate) == false);
+                default:
+                    return queryable.Where(p => object.Equals(p.LastUpdatedDate, lastUpdatedDate));
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.LastUpdatedDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lastUpdatedDate">LastUpdatedDate to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByLastUpdatedDate(this IQueryable<PetShop.Core.Data.Profile> queryable, System.DateTime? lastUpdatedDate, params System.DateTime?[] additionalValues)
+        {
+            var lastUpdatedDateList = new List<System.DateTime?> { lastUpdatedDate };
+
+            if (additionalValues != null)
+                lastUpdatedDateList.AddRange(additionalValues);
+            else
+                lastUpdatedDateList.Add(null);
+
+            if (lastUpdatedDateList.Count == 1)
+                return queryable.ByLastUpdatedDate(lastUpdatedDateList[0]);
+
+            return queryable.ByLastUpdatedDate(lastUpdatedDateList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.Profile.LastUpdatedDate"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.Profile> ByLastUpdatedDate(this IQueryable<PetShop.Core.Data.Profile> queryable, IEnumerable<System.DateTime?> values)
+        {
+            // creating dynmic expression to support nulls
+            var expression = DynamicExpression.BuildExpression<PetShop.Core.Data.Profile, bool>("LastUpdatedDate", values);
+            return queryable.Where(expression);
         }
 
         #region Query
@@ -102,14 +500,14 @@ namespace PetShop.Core.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PetShop.Core.Data.PetShopDataContext, int, PetShop.Core.Data.Profile> ByKey = 
+            internal static readonly Func<PetShop.Core.Data.PetShopDataContext, int, PetShop.Core.Data.Profile> GetByKey =
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PetShop.Core.Data.PetShopDataContext db, int uniqueID) => 
+                    (PetShop.Core.Data.PetShopDataContext db, int uniqueID) =>
                         db.Profile.FirstOrDefault(p => p.UniqueID == uniqueID));
 
-            internal static readonly Func<PetShop.Core.Data.PetShopDataContext, string, string, PetShop.Core.Data.Profile> ByUsernameApplicationName = 
+            internal static readonly Func<PetShop.Core.Data.PetShopDataContext, string, string, PetShop.Core.Data.Profile> GetByUsernameApplicationName =
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PetShop.Core.Data.PetShopDataContext db, string username, string applicationName) => 
+                    (PetShop.Core.Data.PetShopDataContext db, string username, string applicationName) =>
                         db.Profile.FirstOrDefault(p => p.Username == username 
 							&& p.ApplicationName == applicationName));
 

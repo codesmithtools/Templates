@@ -140,7 +140,7 @@ namespace PetShop.Test
             Category category = null;
             using (var context = new PetShopDataContext())
             {
-                category = context.Category.ByKey(ID);
+                category = context.Category.GetByKey(ID);
                 category.Detach();
             }
             Assert.IsTrue(category.CategoryId == ID);
@@ -156,7 +156,7 @@ namespace PetShop.Test
             Category category = null;
             using (var context = new PetShopDataContext())
             {
-                category = context.Category.ByKey(ID);
+                category = context.Category.GetByKey(ID);
                 category.Detach();
             }
 
@@ -169,7 +169,7 @@ namespace PetShop.Test
 
             using (var context = new PetShopDataContext())
             {
-                Assert.IsTrue(context.Category.ByKey(ID).Descn == "This is a .");
+                Assert.IsTrue(context.Category.GetByKey(ID).Descn == "This is a .");
             }
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
@@ -215,7 +215,7 @@ namespace PetShop.Test
 
             using (var context = new PetShopDataContext())
             {
-                inventory = context.Inventory.ByKey(ID);
+                inventory = context.Inventory.GetByKey(ID);
                 inventory.Detach();
             }
 
@@ -232,7 +232,7 @@ namespace PetShop.Test
             Inventory inventory = null;
             using (var context = new PetShopDataContext())
             {
-                inventory = context.Inventory.ByKey(ID);
+                inventory = context.Inventory.GetByKey(ID);
                 inventory.Detach();
             }
 
@@ -245,7 +245,7 @@ namespace PetShop.Test
 
             using (var context = new PetShopDataContext())
             {
-                Assert.IsTrue(context.Inventory.ByKey(ID).Qty == 100);
+                Assert.IsTrue(context.Inventory.GetByKey(ID).Qty == 100);
             }
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
@@ -293,7 +293,7 @@ namespace PetShop.Test
             Product product = null;
             using (var context = new PetShopDataContext())
             {
-                product = context.Product.ByKey(ID);
+                product = context.Product.GetByKey(ID);
                 product.Detach();
             }
 
@@ -310,7 +310,7 @@ namespace PetShop.Test
             Product product = null;
             using (var context = new PetShopDataContext())
             {
-                product = context.Product.ByKey(ID);
+                product = context.Product.GetByKey(ID);
                 product.Detach();
             }
 
@@ -323,7 +323,7 @@ namespace PetShop.Test
 
             using (var context = new PetShopDataContext())
             {
-                Assert.IsTrue(context.Product.ByKey(ID).Descn == "This is a ");
+                Assert.IsTrue(context.Product.GetByKey(ID).Descn == "This is a ");
             }
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
@@ -376,7 +376,7 @@ namespace PetShop.Test
             Supplier supplier = null;
             using (var context = new PetShopDataContext())
             {
-                supplier = context.Supplier.ByKey(_supplierId);
+                supplier = context.Supplier.GetByKey(_supplierId);
                 supplier.Detach();
             }
 
@@ -393,7 +393,7 @@ namespace PetShop.Test
             Supplier supplier = null;
             using (var context = new PetShopDataContext())
             {
-                supplier = context.Supplier.ByKey(_supplierId);
+                supplier = context.Supplier.GetByKey(_supplierId);
                 supplier.Detach();
             }
 
@@ -406,7 +406,7 @@ namespace PetShop.Test
 
             using (var context = new PetShopDataContext())
             {
-                Assert.IsTrue(context.Supplier.ByKey(_supplierId).Phone == "111-111-1111");
+                Assert.IsTrue(context.Supplier.GetByKey(_supplierId).Phone == "111-111-1111");
             }
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
@@ -457,7 +457,7 @@ namespace PetShop.Test
             Item item = null;
             using (var context = new PetShopDataContext())
             {
-                item = context.Item.ByKey(ID);
+                item = context.Item.GetByKey(ID);
                 item.Detach();
             }
 
@@ -474,7 +474,7 @@ namespace PetShop.Test
             Item item = null;
             using (var context = new PetShopDataContext())
             {
-                item = context.Item.ByKey(ID);
+                item = context.Item.GetByKey(ID);
                 item.Detach();
             }
 
@@ -487,7 +487,7 @@ namespace PetShop.Test
 
             using (var context = new PetShopDataContext())
             {
-                Assert.IsTrue(context.Item.ByKey(ID).ListPrice == 111);
+                Assert.IsTrue(context.Item.GetByKey(ID).ListPrice == 111);
             }
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);

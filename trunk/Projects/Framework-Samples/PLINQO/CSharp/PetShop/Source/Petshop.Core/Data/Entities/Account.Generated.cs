@@ -21,7 +21,7 @@ namespace PetShop.Core.Data
     [System.Data.Services.Common.DataServiceKey("AccountId")]
     [System.Diagnostics.DebuggerDisplay("AccountId: {AccountId}")]
     public partial class Account
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable 
     {
         #region Static Constructor
         /// <summary>
@@ -29,7 +29,6 @@ namespace PetShop.Core.Data
         /// </summary>
         static Account()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<Account>();
             AddSharedRules();
         }
         #endregion
@@ -41,13 +40,13 @@ namespace PetShop.Core.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Account()
         {
-            OnCreated();
             Initialize();
         }
 
         private void Initialize()
         {
             _profile = default(System.Data.Linq.EntityRef<Profile>);
+            OnCreated();
         }
         #endregion
 
@@ -349,7 +348,7 @@ namespace PetShop.Core.Data
         private System.Data.Linq.EntityRef<Profile> _profile;
 
         /// <summary>
-        /// Gets or sets the Profile association.
+        /// Gets or sets the <see cref="Profile"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Profile_Account", Storage = "_profile", ThisKey = "UniqueID", OtherKey = "UniqueID", IsUnique = true, IsForeignKey = true, DeleteRule = "CASCADE")]
         [System.Runtime.Serialization.DataMember(Order = 13, EmitDefaultValue = false)]
@@ -383,6 +382,7 @@ namespace PetShop.Core.Data
                 }
             }
         }
+        
         #endregion
 
         #region Extensibility Method Definitions
@@ -493,6 +493,38 @@ namespace PetShop.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Account"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Account"/> instance.</param>
+        /// <returns>An instance of <see cref="Account"/> that is deserialized from the XML string.</returns>
+        public static Account FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Account));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Account;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Account"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Account"/> instance.</param>
+        /// <returns>An instance of <see cref="Account"/> that is deserialized from the byte array.</returns>
+        public static Account FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Account));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Account;
+            }
         }
         #endregion
 

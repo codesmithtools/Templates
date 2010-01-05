@@ -51,7 +51,7 @@ namespace PetShop.Core.Utility
                 else
                 {
 
-                    var cartItem = context.Item.ByKey(itemId);
+                    var cartItem = context.Item.GetByKey(itemId);
                     var cart = new Cart();
                     cart.UniqueID = uniqueId;
                     cart.ItemId = itemId;

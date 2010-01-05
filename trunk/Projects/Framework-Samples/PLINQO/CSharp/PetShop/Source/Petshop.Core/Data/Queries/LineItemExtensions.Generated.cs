@@ -8,8 +8,11 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Data.Linq;
+using CodeSmith.Data.Linq;
+using CodeSmith.Data.Linq.Dynamic;
 
 namespace PetShop.Core.Data
 {
@@ -22,12 +25,12 @@ namespace PetShop.Core.Data
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
-        public static PetShop.Core.Data.LineItem ByKey(this IQueryable<PetShop.Core.Data.LineItem> queryable, int orderId, int lineNum)
+        public static PetShop.Core.Data.LineItem GetByKey(this IQueryable<PetShop.Core.Data.LineItem> queryable, int orderId, int lineNum)
         {
             var entity = queryable as System.Data.Linq.Table<PetShop.Core.Data.LineItem>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.ByKey.Invoke((PetShop.Core.Data.PetShopDataContext)entity.Context, orderId, lineNum);
-            
+                return Query.GetByKey.Invoke((PetShop.Core.Data.PetShopDataContext)entity.Context, orderId, lineNum);
+
             return queryable.FirstOrDefault(l => l.OrderId == orderId 
 					&& l.LineNum == lineNum);
         }
@@ -42,29 +45,348 @@ namespace PetShop.Core.Data
             return table.Delete(l => l.OrderId == orderId 
 					&& l.LineNum == lineNum);
         }
-        
+
         /// <summary>
-        /// Gets a query for <see cref="LineItem.ItemId"/>.
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.OrderId"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="orderId">OrderId to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByOrderId(this IQueryable<PetShop.Core.Data.LineItem> queryable, int orderId)
+        {
+            return queryable.Where(l => l.OrderId == orderId);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.OrderId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="orderId">OrderId to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByOrderId(this IQueryable<PetShop.Core.Data.LineItem> queryable, int orderId, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(l => orderId > l.OrderId);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(l => orderId >= l.OrderId);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(l => orderId < l.OrderId);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(l => orderId <= l.OrderId);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(l => l.OrderId != orderId);
+                default:
+                    return queryable.Where(l => l.OrderId == orderId);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.OrderId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="orderId">OrderId to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByOrderId(this IQueryable<PetShop.Core.Data.LineItem> queryable, int orderId, params int[] additionalValues)
+        {
+            var orderIdList = new List<int> { orderId };
+
+            if (additionalValues != null)
+                orderIdList.AddRange(additionalValues);
+
+            if (orderIdList.Count == 1)
+                return queryable.ByOrderId(orderIdList[0]);
+
+            return queryable.ByOrderId(orderIdList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.OrderId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByOrderId(this IQueryable<PetShop.Core.Data.LineItem> queryable, IEnumerable<int> values)
+        {
+            return queryable.Where(l => values.Contains(l.OrderId));
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.LineNum"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lineNum">LineNum to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByLineNum(this IQueryable<PetShop.Core.Data.LineItem> queryable, int lineNum)
+        {
+            return queryable.Where(l => l.LineNum == lineNum);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.LineNum"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lineNum">LineNum to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByLineNum(this IQueryable<PetShop.Core.Data.LineItem> queryable, int lineNum, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(l => lineNum > l.LineNum);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(l => lineNum >= l.LineNum);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(l => lineNum < l.LineNum);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(l => lineNum <= l.LineNum);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(l => l.LineNum != lineNum);
+                default:
+                    return queryable.Where(l => l.LineNum == lineNum);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.LineNum"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="lineNum">LineNum to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByLineNum(this IQueryable<PetShop.Core.Data.LineItem> queryable, int lineNum, params int[] additionalValues)
+        {
+            var lineNumList = new List<int> { lineNum };
+
+            if (additionalValues != null)
+                lineNumList.AddRange(additionalValues);
+
+            if (lineNumList.Count == 1)
+                return queryable.ByLineNum(lineNumList[0]);
+
+            return queryable.ByLineNum(lineNumList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.LineNum"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByLineNum(this IQueryable<PetShop.Core.Data.LineItem> queryable, IEnumerable<int> values)
+        {
+            return queryable.Where(l => values.Contains(l.LineNum));
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.ItemId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="itemId">ItemId to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<PetShop.Core.Data.LineItem> ByItemId(this IQueryable<PetShop.Core.Data.LineItem> queryable, string itemId)
         {
             return queryable.Where(l => l.ItemId == itemId);
         }
-        
+
         /// <summary>
-        /// Gets a query for <see cref="LineItem.Quantity"/>.
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.ItemId"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="itemId">ItemId to search for.</param>
+        /// <param name="containmentOperator">The containment operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByItemId(this IQueryable<PetShop.Core.Data.LineItem> queryable, string itemId, ContainmentOperator containmentOperator)
+        {
+            if (itemId == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
+                throw new ArgumentNullException("itemId", "Parameter 'itemId' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+
+            switch (containmentOperator)
+            {
+                case ContainmentOperator.Contains:
+                    return queryable.Where(l => l.ItemId.Contains(itemId));
+                case ContainmentOperator.StartsWith:
+                    return queryable.Where(l => l.ItemId.StartsWith(itemId));
+                case ContainmentOperator.EndsWith:
+                    return queryable.Where(l => l.ItemId.EndsWith(itemId));
+                case ContainmentOperator.NotContains:
+                    return queryable.Where(l => l.ItemId.Contains(itemId) == false);
+                case ContainmentOperator.NotEquals:
+                    return queryable.Where(l => l.ItemId != itemId);
+                default:
+                    return queryable.Where(l => l.ItemId == itemId);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.ItemId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="itemId">ItemId to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByItemId(this IQueryable<PetShop.Core.Data.LineItem> queryable, string itemId, params string[] additionalValues)
+        {
+            var itemIdList = new List<string> { itemId };
+
+            if (additionalValues != null)
+                itemIdList.AddRange(additionalValues);
+
+            if (itemIdList.Count == 1)
+                return queryable.ByItemId(itemIdList[0]);
+
+            return queryable.ByItemId(itemIdList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.ItemId"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByItemId(this IQueryable<PetShop.Core.Data.LineItem> queryable, IEnumerable<string> values)
+        {
+            return queryable.Where(l => values.Contains(l.ItemId));
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.Quantity"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="quantity">Quantity to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<PetShop.Core.Data.LineItem> ByQuantity(this IQueryable<PetShop.Core.Data.LineItem> queryable, int quantity)
         {
             return queryable.Where(l => l.Quantity == quantity);
         }
-        
+
         /// <summary>
-        /// Gets a query for <see cref="LineItem.UnitPrice"/>.
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.Quantity"/>.
         /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="quantity">Quantity to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByQuantity(this IQueryable<PetShop.Core.Data.LineItem> queryable, int quantity, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(l => quantity > l.Quantity);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(l => quantity >= l.Quantity);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(l => quantity < l.Quantity);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(l => quantity <= l.Quantity);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(l => l.Quantity != quantity);
+                default:
+                    return queryable.Where(l => l.Quantity == quantity);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.Quantity"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="quantity">Quantity to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByQuantity(this IQueryable<PetShop.Core.Data.LineItem> queryable, int quantity, params int[] additionalValues)
+        {
+            var quantityList = new List<int> { quantity };
+
+            if (additionalValues != null)
+                quantityList.AddRange(additionalValues);
+
+            if (quantityList.Count == 1)
+                return queryable.ByQuantity(quantityList[0]);
+
+            return queryable.ByQuantity(quantityList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.Quantity"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByQuantity(this IQueryable<PetShop.Core.Data.LineItem> queryable, IEnumerable<int> values)
+        {
+            return queryable.Where(l => values.Contains(l.Quantity));
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.UnitPrice"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="unitPrice">UnitPrice to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<PetShop.Core.Data.LineItem> ByUnitPrice(this IQueryable<PetShop.Core.Data.LineItem> queryable, decimal unitPrice)
         {
             return queryable.Where(l => l.UnitPrice == unitPrice);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.UnitPrice"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="unitPrice">UnitPrice to search for.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByUnitPrice(this IQueryable<PetShop.Core.Data.LineItem> queryable, decimal unitPrice, ComparisonOperator comparisonOperator)
+        {
+            switch (comparisonOperator)
+            {
+                case ComparisonOperator.GreaterThan:
+                    return queryable.Where(l => unitPrice > l.UnitPrice);
+                case ComparisonOperator.GreaterThanOrEquals:
+                    return queryable.Where(l => unitPrice >= l.UnitPrice);
+                case ComparisonOperator.LessThan:
+                    return queryable.Where(l => unitPrice < l.UnitPrice);
+                case ComparisonOperator.LessThanOrEquals:
+                    return queryable.Where(l => unitPrice <= l.UnitPrice);
+                case ComparisonOperator.NotEquals:
+                    return queryable.Where(l => l.UnitPrice != unitPrice);
+                default:
+                    return queryable.Where(l => l.UnitPrice == unitPrice);
+            }
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.UnitPrice"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="unitPrice">UnitPrice to search for.</param>
+        /// <param name="additionalValues">Additional values to search for.</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByUnitPrice(this IQueryable<PetShop.Core.Data.LineItem> queryable, decimal unitPrice, params decimal[] additionalValues)
+        {
+            var unitPriceList = new List<decimal> { unitPrice };
+
+            if (additionalValues != null)
+                unitPriceList.AddRange(additionalValues);
+
+            if (unitPriceList.Count == 1)
+                return queryable.ByUnitPrice(unitPriceList[0]);
+
+            return queryable.ByUnitPrice(unitPriceList);
+        }
+
+        /// <summary>
+        /// Gets a query for <see cref="PetShop.Core.Data.LineItem.UnitPrice"/>.
+        /// </summary>
+        /// <param name="queryable">Query to append where clause.</param>
+        /// <param name="values">The values to search for..</param>
+        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        public static IQueryable<PetShop.Core.Data.LineItem> ByUnitPrice(this IQueryable<PetShop.Core.Data.LineItem> queryable, IEnumerable<decimal> values)
+        {
+            return queryable.Where(l => values.Contains(l.UnitPrice));
         }
 
         #region Query
@@ -74,9 +396,9 @@ namespace PetShop.Core.Data
         private static partial class Query
         {
 
-            internal static readonly Func<PetShop.Core.Data.PetShopDataContext, int, int, PetShop.Core.Data.LineItem> ByKey = 
+            internal static readonly Func<PetShop.Core.Data.PetShopDataContext, int, int, PetShop.Core.Data.LineItem> GetByKey =
                 System.Data.Linq.CompiledQuery.Compile(
-                    (PetShop.Core.Data.PetShopDataContext db, int orderId, int lineNum) => 
+                    (PetShop.Core.Data.PetShopDataContext db, int orderId, int lineNum) =>
                         db.LineItem.FirstOrDefault(l => l.OrderId == orderId 
 							&& l.LineNum == lineNum));
 

@@ -21,7 +21,7 @@ namespace PetShop.Core.Data
     [System.Data.Services.Common.DataServiceKey("CartId")]
     [System.Diagnostics.DebuggerDisplay("CartId: {CartId}")]
     public partial class Cart
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable 
     {
         #region Static Constructor
         /// <summary>
@@ -29,7 +29,6 @@ namespace PetShop.Core.Data
         /// </summary>
         static Cart()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<Cart>();
             AddSharedRules();
         }
         #endregion
@@ -41,13 +40,13 @@ namespace PetShop.Core.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Cart()
         {
-            OnCreated();
             Initialize();
         }
 
         private void Initialize()
         {
             _profile = default(System.Data.Linq.EntityRef<Profile>);
+            OnCreated();
         }
         #endregion
 
@@ -298,7 +297,7 @@ namespace PetShop.Core.Data
         private System.Data.Linq.EntityRef<Profile> _profile;
 
         /// <summary>
-        /// Gets or sets the Profile association.
+        /// Gets or sets the <see cref="Profile"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Profile_Cart", Storage = "_profile", ThisKey = "UniqueID", OtherKey = "UniqueID", IsUnique = true, IsForeignKey = true, DeleteRule = "CASCADE")]
         [System.Runtime.Serialization.DataMember(Order = 11, EmitDefaultValue = false)]
@@ -332,6 +331,7 @@ namespace PetShop.Core.Data
                 }
             }
         }
+        
         #endregion
 
         #region Extensibility Method Definitions
@@ -432,6 +432,38 @@ namespace PetShop.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Cart"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Cart"/> instance.</param>
+        /// <returns>An instance of <see cref="Cart"/> that is deserialized from the XML string.</returns>
+        public static Cart FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Cart));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Cart;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Cart"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Cart"/> instance.</param>
+        /// <returns>An instance of <see cref="Cart"/> that is deserialized from the byte array.</returns>
+        public static Cart FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Cart));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Cart;
+            }
         }
         #endregion
 

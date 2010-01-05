@@ -85,7 +85,7 @@ namespace PetShop.UI
                     //Decrement and check the Inventory.
                     foreach (Cart cart in profile.ShoppingCart)
                     {
-                        var inventory = context.Inventory.ByKey(cart.ItemId);
+                        var inventory = context.Inventory.GetByKey(cart.ItemId);
 
                         if (cart.Quantity > inventory.Qty)
                         {

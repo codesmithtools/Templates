@@ -21,7 +21,7 @@ namespace PetShop.Core.Data
     [System.Data.Services.Common.DataServiceKey("OrderId", "LineNum")]
     [System.Diagnostics.DebuggerDisplay("OrderId: {OrderId}, LineNum: {LineNum}")]
     public partial class OrderStatus
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable 
     {
         #region Static Constructor
         /// <summary>
@@ -29,7 +29,6 @@ namespace PetShop.Core.Data
         /// </summary>
         static OrderStatus()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<OrderStatus>();
             AddSharedRules();
         }
         #endregion
@@ -41,13 +40,13 @@ namespace PetShop.Core.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public OrderStatus()
         {
-            OnCreated();
             Initialize();
         }
 
         private void Initialize()
         {
             _order = default(System.Data.Linq.EntityRef<Order>);
+            OnCreated();
         }
         #endregion
 
@@ -156,7 +155,7 @@ namespace PetShop.Core.Data
         private System.Data.Linq.EntityRef<Order> _order;
 
         /// <summary>
-        /// Gets or sets the Order association.
+        /// Gets or sets the <see cref="Order"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Order_OrderStatus", Storage = "_order", ThisKey = "OrderId", OtherKey = "OrderId", IsUnique = true, IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 5, EmitDefaultValue = false)]
@@ -190,6 +189,7 @@ namespace PetShop.Core.Data
                 }
             }
         }
+        
         #endregion
 
         #region Extensibility Method Definitions
@@ -260,6 +260,38 @@ namespace PetShop.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="OrderStatus"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="OrderStatus"/> instance.</param>
+        /// <returns>An instance of <see cref="OrderStatus"/> that is deserialized from the XML string.</returns>
+        public static OrderStatus FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(OrderStatus));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as OrderStatus;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="OrderStatus"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="OrderStatus"/> instance.</param>
+        /// <returns>An instance of <see cref="OrderStatus"/> that is deserialized from the byte array.</returns>
+        public static OrderStatus FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(OrderStatus));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as OrderStatus;
+            }
         }
         #endregion
 

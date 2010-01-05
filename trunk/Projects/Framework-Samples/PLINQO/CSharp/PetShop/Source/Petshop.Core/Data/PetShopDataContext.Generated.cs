@@ -13,13 +13,13 @@ using System;
 namespace PetShop.Core.Data
 {
     /// <summary>
-    /// The <see cref="System.Data.Linq.DataContext"/> class for the PetShop database.
+    /// The <see cref="System.Data.Linq.DataContext"/> class for the C:\CODE\CODESMITH\GOOGLECODE\PETSHOP\SOURCE\PETSHOP.UI\APP_DATA\PETSHOP.MDF database.
     /// </summary>
-    public partial class PetShopDataContext 
-        : System.Data.Linq.DataContext, System.Data.Services.IUpdatable
+    public partial class PetShopDataContext
+        : CodeSmith.Data.Linq.DataContextBase, System.Data.Services.IUpdatable
     {
-        private static readonly System.Data.Linq.Mapping.MappingSource mappingCache = new System.Data.Linq.Mapping.AttributeMappingSource();
-        
+        public static readonly System.Data.Linq.Mapping.MappingSource MappingCache = new System.Data.Linq.Mapping.AttributeMappingSource();
+
         #region ConnectionString
         private const string CONNECTION_NAME = "PetShopConnectionString";
         private static volatile string _connectionString;
@@ -31,7 +31,7 @@ namespace PetShop.Core.Data
         /// <code><![CDATA[
         /// <configuration>
         ///     <connectionStrings>
-        ///         <add name="PetShopConnectionString" 
+        ///         <add name="PetShopConnectionString"
         ///             connectionString="Data Source=(local);Initial Catalog=DATABASE;Integrated Security=True"
         ///             providerName="System.Data.SqlClient" />
         ///     </connectionStrings>
@@ -64,42 +64,42 @@ namespace PetShop.Core.Data
                 throw new System.Configuration.ConfigurationErrorsException(message);
             }
             return settings.ConnectionString;
-        } 
+        }
         #endregion
-        
+
         #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="PetShopDataContext"/> class.
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
         public PetShopDataContext()
-            : base(ConnectionString, mappingCache)
+            : base(ConnectionString, MappingCache)
         {
             OnCreated();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PetShopDataContext"/> class.
         /// </summary>
         /// <param name="connection">The connection string.</param>
         [System.Diagnostics.DebuggerNonUserCode]
         public PetShopDataContext(string connection)
-            : base(connection, mappingCache)
+            : base(connection, MappingCache)
         {
             OnCreated();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PetShopDataContext"/> class.
         /// </summary>
         /// <param name="connection">The database connection.</param>
         [System.Diagnostics.DebuggerNonUserCode]
         public PetShopDataContext(System.Data.IDbConnection connection)
-            : base(connection, mappingCache)
+            : base(connection, MappingCache)
         {
             OnCreated();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PetShopDataContext"/> class.
         /// </summary>
@@ -111,7 +111,7 @@ namespace PetShop.Core.Data
         {
             OnCreated();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PetShopDataContext"/> class.
         /// </summary>
@@ -124,74 +124,74 @@ namespace PetShop.Core.Data
             OnCreated();
         }
         #endregion
-        
+
         #region Tables
         /// <summary>Represents the dbo.Account table in the underlying database.</summary>
         public System.Data.Linq.Table<PetShop.Core.Data.Account> Account
         {
             get { return GetTable<PetShop.Core.Data.Account>(); }
         }
-        
+
         /// <summary>Represents the dbo.Cart table in the underlying database.</summary>
         public System.Data.Linq.Table<PetShop.Core.Data.Cart> Cart
         {
             get { return GetTable<PetShop.Core.Data.Cart>(); }
         }
-        
+
         /// <summary>Represents the dbo.Category table in the underlying database.</summary>
         public System.Data.Linq.Table<PetShop.Core.Data.Category> Category
         {
             get { return GetTable<PetShop.Core.Data.Category>(); }
         }
-        
+
         /// <summary>Represents the dbo.Inventory table in the underlying database.</summary>
         public System.Data.Linq.Table<PetShop.Core.Data.Inventory> Inventory
         {
             get { return GetTable<PetShop.Core.Data.Inventory>(); }
         }
-        
+
         /// <summary>Represents the dbo.Item table in the underlying database.</summary>
         public System.Data.Linq.Table<PetShop.Core.Data.Item> Item
         {
             get { return GetTable<PetShop.Core.Data.Item>(); }
         }
-        
+
         /// <summary>Represents the dbo.LineItem table in the underlying database.</summary>
         public System.Data.Linq.Table<PetShop.Core.Data.LineItem> LineItem
         {
             get { return GetTable<PetShop.Core.Data.LineItem>(); }
         }
-        
+
         /// <summary>Represents the dbo.Orders table in the underlying database.</summary>
         public System.Data.Linq.Table<PetShop.Core.Data.Order> Order
         {
             get { return GetTable<PetShop.Core.Data.Order>(); }
         }
-        
+
         /// <summary>Represents the dbo.OrderStatus table in the underlying database.</summary>
         public System.Data.Linq.Table<PetShop.Core.Data.OrderStatus> OrderStatus
         {
             get { return GetTable<PetShop.Core.Data.OrderStatus>(); }
         }
-        
+
         /// <summary>Represents the dbo.Product table in the underlying database.</summary>
         public System.Data.Linq.Table<PetShop.Core.Data.Product> Product
         {
             get { return GetTable<PetShop.Core.Data.Product>(); }
         }
-        
+
         /// <summary>Represents the dbo.Profiles table in the underlying database.</summary>
         public System.Data.Linq.Table<PetShop.Core.Data.Profile> Profile
         {
             get { return GetTable<PetShop.Core.Data.Profile>(); }
         }
-        
+
         /// <summary>Represents the dbo.Supplier table in the underlying database.</summary>
         public System.Data.Linq.Table<PetShop.Core.Data.Supplier> Supplier
         {
             get { return GetTable<PetShop.Core.Data.Supplier>(); }
         }
-        
+
         #endregion
 
         #region Functions
@@ -300,7 +300,7 @@ namespace PetShop.Core.Data
         /// <param name="instance">The instance.</param>
         partial void DeleteSupplier(PetShop.Core.Data.Supplier instance);
         #endregion
-        
+
         #region IUpdatable Members
         /// <summary>
         /// Adds the specified value to the collection.
@@ -326,8 +326,8 @@ namespace PetShop.Core.Data
         void System.Data.Services.IUpdatable.ClearChanges()
         {
             var mi = GetType().GetMethod("ClearCache",
-                System.Reflection.BindingFlags.Instance | 
-                System.Reflection.BindingFlags.NonPublic | 
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.NonPublic |
                 System.Reflection.BindingFlags.InvokeMethod);
 
             if (mi != null)
@@ -561,7 +561,7 @@ namespace PetShop.Core.Data
         public CodeSmith.Data.Rules.RuleManager RuleManager
         {
             get { return _ruleManager; }
-        } 
+        }
 
         /// <summary>
         /// Sends changes made to retrieved objects to the underlying database.
@@ -573,7 +573,7 @@ namespace PetShop.Core.Data
 
             if (!isValid)
                 throw new CodeSmith.Data.Rules.BrokenRuleException(RuleManager.BrokenRules);
-            
+
             PopulateLastAudit();
             BeforeSubmitChanges();
             base.SubmitChanges(failureMode);
@@ -625,7 +625,7 @@ namespace PetShop.Core.Data
             _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(this);
         }
         #endregion
-        
+
         /// <summary>
         /// Sends changes made to retrieved objects to the underlying database.
         /// </summary>
