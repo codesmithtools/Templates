@@ -67,7 +67,7 @@ namespace PetShop.Core.Controls
                 string categoryName = String.Empty;
                 using (var context = new PetShopDataContext())
                 {
-                    categoryName = context.Category.ByKey(categoryId).Name;
+                    categoryName = context.Category.GetByKey(categoryId).Name;
                 }
                 return categoryName;
             }
@@ -84,7 +84,7 @@ namespace PetShop.Core.Controls
                 // If the data is not in the cache then fetch the data from the business logic tier
                 using (var context = new PetShopDataContext())
                 {
-                    data = context.Category.ByKey(categoryId).Name;
+                    data = context.Category.GetByKey(categoryId).Name;
                 }
 
                 // Store the output in the data cache, and Add the necessary AggregateCacheDependency object
@@ -107,7 +107,7 @@ namespace PetShop.Core.Controls
                 string productName = String.Empty;
                 using (var context = new PetShopDataContext())
                 {
-                    productName = context.Product.ByKey(productId).Name;
+                    productName = context.Product.GetByKey(productId).Name;
                 }
                 return productName;
             }
@@ -125,7 +125,7 @@ namespace PetShop.Core.Controls
                 // If the data is not in the cache then fetch the data from the business logic tier
                 using (var context = new PetShopDataContext())
                 {
-                    data = context.Product.ByKey(productId).Name;
+                    data = context.Product.GetByKey(productId).Name;
                 }
 
                 // Store the output in the data cache, and Add the necessary AggregateCacheDependency object

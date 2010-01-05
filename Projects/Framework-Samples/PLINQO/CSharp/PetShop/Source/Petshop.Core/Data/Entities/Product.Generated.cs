@@ -21,7 +21,7 @@ namespace PetShop.Core.Data
     [System.Data.Services.Common.DataServiceKey("ProductId")]
     [System.Diagnostics.DebuggerDisplay("ProductId: {ProductId}")]
     public partial class Product
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable 
     {
         #region Static Constructor
         /// <summary>
@@ -29,7 +29,6 @@ namespace PetShop.Core.Data
         /// </summary>
         static Product()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<Product>();
             AddSharedRules();
         }
         #endregion
@@ -41,7 +40,6 @@ namespace PetShop.Core.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Product()
         {
-            OnCreated();
             Initialize();
         }
 
@@ -49,6 +47,7 @@ namespace PetShop.Core.Data
         {
             _category = default(System.Data.Linq.EntityRef<Category>);
             _itemList = new System.Data.Linq.EntitySet<Item>(OnItemListAdd, OnItemListRemove);
+            OnCreated();
         }
         #endregion
 
@@ -184,7 +183,7 @@ namespace PetShop.Core.Data
         private System.Data.Linq.EntityRef<Category> _category;
 
         /// <summary>
-        /// Gets or sets the Category association.
+        /// Gets or sets the <see cref="Category"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Category_Product", Storage = "_category", ThisKey = "CategoryId", OtherKey = "CategoryId", IsUnique = true, IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 6, EmitDefaultValue = false)]
@@ -218,11 +217,12 @@ namespace PetShop.Core.Data
                 }
             }
         }
+        
 
         private System.Data.Linq.EntitySet<Item> _itemList;
 
         /// <summary>
-        /// Gets or sets the Item association.
+        /// Gets or sets the <see cref="Item"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Product_Item", Storage = "_itemList", ThisKey = "ProductId", OtherKey = "ProductId")]
         [System.Runtime.Serialization.DataMember(Order=7, EmitDefaultValue=false)]
@@ -322,6 +322,38 @@ namespace PetShop.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Product"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Product"/> instance.</param>
+        /// <returns>An instance of <see cref="Product"/> that is deserialized from the XML string.</returns>
+        public static Product FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Product));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Product;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Product"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Product"/> instance.</param>
+        /// <returns>An instance of <see cref="Product"/> that is deserialized from the byte array.</returns>
+        public static Product FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Product));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Product;
+            }
         }
         #endregion
 

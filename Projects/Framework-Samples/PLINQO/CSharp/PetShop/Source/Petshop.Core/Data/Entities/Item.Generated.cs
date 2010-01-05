@@ -21,7 +21,7 @@ namespace PetShop.Core.Data
     [System.Data.Services.Common.DataServiceKey("ItemId")]
     [System.Diagnostics.DebuggerDisplay("ItemId: {ItemId}")]
     public partial class Item
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable 
     {
         #region Static Constructor
         /// <summary>
@@ -29,7 +29,6 @@ namespace PetShop.Core.Data
         /// </summary>
         static Item()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<Item>();
             AddSharedRules();
         }
         #endregion
@@ -41,7 +40,6 @@ namespace PetShop.Core.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Item()
         {
-            OnCreated();
             Initialize();
         }
 
@@ -49,6 +47,7 @@ namespace PetShop.Core.Data
         {
             _product = default(System.Data.Linq.EntityRef<Product>);
             _supplier1 = default(System.Data.Linq.EntityRef<Supplier>);
+            OnCreated();
         }
         #endregion
 
@@ -257,7 +256,7 @@ namespace PetShop.Core.Data
         private System.Data.Linq.EntityRef<Product> _product;
 
         /// <summary>
-        /// Gets or sets the Product association.
+        /// Gets or sets the <see cref="Product"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Product_Item", Storage = "_product", ThisKey = "ProductId", OtherKey = "ProductId", IsUnique = true, IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 9, EmitDefaultValue = false)]
@@ -291,11 +290,12 @@ namespace PetShop.Core.Data
                 }
             }
         }
+        
 
         private System.Data.Linq.EntityRef<Supplier> _supplier1;
 
         /// <summary>
-        /// Gets or sets the Supplier association.
+        /// Gets or sets the <see cref="Supplier"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Supplier_Item", Storage = "_supplier1", ThisKey = "Supplier", OtherKey = "SuppId", IsUnique = true, IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 10, EmitDefaultValue = false)]
@@ -322,13 +322,14 @@ namespace PetShop.Core.Data
                     }
                     else
                     {
-                        _supplier = default(int);
+                        _supplier = default(Nullable<int>);
                     }
                     SendPropertyChanged("Supplier1");
                     OnSupplier1Changed();
                 }
             }
         }
+        
         #endregion
 
         #region Extensibility Method Definitions
@@ -424,6 +425,38 @@ namespace PetShop.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Item"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Item"/> instance.</param>
+        /// <returns>An instance of <see cref="Item"/> that is deserialized from the XML string.</returns>
+        public static Item FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Item));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Item;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Item"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Item"/> instance.</param>
+        /// <returns>An instance of <see cref="Item"/> that is deserialized from the byte array.</returns>
+        public static Item FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Item));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Item;
+            }
         }
         #endregion
 

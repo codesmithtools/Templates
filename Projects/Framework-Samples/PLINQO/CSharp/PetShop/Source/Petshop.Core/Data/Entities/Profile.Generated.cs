@@ -21,7 +21,7 @@ namespace PetShop.Core.Data
     [System.Data.Services.Common.DataServiceKey("UniqueID")]
     [System.Diagnostics.DebuggerDisplay("UniqueID: {UniqueID}")]
     public partial class Profile
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable 
     {
         #region Static Constructor
         /// <summary>
@@ -29,7 +29,6 @@ namespace PetShop.Core.Data
         /// </summary>
         static Profile()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<Profile>();
             AddSharedRules();
         }
         #endregion
@@ -41,7 +40,6 @@ namespace PetShop.Core.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Profile()
         {
-            OnCreated();
             Initialize();
         }
 
@@ -49,6 +47,7 @@ namespace PetShop.Core.Data
         {
             _accountList = new System.Data.Linq.EntitySet<Account>(OnAccountListAdd, OnAccountListRemove);
             _cartList = new System.Data.Linq.EntitySet<Cart>(OnCartListAdd, OnCartListRemove);
+            OnCreated();
         }
         #endregion
 
@@ -200,7 +199,7 @@ namespace PetShop.Core.Data
         private System.Data.Linq.EntitySet<Account> _accountList;
 
         /// <summary>
-        /// Gets or sets the Account association.
+        /// Gets or sets the <see cref="Account"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Profile_Account", Storage = "_accountList", ThisKey = "UniqueID", OtherKey = "UniqueID")]
         [System.Runtime.Serialization.DataMember(Order=7, EmitDefaultValue=false)]
@@ -229,7 +228,7 @@ namespace PetShop.Core.Data
         private System.Data.Linq.EntitySet<Cart> _cartList;
 
         /// <summary>
-        /// Gets or sets the Cart association.
+        /// Gets or sets the <see cref="Cart"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Profile_Cart", Storage = "_cartList", ThisKey = "UniqueID", OtherKey = "UniqueID")]
         [System.Runtime.Serialization.DataMember(Order=8, EmitDefaultValue=false)]
@@ -329,6 +328,38 @@ namespace PetShop.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Profile"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Profile"/> instance.</param>
+        /// <returns>An instance of <see cref="Profile"/> that is deserialized from the XML string.</returns>
+        public static Profile FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Profile));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Profile;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Profile"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Profile"/> instance.</param>
+        /// <returns>An instance of <see cref="Profile"/> that is deserialized from the byte array.</returns>
+        public static Profile FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Profile));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Profile;
+            }
         }
         #endregion
 

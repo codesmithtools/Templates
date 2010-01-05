@@ -21,7 +21,7 @@ namespace PetShop.Core.Data
     [System.Data.Services.Common.DataServiceKey("SuppId")]
     [System.Diagnostics.DebuggerDisplay("SuppId: {SuppId}")]
     public partial class Supplier
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable 
     {
         #region Static Constructor
         /// <summary>
@@ -29,7 +29,6 @@ namespace PetShop.Core.Data
         /// </summary>
         static Supplier()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<Supplier>();
             AddSharedRules();
         }
         #endregion
@@ -41,13 +40,13 @@ namespace PetShop.Core.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Supplier()
         {
-            OnCreated();
             Initialize();
         }
 
         private void Initialize()
         {
             _itemList = new System.Data.Linq.EntitySet<Item>(OnItemListAdd, OnItemListRemove);
+            OnCreated();
         }
         #endregion
 
@@ -274,7 +273,7 @@ namespace PetShop.Core.Data
         private System.Data.Linq.EntitySet<Item> _itemList;
 
         /// <summary>
-        /// Gets or sets the Item association.
+        /// Gets or sets the <see cref="Item"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Supplier_Item", Storage = "_itemList", ThisKey = "SuppId", OtherKey = "Supplier")]
         [System.Runtime.Serialization.DataMember(Order=10, EmitDefaultValue=false)]
@@ -389,6 +388,38 @@ namespace PetShop.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Supplier"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Supplier"/> instance.</param>
+        /// <returns>An instance of <see cref="Supplier"/> that is deserialized from the XML string.</returns>
+        public static Supplier FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Supplier));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Supplier;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Supplier"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Supplier"/> instance.</param>
+        /// <returns>An instance of <see cref="Supplier"/> that is deserialized from the byte array.</returns>
+        public static Supplier FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Supplier));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Supplier;
+            }
         }
         #endregion
 

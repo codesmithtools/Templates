@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
-    <add key="PetShopConnectionString" value="Data Source=localhost;Database=PetShop;Integrated Security=True" />
+    <add key="PetShopConnectionString" value="Data Source=.\sqlexpress;AttachDbFilename=C:\Code\CodeSmith\GoogleCode\PetShop\Source\PetShop.UI\App_Data\PetShop.mdf;Integrated Security=True" />
   </variables>
   <defaultProperties>
     <property name="DbmlFile">PetShop.dbml</property>
@@ -13,40 +13,40 @@
       <property name="IncludeFunctions">False</property>
       <property name="IgnoreList">
         <stringList>
-      <string>^dbo.sysdiagrams$</string>
-      <string>^dbo.sp_</string>
-      <string>^dbo.aspnet_</string>
-      <string>^dbo.AspNet_</string>
-    </stringList>
+          <string>^dbo.sysdiagrams$</string>
+          <string>^dbo.sp_</string>
+          <string>^dbo.aspnet_</string>
+          <string>^dbo.AspNet_</string>
+        </stringList>
       </property>
       <property name="CleanExpression">
         <stringList>
-      <string>^\\w+_</string>
-    </stringList>
+          <string>^\\w+_</string>
+        </stringList>
       </property>
       <property name="EnumList">
         <stringList>
-      <string>(E|e)num$</string>
-    </stringList>
+          <string>(E|e)num$</string>
+        </stringList>
       </property>
       <property name="EntityBase">LinqEntityBase</property>
       <property name="IncludeDeleteOnNull">False</property>
       <property name="NameColumn">
         <stringList>
-      <string>((N|n)ame)|((T|t)ype(C|c)ode)</string>
-    </stringList>
+          <string>((N|n)ame)|((T|t)ype(C|c)ode)</string>
+        </stringList>
       </property>
       <property name="DescriptionColumm">
         <stringList>
-      <string>(D|d)esc</string>
-    </stringList>
+          <string>(D|d)esc</string>
+        </stringList>
       </property>
       <property name="NamingConventions">
         <NamingProperty xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="">
-      <TableNaming>Singular</TableNaming>
-      <EntityNaming>Singular</EntityNaming>
-      <AssociationNaming>ListSuffix</AssociationNaming>
-    </NamingProperty>
+          <TableNaming>Singular</TableNaming>
+          <EntityNaming>Singular</EntityNaming>
+          <AssociationNaming>ListSuffix</AssociationNaming>
+        </NamingProperty>
       </property>
       <property name="SourceDatabase">
         <connectionString>$(PetShopConnectionString)</connectionString>

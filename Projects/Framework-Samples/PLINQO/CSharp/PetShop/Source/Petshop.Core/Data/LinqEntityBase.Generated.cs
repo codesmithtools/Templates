@@ -15,7 +15,7 @@ namespace PetShop.Core.Data
     /// <summary>
     /// A base class for Linq entities that implements notification events.
     /// </summary>
-    [System.Runtime.Serialization.DataContract( IsReference = true )]
+    [System.Runtime.Serialization.DataContract(IsReference = true)]
     public abstract partial class LinqEntityBase :
         CodeSmith.Data.ILinqEntity,
         System.ComponentModel.INotifyPropertyChanging,
@@ -236,6 +236,24 @@ namespace PetShop.Core.Data
 
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Returns a byte array that represents the current <see cref="T:System.Object"/>. 
+        /// </summary>
+        /// <returns>A byte array that represents the current <see cref="T:System.Object"/>.</returns>
+        public byte[] ToBinary()
+        {
+            byte[] buffer;
+            using (var ms = new System.IO.MemoryStream())
+            using (var writer = System.Xml.XmlDictionaryWriter.CreateBinaryWriter(ms))
+            {
+                var serializer = new System.Runtime.Serialization.DataContractSerializer(GetType());
+                serializer.WriteObject(writer, this);
+                buffer = ms.ToArray();
+            }
+            return buffer;
+        }
+
         #endregion
     }
 }

@@ -21,7 +21,7 @@ namespace PetShop.Core.Data
     [System.Data.Services.Common.DataServiceKey("CategoryId")]
     [System.Diagnostics.DebuggerDisplay("CategoryId: {CategoryId}")]
     public partial class Category
-        : LinqEntityBase, ICloneable
+        : LinqEntityBase, ICloneable 
     {
         #region Static Constructor
         /// <summary>
@@ -29,7 +29,6 @@ namespace PetShop.Core.Data
         /// </summary>
         static Category()
         {
-            CodeSmith.Data.Rules.RuleManager.AddShared<Category>();
             AddSharedRules();
         }
         #endregion
@@ -41,13 +40,13 @@ namespace PetShop.Core.Data
         [System.Diagnostics.DebuggerNonUserCode]
         public Category()
         {
-            OnCreated();
             Initialize();
         }
 
         private void Initialize()
         {
             _productList = new System.Data.Linq.EntitySet<Product>(OnProductListAdd, OnProductListRemove);
+            OnCreated();
         }
         #endregion
 
@@ -131,7 +130,7 @@ namespace PetShop.Core.Data
         private System.Data.Linq.EntitySet<Product> _productList;
 
         /// <summary>
-        /// Gets or sets the Product association.
+        /// Gets or sets the <see cref="Product"/> association.
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Category_Product", Storage = "_productList", ThisKey = "CategoryId", OtherKey = "CategoryId")]
         [System.Runtime.Serialization.DataMember(Order=4, EmitDefaultValue=false)]
@@ -216,6 +215,38 @@ namespace PetShop.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Category"/> from XML.
+        /// </summary>
+        /// <param name="xml">The XML string representing a <see cref="Category"/> instance.</param>
+        /// <returns>An instance of <see cref="Category"/> that is deserialized from the XML string.</returns>
+        public static Category FromXml(string xml)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Category));
+
+            using (var sr = new System.IO.StringReader(xml))
+            using (var reader = System.Xml.XmlReader.Create(sr))
+            {
+                return deserializer.ReadObject(reader) as Category;
+            }
+        }
+
+        /// <summary>
+        /// Deserializes an instance of <see cref="Category"/> from a byte array.
+        /// </summary>
+        /// <param name="buffer">The byte array representing a <see cref="Category"/> instance.</param>
+        /// <returns>An instance of <see cref="Category"/> that is deserialized from the byte array.</returns>
+        public static Category FromBinary(byte[] buffer)
+        {
+            var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(Category));
+
+            using (var ms = new System.IO.MemoryStream(buffer))
+            using (var reader = System.Xml.XmlDictionaryReader.CreateBinaryReader(ms, System.Xml.XmlDictionaryReaderQuotas.Max))
+            {
+                return deserializer.ReadObject(reader) as Category;
+            }
         }
         #endregion
 
