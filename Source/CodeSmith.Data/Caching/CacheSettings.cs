@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Web.Caching;
 
 namespace CodeSmith.Data.Caching
@@ -43,6 +44,7 @@ namespace CodeSmith.Data.Caching
             CacheEmptyResult = true;
             Priority = CacheItemPriority.Normal;
             Mode = CacheExpirationMode.None;
+            Group = CacheManager.DefaultGroup;
         }
 
         /// <summary>
@@ -153,7 +155,6 @@ namespace CodeSmith.Data.Caching
         /// <value>The cache group name.</value>
         public string Group { get; set; }
 
-
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>
@@ -164,16 +165,19 @@ namespace CodeSmith.Data.Caching
         {
             var clone = new CacheSettings
             {
-                AbsoluteExpiration = AbsoluteExpiration,
-                CacheDependency = CacheDependency,
-                CacheEmptyResult = CacheEmptyResult,
-                CacheItemRemovedCallback = CacheItemRemovedCallback,
-                Duration = Duration,
                 Mode = Mode,
+                Duration = Duration,
+                AbsoluteExpiration = AbsoluteExpiration,
                 Priority = Priority,
+                CacheEmptyResult = CacheEmptyResult,
+                CacheDependency = CacheDependency,
+                CacheItemRemovedCallback = CacheItemRemovedCallback,
                 Provider = Provider,
                 Group = Group
             };
+
+            if (String.IsNullOrEmpty(Group))
+                clone.Group = CacheManager.DefaultGroup;
 
             return clone;
         }
@@ -189,14 +193,93 @@ namespace CodeSmith.Data.Caching
             return Clone();
         }
 
-        
+        /// <summary>
+        /// Creates a new CacheSettings object using the duration specified.
+        /// </summary>
+        /// <param name="duration">The duration to store the data in the cache.</param>
+        /// <returns>A new CacheSettings object with the specified duration.</returns>
+        public static CacheSettings FromDuration(int duration)
+        {
+            return new CacheSettings(duration);
+        }
+
+        /// <summary>
+        /// Creates a new CacheSettings object using the duration specified.
+        /// </summary>
+        /// <param name="expiration">The date to expire the data in the cache.</param>
+        /// <returns>A new CacheSettings object with the specified duration.</returns>
+        public static CacheSettings FromAbsolute(DateTime expiration)
+        {
+            return new CacheSettings(expiration);
+        }
+
+        /// <summary>
+        /// Creates a new CacheSettings object using the named profile.
+        /// </summary>
+        /// <param name="profile">The cache profile name.</param>
+        /// <returns>A new CacheSettings object with settings from the named profile.</returns>
+        public static CacheSettings FromProfile(string profile)
+        {
+            return CacheManager.GetProfile(profile);
+        }
     }
 
     public static class CacheSettingsExtensions
     {
-        public static CacheSettings WithGroup(this CacheSettings settings, string groupName)
+        public static CacheSettings WithDuration(this CacheSettings settings, int duration)
         {
-            settings.Group = groupName;
+            settings.Duration = TimeSpan.FromSeconds(duration);
+            settings.Mode = CacheExpirationMode.Duration;
+            return settings;
+        }
+
+        public static CacheSettings WithDuration(this CacheSettings settings, TimeSpan duration)
+        {
+            settings.Duration = duration;
+            settings.Mode = CacheExpirationMode.Duration;
+            return settings;
+        }
+
+        public static CacheSettings WithAbsoluteExpiration(this CacheSettings settings, DateTime absoluteExpiration)
+        {
+            settings.AbsoluteExpiration = absoluteExpiration;
+            settings.Mode = CacheExpirationMode.Absolute;
+            return settings;
+        }
+
+        public static CacheSettings WithPriority(this CacheSettings settings, CacheItemPriority priority)
+        {
+            settings.Priority = priority;
+            return settings;
+        }
+
+        public static CacheSettings WithCacheEmptyResult(this CacheSettings settings, bool cacheEmptyResult)
+        {
+            settings.CacheEmptyResult = cacheEmptyResult;
+            return settings;
+        }
+
+        public static CacheSettings WithCacheDependency(this CacheSettings settings, CacheDependency cacheDependency)
+        {
+            settings.CacheDependency = cacheDependency;
+            return settings;
+        }
+
+        public static CacheSettings WithCacheItemRemovedCallback(this CacheSettings settings, CacheItemRemovedCallback cacheItemRemovedCallback)
+        {
+            settings.CacheItemRemovedCallback = cacheItemRemovedCallback;
+            return settings;
+        }
+
+        public static CacheSettings WithProvider(this CacheSettings settings, string provider)
+        {
+            settings.Provider = provider;
+            return settings;
+        }
+
+        public static CacheSettings WithGroup(this CacheSettings settings, string group)
+        {
+            settings.Group = group;
             return settings;
         }
     }

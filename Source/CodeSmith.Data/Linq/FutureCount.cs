@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Common;
+using System.Data.Linq;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -85,27 +86,7 @@ namespace CodeSmith.Data.Linq
             var genericCount = _countMethod.MakeGenericMethod(new[] { source.ElementType });
             var expression = Expression.Call(null, genericCount, source.Expression);
 
-            // get provider from DataContext
-            Type contextType = dataContext.GetType();
-            PropertyInfo providerProperty = contextType.GetProperty("Provider", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (providerProperty == null)
-                throw new FutureException("Failed to get the DataContext.Provider property.");
-
-            object provider = providerProperty.GetValue(dataContext, null);
-            if (provider == null)
-                throw new FutureException("Failed to get the DataContext provider instance.");
-
-            Type providerType = provider.GetType().GetInterface("IProvider");
-            if (providerType == null)
-                throw new FutureException("Failed to cast the DataContext provider to IProvider.");
-
-            MethodInfo commandMethod = providerType.GetMethod("GetCommand", BindingFlags.Instance | BindingFlags.Public);
-            if (commandMethod == null)
-                throw new FutureException("Failed to get the GetCommand method from the DataContext provider.");
-
-            // run the GetCommand method from the provider directly
-            var commandObject = commandMethod.Invoke(provider, new object[] { expression });
-            return commandObject as DbCommand;
+            return dataContext.GetCommand(expression);
         }
 
         private static void FindCountMethod()
