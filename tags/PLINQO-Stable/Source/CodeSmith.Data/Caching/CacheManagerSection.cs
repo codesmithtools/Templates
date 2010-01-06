@@ -43,6 +43,17 @@ namespace CodeSmith.Data.Caching
         }
 
         /// <summary>
+        /// Gets or sets the default group name.
+        /// </summary>
+        /// <value>The default group name.</value>
+        [ConfigurationProperty("defaultGroup")]
+        public string DefaultGroup
+        {
+            get { return base["defaultGroup"] as string; }
+            set { base["defaultGroup"] = value; }
+        }
+
+        /// <summary>
         /// Gets the cache profiles.
         /// </summary>
         /// <value>The cache profiles.</value>

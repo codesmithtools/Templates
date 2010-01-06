@@ -13,7 +13,7 @@ namespace CodeSmith.Data.Caching
         /// </summary>
         public ProfileElement()
         {
-            IsSlidingExpiration = false;
+            Mode = CacheExpirationMode.Duration;
             Description = string.Empty;
         }
 
@@ -62,16 +62,25 @@ namespace CodeSmith.Data.Caching
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the cache is sliding expiration.
+        /// Gets or sets the group key of the profile.
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if the cache is sliding expiration; otherwise, <c>false</c>.
-        /// </value>
-        [ConfigurationProperty("isSlidingExpiration", DefaultValue = false)]
-        public bool IsSlidingExpiration
+        /// <value>The name of the group key.</value>
+        [ConfigurationProperty("group")]
+        public string Group
         {
-            get { return (bool)this["isSlidingExpiration"]; }
-            set { this["isSlidingExpiration"] = value; }
+            get { return (string)this["group"]; }
+            set { this["group"] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the cache expiration mode.
+        /// </summary>
+        /// <value>The cache expiration mode.</value>
+        [ConfigurationProperty("mode", DefaultValue = CacheExpirationMode.Duration)]
+        public CacheExpirationMode Mode
+        {
+            get { return (CacheExpirationMode)this["mode"]; }
+            set { this["mode"] = value; }
         }
 
         /// <summary>
@@ -82,10 +91,13 @@ namespace CodeSmith.Data.Caching
         {
             var cache = new CacheSettings();
             cache.Duration = Duration;
-            cache.Mode = IsSlidingExpiration ? CacheExpirationMode.Sliding : CacheExpirationMode.Duration;
+            cache.Mode = Mode;
 
             if (!string.IsNullOrEmpty(Provider))
                 cache.Provider = Provider;
+
+            if (!string.IsNullOrEmpty(Group))
+                cache.Group = Group;
 
             return cache;
         }

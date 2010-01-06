@@ -11,10 +11,8 @@ namespace CodeSmith.Data.Caching
     /// </summary>
     /// <example>The following example gets an item to the default cache provider.
     /// <code><![CDATA[
-    /// // get the default provider
-    /// var provider = CacheManager.GetProvider();
-    /// provider.Set("key", "some cached data");
-    /// var data = provider.Get<string>("key");
+    /// CacheManager.Set("key", "some cached data");
+    /// var data = CacheManager.Get<string>("key");
     /// ]]>
     /// </code>
     /// </example>
@@ -52,9 +50,9 @@ namespace CodeSmith.Data.Caching
             _providers = new ConcurrentDictionary<string, ICacheProvider>(StringComparer.OrdinalIgnoreCase);
             _profiles = new ConcurrentDictionary<string, CacheSettings>(StringComparer.OrdinalIgnoreCase);
 
-            Register<HttpCacheProvider>(true);
-            _defaultProfile = new CacheSettings();
+            RegisterProvider<HttpCacheProvider>(true);
             Initialize();
+            _defaultProfile = new CacheSettings();
         }
 
         private static void Initialize()
@@ -63,12 +61,12 @@ namespace CodeSmith.Data.Caching
             if (cacheSection == null)
                 return;
 
-            //load providers
+            // load providers
             if (cacheSection.Providers.Count > 0)
             {
                 var cacheProviders = new CacheProviderCollection();
-                ProvidersHelper.InstantiateProviders(cacheSection.Providers, cacheProviders, typeof(CacheProvider));
-                foreach (CacheProvider provider in cacheProviders)
+                ProvidersHelper.InstantiateProviders(cacheSection.Providers, cacheProviders, typeof(ICacheProvider));
+                foreach (ICacheProvider provider in cacheProviders)
                     _providers.TryAdd(provider.Name, provider);
 
                 ICacheProvider cacheProvider;
@@ -77,7 +75,7 @@ namespace CodeSmith.Data.Caching
                         _defaultProvider = cacheProvider;
             }
 
-            //load profiles
+            // load profiles
             if (cacheSection.Profiles.Count > 0)
             {
                 foreach (ProfileElement profile in cacheSection.Profiles)
@@ -88,6 +86,9 @@ namespace CodeSmith.Data.Caching
                     if (_profiles.TryGetValue(cacheSection.DefaultProfile, out cacheSettings))
                         _defaultProfile = cacheSettings;
             }
+
+            if (!String.IsNullOrEmpty(cacheSection.DefaultGroup))
+                DefaultGroup = cacheSection.DefaultGroup;
         }
 
         /// <summary>
@@ -97,9 +98,9 @@ namespace CodeSmith.Data.Caching
         /// <param name="providerName">Name of the provider.</param>
         /// <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
         /// <returns>A new instance of the provider.</returns>
-        public static ICacheProvider Register<T>(string providerName, bool defaultProvider) where T : ICacheProvider, new()
+        public static ICacheProvider RegisterProvider<T>(string providerName, bool defaultProvider) where T : ICacheProvider, new()
         {
-            return Register<T>(providerName, defaultProvider, k => new T());
+            return RegisterProvider(providerName, defaultProvider, k => new T());
         }
 
         /// <summary>
@@ -110,9 +111,8 @@ namespace CodeSmith.Data.Caching
         /// <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
         /// <param name="createFactory">The factory to create a new provider.</param>
         /// <returns>A new instance of the provider.</returns>
-        public static ICacheProvider Register<T>(string providerName, bool defaultProvider, Func<string, ICacheProvider> createFactory) where T : ICacheProvider, new()
+        public static ICacheProvider RegisterProvider(string providerName, bool defaultProvider, Func<string, ICacheProvider> createFactory)
         {
-
             var provider = _providers.GetOrAdd(providerName, createFactory);
             if (defaultProvider)
                 _defaultProvider = provider;
@@ -125,9 +125,9 @@ namespace CodeSmith.Data.Caching
         /// </summary>
         /// <typeparam name="T">The type of the provider.</typeparam>
         /// <returns>A new instance of the provider.</returns>
-        public static ICacheProvider Register<T>() where T : ICacheProvider, new()
+        public static ICacheProvider RegisterProvider<T>() where T : ICacheProvider, new()
         {
-            return Register<T>(false);
+            return RegisterProvider<T>(false);
         }
 
         /// <summary>
@@ -136,9 +136,9 @@ namespace CodeSmith.Data.Caching
         /// <typeparam name="T">The type of the provider.</typeparam>
         /// <param name="defaultProvider">if set to <c>true</c> this provider will be set as default.</param>
         /// <returns>A new instance of the provider.</returns>
-        public static ICacheProvider Register<T>(bool defaultProvider) where T : ICacheProvider, new()
+        public static ICacheProvider RegisterProvider<T>(bool defaultProvider) where T : ICacheProvider, new()
         {
-            return Register<T>(typeof(T).Name, defaultProvider);
+            return RegisterProvider<T>(typeof(T).Name, defaultProvider);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace CodeSmith.Data.Caching
         }
 
         /// <summary>
-        /// Gets an instance of <see cref="CacheSettings"/> based the default profile.
+        /// Gets an instance of <see cref="CacheSettings"/> based on the default profile.
         /// </summary>
         /// <returns>An instance of <see cref="CacheSettings"/>.</returns>
         public static CacheSettings GetProfile()
@@ -209,5 +209,160 @@ namespace CodeSmith.Data.Caching
                 : cacheSettings.Clone();
         }
 
+        /// <summary>
+        /// The default group for cache items to be inserted into.
+        /// </summary>
+        public static string DefaultGroup { get; set; }
+
+        /// <summary>
+        /// The default provider for cache items.
+        /// </summary>
+        public static ICacheProvider DefaultProvider
+        {
+            get
+            {
+                return _defaultProvider;
+            }
+        }
+
+        /// <summary>
+        /// Saves the specified key to the default cache provider.
+        /// </summary>
+        /// <typeparam name="T">The type for data being saved,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="data">The data to be cached in the provider.</param>
+        public static void Set<T>(string key, T data)
+        {
+            DefaultProvider.Set(key, data);
+        }
+
+        /// <summary>
+        /// Saves the specified key to the default cache provider for a specific duration.
+        /// </summary>
+        /// <typeparam name="T">The type for data being saved,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="data">The data to be cached in the provider.</param>
+        /// <param name="duration">The duration to store the data in the cache.</param>
+        public static void Set<T>(string key, T data, int duration)
+        {
+            DefaultProvider.Set(key, data, CacheSettings.FromDuration(duration));
+        }
+
+        /// <summary>
+        /// Saves the specified key using the settings from the specified cache profile.
+        /// </summary>
+        /// <typeparam name="T">The type for data being saved,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="data">The data to be cached in the provider.</param>
+        /// <param name="profile">The name of the cache profile to use.</param>
+        public static void Set<T>(string key, T data, string profile)
+        {
+            CacheSettings settings = GetProfile(profile);
+            GetProvider(settings.Provider).Set(key, data, settings);
+        }
+
+        /// <summary>
+        /// Saves the specified key using the settings from the specified cache profile.
+        /// </summary>
+        /// <typeparam name="T">The type for data being saved,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="data">The data to be cached in the provider.</param>
+        /// <param name="settings">The <see cref="CacheSettings"/> to be used when storing in the provider.</param>
+        public static void Set<T>(string key, T data, CacheSettings settings)
+        {
+            GetProvider(settings.Provider).Set(key, data, settings);
+        }
+
+        /// <summary>
+        /// Removes the specified key from the default cache provider.
+        /// </summary>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        public static bool Remove(string key)
+        {
+            return DefaultProvider.Remove(key);
+        }
+
+        /// <summary>
+        /// Removes the combined key and group name from the default cache provider.
+        /// </summary>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="groupName">Name of the group.</param>
+        public static bool Remove(string key, string groupName)
+        {
+            return DefaultProvider.Remove(key, groupName);
+        }
+
+        /// <summary>
+        /// Gets the data cached for the specified key from the default cache provider.
+        /// </summary>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <returns>An instance of T if the item exists in the cache, otherwise <see langword="null"/>.</returns>
+        public static object Get(string key)
+        {
+            return DefaultProvider.Get(key);
+        }
+
+        /// <summary>
+        /// Gets the data cached for the specified key from the default cache provider.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <returns>An instance of T if the item exists in the cache, otherwise <see langword="null"/>.</returns>
+        public static T Get<T>(string key)
+        {
+            return DefaultProvider.Get<T>(key);
+        }
+
+        /// <summary>
+        /// Gets the data cached for the combined key and group name from the default cache provider.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="groupName">Name of the group.</param>
+        /// <returns>
+        /// An instance of T if the item exists in the cache, otherwise <see langword="null"/>.
+        /// </returns>
+        public static T Get<T>(string key, string groupName)
+        {
+            return DefaultProvider.Get<T>(key, groupName);
+        }
+
+        /// <summary>
+        /// Checks to see if the specified key exists.
+        /// </summary>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <returns>True if the item exists.</returns>
+        public static bool Exists(string key)
+        {
+            return DefaultProvider.Exists(key);
+        }
+
+        /// <summary>
+        /// Checks to see if the specified key exists.
+        /// </summary>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="group">The name of the cache group.</param>
+        /// <returns>True if the item exists.</returns>
+        public static bool Exists(string key, string group)
+        {
+            return DefaultProvider.Exists(key, group);
+        }
+
+        /// <summary>
+        /// Invalidates the cache items for the default group from the default cache provider.
+        /// </summary>
+        public static void InvalidateGroup()
+        {
+            DefaultProvider.InvalidateGroup(DefaultGroup);
+        }
+
+        /// <summary>
+        /// Invalidates the cache items for the specified group from the default cache provider.
+        /// </summary>
+        /// <param name="groupName">Name of the group.</param>
+        public static void InvalidateGroup(string groupName)
+        {
+            DefaultProvider.InvalidateGroup(groupName);
+        }
     }
 }

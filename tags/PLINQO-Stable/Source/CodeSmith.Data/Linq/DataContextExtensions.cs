@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -115,6 +116,26 @@ namespace CodeSmith.Data.Linq
                 dbCommand.CommandText = RemoveColumnAlias(dbCommand.CommandText, metaType);
 
             return dbCommand;
+        }
+
+        public static DbCommand GetCommand(this DataContext dataContext, Expression expression)
+        {
+            // get provider from DataContext
+            object provider = GetProvider(dataContext);
+            if (provider == null)
+                throw new InvalidOperationException("Failed to get the DataContext provider instance.");
+
+            Type providerType = provider.GetType().GetInterface("IProvider");
+            if (providerType == null)
+                throw new InvalidOperationException("Failed to cast the DataContext provider to IProvider.");
+
+            MethodInfo commandMethod = providerType.GetMethod("GetCommand", BindingFlags.Instance | BindingFlags.Public);
+            if (commandMethod == null)
+                throw new InvalidOperationException("Failed to get the GetCommand method from the DataContext provider.");
+
+            // run the GetCommand method from the provider directly
+            var commandObject = commandMethod.Invoke(provider, new object[] { expression });
+            return commandObject as DbCommand;
         }
 
         /// <summary>
@@ -233,12 +254,8 @@ namespace CodeSmith.Data.Linq
 
             var flags = BindingFlags.Instance | BindingFlags.NonPublic;
 
-            PropertyInfo providerProperty = context.GetType().GetProperty("Provider", flags);
-            if (providerProperty == null)
-                return;
-
-            object provider = providerProperty.GetValue(context, null);
-
+            // get provider from DataContext
+            object provider = GetProvider(context);
             if (provider == null)
                 return;
 
@@ -256,5 +273,16 @@ namespace CodeSmith.Data.Linq
 
             logCommandMethod.Invoke(provider, new object[] { context.Log, cmd });
         }
+
+        private static object GetProvider(DataContext dataContext)
+        {
+            Type contextType = dataContext.GetType();
+            PropertyInfo providerProperty = contextType.GetProperty("Provider", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (providerProperty == null)
+                return null;
+
+            return providerProperty.GetValue(dataContext, null);
+        }
+
     }
 }

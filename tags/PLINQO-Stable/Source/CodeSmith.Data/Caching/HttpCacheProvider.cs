@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Web;
-using CodeSmith.Data.Linq;
 
 namespace CodeSmith.Data.Caching
 {
@@ -23,7 +19,7 @@ namespace CodeSmith.Data.Caching
         {
             DateTime absoluteExpiration = System.Web.Caching.Cache.NoAbsoluteExpiration;
             TimeSpan slidingExpiration = System.Web.Caching.Cache.NoSlidingExpiration;
-            
+
             switch (settings.Mode)
             {
                 case CacheExpirationMode.Duration:
@@ -53,9 +49,10 @@ namespace CodeSmith.Data.Caching
         /// Removes the specified key from the cache provider.
         /// </summary>
         /// <param name="key">The key used to store the data in the cache provider.</param>
-        public override void Remove(string key)
+        /// <param name="group">The cache group.</param>
+        public override bool Remove(string key, string group)
         {
-            HttpRuntime.Cache.Remove(key);
+            return HttpRuntime.Cache.Remove(GetGroupKey(key, group)) != null;
         }
 
         /// <summary>
@@ -63,13 +60,13 @@ namespace CodeSmith.Data.Caching
         /// </summary>
         /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
         /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="group">The cache group.</param>
         /// <returns>
         /// An instance of T if the item exists in the cache, otherwise <see langword="null"/>.
         /// </returns>
-        public override T Get<T>(string key)
+        public override object Get(string key, string group)
         {
-            var data = HttpRuntime.Cache.Get(key);
-            return data == null ? default(T) : (T)data;
+            return HttpRuntime.Cache.Get(GetGroupKey(key, group));
         }
     }
 }
