@@ -185,10 +185,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccessLayer", "DataAcce
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{1EBCD6D8-6E9E-41EB-8968-F1ABAD8CB1CE}"
-	ProjectSection(SolutionItems) = preProject
-		..\VisualBasic\DataAccessLayer\Internal\ParameterizedSQL.cst = ..\VisualBasic\DataAccessLayer\Internal\ParameterizedSQL.cst
-		..\VisualBasic\DataAccessLayer\Internal\ParameterizedSQLBase.cst = ..\VisualBasic\DataAccessLayer\Internal\ParameterizedSQLBase.cst
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{AA24549B-F016-4588-9AE9-3A503B4DAD79}"
 	ProjectSection(SolutionItems) = preProject

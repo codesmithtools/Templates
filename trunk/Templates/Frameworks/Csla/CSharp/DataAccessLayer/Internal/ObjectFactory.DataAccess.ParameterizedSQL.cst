@@ -35,7 +35,7 @@ namespace <%= DataProjectName %>
 {
     public partial class <%= Entity.ClassName %>Factory : ObjectFactory
     {
-<% if(IsReadOnlyBusinessObject) { %>
+<% if(!IsReadOnlyBusinessObject) { %>
         #region Create
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace <%= DataProjectName %>
 
         #endregion
 
-<% if(IsReadOnlyBusinessObject) { %>
+<% if(!IsReadOnlyBusinessObject) { %>
         #region Insert
 
         private void DoInsert(<%= Entity.ClassName %> item<% if(Entity.ManyToOne.Count > 0){ %>, <%= Entity.ManyToOne.BuildChildInsertParametersVariables() %><% } %>)

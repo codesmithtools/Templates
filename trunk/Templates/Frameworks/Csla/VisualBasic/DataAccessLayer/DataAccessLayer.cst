@@ -1,8 +1,9 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.DataAccessCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X DataAccessLayer" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.DataAccessCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.7.X DataAccessLayer" %>
 
-<%@ Register Name="ParameterizedSQL" Template="Internal\ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ParameterizedSQLBase" Template="Internal\ParameterizedSQLBase.cst" MergeProperties="False" ExcludeProperties="" %>
-
+<%@ Register Name="ObjectFactory" Template="Internal\ObjectFactory.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ObjectFactoryDataAccess" Template="Internal\ObjectFactory.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ObjectFactoryDataAccessParameterized" Template="Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\Common" %>
@@ -16,23 +17,45 @@
 
 <script runat="template">
 
-Public Overrides Sub Generate()
-    If DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
-        'ParameterizedSQL
-        Dim parameterizedSQL As ParameterizedSQL = Me.Create(Of ParameterizedSQL)()
-        Me.CopyPropertiesTo(parameterizedSQL)
+Public Overloads Overrides Sub Generate()
+    RegisterReferences()
 
-        Dim fileName As String = System.IO.Path.Combine(Me.Location, "DataAccessLayer.vb")
-        If Not System.IO.File.Exists(fileName) Then
-            parameterizedSQL.RenderToFile(fileName, False)
+    For Each entity As Entity In Entities
+
+        Dim objectFactory As ObjectFactory = Me.Create(Of ObjectFactory)()
+        Me.CopyPropertiesTo(objectFactory)
+        objectFactory.SourceTable = entity.Table
+        objectFactory.BusinessClassName = entity.ClassName + "Factory"
+
+        Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("{0}.vb", objectFactory.BusinessClassName))
+        If Not System.IO.File.Exists(parentFileName) Then
+            objectFactory.RenderToFile(parentFileName, False)
         End If
 
-        'ParameterizedSQLBase
-        Dim parameterizedSQLBase As ParameterizedSQLBase = Me.Create(Of ParameterizedSQLBase)()
-        Me.CopyPropertiesTo(parameterizedSQLBase)
-        parameterizedSQLBase.DataClassName = String.Format("{0}Base", DataClassName)
-        parameterizedSQLBase.RenderToFile(System.IO.Path.Combine(Me.Location, "Base\DataAccessLayerBase.vb"), True)
-    End If
+        Dim fileName As String = System.IO.Path.Combine(Location, String.Format("{0}.DataAccess.vb", objectFactory.BusinessClassName))
+        If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Then
+            Dim objectFactoryDataAccess As ObjectFactoryDataAccess = Me.Create(Of ObjectFactoryDataAccess)()
+            Me.CopyPropertiesTo(objectFactoryDataAccess)
+            objectFactoryDataAccess.SourceTable = entity.Table
+
+            objectFactoryDataAccess.RenderToFile(fileName, parentFileName, True)
+        ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Then
+            Dim objectFactoryDataAccessParameterized As ObjectFactoryDataAccessParameterized = Me.Create(Of ObjectFactoryDataAccessParameterized)()
+            Me.CopyPropertiesTo(objectFactoryDataAccessParameterized)
+            objectFactoryDataAccessParameterized.SourceTable = entity.Table
+
+            objectFactoryDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
+
+            Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
+            Me.CopyPropertiesTo(ADOHelper)
+            ADOHelper.SourceTable = entity.Table
+
+            fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
+            If Not System.IO.File.Exists(fileName) Then
+                ADOHelper.RenderToFile(fileName, False)
+            End If
+        End If
+    Next
 End Sub
 
 </script>
