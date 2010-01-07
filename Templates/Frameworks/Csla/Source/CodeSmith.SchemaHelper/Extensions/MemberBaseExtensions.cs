@@ -18,7 +18,13 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildCriteriaObjectInitializer(this MemberBase member, string className)
         {
-            return string.Format("{0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName, className), member.Entity.ResolveCriteriaVariableName(member.ColumnName));
+            return BuildCriteriaObjectInitializer(member, className, false);
+        }
+
+        public static string BuildCriteriaObjectInitializer(this MemberBase member, string className, bool isObjectFactory)
+        {
+            string criteria = isObjectFactory ? string.Format("item.{0}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName)) : member.Entity.ResolveCriteriaVariableName(member.ColumnName);
+            return string.Format("{0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName, className), criteria);
         }
 
         public static List<SearchCriteria> ListSearchCriteria(this MemberBase member)
