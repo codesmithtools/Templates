@@ -1,8 +1,9 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.DataAccessCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.7.X DataAccessLayer" %>
 
-<%@ Register Name="ParameterizedSQL" Template="Internal\ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="ParameterizedSQLBase" Template="Internal\ParameterizedSQLBase.cst" MergeProperties="False" ExcludeProperties="" %>
-
+<%@ Register Name="ObjectFactory" Template="Internal\ObjectFactory.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ObjectFactoryDataAccess" Template="Internal\ObjectFactory.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ObjectFactoryDataAccessParameterized" Template="Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\Common" %>
@@ -18,29 +19,51 @@
 
 public override void Generate()
 {
-    if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
+    RegisterReferences();
+    
+    foreach(Entity entity in Entities)
     {
-        #region ParameterizedSQL
-		
-        ParameterizedSQL parameterizedSQL = this.Create<ParameterizedSQL>();
-        this.CopyPropertiesTo(parameterizedSQL);
+        #region ObjectFactory
         
-        string fileName = System.IO.Path.Combine(this.Location, "DataAccessLayer.cs");
-		if (!System.IO.File.Exists(fileName))
-		{
-			parameterizedSQL.RenderToFile(fileName, false);
-		}
-        
-		#region ParameterizedSQLBase
-		
-		ParameterizedSQLBase parameterizedSQLBase = this.Create<ParameterizedSQLBase>();
-        this.CopyPropertiesTo(parameterizedSQLBase);
-        parameterizedSQLBase.DataClassName = string.Format("{0}Base", DataClassName);
-        
-        parameterizedSQLBase.RenderToFile(System.IO.Path.Combine(this.Location, "Base\\DataAccessLayerBase.cs"), true);
-		
-		#endregion
-        
+        ObjectFactory objectFactory = this.Create<ObjectFactory>();
+        this.CopyPropertiesTo(objectFactory);
+        objectFactory.SourceTable = entity.Table;
+        objectFactory.BusinessClassName = entity.ClassName + "Factory";
+
+        string parentFileName = System.IO.Path.Combine(this.Location, string.Format("{0}.cs", objectFactory.BusinessClassName));
+        if (!System.IO.File.Exists(parentFileName))
+        {
+            objectFactory.RenderToFile(parentFileName, false);
+        }
+
+        var fileName = System.IO.Path.Combine(Location, string.Format("{0}.DataAccess.cs", objectFactory.BusinessClassName));
+        if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone)
+        {
+            ObjectFactoryDataAccess objectFactoryDataAccess = this.Create<ObjectFactoryDataAccess>();
+            this.CopyPropertiesTo(objectFactoryDataAccess);
+            objectFactoryDataAccess.SourceTable = entity.Table;
+            
+            objectFactoryDataAccess.RenderToFile(fileName, parentFileName, true);
+        }
+        else if(DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
+        {
+            ObjectFactoryDataAccessParameterized objectFactoryDataAccessParameterized = this.Create<ObjectFactoryDataAccessParameterized>();
+            this.CopyPropertiesTo(objectFactoryDataAccessParameterized);
+            objectFactoryDataAccessParameterized.SourceTable = entity.Table;
+            
+            objectFactoryDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+            
+            ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
+            this.CopyPropertiesTo(ADOHelper);
+            ADOHelper.SourceTable = entity.Table;
+            
+            fileName = System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs");
+            if (!System.IO.File.Exists(fileName))
+            {
+                ADOHelper.RenderToFile(fileName, false);
+            }
+        }
+
         #endregion
     }
 }

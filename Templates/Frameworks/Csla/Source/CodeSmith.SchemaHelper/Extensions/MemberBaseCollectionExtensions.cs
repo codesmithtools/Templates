@@ -223,11 +223,18 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildCriteriaObjectInitializer(this List<MemberBase> members, string className)
         {
-            string parameters = string.Empty;
+            return BuildCriteriaObjectInitializer(members, className, false);
+        }
 
+        public static string BuildCriteriaObjectInitializer(this List<MemberBase> members, string className, bool isObjectFactory)
+        {
+            string parameters = string.Empty;
+            
             foreach (MemberBase member in members)
             {
-                parameters += string.Format(", {0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName, className), member.Entity.ResolveCriteriaVariableName(member.ColumnName));
+                string name = isObjectFactory ? string.Format("item.{0}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName)) : member.Entity.ResolveCriteriaVariableName(member.ColumnName);
+
+                parameters += string.Format(", {0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName, className), name);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
