@@ -26,11 +26,6 @@ namespace QuickStart
         public string DataProjectName { get; set; }
 
         [Category("4. Data Project")]
-        [Description("The name of the Data Access class.")]
-        [DefaultValue("DataAccessLayer")]
-        public string DataClassName { get; set; }
-
-        [Category("4. Data Project")]
         [Description("The value all sql parameters should be prefixed with.")]
         [DefaultValue("@p_")]
         public string ParameterPrefix

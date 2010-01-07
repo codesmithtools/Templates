@@ -393,12 +393,23 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildInsertCommandParameters(this List<Member> members)
         {
-            return BuildInsertCommandParameters(members, new List<AssociationMember>());
+            return BuildInsertCommandParameters(members, false);
+        }
+
+        public static string BuildInsertCommandParameters(this List<Member> members, bool isObjectFactory)
+        {
+            return BuildInsertCommandParameters(members, new List<AssociationMember>(), isObjectFactory);
         }
 
         public static string BuildInsertCommandParameters(this List<Member> members, List<AssociationMember> associationMembers)
         {
+            return BuildInsertCommandParameters(members, associationMembers, false);
+        }
+
+        public static string BuildInsertCommandParameters(this List<Member> members, List<AssociationMember> associationMembers, bool isObjectFactory)
+        {
             string commandParameters = string.Empty;
+            string castPrefix = isObjectFactory ? "item." : string.Empty;
 
             foreach (Member member in members)
             {
@@ -418,7 +429,7 @@ namespace CodeSmith.SchemaHelper
                 else
                     cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", member.PropertyName) : string.Format("{0});", member.PropertyName);
 
-                commandParameters += string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
+                commandParameters += string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3}", Configuration.Instance.ParameterPrefix, member.ColumnName, castPrefix, cast);
             }
 
             foreach (AssociationMember associationMember in associationMembers)
@@ -439,7 +450,7 @@ namespace CodeSmith.SchemaHelper
                     else
                         cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", propertyName) : string.Format("{0});", propertyName);
 
-                    string output = string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName, cast);
+                    string output = string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName, castPrefix, cast);
 
                     if (!commandParameters.Contains(output))
                         commandParameters += output;
@@ -451,12 +462,23 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildCommandParameters(this List<Member> members)
         {
-            return BuildCommandParameters(members, new List<AssociationMember>());
+            return BuildCommandParameters(members, new List<AssociationMember>(), false);
+        }
+
+        public static string BuildCommandParameters(this List<Member> members, bool isObjectFactory)
+        {
+            return BuildCommandParameters(members, new List<AssociationMember>(), isObjectFactory);
         }
 
         public static string BuildCommandParameters(this List<Member> members, List<AssociationMember> associationMembers)
         {
+            return BuildCommandParameters(members, associationMembers, false);
+        }
+
+        public static string BuildCommandParameters(this List<Member> members, List<AssociationMember> associationMembers, bool isObjectFactory)
+        {
             string commandParameters = string.Empty;
+            string castPrefix = isObjectFactory ? "item." : string.Empty;
 
             foreach (Member member in members)
             {
@@ -473,7 +495,7 @@ namespace CodeSmith.SchemaHelper
                 else
                     cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", member.PropertyName) : string.Format("{0});", member.PropertyName);
 
-                commandParameters += string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
+                commandParameters += string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3}", Configuration.Instance.ParameterPrefix, member.ColumnName, castPrefix, cast);
             }
 
             foreach (AssociationMember associationMember in associationMembers)
@@ -492,7 +514,7 @@ namespace CodeSmith.SchemaHelper
                 else
                     cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", propertyName) : string.Format("{0});", propertyName);
 
-                string output = string.Format("\n\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName, cast);
+                string output = string.Format("\n\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}{3}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName, castPrefix, cast);
 
                 if (!commandParameters.Contains(output))
                     commandParameters += output;
