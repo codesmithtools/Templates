@@ -62,8 +62,8 @@ namespace CodeSmith.SchemaHelper
         public static string GetName(this ColumnSchema column)
         {
             string name = (column.HasAlias()) ? column.ExtendedProperties[Configuration.Instance.AliasExtendedProperty].Value.ToString() : column.Name;
-
-            return Configuration.Instance.ValidateName(name);
+            
+            return Configuration.Instance.ValidateName(column, name);
         }
 
         public static string GetName(this ColumnSchema column, TableSchema table, AssociationType associationType)
