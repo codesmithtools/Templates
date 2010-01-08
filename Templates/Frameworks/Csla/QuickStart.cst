@@ -100,6 +100,12 @@ public override void Generate()
         WebAppProjectCreator webAppCreator = new WebAppProjectCreator(pbs);
         webAppCreator.CspFileName = "Web.csp";
         webAppCreator.ProjectReferences.Add(this.BusinessProjectName);
+        
+        if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
+        {
+            webAppCreator.ProjectReferences.Add(this.DataProjectName);
+        }
+        
         SolutionItem webAppProject = webAppCreator.CreateProject(this.InterfaceProjectName);
         solutionItems.Add(webAppProject);
     }

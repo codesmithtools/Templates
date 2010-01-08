@@ -115,9 +115,14 @@ namespace CodeSmith.SchemaHelper
             {
                 if(association.PropertyName == propertyName)
                 {
-                    return entity.ResolveCriteriaColumnName(member.ColumnName);
+                    var name = entity.ResolveCriteriaColumnName(member.ColumnName);
+                    if (string.Equals(name, member.Table.ClassName(), StringComparison.InvariantCultureIgnoreCase))
+                        return string.Format("{0}Member", name);
                 }
             }
+
+            if (string.Equals(member.ColumnName, member.Table.ClassName(), StringComparison.InvariantCultureIgnoreCase))
+                return string.Format("{0}Member", member.ColumnName);
 
             return member.ColumnName;
         }
