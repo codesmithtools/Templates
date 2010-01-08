@@ -55,7 +55,7 @@ namespace <%= BusinessProjectName %>
 
         #endregion
         
-        #region Business Methods
+        #region Properties
 
 <%  foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey){ if (UseMemberVariables){ %>
         private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>);

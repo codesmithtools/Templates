@@ -75,7 +75,7 @@ namespace <%= BusinessProjectName %>
         
         #endregion
         
-        #region Business Methods
+        #region Properties
 
 <% if(Entity.HasRowVersionMember) { %>
         /// <summary>

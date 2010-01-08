@@ -42,11 +42,12 @@ namespace CodeSmith.SchemaHelper
 
         public static string ResolveSystemType(this ColumnSchema column, bool canAppendNullable)
         {
-            string result = (Configuration.Instance.ResolveSystemType.ContainsKey(column.DataType.ToString()))
-                                ? Configuration.Instance.ResolveSystemType[column.DataType.ToString()]
-                                : column.SystemType.ToString();
+            string result = column.SystemType.ToString();
 
-            if (result.Equals("DateTime", StringComparison.InvariantCultureIgnoreCase))
+            if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                result = result.Replace("[]", "()");
+
+            if (result.Equals("System.DateTime", StringComparison.InvariantCultureIgnoreCase))
                 result = "SmartDate";
 
             bool appendNull = column.AllowDBNull && column.SystemType.IsValueType && canAppendNullable;

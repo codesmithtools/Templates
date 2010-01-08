@@ -46,7 +46,7 @@ Public Partial Class <%= BusinessClassName %>
 <% End If %>
     #End Region
     
-    #Region "Business Methods"
+    #Region "Properties"
             
 <% If(Entity.HasRowVersionMember) Then %>
     ''' <summary>

@@ -20,6 +20,7 @@ namespace CodeSmith.SchemaHelper
 
             Size = column.Size;
             SystemType = column.ResolveSystemType();
+            DataType = column.DataType.ToString();
             IsUnique = column.IsUnique;
             IsNullable = column.AllowDBNull;
             IsPrimaryKey = column.IsPrimaryKeyMember;
@@ -56,6 +57,8 @@ namespace CodeSmith.SchemaHelper
 
         public string Name { get; protected set; }
 
+        public string DataType { get; private set; }
+        
         public string SystemType { get; private set; }
 
         public string SystemTypeWithSize

@@ -97,6 +97,28 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
+        /// <summary>
+        /// Returns the SystemLanguage From C#/VB MapCollection.
+        /// </summary>
+        /// <returns>Returns the correct language MapCollection.</returns>
+        [Browsable(false)]
+        public MapCollection ResolveSystemTypeFullName
+        {
+            get
+            {
+                string mapFileName = TargetLanguage == LanguageEnum.CSharp ? "System-CSharpAlias" : "System-VBAlias";
+
+                if (_dbTypeToSystemType == null)
+                {
+                    string path;
+                    Map.TryResolvePath(mapFileName, "", out path);
+                    _dbTypeToSystemType = Map.Load(path);
+                }
+
+                return _dbTypeToSystemType;
+            }
+        }
+
         #endregion
 
         #region Instance
