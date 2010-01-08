@@ -52,7 +52,7 @@ namespace QuickStart
         public override void RegisterReferences()
         {
             RegisterReference("System.Configuration");
-            RegisterReference(Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\..\Common\Csla\Csla.dll")));
+            RegisterReference(Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\Csla.dll")));
         }
 
         #endregion
