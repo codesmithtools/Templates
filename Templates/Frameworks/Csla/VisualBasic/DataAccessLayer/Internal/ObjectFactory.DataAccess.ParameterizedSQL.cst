@@ -63,10 +63,10 @@ Public Partial Class <%= Entity.ClassName %>Factory
     ''' <Returns>New <%= Entity.ClassName %>.</Returns>
     <RunLocal()> _
     Private Function Create(ByVal criteria As <%= Entity.ClassName %>Criteria) As  <%= Entity.ClassName %>
-        Dim resource As <%= Entity.ClassName %> = <%= Entity.ClassName %>.Get<%= Entity.ClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildCriteriaParametersVariables() %>)
+        Dim resource As <%= Entity.ClassName %> = Fetch(criteria)
         Dim item As <%= Entity.ClassName %> = Activator.CreateInstance(GetType(<%= Entity.ClassName %>), true)
         Using BypassPropertyChecks(item)
-<% For Each member As Member in Entity.MembersNoRowVersionIncludePrimaryKey %>
+<% For Each member As Member in Entity.MembersNoKeysOrRowVersion %>
             item.<%= member.PropertyName %> = resource.<%= member.PropertyName %>
 <% Next %>
 <% For Each member As AssociationMember in Entity.MembersForeignKey
@@ -136,22 +136,21 @@ Public Partial Class <%= Entity.ClassName %>Factory
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)
-                    <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(entity.MembersForeignKey,true) %>
-
+<% If(Entity.ManyToOne.Count > 0) Then %>
+                    <%= entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true) %>
+<% Else %>
+                    <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true) %>
+<% End If %>
                     Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                         If reader.Read() Then
 <% If (Entity.HasRowVersionMember) Then %>
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+                            '_timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
 
 <% If (Entity.PrimaryKey.IsIdentity) Then %>
-<% for each [member] As Member in Entity.PrimaryKey.KeyMembers
-If(UseMemberVariables) Then %>
-                            <%= [member].PrivateMemberVariableName %> = <%If Not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
-<% else %>
-                            LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <% If NOT [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
-<%  End If
-Next %>
+<% for each [member] As Member in Entity.PrimaryKey.KeyMembers %>
+                            'item.<%= [member].PropertyName %> = <%If Not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+<% Next %>
 <% End If %>
                         End If
                     End Using
@@ -161,15 +160,15 @@ Next %>
             ' Update Child Items.
 <%-- One-To-Zero-Or-One --%>
 <% For Each association As AssociationMember in Entity.OneToZeroOrOne %>
-            New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
+            'New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
 <% Next %>
 <%-- Many-To-One --%>
 <% For Each association As AssociationMember in Entity.ManyToOne %>
-            New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
+            'New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
 <% Next %>
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each association As AssociationMember in Entity.OneToMany %>
-            New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
+            'New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
 <% Next %>
         End Using
 
@@ -181,11 +180,11 @@ Next %>
     #Region "Update"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Update(ByVal item As <%= Entity.ClassName %>) As <%= Entity.ClassName %> 
+    Public Function Update(ByVal item As <%= Entity.ClassName %><% If(Entity.ManyToOne.Count > 0) Then %>, <%= Entity.ManyToOne.BuildChildInsertParametersVariables() %><% End If %>) As <%= Entity.ClassName %> 
         If(item.IsDeleted) Then
             DoDelete(item)
         Else If(item.IsNew) Then
-            DoInsert(item)
+            DoInsert(item<% If(Entity.ManyToOne.Count > 0) Then %>, <%= Entity.ManyToOne.BuildVariableArguments() %><% End If %>)
         Else
            DoUpdate(item)
         End If
@@ -235,15 +234,15 @@ Next %>
             ' Update Child Items.
 <%-- One-To-Zero-Or-One --%>
 <% For Each association As AssociationMember in Entity.OneToZeroOrOne %>
-            New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
+            'New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
 <% Next  %>
 <%-- Many-To-One --%>
 <% For Each association As AssociationMember in Entity.ManyToOne %>
-            New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
+            'New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
 <% Next %>
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each association As AssociationMember in Entity.OneToMany%>
-            New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
+            'New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
 <% Next  %>
 
             MarkOld(item)
