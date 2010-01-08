@@ -30,7 +30,7 @@ Imports Csla
 Public Partial Class <%= BusinessClassName %> 
     Inherits EditableRootListBase(Of <%= ChildBusinessClassName %>)
     
-    #Region "Business Methods"
+    #Region "Properties"
     
     Protected Overrides Function AddNewCore() As Object
         Dim item As <%= ChildBusinessClassName %> = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()

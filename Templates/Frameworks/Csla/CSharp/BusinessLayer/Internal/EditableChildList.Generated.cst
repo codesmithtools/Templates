@@ -72,7 +72,7 @@ namespace <%= BusinessProjectName %>
         
         #endregion
 
-        #region Business Methods
+        #region Properties
         
         protected override object AddNewCore()
         {

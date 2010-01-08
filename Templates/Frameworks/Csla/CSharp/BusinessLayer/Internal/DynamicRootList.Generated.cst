@@ -33,7 +33,7 @@ namespace <%= BusinessProjectName %>
 <% } %>
     public partial class <%= BusinessClassName %> : EditableRootListBase< <%= ChildBusinessClassName %> >
     {
-        #region Business Methods
+        #region Properties
         
         protected override object AddNewCore()
         {

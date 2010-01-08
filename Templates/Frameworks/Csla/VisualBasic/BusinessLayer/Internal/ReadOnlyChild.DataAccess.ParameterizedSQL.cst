@@ -58,7 +58,7 @@ Public Partial Class <%= BusinessClassName %>
 
     Private Sub Map(ByVal reader As SafeDataReader)
 <% If Entity.HasRowVersionMember Then %>
-        _timestamp = GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
         
 <% End If %>
 <% for each [member] as Member in Entity.MembersNoRowVersionIncludePrimaryKey 

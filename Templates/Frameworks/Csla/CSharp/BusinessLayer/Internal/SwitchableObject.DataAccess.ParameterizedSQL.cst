@@ -124,7 +124,7 @@ namespace <%= BusinessProjectName %>
                     <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(Entity.MembersForeignKey) %>
 <% } %>
 <% if(Entity.HasRowVersionMember) { %>
-                    command.Parameters.AddWithValue("@p_<%= Entity.RowVersionMember.ColumnName %>", timestamp);
+                    command.Parameters.AddWithValue("@p_<%= Entity.RowVersionMember.ColumnName %>", _timestamp);
 <% } %>
 
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
@@ -134,7 +134,7 @@ namespace <%= BusinessProjectName %>
                             throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 
 <% if(Entity.HasRowVersionMember) { %>
-                        _timestamp = reader.Timestamp;
+                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } %>
                     }
                 }
@@ -256,7 +256,7 @@ namespace <%= BusinessProjectName %>
                     <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(Entity.MembersForeignKey) %>
 <% } %>
 <% if(Entity.HasRowVersionMember) { %>
-                    command.Parameters.AddWithValue("@p_<%= Entity.RowVersionMember.ColumnName %>", timestamp);
+                    command.Parameters.AddWithValue("@p_<%= Entity.RowVersionMember.ColumnName %>", _timestamp);
 <% } %>
 
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
@@ -266,7 +266,7 @@ namespace <%= BusinessProjectName %>
                             throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 
 <% if(Entity.HasRowVersionMember) { %>
-                        _timestamp = reader.Timestamp;
+                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } %>
                     }
                 }
@@ -283,7 +283,7 @@ namespace <%= BusinessProjectName %>
         private void Map(SafeDataReader reader)
         {
 <% if(Entity.HasRowVersionMember) { %>
-            _timestamp = GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 
 <% } %>
 <% foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey) { if(UseMemberVariables) { %>
