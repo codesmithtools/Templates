@@ -89,14 +89,17 @@ Public Class ADOHelper
         Dim buffer As Byte() = New Byte(1024) {}
         Dim fieldOffset As Long = 0
 
-        Using stream = New MemoryStream()
-            Dim bytesRead As Long
+        Using stream As MemoryStream = New MemoryStream()
+            Dim bytesRead As Long = 0
 
-            While bytesRead = reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length)
-                Dim actualRead As Byte() = New Byte(CInt(bytesRead)) {}
+            bytesRead = reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length)
+            While bytesRead > 0
+                Dim actualRead As Byte() = New Byte(bytesRead) {}
                 Array.Copy(buffer, 0, actualRead, 0, bytesRead)
                 stream.Write(actualRead, 0, actualRead.Length)
                 fieldOffset += bytesRead
+
+                bytesRead = reader.GetBytes(columnName, fieldOffset, buffer, 0, buffer.Length)
             End While
 
             Return stream.ToArray()
