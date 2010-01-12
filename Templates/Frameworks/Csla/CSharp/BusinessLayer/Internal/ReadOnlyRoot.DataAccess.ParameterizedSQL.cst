@@ -71,9 +71,9 @@ namespace <%= BusinessProjectName %>
 
 <%-- Many-To-One --%>
 <% foreach(AssociationMember association in Entity.ManyToOne) { if (UseMemberVariables){  %>
-            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = <%if(!association.HasByteArrayColumn()) { %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>");<% } else { %>GetBytes(reader);<% } %>
+            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName, Entity) %> = <%if(!association.HasByteArrayColumn()) { %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>");<% } else { %>GetBytes(reader);<% } %>
 <% } else { %>
-            LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, <%if(!association.HasByteArrayColumn()) { %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"));<% } else { %>GetBytes(reader," <%= association.ColumnName %>"));<% } %>
+            LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName, Entity) %>Property, <%if(!association.HasByteArrayColumn()) { %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"));<% } else { %>GetBytes(reader," <%= association.ColumnName %>"));<% } %>
 <% } }  %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(AssociationMember association2 in Entity.ToManyUnion) { if (!UseLazyLoading){ %>

@@ -79,9 +79,9 @@ namespace <%= BusinessProjectName %>
 <% } } %>
 <%-- Many-To-One --%>
 <% foreach(AssociationMember association in Entity.ManyToOne) { if (UseMemberVariables){  %>
-            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = <%= association.Entity.ResolveCriteriaPropertyName(association.ColumnName) %>;
+            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName, Entity) %> = <%= association.Entity.ResolveCriteriaPropertyName(association.ColumnName) %>;
 <% } else { %>
-            LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, <%= association.Entity.ResolveCriteriaPropertyName(association.ColumnName) %>);
+            LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName, Entity) %>Property, <%= association.Entity.ResolveCriteriaPropertyName(association.ColumnName) %>);
 <% } }  %>
 
             MarkOld();
@@ -150,7 +150,10 @@ namespace <%= BusinessProjectName %>
                             throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 
 <% if(Entity.HasRowVersionMember) { %>
-                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                        if(reader.Read())
+						{
+							_timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                        }
 <% } %>
                     }
                 }

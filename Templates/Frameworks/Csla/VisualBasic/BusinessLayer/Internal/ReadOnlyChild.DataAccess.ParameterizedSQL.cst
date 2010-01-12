@@ -72,9 +72,9 @@ Next %>
 <%-- Many-To-One --%>
 <% for each association As AssociationMember in Entity.ManyToOne
 If UseMemberVariables Then  %>
-        <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>GetBytes(reader)<% End If %>
+        <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName, Entity) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>GetBytes(reader)<% End If %>
 <%  else  %>
-        LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName) %>Property, <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"))<% else %>GetBytes(reader," <%= association.ColumnName %>"))<% End If %>
+        LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName, Entity) %>Property, <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"))<% else %>GetBytes(reader," <%= association.ColumnName %>"))<% End If %>
 <% End If
 Next  %>
 <%-- One-To-Many & Many-To-Many --%>

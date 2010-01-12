@@ -3,7 +3,10 @@
 <%@ Register Name="DynamicRoot" Template="Internal\DynamicRoot.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="DynamicRootDataAccess" Template="Internal\DynamicRoot.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="DynamicRootDataAccessParameterized" Template="Internal\DynamicRoot.DataAccess.ParameterizedSQL.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="DynamicRootDataAccessStoredProcedures" Template="Internal\DynamicRoot.DataAccess.StoredProcedures.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="DynamicRootGenerated" Template="Internal\DynamicRoot.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+
+<%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
@@ -66,6 +69,23 @@ public override void Generate()
             dynamicRootDataAccessParameterized.SourceTable = entity.Table;
             
             dynamicRootDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+        }
+        else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+        {
+            DynamicRootDataAccessStoredProcedures dynamicRootDataAccessStoredProcedures = this.Create<DynamicRootDataAccessStoredProcedures>();
+            this.CopyPropertiesTo(dynamicRootDataAccessStoredProcedures);
+            dynamicRootDataAccessStoredProcedures.SourceTable = entity.Table;
+
+            dynamicRootDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
+
+            //StoredProcedures
+            fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.StoredProcedures.sql", dynamicRoot.BusinessClassName));
+            SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
+            this.CopyPropertiesTo(sqlStoredProcedures);
+            sqlStoredProcedures.SourceTable = entity.Table;
+            sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
+            
+            sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
         }
         
         #endregion

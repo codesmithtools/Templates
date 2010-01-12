@@ -204,7 +204,7 @@ public override void Generate()
     
     #region ADOHelperTemplate
     
-    if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
+    if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures)
     {
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
         this.CopyPropertiesTo(ADOHelper);

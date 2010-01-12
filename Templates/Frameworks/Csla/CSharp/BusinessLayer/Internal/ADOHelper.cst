@@ -20,12 +20,11 @@
 #region Using declarations
 
 using System;
-using System.Data;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 
-using Csla;
 using Csla.Data;
 
 #endregion
@@ -53,20 +52,25 @@ namespace <%= BusinessProjectName %>
                 return _connectionString;
             }
         }
-        
+
         /// <summary>
         /// Returns an array of SqlParameters
         /// </summary>
         public static SqlParameter[] SqlParameters(Dictionary<string, object> bag)
         {
-            List<SqlParameter> parameters = new List<SqlParameter>(bag.Keys.Count);
+            return new List<SqlParameter>(bag.Select(pair => new SqlParameter(string.Format("<%= ParameterPrefix %>{0}", pair.Key), pair.Value))).ToArray();
+        }
 
-            foreach (KeyValuePair<string, object> pair in bag)
-            {
-                parameters.Add(new SqlParameter(string.Format("@p_{0}", pair.Key), pair.Value));
-            }
+        /// <summary>
+        /// Returns an array of SqlParameters for use in Stored Procedures.
+        /// </summary>
+        public static SqlParameter[] WhereSqlParameters(Dictionary<string, object> bag)
+        {
+            if (bag.Count == 0)
+                return new List<SqlParameter> { new SqlParameter("@WhereCondition", DBNull.Value) }.ToArray();
 
-            return parameters.ToArray();
+            string whereClause = bag.Aggregate(string.Empty, (current, pair) => current + string.Format("[{0}] = '{1}' AND ", pair.Key, pair.Value));
+            return new List<SqlParameter> { new SqlParameter("@WhereCondition", whereClause.Remove(whereClause.Length - 5, 5)) }.ToArray();
         }
 
         /// <summary>
@@ -78,13 +82,7 @@ namespace <%= BusinessProjectName %>
             if (bag.Count == 0)
                 return string.Empty;
 
-            string columnNames = string.Empty;
-
-            foreach (string columnName in bag.Keys)
-            {
-                columnNames += string.Format("[{0}] = @p_{0} AND ", columnName);
-            }
-
+            string columnNames = bag.Keys.Aggregate(string.Empty, (current, columnName) => current + string.Format("[{0}] = <%= ParameterPrefix %>{0} AND ", columnName));
             return string.Format("WHERE {0}", columnNames.Remove(columnNames.Length - 5, 5));
         }
 

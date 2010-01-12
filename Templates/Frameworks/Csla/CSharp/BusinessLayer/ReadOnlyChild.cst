@@ -3,7 +3,10 @@
 <%@ Register Name="ReadOnlyChild" Template="Internal\ReadOnlyChild.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="ReadOnlyChildDataAccess" Template="Internal\ReadOnlyChild.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="ReadOnlyChildDataAccessParameterized" Template="Internal\ReadOnlyChild.DataAccess.ParameterizedSQL.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="ReadOnlyChildDataAccessStoredProcedures" Template="Internal\ReadOnlyChild.DataAccess.StoredProcedures.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="ReadOnlyChildGenerated" Template="Internal\ReadOnlyChild.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+
+<%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
@@ -67,6 +70,23 @@ public override void Generate()
             readOnlyChildDataAccessParameterized.SourceTable = entity.Table;
             
             readOnlyChildDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+        }
+        else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+        {
+            ReadOnlyChildDataAccessStoredProcedures readOnlyChildDataAccessStoredProcedures = this.Create<ReadOnlyChildDataAccessStoredProcedures>();
+            this.CopyPropertiesTo(readOnlyChildDataAccessStoredProcedures);
+            readOnlyChildDataAccessStoredProcedures.SourceTable = entity.Table;
+
+            readOnlyChildDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
+
+            //StoredProcedures
+            fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.StoredProcedures.sql", readOnlyChild.BusinessClassName));
+            SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
+            this.CopyPropertiesTo(sqlStoredProcedures);
+            sqlStoredProcedures.SourceTable = entity.Table;
+            sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
+            
+            sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
         }
         
         #endregion
