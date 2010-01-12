@@ -49,17 +49,13 @@ namespace <%= BusinessProjectName %>
 
         private void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)
         {
-<%if(Entity.Table.ForeignKeyColumns.Count == 0) {%>
-            string commandText = string.Format("SELECT <%= Entity.MembersPrimaryKeyUnion.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
-<%} else { %>
-            string commandText = string.Format("SELECT <%= Entity.MembersIncludePrimaryKeyForeignKey.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
-<%}%>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand(commandText, connection))
+                using (SqlCommand command = new SqlCommand("<%= GetSelectStoredProcedureName() %>", connection))
                 {
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag));
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -74,12 +70,12 @@ namespace <%= BusinessProjectName %>
         [Transactional(TransactionalTypes.TransactionScope)]
         protected override void DataPortal_Insert()
         {
-            const string commandText = "INSERT INTO [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] (<%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseColumns(Entity.MembersForeignKey) %>) VALUES (<%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseParameters(Entity.MembersForeignKey) %>)<%= Entity.BuildInsertSelectStatement() %>";
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using(SqlCommand command = new SqlCommand(commandText, connection))
+                using(SqlCommand command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))
                 {
+                    command.CommandType = CommandType.StoredProcedure;
                     <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
                     
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
@@ -108,16 +104,12 @@ namespace <%= BusinessProjectName %>
         [Transactional(TransactionalTypes.TransactionScope)]
         protected override void DataPortal_Update()
         {
-<% if(Entity.Table.ForeignKeyColumns.Count == 0) { %>
-            const string commandText = "UPDATE [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] <%= Entity.MembersNoKeysOrRowVersion.BuildSetStatements() %> <%= Entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(Entity.HasRowVersionMember) { %> AND [<%= Entity.RowVersionMember.ColumnName %>] = @p_<%= Entity.RowVersionMember.ColumnName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
-<% } else { %>
-            const string commandText = "UPDATE [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] <%= Entity.MembersNoKeysOrRowVersion.BuildSetStatements(Entity.MembersForeignKey) %> <%= Entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(Entity.HasRowVersionMember) { %> AND [<%= Entity.RowVersionMember.ColumnName %>] = @p_<%= Entity.RowVersionMember.ColumnName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
-<% } %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using(SqlCommand command = new SqlCommand(commandText, connection))
+                using(SqlCommand command = new SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection))
                 {
+                    command.CommandType = CommandType.StoredProcedure;
 <% if(Entity.Table.ForeignKeyColumns.Count == 0) { %>
                     <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
 <% } else { %>
@@ -157,14 +149,13 @@ namespace <%= BusinessProjectName %>
         [Transactional(TransactionalTypes.TransactionScope)]
         protected void DataPortal_Delete(<%= BusinessClassName %>Criteria criteria)
         {
-            string commandText = string.Format("DELETE FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand(commandText, connection))
+                using (SqlCommand command = new SqlCommand("<%= GetDeleteStoredProcedureName() %>", connection))
                 {
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
-
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag));
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
@@ -188,17 +179,13 @@ namespace <%= BusinessProjectName %>
 
         private void Child_Fetch(<%= BusinessClassName %>Criteria criteria)
         {
-<%if(Entity.Table.ForeignKeyColumns.Count == 0) {%>
-            string commandText = string.Format("SELECT <%= Entity.MembersPrimaryKeyUnion.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
-<%} else { %>
-            string commandText = string.Format("SELECT <%= Entity.MembersIncludePrimaryKeyForeignKey.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
-<%}%>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand(commandText, connection))
+                using (SqlCommand command = new SqlCommand("<%= GetSelectStoredProcedureName() %>", connection))
                 {
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag));
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -214,12 +201,12 @@ namespace <%= BusinessProjectName %>
 
         private void Child_Insert(<%= Entity.ManyToOne.BuildChildInsertParametersVariables() %>)
         {
-            const string commandText = "INSERT INTO [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] (<%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseColumns(Entity.MembersForeignKey) %>) VALUES (<%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseParameters(Entity.MembersForeignKey) %>)<%= Entity.BuildInsertSelectStatement() %>";
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using(SqlCommand command = new SqlCommand(commandText, connection))
+                using(SqlCommand command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))
                 {
+                    command.CommandType = CommandType.StoredProcedure;
                     <%= Entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
                     
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
@@ -243,16 +230,12 @@ namespace <%= BusinessProjectName %>
 
         private void Child_Update()
         {
-<% if(Entity.Table.ForeignKeyColumns.Count == 0) { %>
-            const string commandText = "UPDATE [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] <%= Entity.MembersNoKeysOrRowVersion.BuildSetStatements() %> <%= Entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(Entity.HasRowVersionMember) { %> AND [<%= Entity.RowVersionMember.ColumnName %>] = @p_<%= Entity.RowVersionMember.ColumnName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
-<% } else { %>
-            const string commandText = "UPDATE [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] <%= Entity.MembersNoKeysOrRowVersion.BuildSetStatements(Entity.MembersForeignKey) %> <%= Entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(Entity.HasRowVersionMember) { %> AND [<%= Entity.RowVersionMember.ColumnName %>] = @p_<%= Entity.RowVersionMember.ColumnName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
-<% } %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using(SqlCommand command = new SqlCommand(commandText, connection))
+                using(SqlCommand command = new SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection))
                 {
+                    command.CommandType = CommandType.StoredProcedure;
 <% if(Entity.Table.ForeignKeyColumns.Count == 0) { %>
                     <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
 <% } else { %>

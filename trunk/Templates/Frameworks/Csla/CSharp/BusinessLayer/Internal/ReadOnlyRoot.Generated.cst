@@ -39,10 +39,10 @@ namespace <%= BusinessProjectName %>
         private <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
 
-<% if(DataAccessImplementation == DataAccessMethod.None || DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
+<% if(DataAccessImplementation == DataAccessMethod.None || DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
         internal <%= BusinessClassName %>(SafeDataReader reader)
         {
-<%if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
+<%if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
             Map(reader);
 <% } %>
         }

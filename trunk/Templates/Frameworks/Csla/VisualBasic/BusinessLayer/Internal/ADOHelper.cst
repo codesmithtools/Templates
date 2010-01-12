@@ -56,7 +56,7 @@ Public Class ADOHelper
         Dim parameters As New List(Of SqlParameter)(bag.Keys.Count)
 
         For Each pair As KeyValuePair(Of String, Object) In bag
-            parameters.Add(New SqlParameter(String.Format("@p_{0}", pair.Key), pair.Value))
+            parameters.Add(New SqlParameter(String.Format("<%= ParameterPrefix %>{0}", pair.Key), pair.Value))
         Next
 
         Return parameters.ToArray()
@@ -73,7 +73,7 @@ Public Class ADOHelper
 
         Dim columnNames As String = String.Empty
         For Each columnName As String In bag.Keys
-            columnNames += String.Format("[{0}] = @p_{0} AND ", columnName)
+            columnNames += String.Format("[{0}] = <%= ParameterPrefix %>{0} AND ", columnName)
         Next
 
         Return String.Format("WHERE {0}", columnNames.Remove(columnNames.Length - 5, 5))

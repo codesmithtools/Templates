@@ -164,6 +164,20 @@ namespace QuickStart
         [DefaultValue(false)]
         public bool UseLazyLoading { get; set; }
 
+        [Category("4. Data Project")]
+        [Description("Prefix to use for all generated procedure names.")]
+        public string ProcedurePrefix { get; set; }
+
+        [Category("4. Data Project")]
+        [Description("Whether or not to immediately execute the script on the target database.")]
+        [DefaultValue(false)]
+        public bool AutoExecuteStoredProcedures { get; set; }
+
+        [Category("4. Data Project")]
+        [Description("Isolation level to use in the generated procedures.")]
+        [DefaultValue(0)] //ReadCommitted
+        public TransactionIsolationLevelEnum IsolationLevel { get; set; }
+
         #endregion
 
         #region 5. Interface Project
@@ -283,6 +297,9 @@ namespace QuickStart
 
             if (string.IsNullOrEmpty(SolutionName))
                 SolutionName = SourceDatabase.Namespace();
+
+            if (string.IsNullOrEmpty(ProcedurePrefix))
+                ProcedurePrefix = "CSLA_";
 
             if (string.IsNullOrEmpty(Location))
                 Location = Path.Combine(CodeSmith.Engine.Configuration.Instance.CodeSmithTemplatesDirectory, Path.Combine("CSLA", SourceDatabase.Name));

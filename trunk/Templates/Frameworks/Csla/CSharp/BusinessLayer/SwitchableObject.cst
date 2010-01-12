@@ -3,7 +3,10 @@
 <%@ Register Name="SwitchableObject" Template="Internal\SwitchableObject.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="SwitchableObjectDataAccess" Template="Internal\SwitchableObject.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="SwitchableObjectDataAccessParameterized" Template="Internal\SwitchableObject.DataAccess.ParameterizedSQL.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="SwitchableObjectDataAccessStoredProcedures" Template="Internal\SwitchableObject.DataAccess.StoredProcedures.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="SwitchableObjectGenerated" Template="Internal\SwitchableObject.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+
+<%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
@@ -67,6 +70,23 @@ public override void Generate()
             switchableObjectDataAccessParameterized.SourceTable = entity.Table;
             
             switchableObjectDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+        }
+        else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+        {
+            SwitchableObjectDataAccessStoredProcedures switchableObjectDataAccessStoredProcedures = this.Create<SwitchableObjectDataAccessStoredProcedures>();
+            this.CopyPropertiesTo(switchableObjectDataAccessStoredProcedures);
+            switchableObjectDataAccessStoredProcedures.SourceTable = entity.Table;
+
+            switchableObjectDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
+
+            //StoredProcedures
+            fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.StoredProcedures.sql", switchableObject.BusinessClassName));
+            SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
+            this.CopyPropertiesTo(sqlStoredProcedures);
+            sqlStoredProcedures.SourceTable = entity.Table;
+            sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
+            
+            sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
         }
         
         #endregion

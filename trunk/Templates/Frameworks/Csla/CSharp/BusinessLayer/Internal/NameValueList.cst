@@ -71,6 +71,45 @@ namespace <%= BusinessProjectName %>
 
         #endregion
 
+<% } else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
+
+        #region Custom Data Access
+
+        private void DataPortal_Fetch()
+        {
+            RaiseListChangedEvents = false;
+            IsReadOnly = false;
+
+            var criteria = new <%= ChildBusinessClassName %>Criteria;
+            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("<%= GetSelectStoredProcedureName() %>", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag));
+                    using(var reader = new SafeDataReader(command.ExecuteReader()))
+                    {
+                        if(reader.Read())
+                        {
+                            do
+                            {
+                                // TODO: You will need to update the GetInt32 and GetString values.
+                                this.Add(new NameValuePair(reader.GetInt32("<%= Entity.PrimaryKey.KeyMember.Name %>"), reader.GetString("<%= Entity.Members[0].Name %>")));
+                            } while(reader.Read());
+                        }
+                        else
+                            throw new Exception(string.Format("The record was not found in '<%= Entity.Table.Name %>' using the following criteria: {0}.", criteria));
+                    }
+                }
+            }
+
+            IsReadOnly = true;
+            RaiseListChangedEvents = true;
+        }
+
+        #endregion
+
 <% } %>
     }
 }

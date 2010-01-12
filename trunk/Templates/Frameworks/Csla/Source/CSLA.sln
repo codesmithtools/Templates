@@ -12,10 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSharp", "CSharp", "{06C6ADF6-C3DB-4ABC-948E-1705702DD07C}"
-	ProjectSection(SolutionItems) = preProject
-		..\CSharp\DataAccess.cst = ..\CSharp\DataAccess.cst
-		..\CSharp\Entities.cst = ..\CSharp\Entities.cst
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessLayer", "BusinessLayer", "{999286CE-0FB7-4622-8D09-EA068B9778DE}"
 	ProjectSection(SolutionItems) = preProject
@@ -37,6 +33,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessLayer", "BusinessLa
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccessLayer", "DataAccessLayer", "{C2E439BE-629B-4069-9A36-A61F1D793E94}"
+	ProjectSection(SolutionItems) = preProject
+		..\CSharp\DataAccessLayer\DataAccessLayer.cst = ..\CSharp\DataAccessLayer\DataAccessLayer.cst
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{670B086B-ECFC-4769-85FC-FA19DC00E5B9}"
 	ProjectSection(SolutionItems) = preProject
@@ -49,26 +48,32 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{67
 		..\CSharp\BusinessLayer\Internal\DynamicRoot.cst = ..\CSharp\BusinessLayer\Internal\DynamicRoot.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRoot.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\DynamicRoot.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRoot.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\DynamicRoot.DataAccess.ParameterizedSQL.cst
+		..\CSharp\BusinessLayer\Internal\DynamicRoot.DataAccess.StoredProcedures.cst = ..\CSharp\BusinessLayer\Internal\DynamicRoot.DataAccess.StoredProcedures.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRoot.Generated.cst = ..\CSharp\BusinessLayer\Internal\DynamicRoot.Generated.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRootList.cst = ..\CSharp\BusinessLayer\Internal\DynamicRootList.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRootList.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\DynamicRootList.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRootList.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\DynamicRootList.DataAccess.ParameterizedSQL.cst
+		..\CSharp\BusinessLayer\Internal\DynamicRootList.DataAccess.StoredProcedures.cst = ..\CSharp\BusinessLayer\Internal\DynamicRootList.DataAccess.StoredProcedures.cst
 		..\CSharp\BusinessLayer\Internal\DynamicRootList.Generated.cst = ..\CSharp\BusinessLayer\Internal\DynamicRootList.Generated.cst
 		..\CSharp\BusinessLayer\Internal\EditableChild.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.cst
 		..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.ParameterizedSQL.cst
+		..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.StoredProcedures.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.DataAccess.StoredProcedures.cst
 		..\CSharp\BusinessLayer\Internal\EditableChild.Generated.cst = ..\CSharp\BusinessLayer\Internal\EditableChild.Generated.cst
 		..\CSharp\BusinessLayer\Internal\EditableChildList.cst = ..\CSharp\BusinessLayer\Internal\EditableChildList.cst
 		..\CSharp\BusinessLayer\Internal\EditableChildList.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\EditableChildList.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\EditableChildList.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\EditableChildList.DataAccess.ParameterizedSQL.cst
+		..\CSharp\BusinessLayer\Internal\EditableChildList.DataAccess.StoredProcedures.cst = ..\CSharp\BusinessLayer\Internal\EditableChildList.DataAccess.StoredProcedures.cst
 		..\CSharp\BusinessLayer\Internal\EditableChildList.Generated.cst = ..\CSharp\BusinessLayer\Internal\EditableChildList.Generated.cst
 		..\CSharp\BusinessLayer\Internal\EditableRoot.cst = ..\CSharp\BusinessLayer\Internal\EditableRoot.cst
 		..\CSharp\BusinessLayer\Internal\EditableRoot.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\EditableRoot.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\EditableRoot.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\EditableRoot.DataAccess.ParameterizedSQL.cst
+		..\CSharp\BusinessLayer\Internal\EditableRoot.DataAccess.StoredProcedures.cst = ..\CSharp\BusinessLayer\Internal\EditableRoot.DataAccess.StoredProcedures.cst
 		..\CSharp\BusinessLayer\Internal\EditableRoot.Generated.cst = ..\CSharp\BusinessLayer\Internal\EditableRoot.Generated.cst
 		..\CSharp\BusinessLayer\Internal\EditableRootList.cst = ..\CSharp\BusinessLayer\Internal\EditableRootList.cst
 		..\CSharp\BusinessLayer\Internal\EditableRootList.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\EditableRootList.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\EditableRootList.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\EditableRootList.DataAccess.ParameterizedSQL.cst
+		..\CSharp\BusinessLayer\Internal\EditableRootList.DataAccess.StoredProcedures.cst = ..\CSharp\BusinessLayer\Internal\EditableRootList.DataAccess.StoredProcedures.cst
 		..\CSharp\BusinessLayer\Internal\EditableRootList.Generated.cst = ..\CSharp\BusinessLayer\Internal\EditableRootList.Generated.cst
 		..\CSharp\BusinessLayer\Internal\FactoryNames.cst = ..\CSharp\BusinessLayer\Internal\FactoryNames.cst
 		..\CSharp\BusinessLayer\Internal\NameValueList.cst = ..\CSharp\BusinessLayer\Internal\NameValueList.cst
@@ -77,22 +82,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{67
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChild.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChild.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChild.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChild.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChild.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChild.DataAccess.ParameterizedSQL.cst
+		..\CSharp\BusinessLayer\Internal\ReadOnlyChild.DataAccess.StoredProcedures.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChild.DataAccess.StoredProcedures.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChild.Generated.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChild.Generated.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.ParameterizedSQL.cst
+		..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.StoredProcedures.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.DataAccess.StoredProcedures.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.Generated.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyChildList.Generated.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyList.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyList.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyList.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyList.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyList.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyList.DataAccess.ParameterizedSQL.cst
+		..\CSharp\BusinessLayer\Internal\ReadOnlyList.DataAccess.StoredProcedures.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyList.DataAccess.StoredProcedures.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyList.Generated.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyList.Generated.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.ParameterizedSQL.cst
+		..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.StoredProcedures.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.DataAccess.StoredProcedures.cst
 		..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.Generated.cst = ..\CSharp\BusinessLayer\Internal\ReadOnlyRoot.Generated.cst
 		..\CSharp\BusinessLayer\Internal\SwitchableObject.cst = ..\CSharp\BusinessLayer\Internal\SwitchableObject.cst
 		..\CSharp\BusinessLayer\Internal\SwitchableObject.DataAccess.cst = ..\CSharp\BusinessLayer\Internal\SwitchableObject.DataAccess.cst
 		..\CSharp\BusinessLayer\Internal\SwitchableObject.DataAccess.ParameterizedSQL.cst = ..\CSharp\BusinessLayer\Internal\SwitchableObject.DataAccess.ParameterizedSQL.cst
+		..\CSharp\BusinessLayer\Internal\SwitchableObject.DataAccess.StoredProcedures.cst = ..\CSharp\BusinessLayer\Internal\SwitchableObject.DataAccess.StoredProcedures.cst
 		..\CSharp\BusinessLayer\Internal\SwitchableObject.Generated.cst = ..\CSharp\BusinessLayer\Internal\SwitchableObject.Generated.cst
 	EndProjectSection
 EndProject
@@ -194,6 +204,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{AA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.Tests", "CodeSmith.SchemaHelper.Tests\CodeSmith.SchemaHelper.Tests.csproj", "{209FCE36-FF4D-45C0-991A-D96B86ED3F1A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{E90645D8-091B-47CE-9E4E-9528A4AB0C72}"
+	ProjectSection(SolutionItems) = preProject
+		..\CSharp\DataAccessLayer\Internal\ADOHelper.cst = ..\CSharp\DataAccessLayer\Internal\ADOHelper.cst
+		..\CSharp\DataAccessLayer\Internal\ObjectFactory.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactory.cst
+		..\CSharp\DataAccessLayer\Internal\ObjectFactory.DataAccess.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactory.DataAccess.cst
+		..\CSharp\DataAccessLayer\Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst
+		..\CSharp\DataAccessLayer\Internal\ObjectFactory.DataAccess.StoredProcedures.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactory.DataAccess.StoredProcedures.cst
+		..\CSharp\DataAccessLayer\Internal\SQLStoredProcedures.cst = ..\CSharp\DataAccessLayer\Internal\SQLStoredProcedures.cst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebLayer", "WebLayer", "{14CC4B24-5ED7-4819-9610-8B5AD619FAD4}"
+	ProjectSection(SolutionItems) = preProject
+		..\CSharp\WebLayer\Default.aspx.cst = ..\CSharp\WebLayer\Default.aspx.cst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{19D60463-EC4B-4A64-9186-20C9B34A8F92}"
+	ProjectSection(SolutionItems) = preProject
+		..\CSharp\WebLayer\Internal\Default.aspx.cs.cst = ..\CSharp\WebLayer\Internal\Default.aspx.cs.cst
+		..\CSharp\WebLayer\Internal\Default.aspx.cst = ..\CSharp\WebLayer\Internal\Default.aspx.cst
+		..\CSharp\WebLayer\Internal\Default.aspx.designer.cs.cst = ..\CSharp\WebLayer\Internal\Default.aspx.designer.cs.cst
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -246,12 +278,15 @@ Global
 		{580D643C-0950-4C43-BF66-4724D24C673D} = {A3DD79D2-92AD-4BAF-893F-7230A4A7D1E6}
 		{999286CE-0FB7-4622-8D09-EA068B9778DE} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
 		{C2E439BE-629B-4069-9A36-A61F1D793E94} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
+		{14CC4B24-5ED7-4819-9610-8B5AD619FAD4} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
 		{670B086B-ECFC-4769-85FC-FA19DC00E5B9} = {999286CE-0FB7-4622-8D09-EA068B9778DE}
+		{E90645D8-091B-47CE-9E4E-9528A4AB0C72} = {C2E439BE-629B-4069-9A36-A61F1D793E94}
 		{8AF4CEEA-7B24-40A5-87C2-1A934E4A0F54} = {580D643C-0950-4C43-BF66-4724D24C673D}
 		{B3F774E2-9D8D-4780-A9F5-D54958DEF3E8} = {580D643C-0950-4C43-BF66-4724D24C673D}
 		{AB7EA04C-C7E9-447A-9277-B677409B54BA} = {580D643C-0950-4C43-BF66-4724D24C673D}
 		{D033080D-12D9-4DC3-91CB-274675B2BC80} = {8AF4CEEA-7B24-40A5-87C2-1A934E4A0F54}
 		{AA24549B-F016-4588-9AE9-3A503B4DAD79} = {B3F774E2-9D8D-4780-A9F5-D54958DEF3E8}
 		{1EBCD6D8-6E9E-41EB-8968-F1ABAD8CB1CE} = {AB7EA04C-C7E9-447A-9277-B677409B54BA}
+		{19D60463-EC4B-4A64-9186-20C9B34A8F92} = {14CC4B24-5ED7-4819-9610-8B5AD619FAD4}
 	EndGlobalSection
 EndGlobal

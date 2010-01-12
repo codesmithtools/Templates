@@ -40,19 +40,15 @@ namespace <%= BusinessProjectName %>
             //base.Child_Create()
         }
 
-         private void Child_Fetch(<%= BusinessClassName %>Criteria criteria)
+        private void Child_Fetch(<%= BusinessClassName %>Criteria criteria)
         {
-<%if(Entity.Table.ForeignKeyColumns.Count == 0) {%>
-            string commandText = string.Format("SELECT <%= Entity.MembersPrimaryKeyUnion.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
-<%} else { %>
-            string commandText = string.Format("SELECT <%= Entity.MembersIncludePrimaryKeyForeignKey.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
-<%}%>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand(commandText, connection))
+                using (SqlCommand command = new SqlCommand("<%= GetSelectStoredProcedureName() %>", connection))
                 {
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag));
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())

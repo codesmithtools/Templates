@@ -122,6 +122,20 @@ namespace QuickStart
         [DefaultValue(false)]
         public bool UseLazyLoading { get; set; }
 
+        [Category("4. Data Project")]
+        [Description("Prefix to use for all generated procedure names.")]
+        public string ProcedurePrefix { get; set; }
+
+        [Category("4. Data Project")]
+        [Description("Whether or not to immediately execute the script on the target database.")]
+        [DefaultValue(false)]
+        public bool AutoExecuteStoredProcedures { get; set; }
+
+        [Category("4. Data Project")]
+        [Description("Isolation level to use in the generated procedures.")]
+        [DefaultValue(0)] //ReadCommitted
+        public TransactionIsolationLevelEnum IsolationLevel { get; set; }
+
         #endregion
 
         #endregion
@@ -149,6 +163,24 @@ namespace QuickStart
 
             if (string.IsNullOrEmpty(BusinessProjectName))
                 BusinessProjectName = string.Format("{0}.Business", SourceTable.Namespace());
+
+            if (string.IsNullOrEmpty(ProcedurePrefix))
+                ProcedurePrefix = "CSLA_";
+        }
+
+        protected virtual string GetTableOwner()
+        {
+            return GetTableOwner(true);
+        }
+
+        protected virtual string GetTableOwner(bool includeDot)
+        {
+            if (SourceTable.Owner.Length > 0)
+                return includeDot
+                           ? string.Format("[{0}].", SourceTable.Owner)
+                           : string.Format("[{0}]", SourceTable.Owner);
+
+            return string.Empty;
         }
 
         #endregion
@@ -158,6 +190,30 @@ namespace QuickStart
         public override void RegisterReferences()
         {
             RegisterReference(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\Csla.dll"));
+        }
+
+        #endregion
+
+        #region Procedure Naming
+
+        public virtual string GetInsertStoredProcedureName()
+        {
+            return String.Format("{0}[{1}{2}_Insert]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
+        }
+
+        public virtual string GetUpdateStoredProcedureName()
+        {
+            return String.Format("{0}[{1}{2}_Update]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
+        }
+
+        public virtual string GetDeleteStoredProcedureName()
+        {
+            return String.Format("{0}[{1}{2}_Select]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
+        }
+
+        public virtual string GetSelectStoredProcedureName()
+        {
+            return String.Format("{0}[{1}{2}_Delete]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
         }
 
         #endregion

@@ -3,7 +3,10 @@
 <%@ Register Name="DynamicRootList" Template="Internal\DynamicRootList.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="DynamicRootListDataAccess" Template="Internal\DynamicRootList.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="DynamicRootListDataAccessParameterized" Template="Internal\DynamicRootList.DataAccess.ParameterizedSQL.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="DynamicRootListDataAccessStoredProcedures" Template="Internal\DynamicRootList.DataAccess.StoredProcedures.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="DynamicRootListGenerated" Template="Internal\DynamicRootList.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+
+<%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
@@ -71,6 +74,24 @@ public override void Generate()
             dynamicRootListDataAccessParameterized.BusinessClassName = string.Format("{0}List", dynamicRootListDataAccessParameterized.BusinessClassName);
             
             dynamicRootListDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+        }
+        else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+        {
+            DynamicRootListDataAccessStoredProcedures dynamicRootListDataAccessStoredProcedures = this.Create<DynamicRootListDataAccessStoredProcedures>();
+            this.CopyPropertiesTo(dynamicRootListDataAccessStoredProcedures);
+            dynamicRootListDataAccessStoredProcedures.SourceTable = entity.Table;
+            dynamicRootListDataAccessStoredProcedures.BusinessClassName = string.Format("{0}List", dynamicRootListDataAccessStoredProcedures.BusinessClassName);
+
+            dynamicRootListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
+
+            //StoredProcedures
+            fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.StoredProcedures.sql", dynamicRootList.BusinessClassName));
+            SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
+            this.CopyPropertiesTo(sqlStoredProcedures);
+            sqlStoredProcedures.SourceTable = entity.Table;
+            sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
+            
+            sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
         }
         
         #endregion

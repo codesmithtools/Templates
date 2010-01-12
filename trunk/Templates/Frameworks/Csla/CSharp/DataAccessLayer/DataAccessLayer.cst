@@ -3,7 +3,11 @@
 <%@ Register Name="ObjectFactory" Template="Internal\ObjectFactory.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryDataAccess" Template="Internal\ObjectFactory.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryDataAccessParameterized" Template="Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ObjectFactoryDataAccessStoredProcedures" Template="Internal\ObjectFactory.DataAccess.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
+
+<%@ Register Name="SqlStoredProcedures" Template="Internal\SQLStoredProcedures.cst" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\Common" %>
@@ -53,6 +57,34 @@ public override void Generate()
             
             objectFactoryDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
             
+            ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
+            this.CopyPropertiesTo(ADOHelper);
+            ADOHelper.SourceTable = entity.Table;
+            
+            fileName = System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs");
+            if (!System.IO.File.Exists(fileName))
+            {
+                ADOHelper.RenderToFile(fileName, false);
+            }
+        }
+        else if(DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
+        {
+            //ObjectFactoryDataAccessStoredProcedures
+            ObjectFactoryDataAccessStoredProcedures objectFactoryDataAccessStoredProcedures = this.Create<ObjectFactoryDataAccessStoredProcedures>();
+            this.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures);
+            objectFactoryDataAccessStoredProcedures.SourceTable = entity.Table;
+            
+            objectFactoryDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
+            
+            //SqlStoredProcedures
+            SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
+            this.CopyPropertiesTo(sqlStoredProcedures);
+            sqlStoredProcedures.SourceTable = entity.Table;
+            
+            fileName = System.IO.Path.Combine(Location, string.Format("{0}.StoredProcedures.sql", objectFactory.BusinessClassName));
+            sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
+            
+            //ADOHelperTemplate
             ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
             this.CopyPropertiesTo(ADOHelper);
             ADOHelper.SourceTable = entity.Table;

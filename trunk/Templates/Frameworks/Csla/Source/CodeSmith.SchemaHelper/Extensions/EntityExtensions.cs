@@ -141,9 +141,18 @@ namespace CodeSmith.SchemaHelper
 
         public static string ResolveCriteriaPrivateMemberVariableName(this Entity entity, string columnName)
         {
+            return ResolveCriteriaPrivateMemberVariableName(entity, columnName, null);
+        }
+
+        public static string ResolveCriteriaPrivateMemberVariableName(this Entity associationEntity, string columnName, Entity entity)
+        {
+            // If the current entity contains the column then return..
+            if (entity != null && entity.Table.Columns.Contains(columnName))
+                return NamingConventions.PrivateMemberVariableName(columnName);
+
             string variableName = NamingConventions.PrivateMemberVariableName(columnName);
 
-            foreach (AssociationMember association in entity.ManyToOne)
+            foreach (AssociationMember association in associationEntity.ManyToOne)
             {
                 if (association.PrivateMemberVariableName == variableName)
                 {
