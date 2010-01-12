@@ -53,13 +53,23 @@ Public Class ADOHelper
     ''' Returns an array of SqlParameters
     ''' </summary>
     Public Shared Function SqlParameters(ByVal bag As Dictionary(Of String, Object)) As SqlParameter()
-        Dim parameters As New List(Of SqlParameter)(bag.Keys.Count)
+        Return New List(Of SqlParameter)(bag.[Select](Function(pair) New SqlParameter(String.Format("<%= ParameterPrefix %>{0}", pair.Key), pair.Value))).ToArray()
+    End Function
 
-        For Each pair As KeyValuePair(Of String, Object) In bag
-            parameters.Add(New SqlParameter(String.Format("<%= ParameterPrefix %>{0}", pair.Key), pair.Value))
-        Next
+    ''' <summary>
+    ''' Returns an array of SqlParameters for use in Stored Procedures.
+    ''' </summary>
+    Public Shared Function WhereSqlParameters(ByVal bag As Dictionary(Of String, Object)) As SqlParameter()
+        Dim statement As List(Of SqlParameter) = New List(Of SqlParameter)
 
-        Return parameters.ToArray()
+        If bag.Count = 0 Then
+            Return statement.ToArray()
+        End If
+
+        Dim whereClause As String = bag.Aggregate(String.Empty, Function(current, pair) current + String.Format("[{0}] = '{1}' AND ", pair.Key, pair.Value))
+        statement.Add(New SqlParameter("@WhereCondition", whereClause.Remove(whereClause.Length - 5, 5)))
+
+        Return statement.ToArray()
     End Function
 
     ''' <summary>
@@ -71,11 +81,7 @@ Public Class ADOHelper
             Return String.Empty
         End If
 
-        Dim columnNames As String = String.Empty
-        For Each columnName As String In bag.Keys
-            columnNames += String.Format("[{0}] = <%= ParameterPrefix %>{0} AND ", columnName)
-        Next
-
+        Dim columnNames As String = bag.Keys.Aggregate(String.Empty, Function(current, columnName) current + String.Format("[{0}] = <%= ParameterPrefix %>{0} AND ", columnName))
         Return String.Format("WHERE {0}", columnNames.Remove(columnNames.Length - 5, 5))
     End Function
 

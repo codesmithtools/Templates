@@ -208,12 +208,12 @@ namespace QuickStart
 
         public virtual string GetDeleteStoredProcedureName()
         {
-            return String.Format("{0}[{1}{2}_Select]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
+            return String.Format("{0}[{1}{2}_Delete]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
         }
 
         public virtual string GetSelectStoredProcedureName()
         {
-            return String.Format("{0}[{1}{2}_Delete]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
+            return String.Format("{0}[{1}{2}_Select]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
         }
 
         #endregion

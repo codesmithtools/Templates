@@ -147,7 +147,7 @@ Public Overrides Sub Generate()
     End If
     
     'ADOHelperTemplate
-    If DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+    If DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures Then
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
     

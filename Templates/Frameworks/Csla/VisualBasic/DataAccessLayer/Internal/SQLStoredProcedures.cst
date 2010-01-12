@@ -1,0 +1,500 @@
+<%--------------------------------------------------------------------------------------------------------------
+* Author: Eric J. Smith
+* Modified By: Blake Niemyjski
+* Description: This template will generate standard CRUD stored procedures for a given database table.
+--------------------------------------------------------------------------------------------------------------%>
+<%@ CodeTemplate Debug="True" Language="VB"  TargetLanguage="T-SQL"  Inherits="QuickStart.DataCodeTemplate" CompilerVersion="v3.5" Description="Generates standard CRUD procedures based on a database table schema." %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="System.Data" %>
+
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%
+' this template requires a primary key on the source table
+If Not SourceTable.HasPrimaryKey Then
+    Throw New ApplicationException("SourceTable does not contain a primary key.")
+End If
+
+' generate drop statements
+Response.WriteLine("--region Drop Existing Procedures")
+Response.WriteLine("")
+
+GenerateDropStatement(GetInsertStoredProcedureName())
+GenerateDropStatement(GetUpdateStoredProcedureName())
+GenerateDropStatement(GetDeleteStoredProcedureName())
+GenerateDropStatement(GetSelectStoredProcedureName())
+
+Response.WriteLine("--endregion")
+Response.WriteLine("")
+Response.WriteLine("GO")
+Response.WriteLine("")
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Insert Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+    GenerateProcedureHeader(GetInsertStoredProcedureName())
+
+     ' Check to see If the primary key is a single column primary key and also If it's either an
+     ' identity column or a GUID.  If so, we will not include the primary key column in the
+     ' list of input parameters.
+
+    If (SourceTable.PrimaryKey.MemberColumns.Count = 1 And (SourceTable.PrimaryKey.MemberColumns(0).DataType = DbType.Guid Or ((SourceTable.PrimaryKey.MemberColumns(0).DataType = DbType.Int16 Or SourceTable.PrimaryKey.MemberColumns(0).DataType = DbType.Int32 Or SourceTable.PrimaryKey.MemberColumns(0).DataType = DbType.Int64) And CType(SourceTable.PrimaryKey.MemberColumns(0).ExtendedProperties("CS_IsIdentity").Value, Boolean) = true))) Then
+        Dim primaryKeyColumn As ColumnSchema = SourceTable.PrimaryKey.MemberColumns(0)
+%>
+
+CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
+<% GenerateParameters(SourceTable.NonPrimaryKeyColumns, 1, true, false) %>
+<% GenerateParameter(primaryKeyColumn, 1, false, true, true, false) %>
+AS
+
+SET NOCOUNT ON
+
+<%-- If the primary key is a GUID, then assign a New GUID using NEWID(). --%>
+<% If (primaryKeyColumn.DataType = DbType.Guid) Then %>
+SET @<%= primaryKeyColumn.Name %> = NEWID()
+
+<% End If %>
+INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
+    <% If (primaryKeyColumn.DataType = DbType.Guid) Then %>
+    [<%= primaryKeyColumn.Name %>],
+    <% End If %>
+    <% GenerateColumns(SourceTable.NonPrimaryKeyColumns, 1, false) %>
+) VALUES (
+    <% If (primaryKeyColumn.DataType = DbType.Guid) Then %>
+    @<%= primaryKeyColumn.Name %>,
+    <% End If %>
+    <% GenerateVariables(SourceTable.NonPrimaryKeyColumns, 1, false) %>
+)
+<%-- If the primary key is an identity column, then capture the newly assigned identity using SCOPE_IDENTITY(). --%>
+<% If (primaryKeyColumn.DataType = DbType.Int16 Or primaryKeyColumn.DataType = DbType.Int32 Or primaryKeyColumn.DataType = DbType.Int64) Then %>
+
+SET @<%= primaryKeyColumn.Name %> = SCOPE_IDENTITY()
+<% End If %>
+
+<%-- Primary key is not a identity column or a GUID, so include all columns as input parameters. --%>
+<% Else %>
+
+CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
+<% GenerateParameters(SourceTable.Columns, 1, false) %>
+AS
+
+SET NOCOUNT ON
+
+INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
+    <% GenerateColumns(SourceTable.Columns, 1, false) %>
+) VALUES (
+    <% GenerateVariables(SourceTable.Columns, 1, false) %>
+)
+
+<%
+    End If
+    GenerateProcedureFooter(GetInsertStoredProcedureName())
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Update Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+    GenerateProcedureHeader(GetUpdateStoredProcedureName())
+%>
+
+CREATE PROCEDURE <%= GetUpdateStoredProcedureName() %>
+<% GenerateParameters(SourceTable.Columns, 1, false) %>
+AS
+
+SET NOCOUNT ON
+
+UPDATE <%= GetTableOwner() %>[<%= SourceTable.Name %>] SET
+    <% GenerateUpdates(SourceTable.NonPrimaryKeyColumns, 1, false) %>
+WHERE
+    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1) %>
+
+<%
+    GenerateProcedureFooter(GetUpdateStoredProcedureName())
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Delete Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+    GenerateProcedureHeader(GetDeleteStoredProcedureName())
+%>
+
+CREATE PROCEDURE <%= GetDeleteStoredProcedureName() %>
+    @WhereCondition nvarchar(500)
+AS
+
+SET NOCOUNT ON
+
+DECLARE @SQL nvarchar(3250)
+
+SET @SQL = '
+DELETE FROM
+    <%= GetTableOwner() %>[<%= SourceTable.Name %>]
+WHERE
+    ' + @WhereCondition
+
+EXEC sp_executesql @SQL
+
+<%
+    GenerateProcedureFooter(GetDeleteStoredProcedureName())
+%>
+<%------------------------------------------------------------------------------------------
+*
+* Select Procedure
+*
+------------------------------------------------------------------------------------------%>
+<%
+    GenerateProcedureHeader(GetSelectStoredProcedureName())
+%>
+
+CREATE PROCEDURE <%= GetSelectStoredProcedureName() %>
+    @WhereCondition nvarchar(500),
+    @OrderByExpression nvarchar(250) = NULL
+AS
+
+SET NOCOUNT ON
+<% GenerateSetTransactionIsolationLevelStatement(IsolationLevel) %>
+
+DECLARE @SQL nvarchar(3250)
+
+SET @SQL = '
+SELECT
+    <% GenerateColumns(SourceTable.Columns, 1, true) %>
+FROM
+    <%= GetTableOwner() %>[<%= SourceTable.Name %>]
+WHERE
+    ' + @WhereCondition
+
+IF @OrderByExpression IS NOT NULL AND LEN(@OrderByExpression) > 0
+BEGIN
+    SET @SQL = @SQL + '
+ORDER BY
+    ' + @OrderByExpression
+END
+
+EXEC sp_executesql @SQL
+
+<%
+    GenerateProcedureFooter(GetSelectStoredProcedureName())
+%>
+<script runat="template">
+#Region "Member Variables"
+Private _droppedProcedureNames As New StringCollection()
+Private _generatedProcedureNames As New StringCollection()
+#End Region
+
+#Region "Isolation Level"
+
+Public Sub GenerateSetTransactionIsolationLevelStatement(ByVal isolationLevel As TransactionIsolationLevelEnum)
+    Response.Write("SET TRANSACTION ISOLATION LEVEL ")
+
+    Select Case isolationLevel
+        Case TransactionIsolationLevelEnum.ReadUncommitted
+            If True Then
+                Response.WriteLine("READ UNCOMMITTED")
+                Exit Select
+            End If
+        Case TransactionIsolationLevelEnum.RepeatableRead
+            If True Then
+                Response.WriteLine("REPEATABLE READ")
+                Exit Select
+            End If
+        Case TransactionIsolationLevelEnum.Serializable
+            If True Then
+                Response.WriteLine("SERIALIZABLE")
+                Exit Select
+            End If
+        Case Else
+            If True Then
+                Response.WriteLine("READ COMMITTED")
+                Exit Select
+        End If
+    End Select
+End Sub
+#End Region
+
+#Region "Code Generation Helpers"
+
+Private Function ConvertMemberColumnSchemaToColumnSchema(ByVal memberColumns As IList(Of MemberColumnSchema)) As IList(Of ColumnSchema)
+    Dim columns As List(Of ColumnSchema) = New List(Of ColumnSchema)()
+    columns.AddRange(memberColumns.Cast(Of ColumnSchema)())
+    Return columns
+End Function
+
+Public Sub GenerateDropStatement(ByVal procedureName As String)
+    ' check to see if this procedure has already been dropped.
+    If Not _droppedProcedureNames.Contains(procedureName) Then
+        Response.WriteLine("IF OBJECT_ID(N'{0}') IS NOT NULL", procedureName)
+        GenerateIndent(1)
+        Response.WriteLine("DROP PROCEDURE {0}", procedureName)
+        Response.WriteLine("")
+        
+        ' add this procedure to the list of dropped procedures
+        _droppedProcedureNames.Add(procedureName)
+    End If
+End Sub
+
+Public Sub GenerateProcedureHeader(ByVal procedureName As String)
+    Response.WriteLine("--region {0}", procedureName)
+    Response.WriteLine("")
+    Response.WriteLine("------------------------------------------------------------------------------------------------------------------------")
+    Response.WriteLine("-- Generated By:   {0} using CodeSmith {1}", System.Environment.UserName, GetType(CodeTemplate).Assembly.GetName().Version.ToString())
+    Response.WriteLine("-- Procedure Name: {0}", procedureName)
+    Response.WriteLine("-- Date Generated: {0}", DateTime.Now.ToLongDateString())
+    Response.WriteLine("------------------------------------------------------------------------------------------------------------------------")
+End Sub
+
+Public Sub GenerateProcedureFooter(ByVal procedureName As String)
+    Response.WriteLine("--endregion")
+    Response.WriteLine("")
+    Response.WriteLine("GO")
+    Response.WriteLine("")
+End Sub
+
+Public Sub GenerateIndent(ByVal indentLevel As Integer)
+    For i As Integer = 0 To indentLevel - 1
+        Response.Write(ControlChars.Tab)
+    Next
+End Sub
+
+Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
+    GenerateParameter(column, indentLevel, isFirst, isLast, False, includeTimeStamp)
+End Sub
+
+Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal isOutput As Boolean, ByVal includeTimeStamp As Boolean)
+    If Not includeTimeStamp AndAlso ColumnIsTimestamp(column) Then
+        Exit Sub
+    End If
+    
+    GenerateIndent(indentLevel)
+    Response.Write(GetSqlParameterStatement(column, isOutput))
+    If Not isLast Then
+        Response.Write(",")
+    End If
+    If indentLevel >= 0 Then
+        Response.WriteLine("")
+    ElseIf Not isLast Then
+        Response.Write(" ")
+    End If
+End Sub
+
+Public Function GetSqlParameterStatement(ByVal column As DataObjectBase, ByVal isOutput As Boolean) As String
+    Dim param As String = String.Format("{0}{1} {2}", ParameterPrefix, column.Name, column.NativeType)
+    
+    If Not IsUserDefinedType(column) Then
+        Select Case column.DataType
+            Case DbType.[Decimal]
+                If True Then
+                    param += String.Format("({0}, {1})", column.Precision, column.Scale)
+                    Exit Select
+                End If
+            Case DbType.Binary, DbType.AnsiString, DbType.AnsiStringFixedLength, DbType.[String], DbType.StringFixedLength
+                If True Then
+                    If column.NativeType <> "text" AndAlso column.NativeType <> "ntext" Then
+                        If column.Size > 0 Then
+                            param += String.Format("({0})", column.Size)
+                        ElseIf column.Size = -1 Then
+                            param += "(max)"
+                        End If
+                    End If
+                    Exit Select
+                End If
+        End Select
+    End If
+    
+    If isOutput Then
+        param += " OUTPUT"
+    End If
+    
+    Return param
+End Function
+
+''' <summary>
+''' Determine if the given column is using a UDT.
+''' </summary>
+''' <param name="column"></param>
+''' <returns></returns>
+Public Function IsUserDefinedType(ByVal column As DataObjectBase) As Boolean
+    Select Case column.NativeType.Trim().ToLower()
+        Case "bigint", "binary", "bit", "char", "date", "datetime", _
+            "datetime2", "time", "decimal", "float", "image", "int", _
+            "money", "nchar", "ntext", "numeric", "nvarchar", "real", _
+            "smalldatetime", "smallint", "smallmoney", "sql_variant", "sysname", "text", _
+            "timestamp", "tinyint", "uniqueidentifier", "varbinary", "xml", "varchar"
+            Return False
+        Case Else
+            Return True
+    End Select
+End Function
+
+Public Sub GenerateParameters(ByVal columns As IList(Of MemberColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+    GenerateParameters(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel, False, includeTimeStamp)
+End Sub
+
+Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+    GenerateParameters(columns, indentLevel, False, includeTimeStamp)
+End Sub
+
+Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTrailingComma As Boolean, ByVal includeTimeStamp As Boolean)
+    For Each column As Object In columns.AsIndexedEnumerable()
+        GenerateParameter(column.Value, indentLevel, column.IsFirst, column.IsLast AndAlso Not includeTrailingComma, includeTimeStamp)
+    Next
+End Sub
+
+Public Sub GenerateColumn(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
+    If Not includeTimeStamp AndAlso ColumnIsTimestamp(column) Then
+        Exit Sub
+    End If
+    
+    GenerateIndent(indentLevel)
+    Response.Write("[")
+    Response.Write(column.Name)
+    Response.Write("]")
+    If Not isLast Then
+        Response.Write(",")
+    End If
+    If indentLevel >= 0 Then
+        Response.WriteLine("")
+    ElseIf Not isLast Then
+        Response.Write(" ")
+    End If
+End Sub
+
+Public Sub GenerateColumns(ByVal columns As IList(Of MemberColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+    GenerateColumns(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel, includeTimeStamp)
+End Sub
+
+Public Sub GenerateColumns(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+    For Each column As Object In columns.AsIndexedEnumerable()
+        GenerateColumn(column.Value, indentLevel, column.IsFirst, column.IsLast, includeTimeStamp)
+    Next
+End Sub
+
+Public Sub GenerateUpdate(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
+    If Not includeTimeStamp AndAlso ColumnIsTimestamp(column) Then
+        Exit Sub
+    End If
+    
+    GenerateIndent(indentLevel)
+    Response.Write("[")
+    Response.Write(column.Name)
+    Response.Write("] = ")
+    Response.Write(ParameterPrefix)
+    Response.Write(column.Name)
+    If Not isLast Then
+        Response.Write(",")
+    End If
+    If indentLevel >= 0 Then
+        Response.WriteLine("")
+    ElseIf Not isLast Then
+        Response.Write(" ")
+    End If
+End Sub
+
+Public Sub GenerateUpdates(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+    For Each column As Object In columns.AsIndexedEnumerable()
+        GenerateUpdate(column.Value, indentLevel, column.IsFirst, column.IsLast, includeTimeStamp)
+    Next
+End Sub
+
+Public Sub GenerateCondition(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean)
+    GenerateIndent(indentLevel)
+    If Not isFirst Then
+        Response.Write("AND ")
+    End If
+    Response.Write("[")
+    Response.Write(column.Name)
+    Response.Write("] = ")
+    Response.Write(ParameterPrefix)
+    Response.Write(column.Name)
+    If indentLevel >= 0 Then
+        Response.WriteLine("")
+    ElseIf Not isLast Then
+        Response.Write(" ")
+    End If
+End Sub
+
+Public Sub GenerateConditions(ByVal columns As IList(Of MemberColumnSchema), ByVal indentLevel As Integer)
+    GenerateConditions(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel)
+End Sub
+
+Public Sub GenerateConditions(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer)
+    For Each column As Object In columns.AsIndexedEnumerable()
+        GenerateCondition(column.Value, indentLevel, column.IsFirst, column.IsLast)
+    Next
+End Sub
+
+Public Sub GenerateVariable(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
+    If Not includeTimeStamp AndAlso ColumnIsTimestamp(column) Then
+        Exit Sub
+    End If
+    
+    GenerateIndent(indentLevel)
+    Response.Write(ParameterPrefix)
+    Response.Write(column.Name)
+    If Not isLast Then
+        Response.Write(",")
+    End If
+    If indentLevel >= 0 Then
+        Response.WriteLine("")
+    ElseIf Not isLast Then
+        Response.Write(" ")
+    End If
+End Sub
+
+Public Sub GenerateVariables(ByVal columns As List(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+    For Each column As Object In columns.AsIndexedEnumerable()
+        GenerateVariable(column.Value, indentLevel, column.IsFirst, column.IsLast, includeTimeStamp)
+    Next
+End Sub
+
+Public Sub GenerateVariables(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+    For Each column As Object In columns.AsIndexedEnumerable()
+        GenerateVariable(column.Value, indentLevel, column.IsFirst, column.IsLast, includeTimeStamp)
+    Next
+End Sub
+
+Public Function ColumnIsTimestamp(ByVal column As ColumnSchema) As Boolean
+    If column.NativeType.ToLower() = "timestamp" OrElse column.NativeType.ToLower() = "rowversion" Then
+        Return True
+    End If
+    
+    Return False
+End Function
+
+#End Region
+
+#Region "Events"
+
+Protected Overloads Overrides Sub OnPostRender(ByVal result As String)
+    If AutoExecuteStoredProcedures Then
+        ' execute the output on the same database as the source table.
+        Dim scriptResult As CodeSmith.BaseTemplates.ScriptResult = CodeSmith.BaseTemplates.ScriptUtility.ExecuteScript(Me.SourceTable.Database.ConnectionString, result, AddressOf Me.cn_InfoMessage)
+        Trace.WriteLine(scriptResult.ToString())
+    End If
+    
+    MyBase.OnPostRender(result)
+End Sub
+
+Private Sub cn_InfoMessage(ByVal sender As Object, ByVal ex As System.Data.SqlClient.SqlInfoMessageEventArgs)
+    Trace.WriteLine(ex.Message)
+End Sub
+
+#End Region
+</script>

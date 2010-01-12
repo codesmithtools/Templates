@@ -27,6 +27,8 @@ Imports Csla
 
 Public Partial Class <%= BusinessClassName %>
 
+<% If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>
+
     #Region "Custom Data Access"
 
     Private Shadows Sub DataPortal_Fetch()
@@ -62,4 +64,38 @@ Public Partial Class <%= BusinessClassName %>
 
     #End Region
 
+<% Else If(DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
+
+    #Region "Custom Data Access"
+
+    Private Shadows Sub DataPortal_Fetch()
+        RaiseListChangedEvents = false
+        IsReadOnly = false
+
+        Dim criteria as New <%= ChildBusinessClassName %>Criteria
+        Using connection As New SqlConnection(ADOHelper.ConnectionString)
+            connection.Open()
+            Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)
+                command.CommandType = CommandType.StoredProcedure
+                command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag))
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
+                        Do
+                            ' TODO: You will need to update the GetInt32 and GetString values.
+                            Me.Add(New NameValuePair(reader.GetInt32("<%= Entity.PrimaryKey.KeyMember.Name %>"), reader.GetString("<%= Entity.Members(0).Name %>")))
+                        Loop While reader.Read()
+                    Else
+                        Throw New Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria))
+                    End If
+                End Using
+            End Using
+        End Using
+
+        IsReadOnly = true
+        RaiseListChangedEvents = true
+    End Sub
+
+    #End Region
+
+<% End If %>
 End Class
