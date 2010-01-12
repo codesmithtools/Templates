@@ -3,7 +3,11 @@
 <%@ Register Name="ObjectFactory" Template="Internal\ObjectFactory.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryDataAccess" Template="Internal\ObjectFactory.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryDataAccessParameterized" Template="Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ObjectFactoryDataAccessStoredProcedures" Template="Internal\ObjectFactory.DataAccess.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
+
+<%@ Register Name="SqlStoredProcedures" Template="Internal\SQLStoredProcedures.cst" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\Common" %>
@@ -53,6 +57,31 @@ Public Overloads Overrides Sub Generate()
             fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
             If Not System.IO.File.Exists(fileName) Then
                 ADOHelper.RenderToFile(fileName, False)
+            End If
+        ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
+            'ObjectFactoryDataAccessStoredProcedures
+            Dim objectFactoryDataAccessStoredProcedures As ObjectFactoryDataAccessStoredProcedures = Me.Create(Of ObjectFactoryDataAccessStoredProcedures)()
+            Me.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures)
+            objectFactoryDataAccessStoredProcedures.SourceTable = entity.Table
+            
+            objectFactoryDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
+            
+            'SqlStoredProcedures
+            Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
+            Me.CopyPropertiesTo(sqlStoredProcedures)
+            sqlStoredProcedures.SourceTable = entity.Table
+            
+            fileName = System.IO.Path.Combine(Location, String.Format("{0}.StoredProcedures.sql", objectFactory.BusinessClassName))
+            sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+            
+            'ADOHelperTemplate
+            Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
+            Me.CopyPropertiesTo(ADOHelper)
+            ADOHelper.SourceTable = entity.Table
+            
+            fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.cs")
+            If Not System.IO.File.Exists(fileName) Then
+            ? ? ADOHelper.RenderToFile(fileName, False)
             End If
         End If
     Next

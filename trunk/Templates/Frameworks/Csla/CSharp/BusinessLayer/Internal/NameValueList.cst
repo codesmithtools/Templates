@@ -71,7 +71,7 @@ namespace <%= BusinessProjectName %>
 
         #endregion
 
-<% } else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
+<% } else if(DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
 
         #region Custom Data Access
 

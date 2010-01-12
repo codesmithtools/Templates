@@ -38,9 +38,9 @@ Public Partial Class <%= BusinessClassName %>
     Private Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
     End Sub
 
-<% If(DataAccessImplementation = DataAccessMethod.None Or DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>
+<% If(DataAccessImplementation = DataAccessMethod.None Or DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
     Friend Sub New(Byval reader As SafeDataReader)
-<%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>
+<%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
         Map(reader)
 <% End If %>
     End Sub
