@@ -38,7 +38,7 @@ namespace CodeSmith.SchemaHelper
 
             SearchCriteriaProperty = new SearchCriteriaProperty();
             SearchCriteriaProperty.Prefix = "GetBy";
-            
+
             RowVersionColumn = "^((R|r)ow)?(V|v)ersion$";
             VisualStudioVersion = VisualStudioVersion.VS_2008;
             SingularMemberSuffix = "Member";
@@ -72,50 +72,6 @@ namespace CodeSmith.SchemaHelper
                 }
 
                 return _systemTypeEscape;
-            }
-        }
-
-        /// <summary>
-        /// Returns the DBTypeToSystemLanguage MapCollection.
-        /// </summary>
-        /// <returns>Returns the correct language MapCollection.</returns>
-        [Browsable(false)]
-        public MapCollection ResolveSystemType
-        {
-            get
-            {
-                string mapFileName = TargetLanguage == LanguageEnum.CSharp ? "DbType-CSharp" : "DbType-VB";
-
-                if (_dbTypeToSystemType == null)
-                {
-                    string path;
-                    Map.TryResolvePath(mapFileName, "", out path);
-                    _dbTypeToSystemType = Map.Load(path);
-                }
-
-                return _dbTypeToSystemType;
-            }
-        }
-
-        /// <summary>
-        /// Returns the SystemLanguage From C#/VB MapCollection.
-        /// </summary>
-        /// <returns>Returns the correct language MapCollection.</returns>
-        [Browsable(false)]
-        public MapCollection ResolveSystemTypeFullName
-        {
-            get
-            {
-                string mapFileName = TargetLanguage == LanguageEnum.CSharp ? "System-CSharpAlias" : "System-VBAlias";
-
-                if (_dbTypeToSystemType == null)
-                {
-                    string path;
-                    Map.TryResolvePath(mapFileName, "", out path);
-                    _dbTypeToSystemType = Map.Load(path);
-                }
-
-                return _dbTypeToSystemType;
             }
         }
 

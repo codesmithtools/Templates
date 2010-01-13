@@ -6,7 +6,7 @@ using SchemaExplorer;
 
 namespace CodeSmith.SchemaHelper
 {
-    public class AssociationMember : MemberBase
+    public class AssociationMember : Member
     {
         #region Constructor(s)
 
@@ -16,7 +16,7 @@ namespace CodeSmith.SchemaHelper
                                      ? GetToManyTableKey(column.Table, table).Name
                                      : String.Empty;
 
-            LocalColumn = new Member(localColumn, new Entity(localColumn.Table), true);
+            LocalColumn = new Member(localColumn, new Entity(localColumn.Table));
             Cascade = (associationType == SchemaHelper.AssociationType.OneToMany && !column.AllowDBNull);
             ClassName = table.ClassName();
             AssociationType = associationType;

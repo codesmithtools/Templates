@@ -74,6 +74,32 @@ namespace CodeSmith.SchemaHelper
             return string.Format("[{0}]", member.ColumnName);
         }
 
+        public static string BuildCriteriaObjectInitializer(this Member member, string className)
+        {
+            return BuildCriteriaObjectInitializer(member, className, false);
+        }
+
+        public static string BuildCriteriaObjectInitializer(this Member member, string className, bool isObjectFactory)
+        {
+            string criteria = isObjectFactory ? string.Format("item.{0}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName)) : member.Entity.ResolveCriteriaVariableName(member.ColumnName);
+            return string.Format("{0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName, className), criteria);
+        }
+
+        public static string BuildParametersVariablesCriteria(this Member member)
+        {
+            return member.BuildParametersVariablesCriteria(true);
+        }
+
+        public static string BuildParametersVariablesCriteria(this Member member, bool isNullable)
+        {
+            string systemType = isNullable ? member.SystemType : member.BaseSystemType;
+
+            if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                return string.Format("ByVal {0} As {1}", member.Entity.ResolveCriteriaVariableName(member.ColumnName), systemType);
+
+            return string.Format("{0} {1}", systemType, member.Entity.ResolveCriteriaVariableName(member.ColumnName));
+        }
+
         #region Internal Properties and Members
 
         internal static MapCollection _dbTypeToDataReaderMethod;

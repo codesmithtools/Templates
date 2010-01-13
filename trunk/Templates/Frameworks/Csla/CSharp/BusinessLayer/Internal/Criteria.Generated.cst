@@ -72,7 +72,7 @@ namespace <%= BusinessProjectName %>
             set { _bag[ "<%= Entity.RowVersionMember.ColumnName %>"] = value; }
         }
 <% } %>        
-<%  foreach(MemberBase member in Entity.GetUniqueSearchCriteriaMembers()){ %>
+<%  foreach(Member member in Entity.GetUniqueSearchCriteriaMembers()){ %>
         
         public <%= member.SystemType %> <%= member.Entity.ResolveCriteriaPropertyName( member.ColumnName, true ) %>
         {

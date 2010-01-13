@@ -122,7 +122,7 @@ Next %>
 If sc.IsUniqueResult AndAlso Not ((sc.Members.Count = Entity.PrimaryKey.KeyMembers.Count) AndAlso (sc.Members.item(0).Name = Entity.PrimaryKey.KeyMember.Name)) Then %>
     Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariablesCriteria(False) %>) As <%= BusinessClassName %> 
         Dim criteria As New <%= BusinessClassName %>Criteria()
-<% For Each member As MemberBase In sc.Members %>
+<% For Each member As Member In sc.Members %>
         criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
 <% Next %>
         
