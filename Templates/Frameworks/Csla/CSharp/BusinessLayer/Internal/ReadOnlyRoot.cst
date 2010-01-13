@@ -79,13 +79,7 @@ string columnName = member.ResolveManyToOneNameConflict(Entity); %>
         
 <% } %>
         }
-        
-        private static void AddObjectAuthorizationRules()
-        {
-            // TODO: add authorization rules
-            //AuthorizationRules.AllowGet(typeof(<%= BusinessClassName %>), "Role");
-        }
-        
+
         #endregion
     }
 }

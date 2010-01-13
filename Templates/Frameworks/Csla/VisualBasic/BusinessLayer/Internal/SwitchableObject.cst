@@ -89,12 +89,7 @@ Dim columnName As String = member.ResolveManyToOneNameConflict(Entity) %>
         
 <% Next%>
     End Sub
-    
-    Private Shared Sub AddObjectAuthorizationRules()
-        ' TODO: add authorization rules
-        'AuthorizationRules.AllowEdit(typeof(<%= BusinessClassName %>), "Role")
-    End Sub
-    
+
     #End Region
     
 End Class
