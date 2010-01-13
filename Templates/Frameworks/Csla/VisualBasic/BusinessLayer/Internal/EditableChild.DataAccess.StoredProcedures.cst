@@ -57,7 +57,7 @@ Public Partial Class <%= BusinessClassName %>
             connection.Open()
             Using command As New SqlCommand("<%= GetInsertStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
-                <%= entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(entity.MembersForeignKey) %>
+                <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(entity.MembersForeignKey, False, False) %>
 
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then

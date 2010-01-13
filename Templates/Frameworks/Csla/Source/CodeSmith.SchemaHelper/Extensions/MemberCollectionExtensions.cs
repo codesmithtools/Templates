@@ -398,15 +398,15 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildInsertCommandParameters(this List<Member> members, bool isObjectFactory)
         {
-            return BuildInsertCommandParameters(members, new List<AssociationMember>(), isObjectFactory);
+            return BuildInsertCommandParameters(members, new List<AssociationMember>(), isObjectFactory, false);
         }
 
         public static string BuildInsertCommandParameters(this List<Member> members, List<AssociationMember> associationMembers)
         {
-            return BuildInsertCommandParameters(members, associationMembers, false);
+            return BuildInsertCommandParameters(members, associationMembers, false, false);
         }
 
-        public static string BuildInsertCommandParameters(this List<Member> members, List<AssociationMember> associationMembers, bool isObjectFactory)
+        public static string BuildInsertCommandParameters(this List<Member> members, List<AssociationMember> associationMembers, bool isObjectFactory, bool usePropertyName)
         {
             string commandParameters = string.Empty;
             string castPrefix = isObjectFactory ? "item." : string.Empty;
@@ -420,7 +420,10 @@ namespace CodeSmith.SchemaHelper
                 if(member.IsForeignKey && member.IsPrimaryKey)
                 {
                     var associationMember = member.Entity.ManyToOne.Where(am => am.TableName == member.TableName && am.ColumnName == member.ColumnName).FirstOrDefault();
-                    propertyName = string.Format("{0}.{1}", associationMember.VariableName, NamingConventions.PropertyName(associationMember.LocalColumn.Name));
+                    if(usePropertyName)
+                        propertyName = string.Format("{0}.{1}", associationMember.PropertyName, NamingConventions.PropertyName(associationMember.LocalColumn.Name));
+                    else
+                        propertyName = string.Format("{0}.{1}", associationMember.VariableName, NamingConventions.PropertyName(associationMember.LocalColumn.Name));
                 }
 
                 string cast;
@@ -444,7 +447,11 @@ namespace CodeSmith.SchemaHelper
                 if (!associationMember.IsIdentity)
                 {
                     string cast;
+
                     string propertyName = string.Format("{0}.{1}", associationMember.VariableName, NamingConventions.PropertyName(associationMember.LocalColumn.Name));
+                    if (usePropertyName)
+                        propertyName = string.Format("{0}.{1}", associationMember.PropertyName, NamingConventions.PropertyName(associationMember.LocalColumn.Name));
+                    
                     if (associationMember.SystemType.Contains("SmartDate"))
                     {
                         if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
