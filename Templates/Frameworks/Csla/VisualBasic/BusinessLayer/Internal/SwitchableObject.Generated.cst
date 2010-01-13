@@ -304,7 +304,7 @@ If sc.IsUniqueResult AndAlso Not ((sc.Members.Count = Entity.PrimaryKey.KeyMembe
     
     Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariablesCriteria(False) %>) As <%= BusinessClassName %> 
         Dim criteria As New <%= BusinessClassName %>Criteria()
-<% For Each member As MemberBase In sc.Members %>
+<% For Each member As Member In sc.Members %>
         criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
 <% Next %>
         
@@ -320,7 +320,7 @@ Next %>
 <% If Not ((Entity.GetUniqueSearchCriteriaMembers().Count = Entity.PrimaryKey.KeyMembers.Count AndAlso Entity.GetUniqueSearchCriteriaMembers.item(0).Name = Entity.PrimaryKey.KeyMember.Name)) %>
     'Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.GetUniqueSearchCriteriaMembers().BuildParametersVariables() %>)
         'Dim criteria As New <%= BusinessClassName %>Criteria()
-<% For Each member As MemberBase In Entity.GetUniqueSearchCriteriaMembers() %>
+<% For Each member As Member In Entity.GetUniqueSearchCriteriaMembers() %>
         'criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name) %>
 <% Next %>
 
@@ -334,7 +334,7 @@ End If%>
 <% If Not ((Entity.GetUniqueSearchCriteriaMembers().Count = Entity.PrimaryKey.KeyMembers.Count AndAlso Entity.GetUniqueSearchCriteriaMembers.item(0).Name = Entity.PrimaryKey.KeyMember.Name))Then %>    
     Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.GetUniqueSearchCriteriaMembers().BuildParametersVariablesCriteria() %>)
         Dim criteria As New <%= BusinessClassName %>Criteria()
-<% For Each member As MemberBase In Entity.GetUniqueSearchCriteriaMembers() %>
+<% For Each member As Member In Entity.GetUniqueSearchCriteriaMembers() %>
         criteria.<%= member.BuildCriteriaObjectInitializer("") %>
 <% Next %>
 

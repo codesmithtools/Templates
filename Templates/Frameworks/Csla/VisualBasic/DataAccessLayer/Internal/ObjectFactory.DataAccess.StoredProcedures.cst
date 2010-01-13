@@ -262,7 +262,7 @@ Public Partial Class <%= Entity.ClassName %>Factory
         End If
 
         Dim criteria As New <%= BusinessClassName %>Criteria()
-<% For Each member As MemberBase In Entity.GetUniqueSearchCriteriaMembers() %>
+<% For Each member As Member In Entity.GetUniqueSearchCriteriaMembers() %>
         criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name, true) %>
 <% Next %>
         DoDelete(criteria)

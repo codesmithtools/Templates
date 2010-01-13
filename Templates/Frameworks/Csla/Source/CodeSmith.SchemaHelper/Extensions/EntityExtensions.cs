@@ -25,9 +25,9 @@ namespace CodeSmith.SchemaHelper
             return enumValues.TrimStart(new[] { '\t', '\n' }).TrimEnd(new[] { ',' });
         }
 
-        public static List<MemberBase> GetUniqueSearchCriteriaMembers(this Entity entity)
+        public static List<Member> GetUniqueSearchCriteriaMembers(this Entity entity)
         {
-            List<MemberBase> members = new List<MemberBase>();
+            List<Member> members = new List<Member>();
 
             foreach (SearchCriteria sc in entity.SearchCriteria)
             {
@@ -103,7 +103,7 @@ namespace CodeSmith.SchemaHelper
 
                 if (!isCritiaClass)
                 {
-                    foreach (MemberBase member in association.AssociationEntity().Members)
+                    foreach (Member member in association.AssociationEntity().Members)
                     {
                         if (columnName.EndsWith(member.ColumnName, true, CultureInfo.InvariantCulture))
                             return NamingConventions.PropertyName(member.ColumnName);
@@ -128,7 +128,7 @@ namespace CodeSmith.SchemaHelper
                         return sc.Members[0].VariableName;
                     }
 
-                    foreach (MemberBase member in association.AssociationEntity().Members)
+                    foreach (Member member in association.AssociationEntity().Members)
                     {
                         if (columnName.EndsWith(member.ColumnName, true, CultureInfo.InvariantCulture))
                             return NamingConventions.VariableName(member.ColumnName);
@@ -161,7 +161,7 @@ namespace CodeSmith.SchemaHelper
                         return sc.Members[0].PrivateMemberVariableName;
                     }
 
-                    foreach (MemberBase member in association.AssociationEntity().Members)
+                    foreach (Member member in association.AssociationEntity().Members)
                     {
                         if (columnName.EndsWith(member.ColumnName, true, CultureInfo.InvariantCulture))
                             return NamingConventions.PrivateMemberVariableName(member.ColumnName);
@@ -185,7 +185,7 @@ namespace CodeSmith.SchemaHelper
                         return sc.Members[0].ColumnName;
                     }
 
-                    foreach (MemberBase member in association.AssociationEntity().Members)
+                    foreach (Member member in association.AssociationEntity().Members)
                     {
                         if (columnName.EndsWith(member.ColumnName, true, CultureInfo.InvariantCulture))
                             return member.ColumnName;

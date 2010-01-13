@@ -82,7 +82,7 @@ Public Partial Class <%= BusinessClassName %>
         End Set
     End Property
 <% End If %>        
-<% For Each member As MemberBase In Entity.GetUniqueSearchCriteriaMembers() %>
+<% For Each member As Member In Entity.GetUniqueSearchCriteriaMembers() %>
     
     Public Property <%= member.Entity.ResolveCriteriaPropertyName( member.ColumnName, true ) %>() As <%= member.SystemType %>
         Get

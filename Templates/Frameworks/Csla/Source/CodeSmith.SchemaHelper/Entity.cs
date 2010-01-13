@@ -186,11 +186,11 @@ namespace CodeSmith.SchemaHelper
 
         private void UpdateDuplicateProperties()
         {
-            IEnumerable<MemberBase> entities = MemberMap.Values.Cast<MemberBase>().Union(AssociationMap.Values.Cast<MemberBase>());
-            foreach (MemberBase entity in entities)
+            IEnumerable<Member> entities = MemberMap.Values.Cast<Member>().Union(AssociationMap.Values.Cast<Member>());
+            foreach (Member entity in entities)
             {
-                MemberBase entity1 = entity;
-                List<MemberBase> duplicateMembers = entities.Where(e => e.Name == entity1.Name).ToList();
+                Member entity1 = entity;
+                List<Member> duplicateMembers = entities.Where(e => e.Name == entity1.Name).ToList();
                 if (duplicateMembers.Count > 1)
                     for (int x = 0; x < duplicateMembers.Count(); x++)
                         duplicateMembers[x].AppendNameSuffix(x + 1);
@@ -248,7 +248,7 @@ namespace CodeSmith.SchemaHelper
             {
                 if (column.Table.Equals(Table))
                 {
-                    MemberBase member = GetFromColumn(column);
+                    Member member = GetFromColumn(column);
                     if (member != null)
                         searchCriteria.Members.Add(GetFromColumn(column));
                 }
@@ -267,7 +267,7 @@ namespace CodeSmith.SchemaHelper
                 {
                     if (column.Table.Equals(Table))
                     {
-                        MemberBase member = GetFromColumn(column);
+                        Member member = GetFromColumn(column);
                         if(member != null)
                             searchCriteria.Members.Add(GetFromColumn(column));
                     }
@@ -287,7 +287,7 @@ namespace CodeSmith.SchemaHelper
                 {
                     if (column.Table.Equals(Table))
                     {
-                        MemberBase member = GetFromColumn(column);
+                        Member member = GetFromColumn(column);
                         if (member != null)
                             searchCriteria.Members.Add(GetFromColumn(column));
                     }
@@ -314,7 +314,7 @@ namespace CodeSmith.SchemaHelper
 
         #region Public Methods
 
-        public MemberBase GetFromColumn(ColumnSchema column)
+        public Member GetFromColumn(ColumnSchema column)
         {
             if (MemberMap.ContainsKey(column.Name))
                 return MemberMap[column.Name];
@@ -462,11 +462,11 @@ namespace CodeSmith.SchemaHelper
                 var memberUnion = MemberMap.Values.Where(m => !m.IsPrimaryKey).ToList().Union(FKMemberMap.Values).ToList();
 
                 List<Member> members = new List<Member>(memberUnion.Count);
-                foreach (Member memberBase in memberUnion)
+                foreach (Member member in memberUnion)
                 {
-                    string name = memberBase.ColumnName;
+                    string name = member.ColumnName;
                     if (members.Count(m => m.ColumnName == name) == 0)
-                        members.Add(memberBase);
+                        members.Add(member);
                 }
 
                 return members;
@@ -492,18 +492,18 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
-        //public List<MemberBase> MembersNoRowVersionIncludeRemoteAssociations
+        //public List<Member> MembersNoRowVersionIncludeRemoteAssociations
         //{
         //    get
         //    {
-        //        var memberUnion = MemberMap.Values.Cast<MemberBase>().Where(m => !m.IsPrimaryKey && !m.IsRowVersion).ToList().Union(FKRemoteMemberMap.Values.Cast<MemberBase>()).ToList();
+        //        var memberUnion = MemberMap.Values.Cast<Member>().Where(m => !m.IsPrimaryKey && !m.IsRowVersion).ToList().Union(FKRemoteMemberMap.Values.Cast<Member>()).ToList();
 
-        //        List<MemberBase> members = new List<MemberBase>(memberUnion.Count);
-        //        foreach (MemberBase memberBase in memberUnion)
+        //        List<Member> members = new List<Member>(memberUnion.Count);
+        //        foreach (Member member in memberUnion)
         //        {
-        //            string name = memberBase.ColumnName;
+        //            string name = member.ColumnName;
         //            if (members.Count(m => m.ColumnName == name) == 0)
-        //                members.Add(memberBase);
+        //                members.Add(member);
         //        }
 
         //        return members;
@@ -537,30 +537,30 @@ namespace CodeSmith.SchemaHelper
                 var membersNoRowVersion = MemberMap.Values.Where(m => !m.IsRowVersion).ToList();
 
                 List<Member> members = new List<Member>(membersNoRowVersion.Count);
-                foreach (Member memberBase in membersNoRowVersion)
+                foreach (Member member in membersNoRowVersion)
                 {
-                    string name = memberBase.ColumnName;
+                    string name = member.ColumnName;
                     if (members.Count(m => m.ColumnName == name) == 0)
-                        members.Add(memberBase);
+                        members.Add(member);
                 }
 
                 return members;
             }
         }
 
-        public List<MemberBase> MembersNoRowVersionIncludePrimaryKeyForeignKey
+        public List<Member> MembersNoRowVersionIncludePrimaryKeyForeignKey
         {
             get
             {
-                var membersNoRowVersion = MemberMap.Values.Cast<MemberBase>().Where(m => !m.IsRowVersion).ToList().Union(FKRemoteMemberMap.Values.Cast<MemberBase>().Where(fk => fk.TableName == this.Table.Name).Cast<MemberBase>().ToList()).ToList();
+                var membersNoRowVersion = MemberMap.Values.Cast<Member>().Where(m => !m.IsRowVersion).ToList().Union(FKRemoteMemberMap.Values.Cast<Member>().Where(fk => fk.TableName == this.Table.Name).Cast<Member>().ToList()).ToList();
 
-                var members = new List<MemberBase>(membersNoRowVersion.Count);
-                foreach (var memberBase in membersNoRowVersion)
+                var members = new List<Member>(membersNoRowVersion.Count);
+                foreach (var member in membersNoRowVersion)
                 {
-                    string name = memberBase.ColumnName;
+                    string name = member.ColumnName;
                     if (members.Count(m => m.ColumnName == name) == 0)
                     {
-                        members.Add(memberBase);
+                        members.Add(member);
                     }
 
                 }
@@ -604,32 +604,32 @@ namespace CodeSmith.SchemaHelper
             get { return MemberMap.Values.ToList(); }
         }
 
-        public List<MemberBase> MembersManyUnion
+        public List<Member> MembersManyUnion
         {
             get
             {
                 return MemberMap.Values
-                    .Cast<MemberBase>()
+                    .Cast<Member>()
                     .Union(
                         AssociationMap.Values
-                        .Cast<MemberBase>()
+                        .Cast<Member>()
                     ).ToList();
             }
         }
 
-        public List<MemberBase> MembersIncludePrimaryKeyForeignKey
+        public List<Member> MembersIncludePrimaryKeyForeignKey
         {
             get
             {
-                var list = MemberMap.Values.Cast<MemberBase>().ToList().Union(FKRemoteMemberMap.Values.Cast<MemberBase>().Where(fk => fk.TableName == this.Table.Name).Cast<MemberBase>().ToList()).ToList();
+                var list = MemberMap.Values.Cast<Member>().ToList().Union(FKRemoteMemberMap.Values.Cast<Member>().Where(fk => fk.TableName == this.Table.Name).Cast<Member>().ToList()).ToList();
 
-                var members = new List<MemberBase>(list.Count);
-                foreach (var memberBase in list)
+                var members = new List<Member>(list.Count);
+                foreach (var member in list)
                 {
-                    string name = memberBase.ColumnName;
+                    string name = member.ColumnName;
                     if (members.Count(m => m.ColumnName == name) == 0)
                     {
-                        members.Add(memberBase);
+                        members.Add(member);
                     }
                 }
 

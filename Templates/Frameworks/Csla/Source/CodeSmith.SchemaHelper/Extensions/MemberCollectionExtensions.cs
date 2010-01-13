@@ -416,18 +416,25 @@ namespace CodeSmith.SchemaHelper
                 if (member.IsIdentity)
                     continue;
 
+                string propertyName = member.PropertyName;
+                if(member.IsForeignKey && member.IsPrimaryKey)
+                {
+                    var associationMember = member.Entity.ManyToOne.Where(am => am.TableName == member.TableName && am.ColumnName == member.ColumnName).FirstOrDefault();
+                    propertyName = string.Format("{0}.{1}", associationMember.VariableName, NamingConventions.PropertyName(associationMember.LocalColumn.Name));
+                }
+
                 string cast;
                 if (member.SystemType.Contains("SmartDate"))
                 {
                     if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                        cast = member.IsNullable ? string.Format("IIf({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, DateTime), System.DBNull.Value))", castPrefix, member.PropertyName)
-                                                 : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, member.PropertyName);
+                        cast = member.IsNullable ? string.Format("IIf({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, DateTime), System.DBNull.Value))", castPrefix, propertyName)
+                                                 : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, propertyName);
                     else
-                        cast = member.IsNullable ? string.Format("(DateTime?){0}{1});", castPrefix, member.PropertyName)
-                                                 : string.Format("(DateTime){0}{1});", castPrefix, member.PropertyName);
+                        cast = member.IsNullable ? string.Format("(DateTime?){0}{1});", castPrefix, propertyName)
+                                                 : string.Format("(DateTime){0}{1});", castPrefix, propertyName);
                 }
                 else
-                    cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0}{1})", castPrefix, member.PropertyName) : string.Format("{0}{1});", castPrefix, member.PropertyName);
+                    cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0}{1})", castPrefix, propertyName) : string.Format("{0}{1});", castPrefix, propertyName);
 
                 commandParameters += string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
             }
@@ -608,6 +615,25 @@ namespace CodeSmith.SchemaHelper
             }
 
             return false;
+        }
+
+        public static string BuildCriteriaObjectInitializer(this List<Member> members, string className)
+        {
+            return BuildCriteriaObjectInitializer(members, className, false);
+        }
+
+        public static string BuildCriteriaObjectInitializer(this List<Member> members, string className, bool isObjectFactory)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                string name = isObjectFactory ? string.Format("item.{0}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName)) : member.Entity.ResolveCriteriaVariableName(member.ColumnName);
+
+                parameters += string.Format(", {0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName, className), name);
+            }
+
+            return parameters.TrimStart(new[] { ',', ' ' });
         }
     }
 }

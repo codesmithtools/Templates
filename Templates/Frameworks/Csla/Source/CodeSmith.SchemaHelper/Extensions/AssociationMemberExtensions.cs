@@ -16,77 +16,77 @@ namespace CodeSmith.SchemaHelper
             return member.SearchCriteria.Where(sc => !sc.IsUniqueResult && sc.MethodName.Contains(member.Name)).ToList();
         }
 
-        public static string BuildObjectInitializer(this AssociationMember member)
+        public static string BuildObjectInitializer(this AssociationMember associationMember)
         {
-            foreach (var memberBase in member.AssociationEntity().GetUniqueSearchCriteriaMembers())
+            foreach (var member in associationMember.AssociationEntity().GetUniqueSearchCriteriaMembers())
             {
-                if (memberBase.ColumnName == member.ColumnName)
+                if (member.ColumnName == associationMember.ColumnName)
                 {
                     return string.Format("{0} = {1}", NamingConventions.PropertyName(member.ColumnName), NamingConventions.VariableName(member.ColumnName));
                 }
             }
 
-            var output = member.BuildCriteriaObjectInitializer(member.TableName);
+            var output = associationMember.BuildCriteriaObjectInitializer(associationMember.TableName);
 
-            if(!output.StartsWith(member.Entity.ResolveCriteriaVariableName(member.ColumnName), StringComparison.InvariantCultureIgnoreCase))
-                return string.Format("{0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.ColumnName), member.Entity.ResolveCriteriaVariableName(member.ColumnName));
-
-            return output;
-        }
-
-        public static string BuildParametersVariable(this AssociationMember member)
-        {
-            foreach (var memberBase in member.AssociationEntity().GetUniqueSearchCriteriaMembers())
-            {
-                if (memberBase.ColumnName == member.ColumnName)
-                {
-                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                    {
-                        return string.Format("ByVal {0} As {1}", NamingConventions.VariableName(member.ColumnName), member.SystemType);
-                    }
-
-                    return string.Format("{0} {1}", member.SystemType, NamingConventions.VariableName(member.ColumnName));
-                }
-            }
-
-            return member.BuildParametersVariablesCriteria(false);
-        }
-
-
-        public static string BuildOneToZeroOrZeroObjectInitializer(this AssociationMember member)
-        {
-            foreach (var memberBase in member.Entity.GetUniqueSearchCriteriaMembers())
-            {
-                if (memberBase.ColumnName == member.LocalColumn.Name)
-                {
-                    return string.Format("{0} = {1}", NamingConventions.PropertyName(member.LocalColumn.Name), NamingConventions.VariableName(member.LocalColumn.Name));
-                }
-            }
-
-            var output = member.BuildCriteriaObjectInitializer(member.TableName);
-
-            if (!output.StartsWith(member.Entity.ResolveCriteriaVariableName(member.LocalColumn.Name), StringComparison.InvariantCultureIgnoreCase))
-                return string.Format("{0} = {1}", member.Entity.ResolveCriteriaPropertyName(member.LocalColumn.Name), member.Entity.ResolveCriteriaVariableName(member.LocalColumn.Name));
+            if (!output.StartsWith(associationMember.Entity.ResolveCriteriaVariableName(associationMember.ColumnName), StringComparison.InvariantCultureIgnoreCase))
+                return string.Format("{0} = {1}", associationMember.Entity.ResolveCriteriaPropertyName(associationMember.ColumnName), associationMember.Entity.ResolveCriteriaVariableName(associationMember.ColumnName));
 
             return output;
         }
 
-        public static string BuildOneToZeroOrZeroParametersVariable(this AssociationMember member)
+        public static string BuildParametersVariable(this AssociationMember associationMember)
         {
-            foreach (var memberBase in member.AssociationEntity().GetUniqueSearchCriteriaMembers())
+            foreach (var member in associationMember.AssociationEntity().GetUniqueSearchCriteriaMembers())
             {
-                if (memberBase.ColumnName == member.ColumnName)
+                if (member.ColumnName == associationMember.ColumnName)
                 {
                     if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
                     {
-                        return string.Format("ByVal {0} As {1}", NamingConventions.VariableName(member.LocalColumn.Name), member.SystemType);
+                        return string.Format("ByVal {0} As {1}", NamingConventions.VariableName(associationMember.ColumnName), associationMember.SystemType);
                     }
 
-                    return string.Format("{0} {1}", member.SystemType, NamingConventions.VariableName(member.LocalColumn.Name));
+                    return string.Format("{0} {1}", associationMember.SystemType, NamingConventions.VariableName(associationMember.ColumnName));
                 }
             }
 
-            return member.BuildParametersVariablesCriteria(false);
+            return associationMember.BuildParametersVariablesCriteria(false);
+        }
+
+
+        public static string BuildOneToZeroOrZeroObjectInitializer(this AssociationMember associationMember)
+        {
+            foreach (var member in associationMember.Entity.GetUniqueSearchCriteriaMembers())
+            {
+                if (member.ColumnName == associationMember.LocalColumn.Name)
+                {
+                    return string.Format("{0} = {1}", NamingConventions.PropertyName(associationMember.LocalColumn.Name), NamingConventions.VariableName(associationMember.LocalColumn.Name));
+                }
+            }
+
+            var output = associationMember.BuildCriteriaObjectInitializer(associationMember.TableName);
+
+            if (!output.StartsWith(associationMember.Entity.ResolveCriteriaVariableName(associationMember.LocalColumn.Name), StringComparison.InvariantCultureIgnoreCase))
+                return string.Format("{0} = {1}", associationMember.Entity.ResolveCriteriaPropertyName(associationMember.LocalColumn.Name), associationMember.Entity.ResolveCriteriaVariableName(associationMember.LocalColumn.Name));
+
+            return output;
+        }
+
+        public static string BuildOneToZeroOrZeroParametersVariable(this AssociationMember associationMember)
+        {
+            foreach (var member in associationMember.AssociationEntity().GetUniqueSearchCriteriaMembers())
+            {
+                if (member.ColumnName == associationMember.ColumnName)
+                {
+                    if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
+                    {
+                        return string.Format("ByVal {0} As {1}", NamingConventions.VariableName(associationMember.LocalColumn.Name), associationMember.SystemType);
+                    }
+
+                    return string.Format("{0} {1}", associationMember.SystemType, NamingConventions.VariableName(associationMember.LocalColumn.Name));
+                }
+            }
+
+            return associationMember.BuildParametersVariablesCriteria(false);
         }
 
 
@@ -102,7 +102,7 @@ namespace CodeSmith.SchemaHelper
                         sc.MethodName.EndsWith(member.LocalColumn.Name) ||
                         sc.MethodName.EndsWith(member.LocalColumn.ColumnName) ||
                         sc.MethodName.EndsWith(member.Name) ||
-                        sc.MethodName.EndsWith(member.ColumnName) && 
+                        sc.MethodName.EndsWith(member.ColumnName) &&
                         !sc.IsUniqueResult)
                     .ToList();
         }
@@ -144,7 +144,7 @@ namespace CodeSmith.SchemaHelper
             return false;
         }
 
-        #region Internal Properties and MemberBases
+        #region Internal Properties and Members
 
         internal static MapCollection _dbTypeToDataReaderMethod;
         internal static MapCollection DbTypeToDataReaderMethod

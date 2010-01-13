@@ -10,7 +10,7 @@ namespace CodeSmith.SchemaHelper
 
         public SearchCriteria(bool isPrimaryKey)
         {
-            Members = new List<MemberBase>();
+            Members = new List<Member>();
             IsPrimaryKey = isPrimaryKey;
         }
 
@@ -24,7 +24,7 @@ namespace CodeSmith.SchemaHelper
             bool isFirst = true;
 
             sb.Append(Configuration.Instance.SearchCriteriaProperty.Prefix);
-            foreach (MemberBase member in Members)
+            foreach (Member member in Members)
             {
                 if (isFirst)
                     isFirst = false;
@@ -43,14 +43,14 @@ namespace CodeSmith.SchemaHelper
 
         #region Public Read-Only Properties
 
-        public List<MemberBase> Members { get; private set; }
+        public List<Member> Members { get; private set; }
 
         public bool IsUniqueResult
         {
             get
             {
                 bool result = false;
-                foreach (MemberBase member in Members)
+                foreach (Member member in Members)
                     if (member.IsUnique)
                     {
                         result = true;
@@ -77,7 +77,7 @@ namespace CodeSmith.SchemaHelper
             {
                 StringBuilder sb = new StringBuilder();
 
-                foreach (MemberBase member in Members)
+                foreach (Member member in Members)
                     sb.Append(member.PropertyName);
 
                 return sb.ToString();

@@ -71,7 +71,7 @@ namespace <%= BusinessProjectName %>
                 connection.Open();
                 using(SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    <%= Entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
+                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
                     
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {

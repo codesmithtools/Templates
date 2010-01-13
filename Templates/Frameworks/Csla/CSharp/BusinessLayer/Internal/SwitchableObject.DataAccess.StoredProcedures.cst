@@ -207,7 +207,7 @@ namespace <%= BusinessProjectName %>
                 using(SqlCommand command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    <%= Entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
+                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
                     
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
