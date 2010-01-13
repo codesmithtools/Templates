@@ -80,7 +80,7 @@ namespace <%= BusinessProjectName %>
                 connection.Open();
                 using(SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
+                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, false, true) %>
                     
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
@@ -220,7 +220,7 @@ namespace <%= BusinessProjectName %>
                 connection.Open();
                 using(SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey) %>
+                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, false, false) %>
                     
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
