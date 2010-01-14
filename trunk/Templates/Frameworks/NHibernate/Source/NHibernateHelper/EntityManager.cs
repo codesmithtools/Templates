@@ -207,6 +207,26 @@ namespace NHibernateHelper
 
         #region Properties
 
+        public string TableFullSafeSqlName
+        {
+            get
+            {
+                var names = _sourceTable.FullName.Split('.').ToArray();
+                var sb = new StringBuilder();
+                for (var i = 0; i < names.Length; i++)
+                {
+                    if (String.IsNullOrEmpty(names[i]))
+                        continue;
+                    if (i > 0)
+                        sb.Append('.');
+                    sb.Append('[');
+                    sb.Append(names[i]);
+                    sb.Append(']');
+                }
+                return sb.ToString();
+            }
+        }
+
         private Dictionary<ColumnSchema, EntityAssociation> _associationMap = null;
         private Dictionary<ColumnSchema, EntityAssociation> AssociationMap
         {

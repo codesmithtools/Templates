@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Sample.Data.Generated.BusinessObjects" assembly="Sample.Data">
-	<class name="Sample.Data.Generated.BusinessObjects.Product, Sample.Data" table="dbo.Product" lazy="true">
-		<id name="Id" column="ProductId">
+	<class name="Sample.Data.Generated.BusinessObjects.Product, Sample.Data" table="[dbo].[Product]" lazy="true">
+		<id name="Id" column="[ProductId]">
 		 	<generator class="assigned" />
 		</id>
-		<property name="Name" column="Name" />
-		<property name="Descn" column="Descn" />
-		<property name="Image" column="Image" />
-		<many-to-one name="Category" column="CategoryId" class="Category" />
+		<property name="Name" column="[Name]" />
+		<property name="Descn" column="[Descn]" />
+		<property name="Image" column="[Image]" />
+		<many-to-one name="Category" column="[CategoryId]" class="Category" />
 		<bag name="Items" lazy="true" cascade="all-delete-orphan" inverse="true" >
-			<key column="ProductId"></key>
+			<key column="[ProductId]"></key>
 			<one-to-many class="Item"></one-to-many>
 		</bag>
 	</class>
