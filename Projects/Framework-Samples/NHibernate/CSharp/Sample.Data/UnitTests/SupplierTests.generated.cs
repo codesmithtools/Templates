@@ -23,16 +23,16 @@ namespace Sample.Data.Generated.UnitTests
 			Supplier entity = new Supplier();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = 73;
+			entity.Id = 43;
 			
-			entity.Name = "Test Tes";
+			entity.Name = "Test Test Test Test Test";
 			entity.Status = "T";
-			entity.Addr1 = "Test Test Test Test Test Test Test";
-			entity.Addr2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
-			entity.City = "Test";
-			entity.State = "Tes";
-			entity.Zip = "Tes";
-			entity.Phone = "Test Te";
+			entity.Addr1 = "Test Test Test Test Test Test Test Test T";
+			entity.Addr2 = "Test Test Test Test Test Test Test Test Test T";
+			entity.City = "Test Test Test Test Test Test Test Test Test Test Test T";
+			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test";
+			entity.Zip = "Test";
+			entity.Phone = "Test Test Test Test Test";
 			
 			return entity;
 		}
@@ -84,7 +84,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Supplier entityA = GetFirstSupplier();
 				
-				entityA.Name = "Test Test Test Test Test T";
+				entityA.Name = "Test Test Test Test Test Test Test T";
 				
 				manager.Update(entityA);
 
