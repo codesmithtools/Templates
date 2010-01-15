@@ -73,7 +73,7 @@ namespace <%= BusinessProjectName %>
         }
 <% } %>        
 <%  foreach(Member member in Entity.GetUniqueSearchCriteriaMembers()){ %>
-        
+
         public <%= member.SystemType %> <%= member.Entity.ResolveCriteriaPropertyName( member.ColumnName, true ) %>
         {
             get { return GetValue< <%= member.SystemType %> >("<%= member.ColumnName %>"); }                
