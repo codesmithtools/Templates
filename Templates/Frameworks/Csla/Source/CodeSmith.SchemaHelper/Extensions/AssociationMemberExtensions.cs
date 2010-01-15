@@ -57,7 +57,7 @@ namespace CodeSmith.SchemaHelper
         {
             foreach (var member in associationMember.Entity.GetUniqueSearchCriteriaMembers())
             {
-                if (member.ColumnName == associationMember.LocalColumn.Name)
+                if (member.ColumnName == associationMember.LocalColumn.ColumnName)
                 {
                     return string.Format("{0} = {1}", NamingConventions.PropertyName(associationMember.LocalColumn.Name), NamingConventions.VariableName(associationMember.LocalColumn.Name));
                 }
