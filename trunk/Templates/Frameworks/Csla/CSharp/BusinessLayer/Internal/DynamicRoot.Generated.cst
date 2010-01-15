@@ -83,8 +83,8 @@ namespace <%= BusinessProjectName %>
         /// </summary>
         [NotUndoable]
         private <%= Entity.RowVersionMember.SystemType %> _timestamp = new <%= Entity.RowVersionMember.SystemTypeWithSize %>;
+        
 <% } %>
-
 <%  foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey){ if (UseMemberVariables){ %>
         private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>);
         private <%= member.SystemType %> <%= member.PrivateMemberVariableName %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue;<%= member.BuildDataObjectField() %>

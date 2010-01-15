@@ -63,42 +63,6 @@ End If%>
             End Using
         End Using
     End Sub
-
-    Private Sub Map(ByVal reader As SafeDataReader)
-<% If Entity.HasRowVersionMember Then %>
-        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
-
-<% End If %>
-<% for each [member] as Member in Entity.MembersNoRowVersionIncludePrimaryKey 
-If UseMemberVariables Then %>
-        <%= [member].PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>GetBytes(reader)<% End If %>
-<%  else  %>
-        LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
-<% End If 
-Next %>
-
-<%-- Many-To-One --%>
-<% for each association As AssociationMember in Entity.ManyToOne
-If UseMemberVariables Then  %>
-        <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName, Entity) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>GetBytes(reader)<% End If %>
-<%  else  %>
-        LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ColumnName, Entity) %>Property, <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"))<% else %>GetBytes(reader," <%= association.ColumnName %>"))<% End If %>
-<% End If
-Next  %>
-<%-- One-To-Many & Many-To-Many --%>
-<% for each association2 As AssociationMember in Entity.ToManyUnion
-If Not UseLazyLoading Then %>
-
-<% If (UseMemberVariables) Then %>
-        <%= association2.PrivateMemberVariableName %> = New <%= association2.ClassName %>List.NewList()
-<%  else  %>
-        LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList())
-<% End If
-End If
-Next %> 
-
-        MarkOld()
-    End Sub
     
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Insert()
@@ -194,4 +158,44 @@ Next %>
             End Using
         End Using
     End Sub
+    
+    Private Sub Map(ByVal reader As SafeDataReader)
+        Using(BypassPropertyChecks)
+<% If Entity.HasRowVersionMember Then %>
+            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+
+<% End If %>
+<% for each [member] as Member in Entity.MembersNoRowVersionIncludePrimaryKey 
+If UseMemberVariables Then %>
+            <%= [member].PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>GetBytes(reader)<% End If %>
+<%  else  %>
+            LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
+<% End If 
+Next %>
+
+<%-- Many-To-One --%>
+<% for each association As AssociationMember in Entity.ManyToOne
+If UseMemberVariables Then  %>
+            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ResolveManyToOneNameConflict(Entity), Entity) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>GetBytes(reader)<% End If %>
+<%  else  %>
+            LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ResolveManyToOneNameConflict(Entity), Entity) %>Property, <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"))<% else %>GetBytes(reader," <%= association.ColumnName %>"))<% End If %>
+<% End If
+Next  %>
+
+<%-- One-To-Many & Many-To-Many --%>
+<% for each association2 As AssociationMember in Entity.ToManyUnion
+If Not UseLazyLoading Then %>
+<% If (UseMemberVariables) Then %>
+            <%= association2.PrivateMemberVariableName %> = New <%= association2.ClassName %>List.NewList()
+<%  else  %>
+            LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList())
+<% End If
+End If
+Next %>
+        End Using
+
+
+        MarkOld()
+    End Sub
+
 End Class

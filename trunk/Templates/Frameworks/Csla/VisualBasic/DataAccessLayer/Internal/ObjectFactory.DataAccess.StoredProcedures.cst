@@ -132,10 +132,11 @@ Public Partial Class <%= Entity.ClassName %>Factory
                 connection.Open()
                 Using command As New SqlCommand("<%= GetInsertStoredProcedureName() %>", connection)
                     command.CommandType = CommandType.StoredProcedure
-<% If(Entity.ManyToOne.Count > 0) Then %>
-                    <%= entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true) %>
+<% Dim flag as Boolean = Entity.ManyToOne.Count > 0
+If(Entity.ManyToOne.Count > 0) Then %>
+                    <%= entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true, flag) %>
 <% Else %>
-                    <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true) %>
+                    <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true, flag) %>
 <% End If %>
                     Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                         If reader.Read() Then
@@ -302,7 +303,7 @@ Public Partial Class <%= Entity.ClassName %>Factory
 <% Next %>
 <%-- Many-To-One --%>
 <% for each association As AssociationMember in Entity.ManyToOne %>
-            item.<%= association.Entity.ResolveCriteriaPropertyName(association.ColumnName) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+            item.<%= association.Entity.ResolveCriteriaPropertyName(association.ResolveManyToOneNameConflict(Entity)) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
 <%Next  %>
 <%-- One-To-Many & Many-To-Many --%>
 <% for each association2 As AssociationMember in Entity.ToManyUnion %>
