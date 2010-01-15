@@ -141,10 +141,11 @@ namespace <%= DataProjectName %>
                     using(SqlCommand command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-<% if(Entity.ManyToOne.Count > 0){ %>
-                        <%= Entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true) %>
+<% bool flag = Entity.ManyToOne.Count > 0;
+if(Entity.ManyToOne.Count > 0){ %>
+                        <%= Entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true, flag) %>
 <% } else { %>
-                        <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true) %>
+                        <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true, flag) %>
 <% } %>
                         using(var reader = new SafeDataReader(command.ExecuteReader()))
                         {
@@ -303,20 +304,20 @@ namespace <%= DataProjectName %>
 
         #region Helper Methods
 
-         private <%= Entity.ClassName %> Map(SafeDataReader reader)
+        private <%= Entity.ClassName %> Map(SafeDataReader reader)
         {
             var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
             using (BypassPropertyChecks(item))
             {
 <% if(Entity.HasRowVersionMember) { %>
-                item._imestamp = reader.Timestamp;
+                item.Timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } %>
 <% foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey) { %>
                 item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
 <% } %>
 <%-- Many-To-One --%>
 <% foreach(AssociationMember association in Entity.ManyToOne) { %>
-                item.<%= association.Entity.ResolveCriteriaPropertyName(association.ColumnName) %> = reader.<%= association.GetReaderMethod() %>("<%= association.LocalColumn.ColumnName %>");
+                item.<%= association.Entity.ResolveCriteriaPropertyName(association.ResolveManyToOneNameConflict(Entity)) %> = reader.<%= association.GetReaderMethod() %>("<%= association.LocalColumn.ColumnName %>");
 <% } %>
             }
             

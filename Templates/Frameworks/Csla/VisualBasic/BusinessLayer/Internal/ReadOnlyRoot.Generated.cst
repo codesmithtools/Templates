@@ -54,20 +54,17 @@ Public Partial Class <%= BusinessClassName %>
     ''' </summary>
     <NotUndoable()> _
     Private _timestamp As <%= Entity.RowVersionMember.SystemType %>
+    
 <% End If %>
-
 <%  For Each member As Member in Entity.MembersNoRowVersionIncludePrimaryKey
 If UseMemberVariables Then %>
-
     Private Shared ReadOnly <%= member.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= member.PropertyName %>)
     Private <%= member.PrivateMemberVariableName %> As <%= member.SystemType %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue<%= member.BuildDataObjectField() %>
     Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
-    
         Get 
             Return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>) 
         End Get
 <% else %>
-    
     Private Shared ReadOnly <%= member.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= member.PropertyName %>)<%= member.BuildDataObjectField() %>
     Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
         Get 
@@ -81,7 +78,7 @@ If UseMemberVariables Then %>
 <% For Each member As AssociationMember In Entity.MembersForeignKey
     Dim columnName As String = member.ResolveManyToOneNameConflict(Entity) 
     If (UseMemberVariables) Then %>
-    Private Shared <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property As PropertyInfo(Of <%= member.SystemType %> ) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>)
+    Private Shared <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property As PropertyInfo(Of <%= member.BaseSystemType %> ) = RegisterProperty(Of <%= member.BaseSystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>)
     Private <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %> As <%= member.BaseSystemType %> = <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property.DefaultValue<%= member.BuildDataObjectField() %>
     Public ReadOnly Property <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>() As <%= member.BaseSystemType %>
         Get 

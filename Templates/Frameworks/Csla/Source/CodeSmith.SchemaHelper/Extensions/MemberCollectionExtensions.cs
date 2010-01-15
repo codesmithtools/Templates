@@ -439,7 +439,7 @@ namespace CodeSmith.SchemaHelper
                 else
                     cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0}{1})", castPrefix, propertyName) : string.Format("{0}{1});", castPrefix, propertyName);
 
-                commandParameters += string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
+                commandParameters += string.Format("\n\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
             }
 
             foreach (AssociationMember associationMember in associationMembers)
@@ -464,7 +464,7 @@ namespace CodeSmith.SchemaHelper
                     else
                         cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0})", propertyName) : string.Format("{0});", propertyName);
 
-                    string output = string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName, cast);
+                    string output = string.Format("\n\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName, cast);
 
                     if (!commandParameters.Contains(output))
                         commandParameters += output;
@@ -509,7 +509,7 @@ namespace CodeSmith.SchemaHelper
                 else
                     cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0}{1})", castPrefix, member.PropertyName) : string.Format("{0}{1});", castPrefix, member.PropertyName);
 
-                commandParameters += string.Format("\n\t\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
+                commandParameters += string.Format("\n\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
             }
 
             foreach (AssociationMember associationMember in associationMembers)
@@ -528,7 +528,7 @@ namespace CodeSmith.SchemaHelper
                 else
                     cast = Configuration.Instance.TargetLanguage == LanguageEnum.VB ? string.Format("{0}{1})", castPrefix, propertyName) : string.Format("{0}{1});", castPrefix, propertyName);
 
-                string output = string.Format("\n\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName, cast);
+                string output = string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, associationMember.ColumnName, cast);
 
                 if (!commandParameters.Contains(output))
                     commandParameters += output;

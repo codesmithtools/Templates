@@ -15,7 +15,6 @@ namespace CodeSmith.SchemaHelper
         #region Member(s)
 
         private string _rowVersionColumn;
-        private MapCollection _dbTypeToSystemType;
         private MapCollection _systemTypeEscape;
 
         internal Regex RowVersionColumnRegex { get; private set; }
