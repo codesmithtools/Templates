@@ -28,7 +28,7 @@ namespace <%= BusinessProjectName %>
     {        
         #region Authorization Rules
         
-        protected override void AddAuthorizationRules()
+        protected void AddAuthorizationRules()
         {
             //// More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
             
