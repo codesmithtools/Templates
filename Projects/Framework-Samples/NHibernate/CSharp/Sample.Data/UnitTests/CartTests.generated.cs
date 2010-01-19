@@ -23,14 +23,14 @@ namespace Sample.Data.Generated.UnitTests
 			Cart entity = new Cart();
 			
 			
-			entity.ItemId = "Tes";
-			entity.Name = "Test Test ";
-			entity.Type = "Test Test Test Test ";
-			entity.Price = 50;
-			entity.CategoryId = "T";
-			entity.ProductId = "Test Tes";
+			entity.ItemId = "Test";
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+			entity.Type = "Test Test Test Test";
+			entity.Price = 11;
+			entity.CategoryId = "Test Test";
+			entity.ProductId = "Te";
 			entity.IsShoppingCart = true;
-			entity.Quantity = 87;
+			entity.Quantity = 22;
 			
 			IProfileManager profileManager = managerFactory.GetProfileManager();
 			entity.Profile = profileManager.GetAll(1)[0];
@@ -85,7 +85,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Cart entityA = GetFirstCart();
 				
-				entityA.ItemId = "Test Tes";
+				entityA.ItemId = "Test Test";
 				
 				manager.Update(entityA);
 

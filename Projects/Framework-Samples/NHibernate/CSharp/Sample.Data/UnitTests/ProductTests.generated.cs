@@ -25,9 +25,9 @@ namespace Sample.Data.Generated.UnitTests
 			// You may need to maually enter this key if there is a constraint violation.
 			entity.Id = "T";
 			
-			entity.Name = "Test Test Test Test Test T";
+			entity.Name = "Test Test Test Test Test Test Test Test Test";
 			entity.Descn = "Test Test ";
-			entity.Image = "Test Test Test Test Test Test Test Test ";
+			entity.Image = "Test Test Test ";
 			
 			ICategoryManager categoryManager = managerFactory.GetCategoryManager();
 			entity.Category = categoryManager.GetAll(1)[0];
@@ -82,7 +82,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Product entityA = GetFirstProduct();
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test Te";
+				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
 				
 				manager.Update(entityA);
 

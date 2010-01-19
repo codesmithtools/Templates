@@ -25,7 +25,7 @@ namespace Sample.Data.Generated.UnitTests
 			// You may need to maually enter this key if there is a constraint violation.
 			entity.Id = "Te";
 			
-			entity.Name = "Test Te";
+			entity.Name = "Test Test Test Test Test Test T";
 			entity.Descn = "Test Test ";
 			
 			return entity;
@@ -78,7 +78,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Category entityA = GetFirstCategory();
 				
-				entityA.Name = "Test Test Test Test Test Te";
+				entityA.Name = "Test Test Test Test Test Test";
 				
 				manager.Update(entityA);
 
