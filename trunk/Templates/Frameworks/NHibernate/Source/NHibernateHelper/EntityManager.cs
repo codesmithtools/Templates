@@ -211,19 +211,11 @@ namespace NHibernateHelper
         {
             get
             {
-                var names = _sourceTable.FullName.Split('.').ToArray();
-                var sb = new StringBuilder();
-                for (var i = 0; i < names.Length; i++)
-                {
-                    if (String.IsNullOrEmpty(names[i]))
-                        continue;
-                    if (i > 0)
-                        sb.Append('.');
-                    sb.Append('[');
-                    sb.Append(names[i]);
-                    sb.Append(']');
-                }
-                return sb.ToString();
+                var safeName = String.IsNullOrEmpty(_sourceTable.Owner)
+                                   ? String.Empty
+                                   : String.Concat("[", _sourceTable.Owner, "].");
+
+                return String.Concat(safeName, "[", _sourceTable.Name, "]");
             }
         }
 

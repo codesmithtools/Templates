@@ -51,7 +51,7 @@ Description: Generates a HBM Map for NHibernate.
 		<% } %>
 		<% // Many-To-Many %>
 		<% foreach(EntityAssociation association in entityManager.ManyToMany) { %>
-		<bag name="<%= association.PropertyName %>" table="<%= association.TableName %>" lazy="true" cascade="all" inverse="false" >
+		<bag name="<%= association.PropertyName %>" table="<%= entityManager.TableFullSafeSqlName %>" lazy="true" cascade="all" inverse="false" >
 			<key column="[<%= association.ColumnName %>]"></key>
 			<many-to-many column="[<%= association.ToManyTableKeyName %>]" class="<%= association.ClassName %>" />
     	</bag>
