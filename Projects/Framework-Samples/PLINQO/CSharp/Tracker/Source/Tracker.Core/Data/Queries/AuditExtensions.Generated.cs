@@ -398,8 +398,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Audit> ByUserId(this IQueryable<Tracker.Core.Data.Audit> queryable, int? userId)
         {
-            // using object equals to support nulls
-            return queryable.Where(a => object.Equals(a.UserId, userId));
+            // support nulls
+            return userId == null 
+                ? queryable.Where(a => a.UserId == null) 
+                : queryable.Where(a => a.UserId == userId);
         }
 
         /// <summary>
@@ -425,9 +427,13 @@ namespace Tracker.Core.Data
                 case ComparisonOperator.LessThanOrEquals:
                     return queryable.Where(a => userId <= a.UserId);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(a => object.Equals(a.UserId, userId) == false);
+                    return userId == null 
+                        ? queryable.Where(a => a.UserId != null) 
+                        : queryable.Where(a => a.UserId != userId);
                 default:
-                    return queryable.Where(a => object.Equals(a.UserId, userId));
+                    return userId == null 
+                        ? queryable.Where(a => a.UserId == null) 
+                        : queryable.Where(a => a.UserId == userId);
             }
         }
 
@@ -474,8 +480,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Audit> ByTaskId(this IQueryable<Tracker.Core.Data.Audit> queryable, int? taskId)
         {
-            // using object equals to support nulls
-            return queryable.Where(a => object.Equals(a.TaskId, taskId));
+            // support nulls
+            return taskId == null 
+                ? queryable.Where(a => a.TaskId == null) 
+                : queryable.Where(a => a.TaskId == taskId);
         }
 
         /// <summary>
@@ -501,9 +509,13 @@ namespace Tracker.Core.Data
                 case ComparisonOperator.LessThanOrEquals:
                     return queryable.Where(a => taskId <= a.TaskId);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(a => object.Equals(a.TaskId, taskId) == false);
+                    return taskId == null 
+                        ? queryable.Where(a => a.TaskId != null) 
+                        : queryable.Where(a => a.TaskId != taskId);
                 default:
-                    return queryable.Where(a => object.Equals(a.TaskId, taskId));
+                    return taskId == null 
+                        ? queryable.Where(a => a.TaskId == null) 
+                        : queryable.Where(a => a.TaskId == taskId);
             }
         }
 
@@ -550,8 +562,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, string myxml)
         {
-            // using object equals to support nulls
-            return queryable.Where(a => object.Equals(a.Myxml, myxml));
+            // support nulls
+            return myxml == null 
+                ? queryable.Where(a => a.Myxml == null) 
+                : queryable.Where(a => a.Myxml == myxml);
         }
 
         /// <summary>
@@ -577,9 +591,13 @@ namespace Tracker.Core.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(a => a.Myxml.Contains(myxml) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(a => object.Equals(a.Myxml, myxml) == false);
+                    return myxml == null 
+                        ? queryable.Where(a => a.Myxml != null) 
+                        : queryable.Where(a => a.Myxml != myxml);
                 default:
-                    return queryable.Where(a => object.Equals(a.Myxml, myxml));
+                    return myxml == null 
+                        ? queryable.Where(a => a.Myxml == null) 
+                        : queryable.Where(a => a.Myxml == myxml);
             }
         }
 

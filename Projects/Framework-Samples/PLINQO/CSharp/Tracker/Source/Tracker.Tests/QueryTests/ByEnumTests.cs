@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CodeSmith.Data.Linq;
 using NUnit.Framework;
 using Tracker.Core.Data;
 
@@ -41,6 +42,10 @@ namespace Tracker.Tests.QueryTests
 
                     var e = db.Task.ByPriority(Priority.Normal, null, Priority.High).ToList();
                     Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
+
+                    var f = db.Task.ByPriority(null, ComparisonOperator.NotEquals).ToList();
+                    var g = db.Task.ByPriority(null, ComparisonOperator.Equals).ToList();
+
                 }
 
         }

@@ -117,8 +117,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Guid> ByAlternateId(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid? alternateId)
         {
-            // using object equals to support nulls
-            return queryable.Where(g => object.Equals(g.AlternateId, alternateId));
+            // support nulls
+            return alternateId == null 
+                ? queryable.Where(g => g.AlternateId == null) 
+                : queryable.Where(g => g.AlternateId == alternateId);
         }
 
         /// <summary>
@@ -141,9 +143,13 @@ namespace Tracker.Core.Data
                 case ComparisonOperator.LessThanOrEquals:
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support System.Guid? type.", "comparisonOperator");
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(g => object.Equals(g.AlternateId, alternateId) == false);
+                    return alternateId == null 
+                        ? queryable.Where(g => g.AlternateId != null) 
+                        : queryable.Where(g => g.AlternateId != alternateId);
                 default:
-                    return queryable.Where(g => object.Equals(g.AlternateId, alternateId));
+                    return alternateId == null 
+                        ? queryable.Where(g => g.AlternateId == null) 
+                        : queryable.Where(g => g.AlternateId == alternateId);
             }
         }
 

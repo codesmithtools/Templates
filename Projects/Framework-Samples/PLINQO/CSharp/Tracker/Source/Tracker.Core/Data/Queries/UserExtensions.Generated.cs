@@ -204,8 +204,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByFirstName(this IQueryable<Tracker.Core.Data.User> queryable, string firstName)
         {
-            // using object equals to support nulls
-            return queryable.Where(u => object.Equals(u.FirstName, firstName));
+            // support nulls
+            return firstName == null 
+                ? queryable.Where(u => u.FirstName == null) 
+                : queryable.Where(u => u.FirstName == firstName);
         }
 
         /// <summary>
@@ -231,9 +233,13 @@ namespace Tracker.Core.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(u => u.FirstName.Contains(firstName) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(u => object.Equals(u.FirstName, firstName) == false);
+                    return firstName == null 
+                        ? queryable.Where(u => u.FirstName != null) 
+                        : queryable.Where(u => u.FirstName != firstName);
                 default:
-                    return queryable.Where(u => object.Equals(u.FirstName, firstName));
+                    return firstName == null 
+                        ? queryable.Where(u => u.FirstName == null) 
+                        : queryable.Where(u => u.FirstName == firstName);
             }
         }
 
@@ -280,8 +286,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByLastName(this IQueryable<Tracker.Core.Data.User> queryable, string lastName)
         {
-            // using object equals to support nulls
-            return queryable.Where(u => object.Equals(u.LastName, lastName));
+            // support nulls
+            return lastName == null 
+                ? queryable.Where(u => u.LastName == null) 
+                : queryable.Where(u => u.LastName == lastName);
         }
 
         /// <summary>
@@ -307,9 +315,13 @@ namespace Tracker.Core.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(u => u.LastName.Contains(lastName) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(u => object.Equals(u.LastName, lastName) == false);
+                    return lastName == null 
+                        ? queryable.Where(u => u.LastName != null) 
+                        : queryable.Where(u => u.LastName != lastName);
                 default:
-                    return queryable.Where(u => object.Equals(u.LastName, lastName));
+                    return lastName == null 
+                        ? queryable.Where(u => u.LastName == null) 
+                        : queryable.Where(u => u.LastName == lastName);
             }
         }
 
@@ -634,8 +646,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByComment(this IQueryable<Tracker.Core.Data.User> queryable, string comment)
         {
-            // using object equals to support nulls
-            return queryable.Where(u => object.Equals(u.Comment, comment));
+            // support nulls
+            return comment == null 
+                ? queryable.Where(u => u.Comment == null) 
+                : queryable.Where(u => u.Comment == comment);
         }
 
         /// <summary>
@@ -661,9 +675,13 @@ namespace Tracker.Core.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(u => u.Comment.Contains(comment) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(u => object.Equals(u.Comment, comment) == false);
+                    return comment == null 
+                        ? queryable.Where(u => u.Comment != null) 
+                        : queryable.Where(u => u.Comment != comment);
                 default:
-                    return queryable.Where(u => object.Equals(u.Comment, comment));
+                    return comment == null 
+                        ? queryable.Where(u => u.Comment == null) 
+                        : queryable.Where(u => u.Comment == comment);
             }
         }
 
@@ -775,8 +793,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByLastLoginDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime? lastLoginDate)
         {
-            // using object equals to support nulls
-            return queryable.Where(u => object.Equals(u.LastLoginDate, lastLoginDate));
+            // support nulls
+            return lastLoginDate == null 
+                ? queryable.Where(u => u.LastLoginDate == null) 
+                : queryable.Where(u => u.LastLoginDate == lastLoginDate);
         }
 
         /// <summary>
@@ -802,9 +822,13 @@ namespace Tracker.Core.Data
                 case ComparisonOperator.LessThanOrEquals:
                     return queryable.Where(u => lastLoginDate <= u.LastLoginDate);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(u => object.Equals(u.LastLoginDate, lastLoginDate) == false);
+                    return lastLoginDate == null 
+                        ? queryable.Where(u => u.LastLoginDate != null) 
+                        : queryable.Where(u => u.LastLoginDate != lastLoginDate);
                 default:
-                    return queryable.Where(u => object.Equals(u.LastLoginDate, lastLoginDate));
+                    return lastLoginDate == null 
+                        ? queryable.Where(u => u.LastLoginDate == null) 
+                        : queryable.Where(u => u.LastLoginDate == lastLoginDate);
             }
         }
 
@@ -919,8 +943,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime? lastPasswordChangeDate)
         {
-            // using object equals to support nulls
-            return queryable.Where(u => object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate));
+            // support nulls
+            return lastPasswordChangeDate == null 
+                ? queryable.Where(u => u.LastPasswordChangeDate == null) 
+                : queryable.Where(u => u.LastPasswordChangeDate == lastPasswordChangeDate);
         }
 
         /// <summary>
@@ -946,9 +972,13 @@ namespace Tracker.Core.Data
                 case ComparisonOperator.LessThanOrEquals:
                     return queryable.Where(u => lastPasswordChangeDate <= u.LastPasswordChangeDate);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(u => object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate) == false);
+                    return lastPasswordChangeDate == null 
+                        ? queryable.Where(u => u.LastPasswordChangeDate != null) 
+                        : queryable.Where(u => u.LastPasswordChangeDate != lastPasswordChangeDate);
                 default:
-                    return queryable.Where(u => object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate));
+                    return lastPasswordChangeDate == null 
+                        ? queryable.Where(u => u.LastPasswordChangeDate == null) 
+                        : queryable.Where(u => u.LastPasswordChangeDate == lastPasswordChangeDate);
             }
         }
 
@@ -995,8 +1025,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.User> ByAvatarType(this IQueryable<Tracker.Core.Data.User> queryable, string avatarType)
         {
-            // using object equals to support nulls
-            return queryable.Where(u => object.Equals(u.AvatarType, avatarType));
+            // support nulls
+            return avatarType == null 
+                ? queryable.Where(u => u.AvatarType == null) 
+                : queryable.Where(u => u.AvatarType == avatarType);
         }
 
         /// <summary>
@@ -1022,9 +1054,13 @@ namespace Tracker.Core.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(u => u.AvatarType.Contains(avatarType) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(u => object.Equals(u.AvatarType, avatarType) == false);
+                    return avatarType == null 
+                        ? queryable.Where(u => u.AvatarType != null) 
+                        : queryable.Where(u => u.AvatarType != avatarType);
                 default:
-                    return queryable.Where(u => object.Equals(u.AvatarType, avatarType));
+                    return avatarType == null 
+                        ? queryable.Where(u => u.AvatarType == null) 
+                        : queryable.Where(u => u.AvatarType == avatarType);
             }
         }
 

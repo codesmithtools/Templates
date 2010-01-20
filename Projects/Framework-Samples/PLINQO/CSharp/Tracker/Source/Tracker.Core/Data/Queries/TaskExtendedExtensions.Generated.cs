@@ -120,8 +120,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.TaskExtended> ByBrowser(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, string browser)
         {
-            // using object equals to support nulls
-            return queryable.Where(t => object.Equals(t.Browser, browser));
+            // support nulls
+            return browser == null 
+                ? queryable.Where(t => t.Browser == null) 
+                : queryable.Where(t => t.Browser == browser);
         }
 
         /// <summary>
@@ -147,9 +149,13 @@ namespace Tracker.Core.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(t => t.Browser.Contains(browser) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(t => object.Equals(t.Browser, browser) == false);
+                    return browser == null 
+                        ? queryable.Where(t => t.Browser != null) 
+                        : queryable.Where(t => t.Browser != browser);
                 default:
-                    return queryable.Where(t => object.Equals(t.Browser, browser));
+                    return browser == null 
+                        ? queryable.Where(t => t.Browser == null) 
+                        : queryable.Where(t => t.Browser == browser);
             }
         }
 
@@ -196,8 +202,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.TaskExtended> ByOs(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, string os)
         {
-            // using object equals to support nulls
-            return queryable.Where(t => object.Equals(t.Os, os));
+            // support nulls
+            return os == null 
+                ? queryable.Where(t => t.Os == null) 
+                : queryable.Where(t => t.Os == os);
         }
 
         /// <summary>
@@ -223,9 +231,13 @@ namespace Tracker.Core.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(t => t.Os.Contains(os) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(t => object.Equals(t.Os, os) == false);
+                    return os == null 
+                        ? queryable.Where(t => t.Os != null) 
+                        : queryable.Where(t => t.Os != os);
                 default:
-                    return queryable.Where(t => object.Equals(t.Os, os));
+                    return os == null 
+                        ? queryable.Where(t => t.Os == null) 
+                        : queryable.Where(t => t.Os == os);
             }
         }
 
