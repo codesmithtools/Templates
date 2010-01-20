@@ -191,8 +191,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Role> ByDescription(this IQueryable<Tracker.Core.Data.Role> queryable, string description)
         {
-            // using object equals to support nulls
-            return queryable.Where(r => object.Equals(r.Description, description));
+            // support nulls
+            return description == null 
+                ? queryable.Where(r => r.Description == null) 
+                : queryable.Where(r => r.Description == description);
         }
 
         /// <summary>
@@ -218,9 +220,13 @@ namespace Tracker.Core.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(r => r.Description.Contains(description) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(r => object.Equals(r.Description, description) == false);
+                    return description == null 
+                        ? queryable.Where(r => r.Description != null) 
+                        : queryable.Where(r => r.Description != description);
                 default:
-                    return queryable.Where(r => object.Equals(r.Description, description));
+                    return description == null 
+                        ? queryable.Where(r => r.Description == null) 
+                        : queryable.Where(r => r.Description == description);
             }
         }
 

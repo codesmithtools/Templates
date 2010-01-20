@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Linq;
+using CodeSmith.Data.Linq;
 using NUnit.Framework;
 using Tracker.Core.Data;
 
@@ -29,6 +30,9 @@ namespace Tracker.Tests.QueryTests
 
                     var g = db.Task.ByDetails(null, String.Empty, "Hello world!", "Goodnight moon!").ToList();
                     Assert.AreEqual(a.Count + b.Count + c.Count + d.Count, g.Count);
+
+                    var h = db.Task.ByDetails(null, ContainmentOperator.Equals).ToList();
+                    var i = db.Task.ByDetails(null, ContainmentOperator.NotEquals).ToList();
                 }
 
         }

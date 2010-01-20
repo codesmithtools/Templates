@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Linq;
+using CodeSmith.Data.Linq;
 using NUnit.Framework;
 using Tracker.Core.Data;
 
@@ -38,6 +39,10 @@ namespace Tracker.Tests.QueryTests
 
                 var e = db.Task.ByDueDate(DueDates[0], null, DueDates[1]).ToList();
                 Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
+
+                var f = db.Task.ByDueDate(null, ComparisonOperator.NotEquals).ToList();
+                var g = db.Task.ByDueDate(null, ComparisonOperator.Equals).ToList();
+
             }
 
         }

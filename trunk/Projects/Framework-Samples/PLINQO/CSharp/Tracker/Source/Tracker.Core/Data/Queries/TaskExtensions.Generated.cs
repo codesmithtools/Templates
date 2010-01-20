@@ -259,8 +259,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByDetails(this IQueryable<Tracker.Core.Data.Task> queryable, string details)
         {
-            // using object equals to support nulls
-            return queryable.Where(t => object.Equals(t.Details, details));
+            // support nulls
+            return details == null 
+                ? queryable.Where(t => t.Details == null) 
+                : queryable.Where(t => t.Details == details);
         }
 
         /// <summary>
@@ -286,9 +288,13 @@ namespace Tracker.Core.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(t => t.Details.Contains(details) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(t => object.Equals(t.Details, details) == false);
+                    return details == null 
+                        ? queryable.Where(t => t.Details != null) 
+                        : queryable.Where(t => t.Details != details);
                 default:
-                    return queryable.Where(t => object.Equals(t.Details, details));
+                    return details == null 
+                        ? queryable.Where(t => t.Details == null) 
+                        : queryable.Where(t => t.Details == details);
             }
         }
 
@@ -335,8 +341,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByStartDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? startDate)
         {
-            // using object equals to support nulls
-            return queryable.Where(t => object.Equals(t.StartDate, startDate));
+            // support nulls
+            return startDate == null 
+                ? queryable.Where(t => t.StartDate == null) 
+                : queryable.Where(t => t.StartDate == startDate);
         }
 
         /// <summary>
@@ -362,9 +370,13 @@ namespace Tracker.Core.Data
                 case ComparisonOperator.LessThanOrEquals:
                     return queryable.Where(t => startDate <= t.StartDate);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(t => object.Equals(t.StartDate, startDate) == false);
+                    return startDate == null 
+                        ? queryable.Where(t => t.StartDate != null) 
+                        : queryable.Where(t => t.StartDate != startDate);
                 default:
-                    return queryable.Where(t => object.Equals(t.StartDate, startDate));
+                    return startDate == null 
+                        ? queryable.Where(t => t.StartDate == null) 
+                        : queryable.Where(t => t.StartDate == startDate);
             }
         }
 
@@ -411,8 +423,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByDueDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? dueDate)
         {
-            // using object equals to support nulls
-            return queryable.Where(t => object.Equals(t.DueDate, dueDate));
+            // support nulls
+            return dueDate == null 
+                ? queryable.Where(t => t.DueDate == null) 
+                : queryable.Where(t => t.DueDate == dueDate);
         }
 
         /// <summary>
@@ -438,9 +452,13 @@ namespace Tracker.Core.Data
                 case ComparisonOperator.LessThanOrEquals:
                     return queryable.Where(t => dueDate <= t.DueDate);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(t => object.Equals(t.DueDate, dueDate) == false);
+                    return dueDate == null 
+                        ? queryable.Where(t => t.DueDate != null) 
+                        : queryable.Where(t => t.DueDate != dueDate);
                 default:
-                    return queryable.Where(t => object.Equals(t.DueDate, dueDate));
+                    return dueDate == null 
+                        ? queryable.Where(t => t.DueDate == null) 
+                        : queryable.Where(t => t.DueDate == dueDate);
             }
         }
 
@@ -487,8 +505,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByCompleteDate(this IQueryable<Tracker.Core.Data.Task> queryable, System.DateTime? completeDate)
         {
-            // using object equals to support nulls
-            return queryable.Where(t => object.Equals(t.CompleteDate, completeDate));
+            // support nulls
+            return completeDate == null 
+                ? queryable.Where(t => t.CompleteDate == null) 
+                : queryable.Where(t => t.CompleteDate == completeDate);
         }
 
         /// <summary>
@@ -514,9 +534,13 @@ namespace Tracker.Core.Data
                 case ComparisonOperator.LessThanOrEquals:
                     return queryable.Where(t => completeDate <= t.CompleteDate);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(t => object.Equals(t.CompleteDate, completeDate) == false);
+                    return completeDate == null 
+                        ? queryable.Where(t => t.CompleteDate != null) 
+                        : queryable.Where(t => t.CompleteDate != completeDate);
                 default:
-                    return queryable.Where(t => object.Equals(t.CompleteDate, completeDate));
+                    return completeDate == null 
+                        ? queryable.Where(t => t.CompleteDate == null) 
+                        : queryable.Where(t => t.CompleteDate == completeDate);
             }
         }
 
@@ -563,8 +587,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByAssignedId(this IQueryable<Tracker.Core.Data.Task> queryable, int? assignedId)
         {
-            // using object equals to support nulls
-            return queryable.Where(t => object.Equals(t.AssignedId, assignedId));
+            // support nulls
+            return assignedId == null 
+                ? queryable.Where(t => t.AssignedId == null) 
+                : queryable.Where(t => t.AssignedId == assignedId);
         }
 
         /// <summary>
@@ -590,9 +616,13 @@ namespace Tracker.Core.Data
                 case ComparisonOperator.LessThanOrEquals:
                     return queryable.Where(t => assignedId <= t.AssignedId);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(t => object.Equals(t.AssignedId, assignedId) == false);
+                    return assignedId == null 
+                        ? queryable.Where(t => t.AssignedId != null) 
+                        : queryable.Where(t => t.AssignedId != assignedId);
                 default:
-                    return queryable.Where(t => object.Equals(t.AssignedId, assignedId));
+                    return assignedId == null 
+                        ? queryable.Where(t => t.AssignedId == null) 
+                        : queryable.Where(t => t.AssignedId == assignedId);
             }
         }
 
@@ -775,8 +805,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByLastModifiedBy(this IQueryable<Tracker.Core.Data.Task> queryable, string lastModifiedBy)
         {
-            // using object equals to support nulls
-            return queryable.Where(t => object.Equals(t.LastModifiedBy, lastModifiedBy));
+            // support nulls
+            return lastModifiedBy == null 
+                ? queryable.Where(t => t.LastModifiedBy == null) 
+                : queryable.Where(t => t.LastModifiedBy == lastModifiedBy);
         }
 
         /// <summary>
@@ -802,9 +834,13 @@ namespace Tracker.Core.Data
                 case ContainmentOperator.NotContains:
                     return queryable.Where(t => t.LastModifiedBy.Contains(lastModifiedBy) == false);
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(t => object.Equals(t.LastModifiedBy, lastModifiedBy) == false);
+                    return lastModifiedBy == null 
+                        ? queryable.Where(t => t.LastModifiedBy != null) 
+                        : queryable.Where(t => t.LastModifiedBy != lastModifiedBy);
                 default:
-                    return queryable.Where(t => object.Equals(t.LastModifiedBy, lastModifiedBy));
+                    return lastModifiedBy == null 
+                        ? queryable.Where(t => t.LastModifiedBy == null) 
+                        : queryable.Where(t => t.LastModifiedBy == lastModifiedBy);
             }
         }
 
@@ -919,8 +955,10 @@ namespace Tracker.Core.Data
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         public static IQueryable<Tracker.Core.Data.Task> ByPriority(this IQueryable<Tracker.Core.Data.Task> queryable, Priority? priority)
         {
-            // using object equals to support nulls
-            return queryable.Where(t => object.Equals(t.Priority, priority));
+            // support nulls
+            return priority == null 
+                ? queryable.Where(t => t.Priority == null) 
+                : queryable.Where(t => t.Priority == priority);
         }
 
         /// <summary>
@@ -946,9 +984,13 @@ namespace Tracker.Core.Data
                 case ComparisonOperator.LessThanOrEquals:
                     return queryable.Where(t => priority <= t.Priority);
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(t => object.Equals(t.Priority, priority) == false);
+                    return priority == null 
+                        ? queryable.Where(t => t.Priority != null) 
+                        : queryable.Where(t => t.Priority != priority);
                 default:
-                    return queryable.Where(t => object.Equals(t.Priority, priority));
+                    return priority == null 
+                        ? queryable.Where(t => t.Priority == null) 
+                        : queryable.Where(t => t.Priority == priority);
             }
         }
 

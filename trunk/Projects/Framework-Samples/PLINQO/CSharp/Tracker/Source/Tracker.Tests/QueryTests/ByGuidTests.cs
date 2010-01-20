@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using CodeSmith.Data.Linq;
 using NUnit.Framework;
 using Tracker.Core.Data;
 using Guid = System.Guid;
@@ -84,6 +85,10 @@ namespace Tracker.Tests.QueryTests
 
                 var e = db.Guid.ByAlternateId(_guid2Alt, null, _guid3Alt).ToList();
                 Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
+
+                var f = db.Guid.ByAlternateId(null, ComparisonOperator.NotEquals).ToList();
+                var g = db.Guid.ByAlternateId(null, ComparisonOperator.Equals).ToList();
+
             }
 
         }
