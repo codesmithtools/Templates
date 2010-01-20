@@ -52,13 +52,11 @@ namespace <%= Database.EntityNamespace %>
 {
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
     {
-        // For more information about the features contained in this class, please visit our GoogleCode Wiki at...
-        // http://code.google.com/p/codesmith/wiki/PLINQO
-        // Also, you can watch our Video Tutorials at...
-        // http://community.codesmithtools.com/
+        // Place custom code here.
 
         #region Metadata
-
+        // For more information about how to use the metadata class visit:
+        // http://www.plinqo.com/metadata.ashx
         [CodeSmith.Data.Audit.Audit]
 <% if (!string.IsNullOrEmpty(EntityBase) && EntityBase != Database.EntityBase) { %>
         internal new class Metadata
@@ -67,7 +65,7 @@ namespace <%= Database.EntityNamespace %>
         internal class Metadata
 <% } %>
         {
-            // Only Attributes in the class will be preserved.
+             // WARNING: Only attributes inside of this class will be preserved.
 
 <%          AttributeSectionVisitor sourceAttributes = new AttributeSectionVisitor();
             if(ExistingFile!=null)
