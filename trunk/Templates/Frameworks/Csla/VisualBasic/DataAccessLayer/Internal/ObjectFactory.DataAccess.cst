@@ -62,12 +62,12 @@ Public Function Partial class <%= Entity.ClassName %>Factory
         'Dim resource As <%= Entity.ClassName %> = <%= Entity.ClassName %>.Get<%= Entity.ClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildCriteriaParametersVariables() %>)
         Dim item As <%= Entity.ClassName %> = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true)
         Using BypassPropertyChecks(item)
-<% For Each member As Member in Entity.MembersNoRowVersionIncludePrimaryKey %>
+<% For Each member As Member in Entity.MembersNoRowVersion %>
             'item.<%= member.PropertyName %> = resource.<%= member.PropertyName %>
 <% Next %>
-<% For Each member As AssociationMember in Entity.MembersForeignKey  
+<% For Each member As Association in Entity.MembersForeignKey  
     Dim columnName As String = member.ResolveManyToOneNameConflict(Entity) %>
-            'item.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %> = resource.<%= member.LocalColumn.PropertyName %>
+            'item.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %> = resource.<%= member.AssociatedColumn.PropertyName %>
 <% Next %>
         End Using
 

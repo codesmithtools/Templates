@@ -68,11 +68,11 @@ namespace <%= DataProjectName %>
             var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
             using (BypassPropertyChecks(item))
             {
-<% foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey){ %>
+<% foreach(Member member in Entity.MembersNoRowVersion){ %>
                 //item.<%= member.PropertyName %> = resource.<%= member.PropertyName %>;
 <% } %>
-<% foreach(AssociationMember member in Entity.MembersForeignKey){ string columnName = member.ResolveManyToOneNameConflict(Entity); %>
-                //item.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %> = resource.<%= member.LocalColumn.PropertyName %>;
+<% foreach(Association member in Entity.MembersForeignKey){ string columnName = member.ResolveManyToOneNameConflict(Entity); %>
+                //item.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %> = resource.<%= member.AssociatedColumn.PropertyName %>;
 <% } %>
             }
     

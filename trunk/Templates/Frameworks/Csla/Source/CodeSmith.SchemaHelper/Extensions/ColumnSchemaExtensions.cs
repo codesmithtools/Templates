@@ -12,6 +12,7 @@ namespace CodeSmith.SchemaHelper
     {
         #region Constant(s)
 
+        private const string CS_Description = "CS_Description";
         private const string IS_IDENTITY = "CS_IsIdentity";
         private const string IS_COMPUTED = "CS_IsComputed";
 
@@ -46,10 +47,6 @@ namespace CodeSmith.SchemaHelper
 
             if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
                 result = result.Replace("[]", "()");
-
-            if (result.Equals("System.DateTime", StringComparison.InvariantCultureIgnoreCase))
-                result = "SmartDate";
-
             bool appendNull = column.AllowDBNull && column.SystemType.IsValueType && canAppendNullable;
 
             if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
@@ -63,7 +60,7 @@ namespace CodeSmith.SchemaHelper
         public static string GetName(this ColumnSchema column)
         {
             string name = (column.HasAlias()) ? column.ExtendedProperties[Configuration.Instance.AliasExtendedProperty].Value.ToString() : column.Name;
-            
+
             return Configuration.Instance.ValidateName(column, name);
         }
 
@@ -90,6 +87,14 @@ namespace CodeSmith.SchemaHelper
         }
 
         #endregion
+
+        public static string ResolveDescription(this ColumnSchema column)
+        {
+            if (column.ExtendedProperties.Contains(CS_Description))
+                 return column.ExtendedProperties[CS_Description].Value.ToString().Trim();
+
+            return string.Empty;
+        }
 
         public static bool IsIdentity(this ColumnSchema column)
         {

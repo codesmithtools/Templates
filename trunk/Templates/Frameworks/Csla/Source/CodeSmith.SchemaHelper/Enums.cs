@@ -60,7 +60,9 @@ namespace CodeSmith.SchemaHelper
         All = 0,
         Index = 1,
         PrimaryKey = 2,
-        ForeignKeys = 3
+        ForeignKeysOneToMany = 3,
+        ForeignKeysManyToOne = 4,
+        NoForeignKeys = 5
     }
 
     #endregion

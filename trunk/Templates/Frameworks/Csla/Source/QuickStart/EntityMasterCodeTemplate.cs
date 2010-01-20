@@ -256,18 +256,21 @@ namespace QuickStart
                     return;
 
                 //Many-To-One
-                foreach (var childEntity in entity.ManyToOne)
+                foreach (var childEntity in entity.AssociatedManyToOne)
                 {
-                    var table = new TableSchema(SourceDatabase, childEntity.TableName, childEntity.TableOwner,
-                                                DateTime.Now);
-                    AddChildEntity(table, false, false);
+                    foreach (AssociationMember member in childEntity)
+                    {
+                        AddChildEntity(member.Entity.Table, false, false);
+                    }
                 }
 
                 //One-To-Many & Many-To-Many
-                foreach (var childList in entity.ToManyUnion)
+                foreach (var childList in entity.AssociatedToManyUnion)
                 {
-                    var table = new TableSchema(SourceDatabase, childList.TableName, childList.TableOwner, DateTime.Now);
-                    AddChildList(table, false, false);
+                    foreach (AssociationMember member in childList)
+                    {
+                        AddChildList(member.Entity.Table, false, false);
+                    }
                 }
             }
         }
@@ -294,18 +297,21 @@ namespace QuickStart
                     return;
 
                 //Many-To-One
-                foreach (var childEntity in entity.ManyToOne)
+                foreach (var childEntity in entity.AssociatedManyToOne)
                 {
-                    var table = new TableSchema(SourceDatabase, childEntity.TableName, childEntity.TableOwner,
-                                                DateTime.Now);
-                    AddChildEntity(table, false, true);
+                    foreach (AssociationMember member in childEntity)
+                    {
+                    AddChildEntity(member.Entity.Table, false, true);
+                    }
                 }
 
                 //One-To-Many & Many-To-Many
-                foreach (var childList in entity.ToManyUnion)
+                foreach (var childList in entity.AssociatedToManyUnion)
                 {
-                    var table = new TableSchema(SourceDatabase, childList.TableName, childList.TableOwner, DateTime.Now);
-                    AddChildList(table, false, true);
+                    foreach (AssociationMember member in childList)
+                    {
+                    AddChildList(member.Entity.Table, false, true);
+                    }
                 }
             }
         }
@@ -332,18 +338,21 @@ namespace QuickStart
                     return;
 
                 //Many-To-One
-                foreach (var childEntity in entity.ManyToOne)
+                foreach (var childEntity in entity.AssociatedManyToOne)
                 {
-                    var table = new TableSchema(SourceDatabase, childEntity.TableName, childEntity.TableOwner,
-                                                DateTime.Now);
-                    AddChildEntity(table, false, true);
+                    foreach (AssociationMember member in childEntity)
+                    {
+                    AddChildEntity(member.Entity.Table, false, true);
+                    }
                 }
 
                 //One-To-Many & Many-To-Many
-                foreach (var childList in entity.ToManyUnion)
+                foreach (var childList in entity.AssociatedToManyUnion)
                 {
-                    var table = new TableSchema(SourceDatabase, childList.TableName, childList.TableOwner, DateTime.Now);
-                    AddChildList(table, false, true);
+                    foreach (AssociationMember member in childList)
+                    {
+                    AddChildList(member.Entity.Table, false, true);
+                    }
                 }
             }
         }
@@ -370,18 +379,21 @@ namespace QuickStart
                     return;
 
                 //Many-To-One
-                foreach (var childEntity in entity.ManyToOne)
+                foreach (var childEntity in entity.AssociatedManyToOne)
                 {
-                    var table = new TableSchema(SourceDatabase, childEntity.TableName, childEntity.TableOwner,
-                                                DateTime.Now);
-                    AddChildEntity(table, true, true);
+                    foreach (AssociationMember member in childEntity)
+                    {
+                    AddChildEntity(member.Entity.Table, true, true);
+                    }
                 }
 
                 //One-To-Many & Many-To-Many
-                foreach (var childList in entity.ToManyUnion)
+                foreach (var childList in entity.AssociatedToManyUnion)
                 {
-                    var table = new TableSchema(SourceDatabase, childList.TableName, childList.TableOwner, DateTime.Now);
-                    AddChildList(table, true, true);
+                    foreach (AssociationMember member in childList)
+                    {
+                    AddChildList(member.Entity.Table, true, true);
+                    }
                 }
             }
         }
@@ -408,18 +420,21 @@ namespace QuickStart
                     return;
 
                 //Many-To-One
-                foreach (var childEntity in entity.ManyToOne)
+                foreach (var childEntity in entity.AssociatedManyToOne)
                 {
-                    var table = new TableSchema(SourceDatabase, childEntity.TableName, childEntity.TableOwner,
-                                                DateTime.Now);
-                    AddChildEntity(table, true, true);
+                    foreach (AssociationMember member in childEntity)
+                    {
+                    AddChildEntity(member.Entity.Table, true, true);
+                    }
                 }
 
                 //One-To-Many & Many-To-Many
-                foreach (var childList in entity.ToManyUnion)
+                foreach (var childList in entity.AssociatedToManyUnion)
                 {
-                    var table = new TableSchema(SourceDatabase, childList.TableName, childList.TableOwner, DateTime.Now);
-                    AddChildList(table, true, true);
+                    foreach (AssociationMember member in childList)
+                    {
+                    AddChildList(member.Entity.Table, true, true);
+                    }
                 }
             }
         }
@@ -446,18 +461,21 @@ namespace QuickStart
                     return;
 
                 //Many-To-One
-                foreach (var childEntity in entity.ManyToOne)
+                foreach (var childEntity in entity.AssociatedManyToOne)
                 {
-                    var table = new TableSchema(SourceDatabase, childEntity.TableName, childEntity.TableOwner,
-                                                DateTime.Now);
-                    AddChildEntity(table, false, true);
+                    foreach (AssociationMember member in childEntity)
+                    {
+                    AddChildEntity(member.Entity.Table, false, true);
+                    }
                 }
 
                 //One-To-Many & Many-To-Many
-                foreach (var childList in entity.ToManyUnion)
+                foreach (var childList in entity.AssociatedToManyUnion)
                 {
-                    var table = new TableSchema(SourceDatabase, childList.TableName, childList.TableOwner, DateTime.Now);
-                    AddChildList(table, false, true);
+                    foreach (AssociationMember member in childList)
+                    {
+                    AddChildList(member.Entity.Table, false, true);
+                    }
                 }
             }
         }
@@ -746,13 +764,15 @@ namespace QuickStart
             //EditableChildList
             foreach (Entity entity in GetListEntities())
             {
-                foreach (AssociationMember association in entity.ToManyUnion)
+                foreach (Association association in entity.AssociatedToManyUnion)
                 {
-                    var table = new TableSchema(SourceDatabase, association.TableName, entity.Table.Owner,
-                                                DateTime.Now);
+                    foreach (AssociationMember member in association)
+                    {
+                        var table = new TableSchema(SourceDatabase, member.TableName, entity.Table.Owner, DateTime.Now);
 
-                    if (!EditableChildList.Contains(table.Owner, table.Name))
-                        EditableChildList.Add(table);
+                        if (!EditableChildList.Contains(table.Owner, table.Name))
+                            EditableChildList.Add(table);
+                    }
                 }
             }
 

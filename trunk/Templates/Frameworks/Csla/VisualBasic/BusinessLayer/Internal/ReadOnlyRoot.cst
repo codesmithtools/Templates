@@ -56,7 +56,7 @@ Public Partial Class <%= BusinessClassName %>
         'AuthorizationRules.AllowEdit(GetType(<%= BusinessClassName %>), canWrite)
         'AuthorizationRules.AllowGet(GetType(<%= BusinessClassName %>), canRead)
 
-<% For Each member As Member in Entity.MembersNoRowVersionIncludePrimaryKey %>
+<% For Each member As Member in Entity.MembersNoRowVersion %>
         ''<%= member.PropertyName %>
 <% If Not member.IsReadOnly Then %>
         'AuthorizationRules.AllowWrite(<%= member.PrivateMemberVariableName %>Property, canWrite)
@@ -73,13 +73,13 @@ Dim columnName As String = member.ResolveManyToOneNameConflict(Entity) %>
         
 <% Next%>
 <%-- One-To-Zero-Or-One --%>
-<% For Each association As AssociationMember in Entity.OneToZeroOrOne %>
+<% For Each association As Association in Entity.AssociatedOneToZeroOrOne %>
         ''<%= association.PropertyName %>
         'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
         
 <% Next%>
 <%-- Many-To-One --%>
-<% For Each association As AssociationMember in Entity.ManyToOne %>
+<% For Each association As Association in Entity.AssociatedManyToOne %>
         ''<%= association.PropertyName %>
         'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
         

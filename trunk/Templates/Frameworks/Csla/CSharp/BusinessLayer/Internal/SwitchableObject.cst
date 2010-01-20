@@ -1,4 +1,6 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X SwitchableObject" %>
+<%@ Register Name="AuthorizationRules" Template="..\..\Common\AuthorizationRules.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ValidationRules" Template="..\..\Common\ValidationRulesPartial.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
@@ -28,74 +30,8 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
-        #region Validation Rules
-        
-        /// <summary>
-        /// All custom rules need to be placed in this method.
-        /// </summary>
-        /// <returns>Return true to override the generated rules; If false generated rules will be run.</returns>
-        protected bool AddBusinessValidationRules()
-        {
-            // TODO: add validation rules
-            //ValidationRules.AddRule(RuleMethod, "");
+<% RenderHelper(new ValidationRules()); %>
 
-            return false;
-        }
-        
-        #endregion
-        
-        #region Authorization Rules
-        
-        protected override void AddAuthorizationRules()
-        {
-            //// More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
-            
-            //string[] canWrite = { "AdminUser", "RegularUser" };
-            //string[] canRead = { "AdminUser", "RegularUser", "ReadOnlyUser" };
-            //string[] admin = { "AdminUser" };
-
-            // AuthorizationRules.AllowCreate(typeof(<%= BusinessClassName %>), admin);
-            // AuthorizationRules.AllowDelete(typeof(<%= BusinessClassName %>), admin);
-            // AuthorizationRules.AllowEdit(typeof(<%= BusinessClassName %>), canWrite);
-            // AuthorizationRules.AllowGet(typeof(<%= BusinessClassName %>), canRead);
-
-<% foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey){ %>
-            //// <%= member.PropertyName %>
-<% if (member.IsReadOnly) { %>
-            // AuthorizationRules.AllowWrite(<%= member.PrivateMemberVariableName %>Property, canWrite);
-<% } %>
-            // AuthorizationRules.AllowRead(<%= member.PrivateMemberVariableName %>Property, canRead);
-        
-<% } %>
-<%-- Foreign Keys --%>
-<% foreach(AssociationMember member in Entity.MembersForeignKey){
-string columnName = member.ResolveManyToOneNameConflict(Entity); %>
-            //// <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
-            // AuthorizationRules.AllowWrite(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, canWrite);
-            // AuthorizationRules.AllowRead(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, canRead);
-        
-<% } %>
-<%-- One-To-Zero-Or-One --%>
-<% foreach(AssociationMember association in Entity.OneToZeroOrOne){ %>
-            //// <%= association.PropertyName %>
-            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
-        
-<% } %>
-<%-- Many-To-One --%>
-<% foreach(AssociationMember association in Entity.ManyToOne){ %>
-            //// <%= association.PropertyName %>
-            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
-        
-<% } %>
-<%-- One-To-Many & Many-To-Many --%>
-// NOTE: Many-To-Many support coming soon.
-<% foreach(AssociationMember association in Entity.OneToMany){ %>
-            //// <%= association.PropertyName %>
-            // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
-        
-<% } %>
-        }
-        
-        #endregion
+<% RenderHelper(new AuthorizationRules()); %>
     }
 }

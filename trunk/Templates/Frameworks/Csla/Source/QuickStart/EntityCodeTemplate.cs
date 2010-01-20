@@ -217,5 +217,15 @@ namespace QuickStart
         }
 
         #endregion
+
+        #region RenderHelper
+
+        public void RenderHelper<T>(T template) where T : EntityCodeTemplate
+        {
+            this.CopyPropertiesTo(template);
+            template.Render(this.Response);
+        }
+
+        #endregion
     }
 }

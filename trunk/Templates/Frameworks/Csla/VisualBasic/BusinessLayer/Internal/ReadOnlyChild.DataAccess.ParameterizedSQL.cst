@@ -37,9 +37,9 @@ Public Partial Class <%= BusinessClassName %>
 
     Private Sub Child_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
 <% If (entity.Table.ForeignKeyColumns.Count = 0) Then%>
-        Dim commandText As String = String.Format("SELECT <%= entity.MembersPrimaryKeyUnion.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
 <% Else %>
-        Dim commandText As String = String.Format("SELECT <%= entity.MembersIncludePrimaryKeyForeignKey.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
 <% End If%>
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
@@ -62,7 +62,7 @@ Public Partial Class <%= BusinessClassName %>
             _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 
 <% End If %>
-<% for each [member] as Member in Entity.MembersNoRowVersionIncludePrimaryKey 
+<% for each [member] as Member in Entity.MembersNoRowVersion 
 If UseMemberVariables Then %>
             <%= [member].PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>GetBytes(reader)<% End If %>
 <%  else  %>
@@ -71,7 +71,7 @@ If UseMemberVariables Then %>
 Next %>
 
 <%-- Many-To-One --%>
-<% for each association As AssociationMember in Entity.ManyToOne
+<% for each association As Association in Entity.AssociatedManyToOne
 If UseMemberVariables Then  %>
             <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ResolveManyToOneNameConflict(Entity), Entity) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>GetBytes(reader)<% End If %>
 <%  else  %>
@@ -80,7 +80,7 @@ If UseMemberVariables Then  %>
 Next  %>
 
 <%-- One-To-Many & Many-To-Many --%>
-<% for each association2 As AssociationMember in Entity.ToManyUnion
+<% for each association2 As Association in Entity.AssociatedToManyUnion
 If Not UseLazyLoading Then %>
 <% If (UseMemberVariables) Then %>
             <%= association2.PrivateMemberVariableName %> = New <%= association2.ClassName %>List.NewList()

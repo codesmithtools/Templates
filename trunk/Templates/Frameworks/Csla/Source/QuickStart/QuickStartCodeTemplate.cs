@@ -54,9 +54,12 @@ namespace QuickStart
                 if (value != null)
                 {
                     _database = value;
-                    _database.DeepLoad = true;
-                    _database.Refresh();
-
+                    if (!_database.DeepLoad)
+                    {
+                        _database.DeepLoad = true;
+                        _database.Refresh();
+                    }
+                
                     OnDatabaseChanged();
                 }
             }
@@ -200,19 +203,25 @@ namespace QuickStart
 
             foreach (var entity in Entities)
             {
-                foreach (AssociationMember associationMember in entity.ManyToOne)
+                foreach (Association associationMember in entity.AssociatedManyToOne)
                 {
-                    if (!entities.Contains(associationMember.Entity))
+                    foreach (AssociationMember member in associationMember)
                     {
-                        entities.Add(associationMember.Entity);
+                        if (!entities.Contains(member.Entity))
+                        {
+                            entities.Add(member.Entity);
+                        }
                     }
                 }
 
-                foreach (AssociationMember associationMember in entity.OneToZeroOrOne)
+                foreach (Association associationMember in entity.AssociatedOneToZeroOrOne)
                 {
-                    if (!entities.Contains(associationMember.Entity))
+                    foreach (AssociationMember member in associationMember)
                     {
-                        entities.Add(associationMember.Entity);
+                        if (!entities.Contains(member.Entity))
+                        {
+                            entities.Add(member.Entity);
+                        }
                     }
                 }
             }
@@ -226,11 +235,14 @@ namespace QuickStart
 
             foreach (var entity in Entities)
             {
-                foreach (AssociationMember associationMember in entity.OneToMany)
+                foreach (Association associationMember in entity.AssociatedOneToMany)
                 {
-                    if(!entities.Contains(associationMember.Entity))
+                    foreach (AssociationMember member in associationMember)
                     {
-                        entities.Add(associationMember.Entity);
+                        if (!entities.Contains(member.Entity))
+                        {
+                            entities.Add(member.Entity);
+                        }
                     }
                 }
             }

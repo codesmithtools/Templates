@@ -2,6 +2,7 @@
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
 
 <%@ Import Namespace="SchemaExplorer" %>
@@ -37,11 +38,7 @@ namespace <%= BusinessProjectName %>
             IsReadOnly = false;
 
             var criteria = new <%= ChildBusinessClassName %>Criteria;
-<%if(Entity.Table.ForeignKeyColumns.Count == 0) {%>
-            string commandText = string.Format("SELECT <%= Entity.MembersPrimaryKeyUnion.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
-<%} else { %>
-            string commandText = string.Format("SELECT <%= Entity.MembersIncludePrimaryKeyForeignKey.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
-<%}%>
+            string commandText = string.Format("SELECT <%= Entity.Members.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
