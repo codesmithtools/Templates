@@ -70,17 +70,14 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Association.cs" />
     <Compile Include="AssociationMember.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="EntityManager.cs" />
     <Compile Include="Extensions\AssociationMemberExtensions.cs" />
-    <Compile Include="Extensions\AssociationMemberCollectionExtensions.cs" />
-    <Compile Include="Extensions\EntityExtensions.cs" />
-    <Compile Include="Extensions\MemberExtensions.cs" />
+    <Compile Include="Extensions\ColumnSchemaCollectionExtensions.cs" />
     <Compile Include="Extensions\DatabaseSchemaExtensions.cs" />
-    <Compile Include="Extensions\MemberCollectionExtensions.cs" />
     <Compile Include="Extensions\ColumnSchemaExtensions.cs" />
-    <Compile Include="Extensions\SearchCriteriaExtensions.cs" />
     <Compile Include="Extensions\TableSchemaExtensions.cs" />
     <Compile Include="EntityKey.cs" />
     <Compile Include="Entity.cs" />

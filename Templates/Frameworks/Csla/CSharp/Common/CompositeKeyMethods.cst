@@ -1,0 +1,22 @@
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+<% if(Entity.PrimaryKey.IsCompositeKey) { %>
+        #region Protected Overriden Method(s)
+
+        // NOTE: This is needed for Composite Keys. 
+        private readonly Guid _guidID = Guid.NewGuid();
+        protected override object GetIdValue()
+        {
+            return _guidID;
+        }
+
+        #endregion
+<% } %>

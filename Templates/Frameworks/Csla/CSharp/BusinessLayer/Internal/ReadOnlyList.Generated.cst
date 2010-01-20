@@ -1,6 +1,8 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X ReadOnlyList" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
 <%@ Assembly Name="SchemaExplorer" %>
 
@@ -34,34 +36,27 @@ namespace <%= BusinessProjectName %>
     public partial class <%= BusinessClassName %> : ReadOnlyListBase< <%= BusinessClassName %>, <%= ChildBusinessClassName %> >
     {
         #region Factory Methods 
-        
-        public static <%= BusinessClassName %> Get<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+<% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
+
+        public static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             return DataPortal.Fetch< <%= BusinessClassName %> >(
-                new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
+                new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
         }
-        
+<% } %>
+
         public static <%= BusinessClassName %> GetAll()
         {
             return DataPortal.Fetch< <%= BusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
         }
-<%-- One-To-Many & Many-To-Many --%>
-<% foreach(AssociationMember association in Entity.ManyToOne) { 
-    System.Collections.Generic.List<string> list = new System.Collections.Generic.List<string>(); 
-    foreach(SearchCriteria sc in association.ListSearchCriteria) { 
-        string key = string.Format("{0}-{1}-{2}-{3}-{4}", association.Name, association.VariableName, association.ColumnName, association.LocalColumn.Name, association.TableName); 
-        if(list.Contains(key)) { continue; } else { list.Add(key); } %>
-        
-        public static <%= BusinessClassName %> <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariable() %>)
-        {
-            return DataPortal.Fetch< <%= BusinessClassName %> >(
-                new <%= ChildBusinessClassName %>Criteria { <%= association.BuildObjectInitializer() %> });
-        }
- <% } } %>
+
+        #endregion
+
+        #region Constructor(s)
 
         private <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
-        
-        #endregion        
+
+        #endregion
     }
 }

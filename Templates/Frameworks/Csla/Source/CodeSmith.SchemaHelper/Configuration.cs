@@ -36,7 +36,7 @@ namespace CodeSmith.SchemaHelper
                                  };
 
             SearchCriteriaProperty = new SearchCriteriaProperty();
-            SearchCriteriaProperty.Prefix = "GetBy";
+            SearchCriteriaProperty.Prefix = "Get{0}By";
 
             RowVersionColumn = "^((R|r)ow)?(V|v)ersion$";
             VisualStudioVersion = VisualStudioVersion.VS_2008;

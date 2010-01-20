@@ -16,6 +16,12 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class TableSchemaExtensions
     {
+        #region Constant(s)
+
+        private const string CS_Description = "CS_Description";
+
+        #endregion
+
         private static readonly Regex CleanNumberPrefix = new Regex(@"^\d+");
 
         #region Public Method(s)
@@ -96,9 +102,9 @@ namespace CodeSmith.SchemaHelper
             // Bypass logic if table contains Extended Property for ManyToMany
             if (table.ExtendedProperties.Contains(Configuration.Instance.ManyToManyExtendedProperty))
             {
-                bool manyToMany;
-                if (Boolean.TryParse(table.ExtendedProperties[Configuration.Instance.ManyToManyExtendedProperty].Value.ToString(), out manyToMany))
-                    return manyToMany;
+                bool AssociatedManyToMany;
+                if (Boolean.TryParse(table.ExtendedProperties[Configuration.Instance.ManyToManyExtendedProperty].Value.ToString(), out AssociatedManyToMany))
+                    return AssociatedManyToMany;
             }
 
             // 1) Table must have Two ForeignKeys.
@@ -125,16 +131,12 @@ namespace CodeSmith.SchemaHelper
             return true;
         }
 
-        public static string BuildFKDataBaseColumns(this TableSchema table)
+        public static string ResolveDescription(this TableSchema column)
         {
-            string columnNames = string.Empty;
+            if (column.ExtendedProperties.Contains(CS_Description))
+                return column.ExtendedProperties[CS_Description].Value.ToString().Trim();
 
-            foreach (ColumnSchema column in table.ForeignKeyColumns)
-            {
-                columnNames += string.Format(", [{0}]", column.Name);
-            }
-
-            return columnNames;
+            return string.Empty;
         }
 
         #endregion

@@ -52,12 +52,12 @@ Public Partial Class <%= BusinessClassName %>
         End Using
     End Sub
     
-    Private Sub Child_Insert(<%= Entity.ManyToOne.BuildChildInsertParametersVariables() %>)
+    Private Sub Child_Insert(<%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %>)
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand("<%= GetInsertStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
-                <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(entity.MembersForeignKey, False, False) %>
+                <%= entity.MembersUpdateInsert.BuildCommandParameters(entity.MembersForeignKey, False, False) %>
 
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
@@ -86,9 +86,9 @@ Next %>
             Using command As New SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
 <% If (entity.Table.ForeignKeyColumns.Count = 0) Then %>
-                <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
+                <%= entity.MembersNoRowVersion.BuildCommandParameters() %>
 <% Else %>
-                <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(entity.MembersForeignKey) %>
+                <%= entity.MembersNoRowVersion.BuildCommandParameters(entity.MembersForeignKey) %>
 <% End If %>
 <% If (entity.HasRowVersionMember) Then %>
                 command.Parameters.AddWithValue("@p_<%= entity.RowVersionMember.ColumnName %>", _timestamp)
@@ -137,7 +137,7 @@ Next %>
             _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 
 <% End If %>
-<% for each [member] as Member in Entity.MembersNoRowVersionIncludePrimaryKey 
+<% for each [member] as Member in Entity.MembersNoRowVersion 
 If UseMemberVariables Then %>
             <%= [member].PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>GetBytes(reader)<% End If %>
 <%  else  %>
@@ -146,7 +146,7 @@ If UseMemberVariables Then %>
 Next %>
 
 <%-- Many-To-One --%>
-<% for each association As AssociationMember in Entity.ManyToOne
+<% for each association As Association in Entity.AssociatedManyToOne
 If UseMemberVariables Then  %>
             <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ResolveManyToOneNameConflict(Entity), Entity) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>GetBytes(reader)<% End If %>
 <%  else  %>
@@ -155,7 +155,7 @@ If UseMemberVariables Then  %>
 Next  %>
 
 <%-- One-To-Many & Many-To-Many --%>
-<% for each association2 As AssociationMember in Entity.ToManyUnion
+<% for each association2 As Association in Entity.AssociatedToManyUnion
 If Not UseLazyLoading Then %>
 <% If (UseMemberVariables) Then %>
             <%= association2.PrivateMemberVariableName %> = New <%= association2.ClassName %>List.NewList()

@@ -58,7 +58,7 @@ Public Partial Class <%= BusinessClassName %>
     Private _timestamp As <%= Entity.RowVersionMember.SystemType %>
     
 <% End If %>
-<%  For Each member As Member in Entity.MembersNoRowVersionIncludePrimaryKey
+<%  For Each member As Member in Entity.MembersNoRowVersion
 If UseMemberVariables Then %>
     Private Shared ReadOnly <%= member.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= member.PropertyName %>)
     Private <%= member.PrivateMemberVariableName %> As <%= member.SystemType %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue<%= member.BuildDataObjectField() %>

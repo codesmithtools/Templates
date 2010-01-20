@@ -69,9 +69,9 @@ Public Partial Class <%= Entity.ClassName %>Factory
 <% For Each member As Member in Entity.MembersNoKeysOrRowVersion %>
             item.<%= member.PropertyName %> = resource.<%= member.PropertyName %>
 <% Next %>
-<% For Each member As AssociationMember in Entity.MembersForeignKey
+<% For Each member As Association in Entity.MembersForeignKey
     Dim columnName As String = member.ResolveManyToOneNameConflict(Entity) %>
-            item.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %> = resource.<%= member.LocalColumn.PropertyName %>
+            item.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %> = resource.<%= member.AssociatedColumn.PropertyName %>
 <% Next %>
         End Using
 
@@ -95,9 +95,9 @@ Public Partial Class <%= Entity.ClassName %>Factory
     Public Function Fetch(ByVal criteria As <%= Entity.ClassName %>Criteria) As <%= Entity.ClassName %>
         Dim item As <%= Entity.ClassName %>
 <% If (entity.Table.ForeignKeyColumns.Count = 0) Then%>
-        Dim commandText As String = String.Format("SELECT <%= entity.MembersPrimaryKeyUnion.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
 <% Else %>
-        Dim commandText As String = String.Format("SELECT <%= entity.MembersIncludePrimaryKeyForeignKey.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
 <% End If%>
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
@@ -125,22 +125,22 @@ Public Partial Class <%= Entity.ClassName %>Factory
 <% If Not(IsReadOnlyBusinessObject) Then %>
     #Region "Insert"
 
-    Private Sub DoInsert(ByVal item As <%= Entity.ClassName %><% If(Entity.ManyToOne.Count > 0) Then %>, <%= Entity.ManyToOne.BuildChildInsertParametersVariables() %><% End If %>)
+    Private Sub DoInsert(ByVal item As <%= Entity.ClassName %><% If(Entity.AssociatedManyToOne.Count > 0) Then %>, <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %><% End If %>)
         ' Don't update If the item isn't dirty.
         If Not (item.IsDirty) Then
             Return
         End If
 
         Using BypassPropertyChecks(item)
-            Const commandText As String = "INSERT INTO [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] (<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseColumns(entity.MembersForeignKey) %>) VALUES (<%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseParameters(entity.MembersForeignKey) %>)<%= entity.BuildInsertSelectStatement() %>"
+            Const commandText As String = "INSERT INTO [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] (<%= entity.MembersNoRowVersion.BuildDataBaseColumns(entity.MembersForeignKey) %>) VALUES (<%= entity.MembersNoRowVersion.BuildDataBaseParameters(entity.MembersForeignKey) %>)<%= entity.BuildInsertSelectStatement() %>"
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)
-<% Dim flag as Boolean = Entity.ManyToOne.Count > 0
-If(Entity.ManyToOne.Count > 0) Then %>
+<% Dim flag as Boolean = Entity.AssociatedManyToOne.Count > 0
+If(Entity.AssociatedManyToOne.Count > 0) Then %>
                     <%= entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true, flag) %>
 <% Else %>
-                    <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true, flag) %>
+                    <%= entity.MembersUpdateInsert.BuildCommandParameters(true, flag) %>
 <% End If %>
                     Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                         If reader.Read() Then
@@ -160,15 +160,15 @@ If(Entity.ManyToOne.Count > 0) Then %>
 
             ' Update Child Items.
 <%-- One-To-Zero-Or-One --%>
-<% For Each association As AssociationMember in Entity.OneToZeroOrOne %>
+<% For Each association As Association in Entity.AssociatedOneToZeroOrOne %>
             'New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
 <% Next %>
 <%-- Many-To-One --%>
-<% For Each association As AssociationMember in Entity.ManyToOne %>
+<% For Each association As Association in Entity.AssociatedManyToOne %>
             'New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
 <% Next %>
 <%-- One-To-Many & Many-To-Many --%>
-<% For Each association As AssociationMember in Entity.OneToMany %>
+<% For Each association As Association in Entity.AssociatedOneToMany %>
             'New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
 <% Next %>
         End Using
@@ -181,11 +181,11 @@ If(Entity.ManyToOne.Count > 0) Then %>
     #Region "Update"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Update(ByVal item As <%= Entity.ClassName %><% If(Entity.ManyToOne.Count > 0) Then %>, <%= Entity.ManyToOne.BuildChildInsertParametersVariables() %><% End If %>) As <%= Entity.ClassName %> 
+    Public Function Update(ByVal item As <%= Entity.ClassName %><% If(Entity.AssociatedManyToOne.Count > 0) Then %>, <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %><% End If %>) As <%= Entity.ClassName %> 
         If(item.IsDeleted) Then
             DoDelete(item)
         Else If(item.IsNew) Then
-            DoInsert(item<% If(Entity.ManyToOne.Count > 0) Then %>, <%= Entity.ManyToOne.BuildVariableArguments() %><% End If %>)
+            DoInsert(item<% If(Entity.AssociatedManyToOne.Count > 0) Then %>, <%= Entity.AssociatedManyToOne.BuildVariableArguments() %><% End If %>)
         Else
            DoUpdate(item)
         End If
@@ -200,7 +200,7 @@ If(Entity.ManyToOne.Count > 0) Then %>
         End If
 
 <% If (entity.Table.ForeignKeyColumns.Count = 0) Then %>
-        Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoKeysOrRowVersion.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = @p_<%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
+        Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersUpdateInsert.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = @p_<%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
 <% Else %>
         Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersNoKeysOrRowVersion.BuildSetStatements(entity.MembersForeignKey) %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = @p_<%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
 <% End If %>
@@ -209,9 +209,9 @@ If(Entity.ManyToOne.Count > 0) Then %>
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)
 <% If (entity.Table.ForeignKeyColumns.Count = 0) Then %>
-                    <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(true) %>
+                    <%= entity.MembersNoRowVersion.BuildCommandParameters(true) %>
 <% Else %>
-                    <%= entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(entity.MembersForeignKey, true) %>
+                    <%= entity.MembersNoRowVersion.BuildCommandParameters(entity.MembersForeignKey, true) %>
 <% End If %>
 <% If (entity.HasRowVersionMember) Then %>
                     command.Parameters.AddWithValue("@p_<%= entity.RowVersionMember.ColumnName %>", _timestamp)
@@ -234,15 +234,15 @@ If(Entity.ManyToOne.Count > 0) Then %>
 
             ' Update Child Items.
 <%-- One-To-Zero-Or-One --%>
-<% For Each association As AssociationMember in Entity.OneToZeroOrOne %>
+<% For Each association As Association in Entity.AssociatedOneToZeroOrOne %>
             'New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
 <% Next  %>
 <%-- Many-To-One --%>
-<% For Each association As AssociationMember in Entity.ManyToOne %>
+<% For Each association As Association in Entity.AssociatedManyToOne %>
             'New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
 <% Next %>
 <%-- One-To-Many & Many-To-Many --%>
-<% For Each association As AssociationMember in Entity.OneToMany%>
+<% For Each association As Association in Entity.AssociatedOneToMany%>
             'New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, item)
 <% Next  %>
 
@@ -307,15 +307,15 @@ If(Entity.ManyToOne.Count > 0) Then %>
 <% If Entity.HasRowVersionMember Then %>
             '_timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
-<% for each [member] as Member in Entity.MembersNoRowVersionIncludePrimaryKey %>
+<% for each [member] as Member in Entity.MembersNoRowVersion %>
             item.<%= [member].PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
 <% Next %>
 <%-- Many-To-One --%>
-<% for each association As AssociationMember in Entity.ManyToOne %>
+<% for each association As Association in Entity.AssociatedManyToOne %>
             item.<%= association.Entity.ResolveCriteriaPropertyName(association.ResolveManyToOneNameConflict(Entity)) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
 <%Next  %>
 <%-- One-To-Many & Many-To-Many --%>
-<% for each association2 As AssociationMember in Entity.ToManyUnion %>
+<% for each association2 As Association in Entity.AssociatedToManyUnion %>
             item.<%= association2.PropertyName %> = New <%= association2.ClassName %>List.NewList()
 <%Next %> 
         End Using

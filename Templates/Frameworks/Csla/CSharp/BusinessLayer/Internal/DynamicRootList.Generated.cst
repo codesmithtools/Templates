@@ -1,6 +1,8 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X DynamicRootList" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
 
 <%@ Import Namespace="QuickStart" %>
@@ -50,31 +52,20 @@ namespace <%= BusinessProjectName %>
         {
             return DataPortal.Create< <%= BusinessClassName %> >();
         }
-        
-        public static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>()
-        {
-            return DataPortal.Fetch< <%= ChildBusinessClassName %> >();
-        }
-        
+
         public static <%= BusinessClassName %> GetAll()
         {
             return DataPortal.Fetch< <%= BusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
         }
-        
-        <%-- One-To-Many & Many-To-Many --%>
-<% foreach(AssociationMember association in Entity.ManyToOne) { 
-    System.Collections.Generic.List<string> list = new System.Collections.Generic.List<string>(); 
-    foreach(SearchCriteria sc in association.ListSearchCriteria) { 
-        string key = string.Format("{0}-{1}-{2}-{3}-{4}", association.Name, association.VariableName, association.ColumnName, association.LocalColumn.Name, association.TableName); 
-        if(list.Contains(key)) { continue; } else { list.Add(key); } %>
-        
-        public static <%= BusinessClassName %> <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariable() %>)
+<% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
+
+        public static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             return DataPortal.Fetch< <%= BusinessClassName %> >(
-                new <%= ChildBusinessClassName %>Criteria { <%= association.BuildObjectInitializer() %> });
+                new <%= BusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
         }
- <% } } %>
-        
+<% } %>
+
         private <%= BusinessClassName %>()
         { 
             AllowNew = true;

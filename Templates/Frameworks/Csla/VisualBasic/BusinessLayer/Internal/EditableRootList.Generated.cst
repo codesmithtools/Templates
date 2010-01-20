@@ -51,10 +51,10 @@ Public Partial Class <%= BusinessClassName %>
         Return DataPortal.Fetch(Of <%= BusinessClassName %>)(new <%= ChildBusinessClassName %>Criteria())
     End Function
 <%-- One-To-Many & Many-To-Many --%>
-<% For Each association As AssociationMember In Entity.ManyToOne
+<% For Each association As AssociationMember In Entity.AssociatedManyToOne
     Dim list As New System.Collections.Generic.List(Of String)
     For Each sc As SearchCriteria In association.ListSearchCriteria
-        Dim key As String = String.Format("{0}-{1}-{2}-{3}-{4}", association.Name, association.VariableName, association.ColumnName, association.LocalColumn.Name, association.TableName) 
+        Dim key As String = String.Format("{0}-{1}-{2}-{3}-{4}", association.Name, association.VariableName, association.ColumnName, association.AssociatedColumn.Name, association.TableName) 
         If (list.Contains(key)) Then
             Continue For
         Else 

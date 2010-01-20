@@ -73,8 +73,8 @@ namespace <%= DataProjectName %>
 <% foreach(Member member in Entity.MembersNoKeysOrRowVersion){ %>
                 item.<%= member.PropertyName %> = resource.<%= member.PropertyName %>;
 <% } %>
-<% foreach(AssociationMember member in Entity.MembersForeignKey){ string columnName = member.ResolveManyToOneNameConflict(Entity); %>
-                item.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %> = resource.<%= member.LocalColumn.PropertyName %>;
+<% foreach(Association member in Entity.MembersForeignKey){ string columnName = member.ResolveManyToOneNameConflict(Entity); %>
+                item.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %> = resource.<%= member.AssociatedColumn.PropertyName %>;
 <% } %>
             }
     
@@ -99,9 +99,9 @@ namespace <%= DataProjectName %>
         {
             <%= Entity.ClassName %> item;
 <%if(Entity.Table.ForeignKeyColumns.Count == 0) {%>
-            string commandText = string.Format("SELECT <%= Entity.MembersPrimaryKeyUnion.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
+            string commandText = string.Format("SELECT <%= Entity.Members.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
 <%} else { %>
-            string commandText = string.Format("SELECT <%= Entity.MembersIncludePrimaryKeyForeignKey.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
+            string commandText = string.Format("SELECT <%= Entity.Members.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
 <%}%>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
@@ -131,24 +131,24 @@ namespace <%= DataProjectName %>
 <% if(!IsReadOnlyBusinessObject) { %>
         #region Insert
 
-        private void DoInsert(<%= Entity.ClassName %> item<% if(Entity.ManyToOne.Count > 0){ %>, <%= Entity.ManyToOne.BuildChildInsertParametersVariables() %><% } %>)
+        private void DoInsert(<%= Entity.ClassName %> item<% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %><% } %>)
         {
             // Don't update if the item isn't dirty.
             if (!item.IsDirty) return;
 
             using (BypassPropertyChecks(item))
             {
-                const string commandText = "INSERT INTO [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] (<%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseColumns(Entity.MembersForeignKey) %>) VALUES (<%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertDataBaseParameters(Entity.MembersForeignKey) %>)<%= Entity.BuildInsertSelectStatement() %>";
+                const string commandText = "INSERT INTO [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] (<%= Entity.MembersNoRowVersion.BuildDataBaseColumns() %>) VALUES (<%= Entity.MembersNoRowVersion.BuildDataBaseParameters() %>)<%= Entity.BuildInsertSelectStatement() %>";
                 using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
                 {
                     connection.Open();
                     using(SqlCommand command = new SqlCommand(commandText, connection))
                     {
-<% bool flag = Entity.ManyToOne.Count > 0;
-if(Entity.ManyToOne.Count > 0){ %>
+<% bool flag = Entity.AssociatedManyToOne.Count > 0;
+if(Entity.AssociatedManyToOne.Count > 0){ %>
                         <%= Entity.MembersNoRowVersionNoForeignKeyIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true, flag) %>
 <% } else { %>
-                        <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, true, flag) %>
+                        <%= Entity.MembersUpdateInsert.BuildCommandParameters(true, flag) %>
 <% } %>
                         using(var reader = new SafeDataReader(command.ExecuteReader()))
                         {
@@ -168,16 +168,16 @@ if(Entity.ManyToOne.Count > 0){ %>
 
                 // Update Child Items.
 <%-- One-To-Zero-Or-One --%>
-<% foreach(AssociationMember association in Entity.OneToZeroOrOne) { %>
-                //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.OneToMany.Count > 0){ %>, item <%}%>);
+<% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
+                //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%>);
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(AssociationMember association in Entity.ManyToOne) { %>
-                //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.OneToMany.Count > 0){ %>, item <%}%>);
+<% foreach(Association association in Entity.AssociatedManyToOne) { %>
+                //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%>);
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(AssociationMember association in Entity.OneToMany) { %>
-                //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.OneToMany.Count > 0){ %>, item <%}%>);
+<% foreach(Association association in Entity.AssociatedOneToMany) { %>
+                //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%>);
 <% } %>
             }
 
@@ -189,7 +189,7 @@ if(Entity.ManyToOne.Count > 0){ %>
         #region Update
 
         [Transactional(TransactionalTypes.TransactionScope)]
-        public <%= Entity.ClassName %> Update(<%= Entity.ClassName %> item<% if(Entity.ManyToOne.Count > 0){ %>, <%= Entity.ManyToOne.BuildChildInsertParametersVariables() %><% } %>)
+        public <%= Entity.ClassName %> Update(<%= Entity.ClassName %> item<% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %><% } %>)
         {
             if(item.IsDeleted)
             {
@@ -197,7 +197,7 @@ if(Entity.ManyToOne.Count > 0){ %>
             }
             else if(item.IsNew)
             {
-                DoInsert(item<% if(Entity.ManyToOne.Count > 0){ %>, <%= Entity.ManyToOne.BuildVariableArguments() %><% } %>);
+                DoInsert(item<% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildVariableArguments() %><% } %>);
             }
             else
             {
@@ -215,9 +215,9 @@ if(Entity.ManyToOne.Count > 0){ %>
             using (BypassPropertyChecks(item))
             {
 <% if(Entity.Table.ForeignKeyColumns.Count == 0) { %>
-                const string commandText = "UPDATE [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] <%= Entity.MembersNoKeysOrRowVersion.BuildSetStatements() %> <%= Entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(Entity.HasRowVersionMember) { %> AND [<%= Entity.RowVersionMember.ColumnName %>] = @p_<%= Entity.RowVersionMember.ColumnName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
+                const string commandText = "UPDATE [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] <%= Entity.MembersUpdateInsert.BuildSetStatements() %> <%= Entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(Entity.HasRowVersionMember) { %> AND [<%= Entity.RowVersionMember.ColumnName %>] = @p_<%= Entity.RowVersionMember.ColumnName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
 <% } else { %>
-                const string commandText = "UPDATE [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] <%= Entity.MembersNoKeysOrRowVersion.BuildSetStatements(Entity.MembersForeignKey) %> <%= Entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(Entity.HasRowVersionMember) { %> AND [<%= Entity.RowVersionMember.ColumnName %>] = @p_<%= Entity.RowVersionMember.ColumnName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
+                const string commandText = "UPDATE [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] <%= Entity.MembersUpdateInsert.BuildSetStatements() %> <%= Entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(Entity.HasRowVersionMember) { %> AND [<%= Entity.RowVersionMember.ColumnName %>] = @p_<%= Entity.RowVersionMember.ColumnName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
 <% } %>
                 using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
                 {
@@ -225,9 +225,9 @@ if(Entity.ManyToOne.Count > 0){ %>
                     using(SqlCommand command = new SqlCommand(commandText, connection))
                     {
 <% if(Entity.Table.ForeignKeyColumns.Count == 0) { %>
-                        <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(true) %>
+                        <%= Entity.MembersNoRowVersion.BuildCommandParameters(true) %>
 <% } else { %>
-                        <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(Entity.MembersForeignKey, true) %>
+                        <%= Entity.MembersNoRowVersion.BuildCommandParameters(Entity.MembersForeignKey, true) %>
 <% } %>
 <% if(Entity.HasRowVersionMember) { %>
                         command.Parameters.AddWithValue("@p_<%= Entity.RowVersionMember.ColumnName %>", timestamp);
@@ -248,16 +248,16 @@ if(Entity.ManyToOne.Count > 0){ %>
 
                 // Update Child Items.
 <%-- One-To-Zero-Or-One --%>
-<% foreach(AssociationMember association in Entity.OneToZeroOrOne) { %>
-                //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.OneToMany.Count > 0){ %>, item <%}%>);
+<% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
+                //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%>);
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(AssociationMember association in Entity.ManyToOne) { %>
-                //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.OneToMany.Count > 0){ %>, item <%}%>);
+<% foreach(Association association in Entity.AssociatedManyToOne) { %>
+                //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%>);
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
-<% foreach(AssociationMember association in Entity.OneToMany) { %>
-                //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.OneToMany.Count > 0){ %>, item <%}%>);
+<% foreach(Association association in Entity.AssociatedOneToMany) { %>
+                //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%>);
 <% } %>
 
                 MarkOld(item);
@@ -320,12 +320,12 @@ if(Entity.ManyToOne.Count > 0){ %>
 <% if(Entity.HasRowVersionMember) { %>
                 item.Timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } %>
-<% foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey) { %>
+<% foreach(Member member in Entity.MembersNoRowVersion) { %>
                 item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
 <% } %>
 <%-- Many-To-One --%>
-<% foreach(AssociationMember association in Entity.ManyToOne) { %>
-                item.<%= association.Entity.ResolveCriteriaPropertyName(association.ResolveManyToOneNameConflict(Entity)) %> = reader.<%= association.GetReaderMethod() %>("<%= association.LocalColumn.ColumnName %>");
+<% foreach(Association association in Entity.AssociatedManyToOne) { %>
+                item.<%= association.Entity.ResolveCriteriaPropertyName(association.ResolveManyToOneNameConflict(Entity)) %> = reader.<%= association.GetReaderMethod() %>("<%= association.AssociatedColumn.ColumnName %>");
 <% } %>
             }
             

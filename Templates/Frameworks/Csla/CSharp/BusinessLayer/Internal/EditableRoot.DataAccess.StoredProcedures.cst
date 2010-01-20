@@ -1,7 +1,14 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X EditableRoot" %>
+<%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataPortalFetch" Template="..\..\Common\DataPortalFetch.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataPortalInsert" Template="..\..\Common\DataPortalInsert.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataPortalUpdate" Template="..\..\Common\DataPortalUpdate.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
 
 <%@ Import Namespace="SchemaExplorer" %>
@@ -35,136 +42,24 @@ namespace <%= BusinessProjectName %>
         [RunLocal]
         protected override void DataPortal_Create()
         {
-<% if(Entity.PrimaryKey.KeyMember.SystemType == "Guid") { if(UseMemberVariables) { %>
-            <%= Entity.PrimaryKey.KeyMember.PrivateMemberVariableName %> = Guid.NewGuid();
-<% } else { %>
-            LoadProperty< <%= Entity.PrimaryKey.KeyMember.SystemType %> >(<%= Entity.PrimaryKey.KeyMember.PrivateMemberVariableName %>Property, Guid.NewGuid());
-<% } } %>
-            ValidationRules.CheckRules();
+<% RenderHelper(new DataPortalCreate()); %>
         }
 
         protected void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)
         {
-            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
-            {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand("<%= GetSelectStoredProcedureName() %>", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag));
-                    using(var reader = new SafeDataReader(command.ExecuteReader()))
-                    {
-                        if(reader.Read())
-                            Map(reader);
-                        else
-                            throw new Exception(string.Format("The record was not found in '<%= Entity.Table.Name %>' using the following criteria: {0}.", criteria));
-                    }
-                }
-            }
-        }
-
-        private void Map(SafeDataReader reader)
-        {
-            using(BypassPropertyChecks)
-            {
-<% if(Entity.HasRowVersionMember) { %>
-                _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-            
-<% } %>
-<% foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey) { if(UseMemberVariables) { %>
-                <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>GetBytes(reader);<% } %>
-<% } else { %>
-                LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>GetBytes(reader," <%= member.ColumnName %>"));<% } %>
-<% } } %>
-<%-- Many-To-One --%>
-<% foreach(AssociationMember association in Entity.ManyToOne) { if (UseMemberVariables){  %>
-                <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ResolveManyToOneNameConflict(Entity), Entity) %> = <%if(!association.HasByteArrayColumn()) { %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>");<% } else { %>GetBytes(reader);<% } %>
-<% } else { %>
-                LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ResolveManyToOneNameConflict(Entity), Entity) %>Property, <%if(!association.HasByteArrayColumn()) { %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"));<% } else { %>GetBytes(reader," <%= association.ColumnName %>"));<% } %>
-<% } }  %>
-<%-- One-To-Many & Many-To-Many --%>
-<% foreach(AssociationMember association2 in Entity.ToManyUnion) { if (!UseLazyLoading){ %>
-<% if (UseMemberVariables){ %>
-                <%= association2.PrivateMemberVariableName %> = new <%= association2.ClassName %>List.NewList();
-<% } else { %>
-                LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList());
-<% } } } %>
-            }
-
-            MarkOld();
+<% RenderHelper(new DataPortalFetch()); %>
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]
         protected override void DataPortal_Insert()
         {
-            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
-            {
-                connection.Open();
-                using(SqlCommand command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildInsertCommandParameters(Entity.MembersForeignKey, false, true) %>
-                    
-                    using(var reader = new SafeDataReader(command.ExecuteReader()))
-                    {
-                        if(reader.Read())
-                        {
-<% if(Entity.HasRowVersionMember) { %>
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-<% } %>
-<% if(Entity.PrimaryKey.IsIdentity) { %>
-<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(UseMemberVariables) { %>
-                            <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
-<% } else { %>
-                            LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>ADOHelper.GetBytes(reader," <%= member.ColumnName %>"));<% } %>
-<% } } } %>
-                        }
-                    }
-                }
-            }
-
-<% if(Entity.ToManyUnion.Count > 0 || Entity.ManyToOne.Count > 0){ %>
-            FieldManager.UpdateChildren(this);
-<% } %>
+<% RenderHelper(new DataPortalInsert()); %>
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]
         protected override void DataPortal_Update()
         {
-            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
-            {
-                connection.Open();
-                using(SqlCommand command = new SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-<% if(Entity.Table.ForeignKeyColumns.Count == 0) { %>
-                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters() %>
-<% } else { %>
-                    <%= Entity.MembersNoRowVersionIncludePrimaryKey.BuildCommandParameters(Entity.MembersForeignKey) %>
-<% } %>
-<% if(Entity.HasRowVersionMember) { %>
-                    command.Parameters.AddWithValue("@p_<%= Entity.RowVersionMember.ColumnName %>", _timestamp);
-<% } %>
-
-                    using(var reader = new SafeDataReader(command.ExecuteReader()))
-                    {
-                        //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                        if(reader.RecordsAffected == 0)
-                            throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-
-<% if(Entity.HasRowVersionMember) { %>
-                        if(reader.Read())
-                        {
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-                        }
-<% } %>
-                    }
-                }
-            }
-
-<% if(Entity.ToManyUnion.Count > 0 || Entity.ManyToOne.Count > 0){ %>
-            FieldManager.UpdateChildren(this);
-<% } %>
+<% RenderHelper(new DataPortalUpdate()); %>
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]
@@ -176,21 +71,14 @@ namespace <%= BusinessProjectName %>
         [Transactional(TransactionalTypes.TransactionScope)]
         protected void DataPortal_Delete(<%= BusinessClassName %>Criteria criteria)
         {
-            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
-            {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand("<%= GetDeleteStoredProcedureName() %>", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag));
-                    using(var reader = new SafeDataReader(command.ExecuteReader()))
-                    {
-                        //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                        if(reader.RecordsAffected == 0)
-                            throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-                    }
-                }
-            }
+<% RenderHelper(new DataPortalDelete()); %>
+        }
+
+        private void Map(SafeDataReader reader)
+        {
+<% RenderHelper(new MapDataReader()); %>
+
+            MarkOld();
         }
     }
 }

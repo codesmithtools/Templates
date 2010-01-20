@@ -19,6 +19,7 @@ namespace CodeSmith.SchemaHelper
 
             Size = column.Size;
             SystemType = column.ResolveSystemType();
+			Description = column.ResolveDescription();
             DataType = column.DataType.ToString();
             IsUnique = column.IsUnique;
             IsNullable = column.AllowDBNull;
@@ -58,6 +59,18 @@ namespace CodeSmith.SchemaHelper
         public bool IsReadOnly
         {
             get { return (IsIdentity || IsRowVersion || IsComputed); }
+        }
+		
+		public string Description { get; private set; }
+        public bool HasDescription
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Description))
+                    return Description.Trim().Length > 0;
+
+                return false;
+            }
         }
 
         public bool IsRowVersion { get; private set; }
@@ -118,26 +131,6 @@ namespace CodeSmith.SchemaHelper
         public bool IsNullable { get; private set; }
         public bool IsIdentity { get; private set; }
         public bool IsComputed { get; private set; }
-
-        public List<SearchCriteria> SearchCriteria
-        {
-            get
-            {
-                return Entity.SearchCriteria
-                    .Where(sc => sc.MethodName.Contains(Name))
-                    .ToList();
-            }
-        }
-
-        public List<SearchCriteria> ListSearchCriteria
-        {
-            get
-            {
-                return Entity.SearchCriteria
-                    .Where(sc => sc.MethodName.EndsWith(Name) && !sc.IsUniqueResult)
-                    .ToList();
-            }
-        }
 
         #endregion    
     }

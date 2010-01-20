@@ -41,9 +41,9 @@ Public Partial Class <%= BusinessClassName %>
 
         ' Fetch Child objects.
 <% If (entity.Table.ForeignKeyColumns.Count = 0) Then%>
-        Dim commandText As String = String.Format("SELECT <%= entity.MembersPrimaryKeyUnion.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
 <% Else %>
-        Dim commandText As String = String.Format("SELECT <%= entity.MembersIncludePrimaryKeyForeignKey.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
 <% End If%>
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()

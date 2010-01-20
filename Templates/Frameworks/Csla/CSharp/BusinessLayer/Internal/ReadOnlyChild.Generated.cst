@@ -1,4 +1,6 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X ReadOnlyChild" %>
+<%@ Register Name="CompositeKeyMethods" Template="..\..\Common\CompositeKeyMethods.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="Properties" Template="..\..\Common\PropertiesReadOnly.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
@@ -54,73 +56,22 @@ namespace <%= BusinessProjectName %>
 <% } %>
 
         #endregion
-        
-        #region Properties
 
-<%  foreach(Member member in Entity.MembersNoRowVersionIncludePrimaryKey){ if (UseMemberVariables){ %>
-        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>);
-        private <%= member.SystemType %> <%= member.PrivateMemberVariableName %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue;<%= member.BuildDataObjectField() %>
-        public <%= member.SystemType %> <%= member.PropertyName %>
-        {
-            get { return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>); }                
-        }
-        
-<% } else { %>
-        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>);<%= member.BuildDataObjectField() %>
-        public <%= member.SystemType %> <%= member.PropertyName %>
-        {
-            get { return GetProperty(<%= member.PrivateMemberVariableName %>Property); }                
-        }
-        
-<% } } %>
-<%-- Foreign Keys --%>
-<%  foreach(AssociationMember member in Entity.MembersForeignKey){ string columnName = member.ResolveManyToOneNameConflict(Entity); if (UseMemberVariables){ %>
-        private static readonly PropertyInfo< <%= member.BaseSystemType %> > <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property = RegisterProperty< <%= member.BaseSystemType %> >(p => p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>);
-        private <%= member.BaseSystemType %> <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %> = <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property.DefaultValue;<%= member.BuildDataObjectField() %>
-        public <%= member.BaseSystemType %> <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
-        {
-            get { return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property, <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>); }                
-        }
-        
-<% } else { %>
-        private static readonly PropertyInfo< <%= member.BaseSystemType %> > <%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property = RegisterProperty< <%= member.BaseSystemType %> >(p => p.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>);<%= member.BuildDataObjectField() %>
-        public <%= member.BaseSystemType %> <%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %>
-        {
-            get { return GetProperty(<%= CodeSmith.SchemaHelper.Util.NamingConventions.PrivateMemberVariableName(columnName) %>Property); }    
-        }
-        
-<% } } %>
-        #endregion
-                
+<% RenderHelper(new Properties()); %>
+
         #region Factory Methods 
         
-        internal static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+<% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
+
+        internal static <%= ChildBusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             return DataPortal.FetchChild< <%= ChildBusinessClassName %> >(
-                new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
+                new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
         }
-<%-- One-To-Zero-Or-One --%>
-<%if(Entity.HasOneToZeroOrZeroMember && Entity.PrimaryKey.KeyMembers.Count > 1){%>
-
-        internal static <%= ChildBusinessClassName %> Get<%= ChildBusinessClassName %>(<%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroParametersVariable() %>)
-        {
-            return DataPortal.Fetch< <%= ChildBusinessClassName %> >(
-                new <%= ChildBusinessClassName %>Criteria { <%= Entity.OneToZeroOrZeroMember.BuildOneToZeroOrZeroObjectInitializer() %> });
-        }
- <% }%>
-        #endregion
-        
-<% if(Entity.PrimaryKey.IsCompositeKey) { %>
-        #region Protected Overriden Method(s)
-        
-        // NOTE: This is needed for Composite Keys. 
-        private readonly Guid _guidID = Guid.NewGuid();
-        protected override object GetIdValue()
-        {
-            return _guidID;
-        }
-        
-        #endregion
 <% } %>
+
+        #endregion
+
+<% RenderHelper(new CompositeKeyMethods()); %>
     }
 }

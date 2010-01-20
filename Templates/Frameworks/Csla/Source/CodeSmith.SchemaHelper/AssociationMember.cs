@@ -16,7 +16,7 @@ namespace CodeSmith.SchemaHelper
                                      ? GetToManyTableKey(column.Table, table).Name
                                      : String.Empty;
 
-            LocalColumn = new Member(localColumn, new Entity(localColumn.Table));
+            AssociatedColumn = new Member(localColumn, new Entity(localColumn.Table));
             Cascade = (associationType == SchemaHelper.AssociationType.OneToMany && !column.AllowDBNull);
             ClassName = table.ClassName();
             AssociationType = associationType;
@@ -41,7 +41,7 @@ namespace CodeSmith.SchemaHelper
 
         #region Public Read-Only Methods
 
-        public Member LocalColumn { get; private set; }
+        public Member AssociatedColumn { get; private set; }
         internal TableSchema Table { get; private set; }
 
         public AssociationType AssociationType { get; private set; }
@@ -49,18 +49,14 @@ namespace CodeSmith.SchemaHelper
         public string ToManyTableKeyName { get; private set; }
         public bool Cascade { get; private set; }
 
-        public new List<SearchCriteria> ListSearchCriteria
+        /// <summary>
+        /// Returns the unique key for this AssociationMember
+        /// </summary>
+        public string Key
         {
             get
             {
-                return this.AssociationEntity().SearchCriteria
-                    .Where(sc =>
-                        sc.MethodName.EndsWith(LocalColumn.Name) ||
-                        sc.MethodName.EndsWith(LocalColumn.ColumnName) ||
-                        sc.MethodName.EndsWith(Name) ||
-                        sc.MethodName.EndsWith(ColumnName) && 
-                        !sc.IsUniqueResult)
-                    .ToList();
+                return string.Format("{0}-{1}", TableName, ColumnName);
             }
         }
 

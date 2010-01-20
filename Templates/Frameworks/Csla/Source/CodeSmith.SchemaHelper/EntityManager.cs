@@ -19,21 +19,22 @@ namespace CodeSmith.SchemaHelper
             if (tables != null && tables.Count > 0 && tables[0].Database != null)
             {
                 Database = tables[0].Database;
-                Database.DeepLoad = true;
-                Database.Refresh();
-
+                if (!Database.DeepLoad)
+                {
+                    Database.DeepLoad = true;
+                    Database.Refresh();
+                }
+               
                 foreach ( TableSchema table in tables )
                 {
                     if(table == null)
                         continue;
-
+                   
                     bool includeManyToMany = table.IsManyToMany() && !Configuration.Instance.IncludeManyToManyEntity;
                     if (Configuration.Instance.ExcludeTableRegexIsMatch(table.FullName) || includeManyToMany)
                         ExcludedTables.Add( table );
                     else if (!table.HasPrimaryKey)
                         Trace.WriteLine(string.Format("Skipping table: '{0}', no Primary Key was found!", table.Name));
-                    else if (table.ContainsCompositeKeys())
-                        Trace.WriteLine(string.Format("Skipping table: '{0}', contains composite keys!", table.Name));
                     else
                         Entities.Add(new Entity(table));
                 }

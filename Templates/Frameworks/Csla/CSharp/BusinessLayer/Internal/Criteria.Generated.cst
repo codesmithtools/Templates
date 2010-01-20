@@ -1,6 +1,8 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X Criteria" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
 
 <%@ Import Namespace="QuickStart" %>
@@ -68,15 +70,15 @@ namespace <%= BusinessProjectName %>
         /// </summary>
         public <%= Entity.RowVersionMember.SystemType %> Timestamp
         {
-            get { return GetValue< <%= Entity.RowVersionMember.SystemType %> >( "<%= Entity.RowVersionMember.ColumnName %>"); }                
+            get { return GetValue< <%= Entity.RowVersionMember.SystemType %> >( "<%= Entity.RowVersionMember.ColumnName %>"); }
             set { _bag[ "<%= Entity.RowVersionMember.ColumnName %>"] = value; }
         }
-<% } %>        
-<%  foreach(Member member in Entity.GetUniqueSearchCriteriaMembers()){ %>
+<% } %>
+<%  foreach(Member member in Entity.MembersNoRowVersion){ %>
 
-        public <%= member.SystemType %> <%= member.Entity.ResolveCriteriaPropertyName( member.ColumnName, true ) %>
+        public <%= member.SystemType %> <%= member.PropertyName %>
         {
-            get { return GetValue< <%= member.SystemType %> >("<%= member.ColumnName %>"); }                
+            get { return GetValue< <%= member.SystemType %> >("<%= member.ColumnName %>"); }
             set { _bag["<%= member.ColumnName %>"] = value; }
         }
 <% } %>
