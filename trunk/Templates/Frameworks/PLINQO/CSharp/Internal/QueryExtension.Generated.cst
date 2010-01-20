@@ -143,8 +143,10 @@ namespace <%= Database.ContextNamespace %>
         public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= columnType %> <%= paramName %>)
         {
 <% if (column.CanBeNull == true) { %>
-            // using object equals to support nulls
-            return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>));
+            // support nulls
+            return <%= paramName %> == null 
+                ? queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == null) 
+                : queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == <%= paramName %>);
 <% } else { %>
             return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == <%= paramName %>);
 <% } %>
@@ -175,9 +177,13 @@ namespace <%= Database.ContextNamespace %>
                     return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %>.Contains(<%= paramName %>) == false);
 <% if (column.CanBeNull == true) { %>
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>) == false);
+                    return <%= paramName %> == null 
+                        ? queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != null) 
+                        : queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != <%= paramName %>);
                 default:
-                    return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>));
+                    return <%= paramName %> == null 
+                        ? queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == null) 
+                        : queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == <%= paramName %>);
 <% } else { %>
                 case ContainmentOperator.NotEquals:
                     return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != <%= paramName %>);
@@ -222,9 +228,13 @@ namespace <%= Database.ContextNamespace %>
 <% } %>
 <% if (column.CanBeNull == true) { %>
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>) == false);
+                    return <%= paramName %> == null 
+                        ? queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != null) 
+                        : queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != <%= paramName %>);
                 default:
-                    return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>));
+                    return <%= paramName %> == null 
+                        ? queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == null) 
+                        : queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == <%= paramName %>);
 <% } else { %>
                 case ComparisonOperator.NotEquals:
                     return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != <%= paramName %>);
