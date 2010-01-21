@@ -1110,7 +1110,6 @@ namespace Tracker.Core.Data
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, int id) =>
                         db.User.FirstOrDefault(u => u.Id == id));
-
             internal static readonly Func<Tracker.Core.Data.TrackerDataContext, string, Tracker.Core.Data.User> GetByEmailAddress =
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, string emailAddress) =>

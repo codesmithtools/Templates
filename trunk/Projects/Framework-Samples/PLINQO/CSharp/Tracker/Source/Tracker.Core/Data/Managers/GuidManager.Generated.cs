@@ -102,6 +102,17 @@ namespace Tracker.Core.Data
         {
             return Entity.Delete(g => g.Id == id);
         }
+        /// <summary>
+        /// Gets an instance by using a unique index.
+        /// </summary>
+        /// <returns>An instance of the entity or null if not found.</returns>
+        public Tracker.Core.Data.Guid GetByKeyMember(System.Guid key)
+        {
+            if (Context.LoadOptions == null) 
+                return Query.GetByKeyMember.Invoke(Context, key);
+            else
+                return Entity.FirstOrDefault(g => g.Key == key);
+        }
 
         #region Extensibility Method Definitions
         /// <summary>Called when the class is created.</summary>
@@ -119,6 +130,11 @@ namespace Tracker.Core.Data
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, System.Guid id) => 
                         db.Guid.FirstOrDefault(g => g.Id == id));
+
+            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, System.Guid, Tracker.Core.Data.Guid> GetByKeyMember = 
+                System.Data.Linq.CompiledQuery.Compile(
+                    (Tracker.Core.Data.TrackerDataContext db, System.Guid key) => 
+                        db.Guid.FirstOrDefault(g => g.Key == key));
 
         }
         #endregion

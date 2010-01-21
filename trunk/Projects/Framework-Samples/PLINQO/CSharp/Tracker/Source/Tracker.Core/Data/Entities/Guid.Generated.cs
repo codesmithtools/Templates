@@ -96,6 +96,29 @@ namespace Tracker.Core.Data
                 }
             }
         }
+
+        private System.Guid _key;
+
+        /// <summary>
+        /// Gets or sets the Key column value.
+        /// </summary>
+        [System.Data.Linq.Mapping.Column(Name = "Key", Storage = "_key", DbType = "uniqueidentifier NOT NULL", CanBeNull = false)]
+        [System.Runtime.Serialization.DataMember(Order = 3)]
+        public System.Guid Key
+        {
+            get { return _key; }
+            set
+            {
+                if (_key != value)
+                {
+                    OnKeyChanging(value);
+                    SendPropertyChanging("Key");
+                    _key = value;
+                    SendPropertyChanged("Key");
+                    OnKeyChanged();
+                }
+            }
+        }
         #endregion
 
         #region Association Mapped Properties
@@ -120,6 +143,11 @@ namespace Tracker.Core.Data
         partial void OnAlternateIdChanging(Nullable<System.Guid> value);
         /// <summary>Called after <see cref="AlternateId"/> has Changed.</summary>
         partial void OnAlternateIdChanged();
+        /// <summary>Called when <see cref="Key"/> is changing.</summary>
+        /// <param name="value">The new value.</param>
+        partial void OnKeyChanging(System.Guid value);
+        /// <summary>Called after <see cref="Key"/> has Changed.</summary>
+        partial void OnKeyChanged();
 
         #endregion
 
