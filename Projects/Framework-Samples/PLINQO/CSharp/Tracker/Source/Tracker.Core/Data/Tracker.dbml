@@ -20,6 +20,7 @@
     <Type Name="Guid">
       <Column Name="Id" Storage="_id" Type="System.Guid" DbType="uniqueidentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="AlternateId" Storage="_alternateId" Type="System.Guid" DbType="uniqueidentifier" CanBeNull="true" />
+      <Column Name="Key" Storage="_key" Type="System.Guid" DbType="uniqueidentifier NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.Role" Member="Role">
