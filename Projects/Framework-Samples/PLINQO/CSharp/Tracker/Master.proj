@@ -1,129 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
-	<Import Project="$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.Targets"/>
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(MSBuildExtensionsPath)\CodeSmith\CodeSmith.Targets"/>
 
-	
-	<PropertyGroup>
-		<Major>4</Major>
-		<Minor>0</Minor>
-		<Build>0</Build>
-		<Revision>1</Revision>
-		<BuildConfiguration>Release</BuildConfiguration>
-	</PropertyGroup>
+  <PropertyGroup>
+    <Major>4</Major>
+    <Minor>0</Minor>
+    <Build>0</Build>
+    <Revision>1</Revision>
 
-	<ItemGroup>
-		<CommitFiles Include="Source\Tracker.Core\Data\*.*" 
-			Exclude="Source\Tracker.Core\Data\Tracker.Core.Data.csp" />
-	</ItemGroup>
+    <BindMinor>0</BindMinor>
+    <BindBuild>0</BindBuild>
+    <BindRevision>0</BindRevision>
 
-	<ItemGroup>
-		<SvnExclude Include="**\.svn\**" />
+    <BuildConfiguration>Release</BuildConfiguration>
+  </PropertyGroup>
 
-		<DefaultExclude Include="@(SvnExclude)" />
-		<DefaultExclude Include="**\obj\**" />
-		<DefaultExclude Include="**\bin\**" />
-		<DefaultExclude Include="**\_ReSharper*\**" />
-		<DefaultExclude Include="*.zip" />
-		<DefaultExclude Include="**\Zip\**" />
-		<DefaultExclude Include="*.suo" />
-		<DefaultExclude Include="**\*.user" />
-		<DefaultExclude Include="**\*.resharper" />
-		<DefaultExclude Include="**\*.cache" />
-		<DefaultExclude Include="*.teamcity.*" />
+  <ItemGroup>
+    <SvnExclude Include="**\.svn\**" />
 
-		<ZipFiles Include="**\*.*" Exclude="@(DefaultExclude)" />
-	</ItemGroup>
+    <DefaultExclude Include="@(SvnExclude)" />
+    <DefaultExclude Include="**\obj\**" />
+    <DefaultExclude Include="**\bin\**" />
+    <DefaultExclude Include="**\_ReSharper*\**" />
+    <DefaultExclude Include="*.zip" />
+    <DefaultExclude Include="**\Zip\**" />
+    <DefaultExclude Include="*.suo" />
+    <DefaultExclude Include="**\*.user" />
+    <DefaultExclude Include="**\*.resharper" />
+    <DefaultExclude Include="**\*.cache" />
+    <DefaultExclude Include="*.teamcity.*" />
+  </ItemGroup>
 
-	<Target Name="Build">
-		<CallTarget Targets="Clean;Regenerate;Compile;Commit;Zip;Nightly"/>
-	</Target>
+  <Target Name="Build">
+    <CallTarget Targets="Clean;Regenerate;Compile;Commit;Zip;Nightly"/>
+  </Target>
 
-	<Target Name="Clean">
-		<DeleteTree Directories="Source\**\obj\**;Source\**\bin\**" />
-		<RemoveDir Directories="Zip\" ContinueOnError="true"/>
-	</Target>
+  <Target Name="Clean">
+    <DeleteTree Directories="Source\**\obj\**;Source\**\bin\**" />
+    <RemoveDir Directories="Zip\" ContinueOnError="true"/>
+  </Target>
 
-	<Target Name="Regenerate">
-		<RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="ConnectionString">
-			
-<Output TaskParameter="Value" PropertyName="ConnectionString" />
-		
-</RegistryRead>
+  <Target Name="Regenerate">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="ConnectionString">
+      <Output TaskParameter="Value" PropertyName="ConnectionString" />
+    </RegistryRead>
 
-		<FileUpdate Files="Source\Tracker.Core\Data\Tracker.Core.Data.csp"
-                	Regex="Data Source=.;Initial Catalog=Tracker;Integrated Security=True"
-	                ReplacementText="$(ConnectionString)" />
+    <FileUpdate Files="Source\Tracker.Core\Data\Tracker.Core.Data.csp"
+                Regex="Data Source=.;Initial Catalog=Tracker;Integrated Security=True"
+                ReplacementText="$(ConnectionString)" />
 
-		
-<CodeSmith ProjectFiles="Source\Tracker.Core\Data\Tracker.Core.Data.csp" />
+    <CodeSmith ProjectFiles="Source\Tracker.Core\Data\Tracker.Core.Data.csp" />
 
 
+    <FileUpdate Files="Source\Tracker.Core\Data\Tracker.Core.Data.csp"
+                Regex="$(ConnectionString)"
+                ReplacementText="Data Source=.;Initial Catalog=Tracker;Integrated Security=True" />
+  </Target>
 
-		<FileUpdate Files="Source\Tracker.Core\Data\Tracker.Core.Data.csp"
-                	Regex="$(ConnectionString)"
-	                ReplacementText="Data Source=.;Initial Catalog=Tracker;Integrated Security=True" />
-	</Target>
+  <Target Name="Compile" DependsOnTargets="Regenerate;Version">
+    <MSBuild Projects="Tracker.sln" Properties="Configuration=$(BuildConfiguration);" />
+  </Target>
 
-	<Target Name="Compile" DependsOnTargets="Version">
-		<MSBuild Projects="Tracker.sln" Properties="Configuration=$(BuildConfiguration);" />
-	</Target>
+  <Target Name="Commit" DependsOnTargets="Compile">
+    <CreateItem Include="Source\Tracker.Core\Data\**\*.*"
+                Exclude="Source\Tracker.Core\Data\Tracker.Core.Data.csp">
+      <Output TaskParameter="Include" ItemName="CommitFiles" />
+    </CreateItem>
 
-	<Target Name="Commit" DependsOnTargets="Compile">
-		<RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="GoogleUser">
-			<Output TaskParameter="Value" PropertyName="GoogleUser" />
-		</RegistryRead>
-    
-		<RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="GooglePassword">
-			<Output TaskParameter="Value" PropertyName="GooglePassword" />
-		</RegistryRead>
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="GoogleUser">
+      <Output TaskParameter="Value" PropertyName="GoogleUser" />
+    </RegistryRead>
 
-		<SvnCommit
-			Targets="@(CommitFiles)"
-			Message="Auto commit from MSBuild."		
-			Username="$(GoogleUser)"	
-			Password="$(GooglePassword)" />
-	</Target>
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="GooglePassword">
+      <Output TaskParameter="Value" PropertyName="GooglePassword" />
+    </RegistryRead>
 
-	<Target Name="Zip" DependsOnTargets="Version">
-		<Zip Files="@(ZipFiles)"
-			ZipFileName="Zip\plinqo.tracker-r$(Revision).zip" />	
-	</Target>
+    <SvnCommit Targets="@(CommitFiles)"
+               Message="Auto commit from MSBuild."
+               Username="$(GoogleUser)"
+               Password="$(GooglePassword)" />
+  </Target>
 
-	<Target Name="Nightly" DependsOnTargets="Zip">
-		<RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="DeployFolder">
-			<Output TaskParameter="Value" PropertyName="DeployFolder" />
-		</RegistryRead>
+  <Target Name="Zip" DependsOnTargets="Version">
+    <CreateItem Include="**\*.*" Exclude="@(DefaultExclude)">
+      <Output TaskParameter="Include" ItemName="ZipFiles" />
+    </CreateItem>
 
-		<Copy SourceFiles="Zip\plinqo.tracker-r$(Revision).zip"
-			DestinationFiles="$(DeployFolder)\plinqo.tracker-r$(Revision).zip" />
-	</Target>
+    <Zip Files="@(ZipFiles)"
+         ZipFileName="Zip\plinqo.tracker-r$(Revision).zip" />
+  </Target>
 
+  <Target Name="Nightly" DependsOnTargets="Zip">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="DeployFolder">
+      <Output TaskParameter="Value" PropertyName="DeployFolder" />
+    </RegistryRead>
 
-	<Target Name="Version">
-		<SvnVersion LocalPath="$(MSBuildProjectDirectory)">
-			<Output TaskParameter="Revision" PropertyName="Revision" />
-		</SvnVersion>
+    <Copy SourceFiles="Zip\plinqo.tracker-r$(Revision).zip"
+          DestinationFiles="$(DeployFolder)\plinqo.tracker-r$(Revision).zip" />
+  </Target>
 
-		<Message Text="Revision: $(Revision)"/>
-    
-		<Time>
-			<Output TaskParameter="Month" PropertyName="Month" />
-			<Output TaskParameter="Day" PropertyName="Day" />
-			<Output TaskParameter="Year" PropertyName="Year" />
-		</Time>
+  <Target Name="Version">
+    <SvnVersion LocalPath="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="Revision" PropertyName="Revision" />
+    </SvnVersion>
 
-		<AssemblyInfo CodeLanguage="CS"
-			OutputFile="$(MSBuildProjectDirectory)\Source\GlobalAssemblyInfo.cs"
-			AssemblyCompany="CodeSmith Tools, LLC"
-			AssemblyProduct="PLINQO Tracker Sample"
-			AssemblyCopyright="Copyright (c) 2002-$(Year) CodeSmith Tools, LLC.  All rights reserved."
-			AssemblyConfiguration="$(BuildConfiguration)"
-			AssemblyVersion="$(Major).$(BindMinor).$(BindBuild).$(BindRevision)"	
-			AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
-			AssemblyInformationalVersion="$(Major).$(Minor).$(Build).$(Revision)"
-			GenerateClass="true" />
+    <Message Text="Revision: $(Revision)"/>
 
-	</Target>
+    <Time>
+      <Output TaskParameter="Month" PropertyName="Month" />
+      <Output TaskParameter="Day" PropertyName="Day" />
+      <Output TaskParameter="Year" PropertyName="Year" />
+    </Time>
+
+    <AssemblyInfo CodeLanguage="CS"
+                  OutputFile="$(MSBuildProjectDirectory)\Source\GlobalAssemblyInfo.cs"
+                  AssemblyCompany="CodeSmith Tools, LLC"
+                  AssemblyProduct="PLINQO Tracker Sample"
+                  AssemblyCopyright="Copyright (c) 2002-$(Year) CodeSmith Tools, LLC.  All rights reserved."
+                  AssemblyConfiguration="$(BuildConfiguration)"
+                  AssemblyVersion="$(Major).$(BindMinor).$(BindBuild).$(BindRevision)"
+                  AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+                  AssemblyInformationalVersion="$(Major).$(Minor).$(Build).$(Revision)"
+                  GenerateClass="true" />
+  </Target>
 
 </Project>

@@ -31,7 +31,7 @@ namespace Tracker.Core.Data
 
         internal class Metadata
         {
-            // Only Attributes in the class will be preserved.
+             // WARNING: Only attributes inside of this class will be preserved.
 
             public int Id { get; set; }
 
