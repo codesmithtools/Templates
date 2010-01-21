@@ -232,6 +232,7 @@ namespace Tracker.Core.Data
             {
                 var serializer = new System.Runtime.Serialization.DataContractSerializer(GetType());
                 serializer.WriteObject(writer, this);
+                writer.Flush();
             }
 
             return sb.ToString();
@@ -249,6 +250,7 @@ namespace Tracker.Core.Data
             {
                 var serializer = new System.Runtime.Serialization.DataContractSerializer(GetType());
                 serializer.WriteObject(writer, this);
+                writer.Flush();
                 buffer = ms.ToArray();
             }
             return buffer;
