@@ -104,19 +104,24 @@ namespace <%= Database.ContextNamespace %>
         {
             return table.Delete(<%= GetLamba(method, 5) %>);
         }
-<% } else if (method.IsUnique) {
-        uniqueMethods.Add(method.NameSuffix );%>
+<%
+} else if (method.IsUnique) {
+        uniqueMethods.Add(method.NameSuffix );
+        string suffix = method.NameSuffix;
+        if (suffix == MethodKeySuffix)
+            suffix += "Member";
+%>
 
         /// <summary>
         /// Gets an instance by using a unique index.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public static <%= safeName %> <%= UniqueMethodPrefix %><%= method.NameSuffix %>(this IQueryable<<%= safeName %>> queryable, <%= GetParameters(method) %>)
+        public static <%= safeName %> <%= UniqueMethodPrefix %><%= suffix %>(this IQueryable<<%= safeName %>> queryable, <%= GetParameters(method) %>)
         {
 <% if (method.Columns.Count < 4) { %>
             var entity = queryable as System.Data.Linq.Table<<%= safeName %>>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.<%= UniqueMethodPrefix %><%= method.NameSuffix %>.Invoke((<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
+                return Query.<%= UniqueMethodPrefix %><%= suffix %>.Invoke((<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
 <% } // column count%>
 
             return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>);
@@ -303,8 +308,11 @@ namespace <%= Database.ContextNamespace %>
                     (<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) =>
                         db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
 <% } else if (method.IsUnique) { %>
-
-            internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>> <%= UniqueMethodPrefix %><%= method.NameSuffix %> =
+<%      string suffix = method.NameSuffix;
+        if (suffix == MethodKeySuffix)
+            suffix += "Member";
+ %>
+            internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>> <%= UniqueMethodPrefix %><%= suffix %> =
                 System.Data.Linq.CompiledQuery.Compile(
                     (<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) =>
                         db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
