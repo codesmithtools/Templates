@@ -113,6 +113,9 @@ namespace <%= ManagerNamespace %>
     string parameters = GetParameters(method); 
     string paramNames = GetParametersNames(method);
     string paramTypes = GetParametersTypes(method);
+    string suffix = method.NameSuffix;
+    if (suffix == MethodKeySuffix)
+        suffix += "Member";
 %>
 <% if (method.IsKey) { %>
 <% if (method.Columns.Count < 5) { %>
@@ -185,11 +188,11 @@ namespace <%= ManagerNamespace %>
         /// Gets an instance by using a unique index.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public <%= safeName %> <%= MethodPrefix %><%= method.NameSuffix %>(<%= parameters %>)
+        public <%= safeName %> <%= MethodPrefix %><%= suffix %>(<%= parameters %>)
         {
 <% if (method.Columns.Count < 4) { %>
             if (Context.LoadOptions == null) 
-                return Query.<%= MethodPrefix %><%= method.NameSuffix %>.Invoke(Context, <%= paramNames %>);
+                return Query.<%= MethodPrefix %><%= suffix %>.Invoke(Context, <%= paramNames %>);
             else
 <% } // column count%>
                 return Entity.FirstOrDefault(<%= GetLamba(method, 5) %>);
@@ -198,11 +201,11 @@ namespace <%= ManagerNamespace %>
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
-        public IQueryable<<%= safeName %>> <%= MethodPrefix %><%= method.NameSuffix %>(<%= parameters %>)
+        public IQueryable<<%= safeName %>> <%= MethodPrefix %><%= suffix %>(<%= parameters %>)
         {
 <% if (method.Columns.Count < 4) { %>
             if (Context.LoadOptions == null) 
-                return Query.<%= MethodPrefix %><%= method.NameSuffix %>.Invoke(Context, <%= paramNames %>);
+                return Query.<%= MethodPrefix %><%= suffix %>.Invoke(Context, <%= paramNames %>);
             else
 <% } // column count%>
                 return Entity.Where(<%= GetLamba(method, 5) %>);
@@ -225,6 +228,9 @@ namespace <%= ManagerNamespace %>
     string parameters = GetParameters(method); 
     string paramNames = GetParametersNames(method);
     string paramTypes = GetParametersTypes(method);
+    string suffix = method.NameSuffix;
+    if (suffix == MethodKeySuffix)
+        suffix += "Member";
 %>
 <% if (method.Columns.Count < 4) { %>
 <% if (method.IsKey) { %>
@@ -235,13 +241,13 @@ namespace <%= ManagerNamespace %>
                         db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
 <% } else if (method.IsUnique) { %>
 
-            internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= paramTypes %>, <%= safeName %>> <%= MethodPrefix %><%= method.NameSuffix %> = 
+            internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= paramTypes %>, <%= safeName %>> <%= MethodPrefix %><%= suffix %> = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %> db, <%= parameters %>) => 
                         db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
 <% } else { %>
 
-            internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= paramTypes %>, IQueryable<<%= safeName %>>> <%= MethodPrefix %><%= method.NameSuffix %> = 
+            internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= paramTypes %>, IQueryable<<%= safeName %>>> <%= MethodPrefix %><%= suffix %> = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %> db, <%= parameters %>) => 
                         db.<%= EntityManager.PropertyName %>.Where(<%= GetLamba(method, 7) %>));
