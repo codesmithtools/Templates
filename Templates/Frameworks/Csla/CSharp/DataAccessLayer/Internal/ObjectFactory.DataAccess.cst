@@ -64,15 +64,12 @@ namespace <%= DataProjectName %>
         [RunLocal]
         private <%= Entity.ClassName %> Create(<%= Entity.ClassName %>Criteria criteria)
         {
-            //var resource  = <%= Entity.ClassName %>.Get<%= Entity.ClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildCriteriaParametersVariables() %>);
+            //var resource  = <%= Entity.ClassName %>.Get<%= Entity.ClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>);
             var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
             using (BypassPropertyChecks(item))
             {
 <% foreach(Member member in Entity.MembersNoRowVersion){ %>
                 //item.<%= member.PropertyName %> = resource.<%= member.PropertyName %>;
-<% } %>
-<% foreach(Association member in Entity.MembersForeignKey){ string columnName = member.ResolveManyToOneNameConflict(Entity); %>
-                //item.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %> = resource.<%= member.AssociatedColumn.PropertyName %>;
 <% } %>
             }
     

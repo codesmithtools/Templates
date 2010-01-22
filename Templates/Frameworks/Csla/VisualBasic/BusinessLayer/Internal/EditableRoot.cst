@@ -1,4 +1,6 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X EditableRoot" %>
+<%@ Register Name="AuthorizationRules" Template="..\..\Common\AuthorizationRules.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ValidationRules" Template="..\..\Common\ValidationRulesPartial.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
@@ -24,64 +26,7 @@ Imports Csla.Security
 Imports Csla.Validation
 
 Public Partial Class <%= BusinessClassName %>
+<% RenderHelper(New ValidationRules()) %>
 
-    #Region "Validation Rules"
-    
-    ''' <summary>
-    ''' All custom rules need to be placed in this method.
-    ''' </summary>
-    ''' <Returns>Return true to override the generated rules If false generated rules will be run.</Returns>
-    Protected Function AddBusinessValidationRules() As Boolean
-        ' TODO: add validation rules
-        'ValidationRules.AddRule(RuleMethod, "")
-
-        Return False
-    End Function
-    
-    #End Region
-    
-    #Region "Authorization Rules"
-    
-    Protected Overrides Sub AddAuthorizationRules()
-        ''More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
-    
-        'Dim canWrite As String() = { "AdminUser", "RegularUser" }
-        'Dim canRead As String() = { "AdminUser", "RegularUser", "ReadOnlyUser" }
-        'Dim admin As String() = { "AdminUser" }
-
-        'AuthorizationRules.AllowCreate(GetType(<%= BusinessClassName %>), admin)
-        'AuthorizationRules.AllowDelete(GetType(<%= BusinessClassName %>), admin)
-        'AuthorizationRules.AllowEdit(GetType(<%= BusinessClassName %>), canWrite)
-        'AuthorizationRules.AllowGet(GetType(<%= BusinessClassName %>), canRead)
-
-<% For Each member As Member in Entity.MembersNoRowVersion %>
-        ''<%= member.PropertyName %>
-<% If Not member.IsReadOnly Then %>
-        'AuthorizationRules.AllowWrite(<%= member.PrivateMemberVariableName %>Property, canWrite)
-<% End If %>
-        'AuthorizationRules.AllowRead(<%= member.PrivateMemberVariableName %>Property, canRead)
-        
-<% Next%>
-<%-- One-To-Zero-Or-One --%>
-<% For Each association As Association in Entity.AssociatedOneToZeroOrOne %>
-        ''<%= association.PropertyName %>
-        'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
-        
-<% Next%>
-<%-- Many-To-One --%>
-<% For Each association As Association in Entity.AssociatedManyToOne %>
-        ''<%= association.PropertyName %>
-        'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
-        
-<% Next%>
-<%-- One-To-Many & Many-To-Many --%>
-<% For Each association As Association in Entity.AssociatedOneToMany %>
-        ''<%= association.PropertyName %>
-        'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
-        
-<% Next%>
-    End Sub
-    
-    #End Region
-    
+<% RenderHelper(New AuthorizationRules()) %>
 End Class

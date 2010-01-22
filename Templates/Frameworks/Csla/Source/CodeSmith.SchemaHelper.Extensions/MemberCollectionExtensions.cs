@@ -29,7 +29,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-                parameters += string.Format(", {0} = {1}", member.PropertyName, member.VariableName);
+                parameters += string.Format(", {0} = {1}{2}", member.PropertyName, member.VariableName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -167,7 +167,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-                parameters += string.Format(", {0}", member.VariableName);
+                parameters += string.Format(", {0}{1}", member.VariableName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -179,7 +179,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-                parameters += string.Format(", {0}", member.PropertyName);
+                parameters += string.Format(", {0}{1}", member.PropertyName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });

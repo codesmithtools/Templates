@@ -251,6 +251,64 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.CSha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSmith.SchemaHelper.VisualBasicExtensions", "CodeSmith.SchemaHelper.VisualBasicExtensions\CodeSmith.SchemaHelper.VisualBasicExtensions.csproj", "{E139EDCF-9BC6-40E1-8280-5C4C1D54AB6E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{21833F6C-64ED-4E9F-91E4-414B3232FBDE}"
+	ProjectSection(SolutionItems) = preProject
+		..\VisualBasic\Common\AuthorizationRules.cst = ..\VisualBasic\Common\AuthorizationRules.cst
+		..\VisualBasic\Common\ChildFetch.ParameterizedSQL.cst = ..\VisualBasic\Common\ChildFetch.ParameterizedSQL.cst
+		..\VisualBasic\Common\ChildFetch.StoredProcedures.cst = ..\VisualBasic\Common\ChildFetch.StoredProcedures.cst
+		..\VisualBasic\Common\ChildInsert.ParameterizedSQL.cst = ..\VisualBasic\Common\ChildInsert.ParameterizedSQL.cst
+		..\VisualBasic\Common\ChildInsert.StoredProcedures.cst = ..\VisualBasic\Common\ChildInsert.StoredProcedures.cst
+		..\VisualBasic\Common\ChildUpdate.ParameterizedSQL.cst = ..\VisualBasic\Common\ChildUpdate.ParameterizedSQL.cst
+		..\VisualBasic\Common\ChildUpdate.StoredProcedures.cst = ..\VisualBasic\Common\ChildUpdate.StoredProcedures.cst
+		..\VisualBasic\Common\CompositeKeyMethods.cst = ..\VisualBasic\Common\CompositeKeyMethods.cst
+		..\VisualBasic\Common\DataPortalCreate.cst = ..\VisualBasic\Common\DataPortalCreate.cst
+		..\VisualBasic\Common\DataPortalDelete.ParameterizedSQL.cst = ..\VisualBasic\Common\DataPortalDelete.ParameterizedSQL.cst
+		..\VisualBasic\Common\DataPortalDelete.StoredProcedures.cst = ..\VisualBasic\Common\DataPortalDelete.StoredProcedures.cst
+		..\VisualBasic\Common\DataPortalFetch.ParameterizedSQL.cst = ..\VisualBasic\Common\DataPortalFetch.ParameterizedSQL.cst
+		..\VisualBasic\Common\DataPortalFetch.StoredProcedures.cst = ..\VisualBasic\Common\DataPortalFetch.StoredProcedures.cst
+		..\VisualBasic\Common\DataPortalFetchList.ParameterizedSQL.cst = ..\VisualBasic\Common\DataPortalFetchList.ParameterizedSQL.cst
+		..\VisualBasic\Common\DataPortalFetchList.StoredProcedures.cst = ..\VisualBasic\Common\DataPortalFetchList.StoredProcedures.cst
+		..\VisualBasic\Common\DataPortalInsert.ParameterizedSQL.cst = ..\VisualBasic\Common\DataPortalInsert.ParameterizedSQL.cst
+		..\VisualBasic\Common\DataPortalInsert.StoredProcedures.cst = ..\VisualBasic\Common\DataPortalInsert.StoredProcedures.cst
+		..\VisualBasic\Common\DataPortalUpdate.ParameterizedSQL.cst = ..\VisualBasic\Common\DataPortalUpdate.ParameterizedSQL.cst
+		..\VisualBasic\Common\DataPortalUpdate.StoredProcedures.cst = ..\VisualBasic\Common\DataPortalUpdate.StoredProcedures.cst
+		..\VisualBasic\Common\ListAuthorizationRules.cst = ..\VisualBasic\Common\ListAuthorizationRules.cst
+		..\VisualBasic\Common\MapDataReader.cst = ..\VisualBasic\Common\MapDataReader.cst
+		..\VisualBasic\Common\Properties.cst = ..\VisualBasic\Common\Properties.cst
+		..\VisualBasic\Common\PropertiesReadOnly.cst = ..\VisualBasic\Common\PropertiesReadOnly.cst
+		..\VisualBasic\Common\ValidationRules.cst = ..\VisualBasic\Common\ValidationRules.cst
+		..\VisualBasic\Common\ValidationRulesPartial.cst = ..\VisualBasic\Common\ValidationRulesPartial.cst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{3FA48AB3-3405-42F4-B49E-77B42F4E1D4E}"
+	ProjectSection(SolutionItems) = preProject
+		..\CSharp\Common\AuthorizationRules.cst = ..\CSharp\Common\AuthorizationRules.cst
+		..\CSharp\Common\ChildFetch.ParameterizedSQL.cst = ..\CSharp\Common\ChildFetch.ParameterizedSQL.cst
+		..\CSharp\Common\ChildFetch.StoredProcedures.cst = ..\CSharp\Common\ChildFetch.StoredProcedures.cst
+		..\CSharp\Common\ChildInsert.ParameterizedSQL.cst = ..\CSharp\Common\ChildInsert.ParameterizedSQL.cst
+		..\CSharp\Common\ChildInsert.StoredProcedures.cst = ..\CSharp\Common\ChildInsert.StoredProcedures.cst
+		..\CSharp\Common\ChildUpdate.ParameterizedSQL.cst = ..\CSharp\Common\ChildUpdate.ParameterizedSQL.cst
+		..\CSharp\Common\ChildUpdate.StoredProcedures.cst = ..\CSharp\Common\ChildUpdate.StoredProcedures.cst
+		..\CSharp\Common\CompositeKeyMethods.cst = ..\CSharp\Common\CompositeKeyMethods.cst
+		..\CSharp\Common\DataPortalCreate.cst = ..\CSharp\Common\DataPortalCreate.cst
+		..\CSharp\Common\DataPortalDelete.ParameterizedSQL.cst = ..\CSharp\Common\DataPortalDelete.ParameterizedSQL.cst
+		..\CSharp\Common\DataPortalDelete.StoredProcedures.cst = ..\CSharp\Common\DataPortalDelete.StoredProcedures.cst
+		..\CSharp\Common\DataPortalFetch.ParameterizedSQL.cst = ..\CSharp\Common\DataPortalFetch.ParameterizedSQL.cst
+		..\CSharp\Common\DataPortalFetch.StoredProcedures.cst = ..\CSharp\Common\DataPortalFetch.StoredProcedures.cst
+		..\CSharp\Common\DataPortalFetchList.ParameterizedSQL.cst = ..\CSharp\Common\DataPortalFetchList.ParameterizedSQL.cst
+		..\CSharp\Common\DataPortalFetchList.StoredProcedures.cst = ..\CSharp\Common\DataPortalFetchList.StoredProcedures.cst
+		..\CSharp\Common\DataPortalInsert.ParameterizedSQL.cst = ..\CSharp\Common\DataPortalInsert.ParameterizedSQL.cst
+		..\CSharp\Common\DataPortalInsert.StoredProcedures.cst = ..\CSharp\Common\DataPortalInsert.StoredProcedures.cst
+		..\CSharp\Common\DataPortalUpdate.ParameterizedSQL.cst = ..\CSharp\Common\DataPortalUpdate.ParameterizedSQL.cst
+		..\CSharp\Common\DataPortalUpdate.StoredProcedures.cst = ..\CSharp\Common\DataPortalUpdate.StoredProcedures.cst
+		..\CSharp\Common\ListAuthorizationRules.cst = ..\CSharp\Common\ListAuthorizationRules.cst
+		..\CSharp\Common\MapDataReader.cst = ..\CSharp\Common\MapDataReader.cst
+		..\CSharp\Common\Properties.cst = ..\CSharp\Common\Properties.cst
+		..\CSharp\Common\PropertiesReadOnly.cst = ..\CSharp\Common\PropertiesReadOnly.cst
+		..\CSharp\Common\ValidationRules.cst = ..\CSharp\Common\ValidationRules.cst
+		..\CSharp\Common\ValidationRulesPartial.cst = ..\CSharp\Common\ValidationRulesPartial.cst
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -331,11 +389,13 @@ Global
 		{999286CE-0FB7-4622-8D09-EA068B9778DE} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
 		{C2E439BE-629B-4069-9A36-A61F1D793E94} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
 		{14CC4B24-5ED7-4819-9610-8B5AD619FAD4} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
+		{3FA48AB3-3405-42F4-B49E-77B42F4E1D4E} = {06C6ADF6-C3DB-4ABC-948E-1705702DD07C}
 		{670B086B-ECFC-4769-85FC-FA19DC00E5B9} = {999286CE-0FB7-4622-8D09-EA068B9778DE}
 		{E90645D8-091B-47CE-9E4E-9528A4AB0C72} = {C2E439BE-629B-4069-9A36-A61F1D793E94}
 		{8AF4CEEA-7B24-40A5-87C2-1A934E4A0F54} = {580D643C-0950-4C43-BF66-4724D24C673D}
 		{B3F774E2-9D8D-4780-A9F5-D54958DEF3E8} = {580D643C-0950-4C43-BF66-4724D24C673D}
 		{AB7EA04C-C7E9-447A-9277-B677409B54BA} = {580D643C-0950-4C43-BF66-4724D24C673D}
+		{21833F6C-64ED-4E9F-91E4-414B3232FBDE} = {580D643C-0950-4C43-BF66-4724D24C673D}
 		{D033080D-12D9-4DC3-91CB-274675B2BC80} = {8AF4CEEA-7B24-40A5-87C2-1A934E4A0F54}
 		{AA24549B-F016-4588-9AE9-3A503B4DAD79} = {B3F774E2-9D8D-4780-A9F5-D54958DEF3E8}
 		{1EBCD6D8-6E9E-41EB-8968-F1ABAD8CB1CE} = {AB7EA04C-C7E9-447A-9277-B677409B54BA}

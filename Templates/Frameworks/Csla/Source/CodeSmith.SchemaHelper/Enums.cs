@@ -58,11 +58,10 @@ namespace CodeSmith.SchemaHelper
     public enum SearchCriteriaEnum : byte
     {
         All = 0,
-        Index = 1,
-        PrimaryKey = 2,
-        ForeignKeysOneToMany = 3,
-        ForeignKeysManyToOne = 4,
-        NoForeignKeys = 5
+        PrimaryKey,
+        ForeignKey,
+        Index,
+        NoForeignKeys
     }
 
     #endregion

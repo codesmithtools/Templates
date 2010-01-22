@@ -33,7 +33,7 @@ Public Partial Class <%= BusinessClassName %>
 
         ' Fetch Child objects.
         ' While(SourceHasMoreChildren)
-            'this.Add(new <%= ChildBusinessClassName %>(source))
+            'this.Add(New <%= ChildBusinessClassName %>(source))
         ' End While
 
         RaiseListChangedEvents = True

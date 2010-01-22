@@ -73,9 +73,6 @@ namespace <%= DataProjectName %>
 <% foreach(Member member in Entity.MembersNoKeysOrRowVersion){ %>
                 item.<%= member.PropertyName %> = resource.<%= member.PropertyName %>;
 <% } %>
-<% foreach(Association member in Entity.MembersForeignKey){ string columnName = member.ResolveManyToOneNameConflict(Entity); %>
-                item.<%= CodeSmith.SchemaHelper.Util.NamingConventions.PropertyName(columnName) %> = resource.<%= member.AssociatedColumn.PropertyName %>;
-<% } %>
             }
     
             MarkNew(resource);
@@ -131,7 +128,7 @@ namespace <%= DataProjectName %>
 <% if(!IsReadOnlyBusinessObject) { %>
         #region Insert
 
-        private void DoInsert(<%= Entity.ClassName %> item<% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %><% } %>)
+        private void DoInsert(<%= Entity.ClassName %> item<%-- <% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %><% } %> --%>)
         {
             // Don't update if the item isn't dirty.
             if (!item.IsDirty) return;
@@ -167,7 +164,7 @@ if(Entity.AssociatedManyToOne.Count > 0){ %>
                 }
 
                 // Update Child Items.
-<%-- One-To-Zero-Or-One --%>
+<%-- <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
                 //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%>);
 <% } %>
@@ -178,7 +175,7 @@ if(Entity.AssociatedManyToOne.Count > 0){ %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(Association association in Entity.AssociatedOneToMany) { %>
                 //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%>);
-<% } %>
+<% } %> --%>
             }
 
             MarkOld(item);

@@ -25,7 +25,7 @@ Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
     '<RunLocal()> _
-    'Protected Sub DataPortal_Create()
+    'Protected Sub Child_Create()
     'End Sub
 
     Private Shadows Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
@@ -33,7 +33,7 @@ Public Partial Class <%= BusinessClassName %>
 
         ' Fetch Child objects.
         ' While(SourceHasMoreChildren)
-            'this.Add(new <%= ChildBusinessClassName %>(source))
+            'this.Add(New <%= ChildBusinessClassName %>(source))
         ' End While
 
         RaiseListChangedEvents = True

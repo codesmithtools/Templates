@@ -102,9 +102,9 @@ namespace CodeSmith.SchemaHelper
             // Bypass logic if table contains Extended Property for ManyToMany
             if (table.ExtendedProperties.Contains(Configuration.Instance.ManyToManyExtendedProperty))
             {
-                bool AssociatedManyToMany;
-                if (Boolean.TryParse(table.ExtendedProperties[Configuration.Instance.ManyToManyExtendedProperty].Value.ToString(), out AssociatedManyToMany))
-                    return AssociatedManyToMany;
+                bool manyToMany;
+                if (Boolean.TryParse(table.ExtendedProperties[Configuration.Instance.ManyToManyExtendedProperty].Value.ToString(), out manyToMany))
+                    return manyToMany;
             }
 
             // 1) Table must have Two ForeignKeys.

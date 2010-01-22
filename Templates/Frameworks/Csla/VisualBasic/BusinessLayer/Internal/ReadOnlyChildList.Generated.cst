@@ -29,44 +29,31 @@ Imports Csla
 <Serializable()> _
 Public Partial Class <%= BusinessClassName %> 
     Inherits ReadOnlyListBase(Of <%= BusinessClassName %>, <%= ChildBusinessClassName %>)
-    
+
     #Region "Contructor(s)"
-    
+
     Private Sub New()
     End Sub
-    
-    #End Region
-    
-    #Region "Factory Methods"
-    
-    Friend Shared Function Get<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>) As <%= BusinessClassName %>
-        Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
-    End Function
-    
-    Friend Shared Function GetAll() As <%= BusinessClassName %>
-        Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(new <%= ChildBusinessClassName %>Criteria())
-    End Function
-    
-<%-- One-To-Many & Many-To-Many --%>
-<% For Each association As AssociationMember In Entity.AssociatedManyToOne
-    Dim list As New System.Collections.Generic.List(Of String)
-    For Each sc As SearchCriteria In association.ListSearchCriteria
-        Dim key As String = String.Format("{0}-{1}-{2}-{3}-{4}", association.Name, association.VariableName, association.ColumnName, association.AssociatedColumn.Name, association.TableName) 
-        If (list.Contains(key)) Then
-            Continue For
-        Else 
-            list.Add(key)
-        End If%>
 
-    Friend Shared Function <%= sc.GetListMethodName(association) %>(<%= association.BuildParametersVariable() %>) As <%= BusinessClassName %>
+    #End Region
+
+    #Region "Factory Methods"
+<% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
+
+    Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
         Dim criteria As New <%= ChildBusinessClassName %>Criteria()
-        criteria.<%= association.BuildObjectInitializer() %>
-        
+<%For Each member As Member in sc.Members %>
+        criteria.<%= member.PropertyName %> = <%= member.VariableName %>
+<% Next %>
+
         Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(criteria)
     End Function
-<%  Next
-Next %>
-    
+<% Next %>
+
+    Friend Shared Function GetAll() As <%= BusinessClassName %>
+        Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(New <%= ChildBusinessClassName %>Criteria())
+    End Function
+
     #End Region
 
 End Class

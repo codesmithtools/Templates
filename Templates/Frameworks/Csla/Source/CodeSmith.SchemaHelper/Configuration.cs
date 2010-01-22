@@ -32,11 +32,10 @@ namespace CodeSmith.SchemaHelper
             NamingProperty = new NamingProperty
                                  {
                                      EntityNaming = EntityNaming.Singular,
-                                     TableNaming = TableNaming.Mixed
+                                     TableNaming = TableNaming.Singular
                                  };
 
-            SearchCriteriaProperty = new SearchCriteriaProperty();
-            SearchCriteriaProperty.Prefix = "Get{0}By";
+            SearchCriteriaProperty = new SearchCriteriaProperty {Prefix = "GetBy"};
 
             RowVersionColumn = "^((R|r)ow)?(V|v)ersion$";
             VisualStudioVersion = VisualStudioVersion.VS_2008;
