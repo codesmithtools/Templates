@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using CodeSmith.SchemaHelper.Util;
 
 namespace CodeSmith.SchemaHelper
 {
@@ -61,23 +59,5 @@ namespace CodeSmith.SchemaHelper
 
             return commandParameters.TrimStart(new[] { '\t', '\n' });
         }
-
-        //public static string BuildParametersVariablesCriteria(this List<Member> members)
-        //{
-        //    return members.BuildParametersVariablesCriteria(true);
-        //}
-
-        //public static string BuildParametersVariablesCriteria(this List<Member> members, bool isNullable)
-        //{
-        //    string parameters = string.Empty;
-
-        //    foreach (Member member in members)
-        //    {
-        //        string systemType = isNullable ? member.SystemType : member.SystemType.TrimEnd(new[] { '?' });
-        //        parameters += string.Format(", {0} {1}", systemType, member.VariableName);
-        //    }
-
-        //    return parameters.TrimStart(new[] { ',', ' ' });
-        //}
     }
 }

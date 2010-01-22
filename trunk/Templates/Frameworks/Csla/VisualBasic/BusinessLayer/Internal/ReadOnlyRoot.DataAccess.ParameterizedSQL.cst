@@ -1,6 +1,10 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X ReadOnlyRoot" %>
+<%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataPortalFetch" Template="..\..\Common\DataPortalFetch.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 
+<%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
 <%@ Assembly Name="SchemaExplorer" %>
 
@@ -33,59 +37,10 @@ Public Partial Class <%= BusinessClassName %>
     End Sub
 
     Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
-<% If (entity.Table.ForeignKeyColumns.Count = 0) Then%>
-        Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
-<% Else %>
-        Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
-<% End If%>
-        Using connection As New SqlConnection(ADOHelper.ConnectionString)
-            connection.Open()
-            Using command As New SqlCommand(commandText, connection)
-                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                    If reader.Read() Then
-                        Map(reader)
-                    Else
-                        Throw New Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria))
-                    End If
-                End Using
-            End Using
-        End Using
+<% RenderHelper(New DataPortalFetch()) %>
     End Sub
 
     Private Sub Map(ByVal reader As SafeDataReader)
-        Using(BypassPropertyChecks)
-<% If Entity.HasRowVersionMember Then %>
-            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
-
-<% End If %>
-<% for each [member] as Member in Entity.MembersNoRowVersion 
-If UseMemberVariables Then %>
-            <%= [member].PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>GetBytes(reader)<% End If %>
-<%  else  %>
-            LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
-<% End If 
-Next %>
-
-<%-- Many-To-One --%>
-<% for each association As Association in Entity.AssociatedManyToOne
-If UseMemberVariables Then  %>
-            <%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ResolveManyToOneNameConflict(Entity), Entity) %> = <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>")<% else %>GetBytes(reader)<% End If %>
-<%  else  %>
-            LoadProperty(<%= association.Entity.ResolveCriteriaPrivateMemberVariableName(association.ResolveManyToOneNameConflict(Entity), Entity) %>Property, <%If Not association.HasByteArrayColumn() Then %>reader.<%= association.GetReaderMethod() %>("<%= association.ColumnName %>"))<% else %>GetBytes(reader," <%= association.ColumnName %>"))<% End If %>
-<% End If
-Next  %>
-
-<%-- One-To-Many & Many-To-Many --%>
-<% for each association2 As Association in Entity.AssociatedToManyUnion
-If Not UseLazyLoading Then %>
-<% If (UseMemberVariables) Then %>
-            <%= association2.PrivateMemberVariableName %> = New <%= association2.ClassName %>List.NewList()
-<%  else  %>
-            LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList())
-<% End If
-End If
-Next %>
-        End Using
+<% RenderHelper(New MapDataReader()) %>
     End Sub
 End Class

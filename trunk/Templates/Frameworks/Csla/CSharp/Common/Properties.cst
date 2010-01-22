@@ -70,7 +70,7 @@
                     if(IsNew)
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.New<%= association.ClassName %>());
                     else
-                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.Get<%= association.ClassName %>(<%= association.BuildPropertyVariableArguments() %>));
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
                 }
 <% } %>
                    return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
@@ -97,7 +97,7 @@
                     if(IsNew)
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.New<%= association.ClassName %>());
                     else
-                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.Get<%= association.ClassName %>By<%= association.BuildPropertyVariables() %>(<%= association.BuildPropertyVariableArguments() %>));
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
                 }
 
 <% } %>
@@ -126,6 +126,7 @@
                     if(IsNew)
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>List.NewList());
                     else
+                    
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
                 }
 

@@ -33,10 +33,10 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
-        [RunLocal]
-        protected override void Child_Create()
-        {
-        }
+        //[RunLocal]
+        //protected override void Child_Create()
+        //{
+        //}
 
         private void Child_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
         {

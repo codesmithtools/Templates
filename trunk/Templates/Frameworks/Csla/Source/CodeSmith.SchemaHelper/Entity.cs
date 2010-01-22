@@ -47,8 +47,8 @@ namespace CodeSmith.SchemaHelper
                 GetAllMembers();
 
                 // Get all associations.
-                GetManyToOne();
-                GetToMany();
+                GetParentAssociations();
+                GetChildAssociations();
 
                 // Update to prevent duplicate names.
                 //UpdateDuplicateProperties();
@@ -83,7 +83,7 @@ namespace CodeSmith.SchemaHelper
             _primaryKey = new EntityKey(Table, this);
         }
 
-        private void GetManyToOne()
+        private void GetParentAssociations()
         {
             foreach (TableKeySchema tks in Table.ForeignKeys)
             {
@@ -113,7 +113,7 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
-        private void GetToMany()
+        private void GetChildAssociations()
         {
             foreach (TableKeySchema tks in Table.PrimaryKeys)
             {
@@ -200,12 +200,11 @@ namespace CodeSmith.SchemaHelper
             switch (Configuration.Instance.SearchCriteriaProperty.SearchCriteria)
             {
                 case SearchCriteriaEnum.All:
-                    AddForeignKeySearchCriteria(map);
-                    AddIndexSearchCriteria(map);
                     AddPrimaryKeySearchCriteria(map);
+                    AddIndexSearchCriteria(map);
+                    AddForeignKeySearchCriteria(map);
                     break;
-                case SearchCriteriaEnum.ForeignKeysManyToOne:
-                case SearchCriteriaEnum.ForeignKeysOneToMany:
+                case SearchCriteriaEnum.ForeignKey:
                     AddForeignKeySearchCriteria(map);
                     break;
                 case SearchCriteriaEnum.Index:
@@ -237,6 +236,8 @@ namespace CodeSmith.SchemaHelper
                 }
             }
 
+            searchCriteria.IsUniqueResult = true;
+
             AddToSearchCriteria(map, searchCriteria);
         }
 
@@ -248,25 +249,27 @@ namespace CodeSmith.SchemaHelper
         {
             foreach (Association association in AssociatedForeignKeys)
             {
-                SearchCriteria searchCriteria = new SearchCriteria(SearchCriteriaEnum.ForeignKeysManyToOne);
-                if(association.AssociationType != AssociationType.ManyToOne)
-                {
-                    searchCriteria = new SearchCriteria(SearchCriteriaEnum.ForeignKeysOneToMany);
-                }
-
-                foreach(AssociationMember member in association)
+                //Only adding Parent Associations
+                SearchCriteria searchCriteria = new SearchCriteria(SearchCriteriaEnum.ForeignKey);
+                SearchCriteria childSearchCriteria = new SearchCriteria(SearchCriteriaEnum.ForeignKey, true);
+                foreach (AssociationMember member in association)
                 {
                     //Validate that the tables are the same
                     //if (member.Table.Equals(Table))
                     //{
-                        searchCriteria.AssociationMembers.Add(member);
-                        searchCriteria.Members.Add(member.AssociatedColumn);
+                    searchCriteria.AssociationMembers.Add(member);
+                    searchCriteria.Members.Add(member.AssociatedColumn);
+                    childSearchCriteria.AssociationMembers.Add(member);
+                    childSearchCriteria.Members.Add(member.AssociatedColumn);
                     //}
                 }
 
-                association.SearchCriteria = searchCriteria;
                 if (association.AssociationType == AssociationType.ManyToOne)
+                {
                     AddToSearchCriteria(map, searchCriteria);
+                }
+
+                association.SearchCriteria = childSearchCriteria;
             }
 
         }
@@ -286,6 +289,9 @@ namespace CodeSmith.SchemaHelper
                             searchCriteria.Members.Add(member);
                     }
                 }
+
+                if (indexSchema.IsUnique)
+                    searchCriteria.IsUniqueResult = true;
 
                 AddToSearchCriteria(map, searchCriteria);
             }
@@ -630,11 +636,8 @@ namespace CodeSmith.SchemaHelper
             if (criteria == SearchCriteriaEnum.All)
                 return _searchCriteria;
 
-            if (criteria == SearchCriteriaEnum.ForeignKeysManyToOne)
-                return _searchCriteria.Where(sc => sc.SearchCriteriaType == SearchCriteriaEnum.ForeignKeysManyToOne).ToList();
-
-            if (criteria == SearchCriteriaEnum.ForeignKeysOneToMany)
-                return _searchCriteria.Where(sc => sc.SearchCriteriaType == SearchCriteriaEnum.ForeignKeysOneToMany).ToList();
+            if (criteria == SearchCriteriaEnum.ForeignKey)
+                return _searchCriteria.Where(sc => sc.SearchCriteriaType == SearchCriteriaEnum.ForeignKey).ToList();
 
             if (criteria == SearchCriteriaEnum.Index)
                 return _searchCriteria.Where(sc => sc.SearchCriteriaType == SearchCriteriaEnum.Index).ToList();

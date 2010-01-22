@@ -25,7 +25,7 @@ Imports Csla
 <Serializable()> _
 Public Partial Class <%= BusinessClassName %> 
     Inherits NameValueListBase(Of Integer, String)
-    
+
     #Region "Factory Methods"
 
     Private Shared _list As <%= BusinessClassName %>

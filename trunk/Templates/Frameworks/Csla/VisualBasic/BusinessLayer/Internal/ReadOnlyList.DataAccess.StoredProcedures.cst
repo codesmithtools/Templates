@@ -1,4 +1,5 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X ReadOnlyList" %>
+<%@ Register Name="DataPortalFetchList" Template="..\..\Common\DataPortalFetchList.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
@@ -36,23 +37,7 @@ Public Partial Class <%= BusinessClassName %>
         RaiseListChangedEvents = false
         IsReadOnly = false
 
-        ' Fetch Child objects.
-        Using connection As New SqlConnection(ADOHelper.ConnectionString)
-            connection.Open()
-            Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)
-                command.CommandType = CommandType.StoredProcedure
-                command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag))
-                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                    If reader.Read() Then
-                        Do
-                            Me.Add(New <%= ChildBusinessClassName %>(reader))
-                        Loop While reader.Read()
-                    Else
-                        Throw New Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria))
-                    End If
-                End Using
-            End Using
-        End Using
+<% RenderHelper(New DataPortalFetchList()) %>
 
         IsReadOnly = true
         RaiseListChangedEvents = true

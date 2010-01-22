@@ -14,6 +14,11 @@
 <%  foreach(Member member in Entity.MembersNoRowVersion){ if (UseMemberVariables){ %>
         private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>);
         private <%= member.SystemType %> <%= member.PrivateMemberVariableName %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue;<%= member.BuildDataObjectField() %>
+<% if(member.HasDescription) { %>
+        /// <summary>
+        /// <%= member.Description %>
+        /// </summary>
+<% } %>
         public <%= member.SystemType %> <%= member.PropertyName %>
         {
             get { return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>); }                
@@ -21,6 +26,11 @@
 
 <% } else { %>
         private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>);<%= member.BuildDataObjectField() %>
+<% if(member.HasDescription) { %>
+        /// <summary>
+        /// <%= member.Description %>
+        /// </summary>
+<% } %>
         public <%= member.SystemType %> <%= member.PropertyName %>
         {
             get { return GetProperty(<%= member.PrivateMemberVariableName %>Property); }                

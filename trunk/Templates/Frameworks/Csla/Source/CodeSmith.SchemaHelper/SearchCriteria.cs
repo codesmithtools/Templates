@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
-using CodeSmith.SchemaHelper.Util;
 
 namespace CodeSmith.SchemaHelper
 {
     public class SearchCriteria
     {
+        #region Private Members
+
+        private readonly bool _isChild;
+
+        #endregion
 
         #region Constructor(s)
 
@@ -18,42 +21,41 @@ namespace CodeSmith.SchemaHelper
             SearchCriteriaType = type;
         }
 
+        public SearchCriteria(SearchCriteriaEnum type, bool treatAsChild) : this(type)
+        {
+            _isChild = treatAsChild;
+        }
+
         #endregion
 
         #region Public Overridden Method(s)
 
         public override string ToString()
         {
-            //Todo: eventually add suppport for preappending list...
             StringBuilder sb = new StringBuilder();
             bool isFirst = true;
 
-            if (SearchCriteriaType == SearchCriteriaEnum.ForeignKeysOneToMany || SearchCriteriaType == SearchCriteriaEnum.ForeignKeysManyToOne)
+            if (SearchCriteriaType == SearchCriteriaEnum.ForeignKey)
             {
                 foreach (AssociationMember member in AssociationMembers)
                 {
                     if (isFirst)
                     {
                         isFirst = false;
-
-                        if (SearchCriteriaType == SearchCriteriaEnum.ForeignKeysManyToOne)
-                            sb.AppendFormat(Configuration.Instance.SearchCriteriaProperty.Prefix, member.AssociatedColumn.Entity.ClassName);
-                        else
-                            sb.AppendFormat(Configuration.Instance.SearchCriteriaProperty.Prefix, member.ClassName);
+                        sb.AppendFormat(Configuration.Instance.SearchCriteriaProperty.Prefix, member.AssociatedColumn.Entity.ClassName);
                     }
                     else
                         sb.Append(Configuration.Instance.SearchCriteriaProperty.Delimeter);
 
-                    if (SearchCriteriaType == SearchCriteriaEnum.ForeignKeysManyToOne)
-                        sb.Append(Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName));
-                    else
+                    if (_isChild)
                         sb.Append(Util.NamingConventions.PropertyName(member.ColumnName));
+                    else
+                        sb.Append(Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName));
                 }
             }
             else
             {
-
-            #region Handle anything not a OneToMany.
+                #region Handle anything not a ForeignKey.
 
                 foreach (Member member in Members)
                 {
@@ -85,22 +87,13 @@ namespace CodeSmith.SchemaHelper
 
         public bool IsUniqueResult
         {
-            get
-            {
-                bool result = false;
-                foreach (Member member in Members)
-                    if (member.IsUnique)
-                    {
-                        result = true;
-                        break;
-                    }
-                return result;
-            }
+            get;
+            set;
         }
 
         public string MethodName
         {
-            get { return this.ToString(); }
+            get { return ToString(); }
         }
 
         /// <summary>
@@ -116,11 +109,8 @@ namespace CodeSmith.SchemaHelper
                     case SearchCriteriaEnum.PrimaryKey:
                         typeDesc = "Primary Key";
                         break;
-                    case SearchCriteriaEnum.ForeignKeysManyToOne: //Parent
-                        typeDesc = "Many To One Foreign Key";
-                        break;
-                    case SearchCriteriaEnum.ForeignKeysOneToMany: //Child
-                        typeDesc = "One To Many Foreign Key";
+                    case SearchCriteriaEnum.ForeignKey: //Parent
+                        typeDesc = "Foreign Key";
                         break;
                     case SearchCriteriaEnum.Index:
                         typeDesc = "Index";

@@ -33,6 +33,5 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ValidationRules()); %>
 
 <% RenderHelper(new AuthorizationRules()); %>
-
     }
 }
