@@ -30,11 +30,6 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
-        [RunLocal()]
-        protected void DataPortal_Create()
-        {
-        }
-
         private void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)
         {
             // TODO: load values.

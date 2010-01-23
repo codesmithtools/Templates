@@ -34,8 +34,6 @@ Public Partial Class <%= BusinessClassName %>
           ' omit Me override If you have no defaults to set
         
         MyBase.DataPortal_Create()
-
-        ValidationRules.CheckRules()
     End Sub
 
     Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)

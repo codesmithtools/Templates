@@ -73,6 +73,8 @@
 
   <ItemGroup>
     <CommitFiles Include="Common\CodeSmith.SchemaHelper.dll" />
+    <CommitFiles Include="Common\CodeSmith.SchemaHelper.CSharpExtensions.dll" />
+    <CommitFiles Include="Common\CodeSmith.SchemaHelper.VisualBasicExtensions.dll" />
     <CommitFiles Include="Common\QuickStart.dll" />
   </ItemGroup>
 

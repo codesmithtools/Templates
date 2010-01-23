@@ -51,7 +51,7 @@ namespace CodeSmith.SchemaHelper
                 GetChildAssociations();
 
                 // Update to prevent duplicate names.
-                //UpdateDuplicateProperties();
+                UpdateDuplicateProperties();
 
                 // Get SearchCriteria
                 GetSearchCriteria();
@@ -162,18 +162,18 @@ namespace CodeSmith.SchemaHelper
             } //End Table.PrimaryKeys
         }
 
-        //private void UpdateDuplicateProperties()
-        //{
-        //    IEnumerable<Member> entities = MemberMap.Values();
-        //    foreach (Member entity in entities)
-        //    {
-        //        Member entity1 = entity;
-        //        List<Member> duplicateMembers = entities.Where(e => e.Name == entity1.Name).ToList();
-        //        if (duplicateMembers.Count > 1)
-        //            for (int x = 0; x < duplicateMembers.Count(); x++)
-        //                duplicateMembers[x].AppendNameSuffix(g53x + 1);
-        //    }
-        //}
+        private void UpdateDuplicateProperties()
+        {
+            IEnumerable<Member> entities = MemberMap.Values.ToList();
+            foreach (Member entity in entities)
+            {
+                Member entity1 = entity;
+                List<Member> duplicateMembers = entities.Where(e => e.Name == entity1.Name).ToList();
+                if (duplicateMembers.Count > 1)
+                    for (int x = 0; x < duplicateMembers.Count(); x++)
+                        duplicateMembers[x].AppendNameSuffix(x + 1);
+            }
+        }
 
         #region Many To Many Methods
 
@@ -241,10 +241,6 @@ namespace CodeSmith.SchemaHelper
             AddToSearchCriteria(map, searchCriteria);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="map"></param>
         private void AddForeignKeySearchCriteria(IDictionary<string, SearchCriteria> map)
         {
             foreach (Association association in AssociatedForeignKeys)
@@ -321,29 +317,8 @@ namespace CodeSmith.SchemaHelper
             if (MemberMap.ContainsKey(column.Name))
                 return MemberMap[column.Name];
 
-            //TODO: JMH - We can probably delete this.
-
-            //var columnKey = string.Format("{0}-{1}", column.Table, column.Name);
-            //if (AssociationMap.ContainsKey(columnKey))
-            //    return AssociationMap[columnKey];
-
             return null;
         }
-
-        //internal AssociationMember GetAssocitionFromColumn(ColumnSchema column)
-        //{
-        //    var columnKey = string.Format("{0}-{1}", column.Table, column.Name);
-        //    return (AssociationMap.ContainsKey(columnKey))
-        //               ? AssociationMap[columnKey]
-        //               : null;
-        //}
-
-        //internal Member GetMemberFromColumn(ColumnSchema column)
-        //{
-        //    return (MemberMap.ContainsKey(column.Name))
-        //               ? MemberMap[column.Name]
-        //               : null;
-        //}
 
         #endregion
 
@@ -438,16 +413,6 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
-        //private Dictionary<string, Member> FKMemberMap
-        //{
-        //    get
-        //    {
-        //        if (_fkMemberMap == null)
-        //            Init();
-        //        return _fkMemberMap;
-        //    }
-        //}
-
         private Dictionary<string, Association> FKRemoteMemberMap
         {
             get
@@ -457,11 +422,6 @@ namespace CodeSmith.SchemaHelper
                 return _fkRemoteMemberMap;
             }
         }
-
-        //public bool HasOneToZeroOrZeroMember
-        //{
-        //    get { return (OneToZeroOrZeroMember != null); }
-        //}
 
         #endregion
 
@@ -557,35 +517,6 @@ namespace CodeSmith.SchemaHelper
                     .ToList();
             }
         }
-
-
-        //public AssociationMember OneToZeroOrZeroMember
-        //{
-        //    get
-        //    {
-        //        var associationMembers = new List<AssociationMember>();
-
-        //        foreach (TableKeySchema tks in Table.ForeignKeys)
-        //        {
-        //            if (tks.PrimaryKeyMemberColumns.Count == 1 && tks.ForeignKeyMemberColumns.Count == 1)
-        //            {
-        //                ColumnSchema column = tks.PrimaryKeyMemberColumns[0].Column;
-
-        //                if (column.IsPrimaryKeyMember) //column.Name.Equals(tks.ForeignKeyMemberColumns[0].Column.Name, StringComparison.InvariantCultureIgnoreCase)
-        //                {
-        //                    if (!Configuration.Instance.ExcludeTableRegexIsMatch(column.Table.FullName))
-        //                    {
-        //                        associationMembers.Add(new AssociationMember(AssociationType.OneToZeroOrOne,
-        //                                                                     column.Table, column,
-        //                                                                     tks.ForeignKeyMemberColumns[0], this));
-        //                    }
-        //                }
-        //            }
-        //        }
-
-        //        return associationMembers.FirstOrDefault();
-        //    }
-        //}
 
         public List<Association> AssociatedOneToMany
         {

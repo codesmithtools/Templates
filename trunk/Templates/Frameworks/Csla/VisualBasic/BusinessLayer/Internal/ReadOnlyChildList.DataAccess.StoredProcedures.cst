@@ -29,13 +29,6 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
-    <RunLocal()> _
-    Protected Sub Child_Create()
-        ' TODO: load default values
-        ' omit this override if you have no defaults to set
-        'MyBase.Child_Create()
-    End Sub
-
     Private Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
         RaiseListChangedEvents = false
         IsReadOnly = false

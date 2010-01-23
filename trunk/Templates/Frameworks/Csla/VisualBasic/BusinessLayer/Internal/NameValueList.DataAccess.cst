@@ -24,9 +24,5 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
-    '<RunLocal()> _
-    'Protected Sub DataPortal_Create()
-    'End Sub
-
     'NOTE: You need to modify the DataPortal_Fetch() method in the non generated partial class.
 End Class

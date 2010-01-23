@@ -1,5 +1,6 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X DynamicRoot" %>
 <%@ Register Name="CompositeKeyMethods" Template="..\..\Common\CompositeKeyMethods.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Properties" Template="..\..\Common\Properties.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ValidationRules" Template="..\..\Common\ValidationRules.cst" MergeProperties="False" ExcludeProperties="" %>
 
@@ -40,25 +41,7 @@ namespace <%= BusinessProjectName %>
 <% } %>
     public partial class <%= BusinessClassName %> : BusinessBase< <%= BusinessClassName %> >
     {
-        #region Contructor(s)
-
-        private <%= BusinessClassName %>()
-        { /* Require use of factory methods */ }
-
-        private <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
-        {
-        }
-
-<% if(DataAccessImplementation == DataAccessMethod.None || DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
-        internal <%= BusinessClassName %>(SafeDataReader reader)
-        {
-<%if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
-            Map(reader);
-<% } %>
-        }
-
-<% } %>
-        #endregion
+<% RenderHelper(new Constructor()); %>
 
 <% RenderHelper(new ValidationRules()); %>
 

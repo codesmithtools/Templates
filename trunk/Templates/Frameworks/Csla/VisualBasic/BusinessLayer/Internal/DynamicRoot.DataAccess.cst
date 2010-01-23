@@ -27,20 +27,9 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
-    <RunLocal()> _
-    Protected Sub DataPortal_Create()
-        ' TODO: load default values
-        ' omit this override if you have no defaults to set
-        MyBase.DataPortal.Create()
-    End Sub
-
-    Private Sub Fetch(object rootData)
-        ' TODO: load values from rootData
-        MarkOld()
-    End Sub
-
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)     
+    Private Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
         ' TODO: load values
+        MarkOld()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _

@@ -12,6 +12,7 @@
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="SchemaExplorer" %>
 
 <%@ Import Namespace="QuickStart" %>
@@ -63,7 +64,7 @@ Public Partial Class <%= BusinessClassName %>
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_DeleteSelf()
-        DataPortal_Delete(New <%= BusinessClassName %>Criteria(<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableParameters() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
+        DataPortal_Delete(New <%= BusinessClassName %>Criteria(<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
@@ -97,7 +98,7 @@ Public Partial Class <%= BusinessClassName %>
     End Sub
 
     Private Sub Child_DeleteSelf()
-        DataPortal_Delete(New <%= BusinessClassName %>Criteria(<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableParameters() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
+        DataPortal_Delete(New <%= BusinessClassName %>Criteria(<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
     End Sub
 
     #End Region

@@ -24,9 +24,6 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
-    '<RunLocal()> _
-    'Protected Sub Child_Create()
-    'End Sub
 
     Private Shadows Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
         RaiseListChangedEvents = False
@@ -42,4 +39,5 @@ Public Partial Class <%= BusinessClassName %>
     Protected Overrides Sub DataPortal_Update()
         Child_Update()
     End Sub
+
 End Class
