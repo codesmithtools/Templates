@@ -31,11 +31,6 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
-        //[RunLocal()]
-        //protected void DataPortal_Create()
-        //{
-        //}
-        
         //NOTE: You need to modify the DataPortal_Fetch() method in the non generated partial class.
     }
 }

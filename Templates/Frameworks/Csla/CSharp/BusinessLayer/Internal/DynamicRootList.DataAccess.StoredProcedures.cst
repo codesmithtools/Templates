@@ -33,11 +33,6 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
-        //[RunLocal()]
-        //protected void DataPortal_Create()
-        //{
-        //}
-
         private void DataPortal_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
         {
             RaiseListChangedEvents = false;

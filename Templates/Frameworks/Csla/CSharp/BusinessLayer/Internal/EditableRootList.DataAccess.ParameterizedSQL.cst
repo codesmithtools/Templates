@@ -34,11 +34,6 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
-        [RunLocal]
-        protected override void DataPortal_Create()
-        {
-        }
-
         private void DataPortal_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
         {
             RaiseListChangedEvents = false;
@@ -46,11 +41,6 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new DataPortalFetchList()); %>
 
             RaiseListChangedEvents = true;
-        }
-
-        protected override void DataPortal_Update()
-        {
-            Child_Update();
         }
     }
 }

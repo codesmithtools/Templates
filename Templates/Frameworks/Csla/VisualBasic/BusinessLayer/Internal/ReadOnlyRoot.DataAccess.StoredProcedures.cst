@@ -30,10 +30,6 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
-    <RunLocal()> _
-    Protected Sub DataPortal_Create()
-    End Sub
-
     Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
 <% RenderHelper(New DataPortalFetch()) %>
     End Sub

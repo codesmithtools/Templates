@@ -38,15 +38,10 @@ namespace <%= BusinessProjectName %>
             base.DataPortal.Create();
         }
 
-        private void Fetch(object rootData)
-        {
-            // TODO: load values from rootData
-            MarkOld();
-        }
-
         private void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)
         {
             // TODO: load values
+            MarkOld();
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]

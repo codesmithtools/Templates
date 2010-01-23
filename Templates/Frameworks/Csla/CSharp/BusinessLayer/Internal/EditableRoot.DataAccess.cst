@@ -38,7 +38,6 @@ namespace <%= BusinessProjectName %>
         {
             // TODO: load default values
             // omit this override if you have no defaults to set
-          ValidationRules.CheckRules();
         }
 
         protected override void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)

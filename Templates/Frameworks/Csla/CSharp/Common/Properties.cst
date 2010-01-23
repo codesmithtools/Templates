@@ -30,9 +30,7 @@
         public <%= member.SystemType %> <%= member.PropertyName %>
         {
             get { return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>); }
-<% if(!member.IsReadOnly) { %>
-            set { SetProperty(<%= member.PrivateMemberVariableName %>Property, ref <%= member.PrivateMemberVariableName %>, value); }
-<% } %>
+            <% if(member.IsReadOnly) { %>internal <% } %>set { SetProperty(<%= member.PrivateMemberVariableName %>Property, ref <%= member.PrivateMemberVariableName %>, value); }
         }
 
 <% } else { %>
@@ -45,9 +43,7 @@
         public <%= member.SystemType %> <%= member.PropertyName %>
         {
             get { return GetProperty(<%= member.PrivateMemberVariableName %>Property); }
-<% if(!member.IsReadOnly) { %>
-            set { SetProperty(<%= member.PrivateMemberVariableName %>Property, value); }
-<% } %>
+            <% if(member.IsReadOnly) { %>internal <% } %>set{ SetProperty(<%= member.PrivateMemberVariableName %>Property, value); }
         }
 
 <% } } %>
