@@ -1,0 +1,27 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+    #Region "Validation Rules"
+
+    Protected Overrides Sub AddBusinessRules()
+
+        If AddBusinessValidationRules() Then Exit Sub
+
+<%     For Each member As Member in Entity.MembersNoRowVersion %>
+<% If (member.SystemType = "System.String" ) Then  %>
+<% If Not member.IsNullable Then %>
+        ValidationRules.AddRule(AddressOf CommonRules.StringRequired, <%= member.PrivateMemberVariableName %>Property)
+<%  End If %>
+        ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(<%= member.PrivateMemberVariableName %>Property, <%= member.Size %>))
+<%  End If 
+Next %>
+    End Sub
+
+    #End Region
