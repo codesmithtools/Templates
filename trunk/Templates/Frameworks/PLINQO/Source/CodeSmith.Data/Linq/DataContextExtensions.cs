@@ -19,6 +19,35 @@ namespace CodeSmith.Data.Linq
     public static class DataContextExtensions
     {
         /// <summary>
+        /// Executes a SQL statement against a <see cref="DataContext"/> connection. 
+        /// </summary>
+        /// <param name="context">The <see cref="DataContext"/> to execute the batch select against.</param>
+        /// <param name="command">The DbCommand to execute.</param>
+        /// <returns>The number of rows affected.</returns>
+        /// <remarks>The DbCommand is not disposed by this call, the caller must dispose the DbCommand.</remarks>
+        public static int ExecuteCommand(this DataContext context, DbCommand command)
+        {
+            if (context == null)
+                throw new ArgumentNullException("context");
+            if (command == null)
+                throw new ArgumentNullException("command");
+
+            LogCommand(context, command);
+
+            command.Connection = context.Connection;
+            if (command.Connection == null)
+                throw new InvalidOperationException("The DataContext must contain a valid SqlConnection.");
+
+            if (context.Transaction != null)
+                command.Transaction = context.Transaction;
+
+            if (command.Connection.State == ConnectionState.Closed)
+                command.Connection.Open();
+
+            return command.ExecuteNonQuery();
+        }
+
+        /// <summary>
         /// Batches together multiple <see cref="IQueryable"/> queries into a single <see cref="DbCommand"/> and returns all data in
         /// a single round trip to the database.
         /// </summary>
@@ -247,7 +276,7 @@ namespace CodeSmith.Data.Linq
             return selectText + fromText;
         }
 
-        private static void LogCommand(DataContext context, DbCommand cmd)
+        internal static void LogCommand(DataContext context, DbCommand cmd)
         {
             if (context == null || context.Log == null || cmd == null)
                 return;
