@@ -1,0 +1,36 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+    #Region "Contructor(s)"
+
+    Private Sub New()
+        ' require use of factory method 
+    End Sub
+
+    Private Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+<% For Each member As Member in Entity.PrimaryKey.KeyMembers
+If UseMemberVariables Then %>
+        <%= [member].PrivateMemberVariableName %> = <%= member.VariableName %>
+<%  Else  %>
+        <%= member.PropertyName %> = <%= member.VariableName %>
+<% End If
+Next %>
+    End Sub
+
+<% If(DataAccessImplementation = DataAccessMethod.None Or DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
+    Friend Sub New(Byval reader As SafeDataReader)
+<%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
+        Map(reader)
+<% End If %>
+    End Sub
+
+<% End If %>
+    #End Region

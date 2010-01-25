@@ -1,0 +1,19 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+<% If (Entity.PrimaryKey.KeyMember.SystemType = "Guid") Then
+    If (UseMemberVariables) Then %>
+        <%= Entity.PrimaryKey.KeyMember.PrivateMemberVariableName %> = Guid.NewGuid()
+<%      Else %>
+        LoadProperty(Of <%= Entity.PrimaryKey.KeyMember.SystemType %>)(<%= Entity.PrimaryKey.KeyMember.PrivateMemberVariableName %>Property, Guid.NewGuid())
+<%      End If
+End If%>
+        ValidationRules.CheckRules()

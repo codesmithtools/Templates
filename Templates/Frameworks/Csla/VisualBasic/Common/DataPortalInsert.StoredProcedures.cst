@@ -1,0 +1,40 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+        Using connection As New SqlConnection(ADOHelper.ConnectionString)
+            connection.Open()
+            Using command As New SqlCommand("<%= GetInsertStoredProcedureName() %>", connection)
+                command.CommandType = CommandType.StoredProcedure
+                <%= entity.MembersUpdateInsert.BuildCommandParameters(False, True) %>
+
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
+<% If (Entity.HasRowVersionMember) Then %>
+                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+<% End If %>
+
+<% If (Entity.PrimaryKey.IsIdentity) Then %>
+<% for each [member] As Member in Entity.PrimaryKey.KeyMembers
+If(UseMemberVariables) Then %>
+                        <%= [member].PrivateMemberVariableName %> = <%If Not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+<% else %>
+                        LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <% If NOT [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
+<%  End If
+Next %>
+<% End If %>
+                    End If
+                End Using
+            End Using
+        End Using
+
+<% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0)Then %>
+        FieldManager.UpdateChildren(Me)
+<% End If %>
