@@ -57,22 +57,6 @@ Public Class ADOHelper
     End Function
 
     ''' <summary>
-    ''' Returns an array of SqlParameters for use in Stored Procedures.
-    ''' </summary>
-    Public Shared Function WhereSqlParameters(ByVal bag As Dictionary(Of String, Object)) As SqlParameter()
-        Dim statement As List(Of SqlParameter) = New List(Of SqlParameter)
-
-        If bag.Count = 0 Then
-            Return statement.ToArray()
-        End If
-
-        Dim whereClause As String = bag.Aggregate(String.Empty, Function(current, pair) current + String.Format("[{0}] = '{1}' AND ", pair.Key, pair.Value))
-        statement.Add(New SqlParameter("@WhereCondition", whereClause.Remove(whereClause.Length - 5, 5)))
-
-        Return statement.ToArray()
-    End Function
-
-    ''' <summary>
     ''' Returns a where clause for the current Criteria object.
     ''' </summary>
     ''' <returns>Returns a where clause for the current Criteria object.</returns>

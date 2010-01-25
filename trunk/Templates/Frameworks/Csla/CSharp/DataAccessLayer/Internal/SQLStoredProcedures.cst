@@ -142,20 +142,15 @@ WHERE
 %>
 
 CREATE PROCEDURE <%= GetDeleteStoredProcedureName() %>
-    @WhereCondition nvarchar(500)
+<% GenerateParameters(SourceTable.PrimaryKey.MemberColumns, 1, false); %>
 AS
 
 SET NOCOUNT ON
 
-DECLARE @SQL nvarchar(3250)
-
-SET @SQL = '
 DELETE FROM
     <%= GetTableOwner() %>[<%= SourceTable.Name %>]
 WHERE
-    ' + @WhereCondition
-
-EXEC sp_executesql @SQL
+    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1); %>
 
 <%
     GenerateProcedureFooter(GetDeleteStoredProcedureName());
@@ -170,31 +165,18 @@ EXEC sp_executesql @SQL
 %>
 
 CREATE PROCEDURE <%= GetSelectStoredProcedureName() %>
-    @WhereCondition nvarchar(500),
-    @OrderByExpression nvarchar(250) = NULL
+<% GenerateParameters(SourceTable.PrimaryKey.MemberColumns, 1, false); %>
 AS
 
 SET NOCOUNT ON
 <% GenerateSetTransactionIsolationLevelStatement(IsolationLevel); %>
 
-DECLARE @SQL nvarchar(3250)
-
-SET @SQL = '
 SELECT
     <% GenerateColumns(SourceTable.Columns, 1, true); %>
 FROM
     <%= GetTableOwner() %>[<%= SourceTable.Name %>]
 WHERE
-    ' + @WhereCondition
-
-IF @OrderByExpression IS NOT NULL AND LEN(@OrderByExpression) > 0
-BEGIN
-    SET @SQL = @SQL + '
-ORDER BY
-    ' + @OrderByExpression
-END
-
-EXEC sp_executesql @SQL
+    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1); %>
 
 <%
     GenerateProcedureFooter(GetSelectStoredProcedureName());

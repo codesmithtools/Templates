@@ -32,14 +32,14 @@ namespace CodeSmith.SchemaHelper
             NamingProperty = new NamingProperty
                                  {
                                      EntityNaming = EntityNaming.Singular,
-                                     TableNaming = TableNaming.Singular
+                                     TableNaming = TableNaming.Mixed
                                  };
 
             SearchCriteriaProperty = new SearchCriteriaProperty {Prefix = "GetBy"};
 
             RowVersionColumn = "^((R|r)ow)?(V|v)ersion$";
             VisualStudioVersion = VisualStudioVersion.VS_2008;
-            SingularMemberSuffix = "";
+            SingularMemberSuffix = "Member";
             IncludeManyToManyEntity = true;
 
             IgnoreExpressions = new List<Regex>();
