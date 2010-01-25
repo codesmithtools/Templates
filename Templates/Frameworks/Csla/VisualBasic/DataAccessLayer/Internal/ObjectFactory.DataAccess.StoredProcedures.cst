@@ -98,7 +98,7 @@ Public Partial Class <%= Entity.ClassName %>Factory
             connection.Open()
             Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
-                command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag))
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         item = Map(reader)
@@ -276,7 +276,7 @@ If(Entity.AssociatedManyToOne.Count > 0) Then %>
             connection.Open()
             Using command As New SqlCommand("<%= GetDeleteStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
-                command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag))
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
                     If reader.RecordsAffected = 0 Then

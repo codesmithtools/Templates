@@ -105,7 +105,7 @@ namespace <%= DataProjectName %>
                 using (SqlCommand command = new SqlCommand("<%= GetSelectStoredProcedureName() %>", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag));
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -288,7 +288,7 @@ if(Entity.AssociatedManyToOne.Count > 0){ %>
                 using (SqlCommand command = new SqlCommand("<%= GetDeleteStoredProcedureName() %>", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag));
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 

@@ -62,7 +62,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-                    columnNames += string.Format(", [{0}]", member.ColumnName);
+                columnNames += string.Format(", [{0}]", member.ColumnName);
             }
 
             return columnNames.TrimStart(new[] { ',', ' ' });
@@ -79,7 +79,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-                    columnNames += string.Format(", {0}{1}", Configuration.Instance.ParameterPrefix, member.Name);
+                columnNames += string.Format(", {0}{1}", Configuration.Instance.ParameterPrefix, member.Name);
             }
 
             foreach (AssociationMember associationMember in associationMembers)

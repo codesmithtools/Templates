@@ -63,18 +63,6 @@ namespace <%= DataProjectName %>
         }
 
         /// <summary>
-        /// Returns an array of SqlParameters for use in Stored Procedures.
-        /// </summary>
-        public static SqlParameter[] WhereSqlParameters(Dictionary<string, object> bag)
-        {
-            if (bag.Count == 0)
-                return new List<SqlParameter> { new SqlParameter("@WhereCondition", DBNull.Value) }.ToArray();
-
-            string whereClause = bag.Aggregate(string.Empty, (current, pair) => current + string.Format("[{0}] = '{1}' AND ", pair.Key, pair.Value));
-            return new List<SqlParameter> { new SqlParameter("@WhereCondition", whereClause.Remove(whereClause.Length - 5, 5)) }.ToArray();
-        }
-
-        /// <summary>
         /// Returns a where clause for the current Criteria object.
         /// </summary>
         /// <returns>Returns a where clause for the current Criteria object.</returns>

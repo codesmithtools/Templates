@@ -9,7 +9,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
+			using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
                 using(SqlCommand command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))

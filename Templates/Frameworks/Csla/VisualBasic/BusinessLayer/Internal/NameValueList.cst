@@ -73,7 +73,7 @@ Public Partial Class <%= BusinessClassName %>
             connection.Open()
             Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
-                command.Parameters.AddRange(ADOHelper.WhereSqlParameters(criteria.StateBag))
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Do
