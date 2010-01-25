@@ -62,7 +62,6 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-                if (!member.IsIdentity)
                     columnNames += string.Format(", [{0}]", member.ColumnName);
             }
 
@@ -80,7 +79,6 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-                if (!member.IsIdentity)
                     columnNames += string.Format(", {0}{1}", Configuration.Instance.ParameterPrefix, member.Name);
             }
 

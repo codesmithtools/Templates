@@ -9,13 +9,13 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-            const string commandText = "INSERT INTO [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] (<%= Entity.MembersNoRowVersion.BuildDataBaseColumns() %>) VALUES (<%= Entity.MembersNoRowVersion.BuildDataBaseParameters() %>)<%= Entity.BuildInsertSelectStatement() %>";
+            const string commandText = "INSERT INTO [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] (<%= Entity.MembersUpdateInsert.BuildDataBaseColumns() %>) VALUES (<%= Entity.MembersUpdateInsert.BuildDataBaseParameters() %>)<%= Entity.BuildInsertSelectStatement() %>";
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
                 using(SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    <%= Entity.MembersUpdateInsert.BuildCommandParameters(false, false) %>
+                    <%= Entity.MembersUpdateInsert.BuildCommandParameters(false, false, true) %>
                     
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {

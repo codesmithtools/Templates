@@ -15,7 +15,8 @@
                 connection.Open();
                 using(SqlCommand command = new SqlCommand(commandText, connection))
                 {
-                    <%= Entity.MembersNoRowVersion.BuildCommandParameters() %>
+					<%= Entity.PrimaryKey.KeyMembers.BuildCommandParameters(false, false, true) %>
+                    <%= Entity.MembersUpdateInsert.BuildCommandParameters(false, false, true) %>
 <% if(Entity.HasRowVersionMember) { %>
                     command.Parameters.AddWithValue("@p_<%= Entity.RowVersionMember.ColumnName %>", _timestamp);
 <% } %>

@@ -8,6 +8,7 @@
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
 
 <%@ Import Namespace="SchemaExplorer" %>
@@ -50,12 +51,12 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ChildFetch()); %>
         }
 
-        private void Child_Insert(<%-- <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %> --%>)
+        private void Child_Insert(<%= Entity.AssociatedManyToOne.BuildParametersVariables() %>)
         {
 <% RenderHelper(new ChildInsert()); %>
         }
 
-        private void Child_Update()
+        private void Child_Update(<%= Entity.AssociatedManyToOne.BuildParametersVariables() %>)
         {
 <% RenderHelper(new ChildUpdate()); %>
         }
