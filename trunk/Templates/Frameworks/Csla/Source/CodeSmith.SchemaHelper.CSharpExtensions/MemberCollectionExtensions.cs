@@ -38,12 +38,33 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildCommandParameters(this List<Member> members, bool isObjectFactory, bool usePropertyName)
         {
+            return BuildCommandParameters(members, isObjectFactory, usePropertyName, false);
+        }
+
+        public static string BuildCommandParameters(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool isChildInsertUpdate)
+        {
             string commandParameters = string.Empty;
             string castPrefix = isObjectFactory ? "item." : string.Empty;
 
             foreach (Member member in members)
             {
                 string propertyName = member.PropertyName;
+
+                // Resolve property Name from relationship.
+                if (isChildInsertUpdate && member.IsForeignKey)
+                {
+                    foreach (Association association in member.Entity.AssociatedManyToOne)
+                    {
+                        foreach (AssociationMember associationMember in association)
+                        {
+                            if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                            {
+                                propertyName = string.Format("{0}.{1}", Util.NamingConventions.VariableName(associationMember.ClassName), Util.NamingConventions.PropertyName(associationMember.ColumnName));
+                                break;
+                            }
+                        }
+                    }
+                }
 
                 string cast;
                 if (member.SystemType.Contains("SmartDate"))

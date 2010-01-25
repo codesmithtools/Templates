@@ -9,7 +9,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-            string commandText = string.Format("DELETE FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
+            string commandText = string.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
@@ -19,9 +19,10 @@
 
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
-                        //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                        if(reader.RecordsAffected == 0)
-                            throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+                        if (reader.Read())
+							Map(reader);
+						else
+							throw new Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria));
                     }
                 }
             }

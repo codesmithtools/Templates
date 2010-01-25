@@ -47,11 +47,11 @@ Public Partial Class <%= BusinessClassName %>
 <% RenderHelper(New ChildFetch()) %>
     End Sub
     
-    Private Sub Child_Insert(<%-- <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %> --%>)
+    Private Sub Child_Insert(<%= Entity.AssociatedManyToOne.BuildParametersVariables() %>)
 <% RenderHelper(New ChildInsert()) %>
     End Sub
 
-    Private Sub Child_Update()
+    Private Sub Child_Update(<%= Entity.AssociatedManyToOne.BuildParametersVariables() %>)
 <% RenderHelper(New ChildUpdate()) %>
     End Sub
     

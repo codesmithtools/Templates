@@ -48,6 +48,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AssociationMemberCollectionExtensions.cs" />
     <Compile Include="MemberCollectionExtensions.cs" />
     <Compile Include="MemberExtensions.cs" />
   </ItemGroup>
