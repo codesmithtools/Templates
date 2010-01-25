@@ -31,9 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Csla, Version=3.6.3.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+    <Reference Include="Csla, Version=3.8.0.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\Csla\Csla.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Templates\Frameworks\Csla\Common\Csla\Csla.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -89,6 +89,13 @@
     </Compile>
     <Compile Include="Collections\LineItemList.Generated.cs">
       <DependentUpon>LineItemList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\OrderStatusList.cs" />
+    <Compile Include="Collections\OrderStatusList.DataAccess.cs">
+      <DependentUpon>OrderStatusList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\OrderStatusList.Generated.cs">
+      <DependentUpon>OrderStatusList.cs</DependentUpon>
     </Compile>
     <Compile Include="Collections\ProductList.cs" />
     <Compile Include="Collections\ProductList.DataAccess.cs">
@@ -229,12 +236,7 @@
     <Compile Include="PetShopProfileProvider.cs" />
     <Compile Include="ProfileManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PetShop.Data\PetShop.Data.csproj">
-      <Project>{C2A03633-B771-4546-8F1E-F1EBFCDACFF8}</Project>
-      <Name>PetShop.Data</Name>
-    </ProjectReference>
+    <Compile Include="Utility\ADOHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Entities.csp" />

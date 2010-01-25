@@ -48,7 +48,7 @@ Public Partial Class <%= BusinessClassName %>
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
 <% RenderHelper(New DataPortalFetch()) %>
     End Sub
 
@@ -69,11 +69,11 @@ Public Partial Class <%= BusinessClassName %>
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_DeleteSelf()
-        DataPortal_Delete(New <%= BusinessClassName %>Criteria(<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
+        DataPortal_Delete(New <%= ChildBusinessClassName %>Criteria(<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
 <% RenderHelper(New DataPortalDelete()) %>
     End Sub
 
@@ -88,7 +88,7 @@ Public Partial Class <%= BusinessClassName %>
         'MyBase.Child_Create()
     End Sub
     
-    Private Sub Child_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
+    Private Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
 <% RenderHelper(New ChildFetch()) %>
         MarkAsChild()
     End Sub
@@ -102,7 +102,7 @@ Public Partial Class <%= BusinessClassName %>
     End Sub
 
     Private Sub Child_DeleteSelf()
-        DataPortal_Delete(New <%= BusinessClassName %>Criteria(<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
+        DataPortal_Delete(New <%= ChildBusinessClassName %>Criteria(<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
     End Sub
 
     #End Region

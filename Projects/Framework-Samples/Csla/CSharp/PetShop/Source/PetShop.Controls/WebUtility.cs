@@ -63,7 +63,7 @@ namespace PetShop.Controls
         public static string GetCategoryName(string categoryId)
         {
             if (!enableCaching)
-                return Category.GetCategory(categoryId).Name;
+                return Category.GetByCategoryId(categoryId).Name;
 
             string cacheKey = string.Format(CATEGORY_NAME_KEY, categoryId);
 
@@ -75,7 +75,7 @@ namespace PetShop.Controls
                 int cacheDuration = int.Parse(ConfigurationManager.AppSettings["CategoryCacheDuration"]);
 
                 // If the data is not in the cache then fetch the data from the business logic tier
-                data = Category.GetCategory(categoryId).Name;
+                data = Category.GetByCategoryId(categoryId).Name;
 
                 // Store the output in the data cache, and Add the necessary AggregateCacheDependency object
                 HttpRuntime.Cache.Add(cacheKey, data, null, DateTime.Now.AddHours(cacheDuration),
@@ -93,7 +93,7 @@ namespace PetShop.Controls
         public static string GetProductName(string productId)
         {
             if (!enableCaching)
-                return Product.GetProduct(productId).Name;
+                return Product.GetByProductId(productId).Name;
 
             string cacheKey = string.Format(PRODUCT_NAME_KEY, productId);
 
@@ -106,7 +106,7 @@ namespace PetShop.Controls
                 int cacheDuration = int.Parse(ConfigurationManager.AppSettings["ProductCacheDuration"]);
 
                 // If the data is not in the cache then fetch the data from the business logic tier
-                data = Product.GetProduct(productId).Name;
+                data = Product.GetByProductId(productId).Name;
 
                 // Store the output in the data cache, and Add the necessary AggregateCacheDependency object
                 HttpRuntime.Cache.Add(cacheKey, data, null, DateTime.Now.AddHours(cacheDuration),

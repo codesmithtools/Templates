@@ -275,7 +275,7 @@ if(Entity.AssociatedManyToOne.Count > 0){ %>
             // If we're new then don't call delete.
             if (item.IsNew) return;
 
-            DoDelete(new <%= BusinessClassName %>Criteria{<%= Entity.GetUniqueSearchCriteriaMembers().BuildCriteriaObjectInitializer(Entity.Table.Name, true) %>});
+            DoDelete(new <%= ChildBusinessClassName %>Criteria{<%= Entity.GetUniqueSearchCriteriaMembers().BuildCriteriaObjectInitializer(Entity.Table.Name, true) %>});
 
             MarkNew(item);
         }

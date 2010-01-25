@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
-    <add key="ConnectionString1" value="Data Source=.\SQLEXPRESS;Integrated Security=True;Database=PetShop;" />
+    <add key="ConnectionString1" value="Data Source=.;Integrated Security=True;Database=PetShop;" />
+    <add key="ConnectionString2" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
   </variables>
   <propertySets>
     <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Entities.cst">
@@ -150,7 +151,7 @@
     </tableList>
       </property>
       <property name="EditableChildList">
-        <connectionString>$(ConnectionString1)</connectionString>
+        <connectionString>$(ConnectionString2)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
       <table>
@@ -164,6 +165,10 @@
       <table>
         <owner>dbo</owner>
         <name>Item</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>OrderStatus</name>
       </table>
     </tableList>
       </property>
@@ -197,6 +202,7 @@
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
+      <property name="NameValueList" />
     </propertySet>
   </propertySets>
 </codeSmith>

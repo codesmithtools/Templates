@@ -30,7 +30,7 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
-        private void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)
+        private void DataPortal_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
         {
             // TODO: load values.
         }

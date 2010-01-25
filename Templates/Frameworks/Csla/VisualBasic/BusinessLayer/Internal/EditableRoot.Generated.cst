@@ -54,7 +54,7 @@ Public Partial Class <%= BusinessClassName %>
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
 
     Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
-        Dim criteria As New <%= BusinessClassName %>Criteria()
+        Dim criteria As New <%= ChildBusinessClassName %>Criteria()
 <%For Each member As Member in sc.Members %>
         criteria.<%= member.PropertyName %> = <%= member.VariableName %>
 <% Next %>
@@ -65,11 +65,11 @@ Public Partial Class <%= BusinessClassName %>
 
 <% If(UseDeferredDeletion)Then %>
     'Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
-    '   DataPortal.Delete(New <%= BusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+    '   DataPortal.Delete(New <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
     'End Sub
 <% Else %>
     Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
-        DataPortal.Delete(New <%= BusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+        DataPortal.Delete(New <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
     End Sub
 <%End If%>
 
