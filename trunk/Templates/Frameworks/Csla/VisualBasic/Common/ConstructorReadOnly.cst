@@ -16,15 +16,13 @@
     End Sub
 
     Private Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
-        Using(BypassPropertyChecks)
 <% For Each member As Member in Entity.PrimaryKey.KeyMembers
 If UseMemberVariables Then %>
-            <%= [member].PrivateMemberVariableName %> = <%= member.VariableName %>
+        <%= [member].PrivateMemberVariableName %> = <%= member.VariableName %>
 <%  Else  %>
-           LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%= member.VariableName %>)
+        LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%= member.VariableName %>)
 <% End If
 Next %>
-        End Using
     End Sub
 
 <% If(DataAccessImplementation = DataAccessMethod.None Or DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>

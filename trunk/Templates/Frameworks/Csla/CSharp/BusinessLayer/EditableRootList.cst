@@ -85,13 +85,13 @@ public override void Generate()
             editableRootListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 
             //StoredProcedures
-                fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.StoredProcedures.sql", editableRootList.BusinessClassName));
+            fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.StoredProcedures.sql", editableRootList.BusinessClassName));
             SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
             this.CopyPropertiesTo(sqlStoredProcedures);
             sqlStoredProcedures.SourceTable = entity.Table;
             
-            sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
             sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
+            sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
         }
         
         #endregion
