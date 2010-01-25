@@ -1660,6 +1660,15 @@
             </summary>
             <value>The cache group name.</value>
         </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextExtensions.ExecuteCommand(System.Data.Linq.DataContext,System.Data.Common.DbCommand)">
+            <summary>
+            Executes a SQL statement against a <see cref="T:System.Data.Linq.DataContext"/> connection. 
+            </summary>
+            <param name="context">The <see cref="T:System.Data.Linq.DataContext"/> to execute the batch select against.</param>
+            <param name="command">The DbCommand to execute.</param>
+            <returns>The number of rows affected.</returns>
+            <remarks>The DbCommand is not disposed by this call, the caller must dispose the DbCommand.</remarks>
+        </member>
         <member name="M:CodeSmith.Data.Linq.DataContextExtensions.ExecuteQuery(System.Data.Linq.DataContext,System.Linq.IQueryable[])">
             <summary>
             Batches together multiple <see cref="T:System.Linq.IQueryable"/> queries into a single <see cref="T:System.Data.Common.DbCommand"/> and returns all data in
