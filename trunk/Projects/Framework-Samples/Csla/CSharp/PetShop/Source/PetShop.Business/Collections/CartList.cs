@@ -22,8 +22,18 @@ namespace PetShop.Business
 
         internal static CartList GetCart(int uniqueID, bool isShoppingCart)
         {
-            return
-                DataPortal.FetchChild<CartList>(new CartCriteria {UniqueID = uniqueID, IsShoppingCart = isShoppingCart});
+            CartList list = null;
+
+            try
+            {
+                list = DataPortal.FetchChild<CartList>(new CartCriteria {UniqueID = uniqueID, IsShoppingCart = isShoppingCart});
+            }
+            catch (Exception)
+            {
+                list = CartList.NewList();
+            }
+
+            return list;
         }
 
         #endregion
@@ -107,8 +117,8 @@ namespace PetShop.Business
                 Items[index].Quantity += quantity;
             else
             {
-                Item item = Item.GetItem(itemId);
-                Product product = Product.GetProduct(item.ProductId);
+                Item item = Item.GetByItemId(itemId);
+                Product product = Product.GetByProductId(item.ProductId);
                 Cart cart = Cart.NewCart();
                 cart.UniqueID = uniqueID;
                 cart.ItemId = itemId;

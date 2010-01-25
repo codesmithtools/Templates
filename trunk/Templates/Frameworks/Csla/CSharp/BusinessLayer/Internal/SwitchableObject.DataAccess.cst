@@ -40,7 +40,7 @@ namespace <%= BusinessProjectName %>
             base.DataPortal.Create();
         }
 
-        private void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)
+        private void DataPortal_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
         {
             // TODO: load values
         }
@@ -64,7 +64,7 @@ namespace <%= BusinessProjectName %>
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]
-        protected override void DataPortal_Delete(<%= BusinessClassName %>Criteria criteria)  
+        protected override void DataPortal_Delete(<%= ChildBusinessClassName %>Criteria criteria)  
         {
             // TODO: delete values
         }

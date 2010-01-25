@@ -18,11 +18,11 @@
                 <table cellspacing="0" cellpadding="0" border="0">
 		            <tr>
 			            <td class="itemText">Name:</td>
-			            <td class="itemName"><%# string.Format("{0} {1}", Eval("Product.Name"), Eval("Name")) %></td>
+			            <td class="itemName"><%# string.Format("{0} {1}", Eval("ProductMember.Name"), Eval("Name"))%></td>
 		            </tr>
 		            <tr class="itemText">
 			            <td>Quantity:</td>
-			            <td><%# Inventory.GetInventory(Eval("ItemId").ToString()).Qty %></td>
+			            <td><%# Inventory.GetByItemId(Eval("ItemId").ToString()).Qty %></td>
 		            </tr>
 		            <tr class="itemText">
 			            <td>Price:</td>

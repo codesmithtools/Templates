@@ -55,15 +55,23 @@ namespace PetShop.Business
             }
 
             //Get the profile.
-            Profile profile = Profile.GetProfile(username);
+            Profile profile = null;
+            var userNotFound = false;
+            try
+            {
+                profile = Profile.GetProfile(username);
+            }
+            catch (Exception)
+            {
+                userNotFound = true;
+            }
 
-            //Check to see if the profile exists.
-            if(string.IsNullOrEmpty(profile.Username))
+            if (userNotFound)
             {
                 //If the username is the Anonymous user then create it.
                 if (username == _ANONYMOUS_USERNAME)
                     return CreateUser(username, true);
-                
+
                 return CreateUser(username, false);
             }
 

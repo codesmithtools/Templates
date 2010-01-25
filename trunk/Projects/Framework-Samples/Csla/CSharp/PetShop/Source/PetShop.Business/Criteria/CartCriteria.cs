@@ -17,10 +17,5 @@ namespace PetShop.Business
 {
 	public partial class CartCriteria
 	{
-        public string ItemId
-		{
-            get { return GetValue<string>("ItemId"); }
-			set { _bag["ItemId"] = value; }
-		}
     }
 }

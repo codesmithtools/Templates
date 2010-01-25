@@ -56,10 +56,6 @@
       <Project>{AC433AE0-A1DF-4D32-98C4-168D6DA1DF38}</Project>
       <Name>PetShop.Business</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PetShop.Data\PetShop.Data.csproj">
-      <Project>{232F6A4E-8BD6-431A-9A4B-E3F2C73953AD}</Project>
-      <Name>PetShop.Data</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

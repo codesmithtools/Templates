@@ -27,7 +27,7 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
-    Private Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
+    Private Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
         ' TODO: load values
         MarkOld()
     End Sub

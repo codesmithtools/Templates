@@ -37,7 +37,7 @@ Public Partial Class <%= BusinessClassName %>
         MyBase.DataPortal_Create()
     End Sub
 
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
         ' TODO: load values
     End Sub
 
@@ -57,7 +57,7 @@ Public Partial Class <%= BusinessClassName %>
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
         ' TODO: delete values
     End Sub
 

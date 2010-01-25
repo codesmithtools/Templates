@@ -58,7 +58,7 @@ namespace <%= BusinessProjectName %>
         internal static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             return DataPortal.Fetch< <%= BusinessClassName %> >(
-                new <%= BusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
+                new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
         }
 <% } %>
 

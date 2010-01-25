@@ -105,7 +105,13 @@ namespace PetShop.Business
             get
             {
                 if (!FieldManager.FieldExists(_shoppingCart))
-                    SetProperty(_shoppingCart, CartList.GetCart(UniqueID, true));
+                {
+                    if (IsNew)
+                        LoadProperty(_shoppingCart, PetShop.Business.CartList.NewList());
+                    else
+
+                        LoadProperty(_shoppingCart, PetShop.Business.CartList.GetCart(UniqueID, true));
+                }
 
                 return GetProperty(_shoppingCart);
             }
@@ -117,7 +123,13 @@ namespace PetShop.Business
             get
             {
                 if (!FieldManager.FieldExists(_wishList))
-                    SetProperty(_wishList, CartList.GetCart(UniqueID, false));
+                {
+                    if (IsNew)
+                        LoadProperty(_wishList, PetShop.Business.CartList.NewList());
+                    else
+
+                        LoadProperty(_wishList, PetShop.Business.CartList.GetCart(UniqueID, false));
+                }
 
                 return GetProperty(_wishList);
             }

@@ -40,7 +40,7 @@ namespace <%= BusinessProjectName %>
             // omit this override if you have no defaults to set
         }
 
-        protected override void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)
+        protected override void DataPortal_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
         {
             if (criteria == null) return;
 
@@ -66,7 +66,7 @@ namespace <%= BusinessProjectName %>
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]
-        protected override void DataPortal_Delete(<%= BusinessClassName %>Criteria criteria)
+        protected override void DataPortal_Delete(<%= ChildBusinessClassName %>Criteria criteria)
         {
             if (criteria == null) return;
 

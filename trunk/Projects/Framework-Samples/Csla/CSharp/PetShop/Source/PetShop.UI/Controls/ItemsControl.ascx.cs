@@ -19,7 +19,7 @@ namespace PetShop.UI.Controls
             //get category id
             string productId = Request.QueryString["productId"];
 
-            itemsGrid.DataSource = Product.GetProduct(productId).Items;
+            itemsGrid.DataSource = Product.GetByProductId(productId).Items;
             itemsGrid.DataBind();
         }
     }

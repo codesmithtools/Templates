@@ -38,7 +38,7 @@ namespace <%= BusinessProjectName %>
             base.DataPortal.Create();
         }
 
-        private void DataPortal_Fetch(<%= BusinessClassName %>Criteria criteria)
+        private void DataPortal_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
         {
             // TODO: load values
             MarkOld();

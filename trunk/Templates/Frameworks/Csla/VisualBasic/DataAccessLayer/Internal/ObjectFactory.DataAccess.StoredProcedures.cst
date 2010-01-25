@@ -262,7 +262,7 @@ If(Entity.AssociatedManyToOne.Count > 0) Then %>
             Return
         End If
 
-        Dim criteria As New <%= BusinessClassName %>Criteria()
+        Dim criteria As New <%= ChildBusinessClassName %>Criteria()
 <% For Each member As Member In Entity.GetUniqueSearchCriteriaMembers() %>
         criteria.<%= member.BuildCriteriaObjectInitializer(Entity.Table.Name, true) %>
 <% Next %>

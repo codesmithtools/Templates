@@ -30,7 +30,7 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
-    Private Sub Child_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria)
+    Private Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
 <% RenderHelper(New ChildFetch()) %>
     End Sub
 

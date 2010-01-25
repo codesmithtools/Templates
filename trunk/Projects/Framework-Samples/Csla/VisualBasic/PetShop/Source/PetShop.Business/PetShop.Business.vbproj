@@ -36,11 +36,12 @@
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Csla, Version=3.6.3.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+    <Reference Include="Csla, Version=3.8.0.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\Csla\Csla.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Templates\Frameworks\Csla\Common\Csla\Csla.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
@@ -101,6 +102,13 @@
       <DependentUpon>LineItemList.vb</DependentUpon>
     </Compile>
     <Compile Include="Collections\LineItemList.vb" />
+    <Compile Include="Collections\OrderStatusList.DataAccess.vb">
+      <DependentUpon>OrderStatusList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\OrderStatusList.Generated.vb">
+      <DependentUpon>OrderStatusList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\OrderStatusList.vb" />
     <Compile Include="Collections\ProductList.DataAccess.vb">
       <DependentUpon>ProductList.vb</DependentUpon>
     </Compile>
@@ -254,6 +262,7 @@
     </Compile>
     <Compile Include="PetShopProfileProvider.vb" />
     <Compile Include="ProfileManager.vb" />
+    <Compile Include="Utility\ADOHelper.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -273,12 +282,6 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PetShop.Data\PetShop.Data.vbproj">
-      <Project>{B6476699-0462-4F01-8490-E489161548F1}</Project>
-      <Name>PetShop.Data</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Entities.csp" />
