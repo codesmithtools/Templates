@@ -28,12 +28,8 @@ namespace CodeSmith.Data.Linq
         /// </remarks>
         public static int Delete<TEntity>(this Table<TEntity> table, IQueryable<TEntity> entities) where TEntity : class
         {
-            DbCommand delete = table.GetDeleteBatchCommand(entities);
-
-            IEnumerable<object> parameters = from p in delete.Parameters.Cast<DbParameter>()
-                                             select p.Value;
-
-            return table.Context.ExecuteCommand(delete.CommandText, parameters.ToArray());
+            using (DbCommand delete = table.GetDeleteBatchCommand(entities))
+                return table.Context.ExecuteCommand(delete);
         }
 
         /// <summary>
@@ -62,11 +58,8 @@ namespace CodeSmith.Data.Linq
         /// </remarks>
         public static int Update<TEntity>(this Table<TEntity> table, IQueryable<TEntity> entities, Expression<Func<TEntity, TEntity>> evaluator) where TEntity : class
         {
-            DbCommand update = table.GetUpdateBatchCommand(entities, evaluator);
-
-            IEnumerable<object> parameters = from p in update.Parameters.Cast<DbParameter>()
-                                             select p.Value;
-            return table.Context.ExecuteCommand(update.CommandText, parameters.ToArray());
+            using (DbCommand update = table.GetUpdateBatchCommand(entities, evaluator))
+                return table.Context.ExecuteCommand(update);
         }
 
         /// <summary>
