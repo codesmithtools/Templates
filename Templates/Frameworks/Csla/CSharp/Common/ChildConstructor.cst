@@ -18,11 +18,14 @@
 
         private <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         {
+            using(BypassPropertyChecks)
+            {
 <% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(UseMemberVariables) { %>
-            <%= member.PrivateMemberVariableName %> = <%= member.VariableName %>;
+                <%= member.PrivateMemberVariableName %> = <%= member.VariableName %>;
 <% } else { %>
-            <%= member.PropertyName %> = <%= member.VariableName %>;
+                LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.VariableName %>);
 <% } } %>
+            }
 
             MarkAsChild();
         }

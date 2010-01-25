@@ -1,5 +1,5 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X ReadOnlyChild" %>
-<%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReaderReadOnly.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
