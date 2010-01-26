@@ -11,6 +11,8 @@ namespace PetShop.Tests.StoredProcedures
 
         private string TestCategoryID { get; set; }
         private string TestCategoryID2 { get; set; }
+        private string TestProductID { get; set; }
+        private string TestProductID2 { get; set; }
 
         [NUnit.Framework.TestFixtureSetUp]
         public void Init()
@@ -25,6 +27,8 @@ namespace PetShop.Tests.StoredProcedures
         {
             TestCategoryID = TestUtility.Instance.RandomString(10, false);
             TestCategoryID2 = TestUtility.Instance.RandomString(10, false);
+            TestProductID = TestUtility.Instance.RandomString(10, false);
+            TestProductID2 = TestUtility.Instance.RandomString(10, false);
 
             TearDown();
             CreateCategory(TestCategoryID);
@@ -33,6 +37,8 @@ namespace PetShop.Tests.StoredProcedures
         [TearDown]
         public void TearDown()
         {
+            Product.DeleteProduct(TestProductID2);
+            Product.DeleteProduct(TestProductID);
             Category.DeleteCategory(TestCategoryID);
             Category.DeleteCategory(TestCategoryID2);
         }
@@ -97,7 +103,6 @@ namespace PetShop.Tests.StoredProcedures
             Console.WriteLine("2. Inserting new category.");
             Stopwatch watch = Stopwatch.StartNew();
 
-            //Insert should fail as there should be a duplicate key.
             Category category = Category.NewCategory();
             category.CategoryId = TestCategoryID2;
             category.Name = TestUtility.Instance.RandomString(80, false);
@@ -192,8 +197,7 @@ namespace PetShop.Tests.StoredProcedures
 
             try
             {
-                Category invalidCategory = Category.GetByCategoryId(TestCategoryID);
-
+                Category.GetByCategoryId(TestCategoryID);
                 Assert.Fail("Record exists when it should have been updated.");
             }
             catch (Exception)
@@ -316,8 +320,10 @@ namespace PetShop.Tests.StoredProcedures
             Stopwatch watch = Stopwatch.StartNew();
 
             Category category = Category.NewCategory();
+            var count = category.Products.Count;
 
-            Assert.Fail("Need to implement.");
+            Assert.IsTrue(count == 0);
+
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
         }
 
@@ -330,7 +336,10 @@ namespace PetShop.Tests.StoredProcedures
             Console.WriteLine("10. Testing child collections on a category with no child collection items.");
             Stopwatch watch = Stopwatch.StartNew();
 
-            Category category = Category.NewCategory();
+            Category category = Category.GetByCategoryId(TestCategoryID);
+            var count = category.Products.Count;
+
+            Assert.IsTrue(count == 0);
 
             Assert.Fail("Need to implement.");
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
@@ -391,8 +400,28 @@ namespace PetShop.Tests.StoredProcedures
             Stopwatch watch = Stopwatch.StartNew();
 
             Category category = Category.NewCategory();
+            category.CategoryId = TestCategoryID2;
+            category.Name = TestUtility.Instance.RandomString(80, false);
+            category.Descn = TestUtility.Instance.RandomString(255, false);
 
-            Assert.Fail("Need to implement.");
+            Assert.IsTrue(category.Products.Count == 0);
+
+            Product product = category.Products.AddNew();
+
+            Assert.IsTrue(category.Products.Count == 1);
+
+            product.ProductId = TestProductID;
+            product.Name = TestUtility.Instance.RandomString(80, false);
+            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Image = TestUtility.Instance.RandomString(80, false);
+
+            category = category.Save();
+
+            Category category2 = Category.GetByCategoryId(TestCategoryID2);
+            
+            Assert.IsTrue(category.Products.Count == category2.Products.Count);
+            Assert.IsTrue(category.CategoryId == category2.Products[0].CategoryId);
+
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
         }
 
@@ -405,9 +434,25 @@ namespace PetShop.Tests.StoredProcedures
             Console.WriteLine("15. Testing insert on child collections in a category.");
             Stopwatch watch = Stopwatch.StartNew();
 
-            Category category = Category.NewCategory();
+            Category category = Category.GetByCategoryId(TestCategoryID);
+            Assert.IsTrue(category.Products.Count == 0);
 
-            Assert.Fail("Need to implement.");
+            Product product = category.Products.AddNew();
+
+            Assert.IsTrue(category.Products.Count == 1);
+
+            product.ProductId = TestProductID;
+            product.Name = TestUtility.Instance.RandomString(80, false);
+            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Image = TestUtility.Instance.RandomString(80, false);
+
+            category = category.Save();
+
+            Category category2 = Category.GetByCategoryId(TestCategoryID);
+
+            Assert.IsTrue(category.Products.Count == category2.Products.Count);
+            Assert.IsTrue(category.CategoryId == category2.Products[0].CategoryId);
+
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
         }
 
@@ -421,8 +466,32 @@ namespace PetShop.Tests.StoredProcedures
             Stopwatch watch = Stopwatch.StartNew();
 
             Category category = Category.NewCategory();
+            category.CategoryId = TestCategoryID2;
+            category.Name = TestUtility.Instance.RandomString(80, false);
+            category.Descn = TestUtility.Instance.RandomString(255, false);
 
-            Assert.Fail("Need to implement.");
+            Assert.IsTrue(category.Products.Count == 0);
+
+            Product product = category.Products.AddNew();
+
+            Assert.IsTrue(category.Products.Count == 1);
+
+            product.ProductId = TestProductID;
+            product.Name = TestUtility.Instance.RandomString(80, false);
+            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Image = TestUtility.Instance.RandomString(80, false);
+
+            var newName = TestUtility.Instance.RandomString(80, false);
+            foreach (Product item in category.Products)
+            {
+                item.Name = newName;
+            }
+
+            category = category.Save();
+
+            Category category2 = Category.GetByCategoryId(TestCategoryID2);
+            Assert.IsTrue(string.Equals(category2.Products[0].Name, newName, StringComparison.InvariantCultureIgnoreCase));
+
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
         }
 
@@ -435,10 +504,231 @@ namespace PetShop.Tests.StoredProcedures
             Console.WriteLine("17. Testing update on child collections in a category.");
             Stopwatch watch = Stopwatch.StartNew();
 
-            Category category = Category.NewCategory();
+            Category category = Category.GetByCategoryId(TestCategoryID);
+            Assert.IsTrue(category.Products.Count == 0);
 
-            Assert.Fail("Need to implement.");
+            Product product = category.Products.AddNew();
+
+            Assert.IsTrue(category.Products.Count == 1);
+
+            product.ProductId = TestProductID;
+            product.Name = TestUtility.Instance.RandomString(80, false);
+            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Image = TestUtility.Instance.RandomString(80, false);
+
+            category = category.Save();
+
+            var newName = TestUtility.Instance.RandomString(80, false);
+            foreach (Product item in category.Products)
+            {
+                item.Name = newName;
+            }
+
+            category = category.Save();
+
+            Category category2 = Category.GetByCategoryId(TestCategoryID);
+            Assert.IsTrue(string.Equals(category2.Products[0].Name, newName, StringComparison.InvariantCultureIgnoreCase));
+
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
         }
+
+        /// <summary>
+        /// Testing update Child collections on an existing entity.
+        /// </summary>
+        [Test]
+        public void Step_18_Update_PK_Of_Child_Collection()
+        {
+            Console.WriteLine("18. Testing update of PK on child collections in a category.");
+            Stopwatch watch = Stopwatch.StartNew();
+
+            Category category = Category.GetByCategoryId(TestCategoryID);
+            Assert.IsTrue(category.Products.Count == 0);
+
+            Product product = category.Products.AddNew();
+
+            Assert.IsTrue(category.Products.Count == 1);
+
+            product.ProductId = TestProductID;
+            product.Name = TestUtility.Instance.RandomString(80, false);
+            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Image = TestUtility.Instance.RandomString(80, false);
+
+            category = category.Save();
+
+            category.CategoryId = TestCategoryID2;
+
+            category = category.Save();
+
+            Category category2 = Category.GetByCategoryId(TestCategoryID2);
+            Assert.IsTrue(category2.Products.Count == 1); 
+            Assert.IsTrue(string.Equals(category2.Products[0].CategoryId, category.CategoryId, StringComparison.InvariantCultureIgnoreCase));
+
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+        }
+
+        /// <summary>
+        /// Testing update of Every PK in a Child collections on an existing entity.
+        /// </summary>
+        [Test]
+        public void Step_19_Update_Every_PK_In_Child_Collection()
+        {
+            Console.WriteLine("19. Testing update of every PK in a child collections in a category.");
+            Stopwatch watch = Stopwatch.StartNew();
+
+            Category category = Category.GetByCategoryId(TestCategoryID);
+            Assert.IsTrue(category.Products.Count == 0);
+
+            Product product = category.Products.AddNew();
+
+            Assert.IsTrue(category.Products.Count == 1);
+
+            product.ProductId = TestProductID;
+            product.Name = TestUtility.Instance.RandomString(80, false);
+            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Image = TestUtility.Instance.RandomString(80, false);
+
+            Product product2 = category.Products.AddNew();
+
+            Assert.IsTrue(category.Products.Count == 2);
+
+            product2.ProductId = TestProductID2;
+            product2.Name = TestUtility.Instance.RandomString(80, false);
+            product2.Descn = TestUtility.Instance.RandomString(255, false);
+            product2.Image = TestUtility.Instance.RandomString(80, false);
+
+            category = category.Save();
+
+            var newName = TestUtility.Instance.RandomString(80, false);
+            foreach (Product item in category.Products)
+            {
+                item.Name = newName;
+            }
+
+            category = category.Save();
+
+            Category category2 = Category.GetByCategoryId(TestCategoryID);
+            Assert.IsTrue(category2.Products.Count == 2);
+            Assert.IsTrue(string.Equals(category2.Products[0].Name, newName, StringComparison.InvariantCultureIgnoreCase));
+            Assert.IsTrue(string.Equals(category2.Products[1].Name, newName, StringComparison.InvariantCultureIgnoreCase));
+
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+        }
+
+
+        /// <summary>
+        /// Testing insert of a duplicate Product into a child collections.
+        /// </summary>
+        [Test]
+        public void Step_20_Insert_Duplicate_Item_In_Child_Collection()
+        {
+            Console.WriteLine("20. Testing insert of a duplicate Product into a child collections.");
+            Stopwatch watch = Stopwatch.StartNew();
+
+            Category category = Category.GetByCategoryId(TestCategoryID);
+            Assert.IsTrue(category.Products.Count == 0);
+
+            Product product = category.Products.AddNew();
+
+            Assert.IsTrue(category.Products.Count == 1);
+
+            product.ProductId = TestProductID;
+            product.Name = TestUtility.Instance.RandomString(80, false);
+            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Image = TestUtility.Instance.RandomString(80, false);
+
+            Product product2 = category.Products.AddNew();
+
+            Assert.IsTrue(category.Products.Count == 2);
+
+            product2.ProductId = TestProductID;
+            product2.Name = TestUtility.Instance.RandomString(80, false);
+            product2.Descn = TestUtility.Instance.RandomString(255, false);
+            product2.Image = TestUtility.Instance.RandomString(80, false);
+
+            try
+            {
+                category = category.Save();
+                Assert.Fail("Should throw a duplicate entry exception.");
+            }
+            catch (Exception)
+            {
+                Assert.IsTrue(true);
+            }
+
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+        }
+
+        /// <summary>
+        /// Delete the Category entity into the database twice.
+        /// </summary>
+        [Test]
+        public void Step_31_Double_Delete()
+        {
+            Console.WriteLine("20. Deleting the category twice.");
+            Stopwatch watch = Stopwatch.StartNew();
+
+            Category category = Category.GetByCategoryId(TestCategoryID);
+            Assert.IsTrue(string.Equals(category.CategoryId, TestCategoryID, StringComparison.InvariantCultureIgnoreCase));
+            Assert.IsFalse(category.IsDeleted);
+            category.Delete();
+
+            Assert.IsTrue(category.IsDeleted);
+
+            category = category.Save();
+
+            Assert.IsTrue(string.Equals(category.CategoryId, TestCategoryID, StringComparison.InvariantCultureIgnoreCase));
+            Assert.IsFalse(category.IsDeleted);
+
+            category.Delete();
+
+            // Shouldn't be able to call delete twice. I'd think.
+            Assert.IsTrue(category.IsDeleted);
+            category = category.Save();
+
+            Assert.IsTrue(string.Equals(category.CategoryId, TestCategoryID, StringComparison.InvariantCultureIgnoreCase));
+            Assert.IsTrue(category.IsNew);
+            Assert.IsFalse(category.IsDeleted);
+
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+        }
+
+        /// <summary>
+        /// Delete the Category entity into the database twice.
+        /// </summary>
+        [Test]
+        public void Step_32_Double_Delete()
+        {
+            Console.WriteLine("20. Deleting the category twice.");
+            Stopwatch watch = Stopwatch.StartNew();
+
+            Category category = Category.GetByCategoryId(TestCategoryID);
+            Assert.IsTrue(string.Equals(category.CategoryId, TestCategoryID, StringComparison.InvariantCultureIgnoreCase));
+            Assert.IsFalse(category.IsDeleted);
+            category.Delete();
+
+            //Delete the category the other way before calling save which would call a delete. This should simulate a concurency issue.
+            Category.DeleteCategory(TestCategoryID);
+            try
+            {
+                Category.GetByCategoryId(TestCategoryID);
+                Assert.Fail("Record exists when it should have been deleted.");
+            }
+            catch (Exception)
+            {
+                // Exception was thrown if record doesn't exist.
+                Assert.IsTrue(true);
+            }
+
+            // Call delete on an already deleted item.
+            Assert.IsTrue(category.IsDeleted);
+            category = category.Save();
+
+            Assert.IsTrue(string.Equals(category.CategoryId, TestCategoryID, StringComparison.InvariantCultureIgnoreCase));
+            Assert.IsFalse(category.IsDeleted);
+            Assert.IsTrue(category.IsNew);
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+        }
+
+        // Add concurrency tests.
     }
 }
