@@ -62,14 +62,14 @@
 
 
         <div class="dashboard-box">
-            <h2>Tasks Not Started (<%=Model.TasksCompleted.Count() %>)</h2>    
+            <h2>Tasks Not Started (<%=Model.TasksNotStarted.Count() %>)</h2>    
             <table>
                 <tr>
                     <th>Due Date</th>
                     <th>Priority</th>
                     <th>Details</th>
                 </tr>
-                <%foreach (var item in Model.TasksWaitingOnSomeone) { %>
+                <%foreach (var item in Model.TasksNotStarted) { %>
                 <tr>
                     <td><%=item.DueDate %></td>
                     <td><%=item.Priority %></td>
@@ -81,14 +81,14 @@
 
 
         <div class="dashboard-box">
-            <h2>Tasks Completed (<%=Model.TasksWaitingOnSomeone.Count() %>)</h2>    
+            <h2>Tasks Completed (<%=Model.TasksCompleted.Count() %>)</h2>    
             <table>
                 <tr>
                     <th>Due Date</th>
                     <th>Priority</th>
                     <th>Details</th>
                 </tr>
-                <%foreach (var item in Model.TasksWaitingOnSomeone) { %>
+                <%foreach (var item in Model.TasksCompleted) { %>
                 <tr>
                     <td><%=item.DueDate %></td>
                     <td><%=item.Priority %></td>
