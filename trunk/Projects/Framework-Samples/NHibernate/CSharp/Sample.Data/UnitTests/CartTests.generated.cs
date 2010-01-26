@@ -24,13 +24,13 @@ namespace Sample.Data.Generated.UnitTests
 			
 			
 			entity.ItemId = "Test";
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-			entity.Type = "Test Test Test Test";
-			entity.Price = 11;
-			entity.CategoryId = "Test Test";
-			entity.ProductId = "Te";
+			entity.Name = "Test Test Test Test Test Test Test Test Test Te";
+			entity.Type = "Test ";
+			entity.Price = 30;
+			entity.CategoryId = "T";
+			entity.ProductId = "Test Tes";
 			entity.IsShoppingCart = true;
-			entity.Quantity = 22;
+			entity.Quantity = 51;
 			
 			IProfileManager profileManager = managerFactory.GetProfileManager();
 			entity.Profile = profileManager.GetAll(1)[0];

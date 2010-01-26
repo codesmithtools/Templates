@@ -21,9 +21,9 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New Inventory()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Te"
+			entity.Id = "Test Tes"
 			
-			entity.Qty = 35
+			entity.Qty = 10
 
 			Return entity
 		End Function
@@ -65,7 +65,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Inventory = GetFirstInventory()
 				
-				entityA.Qty = 42
+				entityA.Qty = 41
 				
 				manager.Update(entityA)
 

@@ -259,7 +259,16 @@ namespace NHibernateHelper
                             return true;
             return false;
         }
-        
+
+        public static string TableFullSafeSqlName(TableSchema sourceTable)
+        {
+            var safeName = String.IsNullOrEmpty(sourceTable.Owner)
+                               ? String.Empty
+                               : String.Concat("[", sourceTable.Owner, "].");
+
+            return String.Concat(safeName, "[", sourceTable.Name, "]");
+        }
+
         #endregion
     }
 }

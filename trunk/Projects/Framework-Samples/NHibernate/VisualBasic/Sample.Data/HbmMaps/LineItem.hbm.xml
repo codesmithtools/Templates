@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Sample.Data.Generated.BusinessObjects" assembly="Sample.Data">
-	<class name="Sample.Data.Generated.BusinessObjects.LineItem, Sample.Data" table="dbo.LineItem" lazy="true">
+	<class name="Sample.Data.Generated.BusinessObjects.LineItem, Sample.Data" table="[dbo].[LineItem]" lazy="true">
 		<composite-id>
-			<key-property name="OrderId" column="OrderId" /> 
-			<key-property name="LineNum" column="LineNum" /> 
+			<key-property name="OrderId" column="[OrderId]" /> 
+			<key-property name="LineNum" column="[LineNum]" /> 
 		</composite-id>
 		
-		<property name="ItemId" column="ItemId" />
-		<property name="Quantity" column="Quantity" />
-		<property name="UnitPrice" column="UnitPrice" />
+		<property name="ItemId" column="[ItemId]" />
+		<property name="Quantity" column="[Quantity]" />
+		<property name="UnitPrice" column="[UnitPrice]" />
 	</class>
 </hibernate-mapping>
