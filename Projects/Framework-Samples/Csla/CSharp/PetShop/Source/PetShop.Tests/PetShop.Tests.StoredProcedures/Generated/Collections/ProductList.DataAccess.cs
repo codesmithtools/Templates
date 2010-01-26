@@ -23,6 +23,10 @@ namespace PetShop.Tests.StoredProcedures
 {
     public partial class ProductList
     {
+        private void DataPortal_Create()
+        {
+        }
+
         private void DataPortal_Fetch(ProductCriteria criteria)
         {
             RaiseListChangedEvents = false;
