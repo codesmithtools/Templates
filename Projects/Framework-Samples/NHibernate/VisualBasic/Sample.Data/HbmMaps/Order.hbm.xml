@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Sample.Data.Generated.BusinessObjects" assembly="Sample.Data">
-	<class name="Sample.Data.Generated.BusinessObjects.Order, Sample.Data" table="dbo.Orders" lazy="true">
-		<id name="Id" column="OrderId">
+	<class name="Sample.Data.Generated.BusinessObjects.Order, Sample.Data" table="[dbo].[Orders]" lazy="true">
+		<id name="Id" column="[OrderId]">
 		 	<generator class="native" />
 		</id>
 		
-		<property name="UserId" column="UserId" />
-		<property name="OrderDate" column="OrderDate" />
-		<property name="ShipAddr1" column="ShipAddr1" />
-		<property name="ShipAddr2" column="ShipAddr2" />
-		<property name="ShipCity" column="ShipCity" />
-		<property name="ShipState" column="ShipState" />
-		<property name="ShipZip" column="ShipZip" />
-		<property name="ShipCountry" column="ShipCountry" />
-		<property name="BillAddr1" column="BillAddr1" />
-		<property name="BillAddr2" column="BillAddr2" />
-		<property name="BillCity" column="BillCity" />
-		<property name="BillState" column="BillState" />
-		<property name="BillZip" column="BillZip" />
-		<property name="BillCountry" column="BillCountry" />
-		<property name="Courier" column="Courier" />
-		<property name="TotalPrice" column="TotalPrice" />
-		<property name="BillToFirstName" column="BillToFirstName" />
-		<property name="BillToLastName" column="BillToLastName" />
-		<property name="ShipToFirstName" column="ShipToFirstName" />
-		<property name="ShipToLastName" column="ShipToLastName" />
-		<property name="AuthorizationNumber" column="AuthorizationNumber" />
-		<property name="Locale" column="Locale" />
+		<property name="UserId" column="[UserId]" />
+		<property name="OrderDate" column="[OrderDate]" />
+		<property name="ShipAddr1" column="[ShipAddr1]" />
+		<property name="ShipAddr2" column="[ShipAddr2]" />
+		<property name="ShipCity" column="[ShipCity]" />
+		<property name="ShipState" column="[ShipState]" />
+		<property name="ShipZip" column="[ShipZip]" />
+		<property name="ShipCountry" column="[ShipCountry]" />
+		<property name="BillAddr1" column="[BillAddr1]" />
+		<property name="BillAddr2" column="[BillAddr2]" />
+		<property name="BillCity" column="[BillCity]" />
+		<property name="BillState" column="[BillState]" />
+		<property name="BillZip" column="[BillZip]" />
+		<property name="BillCountry" column="[BillCountry]" />
+		<property name="Courier" column="[Courier]" />
+		<property name="TotalPrice" column="[TotalPrice]" />
+		<property name="BillToFirstName" column="[BillToFirstName]" />
+		<property name="BillToLastName" column="[BillToLastName]" />
+		<property name="ShipToFirstName" column="[ShipToFirstName]" />
+		<property name="ShipToLastName" column="[ShipToLastName]" />
+		<property name="AuthorizationNumber" column="[AuthorizationNumber]" />
+		<property name="Locale" column="[Locale]" />
 	</class>
 </hibernate-mapping>

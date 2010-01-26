@@ -72,5 +72,9 @@ namespace NHibernateHelper
         {
             get { return Column.Table.FullName; }
         }
+        public string TableFullSafeSqlName
+        {
+            get { return NHibernateHelper.TableFullSafeSqlName(Column.Table); }
+        }
     }
 }

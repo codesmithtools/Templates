@@ -209,14 +209,7 @@ namespace NHibernateHelper
 
         public string TableFullSafeSqlName
         {
-            get
-            {
-                var safeName = String.IsNullOrEmpty(_sourceTable.Owner)
-                                   ? String.Empty
-                                   : String.Concat("[", _sourceTable.Owner, "].");
-
-                return String.Concat(safeName, "[", _sourceTable.Name, "]");
-            }
+            get { return NHibernateHelper.TableFullSafeSqlName(_sourceTable); }
         }
 
         private Dictionary<ColumnSchema, EntityAssociation> _associationMap = null;

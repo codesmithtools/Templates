@@ -27,7 +27,7 @@ Description: Generates a HBM Map for NHibernate.
 			<% Next %>
 		</composite-id>
 		<% Else %>
-		<id name="Id" column=["<%= entityManager.PrimaryKey.KeyColumn.ColumnName %>]">
+		<id name="Id" column="[<%= entityManager.PrimaryKey.KeyColumn.ColumnName %>]">
 		 	<%= entityManager.PrimaryKey.Generator %>
 		</id>
 		<% End If %>
@@ -53,7 +53,7 @@ Description: Generates a HBM Map for NHibernate.
 		<% Next %>
 		<% 'Many-To-Many %>
 		<% For Each association As EntityAssociation In entityManager.ManyToMany %>
-		<bag name="<%= association.PropertyName %>" table="<%= entityManager.TableFullSafeSqlName %>" lazy="true" cascade="all" inverse="true" >
+		<bag name="<%= association.PropertyName %>" table="<%= association.TableFullSafeSqlName %>" lazy="true" cascade="all" inverse="true" >
 			<key column="[<%= association.ColumnName %>]"></key>
 			<many-to-many column="[<%= association.ToManyTableKeyName %>]" class="<%= association.ClassName %>" />
     	</bag>
