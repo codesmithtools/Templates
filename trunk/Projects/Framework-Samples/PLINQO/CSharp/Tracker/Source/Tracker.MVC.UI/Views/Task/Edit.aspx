@@ -91,7 +91,7 @@
             </p>
             <p>
                 Last Modified By:
-                <%= Html.Encode(Model.Task.LastModified) %>
+                <%= Html.Encode(Model.Task.LastModifiedBy) %>
             </p>
 
             <p>
