@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HibernatingRhinos.Profiler.Appender, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0774796e73ebf640, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\..\Insight\trunk\Libraries\L2SProfiler\HibernatingRhinos.Profiler.Appender.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libraries\Newtonsoft.Json.dll</HintPath>
@@ -86,6 +90,7 @@
     <Compile Include="Binder\EmptyStringToNullModelBinder.cs" />
     <Compile Include="Helpers\ByteArrayConverter.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
+    <Compile Include="Models\Dashboard.cs" />
     <Compile Include="Models\JsonResult.cs" />
     <Compile Include="Models\TaskListViewData.cs" />
     <Compile Include="Models\TaskViewData.cs" />

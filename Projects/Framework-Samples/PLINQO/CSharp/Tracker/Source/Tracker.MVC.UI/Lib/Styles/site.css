@@ -11,7 +11,6 @@ font-family: Arial,Helvetica,sans-serif;
 margin:0;
 }
 
-
 #right-side
 {
     float:right;
@@ -57,7 +56,7 @@ h1, h2, h3, h4, h5, h6
 
 h1
 {
-    font-size: 2em;
+    font-size: 120%;
     padding-bottom: 0;
     margin-bottom: 0;
 }
@@ -65,6 +64,7 @@ h2
 {
     padding: 0 0 10px 0;
 }
+
 h3
 {
     font-size: 1.2em;
@@ -394,4 +394,92 @@ th
 #ui-datepicker-div
 {
     font-size: 10px;
+}
+
+.dashboard
+{
+    overflow:auto;
+}
+
+.dashboard-totals
+{
+    clear:both;
+    padding: 3px;
+    margin: 0;    
+}
+
+.dashboard-totals legend
+{
+    font-size:0.8em;
+    font-weight:600;
+    padding: 0;
+}
+
+.dashboard-totals h2
+{
+    float:left;
+}
+
+.dashboard-totals ul
+{
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-totals li
+{
+    display: inline;
+    font-size:80%;
+    font-weight:normal;
+    list-style-image:none;
+    list-style-position:outside;
+    list-style-type:none;
+    padding: 0 6px;
+}
+
+.dashboard-totals li+li
+{
+    padding-left: 0;
+}
+
+.dashboard-box 
+{
+    float:left;
+    height: 125px;
+    width: 200px;
+    margin:9px 21px 9px 0;
+}
+
+
+.dashboard-box h2
+{
+    font-size:80%;
+    font-weight:bold;
+    height:20px;
+    padding:0 3px;
+}
+
+.dashboard-box table
+{
+    padding: 6px;
+    margin: 0 6px;
+    width: 90%;
+    border-collapse: collapse;
+    border: none;
+}
+
+.dashboard-box table th
+{
+    background-color:Transparent;
+    border-color:-moz-use-text-color -moz-use-text-color #CCCCCC;
+    border-style:none none solid;
+    border-width:medium medium 1px;
+    font-size:70%;
+    font-weight:bold;
+    padding:0;
+}
+
+.dashboard-box table td
+{
+    
 }
