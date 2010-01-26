@@ -24,7 +24,7 @@
             
           
         <div class="dashboard-box">
-            <h2>Task Not Started (<%=Model.TasksNotStarted.Count() %>)</h2>    
+            <h2>Tasks Not Started (<%=Model.TasksNotStarted.Count() %>)</h2>    
             <table>
                 <tr>
                     <th>Due Date</th>
@@ -43,7 +43,7 @@
 
 
         <div class="dashboard-box">
-            <h2>Task In Progress (<%=Model.TasksInProgress.Count() %>)</h2>    
+            <h2>Tasks In Progress (<%=Model.TasksInProgress.Count() %>)</h2>    
             <table>
                 <tr>
                     <th>Due Date</th>
@@ -62,7 +62,7 @@
 
 
         <div class="dashboard-box">
-            <h2>Task Not Started (<%=Model.TasksCompleted.Count() %>)</h2>    
+            <h2>Tasks Not Started (<%=Model.TasksCompleted.Count() %>)</h2>    
             <table>
                 <tr>
                     <th>Due Date</th>
@@ -81,7 +81,7 @@
 
 
         <div class="dashboard-box">
-            <h2>Task Completed (<%=Model.TasksWaitingOnSomeone.Count() %>)</h2>    
+            <h2>Tasks Completed (<%=Model.TasksWaitingOnSomeone.Count() %>)</h2>    
             <table>
                 <tr>
                     <th>Due Date</th>
