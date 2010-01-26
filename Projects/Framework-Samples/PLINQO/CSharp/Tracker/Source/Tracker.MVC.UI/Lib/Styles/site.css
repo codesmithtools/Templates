@@ -445,7 +445,6 @@ th
 .dashboard-box 
 {
     float:left;
-    height: 125px;
     width: 200px;
     margin:9px 21px 9px 0;
 }
@@ -481,5 +480,6 @@ th
 
 .dashboard-box table td
 {
-    
+    font-size:70%;
+    border-width : 0;
 }
