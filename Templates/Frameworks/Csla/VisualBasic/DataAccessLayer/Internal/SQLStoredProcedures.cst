@@ -60,8 +60,6 @@ CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
 <% GenerateParameter(primaryKeyColumn, 1, false, true, true, false) %>
 AS
 
-SET NOCOUNT ON
-
 <%-- If the primary key is a GUID, then assign a New GUID using NEWID(). --%>
 <% If (primaryKeyColumn.DataType = DbType.Guid) Then %>
 SET @<%= primaryKeyColumn.Name %> = NEWID()
@@ -81,7 +79,7 @@ INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
 <%-- If the primary key is an identity column, then capture the newly assigned identity using SCOPE_IDENTITY(). --%>
 <% If (primaryKeyColumn.DataType = DbType.Int16 Or primaryKeyColumn.DataType = DbType.Int32 Or primaryKeyColumn.DataType = DbType.Int64) Then %>
 
-SET @<%= primaryKeyColumn.Name %> = SCOPE_IDENTITY()
+SET <%= ParameterPrefix %><%= primaryKeyColumn.Name %> = SCOPE_IDENTITY()
 <% End If %>
 
 <%-- Primary key is not a identity column or a GUID, so include all columns as input parameters. --%>
@@ -90,8 +88,6 @@ SET @<%= primaryKeyColumn.Name %> = SCOPE_IDENTITY()
 CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
 <% GenerateParameters(SourceTable.Columns, 1, false) %>
 AS
-
-SET NOCOUNT ON
 
 INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
     <% GenerateColumns(SourceTable.Columns, 1, false) %>
@@ -116,8 +112,6 @@ CREATE PROCEDURE <%= GetUpdateStoredProcedureName() %>
 <% GenerateParameters(SourceTable.Columns, 1, false) %>
 AS
 
-SET NOCOUNT ON
-
 UPDATE <%= GetTableOwner() %>[<%= SourceTable.Name %>] SET
     <% GenerateUpdates(SourceTable.NonPrimaryKeyColumns, 1, false) %>
 WHERE
@@ -138,8 +132,6 @@ WHERE
 CREATE PROCEDURE <%= GetDeleteStoredProcedureName() %>
 <% GenerateParameters(SourceTable.PrimaryKey.MemberColumns, 1, false) %>
 AS
-
-SET NOCOUNT ON
 
 DELETE FROM
     <%= GetTableOwner() %>[<%= SourceTable.Name %>]
@@ -162,7 +154,6 @@ CREATE PROCEDURE <%= GetSelectStoredProcedureName() %>
 <% GenerateParameters(SourceTable.Columns, 1, false, false, true) %>
 AS
 
-SET NOCOUNT ON
 <% GenerateSetTransactionIsolationLevelStatement(IsolationLevel) %>
 
 SELECT
@@ -339,7 +330,8 @@ End Sub
 Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
     GenerateParameters(columns, indentLevel, False, includeTimeStamp)
 End Sub
-Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+
+Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTrailingComma As Boolean, ByVal includeTimeStamp As Boolean)
     GenerateParameters(columns, indentLevel, includeTrailingComma, includeTimeStamp, False)
 End Sub
 
@@ -431,8 +423,9 @@ Public Sub GenerateConditions(ByVal columns As IList(Of ColumnSchema), ByVal ind
         GenerateCondition(column.Value, indentLevel, column.IsFirst, column.IsLast)
     Next
 End Sub
+
 Public Sub GenerateFindConditions(columns As IList(Of ColumnSchema), indentLevel As Integer)
-	For Each column As var In columns.AsIndexedEnumerable()
+	For Each column As Object In columns.AsIndexedEnumerable()
 		GenerateFindCondition(column.Value, indentLevel, column.IsFirst, column.IsLast)
 	Next
 End Sub

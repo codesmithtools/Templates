@@ -83,7 +83,7 @@ namespace PetShop.Tests.StoredProcedures
 
 
         //AssociatedOneToMany
-        private static readonly PropertyInfo< ProductList > _productsProperty = RegisterProperty<ProductList>(p => p.Products, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< ProductList > _productsProperty = RegisterProperty<ProductList>(p => p.Products, RelationshipTypes.Child);
         public ProductList Products
         {
             get
@@ -93,7 +93,6 @@ namespace PetShop.Tests.StoredProcedures
                     if(IsNew)
                         LoadProperty(_productsProperty, PetShop.Tests.StoredProcedures.ProductList.NewList());
                     else
-                    
                         LoadProperty(_productsProperty, PetShop.Tests.StoredProcedures.ProductList.GetByCategoryId(CategoryId));
                 }
 

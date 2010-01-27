@@ -66,8 +66,6 @@ CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
 <% GenerateParameter(primaryKeyColumn, 1, false, true, true, false, false); %>
 AS
 
-SET NOCOUNT ON
-
 <%-- If the primary key is a GUID, then assign a new GUID using NEWID(). --%>
 <% if (primaryKeyColumn.DataType == DbType.Guid) { %>
 SET @<%= primaryKeyColumn.Name %> = NEWID()
@@ -87,7 +85,7 @@ INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
 <%-- If the primary key is an identity column, then capture the newly assigned identity using SCOPE_IDENTITY(). --%>
 <% if (primaryKeyColumn.DataType == DbType.Int16 || primaryKeyColumn.DataType == DbType.Int32 || primaryKeyColumn.DataType == DbType.Int64) { %>
 
-SET @<%= primaryKeyColumn.Name %> = SCOPE_IDENTITY()
+SET <%= ParameterPrefix %><%= primaryKeyColumn.Name %> = SCOPE_IDENTITY()
 <% } %>
 
 <%-- Primary key is not a identity column or a GUID, so include all columns as input parameters. --%>
@@ -122,8 +120,6 @@ CREATE PROCEDURE <%= GetUpdateStoredProcedureName() %>
 <% GenerateParameters(SourceTable.Columns, 1, false); %>
 AS
 
-SET NOCOUNT ON
-
 UPDATE <%= GetTableOwner() %>[<%= SourceTable.Name %>] SET
     <% GenerateUpdates(SourceTable.NonPrimaryKeyColumns, 1, false); %>
 WHERE
@@ -144,8 +140,6 @@ WHERE
 CREATE PROCEDURE <%= GetDeleteStoredProcedureName() %>
 <% GenerateParameters(SourceTable.PrimaryKey.MemberColumns, 1, false); %>
 AS
-
-SET NOCOUNT ON
 
 DELETE FROM
     <%= GetTableOwner() %>[<%= SourceTable.Name %>]
@@ -168,7 +162,6 @@ CREATE PROCEDURE <%= GetSelectStoredProcedureName() %>
 <% GenerateParameters(SourceTable.Columns, 1, false, false, true); %>
 AS
 
-SET NOCOUNT ON
 <% GenerateSetTransactionIsolationLevelStatement(IsolationLevel); %>
 
 SELECT

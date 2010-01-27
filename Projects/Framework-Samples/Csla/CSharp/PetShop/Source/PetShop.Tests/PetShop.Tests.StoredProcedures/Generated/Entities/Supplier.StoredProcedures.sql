@@ -82,8 +82,6 @@ CREATE PROCEDURE [dbo].[CSLA_Supplier_Update]
 	@p_Phone varchar(40)
 AS
 
-SET NOCOUNT ON
-
 UPDATE [dbo].[Supplier] SET
 	[Name] = @p_Name,
 	[Status] = @p_Status,
@@ -110,8 +108,6 @@ GO
 CREATE PROCEDURE [dbo].[CSLA_Supplier_Delete]
 	@p_SuppId int
 AS
-
-SET NOCOUNT ON
 
 DELETE FROM
     [dbo].[Supplier]
@@ -141,7 +137,6 @@ CREATE PROCEDURE [dbo].[CSLA_Supplier_Select]
 	@p_Phone varchar(40) = NULL
 AS
 
-SET NOCOUNT ON
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 
 SELECT

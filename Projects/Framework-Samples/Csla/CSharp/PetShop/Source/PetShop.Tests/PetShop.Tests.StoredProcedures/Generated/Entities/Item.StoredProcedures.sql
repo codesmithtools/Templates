@@ -78,8 +78,6 @@ CREATE PROCEDURE [dbo].[CSLA_Item_Update]
 	@p_Image varchar(80)
 AS
 
-SET NOCOUNT ON
-
 UPDATE [dbo].[Item] SET
 	[ProductId] = @p_ProductId,
 	[ListPrice] = @p_ListPrice,
@@ -105,8 +103,6 @@ GO
 CREATE PROCEDURE [dbo].[CSLA_Item_Delete]
 	@p_ItemId varchar(10)
 AS
-
-SET NOCOUNT ON
 
 DELETE FROM
     [dbo].[Item]
@@ -135,7 +131,6 @@ CREATE PROCEDURE [dbo].[CSLA_Item_Select]
 	@p_Image varchar(80) = NULL
 AS
 
-SET NOCOUNT ON
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 
 SELECT

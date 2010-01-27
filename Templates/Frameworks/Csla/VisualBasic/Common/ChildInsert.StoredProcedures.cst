@@ -13,7 +13,7 @@
             connection.Open()
             Using command As New SqlCommand("<%= GetInsertStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
-                <%= entity.MembersUpdateInsert.BuildCommandParameters(False, False, True) %>
+                <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, True) %>
 
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then

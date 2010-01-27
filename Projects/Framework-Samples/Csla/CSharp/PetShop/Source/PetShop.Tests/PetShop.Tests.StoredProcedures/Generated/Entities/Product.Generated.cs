@@ -51,7 +51,6 @@ namespace PetShop.Tests.StoredProcedures
 
             ValidationRules.AddRule(CommonRules.StringRequired, _productIdProperty);
             ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_productIdProperty, 10));
-            ValidationRules.AddRule(CommonRules.StringRequired, _categoryIdProperty);
             ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_categoryIdProperty, 10));
             ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_nameProperty, 80));
             ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_descnProperty, 255));

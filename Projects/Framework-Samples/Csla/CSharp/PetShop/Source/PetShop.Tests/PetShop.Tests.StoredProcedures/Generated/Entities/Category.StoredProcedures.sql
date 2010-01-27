@@ -58,8 +58,6 @@ CREATE PROCEDURE [dbo].[CSLA_Category_Update]
 	@p_Descn varchar(255)
 AS
 
-SET NOCOUNT ON
-
 UPDATE [dbo].[Category] SET
 	[Name] = @p_Name,
 	[Descn] = @p_Descn
@@ -80,8 +78,6 @@ GO
 CREATE PROCEDURE [dbo].[CSLA_Category_Delete]
 	@p_CategoryId varchar(10)
 AS
-
-SET NOCOUNT ON
 
 DELETE FROM
     [dbo].[Category]
@@ -105,7 +101,6 @@ CREATE PROCEDURE [dbo].[CSLA_Category_Select]
 	@p_Descn varchar(255) = NULL
 AS
 
-SET NOCOUNT ON
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 
 SELECT
