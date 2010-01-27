@@ -120,14 +120,14 @@ namespace PetShop.Tests.StoredProcedures
         }
 
         //AssociatedManyToOne
-        private static readonly PropertyInfo< Product > _productMemberProperty = RegisterProperty< Product >(p => p.ProductMember, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< Product > _productMemberProperty = RegisterProperty< Product >(p => p.ProductMember, Csla.RelationshipTypes.Child);
         public Product ProductMember
         {
             get
             {
                 if(!FieldManager.FieldExists(_productMemberProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.StoredProcedures.Product.Exists(new PetShop.Tests.StoredProcedures.ProductCriteria {ProductId = ProductId}))
                         LoadProperty(_productMemberProperty, PetShop.Tests.StoredProcedures.Product.NewProduct());
                     else
                         LoadProperty(_productMemberProperty, PetShop.Tests.StoredProcedures.Product.GetByProductId(ProductId));
@@ -138,14 +138,14 @@ namespace PetShop.Tests.StoredProcedures
         }
 
         //AssociatedManyToOne
-        private static readonly PropertyInfo< Supplier > _supplierMemberProperty = RegisterProperty< Supplier >(p => p.SupplierMember, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< Supplier > _supplierMemberProperty = RegisterProperty< Supplier >(p => p.SupplierMember, Csla.RelationshipTypes.Child);
         public Supplier SupplierMember
         {
             get
             {
                 if(!FieldManager.FieldExists(_supplierMemberProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.StoredProcedures.Supplier.Exists(new PetShop.Tests.StoredProcedures.SupplierCriteria {SuppId = Supplier.Value}))
                         LoadProperty(_supplierMemberProperty, PetShop.Tests.StoredProcedures.Supplier.NewSupplier());
                     else
                         LoadProperty(_supplierMemberProperty, PetShop.Tests.StoredProcedures.Supplier.GetBySuppId(Supplier.Value));
@@ -221,6 +221,15 @@ namespace PetShop.Tests.StoredProcedures
         {
             return DataPortal.FetchChild< Item >(
                 new ItemCriteria{Supplier = supplier.Value});
+        }
+
+        #endregion
+
+        #region Exists Command
+
+        public static bool Exists(ItemCriteria criteria)
+        {
+            return ExistsCommand.Execute(criteria);
         }
 
         #endregion

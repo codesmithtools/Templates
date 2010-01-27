@@ -28,6 +28,7 @@ namespace PetShop.Tests.StoredProcedures
         [RunLocal]
         protected override void DataPortal_Create()
         {
+            LoadProperty(_categoryIdProperty, "BN");
             ValidationRules.CheckRules();
         }
 

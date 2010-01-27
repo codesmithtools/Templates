@@ -101,6 +101,7 @@ namespace PetShop.Tests.ParameterizedSQL
                 using(SqlCommand command = new SqlCommand(commandText, connection))
                 {
 					command.Parameters.AddWithValue("@p_OrderId", OrderId);
+					command.Parameters["@p_OrderId"].Direction = ParameterDirection.Output;
 					command.Parameters.AddWithValue("@p_UserId", UserId);
 					command.Parameters.AddWithValue("@p_OrderDate", OrderDate);
 					command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1);

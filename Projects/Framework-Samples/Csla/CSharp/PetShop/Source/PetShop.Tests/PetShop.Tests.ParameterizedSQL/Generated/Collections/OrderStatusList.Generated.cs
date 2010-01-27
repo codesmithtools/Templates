@@ -30,7 +30,7 @@ namespace PetShop.Tests.ParameterizedSQL
         }
         
         #endregion
-        
+
         #region Factory Methods 
         
         public static OrderStatusList NewList()
@@ -56,7 +56,7 @@ namespace PetShop.Tests.ParameterizedSQL
         }
 
         #endregion
-        
+
         #region Properties
         
         protected override object AddNewCore()
@@ -66,6 +66,15 @@ namespace PetShop.Tests.ParameterizedSQL
             return item;
         }
         
+        #endregion
+
+        #region Exists Command
+
+        public static bool Exists(OrderStatusCriteria criteria)
+        {
+            return OrderStatus.Exists(criteria);
+        }
+
         #endregion
     }
 }

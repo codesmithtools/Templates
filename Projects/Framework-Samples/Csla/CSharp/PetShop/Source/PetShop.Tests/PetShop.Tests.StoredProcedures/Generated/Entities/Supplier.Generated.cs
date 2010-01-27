@@ -130,26 +130,24 @@ namespace PetShop.Tests.StoredProcedures
 
 
         //AssociatedOneToMany
-        private static readonly PropertyInfo< ItemList > _itemsProperty = RegisterProperty<ItemList>(p => p.Items, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< ItemList > _itemsProperty = RegisterProperty<ItemList>(p => p.Items, Csla.RelationshipTypes.Child);
         public ItemList Items
         {
             get
             {
                 if(!FieldManager.FieldExists(_itemsProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.StoredProcedures.ItemList.Exists(new PetShop.Tests.StoredProcedures.ItemCriteria {Supplier = SuppId}))
                         LoadProperty(_itemsProperty, PetShop.Tests.StoredProcedures.ItemList.NewList());
                     else
-                    
                         LoadProperty(_itemsProperty, PetShop.Tests.StoredProcedures.ItemList.GetBySupplier(SuppId));
                 }
 
-                return GetProperty(_itemsProperty); 
+                return GetProperty(_itemsProperty);
             }
         }
 
         #endregion
-
 
         #region Factory Methods 
 
@@ -167,6 +165,15 @@ namespace PetShop.Tests.StoredProcedures
         public static void DeleteSupplier(System.Int32 suppId)
         {
             DataPortal.Delete(new SupplierCriteria{SuppId = suppId});
+        }
+
+        #endregion
+
+        #region Exists Command
+
+        public static bool Exists(SupplierCriteria criteria)
+        {
+            return ExistsCommand.Execute(criteria);
         }
 
         #endregion

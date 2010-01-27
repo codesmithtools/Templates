@@ -120,14 +120,14 @@ namespace PetShop.Tests.ParameterizedSQL
         }
 
         //AssociatedManyToOne
-        private static readonly PropertyInfo< Product > _productMemberProperty = RegisterProperty< Product >(p => p.ProductMember, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< Product > _productMemberProperty = RegisterProperty< Product >(p => p.ProductMember, Csla.RelationshipTypes.Child);
         public Product ProductMember
         {
             get
             {
                 if(!FieldManager.FieldExists(_productMemberProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.ParameterizedSQL.Product.Exists(new PetShop.Tests.ParameterizedSQL.ProductCriteria {ProductId = ProductId}))
                         LoadProperty(_productMemberProperty, PetShop.Tests.ParameterizedSQL.Product.NewProduct());
                     else
                         LoadProperty(_productMemberProperty, PetShop.Tests.ParameterizedSQL.Product.GetByProductId(ProductId));
@@ -138,14 +138,14 @@ namespace PetShop.Tests.ParameterizedSQL
         }
 
         //AssociatedManyToOne
-        private static readonly PropertyInfo< Supplier > _supplierMemberProperty = RegisterProperty< Supplier >(p => p.SupplierMember, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< Supplier > _supplierMemberProperty = RegisterProperty< Supplier >(p => p.SupplierMember, Csla.RelationshipTypes.Child);
         public Supplier SupplierMember
         {
             get
             {
                 if(!FieldManager.FieldExists(_supplierMemberProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.ParameterizedSQL.Supplier.Exists(new PetShop.Tests.ParameterizedSQL.SupplierCriteria {SuppId = Supplier.Value}))
                         LoadProperty(_supplierMemberProperty, PetShop.Tests.ParameterizedSQL.Supplier.NewSupplier());
                     else
                         LoadProperty(_supplierMemberProperty, PetShop.Tests.ParameterizedSQL.Supplier.GetBySuppId(Supplier.Value));
@@ -221,6 +221,15 @@ namespace PetShop.Tests.ParameterizedSQL
         {
             return DataPortal.FetchChild< Item >(
                 new ItemCriteria{Supplier = supplier.Value});
+        }
+
+        #endregion
+
+        #region Exists Command
+
+        public static bool Exists(ItemCriteria criteria)
+        {
+            return ExistsCommand.Execute(criteria);
         }
 
         #endregion

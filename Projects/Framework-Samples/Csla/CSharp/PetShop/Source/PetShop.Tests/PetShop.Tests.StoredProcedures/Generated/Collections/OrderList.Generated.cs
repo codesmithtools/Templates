@@ -30,7 +30,7 @@ namespace PetShop.Tests.StoredProcedures
         }
         
         #endregion
-        
+
         #region Factory Methods 
         
         public static OrderList NewList()
@@ -50,7 +50,7 @@ namespace PetShop.Tests.StoredProcedures
         }
 
         #endregion
-        
+
         #region Properties
         
         protected override object AddNewCore()
@@ -60,6 +60,15 @@ namespace PetShop.Tests.StoredProcedures
             return item;
         }
         
+        #endregion
+
+        #region Exists Command
+
+        public static bool Exists(OrderCriteria criteria)
+        {
+            return Order.Exists(criteria);
+        }
+
         #endregion
     }
 }

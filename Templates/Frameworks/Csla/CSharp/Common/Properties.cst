@@ -63,7 +63,7 @@
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                 {
-                    if(IsNew)
+                    if(IsNew || !<%= BusinessProjectName %>.<%= association.ClassName %>.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.New<%= association.ClassName %>());
                     else
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
@@ -90,7 +90,7 @@
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                 {
-                    if(IsNew)
+                    if(IsNew || !<%= BusinessProjectName %>.<%= association.ClassName %>.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.New<%= association.ClassName %>());
                     else
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
@@ -119,14 +119,14 @@
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                 {
-                    if(IsNew)
+                    if(IsNew || !<%= BusinessProjectName %>.<%= association.ClassName %>List.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>List.NewList());
                     else
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
                 }
 
 <% } %>
-                return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
+                return GetProperty(<%= association.PrivateMemberVariableName %>Property);
             }
         }
 

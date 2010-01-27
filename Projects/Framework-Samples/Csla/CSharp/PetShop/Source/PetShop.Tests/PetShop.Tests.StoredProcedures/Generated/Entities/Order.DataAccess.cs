@@ -61,6 +61,7 @@ namespace PetShop.Tests.StoredProcedures
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@p_OrderId", OrderId);
+					command.Parameters["@p_OrderId"].Direction = ParameterDirection.Output;
 					command.Parameters.AddWithValue("@p_UserId", UserId);
 					command.Parameters.AddWithValue("@p_OrderDate", OrderDate);
 					command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1);
@@ -106,6 +107,7 @@ namespace PetShop.Tests.StoredProcedures
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@p_OrderId", OrderId);
+					command.Parameters["@p_OrderId"].Direction = ParameterDirection.Output;
 					command.Parameters.AddWithValue("@p_UserId", UserId);
 					command.Parameters.AddWithValue("@p_OrderDate", OrderDate);
 					command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1);
@@ -209,6 +211,7 @@ namespace PetShop.Tests.StoredProcedures
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@p_OrderId", OrderId);
+					command.Parameters["@p_OrderId"].Direction = ParameterDirection.Output;
 					command.Parameters.AddWithValue("@p_UserId", UserId);
 					command.Parameters.AddWithValue("@p_OrderDate", OrderDate);
 					command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1);
@@ -252,6 +255,7 @@ namespace PetShop.Tests.StoredProcedures
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@p_OrderId", OrderId);
+					command.Parameters["@p_OrderId"].Direction = ParameterDirection.Output;
 					command.Parameters.AddWithValue("@p_UserId", UserId);
 					command.Parameters.AddWithValue("@p_OrderDate", OrderDate);
 					command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1);

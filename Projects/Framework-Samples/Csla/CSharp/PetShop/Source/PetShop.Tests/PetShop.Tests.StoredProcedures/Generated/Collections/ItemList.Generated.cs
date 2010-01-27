@@ -75,5 +75,14 @@ namespace PetShop.Tests.StoredProcedures
         }
         
         #endregion
+
+        #region Exists Command
+
+        public static bool Exists(ItemCriteria criteria)
+        {
+            return Item.Exists(criteria);
+        }
+
+        #endregion
     }
 }

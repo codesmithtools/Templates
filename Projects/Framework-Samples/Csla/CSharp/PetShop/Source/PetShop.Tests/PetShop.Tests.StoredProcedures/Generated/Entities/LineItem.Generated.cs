@@ -96,14 +96,14 @@ namespace PetShop.Tests.StoredProcedures
         }
 
         //AssociatedManyToOne
-        private static readonly PropertyInfo< Order > _orderMemberProperty = RegisterProperty< Order >(p => p.OrderMember, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< Order > _orderMemberProperty = RegisterProperty< Order >(p => p.OrderMember, Csla.RelationshipTypes.Child);
         public Order OrderMember
         {
             get
             {
                 if(!FieldManager.FieldExists(_orderMemberProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.StoredProcedures.Order.Exists(new PetShop.Tests.StoredProcedures.OrderCriteria {OrderId = OrderId}))
                         LoadProperty(_orderMemberProperty, PetShop.Tests.StoredProcedures.Order.NewOrder());
                     else
                         LoadProperty(_orderMemberProperty, PetShop.Tests.StoredProcedures.Order.GetByOrderId(OrderId));
@@ -157,6 +157,15 @@ namespace PetShop.Tests.StoredProcedures
         {
             return DataPortal.FetchChild< LineItem >(
                 new LineItemCriteria{OrderId = orderId});
+        }
+
+        #endregion
+
+        #region Exists Command
+
+        public static bool Exists(LineItemCriteria criteria)
+        {
+            return ExistsCommand.Execute(criteria);
         }
 
         #endregion

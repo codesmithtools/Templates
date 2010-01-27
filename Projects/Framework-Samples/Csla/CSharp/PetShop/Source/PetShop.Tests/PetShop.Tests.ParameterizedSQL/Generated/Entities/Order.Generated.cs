@@ -261,40 +261,38 @@ namespace PetShop.Tests.ParameterizedSQL
 
 
         //AssociatedOneToMany
-        private static readonly PropertyInfo< LineItemList > _lineItemsProperty = RegisterProperty<LineItemList>(p => p.LineItems, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< LineItemList > _lineItemsProperty = RegisterProperty<LineItemList>(p => p.LineItems, Csla.RelationshipTypes.Child);
         public LineItemList LineItems
         {
             get
             {
                 if(!FieldManager.FieldExists(_lineItemsProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.ParameterizedSQL.LineItemList.Exists(new PetShop.Tests.ParameterizedSQL.LineItemCriteria {OrderId = OrderId}))
                         LoadProperty(_lineItemsProperty, PetShop.Tests.ParameterizedSQL.LineItemList.NewList());
                     else
-                    
                         LoadProperty(_lineItemsProperty, PetShop.Tests.ParameterizedSQL.LineItemList.GetByOrderId(OrderId));
                 }
 
-                return GetProperty(_lineItemsProperty); 
+                return GetProperty(_lineItemsProperty);
             }
         }
 
         //AssociatedOneToMany
-        private static readonly PropertyInfo< OrderStatusList > _orderStatusesProperty = RegisterProperty<OrderStatusList>(p => p.OrderStatuses, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< OrderStatusList > _orderStatusesProperty = RegisterProperty<OrderStatusList>(p => p.OrderStatuses, Csla.RelationshipTypes.Child);
         public OrderStatusList OrderStatuses
         {
             get
             {
                 if(!FieldManager.FieldExists(_orderStatusesProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.ParameterizedSQL.OrderStatusList.Exists(new PetShop.Tests.ParameterizedSQL.OrderStatusCriteria {OrderId = OrderId}))
                         LoadProperty(_orderStatusesProperty, PetShop.Tests.ParameterizedSQL.OrderStatusList.NewList());
                     else
-                    
                         LoadProperty(_orderStatusesProperty, PetShop.Tests.ParameterizedSQL.OrderStatusList.GetByOrderId(OrderId));
                 }
 
-                return GetProperty(_orderStatusesProperty); 
+                return GetProperty(_orderStatusesProperty);
             }
         }
 
@@ -311,6 +309,15 @@ namespace PetShop.Tests.ParameterizedSQL
         {
             return DataPortal.FetchChild< Order >(
                 new OrderCriteria{OrderId = orderId});
+        }
+
+        #endregion
+
+        #region Exists Command
+
+        public static bool Exists(OrderCriteria criteria)
+        {
+            return ExistsCommand.Execute(criteria);
         }
 
         #endregion

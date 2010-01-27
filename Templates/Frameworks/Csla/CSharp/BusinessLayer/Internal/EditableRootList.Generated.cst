@@ -1,4 +1,5 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X EditableRootList" %>
+<%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
@@ -44,7 +45,7 @@ namespace <%= BusinessProjectName %>
         }
         
         #endregion
-        
+
         #region Factory Methods 
         
         public static <%= BusinessClassName %> NewList()
@@ -66,7 +67,7 @@ namespace <%= BusinessProjectName %>
         }
 
         #endregion
-        
+
         #region Properties
         
         protected override object AddNewCore()
@@ -77,5 +78,7 @@ namespace <%= BusinessProjectName %>
         }
         
         #endregion
+
+<% RenderHelper(new Exists()); %>
     }
 }

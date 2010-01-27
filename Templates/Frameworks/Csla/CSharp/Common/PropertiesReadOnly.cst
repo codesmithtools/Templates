@@ -21,7 +21,7 @@
 <% } %>
         public <%= member.SystemType %> <%= member.PropertyName %>
         {
-            get { return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>); }                
+            get { return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>); }
         }
 
 <% } else { %>
@@ -33,7 +33,7 @@
 <% } %>
         public <%= member.SystemType %> <%= member.PropertyName %>
         {
-            get { return GetProperty(<%= member.PrivateMemberVariableName %>Property); }                
+            get { return GetProperty(<%= member.PrivateMemberVariableName %>Property); }
         }
 
 <% } } %>
