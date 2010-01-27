@@ -21,14 +21,14 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New Cart()
 
 			
-			entity.ItemId = "Test Te"
-			entity.Name = "Test Test Test Test Test Test Test Test T"
-			entity.Type = "Test Test Test Test Test Test Test Test Test Test Test T"
-			entity.Price = 20
-			entity.CategoryId = "T"
-			entity.ProductId = "Test Tes"
+			entity.ItemId = "Test T"
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test"
+			entity.Type = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test T"
+			entity.Price = 85
+			entity.CategoryId = "Test Te"
+			entity.ProductId = "Tes"
 			entity.IsShoppingCart = True
-			entity.Quantity = 65
+			entity.Quantity = 72
 			
 			Dim profileManager As IProfileManager = managerFactory.GetProfileManager()
 			entity.Profile = profileManager.GetAll(1)(0)
@@ -73,7 +73,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Cart = GetFirstCart()
 				
-				entityA.ItemId = "Tes"
+				entityA.ItemId = "Test Tes"
 				
 				manager.Update(entityA)
 

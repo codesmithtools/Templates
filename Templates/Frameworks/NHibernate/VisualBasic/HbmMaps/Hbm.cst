@@ -42,7 +42,7 @@ Description: Generates a HBM Map for NHibernate.
 		<% Next %>
 		<% 'Many-To-One %>
 		<% For Each association As EntityAssociation In entityManager.ManyToOne %>
-		<many-to-one name="<%= association.PropertyName %>" column="[<%= association.ColumnName %>]" class="<%= association.ClassName %>" />
+		<many-to-one name="<%= association.PropertyName %>" column="[<%= association.ColumnName %>]" class="<%= association.ClassName %>" <% IF (association.HasCascade) Then %>cascade="<%= association.Cascade %>" <% End If %>/>
 		<% Next %>
 		<% 'One-To-Many %>
 		<% For Each association As EntityAssociation In entityManager.OneToMany %>

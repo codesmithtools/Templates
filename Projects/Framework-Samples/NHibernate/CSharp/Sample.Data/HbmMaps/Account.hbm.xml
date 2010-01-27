@@ -15,6 +15,6 @@
 		<property name="Country" column="[Country]" />
 		<property name="Phone" column="[Phone]" />
 		<property name="Number" column="[Number]" />
-		<many-to-one name="Profile" column="[UniqueID]" class="Profile" />
+		<many-to-one name="Profile" column="[UniqueID]" class="Profile" cascade="all" />
 	</class>
 </hibernate-mapping>

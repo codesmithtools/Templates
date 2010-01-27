@@ -23,17 +23,17 @@ namespace Sample.Data.Generated.UnitTests
 			Account entity = new Account();
 			
 			
-			entity.Email = "Test Test Test Test Test Tes";
-			entity.FirstName = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-			entity.LastName = "Test Test Test Te";
-			entity.Address1 = "Test Test Test Test Test Test Test T";
-			entity.Address2 = "Test Test Test Test T";
-			entity.City = "Test Test Test Test Test";
-			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
-			entity.Zip = "Test ";
-			entity.Country = "Test Test Test Te";
+			entity.Email = "Test Test Test ";
+			entity.FirstName = "Test Test Test Test Test Te";
+			entity.LastName = "Test T";
+			entity.Address1 = "Test Test Test Test Test Test Te";
+			entity.Address2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.City = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test";
+			entity.Zip = "Test Test";
+			entity.Country = "Test";
 			entity.Phone = "Test Test ";
-			entity.Number = 2;
+			entity.Number = 34;
 			
 			IProfileManager profileManager = managerFactory.GetProfileManager();
 			entity.Profile = profileManager.GetAll(1)[0];
@@ -88,7 +88,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Account entityA = GetFirstAccount();
 				
-				entityA.Email = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
+				entityA.Email = "Test Test Test Test Test Test Test ";
 				
 				manager.Update(entityA);
 

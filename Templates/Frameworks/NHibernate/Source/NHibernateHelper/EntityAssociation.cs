@@ -15,9 +15,7 @@ namespace NHibernateHelper
             ToManyTableKeyName = (associationType == AssociationTypeEnum.ManyToMany)
                 ? GetToManyTableKey(column.Table, table).Name
                 : String.Empty;
-            Cascade = (associationType == AssociationTypeEnum.OneToMany)
-                ? NHibernateHelper.GetCascade(column)
-                : String.Empty;
+            Cascade = NHibernateHelper.GetCascade(column, associationType == AssociationTypeEnum.OneToMany);
             ClassName = NHibernateHelper.GetClassName(table);
             AssociationType = associationType;
             GenericName = GetGenericName(table, Column, AssociationType);
@@ -68,6 +66,10 @@ namespace NHibernateHelper
         public string ClassName { get; private set; }
         public string ToManyTableKeyName { get; private set; }
         public string Cascade { get; private set; }
+        public bool HasCascade
+        {
+            get { return !String.IsNullOrEmpty(Cascade); }
+        }
         public string TableName
         {
             get { return Column.Table.FullName; }

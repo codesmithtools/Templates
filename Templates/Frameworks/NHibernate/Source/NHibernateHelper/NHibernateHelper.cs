@@ -229,9 +229,20 @@ namespace NHibernateHelper
             throw new Exception(String.Format("Could not find Column {0} in Table {1}'s ForeignKeys.", mcs.Name, table.Name));
         }
 
-        public static string GetCascade(ColumnSchema column)
+        public static string GetCascade(ColumnSchema column, bool isOneToMany)
         {
-            return column.AllowDBNull ? "all" : "all-delete-orphan";
+            var ep = column.ExtendedProperties["cs_cascade"];
+            if (ep != null && ep.Value != null)
+            {
+                var eps = ep.Value.ToString();
+                if (String.IsNullOrEmpty(eps))
+                    return eps;
+            }
+
+            if (isOneToMany)
+                return column.AllowDBNull ? "all" : "all-delete-orphan";
+
+            return column.AllowDBNull ? String.Empty : "all";
         }
 
         public static string GetCriterionNamespace(NHibernateVersion version)

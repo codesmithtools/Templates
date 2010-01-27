@@ -10,7 +10,7 @@
 		<property name="Status" column="[Status]" />
 		<property name="Name" column="[Name]" />
 		<property name="Image" column="[Image]" />
-		<many-to-one name="Product" column="[ProductId]" class="Product" />
+		<many-to-one name="Product" column="[ProductId]" class="Product" cascade="all" />
 		<many-to-one name="Supplier" column="[Supplier]" class="Supplier" />
 	</class>
 </hibernate-mapping>

@@ -13,6 +13,6 @@
 		<property name="ProductId" column="[ProductId]" />
 		<property name="IsShoppingCart" column="[IsShoppingCart]" />
 		<property name="Quantity" column="[Quantity]" />
-		<many-to-one name="Profile" column="[UniqueID]" class="Profile" />
+		<many-to-one name="Profile" column="[UniqueID]" class="Profile" cascade="all" />
 	</class>
 </hibernate-mapping>
