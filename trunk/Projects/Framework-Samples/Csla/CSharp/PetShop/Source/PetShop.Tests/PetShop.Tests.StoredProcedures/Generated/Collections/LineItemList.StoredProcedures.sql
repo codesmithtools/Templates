@@ -66,8 +66,6 @@ CREATE PROCEDURE [dbo].[CSLA_LineItem_Update]
 	@p_UnitPrice decimal(10, 2)
 AS
 
-SET NOCOUNT ON
-
 UPDATE [dbo].[LineItem] SET
 	[ItemId] = @p_ItemId,
 	[Quantity] = @p_Quantity,
@@ -91,8 +89,6 @@ CREATE PROCEDURE [dbo].[CSLA_LineItem_Delete]
 	@p_OrderId int,
 	@p_LineNum int
 AS
-
-SET NOCOUNT ON
 
 DELETE FROM
     [dbo].[LineItem]
@@ -119,7 +115,6 @@ CREATE PROCEDURE [dbo].[CSLA_LineItem_Select]
 	@p_UnitPrice decimal(10, 2) = NULL
 AS
 
-SET NOCOUNT ON
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 
 SELECT

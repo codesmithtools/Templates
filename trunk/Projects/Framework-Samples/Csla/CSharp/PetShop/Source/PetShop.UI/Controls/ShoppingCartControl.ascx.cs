@@ -76,7 +76,7 @@ namespace PetShop.UI.Controls
                 }
             }
 
-            profile = profile.Save(true);
+            profile = profile.Save();
 
             BindCart();
         }
@@ -98,7 +98,7 @@ namespace PetShop.UI.Controls
                     break;
             }
 
-            profile = profile.Save(true);
+            profile = profile.Save();
          
             BindCart();
         }

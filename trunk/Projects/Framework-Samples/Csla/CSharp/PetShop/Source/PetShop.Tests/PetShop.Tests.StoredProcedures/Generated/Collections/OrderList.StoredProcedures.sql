@@ -49,8 +49,6 @@ CREATE PROCEDURE [dbo].[CSLA_Order_Insert]
 	@p_OrderId int OUTPUT
 AS
 
-SET NOCOUNT ON
-
 INSERT INTO [dbo].[Orders] (
 	[UserId],
 	[OrderDate],
@@ -99,7 +97,7 @@ INSERT INTO [dbo].[Orders] (
 	@p_Locale
 )
 
-SET @OrderId = SCOPE_IDENTITY()
+SET @p_OrderId = SCOPE_IDENTITY()
 
 --endregion
 
@@ -137,8 +135,6 @@ CREATE PROCEDURE [dbo].[CSLA_Order_Update]
 	@p_AuthorizationNumber int,
 	@p_Locale varchar(20)
 AS
-
-SET NOCOUNT ON
 
 UPDATE [dbo].[Orders] SET
 	[UserId] = @p_UserId,
@@ -180,8 +176,6 @@ GO
 CREATE PROCEDURE [dbo].[CSLA_Order_Delete]
 	@p_OrderId int
 AS
-
-SET NOCOUNT ON
 
 DELETE FROM
     [dbo].[Orders]
@@ -225,7 +219,6 @@ CREATE PROCEDURE [dbo].[CSLA_Order_Select]
 	@p_Locale varchar(20) = NULL
 AS
 
-SET NOCOUNT ON
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 
 SELECT

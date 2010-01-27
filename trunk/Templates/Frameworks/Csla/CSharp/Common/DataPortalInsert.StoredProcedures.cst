@@ -15,8 +15,7 @@
                 using(SqlCommand command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    <%= Entity.MembersUpdateInsert.BuildCommandParameters(false, true) %>
-                    
+                    <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, true) %>
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())

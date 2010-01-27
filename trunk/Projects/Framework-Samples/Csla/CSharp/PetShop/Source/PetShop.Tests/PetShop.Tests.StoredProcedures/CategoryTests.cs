@@ -37,10 +37,28 @@ namespace PetShop.Tests.StoredProcedures
         [TearDown]
         public void TearDown()
         {
-            Product.DeleteProduct(TestProductID2);
-            Product.DeleteProduct(TestProductID);
-            Category.DeleteCategory(TestCategoryID);
-            Category.DeleteCategory(TestCategoryID2);
+            try
+            {
+                Product.DeleteProduct(TestProductID2);
+            }
+            catch (Exception) { }
+            try
+            {
+                Product.DeleteProduct(TestProductID);
+            }
+            catch (Exception) { }
+
+            try
+            {
+                Category.DeleteCategory(TestCategoryID);
+            }
+            catch (Exception) { }
+
+            try
+            {
+                Category.DeleteCategory(TestCategoryID2);
+            }
+            catch (Exception) { }
         }
 
         [NUnit.Framework.TestFixtureTearDown]
@@ -82,7 +100,7 @@ namespace PetShop.Tests.StoredProcedures
 
 		    try
 		    {
-                category = category.Save(true);
+                category = category.Save();
                 
                 // Fail as a duplicate record was entered.
                 Assert.Fail("Fail as a duplicate record was entered and an exception was not thrown.");
@@ -108,7 +126,7 @@ namespace PetShop.Tests.StoredProcedures
             category.Name = TestUtility.Instance.RandomString(80, false);
             category.Descn = TestUtility.Instance.RandomString(255, false);
 
-            category = category.Save(true);
+            category = category.Save();
 
             Assert.IsTrue(true);
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
@@ -295,10 +313,10 @@ namespace PetShop.Tests.StoredProcedures
 
             category.Name = TestUtility.Instance.RandomString(80, false);
             Assert.IsTrue(category.IsDirty);
-            category = category.Save(true);
+            category = category.Save();
 
             Assert.IsFalse(category.IsNew);
-            Assert.IsTrue(category.IsDirty); // Save docs say this should be the case..
+            Assert.IsFalse(category.IsDirty);
             Assert.IsFalse(category.IsDeleted);
 
             category.Delete();
@@ -341,7 +359,6 @@ namespace PetShop.Tests.StoredProcedures
 
             Assert.IsTrue(count == 0);
 
-            Assert.Fail("Need to implement.");
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
         }
 
@@ -405,6 +422,7 @@ namespace PetShop.Tests.StoredProcedures
             category.Descn = TestUtility.Instance.RandomString(255, false);
 
             Assert.IsTrue(category.Products.Count == 0);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
             Product product = category.Products.AddNew();
 
@@ -414,7 +432,9 @@ namespace PetShop.Tests.StoredProcedures
             product.Name = TestUtility.Instance.RandomString(80, false);
             product.Descn = TestUtility.Instance.RandomString(255, false);
             product.Image = TestUtility.Instance.RandomString(80, false);
+            Assert.IsTrue(product.IsValid, product.BrokenRulesCollection.ToString());
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Category category2 = Category.GetByCategoryId(TestCategoryID2);
@@ -446,6 +466,7 @@ namespace PetShop.Tests.StoredProcedures
             product.Descn = TestUtility.Instance.RandomString(255, false);
             product.Image = TestUtility.Instance.RandomString(80, false);
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Category category2 = Category.GetByCategoryId(TestCategoryID);
@@ -662,7 +683,7 @@ namespace PetShop.Tests.StoredProcedures
         /// Delete the Category entity into the database twice.
         /// </summary>
         [Test]
-        public void Step_31_Double_Delete()
+        public void Step_21_Double_Delete()
         {
             Console.WriteLine("20. Deleting the category twice.");
             Stopwatch watch = Stopwatch.StartNew();
@@ -696,7 +717,7 @@ namespace PetShop.Tests.StoredProcedures
         /// Delete the Category entity into the database twice.
         /// </summary>
         [Test]
-        public void Step_32_Double_Delete()
+        public void Step_22_Double_Delete()
         {
             Console.WriteLine("20. Deleting the category twice.");
             Stopwatch watch = Stopwatch.StartNew();
@@ -721,11 +742,19 @@ namespace PetShop.Tests.StoredProcedures
 
             // Call delete on an already deleted item.
             Assert.IsTrue(category.IsDeleted);
-            category = category.Save();
+
+            try
+            {
+                category = category.Save();
+                Assert.Fail("Record exists when it should have been deleted.");
+            }
+            catch (Exception)
+            {
+                // Exception was thrown if record doesn't exist.
+                Assert.IsTrue(true);
+            }
 
             Assert.IsTrue(string.Equals(category.CategoryId, TestCategoryID, StringComparison.InvariantCultureIgnoreCase));
-            Assert.IsFalse(category.IsDeleted);
-            Assert.IsTrue(category.IsNew);
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
         }
 

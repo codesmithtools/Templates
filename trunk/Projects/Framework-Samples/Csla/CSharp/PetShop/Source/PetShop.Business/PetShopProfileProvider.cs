@@ -129,7 +129,7 @@ namespace PetShop.Business
             profile.LastActivityDate = DateTime.Now;
             profile.LastUpdatedDate = DateTime.Now;
 
-            profile = profile.Save(true);
+            profile = profile.Save();
         }
 
         #endregion
@@ -414,7 +414,7 @@ namespace PetShop.Business
             Profile profile = ProfileManager.Instance.GetCurrentUser(username);
             profile.Delete();
 
-            profile = profile.Save(true);
+            profile = profile.Save();
             
             return profile.IsDeleted;
         }

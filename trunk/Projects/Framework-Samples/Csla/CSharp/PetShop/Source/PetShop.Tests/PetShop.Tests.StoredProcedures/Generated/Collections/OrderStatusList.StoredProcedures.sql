@@ -62,8 +62,6 @@ CREATE PROCEDURE [dbo].[CSLA_OrderStatus_Update]
 	@p_Status varchar(2)
 AS
 
-SET NOCOUNT ON
-
 UPDATE [dbo].[OrderStatus] SET
 	[Timestamp] = @p_Timestamp,
 	[Status] = @p_Status
@@ -86,8 +84,6 @@ CREATE PROCEDURE [dbo].[CSLA_OrderStatus_Delete]
 	@p_OrderId int,
 	@p_LineNum int
 AS
-
-SET NOCOUNT ON
 
 DELETE FROM
     [dbo].[OrderStatus]
@@ -113,7 +109,6 @@ CREATE PROCEDURE [dbo].[CSLA_OrderStatus_Select]
 	@p_Status varchar(2) = NULL
 AS
 
-SET NOCOUNT ON
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
 
 SELECT

@@ -26,7 +26,7 @@ namespace PetShop.UI
                     UpdateAccount(ref account, AddressForm.Address);
                 }
 
-                profile = profile.Save(true);
+                profile = profile.Save();
             }
 
             lblMessage.Text = "Your profile information has been successfully updated.<br>&nbsp;";

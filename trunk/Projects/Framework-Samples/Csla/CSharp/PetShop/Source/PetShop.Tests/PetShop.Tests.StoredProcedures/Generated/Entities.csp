@@ -48,14 +48,6 @@
         <tableList>
       <table>
         <owner>dbo</owner>
-        <name>LineItem</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>Orders</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
         <name>OrderStatus</name>
       </table>
     </tableList>
@@ -83,6 +75,14 @@
       <table>
         <owner>dbo</owner>
         <name>Item</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>LineItem</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Orders</name>
       </table>
       <table>
         <owner>dbo</owner>
@@ -129,6 +129,10 @@
       <table>
         <owner>dbo</owner>
         <name>Item</name>
+      </table>
+      <table>
+        <owner>dbo</owner>
+        <name>Product</name>
       </table>
       <table>
         <owner>dbo</owner>
