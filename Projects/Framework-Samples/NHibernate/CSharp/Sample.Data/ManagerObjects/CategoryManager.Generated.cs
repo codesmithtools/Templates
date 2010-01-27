@@ -7,12 +7,12 @@ using Sample.Data.Generated.Base;
 
 namespace Sample.Data.Generated.ManagerObjects
 {
-    public partial interface ICategoryManager : IManagerBase<Category, string>
+    public partial interface ICategoryManager : IManagerBase<Sample.Data.Generated.BusinessObjects.Category, string>
     {
 		// Get Methods
     }
 
-    partial class CategoryManager : ManagerBase<Category, string>, ICategoryManager
+    partial class CategoryManager : ManagerBase<Sample.Data.Generated.BusinessObjects.Category, string>, ICategoryManager
     {
 		#region Constructors
 		

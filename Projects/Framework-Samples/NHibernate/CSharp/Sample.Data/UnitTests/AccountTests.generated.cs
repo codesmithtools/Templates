@@ -11,38 +11,38 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class AccountTests : UNuitTestBase
     {
-        protected IAccountManager manager;
+        protected Sample.Data.Generated.ManagerObjects.IAccountManager manager;
 		
 		public AccountTests()
         {
             manager = managerFactory.GetAccountManager();
         }
 		
-		protected Account CreateNewAccount()
+		protected Sample.Data.Generated.BusinessObjects.Account CreateNewAccount()
 		{
-			Account entity = new Account();
+			Sample.Data.Generated.BusinessObjects.Account entity = new Sample.Data.Generated.BusinessObjects.Account();
 			
 			
-			entity.Email = "Test Test Test ";
-			entity.FirstName = "Test Test Test Test Test Te";
-			entity.LastName = "Test T";
-			entity.Address1 = "Test Test Test Test Test Test Te";
-			entity.Address2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
-			entity.City = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test";
-			entity.Zip = "Test Test";
-			entity.Country = "Test";
-			entity.Phone = "Test Test ";
-			entity.Number = 34;
+			entity.Email = "Test T";
+			entity.FirstName = "Test Test Test Test Test Test";
+			entity.LastName = "Test Test Test Test T";
+			entity.Address1 = "Te";
+			entity.Address2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.City = "Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+			entity.State = "Test Test Test Test Test Test Test Test Test ";
+			entity.Zip = "Test Test Test T";
+			entity.Country = "Test Test Test T";
+			entity.Phone = "Test Test";
+			entity.Number = 30;
 			
-			IProfileManager profileManager = managerFactory.GetProfileManager();
+			Sample.Data.Generated.ManagerObjects.IProfileManager profileManager = managerFactory.GetProfileManager();
 			entity.Profile = profileManager.GetAll(1)[0];
 			
 			return entity;
 		}
-		protected Account GetFirstAccount()
+		protected Sample.Data.Generated.BusinessObjects.Account GetFirstAccount()
         {
-            IList<Account> entityList = manager.GetAll(1);
+            IList<Sample.Data.Generated.BusinessObjects.Account> entityList = manager.GetAll(1);
             if (entityList.Count == 0)
                 Assert.Fail("All tables must have at least one row for unit tests to succeed.");
             return entityList[0];
@@ -53,7 +53,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-				Account entity = CreateNewAccount();
+				Sample.Data.Generated.BusinessObjects.Account entity = CreateNewAccount();
 				
                 object result = manager.Save(entity);
 
@@ -69,10 +69,10 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Account entityA = CreateNewAccount();
+                Sample.Data.Generated.BusinessObjects.Account entityA = CreateNewAccount();
 				manager.Save(entityA);
 
-                Account entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Account entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA, entityB);
             }
@@ -86,13 +86,13 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Account entityA = GetFirstAccount();
+                Sample.Data.Generated.BusinessObjects.Account entityA = GetFirstAccount();
 				
-				entityA.Email = "Test Test Test Test Test Test Test ";
+				entityA.Email = "Test T";
 				
 				manager.Update(entityA);
 
-                Account entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Account entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA.Email, entityB.Email);
             }
@@ -106,7 +106,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Account entity = GetFirstAccount();
+                Sample.Data.Generated.BusinessObjects.Account entity = GetFirstAccount();
 				
                 manager.Delete(entity);
 

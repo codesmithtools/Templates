@@ -11,35 +11,35 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class CartTests : UNuitTestBase
     {
-        protected ICartManager manager;
+        protected Sample.Data.Generated.ManagerObjects.ICartManager manager;
 		
 		public CartTests()
         {
             manager = managerFactory.GetCartManager();
         }
 		
-		protected Cart CreateNewCart()
+		protected Sample.Data.Generated.BusinessObjects.Cart CreateNewCart()
 		{
-			Cart entity = new Cart();
+			Sample.Data.Generated.BusinessObjects.Cart entity = new Sample.Data.Generated.BusinessObjects.Cart();
 			
 			
-			entity.ItemId = "Test Test";
-			entity.Name = "Test Test Test Test Test Test Test Test Test";
-			entity.Type = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
-			entity.Price = 34;
-			entity.CategoryId = "Te";
-			entity.ProductId = "Test T";
+			entity.ItemId = "Test Tes";
+			entity.Name = "Test Test Test Test Test Test Test Test Tes";
+			entity.Type = "Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.Price = 82;
+			entity.CategoryId = "Test";
+			entity.ProductId = "Test Te";
 			entity.IsShoppingCart = true;
-			entity.Quantity = 36;
+			entity.Quantity = 74;
 			
-			IProfileManager profileManager = managerFactory.GetProfileManager();
+			Sample.Data.Generated.ManagerObjects.IProfileManager profileManager = managerFactory.GetProfileManager();
 			entity.Profile = profileManager.GetAll(1)[0];
 			
 			return entity;
 		}
-		protected Cart GetFirstCart()
+		protected Sample.Data.Generated.BusinessObjects.Cart GetFirstCart()
         {
-            IList<Cart> entityList = manager.GetAll(1);
+            IList<Sample.Data.Generated.BusinessObjects.Cart> entityList = manager.GetAll(1);
             if (entityList.Count == 0)
                 Assert.Fail("All tables must have at least one row for unit tests to succeed.");
             return entityList[0];
@@ -50,7 +50,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-				Cart entity = CreateNewCart();
+				Sample.Data.Generated.BusinessObjects.Cart entity = CreateNewCart();
 				
                 object result = manager.Save(entity);
 
@@ -66,10 +66,10 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Cart entityA = CreateNewCart();
+                Sample.Data.Generated.BusinessObjects.Cart entityA = CreateNewCart();
 				manager.Save(entityA);
 
-                Cart entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Cart entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA, entityB);
             }
@@ -83,13 +83,13 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Cart entityA = GetFirstCart();
+                Sample.Data.Generated.BusinessObjects.Cart entityA = GetFirstCart();
 				
-				entityA.ItemId = "Test Tes";
+				entityA.ItemId = "Test";
 				
 				manager.Update(entityA);
 
-                Cart entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Cart entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA.ItemId, entityB.ItemId);
             }
@@ -103,7 +103,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Cart entity = GetFirstCart();
+                Sample.Data.Generated.BusinessObjects.Cart entity = GetFirstCart();
 				
                 manager.Delete(entity);
 

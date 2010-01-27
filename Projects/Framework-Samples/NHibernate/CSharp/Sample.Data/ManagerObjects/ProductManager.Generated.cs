@@ -7,7 +7,7 @@ using Sample.Data.Generated.Base;
 
 namespace Sample.Data.Generated.ManagerObjects
 {
-    public partial interface IProductManager : IManagerBase<Product, string>
+    public partial interface IProductManager : IManagerBase<Sample.Data.Generated.BusinessObjects.Product, string>
     {
 		// Get Methods
 		IList<Product> GetByCategoryId(System.String category);
@@ -16,7 +16,7 @@ namespace Sample.Data.Generated.ManagerObjects
 		Product GetByCategoryIdProductIdName(System.String category, System.String productId, System.String name);
     }
 
-    partial class ProductManager : ManagerBase<Product, string>, IProductManager
+    partial class ProductManager : ManagerBase<Sample.Data.Generated.BusinessObjects.Product, string>, IProductManager
     {
 		#region Constructors
 		

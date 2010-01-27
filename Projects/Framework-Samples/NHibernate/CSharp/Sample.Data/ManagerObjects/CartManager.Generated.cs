@@ -7,14 +7,14 @@ using Sample.Data.Generated.Base;
 
 namespace Sample.Data.Generated.ManagerObjects
 {
-    public partial interface ICartManager : IManagerBase<Cart, int>
+    public partial interface ICartManager : IManagerBase<Sample.Data.Generated.BusinessObjects.Cart, int>
     {
 		// Get Methods
 		IList<Cart> GetByUniqueID(System.Int32 profile);
 		IList<Cart> GetByIsShoppingCart(System.Boolean isShoppingCart);
     }
 
-    partial class CartManager : ManagerBase<Cart, int>, ICartManager
+    partial class CartManager : ManagerBase<Sample.Data.Generated.BusinessObjects.Cart, int>, ICartManager
     {
 		#region Constructors
 		

@@ -11,37 +11,37 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class ItemTests : UNuitTestBase
     {
-        protected IItemManager manager;
+        protected Sample.Data.Generated.ManagerObjects.IItemManager manager;
 		
 		public ItemTests()
         {
             manager = managerFactory.GetItemManager();
         }
 		
-		protected Item CreateNewItem()
+		protected Sample.Data.Generated.BusinessObjects.Item CreateNewItem()
 		{
-			Item entity = new Item();
+			Sample.Data.Generated.BusinessObjects.Item entity = new Sample.Data.Generated.BusinessObjects.Item();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test Te";
+			entity.Id = "Test Tes";
 			
-			entity.ListPrice = 48;
-			entity.UnitCost = 9;
+			entity.ListPrice = 61;
+			entity.UnitCost = 1;
 			entity.Status = "T";
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test";
-			entity.Image = "Test Test Test Test Test Test Test Test T";
+			entity.Name = "Test Te";
+			entity.Image = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
 			
-			IProductManager productManager = managerFactory.GetProductManager();
+			Sample.Data.Generated.ManagerObjects.IProductManager productManager = managerFactory.GetProductManager();
 			entity.Product = productManager.GetAll(1)[0];
 			
-			ISupplierManager supplierManager = managerFactory.GetSupplierManager();
+			Sample.Data.Generated.ManagerObjects.ISupplierManager supplierManager = managerFactory.GetSupplierManager();
 			entity.Supplier = supplierManager.GetAll(1)[0];
 			
 			return entity;
 		}
-		protected Item GetFirstItem()
+		protected Sample.Data.Generated.BusinessObjects.Item GetFirstItem()
         {
-            IList<Item> entityList = manager.GetAll(1);
+            IList<Sample.Data.Generated.BusinessObjects.Item> entityList = manager.GetAll(1);
             if (entityList.Count == 0)
                 Assert.Fail("All tables must have at least one row for unit tests to succeed.");
             return entityList[0];
@@ -52,7 +52,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-				Item entity = CreateNewItem();
+				Sample.Data.Generated.BusinessObjects.Item entity = CreateNewItem();
 				
                 object result = manager.Save(entity);
 
@@ -68,10 +68,10 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Item entityA = CreateNewItem();
+                Sample.Data.Generated.BusinessObjects.Item entityA = CreateNewItem();
 				manager.Save(entityA);
 
-                Item entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Item entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA, entityB);
             }
@@ -85,13 +85,13 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Item entityA = GetFirstItem();
+                Sample.Data.Generated.BusinessObjects.Item entityA = GetFirstItem();
 				
-				entityA.ListPrice = 37;
+				entityA.ListPrice = 6;
 				
 				manager.Update(entityA);
 
-                Item entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Item entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA.ListPrice, entityB.ListPrice);
             }
@@ -105,7 +105,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Item entity = GetFirstItem();
+                Sample.Data.Generated.BusinessObjects.Item entity = GetFirstItem();
 				
                 manager.Delete(entity);
 

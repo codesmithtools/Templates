@@ -7,13 +7,13 @@ using Sample.Data.Generated.Base;
 
 namespace Sample.Data.Generated.ManagerObjects
 {
-    public partial interface IAccountManager : IManagerBase<Account, int>
+    public partial interface IAccountManager : IManagerBase<Sample.Data.Generated.BusinessObjects.Account, int>
     {
 		// Get Methods
 		IList<Account> GetByUniqueID(System.Int32 profile);
     }
 
-    partial class AccountManager : ManagerBase<Account, int>, IAccountManager
+    partial class AccountManager : ManagerBase<Sample.Data.Generated.BusinessObjects.Account, int>, IAccountManager
     {
 		#region Constructors
 		

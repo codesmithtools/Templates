@@ -11,29 +11,29 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class LineItemTests : UNuitTestBase
     {
-        protected ILineItemManager manager;
+        protected Sample.Data.Generated.ManagerObjects.ILineItemManager manager;
 		
 		public LineItemTests()
         {
             manager = managerFactory.GetLineItemManager();
         }
 		
-		protected LineItem CreateNewLineItem()
+		protected Sample.Data.Generated.BusinessObjects.LineItem CreateNewLineItem()
 		{
-			LineItem entity = new LineItem();
+			Sample.Data.Generated.BusinessObjects.LineItem entity = new Sample.Data.Generated.BusinessObjects.LineItem();
 			
 			
-			entity.OrderId = 99;
-			entity.LineNum = 8;
+			entity.OrderId = 20;
+			entity.LineNum = 91;
 			entity.ItemId = "Tes";
-			entity.Quantity = 9;
-			entity.UnitPrice = 98;
+			entity.Quantity = 35;
+			entity.UnitPrice = 78;
 			
 			return entity;
 		}
-		protected LineItem GetFirstLineItem()
+		protected Sample.Data.Generated.BusinessObjects.LineItem GetFirstLineItem()
         {
-            IList<LineItem> entityList = manager.GetAll(1);
+            IList<Sample.Data.Generated.BusinessObjects.LineItem> entityList = manager.GetAll(1);
             if (entityList.Count == 0)
                 Assert.Fail("All tables must have at least one row for unit tests to succeed.");
             return entityList[0];
@@ -44,7 +44,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-				LineItem entity = CreateNewLineItem();
+				Sample.Data.Generated.BusinessObjects.LineItem entity = CreateNewLineItem();
 				
                 object result = manager.Save(entity);
 
@@ -60,10 +60,10 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                LineItem entityA = CreateNewLineItem();
+                Sample.Data.Generated.BusinessObjects.LineItem entityA = CreateNewLineItem();
 				manager.Save(entityA);
 
-                LineItem entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.LineItem entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA, entityB);
             }
@@ -77,13 +77,13 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                LineItem entityA = GetFirstLineItem();
+                Sample.Data.Generated.BusinessObjects.LineItem entityA = GetFirstLineItem();
 				
-				entityA.ItemId = "Test ";
+				entityA.ItemId = "T";
 				
 				manager.Update(entityA);
 
-                LineItem entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.LineItem entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA.OrderId, entityB.OrderId);
             }
@@ -97,7 +97,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                LineItem entity = GetFirstLineItem();
+                Sample.Data.Generated.BusinessObjects.LineItem entity = GetFirstLineItem();
 				
                 manager.Delete(entity);
 

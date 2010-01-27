@@ -11,28 +11,28 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class OrderStatusTests : UNuitTestBase
     {
-        protected IOrderStatusManager manager;
+        protected Sample.Data.Generated.ManagerObjects.IOrderStatusManager manager;
 		
 		public OrderStatusTests()
         {
             manager = managerFactory.GetOrderStatusManager();
         }
 		
-		protected OrderStatus CreateNewOrderStatus()
+		protected Sample.Data.Generated.BusinessObjects.OrderStatus CreateNewOrderStatus()
 		{
-			OrderStatus entity = new OrderStatus();
+			Sample.Data.Generated.BusinessObjects.OrderStatus entity = new Sample.Data.Generated.BusinessObjects.OrderStatus();
 			
 			
-			entity.OrderId = 97;
-			entity.LineNum = 11;
-			entity.Timestamp = DateTime.Now;
+			entity.OrderId = 22;
+			entity.LineNum = 81;
+			entity.Timestamp = System.DateTime.Now;
 			entity.Status = "T";
 			
 			return entity;
 		}
-		protected OrderStatus GetFirstOrderStatus()
+		protected Sample.Data.Generated.BusinessObjects.OrderStatus GetFirstOrderStatus()
         {
-            IList<OrderStatus> entityList = manager.GetAll(1);
+            IList<Sample.Data.Generated.BusinessObjects.OrderStatus> entityList = manager.GetAll(1);
             if (entityList.Count == 0)
                 Assert.Fail("All tables must have at least one row for unit tests to succeed.");
             return entityList[0];
@@ -43,7 +43,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-				OrderStatus entity = CreateNewOrderStatus();
+				Sample.Data.Generated.BusinessObjects.OrderStatus entity = CreateNewOrderStatus();
 				
                 object result = manager.Save(entity);
 
@@ -59,10 +59,10 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                OrderStatus entityA = CreateNewOrderStatus();
+                Sample.Data.Generated.BusinessObjects.OrderStatus entityA = CreateNewOrderStatus();
 				manager.Save(entityA);
 
-                OrderStatus entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.OrderStatus entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA, entityB);
             }
@@ -76,13 +76,13 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                OrderStatus entityA = GetFirstOrderStatus();
+                Sample.Data.Generated.BusinessObjects.OrderStatus entityA = GetFirstOrderStatus();
 				
-				entityA.Timestamp = DateTime.Now;
+				entityA.Timestamp = System.DateTime.Now;
 				
 				manager.Update(entityA);
 
-                OrderStatus entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.OrderStatus entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA.OrderId, entityB.OrderId);
             }
@@ -96,7 +96,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                OrderStatus entity = GetFirstOrderStatus();
+                Sample.Data.Generated.BusinessObjects.OrderStatus entity = GetFirstOrderStatus();
 				
                 manager.Delete(entity);
 

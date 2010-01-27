@@ -7,14 +7,14 @@ using Sample.Data.Generated.Base;
 
 namespace Sample.Data.Generated.ManagerObjects
 {
-    public partial interface ILineItemManager : IManagerBase<LineItem, string>
+    public partial interface ILineItemManager : IManagerBase<Sample.Data.Generated.BusinessObjects.LineItem, string>
     {
 		// Get Methods
 		LineItem GetById(System.Int32 orderId, System.Int32 lineNum);
 		IList<LineItem> GetByOrderId(System.Int32 orderId);
     }
 
-    partial class LineItemManager : ManagerBase<LineItem, string>, ILineItemManager
+    partial class LineItemManager : ManagerBase<Sample.Data.Generated.BusinessObjects.LineItem, string>, ILineItemManager
     {
 		#region Constructors
 		
