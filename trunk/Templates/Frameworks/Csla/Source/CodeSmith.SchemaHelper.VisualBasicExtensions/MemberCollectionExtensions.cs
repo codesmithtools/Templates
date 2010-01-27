@@ -76,6 +76,11 @@ namespace CodeSmith.SchemaHelper
                     cast = string.Format("{0}{1})", castPrefix, propertyName);
 
                 commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
+
+                if (member.IsIdentity)
+                {
+                    commandParameters += string.Format("\n\t\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Output", Configuration.Instance.ParameterPrefix, member.ColumnName);
+                }
             }
 
             return commandParameters.TrimStart(new[] { '\t', '\n' });

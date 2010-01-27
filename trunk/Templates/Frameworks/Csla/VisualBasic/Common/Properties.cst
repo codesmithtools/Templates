@@ -58,7 +58,7 @@ If UseMemberVariables Then %>
 <%-- One-To-Zero-Or-One --%>
 <% For Each association As Association in Entity.AssociatedOneToZeroOrOne 
 If UseMemberVariables then %>
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>) = RegisterProperty(Of <%= association.ClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, <% If(UseLazyLoading)  %>Csla.RelationshipTypes.LazyLoad<%  else  %>Csla.RelationshipTypes.Child<% End If %>)
+    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>) = RegisterProperty(Of <%= association.ClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child)
     Private <%= association.PrivateMemberVariableName %> As <%= association.ClassName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue
 <% If(association.HasDescription) Then %>
     ''' <summary>
@@ -82,7 +82,7 @@ If UseMemberVariables then %>
     End Property
 
 <% else %>
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>) = RegisterProperty(Of <%= association.ClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, <% If(UseLazyLoading)  %>Csla.RelationshipTypes.LazyLoad<%  else  %>Csla.RelationshipTypes.Child<% End If %>)
+    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>) = RegisterProperty(Of <%= association.ClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child)
 <% If(association.HasDescription) Then %>
     ''' <summary>
     ''' <%= association.Description %>
@@ -109,7 +109,7 @@ Next %>
 <%-- Many-To-One --%>
 <% For Each association  As Association in Entity.AssociatedManyToOne 
 If UseMemberVariables Then %>
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>) = RegisterProperty(Of <%= association.ClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, <% If(UseLazyLoading)  %>Csla.RelationshipTypes.LazyLoad<%  else  %>Csla.RelationshipTypes.Child<% End If %>)
+    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>) = RegisterProperty(Of <%= association.ClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child)
     Private <%= association.PrivateMemberVariableName %> As <%= association.ClassName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue
 <% If(association.HasDescription) Then %>
     ''' <summary>
@@ -133,7 +133,7 @@ If UseMemberVariables Then %>
     End Property
     
 <%  else  %>
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>) = RegisterProperty(Of <%= association.ClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, <% If(UseLazyLoading)  %>Csla.RelationshipTypes.LazyLoad<%  else  %>Csla.RelationshipTypes.Child<% End If %>)
+    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>) = RegisterProperty(Of <%= association.ClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child)
     Public ReadOnly Property <%= association.PropertyName %>() As <%= association.ClassName %>
         Get
         
@@ -156,7 +156,7 @@ Next  %>
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each association As Association in Entity.AssociatedOneToMany 
 If (UseMemberVariables) Then %>
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>List) = RegisterProperty(Of <%= association.ClassName %>List)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, <% If(UseLazyLoading)  %>Csla.RelationshipTypes.LazyLoad<%  else  %>Csla.RelationshipTypes.Child<% End If %>)
+    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>List) = RegisterProperty(Of <%= association.ClassName %>List)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child)
     Private <%= association.PrivateMemberVariableName %> As <%= association.ClassName %>List  = <%= association.PrivateMemberVariableName %>Property.DefaultValue
 <% If(association.HasDescription) Then %>
     ''' <summary>
@@ -180,7 +180,7 @@ If (UseMemberVariables) Then %>
     End Property
 
 <% else %>
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>List) = RegisterProperty(Of <%= association.ClassName %>List)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, <% If(UseLazyLoading)  %>Csla.RelationshipTypes.LazyLoad<%  else  %>Csla.RelationshipTypes.Child<% End If %>)
+    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= association.ClassName %>List) = RegisterProperty(Of <%= association.ClassName %>List)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child)
 <% If(association.HasDescription) Then %>
     ''' <summary>
     ''' <%= association.Description %>
