@@ -50,7 +50,7 @@
 <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
         //AssociatedOneToZeroOrOne
-        private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %><% if(UseLazyLoading) { %>, RelationshipTypes.LazyLoad<% } %>);
+        private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child);
 <% if(association.HasDescription) { %>
         /// <summary>
         /// <%= association.Description %>
@@ -77,7 +77,7 @@
 <%-- Many-To-One --%>
 <% foreach(Association association in Entity.AssociatedManyToOne) { %>
         //AssociatedManyToOne
-        private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %><% if(UseLazyLoading) { %>, RelationshipTypes.LazyLoad<% } %>);
+        private static readonly PropertyInfo< <%= association.ClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= association.ClassName %> >(p => p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child);
 <% if(association.HasDescription) { %>
         /// <summary>
         /// <%= association.Description %>
@@ -106,7 +106,7 @@
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(Association association in Entity.AssociatedOneToMany) { %>
         //AssociatedOneToMany
-        private static readonly PropertyInfo< <%= association.ClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= association.ClassName %>List>(p => p.<%= association.PropertyName %><% if(UseLazyLoading) { %>, RelationshipTypes.LazyLoad<% } %>);
+        private static readonly PropertyInfo< <%= association.ClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= association.ClassName %>List>(p => p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child);
 <% if(association.HasDescription) { %>
         /// <summary>
         /// <%= association.Description %>
@@ -122,7 +122,6 @@
                     if(IsNew)
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>List.NewList());
                     else
-                    
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
                 }
 
