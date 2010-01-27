@@ -30,7 +30,6 @@ namespace PetShop.Tests.StoredProcedures
             TestProductID = TestUtility.Instance.RandomString(10, false);
             TestProductID2 = TestUtility.Instance.RandomString(10, false);
 
-            TearDown();
             CreateCategory(TestCategoryID);
         }
 
@@ -76,6 +75,7 @@ namespace PetShop.Tests.StoredProcedures
             category.Name = TestUtility.Instance.RandomString(80, false);
             category.Descn = TestUtility.Instance.RandomString(255, false);
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Assert.IsTrue(category.CategoryId == categoryID);
@@ -100,6 +100,7 @@ namespace PetShop.Tests.StoredProcedures
 
 		    try
 		    {
+                Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
                 category = category.Save();
                 
                 // Fail as a duplicate record was entered.
@@ -126,6 +127,7 @@ namespace PetShop.Tests.StoredProcedures
             category.Name = TestUtility.Instance.RandomString(80, false);
             category.Descn = TestUtility.Instance.RandomString(255, false);
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Assert.IsTrue(true);
@@ -163,6 +165,7 @@ namespace PetShop.Tests.StoredProcedures
             category.Name = TestUtility.Instance.RandomString(80, false);
             category.Descn = TestUtility.Instance.RandomString(255, false);
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Assert.IsFalse(string.Equals(category.Name, name, StringComparison.InvariantCultureIgnoreCase));
@@ -171,6 +174,7 @@ namespace PetShop.Tests.StoredProcedures
             category.Name = name;
             category.Descn = desc;
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Assert.IsTrue(string.Equals(category.Name, name, StringComparison.InvariantCultureIgnoreCase));
@@ -191,6 +195,7 @@ namespace PetShop.Tests.StoredProcedures
             Category category = Category.GetByCategoryId(TestCategoryID);
             category.Delete();
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Assert.IsTrue(category.IsNew);
@@ -209,6 +214,8 @@ namespace PetShop.Tests.StoredProcedures
             Console.WriteLine("\tGetting category \"{0}\"", TestCategoryID);
             Category category = Category.GetByCategoryId(TestCategoryID);
             category.CategoryId = TestCategoryID2;
+
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
             Console.WriteLine("\tSet categoryID to \"{0}\"", TestCategoryID2);
             Assert.IsTrue(category.CategoryId == TestCategoryID2);
@@ -243,13 +250,13 @@ namespace PetShop.Tests.StoredProcedures
             Assert.IsFalse(category.IsValid);
 
             category.CategoryId = TestCategoryID;
-            Assert.IsTrue(category.IsValid);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
             category.Name = TestUtility.Instance.RandomString(80, false);
-            Assert.IsTrue(category.IsValid);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
             category.Descn = TestUtility.Instance.RandomString(255, false);
-            Assert.IsTrue(category.IsValid);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
             // Check Category.
             category.CategoryId = null;
@@ -259,27 +266,27 @@ namespace PetShop.Tests.StoredProcedures
             Assert.IsFalse(category.IsValid);
 
             category.CategoryId = TestCategoryID;
-            Assert.IsTrue(category.IsValid);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
             // Check Name.
             category.Name = null;
-            Assert.IsTrue(category.IsValid);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
             category.Name = TestUtility.Instance.RandomString(81, false);
             Assert.IsFalse(category.IsValid);
 
             category.Name = TestUtility.Instance.RandomString(80, false);
-            Assert.IsTrue(category.IsValid);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
             // Check Descn.
             category.Descn = null;
-            Assert.IsTrue(category.IsValid);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
             category.Descn = TestUtility.Instance.RandomString(256, false);
             Assert.IsFalse(category.IsValid);
 
             category.Descn = TestUtility.Instance.RandomString(80, false);
-            Assert.IsTrue(category.IsValid);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
         }
@@ -305,6 +312,7 @@ namespace PetShop.Tests.StoredProcedures
             Assert.IsTrue(category.IsDirty);
             Assert.IsFalse(category.IsDeleted);
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Assert.IsFalse(category.IsNew);
@@ -313,6 +321,7 @@ namespace PetShop.Tests.StoredProcedures
 
             category.Name = TestUtility.Instance.RandomString(80, false);
             Assert.IsTrue(category.IsDirty);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Assert.IsFalse(category.IsNew);
@@ -321,6 +330,7 @@ namespace PetShop.Tests.StoredProcedures
 
             category.Delete();
             Assert.IsTrue(category.IsDeleted);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
             Assert.IsFalse(category.IsDeleted);
             Assert.IsTrue(category.IsNew);
@@ -492,6 +502,7 @@ namespace PetShop.Tests.StoredProcedures
             category.Descn = TestUtility.Instance.RandomString(255, false);
 
             Assert.IsTrue(category.Products.Count == 0);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
             Product product = category.Products.AddNew();
 
@@ -508,6 +519,7 @@ namespace PetShop.Tests.StoredProcedures
                 item.Name = newName;
             }
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Category category2 = Category.GetByCategoryId(TestCategoryID2);
@@ -537,6 +549,7 @@ namespace PetShop.Tests.StoredProcedures
             product.Descn = TestUtility.Instance.RandomString(255, false);
             product.Image = TestUtility.Instance.RandomString(80, false);
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             var newName = TestUtility.Instance.RandomString(80, false);
@@ -545,9 +558,12 @@ namespace PetShop.Tests.StoredProcedures
                 item.Name = newName;
             }
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Category category2 = Category.GetByCategoryId(TestCategoryID);
+            ProductList list = category2.Products;
+
             Assert.IsTrue(string.Equals(category2.Products[0].Name, newName, StringComparison.InvariantCultureIgnoreCase));
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
@@ -574,10 +590,12 @@ namespace PetShop.Tests.StoredProcedures
             product.Descn = TestUtility.Instance.RandomString(255, false);
             product.Image = TestUtility.Instance.RandomString(80, false);
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             category.CategoryId = TestCategoryID2;
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Category category2 = Category.GetByCategoryId(TestCategoryID2);
@@ -617,6 +635,7 @@ namespace PetShop.Tests.StoredProcedures
             product2.Descn = TestUtility.Instance.RandomString(255, false);
             product2.Image = TestUtility.Instance.RandomString(80, false);
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             var newName = TestUtility.Instance.RandomString(80, false);
@@ -625,6 +644,7 @@ namespace PetShop.Tests.StoredProcedures
                 item.Name = newName;
             }
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Category category2 = Category.GetByCategoryId(TestCategoryID);
@@ -668,6 +688,7 @@ namespace PetShop.Tests.StoredProcedures
 
             try
             {
+                Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
                 category = category.Save();
                 Assert.Fail("Should throw a duplicate entry exception.");
             }
@@ -695,6 +716,7 @@ namespace PetShop.Tests.StoredProcedures
 
             Assert.IsTrue(category.IsDeleted);
 
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Assert.IsTrue(string.Equals(category.CategoryId, TestCategoryID, StringComparison.InvariantCultureIgnoreCase));
@@ -704,6 +726,7 @@ namespace PetShop.Tests.StoredProcedures
 
             // Shouldn't be able to call delete twice. I'd think.
             Assert.IsTrue(category.IsDeleted);
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Assert.IsTrue(string.Equals(category.CategoryId, TestCategoryID, StringComparison.InvariantCultureIgnoreCase));
@@ -745,6 +768,7 @@ namespace PetShop.Tests.StoredProcedures
 
             try
             {
+                Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
                 category = category.Save();
                 Assert.Fail("Record exists when it should have been deleted.");
             }

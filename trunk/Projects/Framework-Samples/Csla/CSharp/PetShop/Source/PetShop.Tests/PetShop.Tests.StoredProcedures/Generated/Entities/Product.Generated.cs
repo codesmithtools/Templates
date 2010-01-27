@@ -51,6 +51,7 @@ namespace PetShop.Tests.StoredProcedures
 
             ValidationRules.AddRule(CommonRules.StringRequired, _productIdProperty);
             ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_productIdProperty, 10));
+            ValidationRules.AddRule(CommonRules.StringRequired, _categoryIdProperty);
             ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_categoryIdProperty, 10));
             ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_nameProperty, 80));
             ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(_descnProperty, 255));
@@ -98,14 +99,14 @@ namespace PetShop.Tests.StoredProcedures
         }
 
         //AssociatedManyToOne
-        private static readonly PropertyInfo< Category > _categoryMemberProperty = RegisterProperty< Category >(p => p.CategoryMember, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< Category > _categoryMemberProperty = RegisterProperty< Category >(p => p.CategoryMember, Csla.RelationshipTypes.Child);
         public Category CategoryMember
         {
             get
             {
                 if(!FieldManager.FieldExists(_categoryMemberProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.StoredProcedures.Category.Exists(new PetShop.Tests.StoredProcedures.CategoryCriteria {CategoryId = CategoryId}))
                         LoadProperty(_categoryMemberProperty, PetShop.Tests.StoredProcedures.Category.NewCategory());
                     else
                         LoadProperty(_categoryMemberProperty, PetShop.Tests.StoredProcedures.Category.GetByCategoryId(CategoryId));
@@ -117,21 +118,20 @@ namespace PetShop.Tests.StoredProcedures
 
 
         //AssociatedOneToMany
-        private static readonly PropertyInfo< ItemList > _itemsProperty = RegisterProperty<ItemList>(p => p.Items, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< ItemList > _itemsProperty = RegisterProperty<ItemList>(p => p.Items, Csla.RelationshipTypes.Child);
         public ItemList Items
         {
             get
             {
                 if(!FieldManager.FieldExists(_itemsProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.StoredProcedures.ItemList.Exists(new PetShop.Tests.StoredProcedures.ItemCriteria {ProductId = ProductId}))
                         LoadProperty(_itemsProperty, PetShop.Tests.StoredProcedures.ItemList.NewList());
                     else
-                    
                         LoadProperty(_itemsProperty, PetShop.Tests.StoredProcedures.ItemList.GetByProductId(ProductId));
                 }
 
-                return GetProperty(_itemsProperty); 
+                return GetProperty(_itemsProperty);
             }
         }
 
@@ -211,6 +211,15 @@ namespace PetShop.Tests.StoredProcedures
         {
             return DataPortal.FetchChild< Product >(
                 new ProductCriteria{CategoryId = categoryId, ProductId = productId, Name = name});
+        }
+
+        #endregion
+
+        #region Exists Command
+
+        public static bool Exists(ProductCriteria criteria)
+        {
+            return ExistsCommand.Execute(criteria);
         }
 
         #endregion

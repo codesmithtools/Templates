@@ -21,7 +21,7 @@ using Csla;
 namespace PetShop.Tests.StoredProcedures
 {
     [Serializable]
-    public partial class CategoryCriteria : CriteriaBase
+    public partial class CategoryCriteria : CriteriaBase, IGeneratedCriteria
     {
         #region Private Read-Only Members
         
@@ -66,7 +66,7 @@ namespace PetShop.Tests.StoredProcedures
         #endregion
         
         #region Read-Only
-        
+
         /// <summary>
         /// Returns a list of all the modified properties and values.
         /// </summary>
@@ -77,11 +77,22 @@ namespace PetShop.Tests.StoredProcedures
                 return _bag;
             }
         }
-        
+
+        /// <summary>
+        /// Returns a list of all the modified properties and values.
+        /// </summary>
+        public string TableName
+        {
+            get
+            {
+                return "[dbo].Category";
+            }
+        }
+
         #endregion
 
         #endregion
-        
+
         #region Overrides
         
         public override string ToString()
@@ -99,7 +110,7 @@ namespace PetShop.Tests.StoredProcedures
         }
 
         #endregion
-        
+
         #region Private Methods
         
         private T GetValue<T>(string name)

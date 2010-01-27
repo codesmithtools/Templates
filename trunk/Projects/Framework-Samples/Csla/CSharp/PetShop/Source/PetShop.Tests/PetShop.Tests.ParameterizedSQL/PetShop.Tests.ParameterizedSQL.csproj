@@ -104,10 +104,12 @@
     <Compile Include="Generated\Collections\SupplierList.Generated.cs">
       <DependentUpon>SupplierList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\Commands\ExistsCommand.cs" />
     <Compile Include="Generated\Criteria\CategoryCriteria.cs" />
     <Compile Include="Generated\Criteria\CategoryCriteria.Generated.cs">
       <DependentUpon>CategoryCriteria.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\Criteria\Interfaces\IGeneratedCriteria.cs" />
     <Compile Include="Generated\Criteria\ItemCriteria.cs" />
     <Compile Include="Generated\Criteria\ItemCriteria.Generated.cs">
       <DependentUpon>ItemCriteria.cs</DependentUpon>

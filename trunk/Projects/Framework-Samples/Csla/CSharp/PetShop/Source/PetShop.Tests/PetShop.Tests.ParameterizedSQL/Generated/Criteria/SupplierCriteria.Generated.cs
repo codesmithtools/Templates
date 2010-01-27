@@ -21,7 +21,7 @@ using Csla;
 namespace PetShop.Tests.ParameterizedSQL
 {
     [Serializable]
-    public partial class SupplierCriteria : CriteriaBase
+    public partial class SupplierCriteria : CriteriaBase, IGeneratedCriteria
     {
         #region Private Read-Only Members
         
@@ -102,7 +102,7 @@ namespace PetShop.Tests.ParameterizedSQL
         #endregion
         
         #region Read-Only
-        
+
         /// <summary>
         /// Returns a list of all the modified properties and values.
         /// </summary>
@@ -113,11 +113,22 @@ namespace PetShop.Tests.ParameterizedSQL
                 return _bag;
             }
         }
-        
+
+        /// <summary>
+        /// Returns a list of all the modified properties and values.
+        /// </summary>
+        public string TableName
+        {
+            get
+            {
+                return "[dbo].Supplier";
+            }
+        }
+
         #endregion
 
         #endregion
-        
+
         #region Overrides
         
         public override string ToString()
@@ -135,7 +146,7 @@ namespace PetShop.Tests.ParameterizedSQL
         }
 
         #endregion
-        
+
         #region Private Methods
         
         private T GetValue<T>(string name)

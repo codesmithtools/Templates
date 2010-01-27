@@ -4,9 +4,11 @@
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
 
-<%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="SchemaExplorer" %>
 
 <%@ Property Name="UseDeferredDeletion" Type="System.Boolean" Default="False" Category="3. Business Project" Description="Changes how the Business Objects are deleted, defaults to immediate deletion" %>
 //------------------------------------------------------------------------------
@@ -32,7 +34,7 @@ using Csla;
 namespace <%= BusinessProjectName %>
 {
     [Serializable]
-    public partial class <%= BusinessClassName %> : CriteriaBase
+    public partial class <%= BusinessClassName %> : CriteriaBase, IGeneratedCriteria
     {
         #region Private Read-Only Members
         
@@ -86,7 +88,7 @@ namespace <%= BusinessProjectName %>
         #endregion
         
         #region Read-Only
-        
+
         /// <summary>
         /// Returns a list of all the modified properties and values.
         /// </summary>
@@ -97,11 +99,22 @@ namespace <%= BusinessProjectName %>
                 return _bag;
             }
         }
-        
+
+        /// <summary>
+        /// Returns a list of all the modified properties and values.
+        /// </summary>
+        public string TableName
+        {
+            get
+            {
+                return "[<%= Entity.Table.Owner%>].<%= Entity.Table.Name%>";
+            }
+        }
+
         #endregion
 
         #endregion
-        
+
         #region Overrides
         
         public override string ToString()
@@ -119,7 +132,7 @@ namespace <%= BusinessProjectName %>
         }
 
         #endregion
-        
+
         #region Private Methods
         
         private T GetValue<T>(string name)

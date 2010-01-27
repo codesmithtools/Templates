@@ -2,6 +2,7 @@
 <%@ Register Name="CompositeKeyMethods" Template="..\..\Common\CompositeKeyMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="Exists" Template="..\..\Common\Exists.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Properties" Template="..\..\Common\Properties.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ValidationRules" Template="..\..\Common\ValidationRules.cst" MergeProperties="False" ExcludeProperties="" %>
 
@@ -50,7 +51,6 @@ namespace <%= BusinessProjectName %>
 
 <% RenderHelper(new Properties()); %>
 
-
         #region Factory Methods 
 
         public static <%= BusinessClassName %> New<%= BusinessClassName %>()
@@ -79,6 +79,8 @@ namespace <%= BusinessProjectName %>
 <% } %>
 
         #endregion
+
+<% RenderHelper(new Exists()); %>
 
 <% RenderHelper(new CompositeKeyMethods()); %>
     }

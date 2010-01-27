@@ -99,14 +99,14 @@ namespace PetShop.Tests.ParameterizedSQL
         }
 
         //AssociatedManyToOne
-        private static readonly PropertyInfo< Category > _categoryMemberProperty = RegisterProperty< Category >(p => p.CategoryMember, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< Category > _categoryMemberProperty = RegisterProperty< Category >(p => p.CategoryMember, Csla.RelationshipTypes.Child);
         public Category CategoryMember
         {
             get
             {
                 if(!FieldManager.FieldExists(_categoryMemberProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.ParameterizedSQL.Category.Exists(new PetShop.Tests.ParameterizedSQL.CategoryCriteria {CategoryId = CategoryId}))
                         LoadProperty(_categoryMemberProperty, PetShop.Tests.ParameterizedSQL.Category.NewCategory());
                     else
                         LoadProperty(_categoryMemberProperty, PetShop.Tests.ParameterizedSQL.Category.GetByCategoryId(CategoryId));
@@ -118,21 +118,20 @@ namespace PetShop.Tests.ParameterizedSQL
 
 
         //AssociatedOneToMany
-        private static readonly PropertyInfo< ItemList > _itemsProperty = RegisterProperty<ItemList>(p => p.Items, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< ItemList > _itemsProperty = RegisterProperty<ItemList>(p => p.Items, Csla.RelationshipTypes.Child);
         public ItemList Items
         {
             get
             {
                 if(!FieldManager.FieldExists(_itemsProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.ParameterizedSQL.ItemList.Exists(new PetShop.Tests.ParameterizedSQL.ItemCriteria {ProductId = ProductId}))
                         LoadProperty(_itemsProperty, PetShop.Tests.ParameterizedSQL.ItemList.NewList());
                     else
-                    
                         LoadProperty(_itemsProperty, PetShop.Tests.ParameterizedSQL.ItemList.GetByProductId(ProductId));
                 }
 
-                return GetProperty(_itemsProperty); 
+                return GetProperty(_itemsProperty);
             }
         }
 
@@ -212,6 +211,15 @@ namespace PetShop.Tests.ParameterizedSQL
         {
             return DataPortal.FetchChild< Product >(
                 new ProductCriteria{CategoryId = categoryId, ProductId = productId, Name = name});
+        }
+
+        #endregion
+
+        #region Exists Command
+
+        public static bool Exists(ProductCriteria criteria)
+        {
+            return ExistsCommand.Execute(criteria);
         }
 
         #endregion

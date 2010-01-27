@@ -83,25 +83,24 @@ namespace PetShop.Tests.StoredProcedures
 
 
         //AssociatedOneToMany
-        private static readonly PropertyInfo< ProductList > _productsProperty = RegisterProperty<ProductList>(p => p.Products, RelationshipTypes.Child);
+        private static readonly PropertyInfo< ProductList > _productsProperty = RegisterProperty<ProductList>(p => p.Products, Csla.RelationshipTypes.Child);
         public ProductList Products
         {
             get
             {
                 if(!FieldManager.FieldExists(_productsProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.StoredProcedures.ProductList.Exists(new PetShop.Tests.StoredProcedures.ProductCriteria {CategoryId = CategoryId}))
                         LoadProperty(_productsProperty, PetShop.Tests.StoredProcedures.ProductList.NewList());
                     else
                         LoadProperty(_productsProperty, PetShop.Tests.StoredProcedures.ProductList.GetByCategoryId(CategoryId));
                 }
 
-                return GetProperty(_productsProperty); 
+                return GetProperty(_productsProperty);
             }
         }
 
         #endregion
-
 
         #region Factory Methods 
 
@@ -119,6 +118,15 @@ namespace PetShop.Tests.StoredProcedures
         public static void DeleteCategory(System.String categoryId)
         {
             DataPortal.Delete(new CategoryCriteria{CategoryId = categoryId});
+        }
+
+        #endregion
+
+        #region Exists Command
+
+        public static bool Exists(CategoryCriteria criteria)
+        {
+            return ExistsCommand.Execute(criteria);
         }
 
         #endregion

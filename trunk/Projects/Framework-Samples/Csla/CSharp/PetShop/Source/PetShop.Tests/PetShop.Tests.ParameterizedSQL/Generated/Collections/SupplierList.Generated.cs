@@ -57,5 +57,14 @@ namespace PetShop.Tests.ParameterizedSQL
         }
         
         #endregion
+
+        #region Exists Command
+
+        public static bool Exists(SupplierCriteria criteria)
+        {
+            return Supplier.Exists(criteria);
+        }
+
+        #endregion
     }
 }

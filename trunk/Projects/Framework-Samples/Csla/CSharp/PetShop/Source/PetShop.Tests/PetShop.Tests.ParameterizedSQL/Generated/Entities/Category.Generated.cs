@@ -83,26 +83,24 @@ namespace PetShop.Tests.ParameterizedSQL
 
 
         //AssociatedOneToMany
-        private static readonly PropertyInfo< ProductList > _productsProperty = RegisterProperty<ProductList>(p => p.Products, RelationshipTypes.LazyLoad);
+        private static readonly PropertyInfo< ProductList > _productsProperty = RegisterProperty<ProductList>(p => p.Products, Csla.RelationshipTypes.Child);
         public ProductList Products
         {
             get
             {
                 if(!FieldManager.FieldExists(_productsProperty))
                 {
-                    if(IsNew)
+                    if(IsNew || !PetShop.Tests.ParameterizedSQL.ProductList.Exists(new PetShop.Tests.ParameterizedSQL.ProductCriteria {CategoryId = CategoryId}))
                         LoadProperty(_productsProperty, PetShop.Tests.ParameterizedSQL.ProductList.NewList());
                     else
-                    
                         LoadProperty(_productsProperty, PetShop.Tests.ParameterizedSQL.ProductList.GetByCategoryId(CategoryId));
                 }
 
-                return GetProperty(_productsProperty); 
+                return GetProperty(_productsProperty);
             }
         }
 
         #endregion
-
 
         #region Factory Methods 
 
@@ -120,6 +118,15 @@ namespace PetShop.Tests.ParameterizedSQL
         public static void DeleteCategory(System.String categoryId)
         {
             DataPortal.Delete(new CategoryCriteria{CategoryId = categoryId});
+        }
+
+        #endregion
+
+        #region Exists Command
+
+        public static bool Exists(CategoryCriteria criteria)
+        {
+            return ExistsCommand.Execute(criteria);
         }
 
         #endregion
