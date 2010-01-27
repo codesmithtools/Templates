@@ -23,7 +23,7 @@ namespace Sample.Data.Generated.UnitTests
 			Inventory entity = new Inventory();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test";
+			entity.Id = "Tes";
 			
 			entity.Qty = 67;
 			
@@ -77,7 +77,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Inventory entityA = GetFirstInventory();
 				
-				entityA.Qty = 79;
+				entityA.Qty = 42;
 				
 				manager.Update(entityA);
 

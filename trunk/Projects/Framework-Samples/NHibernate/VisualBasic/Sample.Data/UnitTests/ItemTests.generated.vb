@@ -23,11 +23,11 @@ Namespace Sample.Data.Generated.UnitTests
 			' You may need to maually enter this key if there is a constraint violation.
 			entity.Id = "Test "
 			
-			entity.ListPrice = 97
-			entity.UnitCost = 92
+			entity.ListPrice = 89
+			entity.UnitCost = 28
 			entity.Status = "T"
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test "
-			entity.Image = "Test Test Te"
+			entity.Name = "Test Tes"
+			entity.Image = "Test Test Test Test Test Test Test Test Test Test Test Test Test T"
 			
 			Dim productManager As IProductManager = managerFactory.GetProductManager()
 			entity.Product = productManager.GetAll(1)(0)
@@ -75,7 +75,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Item = GetFirstItem()
 				
-				entityA.ListPrice = 9
+				entityA.ListPrice = 11
 				
 				manager.Update(entityA)
 

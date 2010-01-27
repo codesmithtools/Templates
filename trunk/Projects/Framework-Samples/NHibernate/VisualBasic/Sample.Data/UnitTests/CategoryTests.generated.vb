@@ -21,9 +21,9 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New Category()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Tes"
+			entity.Id = "T"
 			
-			entity.Name = "Test Test Test Test Test"
+			entity.Name = "Test Test "
 			entity.Descn = "Test Test "
 
 			Return entity
@@ -66,7 +66,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Category = GetFirstCategory()
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test Test"
+				entityA.Name = "Test Test Test Test"
 				
 				manager.Update(entityA)
 

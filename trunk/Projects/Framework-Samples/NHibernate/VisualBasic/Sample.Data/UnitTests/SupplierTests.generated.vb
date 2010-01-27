@@ -21,16 +21,16 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New Supplier()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = 6
+			entity.Id = 15
 			
 			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Tes"
 			entity.Status = "T"
-			entity.Addr1 = "Test Test Test Test Test Test Test Test Test Test "
+			entity.Addr1 = "Test Test Test Test Test Te"
 			entity.Addr2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test T"
-			entity.City = "Test Test Test Test Test T"
-			entity.State = "Test Test Test Test Test Test T"
-			entity.Zip = "Test"
-			entity.Phone = "Test Tes"
+			entity.City = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test T"
+			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes"
+			entity.Zip = "T"
+			entity.Phone = "Test Test Test"
 
 			Return entity
 		End Function
@@ -72,7 +72,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Supplier = GetFirstSupplier()
 				
-				entityA.Name = "Test Test Test"
+				entityA.Name = "Te"
 				
 				manager.Update(entityA)
 
