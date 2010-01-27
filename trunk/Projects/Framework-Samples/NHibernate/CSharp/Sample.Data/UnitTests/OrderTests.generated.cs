@@ -11,46 +11,46 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class OrderTests : UNuitTestBase
     {
-        protected IOrderManager manager;
+        protected Sample.Data.Generated.ManagerObjects.IOrderManager manager;
 		
 		public OrderTests()
         {
             manager = managerFactory.GetOrderManager();
         }
 		
-		protected Order CreateNewOrder()
+		protected Sample.Data.Generated.BusinessObjects.Order CreateNewOrder()
 		{
-			Order entity = new Order();
+			Sample.Data.Generated.BusinessObjects.Order entity = new Sample.Data.Generated.BusinessObjects.Order();
 			
 			
-			entity.UserId = "Test Test Test Te";
-			entity.OrderDate = DateTime.Now;
-			entity.ShipAddr1 = "Test Test Test Test T";
-			entity.ShipAddr2 = "Test Test Test Test Test Test Test Test Test Test Test Test";
-			entity.ShipCity = "Test Test";
-			entity.ShipState = "Test Test Test Test Test Test Test Test";
-			entity.ShipZip = "Test Test Test Test";
-			entity.ShipCountry = "Test Tes";
-			entity.BillAddr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
-			entity.BillAddr2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
-			entity.BillCity = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
-			entity.BillState = "Test Test Test Test Test Test Test Tes";
-			entity.BillZip = "Test Test";
-			entity.BillCountry = "Test Te";
-			entity.Courier = "Test Test Test Test Test Test Test Tes";
-			entity.TotalPrice = 66;
-			entity.BillToFirstName = "Test Test Test Test Test Test Test Test Test Tes";
-			entity.BillToLastName = "Te";
-			entity.ShipToFirstName = "Test Test Test Test Test Test Test Test Test Test";
-			entity.ShipToLastName = "Test Test Te";
-			entity.AuthorizationNumber = 32;
-			entity.Locale = "Test Test T";
+			entity.UserId = "Test Test Test Test";
+			entity.OrderDate = System.DateTime.Now;
+			entity.ShipAddr1 = "Test Test Test Test Test Test Test ";
+			entity.ShipAddr2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.ShipCity = "Test Test Test Test Test Test Test Test Test Test Test Test ";
+			entity.ShipState = "Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
+			entity.ShipZip = "Test";
+			entity.ShipCountry = "T";
+			entity.BillAddr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Te";
+			entity.BillAddr2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.BillCity = "Test Test Test Test";
+			entity.BillState = "Test Test Test Test Test Test Test Test ";
+			entity.BillZip = "Test Test Test";
+			entity.BillCountry = "Test Test Test T";
+			entity.Courier = "Test Test Test Test Test Test Test Test Test Test Test Test T";
+			entity.TotalPrice = 25;
+			entity.BillToFirstName = "Test Test Test Test Te";
+			entity.BillToLastName = "Test Test Test Test Test Test Test Test Test Test T";
+			entity.ShipToFirstName = "Test ";
+			entity.ShipToLastName = "Test Test Test Test Test Test Test Test Test T";
+			entity.AuthorizationNumber = 20;
+			entity.Locale = "Test Test Test Tes";
 			
 			return entity;
 		}
-		protected Order GetFirstOrder()
+		protected Sample.Data.Generated.BusinessObjects.Order GetFirstOrder()
         {
-            IList<Order> entityList = manager.GetAll(1);
+            IList<Sample.Data.Generated.BusinessObjects.Order> entityList = manager.GetAll(1);
             if (entityList.Count == 0)
                 Assert.Fail("All tables must have at least one row for unit tests to succeed.");
             return entityList[0];
@@ -61,7 +61,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-				Order entity = CreateNewOrder();
+				Sample.Data.Generated.BusinessObjects.Order entity = CreateNewOrder();
 				
                 object result = manager.Save(entity);
 
@@ -77,10 +77,10 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Order entityA = CreateNewOrder();
+                Sample.Data.Generated.BusinessObjects.Order entityA = CreateNewOrder();
 				manager.Save(entityA);
 
-                Order entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Order entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA, entityB);
             }
@@ -94,13 +94,13 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Order entityA = GetFirstOrder();
+                Sample.Data.Generated.BusinessObjects.Order entityA = GetFirstOrder();
 				
-				entityA.UserId = "T";
+				entityA.UserId = "Test Test Test";
 				
 				manager.Update(entityA);
 
-                Order entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Order entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA.UserId, entityB.UserId);
             }
@@ -114,7 +114,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Order entity = GetFirstOrder();
+                Sample.Data.Generated.BusinessObjects.Order entity = GetFirstOrder();
 				
                 manager.Delete(entity);
 

@@ -7,12 +7,12 @@ using Sample.Data.Generated.Base;
 
 namespace Sample.Data.Generated.ManagerObjects
 {
-    public partial interface IOrderManager : IManagerBase<Order, int>
+    public partial interface IOrderManager : IManagerBase<Sample.Data.Generated.BusinessObjects.Order, int>
     {
 		// Get Methods
     }
 
-    partial class OrderManager : ManagerBase<Order, int>, IOrderManager
+    partial class OrderManager : ManagerBase<Sample.Data.Generated.BusinessObjects.Order, int>, IOrderManager
     {
 		#region Constructors
 		

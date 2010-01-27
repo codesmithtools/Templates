@@ -11,28 +11,28 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class CategoryTests : UNuitTestBase
     {
-        protected ICategoryManager manager;
+        protected Sample.Data.Generated.ManagerObjects.ICategoryManager manager;
 		
 		public CategoryTests()
         {
             manager = managerFactory.GetCategoryManager();
         }
 		
-		protected Category CreateNewCategory()
+		protected Sample.Data.Generated.BusinessObjects.Category CreateNewCategory()
 		{
-			Category entity = new Category();
+			Sample.Data.Generated.BusinessObjects.Category entity = new Sample.Data.Generated.BusinessObjects.Category();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test T";
+			entity.Id = "Test Tes";
 			
-			entity.Name = "Test Test Test Test Test T";
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Te";
 			entity.Descn = "Test Test ";
 			
 			return entity;
 		}
-		protected Category GetFirstCategory()
+		protected Sample.Data.Generated.BusinessObjects.Category GetFirstCategory()
         {
-            IList<Category> entityList = manager.GetAll(1);
+            IList<Sample.Data.Generated.BusinessObjects.Category> entityList = manager.GetAll(1);
             if (entityList.Count == 0)
                 Assert.Fail("All tables must have at least one row for unit tests to succeed.");
             return entityList[0];
@@ -43,7 +43,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-				Category entity = CreateNewCategory();
+				Sample.Data.Generated.BusinessObjects.Category entity = CreateNewCategory();
 				
                 object result = manager.Save(entity);
 
@@ -59,10 +59,10 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Category entityA = CreateNewCategory();
+                Sample.Data.Generated.BusinessObjects.Category entityA = CreateNewCategory();
 				manager.Save(entityA);
 
-                Category entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Category entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA, entityB);
             }
@@ -76,13 +76,13 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Category entityA = GetFirstCategory();
+                Sample.Data.Generated.BusinessObjects.Category entityA = GetFirstCategory();
 				
-				entityA.Name = "Test Test Test Test Test Test Test T";
+				entityA.Name = "Test Test Test Te";
 				
 				manager.Update(entityA);
 
-                Category entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Category entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA.Name, entityB.Name);
             }
@@ -96,7 +96,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Category entity = GetFirstCategory();
+                Sample.Data.Generated.BusinessObjects.Category entity = GetFirstCategory();
 				
                 manager.Delete(entity);
 

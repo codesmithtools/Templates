@@ -7,13 +7,13 @@ using Sample.Data.Generated.Base;
 
 namespace Sample.Data.Generated.ManagerObjects
 {
-    public partial interface IProfileManager : IManagerBase<Profile, int>
+    public partial interface IProfileManager : IManagerBase<Sample.Data.Generated.BusinessObjects.Profile, int>
     {
 		// Get Methods
 		IList<Profile> GetByUsernameApplicationName(System.String username, System.String applicationName);
     }
 
-    partial class ProfileManager : ManagerBase<Profile, int>, IProfileManager
+    partial class ProfileManager : ManagerBase<Sample.Data.Generated.BusinessObjects.Profile, int>, IProfileManager
     {
 		#region Constructors
 		

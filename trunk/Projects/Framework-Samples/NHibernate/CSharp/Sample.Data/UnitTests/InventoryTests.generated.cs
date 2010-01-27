@@ -11,27 +11,27 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class InventoryTests : UNuitTestBase
     {
-        protected IInventoryManager manager;
+        protected Sample.Data.Generated.ManagerObjects.IInventoryManager manager;
 		
 		public InventoryTests()
         {
             manager = managerFactory.GetInventoryManager();
         }
 		
-		protected Inventory CreateNewInventory()
+		protected Sample.Data.Generated.BusinessObjects.Inventory CreateNewInventory()
 		{
-			Inventory entity = new Inventory();
+			Sample.Data.Generated.BusinessObjects.Inventory entity = new Sample.Data.Generated.BusinessObjects.Inventory();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Tes";
+			entity.Id = "Test";
 			
-			entity.Qty = 67;
+			entity.Qty = 65;
 			
 			return entity;
 		}
-		protected Inventory GetFirstInventory()
+		protected Sample.Data.Generated.BusinessObjects.Inventory GetFirstInventory()
         {
-            IList<Inventory> entityList = manager.GetAll(1);
+            IList<Sample.Data.Generated.BusinessObjects.Inventory> entityList = manager.GetAll(1);
             if (entityList.Count == 0)
                 Assert.Fail("All tables must have at least one row for unit tests to succeed.");
             return entityList[0];
@@ -42,7 +42,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-				Inventory entity = CreateNewInventory();
+				Sample.Data.Generated.BusinessObjects.Inventory entity = CreateNewInventory();
 				
                 object result = manager.Save(entity);
 
@@ -58,10 +58,10 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Inventory entityA = CreateNewInventory();
+                Sample.Data.Generated.BusinessObjects.Inventory entityA = CreateNewInventory();
 				manager.Save(entityA);
 
-                Inventory entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Inventory entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA, entityB);
             }
@@ -75,13 +75,13 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Inventory entityA = GetFirstInventory();
+                Sample.Data.Generated.BusinessObjects.Inventory entityA = GetFirstInventory();
 				
-				entityA.Qty = 42;
+				entityA.Qty = 92;
 				
 				manager.Update(entityA);
 
-                Inventory entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Inventory entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA.Qty, entityB.Qty);
             }
@@ -95,7 +95,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Inventory entity = GetFirstInventory();
+                Sample.Data.Generated.BusinessObjects.Inventory entity = GetFirstInventory();
 				
                 manager.Delete(entity);
 

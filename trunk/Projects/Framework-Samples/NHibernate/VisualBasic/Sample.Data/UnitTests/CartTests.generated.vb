@@ -21,14 +21,14 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New Cart()
 
 			
-			entity.ItemId = "Test T"
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test"
-			entity.Type = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test T"
-			entity.Price = 85
-			entity.CategoryId = "Test Te"
-			entity.ProductId = "Tes"
+			entity.ItemId = "Test "
+			entity.Name = "Test Test Test Test Test Test Test Test"
+			entity.Type = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test"
+			entity.Price = 11
+			entity.CategoryId = "Te"
+			entity.ProductId = "T"
 			entity.IsShoppingCart = True
-			entity.Quantity = 72
+			entity.Quantity = 16
 			
 			Dim profileManager As IProfileManager = managerFactory.GetProfileManager()
 			entity.Profile = profileManager.GetAll(1)(0)

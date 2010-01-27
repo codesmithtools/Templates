@@ -11,32 +11,32 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class ProductTests : UNuitTestBase
     {
-        protected IProductManager manager;
+        protected Sample.Data.Generated.ManagerObjects.IProductManager manager;
 		
 		public ProductTests()
         {
             manager = managerFactory.GetProductManager();
         }
 		
-		protected Product CreateNewProduct()
+		protected Sample.Data.Generated.BusinessObjects.Product CreateNewProduct()
 		{
-			Product entity = new Product();
+			Sample.Data.Generated.BusinessObjects.Product entity = new Sample.Data.Generated.BusinessObjects.Product();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test T";
+			entity.Id = "Te";
 			
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+			entity.Name = "Test Tes";
 			entity.Descn = "Test Test ";
-			entity.Image = "Test Test Test Test Test Test Test Test Te";
+			entity.Image = "Test Test Test Test Test Test Test Test Test Test Test Test Tes";
 			
-			ICategoryManager categoryManager = managerFactory.GetCategoryManager();
+			Sample.Data.Generated.ManagerObjects.ICategoryManager categoryManager = managerFactory.GetCategoryManager();
 			entity.Category = categoryManager.GetAll(1)[0];
 			
 			return entity;
 		}
-		protected Product GetFirstProduct()
+		protected Sample.Data.Generated.BusinessObjects.Product GetFirstProduct()
         {
-            IList<Product> entityList = manager.GetAll(1);
+            IList<Sample.Data.Generated.BusinessObjects.Product> entityList = manager.GetAll(1);
             if (entityList.Count == 0)
                 Assert.Fail("All tables must have at least one row for unit tests to succeed.");
             return entityList[0];
@@ -47,7 +47,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-				Product entity = CreateNewProduct();
+				Sample.Data.Generated.BusinessObjects.Product entity = CreateNewProduct();
 				
                 object result = manager.Save(entity);
 
@@ -63,10 +63,10 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Product entityA = CreateNewProduct();
+                Sample.Data.Generated.BusinessObjects.Product entityA = CreateNewProduct();
 				manager.Save(entityA);
 
-                Product entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Product entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA, entityB);
             }
@@ -80,13 +80,13 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Product entityA = GetFirstProduct();
+                Sample.Data.Generated.BusinessObjects.Product entityA = GetFirstProduct();
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test Test";
+				entityA.Name = "Test Test Test Test Test Te";
 				
 				manager.Update(entityA);
 
-                Product entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Product entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA.Name, entityB.Name);
             }
@@ -100,7 +100,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Product entity = GetFirstProduct();
+                Sample.Data.Generated.BusinessObjects.Product entity = GetFirstProduct();
 				
                 manager.Delete(entity);
 

@@ -29,7 +29,7 @@ using <%= BaseNamespace %>;
 
 namespace <%= ManagerNamespace %>
 {
-    public partial interface I<%= GetClassName(SourceTable) %>Manager : IManagerBase<<%= GetClassName(SourceTable) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable).ToString()] %>>
+    public partial interface I<%= GetClassName(SourceTable) %>Manager : IManagerBase<<%= BusinessNamespace %>.<%= GetClassName(SourceTable) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable).ToString()] %>>
     {
 		// Get Methods
 		<% foreach(SearchCriteria sc in scList) { %>
@@ -45,7 +45,7 @@ namespace <%= ManagerNamespace %>
 		<% } } } %>
     }
 
-    partial class <%= GetClassName(SourceTable) %>Manager : ManagerBase<<%= GetClassName(SourceTable) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable).ToString()] %>>, I<%= GetClassName(SourceTable) %>Manager
+    partial class <%= GetClassName(SourceTable) %>Manager : ManagerBase<<%= BusinessNamespace %>.<%= GetClassName(SourceTable) %>, <%= SystemCSharp[GetBusinessBaseIdType(SourceTable).ToString()] %>>, I<%= GetClassName(SourceTable) %>Manager
     {
 		#region Constructors
 		

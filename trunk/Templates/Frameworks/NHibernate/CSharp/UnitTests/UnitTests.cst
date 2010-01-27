@@ -33,16 +33,16 @@ namespace <%= UnitTestNamespace %>
 	[TestFixture]
     public partial class <%= GetClassName(SourceTable) %>Tests : UNuitTestBase
     {
-        protected I<%= GetClassName(SourceTable) %>Manager manager;
+        protected <%= ManagerNamespace %>.I<%= GetClassName(SourceTable) %>Manager manager;
 		
 		public <%= GetClassName(SourceTable) %>Tests()
         {
             manager = managerFactory.Get<%= GetClassName(SourceTable) %>Manager();
         }
 		
-		protected <%= GetClassName(SourceTable) %> CreateNew<%= GetClassName(SourceTable) %>()
+		protected <%= BusinessNamespace %>.<%= GetClassName(SourceTable) %> CreateNew<%= GetClassName(SourceTable) %>()
 		{
-			<%= GetClassName(SourceTable) %> entity = new <%= GetClassName(SourceTable) %>();
+			<%= BusinessNamespace %>.<%= GetClassName(SourceTable) %> entity = new <%= BusinessNamespace %>.<%= GetClassName(SourceTable) %>();
 			
 			<% if(!entityManager.PrimaryKey.IsCompositeKey && !entityManager.PrimaryKey.IsIdentity) { %>
 			// You may need to maually enter this key if there is a constraint violation.
@@ -56,15 +56,15 @@ namespace <%= UnitTestNamespace %>
 			<% // Many-To-One %>
 			<% foreach(EntityAssociation association in entityManager.ManyToOne) { %>
 			
-			I<%= association.ClassName %>Manager <%= association.VariableName %>Manager = managerFactory.Get<%= association.ClassName %>Manager();
+			<%= ManagerNamespace %>.I<%= association.ClassName %>Manager <%= association.VariableName %>Manager = managerFactory.Get<%= association.ClassName %>Manager();
 			entity.<%= association.PropertyName %> = <%= association.VariableName %>Manager.GetAll(1)[0];
 			<% } %>
 			
 			return entity;
 		}
-		protected <%= GetClassName(SourceTable) %> GetFirst<%= GetClassName(SourceTable) %>()
+		protected <%= BusinessNamespace %>.<%= GetClassName(SourceTable) %> GetFirst<%= GetClassName(SourceTable) %>()
         {
-            IList<<%= GetClassName(SourceTable) %>> entityList = manager.GetAll(1);
+            IList<<%= BusinessNamespace %>.<%= GetClassName(SourceTable) %>> entityList = manager.GetAll(1);
             if (entityList.Count == 0)
                 Assert.Fail("All tables must have at least one row for unit tests to succeed.");
             return entityList[0];
@@ -75,7 +75,7 @@ namespace <%= UnitTestNamespace %>
         {
             try
             {
-				<%= GetClassName(SourceTable) %> entity = CreateNew<%= GetClassName(SourceTable) %>();
+				<%= BusinessNamespace %>.<%= GetClassName(SourceTable) %> entity = CreateNew<%= GetClassName(SourceTable) %>();
 				
                 object result = manager.Save(entity);
 
@@ -91,10 +91,10 @@ namespace <%= UnitTestNamespace %>
         {
             try
             {
-                <%= GetClassName(SourceTable) %> entityA = CreateNew<%= GetClassName(SourceTable) %>();
+                <%= BusinessNamespace %>.<%= GetClassName(SourceTable) %> entityA = CreateNew<%= GetClassName(SourceTable) %>();
 				manager.Save(entityA);
 
-                <%= GetClassName(SourceTable) %> entityB = manager.GetById(entityA.Id);
+                <%= BusinessNamespace %>.<%= GetClassName(SourceTable) %> entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA, entityB);
             }
@@ -109,7 +109,7 @@ namespace <%= UnitTestNamespace %>
         {
             try
             {
-                <%= GetClassName(SourceTable) %> entityA = GetFirst<%= GetClassName(SourceTable) %>();
+                <%= BusinessNamespace %>.<%= GetClassName(SourceTable) %> entityA = GetFirst<%= GetClassName(SourceTable) %>();
 				
 				<% if(entityManager.MembersNoKeyNoVersion.Count > 0) { %>
 				entityA.<%= entityManager.MembersNoKeyNoVersion[0].PropertyName %> = <%= GetUnitTestInitialization(entityManager.MembersNoKeyNoVersion[0].Column) %>;
@@ -117,7 +117,7 @@ namespace <%= UnitTestNamespace %>
 				
 				manager.Update(entityA);
 
-                <%= GetClassName(SourceTable) %> entityB = manager.GetById(entityA.Id);
+                <%= BusinessNamespace %>.<%= GetClassName(SourceTable) %> entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA.<%= entityManager.Members[0].PropertyName %>, entityB.<%= entityManager.Members[0].PropertyName %>);
             }
@@ -132,7 +132,7 @@ namespace <%= UnitTestNamespace %>
         {
             try
             {
-                <%= GetClassName(SourceTable) %> entity = GetFirst<%= GetClassName(SourceTable) %>();
+                <%= BusinessNamespace %>.<%= GetClassName(SourceTable) %> entity = GetFirst<%= GetClassName(SourceTable) %>();
 				
                 manager.Delete(entity);
 
@@ -198,7 +198,7 @@ public static string GetUnitTestInitialization(ColumnSchema column)
         result = sb.ToString();
     }
     else if (column.SystemType.Equals(typeof(DateTime)))
-        result = "DateTime.Now";
+        result = "System.DateTime.Now";
     else if (column.SystemType.Equals(typeof(Decimal)))
         result = Convert.ToDecimal(random.Next(1, 100)).ToString();
     else if (column.SystemType.Equals(typeof(Int32)))
@@ -206,7 +206,7 @@ public static string GetUnitTestInitialization(ColumnSchema column)
     else if (column.SystemType.Equals(typeof(Boolean)))
         result = (random.Next(1, 2).Equals(1)).ToString().ToLower();
     else if (column.SystemType.Equals(typeof(Guid)))
-        result = "Guid.Empty";
+        result = "System.Guid.Empty";
     else if (column.SystemType.IsPrimitive)
         result = String.Format("default({0})", column.SystemType.Name.ToString());
     else

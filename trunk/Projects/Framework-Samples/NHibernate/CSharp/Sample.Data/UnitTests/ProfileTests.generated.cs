@@ -11,29 +11,29 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class ProfileTests : UNuitTestBase
     {
-        protected IProfileManager manager;
+        protected Sample.Data.Generated.ManagerObjects.IProfileManager manager;
 		
 		public ProfileTests()
         {
             manager = managerFactory.GetProfileManager();
         }
 		
-		protected Profile CreateNewProfile()
+		protected Sample.Data.Generated.BusinessObjects.Profile CreateNewProfile()
 		{
-			Profile entity = new Profile();
+			Sample.Data.Generated.BusinessObjects.Profile entity = new Sample.Data.Generated.BusinessObjects.Profile();
 			
 			
 			entity.Username = "Test Test ";
 			entity.ApplicationName = "Test Test ";
 			entity.IsAnonymous = true;
-			entity.LastActivityDate = DateTime.Now;
-			entity.LastUpdatedDate = DateTime.Now;
+			entity.LastActivityDate = System.DateTime.Now;
+			entity.LastUpdatedDate = System.DateTime.Now;
 			
 			return entity;
 		}
-		protected Profile GetFirstProfile()
+		protected Sample.Data.Generated.BusinessObjects.Profile GetFirstProfile()
         {
-            IList<Profile> entityList = manager.GetAll(1);
+            IList<Sample.Data.Generated.BusinessObjects.Profile> entityList = manager.GetAll(1);
             if (entityList.Count == 0)
                 Assert.Fail("All tables must have at least one row for unit tests to succeed.");
             return entityList[0];
@@ -44,7 +44,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-				Profile entity = CreateNewProfile();
+				Sample.Data.Generated.BusinessObjects.Profile entity = CreateNewProfile();
 				
                 object result = manager.Save(entity);
 
@@ -60,10 +60,10 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Profile entityA = CreateNewProfile();
+                Sample.Data.Generated.BusinessObjects.Profile entityA = CreateNewProfile();
 				manager.Save(entityA);
 
-                Profile entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Profile entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA, entityB);
             }
@@ -77,13 +77,13 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Profile entityA = GetFirstProfile();
+                Sample.Data.Generated.BusinessObjects.Profile entityA = GetFirstProfile();
 				
 				entityA.Username = "Test Test ";
 				
 				manager.Update(entityA);
 
-                Profile entityB = manager.GetById(entityA.Id);
+                Sample.Data.Generated.BusinessObjects.Profile entityB = manager.GetById(entityA.Id);
 
                 Assert.AreEqual(entityA.Username, entityB.Username);
             }
@@ -97,7 +97,7 @@ namespace Sample.Data.Generated.UnitTests
         {
             try
             {
-                Profile entity = GetFirstProfile();
+                Sample.Data.Generated.BusinessObjects.Profile entity = GetFirstProfile();
 				
                 manager.Delete(entity);
 
