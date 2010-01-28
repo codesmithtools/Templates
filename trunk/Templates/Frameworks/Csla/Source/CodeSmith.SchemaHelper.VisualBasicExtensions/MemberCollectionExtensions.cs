@@ -79,7 +79,7 @@ namespace CodeSmith.SchemaHelper
 
                 if (member.IsIdentity)
                 {
-                    commandParameters += string.Format("\n\t\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Output", Configuration.Instance.ParameterPrefix, member.ColumnName);
+                    commandParameters += string.Format("\n\t\t\t\t\tcommand.Parameters(\"{0}{1}\").Direction = ParameterDirection.Output", Configuration.Instance.ParameterPrefix, member.ColumnName);
                 }
             }
 
