@@ -242,7 +242,7 @@ namespace NHibernateHelper
             if (isOneToMany)
                 return column.AllowDBNull ? "all" : "all-delete-orphan";
 
-            return column.AllowDBNull ? String.Empty : "all";
+            return String.Empty;
         }
 
         public static string GetCriterionNamespace(NHibernateVersion version)
