@@ -15,22 +15,23 @@
                 using(SqlCommand command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, true) %>
-                    
+                    <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, true, true) %>
+
+<% if(Entity.HasRowVersionMember) { %>
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
                         {
-<% if(Entity.HasRowVersionMember) { %>
                             _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-<% } %>
-<% if(Entity.PrimaryKey.IsIdentity) { %>
-<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(UseMemberVariables) { %>
-                            <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
-<% } else { %>
-                            LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>ADOHelper.GetBytes(reader," <%= member.ColumnName %>"));<% } %>
-<% } } } %>
                         }
                     }
+<% } else { %>
+                    command.ExecuteNonQuery();
+<% } if(Entity.HasIdentityMember) { %>
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { if(UseMemberVariables) { %>
+                    <%= member.PrivateMemberVariableName %> =  (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
+<% } else { %>
+                    LoadProperty(<%= member.PrivateMemberVariableName %>Property, (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
+<% } } } } %>
                 }
             }

@@ -43,6 +43,11 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildCommandParameters(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool isChildInsertUpdate)
         {
+            return members.BuildCommandParameters(isObjectFactory, usePropertyName, isChildInsertUpdate, false);
+        }
+
+        public static string BuildCommandParameters(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool isChildInsertUpdate, bool includeOutPutParameters)
+        {
             string commandParameters = string.Empty;
             string castPrefix = isObjectFactory ? "item." : string.Empty;
 
@@ -77,7 +82,7 @@ namespace CodeSmith.SchemaHelper
 
                 commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
 
-                if (member.IsIdentity)
+                if (member.IsIdentity && includeOutPutParameters)
                 {
                     commandParameters += string.Format("\n\t\t\t\t\tcommand.Parameters(\"{0}{1}\").Direction = ParameterDirection.Output", Configuration.Instance.ParameterPrefix, member.ColumnName);
                 }
