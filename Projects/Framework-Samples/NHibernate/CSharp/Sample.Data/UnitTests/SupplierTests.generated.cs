@@ -11,28 +11,37 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class SupplierTests : UNuitTestBase
     {
-        protected Sample.Data.Generated.ManagerObjects.ISupplierManager manager;
-		
-		public SupplierTests()
+        [SetUp]
+        public void SetUp()
         {
             manager = managerFactory.GetSupplierManager();
+            manager.Session.BeginTransaction();
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            manager.Session.RollbackTransaction();
+            manager.Dispose();
+        }
+        
+        protected Sample.Data.Generated.ManagerObjects.ISupplierManager manager;
 		
 		protected Sample.Data.Generated.BusinessObjects.Supplier CreateNewSupplier()
 		{
 			Sample.Data.Generated.BusinessObjects.Supplier entity = new Sample.Data.Generated.BusinessObjects.Supplier();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = 59;
+			entity.Id = 58;
 			
-			entity.Name = "Test";
+			entity.Name = "Test Test Test Test Test Test ";
 			entity.Status = "T";
-			entity.Addr1 = "Test Test T";
-			entity.Addr2 = "Test Test Test Test Test Test Test Test Test Test Test Test T";
-			entity.City = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
-			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test T";
-			entity.Zip = "Test";
-			entity.Phone = "Test Test Test ";
+			entity.Addr1 = "Test Test Test Test Test Test Test Test";
+			entity.Addr2 = "Test Test Test Test Test Te";
+			entity.City = "Test Test ";
+			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+			entity.Zip = "Te";
+			entity.Phone = "Test Test Test Test Test Test Tes";
 			
 			return entity;
 		}
@@ -84,7 +93,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Supplier entityA = GetFirstSupplier();
 				
-				entityA.Name = "Test Test Test Test";
+				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
 				
 				manager.Update(entityA);
 

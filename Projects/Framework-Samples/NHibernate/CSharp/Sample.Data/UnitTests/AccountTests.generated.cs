@@ -11,32 +11,40 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class AccountTests : UNuitTestBase
     {
-        protected Sample.Data.Generated.ManagerObjects.IAccountManager manager;
-		
-		public AccountTests()
+        [SetUp]
+        public void SetUp()
         {
             manager = managerFactory.GetAccountManager();
+            manager.Session.BeginTransaction();
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            manager.Session.RollbackTransaction();
+            manager.Dispose();
+        }
+        
+        protected Sample.Data.Generated.ManagerObjects.IAccountManager manager;
 		
 		protected Sample.Data.Generated.BusinessObjects.Account CreateNewAccount()
 		{
 			Sample.Data.Generated.BusinessObjects.Account entity = new Sample.Data.Generated.BusinessObjects.Account();
 			
 			
-			entity.Email = "Test T";
-			entity.FirstName = "Test Test Test Test Test Test";
-			entity.LastName = "Test Test Test Test T";
-			entity.Address1 = "Te";
-			entity.Address2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
-			entity.City = "Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-			entity.State = "Test Test Test Test Test Test Test Test Test ";
-			entity.Zip = "Test Test Test T";
-			entity.Country = "Test Test Test T";
-			entity.Phone = "Test Test";
-			entity.Number = 30;
+			entity.Email = "Test Test Test Test Tes";
+			entity.FirstName = "Test Test Test Test";
+			entity.LastName = "Test Test Test Test Test Test Test";
+			entity.Address1 = "Test Test Test Test Test Test Test Test Test Test Test Test Te";
+			entity.Address2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
+			entity.City = "Test Test Test Test Test Test Test Test Test Test Test Test Test T";
+			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+			entity.Zip = "Tes";
+			entity.Country = "Te";
+			entity.Phone = "Test Tes";
 			
-			Sample.Data.Generated.ManagerObjects.IProfileManager profileManager = managerFactory.GetProfileManager();
-			entity.Profile = profileManager.GetAll(1)[0];
+			using(Sample.Data.Generated.ManagerObjects.IProfileManager profileManager = managerFactory.GetProfileManager())
+			    entity.Profile = profileManager.GetAll(1)[0];
 			
 			return entity;
 		}
@@ -88,7 +96,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Account entityA = GetFirstAccount();
 				
-				entityA.Email = "Test T";
+				entityA.Email = "Test Test Test Test";
 				
 				manager.Update(entityA);
 

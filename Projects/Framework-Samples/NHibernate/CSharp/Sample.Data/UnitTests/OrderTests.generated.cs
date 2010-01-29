@@ -11,40 +11,49 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class OrderTests : UNuitTestBase
     {
-        protected Sample.Data.Generated.ManagerObjects.IOrderManager manager;
-		
-		public OrderTests()
+        [SetUp]
+        public void SetUp()
         {
             manager = managerFactory.GetOrderManager();
+            manager.Session.BeginTransaction();
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            manager.Session.RollbackTransaction();
+            manager.Dispose();
+        }
+        
+        protected Sample.Data.Generated.ManagerObjects.IOrderManager manager;
 		
 		protected Sample.Data.Generated.BusinessObjects.Order CreateNewOrder()
 		{
 			Sample.Data.Generated.BusinessObjects.Order entity = new Sample.Data.Generated.BusinessObjects.Order();
 			
 			
-			entity.UserId = "Test Test Test Test";
+			entity.UserId = "Test Test Te";
 			entity.OrderDate = System.DateTime.Now;
-			entity.ShipAddr1 = "Test Test Test Test Test Test Test ";
-			entity.ShipAddr2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
-			entity.ShipCity = "Test Test Test Test Test Test Test Test Test Test Test Test ";
-			entity.ShipState = "Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
-			entity.ShipZip = "Test";
-			entity.ShipCountry = "T";
-			entity.BillAddr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Te";
-			entity.BillAddr2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
-			entity.BillCity = "Test Test Test Test";
-			entity.BillState = "Test Test Test Test Test Test Test Test ";
-			entity.BillZip = "Test Test Test";
-			entity.BillCountry = "Test Test Test T";
-			entity.Courier = "Test Test Test Test Test Test Test Test Test Test Test Test T";
-			entity.TotalPrice = 25;
-			entity.BillToFirstName = "Test Test Test Test Te";
-			entity.BillToLastName = "Test Test Test Test Test Test Test Test Test Test T";
-			entity.ShipToFirstName = "Test ";
-			entity.ShipToLastName = "Test Test Test Test Test Test Test Test Test T";
-			entity.AuthorizationNumber = 20;
-			entity.Locale = "Test Test Test Tes";
+			entity.ShipAddr1 = "Test Test Test Test Test Test Test Test Test ";
+			entity.ShipAddr2 = "Test Test Test Test Test Test Test Test Test Te";
+			entity.ShipCity = "Test ";
+			entity.ShipState = "Test Test ";
+			entity.ShipZip = "T";
+			entity.ShipCountry = "Te";
+			entity.BillAddr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+			entity.BillAddr2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+			entity.BillCity = "Test";
+			entity.BillState = "Test Test Test Test Test Test Test Test Test Tes";
+			entity.BillZip = "Test Tes";
+			entity.BillCountry = "Tes";
+			entity.Courier = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test T";
+			entity.TotalPrice = 65;
+			entity.BillToFirstName = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+			entity.BillToLastName = "Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
+			entity.ShipToFirstName = "Test Test Test Test Te";
+			entity.ShipToLastName = "Test Test Test Test Test Test Test";
+			entity.AuthorizationNumber = 85;
+			entity.Locale = "Test Test T";
 			
 			return entity;
 		}
@@ -96,7 +105,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Order entityA = GetFirstOrder();
 				
-				entityA.UserId = "Test Test Test";
+				entityA.UserId = "Test";
 				
 				manager.Update(entityA);
 

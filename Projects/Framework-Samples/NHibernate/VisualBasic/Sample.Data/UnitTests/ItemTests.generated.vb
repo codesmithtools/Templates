@@ -13,21 +13,29 @@ Namespace Sample.Data.Generated.UnitTests
 		
 		Protected manager As IItemManager
 
-		Public Sub New()
-			manager = managerFactory.GetItemManager()
+		
+		<SetUp()> _
+		Public Sub SetUp()
+            manager = managerFactory.GetItemManager()
+            manager.Session.BeginTransaction()
+		End Sub
+		<TearDown()> _
+		Public Sub TearDown()
+			manager.Session.RollbackTransaction()
+            manager.Dispose()
 		End Sub
 
 		Protected Function CreateNewItem() As Item
 			Dim entity As New Item()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test T"
+			entity.Id = "Tes"
 			
-			entity.ListPrice = 6
-			entity.UnitCost = 89
+			entity.ListPrice = 58
+			entity.UnitCost = 58
 			entity.Status = "T"
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Tes"
-			entity.Image = "Test Test Test Test Test Test Tes"
+			entity.Name = "Test Test Test Test Test Te"
+			entity.Image = "T"
 			
 			Dim productManager As IProductManager = managerFactory.GetProductManager()
 			entity.Product = productManager.GetAll(1)(0)
@@ -75,7 +83,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Item = GetFirstItem()
 				
-				entityA.ListPrice = 34
+				entityA.ListPrice = 96
 				
 				manager.Update(entityA)
 

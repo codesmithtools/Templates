@@ -13,19 +13,27 @@ Namespace Sample.Data.Generated.UnitTests
 		
 		Protected manager As ILineItemManager
 
-		Public Sub New()
-			manager = managerFactory.GetLineItemManager()
+		
+		<SetUp()> _
+		Public Sub SetUp()
+            manager = managerFactory.GetLineItemManager()
+            manager.Session.BeginTransaction()
+		End Sub
+		<TearDown()> _
+		Public Sub TearDown()
+			manager.Session.RollbackTransaction()
+            manager.Dispose()
 		End Sub
 
 		Protected Function CreateNewLineItem() As LineItem
 			Dim entity As New LineItem()
 
 			
-			entity.OrderId = 34
-			entity.LineNum = 94
-			entity.ItemId = "Test"
-			entity.Quantity = 9
-			entity.UnitPrice = 8
+			entity.OrderId = 65
+			entity.LineNum = 77
+			entity.ItemId = "Test Test"
+			entity.Quantity = 74
+			entity.UnitPrice = 33
 
 			Return entity
 		End Function
@@ -67,7 +75,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As LineItem = GetFirstLineItem()
 				
-				entityA.ItemId = "Test T"
+				entityA.ItemId = "Te"
 				
 				manager.Update(entityA)
 

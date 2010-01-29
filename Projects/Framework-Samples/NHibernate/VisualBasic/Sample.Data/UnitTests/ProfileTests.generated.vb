@@ -13,8 +13,16 @@ Namespace Sample.Data.Generated.UnitTests
 		
 		Protected manager As IProfileManager
 
-		Public Sub New()
-			manager = managerFactory.GetProfileManager()
+		
+		<SetUp()> _
+		Public Sub SetUp()
+            manager = managerFactory.GetProfileManager()
+            manager.Session.BeginTransaction()
+		End Sub
+		<TearDown()> _
+		Public Sub TearDown()
+			manager.Session.RollbackTransaction()
+            manager.Dispose()
 		End Sub
 
 		Protected Function CreateNewProfile() As Profile

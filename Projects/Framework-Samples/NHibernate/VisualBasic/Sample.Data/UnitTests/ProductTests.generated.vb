@@ -13,19 +13,27 @@ Namespace Sample.Data.Generated.UnitTests
 		
 		Protected manager As IProductManager
 
-		Public Sub New()
-			manager = managerFactory.GetProductManager()
+		
+		<SetUp()> _
+		Public Sub SetUp()
+            manager = managerFactory.GetProductManager()
+            manager.Session.BeginTransaction()
+		End Sub
+		<TearDown()> _
+		Public Sub TearDown()
+			manager.Session.RollbackTransaction()
+            manager.Dispose()
 		End Sub
 
 		Protected Function CreateNewProduct() As Product
 			Dim entity As New Product()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test Tes"
+			entity.Id = "Tes"
 			
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test T"
+			entity.Name = "Test Test T"
 			entity.Descn = "Test Test "
-			entity.Image = "Test Test Test Test Test Test Test Test Test Test Te"
+			entity.Image = "Test Test Test Test Test Test Test Test Test Test Tes"
 			
 			Dim categoryManager As ICategoryManager = managerFactory.GetCategoryManager()
 			entity.Category = categoryManager.GetAll(1)(0)
@@ -70,7 +78,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Product = GetFirstProduct()
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Te"
+				entityA.Name = "Test Test"
 				
 				manager.Update(entityA)
 

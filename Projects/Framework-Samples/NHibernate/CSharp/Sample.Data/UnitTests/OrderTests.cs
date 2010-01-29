@@ -8,7 +8,7 @@ using Sample.Data.Generated.Base;
 
 namespace Sample.Data.Generated.UnitTests
 {
-    public partial class OrderTests : UNuitTestBase
+    public partial class OrderTests
     {
 	}
 }

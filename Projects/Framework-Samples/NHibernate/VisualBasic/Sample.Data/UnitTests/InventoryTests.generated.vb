@@ -13,17 +13,25 @@ Namespace Sample.Data.Generated.UnitTests
 		
 		Protected manager As IInventoryManager
 
-		Public Sub New()
-			manager = managerFactory.GetInventoryManager()
+		
+		<SetUp()> _
+		Public Sub SetUp()
+            manager = managerFactory.GetInventoryManager()
+            manager.Session.BeginTransaction()
+		End Sub
+		<TearDown()> _
+		Public Sub TearDown()
+			manager.Session.RollbackTransaction()
+            manager.Dispose()
 		End Sub
 
 		Protected Function CreateNewInventory() As Inventory
 			Dim entity As New Inventory()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test Tes"
+			entity.Id = "Te"
 			
-			entity.Qty = 17
+			entity.Qty = 1
 
 			Return entity
 		End Function
@@ -65,7 +73,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Inventory = GetFirstInventory()
 				
-				entityA.Qty = 37
+				entityA.Qty = 87
 				
 				manager.Update(entityA)
 

@@ -11,29 +11,38 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class CartTests : UNuitTestBase
     {
-        protected Sample.Data.Generated.ManagerObjects.ICartManager manager;
-		
-		public CartTests()
+        [SetUp]
+        public void SetUp()
         {
             manager = managerFactory.GetCartManager();
+            manager.Session.BeginTransaction();
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            manager.Session.RollbackTransaction();
+            manager.Dispose();
+        }
+        
+        protected Sample.Data.Generated.ManagerObjects.ICartManager manager;
 		
 		protected Sample.Data.Generated.BusinessObjects.Cart CreateNewCart()
 		{
 			Sample.Data.Generated.BusinessObjects.Cart entity = new Sample.Data.Generated.BusinessObjects.Cart();
 			
 			
-			entity.ItemId = "Test Tes";
-			entity.Name = "Test Test Test Test Test Test Test Test Tes";
-			entity.Type = "Test Test Test Test Test Test Test Test Test Test Tes";
-			entity.Price = 82;
+			entity.ItemId = "Test T";
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test";
+			entity.Type = "Test Test Test Test Test Test Test Test Test T";
+			entity.Price = 14;
 			entity.CategoryId = "Test";
-			entity.ProductId = "Test Te";
+			entity.ProductId = "Test Test";
 			entity.IsShoppingCart = true;
-			entity.Quantity = 74;
+			entity.Quantity = 93;
 			
-			Sample.Data.Generated.ManagerObjects.IProfileManager profileManager = managerFactory.GetProfileManager();
-			entity.Profile = profileManager.GetAll(1)[0];
+			using(Sample.Data.Generated.ManagerObjects.IProfileManager profileManager = managerFactory.GetProfileManager())
+			    entity.Profile = profileManager.GetAll(1)[0];
 			
 			return entity;
 		}
@@ -85,7 +94,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Cart entityA = GetFirstCart();
 				
-				entityA.ItemId = "Test";
+				entityA.ItemId = "Test Te";
 				
 				manager.Update(entityA);
 

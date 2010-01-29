@@ -215,6 +215,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="NHibernate.csp" />
   </ItemGroup>
   <ItemGroup>

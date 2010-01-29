@@ -13,25 +13,32 @@ Namespace Sample.Data.Generated.UnitTests
 		
 		Protected manager As IAccountManager
 
-		Public Sub New()
-			manager = managerFactory.GetAccountManager()
+		
+		<SetUp()> _
+		Public Sub SetUp()
+            manager = managerFactory.GetAccountManager()
+            manager.Session.BeginTransaction()
+		End Sub
+		<TearDown()> _
+		Public Sub TearDown()
+			manager.Session.RollbackTransaction()
+            manager.Dispose()
 		End Sub
 
 		Protected Function CreateNewAccount() As Account
 			Dim entity As New Account()
 
 			
-			entity.Email = "Test Test Test Test Tes"
-			entity.FirstName = "Test Test Test Test Test Test Test Test Test Test Test Test Test T"
-			entity.LastName = "Test Test Test Test Test Test Test "
-			entity.Address1 = "Test Test Tes"
-			entity.Address2 = "Test Test Test Test Test Test Test Test Test "
-			entity.City = "Test Test Test Test Test Test Test Test T"
-			entity.State = "Test Test Test Test Test Test Test Test Tes"
-			entity.Zip = "Test Test Test "
-			entity.Country = "Test Test Test Tes"
-			entity.Phone = "Test Test Test Tes"
-			entity.Number = 58
+			entity.Email = "Test Test Test Test Test T"
+			entity.FirstName = "Test "
+			entity.LastName = "Test Test Test Test Test "
+			entity.Address1 = "Test Test Test Test Test Test Test Test Test Test Te"
+			entity.Address2 = "Test Test Test Test T"
+			entity.City = "Test Tes"
+			entity.State = "Test Test Test Test Test Te"
+			entity.Zip = "Test Test Test Test"
+			entity.Country = "Test "
+			entity.Phone = "Test Test T"
 			
 			Dim profileManager As IProfileManager = managerFactory.GetProfileManager()
 			entity.Profile = profileManager.GetAll(1)(0)
@@ -76,7 +83,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Account = GetFirstAccount()
 				
-				entityA.Email = "Test Test Test Test Test Test Test Test Test Test Te"
+				entityA.Email = "Test Test Test Test Test Test Test Test Test Test Test Test Te"
 				
 				manager.Update(entityA)
 

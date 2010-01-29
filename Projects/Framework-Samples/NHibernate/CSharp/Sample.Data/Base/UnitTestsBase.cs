@@ -10,16 +10,5 @@ namespace Sample.Data.Generated.Base
     public class UNuitTestBase
     {
         protected IManagerFactory managerFactory = new ManagerFactory();
-
-        [SetUp]
-        public void SetUp()
-        {
-            NHibernateSessionManager.Instance.Session.BeginTransaction();
-        }
-        [TearDown]
-        public void TearDown()
-        {
-            NHibernateSessionManager.Instance.Session.RollbackTransaction();
-        }
     }
 }
