@@ -235,7 +235,7 @@ namespace NHibernateHelper
             if (ep != null && ep.Value != null)
             {
                 var eps = ep.Value.ToString();
-                if (String.IsNullOrEmpty(eps))
+                if (!String.IsNullOrEmpty(eps))
                     return eps;
             }
 
