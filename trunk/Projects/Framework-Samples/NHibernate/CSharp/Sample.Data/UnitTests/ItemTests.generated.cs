@@ -11,31 +11,40 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class ItemTests : UNuitTestBase
     {
-        protected Sample.Data.Generated.ManagerObjects.IItemManager manager;
-		
-		public ItemTests()
+        [SetUp]
+        public void SetUp()
         {
             manager = managerFactory.GetItemManager();
+            manager.Session.BeginTransaction();
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            manager.Session.RollbackTransaction();
+            manager.Dispose();
+        }
+        
+        protected Sample.Data.Generated.ManagerObjects.IItemManager manager;
 		
 		protected Sample.Data.Generated.BusinessObjects.Item CreateNewItem()
 		{
 			Sample.Data.Generated.BusinessObjects.Item entity = new Sample.Data.Generated.BusinessObjects.Item();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test Tes";
+			entity.Id = "Test T";
 			
-			entity.ListPrice = 61;
-			entity.UnitCost = 1;
+			entity.ListPrice = 28;
+			entity.UnitCost = 71;
 			entity.Status = "T";
-			entity.Name = "Test Te";
-			entity.Image = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test";
+			entity.Image = "Test Test Test Test Test Test T";
 			
-			Sample.Data.Generated.ManagerObjects.IProductManager productManager = managerFactory.GetProductManager();
-			entity.Product = productManager.GetAll(1)[0];
+			using(Sample.Data.Generated.ManagerObjects.IProductManager productManager = managerFactory.GetProductManager())
+			    entity.Product = productManager.GetAll(1)[0];
 			
-			Sample.Data.Generated.ManagerObjects.ISupplierManager supplierManager = managerFactory.GetSupplierManager();
-			entity.Supplier = supplierManager.GetAll(1)[0];
+			using(Sample.Data.Generated.ManagerObjects.ISupplierManager supplierManager = managerFactory.GetSupplierManager())
+			    entity.Supplier = supplierManager.GetAll(1)[0];
 			
 			return entity;
 		}
@@ -87,7 +96,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Item entityA = GetFirstItem();
 				
-				entityA.ListPrice = 6;
+				entityA.ListPrice = 22;
 				
 				manager.Update(entityA);
 

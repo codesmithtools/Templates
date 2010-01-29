@@ -13,22 +13,30 @@ Namespace Sample.Data.Generated.UnitTests
 		
 		Protected manager As ICartManager
 
-		Public Sub New()
-			manager = managerFactory.GetCartManager()
+		
+		<SetUp()> _
+		Public Sub SetUp()
+            manager = managerFactory.GetCartManager()
+            manager.Session.BeginTransaction()
+		End Sub
+		<TearDown()> _
+		Public Sub TearDown()
+			manager.Session.RollbackTransaction()
+            manager.Dispose()
 		End Sub
 
 		Protected Function CreateNewCart() As Cart
 			Dim entity As New Cart()
 
 			
-			entity.ItemId = "Test "
-			entity.Name = "Test Test Test Test Test Test Test Test"
-			entity.Type = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test"
-			entity.Price = 11
-			entity.CategoryId = "Te"
-			entity.ProductId = "T"
+			entity.ItemId = "Test Test"
+			entity.Name = "Test Test Test Test Test Tes"
+			entity.Type = "Test Test Test Test Test "
+			entity.Price = 50
+			entity.CategoryId = "Tes"
+			entity.ProductId = "Test"
 			entity.IsShoppingCart = True
-			entity.Quantity = 16
+			entity.Quantity = 65
 			
 			Dim profileManager As IProfileManager = managerFactory.GetProfileManager()
 			entity.Profile = profileManager.GetAll(1)(0)
@@ -73,7 +81,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Cart = GetFirstCart()
 				
-				entityA.ItemId = "Test Tes"
+				entityA.ItemId = "Test Te"
 				
 				manager.Update(entityA)
 

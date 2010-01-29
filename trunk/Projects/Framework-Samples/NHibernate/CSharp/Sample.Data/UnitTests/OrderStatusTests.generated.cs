@@ -11,20 +11,29 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class OrderStatusTests : UNuitTestBase
     {
-        protected Sample.Data.Generated.ManagerObjects.IOrderStatusManager manager;
-		
-		public OrderStatusTests()
+        [SetUp]
+        public void SetUp()
         {
             manager = managerFactory.GetOrderStatusManager();
+            manager.Session.BeginTransaction();
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            manager.Session.RollbackTransaction();
+            manager.Dispose();
+        }
+        
+        protected Sample.Data.Generated.ManagerObjects.IOrderStatusManager manager;
 		
 		protected Sample.Data.Generated.BusinessObjects.OrderStatus CreateNewOrderStatus()
 		{
 			Sample.Data.Generated.BusinessObjects.OrderStatus entity = new Sample.Data.Generated.BusinessObjects.OrderStatus();
 			
 			
-			entity.OrderId = 22;
-			entity.LineNum = 81;
+			entity.OrderId = 53;
+			entity.LineNum = 42;
 			entity.Timestamp = System.DateTime.Now;
 			entity.Status = "T";
 			

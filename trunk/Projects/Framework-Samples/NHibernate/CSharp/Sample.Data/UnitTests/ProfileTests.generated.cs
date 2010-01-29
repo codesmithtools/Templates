@@ -11,12 +11,21 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class ProfileTests : UNuitTestBase
     {
-        protected Sample.Data.Generated.ManagerObjects.IProfileManager manager;
-		
-		public ProfileTests()
+        [SetUp]
+        public void SetUp()
         {
             manager = managerFactory.GetProfileManager();
+            manager.Session.BeginTransaction();
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            manager.Session.RollbackTransaction();
+            manager.Dispose();
+        }
+        
+        protected Sample.Data.Generated.ManagerObjects.IProfileManager manager;
 		
 		protected Sample.Data.Generated.BusinessObjects.Profile CreateNewProfile()
 		{

@@ -11,21 +11,30 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class InventoryTests : UNuitTestBase
     {
-        protected Sample.Data.Generated.ManagerObjects.IInventoryManager manager;
-		
-		public InventoryTests()
+        [SetUp]
+        public void SetUp()
         {
             manager = managerFactory.GetInventoryManager();
+            manager.Session.BeginTransaction();
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            manager.Session.RollbackTransaction();
+            manager.Dispose();
+        }
+        
+        protected Sample.Data.Generated.ManagerObjects.IInventoryManager manager;
 		
 		protected Sample.Data.Generated.BusinessObjects.Inventory CreateNewInventory()
 		{
 			Sample.Data.Generated.BusinessObjects.Inventory entity = new Sample.Data.Generated.BusinessObjects.Inventory();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test";
+			entity.Id = "T";
 			
-			entity.Qty = 65;
+			entity.Qty = 91;
 			
 			return entity;
 		}
@@ -77,7 +86,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Inventory entityA = GetFirstInventory();
 				
-				entityA.Qty = 92;
+				entityA.Qty = 36;
 				
 				manager.Update(entityA);
 

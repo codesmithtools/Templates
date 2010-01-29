@@ -13,17 +13,25 @@ Namespace Sample.Data.Generated.UnitTests
 		
 		Protected manager As ICategoryManager
 
-		Public Sub New()
-			manager = managerFactory.GetCategoryManager()
+		
+		<SetUp()> _
+		Public Sub SetUp()
+            manager = managerFactory.GetCategoryManager()
+            manager.Session.BeginTransaction()
+		End Sub
+		<TearDown()> _
+		Public Sub TearDown()
+			manager.Session.RollbackTransaction()
+            manager.Dispose()
 		End Sub
 
 		Protected Function CreateNewCategory() As Category
 			Dim entity As New Category()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Tes"
+			entity.Id = "Te"
 			
-			entity.Name = "Test Test Test Test Test Test "
+			entity.Name = "Te"
 			entity.Descn = "Test Test "
 
 			Return entity
@@ -66,7 +74,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Category = GetFirstCategory()
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test Te"
+				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test "
 				
 				manager.Update(entityA)
 

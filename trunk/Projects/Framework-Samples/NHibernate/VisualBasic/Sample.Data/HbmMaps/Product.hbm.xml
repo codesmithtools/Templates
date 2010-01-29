@@ -8,7 +8,7 @@
 		<property name="Name" column="[Name]" />
 		<property name="Descn" column="[Descn]" />
 		<property name="Image" column="[Image]" />
-		<many-to-one name="Category" column="[CategoryId]" class="Category" cascade="all" />
+		<many-to-one name="Category" column="[CategoryId]" class="Category" />
 		<bag name="Items" lazy="true" cascade="all-delete-orphan"  inverse="false" >
 			<key column="[ProductId]"></key>
 			<one-to-many class="Item"></one-to-many>

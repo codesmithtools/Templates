@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
-    <add key="ConnectionString1" value="Data Source=skaberry;Initial Catalog=Petshop;Integrated Security=True" />
+    <add key="ConnectionString1" value="Data Source=localhost;Initial Catalog=Petshop;Integrated Security=True" />
   </variables>
   <propertySets>
     <propertySet name="NHibernateMaster" template="..\..\..\..\..\Templates\Frameworks\NHibernate\VisualBasic\NHibernateMaster.cst">

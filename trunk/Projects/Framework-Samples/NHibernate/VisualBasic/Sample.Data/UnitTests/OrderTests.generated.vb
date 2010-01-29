@@ -13,36 +13,44 @@ Namespace Sample.Data.Generated.UnitTests
 		
 		Protected manager As IOrderManager
 
-		Public Sub New()
-			manager = managerFactory.GetOrderManager()
+		
+		<SetUp()> _
+		Public Sub SetUp()
+            manager = managerFactory.GetOrderManager()
+            manager.Session.BeginTransaction()
+		End Sub
+		<TearDown()> _
+		Public Sub TearDown()
+			manager.Session.RollbackTransaction()
+            manager.Dispose()
 		End Sub
 
 		Protected Function CreateNewOrder() As Order
 			Dim entity As New Order()
 
 			
-			entity.UserId = "Test T"
+			entity.UserId = "Test Test Te"
 			entity.OrderDate = DateTime.Now
-			entity.ShipAddr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes"
-			entity.ShipAddr2 = "Test Test Test Test Test Test Test Test Test Tes"
-			entity.ShipCity = "Test Test Test Test Test Tes"
-			entity.ShipState = "Test Test Test Test Tes"
-			entity.ShipZip = "Test Test Test T"
-			entity.ShipCountry = "Tes"
-			entity.BillAddr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test "
-			entity.BillAddr2 = "Test Test "
-			entity.BillCity = "Te"
-			entity.BillState = "Test Test Test Test Test"
-			entity.BillZip = "Test Test Test T"
-			entity.BillCountry = "Test Test "
-			entity.Courier = "Test Test Test Test Test Test Tes"
-			entity.TotalPrice = 32
-			entity.BillToFirstName = "Test Test Test Test Test Test Test Test Test Test Test Test Tes"
-			entity.BillToLastName = "Test Test Test Test T"
-			entity.ShipToFirstName = "Test Test Test Test Te"
-			entity.ShipToLastName = "Test Test Test Test Test Test Test Test Test Test Test Test Te"
-			entity.AuthorizationNumber = 55
-			entity.Locale = "Test Test Test T"
+			entity.ShipAddr1 = "Test Test Test Test Test Test Test Test Test Test Test Test "
+			entity.ShipAddr2 = "Test Test"
+			entity.ShipCity = "T"
+			entity.ShipState = "Test Test Test Test Test Test Test Test Tes"
+			entity.ShipZip = "Test Test"
+			entity.ShipCountry = "Test Test Te"
+			entity.BillAddr1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test"
+			entity.BillAddr2 = "Test Test Test Test Test Test Test Test"
+			entity.BillCity = "Test Test Test Test Test Test Test Test Test Test Test Test Test Tes"
+			entity.BillState = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes"
+			entity.BillZip = "Tes"
+			entity.BillCountry = "Test Test Te"
+			entity.Courier = "Test Test Test Test Test Test Test Test Test Test T"
+			entity.TotalPrice = 92
+			entity.BillToFirstName = "Test Test "
+			entity.BillToLastName = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test"
+			entity.ShipToFirstName = "Test Test Test Test Test Test Test Test Test Test Test Test T"
+			entity.ShipToLastName = "Test Test Test Test Test Test Test Test Test Test Tes"
+			entity.AuthorizationNumber = 6
+			entity.Locale = "Test T"
 
 			Return entity
 		End Function
@@ -84,7 +92,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Order = GetFirstOrder()
 				
-				entityA.UserId = "Test Test Te"
+				entityA.UserId = "Test Test Test Te"
 				
 				manager.Update(entityA)
 

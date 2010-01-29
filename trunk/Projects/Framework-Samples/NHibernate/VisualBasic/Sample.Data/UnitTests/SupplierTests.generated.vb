@@ -13,24 +13,32 @@ Namespace Sample.Data.Generated.UnitTests
 		
 		Protected manager As ISupplierManager
 
-		Public Sub New()
-			manager = managerFactory.GetSupplierManager()
+		
+		<SetUp()> _
+		Public Sub SetUp()
+            manager = managerFactory.GetSupplierManager()
+            manager.Session.BeginTransaction()
+		End Sub
+		<TearDown()> _
+		Public Sub TearDown()
+			manager.Session.RollbackTransaction()
+            manager.Dispose()
 		End Sub
 
 		Protected Function CreateNewSupplier() As Supplier
 			Dim entity As New Supplier()
 
 			' You may need to maually enter this key if there is a constraint violation.
-			entity.Id = 48
+			entity.Id = 75
 			
-			entity.Name = "Test Test Test Test Test Test Test Test Test "
+			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te"
 			entity.Status = "T"
-			entity.Addr1 = "Test Test Test Test Test Test Test Test Test "
-			entity.Addr2 = "Test Test Te"
-			entity.City = "Test Test Test Test Test Test Test Test Test T"
-			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Test "
+			entity.Addr1 = "Test Test Test Test Test Test Te"
+			entity.Addr2 = "Test Test Test Test Test Test Test Test Test Test T"
+			entity.City = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test"
+			entity.State = "Test Test Test Test Test Test Test Test Test Test Te"
 			entity.Zip = "Test"
-			entity.Phone = "Test Test Test Test Te"
+			entity.Phone = "Test Test "
 
 			Return entity
 		End Function
@@ -72,7 +80,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Supplier = GetFirstSupplier()
 				
-				entityA.Name = "Test Test Test Test Test Test Test Test "
+				entityA.Name = "Test Test Test Test Test Test "
 				
 				manager.Update(entityA)
 

@@ -11,23 +11,32 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class LineItemTests : UNuitTestBase
     {
-        protected Sample.Data.Generated.ManagerObjects.ILineItemManager manager;
-		
-		public LineItemTests()
+        [SetUp]
+        public void SetUp()
         {
             manager = managerFactory.GetLineItemManager();
+            manager.Session.BeginTransaction();
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            manager.Session.RollbackTransaction();
+            manager.Dispose();
+        }
+        
+        protected Sample.Data.Generated.ManagerObjects.ILineItemManager manager;
 		
 		protected Sample.Data.Generated.BusinessObjects.LineItem CreateNewLineItem()
 		{
 			Sample.Data.Generated.BusinessObjects.LineItem entity = new Sample.Data.Generated.BusinessObjects.LineItem();
 			
 			
-			entity.OrderId = 20;
-			entity.LineNum = 91;
-			entity.ItemId = "Tes";
-			entity.Quantity = 35;
-			entity.UnitPrice = 78;
+			entity.OrderId = 71;
+			entity.LineNum = 57;
+			entity.ItemId = "Test ";
+			entity.Quantity = 6;
+			entity.UnitPrice = 48;
 			
 			return entity;
 		}
@@ -79,7 +88,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.LineItem entityA = GetFirstLineItem();
 				
-				entityA.ItemId = "T";
+				entityA.ItemId = "Test Test";
 				
 				manager.Update(entityA);
 

@@ -11,21 +11,30 @@ namespace Sample.Data.Generated.UnitTests
 	[TestFixture]
     public partial class CategoryTests : UNuitTestBase
     {
-        protected Sample.Data.Generated.ManagerObjects.ICategoryManager manager;
-		
-		public CategoryTests()
+        [SetUp]
+        public void SetUp()
         {
             manager = managerFactory.GetCategoryManager();
+            manager.Session.BeginTransaction();
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            manager.Session.RollbackTransaction();
+            manager.Dispose();
+        }
+        
+        protected Sample.Data.Generated.ManagerObjects.ICategoryManager manager;
 		
 		protected Sample.Data.Generated.BusinessObjects.Category CreateNewCategory()
 		{
 			Sample.Data.Generated.BusinessObjects.Category entity = new Sample.Data.Generated.BusinessObjects.Category();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "Test Tes";
+			entity.Id = "Test ";
 			
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Te";
+			entity.Name = "Test Test Test Test Test Test Test T";
 			entity.Descn = "Test Test ";
 			
 			return entity;
@@ -78,7 +87,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Category entityA = GetFirstCategory();
 				
-				entityA.Name = "Test Test Test Te";
+				entityA.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test T";
 				
 				manager.Update(entityA);
 

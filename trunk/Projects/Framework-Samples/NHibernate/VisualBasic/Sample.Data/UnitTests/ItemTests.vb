@@ -8,6 +8,5 @@ Imports Sample.Data.Generated.Base
 
 Namespace Sample.Data.Generated.UnitTests
 	Public Partial Class ItemTests
-		Inherits UNuitTestBase
 	End Class
 End Namespace

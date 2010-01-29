@@ -13,16 +13,24 @@ Namespace Sample.Data.Generated.UnitTests
 		
 		Protected manager As IOrderStatusManager
 
-		Public Sub New()
-			manager = managerFactory.GetOrderStatusManager()
+		
+		<SetUp()> _
+		Public Sub SetUp()
+            manager = managerFactory.GetOrderStatusManager()
+            manager.Session.BeginTransaction()
+		End Sub
+		<TearDown()> _
+		Public Sub TearDown()
+			manager.Session.RollbackTransaction()
+            manager.Dispose()
 		End Sub
 
 		Protected Function CreateNewOrderStatus() As OrderStatus
 			Dim entity As New OrderStatus()
 
 			
-			entity.OrderId = 4
-			entity.LineNum = 81
+			entity.OrderId = 34
+			entity.LineNum = 64
 			entity.Timestamp = DateTime.Now
 			entity.Status = "T"
 
