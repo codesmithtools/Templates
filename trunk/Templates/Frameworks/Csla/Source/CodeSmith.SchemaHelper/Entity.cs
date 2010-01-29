@@ -94,8 +94,8 @@ namespace CodeSmith.SchemaHelper
                     ColumnSchema column = tks.PrimaryKeyMemberColumns[index];
                     ColumnSchema localColumn = tks.ForeignKeyMemberColumns[index];
                     
-                    if (!Configuration.Instance.ExcludeTableRegexIsMatch(tks.PrimaryKeyTable.FullName)
-                        && (!localColumn.IsPrimaryKeyMember || (localColumn.IsPrimaryKeyMember && localColumn.IsForeignKeyMember)))
+                    if (!Configuration.Instance.ExcludeTableRegexIsMatch(tks.PrimaryKeyTable.FullName) && 
+                        (!localColumn.IsPrimaryKeyMember || (localColumn.IsPrimaryKeyMember && localColumn.IsForeignKeyMember)))
                     {
                         AssociationMember member = new AssociationMember(AssociationType.ManyToOne, tks.PrimaryKeyTable, column, localColumn, this);
                         if(!association.ContainsKey(member.Key))
@@ -105,10 +105,10 @@ namespace CodeSmith.SchemaHelper
                     }
                 }
 
-                if (!_associationMap.ContainsKey(association.Key))
+                if (!string.IsNullOrEmpty(association.Key) && !_associationMap.ContainsKey(association.Key))
                     _associationMap.Add(association.Key, association);
 
-                if (!_fkRemoteMemberMap.ContainsKey(association.Key))
+                if (!string.IsNullOrEmpty(association.Key) && !_fkRemoteMemberMap.ContainsKey(association.Key))
                     _fkRemoteMemberMap.Add(association.Key, association);
             }
         }
@@ -126,7 +126,7 @@ namespace CodeSmith.SchemaHelper
 
                     //Added a check to see if the FK is also a Foreign composite key (http://community.codesmithtools.com/forums/t/10266.aspx).
                     bool isFKAlsoComposite = column.Table.PrimaryKey.MemberColumns.Count > 1 && column.IsPrimaryKeyMember && column.IsForeignKeyMember;
-                    if ((!column.IsPrimaryKeyMember || isFKAlsoComposite))
+                    if (!Configuration.Instance.ExcludeTableRegexIsMatch(column.Table.FullName) && (!column.IsPrimaryKeyMember || isFKAlsoComposite))
                     {
                         if (!column.Table.IsManyToMany())
                         {
@@ -154,9 +154,9 @@ namespace CodeSmith.SchemaHelper
                 } //End For Index in ForeignKeyMemberColumns
 
 
-                if (!_associationMap.ContainsKey(association.Key))
+                if (!string.IsNullOrEmpty(association.Key) && !_associationMap.ContainsKey(association.Key))
                     _associationMap.Add(association.Key, association);
-                if (!_fkRemoteMemberMap.ContainsKey(association.Key))
+                if (!string.IsNullOrEmpty(association.Key) && !_fkRemoteMemberMap.ContainsKey(association.Key))
                     _fkRemoteMemberMap.Add(association.Key, association);
 
             } //End Table.PrimaryKeys

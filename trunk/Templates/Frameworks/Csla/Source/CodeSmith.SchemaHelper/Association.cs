@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-
-using SchemaExplorer;
 using CodeSmith.SchemaHelper.Util;
 
 
@@ -11,56 +7,6 @@ namespace CodeSmith.SchemaHelper
 {
     public class Association : Collection<AssociationMember>
     {
-        //#region Constructor(s)
-
-        //public Association(AssociationType associationType, TableSchema table, Entity entity)
-        //{
-        //    //ToManyTableKeyName = (associationType == SchemaHelper.AssociationType.ManyToMany)
-        //    //                         ? GetToManyTableKey(columns[0].Table, table).Name
-        //    //                         : String.Empty;
-
-        //    //Columns = new Dictionary<Member, Member>();
-        //    //for (int index = 0; index < columns.Count; index++)
-        //    //{
-        //    //    Columns.Add(new Member(columns[index], new Entity(columns[index].Table)), new Member(localColumns[index], new Entity(localColumns[index].Table)));
-        //    //}
-
-        //    //foreach (ColumnSchema col in columns)
-        //    //{
-        //    //    Cascade &= (associationType == SchemaHelper.AssociationType.OneToMany && !col.AllowDBNull);
-        //    //}
-
-        //    Entity = entity;
-        //    //ClassName = table.ClassName();
-        //    AssociationType = associationType;
-        //    //Name = columns.GetName(table, associationType);
-        //    Table = table;
-        //}
-
-        //#endregion
-
-        //#region Public Read-Only Methods
-
-        //internal TableSchema Table { get; private set; }
-        //internal Entity Entity { get; private set; }
-        //public List<AssociationMember> Members { get; }
-        ////public string Name { get; internal set; }
-        //public AssociationType AssociationType { get; private set; }
-        ////public string ClassName { get; private set; }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="column"></param>
-        ///// <param name="localColumn"></param>
-        //public void AddMember(ColumnSchema column, ColumnSchema localColumn)
-        //{
-        //    Members.Add(new AssociationMember(this.AssociationType, Table, column, localColumn, Entity));
-        //}
-
-        //#endregion
-
-
         /// <summary>
         /// Returns the appended Key for all AssociatedMembers
         /// </summary>

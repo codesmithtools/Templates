@@ -15,20 +15,22 @@
                 connection.Open();
                 using(SqlCommand command = new SqlCommand(commandText, connection))
                 {
-					<%= Entity.MembersUpdateInsert.BuildCommandParameters(false, true) %>
+                    <%= Entity.MembersUpdateInsert.BuildCommandParameters(false, true) %>
+
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
                         {
+							using (BypassPropertyChecks)
+							{
 <% if(Entity.HasRowVersionMember) { %>
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-<% } %>
-<% if(Entity.PrimaryKey.IsIdentity) { %>
-<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(UseMemberVariables) { %>
-                            <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
+								_timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");                        
+<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { if(UseMemberVariables) { %>
+								<%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>GetBytes(reader);<% } %>
 <% } else { %>
-                            LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>ADOHelper.GetBytes(reader," <%= member.ColumnName %>"));<% } %>
+								LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>GetBytes(reader," <%= member.ColumnName %>"));<% } %>
 <% } } } %>
+							}
                         }
                     }
                 }

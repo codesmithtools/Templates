@@ -62,7 +62,7 @@ namespace PetShop.Tests.ParameterizedSQL
 					command.Parameters.AddWithValue("@p_LineNum", LineNum);
 					command.Parameters.AddWithValue("@p_Timestamp", Timestamp);
 					command.Parameters.AddWithValue("@p_Status", Status);
-                    
+
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -86,13 +86,10 @@ namespace PetShop.Tests.ParameterizedSQL
 					command.Parameters.AddWithValue("@p_Timestamp", Timestamp);
 					command.Parameters.AddWithValue("@p_Status", Status);
 
-                    using(var reader = new SafeDataReader(command.ExecuteReader()))
-                    {
-                        //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                        if(reader.RecordsAffected == 0)
-                            throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-
-                    }
+                    //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    int result = command.ExecuteNonQuery();
+                    if (result == 0)
+                        throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
                 }
             }
         }
@@ -112,8 +109,8 @@ namespace PetShop.Tests.ParameterizedSQL
                 using (SqlCommand command = new SqlCommand(commandText, connection))
                 {
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
-					
-					//result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+
+                    //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
                     int result = command.ExecuteNonQuery();
                     if (result == 0)
                         throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
