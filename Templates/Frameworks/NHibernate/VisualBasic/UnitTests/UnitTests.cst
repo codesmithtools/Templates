@@ -35,8 +35,16 @@ Namespace <%= UnitTestNamespace %>
 		
 		Protected manager As I<%= GetClassName(SourceTable) %>Manager
 
-		Public Sub New()
-			manager = managerFactory.Get<%= GetClassName(SourceTable) %>Manager()
+		
+		<SetUp()> _
+		Public Sub SetUp()
+            manager = managerFactory.Get<%= GetClassName(SourceTable) %>Manager()
+            manager.Session.BeginTransaction()
+		End Sub
+		<TearDown()> _
+		Public Sub TearDown()
+			manager.Session.RollbackTransaction()
+            manager.Dispose()
 		End Sub
 
 		Protected Function CreateNew<%= GetClassName(SourceTable) %>() As <%= GetClassName(SourceTable) %>

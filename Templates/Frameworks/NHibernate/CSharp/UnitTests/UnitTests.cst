@@ -33,12 +33,21 @@ namespace <%= UnitTestNamespace %>
 	[TestFixture]
     public partial class <%= GetClassName(SourceTable) %>Tests : UNuitTestBase
     {
-        protected <%= ManagerNamespace %>.I<%= GetClassName(SourceTable) %>Manager manager;
-		
-		public <%= GetClassName(SourceTable) %>Tests()
+        [SetUp]
+        public void SetUp()
         {
             manager = managerFactory.Get<%= GetClassName(SourceTable) %>Manager();
+            manager.Session.BeginTransaction();
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            manager.Session.RollbackTransaction();
+            manager.Dispose();
+        }
+        
+        protected <%= ManagerNamespace %>.I<%= GetClassName(SourceTable) %>Manager manager;
 		
 		protected <%= BusinessNamespace %>.<%= GetClassName(SourceTable) %> CreateNew<%= GetClassName(SourceTable) %>()
 		{
@@ -56,8 +65,8 @@ namespace <%= UnitTestNamespace %>
 			<% // Many-To-One %>
 			<% foreach(EntityAssociation association in entityManager.ManyToOne) { %>
 			
-			<%= ManagerNamespace %>.I<%= association.ClassName %>Manager <%= association.VariableName %>Manager = managerFactory.Get<%= association.ClassName %>Manager();
-			entity.<%= association.PropertyName %> = <%= association.VariableName %>Manager.GetAll(1)[0];
+			using(<%= ManagerNamespace %>.I<%= association.ClassName %>Manager <%= association.VariableName %>Manager = managerFactory.Get<%= association.ClassName %>Manager())
+			    entity.<%= association.PropertyName %> = <%= association.VariableName %>Manager.GetAll(1)[0];
 			<% } %>
 			
 			return entity;
