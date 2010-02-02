@@ -165,7 +165,7 @@ Public Overrides Sub Generate()
         Me.CopyPropertiesTo(factoryNames)
         factoryNames.SourceTables = Me.Criteria
         
-        Dim fileName As String = System.IO.Path.Combine(Me.Location, "Factory\\FactoryNames.vb")
+        Dim fileName As String = System.IO.Path.Combine(Me.Location, "Factory\FactoryNames.vb")
         If Not System.IO.File.Exists(fileName) Then
             factoryNames.RenderToFile(fileName, False)
         End If
