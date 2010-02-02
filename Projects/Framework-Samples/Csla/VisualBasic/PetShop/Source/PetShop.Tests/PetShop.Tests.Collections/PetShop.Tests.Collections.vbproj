@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F6C60C74-C106-4E26-8C59-73D92D3168BB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>PetShop.Tests.Collections</RootNamespace>
+    <AssemblyName>PetShop.Tests.Collections</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>PetShop.Tests.Collections.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>PetShop.Tests.Collections.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Csla, Version=3.8.0.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\Common\Csla\Csla.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Generated\ReadOnlyRoot\ADOHelper.vb" />
+    <Compile Include="Generated\ReadOnlyRoot\ExistsCommand.vb" />
+    <Compile Include="Generated\ReadOnlyRoot\IGeneratedCriteria.vb" />
+    <Compile Include="Generated\ReadOnlyChild\ADOHelper.vb" />
+    <Compile Include="Generated\EditableRoot\ADOHelper.vb" />
+    <Compile Include="Generated\EditableChild\ADOHelper.vb" />
+    <Compile Include="Generated\DynamicRoot\ADOHelper.vb" />
+    <Compile Include="Generated\DynamicRoot\Collections\CategoryList.DataAccess.vb">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\DynamicRoot\Collections\CategoryList.Generated.vb">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\DynamicRoot\Collections\CategoryList.vb" />
+    <Compile Include="Generated\DynamicRoot\Criteria\CategoryCriteria.Generated.vb">
+      <DependentUpon>CategoryCriteria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\DynamicRoot\Criteria\CategoryCriteria.vb" />
+    <Compile Include="Generated\DynamicRoot\Entities\Category.DataAccess.vb">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\DynamicRoot\Entities\Category.Generated.vb">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\DynamicRoot\Entities\Category.vb" />
+    <Compile Include="Generated\EditableChild\Collections\CategoryList.DataAccess.vb">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\EditableChild\Collections\CategoryList.Generated.vb">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\EditableChild\Collections\CategoryList.vb" />
+    <Compile Include="Generated\EditableChild\Criteria\CategoryCriteria.Generated.vb">
+      <DependentUpon>CategoryCriteria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\EditableChild\Criteria\CategoryCriteria.vb" />
+    <Compile Include="Generated\EditableChild\Entities\Category.DataAccess.vb">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\EditableChild\Entities\Category.Generated.vb">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\EditableChild\Entities\Category.vb" />
+    <Compile Include="Generated\EditableRoot\Collections\CategoryList.DataAccess.vb">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\EditableRoot\Collections\CategoryList.Generated.vb">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\EditableRoot\Collections\CategoryList.vb" />
+    <Compile Include="Generated\EditableRoot\Criteria\CategoryCriteria.Generated.vb">
+      <DependentUpon>CategoryCriteria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\EditableRoot\Criteria\CategoryCriteria.vb" />
+    <Compile Include="Generated\EditableRoot\Entities\Category.DataAccess.vb">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\EditableRoot\Entities\Category.Generated.vb">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\EditableRoot\Entities\Category.vb" />
+    <Compile Include="Generated\DynamicRoot\ExistsCommand.vb" />
+    <Compile Include="Generated\DynamicRoot\IGeneratedCriteria.vb" />
+    <Compile Include="Generated\EditableChild\ExistsCommand.vb" />
+    <Compile Include="Generated\EditableChild\IGeneratedCriteria.vb" />
+    <Compile Include="Generated\EditableRoot\ExistsCommand.vb" />
+    <Compile Include="Generated\EditableRoot\IGeneratedCriteria.vb" />
+    <Compile Include="Generated\ReadOnlyChild\ExistsCommand.vb" />
+    <Compile Include="Generated\ReadOnlyChild\IGeneratedCriteria.vb" />
+    <Compile Include="Generated\ReadOnlyChild\Collections\CategoryList.DataAccess.vb">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\ReadOnlyChild\Collections\CategoryList.Generated.vb">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\ReadOnlyChild\Collections\CategoryList.vb" />
+    <Compile Include="Generated\ReadOnlyChild\Criteria\CategoryCriteria.Generated.vb">
+      <DependentUpon>CategoryCriteria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\ReadOnlyChild\Criteria\CategoryCriteria.vb" />
+    <Compile Include="Generated\ReadOnlyChild\Entities\Category.DataAccess.vb">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\ReadOnlyChild\Entities\Category.Generated.vb">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\ReadOnlyChild\Entities\Category.vb" />
+    <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryList.DataAccess.vb">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryList.Generated.vb">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\ReadOnlyRoot\Collections\CategoryList.vb" />
+    <Compile Include="Generated\ReadOnlyRoot\Criteria\CategoryCriteria.Generated.vb">
+      <DependentUpon>CategoryCriteria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\ReadOnlyRoot\Criteria\CategoryCriteria.vb" />
+    <Compile Include="Generated\ReadOnlyRoot\Entities\Category.DataAccess.vb">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\ReadOnlyRoot\Entities\Category.Generated.vb">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\ReadOnlyRoot\Entities\Category.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="TestUtility.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Generated\DynamicRoot\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </None>
+    <None Include="Generated\DynamicRoot\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.vb</DependentUpon>
+    </None>
+    <None Include="Generated\EditableChild\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </None>
+    <None Include="Generated\EditableChild\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.vb</DependentUpon>
+    </None>
+    <None Include="Generated\EditableRoot\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </None>
+    <None Include="Generated\EditableRoot\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.vb</DependentUpon>
+    </None>
+    <None Include="Generated\Entities.csp" />
+    <None Include="Generated\ReadOnlyChild\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </None>
+    <None Include="Generated\ReadOnlyChild\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.vb</DependentUpon>
+    </None>
+    <None Include="Generated\ReadOnlyRoot\Collections\CategoryList.StoredProcedures.sql">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </None>
+    <None Include="Generated\ReadOnlyRoot\Entities\Category.StoredProcedures.sql">
+      <DependentUpon>Category.vb</DependentUpon>
+    </None>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
