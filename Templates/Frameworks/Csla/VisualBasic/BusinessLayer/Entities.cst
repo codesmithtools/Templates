@@ -1,7 +1,6 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Description="CSLA 3.8.X Entities" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
-<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\Common" %>
 <%@ Assembly Name="SchemaExplorer" %>
 
@@ -27,6 +26,9 @@
 <%@ Register Name="SwitchableObjectTemplate" Template="SwitchableObject.cst" %>
 
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
+<%@ Register Name="FactoryNamesTemplate" Template="Internal\FactoryNames.cst" %>
+<%@ Register Name="ExistsCommandTemplate" Template="Internal\ExistsCommand.cst" %>
+<%@ Register Name="IGeneratedCriteriaTemplate" Template="Internal\IGeneratedCriteria.cst" %>
 
 <% Generate() %>
 
@@ -156,6 +158,27 @@ Public Overrides Sub Generate()
             ADOHelper.RenderToFile(fileName, False)
         End If
     End If
+
+    'FactoryNamesTemplate
+    If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Then
+        Dim factoryNames As FactoryNamesTemplate = Me.Create(Of FactoryNamesTemplate)()
+        Me.CopyPropertiesTo(factoryNames)
+        factoryNames.SourceTables = Me.Criteria
+        
+        Dim fileName As String = System.IO.Path.Combine(Me.Location, "Factory\\FactoryNames.vb")
+        If Not System.IO.File.Exists(fileName) Then
+            factoryNames.RenderToFile(fileName, False)
+        End If
+    End If
+    
+    Dim ExistsCommand As ExistsCommandTemplate = Me.Create(Of ExistsCommandTemplate)()
+    Me.CopyPropertiesTo(ExistsCommand)
+    ExistsCommand.RenderToFile(System.IO.Path.Combine(Me.Location, "Commands\ExistsCommand.vb"), True)
+    
+    Dim IGeneratedCriteria As IGeneratedCriteriaTemplate = Me.Create(Of IGeneratedCriteriaTemplate)()
+    Me.CopyPropertiesTo(IGeneratedCriteria)
+    IGeneratedCriteria.RenderToFile(System.IO.Path.Combine(Me.Location, "Criteria\Interfaces\IGeneratedCriteria.vb"), True)
+
 End Sub
 
 </script>
