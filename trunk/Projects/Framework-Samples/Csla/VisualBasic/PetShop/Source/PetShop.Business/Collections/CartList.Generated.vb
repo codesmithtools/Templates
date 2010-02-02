@@ -20,47 +20,64 @@ Imports Csla.Data
 <Serializable()> _
 Public Partial Class CartList 
     Inherits BusinessListBase(Of CartList, Cart)
-    
+
     #Region "Contructor(s)"
-    
+
     Private Sub New()
         AllowNew = true
         MarkAsChild()
     End Sub
-    
+
     #End Region
-    
+
     #Region "Factory Methods" 
-    
+
     Friend Shared Function NewList() As CartList
         Return DataPortal.CreateChild(Of CartList)()
     End Function
-    
-    Friend Shared Function GetCartList(ByVal cartId As Integer) As CartList
-        Return DataPortal.FetchChild(Of CartList)(new CartCriteria(cartId))
-    End Function
-    
-    Friend Shared Function GetAll() As CartList
-        Return DataPortal.FetchChild(Of CartList)(new CartCriteria())
-    End Function
-    
-    Friend Shared Function GetByUniqueID(ByVal uniqueID As Integer) As CartList
+
+    Friend Shared Function GetByCartId(ByVal cartId As System.Int32) As CartList 
         Dim criteria As New CartCriteria()
-        criteria.UniqueID = uniqueID
-        
+		criteria.CartId = cartId
+
         Return DataPortal.FetchChild(Of CartList)(criteria)
     End Function
-    
+
+    Friend Shared Function GetByUniqueID(ByVal uniqueID As System.Int32) As CartList 
+        Dim criteria As New CartCriteria()
+		criteria.UniqueID = uniqueID
+
+        Return DataPortal.FetchChild(Of CartList)(criteria)
+    End Function
+
+    Friend Shared Function GetByIsShoppingCart(ByVal isShoppingCart As System.Boolean) As CartList 
+        Dim criteria As New CartCriteria()
+		criteria.IsShoppingCart = isShoppingCart
+
+        Return DataPortal.FetchChild(Of CartList)(criteria)
+    End Function
+
+    Friend Shared Function GetAll() As CartList
+        Return DataPortal.FetchChild(Of CartList)(New CartCriteria())
+    End Function
+
     #End Region
 
-    #Region "Business Methods"
-    
+    #Region "Properties"
+
     Protected Overrides Function AddNewCore() As Object
         Dim item As Cart = PetShop.Business.Cart.NewCart()
                 Me.Add(item)
                 Return item
     End Function
-    
+
     #End Region
-    
+
+    #Region "Exists Command"
+
+    Public Shared Function Exists(ByVal criteria As CartCriteria) As Boolean
+        Return PetShop.Business.Cart.Exists(criteria)
+    End Function
+
+    #End Region
     End Class

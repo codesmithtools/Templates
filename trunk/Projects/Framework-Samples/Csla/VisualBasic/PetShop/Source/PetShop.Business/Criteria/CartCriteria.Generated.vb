@@ -24,6 +24,7 @@ Imports Csla
 <Serializable()> _
 Public Partial Class CartCriteria
     Inherits CriteriaBase
+    Implements IGeneratedCriteria
 
     #Region "Private Read-Only Members"
     
@@ -37,7 +38,7 @@ Public Partial Class CartCriteria
         MyBase.New(GetType(Cart))
     End Sub
     
-    Public Sub New(ByVal cartId As Integer) 
+    Public Sub New(ByVal cartId As System.Int32) 
         MyBase.New(GetType(Cart))
         
         Me.CartId = cartId
@@ -50,30 +51,93 @@ Public Partial Class CartCriteria
     
     #Region "Read-Write"
     
-    Public Property UniqueID() As Integer
+    Public Property CartId() As System.Int32
         Get
-            Return GetValue(Of Integer)("UniqueID")
+            Return GetValue(Of System.Int32)("CartId")
+        End Get
+        Set
+            _bag("CartId") = value
+        End Set
+    End Property
+    
+    Public Property UniqueID() As System.Int32
+        Get
+            Return GetValue(Of System.Int32)("UniqueID")
         End Get
         Set
             _bag("UniqueID") = value
         End Set
     End Property
     
-    Public Property IsShoppingCart() As Boolean
+    Public Property ItemId() As System.String
         Get
-            Return GetValue(Of Boolean)("IsShoppingCart")
+            Return GetValue(Of System.String)("ItemId")
+        End Get
+        Set
+            _bag("ItemId") = value
+        End Set
+    End Property
+    
+    Public Property Name() As System.String
+        Get
+            Return GetValue(Of System.String)("Name")
+        End Get
+        Set
+            _bag("Name") = value
+        End Set
+    End Property
+    
+    Public Property Type() As System.String
+        Get
+            Return GetValue(Of System.String)("Type")
+        End Get
+        Set
+            _bag("Type") = value
+        End Set
+    End Property
+    
+    Public Property Price() As System.Decimal
+        Get
+            Return GetValue(Of System.Decimal)("Price")
+        End Get
+        Set
+            _bag("Price") = value
+        End Set
+    End Property
+    
+    Public Property CategoryId() As System.String
+        Get
+            Return GetValue(Of System.String)("CategoryId")
+        End Get
+        Set
+            _bag("CategoryId") = value
+        End Set
+    End Property
+    
+    Public Property ProductId() As System.String
+        Get
+            Return GetValue(Of System.String)("ProductId")
+        End Get
+        Set
+            _bag("ProductId") = value
+        End Set
+    End Property
+    
+    Public Property IsShoppingCart() As System.Boolean
+        Get
+            Return GetValue(Of System.Boolean)("IsShoppingCart")
         End Get
         Set
             _bag("IsShoppingCart") = value
         End Set
     End Property
     
-    Public Property CartId() As Integer
+    Public Property Quantity() As System.Int32
         Get
-            Return GetValue(Of Integer)("CartId")
+            Return GetValue(Of System.Int32)("Quantity")
         End Get
         Set
-            _bag("CartId") = value
+            _bag("Quantity") = value
         End Set
     End Property
 
@@ -84,9 +148,18 @@ Public Partial Class CartCriteria
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
+    Public ReadOnly Property StateBag() As Dictionary(Of String, Object) Implements IGeneratedCriteria.StateBag
         Get
             Return _bag
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Returns a list of all the modified properties and values.
+    ''' </summary>
+    Public ReadOnly Property TableName() As String Implements IGeneratedCriteria.TableName
+        Get
+            Return "[dbo].Cart"
         End Get
     End Property
 

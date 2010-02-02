@@ -64,7 +64,7 @@ Partial Public Class CheckOut
             Dim _itemsOnBackOrder As Integer = 0
             'Decrement and check the Inventory.
             For Each cart As Cart In profile.ShoppingCart
-                Dim inventory As Inventory = inventory.GetInventory(cart.ItemId)
+                Dim inventory As Inventory = inventory.GetByItemId(cart.ItemId)
 
                 If cart.Quantity > inventory.Qty Then
                     _itemsOnBackOrder += cart.Quantity - inventory.Qty

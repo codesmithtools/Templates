@@ -24,14 +24,13 @@ Public Partial Class Item
 
     <RunLocal()> _
     Protected Overrides Sub DataPortal_Create()
-        'MyBase.DataPortal_Create()
-
+        LoadProperty(_productIdProperty, "BN")
         ValidationRules.CheckRules()
     End Sub
-    
+
     <Transactional(TransactionalTypes.TransactionScope)> _
     Private Shadows Sub DataPortal_Fetch(ByVal criteria As ItemCriteria)
-        Dim commandText As String = String.Format("SELECT [ItemId], [ListPrice], [UnitCost], [Status], [Name], [Image], [ProductId], [Supplier] FROM [dbo].[Item] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT [ItemId], [ProductId], [ListPrice], [UnitCost], [Supplier], [Status], [Name], [Image] FROM [dbo].[Item] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -46,36 +45,26 @@ Public Partial Class Item
             End Using
         End Using
     End Sub
-    
+
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Insert()
-        Const commandText As String = "INSERT INTO [dbo].[Item] ([ItemId], [ListPrice], [UnitCost], [Status], [Name], [Image], [ProductId], [Supplier]) VALUES (@p_ItemId, @p_ListPrice, @p_UnitCost, @p_Status, @p_Name, @p_Image, @p_ProductId, @p_Supplier)"
+        Const commandText As String = "INSERT INTO [dbo].[Item] ([ItemId], [ProductId], [ListPrice], [UnitCost], [Supplier], [Status], [Name], [Image]) VALUES (@p_ItemId, @p_ProductId, @p_ListPrice, @p_UnitCost, @p_Supplier, @p_Status, @p_Name, @p_Image)"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "ItemInsert")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_ItemId", ItemId)
-						command.Parameters.AddWithValue("@p_ListPrice", ListPrice)
-						command.Parameters.AddWithValue("@p_UnitCost", UnitCost)
-						command.Parameters.AddWithValue("@p_Status", Status)
-						command.Parameters.AddWithValue("@p_Name", Name)
-						command.Parameters.AddWithValue("@p_Image", Image)
-					command.Parameters.AddWithValue("@p_ProductId", ProductId)
-					command.Parameters.AddWithValue("@p_Supplier", Supplier)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_ItemId", ItemId)
+				command.Parameters.AddWithValue("@p_ProductId", ProductId)
+				command.Parameters.AddWithValue("@p_ListPrice", ListPrice)
+				command.Parameters.AddWithValue("@p_UnitCost", UnitCost)
+				command.Parameters.AddWithValue("@p_Supplier", Supplier)
+				command.Parameters.AddWithValue("@p_Status", Status)
+				command.Parameters.AddWithValue("@p_Name", Name)
+				command.Parameters.AddWithValue("@p_Image", Image)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            If reader.Read() Then
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
 
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("ItemInsert")
-                        Throw
-                    End Try
+                    End If
                 End Using
             End Using
         End Using
@@ -85,34 +74,24 @@ Public Partial Class Item
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Update()
-        Const commandText As String = "UPDATE [dbo].[Item]  SET [ListPrice] = @p_ListPrice, [UnitCost] = @p_UnitCost, [Status] = @p_Status, [Name] = @p_Name, [Image] = @p_Image, [ProductId] = @p_productId, [Supplier] = @p_supplier WHERE [ItemId] = @p_ItemId"
+        Const commandText As String = "UPDATE [dbo].[Item]  SET [ItemId] = @p_ItemId, [ProductId] = @p_ProductId, [ListPrice] = @p_ListPrice, [UnitCost] = @p_UnitCost, [Supplier] = @p_Supplier, [Status] = @p_Status, [Name] = @p_Name, [Image] = @p_Image WHERE [ItemId] = @p_ItemId"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "ItemUpdate")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_ItemId", ItemId)
-						command.Parameters.AddWithValue("@p_ListPrice", ListPrice)
-						command.Parameters.AddWithValue("@p_UnitCost", UnitCost)
-						command.Parameters.AddWithValue("@p_Status", Status)
-						command.Parameters.AddWithValue("@p_Name", Name)
-						command.Parameters.AddWithValue("@p_Image", Image)
-					command.Parameters.AddWithValue("@p_ProductId", ProductId)
-					command.Parameters.AddWithValue("@p_Supplier", Supplier)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_ItemId", ItemId)
+				command.Parameters.AddWithValue("@p_ProductId", ProductId)
+				command.Parameters.AddWithValue("@p_ListPrice", ListPrice)
+				command.Parameters.AddWithValue("@p_UnitCost", UnitCost)
+				command.Parameters.AddWithValue("@p_Supplier", Supplier)
+				command.Parameters.AddWithValue("@p_Status", Status)
+				command.Parameters.AddWithValue("@p_Name", Name)
+				command.Parameters.AddWithValue("@p_Image", Image)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("ItemUpdate")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    If reader.RecordsAffected = 0 Then
+                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
                 End Using
             End Using
         End Using
@@ -122,33 +101,22 @@ Public Partial Class Item
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_DeleteSelf()
-        DataPortal_Delete(new ItemCriteria(ItemId))
+        DataPortal_Delete(New ItemCriteria(ItemId))
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Sub DataPortal_Delete(ByVal criteria As ItemCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As ItemCriteria)
         Dim commandText As String = String.Format("DELETE FROM [dbo].[Item] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "ItemDelete")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("ItemDelete")
-                        Throw
-                    End Try
-                End Using
+				'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+				Dim result As Integer = command.ExecuteNonQuery()
+				If (result = 0) Then
+					throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+				End If
             End Using
         End Using
     End Sub
@@ -163,9 +131,9 @@ Public Partial Class Item
         ' omit this override if you have no defaults to set
         'MyBase.Child_Create()
     End Sub
-    
+
     Private Sub Child_Fetch(ByVal criteria As ItemCriteria)
-        Dim commandText As String = String.Format("SELECT [ItemId], [ListPrice], [UnitCost], [Status], [Name], [Image], [ProductId], [Supplier] FROM [dbo].[Item] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT [ItemId], [ProductId], [ListPrice], [UnitCost], [Supplier], [Status], [Name], [Image] FROM [dbo].[Item] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -183,89 +151,69 @@ Public Partial Class Item
         MarkAsChild()
     End Sub
 
-    Private Sub Child_Insert()
-        Const commandText As String = "INSERT INTO [dbo].[Item] ([ItemId], [ListPrice], [UnitCost], [Status], [Name], [Image], [ProductId], [Supplier]) VALUES (@p_ItemId, @p_ListPrice, @p_UnitCost, @p_Status, @p_Name, @p_Image, @p_ProductId, @p_Supplier)"
+    Private Sub Child_Insert(ByVal product As Product, ByVal supplier As Supplier)
+        Const commandText As String = "INSERT INTO [dbo].[Item] ([ItemId], [ProductId], [ListPrice], [UnitCost], [Supplier], [Status], [Name], [Image]) VALUES (@p_ItemId, @p_ProductId, @p_ListPrice, @p_UnitCost, @p_Supplier, @p_Status, @p_Name, @p_Image)"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "ItemInsert")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_ItemId", ItemId)
-						command.Parameters.AddWithValue("@p_ListPrice", ListPrice)
-						command.Parameters.AddWithValue("@p_UnitCost", UnitCost)
-						command.Parameters.AddWithValue("@p_Status", Status)
-						command.Parameters.AddWithValue("@p_Name", Name)
-						command.Parameters.AddWithValue("@p_Image", Image)
-					command.Parameters.AddWithValue("@p_ProductId", ProductId)
-					command.Parameters.AddWithValue("@p_Supplier", Supplier)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_ItemId", ItemId)
+				command.Parameters.AddWithValue("@p_ProductId", product.ProductId)
+				command.Parameters.AddWithValue("@p_ListPrice", ListPrice)
+				command.Parameters.AddWithValue("@p_UnitCost", UnitCost)
+				command.Parameters.AddWithValue("@p_Supplier", supplier.SuppId)
+				command.Parameters.AddWithValue("@p_Status", Status)
+				command.Parameters.AddWithValue("@p_Name", Name)
+				command.Parameters.AddWithValue("@p_Image", Image)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            If reader.Read() Then
-
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("ItemInsert")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
+                    End If
                 End Using
             End Using
         End Using
     End Sub
 
-    Private Sub Child_Update()
-        Const commandText As String = "UPDATE [dbo].[Item]  SET [ListPrice] = @p_ListPrice, [UnitCost] = @p_UnitCost, [Status] = @p_Status, [Name] = @p_Name, [Image] = @p_Image, [ProductId] = @p_productId, [Supplier] = @p_supplier WHERE [ItemId] = @p_ItemId"
+    Private Sub Child_Update(ByVal product As Product, ByVal supplier As Supplier)
+        Const commandText As String = "UPDATE [dbo].[Item]  SET [ItemId] = @p_ItemId, [ProductId] = @p_ProductId, [ListPrice] = @p_ListPrice, [UnitCost] = @p_UnitCost, [Supplier] = @p_Supplier, [Status] = @p_Status, [Name] = @p_Name, [Image] = @p_Image WHERE [ItemId] = @p_ItemId"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "ItemUpdate")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_ItemId", ItemId)
-						command.Parameters.AddWithValue("@p_ListPrice", ListPrice)
-						command.Parameters.AddWithValue("@p_UnitCost", UnitCost)
-						command.Parameters.AddWithValue("@p_Status", Status)
-						command.Parameters.AddWithValue("@p_Name", Name)
-						command.Parameters.AddWithValue("@p_Image", Image)
-					command.Parameters.AddWithValue("@p_ProductId", ProductId)
-					command.Parameters.AddWithValue("@p_Supplier", Supplier)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+				command.Parameters.AddWithValue("@p_ItemId", ItemId)
+				command.Parameters.AddWithValue("@p_ProductId", product.ProductId)
+				command.Parameters.AddWithValue("@p_ListPrice", ListPrice)
+				command.Parameters.AddWithValue("@p_UnitCost", UnitCost)
+				command.Parameters.AddWithValue("@p_Supplier", supplier.SuppId)
+				command.Parameters.AddWithValue("@p_Status", Status)
+				command.Parameters.AddWithValue("@p_Name", Name)
+				command.Parameters.AddWithValue("@p_Image", Image)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("ItemUpdate")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    If reader.RecordsAffected = 0 Then
+                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
                 End Using
             End Using
         End Using
     End Sub
 
     Private Sub Child_DeleteSelf()
-        DataPortal_Delete(new ItemCriteria(ItemId))
+        DataPortal_Delete(New ItemCriteria(ItemId))
     End Sub
 
     #End Region
 
     Private Sub Map(ByVal reader As SafeDataReader)
-        LoadProperty(_itemIdProperty, reader.GetString("ItemId"))
-        LoadProperty(_listPriceProperty, reader.GetDecimal("ListPrice"))
-        LoadProperty(_unitCostProperty, reader.GetDecimal("UnitCost"))
-        LoadProperty(_statusProperty, reader.GetString("Status"))
-        LoadProperty(_nameProperty, reader.GetString("Name"))
-        LoadProperty(_imageProperty, reader.GetString("Image"))
-
-        LoadProperty(_productIdProperty, reader.GetString("ProductId"))
-        LoadProperty(_suppIdProperty, reader.GetInt32("Supplier"))
+        Using(BypassPropertyChecks)
+            LoadProperty(_itemIdProperty, reader.GetString("ItemId"))
+            LoadProperty(_productIdProperty, reader.GetString("ProductId"))
+            LoadProperty(_listPriceProperty, reader.GetDecimal("ListPrice"))
+            LoadProperty(_unitCostProperty, reader.GetDecimal("UnitCost"))
+            LoadProperty(_supplierProperty, reader.GetInt32("Supplier"))
+            LoadProperty(_statusProperty, reader.GetString("Status"))
+            LoadProperty(_nameProperty, reader.GetString("Name"))
+            LoadProperty(_imageProperty, reader.GetString("Image"))
+        End Using
 
         MarkOld()
     End Sub

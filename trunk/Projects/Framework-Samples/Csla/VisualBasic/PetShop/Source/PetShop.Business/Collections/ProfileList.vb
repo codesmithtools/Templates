@@ -25,5 +25,16 @@ Public Partial Class ProfileList
 	End Sub
 	
 	#End Region
-    
+
+#Region "Custom Factory Methods"
+
+    Public Shared Function GetByUsername(ByVal username As System.String) As ProfileList
+        Dim criteria As New ProfileCriteria()
+        criteria.Username = username
+
+        Return DataPortal.Fetch(Of ProfileList)(criteria)
+    End Function
+
+#End Region
+
 End Class

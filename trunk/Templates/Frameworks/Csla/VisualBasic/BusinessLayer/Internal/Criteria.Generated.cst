@@ -36,7 +36,8 @@ Imports Csla
 
 <Serializable()> _
 Public Partial Class <%= BusinessClassName %>
-    Inherits CriteriaBase, IGeneratedCriteria
+    Inherits CriteriaBase
+    Implements IGeneratedCriteria
 
     #Region "Private Read-Only Members"
     
@@ -105,7 +106,7 @@ Public Partial Class <%= BusinessClassName %>
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
+    Public ReadOnly Property StateBag() As Dictionary(Of String, Object) Implements IGeneratedCriteria.StateBag
         Get
             Return _bag
         End Get
@@ -114,7 +115,7 @@ Public Partial Class <%= BusinessClassName %>
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property TableName() As String
+    Public ReadOnly Property TableName() As String Implements IGeneratedCriteria.TableName
         Get
             Return "[<%= Entity.Table.Owner%>].<%= Entity.Table.Name%>"
         End Get

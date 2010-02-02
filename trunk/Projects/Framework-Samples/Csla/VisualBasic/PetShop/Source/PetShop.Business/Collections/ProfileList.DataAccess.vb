@@ -19,9 +19,6 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class ProfileList
-    '<RunLocal()> _
-    'Protected Sub DataPortal_Create()
-    'End Sub
 
     Private Shadows Sub DataPortal_Fetch(ByVal criteria As ProfileCriteria)
         RaiseListChangedEvents = False
@@ -47,7 +44,4 @@ Public Partial Class ProfileList
         RaiseListChangedEvents = True
     End Sub
 
-    Protected Overrides Sub DataPortal_Update()
-        Child_Update()
-    End Sub
 End Class

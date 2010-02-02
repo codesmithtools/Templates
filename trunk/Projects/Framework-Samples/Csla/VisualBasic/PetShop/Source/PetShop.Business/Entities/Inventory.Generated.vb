@@ -27,64 +27,82 @@ Public Partial Class Inventory
         ' require use of factory method 
     End Sub
 
+    Private Sub New(ByVal itemId As System.String)
+        Using(BypassPropertyChecks)
+           LoadProperty(_itemIdProperty, itemId)
+        End Using
+    End Sub
+
     Friend Sub New(Byval reader As SafeDataReader)
         Map(reader)
     End Sub
 
     #End Region
-    
     #Region "Validation Rules"
-    
+
     Protected Overrides Sub AddBusinessRules()
-    
+
         If AddBusinessValidationRules() Then Exit Sub
-       
+
+        ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _itemIdProperty)
+        ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_itemIdProperty, 10))
     End Sub
-    
+
     #End Region
-    
-    #Region "Business Methods"
 
+    #Region "Properties"
 
     
-    Private Shared ReadOnly _itemIdProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Inventory) p.ItemId)
+    Private Shared ReadOnly _itemIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Inventory) p.ItemId)
 		<System.ComponentModel.DataObjectField(true, false)> _
-    Public Property ItemId() As String
+    Public Property ItemId() As System.String
         Get 
             Return GetProperty(_itemIdProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_itemIdProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _qtyProperty As PropertyInfo(Of Integer) = RegisterProperty(Of Integer)(Function(p As Inventory) p.Qty)
-    Public Property Qty() As Integer
+    Private Shared ReadOnly _qtyProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As Inventory) p.Qty)
+    Public Property Qty() As System.Int32
         Get 
             Return GetProperty(_qtyProperty)
         End Get
-        Set (ByVal value As Integer)
+        Set (ByVal value As System.Int32)
             SetProperty(_qtyProperty, value)
         End Set
     End Property
     
     #End Region
-    
+
+
     #Region "Factory Methods"
-    
+
     Public Shared Function NewInventory() As Inventory 
         Return DataPortal.Create(Of Inventory)()
     End Function
-    
-    Public Shared Function GetInventory(ByVal itemId As String) As Inventory         
-        Return DataPortal.Fetch(Of Inventory)(New InventoryCriteria(itemId))
+
+    Public Shared Function GetByItemId(ByVal itemId As System.String) As Inventory 
+        Dim criteria As New InventoryCriteria()
+		criteria.ItemId = itemId
+		
+        Return DataPortal.Fetch(Of Inventory)(criteria)
     End Function
 
-    Public Shared Sub DeleteInventory(ByVal itemId As String)
+    Public Shared Sub DeleteInventory(ByVal itemId As System.String)
         DataPortal.Delete(New InventoryCriteria(itemId))
     End Sub
 
     #End Region
-    
+
+    #Region "Exists Command"
+
+    Public Shared Function Exists(ByVal criteria As InventoryCriteria) As Boolean
+        Return ExistsCommand.Execute(criteria)
+    End Function
+
+    #End Region
+
 End Class

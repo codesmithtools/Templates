@@ -24,6 +24,7 @@ Imports Csla
 <Serializable()> _
 Public Partial Class OrderStatusCriteria
     Inherits CriteriaBase
+    Implements IGeneratedCriteria
 
     #Region "Private Read-Only Members"
     
@@ -37,7 +38,7 @@ Public Partial Class OrderStatusCriteria
         MyBase.New(GetType(OrderStatus))
     End Sub
     
-    Public Sub New(ByVal orderId As Integer, ByVal lineNum As Integer) 
+    Public Sub New(ByVal orderId As System.Int32, ByVal lineNum As System.Int32) 
         MyBase.New(GetType(OrderStatus))
         
         Me.OrderId = orderId
@@ -51,21 +52,39 @@ Public Partial Class OrderStatusCriteria
     
     #Region "Read-Write"
     
-    Public Property OrderId() As Integer
+    Public Property OrderId() As System.Int32
         Get
-            Return GetValue(Of Integer)("OrderId")
+            Return GetValue(Of System.Int32)("OrderId")
         End Get
         Set
             _bag("OrderId") = value
         End Set
     End Property
     
-    Public Property LineNum() As Integer
+    Public Property LineNum() As System.Int32
         Get
-            Return GetValue(Of Integer)("LineNum")
+            Return GetValue(Of System.Int32)("LineNum")
         End Get
         Set
             _bag("LineNum") = value
+        End Set
+    End Property
+    
+    Public Property Timestamp() As System.DateTime
+        Get
+            Return GetValue(Of System.DateTime)("Timestamp")
+        End Get
+        Set
+            _bag("Timestamp") = value
+        End Set
+    End Property
+    
+    Public Property Status() As System.String
+        Get
+            Return GetValue(Of System.String)("Status")
+        End Get
+        Set
+            _bag("Status") = value
         End Set
     End Property
 
@@ -76,9 +95,18 @@ Public Partial Class OrderStatusCriteria
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
+    Public ReadOnly Property StateBag() As Dictionary(Of String, Object) Implements IGeneratedCriteria.StateBag
         Get
             Return _bag
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Returns a list of all the modified properties and values.
+    ''' </summary>
+    Public ReadOnly Property TableName() As String Implements IGeneratedCriteria.TableName
+        Get
+            Return "[dbo].OrderStatus"
         End Get
     End Property
 

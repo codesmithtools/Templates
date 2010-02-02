@@ -19,9 +19,6 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class OrderStatusList
-    '<RunLocal()> _
-    'Protected Sub DataPortal_Create()
-    'End Sub
 
     Private Shadows Sub Child_Fetch(ByVal criteria As OrderStatusCriteria)
         RaiseListChangedEvents = False
@@ -47,7 +44,4 @@ Public Partial Class OrderStatusList
         RaiseListChangedEvents = True
     End Sub
 
-    Protected Overrides Sub DataPortal_Update()
-        Child_Update()
-    End Sub
 End Class

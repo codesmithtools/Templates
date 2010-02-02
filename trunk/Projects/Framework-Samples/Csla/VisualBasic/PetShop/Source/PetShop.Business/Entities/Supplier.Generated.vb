@@ -27,18 +27,23 @@ Public Partial Class Supplier
         ' require use of factory method 
     End Sub
 
+    Private Sub New(ByVal suppId As System.Int32)
+        Using(BypassPropertyChecks)
+           LoadProperty(_suppIdProperty, suppId)
+        End Using
+    End Sub
+
     Friend Sub New(Byval reader As SafeDataReader)
         Map(reader)
     End Sub
 
     #End Region
-    
     #Region "Validation Rules"
-    
+
     Protected Overrides Sub AddBusinessRules()
-    
+
         If AddBusinessValidationRules() Then Exit Sub
-       
+
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_nameProperty, 80))
         ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _statusProperty)
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_statusProperty, 2))
@@ -49,120 +54,123 @@ Public Partial Class Supplier
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_zipProperty, 5))
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_phoneProperty, 40))
     End Sub
-    
+
     #End Region
-    
-    #Region "Business Methods"
 
+    #Region "Properties"
 
     
-    Private Shared ReadOnly _suppIdProperty As PropertyInfo(Of Integer) = RegisterProperty(Of Integer)(Function(p As Supplier) p.SuppId)
+    Private Shared ReadOnly _suppIdProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As Supplier) p.SuppId)
 		<System.ComponentModel.DataObjectField(true, false)> _
-    Public Property SuppId() As Integer
+    Public Property SuppId() As System.Int32
         Get 
             Return GetProperty(_suppIdProperty)
         End Get
-        Set (ByVal value As Integer)
+        Set (ByVal value As System.Int32)
             SetProperty(_suppIdProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _nameProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Supplier) p.Name)
-    Public Property Name() As String
+    Private Shared ReadOnly _nameProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.Name)
+    Public Property Name() As System.String
         Get 
             Return GetProperty(_nameProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_nameProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _statusProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Supplier) p.Status)
-    Public Property Status() As String
+    Private Shared ReadOnly _statusProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.Status)
+    Public Property Status() As System.String
         Get 
             Return GetProperty(_statusProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_statusProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _addr1Property As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Supplier) p.Addr1)
-    Public Property Addr1() As String
+    Private Shared ReadOnly _addr1Property As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.Addr1)
+    Public Property Addr1() As System.String
         Get 
             Return GetProperty(_addr1Property)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_addr1Property, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _addr2Property As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Supplier) p.Addr2)
-    Public Property Addr2() As String
+    Private Shared ReadOnly _addr2Property As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.Addr2)
+    Public Property Addr2() As System.String
         Get 
             Return GetProperty(_addr2Property)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_addr2Property, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _cityProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Supplier) p.City)
-    Public Property City() As String
+    Private Shared ReadOnly _cityProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.City)
+    Public Property City() As System.String
         Get 
             Return GetProperty(_cityProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_cityProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _stateProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Supplier) p.State)
-    Public Property State() As String
+    Private Shared ReadOnly _stateProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.State)
+    Public Property State() As System.String
         Get 
             Return GetProperty(_stateProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_stateProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _zipProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Supplier) p.Zip)
-    Public Property Zip() As String
+    Private Shared ReadOnly _zipProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.Zip)
+    Public Property Zip() As System.String
         Get 
             Return GetProperty(_zipProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_zipProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _phoneProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Supplier) p.Phone)
-    Public Property Phone() As String
+    Private Shared ReadOnly _phoneProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Supplier) p.Phone)
+    Public Property Phone() As System.String
         Get 
             Return GetProperty(_phoneProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_phoneProperty, value)
         End Set
     End Property
     
-    Private Shared ReadOnly _itemsProperty As PropertyInfo(Of ItemList) = RegisterProperty(Of ItemList)(Function(p As Supplier) p.Items, Csla.RelationshipTypes.LazyLoad)
-    Public ReadOnly Property Items() As ItemList 
+    'OneToMany
+    Private Shared ReadOnly _itemsProperty As PropertyInfo(Of ItemList) = RegisterProperty(Of ItemList)(Function(p As Supplier) p.Items, Csla.RelationshipTypes.Child)
+Public ReadOnly Property Items() As ItemList 
         Get
             If Not (FieldManager.FieldExists(_itemsProperty)) Then
-                If (Me.IsNew) Then
-                    LoadProperty(_itemsProperty, ItemList.NewList())
+                Dim criteria As New PetShop.Business.ItemCriteria()
+                criteria.Supplier = SuppId
+                
+                If (Me.IsNew Or Not PetShop.Business.ItemList.Exists(criteria)) Then
+                    LoadProperty(_itemsProperty, PetShop.Business.ItemList.NewList())
                 Else
-                    LoadProperty(_itemsProperty, ItemList.GetBySupplier(SuppId))
+                    LoadProperty(_itemsProperty, PetShop.Business.ItemList.GetBySupplier(SuppId))
                 End If
             End If
             
@@ -171,21 +179,33 @@ Public Partial Class Supplier
     End Property
     
     #End Region
-    
+
+
     #Region "Factory Methods"
-    
+
     Public Shared Function NewSupplier() As Supplier 
         Return DataPortal.Create(Of Supplier)()
     End Function
-    
-    Public Shared Function GetSupplier(ByVal suppId As Integer) As Supplier         
-        Return DataPortal.Fetch(Of Supplier)(New SupplierCriteria(suppId))
+
+    Public Shared Function GetBySuppId(ByVal suppId As System.Int32) As Supplier 
+        Dim criteria As New SupplierCriteria()
+		criteria.SuppId = suppId
+		
+        Return DataPortal.Fetch(Of Supplier)(criteria)
     End Function
 
-    Public Shared Sub DeleteSupplier(ByVal suppId As Integer)
+    Public Shared Sub DeleteSupplier(ByVal suppId As System.Int32)
         DataPortal.Delete(New SupplierCriteria(suppId))
     End Sub
 
     #End Region
-    
+
+    #Region "Exists Command"
+
+    Public Shared Function Exists(ByVal criteria As SupplierCriteria) As Boolean
+        Return ExistsCommand.Execute(criteria)
+    End Function
+
+    #End Region
+
 End Class

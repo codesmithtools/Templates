@@ -24,6 +24,7 @@ Imports Csla
 <Serializable()> _
 Public Partial Class ProfileCriteria
     Inherits CriteriaBase
+    Implements IGeneratedCriteria
 
     #Region "Private Read-Only Members"
     
@@ -37,7 +38,7 @@ Public Partial Class ProfileCriteria
         MyBase.New(GetType(Profile))
     End Sub
     
-    Public Sub New(ByVal uniqueID As Integer) 
+    Public Sub New(ByVal uniqueID As System.Int32) 
         MyBase.New(GetType(Profile))
         
         Me.UniqueID = uniqueID
@@ -50,30 +51,57 @@ Public Partial Class ProfileCriteria
     
     #Region "Read-Write"
     
-    Public Property Username() As String
+    Public Property UniqueID() As System.Int32
         Get
-            Return GetValue(Of String)("Username")
+            Return GetValue(Of System.Int32)("UniqueID")
+        End Get
+        Set
+            _bag("UniqueID") = value
+        End Set
+    End Property
+    
+    Public Property Username() As System.String
+        Get
+            Return GetValue(Of System.String)("Username")
         End Get
         Set
             _bag("Username") = value
         End Set
     End Property
     
-    Public Property ApplicationName() As String
+    Public Property ApplicationName() As System.String
         Get
-            Return GetValue(Of String)("ApplicationName")
+            Return GetValue(Of System.String)("ApplicationName")
         End Get
         Set
             _bag("ApplicationName") = value
         End Set
     End Property
     
-    Public Property UniqueID() As Integer
+    Public Property IsAnonymous() As System.Nullable(Of System.Boolean)
         Get
-            Return GetValue(Of Integer)("UniqueID")
+            Return GetValue(Of System.Nullable(Of System.Boolean))("IsAnonymous")
         End Get
         Set
-            _bag("UniqueID") = value
+            _bag("IsAnonymous") = value
+        End Set
+    End Property
+    
+    Public Property LastActivityDate() As System.Nullable(Of System.DateTime)
+        Get
+            Return GetValue(Of System.Nullable(Of System.DateTime))("LastActivityDate")
+        End Get
+        Set
+            _bag("LastActivityDate") = value
+        End Set
+    End Property
+    
+    Public Property LastUpdatedDate() As System.Nullable(Of System.DateTime)
+        Get
+            Return GetValue(Of System.Nullable(Of System.DateTime))("LastUpdatedDate")
+        End Get
+        Set
+            _bag("LastUpdatedDate") = value
         End Set
     End Property
 
@@ -84,9 +112,18 @@ Public Partial Class ProfileCriteria
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
+    Public ReadOnly Property StateBag() As Dictionary(Of String, Object) Implements IGeneratedCriteria.StateBag
         Get
             Return _bag
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Returns a list of all the modified properties and values.
+    ''' </summary>
+    Public ReadOnly Property TableName() As String Implements IGeneratedCriteria.TableName
+        Get
+            Return "[dbo].Profiles"
         End Get
     End Property
 

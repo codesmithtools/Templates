@@ -20,47 +20,58 @@ Imports Csla.Data
 <Serializable()> _
 Public Partial Class OrderStatusList 
     Inherits BusinessListBase(Of OrderStatusList, OrderStatus)
-    
+
     #Region "Contructor(s)"
-    
+
     Private Sub New()
         AllowNew = true
         MarkAsChild()
     End Sub
-    
+
     #End Region
-    
+
     #Region "Factory Methods" 
-    
+
     Friend Shared Function NewList() As OrderStatusList
         Return DataPortal.CreateChild(Of OrderStatusList)()
     End Function
-    
-    Friend Shared Function GetOrderStatusList(ByVal orderId As Integer, ByVal lineNum As Integer) As OrderStatusList
-        Return DataPortal.FetchChild(Of OrderStatusList)(new OrderStatusCriteria(orderId, lineNum))
-    End Function
-    
-    Friend Shared Function GetAll() As OrderStatusList
-        Return DataPortal.FetchChild(Of OrderStatusList)(new OrderStatusCriteria())
-    End Function
-    
-    Friend Shared Function GetByOrderId(ByVal orderId As Integer) As OrderStatusList
+
+    Friend Shared Function GetByOrderIdLineNum(ByVal orderId As System.Int32, ByVal lineNum As System.Int32) As OrderStatusList 
         Dim criteria As New OrderStatusCriteria()
-        criteria.OrderId = orderId
-        
+		criteria.OrderId = orderId
+		criteria.LineNum = lineNum
+
         Return DataPortal.FetchChild(Of OrderStatusList)(criteria)
     End Function
-    
+
+    Friend Shared Function GetByOrderId(ByVal orderId As System.Int32) As OrderStatusList 
+        Dim criteria As New OrderStatusCriteria()
+		criteria.OrderId = orderId
+
+        Return DataPortal.FetchChild(Of OrderStatusList)(criteria)
+    End Function
+
+    Friend Shared Function GetAll() As OrderStatusList
+        Return DataPortal.FetchChild(Of OrderStatusList)(New OrderStatusCriteria())
+    End Function
+
     #End Region
 
-    #Region "Business Methods"
-    
+    #Region "Properties"
+
     Protected Overrides Function AddNewCore() As Object
         Dim item As OrderStatus = PetShop.Business.OrderStatus.NewOrderStatus()
                 Me.Add(item)
                 Return item
     End Function
-    
+
     #End Region
-    
+
+    #Region "Exists Command"
+
+    Public Shared Function Exists(ByVal criteria As OrderStatusCriteria) As Boolean
+        Return PetShop.Business.OrderStatus.Exists(criteria)
+    End Function
+
+    #End Region
     End Class

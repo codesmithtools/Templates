@@ -22,8 +22,6 @@ Imports Csla.Validation
 Public Partial Class Category
     <RunLocal()> _
     Protected Shadows Sub DataPortal_Create()
-        'MyBase.DataPortal_Create()
-
         ValidationRules.CheckRules()
     End Sub
 
@@ -43,40 +41,21 @@ Public Partial Class Category
             End Using
         End Using
     End Sub
-    
-    Private Sub Map(ByVal reader As SafeDataReader)
-        LoadProperty(_categoryIdProperty, reader.GetString("CategoryId"))
-        LoadProperty(_nameProperty, reader.GetString("Name"))
-        LoadProperty(_descnProperty, reader.GetString("Descn"))
-
-
-        MarkOld()
-    End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Insert()
         Const commandText As String = "INSERT INTO [dbo].[Category] ([CategoryId], [Name], [Descn]) VALUES (@p_CategoryId, @p_Name, @p_Descn)"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "CategoryInsert")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_CategoryId", CategoryId)
-						command.Parameters.AddWithValue("@p_Name", Name)
-						command.Parameters.AddWithValue("@p_Descn", Descn)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_CategoryId", CategoryId)
+				command.Parameters.AddWithValue("@p_Name", Name)
+				command.Parameters.AddWithValue("@p_Descn", Descn)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            If reader.Read() Then
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
 
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("CategoryInsert")
-                        Throw
-                    End Try
+                    End If
                 End Using
             End Using
         End Using
@@ -86,29 +65,19 @@ Public Partial Class Category
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Update()
-        Const commandText As String = "UPDATE [dbo].[Category]  SET [Name] = @p_Name, [Descn] = @p_Descn WHERE [CategoryId] = @p_CategoryId"
+        Const commandText As String = "UPDATE [dbo].[Category]  SET [CategoryId] = @p_CategoryId, [Name] = @p_Name, [Descn] = @p_Descn WHERE [CategoryId] = @p_CategoryId"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "CategoryUpdate")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_CategoryId", CategoryId)
-						command.Parameters.AddWithValue("@p_Name", Name)
-						command.Parameters.AddWithValue("@p_Descn", Descn)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_CategoryId", CategoryId)
+				command.Parameters.AddWithValue("@p_Name", Name)
+				command.Parameters.AddWithValue("@p_Descn", Descn)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("CategoryUpdate")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    If reader.RecordsAffected = 0 Then
+                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
                 End Using
             End Using
         End Using
@@ -118,34 +87,33 @@ Public Partial Class Category
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_DeleteSelf()
-        DataPortal_Delete(new CategoryCriteria(CategoryId))
+        DataPortal_Delete(New CategoryCriteria(CategoryId))
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Sub DataPortal_Delete(ByVal criteria As CategoryCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As CategoryCriteria)
         Dim commandText As String = String.Format("DELETE FROM [dbo].[Category] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "CategoryDelete")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("CategoryDelete")
-                        Throw
-                    End Try
-                End Using
+				'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+				Dim result As Integer = command.ExecuteNonQuery()
+				If (result = 0) Then
+					throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+				End If
             End Using
         End Using
+    End Sub
+
+    Private Sub Map(ByVal reader As SafeDataReader)
+        Using(BypassPropertyChecks)
+            LoadProperty(_categoryIdProperty, reader.GetString("CategoryId"))
+            LoadProperty(_nameProperty, reader.GetString("Name"))
+            LoadProperty(_descnProperty, reader.GetString("Descn"))
+        End Using
+
+        MarkOld()
     End Sub
 End Class

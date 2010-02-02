@@ -19,15 +19,12 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class AccountList
-    '<RunLocal()> _
-    'Protected Sub DataPortal_Create()
-    'End Sub
 
     Private Shadows Sub Child_Fetch(ByVal criteria As AccountCriteria)
         RaiseListChangedEvents = False
 
         ' Fetch Child objects.
-        Dim commandText As String = String.Format("SELECT [AccountId], [Email], [FirstName], [LastName], [Address1], [Address2], [City], [State], [Zip], [Country], [Phone], [UniqueID] FROM [dbo].[Account] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT [AccountId], [UniqueID], [Email], [FirstName], [LastName], [Address1], [Address2], [City], [State], [Zip], [Country], [Phone] FROM [dbo].[Account] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -47,7 +44,4 @@ Public Partial Class AccountList
         RaiseListChangedEvents = True
     End Sub
 
-    Protected Overrides Sub DataPortal_Update()
-        Child_Update()
-    End Sub
 End Class

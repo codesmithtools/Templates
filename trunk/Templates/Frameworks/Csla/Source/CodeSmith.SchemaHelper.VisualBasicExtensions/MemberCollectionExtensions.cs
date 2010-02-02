@@ -8,6 +8,18 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class MemberCollectionExtensions
     {
+        public static string BuildObjectInitializer(this List<Member> members)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                parameters += string.Format("\r\n\t\tcriteria.{0} = {1}{2}", member.PropertyName, member.VariableName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
+            }
+
+            return parameters.TrimStart(new[] { '\r', '\n', '\t', ',', ' ' });
+        }
+
         public static string BuildParametersVariables(this List<Member> members)
         {
             return members.BuildParametersVariables(true);

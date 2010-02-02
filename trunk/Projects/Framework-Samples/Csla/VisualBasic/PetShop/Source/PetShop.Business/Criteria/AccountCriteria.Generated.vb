@@ -24,6 +24,7 @@ Imports Csla
 <Serializable()> _
 Public Partial Class AccountCriteria
     Inherits CriteriaBase
+    Implements IGeneratedCriteria
 
     #Region "Private Read-Only Members"
     
@@ -37,7 +38,7 @@ Public Partial Class AccountCriteria
         MyBase.New(GetType(Account))
     End Sub
     
-    Public Sub New(ByVal accountId As Integer) 
+    Public Sub New(ByVal accountId As System.Int32) 
         MyBase.New(GetType(Account))
         
         Me.AccountId = accountId
@@ -50,21 +51,111 @@ Public Partial Class AccountCriteria
     
     #Region "Read-Write"
     
-    Public Property UniqueID() As Integer
+    Public Property AccountId() As System.Int32
         Get
-            Return GetValue(Of Integer)("UniqueID")
+            Return GetValue(Of System.Int32)("AccountId")
+        End Get
+        Set
+            _bag("AccountId") = value
+        End Set
+    End Property
+    
+    Public Property UniqueID() As System.Int32
+        Get
+            Return GetValue(Of System.Int32)("UniqueID")
         End Get
         Set
             _bag("UniqueID") = value
         End Set
     End Property
     
-    Public Property AccountId() As Integer
+    Public Property Email() As System.String
         Get
-            Return GetValue(Of Integer)("AccountId")
+            Return GetValue(Of System.String)("Email")
         End Get
         Set
-            _bag("AccountId") = value
+            _bag("Email") = value
+        End Set
+    End Property
+    
+    Public Property FirstName() As System.String
+        Get
+            Return GetValue(Of System.String)("FirstName")
+        End Get
+        Set
+            _bag("FirstName") = value
+        End Set
+    End Property
+    
+    Public Property LastName() As System.String
+        Get
+            Return GetValue(Of System.String)("LastName")
+        End Get
+        Set
+            _bag("LastName") = value
+        End Set
+    End Property
+    
+    Public Property Address1() As System.String
+        Get
+            Return GetValue(Of System.String)("Address1")
+        End Get
+        Set
+            _bag("Address1") = value
+        End Set
+    End Property
+    
+    Public Property Address2() As System.String
+        Get
+            Return GetValue(Of System.String)("Address2")
+        End Get
+        Set
+            _bag("Address2") = value
+        End Set
+    End Property
+    
+    Public Property City() As System.String
+        Get
+            Return GetValue(Of System.String)("City")
+        End Get
+        Set
+            _bag("City") = value
+        End Set
+    End Property
+    
+    Public Property State() As System.String
+        Get
+            Return GetValue(Of System.String)("State")
+        End Get
+        Set
+            _bag("State") = value
+        End Set
+    End Property
+    
+    Public Property Zip() As System.String
+        Get
+            Return GetValue(Of System.String)("Zip")
+        End Get
+        Set
+            _bag("Zip") = value
+        End Set
+    End Property
+    
+    Public Property Country() As System.String
+        Get
+            Return GetValue(Of System.String)("Country")
+        End Get
+        Set
+            _bag("Country") = value
+        End Set
+    End Property
+    
+    Public Property Phone() As System.String
+        Get
+            Return GetValue(Of System.String)("Phone")
+        End Get
+        Set
+            _bag("Phone") = value
         End Set
     End Property
 
@@ -75,9 +166,18 @@ Public Partial Class AccountCriteria
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
+    Public ReadOnly Property StateBag() As Dictionary(Of String, Object) Implements IGeneratedCriteria.StateBag
         Get
             Return _bag
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Returns a list of all the modified properties and values.
+    ''' </summary>
+    Public ReadOnly Property TableName() As String Implements IGeneratedCriteria.TableName
+        Get
+            Return "[dbo].Account"
         End Get
     End Property
 

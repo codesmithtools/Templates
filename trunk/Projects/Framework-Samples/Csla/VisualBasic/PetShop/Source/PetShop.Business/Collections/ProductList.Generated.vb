@@ -19,7 +19,7 @@ Imports Csla
 Public Partial Class ProductList 
     Inherits EditableRootListBase(Of Product)
     
-    #Region "Business Methods"
+    #Region "Properties"
     
     Protected Overrides Function AddNewCore() As Object
         Dim item As Product = PetShop.Business.Product.NewProduct()
@@ -34,26 +34,60 @@ Public Partial Class ProductList
     Public Shared Function NewList() As ProductList
         Return DataPortal.Create(Of ProductList)()
     End Function
-    
-    Public Shared Function GetProductList(ByVal productId As String) As ProductList
-        Return DataPortal.Fetch(Of ProductList)(new ProductCriteria(productId))
-    End Function
-    
-    Public Shared Function GetAll() As ProductList
-        Return DataPortal.Fetch(Of ProductList)(new ProductCriteria())
-    End Function
-    
-    Public Shared Function GetByCategoryId(ByVal categoryId As String) As ProductList
+
+    Public Shared Function GetByProductId(ByVal productId As System.String) As ProductList 
         Dim criteria As New ProductCriteria()
-        criteria.CategoryId = categoryId
-        
+		criteria.ProductId = productId
+
         Return DataPortal.Fetch(Of ProductList)(criteria)
     End Function
-    
+
+    Public Shared Function GetByName(ByVal name As System.String) As ProductList 
+        Dim criteria As New ProductCriteria()
+		criteria.Name = name
+
+        Return DataPortal.Fetch(Of ProductList)(criteria)
+    End Function
+
+    Public Shared Function GetByCategoryId(ByVal categoryId As System.String) As ProductList 
+        Dim criteria As New ProductCriteria()
+		criteria.CategoryId = categoryId
+
+        Return DataPortal.Fetch(Of ProductList)(criteria)
+    End Function
+
+    Public Shared Function GetByCategoryIdName(ByVal categoryId As System.String, ByVal name As System.String) As ProductList 
+        Dim criteria As New ProductCriteria()
+		criteria.CategoryId = categoryId
+		criteria.Name = name
+
+        Return DataPortal.Fetch(Of ProductList)(criteria)
+    End Function
+
+    Public Shared Function GetByCategoryIdProductIdName(ByVal categoryId As System.String, ByVal productId As System.String, ByVal name As System.String) As ProductList 
+        Dim criteria As New ProductCriteria()
+		criteria.CategoryId = categoryId
+		criteria.ProductId = productId
+		criteria.Name = name
+
+        Return DataPortal.Fetch(Of ProductList)(criteria)
+    End Function
+
+    Public Shared Function GetAll() As ProductList
+        Return DataPortal.Fetch(Of ProductList)(New ProductCriteria())
+    End Function
+
     Private Sub New()
         AllowNew = true
     End Sub
-    
+
     #End Region
 
+    #Region "Exists Command"
+
+    Public Shared Function Exists(ByVal criteria As ProductCriteria) As Boolean
+        Return PetShop.Business.Product.Exists(criteria)
+    End Function
+
+    #End Region
 End Class

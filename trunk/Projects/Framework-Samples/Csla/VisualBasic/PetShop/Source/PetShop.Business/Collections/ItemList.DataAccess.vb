@@ -19,15 +19,12 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class ItemList
-    '<RunLocal()> _
-    'Protected Sub DataPortal_Create()
-    'End Sub
 
     Private Shadows Sub Child_Fetch(ByVal criteria As ItemCriteria)
         RaiseListChangedEvents = False
 
         ' Fetch Child objects.
-        Dim commandText As String = String.Format("SELECT [ItemId], [ListPrice], [UnitCost], [Status], [Name], [Image], [ProductId], [Supplier] FROM [dbo].[Item] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT [ItemId], [ProductId], [ListPrice], [UnitCost], [Supplier], [Status], [Name], [Image] FROM [dbo].[Item] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -47,7 +44,4 @@ Public Partial Class ItemList
         RaiseListChangedEvents = True
     End Sub
 
-    Protected Overrides Sub DataPortal_Update()
-        Child_Update()
-    End Sub
 End Class
