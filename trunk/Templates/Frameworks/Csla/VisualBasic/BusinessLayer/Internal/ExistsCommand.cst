@@ -80,8 +80,8 @@ Public Class ExistsCommand
     End Property
 
     Private Sub BeforeServer(ByVal criteria As IGeneratedCriteria)
-        Criteria = criteria
-        Result = False
+        Me.Criteria = criteria
+        Me.Result = False
     End Sub
 
     Private Sub AfterServer()

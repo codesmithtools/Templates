@@ -77,9 +77,9 @@ Public Overrides Sub Generate()
             Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
             Me.CopyPropertiesTo(sqlStoredProcedures)
             sqlStoredProcedures.SourceTable = entity.Table
+            sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
             
             sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
-            sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
         End If
     Next
 End Sub
