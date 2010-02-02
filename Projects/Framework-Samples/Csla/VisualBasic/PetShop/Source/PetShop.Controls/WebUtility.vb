@@ -63,7 +63,7 @@ Public Class WebUtility
     ''' <returns>Category name</returns>
     Public Shared Function GetCategoryName(ByVal categoryId As String) As String
         If Not enableCaching Then
-            Return Category.GetCategory(categoryId).Name
+            Return Category.GetByCategoryId(categoryId).Name
         End If
 
         Dim cacheKey As String = String.Format(CATEGORY_NAME_KEY, categoryId)
@@ -75,7 +75,7 @@ Public Class WebUtility
             Dim cacheDuration As Integer = Integer.Parse(ConfigurationManager.AppSettings("CategoryCacheDuration"))
 
             ' If the data is not in the cache then fetch the data from the business logic tier
-            data = Category.GetCategory(categoryId).Name
+            data = Category.GetByCategoryId(categoryId).Name
 
             ' Store the output in the data cache, and Add the necessary AggregateCacheDependency object
             HttpRuntime.Cache.Add(cacheKey, data, Nothing, DateTime.Now.AddHours(cacheDuration), Cache.NoSlidingExpiration, CacheItemPriority.High, _
@@ -92,7 +92,7 @@ Public Class WebUtility
     ''' <returns>Product name</returns>
     Public Shared Function GetProductName(ByVal productId As String) As String
         If Not enableCaching Then
-            Return Product.GetProduct(productId).Name
+            Return Product.GetByProductId(productId).Name
         End If
 
         Dim cacheKey As String = String.Format(PRODUCT_NAME_KEY, productId)
@@ -105,7 +105,7 @@ Public Class WebUtility
             Dim cacheDuration As Integer = Integer.Parse(ConfigurationManager.AppSettings("ProductCacheDuration"))
 
             ' If the data is not in the cache then fetch the data from the business logic tier
-            data = Product.GetProduct(productId).Name
+            data = Product.GetByProductId(productId).Name
 
             ' Store the output in the data cache, and Add the necessary AggregateCacheDependency object
             HttpRuntime.Cache.Add(cacheKey, data, Nothing, DateTime.Now.AddHours(cacheDuration), Cache.NoSlidingExpiration, CacheItemPriority.High, _

@@ -24,11 +24,9 @@ Public Partial Class Order
 
     <RunLocal()> _
     Protected Overrides Sub DataPortal_Create()
-        'MyBase.DataPortal_Create()
-
         ValidationRules.CheckRules()
     End Sub
-    
+
     <Transactional(TransactionalTypes.TransactionScope)> _
     Private Shadows Sub DataPortal_Fetch(ByVal criteria As OrderCriteria)
         Dim commandText As String = String.Format("SELECT [OrderId], [UserId], [OrderDate], [ShipAddr1], [ShipAddr2], [ShipCity], [ShipState], [ShipZip], [ShipCountry], [BillAddr1], [BillAddr2], [BillCity], [BillState], [BillZip], [BillCountry], [Courier], [TotalPrice], [BillToFirstName], [BillToLastName], [ShipToFirstName], [ShipToLastName], [AuthorizationNumber], [Locale] FROM [dbo].[Orders] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
@@ -46,51 +44,41 @@ Public Partial Class Order
             End Using
         End Using
     End Sub
-    
+
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Insert()
         Const commandText As String = "INSERT INTO [dbo].[Orders] ([UserId], [OrderDate], [ShipAddr1], [ShipAddr2], [ShipCity], [ShipState], [ShipZip], [ShipCountry], [BillAddr1], [BillAddr2], [BillCity], [BillState], [BillZip], [BillCountry], [Courier], [TotalPrice], [BillToFirstName], [BillToLastName], [ShipToFirstName], [ShipToLastName], [AuthorizationNumber], [Locale]) VALUES (@p_UserId, @p_OrderDate, @p_ShipAddr1, @p_ShipAddr2, @p_ShipCity, @p_ShipState, @p_ShipZip, @p_ShipCountry, @p_BillAddr1, @p_BillAddr2, @p_BillCity, @p_BillState, @p_BillZip, @p_BillCountry, @p_Courier, @p_TotalPrice, @p_BillToFirstName, @p_BillToLastName, @p_ShipToFirstName, @p_ShipToLastName, @p_AuthorizationNumber, @p_Locale); SELECT [OrderId] FROM [dbo].[Orders] WHERE OrderId = SCOPE_IDENTITY()"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "OrdersInsert")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_UserId", UserId)
-						command.Parameters.AddWithValue("@p_OrderDate", DirectCast(OrderDate.Date, DateTime))
-						command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1)
-						command.Parameters.AddWithValue("@p_ShipAddr2", ShipAddr2)
-						command.Parameters.AddWithValue("@p_ShipCity", ShipCity)
-						command.Parameters.AddWithValue("@p_ShipState", ShipState)
-						command.Parameters.AddWithValue("@p_ShipZip", ShipZip)
-						command.Parameters.AddWithValue("@p_ShipCountry", ShipCountry)
-						command.Parameters.AddWithValue("@p_BillAddr1", BillAddr1)
-						command.Parameters.AddWithValue("@p_BillAddr2", BillAddr2)
-						command.Parameters.AddWithValue("@p_BillCity", BillCity)
-						command.Parameters.AddWithValue("@p_BillState", BillState)
-						command.Parameters.AddWithValue("@p_BillZip", BillZip)
-						command.Parameters.AddWithValue("@p_BillCountry", BillCountry)
-						command.Parameters.AddWithValue("@p_Courier", Courier)
-						command.Parameters.AddWithValue("@p_TotalPrice", TotalPrice)
-						command.Parameters.AddWithValue("@p_BillToFirstName", BillToFirstName)
-						command.Parameters.AddWithValue("@p_BillToLastName", BillToLastName)
-						command.Parameters.AddWithValue("@p_ShipToFirstName", ShipToFirstName)
-						command.Parameters.AddWithValue("@p_ShipToLastName", ShipToLastName)
-						command.Parameters.AddWithValue("@p_AuthorizationNumber", AuthorizationNumber)
-						command.Parameters.AddWithValue("@p_Locale", Locale)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_UserId", UserId)
+				command.Parameters.AddWithValue("@p_OrderDate", OrderDate)
+				command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1)
+				command.Parameters.AddWithValue("@p_ShipAddr2", ShipAddr2)
+				command.Parameters.AddWithValue("@p_ShipCity", ShipCity)
+				command.Parameters.AddWithValue("@p_ShipState", ShipState)
+				command.Parameters.AddWithValue("@p_ShipZip", ShipZip)
+				command.Parameters.AddWithValue("@p_ShipCountry", ShipCountry)
+				command.Parameters.AddWithValue("@p_BillAddr1", BillAddr1)
+				command.Parameters.AddWithValue("@p_BillAddr2", BillAddr2)
+				command.Parameters.AddWithValue("@p_BillCity", BillCity)
+				command.Parameters.AddWithValue("@p_BillState", BillState)
+				command.Parameters.AddWithValue("@p_BillZip", BillZip)
+				command.Parameters.AddWithValue("@p_BillCountry", BillCountry)
+				command.Parameters.AddWithValue("@p_Courier", Courier)
+				command.Parameters.AddWithValue("@p_TotalPrice", TotalPrice)
+				command.Parameters.AddWithValue("@p_BillToFirstName", BillToFirstName)
+				command.Parameters.AddWithValue("@p_BillToLastName", BillToLastName)
+				command.Parameters.AddWithValue("@p_ShipToFirstName", ShipToFirstName)
+				command.Parameters.AddWithValue("@p_ShipToLastName", ShipToLastName)
+				command.Parameters.AddWithValue("@p_AuthorizationNumber", AuthorizationNumber)
+				command.Parameters.AddWithValue("@p_Locale", Locale)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            If reader.Read() Then
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
 
-                                LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("OrdersInsert")
-                        Throw
-                    End Try
+                        LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
+                    End If
                 End Using
             End Using
         End Using
@@ -103,46 +91,36 @@ Public Partial Class Order
         Const commandText As String = "UPDATE [dbo].[Orders]  SET [UserId] = @p_UserId, [OrderDate] = @p_OrderDate, [ShipAddr1] = @p_ShipAddr1, [ShipAddr2] = @p_ShipAddr2, [ShipCity] = @p_ShipCity, [ShipState] = @p_ShipState, [ShipZip] = @p_ShipZip, [ShipCountry] = @p_ShipCountry, [BillAddr1] = @p_BillAddr1, [BillAddr2] = @p_BillAddr2, [BillCity] = @p_BillCity, [BillState] = @p_BillState, [BillZip] = @p_BillZip, [BillCountry] = @p_BillCountry, [Courier] = @p_Courier, [TotalPrice] = @p_TotalPrice, [BillToFirstName] = @p_BillToFirstName, [BillToLastName] = @p_BillToLastName, [ShipToFirstName] = @p_ShipToFirstName, [ShipToLastName] = @p_ShipToLastName, [AuthorizationNumber] = @p_AuthorizationNumber, [Locale] = @p_Locale WHERE [OrderId] = @p_OrderId"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "OrdersUpdate")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_OrderId", OrderId)
-						command.Parameters.AddWithValue("@p_UserId", UserId)
-						command.Parameters.AddWithValue("@p_OrderDate", DirectCast(OrderDate.Date, DateTime))
-						command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1)
-						command.Parameters.AddWithValue("@p_ShipAddr2", ShipAddr2)
-						command.Parameters.AddWithValue("@p_ShipCity", ShipCity)
-						command.Parameters.AddWithValue("@p_ShipState", ShipState)
-						command.Parameters.AddWithValue("@p_ShipZip", ShipZip)
-						command.Parameters.AddWithValue("@p_ShipCountry", ShipCountry)
-						command.Parameters.AddWithValue("@p_BillAddr1", BillAddr1)
-						command.Parameters.AddWithValue("@p_BillAddr2", BillAddr2)
-						command.Parameters.AddWithValue("@p_BillCity", BillCity)
-						command.Parameters.AddWithValue("@p_BillState", BillState)
-						command.Parameters.AddWithValue("@p_BillZip", BillZip)
-						command.Parameters.AddWithValue("@p_BillCountry", BillCountry)
-						command.Parameters.AddWithValue("@p_Courier", Courier)
-						command.Parameters.AddWithValue("@p_TotalPrice", TotalPrice)
-						command.Parameters.AddWithValue("@p_BillToFirstName", BillToFirstName)
-						command.Parameters.AddWithValue("@p_BillToLastName", BillToLastName)
-						command.Parameters.AddWithValue("@p_ShipToFirstName", ShipToFirstName)
-						command.Parameters.AddWithValue("@p_ShipToLastName", ShipToLastName)
-						command.Parameters.AddWithValue("@p_AuthorizationNumber", AuthorizationNumber)
-						command.Parameters.AddWithValue("@p_Locale", Locale)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_OrderId", OrderId)
+				command.Parameters.AddWithValue("@p_UserId", UserId)
+				command.Parameters.AddWithValue("@p_OrderDate", OrderDate)
+				command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1)
+				command.Parameters.AddWithValue("@p_ShipAddr2", ShipAddr2)
+				command.Parameters.AddWithValue("@p_ShipCity", ShipCity)
+				command.Parameters.AddWithValue("@p_ShipState", ShipState)
+				command.Parameters.AddWithValue("@p_ShipZip", ShipZip)
+				command.Parameters.AddWithValue("@p_ShipCountry", ShipCountry)
+				command.Parameters.AddWithValue("@p_BillAddr1", BillAddr1)
+				command.Parameters.AddWithValue("@p_BillAddr2", BillAddr2)
+				command.Parameters.AddWithValue("@p_BillCity", BillCity)
+				command.Parameters.AddWithValue("@p_BillState", BillState)
+				command.Parameters.AddWithValue("@p_BillZip", BillZip)
+				command.Parameters.AddWithValue("@p_BillCountry", BillCountry)
+				command.Parameters.AddWithValue("@p_Courier", Courier)
+				command.Parameters.AddWithValue("@p_TotalPrice", TotalPrice)
+				command.Parameters.AddWithValue("@p_BillToFirstName", BillToFirstName)
+				command.Parameters.AddWithValue("@p_BillToLastName", BillToLastName)
+				command.Parameters.AddWithValue("@p_ShipToFirstName", ShipToFirstName)
+				command.Parameters.AddWithValue("@p_ShipToLastName", ShipToLastName)
+				command.Parameters.AddWithValue("@p_AuthorizationNumber", AuthorizationNumber)
+				command.Parameters.AddWithValue("@p_Locale", Locale)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("OrdersUpdate")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    If reader.RecordsAffected = 0 Then
+                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
                 End Using
             End Using
         End Using
@@ -152,33 +130,22 @@ Public Partial Class Order
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_DeleteSelf()
-        DataPortal_Delete(new OrderCriteria(OrderId))
+        DataPortal_Delete(New OrderCriteria(OrderId))
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Sub DataPortal_Delete(ByVal criteria As OrderCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As OrderCriteria)
         Dim commandText As String = String.Format("DELETE FROM [dbo].[Orders] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "OrdersDelete")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("OrdersDelete")
-                        Throw
-                    End Try
-                End Using
+				'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+				Dim result As Integer = command.ExecuteNonQuery()
+				If (result = 0) Then
+					throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+				End If
             End Using
         End Using
     End Sub
@@ -193,7 +160,7 @@ Public Partial Class Order
         ' omit this override if you have no defaults to set
         'MyBase.Child_Create()
     End Sub
-    
+
     Private Sub Child_Fetch(ByVal criteria As OrderCriteria)
         Dim commandText As String = String.Format("SELECT [OrderId], [UserId], [OrderDate], [ShipAddr1], [ShipAddr2], [ShipCity], [ShipState], [ShipZip], [ShipCountry], [BillAddr1], [BillAddr2], [BillCity], [BillState], [BillZip], [BillCountry], [Courier], [TotalPrice], [BillToFirstName], [BillToLastName], [ShipToFirstName], [ShipToLastName], [AuthorizationNumber], [Locale] FROM [dbo].[Orders] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
@@ -217,45 +184,34 @@ Public Partial Class Order
         Const commandText As String = "INSERT INTO [dbo].[Orders] ([UserId], [OrderDate], [ShipAddr1], [ShipAddr2], [ShipCity], [ShipState], [ShipZip], [ShipCountry], [BillAddr1], [BillAddr2], [BillCity], [BillState], [BillZip], [BillCountry], [Courier], [TotalPrice], [BillToFirstName], [BillToLastName], [ShipToFirstName], [ShipToLastName], [AuthorizationNumber], [Locale]) VALUES (@p_UserId, @p_OrderDate, @p_ShipAddr1, @p_ShipAddr2, @p_ShipCity, @p_ShipState, @p_ShipZip, @p_ShipCountry, @p_BillAddr1, @p_BillAddr2, @p_BillCity, @p_BillState, @p_BillZip, @p_BillCountry, @p_Courier, @p_TotalPrice, @p_BillToFirstName, @p_BillToLastName, @p_ShipToFirstName, @p_ShipToLastName, @p_AuthorizationNumber, @p_Locale); SELECT [OrderId] FROM [dbo].[Orders] WHERE OrderId = SCOPE_IDENTITY()"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "OrdersInsert")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_UserId", UserId)
-						command.Parameters.AddWithValue("@p_OrderDate", DirectCast(OrderDate.Date, DateTime))
-						command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1)
-						command.Parameters.AddWithValue("@p_ShipAddr2", ShipAddr2)
-						command.Parameters.AddWithValue("@p_ShipCity", ShipCity)
-						command.Parameters.AddWithValue("@p_ShipState", ShipState)
-						command.Parameters.AddWithValue("@p_ShipZip", ShipZip)
-						command.Parameters.AddWithValue("@p_ShipCountry", ShipCountry)
-						command.Parameters.AddWithValue("@p_BillAddr1", BillAddr1)
-						command.Parameters.AddWithValue("@p_BillAddr2", BillAddr2)
-						command.Parameters.AddWithValue("@p_BillCity", BillCity)
-						command.Parameters.AddWithValue("@p_BillState", BillState)
-						command.Parameters.AddWithValue("@p_BillZip", BillZip)
-						command.Parameters.AddWithValue("@p_BillCountry", BillCountry)
-						command.Parameters.AddWithValue("@p_Courier", Courier)
-						command.Parameters.AddWithValue("@p_TotalPrice", TotalPrice)
-						command.Parameters.AddWithValue("@p_BillToFirstName", BillToFirstName)
-						command.Parameters.AddWithValue("@p_BillToLastName", BillToLastName)
-						command.Parameters.AddWithValue("@p_ShipToFirstName", ShipToFirstName)
-						command.Parameters.AddWithValue("@p_ShipToLastName", ShipToLastName)
-						command.Parameters.AddWithValue("@p_AuthorizationNumber", AuthorizationNumber)
-						command.Parameters.AddWithValue("@p_Locale", Locale)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_UserId", UserId)
+				command.Parameters.AddWithValue("@p_OrderDate", OrderDate)
+				command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1)
+				command.Parameters.AddWithValue("@p_ShipAddr2", ShipAddr2)
+				command.Parameters.AddWithValue("@p_ShipCity", ShipCity)
+				command.Parameters.AddWithValue("@p_ShipState", ShipState)
+				command.Parameters.AddWithValue("@p_ShipZip", ShipZip)
+				command.Parameters.AddWithValue("@p_ShipCountry", ShipCountry)
+				command.Parameters.AddWithValue("@p_BillAddr1", BillAddr1)
+				command.Parameters.AddWithValue("@p_BillAddr2", BillAddr2)
+				command.Parameters.AddWithValue("@p_BillCity", BillCity)
+				command.Parameters.AddWithValue("@p_BillState", BillState)
+				command.Parameters.AddWithValue("@p_BillZip", BillZip)
+				command.Parameters.AddWithValue("@p_BillCountry", BillCountry)
+				command.Parameters.AddWithValue("@p_Courier", Courier)
+				command.Parameters.AddWithValue("@p_TotalPrice", TotalPrice)
+				command.Parameters.AddWithValue("@p_BillToFirstName", BillToFirstName)
+				command.Parameters.AddWithValue("@p_BillToLastName", BillToLastName)
+				command.Parameters.AddWithValue("@p_ShipToFirstName", ShipToFirstName)
+				command.Parameters.AddWithValue("@p_ShipToLastName", ShipToLastName)
+				command.Parameters.AddWithValue("@p_AuthorizationNumber", AuthorizationNumber)
+				command.Parameters.AddWithValue("@p_Locale", Locale)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            If reader.Read() Then
-
-                                LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("OrdersInsert")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
+                        LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
+                    End If
                 End Using
             End Using
         End Using
@@ -265,82 +221,73 @@ Public Partial Class Order
         Const commandText As String = "UPDATE [dbo].[Orders]  SET [UserId] = @p_UserId, [OrderDate] = @p_OrderDate, [ShipAddr1] = @p_ShipAddr1, [ShipAddr2] = @p_ShipAddr2, [ShipCity] = @p_ShipCity, [ShipState] = @p_ShipState, [ShipZip] = @p_ShipZip, [ShipCountry] = @p_ShipCountry, [BillAddr1] = @p_BillAddr1, [BillAddr2] = @p_BillAddr2, [BillCity] = @p_BillCity, [BillState] = @p_BillState, [BillZip] = @p_BillZip, [BillCountry] = @p_BillCountry, [Courier] = @p_Courier, [TotalPrice] = @p_TotalPrice, [BillToFirstName] = @p_BillToFirstName, [BillToLastName] = @p_BillToLastName, [ShipToFirstName] = @p_ShipToFirstName, [ShipToLastName] = @p_ShipToLastName, [AuthorizationNumber] = @p_AuthorizationNumber, [Locale] = @p_Locale WHERE [OrderId] = @p_OrderId"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "OrdersUpdate")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_OrderId", OrderId)
-						command.Parameters.AddWithValue("@p_UserId", UserId)
-						command.Parameters.AddWithValue("@p_OrderDate", DirectCast(OrderDate.Date, DateTime))
-						command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1)
-						command.Parameters.AddWithValue("@p_ShipAddr2", ShipAddr2)
-						command.Parameters.AddWithValue("@p_ShipCity", ShipCity)
-						command.Parameters.AddWithValue("@p_ShipState", ShipState)
-						command.Parameters.AddWithValue("@p_ShipZip", ShipZip)
-						command.Parameters.AddWithValue("@p_ShipCountry", ShipCountry)
-						command.Parameters.AddWithValue("@p_BillAddr1", BillAddr1)
-						command.Parameters.AddWithValue("@p_BillAddr2", BillAddr2)
-						command.Parameters.AddWithValue("@p_BillCity", BillCity)
-						command.Parameters.AddWithValue("@p_BillState", BillState)
-						command.Parameters.AddWithValue("@p_BillZip", BillZip)
-						command.Parameters.AddWithValue("@p_BillCountry", BillCountry)
-						command.Parameters.AddWithValue("@p_Courier", Courier)
-						command.Parameters.AddWithValue("@p_TotalPrice", TotalPrice)
-						command.Parameters.AddWithValue("@p_BillToFirstName", BillToFirstName)
-						command.Parameters.AddWithValue("@p_BillToLastName", BillToLastName)
-						command.Parameters.AddWithValue("@p_ShipToFirstName", ShipToFirstName)
-						command.Parameters.AddWithValue("@p_ShipToLastName", ShipToLastName)
-						command.Parameters.AddWithValue("@p_AuthorizationNumber", AuthorizationNumber)
-						command.Parameters.AddWithValue("@p_Locale", Locale)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+				command.Parameters.AddWithValue("@p_OrderId", OrderId)
+				command.Parameters.AddWithValue("@p_UserId", UserId)
+				command.Parameters.AddWithValue("@p_OrderDate", OrderDate)
+				command.Parameters.AddWithValue("@p_ShipAddr1", ShipAddr1)
+				command.Parameters.AddWithValue("@p_ShipAddr2", ShipAddr2)
+				command.Parameters.AddWithValue("@p_ShipCity", ShipCity)
+				command.Parameters.AddWithValue("@p_ShipState", ShipState)
+				command.Parameters.AddWithValue("@p_ShipZip", ShipZip)
+				command.Parameters.AddWithValue("@p_ShipCountry", ShipCountry)
+				command.Parameters.AddWithValue("@p_BillAddr1", BillAddr1)
+				command.Parameters.AddWithValue("@p_BillAddr2", BillAddr2)
+				command.Parameters.AddWithValue("@p_BillCity", BillCity)
+				command.Parameters.AddWithValue("@p_BillState", BillState)
+				command.Parameters.AddWithValue("@p_BillZip", BillZip)
+				command.Parameters.AddWithValue("@p_BillCountry", BillCountry)
+				command.Parameters.AddWithValue("@p_Courier", Courier)
+				command.Parameters.AddWithValue("@p_TotalPrice", TotalPrice)
+				command.Parameters.AddWithValue("@p_BillToFirstName", BillToFirstName)
+				command.Parameters.AddWithValue("@p_BillToLastName", BillToLastName)
+				command.Parameters.AddWithValue("@p_ShipToFirstName", ShipToFirstName)
+				command.Parameters.AddWithValue("@p_ShipToLastName", ShipToLastName)
+				command.Parameters.AddWithValue("@p_AuthorizationNumber", AuthorizationNumber)
+				command.Parameters.AddWithValue("@p_Locale", Locale)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("OrdersUpdate")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    If reader.RecordsAffected = 0 Then
+                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
                 End Using
             End Using
         End Using
     End Sub
 
     Private Sub Child_DeleteSelf()
-        DataPortal_Delete(new OrderCriteria(OrderId))
+        DataPortal_Delete(New OrderCriteria(OrderId))
     End Sub
 
     #End Region
 
     Private Sub Map(ByVal reader As SafeDataReader)
-        LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
-        LoadProperty(_userIdProperty, reader.GetString("UserId"))
-        LoadProperty(_orderDateProperty, reader.GetDateTime("OrderDate"))
-        LoadProperty(_shipAddr1Property, reader.GetString("ShipAddr1"))
-        LoadProperty(_shipAddr2Property, reader.GetString("ShipAddr2"))
-        LoadProperty(_shipCityProperty, reader.GetString("ShipCity"))
-        LoadProperty(_shipStateProperty, reader.GetString("ShipState"))
-        LoadProperty(_shipZipProperty, reader.GetString("ShipZip"))
-        LoadProperty(_shipCountryProperty, reader.GetString("ShipCountry"))
-        LoadProperty(_billAddr1Property, reader.GetString("BillAddr1"))
-        LoadProperty(_billAddr2Property, reader.GetString("BillAddr2"))
-        LoadProperty(_billCityProperty, reader.GetString("BillCity"))
-        LoadProperty(_billStateProperty, reader.GetString("BillState"))
-        LoadProperty(_billZipProperty, reader.GetString("BillZip"))
-        LoadProperty(_billCountryProperty, reader.GetString("BillCountry"))
-        LoadProperty(_courierProperty, reader.GetString("Courier"))
-        LoadProperty(_totalPriceProperty, reader.GetDecimal("TotalPrice"))
-        LoadProperty(_billToFirstNameProperty, reader.GetString("BillToFirstName"))
-        LoadProperty(_billToLastNameProperty, reader.GetString("BillToLastName"))
-        LoadProperty(_shipToFirstNameProperty, reader.GetString("ShipToFirstName"))
-        LoadProperty(_shipToLastNameProperty, reader.GetString("ShipToLastName"))
-        LoadProperty(_authorizationNumberProperty, reader.GetInt32("AuthorizationNumber"))
-        LoadProperty(_localeProperty, reader.GetString("Locale"))
-
+        Using(BypassPropertyChecks)
+            LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
+            LoadProperty(_userIdProperty, reader.GetString("UserId"))
+            LoadProperty(_orderDateProperty, reader.GetDateTime("OrderDate"))
+            LoadProperty(_shipAddr1Property, reader.GetString("ShipAddr1"))
+            LoadProperty(_shipAddr2Property, reader.GetString("ShipAddr2"))
+            LoadProperty(_shipCityProperty, reader.GetString("ShipCity"))
+            LoadProperty(_shipStateProperty, reader.GetString("ShipState"))
+            LoadProperty(_shipZipProperty, reader.GetString("ShipZip"))
+            LoadProperty(_shipCountryProperty, reader.GetString("ShipCountry"))
+            LoadProperty(_billAddr1Property, reader.GetString("BillAddr1"))
+            LoadProperty(_billAddr2Property, reader.GetString("BillAddr2"))
+            LoadProperty(_billCityProperty, reader.GetString("BillCity"))
+            LoadProperty(_billStateProperty, reader.GetString("BillState"))
+            LoadProperty(_billZipProperty, reader.GetString("BillZip"))
+            LoadProperty(_billCountryProperty, reader.GetString("BillCountry"))
+            LoadProperty(_courierProperty, reader.GetString("Courier"))
+            LoadProperty(_totalPriceProperty, reader.GetDecimal("TotalPrice"))
+            LoadProperty(_billToFirstNameProperty, reader.GetString("BillToFirstName"))
+            LoadProperty(_billToLastNameProperty, reader.GetString("BillToLastName"))
+            LoadProperty(_shipToFirstNameProperty, reader.GetString("ShipToFirstName"))
+            LoadProperty(_shipToLastNameProperty, reader.GetString("ShipToLastName"))
+            LoadProperty(_authorizationNumberProperty, reader.GetInt32("AuthorizationNumber"))
+            LoadProperty(_localeProperty, reader.GetString("Locale"))
+        End Using
 
         MarkOld()
     End Sub

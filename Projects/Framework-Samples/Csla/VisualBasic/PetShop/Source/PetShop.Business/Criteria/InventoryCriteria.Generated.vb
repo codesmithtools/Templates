@@ -24,6 +24,7 @@ Imports Csla
 <Serializable()> _
 Public Partial Class InventoryCriteria
     Inherits CriteriaBase
+    Implements IGeneratedCriteria
 
     #Region "Private Read-Only Members"
     
@@ -37,7 +38,7 @@ Public Partial Class InventoryCriteria
         MyBase.New(GetType(Inventory))
     End Sub
     
-    Public Sub New(ByVal itemId As String) 
+    Public Sub New(ByVal itemId As System.String) 
         MyBase.New(GetType(Inventory))
         
         Me.ItemId = itemId
@@ -50,12 +51,21 @@ Public Partial Class InventoryCriteria
     
     #Region "Read-Write"
     
-    Public Property ItemId() As String
+    Public Property ItemId() As System.String
         Get
-            Return GetValue(Of String)("ItemId")
+            Return GetValue(Of System.String)("ItemId")
         End Get
         Set
             _bag("ItemId") = value
+        End Set
+    End Property
+    
+    Public Property Qty() As System.Int32
+        Get
+            Return GetValue(Of System.Int32)("Qty")
+        End Get
+        Set
+            _bag("Qty") = value
         End Set
     End Property
 
@@ -66,9 +76,18 @@ Public Partial Class InventoryCriteria
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
+    Public ReadOnly Property StateBag() As Dictionary(Of String, Object) Implements IGeneratedCriteria.StateBag
         Get
             Return _bag
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Returns a list of all the modified properties and values.
+    ''' </summary>
+    Public ReadOnly Property TableName() As String Implements IGeneratedCriteria.TableName
+        Get
+            Return "[dbo].Inventory"
         End Get
     End Property
 

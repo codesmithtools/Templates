@@ -20,47 +20,57 @@ Imports Csla.Data
 <Serializable()> _
 Public Partial Class AccountList 
     Inherits BusinessListBase(Of AccountList, Account)
-    
+
     #Region "Contructor(s)"
-    
+
     Private Sub New()
         AllowNew = true
         MarkAsChild()
     End Sub
-    
+
     #End Region
-    
+
     #Region "Factory Methods" 
-    
+
     Friend Shared Function NewList() As AccountList
         Return DataPortal.CreateChild(Of AccountList)()
     End Function
-    
-    Friend Shared Function GetAccountList(ByVal accountId As Integer) As AccountList
-        Return DataPortal.FetchChild(Of AccountList)(new AccountCriteria(accountId))
-    End Function
-    
-    Friend Shared Function GetAll() As AccountList
-        Return DataPortal.FetchChild(Of AccountList)(new AccountCriteria())
-    End Function
-    
-    Friend Shared Function GetByUniqueID(ByVal uniqueID As Integer) As AccountList
+
+    Friend Shared Function GetByAccountId(ByVal accountId As System.Int32) As AccountList 
         Dim criteria As New AccountCriteria()
-        criteria.UniqueID = uniqueID
-        
+		criteria.AccountId = accountId
+
         Return DataPortal.FetchChild(Of AccountList)(criteria)
     End Function
-    
+
+    Friend Shared Function GetByUniqueID(ByVal uniqueID As System.Int32) As AccountList 
+        Dim criteria As New AccountCriteria()
+		criteria.UniqueID = uniqueID
+
+        Return DataPortal.FetchChild(Of AccountList)(criteria)
+    End Function
+
+    Friend Shared Function GetAll() As AccountList
+        Return DataPortal.FetchChild(Of AccountList)(New AccountCriteria())
+    End Function
+
     #End Region
 
-    #Region "Business Methods"
-    
+    #Region "Properties"
+
     Protected Overrides Function AddNewCore() As Object
         Dim item As Account = PetShop.Business.Account.NewAccount()
                 Me.Add(item)
                 Return item
     End Function
-    
+
     #End Region
-    
+
+    #Region "Exists Command"
+
+    Public Shared Function Exists(ByVal criteria As AccountCriteria) As Boolean
+        Return PetShop.Business.Account.Exists(criteria)
+    End Function
+
+    #End Region
     End Class

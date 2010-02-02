@@ -24,21 +24,31 @@ Public Partial Class Account
     #Region "Contructor(s)"
 
     Private Sub New()
+        ' require use of factory method
+        MarkAsChild()
+    End Sub
+
+    Private Sub New(ByVal accountId As System.Int32)
+        Using(BypassPropertyChecks)
+           LoadProperty(_accountIdProperty, accountId)
+        End Using
+
         MarkAsChild()
     End Sub
 
     Friend Sub New(Byval reader As SafeDataReader)
         Map(reader)
+
+        MarkAsChild()
     End Sub
 
     #End Region
-    
     #Region "Validation Rules"
-    
+
     Protected Overrides Sub AddBusinessRules()
-    
+
         If AddBusinessValidationRules() Then Exit Sub
-       
+
         ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _emailProperty)
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_emailProperty, 80))
         ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _firstNameProperty)
@@ -58,170 +68,193 @@ Public Partial Class Account
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_countryProperty, 20))
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_phoneProperty, 20))
     End Sub
-    
+
     #End Region
-    
-    #Region "Business Methods"
 
+    #Region "Properties"
 
     
-    Private Shared ReadOnly _accountIdProperty As PropertyInfo(Of Integer) = RegisterProperty(Of Integer)(Function(p As Account) p.AccountId)
+    Private Shared ReadOnly _accountIdProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As Account) p.AccountId)
 		<System.ComponentModel.DataObjectField(true, true)> _
-    Public ReadOnly Property AccountId() As Integer
+    Public Property AccountId() As System.Int32
         Get 
             Return GetProperty(_accountIdProperty)
         End Get
+        Friend Set (ByVal value As System.Int32)
+            SetProperty(_accountIdProperty, value)
+        End Set
     End Property
     
     
-    Private Shared ReadOnly _emailProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Account) p.Email)
-    Public Property Email() As String
+    Private Shared ReadOnly _uniqueIDProperty As PropertyInfo(Of System.Int32) = RegisterProperty(Of System.Int32)(Function(p As Account) p.UniqueID)
+    Public Property UniqueID() As System.Int32
+        Get 
+            Return GetProperty(_uniqueIDProperty)
+        End Get
+        Set (ByVal value As System.Int32)
+            SetProperty(_uniqueIDProperty, value)
+        End Set
+    End Property
+    
+    
+    Private Shared ReadOnly _emailProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Account) p.Email)
+    Public Property Email() As System.String
         Get 
             Return GetProperty(_emailProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_emailProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _firstNameProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Account) p.FirstName)
-    Public Property FirstName() As String
+    Private Shared ReadOnly _firstNameProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Account) p.FirstName)
+    Public Property FirstName() As System.String
         Get 
             Return GetProperty(_firstNameProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_firstNameProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _lastNameProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Account) p.LastName)
-    Public Property LastName() As String
+    Private Shared ReadOnly _lastNameProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Account) p.LastName)
+    Public Property LastName() As System.String
         Get 
             Return GetProperty(_lastNameProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_lastNameProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _address1Property As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Account) p.Address1)
-    Public Property Address1() As String
+    Private Shared ReadOnly _address1Property As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Account) p.Address1)
+    Public Property Address1() As System.String
         Get 
             Return GetProperty(_address1Property)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_address1Property, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _address2Property As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Account) p.Address2)
-    Public Property Address2() As String
+    Private Shared ReadOnly _address2Property As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Account) p.Address2)
+    Public Property Address2() As System.String
         Get 
             Return GetProperty(_address2Property)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_address2Property, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _cityProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Account) p.City)
-    Public Property City() As String
+    Private Shared ReadOnly _cityProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Account) p.City)
+    Public Property City() As System.String
         Get 
             Return GetProperty(_cityProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_cityProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _stateProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Account) p.State)
-    Public Property State() As String
+    Private Shared ReadOnly _stateProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Account) p.State)
+    Public Property State() As System.String
         Get 
             Return GetProperty(_stateProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_stateProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _zipProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Account) p.Zip)
-    Public Property Zip() As String
+    Private Shared ReadOnly _zipProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Account) p.Zip)
+    Public Property Zip() As System.String
         Get 
             Return GetProperty(_zipProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_zipProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _countryProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Account) p.Country)
-    Public Property Country() As String
+    Private Shared ReadOnly _countryProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Account) p.Country)
+    Public Property Country() As System.String
         Get 
             Return GetProperty(_countryProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_countryProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _phoneProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Account) p.Phone)
-    Public Property Phone() As String
+    Private Shared ReadOnly _phoneProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Account) p.Phone)
+    Public Property Phone() As System.String
         Get 
             Return GetProperty(_phoneProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_phoneProperty, value)
         End Set
     End Property
     
-    Private Shared _uniqueIDProperty As PropertyInfo(Of Integer) = RegisterProperty(Of Integer)(Function(p As Account) p.UniqueID)
-    Public Property UniqueID() As Integer 
-        Get  
-            Return GetProperty(_uniqueIDProperty)                
-        End Get
-        Set (ByVal value As Integer)
-            SetProperty(_uniqueIDProperty, value) 
-        End Set
-    End Property
-    
-    Private Shared ReadOnly _profileProperty As PropertyInfo(Of Profile) = RegisterProperty(Of Profile)(Function(p As Account) p.Profile, Csla.RelationshipTypes.LazyLoad)
-    Public ReadOnly Property Profile() As Profile
+    'ManyToOne
+    Private Shared ReadOnly _profileMemberProperty As PropertyInfo(Of Profile) = RegisterProperty(Of Profile)(Function(p As Account) p.ProfileMember, Csla.RelationshipTypes.Child)
+    Public ReadOnly Property ProfileMember() As Profile
         Get
-        
-            If Not(FieldManager.FieldExists(_profileProperty))
-                If (Me.IsNew) Then
-                    LoadProperty(_profileProperty, Profile.NewProfile())
+            If Not(FieldManager.FieldExists(_profileMemberProperty))
+                Dim criteria As New PetShop.Business.ProfileCriteria()
+                criteria.UniqueID = UniqueID
+                
+                If (Me.IsNew Or Not PetShop.Business.Profile.Exists(criteria)) Then
+                    LoadProperty(_profileMemberProperty, PetShop.Business.Profile.NewProfile())
                 Else
-                    LoadProperty(_profileProperty, Profile.GetProfile(UniqueID))
+                    LoadProperty(_profileMemberProperty, PetShop.Business.Profile.GetByUniqueID(UniqueID))
                 End If
             End If
             
-            Return GetProperty(_profileProperty) 
+            Return GetProperty(_profileMemberProperty) 
         End Get
     End Property
     
     #End Region
-            
+
     #Region "Factory Methods"
-    
+
     Friend Shared Function NewAccount() As Account 
         Return DataPortal.Create(Of Account)()
     End Function
-    
-    Friend Shared Function GetAccount(ByVal accountId As Integer) As Account         
-        Return DataPortal.Fetch(Of Account)(New AccountCriteria(accountId))
+
+    Friend Shared Function GetByAccountId(ByVal accountId As System.Int32) As Account 
+        Dim criteria As New AccountCriteria()
+		criteria.AccountId = accountId
+
+        Return DataPortal.FetchChild(Of Account)(criteria)
     End Function
-    
+
+    Friend Shared Function GetByUniqueID(ByVal uniqueID As System.Int32) As Account 
+        Dim criteria As New AccountCriteria()
+		criteria.UniqueID = uniqueID
+
+        Return DataPortal.FetchChild(Of Account)(criteria)
+    End Function
+
     #End Region
-    
+
+    #Region "Exists Command"
+
+    Public Shared Function Exists(ByVal criteria As AccountCriteria) As Boolean
+        Return ExistsCommand.Execute(criteria)
+    End Function
+
+    #End Region
 
 End Class

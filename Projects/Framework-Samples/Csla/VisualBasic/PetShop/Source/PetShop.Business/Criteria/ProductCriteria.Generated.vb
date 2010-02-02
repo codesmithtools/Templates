@@ -24,6 +24,7 @@ Imports Csla
 <Serializable()> _
 Public Partial Class ProductCriteria
     Inherits CriteriaBase
+    Implements IGeneratedCriteria
 
     #Region "Private Read-Only Members"
     
@@ -37,7 +38,7 @@ Public Partial Class ProductCriteria
         MyBase.New(GetType(Product))
     End Sub
     
-    Public Sub New(ByVal productId As String) 
+    Public Sub New(ByVal productId As System.String) 
         MyBase.New(GetType(Product))
         
         Me.ProductId = productId
@@ -50,30 +51,48 @@ Public Partial Class ProductCriteria
     
     #Region "Read-Write"
     
-    Public Property CategoryId() As String
+    Public Property ProductId() As System.String
         Get
-            Return GetValue(Of String)("CategoryId")
+            Return GetValue(Of System.String)("ProductId")
+        End Get
+        Set
+            _bag("ProductId") = value
+        End Set
+    End Property
+    
+    Public Property CategoryId() As System.String
+        Get
+            Return GetValue(Of System.String)("CategoryId")
         End Get
         Set
             _bag("CategoryId") = value
         End Set
     End Property
     
-    Public Property Name() As String
+    Public Property Name() As System.String
         Get
-            Return GetValue(Of String)("Name")
+            Return GetValue(Of System.String)("Name")
         End Get
         Set
             _bag("Name") = value
         End Set
     End Property
     
-    Public Property ProductId() As String
+    Public Property Descn() As System.String
         Get
-            Return GetValue(Of String)("ProductId")
+            Return GetValue(Of System.String)("Descn")
         End Get
         Set
-            _bag("ProductId") = value
+            _bag("Descn") = value
+        End Set
+    End Property
+    
+    Public Property Image() As System.String
+        Get
+            Return GetValue(Of System.String)("Image")
+        End Get
+        Set
+            _bag("Image") = value
         End Set
     End Property
 
@@ -84,9 +103,18 @@ Public Partial Class ProductCriteria
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
+    Public ReadOnly Property StateBag() As Dictionary(Of String, Object) Implements IGeneratedCriteria.StateBag
         Get
             Return _bag
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Returns a list of all the modified properties and values.
+    ''' </summary>
+    Public ReadOnly Property TableName() As String Implements IGeneratedCriteria.TableName
+        Get
+            Return "[dbo].Product"
         End Get
     End Property
 

@@ -24,6 +24,7 @@ Imports Csla
 <Serializable()> _
 Public Partial Class CategoryCriteria
     Inherits CriteriaBase
+    Implements IGeneratedCriteria
 
     #Region "Private Read-Only Members"
     
@@ -37,7 +38,7 @@ Public Partial Class CategoryCriteria
         MyBase.New(GetType(Category))
     End Sub
     
-    Public Sub New(ByVal categoryId As String) 
+    Public Sub New(ByVal categoryId As System.String) 
         MyBase.New(GetType(Category))
         
         Me.CategoryId = categoryId
@@ -50,12 +51,30 @@ Public Partial Class CategoryCriteria
     
     #Region "Read-Write"
     
-    Public Property CategoryId() As String
+    Public Property CategoryId() As System.String
         Get
-            Return GetValue(Of String)("CategoryId")
+            Return GetValue(Of System.String)("CategoryId")
         End Get
         Set
             _bag("CategoryId") = value
+        End Set
+    End Property
+    
+    Public Property Name() As System.String
+        Get
+            Return GetValue(Of System.String)("Name")
+        End Get
+        Set
+            _bag("Name") = value
+        End Set
+    End Property
+    
+    Public Property Descn() As System.String
+        Get
+            Return GetValue(Of System.String)("Descn")
+        End Get
+        Set
+            _bag("Descn") = value
         End Set
     End Property
 
@@ -66,9 +85,18 @@ Public Partial Class CategoryCriteria
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
+    Public ReadOnly Property StateBag() As Dictionary(Of String, Object) Implements IGeneratedCriteria.StateBag
         Get
             Return _bag
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Returns a list of all the modified properties and values.
+    ''' </summary>
+    Public ReadOnly Property TableName() As String Implements IGeneratedCriteria.TableName
+        Get
+            Return "[dbo].Category"
         End Get
     End Property
 

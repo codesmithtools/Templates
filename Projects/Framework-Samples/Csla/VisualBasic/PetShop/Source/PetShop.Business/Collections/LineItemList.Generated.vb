@@ -27,38 +27,49 @@ Public Partial Class LineItemList
     End Sub
     
     #End Region
-    
+
     #Region "Factory Methods"
-    
+
     Public Shared Function NewList() As LineItemList
         Return DataPortal.Create(Of LineItemList)()
     End Function
-    
-    Public Shared Function GetLineItemList(ByVal orderId As Integer, ByVal lineNum As Integer) As LineItemList
-        Return DataPortal.Fetch(Of LineItemList)(new LineItemCriteria(orderId, lineNum))
-    End Function
-    
-    Public Shared Function GetAll() As LineItemList
-        Return DataPortal.Fetch(Of LineItemList)(new LineItemCriteria())
-    End Function
-    
-    Public Shared Function GetByOrderId(ByVal orderId As Integer) As LineItemList
+
+    Public Shared Function GetByOrderIdLineNum(ByVal orderId As System.Int32, ByVal lineNum As System.Int32) As LineItemList 
         Dim criteria As New LineItemCriteria()
-        criteria.OrderId = orderId
-        
+		criteria.OrderId = orderId
+		criteria.LineNum = lineNum
+
         Return DataPortal.Fetch(Of LineItemList)(criteria)
     End Function
-    
+
+    Public Shared Function GetByOrderId(ByVal orderId As System.Int32) As LineItemList 
+        Dim criteria As New LineItemCriteria()
+		criteria.OrderId = orderId
+
+        Return DataPortal.Fetch(Of LineItemList)(criteria)
+    End Function
+
+    Public Shared Function GetAll() As LineItemList
+        Return DataPortal.Fetch(Of LineItemList)(New LineItemCriteria())
+    End Function
+
     #End Region
-    
-    #Region "Business Methods"
-    
+
+    #Region "Properties"
+
     Protected Overrides Function AddNewCore() As Object
         Dim item As LineItem = PetShop.Business.LineItem.NewLineItem()
         Me.Add(item)
         Return item
     End Function
-    
+
     #End Region
 
+    #Region "Exists Command"
+
+    Public Shared Function Exists(ByVal criteria As LineItemCriteria) As Boolean
+        Return PetShop.Business.LineItem.Exists(criteria)
+    End Function
+
+    #End Region
 End Class

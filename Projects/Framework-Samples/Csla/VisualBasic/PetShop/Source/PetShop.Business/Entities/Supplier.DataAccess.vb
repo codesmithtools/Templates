@@ -22,8 +22,6 @@ Imports Csla.Validation
 Public Partial Class Supplier
     <RunLocal()> _
     Protected Shadows Sub DataPortal_Create()
-        'MyBase.DataPortal_Create()
-
         ValidationRules.CheckRules()
     End Sub
 
@@ -43,52 +41,27 @@ Public Partial Class Supplier
             End Using
         End Using
     End Sub
-    
-    Private Sub Map(ByVal reader As SafeDataReader)
-        LoadProperty(_suppIdProperty, reader.GetInt32("SuppId"))
-        LoadProperty(_nameProperty, reader.GetString("Name"))
-        LoadProperty(_statusProperty, reader.GetString("Status"))
-        LoadProperty(_addr1Property, reader.GetString("Addr1"))
-        LoadProperty(_addr2Property, reader.GetString("Addr2"))
-        LoadProperty(_cityProperty, reader.GetString("City"))
-        LoadProperty(_stateProperty, reader.GetString("State"))
-        LoadProperty(_zipProperty, reader.GetString("Zip"))
-        LoadProperty(_phoneProperty, reader.GetString("Phone"))
-
-
-        MarkOld()
-    End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Insert()
         Const commandText As String = "INSERT INTO [dbo].[Supplier] ([SuppId], [Name], [Status], [Addr1], [Addr2], [City], [State], [Zip], [Phone]) VALUES (@p_SuppId, @p_Name, @p_Status, @p_Addr1, @p_Addr2, @p_City, @p_State, @p_Zip, @p_Phone)"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "SupplierInsert")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_SuppId", SuppId)
-						command.Parameters.AddWithValue("@p_Name", Name)
-						command.Parameters.AddWithValue("@p_Status", Status)
-						command.Parameters.AddWithValue("@p_Addr1", Addr1)
-						command.Parameters.AddWithValue("@p_Addr2", Addr2)
-						command.Parameters.AddWithValue("@p_City", City)
-						command.Parameters.AddWithValue("@p_State", State)
-						command.Parameters.AddWithValue("@p_Zip", Zip)
-						command.Parameters.AddWithValue("@p_Phone", Phone)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_SuppId", SuppId)
+				command.Parameters.AddWithValue("@p_Name", Name)
+				command.Parameters.AddWithValue("@p_Status", Status)
+				command.Parameters.AddWithValue("@p_Addr1", Addr1)
+				command.Parameters.AddWithValue("@p_Addr2", Addr2)
+				command.Parameters.AddWithValue("@p_City", City)
+				command.Parameters.AddWithValue("@p_State", State)
+				command.Parameters.AddWithValue("@p_Zip", Zip)
+				command.Parameters.AddWithValue("@p_Phone", Phone)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            If reader.Read() Then
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
 
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("SupplierInsert")
-                        Throw
-                    End Try
+                    End If
                 End Using
             End Using
         End Using
@@ -98,35 +71,25 @@ Public Partial Class Supplier
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Update()
-        Const commandText As String = "UPDATE [dbo].[Supplier]  SET [Name] = @p_Name, [Status] = @p_Status, [Addr1] = @p_Addr1, [Addr2] = @p_Addr2, [City] = @p_City, [State] = @p_State, [Zip] = @p_Zip, [Phone] = @p_Phone WHERE [SuppId] = @p_SuppId"
+        Const commandText As String = "UPDATE [dbo].[Supplier]  SET [SuppId] = @p_SuppId, [Name] = @p_Name, [Status] = @p_Status, [Addr1] = @p_Addr1, [Addr2] = @p_Addr2, [City] = @p_City, [State] = @p_State, [Zip] = @p_Zip, [Phone] = @p_Phone WHERE [SuppId] = @p_SuppId"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "SupplierUpdate")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_SuppId", SuppId)
-						command.Parameters.AddWithValue("@p_Name", Name)
-						command.Parameters.AddWithValue("@p_Status", Status)
-						command.Parameters.AddWithValue("@p_Addr1", Addr1)
-						command.Parameters.AddWithValue("@p_Addr2", Addr2)
-						command.Parameters.AddWithValue("@p_City", City)
-						command.Parameters.AddWithValue("@p_State", State)
-						command.Parameters.AddWithValue("@p_Zip", Zip)
-						command.Parameters.AddWithValue("@p_Phone", Phone)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_SuppId", SuppId)
+				command.Parameters.AddWithValue("@p_Name", Name)
+				command.Parameters.AddWithValue("@p_Status", Status)
+				command.Parameters.AddWithValue("@p_Addr1", Addr1)
+				command.Parameters.AddWithValue("@p_Addr2", Addr2)
+				command.Parameters.AddWithValue("@p_City", City)
+				command.Parameters.AddWithValue("@p_State", State)
+				command.Parameters.AddWithValue("@p_Zip", Zip)
+				command.Parameters.AddWithValue("@p_Phone", Phone)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("SupplierUpdate")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    If reader.RecordsAffected = 0 Then
+                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
                 End Using
             End Using
         End Using
@@ -136,34 +99,39 @@ Public Partial Class Supplier
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_DeleteSelf()
-        DataPortal_Delete(new SupplierCriteria(SuppId))
+        DataPortal_Delete(New SupplierCriteria(SuppId))
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Sub DataPortal_Delete(ByVal criteria As SupplierCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As SupplierCriteria)
         Dim commandText As String = String.Format("DELETE FROM [dbo].[Supplier] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "SupplierDelete")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("SupplierDelete")
-                        Throw
-                    End Try
-                End Using
+				'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+				Dim result As Integer = command.ExecuteNonQuery()
+				If (result = 0) Then
+					throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+				End If
             End Using
         End Using
+    End Sub
+
+    Private Sub Map(ByVal reader As SafeDataReader)
+        Using(BypassPropertyChecks)
+            LoadProperty(_suppIdProperty, reader.GetInt32("SuppId"))
+            LoadProperty(_nameProperty, reader.GetString("Name"))
+            LoadProperty(_statusProperty, reader.GetString("Status"))
+            LoadProperty(_addr1Property, reader.GetString("Addr1"))
+            LoadProperty(_addr2Property, reader.GetString("Addr2"))
+            LoadProperty(_cityProperty, reader.GetString("City"))
+            LoadProperty(_stateProperty, reader.GetString("State"))
+            LoadProperty(_zipProperty, reader.GetString("Zip"))
+            LoadProperty(_phoneProperty, reader.GetString("Phone"))
+        End Using
+
+        MarkOld()
     End Sub
 End Class

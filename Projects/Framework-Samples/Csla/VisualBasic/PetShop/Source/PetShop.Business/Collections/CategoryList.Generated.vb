@@ -27,31 +27,41 @@ Public Partial Class CategoryList
     End Sub
     
     #End Region
-    
+
     #Region "Factory Methods"
-    
+
     Public Shared Function NewList() As CategoryList
         Return DataPortal.Create(Of CategoryList)()
     End Function
-    
-    Public Shared Function GetCategoryList(ByVal categoryId As String) As CategoryList
-        Return DataPortal.Fetch(Of CategoryList)(new CategoryCriteria(categoryId))
+
+    Public Shared Function GetByCategoryId(ByVal categoryId As System.String) As CategoryList 
+        Dim criteria As New CategoryCriteria()
+		criteria.CategoryId = categoryId
+
+        Return DataPortal.Fetch(Of CategoryList)(criteria)
     End Function
-    
+
     Public Shared Function GetAll() As CategoryList
-        Return DataPortal.Fetch(Of CategoryList)(new CategoryCriteria())
+        Return DataPortal.Fetch(Of CategoryList)(New CategoryCriteria())
     End Function
-    
+
     #End Region
-    
-    #Region "Business Methods"
-    
+
+    #Region "Properties"
+
     Protected Overrides Function AddNewCore() As Object
         Dim item As Category = PetShop.Business.Category.NewCategory()
         Me.Add(item)
         Return item
     End Function
-    
+
     #End Region
 
+    #Region "Exists Command"
+
+    Public Shared Function Exists(ByVal criteria As CategoryCriteria) As Boolean
+        Return PetShop.Business.Category.Exists(criteria)
+    End Function
+
+    #End Region
 End Class

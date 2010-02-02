@@ -27,31 +27,49 @@ Public Partial Class ProfileList
     End Sub
     
     #End Region
-    
+
     #Region "Factory Methods"
-    
+
     Public Shared Function NewList() As ProfileList
         Return DataPortal.Create(Of ProfileList)()
     End Function
-    
-    Public Shared Function GetProfileList(ByVal uniqueID As Integer) As ProfileList
-        Return DataPortal.Fetch(Of ProfileList)(new ProfileCriteria(uniqueID))
+
+    Public Shared Function GetByUniqueID(ByVal uniqueID As System.Int32) As ProfileList 
+        Dim criteria As New ProfileCriteria()
+		criteria.UniqueID = uniqueID
+
+        Return DataPortal.Fetch(Of ProfileList)(criteria)
     End Function
-    
+
+    Public Shared Function GetByUsernameApplicationName(ByVal username As System.String, ByVal applicationName As System.String) As ProfileList 
+        Dim criteria As New ProfileCriteria()
+		criteria.Username = username
+		criteria.ApplicationName = applicationName
+
+        Return DataPortal.Fetch(Of ProfileList)(criteria)
+    End Function
+
     Public Shared Function GetAll() As ProfileList
-        Return DataPortal.Fetch(Of ProfileList)(new ProfileCriteria())
+        Return DataPortal.Fetch(Of ProfileList)(New ProfileCriteria())
     End Function
-    
+
     #End Region
-    
-    #Region "Business Methods"
-    
+
+    #Region "Properties"
+
     Protected Overrides Function AddNewCore() As Object
         Dim item As Profile = PetShop.Business.Profile.NewProfile()
         Me.Add(item)
         Return item
     End Function
-    
+
     #End Region
 
+    #Region "Exists Command"
+
+    Public Shared Function Exists(ByVal criteria As ProfileCriteria) As Boolean
+        Return PetShop.Business.Profile.Exists(criteria)
+    End Function
+
+    #End Region
 End Class

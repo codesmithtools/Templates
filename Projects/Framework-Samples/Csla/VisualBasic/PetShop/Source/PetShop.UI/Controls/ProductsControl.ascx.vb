@@ -14,7 +14,7 @@ Partial Public Class ProductsControl
         Dim categoryId As String = Request.QueryString("categoryId")
 
         'bind data
-        productsList.DataSource = Category.GetCategory(categoryId).Products
+        productsList.DataSource = Category.GetByCategoryId(categoryId).Products
         productsList.DataBind()
     End Sub
 

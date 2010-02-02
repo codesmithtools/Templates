@@ -24,11 +24,9 @@ Public Partial Class Profile
 
     <RunLocal()> _
     Protected Overrides Sub DataPortal_Create()
-        'MyBase.DataPortal_Create()
-
         ValidationRules.CheckRules()
     End Sub
-    
+
     <Transactional(TransactionalTypes.TransactionScope)> _
     Private Shadows Sub DataPortal_Fetch(ByVal criteria As ProfileCriteria)
         Dim commandText As String = String.Format("SELECT [UniqueID], [Username], [ApplicationName], [IsAnonymous], [LastActivityDate], [LastUpdatedDate] FROM [dbo].[Profiles] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
@@ -46,34 +44,24 @@ Public Partial Class Profile
             End Using
         End Using
     End Sub
-    
+
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Insert()
         Const commandText As String = "INSERT INTO [dbo].[Profiles] ([Username], [ApplicationName], [IsAnonymous], [LastActivityDate], [LastUpdatedDate]) VALUES (@p_Username, @p_ApplicationName, @p_IsAnonymous, @p_LastActivityDate, @p_LastUpdatedDate); SELECT [UniqueID] FROM [dbo].[Profiles] WHERE UniqueID = SCOPE_IDENTITY()"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "ProfilesInsert")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_Username", Username)
-						command.Parameters.AddWithValue("@p_ApplicationName", ApplicationName)
-						command.Parameters.AddWithValue("@p_IsAnonymous", IsAnonymous)
-						command.Parameters.AddWithValue("@p_LastActivityDate", IIf(LastActivityDate.HasValue, DirectCast(LastActivityDate.Value.Date, DateTime), System.DBNull.Value))
-						command.Parameters.AddWithValue("@p_LastUpdatedDate", IIf(LastUpdatedDate.HasValue, DirectCast(LastUpdatedDate.Value.Date, DateTime), System.DBNull.Value))
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_Username", Username)
+				command.Parameters.AddWithValue("@p_ApplicationName", ApplicationName)
+				command.Parameters.AddWithValue("@p_IsAnonymous", IsAnonymous)
+				command.Parameters.AddWithValue("@p_LastActivityDate", LastActivityDate)
+				command.Parameters.AddWithValue("@p_LastUpdatedDate", LastUpdatedDate)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            If reader.Read() Then
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
 
-                                LoadProperty(_uniqueIDProperty, reader.GetInt32("UniqueID"))
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("ProfilesInsert")
-                        Throw
-                    End Try
+                        LoadProperty(_uniqueIDProperty, reader.GetInt32("UniqueID"))
+                    End If
                 End Using
             End Using
         End Using
@@ -86,29 +74,19 @@ Public Partial Class Profile
         Const commandText As String = "UPDATE [dbo].[Profiles]  SET [Username] = @p_Username, [ApplicationName] = @p_ApplicationName, [IsAnonymous] = @p_IsAnonymous, [LastActivityDate] = @p_LastActivityDate, [LastUpdatedDate] = @p_LastUpdatedDate WHERE [UniqueID] = @p_UniqueID"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "ProfilesUpdate")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_UniqueID", UniqueID)
-						command.Parameters.AddWithValue("@p_Username", Username)
-						command.Parameters.AddWithValue("@p_ApplicationName", ApplicationName)
-						command.Parameters.AddWithValue("@p_IsAnonymous", IsAnonymous)
-						command.Parameters.AddWithValue("@p_LastActivityDate", IIf(LastActivityDate.HasValue, DirectCast(LastActivityDate.Value.Date, DateTime), System.DBNull.Value))
-						command.Parameters.AddWithValue("@p_LastUpdatedDate", IIf(LastUpdatedDate.HasValue, DirectCast(LastUpdatedDate.Value.Date, DateTime), System.DBNull.Value))
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_UniqueID", UniqueID)
+				command.Parameters.AddWithValue("@p_Username", Username)
+				command.Parameters.AddWithValue("@p_ApplicationName", ApplicationName)
+				command.Parameters.AddWithValue("@p_IsAnonymous", IsAnonymous)
+				command.Parameters.AddWithValue("@p_LastActivityDate", LastActivityDate)
+				command.Parameters.AddWithValue("@p_LastUpdatedDate", LastUpdatedDate)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("ProfilesUpdate")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    If reader.RecordsAffected = 0 Then
+                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
                 End Using
             End Using
         End Using
@@ -118,33 +96,22 @@ Public Partial Class Profile
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_DeleteSelf()
-        DataPortal_Delete(new ProfileCriteria(UniqueID))
+        DataPortal_Delete(New ProfileCriteria(UniqueID))
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Sub DataPortal_Delete(ByVal criteria As ProfileCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As ProfileCriteria)
         Dim commandText As String = String.Format("DELETE FROM [dbo].[Profiles] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "ProfilesDelete")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("ProfilesDelete")
-                        Throw
-                    End Try
-                End Using
+				'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+				Dim result As Integer = command.ExecuteNonQuery()
+				If (result = 0) Then
+					throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+				End If
             End Using
         End Using
     End Sub
@@ -159,7 +126,7 @@ Public Partial Class Profile
         ' omit this override if you have no defaults to set
         'MyBase.Child_Create()
     End Sub
-    
+
     Private Sub Child_Fetch(ByVal criteria As ProfileCriteria)
         Dim commandText As String = String.Format("SELECT [UniqueID], [Username], [ApplicationName], [IsAnonymous], [LastActivityDate], [LastUpdatedDate] FROM [dbo].[Profiles] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
@@ -183,28 +150,17 @@ Public Partial Class Profile
         Const commandText As String = "INSERT INTO [dbo].[Profiles] ([Username], [ApplicationName], [IsAnonymous], [LastActivityDate], [LastUpdatedDate]) VALUES (@p_Username, @p_ApplicationName, @p_IsAnonymous, @p_LastActivityDate, @p_LastUpdatedDate); SELECT [UniqueID] FROM [dbo].[Profiles] WHERE UniqueID = SCOPE_IDENTITY()"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "ProfilesInsert")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_Username", Username)
-						command.Parameters.AddWithValue("@p_ApplicationName", ApplicationName)
-						command.Parameters.AddWithValue("@p_IsAnonymous", IsAnonymous)
-						command.Parameters.AddWithValue("@p_LastActivityDate", IIf(LastActivityDate.HasValue, DirectCast(LastActivityDate.Value.Date, DateTime), System.DBNull.Value))
-						command.Parameters.AddWithValue("@p_LastUpdatedDate", IIf(LastUpdatedDate.HasValue, DirectCast(LastUpdatedDate.Value.Date, DateTime), System.DBNull.Value))
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_Username", Username)
+				command.Parameters.AddWithValue("@p_ApplicationName", ApplicationName)
+				command.Parameters.AddWithValue("@p_IsAnonymous", IsAnonymous)
+				command.Parameters.AddWithValue("@p_LastActivityDate", LastActivityDate)
+				command.Parameters.AddWithValue("@p_LastUpdatedDate", LastUpdatedDate)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            If reader.Read() Then
-
-                                LoadProperty(_uniqueIDProperty, reader.GetInt32("UniqueID"))
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("ProfilesInsert")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
+                        LoadProperty(_uniqueIDProperty, reader.GetInt32("UniqueID"))
+                    End If
                 End Using
             End Using
         End Using
@@ -214,48 +170,39 @@ Public Partial Class Profile
         Const commandText As String = "UPDATE [dbo].[Profiles]  SET [Username] = @p_Username, [ApplicationName] = @p_ApplicationName, [IsAnonymous] = @p_IsAnonymous, [LastActivityDate] = @p_LastActivityDate, [LastUpdatedDate] = @p_LastUpdatedDate WHERE [UniqueID] = @p_UniqueID"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "ProfilesUpdate")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_UniqueID", UniqueID)
-						command.Parameters.AddWithValue("@p_Username", Username)
-						command.Parameters.AddWithValue("@p_ApplicationName", ApplicationName)
-						command.Parameters.AddWithValue("@p_IsAnonymous", IsAnonymous)
-						command.Parameters.AddWithValue("@p_LastActivityDate", IIf(LastActivityDate.HasValue, DirectCast(LastActivityDate.Value.Date, DateTime), System.DBNull.Value))
-						command.Parameters.AddWithValue("@p_LastUpdatedDate", IIf(LastUpdatedDate.HasValue, DirectCast(LastUpdatedDate.Value.Date, DateTime), System.DBNull.Value))
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+				command.Parameters.AddWithValue("@p_UniqueID", UniqueID)
+				command.Parameters.AddWithValue("@p_Username", Username)
+				command.Parameters.AddWithValue("@p_ApplicationName", ApplicationName)
+				command.Parameters.AddWithValue("@p_IsAnonymous", IsAnonymous)
+				command.Parameters.AddWithValue("@p_LastActivityDate", LastActivityDate)
+				command.Parameters.AddWithValue("@p_LastUpdatedDate", LastUpdatedDate)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("ProfilesUpdate")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    If reader.RecordsAffected = 0 Then
+                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
                 End Using
             End Using
         End Using
     End Sub
 
     Private Sub Child_DeleteSelf()
-        DataPortal_Delete(new ProfileCriteria(UniqueID))
+        DataPortal_Delete(New ProfileCriteria(UniqueID))
     End Sub
 
     #End Region
 
     Private Sub Map(ByVal reader As SafeDataReader)
-        LoadProperty(_uniqueIDProperty, reader.GetInt32("UniqueID"))
-        LoadProperty(_usernameProperty, reader.GetString("Username"))
-        LoadProperty(_applicationNameProperty, reader.GetString("ApplicationName"))
-        LoadProperty(_isAnonymousProperty, reader.GetBoolean("IsAnonymous"))
-        LoadProperty(_lastActivityDateProperty, reader.GetDateTime("LastActivityDate"))
-        LoadProperty(_lastUpdatedDateProperty, reader.GetDateTime("LastUpdatedDate"))
-
+        Using(BypassPropertyChecks)
+            LoadProperty(_uniqueIDProperty, reader.GetInt32("UniqueID"))
+            LoadProperty(_usernameProperty, reader.GetString("Username"))
+            LoadProperty(_applicationNameProperty, reader.GetString("ApplicationName"))
+            LoadProperty(_isAnonymousProperty, reader.GetBoolean("IsAnonymous"))
+            LoadProperty(_lastActivityDateProperty, reader.GetDateTime("LastActivityDate"))
+            LoadProperty(_lastUpdatedDateProperty, reader.GetDateTime("LastUpdatedDate"))
+        End Using
 
         MarkOld()
     End Sub

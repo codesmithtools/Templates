@@ -20,11 +20,17 @@ Imports Csla.Validation
 <Serializable()> _
 Public Partial Class Product 
     Inherits BusinessBase(Of Product)
-    
+
     #Region "Contructor(s)"
 
     Private Sub New()
         ' require use of factory method 
+    End Sub
+
+    Private Sub New(ByVal productId As System.String)
+        Using(BypassPropertyChecks)
+           LoadProperty(_productIdProperty, productId)
+        End Using
     End Sub
 
     Friend Sub New(Byval reader As SafeDataReader)
@@ -32,106 +38,112 @@ Public Partial Class Product
     End Sub
 
     #End Region
-    
     #Region "Validation Rules"
-    
+
     Protected Overrides Sub AddBusinessRules()
-    
+
         If AddBusinessValidationRules() Then Exit Sub
-       
+
+        ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _productIdProperty)
+        ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_productIdProperty, 10))
+        ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _categoryIdProperty)
+        ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_categoryIdProperty, 10))
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_nameProperty, 80))
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_descnProperty, 255))
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_imageProperty, 80))
-        ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _categoryIdProperty)
-        ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_categoryIdProperty, 10))
-        ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _productIdProperty)
-        ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_productIdProperty, 10))
     End Sub
-    
+
     #End Region
-    
-    #Region "Business Methods"
 
+    #Region "Properties"
 
     
-    Private Shared ReadOnly _productIdProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Product) p.ProductId)
+    Private Shared ReadOnly _productIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.ProductId)
 		<System.ComponentModel.DataObjectField(true, false)> _
-    Public Property ProductId() As String
+    Public Property ProductId() As System.String
         Get 
             Return GetProperty(_productIdProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_productIdProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _nameProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Product) p.Name)
-    Public Property Name() As String
+    Private Shared ReadOnly _categoryIdProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.CategoryId)
+    Public Property CategoryId() As System.String
+        Get 
+            Return GetProperty(_categoryIdProperty)
+        End Get
+        Set (ByVal value As System.String)
+            SetProperty(_categoryIdProperty, value)
+        End Set
+    End Property
+    
+    
+    Private Shared ReadOnly _nameProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.Name)
+    Public Property Name() As System.String
         Get 
             Return GetProperty(_nameProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_nameProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _descnProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Product) p.Descn)
-    Public Property Descn() As String
+    Private Shared ReadOnly _descnProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.Descn)
+    Public Property Descn() As System.String
         Get 
             Return GetProperty(_descnProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_descnProperty, value)
         End Set
     End Property
     
     
-    Private Shared ReadOnly _imageProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Product) p.Image)
-    Public Property Image() As String
+    Private Shared ReadOnly _imageProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.Image)
+    Public Property Image() As System.String
         Get 
             Return GetProperty(_imageProperty)
         End Get
-        Set (ByVal value As String)
+        Set (ByVal value As System.String)
             SetProperty(_imageProperty, value)
         End Set
     End Property
     
-    Private Shared _categoryIdProperty As PropertyInfo(Of String) = RegisterProperty(Of String)(Function(p As Product) p.CategoryId)
-    Public Property CategoryId() As String 
-        Get  
-            Return GetProperty(_categoryIdProperty)                
-        End Get
-        Set (ByVal value As String)
-            SetProperty(_categoryIdProperty, value) 
-        End Set
-    End Property
-    
-    Private Shared ReadOnly _categoryProperty As PropertyInfo(Of Category) = RegisterProperty(Of Category)(Function(p As Product) p.Category, Csla.RelationshipTypes.LazyLoad)
-    Public ReadOnly Property Category() As Category
+    'ManyToOne
+    Private Shared ReadOnly _categoryMemberProperty As PropertyInfo(Of Category) = RegisterProperty(Of Category)(Function(p As Product) p.CategoryMember, Csla.RelationshipTypes.Child)
+    Public ReadOnly Property CategoryMember() As Category
         Get
-        
-            If Not(FieldManager.FieldExists(_categoryProperty))
-                If (Me.IsNew) Then
-                    LoadProperty(_categoryProperty, Category.NewCategory())
+            If Not(FieldManager.FieldExists(_categoryMemberProperty))
+                Dim criteria As New PetShop.Business.CategoryCriteria()
+                criteria.CategoryId = CategoryId
+                
+                If (Me.IsNew Or Not PetShop.Business.Category.Exists(criteria)) Then
+                    LoadProperty(_categoryMemberProperty, PetShop.Business.Category.NewCategory())
                 Else
-                    LoadProperty(_categoryProperty, Category.GetCategory(CategoryId))
+                    LoadProperty(_categoryMemberProperty, PetShop.Business.Category.GetByCategoryId(CategoryId))
                 End If
             End If
             
-            Return GetProperty(_categoryProperty) 
+            Return GetProperty(_categoryMemberProperty) 
         End Get
     End Property
     
-    Private Shared ReadOnly _itemsProperty As PropertyInfo(Of ItemList) = RegisterProperty(Of ItemList)(Function(p As Product) p.Items, Csla.RelationshipTypes.LazyLoad)
-    Public ReadOnly Property Items() As ItemList 
+    'OneToMany
+    Private Shared ReadOnly _itemsProperty As PropertyInfo(Of ItemList) = RegisterProperty(Of ItemList)(Function(p As Product) p.Items, Csla.RelationshipTypes.Child)
+Public ReadOnly Property Items() As ItemList 
         Get
             If Not (FieldManager.FieldExists(_itemsProperty)) Then
-                If (Me.IsNew) Then
-                    LoadProperty(_itemsProperty, ItemList.NewList())
+                Dim criteria As New PetShop.Business.ItemCriteria()
+                criteria.ProductId = ProductId
+                
+                If (Me.IsNew Or Not PetShop.Business.ItemList.Exists(criteria)) Then
+                    LoadProperty(_itemsProperty, PetShop.Business.ItemList.NewList())
                 Else
-                    LoadProperty(_itemsProperty, ItemList.GetByProductId(ProductId))
+                    LoadProperty(_itemsProperty, PetShop.Business.ItemList.GetByProductId(ProductId))
                 End If
             End If
             
@@ -140,51 +152,109 @@ Public Partial Class Product
     End Property
     
     #End Region
-            
+
     #Region "Root Factory Methods"
-    
+
     Public Shared Function NewProduct() As Product 
         Return DataPortal.Create(Of Product)()
     End Function
-    
-    Public Shared Function GetProduct(ByVal productId As String) As Product         
-        Return DataPortal.Fetch(Of Product)(New ProductCriteria(productId))
-    End Function
-    
-    Public Shared Function GetByCategoryProductIdName(ByVal categoryId As String, ByVal productId As String, ByVal name As String) As Product 
+
+    Public Shared Function GetByProductId(ByVal productId As System.String) As Product 
         Dim criteria As New ProductCriteria()
-        criteria.CategoryId = categoryId
         criteria.ProductId = productId
-        criteria.Name = name
-        
+
         Return DataPortal.Fetch(Of Product)(criteria)
     End Function
 
-    Public Shared Sub DeleteProduct(ByVal productId As String)
-        DataPortal.Delete(New ProductCriteria(productId))
-    End Sub
-    Public Shared Sub DeleteProduct(ByVal categoryId As String, ByVal name As String, ByVal productId As String)
+    Public Shared Function GetByName(ByVal name As System.String) As Product 
+        Dim criteria As New ProductCriteria()
+        criteria.Name = name
+
+        Return DataPortal.Fetch(Of Product)(criteria)
+    End Function
+
+    Public Shared Function GetByCategoryId(ByVal categoryId As System.String) As Product 
         Dim criteria As New ProductCriteria()
         criteria.CategoryId = categoryId
-        criteria.Name = name
-        criteria.ProductId = productId
 
-        DataPortal.Delete(criteria)
+        Return DataPortal.Fetch(Of Product)(criteria)
+    End Function
+
+    Public Shared Function GetByCategoryIdName(ByVal categoryId As System.String, ByVal name As System.String) As Product 
+        Dim criteria As New ProductCriteria()
+        criteria.CategoryId = categoryId
+		criteria.Name = name
+
+        Return DataPortal.Fetch(Of Product)(criteria)
+    End Function
+
+    Public Shared Function GetByCategoryIdProductIdName(ByVal categoryId As System.String, ByVal productId As System.String, ByVal name As System.String) As Product 
+        Dim criteria As New ProductCriteria()
+        criteria.CategoryId = categoryId
+		criteria.ProductId = productId
+		criteria.Name = name
+
+        Return DataPortal.Fetch(Of Product)(criteria)
+    End Function
+
+    Public Shared Sub DeleteProduct(ByVal productId As System.String)
+        DataPortal.Delete(New ProductCriteria(productId))
     End Sub
-    
+
     #End Region
-    
+
     #Region "Child Factory Methods"
-    
+
     Friend Shared Function NewProductChild() As Product
         Return DataPortal.CreateChild(Of Product)()
     End Function
-    
-    Friend Shared Function GetProductChild(ByVal productId As String) As Product         
-        Return DataPortal.FetchChild(Of Product)(New ProductCriteria(productId))
+
+    Friend Shared Function GetByProductIdChild(ByVal productId As System.String) As Product 
+        Dim criteria As New ProductCriteria()
+        criteria.ProductId = productId
+
+        Return DataPortal.FetchChild(Of Product)(criteria)
+    End Function
+
+    Friend Shared Function GetByNameChild(ByVal name As System.String) As Product 
+        Dim criteria As New ProductCriteria()
+        criteria.Name = name
+
+        Return DataPortal.FetchChild(Of Product)(criteria)
+    End Function
+
+    Friend Shared Function GetByCategoryIdChild(ByVal categoryId As System.String) As Product 
+        Dim criteria As New ProductCriteria()
+        criteria.CategoryId = categoryId
+
+        Return DataPortal.FetchChild(Of Product)(criteria)
+    End Function
+
+    Friend Shared Function GetByCategoryIdNameChild(ByVal categoryId As System.String, ByVal name As System.String) As Product 
+        Dim criteria As New ProductCriteria()
+        criteria.CategoryId = categoryId
+        criteria.Name = name
+
+        Return DataPortal.FetchChild(Of Product)(criteria)
+    End Function
+
+    Friend Shared Function GetByCategoryIdProductIdNameChild(ByVal categoryId As System.String, ByVal productId As System.String, ByVal name As System.String) As Product 
+        Dim criteria As New ProductCriteria()
+        criteria.CategoryId = categoryId
+        criteria.ProductId = productId
+        criteria.Name = name
+
+        Return DataPortal.FetchChild(Of Product)(criteria)
     End Function
 
     #End Region
-    
+
+    #Region "Exists Command"
+
+    Public Shared Function Exists(ByVal criteria As ProductCriteria) As Boolean
+        Return ExistsCommand.Execute(criteria)
+    End Function
+
+    #End Region
 
 End Class

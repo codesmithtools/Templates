@@ -13,7 +13,7 @@ Partial Public Class ItemsControl
         'get category id
         Dim productId As String = Request.QueryString("productId")
 
-        itemsGrid.DataSource = Product.GetProduct(productId).Items
+        itemsGrid.DataSource = PetShop.Business.Product.GetByProductId(productId).Items
         itemsGrid.DataBind()
     End Sub
 

@@ -123,6 +123,7 @@
       <DependentUpon>ProfileList.vb</DependentUpon>
     </Compile>
     <Compile Include="Collections\ProfileList.vb" />
+    <Compile Include="Commands\ExistsCommand.vb" />
     <Compile Include="CreditCard.vb" />
     <Compile Include="Criteria\AccountCriteria.Generated.vb">
       <DependentUpon>AccountCriteria.vb</DependentUpon>
@@ -136,6 +137,7 @@
       <DependentUpon>CategoryCriteria.vb</DependentUpon>
     </Compile>
     <Compile Include="Criteria\CategoryCriteria.vb" />
+    <Compile Include="Criteria\Interfaces\IGeneratedCriteria.vb" />
     <Compile Include="Criteria\InventoryCriteria.Generated.vb">
       <DependentUpon>InventoryCriteria.vb</DependentUpon>
     </Compile>

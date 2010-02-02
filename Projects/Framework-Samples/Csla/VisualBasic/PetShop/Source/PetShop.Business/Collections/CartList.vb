@@ -101,8 +101,8 @@ Public Partial Class CartList
         If found Then
             Items(index).Quantity += quantity
         Else
-            Dim item As Item = item.GetItem(itemId)
-            Dim product As Product = product.GetProduct(item.ProductId)
+            Dim item As Item = item.GetByItemId(itemId)
+            Dim product As Product = product.GetByProductId(item.ProductId)
             Dim cart As Cart = cart.NewCart()
             cart.UniqueID = uniqueID
             cart.ItemId = itemId

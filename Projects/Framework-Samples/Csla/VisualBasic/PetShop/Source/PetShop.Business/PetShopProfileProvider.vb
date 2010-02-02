@@ -315,7 +315,7 @@ Public NotInheritable Class PetShopProfileProvider
         Dim startIndex As Integer = pageSize * (pageIndex - 1)
         Dim endIndex As Integer = startIndex + pageSize - 1
 
-        Dim profileList As ProfileList = profileList.GetProfileList(usernameToMatch)
+        Dim profileList As ProfileList = profileList.GetByUsername(usernameToMatch)
         totalRecords = profileList.Count
 
         For Each profile As Profile In profileList

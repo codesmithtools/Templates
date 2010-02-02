@@ -22,8 +22,6 @@ Imports Csla.Validation
 Public Partial Class OrderStatus
     <RunLocal()> _
     Protected Shadows Sub DataPortal_Create()
-        'MyBase.DataPortal_Create()
-
         ValidationRules.CheckRules()
     End Sub
 
@@ -43,43 +41,22 @@ Public Partial Class OrderStatus
             End Using
         End Using
     End Sub
-    
-    Private Sub Map(ByVal reader As SafeDataReader)
-        LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
-        LoadProperty(_lineNumProperty, reader.GetInt32("LineNum"))
-        LoadProperty(_timestampProperty, reader.GetDateTime("Timestamp"))
-        LoadProperty(_statusProperty, reader.GetString("Status"))
-
-        LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
-
-        MarkOld()
-    End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Insert()
         Const commandText As String = "INSERT INTO [dbo].[OrderStatus] ([OrderId], [LineNum], [Timestamp], [Status]) VALUES (@p_OrderId, @p_LineNum, @p_Timestamp, @p_Status)"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "OrderStatusInsert")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_OrderId", OrderId)
-						command.Parameters.AddWithValue("@p_LineNum", LineNum)
-						command.Parameters.AddWithValue("@p_Timestamp", DirectCast(Timestamp.Date, DateTime))
-						command.Parameters.AddWithValue("@p_Status", Status)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_OrderId", OrderId)
+				command.Parameters.AddWithValue("@p_LineNum", LineNum)
+				command.Parameters.AddWithValue("@p_Timestamp", Timestamp)
+				command.Parameters.AddWithValue("@p_Status", Status)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            If reader.Read() Then
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
 
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("OrderStatusInsert")
-                        Throw
-                    End Try
+                    End If
                 End Using
             End Using
         End Using
@@ -89,30 +66,20 @@ Public Partial Class OrderStatus
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Update()
-        Const commandText As String = "UPDATE [dbo].[OrderStatus]  SET [Timestamp] = @p_Timestamp, [Status] = @p_Status WHERE [OrderId] = @p_OrderId AND [LineNum] = @p_LineNum"
+        Const commandText As String = "UPDATE [dbo].[OrderStatus]  SET [OrderId] = @p_OrderId, [LineNum] = @p_LineNum, [Timestamp] = @p_Timestamp, [Status] = @p_Status WHERE [OrderId] = @p_OrderId AND [LineNum] = @p_LineNum"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "OrderStatusUpdate")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_OrderId", OrderId)
-						command.Parameters.AddWithValue("@p_LineNum", LineNum)
-						command.Parameters.AddWithValue("@p_Timestamp", DirectCast(Timestamp.Date, DateTime))
-						command.Parameters.AddWithValue("@p_Status", Status)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_OrderId", OrderId)
+				command.Parameters.AddWithValue("@p_LineNum", LineNum)
+				command.Parameters.AddWithValue("@p_Timestamp", Timestamp)
+				command.Parameters.AddWithValue("@p_Status", Status)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("OrderStatusUpdate")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    If reader.RecordsAffected = 0 Then
+                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
                 End Using
             End Using
         End Using
@@ -122,34 +89,34 @@ Public Partial Class OrderStatus
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_DeleteSelf()
-        DataPortal_Delete(new OrderStatusCriteria(OrderId, LineNum))
+        DataPortal_Delete(New OrderStatusCriteria(OrderId, LineNum))
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Sub DataPortal_Delete(ByVal criteria As OrderStatusCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As OrderStatusCriteria)
         Dim commandText As String = String.Format("DELETE FROM [dbo].[OrderStatus] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "OrderStatusDelete")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("OrderStatusDelete")
-                        Throw
-                    End Try
-                End Using
+				'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+				Dim result As Integer = command.ExecuteNonQuery()
+				If (result = 0) Then
+					throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+				End If
             End Using
         End Using
+    End Sub
+
+    Private Sub Map(ByVal reader As SafeDataReader)
+        Using(BypassPropertyChecks)
+            LoadProperty(_orderIdProperty, reader.GetInt32("OrderId"))
+            LoadProperty(_lineNumProperty, reader.GetInt32("LineNum"))
+            LoadProperty(_timestampProperty, reader.GetDateTime("Timestamp"))
+            LoadProperty(_statusProperty, reader.GetString("Status"))
+        End Using
+
+        MarkOld()
     End Sub
 End Class

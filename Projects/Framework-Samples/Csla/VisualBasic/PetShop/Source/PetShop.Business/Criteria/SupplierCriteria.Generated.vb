@@ -24,6 +24,7 @@ Imports Csla
 <Serializable()> _
 Public Partial Class SupplierCriteria
     Inherits CriteriaBase
+    Implements IGeneratedCriteria
 
     #Region "Private Read-Only Members"
     
@@ -37,7 +38,7 @@ Public Partial Class SupplierCriteria
         MyBase.New(GetType(Supplier))
     End Sub
     
-    Public Sub New(ByVal suppId As Integer) 
+    Public Sub New(ByVal suppId As System.Int32) 
         MyBase.New(GetType(Supplier))
         
         Me.SuppId = suppId
@@ -50,12 +51,84 @@ Public Partial Class SupplierCriteria
     
     #Region "Read-Write"
     
-    Public Property SuppId() As Integer
+    Public Property SuppId() As System.Int32
         Get
-            Return GetValue(Of Integer)("SuppId")
+            Return GetValue(Of System.Int32)("SuppId")
         End Get
         Set
             _bag("SuppId") = value
+        End Set
+    End Property
+    
+    Public Property Name() As System.String
+        Get
+            Return GetValue(Of System.String)("Name")
+        End Get
+        Set
+            _bag("Name") = value
+        End Set
+    End Property
+    
+    Public Property Status() As System.String
+        Get
+            Return GetValue(Of System.String)("Status")
+        End Get
+        Set
+            _bag("Status") = value
+        End Set
+    End Property
+    
+    Public Property Addr1() As System.String
+        Get
+            Return GetValue(Of System.String)("Addr1")
+        End Get
+        Set
+            _bag("Addr1") = value
+        End Set
+    End Property
+    
+    Public Property Addr2() As System.String
+        Get
+            Return GetValue(Of System.String)("Addr2")
+        End Get
+        Set
+            _bag("Addr2") = value
+        End Set
+    End Property
+    
+    Public Property City() As System.String
+        Get
+            Return GetValue(Of System.String)("City")
+        End Get
+        Set
+            _bag("City") = value
+        End Set
+    End Property
+    
+    Public Property State() As System.String
+        Get
+            Return GetValue(Of System.String)("State")
+        End Get
+        Set
+            _bag("State") = value
+        End Set
+    End Property
+    
+    Public Property Zip() As System.String
+        Get
+            Return GetValue(Of System.String)("Zip")
+        End Get
+        Set
+            _bag("Zip") = value
+        End Set
+    End Property
+    
+    Public Property Phone() As System.String
+        Get
+            Return GetValue(Of System.String)("Phone")
+        End Get
+        Set
+            _bag("Phone") = value
         End Set
     End Property
 
@@ -66,9 +139,18 @@ Public Partial Class SupplierCriteria
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
+    Public ReadOnly Property StateBag() As Dictionary(Of String, Object) Implements IGeneratedCriteria.StateBag
         Get
             Return _bag
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Returns a list of all the modified properties and values.
+    ''' </summary>
+    Public ReadOnly Property TableName() As String Implements IGeneratedCriteria.TableName
+        Get
+            Return "[dbo].Supplier"
         End Get
     End Property
 

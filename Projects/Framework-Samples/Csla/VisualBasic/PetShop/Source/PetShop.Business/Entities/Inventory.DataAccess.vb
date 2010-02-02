@@ -22,8 +22,6 @@ Imports Csla.Validation
 Public Partial Class Inventory
     <RunLocal()> _
     Protected Shadows Sub DataPortal_Create()
-        'MyBase.DataPortal_Create()
-
         ValidationRules.CheckRules()
     End Sub
 
@@ -43,38 +41,20 @@ Public Partial Class Inventory
             End Using
         End Using
     End Sub
-    
-    Private Sub Map(ByVal reader As SafeDataReader)
-        LoadProperty(_itemIdProperty, reader.GetString("ItemId"))
-        LoadProperty(_qtyProperty, reader.GetInt32("Qty"))
-
-
-        MarkOld()
-    End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Insert()
         Const commandText As String = "INSERT INTO [dbo].[Inventory] ([ItemId], [Qty]) VALUES (@p_ItemId, @p_Qty)"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "InventoryInsert")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_ItemId", ItemId)
-						command.Parameters.AddWithValue("@p_Qty", Qty)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_ItemId", ItemId)
+				command.Parameters.AddWithValue("@p_Qty", Qty)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            If reader.Read() Then
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    If reader.Read() Then
 
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("InventoryInsert")
-                        Throw
-                    End Try
+                    End If
                 End Using
             End Using
         End Using
@@ -83,28 +63,18 @@ Public Partial Class Inventory
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Update()
-        Const commandText As String = "UPDATE [dbo].[Inventory]  SET [Qty] = @p_Qty WHERE [ItemId] = @p_ItemId"
+        Const commandText As String = "UPDATE [dbo].[Inventory]  SET [ItemId] = @p_ItemId, [Qty] = @p_Qty WHERE [ItemId] = @p_ItemId"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "InventoryUpdate")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_ItemId", ItemId)
-						command.Parameters.AddWithValue("@p_Qty", Qty)
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddWithValue("@p_ItemId", ItemId)
+				command.Parameters.AddWithValue("@p_Qty", Qty)
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("InventoryUpdate")
-                        Throw
-                    End Try
+                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                    'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    If reader.RecordsAffected = 0 Then
+                        Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
                 End Using
             End Using
         End Using
@@ -113,34 +83,32 @@ Public Partial Class Inventory
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_DeleteSelf()
-        DataPortal_Delete(new InventoryCriteria(ItemId))
+        DataPortal_Delete(New InventoryCriteria(ItemId))
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Sub DataPortal_Delete(ByVal criteria As InventoryCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As InventoryCriteria)
         Dim commandText As String = String.Format("DELETE FROM [dbo].[Inventory] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using transaction As SqlTransaction = connection.BeginTransaction(IsolationLevel.ReadCommitted, "InventoryDelete")
-                Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                    command.Transaction = transaction
+            Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
 
-                    Try
-                        Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                            'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            If reader.RecordsAffected = 0 Then
-                                Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                            End If
-                        End Using
-
-                        transaction.Commit()
-                    Catch generatedExceptionName As Exception
-                        transaction.Rollback("InventoryDelete")
-                        Throw
-                    End Try
-                End Using
+				'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+				Dim result As Integer = command.ExecuteNonQuery()
+				If (result = 0) Then
+					throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+				End If
             End Using
         End Using
+    End Sub
+
+    Private Sub Map(ByVal reader As SafeDataReader)
+        Using(BypassPropertyChecks)
+            LoadProperty(_itemIdProperty, reader.GetString("ItemId"))
+            LoadProperty(_qtyProperty, reader.GetInt32("Qty"))
+        End Using
+
+        MarkOld()
     End Sub
 End Class

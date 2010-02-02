@@ -24,6 +24,7 @@ Imports Csla
 <Serializable()> _
 Public Partial Class ItemCriteria
     Inherits CriteriaBase
+    Implements IGeneratedCriteria
 
     #Region "Private Read-Only Members"
     
@@ -37,7 +38,7 @@ Public Partial Class ItemCriteria
         MyBase.New(GetType(Item))
     End Sub
     
-    Public Sub New(ByVal itemId As String) 
+    Public Sub New(ByVal itemId As System.String) 
         MyBase.New(GetType(Item))
         
         Me.ItemId = itemId
@@ -50,48 +51,75 @@ Public Partial Class ItemCriteria
     
     #Region "Read-Write"
     
-    Public Property ProductId() As String
+    Public Property ItemId() As System.String
         Get
-            Return GetValue(Of String)("ProductId")
-        End Get
-        Set
-            _bag("ProductId") = value
-        End Set
-    End Property
-    
-    Public Property SuppId() As System.Nullable(Of Integer)
-        Get
-            Return GetValue(Of System.Nullable(Of Integer))("Supplier")
-        End Get
-        Set
-            _bag("Supplier") = value
-        End Set
-    End Property
-    
-    Public Property ItemId() As String
-        Get
-            Return GetValue(Of String)("ItemId")
+            Return GetValue(Of System.String)("ItemId")
         End Get
         Set
             _bag("ItemId") = value
         End Set
     End Property
     
-    Public Property ListPrice() As System.Nullable(Of Decimal)
+    Public Property ProductId() As System.String
         Get
-            Return GetValue(Of System.Nullable(Of Decimal))("ListPrice")
+            Return GetValue(Of System.String)("ProductId")
+        End Get
+        Set
+            _bag("ProductId") = value
+        End Set
+    End Property
+    
+    Public Property ListPrice() As System.Nullable(Of System.Decimal)
+        Get
+            Return GetValue(Of System.Nullable(Of System.Decimal))("ListPrice")
         End Get
         Set
             _bag("ListPrice") = value
         End Set
     End Property
     
-    Public Property Name() As String
+    Public Property UnitCost() As System.Nullable(Of System.Decimal)
         Get
-            Return GetValue(Of String)("Name")
+            Return GetValue(Of System.Nullable(Of System.Decimal))("UnitCost")
+        End Get
+        Set
+            _bag("UnitCost") = value
+        End Set
+    End Property
+    
+    Public Property Supplier() As System.Nullable(Of System.Int32)
+        Get
+            Return GetValue(Of System.Nullable(Of System.Int32))("Supplier")
+        End Get
+        Set
+            _bag("Supplier") = value
+        End Set
+    End Property
+    
+    Public Property Status() As System.String
+        Get
+            Return GetValue(Of System.String)("Status")
+        End Get
+        Set
+            _bag("Status") = value
+        End Set
+    End Property
+    
+    Public Property Name() As System.String
+        Get
+            Return GetValue(Of System.String)("Name")
         End Get
         Set
             _bag("Name") = value
+        End Set
+    End Property
+    
+    Public Property Image() As System.String
+        Get
+            Return GetValue(Of System.String)("Image")
+        End Get
+        Set
+            _bag("Image") = value
         End Set
     End Property
 
@@ -102,9 +130,18 @@ Public Partial Class ItemCriteria
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
+    Public ReadOnly Property StateBag() As Dictionary(Of String, Object) Implements IGeneratedCriteria.StateBag
         Get
             Return _bag
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Returns a list of all the modified properties and values.
+    ''' </summary>
+    Public ReadOnly Property TableName() As String Implements IGeneratedCriteria.TableName
+        Get
+            Return "[dbo].Item"
         End Get
     End Property
 

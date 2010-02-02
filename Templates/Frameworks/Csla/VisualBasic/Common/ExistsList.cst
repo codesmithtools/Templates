@@ -11,7 +11,7 @@
     #Region "Exists Command"
 
     Public Shared Function Exists(ByVal criteria As <%= ChildBusinessClassName %>Criteria) As Boolean
-        Return <%= ChildBusinessClassName %>.Exists(criteria)
+        Return <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria)
     End Function
 
     #End Region
