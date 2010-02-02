@@ -13,24 +13,27 @@
             connection.Open()
             Using command As New SqlCommand("<%= GetInsertStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
-                <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, True) %>
+                <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, True, True) %>
 
+<% If (Entity.HasRowVersionMember) Then %>
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
-<% If (Entity.HasRowVersionMember) Then %>
                         _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
-<% End If %>
-
-<% If (Entity.PrimaryKey.IsIdentity) Then %>
-<% for each [member] As Member in Entity.PrimaryKey.KeyMembers
-If(UseMemberVariables) Then %>
-                        <%= [member].PrivateMemberVariableName %> = <%If Not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
-<% else %>
-                        LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <% If NOT [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
-<%  End If
-Next %>
-<% End If %>
                     End If
                 End Using
+<% Else %>
+                command.ExecuteNonQuery()
+<% End If
+If (Entity.HasIdentityMember) Then %>
+<% for each member As Member in Entity.PrimaryKey.KeyMembers
+    If(member.IsIdentity) Then
+        If(UseMemberVariables) Then %>
+                <%= member.PrivateMemberVariableName %> =  (<%= member.SystemType %>)command.Parameters("<%= member.BuildParameterVariableName() %>").Value
+        <% else %>
+                LoadProperty(<%= member.PrivateMemberVariableName %>Property, command.Parameters("<%= member.BuildParameterVariableName() %>").Value)
+        <%  End If
+    End If
+Next %>
+<% End If %>
             End Using
         End Using

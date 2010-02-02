@@ -7,6 +7,12 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PetShop.UI", "Source\PetSho
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PetShop.Controls", "Source\PetShop.Controls\PetShop.Controls.vbproj", "{7217E466-4728-4CF8-B736-CA65B779AA26}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Tests", "Unit Tests", "{7E47C618-143C-429C-883A-343DAC3203E0}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PetShop.Tests.ParameterizedSQL", "Source\PetShop.Tests\PetShop.Tests.ParameterizedSQL\PetShop.Tests.ParameterizedSQL.vbproj", "{B5772F1F-5418-4C85-8C83-1BC333F19884}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PetShop.Tests.StoredProcedures", "Source\PetShop.Tests\PetShop.Tests.StoredProcedures\PetShop.Tests.StoredProcedures.vbproj", "{F6247C42-9359-44FC-9D11-68987437592A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,8 +31,20 @@ Global
 		{7217E466-4728-4CF8-B736-CA65B779AA26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7217E466-4728-4CF8-B736-CA65B779AA26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7217E466-4728-4CF8-B736-CA65B779AA26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5772F1F-5418-4C85-8C83-1BC333F19884}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5772F1F-5418-4C85-8C83-1BC333F19884}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5772F1F-5418-4C85-8C83-1BC333F19884}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5772F1F-5418-4C85-8C83-1BC333F19884}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6247C42-9359-44FC-9D11-68987437592A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6247C42-9359-44FC-9D11-68987437592A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6247C42-9359-44FC-9D11-68987437592A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6247C42-9359-44FC-9D11-68987437592A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B5772F1F-5418-4C85-8C83-1BC333F19884} = {7E47C618-143C-429C-883A-343DAC3203E0}
+		{F6247C42-9359-44FC-9D11-68987437592A} = {7E47C618-143C-429C-883A-343DAC3203E0}
 	EndGlobalSection
 EndGlobal

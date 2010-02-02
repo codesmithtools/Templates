@@ -55,11 +55,6 @@ Public Partial Class <%= BusinessClassName %>
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_Insert()
 <% RenderHelper(New DataPortalInsert()) %>
-        End Using
-
-<% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0)Then %>
-        FieldManager.UpdateChildren(Me)
-<% End If %>
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _

@@ -18,17 +18,22 @@
                 command.Parameters.AddWithValue("@p_<%= entity.RowVersionMember.ColumnName %>", _timestamp)
 <% End If %>
 
+<% if(Entity.HasRowVersionMember) Then %>
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
                     If reader.RecordsAffected = 0 Then
                         Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
                     End If
-<% If (Entity.HasRowVersionMember) Then %>
-
                     If reader.Read() then
                         _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
                     End If
-<% End If %>
                 End Using
+<% Else %>
+                'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                Dim result As Integer = command.ExecuteNonQuery()
+                If (result = 0) Then
+                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                End If
+<% End If %>
             End Using
         End Using
