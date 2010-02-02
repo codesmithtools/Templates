@@ -4,9 +4,11 @@
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
+<%@ Assembly Name="SchemaExplorer" %>
 
-<%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+<%@ Import Namespace="SchemaExplorer" %>
 
 <%@ Property Name="UseDeferredDeletion" Type="System.Boolean" Default="False" Category="3. Business Project" Description="Changes how the Business Objects are deleted, defaults to immediate deletion" %>
 '------------------------------------------------------------------------------
@@ -34,7 +36,7 @@ Imports Csla
 
 <Serializable()> _
 Public Partial Class <%= BusinessClassName %>
-    Inherits CriteriaBase
+    Inherits CriteriaBase, IGeneratedCriteria
 
     #Region "Private Read-Only Members"
     
@@ -106,6 +108,15 @@ Public Partial Class <%= BusinessClassName %>
     Public ReadOnly Property StateBag() As Dictionary(Of String, Object)
         Get
             Return _bag
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Returns a list of all the modified properties and values.
+    ''' </summary>
+    Public ReadOnly Property TableName() As String
+        Get
+            Return "[<%= Entity.Table.Owner%>].<%= Entity.Table.Name%>"
         End Get
     End Property
 

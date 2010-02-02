@@ -20,7 +20,6 @@
 <% If (Entity.HasRowVersionMember) Then %>
                         _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
-
 <% If (Entity.PrimaryKey.IsIdentity) Then %>
 <% for each [member] As Member in Entity.PrimaryKey.KeyMembers
 If(UseMemberVariables) Then %>

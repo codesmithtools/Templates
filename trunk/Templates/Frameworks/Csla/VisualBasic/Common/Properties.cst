@@ -69,7 +69,7 @@ If UseMemberVariables then %>
         Get
 <% If UseLazyLoading Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-        If (Me.IsNew) Then
+                If (Me.IsNew Or Not <%= BusinessProjectName %>.<%= association.ClassName %>List.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}) Then
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>())
                 Else
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
@@ -92,7 +92,7 @@ If UseMemberVariables then %>
         Get
 <% If UseLazyLoading Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                If (Me.IsNew) Then
+                If (Me.IsNew Or Not <%= BusinessProjectName %>.<%= association.ClassName %>List.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}) Then
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.New<%= association.ClassName %>())
                 Else
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.ClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
@@ -120,7 +120,7 @@ If UseMemberVariables Then %>
         Get
 <% If UseLazyLoading Then  %>
             If Not(FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                If (Me.IsNew) Then
+                If (Me.IsNew Or Not <%= BusinessProjectName %>.<%= association.ClassName %>List.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}) Then
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.New<%= association.ClassName %>())
                 Else
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
@@ -139,7 +139,7 @@ If UseMemberVariables Then %>
         
 <% If UseLazyLoading Then %>
             If Not(FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                If (Me.IsNew) Then
+                If (Me.IsNew Or Not <%= BusinessProjectName %>.<%= association.ClassName %>List.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}) Then
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.New<%= association.ClassName %>())
                 Else
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
@@ -167,7 +167,7 @@ If (UseMemberVariables) Then %>
         Get
 <% If(UseLazyLoading) Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property)) Then
-                If (Me.IsNew) Then
+                If (Me.IsNew Or Not <%= BusinessProjectName %>.<%= association.ClassName %>List.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}) Then
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>List.NewList())
                 Else
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
@@ -190,7 +190,7 @@ Public ReadOnly Property <%= association.PropertyName %>() As <%= association.Cl
         Get
 <% If(UseLazyLoading) Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property)) Then
-                If (Me.IsNew) Then
+                If (Me.IsNew Or Not <%= BusinessProjectName %>.<%= association.ClassName %>List.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}) Then
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>List.NewList())
                 Else
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= association.ClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
