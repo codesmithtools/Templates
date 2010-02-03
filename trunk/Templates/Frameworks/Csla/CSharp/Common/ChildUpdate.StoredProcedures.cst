@@ -17,7 +17,7 @@
                     command.CommandType = CommandType.StoredProcedure;
                     <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, true, true) %>
 <% if(Entity.HasRowVersionMember) { %>
-                    command.Parameters.AddWithValue("@p_<%= Entity.RowVersionMember.ColumnName %>", _timestamp);
+                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", _timestamp);
 <% } %>
 
 <% if(Entity.HasRowVersionMember) { %>
