@@ -9,6 +9,12 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+        Dim cancel As Boolean = False
+        OnChildUpdating(cancel)
+        If (cancel) Then
+            Return
+        End If
+
         Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersUpdateInsert.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = <%= ParameterPrefix  %><%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
@@ -32,3 +38,5 @@
                 End Using
             End Using
         End Using
+
+        OnChildUpdated()

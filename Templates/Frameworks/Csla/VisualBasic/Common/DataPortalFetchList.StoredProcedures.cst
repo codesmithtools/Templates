@@ -9,6 +9,12 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+        Dim cancel As Boolean = False
+        OnFetching(criteria, cancel)
+        If (cancel) Then
+            Return
+        End If
+
         ' Fetch Child objects.
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
@@ -26,3 +32,5 @@
                 End Using
             End Using
         End Using
+
+        OnFetched()

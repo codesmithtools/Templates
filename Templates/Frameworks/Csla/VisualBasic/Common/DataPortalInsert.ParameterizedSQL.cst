@@ -9,6 +9,12 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+        Dim cancel As Boolean = False
+        OnInserting(cancel)
+        If (cancel) Then
+            Return
+        End If
+
         Const commandText As String = "INSERT INTO [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] (<%= entity.MembersUpdateInsert.BuildDataBaseColumns() %>) VALUES (<%= entity.MembersUpdateInsert.BuildDataBaseParameters() %>)<%= entity.BuildInsertSelectStatement() %>"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
@@ -38,3 +44,5 @@ Next %>
 <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0)Then %>
         FieldManager.UpdateChildren(Me)
 <% End If %>
+
+        OnInserted()
