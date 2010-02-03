@@ -5,6 +5,7 @@
 <%@ Register Name="DataPortalInsert" Template="..\..\Common\DataPortalInsert.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalUpdate" Template="..\..\Common\DataPortalUpdate.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\DataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
@@ -83,5 +84,7 @@ namespace <%= BusinessProjectName %>
 
             MarkOld();
         }
+
+<% RenderHelper(new PartialMethods()); %>
     }
 }

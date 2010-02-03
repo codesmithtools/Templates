@@ -9,6 +9,10 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+            bool cancel = false;
+            OnDeleting(criteria, ref cancel);
+            if (cancel) return;
+
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
@@ -23,3 +27,5 @@
                         throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
                 }
             }
+
+            OnDeleted();

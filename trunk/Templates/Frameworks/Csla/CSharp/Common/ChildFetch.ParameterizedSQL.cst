@@ -9,6 +9,10 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+            bool cancel = false;
+            OnChildFetching(criteria, ref cancel);
+            if (cancel) return;
+
             string commandText = string.Format("SELECT <%= Entity.Members.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
@@ -25,3 +29,5 @@
                     }
                 }
             }
+
+            OnChildFetched();

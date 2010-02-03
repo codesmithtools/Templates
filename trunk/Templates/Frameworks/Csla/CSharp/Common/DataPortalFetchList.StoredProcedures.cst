@@ -9,6 +9,10 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+            bool cancel = false;
+            OnFetching(criteria, ref cancel);
+            if (cancel) return;
+
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
@@ -30,3 +34,5 @@
                     }
                 }
             }
+
+            OnFetched();

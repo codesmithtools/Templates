@@ -9,6 +9,10 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+            bool cancel = false;
+            OnInserting(ref cancel);
+            if (cancel) return;
+
             const string commandText = "INSERT INTO [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] (<%= Entity.MembersUpdateInsert.BuildDataBaseColumns() %>) VALUES (<%= Entity.MembersUpdateInsert.BuildDataBaseParameters() %>)<%= Entity.BuildInsertSelectStatement() %>";
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
@@ -21,20 +25,22 @@
                     {
                         if(reader.Read())
                         {
-							using (BypassPropertyChecks)
-							{
+                            using (BypassPropertyChecks)
+                            {
 <% if(Entity.HasRowVersionMember) { %>
-								_timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");                        
+                                _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");                        
 <% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { if(UseMemberVariables) { %>
-								<%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>GetBytes(reader);<% } %>
+                                <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>GetBytes(reader);<% } %>
 <% } else { %>
-								LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>GetBytes(reader," <%= member.ColumnName %>"));<% } %>
+                                LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>GetBytes(reader," <%= member.ColumnName %>"));<% } %>
 <% } } } %>
-							}
+                            }
                         }
                     }
                 }
             }
+
+            OnInserted();
 
 <% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0){ %>
             FieldManager.UpdateChildren(this);

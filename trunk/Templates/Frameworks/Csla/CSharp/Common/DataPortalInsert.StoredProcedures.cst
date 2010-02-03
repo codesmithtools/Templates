@@ -9,6 +9,10 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+            bool cancel = false;
+            OnInserting(ref cancel);
+            if (cancel) return;
+
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
@@ -39,6 +43,8 @@
 <% } %>
                 }
             }
+
+            OnInserted();
 
 <% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0){ %>
             FieldManager.UpdateChildren(this);

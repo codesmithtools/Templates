@@ -5,9 +5,11 @@
 <%@ Register Name="DataPortalInsert" Template="..\..\Common\DataPortalInsert.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalUpdate" Template="..\..\Common\DataPortalUpdate.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ChildCreate" Template="..\..\Common\ChildCreate.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildInsert" Template="..\..\Common\ChildInsert.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildUpdate" Template="..\..\Common\ChildUpdate.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\DataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -86,9 +88,7 @@ namespace <%= BusinessProjectName %>
 
         protected override void Child_Create()
         {
-            // TODO: load default values
-            // omit this override if you have no defaults to set
-            //base.Child_Create();
+<% RenderHelper(new ChildCreate()); %>
         }
 
         private void Child_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
@@ -121,5 +121,22 @@ namespace <%= BusinessProjectName %>
 
             MarkOld();
         }
+
+<% RenderHelper(new PartialMethods()); %>
+
+        #region Child data access partial methods
+
+        partial void OnChildCreating(ref bool cancel);
+        partial void OnChildCreated();
+        partial void OnChildFetching(<%= ChildBusinessClassName %>Criteria criteria, ref bool cancel);
+        partial void OnChildFetched();
+        partial void OnChildInserting(ref bool cancel);
+        partial void OnChildInserted();
+        partial void OnChildUpdating(ref bool cancel);
+        partial void OnChildUpdated();
+        partial void OnChildSelfDeleting(ref bool cancel);
+        partial void OnChildSelfDeleted();
+
+        #endregion
     }
 }

@@ -111,6 +111,7 @@
     <Compile Include="Collections\ProfileList.Generated.cs">
       <DependentUpon>ProfileList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Commands\ExistsCommand.cs" />
     <Compile Include="CreditCard.cs" />
     <Compile Include="Criteria\AccountCriteria.cs" />
     <Compile Include="Criteria\AccountCriteria.Generated.cs">
@@ -124,6 +125,7 @@
     <Compile Include="Criteria\CategoryCriteria.Generated.cs">
       <DependentUpon>CategoryCriteria.cs</DependentUpon>
     </Compile>
+    <Compile Include="Criteria\Interfaces\IGeneratedCriteria.cs" />
     <Compile Include="Criteria\InventoryCriteria.cs" />
     <Compile Include="Criteria\InventoryCriteria.Generated.cs">
       <DependentUpon>InventoryCriteria.cs</DependentUpon>

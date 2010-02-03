@@ -9,6 +9,10 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return;
+
 <% foreach(Member member in Entity.PrimaryKey.KeyMembers) {
 if(member.SystemType == "System.Guid") { if(UseMemberVariables) { %>
             <%= member.PrivateMemberVariableName %> = Guid.NewGuid();
@@ -22,3 +26,5 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
             LoadProperty(<%= member.AssociatedColumn.PrivateMemberVariableName %>Property, "BN");
 <% } } } } %>
             ValidationRules.CheckRules();
+
+            OnCreated();
