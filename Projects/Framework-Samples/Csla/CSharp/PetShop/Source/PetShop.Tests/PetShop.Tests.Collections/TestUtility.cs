@@ -22,7 +22,6 @@ namespace PetShop.Tests.Collections
         /// </summary>
         private TestUtility()
         {
-
         }
 
         /// <summary>
