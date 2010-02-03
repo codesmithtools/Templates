@@ -15,11 +15,9 @@ using System.Reflection;
 [assembly: AssemblyProduct("CSLA")]
 [assembly: AssemblyCopyright("Copyright (c) 2002-2009 CodeSmith Tools, LLC.  All rights reserved.")]
 [assembly: AssemblyConfiguration("Release")]
-[assembly: AssemblyVersion("1.1.1.0")]
-[assembly: AssemblyFileVersion("1.1.1.0")]
-[assembly: AssemblyInformationalVersion("1.1.1.0")]
-
-
+[assembly: AssemblyVersion("1.5.0.0")]
+[assembly: AssemblyFileVersion("1.5.0.0")]
+[assembly: AssemblyInformationalVersion("1.5.0.0")]
 
 internal static class ThisAssembly {
     
@@ -31,9 +29,9 @@ internal static class ThisAssembly {
     
     internal const string AssemblyConfiguration = "Release";
 
-    internal const string AssemblyVersion = "1.1.1.0";
+    internal const string AssemblyVersion = "1.5.0.0";
 
-    internal const string AssemblyFileVersion = "1.1.1.0";
+    internal const string AssemblyFileVersion = "1.5.0.0";
 
-    internal const string AssemblyInformationalVersion = "1.1.1.0";
+    internal const string AssemblyInformationalVersion = "1.5.0.0";
 }

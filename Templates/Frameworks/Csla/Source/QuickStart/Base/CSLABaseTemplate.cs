@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 
 using CodeSmith.Engine;
@@ -26,6 +27,48 @@ namespace QuickStart
 
         [Browsable(false)]
         public Dictionary<string, string> TemplateContext { get; set; }
+
+        [Browsable(false)]
+        public string TemplateVersion
+        {
+            get
+            {
+                var fileName = typeof(CodeSmith.SchemaHelper.Entity).Assembly.Location;
+                if (fileName != null)
+                {
+                    return FileVersionInfo.GetVersionInfo(fileName).FileVersion;
+                }
+
+                return "0.0.0.0";
+            }
+        }
+
+        [Browsable(false)]
+        public string CSLAVersion
+        {
+            get
+            {
+                return "3.8.0";
+            }
+        }
+
+        [Browsable(false)]
+        public string CodeSmithVersion
+        {
+            get
+            {
+                return CodeSmith.Engine.Configuration.Instance.ConfigurationVersion;
+            }
+        }
+
+        [Browsable(false)]
+        public string VersionInfo
+        {
+            get
+            {
+                return string.Format("CodeSmith: v{0}, CSLA Templates: v{1}, CSLA Framework: v{2}", CodeSmithVersion, TemplateVersion, CSLAVersion);
+            }
+        }
 
         #endregion
 
