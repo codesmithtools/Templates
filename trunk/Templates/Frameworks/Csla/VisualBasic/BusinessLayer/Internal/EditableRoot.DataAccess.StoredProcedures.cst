@@ -5,6 +5,7 @@
 <%@ Register Name="DataPortalInsert" Template="..\..\Common\DataPortalInsert.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalUpdate" Template="..\..\Common\DataPortalUpdate.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\DataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -58,7 +59,15 @@ Public Partial Class <%= BusinessClassName %>
 
     <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_DeleteSelf()
+        Dim cancel As Boolean = False
+        OnSelfDeleting(cancel)
+        If (cancel) Then
+            Return
+        End If
+    
         DataPortal_Delete(New <%= ChildBusinessClassName %>Criteria(<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
+    
+		OnSelfDeleted()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
@@ -71,4 +80,6 @@ Public Partial Class <%= BusinessClassName %>
 
         MarkOld()
     End Sub
+    
+<% RenderHelper(New PartialMethods()) %>
 End Class

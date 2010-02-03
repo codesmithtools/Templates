@@ -1,9 +1,11 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X EditableRoot" %>
 <%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ChildCreate" Template="..\..\Common\ChildCreate.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildInsert" Template="..\..\Common\ChildInsert.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildUpdate" Template="..\..\Common\ChildUpdate.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\ChildPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -38,9 +40,7 @@ Imports Csla.Data
 Public Partial Class <%= BusinessClassName %>
     <RunLocal()> _
     Protected Overrides Sub Child_Create()
-        ' TODO: load default values
-        ' omit this override if you have no defaults to set
-        'MyBase.Child_Create()
+<% RenderHelper(New ChildCreate()) %>
     End Sub
     
     Private Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
@@ -56,7 +56,15 @@ Public Partial Class <%= BusinessClassName %>
     End Sub
     
     Private Sub Child_DeleteSelf()
+        Dim cancel As Boolean = False
+        OnChildSelfDeleting(cancel)
+        If (cancel) Then
+            Return
+        End If
+    
         DataPortal_Delete(New <%= ChildBusinessClassName %>Criteria(<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
+    
+		OnChildSelfDeleted()
     End Sub
     
     <Transactional(TransactionalTypes.TransactionScope)> _
@@ -70,4 +78,6 @@ Public Partial Class <%= BusinessClassName %>
         MarkAsChild()
         MarkOld()
     End Sub
+    
+<% RenderHelper(New PartialMethods()) %>
 End Class

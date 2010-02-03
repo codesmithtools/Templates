@@ -9,6 +9,12 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+        Dim cancel As Boolean = False
+        OnChildFetching(criteria, cancel)
+        If (cancel) Then
+            Return
+        End If
+
         Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
@@ -23,3 +29,5 @@
                 End Using
             End Using
         End Using
+
+        OnChildFetched()

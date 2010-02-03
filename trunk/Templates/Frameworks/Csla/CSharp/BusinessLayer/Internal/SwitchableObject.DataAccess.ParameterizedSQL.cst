@@ -73,7 +73,13 @@ namespace <%= BusinessProjectName %>
         [Transactional(TransactionalTypes.TransactionScope)]
         protected override void DataPortal_DeleteSelf()
         {
+            bool cancel = false;
+            OnSelfDeleting(ref cancel);
+            if (cancel) return;
+            
             DataPortal_Delete(new <%= ChildBusinessClassName %>Criteria(<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
+        
+			OnSelfDeleted();
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]
@@ -110,7 +116,13 @@ namespace <%= BusinessProjectName %>
 
         private void Child_DeleteSelf()
         {
+            bool cancel = false;
+            OnChildSelfDeleting(ref cancel);
+            if (cancel) return;
+            
             DataPortal_Delete(new <%= ChildBusinessClassName %>Criteria(<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %><% if(Entity.HasRowVersionMember) { %>, _timestamp<% } %>));
+        
+			OnChildSelfDeleted();
         }
 
         #endregion

@@ -9,6 +9,12 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+        Dim cancel As Boolean = False
+        OnChildInserting(cancel)
+        If (cancel) Then
+            Return
+        End If
+
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand("<%= GetInsertStoredProcedureName() %>", connection)
@@ -37,3 +43,5 @@ Next %>
 <% End If %>
             End Using
         End Using
+
+        OnChildInserted()
