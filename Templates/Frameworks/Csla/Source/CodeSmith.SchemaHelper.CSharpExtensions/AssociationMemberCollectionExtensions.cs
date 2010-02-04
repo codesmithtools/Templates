@@ -10,6 +10,11 @@ namespace CodeSmith.SchemaHelper
     {
         public static string BuildParametersVariables(this List<Association> associations)
         {
+            return associations.BuildParametersVariables(false);
+        }
+
+        public static string BuildParametersVariables(this List<Association> associations, bool includeConnectionParameter)
+        {
             string parameters = string.Empty;
 
             foreach (Association association in associations)
@@ -19,6 +24,9 @@ namespace CodeSmith.SchemaHelper
                     parameters += string.Format(", {0} {1}", member.ClassName, Util.NamingConventions.VariableName(member.ClassName));
                 }
             }
+
+            if (includeConnectionParameter)
+                parameters += ", SqlConnection connection";
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }

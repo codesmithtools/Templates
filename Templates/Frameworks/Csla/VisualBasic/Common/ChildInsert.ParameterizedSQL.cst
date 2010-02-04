@@ -15,28 +15,26 @@
             Return
         End If
 
+        If connection.State <> ConnectionState.Open Then connection.Open()
         Const commandText As String = "INSERT INTO [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] (<%= entity.MembersUpdateInsert.BuildDataBaseColumns() %>) VALUES (<%= entity.MembersUpdateInsert.BuildDataBaseParameters() %>)<%= entity.BuildInsertSelectStatement() %>"
-        Using connection As New SqlConnection(ADOHelper.ConnectionString)
-            connection.Open()
-            Using command As New SqlCommand(commandText, connection)
-                <%= entity.MembersUpdateInsert.BuildCommandParameters(False, False, True) %>
+        Using command As New SqlCommand(commandText, connection)
+            <%= entity.MembersUpdateInsert.BuildCommandParameters(False, False, True) %>
 
-                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                    If reader.Read() Then
+            Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                If reader.Read() Then
 <% If (Entity.HasRowVersionMember) Then %>
-                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+                    _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
 <% If (Entity.PrimaryKey.IsIdentity) Then %>
 <% for each [member] As Member in Entity.PrimaryKey.KeyMembers
 If(UseMemberVariables) Then %>
-                        <%= [member].PrivateMemberVariableName %> = <%If Not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+                    <%= [member].PrivateMemberVariableName %> = <%If Not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
 <% else %>
-                        LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <% If NOT [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
+                    LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <% If NOT [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
 <%  End If
 Next %>
 <% End If %>
-                    End If
-                End Using
+                End If
             End Using
         End Using
 
