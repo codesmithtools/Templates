@@ -2849,6 +2849,11 @@
               Looks up a localized string similar to {0} cannot be empty..
             </summary>
         </member>
+        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorNotNullMessage">
+            <summary>
+              Looks up a localized string similar to {0} cannot be null..
+            </summary>
+        </member>
         <member name="P:CodeSmith.Data.Properties.Resources.ValidatorRangeMessage">
             <summary>
               Looks up a localized string similar to {0} must fall between {1} and {2}..
