@@ -90,6 +90,7 @@
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Attributes\IpAddressAttribute.cs" />
+    <Compile Include="Attributes\NotNullAttribute.cs" />
     <Compile Include="Attributes\RuleAttributeBase.cs" />
     <Compile Include="Attributes\UserNameAttribute.cs" />
     <Compile Include="Attributes\GuidAttribute.cs" />
@@ -177,6 +178,7 @@
     <Compile Include="Rules\Validation\ComparisonOperator.cs" />
     <Compile Include="Rules\Validation\CustomRule.cs" />
     <Compile Include="Rules\Validation\LengthRule.cs" />
+    <Compile Include="Rules\Validation\NotNullRule.cs" />
     <Compile Include="Rules\Validation\RangeRule.cs" />
     <Compile Include="Rules\Validation\RegexRule.cs" />
     <Compile Include="Rules\Validation\RequiredRule.cs" />
