@@ -43,10 +43,10 @@
                         throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 <% } %>
                 }
+                <% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0){ %>
+							
+					FieldManager.UpdateChildren(this, connection);
+				<% } %>
             }
 
             OnUpdated();
-
-<% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0){ %>
-            FieldManager.UpdateChildren(this);
-<% } %>

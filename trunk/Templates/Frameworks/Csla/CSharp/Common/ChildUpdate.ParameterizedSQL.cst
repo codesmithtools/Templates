@@ -13,36 +13,33 @@
             OnChildUpdating(ref cancel);
             if (cancel) return;
 
+			if(connection.State != ConnectionState.Open) connection.Open();
             const string commandText = "UPDATE [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] <%= Entity.MembersUpdateInsert.BuildSetStatements() %> <%= Entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(Entity.HasRowVersionMember) { %> AND [<%= Entity.RowVersionMember.ColumnName %>] = <%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
-            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
+            using(SqlCommand command = new SqlCommand(commandText, connection))
             {
-                connection.Open();
-                using(SqlCommand command = new SqlCommand(commandText, connection))
+                <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, true) %>
+<% if(Entity.HasRowVersionMember) { %>
+                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", _timestamp);
+<% } %>
+
+<% if(Entity.HasRowVersionMember) { %>
+                using(var reader = new SafeDataReader(command.ExecuteReader()))
                 {
-                    <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, true) %>
-<% if(Entity.HasRowVersionMember) { %>
-                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", _timestamp);
-<% } %>
-
-<% if(Entity.HasRowVersionMember) { %>
-                    using(var reader = new SafeDataReader(command.ExecuteReader()))
-                    {
-                        //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                        if(reader.RecordsAffected == 0)
-                            throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-
-                        if(reader.Read())
-                        {
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-                        }
-                    }
-<% } else { %>
-                    //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                    int result = command.ExecuteNonQuery();
-                    if (result == 0)
+                    //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    if(reader.RecordsAffected == 0)
                         throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-<% } %>
+
+                    if(reader.Read())
+                    {
+                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                    }
                 }
+<% } else { %>
+                //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                int result = command.ExecuteNonQuery();
+                if (result == 0)
+                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+<% } %>
             }
 
             OnChildUpdated();

@@ -42,10 +42,10 @@
                     }
 <% } %>
                 }
+<% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0){ %>
+
+				FieldManager.UpdateChildren(this, connection);
+<% } %>
             }
 
             OnInserted();
-
-<% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0){ %>
-            FieldManager.UpdateChildren(this);
-<% } %>

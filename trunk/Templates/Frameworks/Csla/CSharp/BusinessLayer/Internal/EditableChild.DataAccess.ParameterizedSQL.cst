@@ -51,12 +51,12 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ChildFetch()); %>
         }
 
-        private void Child_Insert(<%= Entity.AssociatedManyToOne.BuildParametersVariables() %>)
+        private void Child_Insert(<%= Entity.AssociatedManyToOne.BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildInsert()); %>
         }
 
-        private void Child_Update(<%= Entity.AssociatedManyToOne.BuildParametersVariables() %>)
+        private void Child_Update(<%= Entity.AssociatedManyToOne.BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildUpdate()); %>
         }

@@ -37,10 +37,10 @@
 <% End If %>
                 End Using
             End Using
-        End Using
-
 <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0) Then %>
-        FieldManager.UpdateChildren(Me)
+
+			FieldManager.UpdateChildren(Me, connection)
 <% End If %>
+        End Using
 
         OnUpdated()
