@@ -98,8 +98,7 @@ namespace CodeSmith.Data.Rules
 
             _sharedBusinessRules[entityType].IsProcessed = true;
 
-            var metadataTypeAttribute =
-                entityType.GetCustomAttributes(typeof(MetadataTypeAttribute), true).FirstOrDefault() as MetadataTypeAttribute;
+            var metadataTypeAttribute = entityType.GetCustomAttributes(typeof(MetadataTypeAttribute), true).FirstOrDefault() as MetadataTypeAttribute;
             if (metadataTypeAttribute != null)
                 metadata = metadataTypeAttribute.MetadataClassType;
 

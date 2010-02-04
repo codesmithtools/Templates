@@ -144,4 +144,7 @@
   <data name="DefaultValidationErrorMessage" xml:space="preserve">
     <value>Validation Error</value>
   </data>
+  <data name="ValidatorNotNullMessage" xml:space="preserve">
+    <value>{0} cannot be null.</value>
+  </data>
 </root>
