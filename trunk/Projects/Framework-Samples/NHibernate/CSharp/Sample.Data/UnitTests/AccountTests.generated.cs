@@ -32,16 +32,17 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.Account entity = new Sample.Data.Generated.BusinessObjects.Account();
 			
 			
-			entity.Email = "Test Test Test Test Tes";
-			entity.FirstName = "Test Test Test Test";
-			entity.LastName = "Test Test Test Test Test Test Test";
-			entity.Address1 = "Test Test Test Test Test Test Test Test Test Test Test Test Te";
-			entity.Address2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Te";
-			entity.City = "Test Test Test Test Test Test Test Test Test Test Test Test Test T";
-			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Test ";
-			entity.Zip = "Tes";
-			entity.Country = "Te";
-			entity.Phone = "Test Tes";
+			entity.Email = "Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.FirstName = "Test Test Test Test Test";
+			entity.LastName = "Test ";
+			entity.Address1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test";
+			entity.Address2 = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ";
+			entity.City = "Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
+			entity.State = "Test Test Test Test Test Test Test Test Test Test Te";
+			entity.Zip = "Test T";
+			entity.Country = "Test Test";
+			entity.Phone = "Test Test Te";
+			entity.Number = 12;
 			
 			using(Sample.Data.Generated.ManagerObjects.IProfileManager profileManager = managerFactory.GetProfileManager())
 			    entity.Profile = profileManager.GetAll(1)[0];
@@ -96,7 +97,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Account entityA = GetFirstAccount();
 				
-				entityA.Email = "Test Test Test Test";
+				entityA.Email = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
 				
 				manager.Update(entityA);
 

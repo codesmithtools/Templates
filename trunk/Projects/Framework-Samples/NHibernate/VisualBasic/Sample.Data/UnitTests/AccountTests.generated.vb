@@ -29,16 +29,17 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New Account()
 
 			
-			entity.Email = "Test Test Test Test Test T"
-			entity.FirstName = "Test "
-			entity.LastName = "Test Test Test Test Test "
-			entity.Address1 = "Test Test Test Test Test Test Test Test Test Test Te"
-			entity.Address2 = "Test Test Test Test T"
-			entity.City = "Test Tes"
-			entity.State = "Test Test Test Test Test Te"
-			entity.Zip = "Test Test Test Test"
-			entity.Country = "Test "
-			entity.Phone = "Test Test T"
+			entity.Email = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test T"
+			entity.FirstName = "Test Test Test Test Test Test Test Te"
+			entity.LastName = "Test Test Test Tes"
+			entity.Address1 = "Test Test Test Test Test Test Test Test Test Test Test Test Test "
+			entity.Address2 = "Test Test Test Test Test Test Test Test Test Test Test Test "
+			entity.City = "Test Test Test Test Test Test Test Test "
+			entity.State = "Test Test Test Test Test Test Test Test Test Test Test Test Tes"
+			entity.Zip = "Test Test Test Tes"
+			entity.Country = "Test Test Test Tes"
+			entity.Phone = "Test Test Tes"
+			entity.Number = 60
 			
 			Dim profileManager As IProfileManager = managerFactory.GetProfileManager()
 			entity.Profile = profileManager.GetAll(1)(0)
@@ -83,7 +84,7 @@ Namespace Sample.Data.Generated.UnitTests
 			Try
 				Dim entityA As Account = GetFirstAccount()
 				
-				entityA.Email = "Test Test Test Test Test Test Test Test Test Test Test Test Te"
+				entityA.Email = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes"
 				
 				manager.Update(entityA)
 
