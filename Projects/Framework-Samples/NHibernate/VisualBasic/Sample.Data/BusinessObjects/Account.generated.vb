@@ -20,6 +20,7 @@ Namespace Sample.Data.Generated.BusinessObjects
 		Private _zip As String = String.Empty
 		Private _country As String = String.Empty
 		Private _phone As String = Nothing
+		Private _number As Integer? = Nothing
 		
 		Private _profile As Profile = Nothing
 		
@@ -50,6 +51,7 @@ Namespace Sample.Data.Generated.BusinessObjects
 			sb.Append(_zip)
 			sb.Append(_country)
 			sb.Append(_phone)
+			sb.Append(_number)
 			
 			Return sb.ToString().GetHashCode()
 		End Function
@@ -197,6 +199,20 @@ Namespace Sample.Data.Generated.BusinessObjects
 		Partial Private Sub OnPhoneChanging()
 		End Sub
 		Partial Private Sub OnPhoneChanged()
+		End Sub
+		Public Overridable Property Number() As Integer?
+			Get
+				Return _number
+			End Get
+			Set
+				OnNumberChanging()
+				_number = value
+				OnNumberChanged()
+			End Set
+		End Property
+		Partial Private Sub OnNumberChanging()
+		End Sub
+		Partial Private Sub OnNumberChanged()
 		End Sub
 		
 		Public Overridable Property Profile() As Profile

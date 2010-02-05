@@ -34,7 +34,7 @@ namespace Sample.Data.Generated.UnitTests
 			// You may need to maually enter this key if there is a constraint violation.
 			entity.Id = "T";
 			
-			entity.Qty = 91;
+			entity.Qty = 33;
 			
 			return entity;
 		}
@@ -86,7 +86,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Inventory entityA = GetFirstInventory();
 				
-				entityA.Qty = 36;
+				entityA.Qty = 22;
 				
 				manager.Update(entityA);
 

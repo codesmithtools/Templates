@@ -32,8 +32,8 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.OrderStatus entity = new Sample.Data.Generated.BusinessObjects.OrderStatus();
 			
 			
-			entity.OrderId = 53;
-			entity.LineNum = 42;
+			entity.OrderId = 90;
+			entity.LineNum = 90;
 			entity.Timestamp = System.DateTime.Now;
 			entity.Status = "T";
 			

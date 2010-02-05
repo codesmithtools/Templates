@@ -20,6 +20,7 @@ namespace Sample.Data.Generated.BusinessObjects
 		private string _zip = String.Empty;
 		private string _country = String.Empty;
 		private string _phone = null;
+		private int? _number = null;
 		
 		private Profile _profile = null;
 		
@@ -49,6 +50,7 @@ namespace Sample.Data.Generated.BusinessObjects
 			sb.Append(_zip);
 			sb.Append(_country);
 			sb.Append(_phone);
+			sb.Append(_number);
 
             return sb.ToString().GetHashCode();
         }
@@ -186,6 +188,19 @@ namespace Sample.Data.Generated.BusinessObjects
         }
 		partial void OnPhoneChanging();
 		partial void OnPhoneChanged();
+		
+		public virtual int? Number
+        {
+            get { return _number; }
+			set
+			{
+				OnNumberChanging();
+				_number = value;
+				OnNumberChanged();
+			}
+        }
+		partial void OnNumberChanging();
+		partial void OnNumberChanged();
 		
 		public virtual Profile Profile
         {

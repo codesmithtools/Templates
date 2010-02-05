@@ -29,8 +29,8 @@ Namespace Sample.Data.Generated.UnitTests
 			Dim entity As New OrderStatus()
 
 			
-			entity.OrderId = 34
-			entity.LineNum = 64
+			entity.OrderId = 59
+			entity.LineNum = 85
 			entity.Timestamp = DateTime.Now
 			entity.Status = "T"
 
