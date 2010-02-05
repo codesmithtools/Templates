@@ -1,7 +1,7 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8"
     Description="Linq to Sql Entity Class." CompilerVersion="v3.5" %>
 
-<%@ Assembly Name="ICSharpCode.NRefactory" Path="..\..\Common" %>
+<%@ Assembly Name="ICSharpCode.NRefactory, Version=4.0.0.9999, Culture=neutral, PublicKeyToken=efe927acf176eea2, processorArchitecture=MSIL" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.InsertClassMergeStrategy" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.CodeParser" Path="..\..\Common" %>
 <%@ Assembly Name="Generator" Path="..\..\Common" %>
