@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -79,11 +80,14 @@ namespace QuickStart
         {
             get
             {
-                if (BusinessClassName.EndsWith("List"))
-                    return BusinessClassName.Replace("List", "");
+                if (BusinessClassName.EndsWith("ListList", true, CultureInfo.InvariantCulture))
+                    return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
 
-                if (BusinessClassName.EndsWith("Criteria"))
-                    return BusinessClassName.Replace("Criteria", "");
+                if (BusinessClassName.EndsWith("List", true, CultureInfo.InvariantCulture))
+                    return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
+
+                if (BusinessClassName.EndsWith("Criteria", true, CultureInfo.InvariantCulture))
+                    return BusinessClassName.Substring(0, BusinessClassName.Length - 8);
 
                 return BusinessClassName;
             }

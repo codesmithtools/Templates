@@ -206,7 +206,7 @@ public override void Generate()
     
     #region ADOHelperTemplate
     
-    if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
     {
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
         this.CopyPropertiesTo(ADOHelper);
@@ -222,7 +222,7 @@ public override void Generate()
     
     #region FactoryNamesTemplate
 
-    if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
+    if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
     {
         FactoryNamesTemplate factoryNames = this.Create<FactoryNamesTemplate>();
         this.CopyPropertiesTo(factoryNames);

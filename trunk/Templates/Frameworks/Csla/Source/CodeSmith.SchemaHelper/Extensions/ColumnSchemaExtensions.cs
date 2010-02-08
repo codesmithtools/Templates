@@ -25,7 +25,7 @@ namespace CodeSmith.SchemaHelper
             if (column.NativeType.ToLower() == "timestamp" || column.NativeType.ToLower() == "rowversion")
                 return true;
 
-            if (Configuration.Instance.RowVersionColumnRegex.IsMatch(column.Name))
+            if (Configuration.Instance.UseRowVersionRegex && Configuration.Instance.RowVersionColumnRegex.IsMatch(column.Name))
                 return true;
 
             return false;

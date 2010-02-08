@@ -46,11 +46,22 @@ namespace CodeSmith.SchemaHelper.Util
             if (string.IsNullOrEmpty(value))
                 return String.Empty;
 
-            return StringUtil.ToCamelCase(CleanName(value.Trim()));
+            value = StringUtil.ToCamelCase(CleanName(value.Trim()));
+
+            // Lookup in mapping file for overrides.
+            value = CodeSmith.SchemaHelper.Configuration.Instance.KeywordRenameAlias[value, value];
+
+            // Replace system keywords..
+            value = CodeSmith.SchemaHelper.Configuration.Instance.SystemTypeEscape[value, value];
+
+            return value;
         }
 
         private static string CleanName(string value)
         {
+            // Lookup in mapping file for overrides.
+            value = CodeSmith.SchemaHelper.Configuration.Instance.KeywordRenameAlias[value, value];
+
             return CleanNumberPrefix.Replace(value, string.Empty, 1);
         }
     }

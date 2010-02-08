@@ -16,7 +16,7 @@
             MarkAsChild();
         }
 
-        private <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+        internal <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         {
             using(BypassPropertyChecks)
             {

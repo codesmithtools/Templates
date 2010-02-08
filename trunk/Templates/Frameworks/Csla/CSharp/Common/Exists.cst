@@ -10,7 +10,7 @@
 <%@ Import Namespace="QuickStart" %>
         #region Exists Command
 
-        public static bool Exists(<%= ChildBusinessClassName %>Criteria criteria)
+        public static bool Exists(<%= BusinessClassName %>Criteria criteria)
         {
             return ExistsCommand.Execute(criteria);
         }

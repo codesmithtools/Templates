@@ -103,7 +103,7 @@ namespace <%= BusinessProjectName %>
         /// <summary>
         /// Returns a list of all the modified properties and values.
         /// </summary>
-        public string TableName
+        public string TableFullName
         {
             get
             {

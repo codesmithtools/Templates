@@ -123,7 +123,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (ColumnSchema column in table.Columns)
             {
-                bool isManyToMany = (column.IsForeignKeyMember || column.IsPrimaryKeyMember || column.SystemType.Equals(typeof(DateTime)) || Configuration.Instance.RowVersionColumnRegex.IsMatch(column.Name));
+                bool isManyToMany = (column.IsForeignKeyMember || column.IsPrimaryKeyMember || column.SystemType.Equals(typeof(DateTime)) || (Configuration.Instance.UseRowVersionRegex && Configuration.Instance.RowVersionColumnRegex.IsMatch(column.Name)));
                 if (!isManyToMany)
                     return false;
             }

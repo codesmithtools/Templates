@@ -1,6 +1,8 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.DataCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X DataAccessLayer" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
 <%@ Assembly Name="SchemaExplorer" %>
 

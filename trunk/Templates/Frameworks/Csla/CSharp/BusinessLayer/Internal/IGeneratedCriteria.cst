@@ -25,6 +25,6 @@ namespace <%= BusinessProjectName %>
     public interface IGeneratedCriteria
     {
         Dictionary<string, object> StateBag { get; }
-        string TableName { get; }
+        string TableFullName { get; }
     }
 }
