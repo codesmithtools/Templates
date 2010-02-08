@@ -36,7 +36,7 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
-        private void Child_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
+        private void Child_Fetch(<%= BusinessClassName %>Criteria criteria)
         {
 <% RenderHelper(new ChildFetch()); %>
         }

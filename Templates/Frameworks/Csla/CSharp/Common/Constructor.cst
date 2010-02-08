@@ -14,7 +14,7 @@
         private <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
 
-        private <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+        internal <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         {
             using(BypassPropertyChecks)
             {

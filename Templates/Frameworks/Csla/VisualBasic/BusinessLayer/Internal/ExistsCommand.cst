@@ -92,7 +92,7 @@ Public Class ExistsCommand
     #Region "Data Access"
 
     Protected Overloads Overrides Sub DataPortal_Execute()
-        Dim commandText As String = String.Format("SELECT COUNT(1) FROM {0} {1}", Criteria.TableName, ADOHelper.BuildWhereStatement(Criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT COUNT(1) FROM {0} {1}", Criteria.TableFullName, ADOHelper.BuildWhereStatement(Criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)

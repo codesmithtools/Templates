@@ -10,7 +10,7 @@
 <%@ Import Namespace="QuickStart" %>
     #Region "Exists Command"
 
-    Public Shared Function Exists(ByVal criteria As <%= ChildBusinessClassName %>Criteria) As Boolean
+    Public Shared Function Exists(ByVal criteria As <%= BusinessClassName %>Criteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
 

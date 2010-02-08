@@ -46,7 +46,7 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ChildCreate()); %>
         }
 
-        private void Child_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
+        private void Child_Fetch(<%= BusinessClassName %>Criteria criteria)
         {
 <% RenderHelper(new ChildFetch()); %>
         }
@@ -67,13 +67,13 @@ namespace <%= BusinessProjectName %>
             OnChildSelfDeleting(ref cancel);
             if (cancel) return;
             
-            DataPortal_Delete(new <%= ChildBusinessClassName %>Criteria(<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %><% if(Entity.HasRowVersionMember) { %>, _timestamp<% } %>));
+            DataPortal_Delete(new <%= BusinessClassName %>Criteria (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %><% if(Entity.HasRowVersionMember) { %>, _timestamp<% } %>));
         
 			OnChildSelfDeleted();
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]
-        protected void DataPortal_Delete(<%= ChildBusinessClassName %>Criteria criteria)
+        protected void DataPortal_Delete(<%= BusinessClassName %>Criteria criteria)
         {
 <% RenderHelper(new DataPortalDelete()); %>
         }

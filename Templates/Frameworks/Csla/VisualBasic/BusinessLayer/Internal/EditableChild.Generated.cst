@@ -49,7 +49,7 @@ Public Partial Class <%= BusinessClassName %>
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
 
     Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
-        Dim criteria As New <%= ChildBusinessClassName %>Criteria()
+        Dim criteria As New <%= BusinessClassName %>Criteria ()
 		<%= sc.Members.BuildObjectInitializer() %>
 
         Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(criteria)

@@ -60,19 +60,19 @@ namespace <%= BusinessProjectName %>
         public static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             return DataPortal.Fetch< <%= BusinessClassName %> >(
-                new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
+                new <%= BusinessClassName %>Criteria {<%= sc.Members.BuildObjectInitializer() %>});
         }
 <% } %>
 
 <% if(UseDeferredDeletion){ %>
         //public static void Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         //{
-        //      DataPortal.Delete(new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
+        //      DataPortal.Delete(new <%= BusinessClassName %>Criteria (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
         //}
 <% } else { %> 
         public static void Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         {
-                DataPortal.Delete(new <%= ChildBusinessClassName %>Criteria(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
+                DataPortal.Delete(new <%= BusinessClassName %>Criteria (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
         }
 <% } %>
         
@@ -88,7 +88,7 @@ namespace <%= BusinessProjectName %>
         internal static <%= BusinessClassName %> <%= sc.MethodName %>Child(<%= sc.Members.BuildParametersVariables() %>)
         {
             return DataPortal.FetchChild< <%= ChildBusinessClassName %> >(
-                new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
+                new <%= BusinessClassName %>Criteria {<%= sc.Members.BuildObjectInitializer() %>});
         }
 <% } %>
 

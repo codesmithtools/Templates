@@ -16,7 +16,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-
+<%@ Property Name="BusinessProjectName" Type="System.String" Optional="False" Category="3. Business Project" Description="" %>
 <% Generate(); %>
 
 <script runat="template">

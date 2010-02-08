@@ -7,7 +7,7 @@ Description: Used to Quick Start Visual Studio Projects
 
 <%@ Register Name="QuickStartSolution" Template="Common\QuickStartSolution.cst" %>
 <%@ Register Name="Entities" Template="CSharp\BusinessLayer\Entities.cst" MergeProperties="False" ExcludeProperties="" %>
-<%-- <%@ Register Name="DataAccess" Template="CSharp\DataAccessLayer\DataAccessLayer.cst" MergeProperties="False" ExcludeProperties="" %> --%>
+<%@ Register Name="DataAccess" Template="CSharp\DataAccessLayer\DataAccessLayer.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Web" Template="CSharp\WebLayer\Default.aspx.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="Common" %>
@@ -55,13 +55,13 @@ public override void Generate()
     entityCSP.Location = Path.Combine(this.Location, this.BusinessProjectName);
     entityCSP.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Entities.csp"));
     
-    if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
+    if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
     {
-        //DataAccess dataAccess = this.Create<DataAccess>();
-        //this.CopyPropertiesTo(dataAccess);
-        //dataAccess.SourceTables = SourceDatabase.Tables;
-        //dataAccess.Location = Path.Combine(this.Location, this.DataProjectName);
-        //dataAccess.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\DataAccess.csp"));
+        DataAccess dataAccess = this.Create<DataAccess>();
+        this.CopyPropertiesTo(dataAccess);
+        dataAccess.SourceTables = SourceDatabase.Tables;
+        dataAccess.Location = Path.Combine(this.Location, this.DataProjectName);
+        dataAccess.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\DataAccess.csp"));
     }
     
     if(IncludeInterfaceProject)
@@ -78,7 +78,7 @@ public override void Generate()
     ProjectBuilderSettings pbs = CreateProjectBuilderSettings();
 
     // Only create the data project if object factory is used.
-    if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL)
+    if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
     {
         // Create Data Project
         DataProjectCreator dataProjectCreator = new DataProjectCreator(pbs);

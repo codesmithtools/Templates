@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 using CodeSmith.Engine;
@@ -16,6 +18,7 @@ namespace CodeSmith.SchemaHelper
 
         private string _rowVersionColumn;
         private MapCollection _systemTypeEscape;
+        private MapCollection _keywordRenameAlias;
 
         internal Regex RowVersionColumnRegex { get; private set; }
 
@@ -37,6 +40,7 @@ namespace CodeSmith.SchemaHelper
 
             SearchCriteriaProperty = new SearchCriteriaProperty {Prefix = "GetBy"};
 
+            UseRowVersionRegex = false;
             RowVersionColumn = "^((R|r)ow)?(V|v)ersion$";
             VisualStudioVersion = VisualStudioVersion.VS_2008;
             SingularMemberSuffix = "Member";
@@ -70,6 +74,31 @@ namespace CodeSmith.SchemaHelper
                 }
 
                 return _systemTypeEscape;
+            }
+        }
+
+        /// <summary>
+        /// Returns the DBTypeToSystemTypeEscape MapCollection.
+        /// </summary>
+        /// <returns>Returns the correct SystemTypeEscape MapCollection.</returns>
+        [Browsable(false)]
+        public MapCollection KeywordRenameAlias
+        {
+            get
+            {
+                if (_keywordRenameAlias == null)
+                {
+                    string path;
+                    if(!Map.TryResolvePath("KeywordRenameAlias", string.Empty, out path))
+                    {
+                        string baseDirectory = new System.IO.DirectoryInfo(Assembly.GetExecutingAssembly().Location).Parent.FullName;
+                        Map.TryResolvePath("KeywordRenameAlias", baseDirectory, out path);
+                    }
+
+                    _keywordRenameAlias = Map.Load(path);
+                }
+
+                return _keywordRenameAlias;
             }
         }
 
@@ -154,6 +183,8 @@ namespace CodeSmith.SchemaHelper
         public NamingProperty NamingProperty { get; set; }
 
         public SearchCriteriaProperty SearchCriteriaProperty { get; set; }
+
+        public bool UseRowVersionRegex { get; set; }
 
         public string RowVersionColumn
         {

@@ -62,19 +62,19 @@ namespace <%= BusinessProjectName %>
         public static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             return DataPortal.Fetch< <%= BusinessClassName %> >(
-                new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
+                new <%= BusinessClassName %>Criteria {<%= sc.Members.BuildObjectInitializer() %>});
         }
 <% } %>
 
 <% if(UseDeferredDeletion){ %>
         //public static void Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         //{
-        //    DataPortal.Delete(new <%= ChildBusinessClassName %>Criteria{<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer() %>});
+        //    DataPortal.Delete(new <%= BusinessClassName %>Criteria {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer() %>});
         //}
 <% } else { %>
         public static void Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         {
-            DataPortal.Delete(new <%= ChildBusinessClassName %>Criteria{<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer() %>});
+            DataPortal.Delete(new <%= BusinessClassName %>Criteria {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer() %>});
         }
 <% } %>
 
