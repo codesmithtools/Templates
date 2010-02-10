@@ -55,7 +55,7 @@ namespace PetShop.Tests.Collections.DynamicRoot
             //// Name
             // AuthorizationRules.AllowRead(_nameProperty, canRead);
 
-            //// Descn
+            //// Description
             // AuthorizationRules.AllowRead(_descnProperty, canRead);
 
 // NOTE: Many-To-Many support coming soon.

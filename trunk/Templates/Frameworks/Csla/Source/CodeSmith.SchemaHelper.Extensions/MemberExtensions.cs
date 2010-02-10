@@ -20,7 +20,7 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildParameterVariableName(this Member member)
         {
-            return string.Format("{0}{1}", Configuration.Instance.ParameterPrefix, member.Name);
+            return string.Format("{0}{1}", Configuration.Instance.ParameterPrefix, member.ColumnName);
         }
 
         public static string BuildDataBaseColumn(this Member member)

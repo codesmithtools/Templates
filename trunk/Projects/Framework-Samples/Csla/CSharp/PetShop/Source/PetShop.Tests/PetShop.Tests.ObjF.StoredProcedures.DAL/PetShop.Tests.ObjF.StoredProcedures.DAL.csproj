@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A717EDD6-1E36-4509-965A-E28A1056F3B0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PetShop.Tests.ObjF.StoredProcedures.DAL</RootNamespace>
+    <AssemblyName>PetShop.Tests.ObjF.StoredProcedures.DAL</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\PetShop.Tests.ObjF.StoredProcedures\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Csla, Version=3.8.0.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\Common\Csla\Csla.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Collections\AccountListFactory.cs" />
+    <Compile Include="Collections\AccountListFactory.DataAccess.cs">
+      <DependentUpon>AccountListFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\CartListFactory.cs" />
+    <Compile Include="Collections\CartListFactory.DataAccess.cs">
+      <DependentUpon>CartListFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\CategoryListFactory.cs" />
+    <Compile Include="Collections\CategoryListFactory.DataAccess.cs">
+      <DependentUpon>CategoryListFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\ItemListFactory.cs" />
+    <Compile Include="Collections\ItemListFactory.DataAccess.cs">
+      <DependentUpon>ItemListFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\LineItemListFactory.cs" />
+    <Compile Include="Collections\LineItemListFactory.DataAccess.cs">
+      <DependentUpon>LineItemListFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\OrderStatusListFactory.cs" />
+    <Compile Include="Collections\OrderStatusListFactory.DataAccess.cs">
+      <DependentUpon>OrderStatusListFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\ProductListFactory.cs" />
+    <Compile Include="Collections\ProductListFactory.DataAccess.cs">
+      <DependentUpon>ProductListFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\ProfileListFactory.cs" />
+    <Compile Include="Collections\ProfileListFactory.DataAccess.cs">
+      <DependentUpon>ProfileListFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\AccountFactory.cs" />
+    <Compile Include="Entities\AccountFactory.DataAccess.cs">
+      <DependentUpon>AccountFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CartFactory.cs" />
+    <Compile Include="Entities\CartFactory.DataAccess.cs">
+      <DependentUpon>CartFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CategoryFactory.cs" />
+    <Compile Include="Entities\CategoryFactory.DataAccess.cs">
+      <DependentUpon>CategoryFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\InventoryFactory.cs" />
+    <Compile Include="Entities\InventoryFactory.DataAccess.cs">
+      <DependentUpon>InventoryFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ItemFactory.cs" />
+    <Compile Include="Entities\ItemFactory.DataAccess.cs">
+      <DependentUpon>ItemFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\LineItemFactory.cs" />
+    <Compile Include="Entities\LineItemFactory.DataAccess.cs">
+      <DependentUpon>LineItemFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\OrderFactory.cs" />
+    <Compile Include="Entities\OrderFactory.DataAccess.cs">
+      <DependentUpon>OrderFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\OrderStatusFactory.cs" />
+    <Compile Include="Entities\OrderStatusFactory.DataAccess.cs">
+      <DependentUpon>OrderStatusFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ProductFactory.cs" />
+    <Compile Include="Entities\ProductFactory.DataAccess.cs">
+      <DependentUpon>ProductFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ProfileFactory.cs" />
+    <Compile Include="Entities\ProfileFactory.DataAccess.cs">
+      <DependentUpon>ProfileFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\SupplierFactory.cs" />
+    <Compile Include="Entities\SupplierFactory.DataAccess.cs">
+      <DependentUpon>SupplierFactory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\ADOHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Collections\AccountListFactory.StoredProcedures.sql">
+      <DependentUpon>AccountListFactory.cs</DependentUpon>
+    </None>
+    <None Include="Collections\CartListFactory.StoredProcedures.sql">
+      <DependentUpon>CartListFactory.cs</DependentUpon>
+    </None>
+    <None Include="Collections\CategoryListFactory.StoredProcedures.sql">
+      <DependentUpon>CategoryListFactory.cs</DependentUpon>
+    </None>
+    <None Include="Collections\ItemListFactory.StoredProcedures.sql">
+      <DependentUpon>ItemListFactory.cs</DependentUpon>
+    </None>
+    <None Include="Collections\LineItemListFactory.StoredProcedures.sql">
+      <DependentUpon>LineItemListFactory.cs</DependentUpon>
+    </None>
+    <None Include="Collections\OrderStatusListFactory.StoredProcedures.sql">
+      <DependentUpon>OrderStatusListFactory.cs</DependentUpon>
+    </None>
+    <None Include="Collections\ProductListFactory.StoredProcedures.sql">
+      <DependentUpon>ProductListFactory.cs</DependentUpon>
+    </None>
+    <None Include="Collections\ProfileListFactory.StoredProcedures.sql">
+      <DependentUpon>ProfileListFactory.cs</DependentUpon>
+    </None>
+    <None Include="DataAccess.csp" />
+    <None Include="Entities\AccountFactory.StoredProcedures.sql">
+      <DependentUpon>AccountFactory.cs</DependentUpon>
+    </None>
+    <None Include="Entities\CartFactory.StoredProcedures.sql">
+      <DependentUpon>CartFactory.cs</DependentUpon>
+    </None>
+    <None Include="Entities\CategoryFactory.StoredProcedures.sql">
+      <DependentUpon>CategoryFactory.cs</DependentUpon>
+    </None>
+    <None Include="Entities\InventoryFactory.StoredProcedures.sql">
+      <DependentUpon>InventoryFactory.cs</DependentUpon>
+    </None>
+    <None Include="Entities\ItemFactory.StoredProcedures.sql">
+      <DependentUpon>ItemFactory.cs</DependentUpon>
+    </None>
+    <None Include="Entities\LineItemFactory.StoredProcedures.sql">
+      <DependentUpon>LineItemFactory.cs</DependentUpon>
+    </None>
+    <None Include="Entities\OrderFactory.StoredProcedures.sql">
+      <DependentUpon>OrderFactory.cs</DependentUpon>
+    </None>
+    <None Include="Entities\OrderStatusFactory.StoredProcedures.sql">
+      <DependentUpon>OrderStatusFactory.cs</DependentUpon>
+    </None>
+    <None Include="Entities\ProductFactory.StoredProcedures.sql">
+      <DependentUpon>ProductFactory.cs</DependentUpon>
+    </None>
+    <None Include="Entities\ProfileFactory.StoredProcedures.sql">
+      <DependentUpon>ProfileFactory.cs</DependentUpon>
+    </None>
+    <None Include="Entities\SupplierFactory.StoredProcedures.sql">
+      <DependentUpon>SupplierFactory.cs</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PetShop.Tests.ObjF.StoredProcedures\PetShop.Tests.ObjF.StoredProcedures.csproj">
+      <Project>{30ACB4D3-473C-4B6C-A239-D0B6A86DFD26}</Project>
+      <Name>PetShop.Tests.ObjF.StoredProcedures</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

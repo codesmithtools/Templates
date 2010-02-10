@@ -73,7 +73,7 @@ namespace PetShop.Tests.StoredProcedures
             Category category = Category.NewCategory();
             category.CategoryId = categoryID;
             category.Name = TestUtility.Instance.RandomString(80, false);
-            category.Descn = TestUtility.Instance.RandomString(255, false);
+            category.Description = TestUtility.Instance.RandomString(255, false);
 
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
@@ -96,7 +96,7 @@ namespace PetShop.Tests.StoredProcedures
             Category category = Category.NewCategory();
             category.CategoryId = TestCategoryID;
             category.Name = TestUtility.Instance.RandomString(80, false);
-            category.Descn = TestUtility.Instance.RandomString(255, false);
+            category.Description = TestUtility.Instance.RandomString(255, false);
 
 		    try
 		    {
@@ -125,7 +125,7 @@ namespace PetShop.Tests.StoredProcedures
             Category category = Category.NewCategory();
             category.CategoryId = TestCategoryID2;
             category.Name = TestUtility.Instance.RandomString(80, false);
-            category.Descn = TestUtility.Instance.RandomString(255, false);
+            category.Description = TestUtility.Instance.RandomString(255, false);
 
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
@@ -160,25 +160,25 @@ namespace PetShop.Tests.StoredProcedures
 
             Category category = Category.GetByCategoryId(TestCategoryID);
             var name = category.Name;
-            var desc = category.Descn;
+            var desc = category.Description;
 
             category.Name = TestUtility.Instance.RandomString(80, false);
-            category.Descn = TestUtility.Instance.RandomString(255, false);
+            category.Description = TestUtility.Instance.RandomString(255, false);
 
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Assert.IsFalse(string.Equals(category.Name, name, StringComparison.InvariantCultureIgnoreCase));
-            Assert.IsFalse(string.Equals(category.Descn, desc, StringComparison.InvariantCultureIgnoreCase));
+            Assert.IsFalse(string.Equals(category.Description, desc, StringComparison.InvariantCultureIgnoreCase));
 
             category.Name = name;
-            category.Descn = desc;
+            category.Description = desc;
 
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
             category = category.Save();
 
             Assert.IsTrue(string.Equals(category.Name, name, StringComparison.InvariantCultureIgnoreCase));
-            Assert.IsTrue(string.Equals(category.Descn, desc, StringComparison.InvariantCultureIgnoreCase));
+            Assert.IsTrue(string.Equals(category.Description, desc, StringComparison.InvariantCultureIgnoreCase));
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
         }
@@ -255,7 +255,7 @@ namespace PetShop.Tests.StoredProcedures
             category.Name = TestUtility.Instance.RandomString(80, false);
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
-            category.Descn = TestUtility.Instance.RandomString(255, false);
+            category.Description = TestUtility.Instance.RandomString(255, false);
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
             // Check Category.
@@ -278,14 +278,14 @@ namespace PetShop.Tests.StoredProcedures
             category.Name = TestUtility.Instance.RandomString(80, false);
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
-            // Check Descn.
-            category.Descn = null;
+            // Check Description.
+            category.Description = null;
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
-            category.Descn = TestUtility.Instance.RandomString(256, false);
+            category.Description = TestUtility.Instance.RandomString(256, false);
             Assert.IsFalse(category.IsValid);
 
-            category.Descn = TestUtility.Instance.RandomString(80, false);
+            category.Description = TestUtility.Instance.RandomString(80, false);
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
 
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
@@ -306,7 +306,7 @@ namespace PetShop.Tests.StoredProcedures
 
             category.CategoryId = TestCategoryID2;
             category.Name = TestUtility.Instance.RandomString(80, false);
-            category.Descn = TestUtility.Instance.RandomString(255, false);
+            category.Description = TestUtility.Instance.RandomString(255, false);
             
             Assert.IsTrue(category.IsNew);
             Assert.IsTrue(category.IsDirty);
@@ -429,7 +429,7 @@ namespace PetShop.Tests.StoredProcedures
             Category category = Category.NewCategory();
             category.CategoryId = TestCategoryID2;
             category.Name = TestUtility.Instance.RandomString(80, false);
-            category.Descn = TestUtility.Instance.RandomString(255, false);
+            category.Description = TestUtility.Instance.RandomString(255, false);
 
             Assert.IsTrue(category.Products.Count == 0);
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
@@ -440,7 +440,7 @@ namespace PetShop.Tests.StoredProcedures
 
             product.ProductId = TestProductID;
             product.Name = TestUtility.Instance.RandomString(80, false);
-            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Description = TestUtility.Instance.RandomString(255, false);
             product.Image = TestUtility.Instance.RandomString(80, false);
             Assert.IsTrue(product.IsValid, product.BrokenRulesCollection.ToString());
 
@@ -473,7 +473,7 @@ namespace PetShop.Tests.StoredProcedures
 
             product.ProductId = TestProductID;
             product.Name = TestUtility.Instance.RandomString(80, false);
-            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Description = TestUtility.Instance.RandomString(255, false);
             product.Image = TestUtility.Instance.RandomString(80, false);
 
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
@@ -499,7 +499,7 @@ namespace PetShop.Tests.StoredProcedures
             Category category = Category.NewCategory();
             category.CategoryId = TestCategoryID2;
             category.Name = TestUtility.Instance.RandomString(80, false);
-            category.Descn = TestUtility.Instance.RandomString(255, false);
+            category.Description = TestUtility.Instance.RandomString(255, false);
 
             Assert.IsTrue(category.Products.Count == 0);
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
@@ -510,7 +510,7 @@ namespace PetShop.Tests.StoredProcedures
 
             product.ProductId = TestProductID;
             product.Name = TestUtility.Instance.RandomString(80, false);
-            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Description = TestUtility.Instance.RandomString(255, false);
             product.Image = TestUtility.Instance.RandomString(80, false);
 
             var newName = TestUtility.Instance.RandomString(80, false);
@@ -546,7 +546,7 @@ namespace PetShop.Tests.StoredProcedures
 
             product.ProductId = TestProductID;
             product.Name = TestUtility.Instance.RandomString(80, false);
-            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Description = TestUtility.Instance.RandomString(255, false);
             product.Image = TestUtility.Instance.RandomString(80, false);
 
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
@@ -587,7 +587,7 @@ namespace PetShop.Tests.StoredProcedures
 
             product.ProductId = TestProductID;
             product.Name = TestUtility.Instance.RandomString(80, false);
-            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Description = TestUtility.Instance.RandomString(255, false);
             product.Image = TestUtility.Instance.RandomString(80, false);
 
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
@@ -623,7 +623,7 @@ namespace PetShop.Tests.StoredProcedures
 
             product.ProductId = TestProductID;
             product.Name = TestUtility.Instance.RandomString(80, false);
-            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Description = TestUtility.Instance.RandomString(255, false);
             product.Image = TestUtility.Instance.RandomString(80, false);
 
             Product product2 = category.Products.AddNew();
@@ -632,7 +632,7 @@ namespace PetShop.Tests.StoredProcedures
 
             product2.ProductId = TestProductID2;
             product2.Name = TestUtility.Instance.RandomString(80, false);
-            product2.Descn = TestUtility.Instance.RandomString(255, false);
+            product2.Description = TestUtility.Instance.RandomString(255, false);
             product2.Image = TestUtility.Instance.RandomString(80, false);
 
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
@@ -674,7 +674,7 @@ namespace PetShop.Tests.StoredProcedures
 
             product.ProductId = TestProductID;
             product.Name = TestUtility.Instance.RandomString(80, false);
-            product.Descn = TestUtility.Instance.RandomString(255, false);
+            product.Description = TestUtility.Instance.RandomString(255, false);
             product.Image = TestUtility.Instance.RandomString(80, false);
 
             Product product2 = category.Products.AddNew();
@@ -683,7 +683,7 @@ namespace PetShop.Tests.StoredProcedures
 
             product2.ProductId = TestProductID;
             product2.Name = TestUtility.Instance.RandomString(80, false);
-            product2.Descn = TestUtility.Instance.RandomString(255, false);
+            product2.Description = TestUtility.Instance.RandomString(255, false);
             product2.Image = TestUtility.Instance.RandomString(80, false);
 
             try

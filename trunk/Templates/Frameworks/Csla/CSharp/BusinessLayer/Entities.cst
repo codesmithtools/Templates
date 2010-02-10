@@ -36,143 +36,185 @@
 public override void Generate()
 {
     #region CommandObjectTemplate
-    
-    foreach(TableSchema table in this.CommandObject)
+
+    if(this.CommandObject != null)
     {
-        CommandObjectTemplate template = this.Create<CommandObjectTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.CommandObject)
+        {
+            CommandObjectTemplate template = this.Create<CommandObjectTemplate>();
+            RenderHelper(template, table);
+        }
     }
     
     #endregion
     
     #region CriteriaTemplate
-    
-    foreach(TableSchema table in this.Criteria)
+
+    if(this.Criteria != null)
     {
-        CriteriaTemplate template = this.Create<CriteriaTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.Criteria)
+        {
+            CriteriaTemplate template = this.Create<CriteriaTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion
     
     #region DynamicRootTemplate
-    
-    foreach(TableSchema table in this.DynamicRoot)
+
+    if(this.DynamicRoot != null)
     {
-        DynamicRootTemplate template = this.Create<DynamicRootTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.DynamicRoot)
+        {
+            DynamicRootTemplate template = this.Create<DynamicRootTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion
     
     #region DynamicRootListTemplate
-    
-    foreach(TableSchema table in this.DynamicRootList)
+
+    if(this.DynamicRootList != null)
     {
-        DynamicRootListTemplate template = this.Create<DynamicRootListTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.DynamicRootList)
+        {
+            DynamicRootListTemplate template = this.Create<DynamicRootListTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion    
     
     #region EditableChildTemplate
-    
-    foreach(TableSchema table in this.EditableChild)
+
+    if(this.EditableChild != null)
     {
-        EditableChildTemplate template = this.Create<EditableChildTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.EditableChild)
+        {
+            EditableChildTemplate template = this.Create<EditableChildTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion
     
     #region EditableChildListTemplate
-    
-    foreach(TableSchema table in this.EditableChildList)
+
+    if(this.EditableChildList != null)
     {
-        EditableChildListTemplate template = this.Create<EditableChildListTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.EditableChildList)
+        {
+            EditableChildListTemplate template = this.Create<EditableChildListTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion    
     
     #region EditableRootTemplate
-    
-    foreach(TableSchema table in this.EditableRoot)
+
+    if(this.EditableRoot != null)
     {
-        EditableRootTemplate template = this.Create<EditableRootTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.EditableRoot)
+        {
+            EditableRootTemplate template = this.Create<EditableRootTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion    
     
     #region EditableRootListTemplate
-    
-    foreach(TableSchema table in this.EditableRootList)
+
+    if(this.EditableRootList != null)
     {
-        EditableRootListTemplate template = this.Create<EditableRootListTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.EditableRootList)
+        {
+            EditableRootListTemplate template = this.Create<EditableRootListTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion
     
     #region NameValueListTemplate
-    
-    foreach(TableSchema table in this.NameValueList)
+
+    if(this.NameValueList != null)
     {
-        NameValueListTemplate template = this.Create<NameValueListTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.NameValueList)
+        {
+            NameValueListTemplate template = this.Create<NameValueListTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion    
     
     #region ReadOnlyChildTemplate
-    
-    foreach(TableSchema table in this.ReadOnlyChild)
+
+    if(this.ReadOnlyChild != null)
     {
-        ReadOnlyChildTemplate template = this.Create<ReadOnlyChildTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.ReadOnlyChild)
+        {
+            ReadOnlyChildTemplate template = this.Create<ReadOnlyChildTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion
     
     #region ReadOnlyChildListTemplate
-    
-    foreach(TableSchema table in this.ReadOnlyChildList)
+
+    if(this.ReadOnlyChildList != null)
     {
-        ReadOnlyChildListTemplate template = this.Create<ReadOnlyChildListTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.ReadOnlyChildList)
+        {
+            ReadOnlyChildListTemplate template = this.Create<ReadOnlyChildListTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion    
     
     #region ReadOnlyListTemplate
-    
-    foreach(TableSchema table in this.ReadOnlyList)
+
+    if(this.ReadOnlyList != null)
     {
-        ReadOnlyListTemplate template = this.Create<ReadOnlyListTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.ReadOnlyList)
+        {
+            ReadOnlyListTemplate template = this.Create<ReadOnlyListTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion
     
     #region ReadOnlyRootTemplate
-    
-    foreach(TableSchema table in this.ReadOnlyRoot)
+
+    if(this.ReadOnlyRoot != null)
     {
-        ReadOnlyRootTemplate template = this.Create<ReadOnlyRootTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.ReadOnlyRoot)
+        {
+            ReadOnlyRootTemplate template = this.Create<ReadOnlyRootTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion    
     
     #region SwitchableObjectTemplate
-    
-    foreach(TableSchema table in this.SwitchableObject)
+
+    if(this.SwitchableObject != null)
     {
-        SwitchableObjectTemplate template = this.Create<SwitchableObjectTemplate>();
-        RenderHelper(template, table);
+        foreach(TableSchema table in this.SwitchableObject)
+        {
+            SwitchableObjectTemplate template = this.Create<SwitchableObjectTemplate>();
+            RenderHelper(template, table);
+        }
     }
-    
+
     #endregion
     
     #region ADOHelperTemplate

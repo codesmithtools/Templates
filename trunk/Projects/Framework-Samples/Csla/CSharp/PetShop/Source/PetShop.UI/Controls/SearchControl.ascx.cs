@@ -24,7 +24,7 @@ namespace PetShop.UI.Controls
             foreach (Product product in ProductList.GetAll())
             {
                 bool isResult = product.Name.ToLowerInvariant().Contains(keywordKey.ToLowerInvariant()) ||
-                                product.Descn.ToLowerInvariant().Contains(keywordKey.ToLowerInvariant());
+                                product.Description.ToLowerInvariant().Contains(keywordKey.ToLowerInvariant());
 
                 if (isResult)
                 {

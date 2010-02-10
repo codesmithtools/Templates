@@ -58,7 +58,7 @@ namespace PetShop.Business
             //// Name
             // AuthorizationRules.AllowRead(_nameProperty, canRead);
         
-            //// Descn
+            //// Description
             // AuthorizationRules.AllowRead(_descnProperty, canRead);
         
             //// Image

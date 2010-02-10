@@ -65,6 +65,7 @@
     <Compile Include="Generated\DynamicRoot\Criteria\CategoryCriteria.Generated.cs">
       <DependentUpon>CategoryCriteria.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\DynamicRoot\Criteria\Interfaces\IGeneratedCriteria.cs" />
     <Compile Include="Generated\DynamicRoot\Entities\Category.cs" />
     <Compile Include="Generated\DynamicRoot\Entities\Category.DataAccess.cs">
       <DependentUpon>Category.cs</DependentUpon>
@@ -83,6 +84,7 @@
     <Compile Include="Generated\EditableChild\Criteria\CategoryCriteria.Generated.cs">
       <DependentUpon>CategoryCriteria.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\EditableChild\Criteria\Interfaces\IGeneratedCriteria.cs" />
     <Compile Include="Generated\EditableChild\Entities\Category.cs" />
     <Compile Include="Generated\EditableChild\Entities\Category.DataAccess.cs">
       <DependentUpon>Category.cs</DependentUpon>
@@ -101,6 +103,7 @@
     <Compile Include="Generated\EditableRoot\Criteria\CategoryCriteria.Generated.cs">
       <DependentUpon>CategoryCriteria.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\EditableRoot\Criteria\Interfaces\IGeneratedCriteria.cs" />
     <Compile Include="Generated\EditableRoot\Entities\Category.cs" />
     <Compile Include="Generated\EditableRoot\Entities\Category.DataAccess.cs">
       <DependentUpon>Category.cs</DependentUpon>
@@ -108,6 +111,11 @@
     <Compile Include="Generated\EditableRoot\Entities\Category.Generated.cs">
       <DependentUpon>Category.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\DynamicRoot\ExistsCommand.cs" />
+    <Compile Include="Generated\EditableChild\ExistsCommand.cs" />
+    <Compile Include="Generated\EditableRoot\ExistsCommand.cs" />
+    <Compile Include="Generated\ReadOnlyRoot\ExistsCommand.cs" />
+    <Compile Include="Generated\ReadOnlyChild\ExistsCommand.cs" />
     <Compile Include="Generated\ReadOnlyChild\Collections\CategoryList.cs" />
     <Compile Include="Generated\ReadOnlyChild\Collections\CategoryList.DataAccess.cs">
       <DependentUpon>CategoryList.cs</DependentUpon>
@@ -119,6 +127,7 @@
     <Compile Include="Generated\ReadOnlyChild\Criteria\CategoryCriteria.Generated.cs">
       <DependentUpon>CategoryCriteria.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\ReadOnlyChild\Criteria\Interfaces\IGeneratedCriteria.cs" />
     <Compile Include="Generated\ReadOnlyChild\Entities\Category.cs" />
     <Compile Include="Generated\ReadOnlyChild\Entities\Category.DataAccess.cs">
       <DependentUpon>Category.cs</DependentUpon>
@@ -137,6 +146,7 @@
     <Compile Include="Generated\ReadOnlyRoot\Criteria\CategoryCriteria.Generated.cs">
       <DependentUpon>CategoryCriteria.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generated\ReadOnlyRoot\Criteria\Interfaces\IGeneratedCriteria.cs" />
     <Compile Include="Generated\ReadOnlyRoot\Entities\Category.cs" />
     <Compile Include="Generated\ReadOnlyRoot\Entities\Category.DataAccess.cs">
       <DependentUpon>Category.cs</DependentUpon>
@@ -150,20 +160,10 @@
     <Compile Include="ReadOnlyChildTests.cs" />
     <Compile Include="DynamicRootTests.cs" />
     <Compile Include="Generated\ReadOnlyRoot\ADOHelper.cs" />
-    <Compile Include="Generated\ReadOnlyRoot\ExistsCommand.cs" />
-    <Compile Include="Generated\ReadOnlyRoot\IGeneratedCriteria.cs" />
     <Compile Include="Generated\ReadOnlyChild\ADOHelper.cs" />
     <Compile Include="Generated\EditableRoot\ADOHelper.cs" />
     <Compile Include="Generated\EditableChild\ADOHelper.cs" />
     <Compile Include="Generated\DynamicRoot\ADOHelper.cs" />
-    <Compile Include="Generated\DynamicRoot\ExistsCommand.cs" />
-    <Compile Include="Generated\DynamicRoot\IGeneratedCriteria.cs" />
-    <Compile Include="Generated\EditableChild\ExistsCommand.cs" />
-    <Compile Include="Generated\EditableChild\IGeneratedCriteria.cs" />
-    <Compile Include="Generated\EditableRoot\ExistsCommand.cs" />
-    <Compile Include="Generated\EditableRoot\IGeneratedCriteria.cs" />
-    <Compile Include="Generated\ReadOnlyChild\ExistsCommand.cs" />
-    <Compile Include="Generated\ReadOnlyChild\IGeneratedCriteria.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtility.cs" />
   </ItemGroup>

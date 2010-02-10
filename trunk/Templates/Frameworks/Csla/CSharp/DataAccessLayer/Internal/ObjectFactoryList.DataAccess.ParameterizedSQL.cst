@@ -1,4 +1,5 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.DataCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X DataAccessLayer" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
@@ -48,36 +49,8 @@ namespace <%= DataProjectName %>
         public <%= Entity.ClassName %>List Create()
         {
             var item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
-            using (BypassPropertyChecks(item))
-            {
-                // Default values.
-
-                CheckRules(item);
-                MarkNew(item);
-<% if(IsChildBusinessObject) { %>
-                MarkAsChild(item);
-<%}%>
-            }
-            return item;
-        }
-
-        /// <summary>
-        /// Creates new <%= Entity.ClassName %>List with default values.
-        /// </summary>
-        /// <returns>new <%= Entity.ClassName %>List.</returns>
-        [RunLocal]
-        private <%= Entity.ClassName %>List Create(<%= Entity.ClassName %>Criteria criteria)
-        {
-            var resource = Fetch(criteria);
-            var item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
-            using (BypassPropertyChecks(item))
-            {
-<% foreach(Member member in Entity.MembersNoKeysOrRowVersion){ %>
-                item.<%= member.PropertyName %> = resource.<%= member.PropertyName %>;
-<% } %>
-            }
-    
-            MarkNew(resource);
+            CheckRules(item);
+            MarkNew(item);
 <% if(IsChildBusinessObject) { %>
             MarkAsChild(item);
 <%}%>
@@ -96,11 +69,12 @@ namespace <%= DataProjectName %>
         /// <returns></returns>
         public <%= Entity.ClassName %>List Fetch(<%= Entity.ClassName %>Criteria criteria)
         {
+            <%= Entity.ClassName %>List item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
+
             bool cancel = false;
             OnFetching(criteria, ref cancel);
-            if (cancel) return;
+            if (cancel) return item;
 
-            <%= Entity.ClassName %>List item;
             string commandText = string.Format("SELECT <%= Entity.Members.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
@@ -111,7 +85,18 @@ namespace <%= DataProjectName %>
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if (reader.Read())
-                            item = Map(reader);
+                        {
+<% if(IsReadOnlyBusinessObject) { %>
+                            SetIsReadOnly(item, false);
+<%}%>
+                            do
+                            {
+                                item.Add(new <%= ChildBusinessClassName %>Factory().Map(reader));
+                            } while(reader.Read());
+<% if(IsReadOnlyBusinessObject) { %>
+                            SetIsReadOnly(item, true);
+<%}%>
+                        }
                         else
                             throw new Exception(String.Format("The record was not found in '<%= Entity.Table.Name %>' using the following criteria: {0}.", criteria));
                     }
@@ -123,222 +108,11 @@ namespace <%= DataProjectName %>
             MarkAsChild(item);
 <%}%>
             OnFetched();
-
             return item;
         }
 
         #endregion
 
-<% if(!IsReadOnlyBusinessObject) { %>
-        #region Insert
-
-        private void DoInsert(<%= Entity.ClassName %>List item<%-- <% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %><% } %> --%>)
-        {
-            // Don't update if the item isn't dirty.
-            if (!item.IsDirty) return;
-
-            bool cancel = false;
-            OnInserting(ref cancel);
-            if (cancel) return;
-
-            const string commandText = "INSERT INTO [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] (<%= Entity.MembersUpdateInsert.BuildDataBaseColumns() %>) VALUES (<%= Entity.MembersUpdateInsert.BuildDataBaseParameters() %>)<%= Entity.BuildInsertSelectStatement() %>";
-            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
-            {
-                connection.Open();
-                using(SqlCommand command = new SqlCommand(commandText, connection))
-                {
-                    <%= Entity.MembersUpdateInsert.BuildCommandParameters(false, true) %>
-
-                    using(var reader = new SafeDataReader(command.ExecuteReader()))
-                    {
-                        if(reader.Read())
-                        {
-                            using (BypassPropertyChecks)
-                            {
-<% if(Entity.HasRowVersionMember) { %>
-                                _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { %>
-                                item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
-<% } } %>
-                            }
-                        }
-                    }
-                }
-            }
-           
-            // Update Child Items.
-<%-- One-To-Zero-Or-One --%>
-<% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
-            //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><%-- <% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%> --%>);
-<% } %>
-<%-- Many-To-One --%>
-<% foreach(Association association in Entity.AssociatedManyToOne) { %>
-            //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><%-- <% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%> --%>);
-<% } %>
-<%-- One-To-Many & Many-To-Many --%>
-<% foreach(Association association in Entity.AssociatedOneToMany) { %>
-            //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><%-- <% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%> --%>);
-<% } %> 
-            }
-
-            OnInserted();
-            MarkOld(item);
-        }
-
-        #endregion
-
-        #region Update
-
-        [Transactional(TransactionalTypes.TransactionScope)]
-        public <%= Entity.ClassName %>List Update(<%= Entity.ClassName %>List item<%-- <% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildParametersVariables() %><% } %> --%>)
-        {
-            if(item.IsDeleted)
-            {
-                DoDelete(item);
-            }
-            else if(item.IsNew)
-            {
-                DoInsert(<%-- item<% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildVariableArguments() %><% } %> --%>);
-            }
-            else
-            {
-                DoUpdate(item);
-            }
-
-            return item;
-        }
-
-        private void DoUpdate(<%= Entity.ClassName %>List item)
-        {
-            bool cancel = false;
-            OnUpdating(ref cancel);
-            if (cancel) return;
-            
-            // Don't update if the item isn't dirty.
-            if (!item.IsDirty) return;
-
-            const string commandText = "UPDATE [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] <%= Entity.MembersUpdateInsert.BuildSetStatements() %> <%= Entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% if(Entity.HasRowVersionMember) { %> AND [<%= Entity.RowVersionMember.ColumnName %>] = <%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
-            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
-            {
-                connection.Open();
-                using(SqlCommand command = new SqlCommand(commandText, connection))
-                {
-                    <%= Entity.MembersNoRowVersion.BuildCommandParameters() %>
-<% if(Entity.HasRowVersionMember) { %>
-                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", _timestamp);
-<% } %>
-
-<% if(Entity.HasRowVersionMember) { %>
-                    using(var reader = new SafeDataReader(command.ExecuteReader()))
-                    {
-                        //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                        if(reader.RecordsAffected == 0)
-                            throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-
-                        if(reader.Read())
-                        {
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-                        }
-                    }
-<% } else { %>
-                    //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                    int result = command.ExecuteNonQuery();
-                    if (result == 0)
-                        throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-<% } %>
-                }
-            }
-            
-            // Update Child Items.
-<%-- One-To-Zero-Or-One --%>
-<% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
-            //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><%-- <% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%> --%>);
-<% } %>
-<%-- Many-To-One --%>
-<% foreach(Association association in Entity.AssociatedManyToOne) { %>
-            //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><%-- <% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%> --%>);
-<% } %>
-<%-- One-To-Many & Many-To-Many --%>
-<% foreach(Association association in Entity.AssociatedOneToMany) { %>
-            //new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %><%-- <% if(association.Entity.AssociatedOneToMany.Count > 0){ %>, item <%}%> --%>);
-<% } %>
-
-            MarkOld(item);
-            OnUpdated();
-        }
-        #endregion
-
-
-        #region Delete
-
-        [Transactional(TransactionalTypes.TransactionScope)]
-        public void Delete(<%= Entity.ClassName %>Criteria criteria)
-        {
-            DoDelete(criteria);
-        }
-
-        protected void DoDelete(<%= Entity.ClassName %>List item)
-        {
-            // If we're not dirty then don't update the database.
-            if (!item.IsDirty) return;
-
-            // If we're new then don't call delete.
-            if (item.IsNew) return;
-
-            DoDelete(new <%= ChildBusinessClassName %>Criteria{<%= Entity.GetUniqueSearchCriteriaMembers().BuildObjectInitializer() %>});
-
-            MarkNew(item);
-        }
-
-        private void DoDelete(<%= Entity.ClassName %>Criteria criteria)
-        {
-            bool cancel = false;
-            OnDeleting(criteria, ref cancel);
-            if (cancel) return;
-
-            string commandText = string.Format("DELETE FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
-            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
-            {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand(commandText, connection))
-                {
-                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
-
-                    //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                    int result = command.ExecuteNonQuery();
-                    if (result == 0)
-                        throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-                }
-            }
-
-            OnDeleted();
-        }
-
-        #endregion
-<% } %>
-
-        #region Helper Methods
-
-         private <%= Entity.ClassName %>List Map(SafeDataReader reader)
-        {
-            var item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
-            using (BypassPropertyChecks(item))
-            {
-<% if(Entity.HasRowVersionMember) { %>
-                item.Timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-<% } %>
-<% foreach(Member member in Entity.MembersNoRowVersion) { %>
-                item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
-<% } %>
-<%-- Many-To-One --%>
-<% foreach(Association association in Entity.AssociatedManyToOne) { %>
-                item.<%= association.PropertyName %> = new <%= association.ClassName %>List.NewList();
-<% } %>
-            }
-            
-            return item;
-        }
-
-        #endregion
+<% RenderHelper(new PartialMethods()); %>
     }
 }
