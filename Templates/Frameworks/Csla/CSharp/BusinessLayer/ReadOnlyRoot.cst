@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X ReadOnlyRoot" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X ReadOnlyRoot" %>
 
 <%@ Register Name="ReadOnlyRoot" Template="Internal\ReadOnlyRoot.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="ReadOnlyRootDataAccess" Template="Internal\ReadOnlyRoot.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
@@ -17,81 +17,71 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="SchemaExplorer" %>
-<% Generate(); %>
 
 <script runat="template">
 
-public override void Generate()
+public override void Render(System.IO.TextWriter writer)
 {
     RegisterReferences();
+
+    #region ReadOnlyRoot
     
-    foreach(Entity entity in Entities)
+    ReadOnlyRoot readOnlyRoot = this.Create<ReadOnlyRoot>();
+    this.CopyPropertiesTo(readOnlyRoot);
+    
+    string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", readOnlyRoot.BusinessClassName));
+    if (!System.IO.File.Exists(parentFileName))
     {
-        #region ReadOnlyRoot
-        
-        ReadOnlyRoot readOnlyRoot = this.Create<ReadOnlyRoot>();
-        this.CopyPropertiesTo(readOnlyRoot);
-        readOnlyRoot.SourceTable = entity.Table;
-        
-        string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", readOnlyRoot.BusinessClassName));
-        if (!System.IO.File.Exists(parentFileName))
-        {
-            readOnlyRoot.RenderToFile(parentFileName, false);
-        }
-        
-        #region ReadOnlyRoot.Generated
-        
-        string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", readOnlyRoot.BusinessClassName));
-        
-        ReadOnlyRootGenerated readOnlyRootGenerated = this.Create<ReadOnlyRootGenerated>();
-        this.CopyPropertiesTo(readOnlyRootGenerated);
-        readOnlyRootGenerated.SourceTable = entity.Table;
-        
-        readOnlyRootGenerated.RenderToFile(fileName, parentFileName, true);
-        
-        #endregion
-        
-        #region ReadOnlyRoot.DataAccess
-        
-        fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", readOnlyRoot.BusinessClassName));
-        if(DataAccessImplementation == DataAccessMethod.None)
-        {
-            ReadOnlyRootDataAccess readOnlyRootDataAccess = this.Create<ReadOnlyRootDataAccess>();
-            this.CopyPropertiesTo(readOnlyRootDataAccess);
-            readOnlyRootDataAccess.SourceTable = entity.Table;
-            
-            readOnlyRootDataAccess.RenderToFile(fileName, parentFileName, true);
-        }
-        else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
-        {
-            ReadOnlyRootDataAccessParameterized readOnlyRootDataAccessParameterized = this.Create<ReadOnlyRootDataAccessParameterized>();
-            this.CopyPropertiesTo(readOnlyRootDataAccessParameterized);
-            readOnlyRootDataAccessParameterized.SourceTable = entity.Table;
-            
-            readOnlyRootDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
-        }
-        else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
-        {
-            ReadOnlyRootDataAccessStoredProcedures readOnlyRootDataAccessStoredProcedures = this.Create<ReadOnlyRootDataAccessStoredProcedures>();
-            this.CopyPropertiesTo(readOnlyRootDataAccessStoredProcedures);
-            readOnlyRootDataAccessStoredProcedures.SourceTable = entity.Table;
-
-            readOnlyRootDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
-
-            //StoredProcedures
-            fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.StoredProcedures.sql", readOnlyRoot.BusinessClassName));
-            SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
-            this.CopyPropertiesTo(sqlStoredProcedures);
-            sqlStoredProcedures.SourceTable = entity.Table;
-            sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
-            
-            sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
-        }
-        
-        #endregion
-        
-        #endregion
+        readOnlyRoot.RenderToFile(parentFileName, false);
     }
+    
+    #region ReadOnlyRoot.Generated
+    
+    string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", readOnlyRoot.BusinessClassName));
+    
+    ReadOnlyRootGenerated readOnlyRootGenerated = this.Create<ReadOnlyRootGenerated>();
+    this.CopyPropertiesTo(readOnlyRootGenerated);
+    
+    readOnlyRootGenerated.RenderToFile(fileName, parentFileName, true);
+    
+    #endregion
+    
+    #region ReadOnlyRoot.DataAccess
+    
+    fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", readOnlyRoot.BusinessClassName));
+    if(DataAccessImplementation == DataAccessMethod.None)
+    {
+        ReadOnlyRootDataAccess readOnlyRootDataAccess = this.Create<ReadOnlyRootDataAccess>();
+        this.CopyPropertiesTo(readOnlyRootDataAccess);
+        
+        readOnlyRootDataAccess.RenderToFile(fileName, parentFileName, true);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
+    {
+        ReadOnlyRootDataAccessParameterized readOnlyRootDataAccessParameterized = this.Create<ReadOnlyRootDataAccessParameterized>();
+        this.CopyPropertiesTo(readOnlyRootDataAccessParameterized);
+        
+        readOnlyRootDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    {
+        ReadOnlyRootDataAccessStoredProcedures readOnlyRootDataAccessStoredProcedures = this.Create<ReadOnlyRootDataAccessStoredProcedures>();
+        this.CopyPropertiesTo(readOnlyRootDataAccessStoredProcedures);
+
+        readOnlyRootDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
+
+        //StoredProcedures
+        fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.StoredProcedures.sql", readOnlyRoot.BusinessClassName));
+        SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
+        this.CopyPropertiesTo(sqlStoredProcedures);
+        sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
+        
+        sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
+    }
+    
+    #endregion
+    
+    #endregion
 }
 
 </script>

@@ -6,12 +6,6 @@ namespace CodeSmith.SchemaHelper
 {
     public class SearchCriteria
     {
-        #region Private Members
-
-        private readonly bool _isChild;
-
-        #endregion
-
         #region Constructor(s)
 
         public SearchCriteria(SearchCriteriaEnum type)
@@ -23,7 +17,7 @@ namespace CodeSmith.SchemaHelper
 
         public SearchCriteria(SearchCriteriaEnum type, bool treatAsChild) : this(type)
         {
-            _isChild = treatAsChild;
+            IsChild = treatAsChild;
         }
 
         #endregion
@@ -47,7 +41,7 @@ namespace CodeSmith.SchemaHelper
                     else
                         sb.Append(Configuration.Instance.SearchCriteriaProperty.Delimeter);
 
-                    if (_isChild)
+                    if (IsChild)
                         sb.Append(Util.NamingConventions.PropertyName(member.ColumnName));
                     else
                         sb.Append(Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName));
@@ -82,7 +76,14 @@ namespace CodeSmith.SchemaHelper
 
         #region Public Read-Only Properties
 
-        internal List<AssociationMember> AssociationMembers { get; set; }
+        /// <summary>
+        /// This is the FK associated members.
+        /// </summary>
+        public List<AssociationMember> AssociationMembers { get; set; }
+        
+        /// <summary>
+        /// This is the main list that you should use...
+        /// </summary>
         public List<Member> Members { get; private set; }
 
         public bool IsUniqueResult
@@ -90,6 +91,8 @@ namespace CodeSmith.SchemaHelper
             get;
             set;
         }
+
+        public bool IsChild { get; internal set; }
 
         public string MethodName
         {

@@ -6,7 +6,7 @@ using System.IO;
 
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
-
+using SchemaExplorer;
 using Configuration=CodeSmith.SchemaHelper.Configuration;
 
 namespace QuickStart
@@ -97,6 +97,23 @@ namespace QuickStart
         {
             RegisterReference(Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\Csla.dll")));
             RegisterReference("System.Configuration");
+        }
+
+        #endregion
+
+        #region RenderHelper
+
+        public void RenderHelper<T>(T template) where T : EntityCodeTemplate
+        {
+            this.CopyPropertiesTo(template);
+            template.Render(this.Response);
+        }
+
+        public void RenderHelper<T>(T template, TableSchema table) where T : EntityCodeTemplate
+        {
+            this.CopyPropertiesTo(template);
+            template.SourceTable = table;
+            template.Render(this.Response);
         }
 
         #endregion

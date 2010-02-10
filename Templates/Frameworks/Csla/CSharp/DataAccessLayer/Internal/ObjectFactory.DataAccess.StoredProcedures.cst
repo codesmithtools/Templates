@@ -49,16 +49,30 @@ namespace <%= DataProjectName %>
         public <%= Entity.ClassName %> Create()
         {
             var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
             using (BypassPropertyChecks(item))
             {
                 // Default values.
-
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) {
+if(member.SystemType == "System.Guid") { %>
+                item.<%= member.PropertyName %> = Guid.NewGuid();
+<%} } foreach(Association association in Entity.AssociatedForeignKeys) { foreach(AssociationMember member in association) {
+if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedColumn.IsIdentity && member.AssociatedColumn.IsForeignKey) { %>
+                item.<%= member.AssociatedColumn.PropertyName %> = "BN";
+<%} } } %>
                 CheckRules(item);
                 MarkNew(item);
 <% if(IsChildBusinessObject) { %>
                 MarkAsChild(item);
 <%}%>
             }
+
+            OnCreated();
+
             return item;
         }
 
@@ -132,7 +146,7 @@ namespace <%= DataProjectName %>
 <% if(!IsReadOnlyBusinessObject) { %>
         #region Insert
 
-        private void DoInsert(<%= Entity.ClassName %> item<%-- <% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %><% } %> --%>)
+        private void DoInsert(<%= Entity.ClassName %> item, bool stopProccessingChildren)
         {
             // Don't update if the item isn't dirty.
             if (!item.IsDirty) return;
@@ -165,22 +179,27 @@ namespace <%= DataProjectName %>
 <% } } } %>
                 }
             }
+
+            MarkOld(item);
+            CheckRules(item);
             
+            if(!stopProccessingChildren)
+            {
             // Update Child Items.
 <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
-            <%= association.ClassName %>Update(ref item);
+                <%= association.ClassName %>Update(ref item);
 <% } %>
 <%-- Many-To-One --%>
 <% foreach(Association association in Entity.AssociatedManyToOne) { %>
-            <%= association.ClassName %>Update(ref item);
+                <%= association.ClassName %>Update(ref item);
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(Association association in Entity.AssociatedOneToMany) { %>
-            <%= association.ClassName %>Update(ref item);
+                <%= association.ClassName %>Update(ref item);
 <% } %>
+            }
 
-            MarkOld(item);
             OnInserted();
         }
 
@@ -189,7 +208,12 @@ namespace <%= DataProjectName %>
         #region Update
 
         [Transactional(TransactionalTypes.TransactionScope)]
-        public <%= Entity.ClassName %> Update(<%= Entity.ClassName %> item<%-- <% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %><% } %> --%>)
+        public <%= Entity.ClassName %> Update(<%= Entity.ClassName %> item)
+        {
+            return Update(item, false);
+        }
+
+        public <%= Entity.ClassName %> Update(<%= Entity.ClassName %> item, bool stopProccessingChildren)
         {
             if(item.IsDeleted)
             {
@@ -198,72 +222,79 @@ namespace <%= DataProjectName %>
             }
             else if(item.IsNew)
             {
-                DoInsert(item<%-- <% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildVariableArguments() %><% } %> --%>);
+                DoInsert(item, stopProccessingChildren);
             }
             else
             {
-                DoUpdate(item);
+                DoUpdate(item, stopProccessingChildren);
             }
 
             return item;
         }
+        
 
-        private void DoUpdate(<%= Entity.ClassName %> item)
+        private void DoUpdate(<%= Entity.ClassName %> item, bool stopProccessingChildren)
         {
-            // Don't update if the item isn't dirty.
-            if (!item.IsDirty) return;
-
             bool cancel = false;
             OnUpdating(ref cancel);
             if (cancel) return;
 
-            using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
+            // Don't update if the item isn't dirty.
+            if (item.IsDirty)
             {
-                connection.Open();
-                using(SqlCommand command = new SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection))
+                using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    <%= Entity.MembersNoRowVersion.BuildCommandParameters(true, false, false, true) %>
-<% if(Entity.HasRowVersionMember) { %>
-                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", _timestamp);
-<% } %>
-
-<% if(Entity.HasRowVersionMember) { %>
-                    using(var reader = new SafeDataReader(command.ExecuteReader()))
+                    connection.Open();
+                    using(SqlCommand command = new SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection))
                     {
-                        //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                        if(reader.RecordsAffected == 0)
-                            throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-
-                        if(reader.Read())
-                        {
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-                        }
-                    }
-<% } else { %>
-                    //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                    int result = command.ExecuteNonQuery();
-                    if (result == 0)
-                        throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+                        command.CommandType = CommandType.StoredProcedure;
+                        <%= Entity.MembersNoRowVersion.BuildCommandParameters(true, false, false, false) %>
+<% if(Entity.HasRowVersionMember) { %>
+                        command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", _timestamp);
 <% } %>
+
+<% if(Entity.HasRowVersionMember) { %>
+                        using(var reader = new SafeDataReader(command.ExecuteReader()))
+                        {
+                            //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                            if(reader.RecordsAffected == 0)
+                                throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+    
+                            if(reader.Read())
+                            {
+                                _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                            }
+                        }
+<% } else { %>
+                        //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                        int result = command.ExecuteNonQuery();
+                        if (result == 0)
+                            throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+<% } %>
+                    }
                 }
             }
 
+            MarkOld(item);
+            CheckRules(item);
+
+            if(!stopProccessingChildren)
+            {
             // Update Child Items.
 <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
-            <%= association.ClassName %>Update(ref item);
+                <%= association.ClassName %>Update(ref item);
 <% } %>
 <%-- Many-To-One --%>
 <% foreach(Association association in Entity.AssociatedManyToOne) { %>
-            <%= association.ClassName %>Update(ref item);
+                <%= association.ClassName %>Update(ref item);
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(Association association in Entity.AssociatedOneToMany) { %>
-            <%= association.ClassName %>Update(ref item);
+                <%= association.ClassName %>Update(ref item);
 <% } %>
+            }
 
-            MarkOld(item);
             OnUpdated();
         }
 
@@ -324,7 +355,7 @@ namespace <%= DataProjectName %>
 
         #region Helper Methods
 
-        private <%= Entity.ClassName %> Map(SafeDataReader reader)
+        public <%= Entity.ClassName %> Map(SafeDataReader reader)
         {
             var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
             using (BypassPropertyChecks(item))
@@ -345,14 +376,9 @@ namespace <%= DataProjectName %>
         //AssociatedOneToZeroOrOne
         private static void <%= association.ClassName %>Update(ref <%= Entity.ClassName %> item)
         {
-            if(!<%= association.ClassName %>.Exists(new <%= association.ClassName %>Criteria{<%= association.SearchCriteria.Members.BuildObjectInitializer(true) %>}))
-                return;
+<%= association.SearchCriteria.BuildUpdateStatements("item." + association.PropertyName) %>
 
-            <% foreach(Member member in association.SearchCriteria.Members){ %>
-            item.<%= association.PropertyName %>.<%= member.PropertyName %> = item.<%= member.PropertyName%>;
-            <%}%>
-            
-            new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>);
+            new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, true);
         }
 <% } %>
 <%-- Many-To-One --%>
@@ -360,14 +386,9 @@ namespace <%= DataProjectName %>
         //AssociatedManyToOne
         private static void <%= association.ClassName %>Update(ref <%= Entity.ClassName %> item)
         {
-            if(!<%= association.ClassName %>.Exists(new <%= association.ClassName %>Criteria{<%= association.SearchCriteria.Members.BuildObjectInitializer(true) %>}))
-                return;
+<%= association.SearchCriteria.BuildUpdateStatements("item." + association.PropertyName) %>
 
-            <% foreach(Member member in association.SearchCriteria.Members){ %>
-            item.<%= association.PropertyName %>.<%= member.PropertyName %> = item.<%= member.PropertyName%>;
-            <%}%>
-            
-            new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>);
+            new <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, true);
         }
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
@@ -375,15 +396,11 @@ namespace <%= DataProjectName %>
         //AssociatedOneToMany
         private static void <%= association.ClassName %>Update(ref <%= Entity.ClassName %> item)
         {
-            if(!<%= association.ClassName %>.Exists(new <%= association.ClassName %>Criteria{<%= association.SearchCriteria.Members.BuildObjectInitializer(true) %>}))
-                return;
-
             foreach(<%= association.ClassName %> itemToUpdate in item.<%= association.PropertyName %>)
             {
-<% foreach(Member member in association.SearchCriteria.Members){ %>
-                itemToUpdate.<%= member.PropertyName %> = item.<%= member.PropertyName%>;
-<%}%>
-                new <%= association.ClassName %>Factory().Update(itemToUpdate);
+<%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate") %>
+
+                new <%= association.ClassName %>Factory().Update(itemToUpdate, true);
             }
         }
 <% } %>

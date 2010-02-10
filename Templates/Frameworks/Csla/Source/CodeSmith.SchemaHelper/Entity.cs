@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using SchemaExplorer;
+using System.Diagnostics;
 
 namespace CodeSmith.SchemaHelper
 {
@@ -55,6 +56,7 @@ namespace CodeSmith.SchemaHelper
 
                 // Get SearchCriteria
                 GetSearchCriteria();
+                UpdateDuplicateAssociations();
 
                 _initialized = true;
             }
@@ -172,6 +174,26 @@ namespace CodeSmith.SchemaHelper
                 if (duplicateMembers.Count > 1)
                     for (int x = 0; x < duplicateMembers.Count(); x++)
                         duplicateMembers[x].AppendNameSuffix(x + 1);
+            }
+        }
+
+        private void UpdateDuplicateAssociations()
+        {
+            IEnumerable<Association> associations = _associationMap.Values.ToList();
+            foreach (Association association in associations)
+            {
+                Association association1 = association;
+                List<Association> duplicateAssociations = associations.Where(a => a.PropertyName == association1.PropertyName).ToList();
+                if (duplicateAssociations.Count > 1)
+                {
+                    for (int index = 0; index < duplicateAssociations.Count(); index++)
+                    {
+                        if (duplicateAssociations[index].SearchCriteria != null)
+                        {
+                            duplicateAssociations[index].PropertyName += "By" + duplicateAssociations[index].MembersToString;
+                        }
+                    }
+                }
             }
         }
 

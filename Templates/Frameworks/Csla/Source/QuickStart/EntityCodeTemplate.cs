@@ -65,6 +65,17 @@ namespace QuickStart
 
         #endregion
 
+        #region 2. Solution
+
+        [Editor(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
+        [Optional, NotChecked]
+        [Category("2. Solution")]
+        [Description("The path to the Solution location.")]
+        [DefaultValue(".\\")]
+        public string Location { get; set; }
+
+        #endregion
+
         #region 3. Business Project
 
         [Category("3. Business Project")]
@@ -97,6 +108,11 @@ namespace QuickStart
         [Description("Uses private member backing variables for properties.")]
         [DefaultValue(false)]
         public bool UseMemberVariables { get; set; }
+
+        [Category("3. Business Project")]
+        [Description("Changes how the Business Objects are deleted, defaults to immediate deletion.")]
+        [DefaultValue(false)]
+        public bool UseDeferredDeletion { get; set; }
 
         #endregion
         
@@ -218,16 +234,6 @@ namespace QuickStart
         public virtual string GetSelectStoredProcedureName()
         {
             return String.Format("{0}[{1}{2}_Select]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
-        }
-
-        #endregion
-
-        #region RenderHelper
-
-        public void RenderHelper<T>(T template) where T : EntityCodeTemplate
-        {
-            this.CopyPropertiesTo(template);
-            template.Render(this.Response);
         }
 
         #endregion
