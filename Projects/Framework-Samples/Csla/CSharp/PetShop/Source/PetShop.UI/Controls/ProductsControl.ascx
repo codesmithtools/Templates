@@ -10,7 +10,7 @@
                 <tr>
                     <td valign="top" width="91"><a href='Items.aspx?productId=<%# Eval("ProductId") %>&categoryId=<%# Eval("categoryId") %>'><img id="imgProduct" alt='<%# Eval("Name") %>' src='<%# Eval("Image") %>' style="border-width: 0px;" runat="server" /></a></td>
                     <td width="26">&nbsp;</td>
-                    <td valign="top" width="120"><a href='Items.aspx?productId=<%# Eval("ProductId") %>&categoryId=<%# Eval("categoryId") %>'><div class="productName"><%# Eval("Name") %></div></a><div class="productDescription"><%# Eval("Descn") %></div></td>                    
+                    <td valign="top" width="120"><a href='Items.aspx?productId=<%# Eval("ProductId") %>&categoryId=<%# Eval("categoryId") %>'><div class="productName"><%# Eval("Name") %></div></a><div class="productDescription"><%# Eval("Description") %></div></td>                    
                 </tr>               
             </table>            
         </ItemTemplate>

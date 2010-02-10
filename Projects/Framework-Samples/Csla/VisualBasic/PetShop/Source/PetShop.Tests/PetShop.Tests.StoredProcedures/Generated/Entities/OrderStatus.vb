@@ -67,5 +67,10 @@ Public Partial Class OrderStatus
 
     End Sub
 
-    #End Region
+#End Region
+
+    Private Sub OnDeleted()
+
+    End Sub
+
 End Class

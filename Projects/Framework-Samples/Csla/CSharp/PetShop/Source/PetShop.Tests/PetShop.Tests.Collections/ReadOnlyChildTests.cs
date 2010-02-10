@@ -60,7 +60,7 @@ namespace PetShop.Tests.Collections
         //    Category category = Category.NewCategory();
         //    category.CategoryId = categoryID;
         //    category.Name = TestUtility.Instance.RandomString(80, false);
-        //    category.Descn = TestUtility.Instance.RandomString(255, false);
+        //    category.Description = TestUtility.Instance.RandomString(255, false);
 
         //    Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
         //    category = category.Save();

@@ -46,6 +46,11 @@ namespace <%= DataProjectName %>
         public <%= Entity.ClassName %> Create()
         {
             var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
             using (BypassPropertyChecks(item))
             {
                 // Default values.
@@ -56,6 +61,9 @@ namespace <%= DataProjectName %>
                 MarkAsChild(item);
 <%}%>
             }
+
+            OnCreated();
+
             return item;
         }
 
@@ -66,19 +74,28 @@ namespace <%= DataProjectName %>
         [RunLocal]
         private <%= Entity.ClassName %> Create(<%= Entity.ClassName %>Criteria criteria)
         {
-            //var resource  = <%= Entity.ClassName %>.Get<%= Entity.ClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>);
             var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
+            //var resource = Fetch(criteria);
             using (BypassPropertyChecks(item))
             {
 <% foreach(Member member in Entity.MembersNoRowVersion){ %>
                 //item.<%= member.PropertyName %> = resource.<%= member.PropertyName %>;
 <% } %>
             }
-    
+
+            CheckRules(item);
             MarkNew(resource);
 <% if(IsChildBusinessObject) { %>
             MarkAsChild(item);
 <%}%>
+
+            OnCreated();
+
             return item;
         }
 
@@ -94,12 +111,19 @@ namespace <%= DataProjectName %>
         /// <returns></returns>
         public <%= Entity.ClassName %> Fetch(<%= Entity.ClassName %>Criteria criteria)
         {
+            bool cancel = false;
+            OnFetching(criteria, ref cancel);
+            if (cancel) return null;
+
             <%= Entity.ClassName %> item;
-            
+
+            // Do Fetch
+
             MarkOld(item);
 <% if(IsChildBusinessObject) { %>
             MarkAsChild(item);
 <%}%>
+            OnFetched();
             return item;
         }
 
@@ -108,20 +132,26 @@ namespace <%= DataProjectName %>
 
         #region Update
 
-        [Transactional(TransactionTypes.TransactionScope)]
+        [Transactional(TransactionalTypes.TransactionScope)]
         public <%= Entity.ClassName %> Update(<%= Entity.ClassName %> item)
+        {
+            return Update(item, false);
+        }
+
+        public <%= Entity.ClassName %> Update(<%= Entity.ClassName %> item, bool stopProccessingChildren)
         {
             if(item.IsDeleted)
             {
                 //DoDelete(item);
+                MarkNew(item);
             }
             else if(item.IsNew)
             {
-                //DoInsert(item);
+                //DoInsert(item, stopProccessingChildren);
             }
             else
             {
-                //DoUpdate(item);
+                //DoUpdate(item, stopProccessingChildren);
             }
 
             return item;

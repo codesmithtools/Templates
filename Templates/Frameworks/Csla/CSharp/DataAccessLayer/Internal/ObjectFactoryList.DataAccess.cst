@@ -104,40 +104,5 @@ namespace <%= DataProjectName %>
         }
 
         #endregion
-<% if(!IsReadOnlyBusinessObject) { %>
-
-        #region Update
-
-        [Transactional(TransactionTypes.TransactionScope)]
-        public <%= Entity.ClassName %>List Update(<%= Entity.ClassName %>List item)
-        {
-            if(item.IsDeleted)
-            {
-                //DoDelete(item);
-            }
-            else if(item.IsNew)
-            {
-                //DoInsert(item);
-            }
-            else
-            {
-                //DoUpdate(item);
-            }
-
-            return item;
-        }
-
-        #endregion
-
-        #region Delete
-
-        [Transactional(TransactionTypes.TransactionScope)]
-        public void Delete(<%= Entity.ClassName %>Criteria criteria)
-        {
-            // Delete data here.
-        }
-
-        #endregion
-<% } %>
     }
 }

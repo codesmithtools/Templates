@@ -64,13 +64,13 @@ if(member.SystemType == "System.Guid") { %>
 if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedColumn.IsIdentity && member.AssociatedColumn.IsForeignKey) { %>
                 item.<%= member.AssociatedColumn.PropertyName %> = "BN";
 <%} } } %>
-                CheckRules(item);
-                MarkNew(item);
-<% if(IsChildBusinessObject) { %>
-                MarkAsChild(item);
-<%}%>
             }
 
+            CheckRules(item);
+            MarkNew(item);
+<% if(IsChildBusinessObject) { %>
+            MarkAsChild(item);
+<%}%>
             OnCreated();
 
             return item;
@@ -83,19 +83,28 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
         [RunLocal]
         private <%= Entity.ClassName %> Create(<%= Entity.ClassName %>Criteria criteria)
         {
-            var resource = Fetch(criteria);
             var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
+            var resource = Fetch(criteria);
             using (BypassPropertyChecks(item))
             {
 <% foreach(Member member in Entity.MembersNoKeysOrRowVersion){ %>
                 item.<%= member.PropertyName %> = resource.<%= member.PropertyName %>;
 <% } %>
             }
-    
+
+            CheckRules(item);
             MarkNew(resource);
 <% if(IsChildBusinessObject) { %>
             MarkAsChild(item);
 <%}%>
+
+            OnCreated();
+
             return item;
         }
 
@@ -231,7 +240,6 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 
             return item;
         }
-        
 
         private void DoUpdate(<%= Entity.ClassName %> item, bool stopProccessingChildren)
         {

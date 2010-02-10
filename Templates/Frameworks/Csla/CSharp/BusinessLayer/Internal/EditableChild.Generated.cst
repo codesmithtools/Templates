@@ -2,6 +2,7 @@
 <%@ Register Name="CompositeKeyMethods" Template="..\..\Common\CompositeKeyMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Constructor" Template="..\..\Common\ChildConstructor.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Exists" Template="..\..\Common\Exists.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="IsDirty" Template="..\..\Common\IsDirty.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Properties" Template="..\..\Common\Properties.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ValidationRules" Template="..\..\Common\ValidationRules.cst" MergeProperties="False" ExcludeProperties="" %>
 
@@ -66,35 +67,8 @@ namespace <%= BusinessProjectName %>
 
 <% RenderHelper(new Exists()); %>
 
+<% RenderHelper(new IsDirty()); %>
+
 <% RenderHelper(new CompositeKeyMethods()); %>
-
-        #region Overridden properties
-
-        /// <summary>
-        /// Returns true if the business object or any of its children properties are dirty.
-        /// </summary>
-        public override bool IsDirty
-        {
-            get
-            {
-                if (base.IsDirty) return true;
-<%-- One-To-Zero-Or-One --%>
-<% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
-                if (<%= association.PropertyName %>.IsDirty) return true;
-<% } %>
-<%-- Many-To-One --%>
-<% foreach(Association association in Entity.AssociatedManyToOne) { %>
-                if (<%= association.PropertyName %>.IsDirty) return true;
-<% } %>
-<%-- One-To-Many & Many-To-Many --%>
-<% foreach(Association association in Entity.AssociatedOneToMany) { %>
-                if (<%= association.PropertyName %>.IsDirty) return true;
-<% } %>
-
-                return false;
-            }
-        }
-
-        #endregion
     }
 }

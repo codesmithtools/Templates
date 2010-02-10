@@ -67,7 +67,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-                columnNames += string.Format(", {0}{1}", Configuration.Instance.ParameterPrefix, member.Name);
+                columnNames += string.Format(", {0}{1}", Configuration.Instance.ParameterPrefix, member.ColumnName);
             }
 
             foreach (AssociationMember associationMember in associationMembers)

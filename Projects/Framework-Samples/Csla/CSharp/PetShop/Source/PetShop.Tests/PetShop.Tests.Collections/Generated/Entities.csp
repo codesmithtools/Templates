@@ -11,33 +11,25 @@
           <string>^\w+_</string>
         </stringList>
       </property>
+      <property name="Location">.\DynamicRoot\</property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
       <property name="IsolationLevel">ReadCommitted</property>
-      <property name="UseDeferredDeletion">False</property>
       <property name="BusinessProjectName">PetShop.Tests.Collections.DynamicRoot</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-          <string>^dbo.Product</string>
-        </stringList>
-      </property>
-      <property name="Location">.\DynamicRoot\</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="DynamicRootList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\DynamicRootList.cst">
       <property name="CleanExpressions">
@@ -45,32 +37,25 @@
           <string>^\w+_</string>
         </stringList>
       </property>
+      <property name="Location">.\DynamicRoot\</property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
       <property name="IsolationLevel">ReadCommitted</property>
-      <property name="UseDeferredDeletion">False</property>
       <property name="BusinessProjectName">PetShop.Tests.Collections.DynamicRoot</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
-      <property name="Location">.\DynamicRoot\</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="DynmaicRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
@@ -78,41 +63,9 @@
           <string>^\w+_</string>
         </stringList>
       </property>
-      <property name="UseMemberVariables">False</property>
-      <property name="ParameterPrefix">@p_</property>
-      <property name="UseLazyLoading">True</property>
-      <property name="AutoExecuteStoredProcedures">False</property>
-      <property name="IsolationLevel">ReadCommitted</property>
-      <property name="UseDeferredDeletion">False</property>
-      <property name="BusinessProjectName">PetShop.Tests.Collections.DynamicRoot</property>
-      <property name="DataAccessImplementation">StoredProcedures</property>
-      <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
-        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
-      </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
       <property name="Location">.\DynamicRoot\</property>
-    </propertySet>
-    <propertySet name="DynamicRootIGeneratedCriteria" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\IGeneratedCriteria.cst">
-      <property name="UseDeferredDeletion">False</property>
-      <property name="CleanExpressions">
-        <stringList>
-          <string>^\w+_</string>
-        </stringList>
-      </property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
@@ -120,23 +73,15 @@
       <property name="BusinessProjectName">PetShop.Tests.Collections.DynamicRoot</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
-      <property name="Location">.\DynamicRoot\Criteria\Interfaces\</property>
-      <property name="SourceDatabase">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="LaunchVisualStudio">True</property>
-      <property name="Language">CSharp</property>
-      <property name="SolutionName">PetShop</property>
-      <property name="DataProjectName">PetShop.Data</property>
-      <property name="DataClassName">NA</property>
-      <property name="InterfaceProjectName">PetShop.UI</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="ADOHelper" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ADOHelper.cst">
       <property name="CleanExpressions">
@@ -209,7 +154,9 @@
           <string>^\w+_</string>
         </stringList>
       </property>
+      <property name="Location">.\EditableChild\</property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
@@ -217,24 +164,15 @@
       <property name="BusinessProjectName">PetShop.Tests.Collections.EditableChild</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-          <string>^dbo.Product</string>
-        </stringList>
-      </property>
-      <property name="Location">.\EditableChild\</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="EditableChildList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\EditableChildList.cst">
       <property name="CleanExpressions">
@@ -242,32 +180,25 @@
           <string>^\w+_</string>
         </stringList>
       </property>
+      <property name="Location">.\EditableChild\</property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
       <property name="IsolationLevel">ReadCommitted</property>
-      <property name="UseDeferredDeletion">False</property>
       <property name="BusinessProjectName">PetShop.Tests.Collections.EditableChild</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
-      <property name="Location">.\EditableChild\</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="EditableChildCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
@@ -275,41 +206,9 @@
           <string>^\w+_</string>
         </stringList>
       </property>
-      <property name="UseMemberVariables">False</property>
-      <property name="ParameterPrefix">@p_</property>
-      <property name="UseLazyLoading">True</property>
-      <property name="AutoExecuteStoredProcedures">False</property>
-      <property name="IsolationLevel">ReadCommitted</property>
-      <property name="UseDeferredDeletion">False</property>
-      <property name="BusinessProjectName">PetShop.Tests.Collections.EditableChild</property>
-      <property name="DataAccessImplementation">StoredProcedures</property>
-      <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
-        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
-      </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
       <property name="Location">.\EditableChild\</property>
-    </propertySet>
-    <propertySet name="EditableChildIGeneratedCriteria" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\IGeneratedCriteria.cst">
-      <property name="UseDeferredDeletion">False</property>
-      <property name="CleanExpressions">
-        <stringList>
-          <string>^\w+_</string>
-        </stringList>
-      </property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
@@ -317,23 +216,15 @@
       <property name="BusinessProjectName">PetShop.Tests.Collections.EditableChild</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
-      <property name="Location">.\EditableChild\Criteria\Interfaces\</property>
-      <property name="SourceDatabase">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="LaunchVisualStudio">True</property>
-      <property name="Language">CSharp</property>
-      <property name="SolutionName">PetShop</property>
-      <property name="DataProjectName">PetShop.Data</property>
-      <property name="DataClassName">NA</property>
-      <property name="InterfaceProjectName">PetShop.UI</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="ADOHelper" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ADOHelper.cst">
       <property name="CleanExpressions">
@@ -406,33 +297,25 @@
           <string>^\w+_</string>
         </stringList>
       </property>
+      <property name="Location">.\EditableRoot\</property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
       <property name="IsolationLevel">ReadCommitted</property>
-      <property name="UseDeferredDeletion">False</property>
       <property name="BusinessProjectName">PetShop.Tests.Collections.EditableRoot</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-          <string>^dbo.Product</string>
-        </stringList>
-      </property>
-      <property name="Location">.\EditableRoot\</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="EditableRootList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\EditableRootList.cst">
       <property name="CleanExpressions">
@@ -440,7 +323,9 @@
           <string>^\w+_</string>
         </stringList>
       </property>
+      <property name="Location">.\EditableRoot\</property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
@@ -448,23 +333,15 @@
       <property name="BusinessProjectName">PetShop.Tests.Collections.EditableRoot</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
-      <property name="Location">.\EditableRoot\</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="EditableRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
@@ -472,41 +349,9 @@
           <string>^\w+_</string>
         </stringList>
       </property>
-      <property name="UseMemberVariables">False</property>
-      <property name="ParameterPrefix">@p_</property>
-      <property name="UseLazyLoading">True</property>
-      <property name="AutoExecuteStoredProcedures">False</property>
-      <property name="IsolationLevel">ReadCommitted</property>
-      <property name="UseDeferredDeletion">False</property>
-      <property name="BusinessProjectName">PetShop.Tests.Collections.EditableRoot</property>
-      <property name="DataAccessImplementation">StoredProcedures</property>
-      <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
-        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
-      </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
       <property name="Location">.\EditableRoot\</property>
-    </propertySet>
-    <propertySet name="EditableRootIGeneratedCriteria" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\IGeneratedCriteria.cst">
-      <property name="UseDeferredDeletion">False</property>
-      <property name="CleanExpressions">
-        <stringList>
-          <string>^\w+_</string>
-        </stringList>
-      </property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
@@ -514,23 +359,15 @@
       <property name="BusinessProjectName">PetShop.Tests.Collections.EditableRoot</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
-      <property name="Location">.\EditableRoot\Criteria\Interfaces\</property>
-      <property name="SourceDatabase">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="LaunchVisualStudio">True</property>
-      <property name="Language">CSharp</property>
-      <property name="SolutionName">PetShop</property>
-      <property name="DataProjectName">PetShop.Data</property>
-      <property name="DataClassName">NA</property>
-      <property name="InterfaceProjectName">PetShop.UI</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="ADOHelper" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ADOHelper.cst">
       <property name="CleanExpressions">
@@ -603,33 +440,25 @@
           <string>^\w+_</string>
         </stringList>
       </property>
+      <property name="Location">.\ReadOnlyChild\</property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
       <property name="IsolationLevel">ReadCommitted</property>
-      <property name="UseDeferredDeletion">False</property>
       <property name="BusinessProjectName">PetShop.Tests.Collections.ReadOnlyChild</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-          <string>^dbo.Product</string>
-        </stringList>
-      </property>
-      <property name="Location">.\ReadOnlyChild\</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="ReadOnlyChildList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\ReadOnlyChildList.cst">
       <property name="CleanExpressions">
@@ -637,7 +466,9 @@
           <string>^\w+_</string>
         </stringList>
       </property>
+      <property name="Location">.\ReadOnlyChild\</property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
@@ -645,23 +476,15 @@
       <property name="BusinessProjectName">PetShop.Tests.Collections.ReadOnlyChild</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
-      <property name="Location">.\ReadOnlyChild\</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="ReadOnlyChildCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
@@ -669,41 +492,9 @@
           <string>^\w+_</string>
         </stringList>
       </property>
-      <property name="UseMemberVariables">False</property>
-      <property name="ParameterPrefix">@p_</property>
-      <property name="UseLazyLoading">True</property>
-      <property name="AutoExecuteStoredProcedures">False</property>
-      <property name="IsolationLevel">ReadCommitted</property>
-      <property name="UseDeferredDeletion">False</property>
-      <property name="BusinessProjectName">PetShop.Tests.Collections.ReadOnlyChild</property>
-      <property name="DataAccessImplementation">StoredProcedures</property>
-      <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
-        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
-      </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
       <property name="Location">.\ReadOnlyChild\</property>
-    </propertySet>
-    <propertySet name="ReadOnlyChildIGeneratedCriteria" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\IGeneratedCriteria.cst">
-      <property name="UseDeferredDeletion">False</property>
-      <property name="CleanExpressions">
-        <stringList>
-          <string>^\w+_</string>
-        </stringList>
-      </property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
@@ -711,23 +502,15 @@
       <property name="BusinessProjectName">PetShop.Tests.Collections.ReadOnlyChild</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
-      <property name="Location">.\ReadOnlyChild\Criteria\Interfaces\</property>
-      <property name="SourceDatabase">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="LaunchVisualStudio">True</property>
-      <property name="Language">CSharp</property>
-      <property name="SolutionName">PetShop</property>
-      <property name="DataProjectName">PetShop.Data</property>
-      <property name="DataClassName">NA</property>
-      <property name="InterfaceProjectName">PetShop.UI</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="ADOHelper" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ADOHelper.cst">
       <property name="CleanExpressions">
@@ -800,7 +583,9 @@
           <string>^\w+_</string>
         </stringList>
       </property>
+      <property name="Location">.\ReadOnlyRoot\</property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
@@ -808,24 +593,15 @@
       <property name="BusinessProjectName">PetShop.Tests.Collections.ReadOnlyRoot</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-          <string>^dbo.Product</string>
-        </stringList>
-      </property>
-      <property name="Location">.\ReadOnlyRoot\</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="ReadOnlyList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\ReadOnlyList.cst">
       <property name="CleanExpressions">
@@ -833,7 +609,9 @@
           <string>^\w+_</string>
         </stringList>
       </property>
+      <property name="Location">.\ReadOnlyRoot\</property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
@@ -841,23 +619,15 @@
       <property name="BusinessProjectName">PetShop.Tests.Collections.ReadOnlyRoot</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
-      <property name="Location">.\ReadOnlyRoot\</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="ReadOnlyRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
@@ -865,41 +635,9 @@
           <string>^\w+_</string>
         </stringList>
       </property>
-      <property name="UseMemberVariables">False</property>
-      <property name="ParameterPrefix">@p_</property>
-      <property name="UseLazyLoading">True</property>
-      <property name="AutoExecuteStoredProcedures">False</property>
-      <property name="IsolationLevel">ReadCommitted</property>
-      <property name="UseDeferredDeletion">False</property>
-      <property name="BusinessProjectName">PetShop.Tests.Collections.ReadOnlyRoot</property>
-      <property name="DataAccessImplementation">StoredProcedures</property>
-      <property name="ProcedurePrefix">CSLA_</property>
-      <property name="SourceTables">
-        <connectionString>$(ConnectionString2)</connectionString>
-        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
-        <tableList>
-          <table>
-            <owner>dbo</owner>
-            <name>Category</name>
-          </table>
-        </tableList>
-      </property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
       <property name="Location">.\ReadOnlyRoot\</property>
-    </propertySet>
-    <propertySet name="ReadOnlyRootIGeneratedCriteria" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\IGeneratedCriteria.cst">
-      <property name="UseDeferredDeletion">False</property>
-      <property name="CleanExpressions">
-        <stringList>
-          <string>^\w+_</string>
-        </stringList>
-      </property>
       <property name="UseMemberVariables">False</property>
+      <property name="UseDeferredDeletion">False</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="AutoExecuteStoredProcedures">False</property>
@@ -907,23 +645,15 @@
       <property name="BusinessProjectName">PetShop.Tests.Collections.ReadOnlyRoot</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="IgnoreExpressions">
-        <stringList>
-          <string>sysdiagrams$</string>
-          <string>^dbo.aspnet</string>
-        </stringList>
-      </property>
-      <property name="Location">.\ReadOnlyRoot\Criteria\Interfaces\</property>
-      <property name="SourceDatabase">
-        <connectionString>$(ConnectionString2)</connectionString>
+      <property name="SourceTable">
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <table>
+          <owner>dbo</owner>
+          <name>Category</name>
+        </table>
       </property>
-      <property name="LaunchVisualStudio">True</property>
-      <property name="Language">CSharp</property>
-      <property name="SolutionName">PetShop</property>
-      <property name="DataProjectName">PetShop.Data</property>
-      <property name="DataClassName">NA</property>
-      <property name="InterfaceProjectName">PetShop.UI</property>
+      <property name="BusinessClassName">Category</property>
     </propertySet>
     <propertySet name="ADOHelper" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ADOHelper.cst">
       <property name="CleanExpressions">

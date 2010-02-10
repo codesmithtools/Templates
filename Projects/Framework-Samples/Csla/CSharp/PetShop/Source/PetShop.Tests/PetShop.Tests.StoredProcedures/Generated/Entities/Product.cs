@@ -61,7 +61,7 @@ namespace PetShop.Tests.StoredProcedures
             //// Name
             // AuthorizationRules.AllowRead(_nameProperty, canRead);
 
-            //// Descn
+            //// Description
             // AuthorizationRules.AllowRead(_descnProperty, canRead);
 
             //// Image
