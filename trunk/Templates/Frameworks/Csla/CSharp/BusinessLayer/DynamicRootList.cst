@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X DynamicRootList" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X DynamicRootList" %>
 
 <%@ Register Name="DynamicRootList" Template="Internal\DynamicRootList.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="DynamicRootListDataAccess" Template="Internal\DynamicRootList.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
@@ -18,86 +18,76 @@
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="SchemaExplorer" %>
 
-<% Generate(); %>
-
 <script runat="template">
 
-public override void Generate()
+public override void Render(System.IO.TextWriter writer)
 {
     RegisterReferences();
+
+    #region DynamicRootList
     
-    foreach(Entity entity in Entities)
+    DynamicRootList dynamicRootList = this.Create<DynamicRootList>();
+    this.CopyPropertiesTo(dynamicRootList);
+    dynamicRootList.BusinessClassName = string.Format("{0}List", dynamicRootList.BusinessClassName);
+    
+    string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", dynamicRootList.BusinessClassName));
+    if (!System.IO.File.Exists(parentFileName))
     {
-        #region DynamicRootList
-        
-        DynamicRootList dynamicRootList = this.Create<DynamicRootList>();
-        this.CopyPropertiesTo(dynamicRootList);
-        dynamicRootList.SourceTable = entity.Table;
-        dynamicRootList.BusinessClassName = string.Format("{0}List", dynamicRootList.BusinessClassName);
-        
-        string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", dynamicRootList.BusinessClassName));
-        if (!System.IO.File.Exists(parentFileName))
-        {
-            dynamicRootList.RenderToFile(parentFileName, false);
-        }
-        
-        #region DynamicRootList.Generated
-        
-        string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", dynamicRootList.BusinessClassName));
-        
-        DynamicRootListGenerated dynamicRootListGenerated = this.Create<DynamicRootListGenerated>();
-        this.CopyPropertiesTo(dynamicRootListGenerated);
-        dynamicRootListGenerated.SourceTable = entity.Table;
-        dynamicRootListGenerated.BusinessClassName = string.Format("{0}List", dynamicRootListGenerated.BusinessClassName);
-        
-        dynamicRootListGenerated.RenderToFile(fileName, parentFileName, true);
-        
-        #endregion
-        
-        #region DynamicRootList.DataAccess
-        
-        fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", dynamicRootList.BusinessClassName));
-        if(DataAccessImplementation == DataAccessMethod.None)
-        {
-            DynamicRootListDataAccess dynamicRootListDataAccess = this.Create<DynamicRootListDataAccess>();
-            this.CopyPropertiesTo(dynamicRootListDataAccess);
-            dynamicRootListDataAccess.SourceTable = entity.Table;
-            dynamicRootListDataAccess.BusinessClassName = string.Format("{0}List", dynamicRootListDataAccess.BusinessClassName);
-            
-            dynamicRootListDataAccess.RenderToFile(fileName, parentFileName, true);
-        }
-        else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
-        {
-            DynamicRootListDataAccessParameterized dynamicRootListDataAccessParameterized = this.Create<DynamicRootListDataAccessParameterized>();
-            this.CopyPropertiesTo(dynamicRootListDataAccessParameterized);
-            dynamicRootListDataAccessParameterized.SourceTable = entity.Table;
-            dynamicRootListDataAccessParameterized.BusinessClassName = string.Format("{0}List", dynamicRootListDataAccessParameterized.BusinessClassName);
-            
-            dynamicRootListDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
-        }
-        else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
-        {
-            DynamicRootListDataAccessStoredProcedures dynamicRootListDataAccessStoredProcedures = this.Create<DynamicRootListDataAccessStoredProcedures>();
-            this.CopyPropertiesTo(dynamicRootListDataAccessStoredProcedures);
-            dynamicRootListDataAccessStoredProcedures.SourceTable = entity.Table;
-            dynamicRootListDataAccessStoredProcedures.BusinessClassName = string.Format("{0}List", dynamicRootListDataAccessStoredProcedures.BusinessClassName);
-
-            dynamicRootListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
-
-            //StoredProcedures
-            fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.StoredProcedures.sql", dynamicRootList.BusinessClassName));
-            SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
-            this.CopyPropertiesTo(sqlStoredProcedures);
-            sqlStoredProcedures.SourceTable = entity.Table;
-            sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
-            
-            sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
-        }
-        
-        #endregion
-        
-        #endregion
+        dynamicRootList.RenderToFile(parentFileName, false);
     }
+    
+    #region DynamicRootList.Generated
+    
+    string fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.Generated.cs", dynamicRootList.BusinessClassName));
+    
+    DynamicRootListGenerated dynamicRootListGenerated = this.Create<DynamicRootListGenerated>();
+    this.CopyPropertiesTo(dynamicRootListGenerated);
+    dynamicRootListGenerated.BusinessClassName = string.Format("{0}List", dynamicRootListGenerated.BusinessClassName);
+    
+    dynamicRootListGenerated.RenderToFile(fileName, parentFileName, true);
+    
+    #endregion
+    
+    #region DynamicRootList.DataAccess
+    
+    fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.DataAccess.cs", dynamicRootList.BusinessClassName));
+    if(DataAccessImplementation == DataAccessMethod.None)
+    {
+        DynamicRootListDataAccess dynamicRootListDataAccess = this.Create<DynamicRootListDataAccess>();
+        this.CopyPropertiesTo(dynamicRootListDataAccess);
+        dynamicRootListDataAccess.BusinessClassName = string.Format("{0}List", dynamicRootListDataAccess.BusinessClassName);
+        
+        dynamicRootListDataAccess.RenderToFile(fileName, parentFileName, true);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
+    {
+        DynamicRootListDataAccessParameterized dynamicRootListDataAccessParameterized = this.Create<DynamicRootListDataAccessParameterized>();
+        this.CopyPropertiesTo(dynamicRootListDataAccessParameterized);
+        dynamicRootListDataAccessParameterized.BusinessClassName = string.Format("{0}List", dynamicRootListDataAccessParameterized.BusinessClassName);
+        
+        dynamicRootListDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    {
+        DynamicRootListDataAccessStoredProcedures dynamicRootListDataAccessStoredProcedures = this.Create<DynamicRootListDataAccessStoredProcedures>();
+        this.CopyPropertiesTo(dynamicRootListDataAccessStoredProcedures);
+        dynamicRootListDataAccessStoredProcedures.BusinessClassName = string.Format("{0}List", dynamicRootListDataAccessStoredProcedures.BusinessClassName);
+
+        dynamicRootListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
+
+        //StoredProcedures
+        fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.StoredProcedures.sql", dynamicRootList.BusinessClassName));
+        SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
+        this.CopyPropertiesTo(sqlStoredProcedures);
+        sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
+        
+        sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
+    }
+    
+    #endregion
+    
+    #endregion
+
 }
 
 </script>

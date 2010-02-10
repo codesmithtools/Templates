@@ -29,7 +29,6 @@
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
 <%@ Register Name="FactoryNamesTemplate" Template="Internal\FactoryNames.cst" %>
 <%@ Register Name="ExistsCommandTemplate" Template="Internal\ExistsCommand.cst" %>
-<%@ Register Name="IGeneratedCriteriaTemplate" Template="Internal\IGeneratedCriteria.cst" %>
 <% Generate(); %>
 
 <script runat="template">
@@ -38,168 +37,140 @@ public override void Generate()
 {
     #region CommandObjectTemplate
     
-    if(this.CommandObject != null && this.CommandObject.Count > 0)
+    foreach(TableSchema table in this.CommandObject)
     {
-        CommandObjectTemplate commandObjectTemplate = this.Create<CommandObjectTemplate>();
-        this.CopyPropertiesTo(commandObjectTemplate);
-        commandObjectTemplate.SourceTables = this.CommandObject;
-        commandObjectTemplate.Generate();
+        CommandObjectTemplate template = this.Create<CommandObjectTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion
     
     #region CriteriaTemplate
     
-    if(this.Criteria != null && this.Criteria.Count > 0)
+    foreach(TableSchema table in this.Criteria)
     {
-        CriteriaTemplate criteriaTemplate = this.Create<CriteriaTemplate>();
-        this.CopyPropertiesTo(criteriaTemplate);
-        criteriaTemplate.SourceTables = this.Criteria;
-        criteriaTemplate.Generate();
+        CriteriaTemplate template = this.Create<CriteriaTemplate>();
+        RenderHelper(template, table);
     }
     
-    #endregion    
+    #endregion
     
     #region DynamicRootTemplate
     
-    if(this.DynamicRoot != null && this.DynamicRoot.Count > 0)
+    foreach(TableSchema table in this.DynamicRoot)
     {
-        DynamicRootTemplate dynamicRootTemplate = this.Create<DynamicRootTemplate>();
-        this.CopyPropertiesTo(dynamicRootTemplate);
-        dynamicRootTemplate.SourceTables = this.DynamicRoot;
-        dynamicRootTemplate.Generate();
+        DynamicRootTemplate template = this.Create<DynamicRootTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion
     
     #region DynamicRootListTemplate
     
-    if(this.DynamicRootList != null && this.DynamicRootList.Count > 0)
+    foreach(TableSchema table in this.DynamicRootList)
     {
-        DynamicRootListTemplate dynamicRootListTemplate = this.Create<DynamicRootListTemplate>();
-        this.CopyPropertiesTo(dynamicRootListTemplate);
-        dynamicRootListTemplate.SourceTables = this.DynamicRootList;
-        dynamicRootListTemplate.Generate();
+        DynamicRootListTemplate template = this.Create<DynamicRootListTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion    
     
     #region EditableChildTemplate
     
-    if(this.EditableChild != null && this.EditableChild.Count > 0)
+    foreach(TableSchema table in this.EditableChild)
     {
-        EditableChildTemplate editableChildTemplate = this.Create<EditableChildTemplate>();
-        this.CopyPropertiesTo(editableChildTemplate);
-        editableChildTemplate.SourceTables = this.EditableChild;
-        editableChildTemplate.Generate();
+        EditableChildTemplate template = this.Create<EditableChildTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion
     
     #region EditableChildListTemplate
     
-    if(this.EditableChildList != null && this.EditableChildList.Count > 0)
+    foreach(TableSchema table in this.EditableChildList)
     {
-        EditableChildListTemplate editableChildListTemplate = this.Create<EditableChildListTemplate>();
-        this.CopyPropertiesTo(editableChildListTemplate);
-        editableChildListTemplate.SourceTables = this.EditableChildList;
-        editableChildListTemplate.Generate();
+        EditableChildListTemplate template = this.Create<EditableChildListTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion    
     
     #region EditableRootTemplate
     
-    if(this.EditableRoot != null && this.EditableRoot.Count > 0)
+    foreach(TableSchema table in this.EditableRoot)
     {
-        EditableRootTemplate editableRootTemplate = this.Create<EditableRootTemplate>();
-        this.CopyPropertiesTo(editableRootTemplate);
-        editableRootTemplate.SourceTables = this.EditableRoot;
-        editableRootTemplate.Generate();
+        EditableRootTemplate template = this.Create<EditableRootTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion    
     
     #region EditableRootListTemplate
     
-    if(this.EditableRootList != null && this.EditableRootList.Count > 0)
+    foreach(TableSchema table in this.EditableRootList)
     {
-        EditableRootListTemplate editableRootListTemplate = this.Create<EditableRootListTemplate>();
-        this.CopyPropertiesTo(editableRootListTemplate);
-        editableRootListTemplate.SourceTables = this.EditableRootList;
-        editableRootListTemplate.Generate();
+        EditableRootListTemplate template = this.Create<EditableRootListTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion
     
     #region NameValueListTemplate
     
-    if(this.NameValueList != null && this.NameValueList.Count > 0)
+    foreach(TableSchema table in this.NameValueList)
     {
-        NameValueListTemplate nameValueListTemplate = this.Create<NameValueListTemplate>();
-        this.CopyPropertiesTo(nameValueListTemplate);
-        nameValueListTemplate.SourceTables = this.NameValueList;
-        nameValueListTemplate.Generate();
+        NameValueListTemplate template = this.Create<NameValueListTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion    
     
     #region ReadOnlyChildTemplate
     
-    if(this.ReadOnlyChild != null && this.ReadOnlyChild.Count > 0)
+    foreach(TableSchema table in this.ReadOnlyChild)
     {
-        ReadOnlyChildTemplate readOnlyChildTemplate = this.Create<ReadOnlyChildTemplate>();
-        this.CopyPropertiesTo(readOnlyChildTemplate);
-        readOnlyChildTemplate.SourceTables = this.ReadOnlyChild;
-        readOnlyChildTemplate.Generate();
+        ReadOnlyChildTemplate template = this.Create<ReadOnlyChildTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion
     
     #region ReadOnlyChildListTemplate
     
-    if(this.ReadOnlyChildList != null && this.ReadOnlyChildList.Count > 0)
+    foreach(TableSchema table in this.ReadOnlyChildList)
     {
-        ReadOnlyChildListTemplate readOnlyChildListTemplate = this.Create<ReadOnlyChildListTemplate>();
-        this.CopyPropertiesTo(readOnlyChildListTemplate);
-        readOnlyChildListTemplate.SourceTables = this.ReadOnlyChildList;
-        readOnlyChildListTemplate.Generate();
+        ReadOnlyChildListTemplate template = this.Create<ReadOnlyChildListTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion    
     
     #region ReadOnlyListTemplate
     
-    if(this.ReadOnlyList != null && this.ReadOnlyList.Count > 0)
+    foreach(TableSchema table in this.ReadOnlyList)
     {
-        ReadOnlyListTemplate readOnlyListTemplate = this.Create<ReadOnlyListTemplate>();
-        this.CopyPropertiesTo(readOnlyListTemplate);
-        readOnlyListTemplate.SourceTables = this.ReadOnlyList;
-        readOnlyListTemplate.Generate();
+        ReadOnlyListTemplate template = this.Create<ReadOnlyListTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion
     
     #region ReadOnlyRootTemplate
     
-    if(this.ReadOnlyRoot != null && this.ReadOnlyRoot.Count > 0)
+    foreach(TableSchema table in this.ReadOnlyRoot)
     {
-        ReadOnlyRootTemplate readOnlyRootTemplate = this.Create<ReadOnlyRootTemplate>();
-        this.CopyPropertiesTo(readOnlyRootTemplate);
-        readOnlyRootTemplate.SourceTables = this.ReadOnlyRoot;
-        readOnlyRootTemplate.Generate();
+        ReadOnlyRootTemplate template = this.Create<ReadOnlyRootTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion    
     
     #region SwitchableObjectTemplate
     
-    if(this.SwitchableObject != null && this.SwitchableObject.Count > 0)
+    foreach(TableSchema table in this.SwitchableObject)
     {
-        SwitchableObjectTemplate switchableObjectTemplate = this.Create<SwitchableObjectTemplate>();
-        this.CopyPropertiesTo(switchableObjectTemplate);
-        switchableObjectTemplate.SourceTables = this.SwitchableObject;
-        switchableObjectTemplate.Generate();
+        SwitchableObjectTemplate template = this.Create<SwitchableObjectTemplate>();
+        RenderHelper(template, table);
     }
     
     #endregion
@@ -226,7 +197,6 @@ public override void Generate()
     {
         FactoryNamesTemplate factoryNames = this.Create<FactoryNamesTemplate>();
         this.CopyPropertiesTo(factoryNames);
-        factoryNames.SourceTables = this.Criteria;
 
         string fileName = System.IO.Path.Combine(this.Location, "Factory\\FactoryNames.cs");
         if (!System.IO.File.Exists(fileName))
@@ -242,14 +212,6 @@ public override void Generate()
     ExistsCommandTemplate ExistsCommand = this.Create<ExistsCommandTemplate>();
     this.CopyPropertiesTo(ExistsCommand);
     ExistsCommand.RenderToFile(System.IO.Path.Combine(this.Location, "Commands\\ExistsCommand.cs"), true);
-
-    #endregion
-
-    #region IGeneratedCriteriaTemplate
-
-    IGeneratedCriteriaTemplate IGeneratedCriteria = this.Create<IGeneratedCriteriaTemplate>();
-    this.CopyPropertiesTo(IGeneratedCriteria);
-    IGeneratedCriteria.RenderToFile(System.IO.Path.Combine(this.Location, "Criteria\\Interfaces\\IGeneratedCriteria.cs"), true);
 
     #endregion
 }

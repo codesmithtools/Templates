@@ -56,7 +56,7 @@ namespace CodeSmith.SchemaHelper
         {
             get
             {
-                return string.Format("{0}-{1}", TableName, ColumnName);
+                return string.Format("{0}-{1}-{2}", TableName, ColumnName, AssociatedColumn.ColumnName);
             }
         }
 

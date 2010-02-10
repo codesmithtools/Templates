@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using CodeSmith.SchemaHelper.Util;
+using System.Text;
 
 
 namespace CodeSmith.SchemaHelper
@@ -52,6 +53,8 @@ namespace CodeSmith.SchemaHelper
             return false;
         }
 
+        private string _propertyName = string.Empty;
+
         /// <summary>
         /// Returns the concatenated PropertyName of all associated members.
         /// </summary>
@@ -59,14 +62,44 @@ namespace CodeSmith.SchemaHelper
         {
             get 
             {
-                string propertyName = string.Empty;
+                if (!string.IsNullOrEmpty(_propertyName))
+                    return _propertyName;
 
+                string propertyName = string.Empty;
                 foreach (var item in this)
                 {
                     propertyName += NamingConventions.PropertyName(item.Name); 
                 }
 
                 return propertyName;
+            }
+            internal set
+            {
+                _propertyName = value;
+            }
+        }
+
+        public string MembersToString
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                bool isFirst = true;
+
+                foreach (AssociationMember member in this)
+                {
+                    if (isFirst)
+                    {
+                        sb.Append(Configuration.Instance.SearchCriteriaProperty.Delimeter);
+                        isFirst = false;
+                    }
+                    if(this.AssociationType == AssociationType.ManyToOne)
+                        sb.Append(Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName));
+                    else
+                        sb.Append(Util.NamingConventions.PropertyName(member.ColumnName));
+                }
+
+                return sb.ToString();
             }
         }
 
@@ -77,14 +110,7 @@ namespace CodeSmith.SchemaHelper
         {
             get
             {
-                string propertyName = string.Empty;
-
-                foreach (var item in this)
-                {
-                    propertyName += NamingConventions.PrivateMemberVariableName(item.Name);
-                }
-
-                return propertyName;
+                return NamingConventions.PrivateMemberVariableName(PropertyName);
             }
         }
 
@@ -95,14 +121,7 @@ namespace CodeSmith.SchemaHelper
         {
             get
             {
-                string propertyName = string.Empty;
-
-                foreach (var item in this)
-                {
-                    propertyName += NamingConventions.VariableName(item.Name);
-                }
-
-                return propertyName;
+                return NamingConventions.VariableName(PropertyName);
             }
         }
 

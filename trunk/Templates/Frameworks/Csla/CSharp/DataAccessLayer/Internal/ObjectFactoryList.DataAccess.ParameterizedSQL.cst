@@ -35,19 +35,19 @@ using <%= BusinessProjectName %>;
 
 namespace <%= DataProjectName %>
 {
-    public partial class <%= Entity.ClassName %>Factory : ObjectFactory
+    public partial class <%= Entity.ClassName %>ListFactory : ObjectFactory
     {
 <% if(!IsReadOnlyBusinessObject) { %>
         #region Create
 
         /// <summary>
-        /// Creates new <%= Entity.ClassName %> with default values.
+        /// Creates new <%= Entity.ClassName %>List with default values.
         /// </summary>
-        /// <returns>new <%= Entity.ClassName %>.</returns>
+        /// <returns>new <%= Entity.ClassName %>List.</returns>
         [RunLocal]
-        public <%= Entity.ClassName %> Create()
+        public <%= Entity.ClassName %>List Create()
         {
-            var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
+            var item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
             using (BypassPropertyChecks(item))
             {
                 // Default values.
@@ -62,14 +62,14 @@ namespace <%= DataProjectName %>
         }
 
         /// <summary>
-        /// Creates new <%= Entity.ClassName %> with default values.
+        /// Creates new <%= Entity.ClassName %>List with default values.
         /// </summary>
-        /// <returns>new <%= Entity.ClassName %>.</returns>
+        /// <returns>new <%= Entity.ClassName %>List.</returns>
         [RunLocal]
-        private <%= Entity.ClassName %> Create(<%= Entity.ClassName %>Criteria criteria)
+        private <%= Entity.ClassName %>List Create(<%= Entity.ClassName %>Criteria criteria)
         {
             var resource = Fetch(criteria);
-            var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
+            var item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
             using (BypassPropertyChecks(item))
             {
 <% foreach(Member member in Entity.MembersNoKeysOrRowVersion){ %>
@@ -90,17 +90,17 @@ namespace <%= DataProjectName %>
         #region Fetch
 
         /// <summary>
-        /// Fetch <%= Entity.ClassName %>.
+        /// Fetch <%= Entity.ClassName %>List.
         /// </summary>
         /// <param name="criteria">The criteria.</param>
         /// <returns></returns>
-        public <%= Entity.ClassName %> Fetch(<%= Entity.ClassName %>Criteria criteria)
+        public <%= Entity.ClassName %>List Fetch(<%= Entity.ClassName %>Criteria criteria)
         {
             bool cancel = false;
             OnFetching(criteria, ref cancel);
             if (cancel) return;
 
-            <%= Entity.ClassName %> item;
+            <%= Entity.ClassName %>List item;
             string commandText = string.Format("SELECT <%= Entity.Members.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
@@ -132,7 +132,7 @@ namespace <%= DataProjectName %>
 <% if(!IsReadOnlyBusinessObject) { %>
         #region Insert
 
-        private void DoInsert(<%= Entity.ClassName %> item<%-- <% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %><% } %> --%>)
+        private void DoInsert(<%= Entity.ClassName %>List item<%-- <% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildChildInsertParametersVariables() %><% } %> --%>)
         {
             // Don't update if the item isn't dirty.
             if (!item.IsDirty) return;
@@ -190,7 +190,7 @@ namespace <%= DataProjectName %>
         #region Update
 
         [Transactional(TransactionalTypes.TransactionScope)]
-        public <%= Entity.ClassName %> Update(<%= Entity.ClassName %> item<%-- <% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildParametersVariables() %><% } %> --%>)
+        public <%= Entity.ClassName %>List Update(<%= Entity.ClassName %>List item<%-- <% if(Entity.AssociatedManyToOne.Count > 0){ %>, <%= Entity.AssociatedManyToOne.BuildParametersVariables() %><% } %> --%>)
         {
             if(item.IsDeleted)
             {
@@ -208,7 +208,7 @@ namespace <%= DataProjectName %>
             return item;
         }
 
-        private void DoUpdate(<%= Entity.ClassName %> item)
+        private void DoUpdate(<%= Entity.ClassName %>List item)
         {
             bool cancel = false;
             OnUpdating(ref cancel);
@@ -277,7 +277,7 @@ namespace <%= DataProjectName %>
             DoDelete(criteria);
         }
 
-        protected void DoDelete(<%= Entity.ClassName %> item)
+        protected void DoDelete(<%= Entity.ClassName %>List item)
         {
             // If we're not dirty then don't update the database.
             if (!item.IsDirty) return;
@@ -319,9 +319,9 @@ namespace <%= DataProjectName %>
 
         #region Helper Methods
 
-        public <%= Entity.ClassName %> Map(SafeDataReader reader)
+         private <%= Entity.ClassName %>List Map(SafeDataReader reader)
         {
-            var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
+            var item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
             using (BypassPropertyChecks(item))
             {
 <% if(Entity.HasRowVersionMember) { %>

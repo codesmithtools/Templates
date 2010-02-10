@@ -67,5 +67,34 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new Exists()); %>
 
 <% RenderHelper(new CompositeKeyMethods()); %>
+
+        #region Overridden properties
+
+        /// <summary>
+        /// Returns true if the business object or any of its children properties are dirty.
+        /// </summary>
+        public override bool IsDirty
+        {
+            get
+            {
+                if (base.IsDirty) return true;
+<%-- One-To-Zero-Or-One --%>
+<% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
+                if (<%= association.PropertyName %>.IsDirty) return true;
+<% } %>
+<%-- Many-To-One --%>
+<% foreach(Association association in Entity.AssociatedManyToOne) { %>
+                if (<%= association.PropertyName %>.IsDirty) return true;
+<% } %>
+<%-- One-To-Many & Many-To-Many --%>
+<% foreach(Association association in Entity.AssociatedOneToMany) { %>
+                if (<%= association.PropertyName %>.IsDirty) return true;
+<% } %>
+
+                return false;
+            }
+        }
+
+        #endregion
     }
 }

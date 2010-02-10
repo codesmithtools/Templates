@@ -32,7 +32,7 @@ namespace <%= BusinessProjectName %>
 {
     [Serializable]
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
-    [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>FactoryName)]
+    [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>ListFactoryName)]
 <% } %>
     public partial class <%= BusinessClassName %> : ReadOnlyListBase< <%= BusinessClassName %>, <%= ChildBusinessClassName %> >
     {

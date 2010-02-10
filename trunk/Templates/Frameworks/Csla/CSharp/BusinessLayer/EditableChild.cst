@@ -1,4 +1,4 @@
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X EditableChild" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X EditableChild" %>
 
 <%@ Register Name="EditableChild" Template="Internal\EditableChild.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
 <%@ Register Name="EditableChildDataAccess" Template="Internal\EditableChild.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
@@ -18,81 +18,71 @@
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="SchemaExplorer" %>
 
-<% Generate(); %>
-
 <script runat="template">
 
-public override void Generate()
+public override void Render(System.IO.TextWriter writer)
 {
     RegisterReferences();
+
+    #region EditableChild
     
-    foreach(Entity entity in Entities)
+    EditableChild editableChild = this.Create<EditableChild>();
+    this.CopyPropertiesTo(editableChild);
+    
+    string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", editableChild.BusinessClassName));
+    if (!System.IO.File.Exists(parentFileName))
     {
-        #region EditableChild
-        
-        EditableChild editableChild = this.Create<EditableChild>();
-        this.CopyPropertiesTo(editableChild);
-        editableChild.SourceTable = entity.Table;
-        
-        string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", editableChild.BusinessClassName));
-        if (!System.IO.File.Exists(parentFileName))
-        {
-            editableChild.RenderToFile(parentFileName, false);
-        }
-        
-        #region EditableChild.Generated
-        
-        string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", editableChild.BusinessClassName));
-        
-        EditableChildGenerated editableChildGenerated = this.Create<EditableChildGenerated>();
-        this.CopyPropertiesTo(editableChildGenerated);
-        editableChildGenerated.SourceTable = entity.Table;
-        
-        editableChildGenerated.RenderToFile(fileName, parentFileName, true);
-        
-        #endregion
-        
-        #region EditableChild.DataAccess
-        
-        fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", editableChild.BusinessClassName));
-        if(DataAccessImplementation == DataAccessMethod.None)
-        {
-            EditableChildDataAccess editableChildDataAccess = this.Create<EditableChildDataAccess>();
-            this.CopyPropertiesTo(editableChildDataAccess);
-            editableChildDataAccess.SourceTable = entity.Table;
-            
-            editableChildDataAccess.RenderToFile(fileName, parentFileName, true);
-        }
-        else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
-        {
-            EditableChildDataAccessParameterized editableChildDataAccessParameterized = this.Create<EditableChildDataAccessParameterized>();
-            this.CopyPropertiesTo(editableChildDataAccessParameterized);
-            editableChildDataAccessParameterized.SourceTable = entity.Table;
-            
-            editableChildDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
-        }
-        else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
-        {
-            EditableChildDataAccessStoredProcedures editableChildDataAccessStoredProcedures = this.Create<EditableChildDataAccessStoredProcedures>();
-            this.CopyPropertiesTo(editableChildDataAccessStoredProcedures);
-            editableChildDataAccessStoredProcedures.SourceTable = entity.Table;
-
-            editableChildDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
-
-            //StoredProcedures
-            fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.StoredProcedures.sql", editableChild.BusinessClassName));
-            SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
-            this.CopyPropertiesTo(sqlStoredProcedures);
-            sqlStoredProcedures.SourceTable = entity.Table;
-            sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
-            
-            sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
-        }
-        
-        #endregion
-        
-        #endregion
+        editableChild.RenderToFile(parentFileName, false);
     }
+    
+    #region EditableChild.Generated
+    
+    string fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.Generated.cs", editableChild.BusinessClassName));
+    
+    EditableChildGenerated editableChildGenerated = this.Create<EditableChildGenerated>();
+    this.CopyPropertiesTo(editableChildGenerated);
+    
+    editableChildGenerated.RenderToFile(fileName, parentFileName, true);
+    
+    #endregion
+    
+    #region EditableChild.DataAccess
+    
+    fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.DataAccess.cs", editableChild.BusinessClassName));
+    if(DataAccessImplementation == DataAccessMethod.None)
+    {
+        EditableChildDataAccess editableChildDataAccess = this.Create<EditableChildDataAccess>();
+        this.CopyPropertiesTo(editableChildDataAccess);
+        
+        editableChildDataAccess.RenderToFile(fileName, parentFileName, true);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL)
+    {
+        EditableChildDataAccessParameterized editableChildDataAccessParameterized = this.Create<EditableChildDataAccessParameterized>();
+        this.CopyPropertiesTo(editableChildDataAccessParameterized);
+        
+        editableChildDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
+    }
+    else if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    {
+        EditableChildDataAccessStoredProcedures editableChildDataAccessStoredProcedures = this.Create<EditableChildDataAccessStoredProcedures>();
+        this.CopyPropertiesTo(editableChildDataAccessStoredProcedures);
+
+        editableChildDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
+
+        //StoredProcedures
+        fileName = System.IO.Path.Combine(Location, string.Format("Entities\\{0}.StoredProcedures.sql", editableChild.BusinessClassName));
+        SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
+        this.CopyPropertiesTo(sqlStoredProcedures);
+        sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
+        
+        sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
+    }
+    
+    #endregion
+    
+    #endregion
+
 }
 
 </script>
