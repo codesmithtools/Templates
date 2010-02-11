@@ -4,6 +4,10 @@
 <%@ Register Name="ObjectFactoryDataAccess" Template="Internal\ObjectFactory.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryDataAccessParameterized" Template="Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ObjectFactoryDataAccessStoredProcedures" Template="Internal\ObjectFactory.DataAccess.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ObjectFactoryList" Template="Internal\ObjectFactoryList.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ObjectFactoryListDataAccess" Template="Internal\ObjectFactoryList.DataAccess.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ObjectFactoryListDataAccessParameterized" Template="Internal\ObjectFactoryList.DataAccess.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="ObjectFactoryListDataAccessStoredProcedures" Template="Internal\ObjectFactoryList.DataAccess.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
 
@@ -24,67 +28,191 @@
 Public Overloads Overrides Sub Generate()
     RegisterReferences()
 
-    For Each entity As Entity In Entities
-
-        Dim objectFactory As ObjectFactory = Me.Create(Of ObjectFactory)()
-        Me.CopyPropertiesTo(objectFactory)
-        objectFactory.SourceTable = entity.Table
-        objectFactory.BusinessClassName = entity.ClassName + "Factory"
-
-        Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("{0}.vb", objectFactory.BusinessClassName))
-        If Not System.IO.File.Exists(parentFileName) Then
-            objectFactory.RenderToFile(parentFileName, False)
-        End If
-
-        Dim fileName As String = System.IO.Path.Combine(Location, String.Format("{0}.DataAccess.vb", objectFactory.BusinessClassName))
-        If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Then
-            Dim objectFactoryDataAccess As ObjectFactoryDataAccess = Me.Create(Of ObjectFactoryDataAccess)()
-            Me.CopyPropertiesTo(objectFactoryDataAccess)
-            objectFactoryDataAccess.SourceTable = entity.Table
-
-            objectFactoryDataAccess.RenderToFile(fileName, parentFileName, True)
-        ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Then
-            Dim objectFactoryDataAccessParameterized As ObjectFactoryDataAccessParameterized = Me.Create(Of ObjectFactoryDataAccessParameterized)()
-            Me.CopyPropertiesTo(objectFactoryDataAccessParameterized)
-            objectFactoryDataAccessParameterized.SourceTable = entity.Table
-
-            objectFactoryDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
-
-            Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
-            Me.CopyPropertiesTo(ADOHelper)
-            ADOHelper.SourceTable = entity.Table
-
-            fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
-            If Not System.IO.File.Exists(fileName) Then
-                ADOHelper.RenderToFile(fileName, False)
-            End If
-        ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
-            'ObjectFactoryDataAccessStoredProcedures
-            Dim objectFactoryDataAccessStoredProcedures As ObjectFactoryDataAccessStoredProcedures = Me.Create(Of ObjectFactoryDataAccessStoredProcedures)()
-            Me.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures)
-            objectFactoryDataAccessStoredProcedures.SourceTable = entity.Table
-            
-            objectFactoryDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
-            
-            'SqlStoredProcedures
-            Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-            Me.CopyPropertiesTo(sqlStoredProcedures)
-            sqlStoredProcedures.SourceTable = entity.Table
-            
-            fileName = System.IO.Path.Combine(Location, String.Format("{0}.StoredProcedures.sql", objectFactory.BusinessClassName))
-            sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
-            
-            'ADOHelperTemplate
-            Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
-            Me.CopyPropertiesTo(ADOHelper)
-            ADOHelper.SourceTable = entity.Table
-            
-            fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.cs")
-            If Not System.IO.File.Exists(fileName) Then
-            ? ? ADOHelper.RenderToFile(fileName, False)
-            End If
-        End If
+    'Entities
+    For Each entity As Entity In New EntityManager(DynamicRoot).Entities
+        RenderObjectFactoryTemplates(entity, False, False)
     Next
+
+    For Each entity As Entity In New EntityManager(EditableChild).Entities
+        RenderObjectFactoryTemplates(entity, False, True)
+    Next
+
+    For Each entity As Entity In New EntityManager(EditableRoot).Entities
+        RenderObjectFactoryTemplates(entity, False, False)
+    Next
+
+    For Each entity As Entity In New EntityManager(ReadOnlyChild).Entities
+        RenderObjectFactoryTemplates(entity, True, True)
+    Next
+
+    For Each entity As Entity In New EntityManager(ReadOnlyRoot).Entities
+        RenderObjectFactoryTemplates(entity, True, False)
+    Next
+
+    For Each entity As Entity In New EntityManager(SwitchableObject).Entities
+        RenderObjectFactoryTemplates(entity, False, False)
+    Next
+
+    'Lists
+    For Each entity As Entity In New EntityManager(DynamicRootList).Entities
+        RenderObjectFactoryListTemplates(entity, False, False)
+    Next
+
+    For Each entity As Entity In New EntityManager(EditableRootList).Entities
+        RenderObjectFactoryListTemplates(entity, False, False)
+    Next
+
+    For Each entity As Entity In New EntityManager(EditableChildList).Entities
+        RenderObjectFactoryListTemplates(entity, False, True)
+    Next
+
+    For Each entity As Entity In New EntityManager(ReadOnlyList).Entities
+        RenderObjectFactoryListTemplates(entity, True, False)
+    Next
+
+    For Each entity As Entity In New EntityManager(ReadOnlyChildList).Entities
+        RenderObjectFactoryListTemplates(entity, True, True)
+    Next
+End Sub
+
+Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean, IsChild As Boolean)
+    'ObjectFactory
+    Dim objectFactory As ObjectFactory = Me.Create(Of ObjectFactory)()
+    Me.CopyPropertiesTo(objectFactory)
+    objectFactory.SourceTable = entity.Table
+    objectFactory.BusinessClassName = entity.ClassName + "Factory"
+    objectFactory.IsReadOnlyBusinessObject = IsReadOnly
+    objectFactory.IsChildBusinessObject = IsChild
+
+    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.cs", objectFactory.BusinessClassName))
+    If Not System.IO.File.Exists(parentFileName) Then
+        objectFactory.RenderToFile(parentFileName, False)
+    End If
+
+    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.cs", objectFactory.BusinessClassName))
+    If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Then
+        Dim objectFactoryDataAccess As ObjectFactoryDataAccess = Me.Create(Of ObjectFactoryDataAccess)()
+        Me.CopyPropertiesTo(objectFactoryDataAccess)
+        objectFactoryDataAccess.SourceTable = entity.Table
+        objectFactoryDataAccess.IsReadOnlyBusinessObject = IsReadOnly
+        objectFactoryDataAccess.IsChildBusinessObject = IsChild
+
+        objectFactoryDataAccess.RenderToFile(fileName, parentFileName, True)
+    ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Then
+        Dim objectFactoryDataAccessParameterized As ObjectFactoryDataAccessParameterized = Me.Create(Of ObjectFactoryDataAccessParameterized)()
+        Me.CopyPropertiesTo(objectFactoryDataAccessParameterized)
+        objectFactoryDataAccessParameterized.SourceTable = entity.Table
+        objectFactoryDataAccessParameterized.IsReadOnlyBusinessObject = IsReadOnly
+        objectFactoryDataAccessParameterized.IsChildBusinessObject = IsChild
+
+        objectFactoryDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
+
+        Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
+        Me.CopyPropertiesTo(ADOHelper)
+        ADOHelper.SourceTable = entity.Table
+
+        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.cs")
+        If Not System.IO.File.Exists(fileName) Then
+            ADOHelper.RenderToFile(fileName, False)
+        End If
+    ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
+        'ObjectFactoryDataAccessStoredProcedures
+        Dim objectFactoryDataAccessStoredProcedures As ObjectFactoryDataAccessStoredProcedures = Me.Create(Of ObjectFactoryDataAccessStoredProcedures)()
+        Me.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures)
+        objectFactoryDataAccessStoredProcedures.SourceTable = entity.Table
+        objectFactoryDataAccessStoredProcedures.IsReadOnlyBusinessObject = IsReadOnly
+        objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild
+
+        objectFactoryDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
+
+        'SqlStoredProcedures
+        Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
+        Me.CopyPropertiesTo(sqlStoredProcedures)
+        sqlStoredProcedures.SourceTable = entity.Table
+
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", objectFactory.BusinessClassName))
+        sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+
+        'ADOHelperTemplate
+        Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
+        Me.CopyPropertiesTo(ADOHelper)
+        ADOHelper.SourceTable = entity.Table
+
+        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.cs")
+        If Not System.IO.File.Exists(fileName) Then
+            ADOHelper.RenderToFile(fileName, False)
+        End If
+    End If
+End Sub
+
+Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Boolean, IsChild As Boolean)
+    'ObjectFactory
+    Dim objectFactory As ObjectFactoryList = Me.Create(Of ObjectFactoryList)()
+    Me.CopyPropertiesTo(objectFactory)
+    objectFactory.SourceTable = entity.Table
+    objectFactory.BusinessClassName = entity.ClassName + "ListFactory"
+    objectFactory.IsReadOnlyBusinessObject = IsReadOnly
+    objectFactory.IsChildBusinessObject = IsChild
+
+    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.cs", objectFactory.BusinessClassName))
+    If Not System.IO.File.Exists(parentFileName) Then
+        objectFactory.RenderToFile(parentFileName, False)
+    End If
+
+    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.cs", objectFactory.BusinessClassName))
+    If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Then
+        Dim objectFactoryDataAccess As ObjectFactoryListDataAccess = Me.Create(Of ObjectFactoryListDataAccess)()
+        Me.CopyPropertiesTo(objectFactoryDataAccess)
+        objectFactoryDataAccess.SourceTable = entity.Table
+        objectFactoryDataAccess.IsReadOnlyBusinessObject = IsReadOnly
+        objectFactoryDataAccess.IsChildBusinessObject = IsChild
+
+        objectFactoryDataAccess.RenderToFile(fileName, parentFileName, True)
+    ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Then
+        Dim objectFactoryDataAccessParameterized As ObjectFactoryListDataAccessParameterized = Me.Create(Of ObjectFactoryListDataAccessParameterized)()
+        Me.CopyPropertiesTo(objectFactoryDataAccessParameterized)
+        objectFactoryDataAccessParameterized.SourceTable = entity.Table
+        objectFactoryDataAccessParameterized.IsReadOnlyBusinessObject = IsReadOnly
+        objectFactoryDataAccessParameterized.IsChildBusinessObject = IsChild
+
+        objectFactoryDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
+
+        Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
+        Me.CopyPropertiesTo(ADOHelper)
+        ADOHelper.SourceTable = entity.Table
+
+        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.cs")
+        If Not System.IO.File.Exists(fileName) Then
+            ADOHelper.RenderToFile(fileName, False)
+        End If
+    ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
+        'ObjectFactoryDataAccessStoredProcedures
+        Dim objectFactoryDataAccessStoredProcedures As ObjectFactoryListDataAccessStoredProcedures = Me.Create(Of ObjectFactoryListDataAccessStoredProcedures)()
+        Me.CopyPropertiesTo(objectFactoryDataAccessStoredProcedures)
+        objectFactoryDataAccessStoredProcedures.SourceTable = entity.Table
+        objectFactoryDataAccessStoredProcedures.IsReadOnlyBusinessObject = IsReadOnly
+        objectFactoryDataAccessStoredProcedures.IsChildBusinessObject = IsChild
+
+        objectFactoryDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
+
+        'SqlStoredProcedures
+        Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
+        Me.CopyPropertiesTo(sqlStoredProcedures)
+        sqlStoredProcedures.SourceTable = entity.Table
+
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", objectFactory.BusinessClassName))
+        sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+
+        'ADOHelperTemplate
+        Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
+        Me.CopyPropertiesTo(ADOHelper)
+        ADOHelper.SourceTable = entity.Table
+
+        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.cs")
+        If Not System.IO.File.Exists(fileName) Then
+            ADOHelper.RenderToFile(fileName, False)
+        End If
+    End If
 End Sub
 
 </script>

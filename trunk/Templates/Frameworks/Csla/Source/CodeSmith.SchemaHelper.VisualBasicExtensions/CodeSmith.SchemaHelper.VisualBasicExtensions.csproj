@@ -52,6 +52,7 @@
     <Compile Include="AssociationMemberCollectionExtensions.cs" />
     <Compile Include="MemberCollectionExtensions.cs" />
     <Compile Include="MemberExtensions.cs" />
+    <Compile Include="SearchCriteriaExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeSmith.SchemaHelper.Extensions\CodeSmith.SchemaHelper.Extensions.csproj">

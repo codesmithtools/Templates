@@ -39,7 +39,7 @@ namespace CodeSmith.SchemaHelper
                         }
                     }
 
-                    parameters += string.Format(", {0} = {1}", resolvedPropertyName, propertyName);
+                    parameters += string.Format("\r\n\t\t{0} = {1}", resolvedPropertyName, propertyName);
                 }
             }
             else
@@ -49,13 +49,13 @@ namespace CodeSmith.SchemaHelper
                 foreach (Member member in sc.Members)
                 {
                     var propertyName = isObjectFactory ? string.Format("item.{0}", member.PropertyName) : member.VariableName;
-                    parameters += string.Format(", {0} = {1}{2}", member.PropertyName, propertyName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
+                    parameters += string.Format("\r\n\t\t{0} = {1}{2}", member.PropertyName, propertyName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
                 }
 
                 #endregion
             }
 
-            return parameters.TrimStart(new[] { ',', ' ' });
+            return parameters.TrimStart(new[] { '\r', '\n' });
         }
 
         public static string BuildUpdateStatements(this SearchCriteria sc, string associationPropertyName)
@@ -82,7 +82,7 @@ namespace CodeSmith.SchemaHelper
                         propertyName = string.Format("{0}{1}", Util.NamingConventions.PropertyName(member.ColumnName), nullable);
                     }
 
-                    parameters += string.Format("\r\n\t\t\t\t{0}.{1} = item.{2};", associationPropertyName, resolvedPropertyName, propertyName);
+                    parameters += string.Format("\r\n\t\t{0}.{1} = item.{2}", associationPropertyName, resolvedPropertyName, propertyName);
                 }
             }
             else
@@ -91,13 +91,13 @@ namespace CodeSmith.SchemaHelper
 
                 foreach (Member member in sc.Members)
                 {
-                    parameters += string.Format("\r\n\t\t\t\t{0}.{1} = item.{1};", associationPropertyName, member.PropertyName);
+                    parameters += string.Format("\r\n\t\t{0}.{1} = item.{1}", associationPropertyName, member.PropertyName);
                 }
 
                 #endregion
             }
 
-            return parameters.TrimStart(new[] { '\r', '\n', });
+            return parameters.TrimStart(new[] { '\r', '\n' });
         }
     }
 }

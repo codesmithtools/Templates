@@ -1,10 +1,10 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X EditableRoot" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X EditableRoot" %>
 
-<%@ Register Name="EditableRoot" Template="Internal\EditableRoot.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="EditableRootDataAccess" Template="Internal\EditableRoot.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="EditableRootDataAccessParameterized" Template="Internal\EditableRoot.DataAccess.ParameterizedSQL.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="EditableRootDataAccessStoredProcedures" Template="Internal\EditableRoot.DataAccess.StoredProcedures.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="EditableRootGenerated" Template="Internal\EditableRoot.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="EditableRoot" Template="Internal\EditableRoot.cst" %>
+<%@ Register Name="EditableRootDataAccess" Template="Internal\EditableRoot.DataAccess.cst" %>
+<%@ Register Name="EditableRootDataAccessParameterized" Template="Internal\EditableRoot.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="EditableRootDataAccessStoredProcedures" Template="Internal\EditableRoot.DataAccess.StoredProcedures.cst" %>
+<%@ Register Name="EditableRootGenerated" Template="Internal\EditableRoot.Generated.cst" %>
 
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
@@ -18,66 +18,54 @@
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="SchemaExplorer" %>
 
-<% Generate() %>
-
 <script runat="template">
 
-Public Overrides Sub Generate()
+Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     RegisterReferences()
 
-    For Each entity As Entity In Entities
+    'EditableRoot
+    Dim editableRoot As EditableRoot = Me.Create(Of EditableRoot)()
+    Me.CopyPropertiesTo(editableRoot)
+    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", editableRoot.BusinessClassName))
+    If Not System.IO.File.Exists(parentFileName) Then
+        editableRoot.RenderToFile(parentFileName, False)
+    End If
+
+    'EditableRoot.Generated
+    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", editableRoot.BusinessClassName))
+
+    Dim editableRootGenerated As EditableRootGenerated = Me.Create(Of EditableRootGenerated)()
+    Me.CopyPropertiesTo(editableRootGenerated)
+
+    editableRootGenerated.RenderToFile(fileName, parentFileName, True)
+
+    'EditableRoot.DataAccess
+    fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", editableRoot.BusinessClassName))
+    If DataAccessImplementation = DataAccessMethod.None Then
+        Dim editableRootDataAccess As EditableRootDataAccess = Me.Create(Of EditableRootDataAccess)()
+        Me.CopyPropertiesTo(editableRootDataAccess)
+    
+        editableRootDataAccess.RenderToFile(fileName, parentFileName, True)
+    ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+        Dim editableRootDataAccessParameterized As EditableRootDataAccessParameterized = Me.Create(Of EditableRootDataAccessParameterized)()
+        Me.CopyPropertiesTo(editableRootDataAccessParameterized)
+    
+        editableRootDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
+    ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
+        Dim editableRootDataAccessStoredProcedures As EditableRootDataAccessStoredProcedures = Me.Create(Of EditableRootDataAccessStoredProcedures)()
+        Me.CopyPropertiesTo(editableRootDataAccessStoredProcedures)
         
-        'EditableRoot
-        Dim editableRoot As EditableRoot = Me.Create(Of EditableRoot)()
-        Me.CopyPropertiesTo(editableRoot)
-        editableRoot.SourceTable = entity.Table
-
-        Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", editableRoot.BusinessClassName))
-        If Not System.IO.File.Exists(parentFileName) Then
-            editableRoot.RenderToFile(parentFileName, False)
-        End If
-
-        'EditableRoot.Generated
-        Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.Generated.vb", editableRoot.BusinessClassName))
-
-        Dim editableRootGenerated As EditableRootGenerated = Me.Create(Of EditableRootGenerated)()
-        Me.CopyPropertiesTo(editableRootGenerated)
-        editableRootGenerated.SourceTable = entity.Table
-
-        editableRootGenerated.RenderToFile(fileName, parentFileName, True)
-
-        'EditableRoot.DataAccess
-        fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", editableRoot.BusinessClassName))
-        If DataAccessImplementation = DataAccessMethod.None Then
-            Dim editableRootDataAccess As EditableRootDataAccess = Me.Create(Of EditableRootDataAccess)()
-            Me.CopyPropertiesTo(editableRootDataAccess)
-            editableRootDataAccess.SourceTable = entity.Table
+        editableRootDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
         
-            editableRootDataAccess.RenderToFile(fileName, parentFileName, True)
-        ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
-            Dim editableRootDataAccessParameterized As EditableRootDataAccessParameterized = Me.Create(Of EditableRootDataAccessParameterized)()
-            Me.CopyPropertiesTo(editableRootDataAccessParameterized)
-            editableRootDataAccessParameterized.SourceTable = entity.Table
+        'StoredProcedures
+        fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", editableRoot.BusinessClassName))
+        Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
+        Me.CopyPropertiesTo(sqlStoredProcedures)
+        sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
         
-            editableRootDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
-        ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
-            Dim editableRootDataAccessStoredProcedures As EditableRootDataAccessStoredProcedures = Me.Create(Of EditableRootDataAccessStoredProcedures)()
-            Me.CopyPropertiesTo(editableRootDataAccessStoredProcedures)
-            editableRootDataAccessStoredProcedures.SourceTable = entity.Table
-            
-            editableRootDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
-            
-            'StoredProcedures
-            fileName = System.IO.Path.Combine(Location, String.Format("Entities\{0}.StoredProcedures.sql", editableRoot.BusinessClassName))
-            Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-            Me.CopyPropertiesTo(sqlStoredProcedures)
-            sqlStoredProcedures.SourceTable = entity.Table
-            sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
-            
-            sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
-        End If
-    Next
+        sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+    End If
 
 End Sub
 

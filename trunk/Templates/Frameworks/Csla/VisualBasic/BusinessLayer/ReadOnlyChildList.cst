@@ -1,10 +1,10 @@
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntitiesCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X ReadOnlyChildList" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X ReadOnlyChildList" %>
 
-<%@ Register Name="ReadOnlyChildList" Template="Internal\ReadOnlyChildList.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="ReadOnlyChildListDataAccess" Template="Internal\ReadOnlyChildList.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="ReadOnlyChildListDataAccessParameterized" Template="Internal\ReadOnlyChildList.DataAccess.ParameterizedSQL.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="ReadOnlyChildListDataAccessStoredProcedures" Template="Internal\ReadOnlyChildList.DataAccess.StoredProcedures.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="ReadOnlyChildListGenerated" Template="Internal\ReadOnlyChildList.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="ReadOnlyChildList" Template="Internal\ReadOnlyChildList.cst" %>
+<%@ Register Name="ReadOnlyChildListDataAccess" Template="Internal\ReadOnlyChildList.DataAccess.cst" %>
+<%@ Register Name="ReadOnlyChildListDataAccessParameterized" Template="Internal\ReadOnlyChildList.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="ReadOnlyChildListDataAccessStoredProcedures" Template="Internal\ReadOnlyChildList.DataAccess.StoredProcedures.cst" %>
+<%@ Register Name="ReadOnlyChildListGenerated" Template="Internal\ReadOnlyChildList.Generated.cst" %>
 
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
@@ -18,71 +18,60 @@
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="SchemaExplorer" %>
 
-<% Generate() %>
-
 <script runat="template">
 
-Public Overrides Sub Generate()
-    
+Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
+
     RegisterReferences()
 
-    For Each entity As Entity In Entities
-    
-        'ReadOnlyChildList
-        Dim readOnlyChildList As ReadOnlyChildList = Me.Create(Of ReadOnlyChildList)()
-        Me.CopyPropertiesTo(readOnlyChildList)
-        readOnlyChildList.SourceTable = entity.Table
-        readOnlyChildList.BusinessClassName = String.Format("{0}List", readOnlyChildList.BusinessClassName)
+    'ReadOnlyChildList
+    Dim readOnlyChildList As ReadOnlyChildList = Me.Create(Of ReadOnlyChildList)()
+    Me.CopyPropertiesTo(readOnlyChildList)
+    readOnlyChildList.BusinessClassName = String.Format("{0}List", readOnlyChildList.BusinessClassName)
 
-        Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", readOnlyChildList.BusinessClassName))
-        If Not System.IO.File.Exists(parentFileName) Then
-            readOnlyChildList.RenderToFile(parentFileName, False)
-        End If
+    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", readOnlyChildList.BusinessClassName))
+    If Not System.IO.File.Exists(parentFileName) Then
+        readOnlyChildList.RenderToFile(parentFileName, False)
+    End If
 
-        'ReadOnlyChildList.Generated
-        Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", readOnlyChildList.BusinessClassName))
+    'ReadOnlyChildList.Generated
+    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", readOnlyChildList.BusinessClassName))
 
-        Dim readOnlyChildListGenerated As ReadOnlyChildListGenerated = Me.Create(Of ReadOnlyChildListGenerated)()
-        Me.CopyPropertiesTo(readOnlyChildListGenerated)
-        readOnlyChildListGenerated.SourceTable = entity.Table
-        readOnlyChildListGenerated.BusinessClassName = String.Format("{0}List", readOnlyChildListGenerated.BusinessClassName)
+    Dim readOnlyChildListGenerated As ReadOnlyChildListGenerated = Me.Create(Of ReadOnlyChildListGenerated)()
+    Me.CopyPropertiesTo(readOnlyChildListGenerated)
+    readOnlyChildListGenerated.BusinessClassName = String.Format("{0}List", readOnlyChildListGenerated.BusinessClassName)
 
-        readOnlyChildListGenerated.RenderToFile(fileName, parentFileName, True)
+    readOnlyChildListGenerated.RenderToFile(fileName, parentFileName, True)
 
-        'ReadOnlyChildList.DataAccess
-        fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", readOnlyChildList.BusinessClassName))
-        If DataAccessImplementation = DataAccessMethod.None Then
-            Dim readOnlyChildListDataAccess As ReadOnlyChildListDataAccess = Me.Create(Of ReadOnlyChildListDataAccess)()
-            Me.CopyPropertiesTo(readOnlyChildListDataAccess)
-            readOnlyChildListDataAccess.SourceTable = entity.Table
-            readOnlyChildListDataAccess.BusinessClassName = String.Format("{0}List", readOnlyChildListDataAccess.BusinessClassName)
-    
-            readOnlyChildListDataAccess.RenderToFile(fileName, parentFileName, True)
-        ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
-            Dim readOnlyChildListDataAccessParameterized As ReadOnlyChildListDataAccessParameterized = Me.Create(Of ReadOnlyChildListDataAccessParameterized)()
-            Me.CopyPropertiesTo(readOnlyChildListDataAccessParameterized)
-            readOnlyChildListDataAccessParameterized.SourceTable = entity.Table
-            readOnlyChildListDataAccessParameterized.BusinessClassName = String.Format("{0}List", readOnlyChildListDataAccessParameterized.BusinessClassName)
-    
-            readOnlyChildListDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
-        ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
-            Dim readOnlyChildListDataAccessStoredProcedures As ReadOnlyChildListDataAccessStoredProcedures = Me.Create(Of ReadOnlyChildListDataAccessStoredProcedures)()
-            Me.CopyPropertiesTo(readOnlyChildListDataAccessStoredProcedures)
-            readOnlyChildListDataAccessStoredProcedures.SourceTable = entity.Table
-            readOnlyChildListDataAccessStoredProcedures.BusinessClassName = String.Format("{0}List", readOnlyChildListDataAccessStoredProcedures.BusinessClassName)
-            
-            readOnlyChildListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
-            
-            'StoredProcedures
-            fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", readOnlyChildList.BusinessClassName))
-            Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
-            Me.CopyPropertiesTo(sqlStoredProcedures)
-            sqlStoredProcedures.SourceTable = entity.Table
-            sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
-            
-            sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
-        End If
-    Next
+    'ReadOnlyChildList.DataAccess
+    fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", readOnlyChildList.BusinessClassName))
+    If DataAccessImplementation = DataAccessMethod.None Then
+        Dim readOnlyChildListDataAccess As ReadOnlyChildListDataAccess = Me.Create(Of ReadOnlyChildListDataAccess)()
+        Me.CopyPropertiesTo(readOnlyChildListDataAccess)
+        readOnlyChildListDataAccess.BusinessClassName = String.Format("{0}List", readOnlyChildListDataAccess.BusinessClassName)
+
+        readOnlyChildListDataAccess.RenderToFile(fileName, parentFileName, True)
+    ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
+        Dim readOnlyChildListDataAccessParameterized As ReadOnlyChildListDataAccessParameterized = Me.Create(Of ReadOnlyChildListDataAccessParameterized)()
+        Me.CopyPropertiesTo(readOnlyChildListDataAccessParameterized)
+        readOnlyChildListDataAccessParameterized.BusinessClassName = String.Format("{0}List", readOnlyChildListDataAccessParameterized.BusinessClassName)
+
+        readOnlyChildListDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
+    ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
+        Dim readOnlyChildListDataAccessStoredProcedures As ReadOnlyChildListDataAccessStoredProcedures = Me.Create(Of ReadOnlyChildListDataAccessStoredProcedures)()
+        Me.CopyPropertiesTo(readOnlyChildListDataAccessStoredProcedures)
+        readOnlyChildListDataAccessStoredProcedures.BusinessClassName = String.Format("{0}List", readOnlyChildListDataAccessStoredProcedures.BusinessClassName)
+        
+        readOnlyChildListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
+        
+        'StoredProcedures
+        fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", readOnlyChildList.BusinessClassName))
+        Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
+        Me.CopyPropertiesTo(sqlStoredProcedures)
+        sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
+        
+        sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+    End If
 End Sub
 
 </script>
