@@ -24,7 +24,7 @@
                                 <%# Eval("Name") %></div>
                         </a>
                         <div class="productDescription">
-                            <%# Eval("Descn")%></div>
+                            <%# Eval("Description")%></div>
                     </td>
                 </tr>
             </table>

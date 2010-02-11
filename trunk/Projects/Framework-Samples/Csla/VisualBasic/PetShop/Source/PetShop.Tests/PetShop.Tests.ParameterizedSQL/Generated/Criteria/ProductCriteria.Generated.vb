@@ -78,7 +78,7 @@ Public Partial Class ProductCriteria
         End Set
     End Property
     
-    Public Property Descn() As System.String
+    Public Property Description() As System.String
         Get
             Return GetValue(Of System.String)("Descn")
         End Get
@@ -112,7 +112,7 @@ Public Partial Class ProductCriteria
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property TableName() As String Implements IGeneratedCriteria.TableName
+    Public ReadOnly Property TableFullName() As String Implements IGeneratedCriteria.TableFullName
         Get
             Return "[dbo].Product"
         End Get

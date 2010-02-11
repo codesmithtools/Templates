@@ -188,24 +188,25 @@ Public ReadOnly Property Items() As ItemList
     End Function
 
     Public Shared Function GetBySuppId(ByVal suppId As System.Int32) As Supplier 
-        Dim criteria As New SupplierCriteria()
+        Dim criteria As New SupplierCriteria ()
 		criteria.SuppId = suppId
 		
         Return DataPortal.Fetch(Of Supplier)(criteria)
     End Function
 
     Public Shared Sub DeleteSupplier(ByVal suppId As System.Int32)
-        DataPortal.Delete(New SupplierCriteria(suppId))
+        DataPortal.Delete(New SupplierCriteria (suppId))
     End Sub
 
     #End Region
 
     #Region "Exists Command"
 
-    Public Shared Function Exists(ByVal criteria As SupplierCriteria) As Boolean
+    Public Shared Function Exists(ByVal criteria As SupplierCriteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
 
     #End Region
+
 
 End Class

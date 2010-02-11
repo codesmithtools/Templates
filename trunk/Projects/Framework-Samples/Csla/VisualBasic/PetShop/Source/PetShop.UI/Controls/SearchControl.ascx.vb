@@ -16,7 +16,7 @@ Partial Public Class SearchControl
         'ProductList list = ProductList.NewList();
         Dim list As New List(Of Product)
         For Each product As Product In ProductList.GetAll()
-            Dim isResult As Boolean = product.Name.ToLowerInvariant().Contains(keywordKey.ToLowerInvariant()) OrElse product.Descn.ToLowerInvariant().Contains(keywordKey.ToLowerInvariant())
+            Dim isResult As Boolean = product.Name.ToLowerInvariant().Contains(keywordKey.ToLowerInvariant()) OrElse product.Description.ToLowerInvariant().Contains(keywordKey.ToLowerInvariant())
 
             If isResult Then
                 list.Add(product)

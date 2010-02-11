@@ -132,7 +132,7 @@ Public Partial Class OrderStatus
     End Function
 
     Friend Shared Function GetByOrderIdLineNum(ByVal orderId As System.Int32, ByVal lineNum As System.Int32) As OrderStatus 
-        Dim criteria As New OrderStatusCriteria()
+        Dim criteria As New OrderStatusCriteria ()
 		criteria.OrderId = orderId
 		criteria.LineNum = lineNum
 
@@ -140,7 +140,7 @@ Public Partial Class OrderStatus
     End Function
 
     Friend Shared Function GetByOrderId(ByVal orderId As System.Int32) As OrderStatus 
-        Dim criteria As New OrderStatusCriteria()
+        Dim criteria As New OrderStatusCriteria ()
 		criteria.OrderId = orderId
 
         Return DataPortal.FetchChild(Of OrderStatus)(criteria)
@@ -150,11 +150,12 @@ Public Partial Class OrderStatus
 
     #Region "Exists Command"
 
-    Public Shared Function Exists(ByVal criteria As OrderStatusCriteria) As Boolean
+    Public Shared Function Exists(ByVal criteria As OrderStatusCriteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
 
     #End Region
+
 
     #Region "Protected Overriden Method(s)"
     

@@ -85,24 +85,25 @@ Public Partial Class Inventory
     End Function
 
     Public Shared Function GetByItemId(ByVal itemId As System.String) As Inventory 
-        Dim criteria As New InventoryCriteria()
+        Dim criteria As New InventoryCriteria ()
 		criteria.ItemId = itemId
 		
         Return DataPortal.Fetch(Of Inventory)(criteria)
     End Function
 
     Public Shared Sub DeleteInventory(ByVal itemId As System.String)
-        DataPortal.Delete(New InventoryCriteria(itemId))
+        DataPortal.Delete(New InventoryCriteria (itemId))
     End Sub
 
     #End Region
 
     #Region "Exists Command"
 
-    Public Shared Function Exists(ByVal criteria As InventoryCriteria) As Boolean
+    Public Shared Function Exists(ByVal criteria As InventoryCriteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
 
     #End Region
+
 
 End Class

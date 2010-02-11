@@ -94,7 +94,7 @@ Public Class CategoryTests
         Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         category.CategoryId = categoryID
         category.Name = TestUtility.Instance.RandomString(80, False)
-        category.Descn = TestUtility.Instance.RandomString(255, False)
+        category.Description = TestUtility.Instance.RandomString(255, False)
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
@@ -116,7 +116,7 @@ Public Class CategoryTests
         Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         category.CategoryId = TestCategoryID
         category.Name = TestUtility.Instance.RandomString(80, False)
-        category.Descn = TestUtility.Instance.RandomString(255, False)
+        category.Description = TestUtility.Instance.RandomString(255, False)
 
         Try
             Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
@@ -141,7 +141,7 @@ Public Class CategoryTests
         Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         category.CategoryId = TestCategoryID2
         category.Name = TestUtility.Instance.RandomString(80, False)
-        category.Descn = TestUtility.Instance.RandomString(255, False)
+        category.Description = TestUtility.Instance.RandomString(255, False)
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
@@ -174,25 +174,25 @@ Public Class CategoryTests
 
         Dim category As Category = category.GetByCategoryId(TestCategoryID)
         Dim name = category.Name
-        Dim desc = category.Descn
+        Dim desc = category.Description
 
         category.Name = TestUtility.Instance.RandomString(80, False)
-        category.Descn = TestUtility.Instance.RandomString(255, False)
+        category.Description = TestUtility.Instance.RandomString(255, False)
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
 
         Assert.IsFalse(String.Equals(category.Name, name, StringComparison.InvariantCultureIgnoreCase))
-        Assert.IsFalse(String.Equals(category.Descn, desc, StringComparison.InvariantCultureIgnoreCase))
+        Assert.IsFalse(String.Equals(category.Description, desc, StringComparison.InvariantCultureIgnoreCase))
 
         category.Name = name
-        category.Descn = desc
+        category.Description = desc
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
 
         Assert.IsTrue(String.Equals(category.Name, name, StringComparison.InvariantCultureIgnoreCase))
-        Assert.IsTrue(String.Equals(category.Descn, desc, StringComparison.InvariantCultureIgnoreCase))
+        Assert.IsTrue(String.Equals(category.Description, desc, StringComparison.InvariantCultureIgnoreCase))
 
         Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds)
     End Sub
@@ -263,7 +263,7 @@ Public Class CategoryTests
         category.Name = TestUtility.Instance.RandomString(80, False)
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
 
-        category.Descn = TestUtility.Instance.RandomString(255, False)
+        category.Description = TestUtility.Instance.RandomString(255, False)
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
 
         ' Check Category.
@@ -287,13 +287,13 @@ Public Class CategoryTests
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
 
         ' Check Descn.
-        category.Descn = Nothing
+        category.Description = Nothing
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
 
-        category.Descn = TestUtility.Instance.RandomString(256, False)
+        category.Description = TestUtility.Instance.RandomString(256, False)
         Assert.IsFalse(category.IsValid)
 
-        category.Descn = TestUtility.Instance.RandomString(80, False)
+        category.Description = TestUtility.Instance.RandomString(80, False)
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
 
         Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds)
@@ -313,7 +313,7 @@ Public Class CategoryTests
 
         category.CategoryId = TestCategoryID2
         category.Name = TestUtility.Instance.RandomString(80, False)
-        category.Descn = TestUtility.Instance.RandomString(255, False)
+        category.Description = TestUtility.Instance.RandomString(255, False)
 
         Assert.IsTrue(category.IsNew)
         Assert.IsTrue(category.IsDirty)
@@ -354,7 +354,7 @@ Public Class CategoryTests
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
         Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
-        Dim count = Category.Products.Count
+        Dim count = category.Products.Count
 
         Assert.IsTrue(count = 0)
 
@@ -425,7 +425,7 @@ Public Class CategoryTests
         Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         category.CategoryId = TestCategoryID2
         category.Name = TestUtility.Instance.RandomString(80, False)
-        category.Descn = TestUtility.Instance.RandomString(255, False)
+        category.Description = TestUtility.Instance.RandomString(255, False)
 
         Assert.IsTrue(category.Products.Count = 0)
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
@@ -436,7 +436,7 @@ Public Class CategoryTests
 
         product.ProductId = TestProductID
         product.Name = TestUtility.Instance.RandomString(80, False)
-        product.Descn = TestUtility.Instance.RandomString(255, False)
+        product.Description = TestUtility.Instance.RandomString(255, False)
         product.Image = TestUtility.Instance.RandomString(80, False)
         Assert.IsTrue(product.IsValid, product.BrokenRulesCollection.ToString())
 
@@ -468,7 +468,7 @@ Public Class CategoryTests
 
         product.ProductId = TestProductID
         product.Name = TestUtility.Instance.RandomString(80, False)
-        product.Descn = TestUtility.Instance.RandomString(255, False)
+        product.Description = TestUtility.Instance.RandomString(255, False)
         product.Image = TestUtility.Instance.RandomString(80, False)
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
@@ -493,7 +493,7 @@ Public Class CategoryTests
         Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         category.CategoryId = TestCategoryID2
         category.Name = TestUtility.Instance.RandomString(80, False)
-        category.Descn = TestUtility.Instance.RandomString(255, False)
+        category.Description = TestUtility.Instance.RandomString(255, False)
 
         Assert.IsTrue(category.Products.Count = 0)
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
@@ -504,7 +504,7 @@ Public Class CategoryTests
 
         product.ProductId = TestProductID
         product.Name = TestUtility.Instance.RandomString(80, False)
-        product.Descn = TestUtility.Instance.RandomString(255, False)
+        product.Description = TestUtility.Instance.RandomString(255, False)
         product.Image = TestUtility.Instance.RandomString(80, False)
 
         Dim newName = TestUtility.Instance.RandomString(80, False)
@@ -538,7 +538,7 @@ Public Class CategoryTests
 
         product.ProductId = TestProductID
         product.Name = TestUtility.Instance.RandomString(80, False)
-        product.Descn = TestUtility.Instance.RandomString(255, False)
+        product.Description = TestUtility.Instance.RandomString(255, False)
         product.Image = TestUtility.Instance.RandomString(80, False)
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
@@ -577,7 +577,7 @@ Public Class CategoryTests
 
         product.ProductId = TestProductID
         product.Name = TestUtility.Instance.RandomString(80, False)
-        product.Descn = TestUtility.Instance.RandomString(255, False)
+        product.Description = TestUtility.Instance.RandomString(255, False)
         product.Image = TestUtility.Instance.RandomString(80, False)
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
@@ -612,7 +612,7 @@ Public Class CategoryTests
 
         product.ProductId = TestProductID
         product.Name = TestUtility.Instance.RandomString(80, False)
-        product.Descn = TestUtility.Instance.RandomString(255, False)
+        product.Description = TestUtility.Instance.RandomString(255, False)
         product.Image = TestUtility.Instance.RandomString(80, False)
 
         Dim product2 As Product = category.Products.AddNew()
@@ -621,7 +621,7 @@ Public Class CategoryTests
 
         product2.ProductId = TestProductID2
         product2.Name = TestUtility.Instance.RandomString(80, False)
-        product2.Descn = TestUtility.Instance.RandomString(255, False)
+        product2.Description = TestUtility.Instance.RandomString(255, False)
         product2.Image = TestUtility.Instance.RandomString(80, False)
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
@@ -661,7 +661,7 @@ Public Class CategoryTests
 
         product.ProductId = TestProductID
         product.Name = TestUtility.Instance.RandomString(80, False)
-        product.Descn = TestUtility.Instance.RandomString(255, False)
+        product.Description = TestUtility.Instance.RandomString(255, False)
         product.Image = TestUtility.Instance.RandomString(80, False)
 
         Dim product2 As Product = category.Products.AddNew()
@@ -670,7 +670,7 @@ Public Class CategoryTests
 
         product2.ProductId = TestProductID
         product2.Name = TestUtility.Instance.RandomString(80, False)
-        product2.Descn = TestUtility.Instance.RandomString(255, False)
+        product2.Description = TestUtility.Instance.RandomString(255, False)
         product2.Image = TestUtility.Instance.RandomString(80, False)
 
         Try

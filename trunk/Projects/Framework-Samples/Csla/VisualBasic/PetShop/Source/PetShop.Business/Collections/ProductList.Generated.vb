@@ -90,4 +90,5 @@ Public Partial Class ProductList
     End Function
 
     #End Region
+
 End Class

@@ -234,14 +234,14 @@ Public Partial Class Account
     End Function
 
     Friend Shared Function GetByAccountId(ByVal accountId As System.Int32) As Account 
-        Dim criteria As New AccountCriteria()
+        Dim criteria As New AccountCriteria ()
 		criteria.AccountId = accountId
 
         Return DataPortal.FetchChild(Of Account)(criteria)
     End Function
 
     Friend Shared Function GetByUniqueID(ByVal uniqueID As System.Int32) As Account 
-        Dim criteria As New AccountCriteria()
+        Dim criteria As New AccountCriteria ()
 		criteria.UniqueID = uniqueID
 
         Return DataPortal.FetchChild(Of Account)(criteria)
@@ -251,10 +251,11 @@ Public Partial Class Account
 
     #Region "Exists Command"
 
-    Public Shared Function Exists(ByVal criteria As AccountCriteria) As Boolean
+    Public Shared Function Exists(ByVal criteria As AccountCriteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
 
     #End Region
+
 
 End Class

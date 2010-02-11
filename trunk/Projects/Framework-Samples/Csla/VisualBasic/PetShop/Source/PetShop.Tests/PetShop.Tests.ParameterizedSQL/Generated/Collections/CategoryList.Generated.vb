@@ -64,4 +64,5 @@ Public Partial Class CategoryList
     End Function
 
     #End Region
+
 End Class

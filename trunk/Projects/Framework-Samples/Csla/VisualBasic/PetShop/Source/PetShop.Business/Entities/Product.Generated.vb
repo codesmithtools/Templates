@@ -49,7 +49,7 @@ Public Partial Class Product
         ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _categoryIdProperty)
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_categoryIdProperty, 10))
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_nameProperty, 80))
-        ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_descnProperty, 255))
+        ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_descriptionProperty, 255))
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_imageProperty, 80))
     End Sub
 
@@ -92,13 +92,13 @@ Public Partial Class Product
     End Property
     
     
-    Private Shared ReadOnly _descnProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.Descn)
-    Public Property Descn() As System.String
+    Private Shared ReadOnly _descriptionProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Product) p.Description)
+    Public Property Description() As System.String
         Get 
-            Return GetProperty(_descnProperty)
+            Return GetProperty(_descriptionProperty)
         End Get
         Set (ByVal value As System.String)
-            SetProperty(_descnProperty, value)
+            SetProperty(_descriptionProperty, value)
         End Set
     End Property
     
@@ -160,28 +160,28 @@ Public ReadOnly Property Items() As ItemList
     End Function
 
     Public Shared Function GetByProductId(ByVal productId As System.String) As Product 
-        Dim criteria As New ProductCriteria()
+        Dim criteria As New ProductCriteria ()
         criteria.ProductId = productId
 
         Return DataPortal.Fetch(Of Product)(criteria)
     End Function
 
     Public Shared Function GetByName(ByVal name As System.String) As Product 
-        Dim criteria As New ProductCriteria()
+        Dim criteria As New ProductCriteria ()
         criteria.Name = name
 
         Return DataPortal.Fetch(Of Product)(criteria)
     End Function
 
     Public Shared Function GetByCategoryId(ByVal categoryId As System.String) As Product 
-        Dim criteria As New ProductCriteria()
+        Dim criteria As New ProductCriteria ()
         criteria.CategoryId = categoryId
 
         Return DataPortal.Fetch(Of Product)(criteria)
     End Function
 
     Public Shared Function GetByCategoryIdName(ByVal categoryId As System.String, ByVal name As System.String) As Product 
-        Dim criteria As New ProductCriteria()
+        Dim criteria As New ProductCriteria ()
         criteria.CategoryId = categoryId
 		criteria.Name = name
 
@@ -189,7 +189,7 @@ Public ReadOnly Property Items() As ItemList
     End Function
 
     Public Shared Function GetByCategoryIdProductIdName(ByVal categoryId As System.String, ByVal productId As System.String, ByVal name As System.String) As Product 
-        Dim criteria As New ProductCriteria()
+        Dim criteria As New ProductCriteria ()
         criteria.CategoryId = categoryId
 		criteria.ProductId = productId
 		criteria.Name = name
@@ -198,7 +198,7 @@ Public ReadOnly Property Items() As ItemList
     End Function
 
     Public Shared Sub DeleteProduct(ByVal productId As System.String)
-        DataPortal.Delete(New ProductCriteria(productId))
+        DataPortal.Delete(New ProductCriteria (productId))
     End Sub
 
     #End Region
@@ -210,28 +210,28 @@ Public ReadOnly Property Items() As ItemList
     End Function
 
     Friend Shared Function GetByProductIdChild(ByVal productId As System.String) As Product 
-        Dim criteria As New ProductCriteria()
+        Dim criteria As New ProductCriteria ()
         criteria.ProductId = productId
 
         Return DataPortal.FetchChild(Of Product)(criteria)
     End Function
 
     Friend Shared Function GetByNameChild(ByVal name As System.String) As Product 
-        Dim criteria As New ProductCriteria()
+        Dim criteria As New ProductCriteria ()
         criteria.Name = name
 
         Return DataPortal.FetchChild(Of Product)(criteria)
     End Function
 
     Friend Shared Function GetByCategoryIdChild(ByVal categoryId As System.String) As Product 
-        Dim criteria As New ProductCriteria()
+        Dim criteria As New ProductCriteria ()
         criteria.CategoryId = categoryId
 
         Return DataPortal.FetchChild(Of Product)(criteria)
     End Function
 
     Friend Shared Function GetByCategoryIdNameChild(ByVal categoryId As System.String, ByVal name As System.String) As Product 
-        Dim criteria As New ProductCriteria()
+        Dim criteria As New ProductCriteria ()
         criteria.CategoryId = categoryId
         criteria.Name = name
 
@@ -239,7 +239,7 @@ Public ReadOnly Property Items() As ItemList
     End Function
 
     Friend Shared Function GetByCategoryIdProductIdNameChild(ByVal categoryId As System.String, ByVal productId As System.String, ByVal name As System.String) As Product 
-        Dim criteria As New ProductCriteria()
+        Dim criteria As New ProductCriteria ()
         criteria.CategoryId = categoryId
         criteria.ProductId = productId
         criteria.Name = name
@@ -251,10 +251,11 @@ Public ReadOnly Property Items() As ItemList
 
     #Region "Exists Command"
 
-    Public Shared Function Exists(ByVal criteria As ProductCriteria) As Boolean
+    Public Shared Function Exists(ByVal criteria As ProductCriteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
 
     #End Region
+
 
 End Class

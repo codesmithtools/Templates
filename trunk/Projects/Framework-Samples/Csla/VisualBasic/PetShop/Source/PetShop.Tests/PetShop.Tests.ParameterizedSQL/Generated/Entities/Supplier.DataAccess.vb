@@ -22,10 +22,18 @@ Imports Csla.Validation
 Public Partial Class Supplier
     <RunLocal()> _
     Protected Shadows Sub DataPortal_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
+
         ValidationRules.CheckRules()
+
+        OnCreated()
     End Sub
 
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As SupplierCriteria)
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As SupplierCriteria )
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
@@ -129,13 +137,13 @@ Public Partial Class Supplier
             Return
         End If
     
-        DataPortal_Delete(New SupplierCriteria(SuppId))
+        DataPortal_Delete(New SupplierCriteria (SuppId))
     
 		OnSelfDeleted()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As SupplierCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As SupplierCriteria )
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then

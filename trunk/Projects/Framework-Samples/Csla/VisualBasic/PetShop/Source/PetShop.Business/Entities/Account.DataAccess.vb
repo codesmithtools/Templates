@@ -32,7 +32,7 @@ Public Partial Class Account
         OnChildCreated()
     End Sub
     
-    Private Sub Child_Fetch(ByVal criteria As AccountCriteria)
+    Private Sub Child_Fetch(ByVal criteria As AccountCriteria )
         Dim cancel As Boolean = False
         OnChildFetching(criteria, cancel)
         If (cancel) Then
@@ -57,7 +57,7 @@ Public Partial Class Account
         OnChildFetched()
     End Sub
     
-    Private Sub Child_Insert(ByVal profile As Profile, ByRef connection As SqlConnection)
+    Private Sub Child_Insert(ByVal profile As Profile, ByVal connection As SqlConnection)
         Dim cancel As Boolean = False
         OnChildInserting(cancel)
         If (cancel) Then
@@ -89,7 +89,7 @@ Public Partial Class Account
         OnChildInserted()
     End Sub
 
-    Private Sub Child_Update(ByVal profile As Profile, ByRef connection As SqlConnection)
+    Private Sub Child_Update(ByVal profile As Profile, ByVal connection As SqlConnection)
         Dim cancel As Boolean = False
         OnChildUpdating(cancel)
         If (cancel) Then
@@ -130,13 +130,13 @@ Public Partial Class Account
             Return
         End If
     
-        DataPortal_Delete(New AccountCriteria(AccountId))
+        DataPortal_Delete(New AccountCriteria (AccountId))
     
 		OnChildSelfDeleted()
     End Sub
     
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As AccountCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As AccountCriteria )
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then

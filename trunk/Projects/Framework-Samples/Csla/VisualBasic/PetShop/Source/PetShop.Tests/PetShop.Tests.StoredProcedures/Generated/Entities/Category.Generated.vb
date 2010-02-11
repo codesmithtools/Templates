@@ -47,7 +47,7 @@ Public Partial Class Category
         ValidationRules.AddRule(AddressOf CommonRules.StringRequired, _categoryIdProperty)
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_categoryIdProperty, 10))
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_nameProperty, 80))
-        ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_descnProperty, 255))
+        ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(_descriptionProperty, 255))
     End Sub
 
     #End Region
@@ -78,13 +78,13 @@ Public Partial Class Category
     End Property
     
     
-    Private Shared ReadOnly _descnProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Category) p.Descn)
-    Public Property Descn() As System.String
+    Private Shared ReadOnly _descriptionProperty As PropertyInfo(Of System.String) = RegisterProperty(Of System.String)(Function(p As Category) p.Description)
+    Public Property Description() As System.String
         Get 
-            Return GetProperty(_descnProperty)
+            Return GetProperty(_descriptionProperty)
         End Get
         Set (ByVal value As System.String)
-            SetProperty(_descnProperty, value)
+            SetProperty(_descriptionProperty, value)
         End Set
     End Property
     
@@ -117,24 +117,25 @@ Public ReadOnly Property Products() As ProductList
     End Function
 
     Public Shared Function GetByCategoryId(ByVal categoryId As System.String) As Category 
-        Dim criteria As New CategoryCriteria()
+        Dim criteria As New CategoryCriteria ()
 		criteria.CategoryId = categoryId
 		
         Return DataPortal.Fetch(Of Category)(criteria)
     End Function
 
     Public Shared Sub DeleteCategory(ByVal categoryId As System.String)
-        DataPortal.Delete(New CategoryCriteria(categoryId))
+        DataPortal.Delete(New CategoryCriteria (categoryId))
     End Sub
 
     #End Region
 
     #Region "Exists Command"
 
-    Public Shared Function Exists(ByVal criteria As CategoryCriteria) As Boolean
+    Public Shared Function Exists(ByVal criteria As CategoryCriteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
 
     #End Region
+
 
 End Class
