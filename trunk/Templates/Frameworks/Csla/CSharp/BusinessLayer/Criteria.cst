@@ -1,7 +1,7 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X Criteria" %>
 
-<%@ Register Name="Criteria" Template="Internal\Criteria.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="CriteriaGenerated" Template="Internal\Criteria.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="Criteria" Template="Internal\Criteria.cst" %>
+<%@ Register Name="CriteriaGenerated" Template="Internal\Criteria.Generated.cst" %>
 <%@ Register Name="IGeneratedCriteriaTemplate" Template="Internal\IGeneratedCriteria.cst" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>

@@ -1,10 +1,10 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X SwitchableObject" %>
 
-<%@ Register Name="SwitchableObject" Template="Internal\SwitchableObject.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="SwitchableObjectDataAccess" Template="Internal\SwitchableObject.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="SwitchableObjectDataAccessParameterized" Template="Internal\SwitchableObject.DataAccess.ParameterizedSQL.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="SwitchableObjectDataAccessStoredProcedures" Template="Internal\SwitchableObject.DataAccess.StoredProcedures.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="SwitchableObjectGenerated" Template="Internal\SwitchableObject.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="SwitchableObject" Template="Internal\SwitchableObject.cst" %>
+<%@ Register Name="SwitchableObjectDataAccess" Template="Internal\SwitchableObject.DataAccess.cst" %>
+<%@ Register Name="SwitchableObjectDataAccessParameterized" Template="Internal\SwitchableObject.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="SwitchableObjectDataAccessStoredProcedures" Template="Internal\SwitchableObject.DataAccess.StoredProcedures.cst" %>
+<%@ Register Name="SwitchableObjectGenerated" Template="Internal\SwitchableObject.Generated.cst" %>
 
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 
