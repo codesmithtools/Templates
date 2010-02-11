@@ -138,7 +138,7 @@ Public Partial Class LineItem
     End Function
 
     Public Shared Function GetByOrderIdLineNum(ByVal orderId As System.Int32, ByVal lineNum As System.Int32) As LineItem 
-        Dim criteria As New LineItemCriteria()
+        Dim criteria As New LineItemCriteria ()
         criteria.OrderId = orderId
 		criteria.LineNum = lineNum
 
@@ -146,14 +146,14 @@ Public Partial Class LineItem
     End Function
 
     Public Shared Function GetByOrderId(ByVal orderId As System.Int32) As LineItem 
-        Dim criteria As New LineItemCriteria()
+        Dim criteria As New LineItemCriteria ()
         criteria.OrderId = orderId
 
         Return DataPortal.Fetch(Of LineItem)(criteria)
     End Function
 
     Public Shared Sub DeleteLineItem(ByVal orderId As System.Int32, ByVal lineNum As System.Int32)
-        DataPortal.Delete(New LineItemCriteria(orderId, lineNum))
+        DataPortal.Delete(New LineItemCriteria (orderId, lineNum))
     End Sub
 
     #End Region
@@ -165,7 +165,7 @@ Public Partial Class LineItem
     End Function
 
     Friend Shared Function GetByOrderIdLineNumChild(ByVal orderId As System.Int32, ByVal lineNum As System.Int32) As LineItem 
-        Dim criteria As New LineItemCriteria()
+        Dim criteria As New LineItemCriteria ()
         criteria.OrderId = orderId
         criteria.LineNum = lineNum
 
@@ -173,7 +173,7 @@ Public Partial Class LineItem
     End Function
 
     Friend Shared Function GetByOrderIdChild(ByVal orderId As System.Int32) As LineItem 
-        Dim criteria As New LineItemCriteria()
+        Dim criteria As New LineItemCriteria ()
         criteria.OrderId = orderId
 
         Return DataPortal.FetchChild(Of LineItem)(criteria)
@@ -183,11 +183,12 @@ Public Partial Class LineItem
 
     #Region "Exists Command"
 
-    Public Shared Function Exists(ByVal criteria As LineItemCriteria) As Boolean
+    Public Shared Function Exists(ByVal criteria As LineItemCriteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
 
     #End Region
+
 
     #Region "Protected Overriden Method(s)"
     

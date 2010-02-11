@@ -80,4 +80,5 @@ Public Partial Class CartList
     End Function
 
     #End Region
+
     End Class

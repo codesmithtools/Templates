@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BDF9354E-2AB6-4BBC-883F-CF1575355959}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>PetShop.Tests.OF.ParameterizedSQL.DAL</RootNamespace>
+    <AssemblyName>PetShop.Tests.OF.ParameterizedSQL.DAL</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>..\PetShop.Tests.ObjF.ParameterizedSQL\bin\Debug\</OutputPath>
+    <DocumentationFile>PetShop.Tests.OF.ParameterizedSQL.DAL.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>PetShop.Tests.OF.ParameterizedSQL.DAL.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Csla, Version=3.8.0.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\Common\Csla\Csla.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DataAccess.csp" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Collections\CategoryListFactory.cs" />
+    <Content Include="Collections\CategoryListFactory.DataAccess.cs">
+      <DependentUpon>CategoryListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\ItemListFactory.cs" />
+    <Content Include="Collections\ItemListFactory.DataAccess.cs">
+      <DependentUpon>ItemListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\LineItemListFactory.cs" />
+    <Content Include="Collections\LineItemListFactory.DataAccess.cs">
+      <DependentUpon>LineItemListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\OrderListFactory.cs" />
+    <Content Include="Collections\OrderListFactory.DataAccess.cs">
+      <DependentUpon>OrderListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\OrderStatusListFactory.cs" />
+    <Content Include="Collections\OrderStatusListFactory.DataAccess.cs">
+      <DependentUpon>OrderStatusListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\ProductListFactory.cs" />
+    <Content Include="Collections\ProductListFactory.DataAccess.cs">
+      <DependentUpon>ProductListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\SupplierListFactory.cs" />
+    <Content Include="Collections\SupplierListFactory.DataAccess.cs">
+      <DependentUpon>SupplierListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\CategoryFactory.cs" />
+    <Content Include="Entities\CategoryFactory.DataAccess.cs">
+      <DependentUpon>CategoryFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\ItemFactory.cs" />
+    <Content Include="Entities\ItemFactory.DataAccess.cs">
+      <DependentUpon>ItemFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\LineItemFactory.cs" />
+    <Content Include="Entities\LineItemFactory.DataAccess.cs">
+      <DependentUpon>LineItemFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\OrderFactory.cs" />
+    <Content Include="Entities\OrderFactory.DataAccess.cs">
+      <DependentUpon>OrderFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\OrderStatusFactory.cs" />
+    <Content Include="Entities\OrderStatusFactory.DataAccess.cs">
+      <DependentUpon>OrderStatusFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\ProductFactory.cs" />
+    <Content Include="Entities\ProductFactory.DataAccess.cs">
+      <DependentUpon>ProductFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\SupplierFactory.cs" />
+    <Content Include="Entities\SupplierFactory.DataAccess.cs">
+      <DependentUpon>SupplierFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Utility\ADOHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PetShop.Tests.OF.ParameterizedSQL\PetShop.Tests.OF.ParameterizedSQL.vbproj">
+      <Project>{81BE355E-E9DF-4242-A3C5-575489C54EC8}</Project>
+      <Name>PetShop.Tests.OF.ParameterizedSQL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

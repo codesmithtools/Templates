@@ -104,7 +104,7 @@ Public Partial Class OrderStatusCriteria
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>
-    Public ReadOnly Property TableName() As String Implements IGeneratedCriteria.TableName
+    Public ReadOnly Property TableFullName() As String Implements IGeneratedCriteria.TableFullName
         Get
             Return "[dbo].OrderStatus"
         End Get

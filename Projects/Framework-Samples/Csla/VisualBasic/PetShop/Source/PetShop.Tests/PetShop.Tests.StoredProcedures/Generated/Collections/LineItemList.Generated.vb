@@ -72,4 +72,5 @@ Public Partial Class LineItemList
     End Function
 
     #End Region
+
 End Class

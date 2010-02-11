@@ -168,14 +168,14 @@ Public ReadOnly Property Carts() As CartList
     End Function
 
     Public Shared Function GetByUniqueID(ByVal uniqueID As System.Int32) As Profile 
-        Dim criteria As New ProfileCriteria()
+        Dim criteria As New ProfileCriteria ()
         criteria.UniqueID = uniqueID
 
         Return DataPortal.Fetch(Of Profile)(criteria)
     End Function
 
     Public Shared Function GetByUsernameApplicationName(ByVal username As System.String, ByVal applicationName As System.String) As Profile 
-        Dim criteria As New ProfileCriteria()
+        Dim criteria As New ProfileCriteria ()
         criteria.Username = username
 		criteria.ApplicationName = applicationName
 
@@ -183,7 +183,7 @@ Public ReadOnly Property Carts() As CartList
     End Function
 
     Public Shared Sub DeleteProfile(ByVal uniqueID As System.Int32)
-        DataPortal.Delete(New ProfileCriteria(uniqueID))
+        DataPortal.Delete(New ProfileCriteria (uniqueID))
     End Sub
 
     #End Region
@@ -195,14 +195,14 @@ Public ReadOnly Property Carts() As CartList
     End Function
 
     Friend Shared Function GetByUniqueIDChild(ByVal uniqueID As System.Int32) As Profile 
-        Dim criteria As New ProfileCriteria()
+        Dim criteria As New ProfileCriteria ()
         criteria.UniqueID = uniqueID
 
         Return DataPortal.FetchChild(Of Profile)(criteria)
     End Function
 
     Friend Shared Function GetByUsernameApplicationNameChild(ByVal username As System.String, ByVal applicationName As System.String) As Profile 
-        Dim criteria As New ProfileCriteria()
+        Dim criteria As New ProfileCriteria ()
         criteria.Username = username
         criteria.ApplicationName = applicationName
 
@@ -213,10 +213,11 @@ Public ReadOnly Property Carts() As CartList
 
     #Region "Exists Command"
 
-    Public Shared Function Exists(ByVal criteria As ProfileCriteria) As Boolean
+    Public Shared Function Exists(ByVal criteria As ProfileCriteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
 
     #End Region
+
 
 End Class

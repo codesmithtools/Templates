@@ -32,7 +32,7 @@ Public Partial Class Cart
         OnChildCreated()
     End Sub
     
-    Private Sub Child_Fetch(ByVal criteria As CartCriteria)
+    Private Sub Child_Fetch(ByVal criteria As CartCriteria )
         Dim cancel As Boolean = False
         OnChildFetching(criteria, cancel)
         If (cancel) Then
@@ -57,7 +57,7 @@ Public Partial Class Cart
         OnChildFetched()
     End Sub
     
-    Private Sub Child_Insert(ByVal profile As Profile, ByRef connection As SqlConnection)
+    Private Sub Child_Insert(ByVal profile As Profile, ByVal connection As SqlConnection)
         Dim cancel As Boolean = False
         OnChildInserting(cancel)
         If (cancel) Then
@@ -87,7 +87,7 @@ Public Partial Class Cart
         OnChildInserted()
     End Sub
 
-    Private Sub Child_Update(ByVal profile As Profile, ByRef connection As SqlConnection)
+    Private Sub Child_Update(ByVal profile As Profile, ByVal connection As SqlConnection)
         Dim cancel As Boolean = False
         OnChildUpdating(cancel)
         If (cancel) Then
@@ -126,13 +126,13 @@ Public Partial Class Cart
             Return
         End If
     
-        DataPortal_Delete(New CartCriteria(CartId))
+        DataPortal_Delete(New CartCriteria (CartId))
     
 		OnChildSelfDeleted()
     End Sub
     
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As CartCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As CartCriteria )
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then

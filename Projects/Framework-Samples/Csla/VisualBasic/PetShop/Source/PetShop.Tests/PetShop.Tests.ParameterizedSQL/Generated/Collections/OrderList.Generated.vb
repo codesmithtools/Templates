@@ -64,4 +64,5 @@ Public Partial Class OrderList
     End Function
 
     #End Region
+
 End Class

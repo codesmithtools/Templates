@@ -14,5 +14,5 @@ Imports System.Collections.Generic
 
 Public Interface IGeneratedCriteria
     ReadOnly Property StateBag() As Dictionary(Of String, Object)
-    ReadOnly Property TableName() As String
+    ReadOnly Property TableFullName() As String
 End Interface

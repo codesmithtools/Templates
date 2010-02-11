@@ -24,11 +24,19 @@ Public Partial Class Order
 
     <RunLocal()> _
     Protected Overrides Sub DataPortal_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
+
         ValidationRules.CheckRules()
+
+        OnCreated()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As OrderCriteria)
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As OrderCriteria )
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
@@ -160,13 +168,13 @@ Public Partial Class Order
             Return
         End If
     
-        DataPortal_Delete(New OrderCriteria(OrderId))
+        DataPortal_Delete(New OrderCriteria (OrderId))
     
 		OnSelfDeleted()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As OrderCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As OrderCriteria )
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then
@@ -207,7 +215,7 @@ Public Partial Class Order
         OnChildCreated()
     End Sub
 
-    Private Sub Child_Fetch(ByVal criteria As OrderCriteria)
+    Private Sub Child_Fetch(ByVal criteria As OrderCriteria )
         Dim cancel As Boolean = False
         OnChildFetching(criteria, cancel)
         If (cancel) Then
@@ -234,7 +242,7 @@ Public Partial Class Order
         MarkAsChild()
     End Sub
 
-    Private Sub Child_Insert(ByRef connection As SqlConnection)
+    Private Sub Child_Insert(ByVal connection As SqlConnection)
         Dim cancel As Boolean = False
         OnChildInserting(cancel)
         If (cancel) Then
@@ -277,7 +285,7 @@ Public Partial Class Order
         OnChildInserted()
     End Sub
 
-    Private Sub Child_Update(ByRef connection As SqlConnection)
+    Private Sub Child_Update(ByVal connection As SqlConnection)
         Dim cancel As Boolean = False
         OnChildUpdating(cancel)
         If (cancel) Then
@@ -329,7 +337,7 @@ Public Partial Class Order
             Return
         End If
     
-        DataPortal_Delete(New OrderCriteria(OrderId))
+        DataPortal_Delete(New OrderCriteria (OrderId))
     
 		OnChildSelfDeleted()
     End Sub
@@ -401,7 +409,7 @@ Public Partial Class Order
     End Sub
     Partial Private Sub OnChildCreated()
     End Sub
-    Partial Private Sub OnChildFetching(ByVal criteria As OrderCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnChildFetching(ByVal criteria As OrderCriteria , ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnChildFetched()
     End Sub

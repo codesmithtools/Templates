@@ -22,10 +22,18 @@ Imports Csla.Validation
 Public Partial Class Category
     <RunLocal()> _
     Protected Shadows Sub DataPortal_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
+
         ValidationRules.CheckRules()
+
+        OnCreated()
     End Sub
 
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As CategoryCriteria)
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As CategoryCriteria )
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
@@ -64,7 +72,7 @@ Public Partial Class Category
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddWithValue("@p_CategoryId", CategoryId)
 				command.Parameters.AddWithValue("@p_Name", Name)
-				command.Parameters.AddWithValue("@p_Descn", Descn)
+				command.Parameters.AddWithValue("@p_Descn", Description)
 
                 command.ExecuteNonQuery()
             End Using
@@ -89,7 +97,7 @@ Public Partial Class Category
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddWithValue("@p_CategoryId", CategoryId)
 				command.Parameters.AddWithValue("@p_Name", Name)
-				command.Parameters.AddWithValue("@p_Descn", Descn)
+				command.Parameters.AddWithValue("@p_Descn", Description)
 
                 'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
                 Dim result As Integer = command.ExecuteNonQuery()
@@ -112,13 +120,13 @@ Public Partial Class Category
             Return
         End If
     
-        DataPortal_Delete(New CategoryCriteria(CategoryId))
+        DataPortal_Delete(New CategoryCriteria (CategoryId))
     
 		OnSelfDeleted()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As CategoryCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As CategoryCriteria )
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then
@@ -146,7 +154,7 @@ Public Partial Class Category
         Using(BypassPropertyChecks)
             LoadProperty(_categoryIdProperty, reader.GetString("CategoryId"))
             LoadProperty(_nameProperty, reader.GetString("Name"))
-            LoadProperty(_descnProperty, reader.GetString("Descn"))
+            LoadProperty(_descriptionProperty, reader.GetString("Descn"))
         End Using
 
         MarkOld()

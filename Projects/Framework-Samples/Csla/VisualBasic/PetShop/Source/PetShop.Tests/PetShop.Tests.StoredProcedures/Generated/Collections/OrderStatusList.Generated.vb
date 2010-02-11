@@ -72,4 +72,5 @@ Public Partial Class OrderStatusList
     End Function
 
     #End Region
+
 End Class

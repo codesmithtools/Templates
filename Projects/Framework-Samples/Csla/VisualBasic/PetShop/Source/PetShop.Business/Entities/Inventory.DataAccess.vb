@@ -22,10 +22,18 @@ Imports Csla.Validation
 Public Partial Class Inventory
     <RunLocal()> _
     Protected Shadows Sub DataPortal_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
+
         ValidationRules.CheckRules()
+
+        OnCreated()
     End Sub
 
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As InventoryCriteria)
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As InventoryCriteria )
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
@@ -111,13 +119,13 @@ Public Partial Class Inventory
             Return
         End If
     
-        DataPortal_Delete(New InventoryCriteria(ItemId))
+        DataPortal_Delete(New InventoryCriteria (ItemId))
     
 		OnSelfDeleted()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As InventoryCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As InventoryCriteria )
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then

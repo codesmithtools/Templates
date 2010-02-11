@@ -387,14 +387,14 @@ Public ReadOnly Property OrderStatuses() As OrderStatusList
     End Function
 
     Public Shared Function GetByOrderId(ByVal orderId As System.Int32) As Order 
-        Dim criteria As New OrderCriteria()
+        Dim criteria As New OrderCriteria ()
         criteria.OrderId = orderId
 
         Return DataPortal.Fetch(Of Order)(criteria)
     End Function
 
     Public Shared Sub DeleteOrder(ByVal orderId As System.Int32)
-        DataPortal.Delete(New OrderCriteria(orderId))
+        DataPortal.Delete(New OrderCriteria (orderId))
     End Sub
 
     #End Region
@@ -406,7 +406,7 @@ Public ReadOnly Property OrderStatuses() As OrderStatusList
     End Function
 
     Friend Shared Function GetByOrderIdChild(ByVal orderId As System.Int32) As Order 
-        Dim criteria As New OrderCriteria()
+        Dim criteria As New OrderCriteria ()
         criteria.OrderId = orderId
 
         Return DataPortal.FetchChild(Of Order)(criteria)
@@ -416,10 +416,11 @@ Public ReadOnly Property OrderStatuses() As OrderStatusList
 
     #Region "Exists Command"
 
-    Public Shared Function Exists(ByVal criteria As OrderCriteria) As Boolean
+    Public Shared Function Exists(ByVal criteria As OrderCriteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
 
     #End Region
+
 
 End Class

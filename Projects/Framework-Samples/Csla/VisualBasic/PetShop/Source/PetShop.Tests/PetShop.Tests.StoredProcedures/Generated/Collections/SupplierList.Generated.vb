@@ -66,4 +66,5 @@ Public Partial Class SupplierList
     End Function
 
     #End Region
+
     End Class

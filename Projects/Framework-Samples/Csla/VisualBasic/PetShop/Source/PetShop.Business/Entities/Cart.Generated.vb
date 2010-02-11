@@ -204,21 +204,21 @@ Public Partial Class Cart
     End Function
 
     Friend Shared Function GetByCartId(ByVal cartId As System.Int32) As Cart 
-        Dim criteria As New CartCriteria()
+        Dim criteria As New CartCriteria ()
 		criteria.CartId = cartId
 
         Return DataPortal.FetchChild(Of Cart)(criteria)
     End Function
 
     Friend Shared Function GetByUniqueID(ByVal uniqueID As System.Int32) As Cart 
-        Dim criteria As New CartCriteria()
+        Dim criteria As New CartCriteria ()
 		criteria.UniqueID = uniqueID
 
         Return DataPortal.FetchChild(Of Cart)(criteria)
     End Function
 
     Friend Shared Function GetByIsShoppingCart(ByVal isShoppingCart As System.Boolean) As Cart 
-        Dim criteria As New CartCriteria()
+        Dim criteria As New CartCriteria ()
 		criteria.IsShoppingCart = isShoppingCart
 
         Return DataPortal.FetchChild(Of Cart)(criteria)
@@ -228,10 +228,11 @@ Public Partial Class Cart
 
     #Region "Exists Command"
 
-    Public Shared Function Exists(ByVal criteria As CartCriteria) As Boolean
+    Public Shared Function Exists(ByVal criteria As CartCriteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
 
     #End Region
+
 
 End Class

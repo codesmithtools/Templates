@@ -24,12 +24,20 @@ Public Partial Class Item
 
     <RunLocal()> _
     Protected Overrides Sub DataPortal_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
+
         LoadProperty(_productIdProperty, "BN")
         ValidationRules.CheckRules()
+
+        OnCreated()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As ItemCriteria)
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As ItemCriteria )
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
@@ -126,13 +134,13 @@ Public Partial Class Item
             Return
         End If
     
-        DataPortal_Delete(New ItemCriteria(ItemId))
+        DataPortal_Delete(New ItemCriteria (ItemId))
     
 		OnSelfDeleted()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As ItemCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As ItemCriteria )
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then
@@ -174,7 +182,7 @@ Public Partial Class Item
         OnChildCreated()
     End Sub
     
-    Private Sub Child_Fetch(ByVal criteria As ItemCriteria)
+    Private Sub Child_Fetch(ByVal criteria As ItemCriteria )
         Dim cancel As Boolean = False
         OnChildFetching(criteria, cancel)
         If (cancel) Then
@@ -261,7 +269,7 @@ Public Partial Class Item
             Return
         End If
     
-        DataPortal_Delete(New ItemCriteria(ItemId))
+        DataPortal_Delete(New ItemCriteria (ItemId))
     
 		OnChildSelfDeleted()
     End Sub
@@ -318,7 +326,7 @@ Public Partial Class Item
     End Sub
     Partial Private Sub OnChildCreated()
     End Sub
-    Partial Private Sub OnChildFetching(ByVal criteria As ItemCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnChildFetching(ByVal criteria As ItemCriteria , ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnChildFetched()
     End Sub

@@ -193,14 +193,14 @@ Public Partial Class Item
     End Function
 
     Public Shared Function GetByItemId(ByVal itemId As System.String) As Item 
-        Dim criteria As New ItemCriteria()
+        Dim criteria As New ItemCriteria ()
         criteria.ItemId = itemId
 
         Return DataPortal.Fetch(Of Item)(criteria)
     End Function
 
     Public Shared Function GetByProductIdItemIdListPriceName(ByVal productId As System.String, ByVal itemId As System.String, ByVal listPrice As System.Nullable(Of System.Decimal), ByVal name As System.String) As Item 
-        Dim criteria As New ItemCriteria()
+        Dim criteria As New ItemCriteria ()
         criteria.ProductId = productId
 		criteria.ItemId = itemId
 		criteria.ListPrice = listPrice.Value
@@ -210,21 +210,21 @@ Public Partial Class Item
     End Function
 
     Public Shared Function GetByProductId(ByVal productId As System.String) As Item 
-        Dim criteria As New ItemCriteria()
+        Dim criteria As New ItemCriteria ()
         criteria.ProductId = productId
 
         Return DataPortal.Fetch(Of Item)(criteria)
     End Function
 
     Public Shared Function GetBySupplier(ByVal supplier As System.Nullable(Of System.Int32)) As Item 
-        Dim criteria As New ItemCriteria()
+        Dim criteria As New ItemCriteria ()
         criteria.Supplier = supplier.Value
 
         Return DataPortal.Fetch(Of Item)(criteria)
     End Function
 
     Public Shared Sub DeleteItem(ByVal itemId As System.String)
-        DataPortal.Delete(New ItemCriteria(itemId))
+        DataPortal.Delete(New ItemCriteria (itemId))
     End Sub
 
     #End Region
@@ -236,14 +236,14 @@ Public Partial Class Item
     End Function
 
     Friend Shared Function GetByItemIdChild(ByVal itemId As System.String) As Item 
-        Dim criteria As New ItemCriteria()
+        Dim criteria As New ItemCriteria ()
         criteria.ItemId = itemId
 
         Return DataPortal.FetchChild(Of Item)(criteria)
     End Function
 
     Friend Shared Function GetByProductIdItemIdListPriceNameChild(ByVal productId As System.String, ByVal itemId As System.String, ByVal listPrice As System.Nullable(Of System.Decimal), ByVal name As System.String) As Item 
-        Dim criteria As New ItemCriteria()
+        Dim criteria As New ItemCriteria ()
         criteria.ProductId = productId
         criteria.ItemId = itemId
         criteria.ListPrice = listPrice
@@ -253,14 +253,14 @@ Public Partial Class Item
     End Function
 
     Friend Shared Function GetByProductIdChild(ByVal productId As System.String) As Item 
-        Dim criteria As New ItemCriteria()
+        Dim criteria As New ItemCriteria ()
         criteria.ProductId = productId
 
         Return DataPortal.FetchChild(Of Item)(criteria)
     End Function
 
     Friend Shared Function GetBySupplierChild(ByVal supplier As System.Nullable(Of System.Int32)) As Item 
-        Dim criteria As New ItemCriteria()
+        Dim criteria As New ItemCriteria ()
         criteria.Supplier = supplier
 
         Return DataPortal.FetchChild(Of Item)(criteria)
@@ -270,10 +270,11 @@ Public Partial Class Item
 
     #Region "Exists Command"
 
-    Public Shared Function Exists(ByVal criteria As ItemCriteria) As Boolean
+    Public Shared Function Exists(ByVal criteria As ItemCriteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
 
     #End Region
+
 
 End Class

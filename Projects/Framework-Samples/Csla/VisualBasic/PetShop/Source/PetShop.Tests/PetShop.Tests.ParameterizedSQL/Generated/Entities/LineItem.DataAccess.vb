@@ -24,11 +24,19 @@ Public Partial Class LineItem
 
     <RunLocal()> _
     Protected Overrides Sub DataPortal_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
+
         ValidationRules.CheckRules()
+
+        OnCreated()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As LineItemCriteria)
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As LineItemCriteria )
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
@@ -124,13 +132,13 @@ Public Partial Class LineItem
             Return
         End If
     
-        DataPortal_Delete(New LineItemCriteria(OrderId, LineNum))
+        DataPortal_Delete(New LineItemCriteria (OrderId, LineNum))
     
 		OnSelfDeleted()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As LineItemCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As LineItemCriteria )
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then
@@ -171,7 +179,7 @@ Public Partial Class LineItem
         OnChildCreated()
     End Sub
 
-    Private Sub Child_Fetch(ByVal criteria As LineItemCriteria)
+    Private Sub Child_Fetch(ByVal criteria As LineItemCriteria )
         Dim cancel As Boolean = False
         OnChildFetching(criteria, cancel)
         If (cancel) Then
@@ -198,7 +206,7 @@ Public Partial Class LineItem
         MarkAsChild()
     End Sub
 
-    Private Sub Child_Insert(ByVal order As Order, ByRef connection As SqlConnection)
+    Private Sub Child_Insert(ByVal order As Order, ByVal connection As SqlConnection)
         Dim cancel As Boolean = False
         OnChildInserting(cancel)
         If (cancel) Then
@@ -223,7 +231,7 @@ Public Partial Class LineItem
         OnChildInserted()
     End Sub
 
-    Private Sub Child_Update(ByVal order As Order, ByRef connection As SqlConnection)
+    Private Sub Child_Update(ByVal order As Order, ByVal connection As SqlConnection)
         Dim cancel As Boolean = False
         OnChildUpdating(cancel)
         If (cancel) Then
@@ -257,7 +265,7 @@ Public Partial Class LineItem
             Return
         End If
     
-        DataPortal_Delete(New LineItemCriteria(OrderId, LineNum))
+        DataPortal_Delete(New LineItemCriteria (OrderId, LineNum))
     
 		OnChildSelfDeleted()
     End Sub
@@ -311,7 +319,7 @@ Public Partial Class LineItem
     End Sub
     Partial Private Sub OnChildCreated()
     End Sub
-    Partial Private Sub OnChildFetching(ByVal criteria As LineItemCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnChildFetching(ByVal criteria As LineItemCriteria , ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnChildFetched()
     End Sub

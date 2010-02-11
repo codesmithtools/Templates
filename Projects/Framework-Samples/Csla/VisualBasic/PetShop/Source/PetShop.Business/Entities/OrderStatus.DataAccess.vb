@@ -22,10 +22,18 @@ Imports Csla.Validation
 Public Partial Class OrderStatus
     <RunLocal()> _
     Protected Shadows Sub DataPortal_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
+
         ValidationRules.CheckRules()
+
+        OnCreated()
     End Sub
 
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As OrderStatusCriteria)
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As OrderStatusCriteria )
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
@@ -119,13 +127,13 @@ Public Partial Class OrderStatus
             Return
         End If
     
-        DataPortal_Delete(New OrderStatusCriteria(OrderId, LineNum))
+        DataPortal_Delete(New OrderStatusCriteria (OrderId, LineNum))
     
 		OnSelfDeleted()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As OrderStatusCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As OrderStatusCriteria )
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then

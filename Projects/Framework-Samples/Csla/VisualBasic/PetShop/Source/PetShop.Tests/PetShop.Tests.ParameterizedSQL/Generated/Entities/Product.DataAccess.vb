@@ -24,12 +24,20 @@ Public Partial Class Product
 
     <RunLocal()> _
     Protected Overrides Sub DataPortal_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
+
         LoadProperty(_categoryIdProperty, "BN")
         ValidationRules.CheckRules()
+
+        OnCreated()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As ProductCriteria)
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As ProductCriteria )
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
@@ -69,7 +77,7 @@ Public Partial Class Product
                 command.Parameters.AddWithValue("@p_ProductId", ProductId)
 				command.Parameters.AddWithValue("@p_CategoryId", CategoryId)
 				command.Parameters.AddWithValue("@p_Name", Name)
-				command.Parameters.AddWithValue("@p_Descn", Descn)
+				command.Parameters.AddWithValue("@p_Descn", Description)
 				command.Parameters.AddWithValue("@p_Image", Image)
 
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
@@ -100,7 +108,7 @@ Public Partial Class Product
                 command.Parameters.AddWithValue("@p_ProductId", ProductId)
 				command.Parameters.AddWithValue("@p_CategoryId", CategoryId)
 				command.Parameters.AddWithValue("@p_Name", Name)
-				command.Parameters.AddWithValue("@p_Descn", Descn)
+				command.Parameters.AddWithValue("@p_Descn", Description)
 				command.Parameters.AddWithValue("@p_Image", Image)
 
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
@@ -125,13 +133,13 @@ Public Partial Class Product
             Return
         End If
     
-        DataPortal_Delete(New ProductCriteria(ProductId))
+        DataPortal_Delete(New ProductCriteria (ProductId))
     
 		OnSelfDeleted()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As ProductCriteria)
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As ProductCriteria )
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then
@@ -173,7 +181,7 @@ Public Partial Class Product
         OnChildCreated()
     End Sub
 
-    Private Sub Child_Fetch(ByVal criteria As ProductCriteria)
+    Private Sub Child_Fetch(ByVal criteria As ProductCriteria )
         Dim cancel As Boolean = False
         OnChildFetching(criteria, cancel)
         If (cancel) Then
@@ -200,7 +208,7 @@ Public Partial Class Product
         MarkAsChild()
     End Sub
 
-    Private Sub Child_Insert(ByVal category As Category, ByRef connection As SqlConnection)
+    Private Sub Child_Insert(ByVal category As Category, ByVal connection As SqlConnection)
         Dim cancel As Boolean = False
         OnChildInserting(cancel)
         If (cancel) Then
@@ -213,7 +221,7 @@ Public Partial Class Product
             command.Parameters.AddWithValue("@p_ProductId", ProductId)
 				command.Parameters.AddWithValue("@p_CategoryId", category.CategoryId)
 				command.Parameters.AddWithValue("@p_Name", Name)
-				command.Parameters.AddWithValue("@p_Descn", Descn)
+				command.Parameters.AddWithValue("@p_Descn", Description)
 				command.Parameters.AddWithValue("@p_Image", Image)
 
             Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
@@ -225,7 +233,7 @@ Public Partial Class Product
         OnChildInserted()
     End Sub
 
-    Private Sub Child_Update(ByVal category As Category, ByRef connection As SqlConnection)
+    Private Sub Child_Update(ByVal category As Category, ByVal connection As SqlConnection)
         Dim cancel As Boolean = False
         OnChildUpdating(cancel)
         If (cancel) Then
@@ -238,7 +246,7 @@ Public Partial Class Product
 			command.Parameters.AddWithValue("@p_ProductId", ProductId)
 				command.Parameters.AddWithValue("@p_CategoryId", category.CategoryId)
 				command.Parameters.AddWithValue("@p_Name", Name)
-				command.Parameters.AddWithValue("@p_Descn", Descn)
+				command.Parameters.AddWithValue("@p_Descn", Description)
 				command.Parameters.AddWithValue("@p_Image", Image)
 
             Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
@@ -259,7 +267,7 @@ Public Partial Class Product
             Return
         End If
     
-        DataPortal_Delete(New ProductCriteria(ProductId))
+        DataPortal_Delete(New ProductCriteria (ProductId))
     
 		OnChildSelfDeleted()
     End Sub
@@ -271,7 +279,7 @@ Public Partial Class Product
             LoadProperty(_productIdProperty, reader.GetString("ProductId"))
             LoadProperty(_categoryIdProperty, reader.GetString("CategoryId"))
             LoadProperty(_nameProperty, reader.GetString("Name"))
-            LoadProperty(_descnProperty, reader.GetString("Descn"))
+            LoadProperty(_descriptionProperty, reader.GetString("Descn"))
             LoadProperty(_imageProperty, reader.GetString("Image"))
         End Using
 
@@ -313,7 +321,7 @@ Public Partial Class Product
     End Sub
     Partial Private Sub OnChildCreated()
     End Sub
-    Partial Private Sub OnChildFetching(ByVal criteria As ProductCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnChildFetching(ByVal criteria As ProductCriteria , ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnChildFetched()
     End Sub
