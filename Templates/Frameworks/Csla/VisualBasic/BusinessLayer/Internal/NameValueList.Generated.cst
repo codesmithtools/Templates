@@ -23,6 +23,9 @@ Imports System
 Imports Csla
 
 <Serializable()> _
+<% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
+<Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>ListFactoryName)> _
+<% End If %>
 Public Partial Class <%= BusinessClassName %> 
     Inherits NameValueListBase(Of Integer, String)
 

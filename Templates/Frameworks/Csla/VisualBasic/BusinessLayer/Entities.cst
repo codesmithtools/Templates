@@ -28,128 +28,155 @@
 <%@ Register Name="ADOHelperTemplate" Template="Internal\ADOHelper.cst" %>
 <%@ Register Name="FactoryNamesTemplate" Template="Internal\FactoryNames.cst" %>
 <%@ Register Name="ExistsCommandTemplate" Template="Internal\ExistsCommand.cst" %>
-<%@ Register Name="IGeneratedCriteriaTemplate" Template="Internal\IGeneratedCriteria.cst" %>
 
 <% Generate() %>
 
 <script runat="template">
 
 Public Overrides Sub Generate()
-
-    'CommandObjectTemplate
-    If Not Me.CommandObject Is Nothing AndAlso Me.CommandObject.Count > 0 Then
-        Dim commandObjectTemplate As CommandObjectTemplate = Me.Create(Of CommandObjectTemplate)()
-        Me.CopyPropertiesTo(commandObjectTemplate)
-        commandObjectTemplate.SourceTables = Me.CommandObject
-        commandObjectTemplate.Generate()
+    ' CommandObjectTemplate
+    
+    If Not Me.CommandObject Is Nothing Then
+        For Each table As TableSchema In Me.CommandObject
+            Dim template As CommandObjectTemplate = Me.Create(Of CommandObjectTemplate)()
+            RenderHelper(template, table)
+        Next
     End If
     
-    'CriteriaTemplate
-    If Not Me.Criteria Is Nothing AndAlso Me.Criteria.Count > 0 Then
-        Dim criteriaTemplate As CriteriaTemplate = Me.Create(Of CriteriaTemplate)()
-        Me.CopyPropertiesTo(criteriaTemplate)
-        criteriaTemplate.SourceTables = Me.Criteria
-        criteriaTemplate.Generate()
+    
+    ' CriteriaTemplate
+    
+    If Not Me.Criteria Is Nothing Then
+        For Each table As TableSchema In Me.Criteria
+            Dim template As CriteriaTemplate = Me.Create(Of CriteriaTemplate)()
+            RenderHelper(template, table)
+        Next
     End If
     
-    'DynamicRootTemplate
-    If Not Me.DynamicRoot Is Nothing AndAlso Me.DynamicRoot.Count > 0 Then
-        Dim dynamicRootTemplate As DynamicRootTemplate = Me.Create(Of DynamicRootTemplate)()
-        Me.CopyPropertiesTo(dynamicRootTemplate)
-        dynamicRootTemplate.SourceTables = Me.DynamicRoot
-        dynamicRootTemplate.Generate()
+    
+    ' DynamicRootTemplate
+    
+    If Not Me.DynamicRoot Is Nothing Then
+        For Each table As TableSchema In Me.DynamicRoot
+            Dim template As DynamicRootTemplate = Me.Create(Of DynamicRootTemplate)()
+            RenderHelper(template, table)
+        Next
     End If
     
-    'DynamicRootListTemplate
-    If Not Me.DynamicRootList Is Nothing AndAlso Me.DynamicRootList.Count > 0 Then
-        Dim dynamicRootListTemplate As DynamicRootListTemplate = Me.Create(Of DynamicRootListTemplate)()
-        Me.CopyPropertiesTo(dynamicRootListTemplate)
-        dynamicRootListTemplate.SourceTables = Me.DynamicRootList
-        dynamicRootListTemplate.Generate()
+    
+    ' DynamicRootListTemplate
+    
+    If Not Me.DynamicRootList Is Nothing Then
+        For Each table As TableSchema In Me.DynamicRootList
+            Dim template As DynamicRootListTemplate = Me.Create(Of DynamicRootListTemplate)()
+            RenderHelper(template, table)
+        Next
     End If
     
-    'EditableChildTemplate
-    If Not Me.EditableChild Is Nothing AndAlso Me.EditableChild.Count > 0 Then
-        Dim editableChildTemplate As EditableChildTemplate = Me.Create(Of EditableChildTemplate)()
-        Me.CopyPropertiesTo(editableChildTemplate)
-        editableChildTemplate.SourceTables = Me.EditableChild
-        editableChildTemplate.Generate()
+    
+    ' EditableChildTemplate
+    
+    If Not Me.EditableChild Is Nothing Then
+        For Each table As TableSchema In Me.EditableChild
+            Dim template As EditableChildTemplate = Me.Create(Of EditableChildTemplate)()
+            RenderHelper(template, table)
+        Next
     End If
     
-    'EditableChildListTemplate
-    If Not Me.EditableChildList Is Nothing AndAlso Me.EditableChildList.Count > 0 Then
-        Dim editableChildListTemplate As EditableChildListTemplate = Me.Create(Of EditableChildListTemplate)()
-        Me.CopyPropertiesTo(editableChildListTemplate)
-        editableChildListTemplate.SourceTables = Me.EditableChildList
-        editableChildListTemplate.Generate()
+    
+    ' EditableChildListTemplate
+    
+    If Not Me.EditableChildList Is Nothing Then
+        For Each table As TableSchema In Me.EditableChildList
+            Dim template As EditableChildListTemplate = Me.Create(Of EditableChildListTemplate)()
+            RenderHelper(template, table)
+        Next
     End If
     
-    'EditableRootTemplate
-    If Not Me.EditableRoot Is Nothing AndAlso Me.EditableRoot.Count > 0 Then
-        Dim editableRootTemplate As EditableRootTemplate = Me.Create(Of EditableRootTemplate)()
-        Me.CopyPropertiesTo(editableRootTemplate)
-        editableRootTemplate.SourceTables = Me.EditableRoot
-        editableRootTemplate.Generate()
-    End If
-
-    'EditableRootListTemplate
-    If Not Me.EditableRootList Is Nothing AndAlso Me.EditableRootList.Count > 0 Then
-        Dim editableRootListTemplate As EditableRootListTemplate = Me.Create(Of EditableRootListTemplate)()
-        Me.CopyPropertiesTo(editableRootListTemplate)
-        editableRootListTemplate.SourceTables = Me.EditableRootList
-        editableRootListTemplate.Generate()
-    End If
-
-    'NameValueListTemplate
-    If Not Me.NameValueList Is Nothing AndAlso Me.NameValueList.Count > 0 Then
-        Dim nameValueListTemplate As NameValueListTemplate = Me.Create(Of NameValueListTemplate)()
-        Me.CopyPropertiesTo(nameValueListTemplate)
-        nameValueListTemplate.SourceTables = Me.NameValueList
-        nameValueListTemplate.Generate()
+    
+    ' EditableRootTemplate
+    
+    If Not Me.EditableRoot Is Nothing Then
+        For Each table As TableSchema In Me.EditableRoot
+            Dim template As EditableRootTemplate = Me.Create(Of EditableRootTemplate)()
+            RenderHelper(template, table)
+        Next
     End If
     
-    'ReadOnlyChildTemplate
-    If Not Me.ReadOnlyChild Is Nothing AndAlso Me.ReadOnlyChild.Count > 0 Then
-        Dim readOnlyChildTemplate As ReadOnlyChildTemplate = Me.Create(Of ReadOnlyChildTemplate)()
-        Me.CopyPropertiesTo(readOnlyChildTemplate)
-        readOnlyChildTemplate.SourceTables = Me.ReadOnlyChild
-        readOnlyChildTemplate.Generate()
+    
+    ' EditableRootListTemplate
+    
+    If Not Me.EditableRootList Is Nothing Then
+        For Each table As TableSchema In Me.EditableRootList
+            Dim template As EditableRootListTemplate = Me.Create(Of EditableRootListTemplate)()
+            RenderHelper(template, table)
+        Next
     End If
     
-    'ReadOnlyChildListTemplate
-    If Not Me.ReadOnlyChildList Is Nothing AndAlso Me.ReadOnlyChildList.Count > 0 Then
-        Dim readOnlyChildListTemplate As ReadOnlyChildListTemplate = Me.Create(Of ReadOnlyChildListTemplate)()
-        Me.CopyPropertiesTo(readOnlyChildListTemplate)
-        readOnlyChildListTemplate.SourceTables = Me.ReadOnlyChildList
-        readOnlyChildListTemplate.Generate()
+    
+    ' NameValueListTemplate
+    
+    If Not Me.NameValueList Is Nothing Then
+        For Each table As TableSchema In Me.NameValueList
+            Dim template As NameValueListTemplate = Me.Create(Of NameValueListTemplate)()
+            RenderHelper(template, table)
+        Next
     End If
     
-    'ReadOnlyListTemplate
-    If Not Me.ReadOnlyList Is Nothing AndAlso Me.ReadOnlyList.Count > 0 Then
-        Dim readOnlyListTemplate As ReadOnlyListTemplate = Me.Create(Of ReadOnlyListTemplate)()
-        Me.CopyPropertiesTo(readOnlyListTemplate)
-        readOnlyListTemplate.SourceTables = Me.ReadOnlyList
-        readOnlyListTemplate.Generate()
+    
+    ' ReadOnlyChildTemplate
+    
+    If Not Me.ReadOnlyChild Is Nothing Then
+        For Each table As TableSchema In Me.ReadOnlyChild
+            Dim template As ReadOnlyChildTemplate = Me.Create(Of ReadOnlyChildTemplate)()
+            RenderHelper(template, table)
+        Next
     End If
     
-    'ReadOnlyRootTemplate
-    If Not Me.ReadOnlyRoot Is Nothing AndAlso Me.ReadOnlyRoot.Count > 0 Then
-        Dim readOnlyRootTemplate As ReadOnlyRootTemplate = Me.Create(Of ReadOnlyRootTemplate)()
-        Me.CopyPropertiesTo(readOnlyRootTemplate)
-        readOnlyRootTemplate.SourceTables = Me.ReadOnlyRoot
-        readOnlyRootTemplate.Generate()
-    End If
-
-    'SwitchableObjectTemplate
-    If Not Me.SwitchableObject Is Nothing AndAlso Me.SwitchableObject.Count > 0 Then
-        Dim switchableObjectTemplate As SwitchableObjectTemplate = Me.Create(Of SwitchableObjectTemplate)()
-        Me.CopyPropertiesTo(switchableObjectTemplate)
-        switchableObjectTemplate.SourceTables = Me.SwitchableObject
-        switchableObjectTemplate.Generate()
+    
+    ' ReadOnlyChildListTemplate
+    
+    If Not Me.ReadOnlyChildList Is Nothing Then
+        For Each table As TableSchema In Me.ReadOnlyChildList
+            Dim template As ReadOnlyChildListTemplate = Me.Create(Of ReadOnlyChildListTemplate)()
+            RenderHelper(template, table)
+        Next
     End If
     
-    'ADOHelperTemplate
-    If DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures Then
+    
+    ' ReadOnlyListTemplate
+    
+    If Not Me.ReadOnlyList Is Nothing Then
+        For Each table As TableSchema In Me.ReadOnlyList
+            Dim template As ReadOnlyListTemplate = Me.Create(Of ReadOnlyListTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' ReadOnlyRootTemplate
+    
+    If Not Me.ReadOnlyRoot Is Nothing Then
+        For Each table As TableSchema In Me.ReadOnlyRoot
+            Dim template As ReadOnlyRootTemplate = Me.Create(Of ReadOnlyRootTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' SwitchableObjectTemplate
+    
+    If Not Me.SwitchableObject Is Nothing Then
+        For Each table As TableSchema In Me.SwitchableObject
+            Dim template As SwitchableObjectTemplate = Me.Create(Of SwitchableObjectTemplate)()
+            RenderHelper(template, table)
+        Next
+    End If
+    
+    
+    ' ADOHelperTemplate
+    
+    If DataAccessImplementation = DataAccessMethod.ParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
     
@@ -158,26 +185,27 @@ Public Overrides Sub Generate()
             ADOHelper.RenderToFile(fileName, False)
         End If
     End If
-
-    'FactoryNamesTemplate
-    If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Then
+    
+    
+    ' FactoryNamesTemplate
+    
+    If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
         Dim factoryNames As FactoryNamesTemplate = Me.Create(Of FactoryNamesTemplate)()
         Me.CopyPropertiesTo(factoryNames)
-        factoryNames.SourceTables = Me.Criteria
-        
+    
         Dim fileName As String = System.IO.Path.Combine(Me.Location, "Factory\FactoryNames.vb")
         If Not System.IO.File.Exists(fileName) Then
             factoryNames.RenderToFile(fileName, False)
         End If
     End If
     
+    
+    ' ExistsCommandTemplate
+    
     Dim ExistsCommand As ExistsCommandTemplate = Me.Create(Of ExistsCommandTemplate)()
     Me.CopyPropertiesTo(ExistsCommand)
     ExistsCommand.RenderToFile(System.IO.Path.Combine(Me.Location, "Commands\ExistsCommand.vb"), True)
     
-    Dim IGeneratedCriteria As IGeneratedCriteriaTemplate = Me.Create(Of IGeneratedCriteriaTemplate)()
-    Me.CopyPropertiesTo(IGeneratedCriteria)
-    IGeneratedCriteria.RenderToFile(System.IO.Path.Combine(Me.Location, "Criteria\Interfaces\IGeneratedCriteria.vb"), True)
 
 End Sub
 

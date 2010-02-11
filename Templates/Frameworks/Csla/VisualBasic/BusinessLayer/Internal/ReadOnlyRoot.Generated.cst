@@ -31,6 +31,9 @@ Imports Csla.Data
 Imports Csla.Validation
 
 <Serializable()> _
+<% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
+<Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>FactoryName)> _
+<% End If %>
 Public Partial Class <%= BusinessClassName %> 
     Inherits ReadOnlyBase(Of <%= BusinessClassName %>)
 

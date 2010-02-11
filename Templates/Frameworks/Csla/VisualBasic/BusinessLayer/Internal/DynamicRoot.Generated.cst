@@ -2,6 +2,7 @@
 <%@ Register Name="CompositeKeyMethods" Template="..\..\Common\CompositeKeyMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Constructor" Template="..\..\Common\Constructor.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Exists" Template="..\..\Common\Exists.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="IsDirty" Template="..\..\Common\IsDirty.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Properties" Template="..\..\Common\Properties.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ValidationRules" Template="..\..\Common\ValidationRules.cst" MergeProperties="False" ExcludeProperties="" %>
 
@@ -31,6 +32,9 @@ Imports Csla.Data
 Imports Csla.Validation
 
 <Serializable()> _
+<% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
+<Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>FactoryName)> _
+<% End If %>
 Public Partial Class <%= BusinessClassName %> 
     Inherits BusinessBase(Of <%= BusinessClassName %>)
 
@@ -58,6 +62,8 @@ Public Partial Class <%= BusinessClassName %>
     #End Region
 
 <% RenderHelper(New Exists()) %>
+
+<% RenderHelper(New IsDirty()) %>
 
 <% RenderHelper(New CompositeKeyMethods()) %>
 End Class

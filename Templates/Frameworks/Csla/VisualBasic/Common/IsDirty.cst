@@ -1,0 +1,47 @@
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+<% If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then %>
+        #Region "Property overrides"
+
+        ''' <summary>
+        ''' Returns true if the business object or any of its children properties are dirty.
+        ''' </summary>
+        Public Overloads Overrides ReadOnly Property IsDirty() As Boolean
+            Get
+                If MyBase.IsDirty Then
+                    Return True
+                End If
+
+<%-- One-To-Zero-Or-One --%>
+<% For Each association As Association In Entity.AssociatedOneToZeroOrOne %>
+                If <%= association.PropertyName %>.IsDirty Then
+                    Return True
+                End If
+<% Next %>
+<%-- Many-To-One --%>
+<% For Each association As Association In Entity.AssociatedManyToOne %>
+                If <%= association.PropertyName %>.IsDirty Then
+                    Return True
+                End If
+<% Next %>
+<%-- One-To-Many & Many-To-Many --%>
+<% For Each association As Association In Entity.AssociatedOneToMany %>
+                If <%= association.PropertyName %>.IsDirty Then
+                    Return True
+                End If
+<% Next %>
+                Return False
+            End Get
+        End Property
+
+        #End Region
+
+<% End If %>
