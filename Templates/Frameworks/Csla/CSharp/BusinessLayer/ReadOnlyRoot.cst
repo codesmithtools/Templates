@@ -1,10 +1,10 @@
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X ReadOnlyRoot" %>
 
-<%@ Register Name="ReadOnlyRoot" Template="Internal\ReadOnlyRoot.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="ReadOnlyRootDataAccess" Template="Internal\ReadOnlyRoot.DataAccess.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="ReadOnlyRootDataAccessParameterized" Template="Internal\ReadOnlyRoot.DataAccess.ParameterizedSQL.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="ReadOnlyRootDataAccessStoredProcedures" Template="Internal\ReadOnlyRoot.DataAccess.StoredProcedures.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
-<%@ Register Name="ReadOnlyRootGenerated" Template="Internal\ReadOnlyRoot.Generated.cst" MergeProperties="True" ExcludeProperties="SourceTable, BusinessClassName" %>
+<%@ Register Name="ReadOnlyRoot" Template="Internal\ReadOnlyRoot.cst" %>
+<%@ Register Name="ReadOnlyRootDataAccess" Template="Internal\ReadOnlyRoot.DataAccess.cst" %>
+<%@ Register Name="ReadOnlyRootDataAccessParameterized" Template="Internal\ReadOnlyRoot.DataAccess.ParameterizedSQL.cst" %>
+<%@ Register Name="ReadOnlyRootDataAccessStoredProcedures" Template="Internal\ReadOnlyRoot.DataAccess.StoredProcedures.cst" %>
+<%@ Register Name="ReadOnlyRootGenerated" Template="Internal\ReadOnlyRoot.Generated.cst" %>
 
 <%@ Register Name="SqlStoredProcedures" Template="..\DataAccessLayer\Internal\SQLStoredProcedures.cst" %>
 

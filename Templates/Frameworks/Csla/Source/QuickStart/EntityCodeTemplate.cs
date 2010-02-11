@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -20,7 +21,9 @@ namespace QuickStart
         #region Private Member(s)
 
         private TableSchema _table;
-        
+        private StringCollection _ignoreExpressions;
+        private StringCollection _cleanExpressions;
+
         #endregion
 
         #region Constructor(s)
@@ -28,6 +31,7 @@ namespace QuickStart
         public EntityCodeTemplate()
         {
             CleanExpressions = new StringCollection();
+            IgnoreExpressions = new StringCollection();
         }
 
         #endregion
@@ -58,7 +62,57 @@ namespace QuickStart
         [Description("List of regular expressions to clean table, view and column names.")]
         [Optional]
         [DefaultValue("^\\w+_")]
-        public CodeSmith.CustomProperties.StringCollection CleanExpressions { get; set; }
+        public CodeSmith.CustomProperties.StringCollection CleanExpressions
+        {
+            get
+            {
+                return _cleanExpressions;
+            }
+            set
+            {
+                _cleanExpressions = value;
+
+                Configuration.Instance.CleanExpressions = new List<Regex>();
+                foreach (string clean in _cleanExpressions)
+                {
+                    if (!string.IsNullOrEmpty(clean))
+                    {
+                        Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
+                    }
+                }
+
+                if (SourceTable != null)
+                    Entity = new Entity(SourceTable);
+            }
+        }
+
+        [Category("1. DataSource")]
+        [Description("List of regular expressions to ignore tables when generating.")]
+        [Optional]
+        [DefaultValue("sysdiagrams$")]
+        public CodeSmith.CustomProperties.StringCollection IgnoreExpressions
+        {
+            get
+            {
+                return _ignoreExpressions;
+            }
+            set
+            {
+                _ignoreExpressions = value;
+
+                Configuration.Instance.IgnoreExpressions = new List<Regex>();
+                foreach (string ignore in _ignoreExpressions)
+                {
+                    if (!string.IsNullOrEmpty(ignore))
+                    {
+                        Configuration.Instance.IgnoreExpressions.Add(new Regex(ignore, RegexOptions.IgnoreCase));
+                    }
+                }
+
+                if(SourceTable != null)
+                    Entity = new Entity(SourceTable);
+            }
+        }
 
         [Browsable(false)]
         public Entity Entity { get; internal set; }
@@ -91,6 +145,9 @@ namespace QuickStart
         {
             get
             {
+                if (string.IsNullOrEmpty(BusinessClassName))
+                    return BusinessClassName;
+
                 if (BusinessClassName.EndsWith("ListList", true, CultureInfo.InvariantCulture))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
 
@@ -164,18 +221,6 @@ namespace QuickStart
 
         public virtual void OnTableChanged()
         {
-            if (CleanExpressions.Count == 0)
-                CleanExpressions.Add("^\\w+_");
-
-            Configuration.Instance.CleanExpressions = new List<Regex>();
-            foreach (string clean in CleanExpressions)
-            {
-                if (!string.IsNullOrEmpty(clean))
-                {
-                    Configuration.Instance.CleanExpressions.Add(new Regex(clean, RegexOptions.IgnoreCase));
-                }
-            }
-
             Entity = new Entity( SourceTable );
 
             if (string.IsNullOrEmpty(BusinessClassName))
@@ -183,6 +228,9 @@ namespace QuickStart
 
             if (string.IsNullOrEmpty(BusinessProjectName))
                 BusinessProjectName = string.Format("{0}.Business", SourceTable.Namespace());
+
+            if (string.IsNullOrEmpty(Location))
+                Location = ".\\";
 
             if (string.IsNullOrEmpty(ProcedurePrefix))
                 ProcedurePrefix = "CSLA_";
