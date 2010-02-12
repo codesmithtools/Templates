@@ -21,18 +21,18 @@ Imports PetShop.Tests.OF.ParameterizedSQL
 
 #End Region
 
-Public Partial Class SupplierListFactory
+Public Partial Class ItemListFactory
     Inherits ObjectFactory
 
     #Region "Create"
 
     ''' <summary>
-    ''' Creates New SupplierList with default values.
+    ''' Creates New ItemList with default values.
     ''' </summary>
-    ''' <Returns>New SupplierList.</Returns>
+    ''' <Returns>New ItemList.</Returns>
     <RunLocal()> _
-    Public Function Create() As SupplierList
-        Dim item As SupplierList = Activator.CreateInstance(GetType(SupplierList), True)
+    Public Function Create() As ItemList
+        Dim item As ItemList = Activator.CreateInstance(GetType(ItemList), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -54,12 +54,12 @@ Public Partial Class SupplierListFactory
     #Region "Fetch
 
     ''' <summary>
-    ''' Fetch SupplierList.
+    ''' Fetch ItemList.
     ''' </summary>
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
-    Public Function Fetch(ByVal criteria As Supplier) As SupplierList
-        Dim item As SupplierList = Activator.CreateInstance(GetType(SupplierList), True)
+    Public Function Fetch(ByVal criteria As ItemCriteria) As ItemList
+        Dim item As ItemList = Activator.CreateInstance(GetType(ItemList), True)
 
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
@@ -68,7 +68,7 @@ Public Partial Class SupplierListFactory
         End If
 
         ' Fetch Child objects.
-        Dim commandText As String = String.Format("SELECT [SuppId], [Name], [Status], [Addr1], [Addr2], [City], [State], [Zip], [Phone] FROM [dbo].[Supplier] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT [ItemId], [ProductId], [ListPrice], [UnitCost], [Supplier], [Status], [Name], [Image] FROM [dbo].[Item] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -76,10 +76,10 @@ Public Partial Class SupplierListFactory
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Do
-                            item.Add(new SupplierFactory().Map(reader))
+                            item.Add(new ItemFactory().Map(reader))
                         Loop While reader.Read()
                     Else
-                        Throw New Exception(String.Format("The record was not found in 'Supplier' using the following criteria: {0}.", criteria))
+                        Throw New Exception(String.Format("The record was not found in 'Item' using the following criteria: {0}.", criteria))
                     End If
                 End Using
             End Using
@@ -101,7 +101,7 @@ Public Partial Class SupplierListFactory
     End Sub
     Partial Private Sub OnCreated()
     End Sub
-    Partial Private Sub OnFetching(ByVal criteria As SupplierCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnFetching(ByVal criteria As ItemCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnFetched()
     End Sub

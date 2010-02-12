@@ -34,11 +34,7 @@ Public Partial Class <%= BusinessClassName %>
     End Sub
 
     Private Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
-        RaiseListChangedEvents = False
-
 <% RenderHelper(New DataPortalFetchList()) %>
-
-        RaiseListChangedEvents = True
     End Sub
     
 <% RenderHelper(New PartialMethods()) %>

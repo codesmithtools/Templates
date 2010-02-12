@@ -94,13 +94,13 @@ Public Partial Class OrderStatusFactory
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
     Public Function Fetch(ByVal criteria As OrderStatusCriteria) As OrderStatus
+        Dim item As OrderStatus = Nothing
+        
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
-            Return
+            Return item
         End If
-
-        Dim item As OrderStatus
 
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
@@ -171,11 +171,11 @@ Public Partial Class OrderStatusFactory
     #Region "Update"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Update(ByVal item As OrderStatus, ByVal stopProccessingChildren as Boolean) As OrderStatus
+    Public Function Update(ByVal item As OrderStatus) As OrderStatus
         Return Update(item, false)
     End Function
 
-    Public Function Update(ByVal item As OrderStatus) As OrderStatus
+    Public Function Update(ByVal item As OrderStatus, ByVal stopProccessingChildren as Boolean) As OrderStatus
         If(item.IsDeleted) Then
             DoDelete(item)
             MarkNew(item)
@@ -231,10 +231,10 @@ Public Partial Class OrderStatusFactory
     #Region "Delete"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Delete(ByVal criteria As OrderStatusCriteria)
+    Public Sub Delete(ByVal criteria As OrderStatusCriteria)
         ' Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
         DoDelete(criteria)
-    End Function
+    End Sub
 
     Protected Sub DoDelete(ByVal item As OrderStatus)
         ' If we're not dirty then don't update the database.
@@ -248,8 +248,8 @@ Public Partial Class OrderStatusFactory
         End If
 
         Dim criteria As New OrderStatusCriteria()
-criteria.OrderId = orderId
-		criteria.LineNum = lineNum
+criteria.OrderId = item.OrderId
+		criteria.LineNum = item.LineNum
         DoDelete(criteria)
 
         MarkNew(item)
@@ -296,10 +296,11 @@ criteria.OrderId = orderId
     End Function
 
     'AssociatedManyToOne
-    Private Friend Sub OrderUpdate(ByRef item As OrderStatus)
+    Private Shared Sub OrderUpdate(ByRef item As OrderStatus)
 		item.OrderMember.OrderId = item.OrderId
 
-        New OrderFactory().Update(item.OrderMember, True)
+        Dim factory As New OrderFactory
+        factory.Update(item.OrderMember, True)
     End Sub
 
     #End Region

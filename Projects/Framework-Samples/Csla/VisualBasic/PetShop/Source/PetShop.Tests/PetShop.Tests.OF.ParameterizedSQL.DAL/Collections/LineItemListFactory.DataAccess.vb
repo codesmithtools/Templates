@@ -21,18 +21,18 @@ Imports PetShop.Tests.OF.ParameterizedSQL
 
 #End Region
 
-Public Partial Class ItemListFactory
+Public Partial Class LineItemListFactory
     Inherits ObjectFactory
 
     #Region "Create"
 
     ''' <summary>
-    ''' Creates New ItemList with default values.
+    ''' Creates New LineItemList with default values.
     ''' </summary>
-    ''' <Returns>New ItemList.</Returns>
+    ''' <Returns>New LineItemList.</Returns>
     <RunLocal()> _
-    Public Function Create() As ItemList
-        Dim item As ItemList = Activator.CreateInstance(GetType(ItemList), True)
+    Public Function Create() As LineItemList
+        Dim item As LineItemList = Activator.CreateInstance(GetType(LineItemList), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -42,7 +42,6 @@ Public Partial Class ItemListFactory
 
         CheckRules(item)
         MarkNew(item)
-        MarkAsChild(item)
 
         OnCreated()
 
@@ -54,12 +53,12 @@ Public Partial Class ItemListFactory
     #Region "Fetch
 
     ''' <summary>
-    ''' Fetch ItemList.
+    ''' Fetch LineItemList.
     ''' </summary>
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
-    Public Function Fetch(ByVal criteria As Item) As ItemList
-        Dim item As ItemList = Activator.CreateInstance(GetType(ItemList), True)
+    Public Function Fetch(ByVal criteria As LineItemCriteria) As LineItemList
+        Dim item As LineItemList = Activator.CreateInstance(GetType(LineItemList), True)
 
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
@@ -68,7 +67,7 @@ Public Partial Class ItemListFactory
         End If
 
         ' Fetch Child objects.
-        Dim commandText As String = String.Format("SELECT [ItemId], [ProductId], [ListPrice], [UnitCost], [Supplier], [Status], [Name], [Image] FROM [dbo].[Item] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT [OrderId], [LineNum], [ItemId], [Quantity], [UnitPrice] FROM [dbo].[LineItem] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -76,17 +75,16 @@ Public Partial Class ItemListFactory
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Do
-                            item.Add(new ItemFactory().Map(reader))
+                            item.Add(new LineItemFactory().Map(reader))
                         Loop While reader.Read()
                     Else
-                        Throw New Exception(String.Format("The record was not found in 'Item' using the following criteria: {0}.", criteria))
+                        Throw New Exception(String.Format("The record was not found in 'LineItem' using the following criteria: {0}.", criteria))
                     End If
                 End Using
             End Using
         End Using
 
         MarkOld(item)
-        MarkAsChild(item)
 
         OnFetched()
 
@@ -101,7 +99,7 @@ Public Partial Class ItemListFactory
     End Sub
     Partial Private Sub OnCreated()
     End Sub
-    Partial Private Sub OnFetching(ByVal criteria As ItemCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnFetching(ByVal criteria As LineItemCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnFetched()
     End Sub

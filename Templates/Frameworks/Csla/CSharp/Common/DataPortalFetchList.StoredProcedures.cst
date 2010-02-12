@@ -13,6 +13,8 @@
             OnFetching(criteria, ref cancel);
             if (cancel) return;
 
+            RaiseListChangedEvents = false;
+
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
@@ -34,5 +36,7 @@
                     }
                 }
             }
+
+            RaiseListChangedEvents = true;
 
             OnFetched();

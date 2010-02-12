@@ -21,18 +21,18 @@ Imports PetShop.Tests.OF.ParameterizedSQL
 
 #End Region
 
-Public Partial Class ProductFactory
+Public Partial Class CategoryFactory
     Inherits ObjectFactory
 
     #Region "Create"
 
     ''' <summary>
-    ''' Creates New Product with default values.
+    ''' Creates New Category with default values.
     ''' </summary>
-    ''' <Returns>New Product.</Returns>
+    ''' <Returns>New Category.</Returns>
     <RunLocal()> _
-    Public Function Create() As Product
-        Dim item As Product = Activator.CreateInstance(GetType(Product), True)
+    Public Function Create() As Category
+        Dim item As Category = Activator.CreateInstance(GetType(Category), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -43,7 +43,6 @@ Public Partial Class ProductFactory
         Using BypassPropertyChecks(item)
             ' Default values.
 
-        CategoryId = "BN"
 
             CheckRules(item)
             MarkNew(item)
@@ -55,12 +54,12 @@ Public Partial Class ProductFactory
     End Function
 
     ''' <summary>
-    ''' Creates New Product with default values.
+    ''' Creates New Category with default values.
     ''' </summary>
-    ''' <Returns>New Product.</Returns>
+    ''' <Returns>New Category.</Returns>
     <RunLocal()> _
-    Private Function Create(ByVal criteria As ProductCriteria) As  Product
-        Dim item As Product = Activator.CreateInstance(GetType(Product), True)
+    Private Function Create(ByVal criteria As CategoryCriteria) As  Category
+        Dim item As Category = Activator.CreateInstance(GetType(Category), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -68,12 +67,11 @@ Public Partial Class ProductFactory
             Return item
         End If
 
-        Dim resource As Product = Fetch(criteria)
+        Dim resource As Category = Fetch(criteria)
 
         Using BypassPropertyChecks(item)
             item.Name = resource.Name
             item.Description = resource.Description
-            item.Image = resource.Image
         End Using
 
         CheckRules(item)
@@ -89,20 +87,20 @@ Public Partial Class ProductFactory
     #Region "Fetch
 
     ''' <summary>
-    ''' Fetch Product.
+    ''' Fetch Category.
     ''' </summary>
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
-    Public Function Fetch(ByVal criteria As ProductCriteria) As Product
+    Public Function Fetch(ByVal criteria As CategoryCriteria) As Category
+        Dim item As Category = Nothing
+        
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
-            Return
+            Return item
         End If
 
-        Dim item As Product
-
-        Dim commandText As String = String.Format("SELECT [ProductId], [CategoryId], [Name], [Descn], [Image] FROM [dbo].[Product] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT [CategoryId], [Name], [Descn] FROM [dbo].[Category] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -111,7 +109,7 @@ Public Partial Class ProductFactory
                     If reader.Read() Then
                         item = Map(reader)
                     Else
-                        Throw New Exception(String.Format("The record was not found in 'Product' using the following criteria: {0}.", criteria))
+                        Throw New Exception(String.Format("The record was not found in 'Category' using the following criteria: {0}.", criteria))
                     End If
                 End Using
             End Using
@@ -128,7 +126,7 @@ Public Partial Class ProductFactory
 
     #Region "Insert"
 
-    Private Sub DoInsert(ByVal item As Product, ByVal stopProccessingChildren As Boolean)
+    Private Sub DoInsert(ByVal item As Category, ByVal stopProccessingChildren As Boolean)
         ' Don't update If the item isn't dirty.
         If Not (item.IsDirty) Then
             Return
@@ -140,15 +138,13 @@ Public Partial Class ProductFactory
             Return
         End If
 
-        Const commandText As String = "INSERT INTO [dbo].[Product] ([ProductId], [CategoryId], [Name], [Descn], [Image]) VALUES (@p_ProductId, @p_CategoryId, @p_Name, @p_Descn, @p_Image)"
+        Const commandText As String = "INSERT INTO [dbo].[Category] ([CategoryId], [Name], [Descn]) VALUES (@p_CategoryId, @p_Name, @p_Descn)"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
-                command.Parameters.AddWithValue("@p_ProductId", item.ProductId)
-				command.Parameters.AddWithValue("@p_CategoryId", item.CategoryId)
+                command.Parameters.AddWithValue("@p_CategoryId", item.CategoryId)
 				command.Parameters.AddWithValue("@p_Name", item.Name)
 				command.Parameters.AddWithValue("@p_Descn", item.Description)
-				command.Parameters.AddWithValue("@p_Image", item.Image)
 
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
@@ -163,8 +159,7 @@ Public Partial Class ProductFactory
         
         If Not (stopProccessingChildren) Then
             ' Update Child Items.
-            CategoryUpdate(item)
-            ItemUpdate(item)
+            ProductUpdate(item)
         End If
 
         OnInserted()
@@ -175,11 +170,11 @@ Public Partial Class ProductFactory
     #Region "Update"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Update(ByVal item As Product, ByVal stopProccessingChildren as Boolean) As Product
+    Public Function Update(ByVal item As Category) As Category
         Return Update(item, false)
     End Function
 
-    Public Function Update(ByVal item As Product) As Product
+    Public Function Update(ByVal item As Category, ByVal stopProccessingChildren as Boolean) As Category
         If(item.IsDeleted) Then
             DoDelete(item)
             MarkNew(item)
@@ -192,7 +187,7 @@ Public Partial Class ProductFactory
         Return item
     End Function
 
-    Private Sub DoUpdate(ByVal item As Product, ByVal stopProccessingChildren As Boolean)
+    Private Sub DoUpdate(ByVal item As Category, ByVal stopProccessingChildren As Boolean)
         Dim cancel As Boolean = False
         OnUpdating(cancel)
         If (cancel) Then
@@ -201,15 +196,13 @@ Public Partial Class ProductFactory
 
         ' Don't update If the item isn't dirty.
         If (item.IsDirty) Then
-            Const commandText As String = "UPDATE [dbo].[Product]  SET [ProductId] = @p_ProductId, [CategoryId] = @p_CategoryId, [Name] = @p_Name, [Descn] = @p_Descn, [Image] = @p_Image WHERE [ProductId] = @p_ProductId"
+            Const commandText As String = "UPDATE [dbo].[Category]  SET [CategoryId] = @p_CategoryId, [Name] = @p_Name, [Descn] = @p_Descn WHERE [CategoryId] = @p_CategoryId"
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_ProductId", item.ProductId)
-				command.Parameters.AddWithValue("@p_CategoryId", item.CategoryId)
+                    command.Parameters.AddWithValue("@p_CategoryId", item.CategoryId)
 				command.Parameters.AddWithValue("@p_Name", item.Name)
 				command.Parameters.AddWithValue("@p_Descn", item.Description)
-				command.Parameters.AddWithValue("@p_Image", item.Image)
 
                     Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                         'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
@@ -226,8 +219,7 @@ Public Partial Class ProductFactory
 
         If Not (stopProccessingChildren) Then
             ' Update Child Items.
-            CategoryUpdate(item)
-            ItemUpdate(item)
+            ProductUpdate(item)
         End If
 
         OnUpdated()
@@ -238,12 +230,12 @@ Public Partial Class ProductFactory
     #Region "Delete"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Delete(ByVal criteria As ProductCriteria)
+    Public Sub Delete(ByVal criteria As CategoryCriteria)
         ' Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
         DoDelete(criteria)
-    End Function
+    End Sub
 
-    Protected Sub DoDelete(ByVal item As Product)
+    Protected Sub DoDelete(ByVal item As Category)
         ' If we're not dirty then don't update the database.
         If Not (item.IsDirty) Then
             Return
@@ -254,21 +246,21 @@ Public Partial Class ProductFactory
             Return
         End If
 
-        Dim criteria As New ProductCriteria()
-criteria.ProductId = productId
+        Dim criteria As New CategoryCriteria()
+criteria.CategoryId = item.CategoryId
         DoDelete(criteria)
 
         MarkNew(item)
     End Sub
 
-    Private Sub DoDelete(ByVal criteria As ProductCriteria)
+    Private Sub DoDelete(ByVal criteria As CategoryCriteria)
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then
             Return
         End If
 
-        Dim commandText As String = String.Format("DELETE FROM [dbo].[Product] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("DELETE FROM [dbo].[Category] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -289,33 +281,24 @@ criteria.ProductId = productId
 
     #Region "Helper Methods"
 
-    Public Function Map(ByVal reader As SafeDataReader) As Product
-        Dim item As Product = Activator.CreateInstance(GetType(Product), True)
+    Public Function Map(ByVal reader As SafeDataReader) As Category
+        Dim item As Category = Activator.CreateInstance(GetType(Category), True)
         Using BypassPropertyChecks(item)
-            item.ProductId = reader.GetString("ProductId")
             item.CategoryId = reader.GetString("CategoryId")
             item.Name = reader.GetString("Name")
             item.Description = reader.GetString("Descn")
-            item.Image = reader.GetString("Image")
-
-            item.Items = New ItemList.NewList()
         End Using
 
         Return item
     End Function
 
-    'AssociatedManyToOne
-    Private Friend Sub CategoryUpdate(ByRef item As Product)
-		item.CategoryMember.CategoryId = item.CategoryId
-
-        New CategoryFactory().Update(item.CategoryMember, True)
-    End Sub
     'AssociatedOneToMany
-    Private Friend Sub ItemUpdate(ByRef item As Product)
-        For Each itemToUpdate As Item In item.Items
-		itemToUpdate.ProductId = item.ProductId
+    Private Shared Sub ProductUpdate(ByRef item As Category)
+        For Each itemToUpdate As Product In item.Products
+		itemToUpdate.CategoryId = item.CategoryId
 
-            New ItemFactory().Update(itemToUpdate, True)
+            Dim factory As New ProductFactory
+            factory.Update(itemToUpdate, True)
         Next
     End Sub
 
@@ -327,7 +310,7 @@ criteria.ProductId = productId
     End Sub
     Partial Private Sub OnCreated()
     End Sub
-    Partial Private Sub OnFetching(ByVal criteria As ProductCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnFetching(ByVal criteria As CategoryCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnFetched()
     End Sub
@@ -343,7 +326,7 @@ criteria.ProductId = productId
     End Sub
     Partial Private Sub OnSelfDeleted()
     End Sub
-    Partial Private Sub OnDeleting(ByVal criteria As ProductCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnDeleting(ByVal criteria As CategoryCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnDeleted()
     End Sub

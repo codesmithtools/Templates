@@ -21,18 +21,18 @@ Imports PetShop.Tests.OF.ParameterizedSQL
 
 #End Region
 
-Public Partial Class ProductListFactory
+Public Partial Class CategoryListFactory
     Inherits ObjectFactory
 
     #Region "Create"
 
     ''' <summary>
-    ''' Creates New ProductList with default values.
+    ''' Creates New CategoryList with default values.
     ''' </summary>
-    ''' <Returns>New ProductList.</Returns>
+    ''' <Returns>New CategoryList.</Returns>
     <RunLocal()> _
-    Public Function Create() As ProductList
-        Dim item As ProductList = Activator.CreateInstance(GetType(ProductList), True)
+    Public Function Create() As CategoryList
+        Dim item As CategoryList = Activator.CreateInstance(GetType(CategoryList), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -42,7 +42,6 @@ Public Partial Class ProductListFactory
 
         CheckRules(item)
         MarkNew(item)
-        MarkAsChild(item)
 
         OnCreated()
 
@@ -54,12 +53,12 @@ Public Partial Class ProductListFactory
     #Region "Fetch
 
     ''' <summary>
-    ''' Fetch ProductList.
+    ''' Fetch CategoryList.
     ''' </summary>
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
-    Public Function Fetch(ByVal criteria As Product) As ProductList
-        Dim item As ProductList = Activator.CreateInstance(GetType(ProductList), True)
+    Public Function Fetch(ByVal criteria As CategoryCriteria) As CategoryList
+        Dim item As CategoryList = Activator.CreateInstance(GetType(CategoryList), True)
 
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
@@ -68,7 +67,7 @@ Public Partial Class ProductListFactory
         End If
 
         ' Fetch Child objects.
-        Dim commandText As String = String.Format("SELECT [ProductId], [CategoryId], [Name], [Descn], [Image] FROM [dbo].[Product] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT [CategoryId], [Name], [Descn] FROM [dbo].[Category] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -76,17 +75,16 @@ Public Partial Class ProductListFactory
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Do
-                            item.Add(new ProductFactory().Map(reader))
+                            item.Add(new CategoryFactory().Map(reader))
                         Loop While reader.Read()
                     Else
-                        Throw New Exception(String.Format("The record was not found in 'Product' using the following criteria: {0}.", criteria))
+                        Throw New Exception(String.Format("The record was not found in 'Category' using the following criteria: {0}.", criteria))
                     End If
                 End Using
             End Using
         End Using
 
         MarkOld(item)
-        MarkAsChild(item)
 
         OnFetched()
 
@@ -101,7 +99,7 @@ Public Partial Class ProductListFactory
     End Sub
     Partial Private Sub OnCreated()
     End Sub
-    Partial Private Sub OnFetching(ByVal criteria As ProductCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnFetching(ByVal criteria As CategoryCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnFetched()
     End Sub

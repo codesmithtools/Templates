@@ -37,13 +37,11 @@ namespace <%= BusinessProjectName %>
     {
         private void Child_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
         {
-            RaiseListChangedEvents = false;
             IsReadOnly = false;
 
 <% RenderHelper(new DataPortalFetchList()); %>
 
             IsReadOnly = true;
-            RaiseListChangedEvents = true;
         }
 
 <% RenderHelper(new PartialMethods()); %>

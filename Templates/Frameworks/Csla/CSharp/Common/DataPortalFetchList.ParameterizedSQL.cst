@@ -13,6 +13,8 @@
             OnFetching(criteria, ref cancel);
             if (cancel) return;
 
+            RaiseListChangedEvents = false;
+
             string commandText = string.Format("SELECT <%= Entity.Members.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
@@ -35,5 +37,7 @@
                     }
                 }
             }
+
+            RaiseListChangedEvents = true;
 
             OnFetched();

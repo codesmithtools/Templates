@@ -108,13 +108,13 @@ Public Function Partial class <%= Entity.ClassName %>Factory
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
     Public Function Fetch(ByVal criteria As <%= Entity.ClassName %>Criteria) As <%= Entity.ClassName %>
+        Dim item As <%= Entity.ClassName %> = Nothing
+        
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
-            Return
+            Return item
         End If
-
-        Dim item As <%= Entity.ClassName %>
 
         MarkOld(item)
 <% If(IsChildBusinessObject) Then %>
@@ -154,9 +154,9 @@ Public Function Partial class <%= Entity.ClassName %>Factory
     #Region "Delete"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Delete(ByVal criteria As <%= Entity.ClassName %>Criteria)
+    Public Sub Delete(ByVal criteria As <%= Entity.ClassName %>Criteria)
         ' Delete data here.
-    End Function
+    End Sub
 
     #End Region
 <% End If %>

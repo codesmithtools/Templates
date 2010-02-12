@@ -59,13 +59,13 @@ Public Partial Class <%= Entity.ClassName %>Factory
 
 <% For Each member As Member in Entity.PrimaryKey.KeyMembers
 If (member.SystemType = "System.Guid") Then %>
-        <%=member.PropertyName %> = Guid.NewGuid()
+            item.<%=member.PropertyName %> = Guid.NewGuid()
 <% End If
 Next
 For Each association As Association in Entity.AssociatedForeignKeys
     For Each member As AssociationMember in association
 If (member.AssociatedColumn.SystemType = "System.String" And Not member.AssociatedColumn.IsIdentity And member.AssociatedColumn.IsForeignKey) Then %>
-        <%= member.AssociatedColumn.PropertyName %> = "BN"
+            item.<%= member.AssociatedColumn.PropertyName %> = "BN"
 <% End If
 Next
 Next
@@ -127,13 +127,13 @@ Next
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
     Public Function Fetch(ByVal criteria As <%= Entity.ClassName %>Criteria) As <%= Entity.ClassName %>
+        Dim item As <%= Entity.ClassName %> = Nothing
+        
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
-            Return
+            Return item
         End If
-
-        Dim item As <%= Entity.ClassName %>
 
         Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
@@ -228,11 +228,11 @@ End If %>
     #Region "Update"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Update(ByVal item As <%= Entity.ClassName %>, ByVal stopProccessingChildren as Boolean) As <%= Entity.ClassName %>
+    Public Function Update(ByVal item As <%= Entity.ClassName %>) As <%= Entity.ClassName %>
         Return Update(item, false)
     End Function
 
-    Public Function Update(ByVal item As <%= Entity.ClassName %>) As <%= Entity.ClassName %>
+    Public Function Update(ByVal item As <%= Entity.ClassName %>, ByVal stopProccessingChildren as Boolean) As <%= Entity.ClassName %>
         If(item.IsDeleted) Then
             DoDelete(item)
             MarkNew(item)
@@ -306,10 +306,10 @@ End If %>
     #Region "Delete"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Delete(ByVal criteria As <%= Entity.ClassName %>Criteria)
+    Public Sub Delete(ByVal criteria As <%= Entity.ClassName %>Criteria)
         ' Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
         DoDelete(criteria)
-    End Function
+    End Sub
 
     Protected Sub DoDelete(ByVal item As <%= Entity.ClassName %>)
         ' If we're not dirty then don't update the database.
@@ -323,7 +323,7 @@ End If %>
         End If
 
         Dim criteria As New <%= ChildBusinessClassName %>Criteria()
-<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer() %>
+<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(True) %>
         DoDelete(criteria)
 
         MarkNew(item)
@@ -367,11 +367,6 @@ End If %>
 <% for each [member] as Member in Entity.MembersNoRowVersion %>
             item.<%= [member].PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
 <% Next %>
-
-<%-- One-To-Many & Many-To-Many --%>
-<% for each association2 As Association in Entity.AssociatedToManyUnion %>
-            item.<%= association2.PropertyName %> = New <%= association2.ClassName %>List.NewList()
-<%Next %> 
         End Using
 
         Return item
@@ -380,29 +375,32 @@ End If %>
 <%-- One-To-Zero-Or-One --%>
 <% For Each association As Association in Entity.AssociatedOneToZeroOrOne %>
     'AssociatedOneToZeroOrOne
-    Private Friend Sub <%= association.ClassName %>Update(ByRef item As <%= Entity.ClassName %>)
+    Private Shared Sub <%= association.ClassName %>Update(ByRef item As <%= Entity.ClassName %>)
 <%= association.SearchCriteria.BuildUpdateStatements("item." + association.PropertyName) %>
 
-        New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, True)
+        Dim factory As New <%= association.ClassName %>Factory
+        factory.Update(item.<%= association.PropertyName %>, True)
     End Sub
 <% Next %>
 <%-- Many-To-One --%>
 <% For Each association As Association in Entity.AssociatedManyToOne %>
     'AssociatedManyToOne
-    Private Friend Sub <%= association.ClassName %>Update(ByRef item As <%= Entity.ClassName %>)
+    Private Shared Sub <%= association.ClassName %>Update(ByRef item As <%= Entity.ClassName %>)
 <%= association.SearchCriteria.BuildUpdateStatements("item." + association.PropertyName) %>
 
-        New <%= association.ClassName %>Factory().Update(item.<%= association.PropertyName %>, True)
+        Dim factory As New <%= association.ClassName %>Factory
+        factory.Update(item.<%= association.PropertyName %>, True)
     End Sub
 <% Next %>
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each association As Association in Entity.AssociatedOneToMany %>
     'AssociatedOneToMany
-    Private Friend Sub <%= association.ClassName %>Update(ByRef item As <%= Entity.ClassName %>)
+    Private Shared Sub <%= association.ClassName %>Update(ByRef item As <%= Entity.ClassName %>)
         For Each itemToUpdate As <%= association.ClassName %> In item.<%= association.PropertyName %>
 <%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate") %>
 
-            New <%= association.ClassName %>Factory().Update(itemToUpdate, True)
+            Dim factory As New <%= association.ClassName %>Factory
+            factory.Update(itemToUpdate, True)
         Next
     End Sub
 <% Next %>

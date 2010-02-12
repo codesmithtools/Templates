@@ -46,6 +46,11 @@ namespace <%= DataProjectName %>
         public <%= Entity.ClassName %>List Create()
         {
             var item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
             using (BypassPropertyChecks(item))
             {
                 // Default values.
@@ -56,29 +61,9 @@ namespace <%= DataProjectName %>
                 MarkAsChild(item);
 <%}%>
             }
-            return item;
-        }
 
-        /// <summary>
-        /// Creates new <%= Entity.ClassName %>List with default values.
-        /// </summary>
-        /// <returns>new <%= Entity.ClassName %>List.</returns>
-        [RunLocal]
-        private <%= Entity.ClassName %>List Create(<%= Entity.ClassName %>Criteria criteria)
-        {
-            //var resource  = <%= Entity.ClassName %>List.Get<%= Entity.ClassName %>List(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>);
-            var item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
-            using (BypassPropertyChecks(item))
-            {
-<% foreach(Member member in Entity.MembersNoRowVersion){ %>
-                //item.<%= member.PropertyName %> = resource.<%= member.PropertyName %>;
-<% } %>
-            }
-    
-            MarkNew(resource);
-<% if(IsChildBusinessObject) { %>
-            MarkAsChild(item);
-<%}%>
+            OnCreated();
+
             return item;
         }
 
@@ -94,12 +79,18 @@ namespace <%= DataProjectName %>
         /// <returns></returns>
         public <%= Entity.ClassName %>List Fetch(<%= Entity.ClassName %>Criteria criteria)
         {
-            <%= Entity.ClassName %>List item;
+            <%= Entity.ClassName %>List item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
+
+            bool cancel = false;
+            OnFetching(criteria, ref cancel);
+            if (cancel) return item;
             
             MarkOld(item);
 <% if(IsChildBusinessObject) { %>
             MarkAsChild(item);
 <%}%>
+            OnFetched();
+
             return item;
         }
 

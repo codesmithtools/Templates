@@ -93,13 +93,13 @@ Public Partial Class LineItemFactory
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
     Public Function Fetch(ByVal criteria As LineItemCriteria) As LineItem
+        Dim item As LineItem = Nothing
+        
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
-            Return
+            Return item
         End If
-
-        Dim item As LineItem
 
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
@@ -170,11 +170,11 @@ Public Partial Class LineItemFactory
     #Region "Update"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Update(ByVal item As LineItem, ByVal stopProccessingChildren as Boolean) As LineItem
+    Public Function Update(ByVal item As LineItem) As LineItem
         Return Update(item, false)
     End Function
 
-    Public Function Update(ByVal item As LineItem) As LineItem
+    Public Function Update(ByVal item As LineItem, ByVal stopProccessingChildren as Boolean) As LineItem
         If(item.IsDeleted) Then
             DoDelete(item)
             MarkNew(item)
@@ -231,10 +231,10 @@ Public Partial Class LineItemFactory
     #Region "Delete"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Delete(ByVal criteria As LineItemCriteria)
+    Public Sub Delete(ByVal criteria As LineItemCriteria)
         ' Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
         DoDelete(criteria)
-    End Function
+    End Sub
 
     Protected Sub DoDelete(ByVal item As LineItem)
         ' If we're not dirty then don't update the database.
@@ -248,8 +248,8 @@ Public Partial Class LineItemFactory
         End If
 
         Dim criteria As New LineItemCriteria()
-criteria.OrderId = orderId
-		criteria.LineNum = lineNum
+criteria.OrderId = item.OrderId
+		criteria.LineNum = item.LineNum
         DoDelete(criteria)
 
         MarkNew(item)
@@ -297,10 +297,11 @@ criteria.OrderId = orderId
     End Function
 
     'AssociatedManyToOne
-    Private Friend Sub OrderUpdate(ByRef item As LineItem)
+    Private Shared Sub OrderUpdate(ByRef item As LineItem)
 		item.OrderMember.OrderId = item.OrderId
 
-        New OrderFactory().Update(item.OrderMember, True)
+        Dim factory As New OrderFactory
+        factory.Update(item.OrderMember, True)
     End Sub
 
     #End Region

@@ -112,13 +112,13 @@ Public Partial Class OrderFactory
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
     Public Function Fetch(ByVal criteria As OrderCriteria) As Order
+        Dim item As Order = Nothing
+        
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
-            Return
+            Return item
         End If
-
-        Dim item As Order
 
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
@@ -189,7 +189,7 @@ Public Partial Class OrderFactory
 				command.Parameters.AddWithValue("@p_Locale", item.Locale)
 
                 command.ExecuteNonQuery()
-                    item.OrderId =  (System.Int32)command.Parameters("@p_OrderId").Value
+                    item.OrderId =  command.Parameters("@p_OrderId").Value
             End Using
         End Using
 
@@ -210,11 +210,11 @@ Public Partial Class OrderFactory
     #Region "Update"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Update(ByVal item As Order, ByVal stopProccessingChildren as Boolean) As Order
+    Public Function Update(ByVal item As Order) As Order
         Return Update(item, false)
     End Function
 
-    Public Function Update(ByVal item As Order) As Order
+    Public Function Update(ByVal item As Order, ByVal stopProccessingChildren as Boolean) As Order
         If(item.IsDeleted) Then
             DoDelete(item)
             MarkNew(item)
@@ -290,10 +290,10 @@ Public Partial Class OrderFactory
     #Region "Delete"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Delete(ByVal criteria As OrderCriteria)
+    Public Sub Delete(ByVal criteria As OrderCriteria)
         ' Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
         DoDelete(criteria)
-    End Function
+    End Sub
 
     Protected Sub DoDelete(ByVal item As Order)
         ' If we're not dirty then don't update the database.
@@ -307,7 +307,7 @@ Public Partial Class OrderFactory
         End If
 
         Dim criteria As New OrderCriteria()
-criteria.OrderId = orderId
+criteria.OrderId = item.OrderId
         DoDelete(criteria)
 
         MarkNew(item)
@@ -367,27 +367,27 @@ criteria.OrderId = orderId
             item.ShipToLastName = reader.GetString("ShipToLastName")
             item.AuthorizationNumber = reader.GetInt32("AuthorizationNumber")
             item.Locale = reader.GetString("Locale")
-            item.LineItems = New LineItemList.NewList()
-            item.OrderStatuses = New OrderStatusList.NewList()
         End Using
 
         Return item
     End Function
 
     'AssociatedOneToMany
-    Private Friend Sub LineItemUpdate(ByRef item As Order)
+    Private Shared Sub LineItemUpdate(ByRef item As Order)
         For Each itemToUpdate As LineItem In item.LineItems
 		itemToUpdate.OrderId = item.OrderId
 
-            New LineItemFactory().Update(itemToUpdate, True)
+            Dim factory As New LineItemFactory
+            factory.Update(itemToUpdate, True)
         Next
     End Sub
     'AssociatedOneToMany
-    Private Friend Sub OrderStatusUpdate(ByRef item As Order)
+    Private Shared Sub OrderStatusUpdate(ByRef item As Order)
         For Each itemToUpdate As OrderStatus In item.OrderStatuses
 		itemToUpdate.OrderId = item.OrderId
 
-            New OrderStatusFactory().Update(itemToUpdate, True)
+            Dim factory As New OrderStatusFactory
+            factory.Update(itemToUpdate, True)
         Next
     End Sub
 

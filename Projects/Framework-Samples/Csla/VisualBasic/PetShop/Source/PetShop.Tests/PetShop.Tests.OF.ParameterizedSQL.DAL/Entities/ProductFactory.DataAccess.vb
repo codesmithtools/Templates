@@ -21,18 +21,18 @@ Imports PetShop.Tests.OF.ParameterizedSQL
 
 #End Region
 
-Public Partial Class OrderStatusFactory
+Public Partial Class ProductFactory
     Inherits ObjectFactory
 
     #Region "Create"
 
     ''' <summary>
-    ''' Creates New OrderStatus with default values.
+    ''' Creates New Product with default values.
     ''' </summary>
-    ''' <Returns>New OrderStatus.</Returns>
+    ''' <Returns>New Product.</Returns>
     <RunLocal()> _
-    Public Function Create() As OrderStatus
-        Dim item As OrderStatus = Activator.CreateInstance(GetType(OrderStatus), True)
+    Public Function Create() As Product
+        Dim item As Product = Activator.CreateInstance(GetType(Product), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -43,10 +43,10 @@ Public Partial Class OrderStatusFactory
         Using BypassPropertyChecks(item)
             ' Default values.
 
+            item.CategoryId = "BN"
 
             CheckRules(item)
             MarkNew(item)
-            MarkAsChild(item)
         End Using
 
         OnCreated()
@@ -55,12 +55,12 @@ Public Partial Class OrderStatusFactory
     End Function
 
     ''' <summary>
-    ''' Creates New OrderStatus with default values.
+    ''' Creates New Product with default values.
     ''' </summary>
-    ''' <Returns>New OrderStatus.</Returns>
+    ''' <Returns>New Product.</Returns>
     <RunLocal()> _
-    Private Function Create(ByVal criteria As OrderStatusCriteria) As  OrderStatus
-        Dim item As OrderStatus = Activator.CreateInstance(GetType(OrderStatus), True)
+    Private Function Create(ByVal criteria As ProductCriteria) As  Product
+        Dim item As Product = Activator.CreateInstance(GetType(Product), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -68,16 +68,16 @@ Public Partial Class OrderStatusFactory
             Return item
         End If
 
-        Dim resource As OrderStatus = Fetch(criteria)
+        Dim resource As Product = Fetch(criteria)
 
         Using BypassPropertyChecks(item)
-            item.Timestamp = resource.Timestamp
-            item.Status = resource.Status
+            item.Name = resource.Name
+            item.Description = resource.Description
+            item.Image = resource.Image
         End Using
 
         CheckRules(item)
         MarkNew(item)
-        MarkAsChild(item)
 
         OnCreated()
 
@@ -89,20 +89,20 @@ Public Partial Class OrderStatusFactory
     #Region "Fetch
 
     ''' <summary>
-    ''' Fetch OrderStatus.
+    ''' Fetch Product.
     ''' </summary>
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
-    Public Function Fetch(ByVal criteria As OrderStatusCriteria) As OrderStatus
+    Public Function Fetch(ByVal criteria As ProductCriteria) As Product
+        Dim item As Product = Nothing
+        
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
-            Return
+            Return item
         End If
 
-        Dim item As OrderStatus
-
-        Dim commandText As String = String.Format("SELECT [OrderId], [LineNum], [Timestamp], [Status] FROM [dbo].[OrderStatus] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT [ProductId], [CategoryId], [Name], [Descn], [Image] FROM [dbo].[Product] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -111,14 +111,13 @@ Public Partial Class OrderStatusFactory
                     If reader.Read() Then
                         item = Map(reader)
                     Else
-                        Throw New Exception(String.Format("The record was not found in 'OrderStatus' using the following criteria: {0}.", criteria))
+                        Throw New Exception(String.Format("The record was not found in 'Product' using the following criteria: {0}.", criteria))
                     End If
                 End Using
             End Using
         End Using
 
         MarkOld(item)
-        MarkAsChild(item)
 
         OnFetched()
 
@@ -129,7 +128,7 @@ Public Partial Class OrderStatusFactory
 
     #Region "Insert"
 
-    Private Sub DoInsert(ByVal item As OrderStatus, ByVal stopProccessingChildren As Boolean)
+    Private Sub DoInsert(ByVal item As Product, ByVal stopProccessingChildren As Boolean)
         ' Don't update If the item isn't dirty.
         If Not (item.IsDirty) Then
             Return
@@ -141,14 +140,15 @@ Public Partial Class OrderStatusFactory
             Return
         End If
 
-        Const commandText As String = "INSERT INTO [dbo].[OrderStatus] ([OrderId], [LineNum], [Timestamp], [Status]) VALUES (@p_OrderId, @p_LineNum, @p_Timestamp, @p_Status)"
+        Const commandText As String = "INSERT INTO [dbo].[Product] ([ProductId], [CategoryId], [Name], [Descn], [Image]) VALUES (@p_ProductId, @p_CategoryId, @p_Name, @p_Descn, @p_Image)"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
-                command.Parameters.AddWithValue("@p_OrderId", item.OrderId)
-				command.Parameters.AddWithValue("@p_LineNum", item.LineNum)
-				command.Parameters.AddWithValue("@p_Timestamp", item.Timestamp)
-				command.Parameters.AddWithValue("@p_Status", item.Status)
+                command.Parameters.AddWithValue("@p_ProductId", item.ProductId)
+				command.Parameters.AddWithValue("@p_CategoryId", item.CategoryId)
+				command.Parameters.AddWithValue("@p_Name", item.Name)
+				command.Parameters.AddWithValue("@p_Descn", item.Description)
+				command.Parameters.AddWithValue("@p_Image", item.Image)
 
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
@@ -163,7 +163,8 @@ Public Partial Class OrderStatusFactory
         
         If Not (stopProccessingChildren) Then
             ' Update Child Items.
-            OrderUpdate(item)
+            CategoryUpdate(item)
+            ItemUpdate(item)
         End If
 
         OnInserted()
@@ -174,11 +175,11 @@ Public Partial Class OrderStatusFactory
     #Region "Update"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Update(ByVal item As OrderStatus, ByVal stopProccessingChildren as Boolean) As OrderStatus
+    Public Function Update(ByVal item As Product) As Product
         Return Update(item, false)
     End Function
 
-    Public Function Update(ByVal item As OrderStatus) As OrderStatus
+    Public Function Update(ByVal item As Product, ByVal stopProccessingChildren as Boolean) As Product
         If(item.IsDeleted) Then
             DoDelete(item)
             MarkNew(item)
@@ -191,7 +192,7 @@ Public Partial Class OrderStatusFactory
         Return item
     End Function
 
-    Private Sub DoUpdate(ByVal item As OrderStatus, ByVal stopProccessingChildren As Boolean)
+    Private Sub DoUpdate(ByVal item As Product, ByVal stopProccessingChildren As Boolean)
         Dim cancel As Boolean = False
         OnUpdating(cancel)
         If (cancel) Then
@@ -200,14 +201,15 @@ Public Partial Class OrderStatusFactory
 
         ' Don't update If the item isn't dirty.
         If (item.IsDirty) Then
-            Const commandText As String = "UPDATE [dbo].[OrderStatus]  SET [OrderId] = @p_OrderId, [LineNum] = @p_LineNum, [Timestamp] = @p_Timestamp, [Status] = @p_Status WHERE [OrderId] = @p_OrderId AND [LineNum] = @p_LineNum"
+            Const commandText As String = "UPDATE [dbo].[Product]  SET [ProductId] = @p_ProductId, [CategoryId] = @p_CategoryId, [Name] = @p_Name, [Descn] = @p_Descn, [Image] = @p_Image WHERE [ProductId] = @p_ProductId"
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_OrderId", item.OrderId)
-				command.Parameters.AddWithValue("@p_LineNum", item.LineNum)
-				command.Parameters.AddWithValue("@p_Timestamp", item.Timestamp)
-				command.Parameters.AddWithValue("@p_Status", item.Status)
+                    command.Parameters.AddWithValue("@p_ProductId", item.ProductId)
+				command.Parameters.AddWithValue("@p_CategoryId", item.CategoryId)
+				command.Parameters.AddWithValue("@p_Name", item.Name)
+				command.Parameters.AddWithValue("@p_Descn", item.Description)
+				command.Parameters.AddWithValue("@p_Image", item.Image)
 
                     Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                         'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
@@ -224,7 +226,8 @@ Public Partial Class OrderStatusFactory
 
         If Not (stopProccessingChildren) Then
             ' Update Child Items.
-            OrderUpdate(item)
+            CategoryUpdate(item)
+            ItemUpdate(item)
         End If
 
         OnUpdated()
@@ -235,12 +238,12 @@ Public Partial Class OrderStatusFactory
     #Region "Delete"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Delete(ByVal criteria As OrderStatusCriteria)
+    Public Sub Delete(ByVal criteria As ProductCriteria)
         ' Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
         DoDelete(criteria)
-    End Function
+    End Sub
 
-    Protected Sub DoDelete(ByVal item As OrderStatus)
+    Protected Sub DoDelete(ByVal item As Product)
         ' If we're not dirty then don't update the database.
         If Not (item.IsDirty) Then
             Return
@@ -251,22 +254,21 @@ Public Partial Class OrderStatusFactory
             Return
         End If
 
-        Dim criteria As New OrderStatusCriteria()
-criteria.OrderId = orderId
-		criteria.LineNum = lineNum
+        Dim criteria As New ProductCriteria()
+criteria.ProductId = item.ProductId
         DoDelete(criteria)
 
         MarkNew(item)
     End Sub
 
-    Private Sub DoDelete(ByVal criteria As OrderStatusCriteria)
+    Private Sub DoDelete(ByVal criteria As ProductCriteria)
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then
             Return
         End If
 
-        Dim commandText As String = String.Format("DELETE FROM [dbo].[OrderStatus] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("DELETE FROM [dbo].[Product] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -287,24 +289,34 @@ criteria.OrderId = orderId
 
     #Region "Helper Methods"
 
-    Public Function Map(ByVal reader As SafeDataReader) As OrderStatus
-        Dim item As OrderStatus = Activator.CreateInstance(GetType(OrderStatus), True)
+    Public Function Map(ByVal reader As SafeDataReader) As Product
+        Dim item As Product = Activator.CreateInstance(GetType(Product), True)
         Using BypassPropertyChecks(item)
-            item.OrderId = reader.GetInt32("OrderId")
-            item.LineNum = reader.GetInt32("LineNum")
-            item.Timestamp = reader.GetDateTime("Timestamp")
-            item.Status = reader.GetString("Status")
-
+            item.ProductId = reader.GetString("ProductId")
+            item.CategoryId = reader.GetString("CategoryId")
+            item.Name = reader.GetString("Name")
+            item.Description = reader.GetString("Descn")
+            item.Image = reader.GetString("Image")
         End Using
 
         Return item
     End Function
 
     'AssociatedManyToOne
-    Private Friend Sub OrderUpdate(ByRef item As OrderStatus)
-		item.OrderMember.OrderId = item.OrderId
+    Private Shared Sub CategoryUpdate(ByRef item As Product)
+		item.CategoryMember.CategoryId = item.CategoryId
 
-        New OrderFactory().Update(item.OrderMember, True)
+        Dim factory As New CategoryFactory
+        factory.Update(item.CategoryMember, True)
+    End Sub
+    'AssociatedOneToMany
+    Private Shared Sub ItemUpdate(ByRef item As Product)
+        For Each itemToUpdate As Item In item.Items
+		itemToUpdate.ProductId = item.ProductId
+
+            Dim factory As New ItemFactory
+            factory.Update(itemToUpdate, True)
+        Next
     End Sub
 
     #End Region
@@ -315,7 +327,7 @@ criteria.OrderId = orderId
     End Sub
     Partial Private Sub OnCreated()
     End Sub
-    Partial Private Sub OnFetching(ByVal criteria As OrderStatusCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnFetching(ByVal criteria As ProductCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnFetched()
     End Sub
@@ -331,7 +343,7 @@ criteria.OrderId = orderId
     End Sub
     Partial Private Sub OnSelfDeleted()
     End Sub
-    Partial Private Sub OnDeleting(ByVal criteria As OrderStatusCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnDeleting(ByVal criteria As ProductCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnDeleted()
     End Sub

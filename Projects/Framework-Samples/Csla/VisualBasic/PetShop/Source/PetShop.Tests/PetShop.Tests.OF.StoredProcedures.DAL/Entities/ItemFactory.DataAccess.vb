@@ -21,18 +21,18 @@ Imports PetShop.Tests.OF.StoredProcedures
 
 #End Region
 
-Public Partial Class SupplierFactory
+Public Partial Class ItemFactory
     Inherits ObjectFactory
 
     #Region "Create"
 
     ''' <summary>
-    ''' Creates New Supplier with default values.
+    ''' Creates New Item with default values.
     ''' </summary>
-    ''' <Returns>New Supplier.</Returns>
+    ''' <Returns>New Item.</Returns>
     <RunLocal()> _
-    Public Function Create() As Supplier
-        Dim item As Supplier = Activator.CreateInstance(GetType(Supplier), True)
+    Public Function Create() As Item
+        Dim item As Item = Activator.CreateInstance(GetType(Item), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -43,6 +43,7 @@ Public Partial Class SupplierFactory
         Using BypassPropertyChecks(item)
             ' Default values.
 
+            item.ProductId = "BN"
 
             CheckRules(item)
             MarkNew(item)
@@ -54,12 +55,12 @@ Public Partial Class SupplierFactory
     End Function
 
     ''' <summary>
-    ''' Creates New Supplier with default values.
+    ''' Creates New Item with default values.
     ''' </summary>
-    ''' <Returns>New Supplier.</Returns>
+    ''' <Returns>New Item.</Returns>
     <RunLocal()> _
-    Private Function Create(ByVal criteria As SupplierCriteria) As  Supplier
-        Dim item As Supplier = Activator.CreateInstance(GetType(Supplier), True)
+    Private Function Create(ByVal criteria As ItemCriteria) As  Item
+        Dim item As Item = Activator.CreateInstance(GetType(Item), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -67,17 +68,14 @@ Public Partial Class SupplierFactory
             Return item
         End If
 
-        Dim resource As Supplier = Fetch(criteria)
+        Dim resource As Item = Fetch(criteria)
 
         Using BypassPropertyChecks(item)
-            item.Name = resource.Name
+            item.ListPrice = resource.ListPrice
+            item.UnitCost = resource.UnitCost
             item.Status = resource.Status
-            item.Addr1 = resource.Addr1
-            item.Addr2 = resource.Addr2
-            item.City = resource.City
-            item.State = resource.State
-            item.Zip = resource.Zip
-            item.Phone = resource.Phone
+            item.Name = resource.Name
+            item.Image = resource.Image
         End Using
 
         CheckRules(item)
@@ -93,29 +91,29 @@ Public Partial Class SupplierFactory
     #Region "Fetch
 
     ''' <summary>
-    ''' Fetch Supplier.
+    ''' Fetch Item.
     ''' </summary>
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
-    Public Function Fetch(ByVal criteria As SupplierCriteria) As Supplier
+    Public Function Fetch(ByVal criteria As ItemCriteria) As Item
+        Dim item As Item = Nothing
+        
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
-            Return
+            Return item
         End If
-
-        Dim item As Supplier
 
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using command As New SqlCommand("[dbo].[CSLA_Supplier_Select]", connection)
+            Using command As New SqlCommand("[dbo].[CSLA_Item_Select]", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         item = Map(reader)
                     Else
-                        Throw New Exception(String.Format("The record was not found in 'Supplier' using the following criteria: {0}.", criteria))
+                        Throw New Exception(String.Format("The record was not found in 'Item' using the following criteria: {0}.", criteria))
                     End If
                 End Using
             End Using
@@ -132,7 +130,7 @@ Public Partial Class SupplierFactory
 
     #Region "Insert"
 
-    Private Sub DoInsert(ByVal item As Supplier, ByVal stopProccessingChildren As Boolean)
+    Private Sub DoInsert(ByVal item As Item, ByVal stopProccessingChildren As Boolean)
         ' Don't update If the item isn't dirty.
         If Not (item.IsDirty) Then
             Return
@@ -147,17 +145,16 @@ Public Partial Class SupplierFactory
 
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using command As New SqlCommand("[dbo].[CSLA_Supplier_Insert]", connection)
+            Using command As New SqlCommand("[dbo].[CSLA_Item_Insert]", connection)
                 command.CommandType = CommandType.StoredProcedure
-                command.Parameters.AddWithValue("@p_SuppId", item.SuppId)
-				command.Parameters.AddWithValue("@p_Name", item.Name)
+                command.Parameters.AddWithValue("@p_ItemId", item.ItemId)
+				command.Parameters.AddWithValue("@p_ProductId", item.ProductId)
+				command.Parameters.AddWithValue("@p_ListPrice", item.ListPrice)
+				command.Parameters.AddWithValue("@p_UnitCost", item.UnitCost)
+				command.Parameters.AddWithValue("@p_Supplier", item.Supplier)
 				command.Parameters.AddWithValue("@p_Status", item.Status)
-				command.Parameters.AddWithValue("@p_Addr1", item.Addr1)
-				command.Parameters.AddWithValue("@p_Addr2", item.Addr2)
-				command.Parameters.AddWithValue("@p_City", item.City)
-				command.Parameters.AddWithValue("@p_State", item.State)
-				command.Parameters.AddWithValue("@p_Zip", item.Zip)
-				command.Parameters.AddWithValue("@p_Phone", item.Phone)
+				command.Parameters.AddWithValue("@p_Name", item.Name)
+				command.Parameters.AddWithValue("@p_Image", item.Image)
 
                 command.ExecuteNonQuery()
             End Using
@@ -168,7 +165,8 @@ Public Partial Class SupplierFactory
         
         If Not (stopProccessingChildren) Then
             ' Update Child Items.
-            ItemUpdate(item)
+            ProductUpdate(item)
+            SupplierUpdate(item)
         End If
 
         OnInserted()
@@ -179,11 +177,11 @@ Public Partial Class SupplierFactory
     #Region "Update"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Update(ByVal item As Supplier, ByVal stopProccessingChildren as Boolean) As Supplier
+    Public Function Update(ByVal item As Item) As Item
         Return Update(item, false)
     End Function
 
-    Public Function Update(ByVal item As Supplier) As Supplier
+    Public Function Update(ByVal item As Item, ByVal stopProccessingChildren as Boolean) As Item
         If(item.IsDeleted) Then
             DoDelete(item)
             MarkNew(item)
@@ -196,7 +194,7 @@ Public Partial Class SupplierFactory
         Return item
     End Function
 
-    Private Sub DoUpdate(ByVal item As Supplier, ByVal stopProccessingChildren As Boolean)
+    Private Sub DoUpdate(ByVal item As Item, ByVal stopProccessingChildren As Boolean)
         Dim cancel As Boolean = False
         OnUpdating(cancel)
         If (cancel) Then
@@ -207,17 +205,16 @@ Public Partial Class SupplierFactory
         If (item.IsDirty) Then
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
-                Using command As New SqlCommand("[dbo].[CSLA_Supplier_Update]", connection)
+                Using command As New SqlCommand("[dbo].[CSLA_Item_Update]", connection)
                     command.CommandType = CommandType.StoredProcedure
-                    command.Parameters.AddWithValue("@p_SuppId", item.SuppId)
-				command.Parameters.AddWithValue("@p_Name", item.Name)
+                    command.Parameters.AddWithValue("@p_ItemId", item.ItemId)
+				command.Parameters.AddWithValue("@p_ProductId", item.ProductId)
+				command.Parameters.AddWithValue("@p_ListPrice", item.ListPrice)
+				command.Parameters.AddWithValue("@p_UnitCost", item.UnitCost)
+				command.Parameters.AddWithValue("@p_Supplier", item.Supplier)
 				command.Parameters.AddWithValue("@p_Status", item.Status)
-				command.Parameters.AddWithValue("@p_Addr1", item.Addr1)
-				command.Parameters.AddWithValue("@p_Addr2", item.Addr2)
-				command.Parameters.AddWithValue("@p_City", item.City)
-				command.Parameters.AddWithValue("@p_State", item.State)
-				command.Parameters.AddWithValue("@p_Zip", item.Zip)
-				command.Parameters.AddWithValue("@p_Phone", item.Phone)
+				command.Parameters.AddWithValue("@p_Name", item.Name)
+				command.Parameters.AddWithValue("@p_Image", item.Image)
 
                     'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
                     Dim result As Integer = command.ExecuteNonQuery()
@@ -233,7 +230,8 @@ Public Partial Class SupplierFactory
 
         If Not (stopProccessingChildren) Then
             ' Update Child Items.
-            ItemUpdate(item)
+            ProductUpdate(item)
+            SupplierUpdate(item)
         End If
 
         OnUpdated()
@@ -244,12 +242,12 @@ Public Partial Class SupplierFactory
     #Region "Delete"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Delete(ByVal criteria As SupplierCriteria)
+    Public Sub Delete(ByVal criteria As ItemCriteria)
         ' Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
         DoDelete(criteria)
-    End Function
+    End Sub
 
-    Protected Sub DoDelete(ByVal item As Supplier)
+    Protected Sub DoDelete(ByVal item As Item)
         ' If we're not dirty then don't update the database.
         If Not (item.IsDirty) Then
             Return
@@ -260,14 +258,14 @@ Public Partial Class SupplierFactory
             Return
         End If
 
-        Dim criteria As New SupplierCriteria()
-criteria.SuppId = suppId
+        Dim criteria As New ItemCriteria()
+criteria.ItemId = item.ItemId
         DoDelete(criteria)
 
         MarkNew(item)
     End Sub
 
-    Private Sub DoDelete(ByVal criteria As SupplierCriteria)
+    Private Sub DoDelete(ByVal criteria As ItemCriteria)
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then
@@ -276,7 +274,7 @@ criteria.SuppId = suppId
 
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
-            Using command As New SqlCommand("[dbo].[CSLA_Supplier_Delete]", connection)
+            Using command As New SqlCommand("[dbo].[CSLA_Item_Delete]", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
                 
@@ -295,31 +293,35 @@ criteria.SuppId = suppId
 
     #Region "Helper Methods"
 
-    Public Function Map(ByVal reader As SafeDataReader) As Supplier
-        Dim item As Supplier = Activator.CreateInstance(GetType(Supplier), True)
+    Public Function Map(ByVal reader As SafeDataReader) As Item
+        Dim item As Item = Activator.CreateInstance(GetType(Item), True)
         Using BypassPropertyChecks(item)
-            item.SuppId = reader.GetInt32("SuppId")
-            item.Name = reader.GetString("Name")
+            item.ItemId = reader.GetString("ItemId")
+            item.ProductId = reader.GetString("ProductId")
+            item.ListPrice = reader.GetDecimal("ListPrice")
+            item.UnitCost = reader.GetDecimal("UnitCost")
+            item.Supplier = reader.GetInt32("Supplier")
             item.Status = reader.GetString("Status")
-            item.Addr1 = reader.GetString("Addr1")
-            item.Addr2 = reader.GetString("Addr2")
-            item.City = reader.GetString("City")
-            item.State = reader.GetString("State")
-            item.Zip = reader.GetString("Zip")
-            item.Phone = reader.GetString("Phone")
-            item.Items = New ItemList.NewList()
+            item.Name = reader.GetString("Name")
+            item.Image = reader.GetString("Image")
         End Using
 
         Return item
     End Function
 
-    'AssociatedOneToMany
-    Private Friend Sub ItemUpdate(ByRef item As Supplier)
-        For Each itemToUpdate As Item In item.Items
-		itemToUpdate.Supplier = item.SuppId
+    'AssociatedManyToOne
+    Private Shared Sub ProductUpdate(ByRef item As Item)
+		item.ProductMember.ProductId = item.ProductId
 
-            New ItemFactory().Update(itemToUpdate, True)
-        Next
+        Dim factory As New ProductFactory
+        factory.Update(item.ProductMember, True)
+    End Sub
+    'AssociatedManyToOne
+    Private Shared Sub SupplierUpdate(ByRef item As Item)
+		item.SupplierMember.SuppId = item.Supplier.Value
+
+        Dim factory As New SupplierFactory
+        factory.Update(item.SupplierMember, True)
     End Sub
 
     #End Region
@@ -330,7 +332,7 @@ criteria.SuppId = suppId
     End Sub
     Partial Private Sub OnCreated()
     End Sub
-    Partial Private Sub OnFetching(ByVal criteria As SupplierCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnFetching(ByVal criteria As ItemCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnFetched()
     End Sub
@@ -346,7 +348,7 @@ criteria.SuppId = suppId
     End Sub
     Partial Private Sub OnSelfDeleted()
     End Sub
-    Partial Private Sub OnDeleting(ByVal criteria As SupplierCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnDeleting(ByVal criteria As ItemCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnDeleted()
     End Sub
