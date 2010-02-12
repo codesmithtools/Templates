@@ -21,18 +21,18 @@ Imports PetShop.Tests.OF.ParameterizedSQL
 
 #End Region
 
-Public Partial Class OrderStatusListFactory
+Public Partial Class SupplierListFactory
     Inherits ObjectFactory
 
     #Region "Create"
 
     ''' <summary>
-    ''' Creates New OrderStatusList with default values.
+    ''' Creates New SupplierList with default values.
     ''' </summary>
-    ''' <Returns>New OrderStatusList.</Returns>
+    ''' <Returns>New SupplierList.</Returns>
     <RunLocal()> _
-    Public Function Create() As OrderStatusList
-        Dim item As OrderStatusList = Activator.CreateInstance(GetType(OrderStatusList), True)
+    Public Function Create() As SupplierList
+        Dim item As SupplierList = Activator.CreateInstance(GetType(SupplierList), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -42,6 +42,7 @@ Public Partial Class OrderStatusListFactory
 
         CheckRules(item)
         MarkNew(item)
+        MarkAsChild(item)
 
         OnCreated()
 
@@ -53,12 +54,12 @@ Public Partial Class OrderStatusListFactory
     #Region "Fetch
 
     ''' <summary>
-    ''' Fetch OrderStatusList.
+    ''' Fetch SupplierList.
     ''' </summary>
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
-    Public Function Fetch(ByVal criteria As OrderStatus) As OrderStatusList
-        Dim item As OrderStatusList = Activator.CreateInstance(GetType(OrderStatusList), True)
+    Public Function Fetch(ByVal criteria As SupplierCriteria) As SupplierList
+        Dim item As SupplierList = Activator.CreateInstance(GetType(SupplierList), True)
 
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
@@ -67,7 +68,7 @@ Public Partial Class OrderStatusListFactory
         End If
 
         ' Fetch Child objects.
-        Dim commandText As String = String.Format("SELECT [OrderId], [LineNum], [Timestamp], [Status] FROM [dbo].[OrderStatus] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT [SuppId], [Name], [Status], [Addr1], [Addr2], [City], [State], [Zip], [Phone] FROM [dbo].[Supplier] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -75,16 +76,17 @@ Public Partial Class OrderStatusListFactory
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Do
-                            item.Add(new OrderStatusFactory().Map(reader))
+                            item.Add(new SupplierFactory().Map(reader))
                         Loop While reader.Read()
                     Else
-                        Throw New Exception(String.Format("The record was not found in 'OrderStatus' using the following criteria: {0}.", criteria))
+                        Throw New Exception(String.Format("The record was not found in 'Supplier' using the following criteria: {0}.", criteria))
                     End If
                 End Using
             End Using
         End Using
 
         MarkOld(item)
+        MarkAsChild(item)
 
         OnFetched()
 
@@ -99,7 +101,7 @@ Public Partial Class OrderStatusListFactory
     End Sub
     Partial Private Sub OnCreated()
     End Sub
-    Partial Private Sub OnFetching(ByVal criteria As OrderStatusCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnFetching(ByVal criteria As SupplierCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnFetched()
     End Sub

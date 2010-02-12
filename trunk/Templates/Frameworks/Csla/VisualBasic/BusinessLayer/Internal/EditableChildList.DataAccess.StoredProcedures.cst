@@ -32,11 +32,7 @@ Imports Csla.Data
 Public Partial Class <%= BusinessClassName %>
 
     Private Shadows Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
-        RaiseListChangedEvents = False
-
 <% RenderHelper(New DataPortalFetchList()) %>
-
-        RaiseListChangedEvents = True
     End Sub
 
     Protected Overrides Sub DataPortal_Update()

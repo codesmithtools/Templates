@@ -21,18 +21,18 @@ Imports PetShop.Tests.OF.ParameterizedSQL
 
 #End Region
 
-Public Partial Class LineItemListFactory
+Public Partial Class OrderStatusListFactory
     Inherits ObjectFactory
 
     #Region "Create"
 
     ''' <summary>
-    ''' Creates New LineItemList with default values.
+    ''' Creates New OrderStatusList with default values.
     ''' </summary>
-    ''' <Returns>New LineItemList.</Returns>
+    ''' <Returns>New OrderStatusList.</Returns>
     <RunLocal()> _
-    Public Function Create() As LineItemList
-        Dim item As LineItemList = Activator.CreateInstance(GetType(LineItemList), True)
+    Public Function Create() As OrderStatusList
+        Dim item As OrderStatusList = Activator.CreateInstance(GetType(OrderStatusList), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -53,12 +53,12 @@ Public Partial Class LineItemListFactory
     #Region "Fetch
 
     ''' <summary>
-    ''' Fetch LineItemList.
+    ''' Fetch OrderStatusList.
     ''' </summary>
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
-    Public Function Fetch(ByVal criteria As LineItem) As LineItemList
-        Dim item As LineItemList = Activator.CreateInstance(GetType(LineItemList), True)
+    Public Function Fetch(ByVal criteria As OrderStatusCriteria) As OrderStatusList
+        Dim item As OrderStatusList = Activator.CreateInstance(GetType(OrderStatusList), True)
 
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
@@ -67,7 +67,7 @@ Public Partial Class LineItemListFactory
         End If
 
         ' Fetch Child objects.
-        Dim commandText As String = String.Format("SELECT [OrderId], [LineNum], [ItemId], [Quantity], [UnitPrice] FROM [dbo].[LineItem] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT [OrderId], [LineNum], [Timestamp], [Status] FROM [dbo].[OrderStatus] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -75,10 +75,10 @@ Public Partial Class LineItemListFactory
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Do
-                            item.Add(new LineItemFactory().Map(reader))
+                            item.Add(new OrderStatusFactory().Map(reader))
                         Loop While reader.Read()
                     Else
-                        Throw New Exception(String.Format("The record was not found in 'LineItem' using the following criteria: {0}.", criteria))
+                        Throw New Exception(String.Format("The record was not found in 'OrderStatus' using the following criteria: {0}.", criteria))
                     End If
                 End Using
             End Using
@@ -99,7 +99,7 @@ Public Partial Class LineItemListFactory
     End Sub
     Partial Private Sub OnCreated()
     End Sub
-    Partial Private Sub OnFetching(ByVal criteria As LineItemCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnFetching(ByVal criteria As OrderStatusCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnFetched()
     End Sub

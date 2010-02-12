@@ -49,11 +49,19 @@ namespace <%= DataProjectName %>
         public <%= Entity.ClassName %>List Create()
         {
             var item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
             CheckRules(item);
             MarkNew(item);
 <% if(IsChildBusinessObject) { %>
             MarkAsChild(item);
 <%}%>
+
+            OnCreated();
+
             return item;
         }
 

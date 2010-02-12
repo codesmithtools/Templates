@@ -84,12 +84,12 @@ Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean,
     objectFactory.IsReadOnlyBusinessObject = IsReadOnly
     objectFactory.IsChildBusinessObject = IsChild
 
-    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.cs", objectFactory.BusinessClassName))
+    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Entities\{0}.vb", objectFactory.BusinessClassName))
     If Not System.IO.File.Exists(parentFileName) Then
         objectFactory.RenderToFile(parentFileName, False)
     End If
 
-    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.cs", objectFactory.BusinessClassName))
+    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Entities\{0}.DataAccess.vb", objectFactory.BusinessClassName))
     If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Then
         Dim objectFactoryDataAccess As ObjectFactoryDataAccess = Me.Create(Of ObjectFactoryDataAccess)()
         Me.CopyPropertiesTo(objectFactoryDataAccess)
@@ -111,7 +111,7 @@ Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean,
         Me.CopyPropertiesTo(ADOHelper)
         ADOHelper.SourceTable = entity.Table
 
-        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.cs")
+        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
         If Not System.IO.File.Exists(fileName) Then
             ADOHelper.RenderToFile(fileName, False)
         End If
@@ -138,7 +138,7 @@ Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean,
         Me.CopyPropertiesTo(ADOHelper)
         ADOHelper.SourceTable = entity.Table
 
-        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.cs")
+        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
         If Not System.IO.File.Exists(fileName) Then
             ADOHelper.RenderToFile(fileName, False)
         End If
@@ -154,12 +154,12 @@ Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Bool
     objectFactory.IsReadOnlyBusinessObject = IsReadOnly
     objectFactory.IsChildBusinessObject = IsChild
 
-    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.cs", objectFactory.BusinessClassName))
+    Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", objectFactory.BusinessClassName))
     If Not System.IO.File.Exists(parentFileName) Then
         objectFactory.RenderToFile(parentFileName, False)
     End If
 
-    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.cs", objectFactory.BusinessClassName))
+    Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.DataAccess.vb", objectFactory.BusinessClassName))
     If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Then
         Dim objectFactoryDataAccess As ObjectFactoryListDataAccess = Me.Create(Of ObjectFactoryListDataAccess)()
         Me.CopyPropertiesTo(objectFactoryDataAccess)
@@ -181,7 +181,7 @@ Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Bool
         Me.CopyPropertiesTo(ADOHelper)
         ADOHelper.SourceTable = entity.Table
 
-        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.cs")
+        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
         If Not System.IO.File.Exists(fileName) Then
             ADOHelper.RenderToFile(fileName, False)
         End If
@@ -208,7 +208,7 @@ Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Bool
         Me.CopyPropertiesTo(ADOHelper)
         ADOHelper.SourceTable = entity.Table
 
-        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.cs")
+        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
         If Not System.IO.File.Exists(fileName) Then
             ADOHelper.RenderToFile(fileName, False)
         End If

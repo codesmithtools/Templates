@@ -10,11 +10,18 @@ namespace CodeSmith.SchemaHelper
     {
         public static string BuildObjectInitializer(this List<Member> members)
         {
+            return members.BuildObjectInitializer(false);
+        }
+
+        public static string BuildObjectInitializer(this List<Member> members, bool isObjectFactory)
+        {
             string parameters = string.Empty;
 
             foreach (Member member in members)
             {
-                parameters += string.Format("\r\n\t\tcriteria.{0} = {1}{2}", member.PropertyName, member.VariableName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
+                string propertyName = isObjectFactory ? string.Format("item.{0}", member.PropertyName) : member.VariableName;
+
+                parameters += string.Format("\r\n\t\tcriteria.{0} = {1}{2}", member.PropertyName, propertyName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
             }
 
             return parameters.TrimStart(new[] { '\r', '\n', '\t', ',', ' ' });

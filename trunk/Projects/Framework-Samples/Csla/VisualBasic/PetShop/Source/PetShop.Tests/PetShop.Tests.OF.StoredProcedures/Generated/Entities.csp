@@ -90,7 +90,16 @@
       </table>
     </tableList>
       </property>
-      <property name="DynamicRootList" />
+      <property name="DynamicRootList">
+        <connectionString>$(ConnectionString1)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <tableList>
+      <table>
+        <owner>dbo</owner>
+        <name>Product</name>
+      </table>
+    </tableList>
+      </property>
       <property name="EditableRootList">
         <connectionString>$(ConnectionString2)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
@@ -114,16 +123,12 @@
     </tableList>
       </property>
       <property name="EditableChildList">
-        <connectionString>$(ConnectionString2)</connectionString>
+        <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
       <table>
         <owner>dbo</owner>
         <name>Item</name>
-      </table>
-      <table>
-        <owner>dbo</owner>
-        <name>Product</name>
       </table>
       <table>
         <owner>dbo</owner>

@@ -9,6 +9,11 @@
 '------------------------------------------------------------------------------
 
 Imports System
+Imports System.Runtime.CompilerServices
+
+' Note: I really don't like having this here but if someone can come up with a better way to populate identity columns after update let me know.
+' Documentation: http://msdn.microsoft.com/en-us/library/system.runtime.compilerservices.internalsvisibletoattribute.aspx
+<assembly: InternalsVisibleTo("PetShop.Tests.OF.StoredProcedures.DAL")> _
 
 Public Module FactoryNames
     Public Const OrderStatusFactoryName As String = "PetShop.Tests.OF.StoredProcedures.DAL.OrderStatusFactory, PetShop.Tests.OF.StoredProcedures.DAL"

@@ -57,7 +57,7 @@ Public Partial Class OrderListFactory
     ''' </summary>
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
-    Public Function Fetch(ByVal criteria As Order) As OrderList
+    Public Function Fetch(ByVal criteria As OrderCriteria) As OrderList
         Dim item As OrderList = Activator.CreateInstance(GetType(OrderList), True)
 
         Dim cancel As Boolean = False

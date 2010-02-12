@@ -204,7 +204,6 @@
       <property name="ProcedurePrefix">CSLA_</property>
       <property name="AutoExecuteStoredProcedures">False</property>
       <property name="IsolationLevel">ReadCommitted</property>
-      <property name="NameValueList" />
     </propertySet>
   </propertySets>
 </codeSmith>

@@ -21,18 +21,18 @@ Imports PetShop.Tests.OF.ParameterizedSQL
 
 #End Region
 
-Public Partial Class ItemFactory
+Public Partial Class LineItemFactory
     Inherits ObjectFactory
 
     #Region "Create"
 
     ''' <summary>
-    ''' Creates New Item with default values.
+    ''' Creates New LineItem with default values.
     ''' </summary>
-    ''' <Returns>New Item.</Returns>
+    ''' <Returns>New LineItem.</Returns>
     <RunLocal()> _
-    Public Function Create() As Item
-        Dim item As Item = Activator.CreateInstance(GetType(Item), True)
+    Public Function Create() As LineItem
+        Dim item As LineItem = Activator.CreateInstance(GetType(LineItem), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -43,7 +43,6 @@ Public Partial Class ItemFactory
         Using BypassPropertyChecks(item)
             ' Default values.
 
-        ProductId = "BN"
 
             CheckRules(item)
             MarkNew(item)
@@ -55,12 +54,12 @@ Public Partial Class ItemFactory
     End Function
 
     ''' <summary>
-    ''' Creates New Item with default values.
+    ''' Creates New LineItem with default values.
     ''' </summary>
-    ''' <Returns>New Item.</Returns>
+    ''' <Returns>New LineItem.</Returns>
     <RunLocal()> _
-    Private Function Create(ByVal criteria As ItemCriteria) As  Item
-        Dim item As Item = Activator.CreateInstance(GetType(Item), True)
+    Private Function Create(ByVal criteria As LineItemCriteria) As  LineItem
+        Dim item As LineItem = Activator.CreateInstance(GetType(LineItem), True)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -68,14 +67,12 @@ Public Partial Class ItemFactory
             Return item
         End If
 
-        Dim resource As Item = Fetch(criteria)
+        Dim resource As LineItem = Fetch(criteria)
 
         Using BypassPropertyChecks(item)
-            item.ListPrice = resource.ListPrice
-            item.UnitCost = resource.UnitCost
-            item.Status = resource.Status
-            item.Name = resource.Name
-            item.Image = resource.Image
+            item.ItemId = resource.ItemId
+            item.Quantity = resource.Quantity
+            item.UnitPrice = resource.UnitPrice
         End Using
 
         CheckRules(item)
@@ -91,20 +88,20 @@ Public Partial Class ItemFactory
     #Region "Fetch
 
     ''' <summary>
-    ''' Fetch Item.
+    ''' Fetch LineItem.
     ''' </summary>
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
-    Public Function Fetch(ByVal criteria As ItemCriteria) As Item
+    Public Function Fetch(ByVal criteria As LineItemCriteria) As LineItem
+        Dim item As LineItem = Nothing
+        
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
-            Return
+            Return item
         End If
 
-        Dim item As Item
-
-        Dim commandText As String = String.Format("SELECT [ItemId], [ProductId], [ListPrice], [UnitCost], [Supplier], [Status], [Name], [Image] FROM [dbo].[Item] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("SELECT [OrderId], [LineNum], [ItemId], [Quantity], [UnitPrice] FROM [dbo].[LineItem] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -113,7 +110,7 @@ Public Partial Class ItemFactory
                     If reader.Read() Then
                         item = Map(reader)
                     Else
-                        Throw New Exception(String.Format("The record was not found in 'Item' using the following criteria: {0}.", criteria))
+                        Throw New Exception(String.Format("The record was not found in 'LineItem' using the following criteria: {0}.", criteria))
                     End If
                 End Using
             End Using
@@ -130,7 +127,7 @@ Public Partial Class ItemFactory
 
     #Region "Insert"
 
-    Private Sub DoInsert(ByVal item As Item, ByVal stopProccessingChildren As Boolean)
+    Private Sub DoInsert(ByVal item As LineItem, ByVal stopProccessingChildren As Boolean)
         ' Don't update If the item isn't dirty.
         If Not (item.IsDirty) Then
             Return
@@ -142,18 +139,15 @@ Public Partial Class ItemFactory
             Return
         End If
 
-        Const commandText As String = "INSERT INTO [dbo].[Item] ([ItemId], [ProductId], [ListPrice], [UnitCost], [Supplier], [Status], [Name], [Image]) VALUES (@p_ItemId, @p_ProductId, @p_ListPrice, @p_UnitCost, @p_Supplier, @p_Status, @p_Name, @p_Image)"
+        Const commandText As String = "INSERT INTO [dbo].[LineItem] ([OrderId], [LineNum], [ItemId], [Quantity], [UnitPrice]) VALUES (@p_OrderId, @p_LineNum, @p_ItemId, @p_Quantity, @p_UnitPrice)"
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
-                command.Parameters.AddWithValue("@p_ItemId", item.ItemId)
-				command.Parameters.AddWithValue("@p_ProductId", item.ProductId)
-				command.Parameters.AddWithValue("@p_ListPrice", item.ListPrice)
-				command.Parameters.AddWithValue("@p_UnitCost", item.UnitCost)
-				command.Parameters.AddWithValue("@p_Supplier", item.Supplier)
-				command.Parameters.AddWithValue("@p_Status", item.Status)
-				command.Parameters.AddWithValue("@p_Name", item.Name)
-				command.Parameters.AddWithValue("@p_Image", item.Image)
+                command.Parameters.AddWithValue("@p_OrderId", item.OrderId)
+				command.Parameters.AddWithValue("@p_LineNum", item.LineNum)
+				command.Parameters.AddWithValue("@p_ItemId", item.ItemId)
+				command.Parameters.AddWithValue("@p_Quantity", item.Quantity)
+				command.Parameters.AddWithValue("@p_UnitPrice", item.UnitPrice)
 
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
@@ -168,8 +162,7 @@ Public Partial Class ItemFactory
         
         If Not (stopProccessingChildren) Then
             ' Update Child Items.
-            ProductUpdate(item)
-            SupplierUpdate(item)
+            OrderUpdate(item)
         End If
 
         OnInserted()
@@ -180,11 +173,11 @@ Public Partial Class ItemFactory
     #Region "Update"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Update(ByVal item As Item, ByVal stopProccessingChildren as Boolean) As Item
+    Public Function Update(ByVal item As LineItem) As LineItem
         Return Update(item, false)
     End Function
 
-    Public Function Update(ByVal item As Item) As Item
+    Public Function Update(ByVal item As LineItem, ByVal stopProccessingChildren as Boolean) As LineItem
         If(item.IsDeleted) Then
             DoDelete(item)
             MarkNew(item)
@@ -197,7 +190,7 @@ Public Partial Class ItemFactory
         Return item
     End Function
 
-    Private Sub DoUpdate(ByVal item As Item, ByVal stopProccessingChildren As Boolean)
+    Private Sub DoUpdate(ByVal item As LineItem, ByVal stopProccessingChildren As Boolean)
         Dim cancel As Boolean = False
         OnUpdating(cancel)
         If (cancel) Then
@@ -206,18 +199,15 @@ Public Partial Class ItemFactory
 
         ' Don't update If the item isn't dirty.
         If (item.IsDirty) Then
-            Const commandText As String = "UPDATE [dbo].[Item]  SET [ItemId] = @p_ItemId, [ProductId] = @p_ProductId, [ListPrice] = @p_ListPrice, [UnitCost] = @p_UnitCost, [Supplier] = @p_Supplier, [Status] = @p_Status, [Name] = @p_Name, [Image] = @p_Image WHERE [ItemId] = @p_ItemId"
+            Const commandText As String = "UPDATE [dbo].[LineItem]  SET [OrderId] = @p_OrderId, [LineNum] = @p_LineNum, [ItemId] = @p_ItemId, [Quantity] = @p_Quantity, [UnitPrice] = @p_UnitPrice WHERE [OrderId] = @p_OrderId AND [LineNum] = @p_LineNum"
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)
-                    command.Parameters.AddWithValue("@p_ItemId", item.ItemId)
-				command.Parameters.AddWithValue("@p_ProductId", item.ProductId)
-				command.Parameters.AddWithValue("@p_ListPrice", item.ListPrice)
-				command.Parameters.AddWithValue("@p_UnitCost", item.UnitCost)
-				command.Parameters.AddWithValue("@p_Supplier", item.Supplier)
-				command.Parameters.AddWithValue("@p_Status", item.Status)
-				command.Parameters.AddWithValue("@p_Name", item.Name)
-				command.Parameters.AddWithValue("@p_Image", item.Image)
+                    command.Parameters.AddWithValue("@p_OrderId", item.OrderId)
+				command.Parameters.AddWithValue("@p_LineNum", item.LineNum)
+				command.Parameters.AddWithValue("@p_ItemId", item.ItemId)
+				command.Parameters.AddWithValue("@p_Quantity", item.Quantity)
+				command.Parameters.AddWithValue("@p_UnitPrice", item.UnitPrice)
 
                     Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                         'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
@@ -234,8 +224,7 @@ Public Partial Class ItemFactory
 
         If Not (stopProccessingChildren) Then
             ' Update Child Items.
-            ProductUpdate(item)
-            SupplierUpdate(item)
+            OrderUpdate(item)
         End If
 
         OnUpdated()
@@ -246,12 +235,12 @@ Public Partial Class ItemFactory
     #Region "Delete"
 
     <Transactional(TransactionalTypes.TransactionScope)> _
-    Public Function Delete(ByVal criteria As ItemCriteria)
+    Public Sub Delete(ByVal criteria As LineItemCriteria)
         ' Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
         DoDelete(criteria)
-    End Function
+    End Sub
 
-    Protected Sub DoDelete(ByVal item As Item)
+    Protected Sub DoDelete(ByVal item As LineItem)
         ' If we're not dirty then don't update the database.
         If Not (item.IsDirty) Then
             Return
@@ -262,21 +251,22 @@ Public Partial Class ItemFactory
             Return
         End If
 
-        Dim criteria As New ItemCriteria()
-criteria.ItemId = itemId
+        Dim criteria As New LineItemCriteria()
+criteria.OrderId = item.OrderId
+		criteria.LineNum = item.LineNum
         DoDelete(criteria)
 
         MarkNew(item)
     End Sub
 
-    Private Sub DoDelete(ByVal criteria As ItemCriteria)
+    Private Sub DoDelete(ByVal criteria As LineItemCriteria)
         Dim cancel As Boolean = False
         OnDeleting(criteria, cancel)
         If (cancel) Then
             Return
         End If
 
-        Dim commandText As String = String.Format("DELETE FROM [dbo].[Item] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Dim commandText As String = String.Format("DELETE FROM [dbo].[LineItem] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
@@ -297,34 +287,25 @@ criteria.ItemId = itemId
 
     #Region "Helper Methods"
 
-    Public Function Map(ByVal reader As SafeDataReader) As Item
-        Dim item As Item = Activator.CreateInstance(GetType(Item), True)
+    Public Function Map(ByVal reader As SafeDataReader) As LineItem
+        Dim item As LineItem = Activator.CreateInstance(GetType(LineItem), True)
         Using BypassPropertyChecks(item)
+            item.OrderId = reader.GetInt32("OrderId")
+            item.LineNum = reader.GetInt32("LineNum")
             item.ItemId = reader.GetString("ItemId")
-            item.ProductId = reader.GetString("ProductId")
-            item.ListPrice = reader.GetDecimal("ListPrice")
-            item.UnitCost = reader.GetDecimal("UnitCost")
-            item.Supplier = reader.GetInt32("Supplier")
-            item.Status = reader.GetString("Status")
-            item.Name = reader.GetString("Name")
-            item.Image = reader.GetString("Image")
-
+            item.Quantity = reader.GetInt32("Quantity")
+            item.UnitPrice = reader.GetDecimal("UnitPrice")
         End Using
 
         Return item
     End Function
 
     'AssociatedManyToOne
-    Private Friend Sub ProductUpdate(ByRef item As Item)
-		item.ProductMember.ProductId = item.ProductId
+    Private Shared Sub OrderUpdate(ByRef item As LineItem)
+		item.OrderMember.OrderId = item.OrderId
 
-        New ProductFactory().Update(item.ProductMember, True)
-    End Sub
-    'AssociatedManyToOne
-    Private Friend Sub SupplierUpdate(ByRef item As Item)
-		item.SupplierMember.SuppId = item.Supplier.Value
-
-        New SupplierFactory().Update(item.SupplierMember, True)
+        Dim factory As New OrderFactory
+        factory.Update(item.OrderMember, True)
     End Sub
 
     #End Region
@@ -335,7 +316,7 @@ criteria.ItemId = itemId
     End Sub
     Partial Private Sub OnCreated()
     End Sub
-    Partial Private Sub OnFetching(ByVal criteria As ItemCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnFetching(ByVal criteria As LineItemCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnFetched()
     End Sub
@@ -351,7 +332,7 @@ criteria.ItemId = itemId
     End Sub
     Partial Private Sub OnSelfDeleted()
     End Sub
-    Partial Private Sub OnDeleting(ByVal criteria As ItemCriteria, ByRef cancel As Boolean)
+    Partial Private Sub OnDeleting(ByVal criteria As LineItemCriteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnDeleted()
     End Sub

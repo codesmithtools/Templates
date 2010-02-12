@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>..\PetShop.Tests.ObjF.ParameterizedSQL\bin\Debug\</OutputPath>
+    <OutputPath>..\PetShop.Tests.OF.ParameterizedSQL\bin\Debug\</OutputPath>
     <DocumentationFile>PetShop.Tests.OF.ParameterizedSQL.DAL.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
@@ -65,6 +65,62 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\CategoryListFactory.DataAccess.vb">
+      <DependentUpon>CategoryListFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\CategoryListFactory.vb" />
+    <Compile Include="Collections\ItemListFactory.DataAccess.vb">
+      <DependentUpon>ItemListFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\ItemListFactory.vb" />
+    <Compile Include="Collections\LineItemListFactory.DataAccess.vb">
+      <DependentUpon>LineItemListFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\LineItemListFactory.vb" />
+    <Compile Include="Collections\OrderListFactory.DataAccess.vb">
+      <DependentUpon>OrderListFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\OrderListFactory.vb" />
+    <Compile Include="Collections\OrderStatusListFactory.DataAccess.vb">
+      <DependentUpon>OrderStatusListFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\OrderStatusListFactory.vb" />
+    <Compile Include="Collections\ProductListFactory.DataAccess.vb">
+      <DependentUpon>ProductListFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\ProductListFactory.vb" />
+    <Compile Include="Collections\SupplierListFactory.DataAccess.vb">
+      <DependentUpon>SupplierListFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Collections\SupplierListFactory.vb" />
+    <Compile Include="Entities\CategoryFactory.DataAccess.vb">
+      <DependentUpon>CategoryFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\CategoryFactory.vb" />
+    <Compile Include="Entities\ItemFactory.DataAccess.vb">
+      <DependentUpon>ItemFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ItemFactory.vb" />
+    <Compile Include="Entities\LineItemFactory.DataAccess.vb">
+      <DependentUpon>LineItemFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\LineItemFactory.vb" />
+    <Compile Include="Entities\OrderFactory.DataAccess.vb">
+      <DependentUpon>OrderFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\OrderFactory.vb" />
+    <Compile Include="Entities\OrderStatusFactory.DataAccess.vb">
+      <DependentUpon>OrderStatusFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\OrderStatusFactory.vb" />
+    <Compile Include="Entities\ProductFactory.DataAccess.vb">
+      <DependentUpon>ProductFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\ProductFactory.vb" />
+    <Compile Include="Entities\SupplierFactory.DataAccess.vb">
+      <DependentUpon>SupplierFactory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\SupplierFactory.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -80,6 +136,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Utility\ADOHelper.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -100,65 +157,6 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Collections\CategoryListFactory.cs" />
-    <Content Include="Collections\CategoryListFactory.DataAccess.cs">
-      <DependentUpon>CategoryListFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Collections\ItemListFactory.cs" />
-    <Content Include="Collections\ItemListFactory.DataAccess.cs">
-      <DependentUpon>ItemListFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Collections\LineItemListFactory.cs" />
-    <Content Include="Collections\LineItemListFactory.DataAccess.cs">
-      <DependentUpon>LineItemListFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Collections\OrderListFactory.cs" />
-    <Content Include="Collections\OrderListFactory.DataAccess.cs">
-      <DependentUpon>OrderListFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Collections\OrderStatusListFactory.cs" />
-    <Content Include="Collections\OrderStatusListFactory.DataAccess.cs">
-      <DependentUpon>OrderStatusListFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Collections\ProductListFactory.cs" />
-    <Content Include="Collections\ProductListFactory.DataAccess.cs">
-      <DependentUpon>ProductListFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Collections\SupplierListFactory.cs" />
-    <Content Include="Collections\SupplierListFactory.DataAccess.cs">
-      <DependentUpon>SupplierListFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Entities\CategoryFactory.cs" />
-    <Content Include="Entities\CategoryFactory.DataAccess.cs">
-      <DependentUpon>CategoryFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Entities\ItemFactory.cs" />
-    <Content Include="Entities\ItemFactory.DataAccess.cs">
-      <DependentUpon>ItemFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Entities\LineItemFactory.cs" />
-    <Content Include="Entities\LineItemFactory.DataAccess.cs">
-      <DependentUpon>LineItemFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Entities\OrderFactory.cs" />
-    <Content Include="Entities\OrderFactory.DataAccess.cs">
-      <DependentUpon>OrderFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Entities\OrderStatusFactory.cs" />
-    <Content Include="Entities\OrderStatusFactory.DataAccess.cs">
-      <DependentUpon>OrderStatusFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Entities\ProductFactory.cs" />
-    <Content Include="Entities\ProductFactory.DataAccess.cs">
-      <DependentUpon>ProductFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Entities\SupplierFactory.cs" />
-    <Content Include="Entities\SupplierFactory.DataAccess.cs">
-      <DependentUpon>SupplierFactory.cs</DependentUpon>
-    </Content>
-    <Content Include="Utility\ADOHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PetShop.Tests.OF.ParameterizedSQL\PetShop.Tests.OF.ParameterizedSQL.vbproj">
