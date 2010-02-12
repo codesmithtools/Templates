@@ -179,7 +179,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 <% if(Entity.HasRowVersionMember) { %>
                             _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } if(Entity.HasIdentityMember) { foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { %>
-                            item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
+                            item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>");<% } %>
 <% } } } %>
                         }
                     }
@@ -194,15 +194,15 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
             // Update Child Items.
 <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
-                <%= association.ClassName %>Update(ref item);
+                Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ref item);
 <% } %>
 <%-- Many-To-One --%>
 <% foreach(Association association in Entity.AssociatedManyToOne) { %>
-                <%= association.ClassName %>Update(ref item);
+                Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ref item);
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(Association association in Entity.AssociatedOneToMany) { %>
-                <%= association.ClassName %>Update(ref item);
+                Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ref item);
 <% } %>
             }
 
@@ -288,15 +288,15 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
             // Update Child Items.
 <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
-                <%= association.ClassName %>Update(ref item);
+                Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ref item);
 <% } %>
 <%-- Many-To-One --%>
 <% foreach(Association association in Entity.AssociatedManyToOne) { %>
-                <%= association.ClassName %>Update(ref item);
+                Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ref item);
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(Association association in Entity.AssociatedOneToMany) { %>
-                <%= association.ClassName %>Update(ref item);
+                Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ref item);
 <% } %>
             }
 
@@ -368,7 +368,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                 item.Timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } %>
 <% foreach(Member member in Entity.MembersNoRowVersion) { %>
-                item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
+                item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>");<% } %>
 <% } %>
             }
             
@@ -378,7 +378,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
         //AssociatedOneToZeroOrOne
-        private static void <%= association.ClassName %>Update(ref <%= Entity.ClassName %> item)
+        private static void Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ref <%= Entity.ClassName %> item)
         {
 <%= association.SearchCriteria.BuildUpdateStatements("item." + association.PropertyName) %>
 
@@ -388,7 +388,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 <%-- Many-To-One --%>
 <% foreach(Association association in Entity.AssociatedManyToOne) { %>
         //AssociatedManyToOne
-        private static void <%= association.ClassName %>Update(ref <%= Entity.ClassName %> item)
+        private static void Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ref <%= Entity.ClassName %> item)
         {
 <%= association.SearchCriteria.BuildUpdateStatements("item." + association.PropertyName) %>
 
@@ -398,7 +398,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(Association association in Entity.AssociatedOneToMany) { %>
         //AssociatedOneToMany
-        private static void <%= association.ClassName %>Update(ref <%= Entity.ClassName %> item)
+        private static void Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ref <%= Entity.ClassName %> item)
         {
             foreach(<%= association.ClassName %> itemToUpdate in item.<%= association.PropertyName %>)
             {

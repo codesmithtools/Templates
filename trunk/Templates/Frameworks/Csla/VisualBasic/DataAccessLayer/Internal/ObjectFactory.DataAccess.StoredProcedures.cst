@@ -210,15 +210,15 @@ End If %>
             ' Update Child Items.
 <%-- One-To-Zero-Or-One --%>
 <% For Each association As Association in Entity.AssociatedOneToZeroOrOne %>
-            <%= association.ClassName %>Update(item)
+            Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(item)
 <% Next %>
 <%-- Many-To-One --%>
 <% For Each association As Association in Entity.AssociatedManyToOne %>
-            <%= association.ClassName %>Update(item)
+            Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(item)
 <% Next %>
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each association As Association in Entity.AssociatedOneToMany %>
-            <%= association.ClassName %>Update(item)
+            Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(item)
 <% Next %>
         End If
 
@@ -293,15 +293,15 @@ End If %>
             ' Update Child Items.
 <%-- One-To-Zero-Or-One --%>
 <% For Each association As Association in Entity.AssociatedOneToZeroOrOne %>
-            <%= association.ClassName %>Update(item)
+            Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(item)
 <% Next %>
 <%-- Many-To-One --%>
 <% For Each association As Association in Entity.AssociatedManyToOne %>
-            <%= association.ClassName %>Update(item)
+            Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(item)
 <% Next %>
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each association As Association in Entity.AssociatedOneToMany %>
-            <%= association.ClassName %>Update(item)
+            Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(item)
 <% Next %>
         End If
 
@@ -372,7 +372,7 @@ End If %>
             '_timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
 <% for each [member] as Member in Entity.MembersNoRowVersion %>
-            item.<%= [member].PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+            item.<%= [member].PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>
 <% Next %>
         End Using
 
@@ -382,7 +382,7 @@ End If %>
 <%-- One-To-Zero-Or-One --%>
 <% For Each association As Association in Entity.AssociatedOneToZeroOrOne %>
     'AssociatedOneToZeroOrOne
-    Private Shared Sub <%= association.ClassName %>Update(ByRef item As <%= Entity.ClassName %>)
+    Private Shared Sub Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ByRef item As <%= Entity.ClassName %>)
 <%= association.SearchCriteria.BuildUpdateStatements("item." + association.PropertyName) %>
 
         Dim factory As New <%= association.ClassName %>Factory
@@ -392,7 +392,7 @@ End If %>
 <%-- Many-To-One --%>
 <% For Each association As Association in Entity.AssociatedManyToOne %>
     'AssociatedManyToOne
-    Private Shared Sub <%= association.ClassName %>Update(ByRef item As <%= Entity.ClassName %>)
+    Private Shared Sub Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ByRef item As <%= Entity.ClassName %>)
 <%= association.SearchCriteria.BuildUpdateStatements("item." + association.PropertyName) %>
 
         Dim factory As New <%= association.ClassName %>Factory
@@ -402,7 +402,7 @@ End If %>
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each association As Association in Entity.AssociatedOneToMany %>
     'AssociatedOneToMany
-    Private Shared Sub <%= association.ClassName %>Update(ByRef item As <%= Entity.ClassName %>)
+    Private Shared Sub Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ByRef item As <%= Entity.ClassName %>)
         For Each itemToUpdate As <%= association.ClassName %> In item.<%= association.PropertyName %>
 <%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate") %>
 
