@@ -25,6 +25,9 @@ Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
 
+    Protected Overrides Sub Child_Create()
+    End Sub
+
     Private Shadows Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
         RaiseListChangedEvents = False
 

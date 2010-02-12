@@ -35,9 +35,9 @@
                     using (BypassPropertyChecks)
                     {
 <% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { if(UseMemberVariables) { %>
-                        <%= member.PrivateMemberVariableName %> =  (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
+                        <%= member.PrivateMemberVariableName %> =  command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
 <% } else { %>
-                        LoadProperty(<%= member.PrivateMemberVariableName %>Property, (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
+                        LoadProperty(<%= member.PrivateMemberVariableName %>Property, command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
 <% } } } %>
                     }
 <% } %>

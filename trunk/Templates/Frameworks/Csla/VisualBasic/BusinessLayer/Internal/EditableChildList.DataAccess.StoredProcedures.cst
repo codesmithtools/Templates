@@ -28,8 +28,19 @@ Imports System.Data.SqlClient
 
 Imports Csla
 Imports Csla.Data
+Imports Csla.Validation
 
 Public Partial Class <%= BusinessClassName %>
+
+    Protected Overrides Sub Child_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
+
+        OnCreated()
+    End Sub
 
     Private Shadows Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
 <% RenderHelper(New DataPortalFetchList()) %>
