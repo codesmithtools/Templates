@@ -35,9 +35,9 @@ If (Entity.HasIdentityMember) Then %>
 <% for each member As Member in Entity.PrimaryKey.KeyMembers
     If(member.IsIdentity) Then
         If(UseMemberVariables) Then %>
-                    <%= member.PrivateMemberVariableName %> =  (<%= member.SystemType %>)command.Parameters("<%= member.BuildParameterVariableName() %>").Value
+                    <%= member.PrivateMemberVariableName %> =  DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value,<%= member.SystemType %>)
         <% else %>
-                    LoadProperty(<%= member.PrivateMemberVariableName %>Property, command.Parameters("<%= member.BuildParameterVariableName() %>").Value)
+                    LoadProperty(<%= member.PrivateMemberVariableName %>Property, DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value,<%= member.SystemType %>))
         <%  End If
     End If
 Next %>
