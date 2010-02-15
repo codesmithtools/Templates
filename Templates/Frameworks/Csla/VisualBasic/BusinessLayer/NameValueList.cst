@@ -1,3 +1,4 @@
+<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X NameValueList" %>
 
 <%@ Register Name="NameValueList" Template="Internal\NameValueList.cst" %>
