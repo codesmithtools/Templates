@@ -1,3 +1,4 @@
+<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X SwitchableObject" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
