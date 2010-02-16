@@ -23,19 +23,19 @@
 
 <%-- One-To-Zero-Or-One --%>
 <% For Each association As Association In Entity.AssociatedOneToZeroOrOne %>
-                If <%= association.PropertyName %>.IsDirty Then
+                If FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) AndAlso <%= association.PropertyName %>.IsDirty Then
                     Return True
                 End If
 <% Next %>
 <%-- Many-To-One --%>
 <% For Each association As Association In Entity.AssociatedManyToOne %>
-                If <%= association.PropertyName %>.IsDirty Then
+                If FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) AndAlso <%= association.PropertyName %>.IsDirty Then
                     Return True
                 End If
 <% Next %>
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each association As Association In Entity.AssociatedOneToMany %>
-                If <%= association.PropertyName %>.IsDirty Then
+                If FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) AndAlso <%= association.PropertyName %>.IsDirty Then
                     Return True
                 End If
 <% Next %>
