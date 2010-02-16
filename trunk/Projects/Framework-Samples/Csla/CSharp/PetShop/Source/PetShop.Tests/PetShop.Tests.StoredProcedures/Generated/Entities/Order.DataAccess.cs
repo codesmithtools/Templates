@@ -50,6 +50,8 @@ namespace PetShop.Tests.StoredProcedures
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.Parameters.AddWithValue("@p_ShipAddr2HasValue", criteria.ShipAddr2HasValue);
+					command.Parameters.AddWithValue("@p_BillAddr2HasValue", criteria.BillAddr2HasValue);
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -229,6 +231,8 @@ namespace PetShop.Tests.StoredProcedures
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.Parameters.AddWithValue("@p_ShipAddr2HasValue", criteria.ShipAddr2HasValue);
+					command.Parameters.AddWithValue("@p_BillAddr2HasValue", criteria.BillAddr2HasValue);
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())

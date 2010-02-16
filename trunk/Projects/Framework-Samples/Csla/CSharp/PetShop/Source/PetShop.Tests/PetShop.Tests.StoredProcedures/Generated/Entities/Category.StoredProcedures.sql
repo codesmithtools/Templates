@@ -98,7 +98,9 @@ GO
 CREATE PROCEDURE [dbo].[CSLA_Category_Select]
 	@p_CategoryId varchar(10) = NULL,
 	@p_Name varchar(80) = NULL,
-	@p_Descn varchar(255) = NULL
+	@p_NameHasValue BIT = 0,
+	@p_Descn varchar(255) = NULL,
+	@p_DescnHasValue BIT = 0
 AS
 
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
@@ -111,8 +113,8 @@ FROM
     [dbo].[Category]
 WHERE
 	([CategoryId] = @p_CategoryId OR @p_CategoryId IS NULL)
-	AND ([Name] = @p_Name OR @p_Name IS NULL)
-	AND ([Descn] = @p_Descn OR @p_Descn IS NULL)
+	AND ([Name] = @p_Name OR (@p_Name IS NULL AND @p_NameHasValue = 0))
+	AND ([Descn] = @p_Descn OR (@p_Descn IS NULL AND @p_DescnHasValue = 0))
 
 --endregion
 

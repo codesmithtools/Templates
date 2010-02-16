@@ -106,6 +106,9 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.Parameters.AddWithValue("@p_NameHasValue", criteria.NameHasValue);
+					command.Parameters.AddWithValue("@p_DescnHasValue", criteria.DescriptionHasValue);
+					command.Parameters.AddWithValue("@p_ImageHasValue", criteria.ImageHasValue);
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -156,8 +159,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                CategoryUpdate(ref item);
-                ItemUpdate(ref item);
+                Update_Category_CategoryMember_CategoryId(ref item);
+                Update_Item_Items_ProductId(ref item);
             }
 
             OnInserted();
@@ -227,8 +230,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                CategoryUpdate(ref item);
-                ItemUpdate(ref item);
+                Update_Category_CategoryMember_CategoryId(ref item);
+                Update_Item_Items_ProductId(ref item);
             }
 
             OnUpdated();
@@ -306,14 +309,14 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
         }
 
         //AssociatedManyToOne
-        private static void CategoryUpdate(ref Product item)
+        private static void Update_Category_CategoryMember_CategoryId(ref Product item)
         {
 				item.CategoryMember.CategoryId = item.CategoryId;
 
             new CategoryFactory().Update(item.CategoryMember, true);
         }
         //AssociatedOneToMany
-        private static void ItemUpdate(ref Product item)
+        private static void Update_Item_Items_ProductId(ref Product item)
         {
             foreach(Item itemToUpdate in item.Items)
             {

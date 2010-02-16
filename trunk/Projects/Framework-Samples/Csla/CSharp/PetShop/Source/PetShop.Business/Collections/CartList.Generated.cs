@@ -70,25 +70,6 @@ namespace PetShop.Business
         
         #endregion
 
-        #region Property overrides
-
-        /// <summary>
-        /// Returns true if any children are dirty
-        /// </summary>
-        public new bool IsDirty
-        {
-            get
-            {
-                foreach(Cart item in this.Items)
-                {
-                    if(item.IsDirty) return true;
-                }
-                
-                return false;
-            }
-        }
-
-        #endregion
 
         #region Exists Command
 

@@ -124,6 +124,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.Parameters.AddWithValue("@p_ShipAddr2HasValue", criteria.ShipAddr2HasValue);
+					command.Parameters.AddWithValue("@p_BillAddr2HasValue", criteria.BillAddr2HasValue);
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -194,8 +196,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                LineItemUpdate(ref item);
-                OrderStatusUpdate(ref item);
+                Update_LineItem_LineItems_OrderId(ref item);
+                Update_OrderStatus_OrderStatuses_OrderId(ref item);
             }
 
             OnInserted();
@@ -283,8 +285,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                LineItemUpdate(ref item);
-                OrderStatusUpdate(ref item);
+                Update_LineItem_LineItems_OrderId(ref item);
+                Update_OrderStatus_OrderStatuses_OrderId(ref item);
             }
 
             OnUpdated();
@@ -380,7 +382,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
         }
 
         //AssociatedOneToMany
-        private static void LineItemUpdate(ref Order item)
+        private static void Update_LineItem_LineItems_OrderId(ref Order item)
         {
             foreach(LineItem itemToUpdate in item.LineItems)
             {
@@ -390,7 +392,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             }
         }
         //AssociatedOneToMany
-        private static void OrderStatusUpdate(ref Order item)
+        private static void Update_OrderStatus_OrderStatuses_OrderId(ref Order item)
         {
             foreach(OrderStatus itemToUpdate in item.OrderStatuses)
             {

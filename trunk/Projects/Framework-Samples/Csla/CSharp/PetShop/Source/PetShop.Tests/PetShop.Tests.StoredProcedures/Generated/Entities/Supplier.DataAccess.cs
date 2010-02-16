@@ -48,6 +48,13 @@ namespace PetShop.Tests.StoredProcedures
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.Parameters.AddWithValue("@p_NameHasValue", criteria.NameHasValue);
+					command.Parameters.AddWithValue("@p_Addr1HasValue", criteria.Addr1HasValue);
+					command.Parameters.AddWithValue("@p_Addr2HasValue", criteria.Addr2HasValue);
+					command.Parameters.AddWithValue("@p_CityHasValue", criteria.CityHasValue);
+					command.Parameters.AddWithValue("@p_StateHasValue", criteria.StateHasValue);
+					command.Parameters.AddWithValue("@p_ZipHasValue", criteria.ZipHasValue);
+					command.Parameters.AddWithValue("@p_PhoneHasValue", criteria.PhoneHasValue);
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())

@@ -25,11 +25,11 @@ namespace PetShop.Tests.StoredProcedures
     {
         private void DataPortal_Fetch(OrderStatusCriteria criteria)
         {
-            RaiseListChangedEvents = false;
-
             bool cancel = false;
             OnFetching(criteria, ref cancel);
             if (cancel) return;
+
+            RaiseListChangedEvents = false;
 
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
@@ -38,6 +38,7 @@ namespace PetShop.Tests.StoredProcedures
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -53,9 +54,9 @@ namespace PetShop.Tests.StoredProcedures
                 }
             }
 
-            OnFetched();
-
             RaiseListChangedEvents = true;
+
+            OnFetched();
         }
 
         #region Data access partial methods

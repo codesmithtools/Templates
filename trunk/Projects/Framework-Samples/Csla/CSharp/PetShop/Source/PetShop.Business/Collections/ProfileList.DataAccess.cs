@@ -25,11 +25,11 @@ namespace PetShop.Business
     {
         private void DataPortal_Fetch(ProfileCriteria criteria)
         {
-            RaiseListChangedEvents = false;
-
             bool cancel = false;
             OnFetching(criteria, ref cancel);
             if (cancel) return;
+
+            RaiseListChangedEvents = false;
 
             string commandText = string.Format("SELECT [UniqueID], [Username], [ApplicationName], [IsAnonymous], [LastActivityDate], [LastUpdatedDate] FROM [dbo].[Profiles] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
@@ -54,9 +54,9 @@ namespace PetShop.Business
                 }
             }
 
-            OnFetched();
-
             RaiseListChangedEvents = true;
+
+            OnFetched();
         }
 
         #region Data access partial methods

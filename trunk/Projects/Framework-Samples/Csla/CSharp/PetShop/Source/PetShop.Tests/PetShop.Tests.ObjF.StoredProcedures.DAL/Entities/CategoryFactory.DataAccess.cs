@@ -104,6 +104,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.Parameters.AddWithValue("@p_NameHasValue", criteria.NameHasValue);
+					command.Parameters.AddWithValue("@p_DescnHasValue", criteria.DescriptionHasValue);
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -152,7 +154,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ProductUpdate(ref item);
+                Update_Product_Products_CategoryId(ref item);
             }
 
             OnInserted();
@@ -220,7 +222,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ProductUpdate(ref item);
+                Update_Product_Products_CategoryId(ref item);
             }
 
             OnUpdated();
@@ -296,7 +298,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
         }
 
         //AssociatedOneToMany
-        private static void ProductUpdate(ref Category item)
+        private static void Update_Product_Products_CategoryId(ref Category item)
         {
             foreach(Product itemToUpdate in item.Products)
             {

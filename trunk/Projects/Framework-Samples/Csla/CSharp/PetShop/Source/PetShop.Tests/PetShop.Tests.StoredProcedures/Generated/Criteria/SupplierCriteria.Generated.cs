@@ -103,6 +103,41 @@ namespace PetShop.Tests.StoredProcedures
         
         #region Read-Only
 
+        public bool NameHasValue
+        {
+            get { return _bag.ContainsKey("Name"); }
+        }
+
+        public bool Addr1HasValue
+        {
+            get { return _bag.ContainsKey("Addr1"); }
+        }
+
+        public bool Addr2HasValue
+        {
+            get { return _bag.ContainsKey("Addr2"); }
+        }
+
+        public bool CityHasValue
+        {
+            get { return _bag.ContainsKey("City"); }
+        }
+
+        public bool StateHasValue
+        {
+            get { return _bag.ContainsKey("State"); }
+        }
+
+        public bool ZipHasValue
+        {
+            get { return _bag.ContainsKey("Zip"); }
+        }
+
+        public bool PhoneHasValue
+        {
+            get { return _bag.ContainsKey("Phone"); }
+        }
+
         /// <summary>
         /// Returns a list of all the modified properties and values.
         /// </summary>

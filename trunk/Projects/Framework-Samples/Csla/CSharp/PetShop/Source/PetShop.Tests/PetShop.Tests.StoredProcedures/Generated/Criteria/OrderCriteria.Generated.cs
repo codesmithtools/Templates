@@ -187,6 +187,16 @@ namespace PetShop.Tests.StoredProcedures
         
         #region Read-Only
 
+        public bool ShipAddr2HasValue
+        {
+            get { return _bag.ContainsKey("ShipAddr2"); }
+        }
+
+        public bool BillAddr2HasValue
+        {
+            get { return _bag.ContainsKey("BillAddr2"); }
+        }
+
         /// <summary>
         /// Returns a list of all the modified properties and values.
         /// </summary>

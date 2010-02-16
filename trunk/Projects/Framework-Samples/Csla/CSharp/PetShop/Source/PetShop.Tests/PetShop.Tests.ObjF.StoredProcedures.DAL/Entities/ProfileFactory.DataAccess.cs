@@ -107,6 +107,9 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.Parameters.AddWithValue("@p_IsAnonymousHasValue", criteria.IsAnonymousHasValue);
+					command.Parameters.AddWithValue("@p_LastActivityDateHasValue", criteria.LastActivityDateHasValue);
+					command.Parameters.AddWithValue("@p_LastUpdatedDateHasValue", criteria.LastUpdatedDateHasValue);
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -160,8 +163,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                AccountUpdate(ref item);
-                CartUpdate(ref item);
+                Update_Account_Accounts_UniqueID(ref item);
+                Update_Cart_Carts_UniqueID(ref item);
             }
 
             OnInserted();
@@ -232,8 +235,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                AccountUpdate(ref item);
-                CartUpdate(ref item);
+                Update_Account_Accounts_UniqueID(ref item);
+                Update_Cart_Carts_UniqueID(ref item);
             }
 
             OnUpdated();
@@ -312,7 +315,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
         }
 
         //AssociatedOneToMany
-        private static void AccountUpdate(ref Profile item)
+        private static void Update_Account_Accounts_UniqueID(ref Profile item)
         {
             foreach(Account itemToUpdate in item.Accounts)
             {
@@ -322,7 +325,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             }
         }
         //AssociatedOneToMany
-        private static void CartUpdate(ref Profile item)
+        private static void Update_Cart_Carts_UniqueID(ref Profile item)
         {
             foreach(Cart itemToUpdate in item.Carts)
             {

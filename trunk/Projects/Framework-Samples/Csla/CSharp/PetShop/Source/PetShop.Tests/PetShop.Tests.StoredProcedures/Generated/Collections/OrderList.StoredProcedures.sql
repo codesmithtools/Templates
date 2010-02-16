@@ -199,12 +199,14 @@ CREATE PROCEDURE [dbo].[CSLA_Order_Select]
 	@p_OrderDate datetime = NULL,
 	@p_ShipAddr1 varchar(80) = NULL,
 	@p_ShipAddr2 varchar(80) = NULL,
+	@p_ShipAddr2HasValue BIT = 0,
 	@p_ShipCity varchar(80) = NULL,
 	@p_ShipState varchar(80) = NULL,
 	@p_ShipZip varchar(20) = NULL,
 	@p_ShipCountry varchar(20) = NULL,
 	@p_BillAddr1 varchar(80) = NULL,
 	@p_BillAddr2 varchar(80) = NULL,
+	@p_BillAddr2HasValue BIT = 0,
 	@p_BillCity varchar(80) = NULL,
 	@p_BillState varchar(80) = NULL,
 	@p_BillZip varchar(20) = NULL,
@@ -252,13 +254,13 @@ WHERE
 	AND ([UserId] = @p_UserId OR @p_UserId IS NULL)
 	AND ([OrderDate] = @p_OrderDate OR @p_OrderDate IS NULL)
 	AND ([ShipAddr1] = @p_ShipAddr1 OR @p_ShipAddr1 IS NULL)
-	AND ([ShipAddr2] = @p_ShipAddr2 OR @p_ShipAddr2 IS NULL)
+	AND ([ShipAddr2] = @p_ShipAddr2 OR (@p_ShipAddr2 IS NULL AND @p_ShipAddr2HasValue = 0))
 	AND ([ShipCity] = @p_ShipCity OR @p_ShipCity IS NULL)
 	AND ([ShipState] = @p_ShipState OR @p_ShipState IS NULL)
 	AND ([ShipZip] = @p_ShipZip OR @p_ShipZip IS NULL)
 	AND ([ShipCountry] = @p_ShipCountry OR @p_ShipCountry IS NULL)
 	AND ([BillAddr1] = @p_BillAddr1 OR @p_BillAddr1 IS NULL)
-	AND ([BillAddr2] = @p_BillAddr2 OR @p_BillAddr2 IS NULL)
+	AND ([BillAddr2] = @p_BillAddr2 OR (@p_BillAddr2 IS NULL AND @p_BillAddr2HasValue = 0))
 	AND ([BillCity] = @p_BillCity OR @p_BillCity IS NULL)
 	AND ([BillState] = @p_BillState OR @p_BillState IS NULL)
 	AND ([BillZip] = @p_BillZip OR @p_BillZip IS NULL)

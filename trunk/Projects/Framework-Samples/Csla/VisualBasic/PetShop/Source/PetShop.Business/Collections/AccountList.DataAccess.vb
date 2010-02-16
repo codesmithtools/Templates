@@ -17,17 +17,27 @@ Imports System.Data.SqlClient
 
 Imports Csla
 Imports Csla.Data
+Imports Csla.Validation
 
 Public Partial Class AccountList
+    Protected Overrides Sub Child_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
+
+        OnCreated()
+    End Sub
 
     Private Shadows Sub Child_Fetch(ByVal criteria As AccountCriteria)
-        RaiseListChangedEvents = False
-
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
             Return
         End If
+
+        RaiseListChangedEvents = False
 
         ' Fetch Child objects.
         Dim commandText As String = String.Format("SELECT [AccountId], [UniqueID], [Email], [FirstName], [LastName], [Address1], [Address2], [City], [State], [Zip], [Country], [Phone] FROM [dbo].[Account] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
@@ -47,9 +57,9 @@ Public Partial Class AccountList
             End Using
         End Using
 
-        OnFetched()
-
         RaiseListChangedEvents = True
+
+        OnFetched()
     End Sub
     
     #Region "Data access partial methods"

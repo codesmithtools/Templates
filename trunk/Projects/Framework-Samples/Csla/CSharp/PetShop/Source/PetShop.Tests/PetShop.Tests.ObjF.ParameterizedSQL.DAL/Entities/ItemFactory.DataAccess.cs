@@ -166,8 +166,8 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ProductUpdate(ref item);
-                SupplierUpdate(ref item);
+                Update_Product_ProductMember_ProductId(ref item);
+                Update_Supplier_SupplierMember_Supplier(ref item);
             }
 
             OnInserted();
@@ -240,8 +240,8 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ProductUpdate(ref item);
-                SupplierUpdate(ref item);
+                Update_Product_ProductMember_ProductId(ref item);
+                Update_Supplier_SupplierMember_Supplier(ref item);
             }
 
             OnUpdated();
@@ -253,7 +253,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         [Transactional(TransactionalTypes.TransactionScope)]
         public void Delete(ItemCriteria criteria)
         {
-            //Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
+            // Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
             DoDelete(criteria);
         }
 
@@ -321,14 +321,14 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         }
 
         //AssociatedManyToOne
-        private static void ProductUpdate(ref Item item)
+        private static void Update_Product_ProductMember_ProductId(ref Item item)
         {
 				item.ProductMember.ProductId = item.ProductId;
 
             new ProductFactory().Update(item.ProductMember, true);
         }
         //AssociatedManyToOne
-        private static void SupplierUpdate(ref Item item)
+        private static void Update_Supplier_SupplierMember_Supplier(ref Item item)
         {
 				item.SupplierMember.SuppId = item.Supplier.Value;
 

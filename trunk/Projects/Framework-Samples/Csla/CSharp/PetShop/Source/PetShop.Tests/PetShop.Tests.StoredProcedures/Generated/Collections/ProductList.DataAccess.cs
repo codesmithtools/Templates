@@ -25,11 +25,11 @@ namespace PetShop.Tests.StoredProcedures
     {
         private void Child_Fetch(ProductCriteria criteria)
         {
-            RaiseListChangedEvents = false;
-
             bool cancel = false;
             OnFetching(criteria, ref cancel);
             if (cancel) return;
+
+            RaiseListChangedEvents = false;
 
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
@@ -38,6 +38,9 @@ namespace PetShop.Tests.StoredProcedures
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.Parameters.AddWithValue("@p_NameHasValue", criteria.NameHasValue);
+					command.Parameters.AddWithValue("@p_DescnHasValue", criteria.DescriptionHasValue);
+					command.Parameters.AddWithValue("@p_ImageHasValue", criteria.ImageHasValue);
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -53,9 +56,9 @@ namespace PetShop.Tests.StoredProcedures
                 }
             }
 
-            OnFetched();
-
             RaiseListChangedEvents = true;
+
+            OnFetched();
         }
 
         #region Data access partial methods

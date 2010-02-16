@@ -49,6 +49,12 @@ Public Partial Class Item
             Using command As New SqlCommand("[dbo].[CSLA_Item_Select]", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+                command.Parameters.AddWithValue("@p_ListPriceHasValue", criteria.ListPriceHasValue)
+				command.Parameters.AddWithValue("@p_UnitCostHasValue", criteria.UnitCostHasValue)
+				command.Parameters.AddWithValue("@p_SupplierHasValue", criteria.SupplierHasValue)
+				command.Parameters.AddWithValue("@p_StatusHasValue", criteria.StatusHasValue)
+				command.Parameters.AddWithValue("@p_NameHasValue", criteria.NameHasValue)
+				command.Parameters.AddWithValue("@p_ImageHasValue", criteria.ImageHasValue)
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Map(reader)
@@ -194,6 +200,12 @@ Public Partial Class Item
             Using command As New SqlCommand("[dbo].[CSLA_Item_Select]", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+				command.Parameters.AddWithValue("@p_ListPriceHasValue", criteria.ListPriceHasValue)
+				command.Parameters.AddWithValue("@p_UnitCostHasValue", criteria.UnitCostHasValue)
+				command.Parameters.AddWithValue("@p_SupplierHasValue", criteria.SupplierHasValue)
+				command.Parameters.AddWithValue("@p_StatusHasValue", criteria.StatusHasValue)
+				command.Parameters.AddWithValue("@p_NameHasValue", criteria.NameHasValue)
+				command.Parameters.AddWithValue("@p_ImageHasValue", criteria.ImageHasValue)
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Map(reader)

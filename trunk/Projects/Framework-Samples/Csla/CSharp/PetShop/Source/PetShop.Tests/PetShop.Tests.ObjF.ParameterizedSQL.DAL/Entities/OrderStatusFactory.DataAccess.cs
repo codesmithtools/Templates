@@ -158,7 +158,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                OrderUpdate(ref item);
+                Update_Order_OrderMember_OrderId(ref item);
             }
 
             OnInserted();
@@ -227,7 +227,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                OrderUpdate(ref item);
+                Update_Order_OrderMember_OrderId(ref item);
             }
 
             OnUpdated();
@@ -239,7 +239,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         [Transactional(TransactionalTypes.TransactionScope)]
         public void Delete(OrderStatusCriteria criteria)
         {
-            //Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
+            // Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
             DoDelete(criteria);
         }
 
@@ -303,7 +303,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         }
 
         //AssociatedManyToOne
-        private static void OrderUpdate(ref OrderStatus item)
+        private static void Update_Order_OrderMember_OrderId(ref OrderStatus item)
         {
 				item.OrderMember.OrderId = item.OrderId;
 

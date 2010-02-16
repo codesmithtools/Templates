@@ -79,6 +79,21 @@ namespace PetShop.Tests.StoredProcedures
         
         #region Read-Only
 
+        public bool NameHasValue
+        {
+            get { return _bag.ContainsKey("Name"); }
+        }
+
+        public bool DescriptionHasValue
+        {
+            get { return _bag.ContainsKey("Descn"); }
+        }
+
+        public bool ImageHasValue
+        {
+            get { return _bag.ContainsKey("Image"); }
+        }
+
         /// <summary>
         /// Returns a list of all the modified properties and values.
         /// </summary>

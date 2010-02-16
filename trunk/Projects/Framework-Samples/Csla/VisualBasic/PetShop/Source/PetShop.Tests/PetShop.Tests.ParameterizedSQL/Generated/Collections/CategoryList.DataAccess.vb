@@ -21,13 +21,13 @@ Imports Csla.Data
 Public Partial Class CategoryList
 
     Private Shadows Sub DataPortal_Fetch(ByVal criteria As CategoryCriteria)
-        RaiseListChangedEvents = False
-
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
             Return
         End If
+
+        RaiseListChangedEvents = False
 
         ' Fetch Child objects.
         Dim commandText As String = String.Format("SELECT [CategoryId], [Name], [Descn] FROM [dbo].[Category] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
@@ -47,9 +47,9 @@ Public Partial Class CategoryList
             End Using
         End Using
 
-        OnFetched()
-
         RaiseListChangedEvents = True
+
+        OnFetched()
     End Sub
     
     #Region "Data access partial methods"

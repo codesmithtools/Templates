@@ -109,8 +109,11 @@ CREATE PROCEDURE [dbo].[CSLA_Product_Select]
 	@p_ProductId varchar(10) = NULL,
 	@p_CategoryId varchar(10) = NULL,
 	@p_Name varchar(80) = NULL,
+	@p_NameHasValue BIT = 0,
 	@p_Descn varchar(255) = NULL,
-	@p_Image varchar(80) = NULL
+	@p_DescnHasValue BIT = 0,
+	@p_Image varchar(80) = NULL,
+	@p_ImageHasValue BIT = 0
 AS
 
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
@@ -126,9 +129,9 @@ FROM
 WHERE
 	([ProductId] = @p_ProductId OR @p_ProductId IS NULL)
 	AND ([CategoryId] = @p_CategoryId OR @p_CategoryId IS NULL)
-	AND ([Name] = @p_Name OR @p_Name IS NULL)
-	AND ([Descn] = @p_Descn OR @p_Descn IS NULL)
-	AND ([Image] = @p_Image OR @p_Image IS NULL)
+	AND ([Name] = @p_Name OR (@p_Name IS NULL AND @p_NameHasValue = 0))
+	AND ([Descn] = @p_Descn OR (@p_Descn IS NULL AND @p_DescnHasValue = 0))
+	AND ([Image] = @p_Image OR (@p_Image IS NULL AND @p_ImageHasValue = 0))
 
 --endregion
 

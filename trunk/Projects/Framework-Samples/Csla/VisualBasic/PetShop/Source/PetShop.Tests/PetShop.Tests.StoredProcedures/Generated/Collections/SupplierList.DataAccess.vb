@@ -17,17 +17,28 @@ Imports System.Data.SqlClient
 
 Imports Csla
 Imports Csla.Data
+Imports Csla.Validation
 
 Public Partial Class SupplierList
 
-    Private Shadows Sub Child_Fetch(ByVal criteria As SupplierCriteria)
-        RaiseListChangedEvents = False
+    Protected Overrides Sub Child_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
 
+        OnCreated()
+    End Sub
+
+    Private Shadows Sub Child_Fetch(ByVal criteria As SupplierCriteria)
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
             Return
         End If
+
+        RaiseListChangedEvents = False
 
         ' Fetch Child objects.
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
@@ -35,6 +46,13 @@ Public Partial Class SupplierList
             Using command As New SqlCommand("[dbo].[CSLA_Supplier_Select]", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+                command.Parameters.AddWithValue("@p_NameHasValue", criteria.NameHasValue)
+				command.Parameters.AddWithValue("@p_Addr1HasValue", criteria.Addr1HasValue)
+				command.Parameters.AddWithValue("@p_Addr2HasValue", criteria.Addr2HasValue)
+				command.Parameters.AddWithValue("@p_CityHasValue", criteria.CityHasValue)
+				command.Parameters.AddWithValue("@p_StateHasValue", criteria.StateHasValue)
+				command.Parameters.AddWithValue("@p_ZipHasValue", criteria.ZipHasValue)
+				command.Parameters.AddWithValue("@p_PhoneHasValue", criteria.PhoneHasValue)
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Do
@@ -47,9 +65,9 @@ Public Partial Class SupplierList
             End Using
         End Using
 
-        OnFetched()
-
         RaiseListChangedEvents = True
+
+        OnFetched()
     End Sub
 
     Protected Overrides Sub DataPortal_Update()

@@ -264,6 +264,12 @@ Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As 
     	Response.Write(" = NULL")
     End If
     
+    If(makeParametersNullable AndAlso column.AllowDBNull)
+        Response.Write(",")
+        Response.WriteLine("")
+        Response.Write(String.Format("{0}{1}HasValue BIT = 0", ParameterPrefix, column.Name))
+    End If
+    
     If Not isLast Then
         Response.Write(",")
     End If
@@ -444,10 +450,20 @@ Public Sub GenerateFindCondition(column As ColumnSchema, indentLevel As Integer,
 	Response.Write("] = ")
 	Response.Write(ParameterPrefix)
 	Response.Write(column.Name)
-	Response.Write(" OR ")
-	Response.Write(ParameterPrefix)
-	Response.Write(column.Name)
-	Response.Write(" IS NULL)")
+If column.AllowDBNull Then
+    Response.Write(" OR (")
+    Response.Write(ParameterPrefix)
+    Response.Write(column.Name)
+    Response.Write(" IS NULL AND ")
+    Response.Write(ParameterPrefix)
+    Response.Write(column.Name)
+    Response.Write("HasValue = 0))")
+Else
+    Response.Write(" OR ")
+    Response.Write(ParameterPrefix)
+    Response.Write(column.Name)
+    Response.Write(" IS NULL)")
+End If
 
 	If indentLevel >= 0 Then
 		Response.WriteLine("")

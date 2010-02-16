@@ -17,17 +17,27 @@ Imports System.Data.SqlClient
 
 Imports Csla
 Imports Csla.Data
+Imports Csla.Validation
 
 Public Partial Class ProductList
+    Protected Overrides Sub Child_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
+
+        OnCreated()
+    End Sub
 
     Private Shadows Sub Child_Fetch(ByVal criteria As ProductCriteria)
-        RaiseListChangedEvents = False
-
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
             Return
         End If
+
+        RaiseListChangedEvents = False
 
         ' Fetch Child objects.
         Dim commandText As String = String.Format("SELECT [ProductId], [CategoryId], [Name], [Descn], [Image] FROM [dbo].[Product] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
@@ -47,9 +57,9 @@ Public Partial Class ProductList
             End Using
         End Using
 
-        OnFetched()
-
         RaiseListChangedEvents = True
+
+        OnFetched()
     End Sub
     
     #Region "Data access partial methods"
