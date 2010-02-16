@@ -36,9 +36,17 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
         public OrderStatusList Create()
         {
             var item = (OrderStatusList)Activator.CreateInstance(typeof(OrderStatusList), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
             CheckRules(item);
             MarkNew(item);
             MarkAsChild(item);
+
+            OnCreated();
+
             return item;
         }
 
@@ -66,6 +74,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())

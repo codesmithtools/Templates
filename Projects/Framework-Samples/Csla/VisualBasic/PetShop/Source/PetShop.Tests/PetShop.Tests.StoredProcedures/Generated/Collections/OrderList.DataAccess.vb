@@ -21,13 +21,13 @@ Imports Csla.Data
 Public Partial Class OrderList
 
     Private Shadows Sub DataPortal_Fetch(ByVal criteria As OrderCriteria)
-        RaiseListChangedEvents = False
-
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
             Return
         End If
+
+        RaiseListChangedEvents = False
 
         ' Fetch Child objects.
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
@@ -35,6 +35,8 @@ Public Partial Class OrderList
             Using command As New SqlCommand("[dbo].[CSLA_Order_Select]", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+                command.Parameters.AddWithValue("@p_ShipAddr2HasValue", criteria.ShipAddr2HasValue)
+				command.Parameters.AddWithValue("@p_BillAddr2HasValue", criteria.BillAddr2HasValue)
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Do
@@ -47,9 +49,9 @@ Public Partial Class OrderList
             End Using
         End Using
 
-        OnFetched()
-
         RaiseListChangedEvents = True
+
+        OnFetched()
     End Sub
 
     Protected Overrides Sub DataPortal_Update()

@@ -128,13 +128,20 @@ GO
 CREATE PROCEDURE [dbo].[CSLA_Supplier_Select]
 	@p_SuppId int = NULL,
 	@p_Name varchar(80) = NULL,
+	@p_NameHasValue BIT = 0,
 	@p_Status varchar(2) = NULL,
 	@p_Addr1 varchar(80) = NULL,
+	@p_Addr1HasValue BIT = 0,
 	@p_Addr2 varchar(80) = NULL,
+	@p_Addr2HasValue BIT = 0,
 	@p_City varchar(80) = NULL,
+	@p_CityHasValue BIT = 0,
 	@p_State varchar(80) = NULL,
+	@p_StateHasValue BIT = 0,
 	@p_Zip varchar(5) = NULL,
-	@p_Phone varchar(40) = NULL
+	@p_ZipHasValue BIT = 0,
+	@p_Phone varchar(40) = NULL,
+	@p_PhoneHasValue BIT = 0
 AS
 
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
@@ -153,14 +160,14 @@ FROM
     [dbo].[Supplier]
 WHERE
 	([SuppId] = @p_SuppId OR @p_SuppId IS NULL)
-	AND ([Name] = @p_Name OR @p_Name IS NULL)
+	AND ([Name] = @p_Name OR (@p_Name IS NULL AND @p_NameHasValue = 0))
 	AND ([Status] = @p_Status OR @p_Status IS NULL)
-	AND ([Addr1] = @p_Addr1 OR @p_Addr1 IS NULL)
-	AND ([Addr2] = @p_Addr2 OR @p_Addr2 IS NULL)
-	AND ([City] = @p_City OR @p_City IS NULL)
-	AND ([State] = @p_State OR @p_State IS NULL)
-	AND ([Zip] = @p_Zip OR @p_Zip IS NULL)
-	AND ([Phone] = @p_Phone OR @p_Phone IS NULL)
+	AND ([Addr1] = @p_Addr1 OR (@p_Addr1 IS NULL AND @p_Addr1HasValue = 0))
+	AND ([Addr2] = @p_Addr2 OR (@p_Addr2 IS NULL AND @p_Addr2HasValue = 0))
+	AND ([City] = @p_City OR (@p_City IS NULL AND @p_CityHasValue = 0))
+	AND ([State] = @p_State OR (@p_State IS NULL AND @p_StateHasValue = 0))
+	AND ([Zip] = @p_Zip OR (@p_Zip IS NULL AND @p_ZipHasValue = 0))
+	AND ([Phone] = @p_Phone OR (@p_Phone IS NULL AND @p_PhoneHasValue = 0))
 
 --endregion
 

@@ -45,6 +45,13 @@ Public Partial Class Supplier
             Using command As New SqlCommand("[dbo].[CSLA_Supplier_Select]", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+                command.Parameters.AddWithValue("@p_NameHasValue", criteria.NameHasValue)
+				command.Parameters.AddWithValue("@p_Addr1HasValue", criteria.Addr1HasValue)
+				command.Parameters.AddWithValue("@p_Addr2HasValue", criteria.Addr2HasValue)
+				command.Parameters.AddWithValue("@p_CityHasValue", criteria.CityHasValue)
+				command.Parameters.AddWithValue("@p_StateHasValue", criteria.StateHasValue)
+				command.Parameters.AddWithValue("@p_ZipHasValue", criteria.ZipHasValue)
+				command.Parameters.AddWithValue("@p_PhoneHasValue", criteria.PhoneHasValue)
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Map(reader)

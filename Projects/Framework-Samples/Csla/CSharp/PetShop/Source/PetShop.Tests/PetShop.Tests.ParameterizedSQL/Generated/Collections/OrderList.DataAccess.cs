@@ -25,11 +25,11 @@ namespace PetShop.Tests.ParameterizedSQL
     {
         private void DataPortal_Fetch(OrderCriteria criteria)
         {
-            RaiseListChangedEvents = false;
-
             bool cancel = false;
             OnFetching(criteria, ref cancel);
             if (cancel) return;
+
+            RaiseListChangedEvents = false;
 
             string commandText = string.Format("SELECT [OrderId], [UserId], [OrderDate], [ShipAddr1], [ShipAddr2], [ShipCity], [ShipState], [ShipZip], [ShipCountry], [BillAddr1], [BillAddr2], [BillCity], [BillState], [BillZip], [BillCountry], [Courier], [TotalPrice], [BillToFirstName], [BillToLastName], [ShipToFirstName], [ShipToLastName], [AuthorizationNumber], [Locale] FROM [dbo].[Orders] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
@@ -54,9 +54,9 @@ namespace PetShop.Tests.ParameterizedSQL
                 }
             }
 
-            OnFetched();
-
             RaiseListChangedEvents = true;
+
+            OnFetched();
         }
 
         #region Data access partial methods

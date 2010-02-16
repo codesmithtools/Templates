@@ -113,8 +113,11 @@ CREATE PROCEDURE [dbo].[CSLA_Profile_Select]
 	@p_Username varchar(256) = NULL,
 	@p_ApplicationName varchar(256) = NULL,
 	@p_IsAnonymous bit = NULL,
+	@p_IsAnonymousHasValue BIT = 0,
 	@p_LastActivityDate datetime = NULL,
-	@p_LastUpdatedDate datetime = NULL
+	@p_LastActivityDateHasValue BIT = 0,
+	@p_LastUpdatedDate datetime = NULL,
+	@p_LastUpdatedDateHasValue BIT = 0
 AS
 
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
@@ -132,9 +135,9 @@ WHERE
 	([UniqueID] = @p_UniqueID OR @p_UniqueID IS NULL)
 	AND ([Username] = @p_Username OR @p_Username IS NULL)
 	AND ([ApplicationName] = @p_ApplicationName OR @p_ApplicationName IS NULL)
-	AND ([IsAnonymous] = @p_IsAnonymous OR @p_IsAnonymous IS NULL)
-	AND ([LastActivityDate] = @p_LastActivityDate OR @p_LastActivityDate IS NULL)
-	AND ([LastUpdatedDate] = @p_LastUpdatedDate OR @p_LastUpdatedDate IS NULL)
+	AND ([IsAnonymous] = @p_IsAnonymous OR (@p_IsAnonymous IS NULL AND @p_IsAnonymousHasValue = 0))
+	AND ([LastActivityDate] = @p_LastActivityDate OR (@p_LastActivityDate IS NULL AND @p_LastActivityDateHasValue = 0))
+	AND ([LastUpdatedDate] = @p_LastUpdatedDate OR (@p_LastUpdatedDate IS NULL AND @p_LastUpdatedDateHasValue = 0))
 
 --endregion
 

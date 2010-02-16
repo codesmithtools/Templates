@@ -157,7 +157,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ProductUpdate(ref item);
+                Update_Product_Products_CategoryId(ref item);
             }
 
             OnInserted();
@@ -225,7 +225,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ProductUpdate(ref item);
+                Update_Product_Products_CategoryId(ref item);
             }
 
             OnUpdated();
@@ -237,7 +237,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         [Transactional(TransactionalTypes.TransactionScope)]
         public void Delete(CategoryCriteria criteria)
         {
-            //Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
+            // Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
             DoDelete(criteria);
         }
 
@@ -300,7 +300,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         }
 
         //AssociatedOneToMany
-        private static void ProductUpdate(ref Category item)
+        private static void Update_Product_Products_CategoryId(ref Category item)
         {
             foreach(Product itemToUpdate in item.Products)
             {

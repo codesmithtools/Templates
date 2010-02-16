@@ -36,8 +36,16 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         public ProfileList Create()
         {
             var item = (ProfileList)Activator.CreateInstance(typeof(ProfileList), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
             CheckRules(item);
             MarkNew(item);
+
+            OnCreated();
+
             return item;
         }
 

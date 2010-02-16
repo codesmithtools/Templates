@@ -25,11 +25,11 @@ namespace PetShop.Tests.ParameterizedSQL
     {
         private void Child_Fetch(ProductCriteria criteria)
         {
-            RaiseListChangedEvents = false;
-
             bool cancel = false;
             OnFetching(criteria, ref cancel);
             if (cancel) return;
+
+            RaiseListChangedEvents = false;
 
             string commandText = string.Format("SELECT [ProductId], [CategoryId], [Name], [Descn], [Image] FROM [dbo].[Product] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
@@ -54,9 +54,9 @@ namespace PetShop.Tests.ParameterizedSQL
                 }
             }
 
-            OnFetched();
-
             RaiseListChangedEvents = true;
+
+            OnFetched();
         }
 
         #region Data access partial methods

@@ -21,13 +21,13 @@ Imports Csla.Data
 Public Partial Class LineItemList
 
     Private Shadows Sub DataPortal_Fetch(ByVal criteria As LineItemCriteria)
-        RaiseListChangedEvents = False
-
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
             Return
         End If
+
+        RaiseListChangedEvents = False
 
         ' Fetch Child objects.
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
@@ -35,6 +35,7 @@ Public Partial Class LineItemList
             Using command As New SqlCommand("[dbo].[CSLA_LineItem_Select]", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+                
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Do
@@ -47,9 +48,9 @@ Public Partial Class LineItemList
             End Using
         End Using
 
-        OnFetched()
-
         RaiseListChangedEvents = True
+
+        OnFetched()
     End Sub
 
     Protected Overrides Sub DataPortal_Update()

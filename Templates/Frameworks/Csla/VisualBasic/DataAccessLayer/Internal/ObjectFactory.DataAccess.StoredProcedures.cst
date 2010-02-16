@@ -50,7 +50,7 @@ Public Partial Class <%= Entity.ClassName %>Factory
     ''' <Returns>New <%= Entity.ClassName %>.</Returns>
     <RunLocal()> _
     Public Function Create() As <%= Entity.ClassName %>
-        Dim item As <%= Entity.ClassName %> = Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True)
+        Dim item As <%= Entity.ClassName %> = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True), <%= Entity.ClassName %>)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -93,7 +93,7 @@ Next
     ''' <Returns>New <%= Entity.ClassName %>.</Returns>
     <RunLocal()> _
     Private Function Create(ByVal criteria As <%= Entity.ClassName %>Criteria) As  <%= Entity.ClassName %>
-        Dim item As <%= Entity.ClassName %> = Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True)
+        Dim item As <%= Entity.ClassName %> = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True), <%= Entity.ClassName %>)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -144,6 +144,7 @@ Next
             Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+                <%= Entity.Members.BuildHasValueCommandParameters() %>
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         item = Map(reader)
@@ -200,7 +201,7 @@ Next
 If (Entity.HasIdentityMember) Then %>
 <% for each member As Member in Entity.PrimaryKey.KeyMembers
     If(member.IsIdentity) Then %>
-                    item.<%= [member].PropertyName %> =  command.Parameters("<%= member.BuildParameterVariableName() %>").Value
+                    item.<%= [member].PropertyName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
 <% End If
 Next
 End If %>
@@ -370,7 +371,7 @@ End If %>
     #Region "Helper Methods"
 
     Public Function Map(ByVal reader As SafeDataReader) As <%= Entity.ClassName %>
-        Dim item As <%= Entity.ClassName %> = Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True)
+        Dim item As <%= Entity.ClassName %> = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True), <%= Entity.ClassName %>)
         Using BypassPropertyChecks(item)
 <% If Entity.HasRowVersionMember Then %>
             '_timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")

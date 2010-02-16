@@ -21,7 +21,10 @@ namespace CodeSmith.SchemaHelper
             {
                 foreach (AssociationMember member in association)
                 {
-                    parameters += string.Format(", ByVal {0} As {1}", Util.NamingConventions.VariableName(member.ClassName), member.ClassName);
+                    var parameter = string.Format(", ByVal {0} As {1}", Util.NamingConventions.VariableName(member.ClassName), member.ClassName);
+
+                    if (!parameters.Contains(parameter))
+                        parameters += parameter;
                 }
             }
 

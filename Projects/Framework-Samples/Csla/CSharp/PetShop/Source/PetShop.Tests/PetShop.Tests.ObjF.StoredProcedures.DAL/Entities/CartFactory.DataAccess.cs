@@ -112,6 +112,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -170,7 +171,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ProfileUpdate(ref item);
+                Update_Profile_ProfileMember_UniqueID(ref item);
             }
 
             OnInserted();
@@ -245,7 +246,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ProfileUpdate(ref item);
+                Update_Profile_ProfileMember_UniqueID(ref item);
             }
 
             OnUpdated();
@@ -328,7 +329,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
         }
 
         //AssociatedManyToOne
-        private static void ProfileUpdate(ref Cart item)
+        private static void Update_Profile_ProfileMember_UniqueID(ref Cart item)
         {
 				item.ProfileMember.UniqueID = item.UniqueID;
 

@@ -48,6 +48,8 @@ Public Partial Class Order
             Using command As New SqlCommand("[dbo].[CSLA_Order_Select]", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+                command.Parameters.AddWithValue("@p_ShipAddr2HasValue", criteria.ShipAddr2HasValue)
+				command.Parameters.AddWithValue("@p_BillAddr2HasValue", criteria.BillAddr2HasValue)
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Map(reader)
@@ -100,7 +102,7 @@ Public Partial Class Order
 
                 command.ExecuteNonQuery()
                 Using (BypassPropertyChecks)
-                    LoadProperty(_orderIdProperty, command.Parameters("@p_OrderId").Value)
+                    LoadProperty(_orderIdProperty, DirectCast(command.Parameters("@p_OrderId").Value,System.Int32))
                 End Using
             End Using
 
@@ -226,6 +228,8 @@ Public Partial Class Order
             Using command As New SqlCommand("[dbo].[CSLA_Order_Select]", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+				command.Parameters.AddWithValue("@p_ShipAddr2HasValue", criteria.ShipAddr2HasValue)
+				command.Parameters.AddWithValue("@p_BillAddr2HasValue", criteria.BillAddr2HasValue)
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Map(reader)
@@ -276,7 +280,7 @@ Public Partial Class Order
 				command.Parameters.AddWithValue("@p_Locale", Locale)
 
             command.ExecuteNonQuery()
-            LoadProperty(_orderIdProperty, command.Parameters("@p_OrderId").Value)
+            LoadProperty(_orderIdProperty, DirectCast(command.Parameters("@p_OrderId").Value,System.Int32))
         End Using
 
         OnChildInserted()

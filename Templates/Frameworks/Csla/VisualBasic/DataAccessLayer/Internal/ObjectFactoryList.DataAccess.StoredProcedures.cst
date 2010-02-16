@@ -50,7 +50,7 @@ Public Partial Class <%= Entity.ClassName %>ListFactory
     ''' <Returns>New <%= Entity.ClassName %>List.</Returns>
     <RunLocal()> _
     Public Function Create() As <%= Entity.ClassName %>List
-        Dim item As <%= Entity.ClassName %>List = Activator.CreateInstance(GetType(<%= Entity.ClassName %>List), True)
+        Dim item As <%= Entity.ClassName %>List = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>List), True), <%= Entity.ClassName %>List)
 
         Dim cancel As Boolean = False
         OnCreating(cancel)
@@ -80,7 +80,7 @@ Public Partial Class <%= Entity.ClassName %>ListFactory
     ''' <param name="criteria">The criteria.</param>
     ''' <Returns></Returns>
     Public Function Fetch(ByVal criteria As <%= Entity.ClassName %>Criteria) As <%= Entity.ClassName %>List
-        Dim item As <%= Entity.ClassName %>List = Activator.CreateInstance(GetType(<%= Entity.ClassName %>List), True)
+        Dim item As <%= Entity.ClassName %>List = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>List), True), <%= Entity.ClassName %>List)
 
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
@@ -94,6 +94,7 @@ Public Partial Class <%= Entity.ClassName %>ListFactory
             Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+                <%= Entity.Members.BuildHasValueCommandParameters() %>
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
 <% If(IsReadOnlyBusinessObject) Then %>

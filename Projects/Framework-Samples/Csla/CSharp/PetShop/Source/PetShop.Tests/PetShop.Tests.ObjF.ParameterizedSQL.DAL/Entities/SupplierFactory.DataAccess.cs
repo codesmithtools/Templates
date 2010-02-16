@@ -169,7 +169,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ItemUpdate(ref item);
+                Update_Item_Items_Supplier(ref item);
             }
 
             OnInserted();
@@ -243,7 +243,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ItemUpdate(ref item);
+                Update_Item_Items_Supplier(ref item);
             }
 
             OnUpdated();
@@ -255,7 +255,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         [Transactional(TransactionalTypes.TransactionScope)]
         public void Delete(SupplierCriteria criteria)
         {
-            //Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
+            // Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
             DoDelete(criteria);
         }
 
@@ -324,7 +324,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         }
 
         //AssociatedOneToMany
-        private static void ItemUpdate(ref Supplier item)
+        private static void Update_Item_Items_Supplier(ref Supplier item)
         {
             foreach(Item itemToUpdate in item.Items)
             {

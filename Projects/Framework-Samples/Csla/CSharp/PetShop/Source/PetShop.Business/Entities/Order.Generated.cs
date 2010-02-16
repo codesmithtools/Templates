@@ -335,24 +335,6 @@ namespace PetShop.Business
 
         #endregion
 
-        #region Overridden properties
-
-        /// <summary>
-        /// Returns true if the business object or any of its children properties are dirty.
-        /// </summary>
-        public override bool IsDirty
-        {
-            get
-            {
-                if (base.IsDirty) return true;
-                if (LineItems.IsDirty) return true;
-                if (OrderStatuses.IsDirty) return true;
-
-                return false;
-            }
-        }
-
-        #endregion
 
     }
 }

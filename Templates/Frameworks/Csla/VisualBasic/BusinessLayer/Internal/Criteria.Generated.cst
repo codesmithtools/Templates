@@ -103,7 +103,21 @@ Public Partial Class <%= BusinessClassName %>
     #End Region
     
     #Region "Read-Only"
-    
+<% If(DataAccessImplementation = DataAccessMethod.StoredProcedures Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures)
+    For Each member As Member In Entity.MembersNoRowVersion
+        If(member.IsNullable) Then
+%>
+
+    Public ReadOnly Property <%= member.PropertyName %>HasValue As Boolean
+        Get
+            Return _bag.ContainsKey("<%= member.ColumnName %>")
+        End Get
+    End Property
+<%      End If
+    Next
+End If
+%>
+
     ''' <summary>
     ''' Returns a list of all the modified properties and values.
     ''' </summary>

@@ -25,11 +25,11 @@ namespace PetShop.Business
     {
         private void Child_Fetch(AccountCriteria criteria)
         {
-            RaiseListChangedEvents = false;
-
             bool cancel = false;
             OnFetching(criteria, ref cancel);
             if (cancel) return;
+
+            RaiseListChangedEvents = false;
 
             string commandText = string.Format("SELECT [AccountId], [UniqueID], [Email], [FirstName], [LastName], [Address1], [Address2], [City], [State], [Zip], [Country], [Phone] FROM [dbo].[Account] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
@@ -54,9 +54,9 @@ namespace PetShop.Business
                 }
             }
 
-            OnFetched();
-
             RaiseListChangedEvents = true;
+
+            OnFetched();
         }
 
         #region Data access partial methods

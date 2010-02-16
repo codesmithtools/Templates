@@ -89,6 +89,14 @@ namespace <%= BusinessProjectName %>
         #endregion
         
         #region Read-Only
+<% if(DataAccessImplementation == DataAccessMethod.StoredProcedures || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){
+foreach(Member member in Entity.MembersNoRowVersion){ if(member.IsNullable) { %>
+
+        public bool <%= member.PropertyName %>HasValue
+        {
+            get { return _bag.ContainsKey("<%= member.ColumnName %>"); }
+        }
+<% } } } %>
 
         /// <summary>
         /// Returns a list of all the modified properties and values.

@@ -23,13 +23,13 @@ Public Partial Class ProductList
     End Sub
 
     Private Sub DataPortal_Fetch(ByVal criteria As ProductCriteria)
-        RaiseListChangedEvents = False
-
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
             Return
         End If
+
+        RaiseListChangedEvents = False
 
         ' Fetch Child objects.
         Dim commandText As String = String.Format("SELECT [ProductId], [CategoryId], [Name], [Descn], [Image] FROM [dbo].[Product] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
@@ -49,9 +49,9 @@ Public Partial Class ProductList
             End Using
         End Using
 
-        OnFetched()
-
         RaiseListChangedEvents = True
+
+        OnFetched()
     End Sub
     
     #Region "Data access partial methods"

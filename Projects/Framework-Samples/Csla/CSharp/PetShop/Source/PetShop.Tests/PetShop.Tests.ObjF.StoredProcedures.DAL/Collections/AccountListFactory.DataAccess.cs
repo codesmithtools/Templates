@@ -36,9 +36,17 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
         public AccountList Create()
         {
             var item = (AccountList)Activator.CreateInstance(typeof(AccountList), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
             CheckRules(item);
             MarkNew(item);
             MarkAsChild(item);
+
+            OnCreated();
+
             return item;
         }
 
@@ -66,6 +74,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.Parameters.AddWithValue("@p_Address2HasValue", criteria.Address2HasValue);
+					command.Parameters.AddWithValue("@p_PhoneHasValue", criteria.PhoneHasValue);
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())

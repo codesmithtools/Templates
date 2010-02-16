@@ -36,8 +36,16 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         public LineItemList Create()
         {
             var item = (LineItemList)Activator.CreateInstance(typeof(LineItemList), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
             CheckRules(item);
             MarkNew(item);
+
+            OnCreated();
+
             return item;
         }
 

@@ -50,6 +50,7 @@ namespace PetShop.Tests.StoredProcedures
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -187,6 +188,7 @@ namespace PetShop.Tests.StoredProcedures
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())

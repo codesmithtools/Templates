@@ -36,8 +36,16 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         public CategoryList Create()
         {
             var item = (CategoryList)Activator.CreateInstance(typeof(CategoryList), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
             CheckRules(item);
             MarkNew(item);
+
+            OnCreated();
+
             return item;
         }
 

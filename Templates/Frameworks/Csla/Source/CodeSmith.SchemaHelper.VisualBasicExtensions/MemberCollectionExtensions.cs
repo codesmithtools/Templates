@@ -109,5 +109,18 @@ namespace CodeSmith.SchemaHelper
 
             return commandParameters.TrimStart(new[] { '\t', '\n' });
         }
+
+        public static string BuildHasValueCommandParameters(this List<Member> members)
+        {
+            string commandParameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                if (member.IsNullable)
+                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}HasValue\", criteria.{2}HasValue)", Configuration.Instance.ParameterPrefix, member.ColumnName, member.PropertyName);
+            }
+
+            return commandParameters.TrimStart(new[] { '\t', '\n' });
+        }
     }
 }

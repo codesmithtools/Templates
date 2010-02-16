@@ -44,6 +44,7 @@ Public Partial Class OrderStatus
             Using command As New SqlCommand("[dbo].[CSLA_OrderStatus_Select]", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+				
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Map(reader)

@@ -110,6 +110,13 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.Parameters.AddWithValue("@p_NameHasValue", criteria.NameHasValue);
+					command.Parameters.AddWithValue("@p_Addr1HasValue", criteria.Addr1HasValue);
+					command.Parameters.AddWithValue("@p_Addr2HasValue", criteria.Addr2HasValue);
+					command.Parameters.AddWithValue("@p_CityHasValue", criteria.CityHasValue);
+					command.Parameters.AddWithValue("@p_StateHasValue", criteria.StateHasValue);
+					command.Parameters.AddWithValue("@p_ZipHasValue", criteria.ZipHasValue);
+					command.Parameters.AddWithValue("@p_PhoneHasValue", criteria.PhoneHasValue);
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -164,7 +171,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ItemUpdate(ref item);
+                Update_Item_Items_Supplier(ref item);
             }
 
             OnInserted();
@@ -238,7 +245,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ItemUpdate(ref item);
+                Update_Item_Items_Supplier(ref item);
             }
 
             OnUpdated();
@@ -320,7 +327,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
         }
 
         //AssociatedOneToMany
-        private static void ItemUpdate(ref Supplier item)
+        private static void Update_Item_Items_Supplier(ref Supplier item)
         {
             foreach(Item itemToUpdate in item.Items)
             {

@@ -146,11 +146,13 @@ CREATE PROCEDURE [dbo].[CSLA_Account_Select]
 	@p_LastName varchar(80) = NULL,
 	@p_Address1 varchar(80) = NULL,
 	@p_Address2 varchar(80) = NULL,
+	@p_Address2HasValue BIT = 0,
 	@p_City varchar(80) = NULL,
 	@p_State varchar(80) = NULL,
 	@p_Zip varchar(20) = NULL,
 	@p_Country varchar(20) = NULL,
-	@p_Phone varchar(20) = NULL
+	@p_Phone varchar(20) = NULL,
+	@p_PhoneHasValue BIT = 0
 AS
 
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
@@ -177,12 +179,12 @@ WHERE
 	AND ([FirstName] = @p_FirstName OR @p_FirstName IS NULL)
 	AND ([LastName] = @p_LastName OR @p_LastName IS NULL)
 	AND ([Address1] = @p_Address1 OR @p_Address1 IS NULL)
-	AND ([Address2] = @p_Address2 OR @p_Address2 IS NULL)
+	AND ([Address2] = @p_Address2 OR (@p_Address2 IS NULL AND @p_Address2HasValue = 0))
 	AND ([City] = @p_City OR @p_City IS NULL)
 	AND ([State] = @p_State OR @p_State IS NULL)
 	AND ([Zip] = @p_Zip OR @p_Zip IS NULL)
 	AND ([Country] = @p_Country OR @p_Country IS NULL)
-	AND ([Phone] = @p_Phone OR @p_Phone IS NULL)
+	AND ([Phone] = @p_Phone OR (@p_Phone IS NULL AND @p_PhoneHasValue = 0))
 
 --endregion
 

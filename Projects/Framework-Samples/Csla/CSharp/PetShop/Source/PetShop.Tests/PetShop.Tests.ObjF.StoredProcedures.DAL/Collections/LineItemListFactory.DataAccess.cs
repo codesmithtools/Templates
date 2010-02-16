@@ -36,8 +36,16 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
         public LineItemList Create()
         {
             var item = (LineItemList)Activator.CreateInstance(typeof(LineItemList), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
             CheckRules(item);
             MarkNew(item);
+
+            OnCreated();
+
             return item;
         }
 
@@ -65,6 +73,7 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())

@@ -122,11 +122,17 @@ CREATE PROCEDURE [dbo].[CSLA_Item_Select]
 	@p_ItemId varchar(10) = NULL,
 	@p_ProductId varchar(10) = NULL,
 	@p_ListPrice decimal(10, 2) = NULL,
+@p_ListPriceHasValue BIT = 0,
 	@p_UnitCost decimal(10, 2) = NULL,
+@p_UnitCostHasValue BIT = 0,
 	@p_Supplier int = NULL,
+@p_SupplierHasValue BIT = 0,
 	@p_Status varchar(2) = NULL,
+@p_StatusHasValue BIT = 0,
 	@p_Name varchar(80) = NULL,
-	@p_Image varchar(80) = NULL
+@p_NameHasValue BIT = 0,
+	@p_Image varchar(80) = NULL,
+@p_ImageHasValue BIT = 0
 AS
 
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED
@@ -145,12 +151,12 @@ FROM
 WHERE
 	([ItemId] = @p_ItemId OR @p_ItemId IS NULL)
 	AND ([ProductId] = @p_ProductId OR @p_ProductId IS NULL)
-	AND ([ListPrice] = @p_ListPrice OR @p_ListPrice IS NULL)
-	AND ([UnitCost] = @p_UnitCost OR @p_UnitCost IS NULL)
-	AND ([Supplier] = @p_Supplier OR @p_Supplier IS NULL)
-	AND ([Status] = @p_Status OR @p_Status IS NULL)
-	AND ([Name] = @p_Name OR @p_Name IS NULL)
-	AND ([Image] = @p_Image OR @p_Image IS NULL)
+	AND ([ListPrice] = @p_ListPrice OR (@p_ListPrice IS NULL AND @p_ListPriceHasValue = 0))
+	AND ([UnitCost] = @p_UnitCost OR (@p_UnitCost IS NULL AND @p_UnitCostHasValue = 0))
+	AND ([Supplier] = @p_Supplier OR (@p_Supplier IS NULL AND @p_SupplierHasValue = 0))
+	AND ([Status] = @p_Status OR (@p_Status IS NULL AND @p_StatusHasValue = 0))
+	AND ([Name] = @p_Name OR (@p_Name IS NULL AND @p_NameHasValue = 0))
+	AND ([Image] = @p_Image OR (@p_Image IS NULL AND @p_ImageHasValue = 0))
 
 --endregion
 

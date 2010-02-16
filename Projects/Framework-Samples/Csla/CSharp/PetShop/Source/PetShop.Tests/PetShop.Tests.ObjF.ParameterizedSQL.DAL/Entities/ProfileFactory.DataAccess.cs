@@ -163,8 +163,8 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                AccountUpdate(ref item);
-                CartUpdate(ref item);
+                Update_Account_Accounts_UniqueID(ref item);
+                Update_Cart_Carts_UniqueID(ref item);
             }
 
             OnInserted();
@@ -235,8 +235,8 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                AccountUpdate(ref item);
-                CartUpdate(ref item);
+                Update_Account_Accounts_UniqueID(ref item);
+                Update_Cart_Carts_UniqueID(ref item);
             }
 
             OnUpdated();
@@ -248,7 +248,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         [Transactional(TransactionalTypes.TransactionScope)]
         public void Delete(ProfileCriteria criteria)
         {
-            //Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
+            // Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
             DoDelete(criteria);
         }
 
@@ -314,7 +314,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         }
 
         //AssociatedOneToMany
-        private static void AccountUpdate(ref Profile item)
+        private static void Update_Account_Accounts_UniqueID(ref Profile item)
         {
             foreach(Account itemToUpdate in item.Accounts)
             {
@@ -324,7 +324,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
             }
         }
         //AssociatedOneToMany
-        private static void CartUpdate(ref Profile item)
+        private static void Update_Cart_Carts_UniqueID(ref Profile item)
         {
             foreach(Cart itemToUpdate in item.Carts)
             {

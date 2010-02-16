@@ -232,7 +232,7 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         [Transactional(TransactionalTypes.TransactionScope)]
         public void Delete(InventoryCriteria criteria)
         {
-            //Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
+            // Note: this call to delete is for immediate deletion and doesn't keep track of any entity state.
             DoDelete(criteria);
         }
 

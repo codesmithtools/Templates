@@ -108,6 +108,12 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+                    command.Parameters.AddWithValue("@p_ListPriceHasValue", criteria.ListPriceHasValue);
+					command.Parameters.AddWithValue("@p_UnitCostHasValue", criteria.UnitCostHasValue);
+					command.Parameters.AddWithValue("@p_SupplierHasValue", criteria.SupplierHasValue);
+					command.Parameters.AddWithValue("@p_StatusHasValue", criteria.StatusHasValue);
+					command.Parameters.AddWithValue("@p_NameHasValue", criteria.NameHasValue);
+					command.Parameters.AddWithValue("@p_ImageHasValue", criteria.ImageHasValue);
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -161,8 +167,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ProductUpdate(ref item);
-                SupplierUpdate(ref item);
+                Update_Product_ProductMember_ProductId(ref item);
+                Update_Supplier_SupplierMember_Supplier(ref item);
             }
 
             OnInserted();
@@ -235,8 +241,8 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
             if(!stopProccessingChildren)
             {
             // Update Child Items.
-                ProductUpdate(ref item);
-                SupplierUpdate(ref item);
+                Update_Product_ProductMember_ProductId(ref item);
+                Update_Supplier_SupplierMember_Supplier(ref item);
             }
 
             OnUpdated();
@@ -317,14 +323,14 @@ namespace PetShop.Tests.ObjF.StoredProcedures.DAL
         }
 
         //AssociatedManyToOne
-        private static void ProductUpdate(ref Item item)
+        private static void Update_Product_ProductMember_ProductId(ref Item item)
         {
 				item.ProductMember.ProductId = item.ProductId;
 
             new ProductFactory().Update(item.ProductMember, true);
         }
         //AssociatedManyToOne
-        private static void SupplierUpdate(ref Item item)
+        private static void Update_Supplier_SupplierMember_Supplier(ref Item item)
         {
 				item.SupplierMember.SuppId = item.Supplier.Value;
 

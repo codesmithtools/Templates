@@ -17,17 +17,28 @@ Imports System.Data.SqlClient
 
 Imports Csla
 Imports Csla.Data
+Imports Csla.Validation
 
 Public Partial Class ItemList
 
-    Private Shadows Sub Child_Fetch(ByVal criteria As ItemCriteria)
-        RaiseListChangedEvents = False
+    Protected Overrides Sub Child_Create()
+        Dim cancel As Boolean = False
+        OnCreating(cancel)
+        If (cancel) Then
+            Return
+        End If
 
+        OnCreated()
+    End Sub
+
+    Private Shadows Sub Child_Fetch(ByVal criteria As ItemCriteria)
         Dim cancel As Boolean = False
         OnFetching(criteria, cancel)
         If (cancel) Then
             Return
         End If
+
+        RaiseListChangedEvents = False
 
         ' Fetch Child objects.
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
@@ -35,6 +46,12 @@ Public Partial Class ItemList
             Using command As New SqlCommand("[dbo].[CSLA_Item_Select]", connection)
                 command.CommandType = CommandType.StoredProcedure
                 command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+                command.Parameters.AddWithValue("@p_ListPriceHasValue", criteria.ListPriceHasValue)
+				command.Parameters.AddWithValue("@p_UnitCostHasValue", criteria.UnitCostHasValue)
+				command.Parameters.AddWithValue("@p_SupplierHasValue", criteria.SupplierHasValue)
+				command.Parameters.AddWithValue("@p_StatusHasValue", criteria.StatusHasValue)
+				command.Parameters.AddWithValue("@p_NameHasValue", criteria.NameHasValue)
+				command.Parameters.AddWithValue("@p_ImageHasValue", criteria.ImageHasValue)
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
                         Do
@@ -47,9 +64,9 @@ Public Partial Class ItemList
             End Using
         End Using
 
-        OnFetched()
-
         RaiseListChangedEvents = True
+
+        OnFetched()
     End Sub
 
     Protected Overrides Sub DataPortal_Update()

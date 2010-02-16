@@ -36,8 +36,16 @@ namespace PetShop.Tests.ObjF.ParameterizedSQL.DAL
         public ProductList Create()
         {
             var item = (ProductList)Activator.CreateInstance(typeof(ProductList), true);
+
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return item;
+
             CheckRules(item);
             MarkNew(item);
+
+            OnCreated();
+
             return item;
         }
 
