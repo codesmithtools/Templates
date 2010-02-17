@@ -1,5 +1,5 @@
-<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA Map" %>
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
@@ -9,6 +9,12 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+        Dim cancel As Boolean = False
+        OnMapping(cancel)
+        If (cancel) Then
+            Return
+        End If
+
         Using(BypassPropertyChecks)
 <% If Entity.HasRowVersionMember Then %>
             _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
@@ -20,14 +26,6 @@ If UseMemberVariables Then %>
             LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
 <% End If 
 Next %>
-<%-- One-To-Many & Many-To-Many --%>
-<% for each association2 As Association in Entity.AssociatedToManyUnion
-If Not UseLazyLoading Then %>
-<% If (UseMemberVariables) Then %>
-            <%= association2.PrivateMemberVariableName %> = New <%= association2.ClassName %>List.NewList()
-<%  else  %>
-            LoadProperty(<%= association2.PrivateMemberVariableName %>Property, <%= association2.ClassName %>List.NewList())
-<% End If
-End If
-Next %>
         End Using
+
+        OnMapped()

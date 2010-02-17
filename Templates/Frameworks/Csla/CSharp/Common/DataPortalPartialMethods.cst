@@ -1,5 +1,5 @@
-<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA Map" %>
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
@@ -15,6 +15,8 @@
         partial void OnCreated();
         partial void OnFetching(<%= BusinessClassName %>Criteria criteria, ref bool cancel);
         partial void OnFetched();
+        partial void OnMapping(ref bool cancel);
+        partial void OnMapped();
         partial void OnInserting(ref bool cancel);
         partial void OnInserted();
         partial void OnUpdating(ref bool cancel);

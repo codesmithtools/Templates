@@ -22,7 +22,7 @@ namespace CodeSmith.SchemaHelper
                     key += item.Key + "|";  
                 }
 
-                return key;
+                return key.TrimEnd('|');
             }
         }
 

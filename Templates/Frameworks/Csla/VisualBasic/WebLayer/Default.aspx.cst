@@ -3,7 +3,7 @@ Name: Default.aspx
 Author: Blake Niemyjski
 Description: The following template will generate an ASP.Net page.
 --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="Text" OutputType="None" Inherits="QuickStart.InterfaceCodeTemplate" CompilerVersion="v3.5" Description="The following template will generate a sample ASP.Net page." %>
+<%@ CodeTemplate Language="VB" TargetLanguage="Text" OutputType="None" Inherits="QuickStart.InterfaceCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="The following template will generate a sample ASP.Net page." %>
 
 <%@ Register Name="SourceViewTemplate" Template="Internal\Default.aspx.cst" %>
 <%@ Register Name="CodeBehindTemplate" Template="Internal\Default.aspx.vb.cst" %>

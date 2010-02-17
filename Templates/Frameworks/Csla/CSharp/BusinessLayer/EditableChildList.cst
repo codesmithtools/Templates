@@ -1,5 +1,5 @@
 <%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA 3.8.X EditableChildList" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X EditableChildList" %>
 
 <%@ Register Name="EditableChildList" Template="Internal\EditableChildList.cst" %>
 <%@ Register Name="EditableChildListDataAccess" Template="Internal\EditableChildList.DataAccess.cst" %>
