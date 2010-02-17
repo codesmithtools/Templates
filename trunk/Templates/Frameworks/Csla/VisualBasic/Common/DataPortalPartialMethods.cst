@@ -1,5 +1,5 @@
-<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Description="CSLA Map" %>
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
@@ -18,6 +18,10 @@
     Partial Private Sub OnFetching(ByVal criteria As <%= BusinessClassName %>Criteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnFetched()
+    End Sub
+    Partial Private Sub OnMapping(ByRef cancel As Boolean)
+    End Sub
+    Partial Private Sub OnMapped()
     End Sub
     Partial Private Sub OnInserting(ByRef cancel As Boolean)
     End Sub
