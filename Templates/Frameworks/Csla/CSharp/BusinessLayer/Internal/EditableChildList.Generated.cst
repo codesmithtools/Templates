@@ -46,7 +46,7 @@ namespace <%= BusinessProjectName %>
         }
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
-        internal static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
+        internal static <%= BusinessClassName %> <%= sc.MethodName %>Child(<%= sc.Members.BuildParametersVariables() %>)
         {
             return DataPortal.FetchChild< <%= BusinessClassName %> >(
                 new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});

@@ -151,7 +151,13 @@ namespace QuickStart
                 if (BusinessClassName.EndsWith("ListList", true, CultureInfo.InvariantCulture))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
 
+                if (BusinessClassName.EndsWith("InfoList", true, CultureInfo.InvariantCulture))
+                    return BusinessClassName.Substring(0, BusinessClassName.Length - 8);
+
                 if (BusinessClassName.EndsWith("List", true, CultureInfo.InvariantCulture))
+                    return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
+
+                if (BusinessClassName.EndsWith("Info", true, CultureInfo.InvariantCulture))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
 
                 if (BusinessClassName.EndsWith("Criteria", true, CultureInfo.InvariantCulture))
@@ -236,12 +242,12 @@ namespace QuickStart
                 ProcedurePrefix = "CSLA_";
         }
 
-        protected virtual string GetTableOwner()
+        public virtual string GetTableOwner()
         {
             return GetTableOwner(true);
         }
 
-        protected virtual string GetTableOwner(bool includeDot)
+        public virtual string GetTableOwner(bool includeDot)
         {
             if (SourceTable.Owner.Length > 0)
                 return includeDot
@@ -259,6 +265,98 @@ namespace QuickStart
         {
             RegisterReference(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\Csla.dll"));
         }
+
+        public bool IsReadOnlyBusinessObject(string suffix)
+        {
+            string key = string.Format("{0}{1}", this._table.Name, suffix);
+            if (ContextData.Get(key) == null) return false;
+
+            var value = ContextData[key];
+            switch (value)
+            {
+                case Constants.ReadOnlyChild:
+                case Constants.ReadOnlyRoot:
+                case Constants.ReadOnlyChildList:
+                case Constants.ReadOnlyList:
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool IsReadOnlyBusinessObject(Association association, string suffix)
+        {
+            if (association.Count <= 0)
+                return false;
+
+            string key = string.Format("{0}{1}", association[0].TableName, suffix);
+            if (ContextData.Get(key) == null) return false;
+
+            var value = ContextData[key];
+            switch (value)
+            {
+                case Constants.ReadOnlyChild:
+                case Constants.ReadOnlyRoot:
+                case Constants.ReadOnlyChildList:
+                case Constants.ReadOnlyList:
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool IsChildBusinessObject(Association association)
+        {
+            return IsChildBusinessObject(association, string.Empty); 
+        }
+
+        public bool IsChildBusinessObject(Association association, string suffix)
+        {
+            if (association.Count <= 0)
+                return false;
+
+            string key = string.Format("{0}{1}", association[0].TableName, suffix);
+            if (ContextData.Get(key) == null) return false;
+
+            var value = ContextData[key];
+            switch (value)
+            {
+                case Constants.EditableChild:
+                case Constants.ReadOnlyChild:
+                case Constants.EditableChildList:
+                case Constants.ReadOnlyChildList:
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// This is used to detect to see if the context data contains a class. It is used in the case where we want to see if a read-write class exists before a read only..
+        /// </summary>
+        /// <param name="association"></param>
+        /// <returns></returns>
+        public bool BusinessObjectExists(Association association)
+        {
+            return BusinessObjectExists(association, string.Empty);
+        }
+
+        /// <summary>
+        /// This is used to detect to see if the context data contains a class. It is used in the case where we want to see if a read-write class exists before a read only..
+        /// </summary>
+        /// <param name="association"></param>
+        /// <param name="suffix"></param>
+        /// <returns></returns>
+        public bool BusinessObjectExists(Association association, string suffix)
+        {
+            if (association.Count <= 0)
+                return false;
+
+            string key = string.Format("{0}{1}", association[0].TableName, suffix);
+
+            return ContextData.Get(key) != null;
+        }
+
 
         #endregion
 

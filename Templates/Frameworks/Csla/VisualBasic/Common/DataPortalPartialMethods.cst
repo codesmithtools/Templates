@@ -15,7 +15,7 @@
     End Sub
     Partial Private Sub OnCreated()
     End Sub
-    Partial Private Sub OnFetching(ByVal criteria As <%= BusinessClassName %>Criteria, ByRef cancel As Boolean)
+    Partial Private Sub OnFetching(ByVal criteria As <%= ChildBusinessClassName %>Criteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnFetched()
     End Sub
@@ -35,7 +35,7 @@
     End Sub
     Partial Private Sub OnSelfDeleted()
     End Sub
-    Partial Private Sub OnDeleting(ByVal criteria As <%= BusinessClassName %>Criteria, ByRef cancel As Boolean)
+    Partial Private Sub OnDeleting(ByVal criteria As <%= ChildBusinessClassName %>Criteria, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnDeleted()
     End Sub

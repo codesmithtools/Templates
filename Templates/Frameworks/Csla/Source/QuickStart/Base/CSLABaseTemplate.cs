@@ -18,15 +18,11 @@ namespace QuickStart
         public CSLABaseTemplate()
         {
             ResolveTargetLanguage();
-            TemplateContext = new Dictionary<string, string>();
         }
 
         #endregion
 
         #region Public Properties
-
-        [Browsable(false)]
-        public Dictionary<string, string> TemplateContext { get; set; }
 
         [Browsable(false)]
         public string TemplateVersion

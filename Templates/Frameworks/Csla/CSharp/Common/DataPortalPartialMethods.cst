@@ -13,7 +13,7 @@
 
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
-        partial void OnFetching(<%= BusinessClassName %>Criteria criteria, ref bool cancel);
+        partial void OnFetching(<%= ChildBusinessClassName %>Criteria criteria, ref bool cancel);
         partial void OnFetched();
         partial void OnMapping(ref bool cancel);
         partial void OnMapped();
@@ -23,7 +23,7 @@
         partial void OnUpdated();
         partial void OnSelfDeleting(ref bool cancel);
         partial void OnSelfDeleted();
-        partial void OnDeleting(<%= BusinessClassName %>Criteria criteria, ref bool cancel);
+        partial void OnDeleting(<%= ChildBusinessClassName %>Criteria criteria, ref bool cancel);
         partial void OnDeleted();
 
         #endregion

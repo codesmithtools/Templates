@@ -34,12 +34,12 @@ namespace <%= BusinessProjectName %>
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
     [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>ListFactoryName)]
 <% } %>
-    public partial class <%= BusinessClassName %> : ReadOnlyListBase< <%= BusinessClassName %>, <%= ChildBusinessClassName %> >
+    public partial class <%= BusinessClassName %> : ReadOnlyListBase< <%= BusinessClassName %>, <%= ChildBusinessClassName %><% if(IsReadOnlyBusinessObject(ChildBusinessClassName+ "Info")) { %>Info<%}%>>
     {
         #region Factory Methods 
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
-        internal static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
+        internal static <%= BusinessClassName %> <%= sc.MethodName %>Child(<%= sc.Members.BuildParametersVariables() %>)
         {
             return DataPortal.FetchChild< <%= BusinessClassName %> >(
                 new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
