@@ -79,6 +79,7 @@
     </Compile>
     <Compile Include="Base\CSLABaseTemplate.cs" />
     <Compile Include="Base\CSLAMasterTemplate.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="DataCodeTemplate.cs" />
     <Compile Include="EntityMasterCodeTemplate.cs" />
     <Compile Include="InterfaceCodeTemplate.cs" />

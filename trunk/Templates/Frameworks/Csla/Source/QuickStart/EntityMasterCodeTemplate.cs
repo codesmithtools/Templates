@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
 using SchemaExplorer;
@@ -236,13 +237,13 @@ namespace QuickStart
 
         private void OnDynamicRootChanged()
         {
-            CleanTemplateContextByValue("DynamicRoot");
+            CleanTemplateContextByValue(Constants.DynamicRoot);
 
             EntityManager em = new EntityManager(DynamicRoot);
             foreach (Entity entity in em.Entities)
             {
-                if (TemplateContext.ContainsKey(entity.ClassName))
-                    TemplateContext.Remove(entity.ClassName);
+                if (ContextData.Get(entity.ClassName) != null)
+                    ContextData.Remove(entity.ClassName);
 
                 EditableChild.Remove(entity.Table);
                 EditableRoot.Remove(entity.Table);
@@ -250,7 +251,7 @@ namespace QuickStart
                 ReadOnlyRoot.Remove(entity.Table);
                 SwitchableObject.Remove(entity.Table);
 
-                TemplateContext.Add(entity.ClassName, "DynamicRoot");
+                ContextData.Add(entity.ClassName, Constants.DynamicRoot);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -277,21 +278,19 @@ namespace QuickStart
 
         private void OnEditableChildChanged()
         {
-            CleanTemplateContextByValue("EditableChild");
+            CleanTemplateContextByValue(Constants.EditableChild);
 
             EntityManager em = new EntityManager(EditableChild);
             foreach (Entity entity in em.Entities)
             {
-                if (TemplateContext.ContainsKey(entity.ClassName))
-                    TemplateContext.Remove(entity.ClassName);
+                if (ContextData.Get(entity.ClassName) != null)
+                    ContextData.Remove(entity.ClassName);
 
                 DynamicRoot.Remove(entity.Table);
                 EditableRoot.Remove(entity.Table);
-                ReadOnlyChild.Remove(entity.Table);
-                ReadOnlyRoot.Remove(entity.Table);
                 SwitchableObject.Remove(entity.Table);
 
-                TemplateContext.Add(entity.ClassName, "EditableChild");
+                ContextData.Add(entity.ClassName, Constants.EditableChild);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -318,21 +317,19 @@ namespace QuickStart
 
         private void OnEditableRootChanged()
         {
-            CleanTemplateContextByValue("EditableRoot");
+            CleanTemplateContextByValue(Constants.EditableRoot);
 
             EntityManager em = new EntityManager(EditableRoot);
             foreach (Entity entity in em.Entities)
             {
-                if (TemplateContext.ContainsKey(entity.ClassName))
-                    TemplateContext.Remove(entity.ClassName);
+                if (ContextData.Get(entity.ClassName) != null)
+                    ContextData.Remove(entity.ClassName);
 
                 DynamicRoot.Remove(entity.Table);
                 EditableChild.Remove(entity.Table);
-                ReadOnlyChild.Remove(entity.Table);
-                ReadOnlyRoot.Remove(entity.Table);
                 SwitchableObject.Remove(entity.Table);
 
-                TemplateContext.Add(entity.ClassName, "EditableRoot");
+                ContextData.Add(entity.ClassName, Constants.EditableRoot);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -359,21 +356,19 @@ namespace QuickStart
 
         private void OnReadOnlyChildChanged()
         {
-            CleanTemplateContextByValue("ReadOnlyChild");
+            CleanTemplateContextByValue(Constants.ReadOnlyChild);
 
             EntityManager em = new EntityManager(ReadOnlyChild);
             foreach (Entity entity in em.Entities)
             {
-                if (TemplateContext.ContainsKey(entity.ClassName))
-                    TemplateContext.Remove(entity.ClassName);
+                string key = string.Format(Constants.ReadOnlyFormat, entity.Table.Name);
 
-                DynamicRoot.Remove(entity.Table);
-                EditableChild.Remove(entity.Table);
-                EditableRoot.Remove(entity.Table);
+                if (ContextData.Get(key) != null)
+                    ContextData.Remove(key);
+
                 ReadOnlyRoot.Remove(entity.Table);
-                SwitchableObject.Remove(entity.Table);
 
-                TemplateContext.Add(entity.ClassName, "ReadOnlyChild");
+                ContextData.Add(key, Constants.ReadOnlyChild);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -400,21 +395,19 @@ namespace QuickStart
 
         private void OnReadOnlyRootChanged()
         {
-            CleanTemplateContextByValue("ReadOnlyRoot");
+            CleanTemplateContextByValue(Constants.ReadOnlyRoot);
 
             EntityManager em = new EntityManager(ReadOnlyRoot);
             foreach (Entity entity in em.Entities)
             {
-                if (TemplateContext.ContainsKey(entity.ClassName))
-                    TemplateContext.Remove(entity.ClassName);
+                string key = string.Format(Constants.ReadOnlyFormat, entity.Table.Name);
 
-                DynamicRoot.Remove(entity.Table);
-                EditableChild.Remove(entity.Table);
-                EditableRoot.Remove(entity.Table);
+                if (ContextData.Get(key) != null)
+                    ContextData.Remove(key);
+
                 ReadOnlyChild.Remove(entity.Table);
-                SwitchableObject.Remove(entity.Table);
 
-                TemplateContext.Add(entity.ClassName, "ReadOnlyRoot");
+                ContextData.Add(key, Constants.ReadOnlyRoot);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -441,21 +434,19 @@ namespace QuickStart
 
         private void OnSwitchableObjectChanged()
         {
-            CleanTemplateContextByValue("SwitchableObject");
+            CleanTemplateContextByValue(Constants.SwitchableObject);
 
             EntityManager em = new EntityManager(SwitchableObject);
             foreach (Entity entity in em.Entities)
             {
-                if (TemplateContext.ContainsKey(entity.ClassName))
-                    TemplateContext.Remove(entity.ClassName);
+                if (ContextData.Get(entity.ClassName) != null)
+                    ContextData.Remove(entity.ClassName);
 
                 DynamicRoot.Remove(entity.Table);
                 EditableChild.Remove(entity.Table);
                 EditableRoot.Remove(entity.Table);
-                ReadOnlyChild.Remove(entity.Table);
-                ReadOnlyRoot.Remove(entity.Table);
 
-                TemplateContext.Add(entity.ClassName, "SwitchableObject");
+                ContextData.Add(entity.ClassName, Constants.SwitchableObject);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -486,22 +477,20 @@ namespace QuickStart
 
         private void OnDynamicRootListChanged()
         {
-            CleanTemplateContextByValue("DynamicRootList");
+            CleanTemplateContextByValue(Constants.DynamicRootList);
 
             EntityManager em = new EntityManager(DynamicRootList);
             foreach (Entity entity in em.Entities)
             {
-                string key = string.Format("{0}List", entity.ClassName);
+                string key = string.Format(Constants.ListFormat, entity.Table.Name);
 
-                if (TemplateContext.ContainsKey(key))
-                    TemplateContext.Remove(key);
+                if (ContextData.Get(key) != null)
+                    ContextData.Remove(key);
 
                 EditableRootList.Remove(entity.Table);
                 EditableChildList.Remove(entity.Table);
-                ReadOnlyList.Remove(entity.Table);
-                ReadOnlyChildList.Remove(entity.Table);
 
-                TemplateContext.Add(key, "DynamicRootList");
+                ContextData.Add(key, Constants.DynamicRootList);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -512,22 +501,22 @@ namespace QuickStart
 
         private void OnEditableRootListChanged()
         {
-            CleanTemplateContextByValue("EditableRootList");
+            CleanTemplateContextByValue(Constants.EditableRootList);
 
             EntityManager em = new EntityManager(EditableRootList);
             foreach (Entity entity in em.Entities)
             {
-                string key = string.Format("{0}List", entity.ClassName);
+                string key = string.Format(Constants.ListFormat, entity.Table.Name);
 
-                if (TemplateContext.ContainsKey(key))
-                    TemplateContext.Remove(key);
+                if (ContextData.Get(key) != null)
+                    ContextData.Remove(key);
 
                 DynamicRootList.Remove(entity.Table);
                 EditableChildList.Remove(entity.Table);
                 ReadOnlyList.Remove(entity.Table);
                 ReadOnlyChildList.Remove(entity.Table);
 
-                TemplateContext.Add(key, "EditableRootList");
+                ContextData.Add(key, Constants.EditableRootList);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -538,23 +527,21 @@ namespace QuickStart
 
         private void OnEditableChildListChanged()
         {
-            CleanTemplateContextByValue("EditableChildList");
+            CleanTemplateContextByValue(Constants.EditableChildList);
 
             EntityManager em = new EntityManager(EditableChildList);
 
             foreach (Entity entity in em.Entities)
             {
-                string key = string.Format("{0}List", entity.ClassName);
+                string key = string.Format(Constants.ListFormat, entity.Table.Name);
 
-                if (TemplateContext.ContainsKey(key))
-                    TemplateContext.Remove(key);
+                if (ContextData.Get(key) != null)
+                    ContextData.Remove(key);
 
                 EditableRootList.Remove(entity.Table);
                 DynamicRootList.Remove(entity.Table);
-                ReadOnlyList.Remove(entity.Table);
-                ReadOnlyChildList.Remove(entity.Table);
 
-                TemplateContext.Add(key, "EditableChildList");
+                ContextData.Add(key, Constants.EditableChildList);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -565,23 +552,20 @@ namespace QuickStart
 
         private void OnReadOnlyListChanged()
         {
-            CleanTemplateContextByValue("ReadOnlyList");
+            CleanTemplateContextByValue(Constants.ReadOnlyList);
 
             EntityManager em = new EntityManager(ReadOnlyList);
 
             foreach (Entity entity in em.Entities)
             {
-                string key = string.Format("{0}List", entity.ClassName);
+                string key = string.Format(Constants.ReadOnlyListFormat, entity.Table.Name);
 
-                if (TemplateContext.ContainsKey(key))
-                    TemplateContext.Remove(key);
+                if (ContextData.Get(key) != null)
+                    ContextData.Remove(key);
 
-                EditableRootList.Remove(entity.Table);
-                EditableChildList.Remove(entity.Table);
-                DynamicRootList.Remove(entity.Table);
                 ReadOnlyChildList.Remove(entity.Table);
 
-                TemplateContext.Add(key, "ReadOnlyList");
+                ContextData.Add(key, Constants.ReadOnlyList);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -592,23 +576,20 @@ namespace QuickStart
 
         private void OnReadOnlyChildListChanged()
         {
-            CleanTemplateContextByValue("ReadOnlyChildList");
+            CleanTemplateContextByValue(Constants.ReadOnlyChildList);
 
             EntityManager em = new EntityManager(ReadOnlyChildList);
 
             foreach (Entity entity in em.Entities)
             {
-                string key = string.Format("{0}List", entity.ClassName);
+                string key = string.Format(Constants.ReadOnlyListFormat, entity.Table.Name);
 
-                if (TemplateContext.ContainsKey(key))
-                    TemplateContext.Remove(key);
+                if (ContextData.Get(key) != null)
+                    ContextData.Remove(key);
 
-                EditableRootList.Remove(entity.Table);
-                EditableChildList.Remove(entity.Table);
-                DynamicRootList.Remove(entity.Table);
                 ReadOnlyList.Remove(entity.Table);
 
-                TemplateContext.Add(key, "ReadOnlyChildList");
+                ContextData.Add(key, Constants.ReadOnlyChildList);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -623,8 +604,6 @@ namespace QuickStart
 
         private void UpdateTableCollections()
         {
-            if (CommandObject == null) CommandObject = new TableSchemaCollection();
-            if (Criteria == null) Criteria = new TableSchemaCollection();
             if (DynamicRoot == null) DynamicRoot = new TableSchemaCollection();
             if (EditableChild == null) EditableChild = new TableSchemaCollection();
             if (EditableRoot == null) EditableRoot = new TableSchemaCollection();
@@ -642,19 +621,13 @@ namespace QuickStart
 
         private void AddChildList(TableSchema tableSchema, bool readOnly, bool child)
         {
-            if (DynamicRootList.Count > 0 && DynamicRootList.Contains(tableSchema.Owner, tableSchema.Name))
-                return;
-            if (EditableRootList.Count > 0 && EditableRootList.Contains(tableSchema.Owner, tableSchema.Name))
-                return;
-            if (EditableChildList.Count > 0 && EditableChildList.Contains(tableSchema.Owner, tableSchema.Name))
-                return;
-            if (ReadOnlyList.Count > 0 && ReadOnlyList.Contains(tableSchema.Owner, tableSchema.Name))
-                return;
-            if (ReadOnlyChildList.Count > 0 && ReadOnlyChildList.Contains(tableSchema.Owner, tableSchema.Name))
-                return;
-
             if (readOnly)
             {
+                if (ReadOnlyList.Count > 0 && ReadOnlyList.Contains(tableSchema.Owner, tableSchema.Name))
+                    return;
+                if (ReadOnlyChildList.Count > 0 && ReadOnlyChildList.Contains(tableSchema.Owner, tableSchema.Name))
+                    return;
+
                 if (child)
                     ReadOnlyChildList.Add(tableSchema);
                 else
@@ -662,6 +635,12 @@ namespace QuickStart
             }
             else
             {
+                if (DynamicRootList.Count > 0 && DynamicRootList.Contains(tableSchema.Owner, tableSchema.Name))
+                    return;
+                if (EditableRootList.Count > 0 && EditableRootList.Contains(tableSchema.Owner, tableSchema.Name))
+                    return;
+                if (EditableChildList.Count > 0 && EditableChildList.Contains(tableSchema.Owner, tableSchema.Name))
+                    return;
                 if (child)
                     EditableChildList.Add(tableSchema);
                 else
@@ -671,21 +650,13 @@ namespace QuickStart
 
         private void AddChildEntity(TableSchema tableSchema, bool readOnly, bool child)
         {
-            if (DynamicRoot.Count > 0 && DynamicRoot.Contains(tableSchema.Owner, tableSchema.Name))
-                return;
-            if (EditableChild.Count > 0 && EditableChild.Contains(tableSchema.Owner, tableSchema.Name))
-                return;
-            if (EditableRoot.Count > 0 && EditableRoot.Contains(tableSchema.Owner, tableSchema.Name))
-                return;
-            if (ReadOnlyChild.Count > 0 && ReadOnlyChild.Contains(tableSchema.Owner, tableSchema.Name))
-                return;
-            if (ReadOnlyRoot.Count > 0 && ReadOnlyRoot.Contains(tableSchema.Owner, tableSchema.Name))
-                return;
-            if (SwitchableObject.Count > 0 && SwitchableObject.Contains(tableSchema.Owner, tableSchema.Name))
-                return;
-
             if (readOnly)
             {
+                if (ReadOnlyChild.Count > 0 && ReadOnlyChild.Contains(tableSchema.Owner, tableSchema.Name))
+                    return;
+                if (ReadOnlyRoot.Count > 0 && ReadOnlyRoot.Contains(tableSchema.Owner, tableSchema.Name))
+                    return;
+
                 if (child)
                     ReadOnlyChild.Add(tableSchema);
                 else
@@ -693,6 +664,15 @@ namespace QuickStart
             }
             else
             {
+                if (DynamicRoot.Count > 0 && DynamicRoot.Contains(tableSchema.Owner, tableSchema.Name))
+                    return;
+                if (EditableChild.Count > 0 && EditableChild.Contains(tableSchema.Owner, tableSchema.Name))
+                    return;
+                if (EditableRoot.Count > 0 && EditableRoot.Contains(tableSchema.Owner, tableSchema.Name))
+                    return;
+                if (SwitchableObject.Count > 0 && SwitchableObject.Contains(tableSchema.Owner, tableSchema.Name))
+                    return;
+
                 if (child)
                     EditableChild.Add(tableSchema);
                 else
@@ -704,20 +684,13 @@ namespace QuickStart
         private void CleanTemplateContextByValue(string value)
         {
             UpdateTableCollections();
-
-            if (TemplateContext == null)
-                TemplateContext = new Dictionary<string, string>();
-
-            List<string> keys = new List<string>();
-
-            foreach (KeyValuePair<string, string> pair in TemplateContext)
-            {
-                if (pair.Value == value)
-                    keys.Add(pair.Key);
-            }
+            List<string> keys = (from key in ContextData.AllKeys
+                                 let contextValues = ContextData.GetValues(key)
+                                 where contextValues != null && contextValues.Length > 0 && contextValues[0] == value
+                                 select key).ToList();
 
             foreach (string key in keys)
-                TemplateContext.Remove(key);
+                ContextData.Remove(key);
         }
 
         #endregion

@@ -72,6 +72,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
+                string includeThisPrefix = !isObjectFactory ? "Me." : string.Empty;
                 string propertyName = member.PropertyName;
                 
                 // Resolve property Name from relationship.
@@ -84,6 +85,7 @@ namespace CodeSmith.SchemaHelper
                             if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
                             {
                                 propertyName = string.Format("{0}.{1}", Util.NamingConventions.VariableName(associationMember.ClassName), Util.NamingConventions.PropertyName(associationMember.ColumnName));
+                                includeThisPrefix = string.Empty; 
                                 break;
                             }
                         }   
@@ -97,7 +99,7 @@ namespace CodeSmith.SchemaHelper
                                              : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, propertyName);
                 }
                 else
-                    cast = string.Format("{0}{1})", castPrefix, propertyName);
+                    cast = string.Format("{0}{1}{2})", includeThisPrefix, castPrefix, propertyName);
 
                 commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
 

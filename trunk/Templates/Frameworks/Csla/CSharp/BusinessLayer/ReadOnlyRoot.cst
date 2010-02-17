@@ -29,6 +29,7 @@ public override void Render(System.IO.TextWriter writer)
     
     ReadOnlyRoot readOnlyRoot = this.Create<ReadOnlyRoot>();
     this.CopyPropertiesTo(readOnlyRoot);
+    readOnlyRoot.BusinessClassName = string.Format("{0}Info", readOnlyRoot.BusinessClassName);
     
     string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Entities\\{0}.cs", readOnlyRoot.BusinessClassName));
     if (!System.IO.File.Exists(parentFileName))
@@ -42,6 +43,7 @@ public override void Render(System.IO.TextWriter writer)
     
     ReadOnlyRootGenerated readOnlyRootGenerated = this.Create<ReadOnlyRootGenerated>();
     this.CopyPropertiesTo(readOnlyRootGenerated);
+    readOnlyRootGenerated.BusinessClassName = string.Format("{0}Info", readOnlyRootGenerated.BusinessClassName);
     
     readOnlyRootGenerated.RenderToFile(fileName, parentFileName, true);
     
@@ -54,6 +56,7 @@ public override void Render(System.IO.TextWriter writer)
     {
         ReadOnlyRootDataAccess readOnlyRootDataAccess = this.Create<ReadOnlyRootDataAccess>();
         this.CopyPropertiesTo(readOnlyRootDataAccess);
+        readOnlyRootDataAccess.BusinessClassName = string.Format("{0}Info", readOnlyRootDataAccess.BusinessClassName);
         
         readOnlyRootDataAccess.RenderToFile(fileName, parentFileName, true);
     }
@@ -61,6 +64,7 @@ public override void Render(System.IO.TextWriter writer)
     {
         ReadOnlyRootDataAccessParameterized readOnlyRootDataAccessParameterized = this.Create<ReadOnlyRootDataAccessParameterized>();
         this.CopyPropertiesTo(readOnlyRootDataAccessParameterized);
+        readOnlyRootDataAccessParameterized.BusinessClassName = string.Format("{0}Info", readOnlyRootDataAccessParameterized.BusinessClassName);
         
         readOnlyRootDataAccessParameterized.RenderToFile(fileName, parentFileName, true);
     }
@@ -68,6 +72,7 @@ public override void Render(System.IO.TextWriter writer)
     {
         ReadOnlyRootDataAccessStoredProcedures readOnlyRootDataAccessStoredProcedures = this.Create<ReadOnlyRootDataAccessStoredProcedures>();
         this.CopyPropertiesTo(readOnlyRootDataAccessStoredProcedures);
+        readOnlyRootDataAccessStoredProcedures.BusinessClassName = string.Format("{0}Info", readOnlyRootDataAccessStoredProcedures.BusinessClassName);
 
         readOnlyRootDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, true);
 

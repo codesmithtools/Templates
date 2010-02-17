@@ -32,7 +32,7 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria )
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria )
 <% RenderHelper(New DataPortalFetch()) %>
     End Sub
 

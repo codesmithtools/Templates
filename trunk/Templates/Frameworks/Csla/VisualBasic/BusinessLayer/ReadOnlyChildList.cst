@@ -28,7 +28,7 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     'ReadOnlyChildList
     Dim readOnlyChildList As ReadOnlyChildList = Me.Create(Of ReadOnlyChildList)()
     Me.CopyPropertiesTo(readOnlyChildList)
-    readOnlyChildList.BusinessClassName = String.Format("{0}List", readOnlyChildList.BusinessClassName)
+    readOnlyChildList.BusinessClassName = String.Format("{0}InfoList", readOnlyChildList.BusinessClassName)
 
     Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", readOnlyChildList.BusinessClassName))
     If Not System.IO.File.Exists(parentFileName) Then
@@ -40,7 +40,7 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim readOnlyChildListGenerated As ReadOnlyChildListGenerated = Me.Create(Of ReadOnlyChildListGenerated)()
     Me.CopyPropertiesTo(readOnlyChildListGenerated)
-    readOnlyChildListGenerated.BusinessClassName = String.Format("{0}List", readOnlyChildListGenerated.BusinessClassName)
+    readOnlyChildListGenerated.BusinessClassName = String.Format("{0}InfoList", readOnlyChildListGenerated.BusinessClassName)
 
     readOnlyChildListGenerated.RenderToFile(fileName, parentFileName, True)
 
@@ -49,19 +49,19 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
     If DataAccessImplementation = DataAccessMethod.None Then
         Dim readOnlyChildListDataAccess As ReadOnlyChildListDataAccess = Me.Create(Of ReadOnlyChildListDataAccess)()
         Me.CopyPropertiesTo(readOnlyChildListDataAccess)
-        readOnlyChildListDataAccess.BusinessClassName = String.Format("{0}List", readOnlyChildListDataAccess.BusinessClassName)
+        readOnlyChildListDataAccess.BusinessClassName = String.Format("{0}InfoList", readOnlyChildListDataAccess.BusinessClassName)
 
         readOnlyChildListDataAccess.RenderToFile(fileName, parentFileName, True)
     ElseIf DataAccessImplementation = DataAccessMethod.ParameterizedSQL Then
         Dim readOnlyChildListDataAccessParameterized As ReadOnlyChildListDataAccessParameterized = Me.Create(Of ReadOnlyChildListDataAccessParameterized)()
         Me.CopyPropertiesTo(readOnlyChildListDataAccessParameterized)
-        readOnlyChildListDataAccessParameterized.BusinessClassName = String.Format("{0}List", readOnlyChildListDataAccessParameterized.BusinessClassName)
+        readOnlyChildListDataAccessParameterized.BusinessClassName = String.Format("{0}InfoList", readOnlyChildListDataAccessParameterized.BusinessClassName)
 
         readOnlyChildListDataAccessParameterized.RenderToFile(fileName, parentFileName, True)
     ElseIf DataAccessImplementation = DataAccessMethod.StoredProcedures Then
         Dim readOnlyChildListDataAccessStoredProcedures As ReadOnlyChildListDataAccessStoredProcedures = Me.Create(Of ReadOnlyChildListDataAccessStoredProcedures)()
         Me.CopyPropertiesTo(readOnlyChildListDataAccessStoredProcedures)
-        readOnlyChildListDataAccessStoredProcedures.BusinessClassName = String.Format("{0}List", readOnlyChildListDataAccessStoredProcedures.BusinessClassName)
+        readOnlyChildListDataAccessStoredProcedures.BusinessClassName = String.Format("{0}InfoList", readOnlyChildListDataAccessStoredProcedures.BusinessClassName)
         
         readOnlyChildListDataAccessStoredProcedures.RenderToFile(fileName, parentFileName, True)
         
