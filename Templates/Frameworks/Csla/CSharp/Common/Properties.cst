@@ -70,12 +70,12 @@
                 {
 <% if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) { %>
                     if(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
-                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% if(IsChildBusinessObject(association, "Info")) { %>Child<% }%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
 <% } else { %>
                     if(IsNew || !<%= BusinessProjectName %>.<%= associationClassName %>.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.New<%= associationClassName %>());
                     else
-                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% if(IsChildBusinessObject(association)) { %>Child<% }%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
 <% } %>
                 }
 <% } %>
@@ -106,12 +106,12 @@
                 {
 <% if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject(association, "Info")) { %>
                     if(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
-                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% if(IsChildBusinessObject(association, "Info")) { %>Child<% }%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
 <% } else { %>
 					if(IsNew || !<%= BusinessProjectName %>.<%= associationClassName %>.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.New<%= associationClassName %>());
                     else
-                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% if(IsChildBusinessObject(association)) { %>Child<% }%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
 <% } %>
                 }
 
@@ -146,12 +146,12 @@
                 {
 <% if(!BusinessObjectExists(association, "List") && IsReadOnlyBusinessObject(association, "InfoList")) { %>
                     if(<%= BusinessProjectName %>.<%= associationClassName %>List.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
-                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%><% if(IsChildBusinessObject(association, "InfoList")) { %>Child<% }%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
 <% } else { %>
                     if(IsNew || !<%= BusinessProjectName %>.<%= associationClassName %>List.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.NewList());
                     else
-                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%><% if(IsChildBusinessObject(association, "List")) { %>Child<% }%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
 <% } %>
                 }
 

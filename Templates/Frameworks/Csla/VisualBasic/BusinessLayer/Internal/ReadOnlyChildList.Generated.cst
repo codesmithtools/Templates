@@ -47,7 +47,7 @@ Public Partial Class <%= BusinessClassName %>
     #Region "Factory Methods"
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
 
-    Friend Shared Function <%= sc.MethodName %>Child(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
+    Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
         Dim criteria As New <%= ChildBusinessClassName %>Criteria()
 		<%= sc.Members.BuildObjectInitializer() %>
 
