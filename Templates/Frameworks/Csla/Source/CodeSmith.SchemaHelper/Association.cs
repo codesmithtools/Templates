@@ -162,6 +162,18 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
+        private string _tableName = string.Empty;
+        public string TableName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_tableName) && this.Count > 0)
+                    _tableName = this.AssociationType == AssociationType.ManyToOne ? this[0].AssociatedColumn.TableName : this[0].TableName;
+
+                return _tableName;
+            }
+        }
+
         public SearchCriteria SearchCriteria
         {
             get; internal set;

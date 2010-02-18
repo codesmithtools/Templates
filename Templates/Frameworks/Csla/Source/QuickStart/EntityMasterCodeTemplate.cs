@@ -13,6 +13,8 @@ namespace QuickStart
     {
         public EntityMasterCodeTemplate()
         {
+            Criteria = new TableSchemaCollection();
+            CommandObject = new TableSchemaCollection();
             UpdateTableCollections();
         }
 

@@ -289,7 +289,7 @@ namespace QuickStart
             if (association.Count <= 0)
                 return false;
 
-            string key = string.Format("{0}{1}", association[0].TableName, suffix);
+            string key = string.Format("{0}{1}", association.TableName, suffix);
             if (ContextData.Get(key) == null) return false;
 
             var value = ContextData[key];
@@ -315,7 +315,7 @@ namespace QuickStart
             if (association.Count <= 0)
                 return false;
 
-            string key = string.Format("{0}{1}", association[0].TableName, suffix);
+            string key = string.Format("{0}{1}", association.TableName, suffix);
             if (ContextData.Get(key) == null) return false;
 
             var value = ContextData[key];
@@ -352,7 +352,7 @@ namespace QuickStart
             if (association.Count <= 0)
                 return false;
 
-            string key = string.Format("{0}{1}", association[0].TableName, suffix);
+            string key = string.Format("{0}{1}", association.TableName, suffix);
 
             return ContextData.Get(key) != null;
         }

@@ -22,15 +22,15 @@
                 if (base.IsDirty) return true;
 <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
-                if FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && (<%= association.PropertyName %>.IsDirty) return true;
+                if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.PropertyName %>.IsDirty) return true;
 <% } %>
 <%-- Many-To-One --%>
 <% foreach(Association association in Entity.AssociatedManyToOne) { %>
-                if FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && (<%= association.PropertyName %>.IsDirty) return true;
+                if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.PropertyName %>.IsDirty) return true;
 <% } %>
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(Association association in Entity.AssociatedOneToMany) { %>
-                if FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && (<%= association.PropertyName %>.IsDirty) return true;
+                if (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property) && <%= association.PropertyName %>.IsDirty) return true;
 <% } %>
 
                 return false;
