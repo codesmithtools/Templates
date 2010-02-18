@@ -15,23 +15,25 @@
 <%  For Each member As Member in Entity.MembersNoRowVersion
 If UseMemberVariables Then %>
     Private Shared ReadOnly <%= member.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= member.PropertyName %>)
-    Private <%= member.PrivateMemberVariableName %> As <%= member.SystemType %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue<%= member.BuildDataObjectField() %>
+    Private <%= member.PrivateMemberVariableName %> As <%= member.SystemType %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue
 <% If(member.HasDescription) Then %>
     ''' <summary>
     ''' <%= member.Description %>
     ''' </summary>
 <% End If %>
+	<%= member.BuildDataObjectField() %>
     Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
         Get 
             Return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>) 
         End Get
 <% else %>
-    Private Shared ReadOnly <%= member.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= member.PropertyName %>)<%= member.BuildDataObjectField() %>
+    Private Shared ReadOnly <%= member.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= member.PropertyName %>)
 <% If(member.HasDescription) Then %>
     ''' <summary>
     ''' <%= member.Description %>
     ''' </summary>
 <% End If %>
+	<%= member.BuildDataObjectField() %>
     Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
         Get 
             Return GetProperty(<%= member.PrivateMemberVariableName %>Property)
