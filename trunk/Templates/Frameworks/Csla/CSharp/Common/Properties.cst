@@ -108,7 +108,7 @@
                     if(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% if(IsChildBusinessObject(association, "Info")) { %>Child<% }%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
 <% } else { %>
-                if(IsNew || !<%= BusinessProjectName %>.<%= associationClassName %>.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
+					if(IsNew || !<%= BusinessProjectName %>.<%= associationClassName %>.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.New<%= associationClassName %>());
                     else
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% if(IsChildBusinessObject(association)) { %>Child<% }%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
