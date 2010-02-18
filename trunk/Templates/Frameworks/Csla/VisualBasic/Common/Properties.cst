@@ -80,13 +80,13 @@ If UseMemberVariables then %>
 
 <% If(BusinessObjectExists(association) = False AndAlso IsReadOnlyBusinessObject( association, "Info")) Then %>
                 If(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% If(IsChildBusinessObject(association, "Info")) Then %>Child<%End If%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
 <% Else %>
                 If (Me.IsNew Or Not <%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %>.New<%= associationClassName %>())
                 Else
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% If(IsChildBusinessObject(association)) Then %>Child<%End If%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
 <% End If %> 
             End If
@@ -113,13 +113,13 @@ If UseMemberVariables then %>
 
 <% If(BusinessObjectExists(association) = False AndAlso IsReadOnlyBusinessObject( association, "Info")) Then %>
                 If(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% If(IsChildBusinessObject(association, "Info")) Then %>Child<%End If%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
 <% Else %>
                 If (Me.IsNew Or Not <%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %>.New<%= associationClassName %>())
                 Else
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% If(IsChildBusinessObject(association)) Then %>Child<%End If%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
 <% End If %>  
             End If
@@ -155,13 +155,13 @@ If UseMemberVariables Then %>
 
 <% If(BusinessObjectExists(association) = False AndAlso IsReadOnlyBusinessObject( association, "Info")) Then %>
                 If(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% If(IsChildBusinessObject(association, "Info")) Then %>Child<%End If%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
 <% Else %>
                 If (Me.IsNew Or Not <%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.New<%= associationClassName %>())
                 Else
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% If(IsChildBusinessObject(association)) Then %>Child<%End If%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
 <% End If %> 
             End If
@@ -183,13 +183,13 @@ If UseMemberVariables Then %>
 
 <% If(BusinessObjectExists(association) = False AndAlso IsReadOnlyBusinessObject( association, "Info")) Then %>
                 If(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% If(IsChildBusinessObject(association, "Info")) Then %>Child<%End If%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
 <% Else %>
                 If (Me.IsNew Or Not <%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.New<%= associationClassName %>())
                 Else
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%><% If(IsChildBusinessObject(association)) Then %>Child<%End If%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
 <% End If %> 
             End If
@@ -223,13 +223,13 @@ Public ReadOnly Property <%= association.PropertyName %>() As <%= associationCla
 
 <% If(BusinessObjectExists(association, "List") = False AndAlso IsReadOnlyBusinessObject( association, "InfoList")) Then %>
                 If(<%= BusinessProjectName %>.<%= associationClassName %>List.Exists(criteria)) Then
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%><% If(IsChildBusinessObject(association, "InfoList")) Then %>Child<%End If%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
 <% Else %>
                 If (Me.IsNew Or Not <%= BusinessProjectName %>.<%= associationClassName %>List.Exists(criteria)) Then
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.NewList())
                 Else
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%><% If(IsChildBusinessObject(association, "List")) Then %>Child<%End If%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
 <% End If%>
             End If
