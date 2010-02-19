@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -21,26 +21,29 @@
             command.CommandType = CommandType.StoredProcedure
             <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, True, True) %>
 
-<% If (Entity.HasRowVersionMember) Then %>
-            Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                If reader.Read() Then
-                    _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
-                End If
-            End Using
-<% Else %>
             command.ExecuteNonQuery()
-<% End If
-If (Entity.HasIdentityMember) Then %>
-<% for each member As Member in Entity.PrimaryKey.KeyMembers
-If(member.IsIdentity) Then
-    If(UseMemberVariables) Then %>
-            <%= member.PrivateMemberVariableName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value,<%= member.SystemType %>)
-    <% else %>
-            LoadProperty(<%= member.PrivateMemberVariableName %>Property, DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value,<%= member.SystemType %>))
-    <%  End If
-End If
-Next %>
+
+<% If (Entity.HasRowVersionMember) Then %>
+            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
+<% For Each member As Member In Entity.PrimaryKey.KeyMembers
+    If(member.IsIdentity) Then
+        If(UseMemberVariables) Then %>
+            <%= member.PrivateMemberVariableName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
+<%      Else %>
+            LoadProperty(<%= member.PrivateMemberVariableName %>Property, DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>))
+<%      End If
+    End If
+Next %>
+<% For Each member As Member In Entity.PrimaryKey.KeyMembers
+    If Not (member.IsIdentity) Then
+        If(UseMemberVariables) Then %>
+            _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
+<%      Else %>
+            LoadProperty(_original<%= member.PropertyName %>Property, Me.<%= member.PropertyName %>)
+<%      End If
+    End If
+Next %>
         End Using
 
         OnChildInserted()

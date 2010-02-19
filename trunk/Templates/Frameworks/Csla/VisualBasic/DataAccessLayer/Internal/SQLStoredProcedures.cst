@@ -1,4 +1,4 @@
-<%--------------------------------------------------------------------------------------------------------------
+﻿<%--------------------------------------------------------------------------------------------------------------
 * Author: Eric J. Smith
 * Modified By: Blake Niemyjski
 * Description: This template will generate standard CRUD stored procedures for a given database table.
@@ -109,13 +109,13 @@ INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
 %>
 
 CREATE PROCEDURE <%= GetUpdateStoredProcedureName() %>
-<% GenerateParameters(SourceTable.Columns, 1, false) %>
+<% GenerateParameters(SourceTable.Columns, 1, false, false, false, true) %>
 AS
 
 UPDATE <%= GetTableOwner() %>[<%= SourceTable.Name %>] SET
     <% GenerateUpdates(SourceTable.NonPrimaryKeyColumns, 1, false) %>
 WHERE
-    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1) %>
+    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, true) %>
 
 <%
     GenerateProcedureFooter(GetUpdateStoredProcedureName())
@@ -136,7 +136,7 @@ AS
 DELETE FROM
     <%= GetTableOwner() %>[<%= SourceTable.Name %>]
 WHERE
-    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1) %>
+    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false) %>
 
 <%
     GenerateProcedureFooter(GetDeleteStoredProcedureName())
@@ -254,8 +254,25 @@ Public Sub GenerateParameter(column As ColumnSchema, indentLevel As Integer, isF
 End Sub
 
 Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal isOutput As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean)
+	GenerateParameter(column, indentLevel, isFirst, isLast, isOutput, includeTimeStamp, makeParametersNullable, False)
+End Sub
+
+
+Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal isOutput As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean, ByVal includeOriginalParam As Boolean)
     If Not includeTimeStamp AndAlso ColumnIsTimestamp(column) Then
         Exit Sub
+    End If
+    
+    If includeOriginalParam AndAlso column.IsPrimaryKeyMember AndAlso column.ExtendedProperties.Contains("CS_IsIdentity") AndAlso Not (DirectCast(column.ExtendedProperties("CS_IsIdentity").Value, Boolean)) Then
+        GenerateIndent(indentLevel)
+        Response.Write(GetSqlParameterStatement(column, isOutput, includeOriginalParam))
+        Response.Write(",")
+        
+        If indentLevel >= 0 Then
+            Response.WriteLine("")
+        ElseIf Not isLast Then
+            Response.Write(" ")
+        End If
     End If
     
     GenerateIndent(indentLevel)
@@ -279,9 +296,12 @@ Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As 
         Response.Write(" ")
     End If
 End Sub
-
 Public Function GetSqlParameterStatement(ByVal column As DataObjectBase, ByVal isOutput As Boolean) As String
-    Dim param As String = String.Format("{0}{1} {2}", ParameterPrefix, column.Name, column.NativeType)
+    Return GetSqlParameterStatement(column, isOutput, False)
+End Function
+
+Public Function GetSqlParameterStatement(ByVal column As DataObjectBase, ByVal isOutput As Boolean, ByVal includeOriginalParam As Boolean) As String
+    Dim param As String = String.Format("{0}{1}{2} {3}", ParameterPrefix, If(includeOriginalParam, "Original", ""), column.Name, column.NativeType)
     
     If Not IsUserDefinedType(column) Then
         Select Case column.DataType
@@ -342,8 +362,12 @@ Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal ind
 End Sub
 
 Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTrailingComma As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean)
+    GenerateParameters(columns, indentLevel, includeTrailingComma, includeTimeStamp, makeParametersNullable, False)
+End Sub
+
+Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeTrailingComma As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean, ByVal includeOriginalParam As Boolean)
     For Each column As Object In columns.AsIndexedEnumerable()
-        GenerateParameter(column.Value, indentLevel, column.IsFirst, column.IsLast AndAlso Not includeTrailingComma, False, includeTimeStamp, makeParametersNullable)
+        GenerateParameter(column.Value, indentLevel, column.IsFirst, column.IsLast AndAlso Not includeTrailingComma, False, includeTimeStamp, makeParametersNullable, includeOriginalParam)
     Next
 End Sub
 
@@ -403,7 +427,7 @@ Public Sub GenerateUpdates(ByVal columns As IList(Of ColumnSchema), ByVal indent
     Next
 End Sub
 
-Public Sub GenerateCondition(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean)
+Public Sub GenerateCondition(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeOriginal As Boolean)
     GenerateIndent(indentLevel)
     If Not isFirst Then
         Response.Write("AND ")
@@ -412,6 +436,11 @@ Public Sub GenerateCondition(ByVal column As ColumnSchema, ByVal indentLevel As 
     Response.Write(column.Name)
     Response.Write("] = ")
     Response.Write(ParameterPrefix)
+
+If includeOriginal AndAlso column.IsPrimaryKeyMember AndAlso column.ExtendedProperties.Contains("CS_IsIdentity") AndAlso Not (DirectCast(column.ExtendedProperties("CS_IsIdentity").Value, Boolean)) Then
+    Response.Write("Original")
+End If
+
     Response.Write(column.Name)
     If indentLevel >= 0 Then
         Response.WriteLine("")
@@ -420,13 +449,16 @@ Public Sub GenerateCondition(ByVal column As ColumnSchema, ByVal indentLevel As 
     End If
 End Sub
 
-Public Sub GenerateConditions(ByVal columns As IList(Of MemberColumnSchema), ByVal indentLevel As Integer)
-    GenerateConditions(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel)
+Public Sub GenerateConditions(ByVal columns As IList(Of MemberColumnSchema), ByVal indentLevel As Integer, ByVal includeTimeStamp As Boolean)
+    GenerateConditions(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel, includeTimeStamp)
 End Sub
 
 Public Sub GenerateConditions(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer)
+    GenerateConditions(columns, indentLevel, false)
+End Sub
+Public Sub GenerateConditions(ByVal columns As IList(Of ColumnSchema), ByVal indentLevel As Integer, ByVal includeOriginal As Boolean)
     For Each column As Object In columns.AsIndexedEnumerable()
-        GenerateCondition(column.Value, indentLevel, column.IsFirst, column.IsLast)
+        GenerateCondition(column.Value, indentLevel, column.IsFirst, column.IsLast, includeOriginal)
     Next
 End Sub
 

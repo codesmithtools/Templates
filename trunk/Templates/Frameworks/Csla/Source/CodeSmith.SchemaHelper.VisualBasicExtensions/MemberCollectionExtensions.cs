@@ -15,13 +15,32 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildObjectInitializer(this List<Member> members, bool isObjectFactory)
         {
+            return members.BuildObjectInitializer(isObjectFactory, false);
+        }
+
+        public static string BuildObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName)
+        {
+            return members.BuildObjectInitializer(isObjectFactory, usePropertyName, false);
+        }
+        
+        public static string BuildObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal)
+        {
+            return members.BuildObjectInitializer(isObjectFactory, usePropertyName, includeOriginal, "criteria.");
+        }
+        
+        public static string BuildObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal, string prefix)
+        {
             string parameters = string.Empty;
 
             foreach (Member member in members)
             {
-                string propertyName = isObjectFactory ? string.Format("item.{0}", member.PropertyName) : member.VariableName;
+                var propertyName = isObjectFactory ? 
+                                string.Format("item.{0}", member.PropertyName) : 
+                                usePropertyName ? member.PropertyName : member.VariableName;
 
-                parameters += string.Format("\r\n\t\tcriteria.{0} = {1}{2}", member.PropertyName, propertyName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
+                if (includeOriginal && member.IsPrimaryKey && !member.IsIdentity)
+                    propertyName = isObjectFactory ? string.Format("item.Original{0}", member.PropertyName) : string.Format("Original{0}", member.PropertyName);
+                parameters += string.Format("\r\n\t\t\t{3}{0} = {1}{2}", member.PropertyName, propertyName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty, prefix);
             }
 
             return parameters.TrimStart(new[] { '\r', '\n', '\t', ',', ' ' });
@@ -67,12 +86,18 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildCommandParameters(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool isChildInsertUpdate, bool includeOutPutParameters)
         {
+            return members.BuildCommandParameters(isObjectFactory, usePropertyName, isChildInsertUpdate, includeOutPutParameters, false);
+        }
+
+        public static string BuildCommandParameters(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool isChildInsertUpdate, bool includeOutPutParameters, bool isUpdateStatement)
+        {
             string commandParameters = string.Empty;
             string castPrefix = isObjectFactory ? "item." : string.Empty;
 
             foreach (Member member in members)
             {
                 string includeThisPrefix = !isObjectFactory ? "Me." : string.Empty;
+                string originalPropertyName = isUpdateStatement && member.IsPrimaryKey && !member.IsIdentity ? string.Format("Original{0}", member.PropertyName) : string.Empty;
                 string propertyName = member.PropertyName;
                 
                 // Resolve property Name from relationship.
@@ -92,15 +117,23 @@ namespace CodeSmith.SchemaHelper
                     }
                 }
                 
+                string originalCast;
                 string cast;
                 if (member.SystemType.Contains("SmartDate"))
                 {
                     cast = member.IsNullable ? string.Format("IIf({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, DateTime), System.DBNull.Value))", castPrefix, propertyName)
                                              : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, propertyName);
+					originalCast = member.IsNullable ? string.Format("IIf({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, DateTime), System.DBNull.Value))", castPrefix, originalPropertyName)
+                                             		 : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, originalPropertyName);
                 }
                 else
+                {
                     cast = string.Format("{0}{1}{2})", includeThisPrefix, castPrefix, propertyName);
+                    originalCast = string.Format("{0}{1}{2})", includeThisPrefix, castPrefix, originalPropertyName);
+                }
 
+                if (isUpdateStatement && !string.IsNullOrEmpty(originalPropertyName))
+                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}Original{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, originalCast);
                 commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
 
                 if (member.IsIdentity && includeOutPutParameters)
@@ -123,6 +156,19 @@ namespace CodeSmith.SchemaHelper
             }
 
             return commandParameters.TrimStart(new[] { '\t', '\n' });
+        }
+
+        public static string BuildIdentityKeyEqualityStatements(this List<Member> members)
+        {
+            string statement = string.Empty;
+
+            foreach (Member member in members)
+            {
+                if(member.IsPrimaryKey && !member.IsIdentity)
+                    statement += string.Format(" Or Not Original{0} = {0}", member.PropertyName);
+            }
+
+            return statement.Substring(3, statement.Length - 3).TrimStart(new[] { ' ' });
         }
     }
 }

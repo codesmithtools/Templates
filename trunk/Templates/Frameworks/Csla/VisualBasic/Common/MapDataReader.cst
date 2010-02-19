@@ -22,8 +22,14 @@
 <% for each [member] as Member in Entity.MembersNoRowVersion 
 If UseMemberVariables Then %>
             <%= [member].PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+<%If(member.IsPrimaryKey And Not member.IsIdentity) %>
+             _original<%= member.PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+<% End If %>
 <%  else  %>
             LoadProperty(<%= [member].PrivateMemberVariableName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
+<%If(member.IsPrimaryKey And Not member.IsIdentity) %>
+            LoadProperty(_original<%= member.PropertyName %>Property, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>"))<% else %>ADOHelper.GetBytes(reader," <%= [member].ColumnName %>"))<% End If %>
+<% End If %>
 <% End If 
 Next %>
         End Using

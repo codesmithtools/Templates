@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -17,25 +17,49 @@
         End If
 
         If connection.State <> ConnectionState.Open Then connection.Open()
-        Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersUpdateInsert.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements() %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = <%= ParameterPrefix  %><%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
+        Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersUpdateInsert.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements(True) %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = <%= ParameterPrefix  %><%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
         Using command As New SqlCommand(commandText, connection)
-			<%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, True) %>
+            <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, True, False, True) %>
 <% If (entity.HasRowVersionMember) Then %>
             command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= entity.RowVersionMember.ColumnName %>", _timestamp)
 <% End If %>
 
+<% If (entity.HasRowVersionMember Or entity.HasIdentityMember) Then %>
             Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                 'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
                 If reader.RecordsAffected = 0 Then
                     Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
                 End If
 <% If (Entity.HasRowVersionMember) Then %>
-
-                If reader.Read() then
-                    _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
-                End If
+                _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
+<%For Each member As Member In Entity.PrimaryKey.KeyMembers
+    If(member.IsIdentity) Then
+        If(UseMemberVariables) Then %>
+                <%= member.PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>
+<%      Else %>
+                LoadProperty(<%= member.PrivateMemberVariableName %>Property,<%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>
+<%      End If
+    End If
+Next %>
             End Using
+<%Else %>
+            'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+            Dim result As Integer = command.ExecuteNonQuery()
+            If (result = 0) Then
+                throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+            End If
+<% End If %>
+
+<% For Each member As Member In Entity.PrimaryKey.KeyMembers
+    If Not (member.IsIdentity) Then
+        If(UseMemberVariables) Then %>
+            _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
+<%      Else %>
+            LoadProperty(_original<%= member.PropertyName %>Property, Me.<%= member.PropertyName %>)
+<%      End If
+    End If
+Next %>
         End Using
 
         OnChildUpdated()

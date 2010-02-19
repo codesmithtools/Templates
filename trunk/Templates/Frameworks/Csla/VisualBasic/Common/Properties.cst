@@ -30,7 +30,7 @@ If UseMemberVariables Then %>
     ''' <%= member.Description %>
     ''' </summary>
 <% End If %>
-	<%= member.BuildDataObjectField() %>
+    <%= member.BuildDataObjectField() %>
     Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
         Get 
             Return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>) 
@@ -38,15 +38,32 @@ If UseMemberVariables Then %>
         <% If member.IsReadOnly Then %>Friend <% End If %>Set (value As <%= member.SystemType %>)
             SetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>, value)
         End Set
+    End Property
+<%If(member.IsPrimaryKey And Not member.IsIdentity) %>
+
+    Private Shared ReadOnly _original<%= member.PropertyName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.Original<%= member.PropertyName %>)
+    Private _original<%= member.PropertyName %> As <%= member.SystemType %> = _original<%= member.PropertyName %>Property.DefaultValue
+    ''' <summary>
+    ''' Holds the original value for <%= member.PropertyName %>. This is used for non identity primary keys.
+    ''' </summary>
+    Friend Property Original<%= member.PropertyName %>() As <%= member.SystemType %>
+        Get 
+            Return GetProperty(_original<%= member.PropertyName %>Property, _original<%= member.PropertyName %>) 
+        End Get
+        Set (value As <%= member.SystemType %>)
+            SetProperty(_original<%= member.PropertyName %>Property, _original<%= member.PropertyName %>, value)
+        End Set
+    End Property
+<% End If %>
 <% else %>
-    
+
     Private Shared ReadOnly <%= member.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.<%= member.PropertyName %>)
 <% If(member.HasDescription) Then %>
     ''' <summary>
     ''' <%= member.Description %>
     ''' </summary>
 <% End If %>
-	<%= member.BuildDataObjectField() %>
+    <%= member.BuildDataObjectField() %>
     Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
         Get 
             Return GetProperty(<%= member.PrivateMemberVariableName %>Property)
@@ -54,8 +71,23 @@ If UseMemberVariables Then %>
         <% If member.IsReadOnly Then %>Friend <% End If %>Set (ByVal value As <%= member.SystemType %>)
             SetProperty(<%= member.PrivateMemberVariableName %>Property, value)
         End Set
-<% End If %>
     End Property
+<%If(member.IsPrimaryKey And Not member.IsIdentity) %>
+
+    Private Shared ReadOnly _original<%= member.PropertyName %>Property As PropertyInfo(Of <%= member.SystemType %>) = RegisterProperty(Of <%= member.SystemType %>)(Function(p As <%= BusinessClassName %>) p.Original<%= member.PropertyName %>)
+    ''' <summary>
+    ''' Holds the original value for <%= member.PropertyName %>. This is used for non identity primary keys.
+    ''' </summary>
+    Friend Property Original<%= member.PropertyName %>() As <%= member.SystemType %>
+        Get 
+            Return GetProperty(_original<%= member.PropertyName %>Property) 
+        End Get
+        Set (value As <%= member.SystemType %>)
+            SetProperty(_original<%= member.PropertyName %>Property, value)
+        End Set
+    End Property
+<% End If %>
+<% End If %>
     
 <% Next %>
 <%-- One-To-Zero-Or-One --%>

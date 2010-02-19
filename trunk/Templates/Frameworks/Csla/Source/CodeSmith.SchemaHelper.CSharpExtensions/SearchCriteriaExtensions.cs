@@ -96,7 +96,7 @@ namespace CodeSmith.SchemaHelper
 
                 foreach (Member member in sc.Members)
                 {
-                    parameters += string.Format("\r\n\t\t\t\t{0}.{1} = item.{1};", associationPropertyName, member.PropertyName);
+                    parameters += string.Format("\r\n\t\t\t\t{0}.{1} = {1}{2};", associationPropertyName, member.PropertyName, prefix);
                 }
 
                 #endregion

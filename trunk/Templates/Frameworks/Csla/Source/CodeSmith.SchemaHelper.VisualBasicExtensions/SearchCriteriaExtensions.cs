@@ -60,6 +60,11 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildUpdateStatements(this SearchCriteria sc, string associationPropertyName)
         {
+            return sc.BuildUpdateStatements(associationPropertyName, "item.");
+        }
+
+        public static string BuildUpdateStatements(this SearchCriteria sc, string associationPropertyName, string prefix)
+        {
             string parameters = string.Empty;
 
             if (sc.SearchCriteriaType == SearchCriteriaEnum.ForeignKey)
@@ -82,7 +87,7 @@ namespace CodeSmith.SchemaHelper
                         propertyName = string.Format("{0}{1}", Util.NamingConventions.PropertyName(member.ColumnName), nullable);
                     }
 
-                    parameters += string.Format("\r\n\t\t{0}.{1} = item.{2}", associationPropertyName, resolvedPropertyName, propertyName);
+                    parameters += string.Format("\r\n\t\t{0}.{1} = {2}{3}", associationPropertyName, resolvedPropertyName, prefix, propertyName);
                 }
             }
             else
@@ -91,7 +96,7 @@ namespace CodeSmith.SchemaHelper
 
                 foreach (Member member in sc.Members)
                 {
-                    parameters += string.Format("\r\n\t\t{0}.{1} = item.{1}", associationPropertyName, member.PropertyName);
+                    parameters += string.Format("\r\n\t\t{0}.{1} = {1}{2}", associationPropertyName, member.PropertyName, prefix);
                 }
 
                 #endregion
