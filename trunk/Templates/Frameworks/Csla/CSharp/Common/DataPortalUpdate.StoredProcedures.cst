@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -14,40 +14,72 @@
             OnUpdating(ref cancel);
             if (cancel) return;
 
+<% if(!Entity.HasIdentityMember) { %>
+            if(<%= Entity.PrimaryKey.KeyMembers.BuildIdentityKeyEqualityStatements()%>)
+            {
+                // Insert new child.
+                <%= BusinessClassName %> item = new <%= BusinessClassName %> {<%= Entity.MembersNoRowVersion.BuildObjectInitializer(false, true) %>};
+                item = item.Save();
+
+                // Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
+<% foreach(Association association in Entity.AssociatedOneToMany) { %>
+                foreach(<%= association.ClassName %> itemToUpdate in <%= association.PropertyName %>)
+                {
+<%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "") %>
+                }
+<% } %>
+
+                // Create a new connection.
+                using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
+                {
+                    connection.Open();
+                    FieldManager.UpdateChildren(this, connection);
+                }
+
+                // Delete the old.
+                DataPortal_Delete(new <%= BusinessClassName %>Criteria {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(false, false, true) %>});
+
+                // Mark the original as the new one.
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { %>
+                Original<%= member.PropertyName %> = <%= member.PropertyName %>;
+<% } }%>
+
+                return;
+            }
+
+<% } %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
                 using(SqlCommand command = new SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, false, true) %>
+                    <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, false, true, true) %>
 <% if(Entity.HasRowVersionMember) { %>
                     command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", _timestamp);
 <% } %>
-
-<% if(Entity.HasRowVersionMember) { %>
-                    using(var reader = new SafeDataReader(command.ExecuteReader()))
-                    {
-                        //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                        if(reader.RecordsAffected == 0)
-                            throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-
-                        if(reader.Read())
-                        {
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-                        }
-                    }
-<% } else { %>
                     //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
                     int result = command.ExecuteNonQuery();
                     if (result == 0)
                         throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-<% } %>
+
+<% if(Entity.HasRowVersionMember) { %>
+                    _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { if(UseMemberVariables) { %>
+                <%= member.PrivateMemberVariableName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
+<% } else { %>
+                LoadProperty(<%= member.PrivateMemberVariableName %>Property,(<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
+<% } } } %>
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { if(UseMemberVariables) { %>
+                    _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
+<% } else { %>
+                    LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
+<% } } } %>
                 }
-                <% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0){ %>
-							
-					FieldManager.UpdateChildren(this, connection);
-				<% } %>
+<% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0){ %>
+
+                FieldManager.UpdateChildren(this, connection);
+<% } %>
             }
 
             OnUpdated();

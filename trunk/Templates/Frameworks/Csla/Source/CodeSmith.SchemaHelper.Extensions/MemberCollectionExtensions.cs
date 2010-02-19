@@ -98,11 +98,19 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildWhereStatements(this List<Member> members)
         {
+            return members.BuildWhereStatements(false);
+        }
+
+        public static string BuildWhereStatements(this List<Member> members, bool isUpdate)
+        {
             string columnNames = string.Empty;
 
             foreach (Member member in members)
             {
-                columnNames += string.Format("[{0}] = {1} AND ", member.ColumnName, member.BuildParameterVariableName());
+                if(isUpdate && !member.IsIdentity)
+                    columnNames += string.Format("[{0}] = {1} AND ", member.ColumnName, string.Format("{0}Original{1}", Configuration.Instance.ParameterPrefix, member.ColumnName));
+                else
+                    columnNames += string.Format("[{0}] = {1} AND ", member.ColumnName, member.BuildParameterVariableName());
             }
 
             return string.Format("WHERE {0}", columnNames.Remove(columnNames.Length - 5, 5));

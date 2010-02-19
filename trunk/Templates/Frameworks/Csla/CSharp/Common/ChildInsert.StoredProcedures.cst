@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -14,28 +14,25 @@
             OnChildInserting(ref cancel);
             if (cancel) return;
 
-			if(connection.State != ConnectionState.Open) connection.Open();
+            if(connection.State != ConnectionState.Open) connection.Open();
             using(SqlCommand command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, true, true) %>
 
-<% if(Entity.HasRowVersionMember) { %>
-                using(var reader = new SafeDataReader(command.ExecuteReader()))
-                {
-                    if(reader.Read())
-                    {
-                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-                    }
-                }
-<% } else { %>
                 command.ExecuteNonQuery();
-<% } if(Entity.HasIdentityMember) { %>
-<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { if(UseMemberVariables) { %>
-                <%= member.PrivateMemberVariableName %> =  (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
+
+<% if(Entity.HasRowVersionMember) { %>
+                _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+<% }  foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { if(UseMemberVariables) { %>
+                <%= member.PrivateMemberVariableName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
 <% } else { %>
-                LoadProperty(<%= member.PrivateMemberVariableName %>Property, (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
-<% } } } } %>
+                LoadProperty(<%= member.PrivateMemberVariableName %>Property,(<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
+<% } } else { if(UseMemberVariables) {  %>
+                _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
+<% } else { %>
+                LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
+<% } } } %>
             }
 
             OnChildInserted();

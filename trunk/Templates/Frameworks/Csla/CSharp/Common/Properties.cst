@@ -34,7 +34,19 @@
             <% if(member.IsReadOnly) { %>internal <% } %>set { SetProperty(<%= member.PrivateMemberVariableName %>Property, ref <%= member.PrivateMemberVariableName %>, value); }
         }
 
-<% } else { %>
+<%if (member.IsPrimaryKey && !member.IsIdentity) { %>
+        private static readonly PropertyInfo< <%= member.SystemType %> > _original<%= member.PropertyName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.Original<%= member.PropertyName %>);
+        private <%= member.SystemType %> _original<%= member.PropertyName %> = _original<%= member.PropertyName %>Property.DefaultValue;
+        /// <summary>
+        /// Holds the original value for <%= member.PropertyName %>. This is used for non identity primary keys.
+        /// </summary>
+        internal <%= member.SystemType %> Original<%= member.PropertyName %>
+        {
+            get { return GetProperty(_original<%= member.PropertyName %>Property, _original<%= member.PropertyName %>); }
+            set { SetProperty(_original<%= member.PropertyName %>Property, ref _original<%= member.PropertyName %>, value); }
+        }
+
+<% } } else { %>
         private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>);<%= member.BuildDataObjectField() %>
 <% if(member.HasDescription) { %>
         /// <summary>
@@ -47,7 +59,18 @@
             <% if(member.IsReadOnly) { %>internal <% } %>set{ SetProperty(<%= member.PrivateMemberVariableName %>Property, value); }
         }
 
-<% } } %>
+<%if (member.IsPrimaryKey && !member.IsIdentity) { %>
+        private static readonly PropertyInfo< <%= member.SystemType %> > _original<%= member.PropertyName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.Original<%= member.PropertyName %>);
+        /// <summary>
+        /// Holds the original value for <%= member.PropertyName %>. This is used for non identity primary keys.
+        /// </summary>
+        internal <%= member.SystemType %> Original<%= member.PropertyName %>
+        {
+            get { return GetProperty(_original<%= member.PropertyName %>Property); }
+            set{ SetProperty(_original<%= member.PropertyName %>Property, value); }
+        }
+
+<% } } } %>
 <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { 
     string associationClassName = association.ClassName;
