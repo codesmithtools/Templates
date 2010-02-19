@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -14,18 +14,19 @@
             OnChildInserting(ref cancel);
             if (cancel) return;
 
-			if(connection.State != ConnectionState.Open) connection.Open();
+            if(connection.State != ConnectionState.Open) connection.Open();
             const string commandText = "INSERT INTO [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] (<%= Entity.MembersUpdateInsert.BuildDataBaseColumns() %>) VALUES (<%= Entity.MembersUpdateInsert.BuildDataBaseParameters() %>)<%= Entity.BuildInsertSelectStatement() %>";
             using(SqlCommand command = new SqlCommand(commandText, connection))
             {
                 <%= Entity.MembersUpdateInsert.BuildCommandParameters(false, false, true) %>
 
+<% if(Entity.HasRowVersionMember || Entity.HasIdentityMember) { %>
                 using(var reader = new SafeDataReader(command.ExecuteReader()))
                 {
                     if(reader.Read())
                     {
 <% if(Entity.HasRowVersionMember) { %>
-                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");                        
+                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { if(UseMemberVariables) { %>
                         <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
 <% } else { %>
@@ -33,6 +34,18 @@
 <% } } } %>
                     }
                 }
+<% } else { %>
+                //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                int result = command.ExecuteNonQuery();
+                if (result == 0)
+                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+<% } %>
+
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { if(UseMemberVariables) { %>
+                _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
+<% } else { %>
+                LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
+<% } } } %>
             }
 
             OnChildInserted();

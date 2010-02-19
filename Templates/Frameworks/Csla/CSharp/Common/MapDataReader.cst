@@ -20,9 +20,13 @@
 <% } %>
 <% foreach(Member member in Entity.MembersNoRowVersion) { if(UseMemberVariables) { %>
                 <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
-<% } else { %>
+<%if (member.IsPrimaryKey && !member.IsIdentity) { %>
+                _original<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
+<% } } else { %>
                 LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>ADOHelper.GetBytes(reader," <%= member.ColumnName %>"));<% } %>
-<% } } %>
+<%if (member.IsPrimaryKey && !member.IsIdentity) { %>
+                LoadProperty(_original<%= member.PropertyName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>ADOHelper.GetBytes(reader," <%= member.ColumnName %>"));<% } %>
+<% } } } %>
             }
 
             OnMapped();

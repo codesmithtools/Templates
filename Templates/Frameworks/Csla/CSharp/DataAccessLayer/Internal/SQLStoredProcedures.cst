@@ -1,4 +1,4 @@
-<%--------------------------------------------------------------------------------------------------------------
+﻿<%--------------------------------------------------------------------------------------------------------------
 * Author: Eric J. Smith
 * Modified By: Blake Niemyjski
 * Description: This template will generate standard CRUD stored procedures for a given database table.
@@ -117,13 +117,13 @@ INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
 %>
 
 CREATE PROCEDURE <%= GetUpdateStoredProcedureName() %>
-<% GenerateParameters(SourceTable.Columns, 1, false); %>
+<% GenerateParameters(SourceTable.Columns, 1, false, false, false, true); %>
 AS
 
 UPDATE <%= GetTableOwner() %>[<%= SourceTable.Name %>] SET
     <% GenerateUpdates(SourceTable.NonPrimaryKeyColumns, 1, false); %>
 WHERE
-    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1); %>
+    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, true); %>
 
 <%
     GenerateProcedureFooter(GetUpdateStoredProcedureName());
@@ -144,7 +144,7 @@ AS
 DELETE FROM
     <%= GetTableOwner() %>[<%= SourceTable.Name %>]
 WHERE
-    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1); %>
+    <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false); %>
 
 <%
     GenerateProcedureFooter(GetDeleteStoredProcedureName());
@@ -274,8 +274,29 @@ public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst
 
 public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst, bool isLast, bool isOutput, bool includeTimeStamp, bool makeParametersNullable)
 {
+    GenerateParameter(column, indentLevel, isFirst, isLast, isOutput, includeTimeStamp, makeParametersNullable, false);
+}
+
+public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst, bool isLast, bool isOutput, bool includeTimeStamp, bool makeParametersNullable, bool includeOriginalParam)
+{
     if(!includeTimeStamp && ColumnIsTimestamp(column))
         return;
+
+    if(includeOriginalParam && column.IsPrimaryKeyMember && column.ExtendedProperties.Contains("CS_IsIdentity") && !((bool)column.ExtendedProperties["CS_IsIdentity"].Value))
+    {
+        GenerateIndent(indentLevel);
+        Response.Write(GetSqlParameterStatement(column, isOutput, includeOriginalParam));
+        Response.Write(",");
+        
+        if (indentLevel >= 0)
+        {
+            Response.WriteLine("");
+        }
+        else if (!isLast)
+        {
+            Response.Write(" ");
+        }
+    }
     
     GenerateIndent(indentLevel);
     Response.Write(GetSqlParameterStatement(column, isOutput));
@@ -298,7 +319,12 @@ public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst
 
 public string GetSqlParameterStatement( DataObjectBase column, bool isOutput )
 {
-    string param = string.Format("{0}{1} {2}", ParameterPrefix, column.Name, column.NativeType);
+    return GetSqlParameterStatement(column, isOutput, false);
+}
+
+public string GetSqlParameterStatement( DataObjectBase column, bool isOutput, bool includeOriginalParam)
+{
+    string param = string.Format("{0}{1}{2} {3}", ParameterPrefix, includeOriginalParam ? "Original" : "", column.Name, column.NativeType);
 
     if ( !IsUserDefinedType( column ) )
         switch ( column.DataType )
@@ -391,9 +417,14 @@ public void GenerateParameters(IList<ColumnSchema> columns, int indentLevel, boo
 
 public void GenerateParameters(IList<ColumnSchema> columns, int indentLevel, bool includeTrailingComma, bool includeTimeStamp, bool makeParametersNullable)
 {
+    GenerateParameters(columns, indentLevel, includeTrailingComma, includeTimeStamp, makeParametersNullable, false);
+}
+
+public void GenerateParameters(IList<ColumnSchema> columns, int indentLevel, bool includeTrailingComma, bool includeTimeStamp, bool makeParametersNullable, bool includeOriginalParam)
+{
     foreach(var column in columns.AsIndexedEnumerable())
     {
-        GenerateParameter(column.Value, indentLevel, column.IsFirst, column.IsLast && !includeTrailingComma, false, includeTimeStamp, makeParametersNullable);
+        GenerateParameter(column.Value, indentLevel, column.IsFirst, column.IsLast && !includeTrailingComma, false, includeTimeStamp, makeParametersNullable, includeOriginalParam);
     }
 }
 
@@ -460,7 +491,7 @@ public void GenerateUpdates(IList<ColumnSchema> columns, int indentLevel, bool i
     }
 }
 
-public void GenerateCondition(ColumnSchema column, int indentLevel, bool isFirst, bool isLast)
+public void GenerateCondition(ColumnSchema column, int indentLevel, bool isFirst, bool isLast, bool includeOriginal)
 {
     GenerateIndent(indentLevel);
     if (!isFirst) Response.Write("AND ");
@@ -468,7 +499,14 @@ public void GenerateCondition(ColumnSchema column, int indentLevel, bool isFirst
     Response.Write(column.Name);
     Response.Write("] = ");
     Response.Write(ParameterPrefix);
+    
+    if(includeOriginal && column.IsPrimaryKeyMember && column.ExtendedProperties.Contains("CS_IsIdentity") && !((bool)column.ExtendedProperties["CS_IsIdentity"].Value))
+    {
+        Response.Write("Original");
+    }
+    
     Response.Write(column.Name);
+    
     if (indentLevel >= 0)
     {
         Response.WriteLine("");
@@ -479,16 +517,20 @@ public void GenerateCondition(ColumnSchema column, int indentLevel, bool isFirst
     }
 }
 
-public void GenerateConditions(IList<MemberColumnSchema> columns, int indentLevel)
+public void GenerateConditions(IList<MemberColumnSchema> columns, int indentLevel, bool includeOriginal)
 {
-    GenerateConditions(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel);
+    GenerateConditions(ConvertMemberColumnSchemaToColumnSchema(columns), indentLevel, includeOriginal);
 }
 
 public void GenerateConditions(IList<ColumnSchema> columns, int indentLevel)
 {
+    GenerateConditions(columns, indentLevel, false);
+}
+public void GenerateConditions(IList<ColumnSchema> columns, int indentLevel, bool includeOriginal)
+{
     foreach(var column in columns.AsIndexedEnumerable())
     {
-        GenerateCondition(column.Value, indentLevel, column.IsFirst, column.IsLast);
+        GenerateCondition(column.Value, indentLevel, column.IsFirst, column.IsLast, includeOriginal);
     }
 }
 

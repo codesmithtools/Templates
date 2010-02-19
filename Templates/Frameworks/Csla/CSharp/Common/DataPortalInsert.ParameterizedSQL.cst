@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -22,6 +22,7 @@
                 {
                     <%= Entity.MembersUpdateInsert.BuildCommandParameters(false, true) %>
 
+<% if(Entity.HasRowVersionMember || Entity.HasIdentityMember) { %>
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
@@ -38,10 +39,22 @@
                             }
                         }
                     }
+<% } else { %>
+                    //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    int result = command.ExecuteNonQuery();
+                    if (result == 0)
+                        throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+<% } %>
+
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { if(UseMemberVariables) { %>
+                    _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
+<% } else { %>
+                    LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
+<% } } } %>
                 }
 <% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0){ %>
 
-				FieldManager.UpdateChildren(this, connection);
+                FieldManager.UpdateChildren(this, connection);
 <% } %>
             }
 
