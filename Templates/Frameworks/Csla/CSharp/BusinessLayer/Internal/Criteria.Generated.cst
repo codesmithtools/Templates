@@ -51,30 +51,12 @@ namespace <%= BusinessProjectName %>
             <%= member.PropertyName %> = <%= member.VariableName %>;
 <% } %>
         }
-
-<% if(Entity.HasRowVersionMember) { %>
-        public <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>, <%= Entity.RowVersionMember.SystemType %> timestamp) : this(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>)
-        {
-            Timestamp = timestamp;
-        }
-<% } %>
         
         #endregion
         
         #region Public Properties
         
         #region Read-Write
-<% if(Entity.HasRowVersionMember) { %>
-
-        /// <summary>
-        /// Used for optimistic concurrency.
-        /// </summary>
-        public <%= Entity.RowVersionMember.SystemType %> Timestamp
-        {
-            get { return GetValue< <%= Entity.RowVersionMember.SystemType %> >( "<%= Entity.RowVersionMember.ColumnName %>"); }
-            set { _bag[ "<%= Entity.RowVersionMember.ColumnName %>"] = value; }
-        }
-<% } %>
 <%  foreach(Member member in Entity.MembersNoRowVersion){ %>
 
         public <%= member.SystemType %> <%= member.PropertyName %>

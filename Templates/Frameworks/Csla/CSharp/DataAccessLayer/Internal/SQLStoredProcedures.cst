@@ -60,10 +60,13 @@ Response.WriteLine("");
     {
         ColumnSchema primaryKeyColumn = SourceTable.PrimaryKey.MemberColumns[0];
 %>
-
 CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
+<% if(Entity.HasRowVersionMember){ %>
+<% GenerateParameter(SourceTable.Columns[Entity.RowVersionMember.ColumnName], 1, true, false, true, true); %>,
+<%}%>
 <% GenerateParameters(SourceTable.NonPrimaryKeyColumns, 1, true, false); %>
 <% GenerateParameter(primaryKeyColumn, 1, false, true, true, false, false); %>
+
 AS
 
 <%-- If the primary key is a GUID, then assign a new GUID using NEWID(). --%>
@@ -88,20 +91,33 @@ INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
 SET <%= ParameterPrefix %><%= primaryKeyColumn.Name %> = SCOPE_IDENTITY()
 <% } %>
 
+<% if(Entity.HasRowVersionMember){ %>
+SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<%= Entity.RowVersionMember.ColumnName %>] FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false); %>)
+<%}%>
+
 <%-- Primary key is not a identity column or a GUID, so include all columns as input parameters. --%>
 <% } else { %>
 
 CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
+<% if(Entity.HasRowVersionMember){ %>
+<% GenerateParameter(SourceTable.Columns[Entity.RowVersionMember.ColumnName], 1, true, false, true, true); %>,
+<%}%>
 <% GenerateParameters(SourceTable.Columns, 1, false); %>
+
 AS
 
 SET NOCOUNT ON
 
 INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
     <% GenerateColumns(SourceTable.Columns, 1, false); %>
+
 ) VALUES (
     <% GenerateVariables(SourceTable.Columns, 1, false); %>
 )
+
+<% if(Entity.HasRowVersionMember){ %>
+SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<%= Entity.RowVersionMember.ColumnName %>] FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false); %>)
+<%}%>
 
 <%
     }
@@ -117,13 +133,25 @@ INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
 %>
 
 CREATE PROCEDURE <%= GetUpdateStoredProcedureName() %>
+<% if(Entity.HasRowVersionMember){ %>
+<% GenerateParameter(SourceTable.Columns[Entity.RowVersionMember.ColumnName], 1, true, false, true, true); %>,
+<%}%>
 <% GenerateParameters(SourceTable.Columns, 1, false, false, false, true); %>
+
 AS
 
 UPDATE <%= GetTableOwner() %>[<%= SourceTable.Name %>] SET
-    <% GenerateUpdates(SourceTable.NonPrimaryKeyColumns, 1, false); %>
+    <% GenerateUpdates(SourceTable.Columns, 1, false); %>
+
 WHERE
     <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, true); %>
+<% if(Entity.HasRowVersionMember){ %>
+    <% GenerateCondition(SourceTable.Columns[Entity.RowVersionMember.ColumnName], 1, false, true, false); %>
+<%}%>
+
+<% if(Entity.HasRowVersionMember){ %>
+SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<%= Entity.RowVersionMember.ColumnName %>] FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false); %>)
+<%}%>
 
 <%
     GenerateProcedureFooter(GetUpdateStoredProcedureName());
@@ -139,6 +167,7 @@ WHERE
 
 CREATE PROCEDURE <%= GetDeleteStoredProcedureName() %>
 <% GenerateParameters(SourceTable.PrimaryKey.MemberColumns, 1, false); %>
+
 AS
 
 DELETE FROM
@@ -160,12 +189,14 @@ WHERE
 
 CREATE PROCEDURE <%= GetSelectStoredProcedureName() %>
 <% GenerateParameters(SourceTable.Columns, 1, false, false, true); %>
+
 AS
 
 <% GenerateSetTransactionIsolationLevelStatement(IsolationLevel); %>
 
 SELECT
     <% GenerateColumns(SourceTable.Columns, 1, true); %>
+
 FROM
     <%= GetTableOwner() %>[<%= SourceTable.Name %>]
 WHERE
@@ -282,10 +313,29 @@ public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst
     if(!includeTimeStamp && ColumnIsTimestamp(column))
         return;
 
+    if (!isFirst)
+    {
+        Response.Write(",");
+        if (indentLevel >= 0)
+        {
+            Response.WriteLine("");
+        }
+        else if (!isLast)
+        {
+            Response.Write(" ");
+        }
+    }
+
+    GenerateIndent(indentLevel);
+    Response.Write(GetSqlParameterStatement(column, isOutput));
+    if(makeParametersNullable) Response.Write(" = NULL");
+    if(makeParametersNullable && column.AllowDBNull)
+    {
+        Response.Write(string.Format(",\r\n\t{0}{1}HasValue BIT = 0", ParameterPrefix, column.Name));
+    }
+    
     if(includeOriginalParam && column.IsPrimaryKeyMember && column.ExtendedProperties.Contains("CS_IsIdentity") && !((bool)column.ExtendedProperties["CS_IsIdentity"].Value))
     {
-        GenerateIndent(indentLevel);
-        Response.Write(GetSqlParameterStatement(column, isOutput, includeOriginalParam));
         Response.Write(",");
         
         if (indentLevel >= 0)
@@ -296,24 +346,9 @@ public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst
         {
             Response.Write(" ");
         }
-    }
-    
-    GenerateIndent(indentLevel);
-    Response.Write(GetSqlParameterStatement(column, isOutput));
-    if(makeParametersNullable) Response.Write(" = NULL");
-    if(makeParametersNullable && column.AllowDBNull)
-    {
-        Response.Write(string.Format(",\r\n\t{0}{1}HasValue BIT = 0", ParameterPrefix, column.Name));
-    }
-    
-    if (!isLast) Response.Write(",");
-    if (indentLevel >= 0)
-    {
-        Response.WriteLine("");
-    }
-    else if (!isLast)
-    {
-        Response.Write(" ");
+
+        GenerateIndent(indentLevel);
+        Response.Write(GetSqlParameterStatement(column, isOutput, includeOriginalParam));
     }
 }
 
@@ -326,7 +361,7 @@ public string GetSqlParameterStatement( DataObjectBase column, bool isOutput, bo
 {
     string param = string.Format("{0}{1}{2} {3}", ParameterPrefix, includeOriginalParam ? "Original" : "", column.Name, column.NativeType);
 
-    if ( !IsUserDefinedType( column ) )
+    if ( !IsUserDefinedType( column ) && !ColumnIsTimestamp(column) )
         switch ( column.DataType )
         {
             case DbType.Decimal:
@@ -432,20 +467,23 @@ public void GenerateColumn(ColumnSchema column, int indentLevel, bool isFirst, b
 {
     if(!includeTimeStamp && ColumnIsTimestamp(column))
         return;
-    
+
+    if (!isFirst)
+    {
+        Response.Write(",");
+        if (indentLevel >= 0)
+        {
+            Response.WriteLine("");
+        }
+        else if (!isLast)
+        {
+            Response.Write(" ");
+        }
+    }
     GenerateIndent(indentLevel);
     Response.Write("[");
     Response.Write(column.Name);
     Response.Write("]");
-    if (!isLast) Response.Write(",");
-    if (indentLevel >= 0)
-    {
-        Response.WriteLine("");
-    }
-    else if (!isLast)
-    {
-        Response.Write(" ");
-    }
 }
 
 public void GenerateColumns(IList<MemberColumnSchema> columns, int indentLevel, bool includeTimeStamp)
@@ -465,6 +503,19 @@ public void GenerateUpdate(ColumnSchema column, int indentLevel, bool isFirst, b
 {
     if(!includeTimeStamp && ColumnIsTimestamp(column))
         return;
+
+    if (!isFirst) 
+    {
+        Response.Write(",");
+        if (indentLevel >= 0)
+        {
+            Response.WriteLine("");
+        }
+        else if (!isLast)
+        {
+            Response.Write(" ");
+        }
+    }
     
     GenerateIndent(indentLevel);
     Response.Write("[");
@@ -472,22 +523,18 @@ public void GenerateUpdate(ColumnSchema column, int indentLevel, bool isFirst, b
     Response.Write("] = ");
     Response.Write(ParameterPrefix);
     Response.Write(column.Name);
-    if (!isLast) Response.Write(",");
-    if (indentLevel >= 0)
-    {
-        Response.WriteLine("");
-    }
-    else if (!isLast)
-    {
-        Response.Write(" ");
-    }
 }
 
 public void GenerateUpdates(IList<ColumnSchema> columns, int indentLevel, bool includeTimeStamp)
 {
+    bool isFirst = true;
     foreach(var column in columns.AsIndexedEnumerable())
     {
-        GenerateUpdate(column.Value, indentLevel, column.IsFirst, column.IsLast, includeTimeStamp);
+        if(column.Value.IsPrimaryKeyMember && (column.Value.ExtendedProperties.Contains("CS_IsIdentity") && (bool)column.Value.ExtendedProperties["CS_IsIdentity"].Value))
+            continue;
+
+        GenerateUpdate(column.Value, indentLevel, isFirst, column.IsLast, includeTimeStamp);
+        isFirst = false;
     }
 }
 
@@ -597,19 +644,22 @@ public void GenerateVariable(ColumnSchema column, int indentLevel, bool isFirst,
 {
     if(!includeTimeStamp && ColumnIsTimestamp(column))
         return;
-    
+
+    if (!isFirst)
+    {
+        Response.Write(",");
+        if (indentLevel >= 0)
+        {
+            Response.WriteLine("");
+        }
+        else if (!isLast)
+        {
+            Response.Write(" ");
+        }
+    }
     GenerateIndent(indentLevel);
     Response.Write(ParameterPrefix);
     Response.Write(column.Name);
-    if (!isLast) Response.Write(",");
-    if (indentLevel >= 0)
-    {
-        Response.WriteLine("");
-    }
-    else if (!isLast)
-    {
-        Response.Write(" ");
-    }
 }
 
 public void GenerateVariables(List<ColumnSchema> columns, int indentLevel, bool includeTimeStamp)
@@ -628,7 +678,7 @@ public void GenerateVariables(IList<ColumnSchema> columns, int indentLevel, bool
     }
 }
 
-public bool ColumnIsTimestamp(ColumnSchema column)
+public bool ColumnIsTimestamp(DataObjectBase column)
 {
     if (column.NativeType.ToLower() == "timestamp" || column.NativeType.ToLower() == "rowversion")
         return true;
