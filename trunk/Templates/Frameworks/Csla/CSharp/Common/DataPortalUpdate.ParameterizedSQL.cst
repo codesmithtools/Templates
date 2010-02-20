@@ -58,7 +58,9 @@
                 {
                     <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, false, false, true) %>
 <% if(Entity.HasRowVersionMember) { %>
-                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", _timestamp);
+					command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp);
+                    command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value = <%= Entity.RowVersionMember.PropertyName %>;
+                    command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Direction = ParameterDirection.InputOutput;
 <% } %>
 
 <% if(Entity.HasRowVersionMember || Entity.HasIdentityMember) { %>
@@ -73,7 +75,7 @@
                             using (BypassPropertyChecks)
                             {
 <% if(Entity.HasRowVersionMember) { %>
-                                _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                                <%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { if(UseMemberVariables) { %>
                                 <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
 <% } else { %>

@@ -157,7 +157,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 <% if(!IsReadOnlyBusinessObject) { %>
         #region Insert
 
-        private void DoInsert(<%= Entity.ClassName %> item, bool stopProccessingChildren)
+        private void DoInsert(ref <%= Entity.ClassName %> item, bool stopProccessingChildren)
         {
             // Don't update if the item isn't dirty.
             if (!item.IsDirty) return;
@@ -173,21 +173,19 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     <%= Entity.MembersNoRowVersion.BuildCommandParameters(true, true, false, true) %>
+<% if(Entity.HasRowVersionMember) { %>
+                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp);
+                    command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value = item.<%= Entity.RowVersionMember.PropertyName %>;
+                    command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Direction = ParameterDirection.InputOutput;
+<% } %>
+
+                    command.ExecuteNonQuery();
 
 <% if(Entity.HasRowVersionMember) { %>
-                    using(var reader = new SafeDataReader(command.ExecuteReader()))
-                    {
-                        if(reader.Read())
-                        {
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-                        }
-                    }
-<% } else { %>
-                    command.ExecuteNonQuery();
-<% } if(Entity.HasIdentityMember) { %>
-<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { %>
+                    item.<%= Entity.RowVersionMember.PropertyName %> = (<%= Entity.RowVersionMember.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value;
+<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) {  %>
                     item.<%= member.PropertyName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
-<% } } } %>
+<% } } %>
                 }
             }
 
@@ -232,22 +230,22 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
         {
             if(item.IsDeleted)
             {
-                DoDelete(item);
+                DoDelete(ref item);
                 MarkNew(item);
             }
             else if(item.IsNew)
             {
-                DoInsert(item, stopProccessingChildren);
+                DoInsert(ref item, stopProccessingChildren);
             }
             else
             {
-                DoUpdate(item, stopProccessingChildren);
+                DoUpdate(ref item, stopProccessingChildren);
             }
 
             return item;
         }
 
-        private void DoUpdate(<%= Entity.ClassName %> item, bool stopProccessingChildren)
+        private void DoUpdate(ref <%= Entity.ClassName %> item, bool stopProccessingChildren)
         {
             bool cancel = false;
             OnUpdating(ref cancel);
@@ -312,14 +310,18 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                         command.CommandType = CommandType.StoredProcedure;
                         <%= Entity.MembersNoRowVersion.BuildCommandParameters(true, false, false, true, true) %>
 <% if(Entity.HasRowVersionMember) { %>
-                        command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", _timestamp);
+                        command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp);
+                        command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value = item.<%= Entity.RowVersionMember.PropertyName %>;
+                        command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Direction = ParameterDirection.InputOutput;
 <% } %>
+
                         //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
                         int result = command.ExecuteNonQuery();
                         if (result == 0)
                             throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+
 <% if(Entity.HasRowVersionMember) { %>
-                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                        item.<%= Entity.RowVersionMember.PropertyName %> = (<%= Entity.RowVersionMember.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value;
 <% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { %>
                         item.<%= member.PropertyName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
 <% } } %>
@@ -365,7 +367,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
             DoDelete(criteria);
         }
 
-        protected void DoDelete(<%= Entity.ClassName %> item)
+        protected void DoDelete(ref <%= Entity.ClassName %> item)
         {
             // If we're not dirty then don't update the database.
             if (!item.IsDirty) return;
@@ -395,7 +397,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
-                    
+
                     //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
                     int result = command.ExecuteNonQuery();
                     if (result == 0)
@@ -417,7 +419,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
             using (BypassPropertyChecks(item))
             {
 <% if(Entity.HasRowVersionMember) { %>
-                item.Timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                item.<%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } %>
 <% foreach(Member member in Entity.MembersNoRowVersion) { %>
                 item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>");<% } %>

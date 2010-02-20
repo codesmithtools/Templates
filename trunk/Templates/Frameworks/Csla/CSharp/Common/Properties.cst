@@ -17,7 +17,7 @@
         /// Used for optimistic concurrency.
         /// </summary>
         [NotUndoable]
-        private <%= Entity.RowVersionMember.SystemType %> _timestamp = new <%= Entity.RowVersionMember.SystemTypeWithSize %>;
+        internal <%= Entity.RowVersionMember.SystemType %> <%= Entity.RowVersionMember.PropertyName %> = new <%= Entity.RowVersionMember.SystemTypeWithSize %>;
 <% } %>
 
 <%  foreach(Member member in Entity.MembersNoRowVersion){ if (UseMemberVariables){ %>

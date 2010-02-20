@@ -21,17 +21,21 @@
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, true, false, true) %>
-
+<% if(Entity.HasRowVersionMember) { %>
+                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp);
+                    command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value = <%= Entity.RowVersionMember.PropertyName %>;
+                    command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Direction = ParameterDirection.InputOutput;
+<% } %>
                     command.ExecuteNonQuery();
 
                     using (BypassPropertyChecks)
                     {
 <% if(Entity.HasRowVersionMember) { %>
-                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                        <%= Entity.RowVersionMember.PropertyName %> = (<%= Entity.RowVersionMember.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value;
 <% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { if(UseMemberVariables) { %>
-                <%= member.PrivateMemberVariableName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
+                        <%= member.PrivateMemberVariableName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
 <% } else { %>
-                LoadProperty(<%= member.PrivateMemberVariableName %>Property,(<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
+                        LoadProperty(<%= member.PrivateMemberVariableName %>Property,(<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
 <% } } else { if(UseMemberVariables) {  %>
                         _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
 <% } else { %>

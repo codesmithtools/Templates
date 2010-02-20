@@ -57,7 +57,9 @@
                     command.CommandType = CommandType.StoredProcedure;
                     <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, false, true, true) %>
 <% if(Entity.HasRowVersionMember) { %>
-                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", _timestamp);
+                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp);
+                    command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value = <%= Entity.RowVersionMember.PropertyName %>;
+                    command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Direction = ParameterDirection.InputOutput;
 <% } %>
                     //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
                     int result = command.ExecuteNonQuery();
@@ -65,11 +67,11 @@
                         throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 
 <% if(Entity.HasRowVersionMember) { %>
-                    _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                    <%= Entity.RowVersionMember.PropertyName %> = (<%= Entity.RowVersionMember.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value;
 <% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { if(UseMemberVariables) { %>
-                <%= member.PrivateMemberVariableName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
+                    <%= member.PrivateMemberVariableName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
 <% } else { %>
-                LoadProperty(<%= member.PrivateMemberVariableName %>Property,(<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
+                    LoadProperty(<%= member.PrivateMemberVariableName %>Property,(<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
 <% } } } %>
 <% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { if(UseMemberVariables) { %>
                     _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;

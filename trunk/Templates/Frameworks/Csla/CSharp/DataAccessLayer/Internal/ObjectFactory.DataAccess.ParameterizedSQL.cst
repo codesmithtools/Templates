@@ -156,7 +156,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 <% if(!IsReadOnlyBusinessObject) { %>
         #region Insert
 
-        private void DoInsert(<%= Entity.ClassName %> item, bool stopProccessingChildren)
+        private void DoInsert(ref <%= Entity.ClassName %> item, bool stopProccessingChildren)
         {
             // Don't update if the item isn't dirty.
             if (!item.IsDirty) return;
@@ -172,13 +172,18 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                 using(SqlCommand command = new SqlCommand(commandText, connection))
                 {
                     <%= Entity.MembersUpdateInsert.BuildCommandParameters(true, true, false, true) %>
+<% if(Entity.HasRowVersionMember) { %>
+                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp);
+                    command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value = item.<%= Entity.RowVersionMember.PropertyName %>;
+                    command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Direction = ParameterDirection.InputOutput;
+<% } %>
 
                     using(var reader = new SafeDataReader(command.ExecuteReader()))
                     {
                         if(reader.Read())
                         {
 <% if(Entity.HasRowVersionMember) { %>
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                            item.<%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } if(Entity.HasIdentityMember) { foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { %>
                             item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>");<% } %>
 <% } } } %>
@@ -228,22 +233,22 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
         {
             if(item.IsDeleted)
             {
-                DoDelete(item);
+                DoDelete(ref item);
                 MarkNew(item);
             }
             else if(item.IsNew)
             {
-                DoInsert(item, stopProccessingChildren);
+                DoInsert(ref item, stopProccessingChildren);
             }
             else
             {
-                DoUpdate(item, stopProccessingChildren);
+                DoUpdate(ref item, stopProccessingChildren);
             }
 
             return item;
         }
 
-        private void DoUpdate(<%= Entity.ClassName %> item, bool stopProccessingChildren)
+        private void DoUpdate(ref <%= Entity.ClassName %> item, bool stopProccessingChildren)
         {
             bool cancel = false;
             OnUpdating(ref cancel);
@@ -308,7 +313,9 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                     {
                         <%= Entity.MembersNoRowVersion.BuildCommandParameters(true, false, false, false, true) %>
 <% if(Entity.HasRowVersionMember) { %>
-                        command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", _timestamp);
+                        command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp);
+                        command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value = item.<%= Entity.RowVersionMember.PropertyName %>;
+                        command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Direction = ParameterDirection.InputOutput;
 <% } %>
 
 <% if(Entity.HasRowVersionMember || Entity.HasIdentityMember) { %>
@@ -321,7 +328,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                             if(reader.Read())
                             {
 <% if(Entity.HasRowVersionMember) { %>
-                                _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+                                item.<%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { %>
                                 item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
 <% }  } %>
@@ -374,7 +381,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
             DoDelete(criteria);
         }
 
-        protected void DoDelete(<%= Entity.ClassName %> item)
+        protected void DoDelete(ref <%= Entity.ClassName %> item)
         {
             // If we're not dirty then don't update the database.
             if (!item.IsDirty) return;

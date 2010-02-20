@@ -14,7 +14,7 @@
             if (cancel) return;
 
 <% if(Entity.HasRowVersionMember) { %>
-            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+            <%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } %>
 <% foreach(Member member in Entity.MembersNoRowVersion) { if(UseMemberVariables) { %>
             <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
