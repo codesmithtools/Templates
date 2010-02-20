@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X NameValueList" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -26,9 +26,6 @@ using Csla;
 namespace <%= BusinessProjectName %>
 {
     [Serializable]
-<% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
-    [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>ListFactoryName)]
-<% } %>
     public partial class <%= BusinessClassName %> : NameValueListBase< int, string >
     {
         #region Factory Methods 

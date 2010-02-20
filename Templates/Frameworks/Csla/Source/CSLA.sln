@@ -216,9 +216,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{1E
 		..\VisualBasic\DataAccessLayer\Internal\ADOHelper.cst = ..\VisualBasic\DataAccessLayer\Internal\ADOHelper.cst
 		..\VisualBasic\DataAccessLayer\Internal\ObjectFactory.cst = ..\VisualBasic\DataAccessLayer\Internal\ObjectFactory.cst
 		..\VisualBasic\DataAccessLayer\Internal\ObjectFactory.DataAccess.cst = ..\VisualBasic\DataAccessLayer\Internal\ObjectFactory.DataAccess.cst
+		..\VisualBasic\DataAccessLayer\Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst = ..\VisualBasic\DataAccessLayer\Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst
 		..\VisualBasic\DataAccessLayer\Internal\ObjectFactory.DataAccess.StoredProcedures.cst = ..\VisualBasic\DataAccessLayer\Internal\ObjectFactory.DataAccess.StoredProcedures.cst
 		..\VisualBasic\DataAccessLayer\Internal\ObjectFactoryList.cst = ..\VisualBasic\DataAccessLayer\Internal\ObjectFactoryList.cst
 		..\VisualBasic\DataAccessLayer\Internal\ObjectFactoryList.DataAccess.cst = ..\VisualBasic\DataAccessLayer\Internal\ObjectFactoryList.DataAccess.cst
+		..\VisualBasic\DataAccessLayer\Internal\ObjectFactoryList.DataAccess.ParameterizedSQL.cst = ..\VisualBasic\DataAccessLayer\Internal\ObjectFactoryList.DataAccess.ParameterizedSQL.cst
 		..\VisualBasic\DataAccessLayer\Internal\ObjectFactoryList.DataAccess.StoredProcedures.cst = ..\VisualBasic\DataAccessLayer\Internal\ObjectFactoryList.DataAccess.StoredProcedures.cst
 		..\VisualBasic\DataAccessLayer\Internal\SQLStoredProcedures.cst = ..\VisualBasic\DataAccessLayer\Internal\SQLStoredProcedures.cst
 	EndProjectSection

@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.DataCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X DataAccessLayer" %>
 <%@ Register Name="PartialMethods" Template="..\..\Common\DataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
@@ -182,7 +182,6 @@ Next
             Return
         End If
 
-
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand("<%= GetInsertStoredProcedureName() %>", connection)
@@ -207,6 +206,12 @@ Next
 End If %>
             End Using
         End Using
+
+<% For Each member As Member In Entity.PrimaryKey.KeyMembers
+ If Not(member.IsIdentity) Then %>
+		item.Original<%= member.PropertyName %> = item.<%= member.PropertyName %>
+<% End If
+Next %>
 
         MarkOld(item)
         CheckRules(item)
@@ -261,35 +266,89 @@ End If %>
 
         ' Don't update If the item isn't dirty.
         If (item.IsDirty) Then
+
+<% If Not(Entity.HasIdentityMember) Then %>
+            If <%= Entity.PrimaryKey.KeyMembers.BuildIdentityKeyEqualityStatements("item.")%> Then
+                ' Insert new child.
+                Dim temp As <%= Entity.ClassName %> = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True), <%= Entity.ClassName %>)
+                <%= Entity.MembersNoRowVersion.BuildObjectInitializer(true, true, false, "temp.") %>
+                temp = temp.Save()
+
+                ' Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
+<% For Each association As Association in Entity.AssociatedOneToMany  %>
+                For Each itemToUpdate As <%= association.ClassName %> In item.<%= association.PropertyName %>
+<%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "item.") %>
+                Next
+<% Next %>
+
+                ' Update Child Items.
+<%-- One-To-Zero-Or-One --%>
+<% For Each association As Association in Entity.AssociatedOneToZeroOrOne %>
+                Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(item)
+<% Next %>
+<%-- Many-To-One --%>
+<% For Each association As Association in Entity.AssociatedManyToOne %>
+                Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(item)
+<% Next %>
+<%-- One-To-Many & Many-To-Many --%>
+<% For Each association As Association in Entity.AssociatedOneToMany %>
+                Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(item)
+<% Next %>
+    
+                ' Delete the old.
+                Dim criteria As New <%= BusinessClassName %>Criteria()
+                <%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(true, false, true) %>
+                Delete(criteria)
+    
+                ' Mark the original as the new one.
+<% For Each member As Member In Entity.PrimaryKey.KeyMembers
+ If Not(member.IsIdentity) Then %>
+                item.Original<%= member.PropertyName %> = item.<%= member.PropertyName %>
+<% End If
+Next %>
+                MarkOld(item)
+                CheckRules(item)
+
+                OnUpdated()
+
+                Return
+            End If
+
+<% End If %>
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection)
                     command.CommandType = CommandType.StoredProcedure
-                    <%= entity.MembersNoRowVersion.BuildCommandParameters(True, False, False, False) %>
+                    <%= entity.MembersNoRowVersion.BuildCommandParameters(True, False, False, False, True) %>
 <% If (entity.HasRowVersionMember) Then %>
                     command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= entity.RowVersionMember.ColumnName %>", _timestamp)
 <% End If %>
 
-<% if(Entity.HasRowVersionMember) Then %>
-                    Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                        'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                        If reader.RecordsAffected = 0 Then
-                            Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-                        End If
-                        If reader.Read() then
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
-                        End If
-                    End Using
-<% Else %>
                     'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
                     Dim result As Integer = command.ExecuteNonQuery()
                     If (result = 0) Then
                         throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
                     End If
-<% End If %>
+                    
+<% If(Entity.HasRowVersionMember) Then %>
+                    _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+<% End If 
+For Each member As Member In Entity.PrimaryKey.KeyMembers
+    If(member.IsIdentity) Then %>
+                    item.<%= member.PropertyName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
+<%End If
+Next %>
                 End Using
             End Using
         End If
+
+<% For Each member As Member In Entity.PrimaryKey.KeyMembers
+    If Not (member.IsIdentity) Then
+        If(UseMemberVariables) Then %>
+        item.Original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
+<%      End If
+    End If
+Next %>
 
         MarkOld(item)
         CheckRules(item)
@@ -378,6 +437,9 @@ End If %>
 <% End If %>
 <% for each [member] as Member in Entity.MembersNoRowVersion %>
             item.<%= [member].PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>
+<% If Not member.IsIdentity And member.IsPrimaryKey Then %>
+            item.Original<%= member.PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>
+<% End If%>
 <% Next %>
         End Using
 
