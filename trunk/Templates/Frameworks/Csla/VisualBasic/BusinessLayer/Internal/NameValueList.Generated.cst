@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X NameValueList" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -24,9 +24,6 @@ Imports System
 Imports Csla
 
 <Serializable()> _
-<% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
-<Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>ListFactoryName)> _
-<% End If %>
 Public Partial Class <%= BusinessClassName %> 
     Inherits NameValueListBase(Of Integer, String)
 

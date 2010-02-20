@@ -161,12 +161,17 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildIdentityKeyEqualityStatements(this List<Member> members)
         {
+            return members.BuildIdentityKeyEqualityStatements("");
+        }
+
+        public static string BuildIdentityKeyEqualityStatements(this List<Member> members, string prefix)
+        {
             string statement = string.Empty;
 
             foreach (Member member in members)
             {
                 if(member.IsPrimaryKey && !member.IsIdentity)
-                    statement += string.Format(" || Original{0} != {0}", member.PropertyName);
+                    statement += string.Format(" || {1}Original{0} != {1}{0}", member.PropertyName, prefix);
             }
 
             return statement.TrimStart(new[] { '|', ' ' });

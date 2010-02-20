@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.DataCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X DataAccessLayer" %>
 <%@ Register Name="PartialMethods" Template="..\..\Common\DataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
@@ -191,6 +191,10 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                 }
             }
 
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) {%>
+            item.Original<%= member.PropertyName %> = item.<%= member.PropertyName %>;
+<% } }  %>
+
             MarkOld(item);
             CheckRules(item);
             
@@ -252,38 +256,80 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
             // Don't update if the item isn't dirty.
             if (item.IsDirty)
             {
+<% if(!Entity.HasIdentityMember) { %>
+                if(<%= Entity.PrimaryKey.KeyMembers.BuildIdentityKeyEqualityStatements("item.")%>)
+                {
+                    // Insert new child.
+                    var temp = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
+<% foreach(Member member in Entity.MembersNoRowVersion) { %>
+                    temp.<%= member.PropertyName %> = item.<%= member.PropertyName %>;
+<% } %>
+                    temp = temp.Save();
+    
+                    // Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
+<% foreach(Association association in Entity.AssociatedOneToMany) { %>
+                    foreach(<%= association.ClassName %> itemToUpdate in item.<%= association.PropertyName %>)
+                    {
+<%= association.SearchCriteria.BuildUpdateStatements("itemToUpdate", "item.") %>
+                    }
+<% } %>
+
+                    // Update Children
+<%-- One-To-Zero-Or-One --%>
+<% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { %>
+                    Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ref item);
+<% } %>
+<%-- Many-To-One --%>
+<% foreach(Association association in Entity.AssociatedManyToOne) { %>
+                    Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ref item);
+<% } %>
+<%-- One-To-Many & Many-To-Many --%>
+<% foreach(Association association in Entity.AssociatedOneToMany) { %>
+                    Update_<%= association.ClassName %>_<%= association.PropertyName %>_<%= association.MembersToString %>(ref item);
+<% } %>
+    
+                    // Delete the old.
+                    Delete(new <%= BusinessClassName %>Criteria {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(true, false, true) %>});
+    
+                    // Mark the original as the new one.
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { %>
+                    item.Original<%= member.PropertyName %> = item.<%= member.PropertyName %>;
+<% } }%>
+
+                    MarkOld(item);
+                    CheckRules(item);
+                    OnUpdated();
+
+                    return;
+                }
+
+<% } %>
                 using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
                 {
                     connection.Open();
                     using(SqlCommand command = new SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        <%= Entity.MembersNoRowVersion.BuildCommandParameters(true, false, false, false) %>
+                        <%= Entity.MembersNoRowVersion.BuildCommandParameters(true, false, false, true, true) %>
 <% if(Entity.HasRowVersionMember) { %>
                         command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", _timestamp);
 <% } %>
-
-<% if(Entity.HasRowVersionMember) { %>
-                        using(var reader = new SafeDataReader(command.ExecuteReader()))
-                        {
-                            //RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-                            if(reader.RecordsAffected == 0)
-                                throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-    
-                            if(reader.Read())
-                            {
-                                _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-                            }
-                        }
-<% } else { %>
                         //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
                         int result = command.ExecuteNonQuery();
                         if (result == 0)
                             throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-<% } %>
+<% if(Entity.HasRowVersionMember) { %>
+                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
+<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { %>
+                        item.<%= member.PropertyName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
+<% } } %>
                     }
                 }
             }
+
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { %>
+            item.Original<%= member.PropertyName %> = item.<%= member.PropertyName %>;
+<% } }%>
 
             MarkOld(item);
             CheckRules(item);
@@ -375,7 +421,9 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 <% } %>
 <% foreach(Member member in Entity.MembersNoRowVersion) { %>
                 item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>");<% } %>
-<% } %>
+<%  if(!member.IsIdentity && member.IsPrimaryKey) { %>
+                item.Original<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>");<% } %>
+<% } }%>
             }
             
             return item;
