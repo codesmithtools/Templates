@@ -18,6 +18,8 @@ namespace NHibernateHelper
         private const string SingularMemberSuffix = "Member";
         internal const string ListSuffix = "List";
 
+        private static Regex NumPrefix = new Regex(@"^\d", RegexOptions.Compiled);
+
         #endregion
 
         #region HelperInit
@@ -109,6 +111,9 @@ namespace NHibernateHelper
             // to blow up when the HelperInit has not been run by the master template.
             if (CsharpKeyWordEscapeMap == null)
                 throw new Exception("Subtemplates may only be called via NHiberanteMaster.cst");
+
+            if (NumPrefix.IsMatch(memberName))
+                memberName = String.Concat("n", memberName);
 
             return (CsharpKeyWordEscapeMap.ContainsKey(memberName))
                 ? CsharpKeyWordEscapeMap[memberName]
