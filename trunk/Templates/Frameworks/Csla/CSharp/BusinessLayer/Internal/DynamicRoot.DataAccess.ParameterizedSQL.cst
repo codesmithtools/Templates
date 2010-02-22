@@ -70,13 +70,13 @@ namespace <%= BusinessProjectName %>
         [Transactional(TransactionalTypes.TransactionScope)]
         protected override void DataPortal_DeleteSelf()
         {
-			bool cancel = false;
+            bool cancel = false;
             OnSelfDeleting(ref cancel);
             if (cancel) return;
             
             DataPortal_Delete(new <%= BusinessClassName %>Criteria (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
         
-			OnSelfDeleted();
+            OnSelfDeleted();
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]
