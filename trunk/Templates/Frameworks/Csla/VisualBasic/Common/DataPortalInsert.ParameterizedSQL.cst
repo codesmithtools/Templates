@@ -26,7 +26,7 @@
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
 <% If (Entity.HasRowVersionMember) Then %>
-                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+                        <%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
 <% If (Entity.PrimaryKey.IsIdentity) Then %>
 <% for each [member] As Member in Entity.PrimaryKey.KeyMembers

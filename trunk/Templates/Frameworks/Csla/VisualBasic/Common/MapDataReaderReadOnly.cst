@@ -15,9 +15,6 @@
             Return
         End If
 
-<% If Entity.HasRowVersionMember Then %>
-        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
-<% End If %>
 <% for each [member] as Member in Entity.MembersNoRowVersion 
 If UseMemberVariables Then %>
         <%= [member].PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>

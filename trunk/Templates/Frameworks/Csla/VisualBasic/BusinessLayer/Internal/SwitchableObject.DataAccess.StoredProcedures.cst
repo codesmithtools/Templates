@@ -73,9 +73,9 @@ Public Partial Class <%= BusinessClassName %>
             Return
         End If
     
-        DataPortal_Delete(New <%= BusinessClassName %>Criteria (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
+        DataPortal_Delete(New <%= BusinessClassName %>Criteria (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
     
-		OnSelfDeleted()
+        OnSelfDeleted()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
@@ -106,15 +106,15 @@ Public Partial Class <%= BusinessClassName %>
     End Sub
 
     Private Sub Child_DeleteSelf()
-		Dim cancel As Boolean = False
+        Dim cancel As Boolean = False
         OnChildSelfDeleting(cancel)
         If (cancel) Then
             Return
         End If
     
-        DataPortal_Delete(New <%= BusinessClassName %>Criteria (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
+        DataPortal_Delete(New <%= BusinessClassName %>Criteria (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
     
-		OnChildSelfDeleted()
+        OnChildSelfDeleted()
     End Sub
 
     #End Region

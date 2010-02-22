@@ -63,9 +63,9 @@ Public Partial Class <%= BusinessClassName %>
             Return
         End If
     
-        DataPortal_Delete(New <%= BusinessClassName %>Criteria (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %><% If Entity.HasRowVersionMember Then %>, _timestamp<% End If %>))
+        DataPortal_Delete(New <%= BusinessClassName %>Criteria (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
     
-		OnSelfDeleted()
+        OnSelfDeleted()
     End Sub
 
     <Transactional(TransactionalTypes.TransactionScope)> _
