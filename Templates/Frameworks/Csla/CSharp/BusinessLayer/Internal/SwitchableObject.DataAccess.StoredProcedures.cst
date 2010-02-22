@@ -80,7 +80,7 @@ namespace <%= BusinessProjectName %>
             
             DataPortal_Delete(new <%= BusinessClassName %>Criteria (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
         
-			OnSelfDeleted();
+            OnSelfDeleted();
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]
@@ -117,13 +117,13 @@ namespace <%= BusinessProjectName %>
 
         private void Child_DeleteSelf()
         {
-			bool cancel = false;
+            bool cancel = false;
             OnChildSelfDeleting(ref cancel);
             if (cancel) return;
             
             DataPortal_Delete(new <%= BusinessClassName %>Criteria (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
         
-			OnChildSelfDeleted();
+            OnChildSelfDeleted();
         }
 
         #endregion

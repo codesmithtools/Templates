@@ -25,46 +25,46 @@ public override void Generate()
 {
     RegisterReferences();
     
-	#region SourceViewTemplate
-	
-	string parentFileName = System.IO.Path.Combine(this.Location, "Default.aspx");
-	
-    SourceViewTemplate sourceView = this.Create<SourceViewTemplate>();
-	this.CopyPropertiesTo(sourceView);
-	
-	if (!System.IO.File.Exists(parentFileName))
-	{
-		sourceView.RenderToFile(parentFileName, false);
-	}
-	
-	#region CodeBehindTemplate
-	
-	string fileName = System.IO.Path.Combine(Location, "Default.aspx.cs");
-	
-	CodeBehindTemplate codeBehind = this.Create<CodeBehindTemplate>();
-	this.CopyPropertiesTo(codeBehind);
-	
-    if (!System.IO.File.Exists(fileName))
-	{
-		codeBehind.RenderToFile(fileName, parentFileName, false);
-	}
+    #region SourceViewTemplate
     
-	#endregion
-	
-	#region DesignerTemplate
-	
-	fileName = System.IO.Path.Combine(Location, "Default.aspx.designer.cs");
-	
-	DesignerTemplate designer = this.Create<DesignerTemplate>();
-	this.CopyPropertiesTo(designer);
-	
+    string parentFileName = System.IO.Path.Combine(this.Location, "Default.aspx");
+    
+    SourceViewTemplate sourceView = this.Create<SourceViewTemplate>();
+    this.CopyPropertiesTo(sourceView);
+    
+    if (!System.IO.File.Exists(parentFileName))
+    {
+        sourceView.RenderToFile(parentFileName, false);
+    }
+    
+    #region CodeBehindTemplate
+    
+    string fileName = System.IO.Path.Combine(Location, "Default.aspx.cs");
+    
+    CodeBehindTemplate codeBehind = this.Create<CodeBehindTemplate>();
+    this.CopyPropertiesTo(codeBehind);
+    
     if (!System.IO.File.Exists(fileName))
-	{
-		designer.RenderToFile(fileName, parentFileName, false);
-	}
-	
-	#endregion
-	
-	#endregion
+    {
+        codeBehind.RenderToFile(fileName, parentFileName, false);
+    }
+    
+    #endregion
+    
+    #region DesignerTemplate
+    
+    fileName = System.IO.Path.Combine(Location, "Default.aspx.designer.cs");
+    
+    DesignerTemplate designer = this.Create<DesignerTemplate>();
+    this.CopyPropertiesTo(designer);
+    
+    if (!System.IO.File.Exists(fileName))
+    {
+        designer.RenderToFile(fileName, parentFileName, false);
+    }
+    
+    #endregion
+    
+    #endregion
 }
 </script>

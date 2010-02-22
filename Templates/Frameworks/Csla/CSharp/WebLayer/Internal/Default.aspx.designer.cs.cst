@@ -24,7 +24,7 @@ namespace <%= InterfaceProjectName %>
 {
     public partial class _Default
     {
-	/// <summary>
+    /// <summary>
         /// form1 control.
         /// </summary>
         /// <remarks>
