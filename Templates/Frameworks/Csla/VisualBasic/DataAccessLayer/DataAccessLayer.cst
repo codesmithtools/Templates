@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.DataAccessCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.7.X DataAccessLayer" %>
 
 <%@ Register Name="ObjectFactory" Template="Internal\ObjectFactory.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -77,6 +77,9 @@ Public Overloads Overrides Sub Generate()
 End Sub
 
 Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean, IsChild As Boolean)
+    Dim strategy As New PreserveRegionsMergeStrategy()
+    strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved)""?;"
+    
     'ObjectFactory
     Dim objectFactory As ObjectFactory = Me.Create(Of ObjectFactory)()
     Me.CopyPropertiesTo(objectFactory)
@@ -111,11 +114,7 @@ Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean,
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
         ADOHelper.SourceTable = entity.Table
-
-        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
-        If Not System.IO.File.Exists(fileName) Then
-            ADOHelper.RenderToFile(fileName, False)
-        End If
+        ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
         'ObjectFactoryDataAccessStoredProcedures
         Dim objectFactoryDataAccessStoredProcedures As ObjectFactoryDataAccessStoredProcedures = Me.Create(Of ObjectFactoryDataAccessStoredProcedures)()
@@ -138,15 +137,14 @@ Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean,
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
         ADOHelper.SourceTable = entity.Table
-
-        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
-        If Not System.IO.File.Exists(fileName) Then
-            ADOHelper.RenderToFile(fileName, False)
-        End If
+        ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     End If
 End Sub
 
 Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Boolean, IsChild As Boolean)
+    Dim strategy As New PreserveRegionsMergeStrategy()
+    strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved)""?;"
+    
     'ObjectFactory
     Dim objectFactory As ObjectFactoryList = Me.Create(Of ObjectFactoryList)()
     Me.CopyPropertiesTo(objectFactory)
@@ -181,11 +179,7 @@ Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Bool
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
         ADOHelper.SourceTable = entity.Table
-
-        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
-        If Not System.IO.File.Exists(fileName) Then
-            ADOHelper.RenderToFile(fileName, False)
-        End If
+        ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     ElseIf DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
         'ObjectFactoryDataAccessStoredProcedures
         Dim objectFactoryDataAccessStoredProcedures As ObjectFactoryListDataAccessStoredProcedures = Me.Create(Of ObjectFactoryListDataAccessStoredProcedures)()
@@ -208,11 +202,7 @@ Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Bool
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
         ADOHelper.SourceTable = entity.Table
-
-        fileName = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
-        If Not System.IO.File.Exists(fileName) Then
-            ADOHelper.RenderToFile(fileName, False)
-        End If
+        ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     End If
 End Sub
 

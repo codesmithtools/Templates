@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X Entities" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
@@ -218,18 +218,16 @@ public override void Generate()
 
     #endregion
     
+    PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy();
+    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Custom)\"?;";
+    
     #region ADOHelperTemplate
     
     if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures)
     {
         ADOHelperTemplate ADOHelper = this.Create<ADOHelperTemplate>();
         this.CopyPropertiesTo(ADOHelper);
-        
-        string fileName = System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs");
-        if (!System.IO.File.Exists(fileName))
-        {
-            ADOHelper.RenderToFile(fileName, false);
-        }
+        ADOHelper.RenderToFile(System.IO.Path.Combine(this.Location, "Utility\\ADOHelper.cs"), strategy);
     }
 
     #endregion
@@ -240,12 +238,7 @@ public override void Generate()
     {
         FactoryNamesTemplate factoryNames = this.Create<FactoryNamesTemplate>();
         this.CopyPropertiesTo(factoryNames);
-
-        string fileName = System.IO.Path.Combine(this.Location, "Factory\\FactoryNames.cs");
-        if (!System.IO.File.Exists(fileName))
-        {
-            factoryNames.RenderToFile(fileName, false);
-        }
+        factoryNames.RenderToFile(System.IO.Path.Combine(this.Location, "Factory\\FactoryNames.cs"), strategy);
     }
 
     #endregion
