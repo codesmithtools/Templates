@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X Entities" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
@@ -174,17 +174,15 @@ Public Overrides Sub Generate()
         Next
     End If
     
+    Dim strategy As New PreserveRegionsMergeStrategy()
+    strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved)""?;"
     
     ' ADOHelperTemplate
     
     If DataAccessImplementation = DataAccessMethod.ParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.StoredProcedures OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then
         Dim ADOHelper As ADOHelperTemplate = Me.Create(Of ADOHelperTemplate)()
         Me.CopyPropertiesTo(ADOHelper)
-    
-        Dim fileName As String = System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb")
-        If Not System.IO.File.Exists(fileName) Then
-            ADOHelper.RenderToFile(fileName, False)
-        End If
+        ADOHelper.RenderToFile(System.IO.Path.Combine(Me.Location, "Utility\ADOHelper.vb"), strategy)
     End If
     
     

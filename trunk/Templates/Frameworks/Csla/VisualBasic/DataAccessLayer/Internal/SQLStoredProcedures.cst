@@ -44,10 +44,34 @@ Response.WriteLine("")
 * Insert Procedure
 *
 ------------------------------------------------------------------------------------------%>
-<%
-    GenerateProcedureHeader(GetInsertStoredProcedureName())
+<% GenerateProcedureHeader(GetInsertStoredProcedureName()) %>
 
-     ' Check to see If the primary key is a single column primary key and also If it's either an
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+
+PRINT N'Creating <%= GetInsertStoredProcedureName() %>'
+GO
+
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetInsertStoredProcedureName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
+    BEGIN
+        RAISERROR ('The procedure <%= GetInsertStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        INSERT INTO #tmpErrors (Error) SELECT 1
+    END
+GO
+
+<%   ' Check to see If the primary key is a single column primary key and also If it's either an
      ' identity column or a GUID.  If so, we will not include the primary key column in the
      ' list of input parameters.
 
@@ -113,10 +137,26 @@ INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
 SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<%= Entity.RowVersionMember.ColumnName %>] FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false) %>)
 <% End If %>
 
-<%
-    End If
-    GenerateProcedureFooter(GetInsertStoredProcedureName())
-%>
+<% End If %>
+
+IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'Stored procedure creation succedded was succeeded.'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'Stored procedure creation failed.'
+GO
+DROP TABLE #tmpErrors
+GO
+
+<% GenerateProcedureFooter(GetInsertStoredProcedureName()) %>
 <%------------------------------------------------------------------------------------------
 *
 * Update Procedure
@@ -125,6 +165,31 @@ SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<
 <%
     GenerateProcedureHeader(GetUpdateStoredProcedureName())
 %>
+
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+
+PRINT N'Creating <%= GetUpdateStoredProcedureName() %>'
+GO
+
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetUpdateStoredProcedureName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
+    BEGIN
+        RAISERROR ('The procedure <%= GetUpdateStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        INSERT INTO #tmpErrors (Error) SELECT 1
+    END
+GO
 
 CREATE PROCEDURE <%= GetUpdateStoredProcedureName() %>
 <% If(Entity.HasRowVersionMember) Then %>
@@ -147,6 +212,24 @@ WHERE
 SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<%= Entity.RowVersionMember.ColumnName %>] FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false) %>)
 <% End If %>
 
+IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'Stored procedure creation succedded was succeeded.'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'Stored procedure creation failed.'
+GO
+DROP TABLE #tmpErrors
+GO
+
+
 <%
     GenerateProcedureFooter(GetUpdateStoredProcedureName())
 %>
@@ -159,6 +242,31 @@ SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<
     GenerateProcedureHeader(GetDeleteStoredProcedureName())
 %>
 
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+
+PRINT N'Creating <%= GetDeleteStoredProcedureName() %>'
+GO
+
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetDeleteStoredProcedureName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
+    BEGIN
+        RAISERROR ('The procedure <%= GetDeleteStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        INSERT INTO #tmpErrors (Error) SELECT 1
+    END
+GO
+
 CREATE PROCEDURE <%= GetDeleteStoredProcedureName() %>
 <% GenerateParameters(SourceTable.PrimaryKey.MemberColumns, 1, false) %>
 
@@ -168,6 +276,24 @@ DELETE FROM
     <%= GetTableOwner() %>[<%= SourceTable.Name %>]
 WHERE
     <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false) %>
+
+IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'Stored procedure creation succedded was succeeded.'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'Stored procedure creation failed.'
+GO
+DROP TABLE #tmpErrors
+GO
+
 
 <%
     GenerateProcedureFooter(GetDeleteStoredProcedureName())
@@ -180,6 +306,31 @@ WHERE
 <%
     GenerateProcedureHeader(GetSelectStoredProcedureName())
 %>
+
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+
+PRINT N'Creating <%= GetSelectStoredProcedureName() %>'
+GO
+
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetSelectStoredProcedureName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
+    BEGIN
+        RAISERROR ('The procedure <%= GetSelectStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        INSERT INTO #tmpErrors (Error) SELECT 1
+    END
+GO
 
 CREATE PROCEDURE <%= GetSelectStoredProcedureName() %>
 <% GenerateParameters(SourceTable.Columns, 1, false, false, true) %>
@@ -195,6 +346,24 @@ FROM
     <%= GetTableOwner() %>[<%= SourceTable.Name %>]
 WHERE
     <% GenerateFindConditions(SourceTable.Columns, 1) %>
+
+IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'Stored procedure creation succedded was succeeded.'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'Stored procedure creation failed.'
+GO
+DROP TABLE #tmpErrors
+GO
+
 
 <%
     GenerateProcedureFooter(GetSelectStoredProcedureName())
@@ -246,11 +415,55 @@ End Function
 Public Sub GenerateDropStatement(ByVal procedureName As String)
     ' check to see if this procedure has already been dropped.
     If Not _droppedProcedureNames.Contains(procedureName) Then
+        Response.WriteLine("SET NUMERIC_ROUNDABORT OFF")
+        Response.WriteLine("GO")
+        Response.WriteLine("SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON")
+        Response.WriteLine("GO")
+        Response.WriteLine("IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors")
+        Response.WriteLine("GO")
+        Response.WriteLine("CREATE TABLE #tmpErrors (Error int)")
+        Response.WriteLine("GO")
+        Response.WriteLine("SET XACT_ABORT ON")
+        Response.WriteLine("GO")
+        Response.WriteLine("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE")
+        Response.WriteLine("GO")
+        Response.WriteLine("BEGIN TRANSACTION")
+        Response.WriteLine("GO")
+        
+        Response.WriteLine("PRINT N'Dropping {0}'", procedureName)
+        Response.WriteLine("GO")
+        
+        Response.WriteLine("IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '{0}', default, default) WHERE name = 'CustomProcedure' and value = '1')", procedureName)
+        Response.WriteLine("BEGIN")
+        Response.WriteLine("    RAISERROR ('The procedure {0} has an Extended Property ""CustomProcedure"" which means is has been customised. Please review and remove the property if you wish to drop the procedure.',16,1)", procedureName)
+        Response.WriteLine("    INSERT INTO #tmpErrors (Error) SELECT 1")
+        Response.WriteLine("END")
+        Response.WriteLine("GO")
+        Response.WriteLine("")
+        
         Response.WriteLine("IF OBJECT_ID(N'{0}') IS NOT NULL", procedureName)
         GenerateIndent(1)
         Response.WriteLine("DROP PROCEDURE {0}", procedureName)
         Response.WriteLine("")
         
+        Response.WriteLine("IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION")
+        Response.WriteLine("GO")
+        Response.WriteLine("")
+        Response.WriteLine("IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END")
+        Response.WriteLine("GO")
+        Response.WriteLine("")
+        Response.WriteLine("IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION")
+        Response.WriteLine("GO")
+        Response.WriteLine("")
+        Response.WriteLine("IF @@TRANCOUNT>0 BEGIN")
+        Response.WriteLine("PRINT 'The stored procedure drop has succeeded'")
+        Response.WriteLine("COMMIT TRANSACTION")
+        Response.WriteLine("END")
+        Response.WriteLine("ELSE PRINT 'The stored procedure drop has failed'")
+        Response.WriteLine("GO")
+        Response.WriteLine("")
+        Response.WriteLine("DROP TABLE #tmpErrors")
+        Response.WriteLine("GO")
         ' add this procedure to the list of dropped procedures
         _droppedProcedureNames.Add(procedureName)
     End If

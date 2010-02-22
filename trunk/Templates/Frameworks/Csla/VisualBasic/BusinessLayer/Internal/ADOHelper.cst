@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.QuickStartCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X DataAccessLayer" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -40,6 +40,10 @@ Public Class ADOHelper
 
      Private Shared _connectionString As String = String.Empty
 
+    #Region "Preserved Code"
+
+     Private Shared _connectionString As String = String.Empty
+
     ''' <summary>
     ''' Returns the Connection String.
     ''' </summary>
@@ -52,6 +56,8 @@ Public Class ADOHelper
             Return _connectionString
         End Get
     End Property
+
+    #End Region
 
     ''' <summary>
     ''' Returns an array of SqlParameters
