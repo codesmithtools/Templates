@@ -782,6 +782,100 @@ namespace PetShop.Tests.StoredProcedures
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
         }
 
-        // Add concurrency tests.
+        /// <summary>
+        /// Updates a Category entity into the database.
+        /// </summary>
+        [Test]
+        public void Step_23_Concurrency_Duplicate_Update()
+        {
+            Console.WriteLine("23. Updating the category.");
+            Stopwatch watch = Stopwatch.StartNew();
+
+            Category category = Category.GetByCategoryId(TestCategoryID);
+            var name = category.Name;
+            var desc = category.Description;
+
+            category.Name = TestUtility.Instance.RandomString(80, false);
+            category.Description = TestUtility.Instance.RandomString(255, false);
+
+            Category category2 = Category.GetByCategoryId(TestCategoryID);
+
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
+            category = category.Save();
+
+            Assert.IsFalse(string.Equals(category.Name, name, StringComparison.InvariantCultureIgnoreCase));
+            Assert.IsFalse(string.Equals(category.Description, desc, StringComparison.InvariantCultureIgnoreCase));
+
+            category2.Name = TestUtility.Instance.RandomString(80, false);
+            category2.Description = TestUtility.Instance.RandomString(255, false);
+
+            try
+            {
+                category2 = category2.Save();
+                Assert.Fail("Concurrency exception should have been thrown.");
+            }
+            catch (Exception)
+            {
+                Assert.IsTrue(true);
+            }
+
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+        }
+
+
+        /// <summary>
+        /// Testing update Child collections on an existing entity.
+        /// </summary>
+        [Test]
+        public void Step_24_Concurrency_Update_Children()
+        {
+            Console.WriteLine("24. Testing update on child collections in a category.");
+            Stopwatch watch = Stopwatch.StartNew();
+
+            Category category = Category.GetByCategoryId(TestCategoryID);
+            Assert.IsTrue(category.Products.Count == 0);
+
+            Product product = category.Products.AddNew();
+
+            Assert.IsTrue(category.Products.Count == 1);
+
+            product.ProductId = TestProductID;
+            product.Name = TestUtility.Instance.RandomString(80, false);
+            product.Description = TestUtility.Instance.RandomString(255, false);
+            product.Image = TestUtility.Instance.RandomString(80, false);
+
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
+            category = category.Save();
+
+            Category category2 = Category.GetByCategoryId(TestCategoryID);
+
+            var newName = TestUtility.Instance.RandomString(80, false);
+            foreach (Product item in category.Products)
+            {
+                item.Name = newName;
+            }
+
+            foreach (Product item in category2.Products)
+            {
+                item.Name = newName;
+            }
+
+            Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString());
+            category = category.Save();
+
+            try
+            {
+                category2 = category2.Save();
+                Assert.Fail("Concurrency exception should have been thrown.");
+            }
+            catch (Exception)
+            {
+                Assert.IsTrue(true);
+            }
+
+            Assert.IsTrue(string.Equals(category2.Products[0].Name, newName, StringComparison.InvariantCultureIgnoreCase));
+
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+        }
     }
 }
