@@ -758,5 +758,89 @@ Public Class CategoryTests
         Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds)
     End Sub
 
-    ' Add concurrency tests.
+    ''' <summary>
+    ''' Updates a Category entity into the database.
+    ''' </summary>
+    <Test()> _
+    Public Sub Step_23_Concurrency_Duplicate_Update()
+        Console.WriteLine("23. Updating the category.")
+        Dim watch As Stopwatch = Stopwatch.StartNew()
+
+        Dim category As Category = Category.GetByCategoryId(TestCategoryID)
+        Dim name As String = category.Name
+        Dim desc As String = category.Description
+
+        category.Name = TestUtility.Instance.RandomString(80, False)
+        category.Description = TestUtility.Instance.RandomString(255, False)
+
+        Dim category2 As Category = Category.GetByCategoryId(TestCategoryID)
+
+        Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
+        category = category.Save()
+
+        Assert.IsFalse(String.Equals(category.Name, name, StringComparison.InvariantCultureIgnoreCase))
+        Assert.IsFalse(String.Equals(category.Description, desc, StringComparison.InvariantCultureIgnoreCase))
+
+        category2.Name = TestUtility.Instance.RandomString(80, False)
+        category2.Description = TestUtility.Instance.RandomString(255, False)
+
+        Try
+            category2 = category2.Save()
+            Assert.Fail("Concurrency exception should have been thrown.")
+        Catch generatedExceptionName As Exception
+            Assert.IsTrue(True)
+        End Try
+
+        Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds)
+    End Sub
+
+
+    ''' <summary>
+    ''' Testing update Child collections on an existing entity.
+    ''' </summary>
+    <Test()> _
+    Public Sub Step_24_Concurrency_Update_Children()
+        Console.WriteLine("24. Testing update on child collections in a category.")
+        Dim watch As Stopwatch = Stopwatch.StartNew()
+
+        Dim category As Category = Category.GetByCategoryId(TestCategoryID)
+        Assert.IsTrue(category.Products.Count = 0)
+
+        Dim product As Product = category.Products.AddNew()
+
+        Assert.IsTrue(category.Products.Count = 1)
+
+        product.ProductId = TestProductID
+        product.Name = TestUtility.Instance.RandomString(80, False)
+        product.Description = TestUtility.Instance.RandomString(255, False)
+        product.Image = TestUtility.Instance.RandomString(80, False)
+
+        Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
+        category = category.Save()
+
+        Dim category2 As Category = Category.GetByCategoryId(TestCategoryID)
+
+        Dim newName As String = TestUtility.Instance.RandomString(80, False)
+        For Each item As Product In category.Products
+            item.Name = newName
+        Next
+
+        For Each item As Product In category2.Products
+            item.Name = newName
+        Next
+
+        Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
+        category = category.Save()
+
+        Try
+            category2 = category2.Save()
+            Assert.Fail("Concurrency exception should have been thrown.")
+        Catch generatedExceptionName As Exception
+            Assert.IsTrue(True)
+        End Try
+
+        Assert.IsTrue(String.Equals(category2.Products(0).Name, newName, StringComparison.InvariantCultureIgnoreCase))
+
+        Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds)
+    End Sub
 End Class

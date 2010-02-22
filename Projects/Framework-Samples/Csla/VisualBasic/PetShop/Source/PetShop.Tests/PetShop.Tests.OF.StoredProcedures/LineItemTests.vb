@@ -248,7 +248,7 @@ Public Class LineItemTests
 
         Console.WriteLine(vbTab & "Getting lineItem ""{0}""", LineItemOrderID)
         Dim lineItem As LineItem = lineItem.GetByOrderId(LineItemOrderID)
-        lineItem.OrderId = LineItemOrderID
+        lineItem.OrderId = LineItemOrderID2
         lineItem = lineItem.Save()
         Console.WriteLine(vbTab & "Set lineItemID to ""{0}""", LineItemOrderID2)
         Assert.IsTrue(lineItem.OrderId = LineItemOrderID2)
@@ -303,5 +303,35 @@ Public Class LineItemTests
         Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds)
     End Sub
 
-    ' Add concurrency tests.
+    ''' <summary>
+    ''' Updates a LineItem entity into the database.
+    ''' </summary>
+    <Test()> _
+    Public Sub Step_08_Concurrency_Duplicate_Update()
+        Console.WriteLine("8. Updating the lineItem.")
+        Dim watch As Stopwatch = Stopwatch.StartNew()
+
+        Dim lineItem As LineItem = LineItem.GetByOrderId(LineItemOrderID)
+        Dim lineItem2 As LineItem = LineItem.GetByOrderId(LineItemOrderID)
+        Dim quantity As Integer = lineItem.Quantity
+        Dim unitPrice As Decimal = lineItem.UnitPrice
+
+        lineItem.Quantity = TestUtility.Instance.RandomNumber(Integer.MinValue, Integer.MaxValue)
+        lineItem.UnitPrice = TestUtility.Instance.RandomNumber(0, 500)
+
+        Assert.IsTrue(lineItem.IsValid, lineItem.BrokenRulesCollection.ToString())
+        lineItem = lineItem.Save()
+
+        lineItem2.Quantity = TestUtility.Instance.RandomNumber(Integer.MinValue, Integer.MaxValue)
+        lineItem2.UnitPrice = TestUtility.Instance.RandomNumber(0, 500)
+
+        Try
+            lineItem2 = lineItem2.Save()
+            Assert.Fail("Concurrency exception should have been thrown.")
+        Catch generatedExceptionName As Exception
+            Assert.IsTrue(True)
+        End Try
+
+        Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds)
+    End Sub
 End Class
