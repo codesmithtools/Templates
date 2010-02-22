@@ -60,8 +60,10 @@ Next
             Using command As New SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
                 <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, False, True, True) %>
-<% If (entity.HasRowVersionMember) Then %>
-                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= entity.RowVersionMember.ColumnName %>", _timestamp)
+<% If(Entity.HasRowVersionMember) Then %>
+                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp)
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value = Me.<%= Entity.RowVersionMember.PropertyName %>
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Direction = ParameterDirection.InputOutput
 <% End If %>
 
                 'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
@@ -71,7 +73,7 @@ Next
                 End If
 
 <% If(Entity.HasRowVersionMember) Then %>
-                _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+                <%= Entity.RowVersionMember.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value, <%= Entity.RowVersionMember.SystemType %>)
 <% End If 
 For Each member As Member In Entity.PrimaryKey.KeyMembers
     If(member.IsIdentity) Then

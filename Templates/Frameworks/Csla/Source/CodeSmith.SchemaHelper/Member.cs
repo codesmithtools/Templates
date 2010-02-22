@@ -19,7 +19,7 @@ namespace CodeSmith.SchemaHelper
 
             Size = column.Size;
             SystemType = column.ResolveSystemType();
-			Description = column.ResolveDescription();
+            Description = column.ResolveDescription();
             DataType = column.DataType.ToString();
             IsUnique = column.IsUnique;
             IsNullable = column.AllowDBNull;
@@ -60,8 +60,8 @@ namespace CodeSmith.SchemaHelper
         {
             get { return (IsIdentity || IsRowVersion || IsComputed); }
         }
-		
-		public string Description { get; private set; }
+        
+        public string Description { get; private set; }
         public bool HasDescription
         {
             get
@@ -86,7 +86,7 @@ namespace CodeSmith.SchemaHelper
             get
             {
                 if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
-                    return string.Format("{0}({1})", SystemType, Size);
+                    return string.Format("{0}({1})", SystemType.Replace("()", string.Empty), Size);
 
                 return SystemType.Replace("[]", string.Format("[{0}]", Size));
             }

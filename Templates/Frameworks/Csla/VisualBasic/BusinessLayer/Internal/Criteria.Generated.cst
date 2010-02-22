@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X Criteria" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -58,34 +58,12 @@ Public Partial Class <%= BusinessClassName %>
 <% Next %>
     End Sub
 
-<% If (Entity.HasRowVersionMember) Then %>
-    Public Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>, ByVal timestamp As <%= Entity.RowVersionMember.SystemType %>)
-        Me.New(<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>)
-        
-        Me.Timestamp = timestamp
-    End Sub
-<% End If %>
-    
     #End Region
 
     #Region "Public Properties"
     
     #Region "Read-Write"
-<% If(Entity.HasRowVersionMember) %>
 
-    ''' <summary>
-    ''' Used for optimistic concurrency.
-    ''' </summary>
-    Public Property Timestamp() As <%= Entity.RowVersionMember.SystemType %>
-        Get
-            Return GetValue(Of <%= Entity.RowVersionMember.SystemType %>)("<%= Entity.RowVersionMember.ColumnName %>")
-        End Get
-        
-        Set
-            _bag("<%= Entity.RowVersionMember.ColumnName %>") = value
-        End Set
-    End Property
-<% End If %>        
 <% For Each member As Member In Entity.MembersNoRowVersion %>
     
     Public Property <%= member.PropertyName %>() As <%= member.SystemType %>

@@ -79,7 +79,7 @@ Public Class ADOHelper
     ''' <param name="reader">The reader.</param>
     ''' <param name="columnName">The column name.</param>
     ''' <returns>Bytes Stored in a column.</returns>
-	Public Shared Function GetBytes(ByVal reader As SafeDataReader, ByVal columnName As String) As Byte()
+    Public Shared Function GetBytes(ByVal reader As SafeDataReader, ByVal columnName As String) As Byte()
         Dim buffer As Byte() = New Byte(1024) {}
         Dim fieldOffset As Long = 0
 

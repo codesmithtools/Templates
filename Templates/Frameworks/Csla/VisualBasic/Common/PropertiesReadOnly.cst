@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -10,7 +10,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-    #Region "Properties"    
+    #Region "Properties"
 
 <%  For Each member As Member in Entity.MembersNoRowVersion
 If UseMemberVariables Then %>
@@ -21,7 +21,7 @@ If UseMemberVariables Then %>
     ''' <%= member.Description %>
     ''' </summary>
 <% End If %>
-	<%= member.BuildDataObjectField() %>
+    <%= member.BuildDataObjectField() %>
     Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
         Get 
             Return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>) 
@@ -33,7 +33,7 @@ If UseMemberVariables Then %>
     ''' <%= member.Description %>
     ''' </summary>
 <% End If %>
-	<%= member.BuildDataObjectField() %>
+    <%= member.BuildDataObjectField() %>
     Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
         Get 
             Return GetProperty(<%= member.PrivateMemberVariableName %>Property)

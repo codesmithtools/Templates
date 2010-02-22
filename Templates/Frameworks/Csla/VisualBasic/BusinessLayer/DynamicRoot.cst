@@ -67,7 +67,7 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
         sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
 
         sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
-	End If
+    End If
 End Sub
 
 </script>

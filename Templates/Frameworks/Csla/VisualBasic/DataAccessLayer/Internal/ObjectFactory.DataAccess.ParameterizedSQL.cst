@@ -169,7 +169,7 @@ Next
 <% If Not(IsReadOnlyBusinessObject) Then %>
     #Region "Insert"
 
-    Private Sub DoInsert(ByVal item As <%= Entity.ClassName %>, ByVal stopProccessingChildren As Boolean)
+    Private Sub DoInsert(ByRef item As <%= Entity.ClassName %>, ByVal stopProccessingChildren As Boolean)
         ' Don't update If the item isn't dirty.
         If Not (item.IsDirty) Then
             Return
@@ -186,11 +186,16 @@ Next
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
                 <%= entity.MembersUpdateInsert.BuildCommandParameters(True, True, False, True) %>
+<% If(Entity.HasRowVersionMember) Then %>
+                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp)
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value = item.<%= Entity.RowVersionMember.PropertyName %>
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Direction = ParameterDirection.InputOutput
+<% End If %>
 
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     If reader.Read() Then
 <% If (Entity.HasRowVersionMember) Then %>
-                        _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+                        item.<%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
 
 <% If (Entity.HasIdentityMember) Then %>
@@ -207,7 +212,7 @@ End If %>
 
 <% For Each member As Member In Entity.PrimaryKey.KeyMembers
  If Not(member.IsIdentity) Then %>
-		item.Original<%= member.PropertyName %> = item.<%= member.PropertyName %>
+        item.Original<%= member.PropertyName %> = item.<%= member.PropertyName %>
 <% End If
 Next %>
 
@@ -255,7 +260,7 @@ Next %>
         Return item
     End Function
 
-    Private Sub DoUpdate(ByVal item As <%= Entity.ClassName %>, ByVal stopProccessingChildren As Boolean)
+    Private Sub DoUpdate(ByRef item As <%= Entity.ClassName %>, ByVal stopProccessingChildren As Boolean)
         Dim cancel As Boolean = False
         OnUpdating(cancel)
         If (cancel) Then
@@ -318,8 +323,10 @@ Next
                 connection.Open()
                 Using command As New SqlCommand(commandText, connection)
                     <%= entity.MembersNoRowVersion.BuildCommandParameters(True, False, False, False, True) %>
-<% If (entity.HasRowVersionMember) Then %>
-                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= entity.RowVersionMember.ColumnName %>", _timestamp)
+<% If(Entity.HasRowVersionMember) Then %>
+                    command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp)
+                    command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value = item.<%= Entity.RowVersionMember.PropertyName %>
+                    command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Direction = ParameterDirection.InputOutput
 <% End If %>
 
 <% If (entity.HasRowVersionMember Or entity.HasIdentityMember) Then %>
@@ -331,7 +338,7 @@ Next
     
                         If reader.Read() Then
 <% If (Entity.HasRowVersionMember) Then %>
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+                            item.<%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
 <%For Each member As Member In Entity.PrimaryKey.KeyMembers
     If(member.IsIdentity) Then
@@ -343,11 +350,11 @@ Next %>
                         End If
                     End Using
 <%Else %>
-					'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-					Dim result As Integer = command.ExecuteNonQuery()
-					If (result = 0) Then
-						throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
-					End If
+                    'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                    Dim result As Integer = command.ExecuteNonQuery()
+                    If (result = 0) Then
+                        throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                    End If
 <% End If %>
                 End Using
             End Using
@@ -391,7 +398,7 @@ Next %>
         DoDelete(criteria)
     End Sub
 
-    Protected Sub DoDelete(ByVal item As <%= Entity.ClassName %>)
+    Protected Sub DoDelete(ByRef item As <%= Entity.ClassName %>)
         ' If we're not dirty then don't update the database.
         If Not (item.IsDirty) Then
             Return
@@ -442,7 +449,7 @@ Next %>
         Dim item As <%= Entity.ClassName %> = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True), <%= Entity.ClassName %>)
         Using BypassPropertyChecks(item)
 <% If Entity.HasRowVersionMember Then %>
-            '_timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+            item.<%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
 <% for each [member] as Member in Entity.MembersNoRowVersion %>
             item.<%= [member].PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>

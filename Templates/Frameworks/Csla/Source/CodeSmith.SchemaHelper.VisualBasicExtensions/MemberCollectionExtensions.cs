@@ -123,8 +123,8 @@ namespace CodeSmith.SchemaHelper
                 {
                     cast = member.IsNullable ? string.Format("IIf({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, DateTime), System.DBNull.Value))", castPrefix, propertyName)
                                              : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, propertyName);
-					originalCast = member.IsNullable ? string.Format("IIf({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, DateTime), System.DBNull.Value))", castPrefix, originalPropertyName)
-                                             		 : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, originalPropertyName);
+                    originalCast = member.IsNullable ? string.Format("IIf({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, DateTime), System.DBNull.Value))", castPrefix, originalPropertyName)
+                                                      : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, originalPropertyName);
                 }
                 else
                 {

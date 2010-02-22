@@ -59,9 +59,12 @@ Next
             connection.Open()
             Using command As New SqlCommand(commandText, connection)
                 <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, False, False, True) %>
-<% If (entity.HasRowVersionMember) Then %>
-                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= entity.RowVersionMember.ColumnName %>", _timestamp)
+<% If(Entity.HasRowVersionMember) Then %>
+                command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp)
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value = Me.<%= Entity.RowVersionMember.PropertyName %>
+                command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Direction = ParameterDirection.InputOutput
 <% End If %>
+
 <% If (entity.HasRowVersionMember Or entity.HasIdentityMember) Then %>
                 Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                     'RecordsAffected: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
@@ -72,7 +75,7 @@ Next
                     If reader.Read() Then
                         Using (BypassPropertyChecks)
 <% If (Entity.HasRowVersionMember) Then %>
-                            _timestamp = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+                            <%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
 <%For Each member As Member In Entity.PrimaryKey.KeyMembers
     If(member.IsIdentity) Then

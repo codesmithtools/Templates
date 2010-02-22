@@ -59,8 +59,8 @@ Public Partial Class <%= BusinessClassName %>
 
     Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
         Dim criteria As New <%= BusinessClassName %>Criteria ()
-		<%= sc.Members.BuildObjectInitializer() %>
-		
+        <%= sc.Members.BuildObjectInitializer() %>
+        
         Return DataPortal.Fetch(Of <%= BusinessClassName %>)(criteria)
     End Function
 <% Next %>
