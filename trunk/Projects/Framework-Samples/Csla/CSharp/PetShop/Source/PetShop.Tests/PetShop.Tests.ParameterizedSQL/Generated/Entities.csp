@@ -6,7 +6,6 @@
   </variables>
   <propertySets>
     <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Entities.cst">
-      <property name="CommandObject" />
       <property name="Criteria">
         <connectionString>$(ConnectionString2)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
@@ -166,7 +165,6 @@
       <property name="UseMemberVariables">False</property>
       <property name="DataAccessImplementation">ParameterizedSQL</property>
       <property name="DataProjectName">PetShop.Tests.ParameterizedSQL</property>
-      <property name="DataClassName">DataAccessLayer</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="InterfaceProjectName">PetShop.UI</property>

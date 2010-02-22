@@ -147,7 +147,7 @@
       </property>
       <property name="SolutionName">PetShop</property>
       <property name="ProcedurePrefix">CSLA_</property>
-      <property name="AutoExecuteStoredProcedures">False</property>
+      <property name="AutoExecuteStoredProcedures">True</property>
       <property name="IsolationLevel">ReadCommitted</property>
     </propertySet>
   </propertySets>

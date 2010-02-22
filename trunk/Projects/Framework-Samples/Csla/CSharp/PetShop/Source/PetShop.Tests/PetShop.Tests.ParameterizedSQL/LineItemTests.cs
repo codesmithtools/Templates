@@ -254,7 +254,7 @@ namespace PetShop.Tests.ParameterizedSQL
 
             Console.WriteLine("\tGetting lineItem \"{0}\"", LineItemOrderID);
             LineItem lineItem = LineItem.GetByOrderId(LineItemOrderID);
-            lineItem.OrderId = LineItemOrderID;
+            lineItem.OrderId = LineItemOrderID2;
             lineItem = lineItem.Save();
             Console.WriteLine("\tSet lineItemID to \"{0}\"", LineItemOrderID2);
             Assert.IsTrue(lineItem.OrderId == LineItemOrderID2);
@@ -304,7 +304,7 @@ namespace PetShop.Tests.ParameterizedSQL
             Assert.IsTrue(lineItem.IsValid);
 
             // Check LineItem.
-            lineItem.OrderId = -10;
+            lineItem.OrderId = -10; //Doesn't exist so valid should return false.
             Assert.IsFalse(lineItem.IsValid, "This test will fail until we implement exists rule to check fk..");
 
             lineItem.OrderId = LineItemOrderID;
@@ -313,6 +313,40 @@ namespace PetShop.Tests.ParameterizedSQL
             Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
         }
 
-        // Add concurrency tests.
+        /// <summary>
+        /// Updates a LineItem entity into the database.
+        /// </summary>
+        [Test]
+        public void Step_08_Concurrency_Duplicate_Update()
+        {
+            Console.WriteLine("8. Updating the lineItem.");
+            Stopwatch watch = Stopwatch.StartNew();
+
+            LineItem lineItem = LineItem.GetByOrderId(LineItemOrderID);
+            LineItem lineItem2 = LineItem.GetByOrderId(LineItemOrderID);
+            var quantity = lineItem.Quantity;
+            var unitPrice = lineItem.UnitPrice;
+
+            lineItem.Quantity = TestUtility.Instance.RandomNumber(int.MinValue, int.MaxValue);
+            lineItem.UnitPrice = TestUtility.Instance.RandomNumber(0, 500);
+
+            Assert.IsTrue(lineItem.IsValid, lineItem.BrokenRulesCollection.ToString());
+            lineItem = lineItem.Save();
+
+            lineItem2.Quantity = TestUtility.Instance.RandomNumber(int.MinValue, int.MaxValue);
+            lineItem2.UnitPrice = TestUtility.Instance.RandomNumber(0, 500);
+
+            try
+            {
+                lineItem2 = lineItem2.Save();
+                Assert.Fail("Concurrency exception should have been thrown.");
+            }
+            catch (Exception)
+            {
+                Assert.IsTrue(true);
+            }
+
+            Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds);
+        }
     }
 }
