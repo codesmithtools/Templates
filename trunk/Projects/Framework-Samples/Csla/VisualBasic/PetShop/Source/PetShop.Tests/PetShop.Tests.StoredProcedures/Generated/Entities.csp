@@ -6,7 +6,6 @@
   </variables>
   <propertySets>
     <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\Entities.cst">
-      <property name="CommandObject" />
       <property name="Criteria">
         <connectionString>$(ConnectionString2)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
@@ -163,10 +162,9 @@
       <property name="Location">.\</property>
       <property name="SolutionName">PetShop</property>
       <property name="BusinessProjectName">PetShop.Tests.StoredProcedures</property>
-      <property name="UseMemberVariables">False</property>
+      <property name="UseMemberVariables">True</property>
       <property name="DataAccessImplementation">StoredProcedures</property>
       <property name="DataProjectName">PetShop.Tests.StoredProcedures</property>
-      <property name="DataClassName">DataAccessLayer</property>
       <property name="ParameterPrefix">@p_</property>
       <property name="UseLazyLoading">True</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
