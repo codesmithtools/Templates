@@ -26,6 +26,7 @@ Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
 
+    <RunLocal()> _
     Protected Overrides Sub DataPortal_Create()
     End Sub
 
