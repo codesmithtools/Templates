@@ -238,9 +238,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{E9
 		..\CSharp\DataAccessLayer\Internal\ADOHelper.cst = ..\CSharp\DataAccessLayer\Internal\ADOHelper.cst
 		..\CSharp\DataAccessLayer\Internal\ObjectFactory.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactory.cst
 		..\CSharp\DataAccessLayer\Internal\ObjectFactory.DataAccess.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactory.DataAccess.cst
+		..\CSharp\DataAccessLayer\Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactory.DataAccess.ParameterizedSQL.cst
 		..\CSharp\DataAccessLayer\Internal\ObjectFactory.DataAccess.StoredProcedures.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactory.DataAccess.StoredProcedures.cst
 		..\CSharp\DataAccessLayer\Internal\ObjectFactoryList.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactoryList.cst
 		..\CSharp\DataAccessLayer\Internal\ObjectFactoryList.DataAccess.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactoryList.DataAccess.cst
+		..\CSharp\DataAccessLayer\Internal\ObjectFactoryList.DataAccess.ParameterizedSQL.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactoryList.DataAccess.ParameterizedSQL.cst
 		..\CSharp\DataAccessLayer\Internal\ObjectFactoryList.DataAccess.StoredProcedures.cst = ..\CSharp\DataAccessLayer\Internal\ObjectFactoryList.DataAccess.StoredProcedures.cst
 		..\CSharp\DataAccessLayer\Internal\SQLStoredProcedures.cst = ..\CSharp\DataAccessLayer\Internal\SQLStoredProcedures.cst
 	EndProjectSection
