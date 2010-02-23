@@ -451,11 +451,18 @@ Next %>
 <% If Entity.HasRowVersionMember Then %>
             item.<%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
-<% for each [member] as Member in Entity.MembersNoRowVersion %>
-            item.<%= [member].PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>
-<% If Not member.IsIdentity And member.IsPrimaryKey Then %>
-            item.Original<%= member.PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>
-<% End If%>
+<% for each [member] as Member in Entity.MembersNoRowVersion 
+    If member.IsNullable And Not member.SystemType = "System.String" Then %>
+            item.<%= [member].PropertyName %> = If(reader.IsDBNull("<%= [member].ColumnName %>"), Nothing, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>)
+<%If(member.IsPrimaryKey And Not member.IsIdentity) %>
+            item.Original<%= member.PropertyName %> = If(reader.IsDBNull("<%= [member].ColumnName %>"), Nothing, <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>)
+<% End If %>
+<% Else%>
+            item.<%= [member].PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+<%If(member.IsPrimaryKey And Not member.IsIdentity) %>
+            item.Original<%= member.PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader)<% End If %>
+<% End If 
+End If %>
 <% Next %>
         End Using
 

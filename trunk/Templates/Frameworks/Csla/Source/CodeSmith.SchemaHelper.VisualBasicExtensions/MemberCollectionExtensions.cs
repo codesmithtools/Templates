@@ -126,6 +126,14 @@ namespace CodeSmith.SchemaHelper
                     originalCast = member.IsNullable ? string.Format("IIf({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, DateTime), System.DBNull.Value))", castPrefix, originalPropertyName)
                                                       : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, originalPropertyName);
                 }
+                else if (member.IsNullable && member.SystemType != "System.String" && !string.IsNullOrEmpty(includeThisPrefix))
+                {
+                    //includeThisPrefix = this.
+                    //castprefix = item.
+                    //propertyName = bo.propertyname or propertyname
+                    cast = string.Format("IIf({0}{1}{2}.HasValue, {0}{1}{2}.Value, DBNull.Value))", includeThisPrefix, castPrefix, propertyName);
+                    originalCast = string.Format("IIf({0}{1}{2}.HasValue, {0}{1}{2}.Value, DBNull.Value))", includeThisPrefix, castPrefix, originalPropertyName);
+                }
                 else
                 {
                     cast = string.Format("{0}{1}{2})", includeThisPrefix, castPrefix, propertyName);

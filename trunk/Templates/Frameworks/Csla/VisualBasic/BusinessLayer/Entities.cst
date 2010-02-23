@@ -175,7 +175,8 @@ Public Overrides Sub Generate()
     End If
     
     Dim strategy As New PreserveRegionsMergeStrategy()
-    strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved)""?;"
+    strategy.Language = "VB"
+    strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved)""?"
     
     ' ADOHelperTemplate
     

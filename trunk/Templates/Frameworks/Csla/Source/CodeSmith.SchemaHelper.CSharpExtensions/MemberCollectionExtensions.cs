@@ -126,6 +126,14 @@ namespace CodeSmith.SchemaHelper
                     originalCast = member.IsNullable ? string.Format("(DateTime?){0}{1});", castPrefix, originalPropertyName)
                                                      : string.Format("(DateTime){0}{1});", castPrefix, originalPropertyName);
                 }
+                else if (member.IsNullable && member.SystemType != "System.String" && !string.IsNullOrEmpty(includeThisPrefix))
+                {
+                    //includeThisPrefix = this.
+                    //castprefix = item.
+                    //propertyName = bo.propertyname or propertyname
+                    cast = string.Format("{0}{1}{2}.HasValue ? (object){0}{1}{2}.Value : DBNull.Value);", includeThisPrefix, castPrefix, propertyName);
+                    originalCast = string.Format("{0}{1}{2}.HasValue ? (object){0}{1}{2}.Value : DBNull.Value);", includeThisPrefix, castPrefix, originalPropertyName);
+                }
                 else
                 {
                     cast = string.Format("{0}{1}{2});", includeThisPrefix, castPrefix, propertyName);
