@@ -38,8 +38,6 @@ Public Class ADOHelper
     Private Sub New()
     End Sub
 
-     Private Shared _connectionString As String = String.Empty
-
     #Region "Preserved Code"
 
      Private Shared _connectionString As String = String.Empty
