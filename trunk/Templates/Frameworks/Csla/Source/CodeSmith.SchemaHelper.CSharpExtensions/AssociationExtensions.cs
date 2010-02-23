@@ -24,7 +24,7 @@ namespace CodeSmith.SchemaHelper
                     {
                         parameters += string.Format(", {0} = {1}{2}", Util.NamingConventions.PropertyName(associationMember.ColumnName),
                             usePropertyName ? member.PropertyName : member.VariableName,
-                            member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
+                            member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
                     }
                 }
             }

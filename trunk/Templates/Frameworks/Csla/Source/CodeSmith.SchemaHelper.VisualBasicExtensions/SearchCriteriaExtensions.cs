@@ -34,7 +34,7 @@ namespace CodeSmith.SchemaHelper
                         else
                         {
                             resolvedPropertyName = Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName);
-                            var nullable = member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty;
+                            var nullable = member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()" ? ".Value" : string.Empty;
                             propertyName = string.Format("item.{0}{1}", Util.NamingConventions.PropertyName(member.ColumnName), nullable);
                         }
                     }
@@ -49,7 +49,7 @@ namespace CodeSmith.SchemaHelper
                 foreach (Member member in sc.Members)
                 {
                     var propertyName = isObjectFactory ? string.Format("item.{0}", member.PropertyName) : member.VariableName;
-                    parameters += string.Format("\r\n\t\t{0} = {1}{2}", member.PropertyName, propertyName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
+                    parameters += string.Format("\r\n\t\t{0} = {1}{2}", member.PropertyName, propertyName, member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()" ? ".Value" : string.Empty);
                 }
 
                 #endregion
@@ -82,7 +82,7 @@ namespace CodeSmith.SchemaHelper
                     }
                     else
                     {
-                        var nullable = member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty;
+                        var nullable = member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()" ? ".Value" : string.Empty;
                         resolvedPropertyName = Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName);
                         propertyName = string.Format("{0}{1}", Util.NamingConventions.PropertyName(member.ColumnName), nullable);
                     }

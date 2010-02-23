@@ -36,7 +36,7 @@ namespace CodeSmith.SchemaHelper
                 if (includeOriginal && member.IsPrimaryKey && !member.IsIdentity)
                     propertyName = isObjectFactory ? string.Format("item.Original{0}", member.PropertyName) : string.Format("Original{0}", member.PropertyName);
                 
-                parameters += string.Format(", {0} = {1}{2}", member.PropertyName, propertyName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
+                parameters += string.Format(", {0} = {1}{2}", member.PropertyName, propertyName, member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -126,7 +126,7 @@ namespace CodeSmith.SchemaHelper
                     originalCast = member.IsNullable ? string.Format("(DateTime?){0}{1});", castPrefix, originalPropertyName)
                                                      : string.Format("(DateTime){0}{1});", castPrefix, originalPropertyName);
                 }
-                else if (member.IsNullable && member.SystemType != "System.String" && !string.IsNullOrEmpty(includeThisPrefix))
+                else if (member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" && !string.IsNullOrEmpty(includeThisPrefix))
                 {
                     //includeThisPrefix = this.
                     //castprefix = item.

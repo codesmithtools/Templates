@@ -14,7 +14,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-                parameters += string.Format(", {0}{1}", member.VariableName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
+                parameters += string.Format(", {0}{1}", member.VariableName, member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -26,7 +26,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-                parameters += string.Format(", {0}{1}", member.PropertyName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
+                parameters += string.Format(", {0}{1}", member.PropertyName, member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
@@ -38,7 +38,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
-                parameters += string.Format(", {0}{1}", member.PrivateMemberVariableName, member.IsNullable && member.SystemType != "System.String" ? ".Value" : string.Empty);
+                parameters += string.Format(", {0}{1}", member.PrivateMemberVariableName, member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
