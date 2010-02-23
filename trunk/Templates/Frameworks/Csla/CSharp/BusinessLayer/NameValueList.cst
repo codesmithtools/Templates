@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X NameValueList" %>
 
 <%@ Register Name="NameValueList" Template="Internal\NameValueList.cst" %>
@@ -23,6 +23,9 @@ public override void Render(System.IO.TextWriter writer)
 {
     RegisterReferences();
 
+    PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy();
+    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Custom)\"?;";
+
     #region NameValueList
     
     NameValueList nameValueList = this.Create<NameValueList>();
@@ -30,10 +33,7 @@ public override void Render(System.IO.TextWriter writer)
     nameValueList.BusinessClassName = string.Format("{0}List", nameValueList.BusinessClassName);
     
     string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", nameValueList.BusinessClassName));
-    if (!System.IO.File.Exists(parentFileName))
-    {
-        nameValueList.RenderToFile(parentFileName, false);
-    }
+    nameValueList.RenderToFile(parentFileName, strategy);
     
     #region NameValueList.Generated
     

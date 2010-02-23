@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X NameValueList" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -27,10 +27,13 @@ Imports System.Data
 Imports System.Data.SqlClient
 
 Imports Csla
+Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
 
-<% If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL) Then %>
+    #Region "Preserved Code"
+
+<% If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL) Then %>
 
     #Region "Custom Data Access"
 
@@ -38,7 +41,7 @@ Public Partial Class <%= BusinessClassName %>
         RaiseListChangedEvents = false
         IsReadOnly = false
 
-        Dim criteria as New <%= ChildBusinessClassName %>Criteria
+        Dim criteria as New <%= ChildBusinessClassName %>Criteria()
         Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
@@ -63,7 +66,7 @@ Public Partial Class <%= BusinessClassName %>
 
     #End Region
 
-<% Else If(DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
+<% Else If(DataAccessImplementation = DataAccessMethod.StoredProcedures Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) Then %>
 
     #Region "Custom Data Access"
 
@@ -71,7 +74,7 @@ Public Partial Class <%= BusinessClassName %>
         RaiseListChangedEvents = false
         IsReadOnly = false
 
-        Dim criteria as New <%= ChildBusinessClassName %>Criteria
+        Dim criteria as New <%= ChildBusinessClassName %>Criteria()
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)
@@ -98,4 +101,7 @@ Public Partial Class <%= BusinessClassName %>
     #End Region
 
 <% End If %>
+
+    #End Region
+
 End Class

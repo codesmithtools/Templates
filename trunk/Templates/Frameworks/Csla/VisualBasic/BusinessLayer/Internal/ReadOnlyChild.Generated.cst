@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X ReadOnlyChild" %>
 <%@ Register Name="CompositeKeyMethods" Template="..\..\Common\CompositeKeyMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Constructor" Template="..\..\Common\ConstructorReadOnly.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -33,7 +33,7 @@ Imports Csla.Validation
 
 <Serializable()> _
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
-<Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>FactoryName)> _
+<Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>InfoFactoryName)> _
 <% End If %>
 Public Partial Class <%= BusinessClassName %> 
     Inherits ReadOnlyBase(Of <%= BusinessClassName %>)

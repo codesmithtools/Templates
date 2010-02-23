@@ -85,7 +85,13 @@ Public Sub RenderObjectFactoryTemplates(entity As Entity, IsReadOnly As Boolean,
     Dim objectFactory As ObjectFactory = Me.Create(Of ObjectFactory)()
     Me.CopyPropertiesTo(objectFactory)
     objectFactory.SourceTable = entity.Table
-    objectFactory.BusinessClassName = entity.ClassName + "Factory"
+    
+    If(IsReadOnly) Then
+        objectFactory.BusinessClassName = entity.ClassName + "InfoFactory"
+    Else
+        objectFactory.BusinessClassName = entity.ClassName + "Factory"
+    End If
+    
     objectFactory.IsReadOnlyBusinessObject = IsReadOnly
     objectFactory.IsChildBusinessObject = IsChild
 
@@ -151,7 +157,13 @@ Public Sub RenderObjectFactoryListTemplates(entity As Entity, IsReadOnly As Bool
     Dim objectFactory As ObjectFactoryList = Me.Create(Of ObjectFactoryList)()
     Me.CopyPropertiesTo(objectFactory)
     objectFactory.SourceTable = entity.Table
-    objectFactory.BusinessClassName = entity.ClassName + "ListFactory"
+    
+    If(IsReadOnly) Then
+        objectFactory.BusinessClassName = entity.ClassName + "InfoListFactory"
+    Else
+        objectFactory.BusinessClassName = entity.ClassName + "ListFactory"
+    End If
+    
     objectFactory.IsReadOnlyBusinessObject = IsReadOnly
     objectFactory.IsChildBusinessObject = IsChild
 

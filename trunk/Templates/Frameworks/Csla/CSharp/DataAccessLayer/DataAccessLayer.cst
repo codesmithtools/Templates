@@ -103,7 +103,12 @@ public void RenderObjectFactoryTemplates(Entity entity, bool IsReadOnly, bool Is
     ObjectFactory objectFactory = this.Create<ObjectFactory>();
     this.CopyPropertiesTo(objectFactory);
     objectFactory.SourceTable = entity.Table;
-    objectFactory.BusinessClassName = entity.ClassName + "Factory";
+    
+    if(IsReadOnly)
+        objectFactory.BusinessClassName = entity.ClassName + "InfoFactory";
+    else
+        objectFactory.BusinessClassName = entity.ClassName + "Factory";
+    
     objectFactory.IsReadOnlyBusinessObject = IsReadOnly;
     objectFactory.IsChildBusinessObject = IsChild;
 
@@ -178,7 +183,12 @@ public void RenderObjectFactoryListTemplates(Entity entity, bool IsReadOnly, boo
     ObjectFactoryList objectFactory = this.Create<ObjectFactoryList>();
     this.CopyPropertiesTo(objectFactory);
     objectFactory.SourceTable = entity.Table;
-    objectFactory.BusinessClassName = entity.ClassName + "ListFactory";
+
+    if(IsReadOnly)
+        objectFactory.BusinessClassName = entity.ClassName + "InfoListFactory";
+    else
+        objectFactory.BusinessClassName = entity.ClassName + "ListFactory";
+
     objectFactory.IsReadOnlyBusinessObject = IsReadOnly;
     objectFactory.IsChildBusinessObject = IsChild;
     

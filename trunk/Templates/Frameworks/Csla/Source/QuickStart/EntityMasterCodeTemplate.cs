@@ -31,6 +31,7 @@ namespace QuickStart
         private TableSchemaCollection _editableChildList = new TableSchemaCollection();
         private TableSchemaCollection _readOnlyList = new TableSchemaCollection();
         private TableSchemaCollection _readOnlyChildList = new TableSchemaCollection();
+        private TableSchemaCollection _nameValueList = new TableSchemaCollection();
 
         #endregion
 
@@ -229,7 +230,18 @@ namespace QuickStart
         [Category("6b. List Entities")]
         [Description("NameValueList")]
         [Optional]
-        public TableSchemaCollection NameValueList { get; set; }
+        public TableSchemaCollection NameValueList
+        {
+            get { return _nameValueList; }
+            set
+            {
+                if (value != null)
+                {
+                    _nameValueList = value;
+                    OnNameListChanged();
+                }
+            }
+        }
 
         #endregion
 
@@ -592,6 +604,30 @@ namespace QuickStart
                 ReadOnlyList.Remove(entity.Table);
 
                 ContextData.Add(key, Constants.ReadOnlyChildList);
+
+                if (this.State == TemplateState.RestoringProperties)
+                    return;
+
+                AddChildEntity(entity.Table, true, true);
+            }
+        }
+
+        private void OnNameListChanged()
+        {
+            CleanTemplateContextByValue(Constants.NameValueList);
+
+            EntityManager em = new EntityManager(NameValueList);
+
+            foreach (Entity entity in em.Entities)
+            {
+                string key = string.Format(Constants.ListFormat, entity.Table.Name);
+
+                if (ContextData.Get(key) != null)
+                    ContextData.Remove(key);
+
+                ReadOnlyList.Remove(entity.Table);
+
+                ContextData.Add(key, Constants.NameValueList);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
