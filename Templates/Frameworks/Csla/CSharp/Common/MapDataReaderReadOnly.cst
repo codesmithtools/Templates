@@ -17,7 +17,7 @@
             <%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
 <% } %>
 <% foreach(Member member in Entity.MembersNoRowVersion) { if(UseMemberVariables) { %>
-    <% if( member.IsNullable && member.SystemType != "System.String") {%>
+    <% if( member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") {%>
             <%= member.PrivateMemberVariableName %> = reader.IsDBNull("<%= member.ColumnName %>") ? (<%= member.SystemType %>)null : <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
     <% } else {%>
             <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
