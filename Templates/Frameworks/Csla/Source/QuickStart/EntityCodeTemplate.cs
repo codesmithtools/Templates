@@ -331,6 +331,29 @@ namespace QuickStart
             return false;
         }
 
+        public bool IsNameValueListBusinessObject(Association association)
+        {
+            return IsNameValueListBusinessObject(association, string.Empty);
+        }
+
+        public bool IsNameValueListBusinessObject(Association association, string suffix)
+        {
+            if (association.Count <= 0)
+                return false;
+
+            string key = string.Format("{0}{1}", association.TableName, suffix);
+            if (ContextData.Get(key) == null) return false;
+
+            var value = ContextData[key];
+            switch (value)
+            {
+                case Constants.NameValueList:
+                    return true;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// This is used to detect to see if the context data contains a class. It is used in the case where we want to see if a read-write class exists before a read only..
         /// </summary>

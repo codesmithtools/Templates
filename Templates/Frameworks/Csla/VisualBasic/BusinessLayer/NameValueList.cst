@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X NameValueList" %>
 
 <%@ Register Name="NameValueList" Template="Internal\NameValueList.cst" %>
@@ -23,15 +23,17 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     RegisterReferences()
 
+    Dim strategy As New PreserveRegionsMergeStrategy()
+    strategy.Language = "VB"
+    strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved)""?"
+
     'NameValueList
     Dim nameValueList As NameValueList = Me.Create(Of NameValueList)()
     Me.CopyPropertiesTo(nameValueList)
     nameValueList.BusinessClassName = String.Format("{0}List", nameValueList.BusinessClassName)
 
     Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", nameValueList.BusinessClassName))
-    If Not System.IO.File.Exists(parentFileName) Then
-        nameValueList.RenderToFile(parentFileName, False)
-    End If
+    nameValueList.RenderToFile(parentFileName, strategy)
 
     'NameValueList.Generated
     Dim fileName As String = System.IO.Path.Combine(Location, String.Format("Collections\{0}.Generated.vb", nameValueList.BusinessClassName))

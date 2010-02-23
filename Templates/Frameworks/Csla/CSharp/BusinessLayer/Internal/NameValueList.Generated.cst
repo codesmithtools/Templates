@@ -1,5 +1,6 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X NameValueList" %>
+<%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
@@ -48,5 +49,25 @@ namespace <%= BusinessProjectName %>
         { /* Require use of factory methods */ }
         
         #endregion
+
+<% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures) { %>
+        #region Property overrides
+
+        /// <summary>
+        /// Returns true if any children are dirty
+        /// </summary>
+        public new bool IsDirty
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        #endregion
+
+<% } %>
+
+<% RenderHelper(new Exists()); %>
     }
 }

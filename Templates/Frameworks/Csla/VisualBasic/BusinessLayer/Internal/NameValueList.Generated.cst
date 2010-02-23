@@ -1,5 +1,6 @@
 ﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X NameValueList" %>
+<%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
@@ -46,5 +47,23 @@ Public Partial Class <%= BusinessClassName %>
     End Sub
     
     #End Region
+
+<% If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then %>
+        #Region "Property overrides"
+
+        ''' <summary>
+        ''' Returns true if any children are dirty
+        ''' </summary>
+        Public Shadows ReadOnly Property IsDirty() As Boolean
+            Get
+                Return False
+            End Get
+        End Property
+
+        #End Region
+
+<% End If %>
+
+<% RenderHelper(New Exists()) %>
 
 End Class

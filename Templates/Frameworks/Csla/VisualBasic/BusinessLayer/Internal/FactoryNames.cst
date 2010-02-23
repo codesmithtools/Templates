@@ -46,10 +46,10 @@ Public Module FactoryNames
     Public Const <%= entity.ClassName %>FactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>Factory, <%= DataProjectName %>"
 <% Next %>
 <% For Each entity As Entity In new EntityManager(ReadOnlyChild).Entities %>
-    Public Const <%= entity.ClassName %>FactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>Factory, <%= DataProjectName %>"
+    Public Const <%= entity.ClassName %>InfoFactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>Factory, <%= DataProjectName %>"
 <% Next %>
 <% For Each entity As Entity In new EntityManager(ReadOnlyRoot).Entities %>
-    Public Const <%= entity.ClassName %>FactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>Factory, <%= DataProjectName %>"
+    Public Const <%= entity.ClassName %>InfoFactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>Factory, <%= DataProjectName %>"
 <% Next %>
 <% For Each entity As Entity In new EntityManager(SwitchableObject).Entities %>
     Public Const <%= entity.ClassName %>FactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>Factory, <%= DataProjectName %>"
@@ -65,9 +65,9 @@ Public Module FactoryNames
     Public Const <%= entity.ClassName %>ListFactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>ListFactory, <%= DataProjectName %>"
 <% Next %>
 <% For Each entity As Entity In new EntityManager(ReadOnlyList).Entities %>
-    Public Const <%= entity.ClassName %>ListFactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>ListFactory, <%= DataProjectName %>"
+    Public Const <%= entity.ClassName %>InfoListFactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>ListFactory, <%= DataProjectName %>"
 <% Next %>
 <% For Each entity As Entity In new EntityManager(ReadOnlyChildList).Entities %>
-    Public Const <%= entity.ClassName %>ListFactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>ListFactory, <%= DataProjectName %>"
+    Public Const <%= entity.ClassName %>InfoListFactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>ListFactory, <%= DataProjectName %>"
 <% Next %>
 End Module

@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X NameValueList" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -21,7 +21,11 @@
 #region Using declarations
 
 using System;
+using System.Data;
+using System.Data.SqlClient;
+
 using Csla;
+using Csla.Data;
 
 #endregion
 
@@ -29,7 +33,10 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
-<% if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL){ %>
+
+        #region "Preserved Code"
+
+<% if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL){ %>
 
         #region Custom Data Access
 
@@ -38,7 +45,7 @@ namespace <%= BusinessProjectName %>
             RaiseListChangedEvents = false;
             IsReadOnly = false;
 
-            var criteria = new <%= ChildBusinessClassName %>Criteria;
+            var criteria = new <%= ChildBusinessClassName %>Criteria();
             string commandText = string.Format("SELECT <%= Entity.Members.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
@@ -69,7 +76,7 @@ namespace <%= BusinessProjectName %>
 
         #endregion
 
-<% } else if(DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
+<% } else if(DataAccessImplementation == DataAccessMethod.StoredProcedures || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
 
         #region Custom Data Access
 
@@ -78,7 +85,7 @@ namespace <%= BusinessProjectName %>
             RaiseListChangedEvents = false;
             IsReadOnly = false;
 
-            var criteria = new <%= ChildBusinessClassName %>Criteria;
+            var criteria = new <%= ChildBusinessClassName %>Criteria();
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
@@ -110,5 +117,8 @@ namespace <%= BusinessProjectName %>
         #endregion
 
 <% } %>
+
+        #endregion
+
     }
 }

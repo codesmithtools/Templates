@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X EditableRootList" %>
 <%@ Register Name="DataPortalFetchList" Template="..\..\Common\DataPortalFetchList.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -36,6 +36,10 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
+        protected override void DataPortal_Create()
+        {
+        }
+
         private void DataPortal_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
         {
 <% RenderHelper(new DataPortalFetchList()); %>

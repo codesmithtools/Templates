@@ -167,7 +167,9 @@
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                 {
-<% if(!BusinessObjectExists(association, "List") && IsReadOnlyBusinessObject(association, "InfoList")) { %>
+<% if(IsNameValueListBusinessObject(association, "List")) { %>
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.GetAll());
+<% } else { if(!BusinessObjectExists(association, "List") && IsReadOnlyBusinessObject(association, "InfoList")) { %>
                     if(<%= BusinessProjectName %>.<%= associationClassName %>List.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
 <% } else { %>
@@ -175,7 +177,7 @@
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.NewList());
                     else
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
-<% } %>
+<% } } %>
                 }
 
 <% } %>

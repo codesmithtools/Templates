@@ -20,5 +20,6 @@ namespace QuickStart
         public const string EditableChildList = "EditableChildList";
         public const string ReadOnlyList = "ReadOnlyList";
         public const string ReadOnlyChildList = "ReadOnlyChildList";
+        public const string NameValueList = "NameValueList";
     }
 }

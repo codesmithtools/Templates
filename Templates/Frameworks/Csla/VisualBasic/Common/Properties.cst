@@ -252,6 +252,9 @@ Public ReadOnly Property <%= association.PropertyName %>() As <%= associationCla
         Get
 <% If(UseLazyLoading) Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property)) Then
+<% If(IsNameValueListBusinessObject(association, "List")) Then %>
+                LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.GetAll())
+<% Else %>
                 Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria()
                 <%= association.BuildObjectInitializer(true) %>
 
@@ -265,7 +268,8 @@ Public ReadOnly Property <%= association.PropertyName %>() As <%= associationCla
                 Else
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
-<% End If%>
+<% End If
+End If%>
             End If
             
 <% End If%>
