@@ -36,6 +36,7 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
+        [RunLocal]
         protected override void DataPortal_Create()
         {
         }
