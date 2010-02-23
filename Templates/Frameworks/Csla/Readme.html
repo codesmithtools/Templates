@@ -134,9 +134,10 @@ under the file that can be changed.</p>
 </ul>
 <h2><a title="Roadmap" name="Roadmap"></a>Roadmap</h2>
 <ul>
-    <li>Add L2S (Linq to SQL support), NHibernate</li>
+    <li>Add L2S (Linq to SQL support), NHibernate, MySQL, Oracle</li>
     <li>Unit test generation</li>
-    <li>Support for Object Factory</li>
+    <li>Generate from a View.</li>
+    <li>Generation from an xml file.</li>
 </ul>
 <h2><a name="Download"></a>Download</h2>
 <p>Download the latest release from Google Code.</p>
@@ -145,6 +146,28 @@ under the file that can be changed.</p>
 </ul>
 <h2>History</h2>
 <ul>
+    <li>Release 2.0
+        <ul>
+            <li>Added SQL Stored Procedure support</li>
+            <li>Added Object Factory support.</li>
+            <li>Added merge region support as well as support to actively generate stored 
+                procedures.</li>
+            <li>Added ExistsCommand, this does a database lookup to see if an item exists in the 
+                database.</li>
+            <li>Added support for generating ReadOnly business objects along side of an Editable 
+                business objects.</li>
+            <li>Added Column and Table renaming support.</li>
+            <li>Moved all repetitive template logic into sub templates (common folder)</li>
+            <li>Added support for the new ByPassPropertyCheck in CSLA 3.8.</li>
+            <li>Updated the templates to CSLA 3.8.2.</li>
+            <li>Fixed detection logic for GetBy Critiera.</li>
+            <li>Fixed many bugs dealing with Child objects and how they are populated.</li>
+            <li>Added partial method hooks for the DataPortal methods.</li>
+            <li>Updated the templates to throw an exception when a record doesn’t exist.</li>
+            <li>Added support to rename a non identity primary key column.</li>
+            <li>Fixed many other <a href="http://code.google.com/p/codesmith/issues/list?can=1&q=label:version-2.0">template bugs</a>.</li>
+        </ul>
+    </li>
     <li>Release 1.1.1
         <ul>
             <li>Fixed a bug where FK's to tables in the excluded list could throw a null reference exception.</li>
