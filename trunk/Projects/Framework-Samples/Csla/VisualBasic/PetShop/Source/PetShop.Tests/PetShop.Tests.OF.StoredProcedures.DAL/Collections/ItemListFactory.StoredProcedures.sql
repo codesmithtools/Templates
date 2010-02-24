@@ -1,17 +1,181 @@
 ﻿--region Drop Existing Procedures
 
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+PRINT N'Dropping [dbo].[CSLA_Item_Insert]'
+GO
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Item_Insert]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+BEGIN
+    RAISERROR ('The procedure [dbo].[CSLA_Item_Insert] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to drop the procedure.',16,1)
+    INSERT INTO #tmpErrors (Error) SELECT 1
+END
+GO
+
 IF OBJECT_ID(N'[dbo].[CSLA_Item_Insert]') IS NOT NULL
 	DROP PROCEDURE [dbo].[CSLA_Item_Insert]
+
+IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'The stored procedure drop has succeeded'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'The stored procedure drop has failed'
+GO
+
+DROP TABLE #tmpErrors
+GO
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+PRINT N'Dropping [dbo].[CSLA_Item_Update]'
+GO
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Item_Update]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+BEGIN
+    RAISERROR ('The procedure [dbo].[CSLA_Item_Update] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to drop the procedure.',16,1)
+    INSERT INTO #tmpErrors (Error) SELECT 1
+END
+GO
 
 IF OBJECT_ID(N'[dbo].[CSLA_Item_Update]') IS NOT NULL
 	DROP PROCEDURE [dbo].[CSLA_Item_Update]
 
+IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'The stored procedure drop has succeeded'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'The stored procedure drop has failed'
+GO
+
+DROP TABLE #tmpErrors
+GO
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+PRINT N'Dropping [dbo].[CSLA_Item_Delete]'
+GO
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Item_Delete]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+BEGIN
+    RAISERROR ('The procedure [dbo].[CSLA_Item_Delete] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to drop the procedure.',16,1)
+    INSERT INTO #tmpErrors (Error) SELECT 1
+END
+GO
+
 IF OBJECT_ID(N'[dbo].[CSLA_Item_Delete]') IS NOT NULL
 	DROP PROCEDURE [dbo].[CSLA_Item_Delete]
+
+IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'The stored procedure drop has succeeded'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'The stored procedure drop has failed'
+GO
+
+DROP TABLE #tmpErrors
+GO
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+PRINT N'Dropping [dbo].[CSLA_Item_Select]'
+GO
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Item_Select]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+BEGIN
+    RAISERROR ('The procedure [dbo].[CSLA_Item_Select] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to drop the procedure.',16,1)
+    INSERT INTO #tmpErrors (Error) SELECT 1
+END
+GO
 
 IF OBJECT_ID(N'[dbo].[CSLA_Item_Select]') IS NOT NULL
 	DROP PROCEDURE [dbo].[CSLA_Item_Select]
 
+IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'The stored procedure drop has succeeded'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'The stored procedure drop has failed'
+GO
+
+DROP TABLE #tmpErrors
+GO
 --endregion
 
 GO
@@ -19,12 +183,37 @@ GO
 --region [dbo].[CSLA_Item_Insert]
 
 ------------------------------------------------------------------------------------------------------------------------
--- Generated By:   Blake Niemyjski using CodeSmith: v5.2.1, CSLA Templates: v1.5.0.0, CSLA Framework: v3.8.2
+-- Generated By:   Blake Niemyjski using CodeSmith: v5.2.1, CSLA Templates: v2.0.0.1440, CSLA Framework: v3.8.2
 -- Procedure Name: [dbo].[CSLA_Item_Insert]
 ------------------------------------------------------------------------------------------------------------------------
 
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+
+PRINT N'Creating [dbo].[CSLA_Item_Insert]'
+GO
+
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Item_Insert]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+    BEGIN
+        RAISERROR ('The procedure [dbo].[CSLA_Item_Insert] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        INSERT INTO #tmpErrors (Error) SELECT 1
+    END
+GO
+
+
 CREATE PROCEDURE [dbo].[CSLA_Item_Insert]
-	@p_timestamp timestamp OUTPUT,
 	@p_ItemId varchar(10),
 	@p_ProductId varchar(10),
 	@p_ListPrice decimal(10, 2),
@@ -53,8 +242,24 @@ INSERT INTO [dbo].[Item] (
 	@p_Name,
 	@p_Image)
 
-SET @p_timestamp = (SELECT [timestamp] FROM [dbo].[Item] WHERE 	[ItemId] = @p_ItemId
-)
+
+
+IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'Stored procedure creation succedded was succeeded.'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'Stored procedure creation failed.'
+GO
+DROP TABLE #tmpErrors
+GO
 
 --endregion
 
@@ -63,12 +268,36 @@ GO
 --region [dbo].[CSLA_Item_Update]
 
 ------------------------------------------------------------------------------------------------------------------------
--- Generated By:   Blake Niemyjski using CodeSmith: v5.2.1, CSLA Templates: v1.5.0.0, CSLA Framework: v3.8.2
+-- Generated By:   Blake Niemyjski using CodeSmith: v5.2.1, CSLA Templates: v2.0.0.1440, CSLA Framework: v3.8.2
 -- Procedure Name: [dbo].[CSLA_Item_Update]
 ------------------------------------------------------------------------------------------------------------------------
 
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+
+PRINT N'Creating [dbo].[CSLA_Item_Update]'
+GO
+
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Item_Update]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+    BEGIN
+        RAISERROR ('The procedure [dbo].[CSLA_Item_Update] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        INSERT INTO #tmpErrors (Error) SELECT 1
+    END
+GO
+
 CREATE PROCEDURE [dbo].[CSLA_Item_Update]
-	@p_timestamp timestamp OUTPUT,
 	@p_ItemId varchar(10),
 	@p_OriginalItemId varchar(10),
 	@p_ProductId varchar(10),
@@ -91,10 +320,25 @@ UPDATE [dbo].[Item] SET
 	[Image] = @p_Image
 WHERE
 	[ItemId] = @p_OriginalItemId
-	AND [timestamp] = @p_timestamp
 
-SET @p_timestamp = (SELECT [timestamp] FROM [dbo].[Item] WHERE 	[ItemId] = @p_ItemId
-)
+
+IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'Stored procedure creation succedded was succeeded.'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'Stored procedure creation failed.'
+GO
+DROP TABLE #tmpErrors
+GO
+
 
 --endregion
 
@@ -103,9 +347,34 @@ GO
 --region [dbo].[CSLA_Item_Delete]
 
 ------------------------------------------------------------------------------------------------------------------------
--- Generated By:   Blake Niemyjski using CodeSmith: v5.2.1, CSLA Templates: v1.5.0.0, CSLA Framework: v3.8.2
+-- Generated By:   Blake Niemyjski using CodeSmith: v5.2.1, CSLA Templates: v2.0.0.1440, CSLA Framework: v3.8.2
 -- Procedure Name: [dbo].[CSLA_Item_Delete]
 ------------------------------------------------------------------------------------------------------------------------
+
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+
+PRINT N'Creating [dbo].[CSLA_Item_Delete]'
+GO
+
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Item_Delete]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+    BEGIN
+        RAISERROR ('The procedure [dbo].[CSLA_Item_Delete] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        INSERT INTO #tmpErrors (Error) SELECT 1
+    END
+GO
 
 CREATE PROCEDURE [dbo].[CSLA_Item_Delete]
 	@p_ItemId varchar(10)
@@ -116,6 +385,24 @@ DELETE FROM
 WHERE
 	[ItemId] = @p_ItemId
 
+IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'Stored procedure creation succedded was succeeded.'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'Stored procedure creation failed.'
+GO
+DROP TABLE #tmpErrors
+GO
+
+
 --endregion
 
 GO
@@ -123,9 +410,34 @@ GO
 --region [dbo].[CSLA_Item_Select]
 
 ------------------------------------------------------------------------------------------------------------------------
--- Generated By:   Blake Niemyjski using CodeSmith: v5.2.1, CSLA Templates: v1.5.0.0, CSLA Framework: v3.8.2
+-- Generated By:   Blake Niemyjski using CodeSmith: v5.2.1, CSLA Templates: v2.0.0.1440, CSLA Framework: v3.8.2
 -- Procedure Name: [dbo].[CSLA_Item_Select]
 ------------------------------------------------------------------------------------------------------------------------
+
+SET NUMERIC_ROUNDABORT OFF
+GO
+SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT, QUOTED_IDENTIFIER, ANSI_NULLS ON
+GO
+IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID('tempdb..#tmpErrors')) DROP TABLE #tmpErrors
+GO
+CREATE TABLE #tmpErrors (Error int)
+GO
+SET XACT_ABORT ON
+GO
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+GO
+BEGIN TRANSACTION
+GO
+
+PRINT N'Creating [dbo].[CSLA_Item_Select]'
+GO
+
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Item_Select]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+    BEGIN
+        RAISERROR ('The procedure [dbo].[CSLA_Item_Select] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        INSERT INTO #tmpErrors (Error) SELECT 1
+    END
+GO
 
 CREATE PROCEDURE [dbo].[CSLA_Item_Select]
 	@p_ItemId varchar(10) = NULL,
@@ -154,8 +466,7 @@ SELECT
 	[Supplier],
 	[Status],
 	[Name],
-	[Image],
-	[timestamp]
+	[Image]
 FROM
     [dbo].[Item]
 WHERE
@@ -167,6 +478,24 @@ WHERE
 	AND ([Status] = @p_Status OR (@p_Status IS NULL AND @p_StatusHasValue = 0))
 	AND ([Name] = @p_Name OR (@p_Name IS NULL AND @p_NameHasValue = 0))
 	AND ([Image] = @p_Image OR (@p_Image IS NULL AND @p_ImageHasValue = 0))
+
+IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
+GO
+
+IF @@TRANCOUNT=0 BEGIN INSERT INTO #tmpErrors (Error) SELECT 1 BEGIN TRANSACTION END
+GO
+
+IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
+GO
+IF @@TRANCOUNT>0 BEGIN
+PRINT 'Stored procedure creation succedded was succeeded.'
+COMMIT TRANSACTION
+END
+ELSE PRINT 'Stored procedure creation failed.'
+GO
+DROP TABLE #tmpErrors
+GO
+
 
 --endregion
 
