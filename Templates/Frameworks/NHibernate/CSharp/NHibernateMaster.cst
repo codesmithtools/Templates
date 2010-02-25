@@ -54,7 +54,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 public override void Render(TextWriter writer)
 {
     string[] excludedColumns = (ExcludedColumns != null) ? ExcludedColumns.ToArray() : new string[0]{};
-	HelperInit(this.TablePrefix, this.SystemCSharp, this.KeyWords, excludedColumns, this.VersionColumn);
+	HelperInit(this.TablePrefix, this.SystemCSharp, this.KeyWords, excludedColumns, this.VersionColumn, this.SourceDatabase.Provider.Name);
 	
 	if(ExcludedTables == null)
 		ExcludedTables = new TableSchemaCollection();

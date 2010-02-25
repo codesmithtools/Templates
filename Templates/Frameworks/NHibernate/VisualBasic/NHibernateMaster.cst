@@ -59,7 +59,7 @@ Public Overloads Overrides Sub Render(ByVal writer As TextWriter)
     Else
         ec = New String(0) {}
     End If
-    HelperInit(Me.TablePrefix, Me.SystemVB, Me.KeyWords, ec, Me.VersionColumn)
+    HelperInit(Me.TablePrefix, Me.SystemVB, Me.KeyWords, ec, Me.VersionColumn, Me.SourceDatabase.Provider.Name)
 	
 	Me.tablePrefix = Me.TablePrefix
 	If ExcludedTables Is Nothing Then

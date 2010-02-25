@@ -50,10 +50,23 @@ namespace NHibernateHelper
         Table = 0,
         Column = 1
     }
+
     public enum AssociationSuffixEnum
     {
         None = 0,
         Plural = 1,
         List = 2
+    }
+
+    public enum SchemaProvider
+    {
+        ADOXSchemaProvider,
+        MySqlSchemaProvider,
+        OracleSchemaProvider,
+        PostgreSchemaProvider,
+        SqlCompactSchemaProvider,
+        SQLiteSchemaProvider,
+        SqlSchemaProvider,
+        VistaDBSchemaProvider
     }
 }

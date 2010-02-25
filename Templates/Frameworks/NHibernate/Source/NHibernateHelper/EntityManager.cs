@@ -207,9 +207,9 @@ namespace NHibernateHelper
 
         #region Properties
 
-        public string TableFullSafeSqlName
+        public string TableSafeName
         {
-            get { return NHibernateHelper.TableFullSafeSqlName(_sourceTable); }
+            get { return NHibernateHelper.TableSafeName(_sourceTable); }
         }
 
         private Dictionary<ColumnSchema, EntityAssociation> _associationMap = null;

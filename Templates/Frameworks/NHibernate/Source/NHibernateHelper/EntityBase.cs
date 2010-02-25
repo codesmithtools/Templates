@@ -67,6 +67,11 @@ namespace NHibernateHelper
         {
             get { return Column.Name; }
         }
+        public string ColumnSafeName
+        {
+            get { return NHibernateHelper.ColumnSafeName(Column); }
+        }
+
         public bool IsPrimaryKeyMember
         {
             get { return Column.IsPrimaryKeyMember; }
