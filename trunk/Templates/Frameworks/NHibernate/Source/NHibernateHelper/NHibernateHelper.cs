@@ -29,7 +29,7 @@ namespace NHibernateHelper
         /// </summary>
         /// <param name="tablePrefix">TablePrefix Property</param>
         /// <param name="namingProperty">NamingContentions Property</param>
-        public static void HelperInit(string tablePrefix, MapCollection systemCSharpAliasMap, MapCollection csharpKeyWordEscapeMap, string[] excludedColumns, string versionRegex) //, NamingProperty namingConventions)
+        public static void HelperInit(string tablePrefix, MapCollection systemCSharpAliasMap, MapCollection csharpKeyWordEscapeMap, string[] excludedColumns, string versionRegex, string providerName) //, NamingProperty namingConventions)
         {
             _tablePrefix = tablePrefix;
 
@@ -41,6 +41,8 @@ namespace NHibernateHelper
             foreach (var s in excludedColumns)
                 if (!String.IsNullOrEmpty(s) && s.Trim().Length > 0)
                     _excludedColumns.Add(new Regex(s, RegexOptions.Compiled));
+
+            SchemaProvider = (SchemaProvider)Enum.Parse(typeof(SchemaProvider), providerName);
 
             //_tableNaming = namingConventions.TableNaming;
             //_entityNaming = namingConventions.EntityNaming;
@@ -76,6 +78,12 @@ namespace NHibernateHelper
         internal static EntityNamingEnum EntityNaming = EntityNamingEnum.Singular;
         internal static AssociationNamingEnum AssociationNaming = AssociationNamingEnum.Table;
         internal static AssociationSuffixEnum AssociationSuffix = AssociationSuffixEnum.Plural;
+
+        internal static SchemaProvider SchemaProvider { get; set; }
+        internal static bool IsSqlServer
+        {
+            get { return SchemaProvider == SchemaProvider.SqlSchemaProvider; }
+        }
 
         #endregion
 
@@ -276,13 +284,25 @@ namespace NHibernateHelper
             return false;
         }
 
-        public static string TableFullSafeSqlName(TableSchema sourceTable)
+        public static string TableSafeName(TableSchema sourceTable)
         {
-            var safeName = String.IsNullOrEmpty(sourceTable.Owner)
+            var safeOwner = String.IsNullOrEmpty(sourceTable.Owner)
                                ? String.Empty
-                               : String.Concat("[", sourceTable.Owner, "].");
+                               : String.Concat(SafeName(sourceTable.Owner), ".");
 
-            return String.Concat(safeName, "[", sourceTable.Name, "]");
+            return String.Concat(safeOwner, SafeName(sourceTable.Name));
+        }
+
+        public static string ColumnSafeName(ColumnSchema column)
+        {
+            return SafeName(column.Name);
+        }
+
+        public static string SafeName(string name)
+        {
+            return IsSqlServer
+                      ? String.Concat("[", name, "]")
+                      : name;
         }
 
         #endregion

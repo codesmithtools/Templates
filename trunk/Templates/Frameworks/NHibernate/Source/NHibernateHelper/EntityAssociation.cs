@@ -64,7 +64,13 @@ namespace NHibernateHelper
         
         public AssociationTypeEnum AssociationType { get; private set; }
         public string ClassName { get; private set; }
+
         public string ToManyTableKeyName { get; private set; }
+        public string ToManyTableKeySafeName
+        {
+            get { return NHibernateHelper.SafeName(ToManyTableKeyName); }
+        }
+
         public string Cascade { get; private set; }
         public bool HasCascade
         {
@@ -74,9 +80,9 @@ namespace NHibernateHelper
         {
             get { return Column.Table.FullName; }
         }
-        public string TableFullSafeSqlName
+        public string TableSafeName
         {
-            get { return NHibernateHelper.TableFullSafeSqlName(Column.Table); }
+            get { return NHibernateHelper.TableSafeName(Column.Table); }
         }
     }
 }
