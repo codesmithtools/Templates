@@ -61,7 +61,7 @@ namespace NHibernateHelper
     public enum SchemaProvider
     {
         ADOXSchemaProvider,
-        MySqlSchemaProvider,
+        MySQLSchemaProvider,
         OracleSchemaProvider,
         PostgreSchemaProvider,
         SqlCompactSchemaProvider,
