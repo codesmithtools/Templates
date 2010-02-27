@@ -11,7 +11,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
         Dim cancel As Boolean = False
-        OnChildInserting(cancel)
+        OnChildInserting(connection, cancel)
         If (cancel) Then
             Return
         End If

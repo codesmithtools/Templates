@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X SwitchableObject" %>
 <%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -143,9 +143,9 @@ namespace <%= BusinessProjectName %>
         partial void OnChildCreated();
         partial void OnChildFetching(<%= BusinessClassName %>Criteria criteria, ref bool cancel);
         partial void OnChildFetched();
-        partial void OnChildInserting(ref bool cancel);
+        partial void OnChildInserting(SqlConnection connection, ref bool cancel);
         partial void OnChildInserted();
-        partial void OnChildUpdating(ref bool cancel);
+        partial void OnChildUpdating(SqlConnection connection, ref bool cancel);
         partial void OnChildUpdated();
         partial void OnChildSelfDeleting(ref bool cancel);
         partial void OnChildSelfDeleted();

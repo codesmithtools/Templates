@@ -10,7 +10,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
             bool cancel = false;
-            OnMapping(ref cancel);
+            OnMapping(reader, ref cancel);
             if (cancel) return;
 
             using(BypassPropertyChecks)

@@ -19,15 +19,15 @@
     End Sub
     Partial Private Sub OnChildFetched()
     End Sub
-    Partial Private Sub OnMapping(ByRef cancel As Boolean)
+    Partial Private Sub OnMapping(ByVal reader As SafeDataReader, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnMapped()
     End Sub
-    Partial Private Sub OnChildInserting(ByRef cancel As Boolean)
+    Partial Private Sub OnChildInserting(ByVal connection As SqlConnection, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnChildInserted()
     End Sub
-    Partial Private Sub OnChildUpdating(ByRef cancel As Boolean)
+    Partial Private Sub OnChildUpdating(ByVal connection As SqlConnection, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnChildUpdated()
     End Sub
