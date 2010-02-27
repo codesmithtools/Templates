@@ -221,6 +221,13 @@ namespace QuickStart
 
         #endregion
 
+        #region public virtual properties
+
+        [Browsable(false)]
+        public bool RenderOptionalContent { get; set; }
+
+        #endregion
+
         #endregion
 
         #region Public Virtual Methods
@@ -299,6 +306,24 @@ namespace QuickStart
                 case Constants.ReadOnlyRoot:
                 case Constants.ReadOnlyChildList:
                 case Constants.ReadOnlyList:
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool IsChildBusinessObject(string suffix)
+        {
+            string key = string.Format("{0}{1}", this._table.Name, suffix);
+            if (ContextData.Get(key) == null) return false;
+
+            var value = ContextData[key];
+            switch (value)
+            {
+                case Constants.EditableChild:
+                case Constants.ReadOnlyChild:
+                case Constants.EditableChildList:
+                case Constants.ReadOnlyChildList:
                     return true;
             }
 

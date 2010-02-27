@@ -101,14 +101,26 @@ namespace QuickStart
 
         public void RenderHelper<T>(T template) where T : EntityCodeTemplate
         {
+            RenderHelper(template, false);
+        }
+
+        public void RenderHelper<T>(T template, bool renderOptionalContent) where T : EntityCodeTemplate
+        {
             this.CopyPropertiesTo(template);
+            template.RenderOptionalContent = renderOptionalContent;
             template.Render(this.Response);
         }
 
         public void RenderHelper<T>(T template, TableSchema table) where T : EntityCodeTemplate
         {
+            RenderHelper(template, table, false);
+        }
+
+        public void RenderHelper<T>(T template, TableSchema table, bool renderOptionalContent) where T : EntityCodeTemplate
+        {
             this.CopyPropertiesTo(template);
             template.SourceTable = table;
+            template.RenderOptionalContent = renderOptionalContent;
             template.Render(this.Response);
         }
 

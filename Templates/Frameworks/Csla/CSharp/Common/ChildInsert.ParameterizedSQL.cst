@@ -18,7 +18,7 @@
             const string commandText = "INSERT INTO [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] (<%= Entity.MembersUpdateInsert.BuildDataBaseColumns() %>) VALUES (<%= Entity.MembersUpdateInsert.BuildDataBaseParameters() %>)<%= Entity.BuildInsertSelectStatement() %>";
             using(SqlCommand command = new SqlCommand(commandText, connection))
             {
-                <%= Entity.MembersUpdateInsert.BuildCommandParameters(false, false, true) %>
+                <%= Entity.MembersUpdateInsert.BuildCommandParameters(false, false, !RenderOptionalContent) %>
 
 <% if(Entity.HasRowVersionMember || Entity.HasIdentityMember) { %>
                 using(var reader = new SafeDataReader(command.ExecuteReader()))
