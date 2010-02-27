@@ -10,7 +10,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
         Dim cancel As Boolean = False
-        OnMapping(cancel)
+        OnMapping(reader, cancel)
         If (cancel) Then
             Return
         End If

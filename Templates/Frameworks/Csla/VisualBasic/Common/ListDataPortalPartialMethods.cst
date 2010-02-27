@@ -19,7 +19,7 @@
     End Sub
     Partial Private Sub OnFetched()
     End Sub
-    Partial Private Sub OnMapping(ByRef cancel As Boolean)
+    Partial Private Sub OnMapping(ByVal reader As SafeDataReader, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnMapped()
     End Sub

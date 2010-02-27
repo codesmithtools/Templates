@@ -15,11 +15,11 @@
         partial void OnChildCreated();
         partial void OnChildFetching(<%= ChildBusinessClassName %>Criteria criteria, ref bool cancel);
         partial void OnChildFetched();
-        partial void OnMapping(ref bool cancel);
+        partial void OnMapping(SafeDataReader reader, ref bool cancel);
         partial void OnMapped();
-        partial void OnChildInserting(ref bool cancel);
+        partial void OnChildInserting(SqlConnection connection, ref bool cancel);
         partial void OnChildInserted();
-        partial void OnChildUpdating(ref bool cancel);
+        partial void OnChildUpdating(SqlConnection connection, ref bool cancel);
         partial void OnChildUpdated();
         partial void OnChildSelfDeleting(ref bool cancel);
         partial void OnChildSelfDeleted();

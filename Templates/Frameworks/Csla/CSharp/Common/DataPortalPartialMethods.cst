@@ -15,7 +15,7 @@
         partial void OnCreated();
         partial void OnFetching(<%= ChildBusinessClassName %>Criteria criteria, ref bool cancel);
         partial void OnFetched();
-        partial void OnMapping(ref bool cancel);
+        partial void OnMapping(SafeDataReader reader, ref bool cancel);
         partial void OnMapped();
         partial void OnInserting(ref bool cancel);
         partial void OnInserted();

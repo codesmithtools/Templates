@@ -11,7 +11,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
             bool cancel = false;
-            OnChildInserting(ref cancel);
+            OnChildInserting(connection, ref cancel);
             if (cancel) return;
 
             if(connection.State != ConnectionState.Open) connection.Open();
