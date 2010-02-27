@@ -14,11 +14,22 @@
             OnUpdating(ref cancel);
             if (cancel) return;
 
+            RaiseListChangedEvents = false;
+
+<% if(IsChildBusinessObject(string.Empty)) { %>
             // Create a new connection.
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
                 Child_Update(connection);
             }
+<% } else { %>
+            foreach(<%= ChildBusinessClassName %> item in Items)
+            {
+                item.Save();
+            }
+<% } %>
+
+            RaiseListChangedEvents = true;
 
             OnUpdated();

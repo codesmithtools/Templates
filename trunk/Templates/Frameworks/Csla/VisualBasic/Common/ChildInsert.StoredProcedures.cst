@@ -19,7 +19,7 @@
         If connection.State <> ConnectionState.Open Then connection.Open()
         Using command As New SqlCommand("<%= GetInsertStoredProcedureName() %>", connection)
             command.CommandType = CommandType.StoredProcedure
-            <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, True, True) %>
+            <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, Not RenderOptionalContent, True) %>
 <% If(Entity.HasRowVersionMember) Then %>
             command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp)
             command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value = Me.<%= Entity.RowVersionMember.PropertyName %>

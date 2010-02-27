@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X EditableRoot" %>
 <%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildCreate" Template="..\..\Common\ChildCreate.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -47,15 +47,27 @@ Public Partial Class <%= BusinessClassName %>
     Private Sub Child_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria )
 <% RenderHelper(New ChildFetch()) %>
     End Sub
-    
+
+    Private Sub Child_Insert(ByVal connection As SqlConnection)
+<% RenderHelper(New ChildInsert(), True) %>
+    End Sub
+<% If (Entity.AssociatedManyToOne.Count > 0) Then%>
+
     Private Sub Child_Insert(<%= Entity.AssociatedManyToOne.BuildParametersVariables(True) %>)
 <% RenderHelper(New ChildInsert()) %>
     End Sub
+<%End If%>
+
+    Private Sub Child_Update(ByVal connection As SqlConnection)
+<% RenderHelper(New ChildUpdate(), True) %>
+    End Sub
+<% If (Entity.AssociatedManyToOne.Count > 0) Then%>
 
     Private Sub Child_Update(<%= Entity.AssociatedManyToOne.BuildParametersVariables(True) %>)
 <% RenderHelper(New ChildUpdate()) %>
     End Sub
-    
+<%End If%>
+
     Private Sub Child_DeleteSelf()
         Dim cancel As Boolean = False
         OnChildSelfDeleting(cancel)

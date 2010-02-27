@@ -15,11 +15,21 @@
         If (cancel) Then
             Return
         End If
-        
+
+        RaiseListChangedEvents = False
+
+<% If(IsChildBusinessObject(String.Empty)) Then %>
         ' Create a new connection.
         Using connection As New SqlConnection(ADOHelper.ConnectionString)
             connection.Open()
             Child_Update(connection)
         End Using
+<% Else %>
+        For Each item As <%= ChildBusinessClassName %> In Items
+            item.Save()
+        Next
+<% End If %>
+
+        RaiseListChangedEvents = True
 
         OnUpdated()

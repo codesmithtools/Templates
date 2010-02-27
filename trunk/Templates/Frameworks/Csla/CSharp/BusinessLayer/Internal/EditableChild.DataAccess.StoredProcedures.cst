@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X EditableRoot" %>
 <%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildCreate" Template="..\..\Common\ChildCreate.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -52,15 +52,29 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ChildFetch()); %>
         }
 
+        private void Child_Insert(SqlConnection connection)
+        {
+<% RenderHelper(new ChildInsert(), true); %>
+        }
+<% if (Entity.AssociatedManyToOne.Count > 0) {%>
+
         private void Child_Insert(<%= Entity.AssociatedManyToOne.BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildInsert()); %>
         }
+<% } %>
+
+        private void Child_Update(SqlConnection connection)
+        {
+<% RenderHelper(new ChildUpdate(), true); %>
+        }
+<% if (Entity.AssociatedManyToOne.Count > 0) {%>
 
         private void Child_Update(<%= Entity.AssociatedManyToOne.BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildUpdate()); %>
         }
+<% } %>
 
         private void Child_DeleteSelf()
         {

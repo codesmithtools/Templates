@@ -18,7 +18,7 @@
             using(SqlCommand command = new SqlCommand("<%= GetInsertStoredProcedureName() %>", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
-                <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, true, true) %>
+                <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, !RenderOptionalContent, true) %>
 <% if(Entity.HasRowVersionMember) { %>
                 command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp);
                 command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value = this.<%= Entity.RowVersionMember.PropertyName %>;

@@ -121,9 +121,9 @@ namespace CodeSmith.SchemaHelper
                 string cast;
                 if (member.SystemType.Contains("SmartDate"))
                 {
-                    cast = member.IsNullable ? string.Format("IIf({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, DateTime), System.DBNull.Value))", castPrefix, propertyName)
+                    cast = member.IsNullable ? string.Format("If({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, Object), System.DBNull.Value))", castPrefix, propertyName)
                                              : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, propertyName);
-                    originalCast = member.IsNullable ? string.Format("IIf({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, DateTime), System.DBNull.Value))", castPrefix, originalPropertyName)
+                    originalCast = member.IsNullable ? string.Format("If({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, Object), System.DBNull.Value))", castPrefix, originalPropertyName)
                                                       : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, originalPropertyName);
                 }
                 else if (member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()" && !string.IsNullOrEmpty(includeThisPrefix))
@@ -131,8 +131,8 @@ namespace CodeSmith.SchemaHelper
                     //includeThisPrefix = this.
                     //castprefix = item.
                     //propertyName = bo.propertyname or propertyname
-                    cast = string.Format("IIf({0}{1}{2}.HasValue, {0}{1}{2}.Value, DBNull.Value))", includeThisPrefix, castPrefix, propertyName);
-                    originalCast = string.Format("IIf({0}{1}{2}.HasValue, {0}{1}{2}.Value, DBNull.Value))", includeThisPrefix, castPrefix, originalPropertyName);
+                    cast = string.Format("If({0}{1}{2}.HasValue, DirectCast({0}{1}{2}.Value, Object), System.DBNull.Value))", includeThisPrefix, castPrefix, propertyName);
+                    originalCast = string.Format("If({0}{1}{2}.HasValue, DirectCast({0}{1}{2}.Value, Object), System.DBNull.Value))", includeThisPrefix, castPrefix, originalPropertyName);
                 }
                 else
                 {

@@ -18,7 +18,7 @@
             const string commandText = "UPDATE [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] <%= Entity.MembersUpdateInsert.BuildSetStatements() %> <%= Entity.PrimaryKey.KeyMembers.BuildWhereStatements(true) %><% if(Entity.HasRowVersionMember) { %> AND [<%= Entity.RowVersionMember.ColumnName %>] = <%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %><% } %><%= Entity.BuildUpdateSelectStatement() %>";
             using(SqlCommand command = new SqlCommand(commandText, connection))
             {
-                <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, true, false, true) %>
+                <%= Entity.MembersNoRowVersion.BuildCommandParameters(false, false, !RenderOptionalContent, false, true) %>
 <% if(Entity.HasRowVersionMember) { %>
                 command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp);
                 command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value = this.<%= Entity.RowVersionMember.PropertyName %>;
