@@ -19,7 +19,7 @@
       </property>
       <property name="CleanExpression">
         <stringList>
-          <string>^\\w+_</string>
+          <string>^(sp|tbl|udf|vw)_</string>
         </stringList>
       </property>
       <property name="EnumList">

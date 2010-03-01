@@ -206,7 +206,10 @@ namespace LinqToSqlShared.Generator
                 Database.EntityBase = Settings.EntityBase;
 
             if (string.IsNullOrEmpty(Database.Class))
-                Database.Class = StringUtil.ToPascalCase(databaseSchema.Name) + "DataContext";
+                if (string.IsNullOrEmpty(Settings.DataContextName))
+                    Database.Class = StringUtil.ToPascalCase(databaseSchema.Name) + "DataContext";
+                else
+                    Database.Class = Settings.DataContextName;
 
             if (Database.Connection == null)
                 Database.Connection = new Connection("System.Data.SqlClient");

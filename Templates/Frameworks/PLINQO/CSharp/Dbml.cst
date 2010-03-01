@@ -57,6 +57,10 @@
     OnChanged="OnContextNamespaceChanged"
     Description="The namespace to use for the context class files."%>
 
+<%@ Property Category="2.Class" Name="DataContextName"
+    Type="System.String" Default="" Optional="False"
+    Description="The name of the DataContext."%>
+
 <%@ Property Category="2.Class" Name="IncludeDeleteOnNull"
     Type="System.Boolean" Default="true" Optional="False"
     Description="Templates will generated DeleteOnNull Attribute for Associations." %>
@@ -119,6 +123,7 @@
         GeneratorSettings settings = new GeneratorSettings();
         settings.MappingFile = filePath;
         settings.ContextNamespace = ContextNamespace;
+        settings.DataContextName = DataContextName;
         settings.EntityNamespace = EntityNamespace;
         settings.EntityBase = EntityBase;
         settings.IncludeViews = IncludeViews;

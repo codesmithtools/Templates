@@ -20,6 +20,13 @@ namespace LinqToSqlShared.Generator
             set { _contextNamespace = value; }
         }
 
+        private string _dataContextName;
+        public string DataContextName
+        {
+            get { return _dataContextName; }
+            set { _dataContextName = value; }
+        }
+
         private string _entityBase;
         public string EntityBase
         {
