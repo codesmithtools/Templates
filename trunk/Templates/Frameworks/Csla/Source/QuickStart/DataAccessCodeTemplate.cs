@@ -523,7 +523,7 @@ namespace QuickStart
                 if (this.State == TemplateState.RestoringProperties)
                     return;
 
-                AddChildEntity(entity.Table, false, true);
+                AddChildEntity(entity.Table, false, false);
             }
         }
 
