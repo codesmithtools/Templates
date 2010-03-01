@@ -8,6 +8,7 @@ Description: Generates a HBM Map for NHibernate.
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
 <%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2a. Assembly" Description="The name of the Assembly that will contain the business objects." %>
 <%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2b. Namespaces" Description="The desired Namespace for the Business Objects." %>
+<%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="3b. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
@@ -36,7 +37,7 @@ Description: Generates a HBM Map for NHibernate.
 		<% } %>
 		<% // Properties %>
 		<% foreach(EntityMember em in entityManager.MembersNoKeyNoVersion) { %>
-		<property name="<%= em.PropertyName %>" column="<%= em.ColumnSafeName %>" />
+		<property name="<%= em.PropertyName %>" column="<%= em.ColumnSafeName %>" <%= GetPropertyType(em.SystemType) %>/>
 		<% } %>
 		<% // Many-To-One %>
 		<% foreach(EntityAssociation association in entityManager.ManyToOne) { %>
@@ -58,3 +59,12 @@ Description: Generates a HBM Map for NHibernate.
 		<% } %>
 	</class>
 </hibernate-mapping>
+
+<script runat="template">
+    public string GetPropertyType(string type)
+    {
+        return type == "System.Xml.XmlDocument"
+            ? String.Format(@"type=""{0}.XmlType, {1}""", this.BaseNamespace, this.AssemblyName)
+            : String.Empty;
+    }
+</script>

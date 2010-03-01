@@ -41,6 +41,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Register Name="SessionTemplate" Template="BaseClasses\Session.cst" %>
 <%@ Register Name="SessionManagerTemplate" Template="BaseClasses\SessionManager.cst" %>
 <%@ Register Name="UnitTestsBaseTemplate" Template="BaseClasses\UnitTestsBase.cst" %>
+<%@ Register Name="XmlTypeTemplate" Template="BaseClasses\XmlType.cst" %>
 <%@ Register Name="BusinessObjectTemplate" Template="BusinessObjects\BusinessObject.cst" %>
 <%@ Register Name="EditableBusinessObjectTemplate" Template="BusinessObjects\EditableBusinessObject.cst" %>
 <%@ Register Name="HbmMapTemplate" Template="HbmMaps\Hbm.cst" %>
@@ -118,6 +119,11 @@ Private Sub RenderBaseClasses()
 	unitTestsBase.ManagerNamespace = Me.ManagerNamespace
 	unitTestsBase.BusinessNamespace = Me.BusinessNamespace
 	unitTestsBase.RenderToFile(GetOutputFile(fileName, Nothing), True)
+    
+    fileName = [String].Format("{0}{1}.vb", folderName, "XmlType")
+	Dim xmlType As XmlTypeTemplate = Me.Create(Of XmlTypeTemplate)()
+	xmlType.BaseNamespace = Me.BaseNamespace
+	xmlType.RenderToFile(GetOutputFile(fileName, Nothing), True)
 End Sub
 Private Sub RenderHbmMaps(ByVal table As TableSchema)
 	Dim fileName As String = [String].Format("{0}{1}.hbm.xml", GetFolder("HbmMaps"), GetClassName(table))
@@ -125,8 +131,8 @@ Private Sub RenderHbmMaps(ByVal table As TableSchema)
 	Dim hbmMap As HbmMapTemplate = Me.Create(Of HbmMapTemplate)()
 	hbmMap.AssemblyName = Me.AssemblyName
 	hbmMap.BusinessNamespace = Me.BusinessNamespace
+    hbmMap.BaseNamespace = Me.BaseNamespace
 	hbmMap.SourceTable = table
-	hbmMap.TablePrefix = Me.TablePrefix
 	hbmMap.ExcludedTables = Me.ExcludedTables
 
 	hbmMap.RenderToFile(GetOutputFile(fileName, Nothing, "BuildAction", 3), True)
