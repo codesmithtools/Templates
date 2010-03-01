@@ -89,9 +89,11 @@ These templates are designed to produce 5 major things...
 &nbsp; &nbsp; &nbsp; &lt;property name="dialect"&gt;NHibernate.Dialect.MsSql2005Dialect&lt;/property&gt;<br>
 &nbsp; &nbsp; &nbsp; &lt;property name="connection.driver_class"&gt;NHibernate.Driver.SqlClientDriver&lt;/property&gt;<br>
 &nbsp; &nbsp; &nbsp; &lt;property name="connection.connection_string"&gt;&lt;/property&gt;<br>
-&nbsp; &nbsp; &nbsp; &lt;mapping assembly="NHibernate.Generated"/&gt;<br>
+<br>
 &nbsp; &nbsp; &nbsp; &lt;!-- NHibernate 2.1 --&gt;<br>
 &nbsp; &nbsp; &nbsp; &lt;property name="proxyfactory.factory_class"&gt;NHibernate.ByteCode.Castle.ProxyFactoryFactory, NHibernate.ByteCode.Castle&lt;/property&gt;<br>
+<br>
+&nbsp; &nbsp; &nbsp; &lt;mapping assembly="NHibernate.Generated"/&gt;<br>
 &nbsp; &nbsp; &lt;/session-factory&gt;<br>
 &nbsp; &lt;/hibernate-configuration&gt;<br>
 &lt;/configuration&gt;<br>

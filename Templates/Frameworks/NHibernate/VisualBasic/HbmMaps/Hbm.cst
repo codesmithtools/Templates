@@ -6,9 +6,9 @@ Description: Generates a HBM Map for NHibernate.
 <%@ CodeTemplate Language="VB" Src="..\Helpers\VbNHibernateHelper.vb" Inherits="VbNHibernateHelper" TargetLanguage="XML" Debug="False" Description="Generates a HBM Map for NHibernate." %>
 <%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="False" Category="1a. Source Table" Description="The source table to generate from." %>
 <%@ Property Name="ExcludedTables" Type="SchemaExplorer.TableSchemaCollection" Optional="True" Category="1b. Database Options" Description="A collection of tables to be excluded during generation." %>
-<%@ Property Name="TablePrefix" Type="System.String" Default="" Optional="True" Category="1b. Database Options" Description="A prefix that will be stripped from table names when class names are generated." %>
 <%@ Property Name="AssemblyName" Type="System.String" Default="NHibernate.Generated" Optional="False" Category="2a. Assembly" Description="The name of the Assembly that will contain the business objects." %>
 <%@ Property Name="BusinessNamespace" Type="System.String" Default="NHibernate.Generated.BusinessObjects" Optional="False" Category="2b. Namespaces" Description="The desired Namespace for the Business Objects." %>
+<%@ Property Name="BaseNamespace" Type="System.String" Default="NHibernate.Generated.Base" Optional="False" Category="3b. Namespaces" Description="The Namespace where the Base classes (BusinessBase & ManagerBase) are located." %>
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="System.Data" %>
 <%@ Assembly Name="NHibernateHelper" Path="..\..\Common\NHibernateHelper" %>
@@ -38,7 +38,7 @@ Description: Generates a HBM Map for NHibernate.
 		<% End If %>
 		<% 'Properties %>
 		<% For Each em As EntityMember In entityManager.MembersNoKeyNoVersion %>
-		<property name="<%= em.PropertyName %>" column="<%= em.ColumnSafeName %>" />
+		<property name="<%= em.PropertyName %>" column="<%= em.ColumnSafeName %>" <%= GetPropertyType(em.SystemType) %>/>
 		<% Next %>
 		<% 'Many-To-One %>
 		<% For Each association As EntityAssociation In entityManager.ManyToOne %>
@@ -60,3 +60,13 @@ Description: Generates a HBM Map for NHibernate.
 		<% Next %>
 	</class>
 </hibernate-mapping>
+
+<script runat="template">
+    Public Function GetPropertyType(ByVal type As String) As String
+        If(type = "System.Xml.XmlDocument")
+            Return [String].Format("type=""{0}.XmlType, {1}""", Me.BaseNamespace, Me.AssemblyName)
+        Else
+            Return [String].Empty
+        End If
+    End Function
+</script>

@@ -41,6 +41,7 @@ Description: Generates a complete set of Maps, Business Objects, Manager Objects
 <%@ Register Name="SessionTemplate" Template="BaseClasses\Session.cst" %>
 <%@ Register Name="SessionManagerTemplate" Template="BaseClasses\SessionManager.cst" %>
 <%@ Register Name="UnitTestsBaseTemplate" Template="BaseClasses\UnitTestsBase.cst" %>
+<%@ Register Name="XmlTypeTemplate" Template="BaseClasses\XmlType.cst" %>
 <%@ Register Name="BusinessObjectTemplate" Template="BusinessObjects\BusinessObject.cst" %>
 <%@ Register Name="EditableBusinessObjectTemplate" Template="BusinessObjects\EditableBusinessObject.cst" %>
 <%@ Register Name="HbmMapTemplate" Template="HbmMaps\Hbm.cst" %>
@@ -116,6 +117,11 @@ private void RenderBaseClasses()
 	unitTestsBase.ManagerNamespace = this.ManagerNamespace;
 	unitTestsBase.BusinessNamespace = this.BusinessNamespace;
 	unitTestsBase.RenderToFile(GetOutputFile(fileName, null), true);
+    
+    fileName = String.Format("{0}{1}.cs", folderName, "XmlType");
+	XmlTypeTemplate xmlType = this.Create<XmlTypeTemplate>();
+	xmlType.BaseNamespace = this.BaseNamespace;
+	xmlType.RenderToFile(GetOutputFile(fileName, null), true);
 }
 private void RenderHbmMaps(TableSchema table)
 {
@@ -124,6 +130,7 @@ private void RenderHbmMaps(TableSchema table)
 	HbmMapTemplate hbmMap = this.Create<HbmMapTemplate>();
 	hbmMap.AssemblyName = this.AssemblyName;
 	hbmMap.BusinessNamespace = this.BusinessNamespace;
+    hbmMap.BaseNamespace = this.BaseNamespace;
 	hbmMap.SourceTable = table;
 	hbmMap.ExcludedTables = this.ExcludedTables;
 	
