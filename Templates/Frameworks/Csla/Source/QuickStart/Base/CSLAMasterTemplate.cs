@@ -59,7 +59,7 @@ namespace QuickStart
         [Category("1. DataSource")]
         [Description("List of regular expressions to clean table, view and column names.")]
         [Optional]
-        [DefaultValue("^\\w+_")]
+        [DefaultValue("^(sp|tbl|udf|vw)_")]
         public CodeSmith.CustomProperties.StringCollection CleanExpressions
         {
             get
@@ -127,7 +127,7 @@ namespace QuickStart
         public virtual void OnTablesChanged()
         {
             if (CleanExpressions.Count == 0)
-                CleanExpressions.Add("^\\w+_");
+                CleanExpressions.Add("^(sp|tbl|udf|vw)_");
 
             if (IgnoreExpressions.Count == 0)
             {
