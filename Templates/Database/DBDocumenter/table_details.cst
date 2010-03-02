@@ -46,7 +46,7 @@ Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 			<% } else { %>
 			<td align="center"><img src="images/unchecked_icon.gif" border="0"/></td>
 			<% } %>
-			<% if (SourceTable.Columns[i].ExtendedProperties["CS_IsIdentity"].Value.ToString().ToLower() == "true") { %>
+			<% if (SourceTable.Columns[i].ExtendedProperties.Contains("CS_IsIdentity") && SourceTable.Columns[i].ExtendedProperties["CS_IsIdentity"].Value.ToString().ToLower() == "true") { %>
 			<td align="center"><img src="images/check_icon.gif" border="0"></td>
 			<% } else { %>
 			<td align="center"><img src="images/unchecked_icon.gif" border="0"/></td>
@@ -59,7 +59,7 @@ Author:  Jason Alexander (jalexander@telligent.com), Eric J. Smith
 			<% } else { %>
 			<td align="center"><img src="images/unchecked_icon.gif" border="0"/></td>
 			<% } %>
-			<% if (SourceTable.Columns[i].ExtendedProperties["CS_Default"].Value.ToString().Length > 0) { %>
+			<% if (SourceTable.Columns[i].ExtendedProperties.Contains("CS_Default") && SourceTable.Columns[i].ExtendedProperties["CS_Default"].Value.ToString().Length > 0) { %>
 			<td nowrap="nowrap"><span class="bodyText"><%= SourceTable.Columns[i].ExtendedProperties["CS_Default"].Value %></span></td>
 			<% } else { %>
 			<td>&nbsp;</td>
