@@ -76,7 +76,7 @@ Namespace <%= ManagerNamespace %>
 			Dim criteria As ICriteria = Session.GetISession().CreateCriteria(GetType(<%= GetClassName(SourceTable) %>))
 		
 			<% For Each mcs As MemberColumnSchema In sc.Items %>
-			criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= entityManager.GetEntityBaseFromColumn(mcs).VariableName %>))
+			criteria.Add(<%= GetCriterionNamespace(Me.NHibernateVersion) %>.Expression.Eq("<%= StringUtil.ToPascalCase(mcs.Name) %>", <%= entityManager.GetEntityBaseFromColumn(mcs).VariableName %>))
 			<% Next %>
 			
 			Dim result As <%= GetClassName(SourceTable) %> = DirectCast(criteria.UniqueResult(), <%= GetClassName(SourceTable) %>)
