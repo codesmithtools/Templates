@@ -77,7 +77,7 @@ namespace <%= ManagerNamespace %>
 			ICriteria criteria = Session.GetISession().CreateCriteria(typeof(<%= GetClassName(SourceTable) %>));
 			
 			<% foreach(MemberColumnSchema mcs in sc.Items) { %>
-			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= mcs.Name %>", <%= KeyWords[entityManager.GetEntityBaseFromColumn(mcs).VariableName] %>));
+			criteria.Add(<%= GetCriterionNamespace(this.NHibernateVersion) %>.Expression.Eq("<%= StringUtil.ToPascalCase(mcs.Name) %>", <%= KeyWords[entityManager.GetEntityBaseFromColumn(mcs).VariableName] %>));
 			<% } %>
 			
 			<%= GetClassName(SourceTable) %> result = (<%= GetClassName(SourceTable) %>)criteria.UniqueResult();
