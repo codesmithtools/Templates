@@ -193,6 +193,10 @@ Public Function GetUnitTestInitialization(ByVal column As ColumnSchema) As Strin
 		result = random.[Next](1, 100).ToString()
 	ElseIf column.SystemType.Equals(GetType(Boolean)) Then
 		result = (random.[Next](1, 2).Equals(1)).ToString()
+    ElseIf column.SystemType.Equals(GetType(Guid)) Then
+		result = "System.Guid.Empty"
+    ElseIf column.SystemType.Equals(GetType(Byte())) Then
+		result = "New System.Byte() {}"
 	Else
 		result = "Nothing"
 	End If

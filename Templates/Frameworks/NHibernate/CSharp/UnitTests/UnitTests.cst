@@ -216,6 +216,8 @@ public static string GetUnitTestInitialization(ColumnSchema column)
         result = (random.Next(1, 2).Equals(1)).ToString().ToLower();
     else if (column.SystemType.Equals(typeof(Guid)))
         result = "System.Guid.Empty";
+    else if (column.SystemType.Equals(typeof(Byte[])))
+        result = "new System.Byte[]{}";
     else if (column.SystemType.IsPrimitive)
         result = String.Format("default({0})", column.SystemType.Name.ToString());
     else
