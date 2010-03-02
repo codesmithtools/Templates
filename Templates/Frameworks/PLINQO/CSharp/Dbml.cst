@@ -58,7 +58,7 @@
     Description="The namespace to use for the context class files."%>
 
 <%@ Property Category="2.Class" Name="DataContextName"
-    Type="System.String" Default="" Optional="False"
+    Type="System.String" Default="" Optional="True"
     Description="The name of the DataContext."%>
 
 <%@ Property Category="2.Class" Name="IncludeDeleteOnNull"
