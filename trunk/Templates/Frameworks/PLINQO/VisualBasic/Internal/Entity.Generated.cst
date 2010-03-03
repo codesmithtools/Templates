@@ -84,7 +84,7 @@ Namespace <%= Database.EntityNamespace %>
     <System.Runtime.Serialization.DataContract(IsReference:=True)> _
 <% End If %>
     <System.ComponentModel.DataAnnotations.ScaffoldTable(True)> _
-    <System.ComponentModel.DataAnnotations.MetadataType(GetType(<%= VBKeywordEscape(Type.Name) %>.Metadata))> _
+    <System.ComponentModel.DataAnnotations.MetadataType(GetType(<%= Database.EntityNamespace %>.<%= VBKeywordEscape(Type.Name) %>.Metadata))> _
    <% If (IncludeDataServices) Then %>
    <% Dim dataServiceKey As New System.Text.StringBuilder()
    Dim isFirstDataServiceKey As Boolean = True
@@ -889,7 +889,7 @@ Public Function GetManyToManyInfo(ByVal modelType As LinqToSqlShared.DbmlObjectM
     Dim original As String = manyMany.PropertyName
     Dim count As Integer = 0
 
-    While type.IsUniqueMember(manyMany.PropertyName) = False OrElse manyToManyNames.Contains(manyMany.PropertyName)
+    While Me.Type.IsUniqueMember(manyMany.PropertyName) = False OrElse manyToManyNames.Contains(manyMany.PropertyName)
         count += 1
         manyMany.PropertyName = original + count.ToString()
     End While

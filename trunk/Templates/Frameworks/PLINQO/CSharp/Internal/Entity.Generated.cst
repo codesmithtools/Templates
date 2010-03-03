@@ -90,7 +90,7 @@ namespace <%= Database.EntityNamespace %>
     [System.Runtime.Serialization.DataContract(IsReference = true)]
 <% } %>
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
+    [System.ComponentModel.DataAnnotations.MetadataType(typeof(<%= Database.EntityNamespace %>.<%= Type.Name %>.Metadata))]
     <% if(IncludeDataServices) { %>
     <%
     StringBuilder dataServiceKey = new StringBuilder();
@@ -901,7 +901,7 @@ foreach(Column column in Type.Columns) {
         string original = manyMany.PropertyName;
         int count = 1;
 
-        while(type.IsUniqueMember(manyMany.PropertyName) == false
+        while(Type.IsUniqueMember(manyMany.PropertyName) == false
             || manyToManyNames.Contains(manyMany.PropertyName))
         {
             manyMany.PropertyName = original + (count++).ToString();
