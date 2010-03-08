@@ -167,6 +167,20 @@ namespace CodeSmith.Data.Linq
             return commandObject as DbCommand;
         }
 
+        public static DbTransaction BeginTransaction(this DataContext dataContext, IsolationLevel isolationLevel)
+        {
+            if (dataContext == null)
+                throw new ArgumentNullException("dataContext");
+
+            if (dataContext.Connection.State == ConnectionState.Closed)
+                dataContext.Connection.Open();
+
+            var transaction = dataContext.Connection.BeginTransaction(isolationLevel);
+            dataContext.Transaction = transaction;
+
+            return transaction;
+        }
+
         /// <summary>
         /// Combines multiple SELECT commands into a single <see cref="SqlCommand"/> so that all statements can be executed in a
         /// single round trip to the database and return multiple result sets.
