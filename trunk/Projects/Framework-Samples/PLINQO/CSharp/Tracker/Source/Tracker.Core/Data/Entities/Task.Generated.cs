@@ -17,9 +17,10 @@ namespace Tracker.Core.Data
     [System.Data.Linq.Mapping.Table(Name="dbo.Task")]
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
+    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Tracker.Core.Data.Task.Metadata))]
     [System.Data.Services.Common.DataServiceKey("Id")]
     [System.Diagnostics.DebuggerDisplay("Id: {Id}")]
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class Task
         : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.ITask  
     {

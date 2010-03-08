@@ -15,6 +15,7 @@ namespace Tracker.Core.Data
     /// <summary>
     /// The <see cref="System.Data.Linq.DataContext"/> class for the Tracker database.
     /// </summary>
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class TrackerDataContext
         : CodeSmith.Data.Linq.DataContextBase, System.Data.Services.IUpdatable
     {

@@ -17,9 +17,10 @@ namespace Tracker.Core.Data
     [System.Data.Linq.Mapping.Table(Name="dbo.Guid")]
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
+    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Tracker.Core.Data.Guid.Metadata))]
     [System.Data.Services.Common.DataServiceKey("Id")]
     [System.Diagnostics.DebuggerDisplay("Id: {Id}")]
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class Guid
         : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.IGuid  
     {
@@ -96,29 +97,6 @@ namespace Tracker.Core.Data
                 }
             }
         }
-
-        private System.Guid _key;
-
-        /// <summary>
-        /// Gets or sets the Key column value.
-        /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "Key", Storage = "_key", DbType = "uniqueidentifier NOT NULL", CanBeNull = false)]
-        [System.Runtime.Serialization.DataMember(Order = 3)]
-        public System.Guid Key
-        {
-            get { return _key; }
-            set
-            {
-                if (_key != value)
-                {
-                    OnKeyChanging(value);
-                    SendPropertyChanging("Key");
-                    _key = value;
-                    SendPropertyChanged("Key");
-                    OnKeyChanged();
-                }
-            }
-        }
         #endregion
 
         #region Association Mapped Properties
@@ -143,11 +121,6 @@ namespace Tracker.Core.Data
         partial void OnAlternateIdChanging(Nullable<System.Guid> value);
         /// <summary>Called after <see cref="AlternateId"/> has Changed.</summary>
         partial void OnAlternateIdChanged();
-        /// <summary>Called when <see cref="Key"/> is changing.</summary>
-        /// <param name="value">The new value.</param>
-        partial void OnKeyChanging(System.Guid value);
-        /// <summary>Called after <see cref="Key"/> has Changed.</summary>
-        partial void OnKeyChanged();
 
         #endregion
 

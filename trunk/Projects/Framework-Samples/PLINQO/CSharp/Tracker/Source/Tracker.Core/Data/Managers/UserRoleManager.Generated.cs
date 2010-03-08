@@ -21,6 +21,7 @@ namespace Tracker.Core.Data
     /// <summary>
     /// The manager class for UserRole.
     /// </summary>
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class UserRoleManager 
         : CodeSmith.Data.EntityManagerBase<TrackerDataManager, Tracker.Core.Data.UserRole>
     {

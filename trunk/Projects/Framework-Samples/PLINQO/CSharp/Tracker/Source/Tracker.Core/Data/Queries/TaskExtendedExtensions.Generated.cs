@@ -19,6 +19,7 @@ namespace Tracker.Core.Data
     /// <summary>
     /// The query extension class for TaskExtended.
     /// </summary>
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public static partial class TaskExtendedExtensions
     {
 

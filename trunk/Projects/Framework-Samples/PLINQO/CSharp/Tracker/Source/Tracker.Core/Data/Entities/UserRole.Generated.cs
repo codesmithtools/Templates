@@ -17,9 +17,10 @@ namespace Tracker.Core.Data
     [System.Data.Linq.Mapping.Table(Name="dbo.UserRole")]
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
+    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Tracker.Core.Data.UserRole.Metadata))]
     [System.Data.Services.Common.DataServiceKey("UserId", "RoleId")]
     [System.Diagnostics.DebuggerDisplay("UserId: {UserId}, RoleId: {RoleId}")]
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class UserRole
         : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.IUserRole  
     {

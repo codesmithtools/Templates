@@ -3,7 +3,7 @@
   <Connection Mode="ConnectionString" ConnectionString="Data Source=.;Initial Catalog=Tracker;Integrated Security=True" SettingsObjectName="Properties.Settings" SettingsPropertyName="TrackerConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Audit" Member="Audit">
     <Type Name="Audit">
-      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="CreatedDate" Storage="_createdDate" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="Date" Storage="_date" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="Username" Storage="_username" Type="System.String" DbType="nvarchar(50) NOT NULL" CanBeNull="false" />
@@ -20,7 +20,6 @@
     <Type Name="Guid">
       <Column Name="Id" Storage="_id" Type="System.Guid" DbType="uniqueidentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="AlternateId" Storage="_alternateId" Type="System.Guid" DbType="uniqueidentifier" CanBeNull="true" />
-      <Column Name="Key" Storage="_key" Type="System.Guid" DbType="uniqueidentifier NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.Role" Member="Role">

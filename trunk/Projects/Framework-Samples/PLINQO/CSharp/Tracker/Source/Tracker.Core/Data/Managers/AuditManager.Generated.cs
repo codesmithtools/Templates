@@ -21,6 +21,7 @@ namespace Tracker.Core.Data
     /// <summary>
     /// The manager class for Audit.
     /// </summary>
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class AuditManager 
         : CodeSmith.Data.EntityManagerBase<TrackerDataManager, Tracker.Core.Data.Audit>
     {

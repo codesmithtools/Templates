@@ -8,6 +8,7 @@ using System.Text;
 using NUnit.Framework;
 using Tracker.Core.Data;
 using CodeSmith.Data.Linq;
+using CodeSmith.Data.Linq.Dynamic;
 
 namespace Tracker.Tests
 {
@@ -113,6 +114,7 @@ namespace Tracker.Tests
         }
 
         [Test]
+        [Ignore]
         public void ToPageList()
         {
             var db = new TrackerDataContext { Log = Console.Out };
@@ -133,6 +135,75 @@ namespace Tracker.Tests
                 Id = t.Id,
                 FullName = t.FirstName
             }).ToPagedList(1, 3);
+        }
+
+        [Test]
+        [Ignore]
+        public void ManyToMany()
+        {
+            var db = new TrackerDataContext { Log = Console.Out };
+
+            var user = db.User.GetByKey(1);
+            var role = db.Role.GetByKey(1);
+
+            user.RoleList.Add(role);
+
+            role = db.Role.GetByKey(2);
+
+            user.RoleList.Add(role);
+
+            db.SubmitChanges();
+
+            var userRole = user.UserRoleList.FirstOrDefault(u => u.RoleId == 1);
+            db.UserRole.DeleteOnSubmit(userRole);
+
+            user.RoleList.Remove(db.Role.GetByKey(1));
+            user.RoleList.Remove(db.Role.GetByKey(2));
+
+            var changes = db.GetChangeSet();
+
+            db.SubmitChanges();
+        }
+
+        [Test]
+        public void MyTest()
+        {
+            var db = new TrackerDataContext { Log = Console.Out };
+
+            var q1 = db.Task.ByDetails("Hello world!");
+            var q2 = db.Task.ByDetails((string)null);
+            var q3 = db.Task.Where(t => t.Details == null);
+
+            var e1 = q1.Expression;
+            var e2 = q2.Expression;
+            var e3 = q3.Expression;
+
+            var list1 = q1.ToList();
+            var list2 = q2.ToList();
+            var list3 = q3.ToList();
+        }
+
+        [Test]
+        public void Nullable()
+        {
+            var db = new TrackerDataContext { Log = Console.Out };
+
+            var q1 = db.Task.Where("AssignedId == null || AssignedId == 1");
+            var list = q1.ToList();
+
+
+        }
+
+        [Test]
+        public void ToBinary()
+        {
+            var db = new TrackerDataContext { Log = Console.Out };
+
+            var task = db.Task.FirstOrDefault();
+
+            var buffer = task.ToBinary();
+
+            var task2 = Task.FromBinary(buffer);
         }
     }
 }

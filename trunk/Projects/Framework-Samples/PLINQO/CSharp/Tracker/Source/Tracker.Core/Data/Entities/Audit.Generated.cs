@@ -17,9 +17,10 @@ namespace Tracker.Core.Data
     [System.Data.Linq.Mapping.Table(Name="dbo.Audit")]
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
+    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Tracker.Core.Data.Audit.Metadata))]
     [System.Data.Services.Common.DataServiceKey("Id")]
     [System.Diagnostics.DebuggerDisplay("Id: {Id}")]
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class Audit
         : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.IAudit  
     {
@@ -58,7 +59,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets the Id column value.
         /// </summary>
-        [System.Data.Linq.Mapping.Column(Name = "Id", Storage = "_id", DbType = "int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
+        [System.Data.Linq.Mapping.Column(Name = "Id", Storage = "_id", DbType = "int NOT NULL", IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.Runtime.Serialization.DataMember(Order = 1)]
         public int Id
         {
