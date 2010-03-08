@@ -56,6 +56,7 @@ namespace <%= Database.ContextNamespace %>
     /// <summary>
     /// The <see cref="System.Data.Linq.DataContext"/> class for the <%= Database.Name %> database.
     /// </summary>
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     <%= Naming.GetModifier(Database.AccessModifier) %> partial class <%= Database.Class %>
         : CodeSmith.Data.Linq.DataContextBase<% if (IncludeIUpdatable) { %>, System.Data.Services.IUpdatable<% } %>
     {

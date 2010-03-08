@@ -81,6 +81,7 @@ namespace <%= ManagerNamespace %>
     /// <summary>
     /// The manager class for <%= EntityManager.EntityName %>.
     /// </summary>
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class <%= EntityManager.ManagerName %> 
         : CodeSmith.Data.EntityManagerBase<<%= DataManager.DataManagerName %>, <%= safeName %>>
     {
