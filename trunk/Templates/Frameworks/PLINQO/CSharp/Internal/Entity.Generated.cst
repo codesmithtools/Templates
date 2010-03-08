@@ -121,6 +121,7 @@ namespace <%= Database.EntityNamespace %>
 <% if (sb.Length > 0) { %>
     [System.Diagnostics.DebuggerDisplay("<%= sb.ToString() %>")]
 <% } %>
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
         : <%= EntityBase %><% if (IncludeDataContract) { %>, ICloneable<% } %><% if(!string.IsNullOrEmpty(this.InterfaceNamespace)) { %>, <% =this.InterfaceNamespace %>.I<%=Type.Name%> <%}%> 
