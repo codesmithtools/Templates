@@ -19,6 +19,7 @@ namespace Tracker.Core.Data
     /// <summary>
     /// The query extension class for Guid.
     /// </summary>
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public static partial class GuidExtensions
     {
 
@@ -42,19 +43,6 @@ namespace Tracker.Core.Data
         public static int Delete(this System.Data.Linq.Table<Tracker.Core.Data.Guid> table, System.Guid id)
         {
             return table.Delete(g => g.Id == id);
-        }
-
-        /// <summary>
-        /// Gets an instance by using a unique index.
-        /// </summary>
-        /// <returns>An instance of the entity or null if not found.</returns>
-        public static Tracker.Core.Data.Guid GetByKeyMember(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid key)
-        {
-            var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.Guid>;
-            if (entity != null && entity.Context.LoadOptions == null)
-                return Query.GetByKeyMember.Invoke((Tracker.Core.Data.TrackerDataContext)entity.Context, key);
-
-            return queryable.FirstOrDefault(g => g.Key == key);
         }
 
         /// <summary>
@@ -201,71 +189,6 @@ namespace Tracker.Core.Data
             return queryable.Where(expression);
         }
 
-        /// <summary>
-        /// Gets a query for <see cref="Tracker.Core.Data.Guid.Key"/>.
-        /// </summary>
-        /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="key">Key to search for.</param>
-        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.Guid> ByKey(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid key)
-        {
-            return queryable.Where(g => g.Key == key);
-        }
-
-        /// <summary>
-        /// Gets a query for <see cref="Tracker.Core.Data.Guid.Key"/>.
-        /// </summary>
-        /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="key">Key to search for.</param>
-        /// <param name="comparisonOperator">The comparison operator.</param>
-        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.Guid> ByKey(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid key, ComparisonOperator comparisonOperator)
-        {
-            switch (comparisonOperator)
-            {
-                case ComparisonOperator.GreaterThan:
-                case ComparisonOperator.GreaterThanOrEquals:
-                case ComparisonOperator.LessThan:
-                case ComparisonOperator.LessThanOrEquals:
-                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support System.Guid type.", "comparisonOperator");
-                case ComparisonOperator.NotEquals:
-                    return queryable.Where(g => g.Key != key);
-                default:
-                    return queryable.Where(g => g.Key == key);
-            }
-        }
-
-        /// <summary>
-        /// Gets a query for <see cref="Tracker.Core.Data.Guid.Key"/>.
-        /// </summary>
-        /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="key">Key to search for.</param>
-        /// <param name="additionalValues">Additional values to search for.</param>
-        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.Guid> ByKey(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid key, params System.Guid[] additionalValues)
-        {
-            var keyList = new List<System.Guid> { key };
-
-            if (additionalValues != null)
-                keyList.AddRange(additionalValues);
-
-            if (keyList.Count == 1)
-                return queryable.ByKey(keyList[0]);
-
-            return queryable.ByKey(keyList);
-        }
-
-        /// <summary>
-        /// Gets a query for <see cref="Tracker.Core.Data.Guid.Key"/>.
-        /// </summary>
-        /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="values">The values to search for..</param>
-        /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.Guid> ByKey(this IQueryable<Tracker.Core.Data.Guid> queryable, IEnumerable<System.Guid> values)
-        {
-            return queryable.Where(g => values.Contains(g.Key));
-        }
-
         #region Query
         /// <summary>
         /// A private class for lazy loading static compiled queries.
@@ -277,10 +200,6 @@ namespace Tracker.Core.Data
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, System.Guid id) =>
                         db.Guid.FirstOrDefault(g => g.Id == id));
-            internal static readonly Func<Tracker.Core.Data.TrackerDataContext, System.Guid, Tracker.Core.Data.Guid> GetByKeyMember =
-                System.Data.Linq.CompiledQuery.Compile(
-                    (Tracker.Core.Data.TrackerDataContext db, System.Guid key) =>
-                        db.Guid.FirstOrDefault(g => g.Key == key));
 
         }
         #endregion

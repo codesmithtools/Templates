@@ -17,7 +17,8 @@ namespace Tracker.Core.Data
     
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
+    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Tracker.Core.Data.GetUsersWithRolesResult2.Metadata))]
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class GetUsersWithRolesResult2
     {
         #region Static Constructor

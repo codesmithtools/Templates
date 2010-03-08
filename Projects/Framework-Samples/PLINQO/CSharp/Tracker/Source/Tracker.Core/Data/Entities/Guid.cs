@@ -27,8 +27,6 @@ namespace Tracker.Core.Data
 
             public System.Guid AlternateId { get; set; }
 
-            public System.Guid Key { get; set; }
-
         }
 
         #endregion

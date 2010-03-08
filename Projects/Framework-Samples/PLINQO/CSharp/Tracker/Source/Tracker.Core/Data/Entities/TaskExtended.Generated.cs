@@ -17,9 +17,10 @@ namespace Tracker.Core.Data
     [System.Data.Linq.Mapping.Table(Name="dbo.TaskExtended")]
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     [System.ComponentModel.DataAnnotations.ScaffoldTable(true)]
-    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Metadata))]
+    [System.ComponentModel.DataAnnotations.MetadataType(typeof(Tracker.Core.Data.TaskExtended.Metadata))]
     [System.Data.Services.Common.DataServiceKey("TaskId")]
     [System.Diagnostics.DebuggerDisplay("TaskId: {TaskId}")]
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class TaskExtended
         : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.ITaskExtended  
     {

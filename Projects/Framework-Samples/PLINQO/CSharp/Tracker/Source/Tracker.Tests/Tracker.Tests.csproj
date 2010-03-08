@@ -60,6 +60,7 @@
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -82,6 +83,7 @@
     <Compile Include="QueryTests\ByStringTests.cs" />
     <Compile Include="QueryTests\OperatorTests.cs" />
     <Compile Include="TestBase.cs" />
+    <Compile Include="TransactionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -21,6 +21,7 @@ namespace Tracker.Core.Data
     /// <summary>
     /// The manager class for Task.
     /// </summary>
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class TaskManager 
         : CodeSmith.Data.EntityManagerBase<TrackerDataManager, Tracker.Core.Data.Task>
     {

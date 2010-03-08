@@ -91,7 +91,7 @@ namespace Tracker.Tests.CacheTests
             }
             timer.Stop();
             double average = (double)timer.ElapsedMilliseconds / count;
-            Console.WriteLine("Total: " + FormatTimeSpan(timer.Elapsed) + " Average: " + average + "ms");
+            Console.WriteLine("Total: {0} Average: {1}ms", FormatTimeSpan(timer.Elapsed), average);
         }
 
         [Test]
@@ -109,9 +109,84 @@ namespace Tracker.Tests.CacheTests
             }
             timer.Stop();
             double average = (double)timer.ElapsedMilliseconds / count;
-            Console.WriteLine("Total: " + FormatTimeSpan(timer.Elapsed) + " Average: " + average + "ms");
+            Console.WriteLine("Total: {0} Average: {1}ms", FormatTimeSpan(timer.Elapsed), average);
         }
 
+        [Test]
+        public void GetOrSet()
+        {
+            string key = "GetOrSet";
+            string groupName = "testgroup";
+            
+            int i = CacheManager.Get<int>(key);
+            Assert.AreEqual(0, i);
+
+            i = CacheManager.GetOrSet(key, 12);
+            Assert.AreEqual(12, i);
+
+            i = CacheManager.Get<int>(key);
+            Assert.AreEqual(12, i);            
+        }
+
+        [Test]
+        public void GetOrSetGroup()
+        {
+            string key = "GetOrSetGroup";
+            string groupName = "testgroup";
+
+            int i = CacheManager.Get<int>(key, groupName);
+            Assert.AreEqual(0, i);
+
+            i = CacheManager.GetOrSet(key, 13, CacheManager.GetProfile().WithGroup(groupName));
+            Assert.AreEqual(13, i);
+
+            i = CacheManager.Get<int>(key, groupName);
+            Assert.AreEqual(13, i);
+
+            CacheManager.InvalidateGroup(groupName);
+            i = CacheManager.Get<int>(key, groupName);
+            Assert.AreEqual(0, i);
+
+        }
+
+        [Test]
+        public void GetOrSetFactory()
+        {
+            string key = "GetOrSetFactory";
+            int hashCode = key.GetHashCode();
+
+            int i = CacheManager.Get<int>(key);
+            Assert.AreEqual(0, i);
+
+            i = CacheManager.GetOrSet(key, a => a.GetHashCode());
+
+            Assert.AreEqual(hashCode, i);
+
+            i = CacheManager.Get<int>(key);
+            Assert.AreEqual(hashCode, i);
+        }
+
+        [Test]
+        public void GetOrSetGroupFactory()
+        {
+            string key = "GetOrSetGroupFactory";
+            string groupName = "testgroup";
+            int hashCode = key.GetHashCode();
+
+            int i = CacheManager.Get<int>(key, groupName);
+            Assert.AreEqual(0, i);
+
+            i = CacheManager.GetOrSet(key, a => a.GetHashCode(), CacheManager.GetProfile().WithGroup(groupName));
+            Assert.AreEqual(hashCode, i);
+
+            i = CacheManager.Get<int>(key, groupName);
+            Assert.AreEqual(hashCode, i);
+
+            CacheManager.InvalidateGroup(groupName);
+            i = CacheManager.Get<int>(key, groupName);
+            Assert.AreEqual(0, i);
+
+        }
         private static string FormatTimeSpan(TimeSpan span)
         {
             var builder = new StringBuilder();

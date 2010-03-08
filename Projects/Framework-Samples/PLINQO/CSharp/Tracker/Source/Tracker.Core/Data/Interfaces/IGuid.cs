@@ -24,9 +24,5 @@ namespace Tracker.Core.Data.Interfaces
         /// Gets or sets the AlternateId column value.
         /// </summary>
         Nullable<System.Guid> AlternateId { get; set; }
-        /// <summary>
-        /// Gets or sets the Key column value.
-        /// </summary>
-        System.Guid Key { get; set; }
     }
 }
