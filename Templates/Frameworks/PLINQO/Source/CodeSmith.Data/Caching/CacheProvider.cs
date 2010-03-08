@@ -152,41 +152,118 @@ namespace CodeSmith.Data.Caching
         public virtual T Get<T>(string key, string group)
         {
             object data = Get(key, group);
-            if (data == null)
-                return default(T);
+            return Convert<T>(data);
+        }
 
-            Type dataType = data.GetType();
+        /// <summary>
+        /// Saves a key/value pair to the cache if the key does not already exist.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="data">The data to be cached in the provider.</param>
+        /// <returns>
+        /// An instance of T that will be either the existing value for the key if the key is already in the cache,
+        /// or the new value if the key was not in the cache.
+        /// </returns>
+        public T GetOrSet<T>(string key, T data)
+        {
+            return GetOrSet(key, CacheManager.DefaultGroup, data);
+        }
 
-            if (typeof(T) == dataType || typeof(T).IsAssignableFrom(dataType))
-                return (T)data;
+        /// <summary>
+        /// Saves a key/value pair to the cache if the key does not already exist.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="group">The name of the cache group.</param>
+        /// <param name="data">The data to be cached in the provider.</param>
+        /// <returns>
+        /// An instance of T that will be either the existing value for the key if the key is already in the cache,
+        /// or the new value if the key was not in the cache.
+        /// </returns>
+        public T GetOrSet<T>(string key, string group, T data)
+        {
+            return GetOrSet(key, data, CacheManager.GetProfile().WithGroup(group));
+        }
 
-            var converter = TypeDescriptor.GetConverter(typeof(T));
-            if (converter.CanConvertFrom(dataType))
-                return (T)converter.ConvertFrom(data);
+        /// <summary>
+        /// Saves a key/value pair to the cache if the key does not already exist.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="data">The data to be cached in the provider.</param>
+        /// <param name="settings">The <see cref="CacheSettings"/> to be used when storing in the provider.</param>
+        /// <returns>
+        /// An instance of T that will be either the existing value for the key if the key is already in the cache,
+        /// or the new value if the key was not in the cache.
+        /// </returns>
+        public T GetOrSet<T>(string key, T data, CacheSettings settings)
+        {
+            if (settings == null)
+                throw new ArgumentNullException("settings");
 
-            if (dataType == typeof(byte[]))
-            {
-                if (typeof(T).IsSubclassOf(typeof(IEnumerable<T>)))
-                {
-                    try
-                    {
-                        var converted = (T)((byte[])data).ToCollection<T>();
-                        return converted;
-                    }
-                    catch {}
-                }
-                else
-                {
-                    try
-                    {
-                        var converted = ((byte[])data).ToObject<T>();
-                        return converted;
-                    }
-                    catch { }
-                }
-            }
+            var d = Get(key, settings.Group);
+            if (d != null)
+                return Convert<T>(d);
 
-            return default(T);
+            Set(key, data, settings);
+            return data;
+        }
+
+        /// <summary>
+        /// Saves a key/value pair to the cache if the key does not already exist.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="valueFactory">The function used to generate a value for the key.</param>
+        /// <returns>
+        /// An instance of T that will be either the existing value for the key if the key is already in the cache,
+        /// or the new value if the key was not in the cache.
+        /// </returns>
+        public T GetOrSet<T>(string key, Func<string, T> valueFactory)
+        {
+            return GetOrSet(key, CacheManager.DefaultGroup, valueFactory);
+        }
+
+        /// <summary>
+        /// Saves a key/value pair to the cache if the key does not already exist.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="group">The name of the cache group.</param>
+        /// <param name="valueFactory">The function used to generate a value for the key.</param>
+        /// <returns>
+        /// An instance of T that will be either the existing value for the key if the key is already in the cache,
+        /// or the new value if the key was not in the cache.
+        /// </returns>
+        public T GetOrSet<T>(string key, string group, Func<string, T> valueFactory)
+        {
+            return GetOrSet(key, valueFactory, CacheManager.GetProfile().WithGroup(group));
+        }
+
+        /// <summary>
+        /// Saves a key/value pair to the cache if the key does not already exist.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="valueFactory">The function used to generate a value for the key.</param>
+        /// <param name="settings">The <see cref="CacheSettings"/> to be used when storing in the provider.</param>
+        /// <returns>
+        /// An instance of T that will be either the existing value for the key if the key is already in the cache,
+        /// or the new value if the key was not in the cache.
+        /// </returns>
+        public T GetOrSet<T>(string key, Func<string, T> valueFactory, CacheSettings settings)
+        {
+            if (settings == null)
+                throw new ArgumentNullException("settings");
+            
+            var d = Get(key, settings.Group);
+            if (d != null)
+                return Convert<T>(d);
+
+            T data = valueFactory.Invoke(key);
+            Set(key, data, settings);
+            return data;
         }
 
         /// <summary>
@@ -281,6 +358,53 @@ namespace CodeSmith.Data.Caching
         {
             string cleanName = Regex.Replace(group, @"\W+", "");
             return "g_" + cleanName;
+        }
+
+        private static T Convert<T>(object data)
+        {
+            if (data == null)
+                return default(T);
+
+            Type dataType = data.GetType();
+            Type valueType = typeof(T);
+
+            if (valueType == dataType || valueType.IsAssignableFrom(dataType))
+                return (T)data;
+
+            var converter = TypeDescriptor.GetConverter(valueType);
+            if (converter.CanConvertFrom(dataType))
+                return (T)converter.ConvertFrom(data);
+
+            if (dataType != typeof (byte[]))
+            {
+                return default(T);
+
+            }
+            
+            if (valueType.IsSubclassOf(typeof (IEnumerable<T>)))
+            {
+                try
+                {
+                    var converted = (T) ((byte[]) data).ToCollection<T>();
+                    return converted;
+                }
+                catch
+                {
+                }
+            }
+            else
+            {
+                try
+                {
+                    var converted = ((byte[]) data).ToObject<T>();
+                    return converted;
+                }
+                catch
+                {
+                }
+            }
+
+            return default(T);
         }
     }
 }
