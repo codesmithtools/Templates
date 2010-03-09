@@ -36,7 +36,7 @@
 <%@ Property Category="1.Database" Name="CleanExpression"
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
     Description="List of regular expressions to clean table, view and column names."
-    Default="^\\w+_" %>
+    Default="^(sp|tbl|udf|vw)_" %>
 
 <%@ Property Category="1.Database" Name="EnumList"
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
@@ -56,6 +56,10 @@
     Type="System.String" Default="" Optional="False"
     OnChanged="OnContextNamespaceChanged"
     Description="The namespace to use for the context class files."%>
+
+<%@ Property Category="2.Class" Name="DataContextName"
+    Type="System.String" Default="" Optional="True"
+    Description="The name of the DataContext."%>
 
 <%@ Property Category="2.Class" Name="IncludeDeleteOnNull"
     Type="System.Boolean" Default="true" Optional="False"
@@ -119,6 +123,7 @@
         GeneratorSettings settings = new GeneratorSettings();
         settings.MappingFile = filePath;
         settings.ContextNamespace = ContextNamespace;
+        settings.DataContextName = DataContextName;
         settings.EntityNamespace = EntityNamespace;
         settings.EntityBase = EntityBase;
         settings.IncludeViews = IncludeViews;

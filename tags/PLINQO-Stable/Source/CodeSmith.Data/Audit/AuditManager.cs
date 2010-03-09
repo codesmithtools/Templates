@@ -136,6 +136,9 @@ namespace CodeSmith.Data.Audit
             var auditEntity = new AuditEntity();
             auditEntity.Action = action;
             auditEntity.Type = metaType.Type.FullName;
+            auditEntity.Current = entity;
+            if (action != AuditAction.Insert)
+                auditEntity.Original = table.GetOriginalEntityState(entity);
 
             AddAuditKeys(metaType, entity, auditEntity);
             AddAuditProperties(metaType, table, entity, auditEntity);

@@ -98,6 +98,8 @@ namespace CodeSmith.Data.Web
             object source = CacheManager.Get<object>(key);
             if (source != null)
                 return;
+            else
+                source = e.Result;
 
             Debug.WriteLine("Cache Insert: " + key);
             if (!String.IsNullOrEmpty(CacheProfile))

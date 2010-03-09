@@ -207,7 +207,7 @@ Public Sub CreateEntity(ByVal entityClass As EntityGeneratedClass, ByVal partial
         partialClass.ExistingFile = New CodeFileParser(parentFileName)
     End If
     
-    Dim insertClassMergeStrategy__1 As New InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.CSharp, "Metadata") With _
+    Dim insertClassMergeStrategy__1 As New InsertClassMergeStrategy(ICSharpCode.NRefactory.SupportedLanguage.VBNet, "Metadata") With _
     { _
             .OnlyInsertMatchingClass = True, _
             .PreserveClassAttributes = True, _

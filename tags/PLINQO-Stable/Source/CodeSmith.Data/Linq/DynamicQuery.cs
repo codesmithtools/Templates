@@ -203,13 +203,11 @@ namespace CodeSmith.Data.Linq.Dynamic
         {
             var expression = BuildExpressionString<T>(identifier, values);
             var array = values.Cast<object>().ToArray();
-            
             return ParseLambda<T, S>(expression, array);
         }
 
         private static string BuildExpressionString<T>(string identifier, IEnumerable values)
         {
-            var isNullable = IsPropertyNullable<T>(identifier);
             var expression = new StringBuilder();
             var count = 0;
 
@@ -219,15 +217,10 @@ namespace CodeSmith.Data.Linq.Dynamic
                     expression.Append(" || ");
 
                 if (value == null)
-                {
-                    if (isNullable)
-                        expression.AppendFormat("!{0}.HasValue", identifier);
-                    else
-                        expression.AppendFormat("Object.Equals({0}, @{1})", identifier, count);
-                }
+                    expression.AppendFormat("{0} == null", identifier);
                 else
                     expression.AppendFormat("{0} == @{1}", identifier, count);
-                
+
                 count++;
             }
 
