@@ -40,6 +40,18 @@ namespace CodeSmith.Data.Audit
         }
 
         /// <summary>
+        /// Gets the entity in its original unmodified state.
+        /// </summary>
+        [XmlIgnore]
+        public object Original { get; set; }
+
+        /// <summary>
+        /// Gets the entity in its current modified state.
+        /// </summary>
+        [XmlIgnore]
+        public object Current { get; set; }
+
+        /// <summary>
         /// Gets the list of properties that action was taken on.
         /// </summary>
         /// <value>The list of properties that action was taken on.</value>
@@ -88,7 +100,7 @@ namespace CodeSmith.Data.Audit
         private const int HASH_SEED = 397;
 
         /// <summary>
-        /// Serves as a hash function for a particular type. 
+        /// Serves as a hash function for a particular type.
         /// </summary>
         /// <returns>
         /// A hash code for the current <see cref="T:System.Object" />.
@@ -100,7 +112,7 @@ namespace CodeSmith.Data.Audit
                 // using the Type, Action and Key values
                 int result = (Type != null ? Type.GetHashCode() : 0);
                 result = (result * HASH_SEED) ^ Action.GetHashCode();
-                
+
                 foreach (var key in _keys)
                     if (key.Value != null)
                         result = (result * HASH_SEED) ^ key.Value.GetHashCode();

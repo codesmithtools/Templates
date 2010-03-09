@@ -39,6 +39,7 @@ namespace <%= ClassNamespace %>
     <%if (IncludeDataContract) { %>
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     <%}%>
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public abstract partial class <%= ClassName %> :
         CodeSmith.Data.ILinqEntity,
         System.ComponentModel.INotifyPropertyChanging,
@@ -255,6 +256,7 @@ namespace <%= ClassNamespace %>
             {
                 var serializer = new System.Runtime.Serialization.DataContractSerializer(GetType());
                 serializer.WriteObject(writer, this);
+                writer.Flush();
             }
 
             return sb.ToString();
@@ -272,6 +274,7 @@ namespace <%= ClassNamespace %>
             {
                 var serializer = new System.Runtime.Serialization.DataContractSerializer(GetType());
                 serializer.WriteObject(writer, this);
+                writer.Flush();
                 buffer = ms.ToArray();
             }
             return buffer;

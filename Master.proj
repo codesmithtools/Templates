@@ -98,14 +98,9 @@
   </ItemGroup>
 
   <Target Name="Documentation" DependsOnTargets="Version;Compile">
-    <Sandcastle Clean="true" TopicStyle="vs2005"
-                NoWarnMessages="true"
-                WorkingDirectory="Help"
-                Assemblies="@(Assemblies)"
-                Comments="@(Comments)"
-                ChmName="CodeSmith.Data" />
+    <MSBuild Projects="Source\Help\CodeSmith.Data.shfbproj" />
 
-    <Copy SourceFiles="Help\vs2005\chm\CodeSmith.Data.chm" 
+    <Copy SourceFiles="Source\Help\Help\CodeSmith.Data.chm" 
           DestinationFolder="Common"/>
   </Target>
 

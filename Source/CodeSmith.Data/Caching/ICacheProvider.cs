@@ -101,6 +101,82 @@ namespace CodeSmith.Data.Caching
         T Get<T>(string key, string group);
 
         /// <summary>
+        /// Saves a key/value pair to the cache if the key does not already exist.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="data">The data to be cached in the provider.</param>
+        /// <returns>
+        /// An instance of T that will be either the existing value for the key if the key is already in the cache, 
+        /// or the new value if the key was not in the cache.
+        /// </returns>
+        T GetOrSet<T>(string key, T data);
+
+        /// <summary>
+        /// Saves a key/value pair to the cache if the key does not already exist.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="group">The name of the cache group.</param>
+        /// <param name="data">The data to be cached in the provider.</param>
+        /// <returns>
+        /// An instance of T that will be either the existing value for the key if the key is already in the cache, 
+        /// or the new value if the key was not in the cache.
+        /// </returns>
+        T GetOrSet<T>(string key, string group, T data);
+
+        /// <summary>
+        /// Saves a key/value pair to the cache if the key does not already exist.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="data">The data to be cached in the provider.</param>
+        /// <param name="settings">The <see cref="CacheSettings"/> to be used when storing in the provider.</param>
+        /// <returns>
+        /// An instance of T that will be either the existing value for the key if the key is already in the cache,
+        /// or the new value if the key was not in the cache.
+        /// </returns>
+        T GetOrSet<T>(string key, T data, CacheSettings settings);
+
+        /// <summary>
+        /// Saves a key/value pair to the cache if the key does not already exist.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="valueFactory">The function used to generate a value for the key.</param>
+        /// <returns>
+        /// An instance of T that will be either the existing value for the key if the key is already in the cache, 
+        /// or the new value if the key was not in the cache.
+        /// </returns>
+        T GetOrSet<T>(string key, Func<string, T> valueFactory);
+
+        /// <summary>
+        /// Saves a key/value pair to the cache if the key does not already exist.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="group">The name of the cache group.</param>
+        /// <param name="valueFactory">The function used to generate a value for the key.</param>
+        /// <returns>
+        /// An instance of T that will be either the existing value for the key if the key is already in the cache, 
+        /// or the new value if the key was not in the cache.
+        /// </returns>
+        T GetOrSet<T>(string key, string group, Func<string, T> valueFactory);
+
+        /// <summary>
+        /// Saves a key/value pair to the cache if the key does not already exist.
+        /// </summary>
+        /// <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+        /// <param name="key">The key used to store the data in the cache provider.</param>
+        /// <param name="valueFactory">The function used to generate a value for the key.</param>
+        /// <param name="settings">The <see cref="CacheSettings"/> to be used when storing in the provider.</param>
+        /// <returns>
+        /// An instance of T that will be either the existing value for the key if the key is already in the cache, 
+        /// or the new value if the key was not in the cache.
+        /// </returns>
+        T GetOrSet<T>(string key, Func<string, T> valueFactory, CacheSettings settings);
+
+        /// <summary>
         /// Checks to see if the specified key exists.
         /// </summary>
         /// <param name="key">The key used to store the data in the cache provider.</param>

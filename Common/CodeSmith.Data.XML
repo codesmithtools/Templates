@@ -284,7 +284,7 @@
         </member>
         <member name="M:CodeSmith.Data.Audit.AuditEntity.GetHashCode">
             <summary>
-            Serves as a hash function for a particular type. 
+            Serves as a hash function for a particular type.
             </summary>
             <returns>
             A hash code for the current <see cref="T:System.Object" />.
@@ -307,6 +307,16 @@
             Gets the list of properties that are the key for the entity.
             </summary>
             <value>The list of properties that are the key for the entity.</value>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditEntity.Original">
+            <summary>
+            Gets the entity in its original unmodified state.
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Audit.AuditEntity.Current">
+            <summary>
+            Gets the entity in its current modified state.
+            </summary>
         </member>
         <member name="P:CodeSmith.Data.Audit.AuditEntity.Properties">
             <summary>
@@ -734,6 +744,82 @@
             An instance of T if the item exists in the cache, otherwise <see langword="null"/>.
             </returns>
         </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.GetOrSet``1(System.String,``0)">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="data">The data to be cached in the provider.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache, 
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.GetOrSet``1(System.String,System.String,``0)">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="group">The name of the cache group.</param>
+            <param name="data">The data to be cached in the provider.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache, 
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.GetOrSet``1(System.String,``0,CodeSmith.Data.Caching.CacheSettings)">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="data">The data to be cached in the provider.</param>
+            <param name="settings">The <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> to be used when storing in the provider.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache,
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.GetOrSet``1(System.String,System.Func{System.String,``0})">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="valueFactory">The function used to generate a value for the key.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache, 
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.GetOrSet``1(System.String,System.String,System.Func{System.String,``0})">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="group">The name of the cache group.</param>
+            <param name="valueFactory">The function used to generate a value for the key.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache, 
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheManager.GetOrSet``1(System.String,System.Func{System.String,``0},CodeSmith.Data.Caching.CacheSettings)">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="valueFactory">The function used to generate a value for the key.</param>
+            <param name="settings">The <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> to be used when storing in the provider.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache, 
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
         <member name="M:CodeSmith.Data.Caching.CacheManager.Exists(System.String)">
             <summary>
             Checks to see if the specified key exists.
@@ -978,6 +1064,82 @@
             An instance of T if the item exists in the cache, otherwise <see langword="null"/>.
             </returns>
         </member>
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.GetOrSet``1(System.String,``0)">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="data">The data to be cached in the provider.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache, 
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.GetOrSet``1(System.String,System.String,``0)">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="group">The name of the cache group.</param>
+            <param name="data">The data to be cached in the provider.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache, 
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.GetOrSet``1(System.String,``0,CodeSmith.Data.Caching.CacheSettings)">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="data">The data to be cached in the provider.</param>
+            <param name="settings">The <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> to be used when storing in the provider.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache,
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.GetOrSet``1(System.String,System.Func{System.String,``0})">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="valueFactory">The function used to generate a value for the key.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache, 
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.GetOrSet``1(System.String,System.String,System.Func{System.String,``0})">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="group">The name of the cache group.</param>
+            <param name="valueFactory">The function used to generate a value for the key.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache, 
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.ICacheProvider.GetOrSet``1(System.String,System.Func{System.String,``0},CodeSmith.Data.Caching.CacheSettings)">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="valueFactory">The function used to generate a value for the key.</param>
+            <param name="settings">The <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> to be used when storing in the provider.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache, 
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
         <member name="M:CodeSmith.Data.Caching.ICacheProvider.Exists(System.String)">
             <summary>
             Checks to see if the specified key exists.
@@ -1140,6 +1302,82 @@
             <param name="group">Name of the group.</param>
             <returns>
             An instance of T if the item exists in the cache, otherwise <see langword="null"/>.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.GetOrSet``1(System.String,``0)">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="data">The data to be cached in the provider.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache,
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.GetOrSet``1(System.String,System.String,``0)">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="group">The name of the cache group.</param>
+            <param name="data">The data to be cached in the provider.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache,
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.GetOrSet``1(System.String,``0,CodeSmith.Data.Caching.CacheSettings)">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="data">The data to be cached in the provider.</param>
+            <param name="settings">The <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> to be used when storing in the provider.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache,
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.GetOrSet``1(System.String,System.Func{System.String,``0})">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="valueFactory">The function used to generate a value for the key.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache,
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.GetOrSet``1(System.String,System.String,System.Func{System.String,``0})">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="group">The name of the cache group.</param>
+            <param name="valueFactory">The function used to generate a value for the key.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache,
+            or the new value if the key was not in the cache.
+            </returns>
+        </member>
+        <member name="M:CodeSmith.Data.Caching.CacheProvider.GetOrSet``1(System.String,System.Func{System.String,``0},CodeSmith.Data.Caching.CacheSettings)">
+            <summary>
+            Saves a key/value pair to the cache if the key does not already exist.
+            </summary>
+            <typeparam name="T">The type for data being retrieved from cache,</typeparam>
+            <param name="key">The key used to store the data in the cache provider.</param>
+            <param name="valueFactory">The function used to generate a value for the key.</param>
+            <param name="settings">The <see cref="T:CodeSmith.Data.Caching.CacheSettings"/> to be used when storing in the provider.</param>
+            <returns>
+            An instance of T that will be either the existing value for the key if the key is already in the cache,
+            or the new value if the key was not in the cache.
             </returns>
         </member>
         <member name="M:CodeSmith.Data.Caching.CacheProvider.Exists(System.String)">
@@ -1659,6 +1897,15 @@
             Gets or sets the cache group name.
             </summary>
             <value>The cache group name.</value>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextExtensions.ExecuteCommand(System.Data.Linq.DataContext,System.Data.Common.DbCommand)">
+            <summary>
+            Executes a SQL statement against a <see cref="T:System.Data.Linq.DataContext"/> connection. 
+            </summary>
+            <param name="context">The <see cref="T:System.Data.Linq.DataContext"/> to execute the batch select against.</param>
+            <param name="command">The DbCommand to execute.</param>
+            <returns>The number of rows affected.</returns>
+            <remarks>The DbCommand is not disposed by this call, the caller must dispose the DbCommand.</remarks>
         </member>
         <member name="M:CodeSmith.Data.Linq.DataContextExtensions.ExecuteQuery(System.Data.Linq.DataContext,System.Linq.IQueryable[])">
             <summary>
@@ -2838,6 +3085,11 @@
         <member name="P:CodeSmith.Data.Properties.Resources.ValidatorNotEmptyMessage">
             <summary>
               Looks up a localized string similar to {0} cannot be empty..
+            </summary>
+        </member>
+        <member name="P:CodeSmith.Data.Properties.Resources.ValidatorNotNullMessage">
+            <summary>
+              Looks up a localized string similar to {0} cannot be null..
             </summary>
         </member>
         <member name="P:CodeSmith.Data.Properties.Resources.ValidatorRangeMessage">

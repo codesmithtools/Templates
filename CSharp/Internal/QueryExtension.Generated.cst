@@ -76,6 +76,7 @@ namespace <%= Database.ContextNamespace %>
     /// <summary>
     /// The query extension class for <%= EntityManager.EntityName %>.
     /// </summary>
+    [System.Runtime.CompilerServices.CompilerGenerated()]
     public static partial class <%= EntityManager.EntityName %>Extensions
     {
 <% foreach(ManagerMethod method in EntityManager.Methods) { %>
@@ -104,19 +105,24 @@ namespace <%= Database.ContextNamespace %>
         {
             return table.Delete(<%= GetLamba(method, 5) %>);
         }
-<% } else if (method.IsUnique) {
-        uniqueMethods.Add(method.NameSuffix );%>
+<%
+} else if (method.IsUnique) {
+        uniqueMethods.Add(method.NameSuffix );
+        string suffix = method.NameSuffix;
+        if (suffix == MethodKeySuffix)
+            suffix += "Member";
+%>
 
         /// <summary>
         /// Gets an instance by using a unique index.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
-        public static <%= safeName %> <%= UniqueMethodPrefix %><%= method.NameSuffix %>(this IQueryable<<%= safeName %>> queryable, <%= GetParameters(method) %>)
+        public static <%= safeName %> <%= UniqueMethodPrefix %><%= suffix %>(this IQueryable<<%= safeName %>> queryable, <%= GetParameters(method) %>)
         {
 <% if (method.Columns.Count < 4) { %>
             var entity = queryable as System.Data.Linq.Table<<%= safeName %>>;
             if (entity != null && entity.Context.LoadOptions == null)
-                return Query.<%= UniqueMethodPrefix %><%= method.NameSuffix %>.Invoke((<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
+                return Query.<%= UniqueMethodPrefix %><%= suffix %>.Invoke((<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>)entity.Context, <%= GetParametersNames(method) %>);
 <% } // column count%>
 
             return queryable.FirstOrDefault(<%= GetLamba(method, 5) %>);
@@ -143,8 +149,10 @@ namespace <%= Database.ContextNamespace %>
         public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= columnType %> <%= paramName %>)
         {
 <% if (column.CanBeNull == true) { %>
-            // using object equals to support nulls
-            return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>));
+            // support nulls
+            return <%= paramName %> == null 
+                ? queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == null) 
+                : queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == <%= paramName %>);
 <% } else { %>
             return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == <%= paramName %>);
 <% } %>
@@ -175,9 +183,13 @@ namespace <%= Database.ContextNamespace %>
                     return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %>.Contains(<%= paramName %>) == false);
 <% if (column.CanBeNull == true) { %>
                 case ContainmentOperator.NotEquals:
-                    return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>) == false);
+                    return <%= paramName %> == null 
+                        ? queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != null) 
+                        : queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != <%= paramName %>);
                 default:
-                    return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>));
+                    return <%= paramName %> == null 
+                        ? queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == null) 
+                        : queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == <%= paramName %>);
 <% } else { %>
                 case ContainmentOperator.NotEquals:
                     return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != <%= paramName %>);
@@ -222,9 +234,13 @@ namespace <%= Database.ContextNamespace %>
 <% } %>
 <% if (column.CanBeNull == true) { %>
                 case ComparisonOperator.NotEquals:
-                    return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>) == false);
+                    return <%= paramName %> == null 
+                        ? queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != null) 
+                        : queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != <%= paramName %>);
                 default:
-                    return queryable.Where(<%= alias %> => object.Equals(<%= alias %>.<%= column.Member %>, <%= paramName %>));
+                    return <%= paramName %> == null 
+                        ? queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == null) 
+                        : queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> == <%= paramName %>);
 <% } else { %>
                 case ComparisonOperator.NotEquals:
                     return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> != <%= paramName %>);
@@ -293,8 +309,11 @@ namespace <%= Database.ContextNamespace %>
                     (<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) =>
                         db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
 <% } else if (method.IsUnique) { %>
-
-            internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>> <%= UniqueMethodPrefix %><%= method.NameSuffix %> =
+<%      string suffix = method.NameSuffix;
+        if (suffix == MethodKeySuffix)
+            suffix += "Member";
+ %>
+            internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>> <%= UniqueMethodPrefix %><%= suffix %> =
                 System.Data.Linq.CompiledQuery.Compile(
                     (<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) =>
                         db.<%= EntityManager.PropertyName %>.FirstOrDefault(<%= GetLamba(method, 7) %>));
