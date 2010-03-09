@@ -197,7 +197,7 @@ namespace CodeSmith.Data.Caching
         /// An instance of T that will be either the existing value for the key if the key is already in the cache,
         /// or the new value if the key was not in the cache.
         /// </returns>
-        public T GetOrSet<T>(string key, T data, CacheSettings settings)
+        public virtual T GetOrSet<T>(string key, T data, CacheSettings settings)
         {
             if (settings == null)
                 throw new ArgumentNullException("settings");
@@ -252,7 +252,7 @@ namespace CodeSmith.Data.Caching
         /// An instance of T that will be either the existing value for the key if the key is already in the cache,
         /// or the new value if the key was not in the cache.
         /// </returns>
-        public T GetOrSet<T>(string key, Func<string, T> valueFactory, CacheSettings settings)
+        public virtual T GetOrSet<T>(string key, Func<string, T> valueFactory, CacheSettings settings)
         {
             if (settings == null)
                 throw new ArgumentNullException("settings");
