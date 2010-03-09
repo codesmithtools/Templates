@@ -61,7 +61,7 @@
       <property name="AssociationNamingSuffix">ListSuffix</property>
       <property name="OutputDirectory">.\Entities</property>
       <property name="BaseDirectory">.\</property>
-      <property name="ViewDirectory">.\Views</property>
+      <property name="ModelDirectory">.\Models</property>
     </propertySet>
     <propertySet name="Queries" template="$linqToSql$$language$\Queries.cst">
       <property name="QueryDirectory">.\Queries</property>
