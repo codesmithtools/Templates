@@ -39,7 +39,6 @@ namespace <%= ClassNamespace %>
     <%if (IncludeDataContract) { %>
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     <%}%>
-    [System.Runtime.CompilerServices.CompilerGenerated()]
     public abstract partial class <%= ClassName %> :
         CodeSmith.Data.ILinqEntity,
         System.ComponentModel.INotifyPropertyChanging,
@@ -48,6 +47,7 @@ namespace <%= ClassNamespace %>
         /// <summary>
         /// Initializes a new instance of the <see cref="<%= ClassName %>"/> class.
         /// </summary>
+        <%= GeneratedCodeAttribute %>
         protected <%= ClassName %>()
         { }
 
@@ -57,6 +57,7 @@ namespace <%= ClassNamespace %>
         /// Implements a PropertyChanged event.
         /// </summary>
         [field: NonSerialized]
+        <%= GeneratedCodeAttribute %>
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -64,6 +65,7 @@ namespace <%= ClassNamespace %>
         /// </summary>
         /// <param name="propertyName">Name of the property that has changed.</param>
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Advanced)]
+        <%= GeneratedCodeAttribute %>
         protected virtual void SendPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
@@ -74,6 +76,7 @@ namespace <%= ClassNamespace %>
         /// Implements a PropertyChanging event.
         /// </summary>
         [field: NonSerialized]
+        <%= GeneratedCodeAttribute %>
         public event System.ComponentModel.PropertyChangingEventHandler PropertyChanging;
 
         /// <summary>
@@ -81,6 +84,7 @@ namespace <%= ClassNamespace %>
         /// </summary>
         /// <param name="propertyName">Name of the property that is changing.</param>
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Advanced)]
+        <%= GeneratedCodeAttribute %>
         protected virtual void SendPropertyChanging(string propertyName)
         {
             if (PropertyChanging != null)
@@ -96,6 +100,7 @@ namespace <%= ClassNamespace %>
         /// <returns>
         /// <c>true</c> if this instance is attached; otherwise, <c>false</c>.
         /// </returns>
+        <%= GeneratedCodeAttribute %>
         public bool IsAttached()
         {
             return PropertyChanging != null;
@@ -107,6 +112,7 @@ namespace <%= ClassNamespace %>
         /// <remarks>
         /// Detaching the entity will allow it to be attached to another <see cref="System.Data.Linq.DataContext"/>.
         /// </remarks>
+        <%= GeneratedCodeAttribute %>
         public virtual void Detach()
         {
             PropertyChanging = null;
@@ -121,6 +127,7 @@ namespace <%= ClassNamespace %>
         /// <param name="onAdd">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Add(`0)" />.</param>
         /// <param name="onRemove">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Remove(`0)" />.</param>
         /// <returns>A new <see cref="T:System.Data.Linq.EntitySet`1" /> with the list copied if it was loaded.</returns>
+        <%= GeneratedCodeAttribute %>
         protected static System.Data.Linq.EntitySet<TEntity> Detach<TEntity>(System.Data.Linq.EntitySet<TEntity> set, Action<TEntity> onAdd, Action<TEntity> onRemove) 
             where TEntity : <%= ClassName %>
         {
@@ -142,6 +149,7 @@ namespace <%= ClassNamespace %>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The <see cref="T:System.Data.Linq.EntityRef`1"/> to detach.</param>
         /// <returns>A new <see cref="T:System.Data.Linq.EntityRef`1"/> with the entity detached.</returns>
+        <%= GeneratedCodeAttribute %>
         protected static System.Data.Linq.EntityRef<TEntity> Detach<TEntity>(System.Data.Linq.EntityRef<TEntity> entity) 
             where TEntity : <%= ClassName %>
         {
@@ -158,6 +166,7 @@ namespace <%= ClassNamespace %>
         /// <typeparam name="T">The type of the value.</typeparam>
         /// <param name="value">The lazy loaded value.</param>
         /// <returns>A new <see cref="T:System.Data.Linq.Link`1"/> that is detached.</returns>
+        <%= GeneratedCodeAttribute %>
         protected static System.Data.Linq.Link<T> Detach<T>(System.Data.Linq.Link<T> value)
         {
             if (!value.HasLoadedOrAssignedValue)
@@ -177,6 +186,7 @@ namespace <%= ClassNamespace %>
         /// <returns>
         /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
         /// </returns>
+        <%= GeneratedCodeAttribute %>
         public string ToEntityString(int indentLevel, string indentValue)
         {
             System.Reflection.PropertyInfo[] props = this.GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
@@ -245,6 +255,7 @@ namespace <%= ClassNamespace %>
         /// Returns an XML <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>. 
         /// </summary>
         /// <returns>An XML <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.</returns>
+        <%= GeneratedCodeAttribute %>
         public string ToXml()
         {
             var settings = new System.Xml.XmlWriterSettings();
@@ -266,6 +277,7 @@ namespace <%= ClassNamespace %>
         /// Returns a byte array that represents the current <see cref="T:System.Object"/>. 
         /// </summary>
         /// <returns>A byte array that represents the current <see cref="T:System.Object"/>.</returns>
+        <%= GeneratedCodeAttribute %>
         public byte[] ToBinary()
         {
             byte[] buffer;
@@ -283,3 +295,9 @@ namespace <%= ClassNamespace %>
         #endregion
     }
 }
+
+<script runat="template">
+    private static readonly string GeneratedCodeAttribute =  string.Format(
+        "[System.CodeDom.Compiler.GeneratedCode(\"CodeSmith\", \"{0}\")]",
+        typeof(CodeTemplate).Assembly.GetName().Version.ToString());
+</script>

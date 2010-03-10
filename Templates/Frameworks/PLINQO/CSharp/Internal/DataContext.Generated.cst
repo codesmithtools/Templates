@@ -56,15 +56,18 @@ namespace <%= Database.ContextNamespace %>
     /// <summary>
     /// The <see cref="System.Data.Linq.DataContext"/> class for the <%= Database.Name %> database.
     /// </summary>
-    [System.Runtime.CompilerServices.CompilerGenerated()]
     <%= Naming.GetModifier(Database.AccessModifier) %> partial class <%= Database.Class %>
         : CodeSmith.Data.Linq.DataContextBase<% if (IncludeIUpdatable) { %>, System.Data.Services.IUpdatable<% } %>
     {
+        <%= GeneratedCodeAttribute %>
         public static readonly System.Data.Linq.Mapping.MappingSource MappingCache = new System.Data.Linq.Mapping.AttributeMappingSource();
 
         #region ConnectionString
+        <%= GeneratedCodeAttribute %>
         private const string CONNECTION_NAME = "<%= DefaultConnectionString == null ? Database.Connection.SettingsPropertyName : DefaultConnectionString%>";
+        <%= GeneratedCodeAttribute %>
         private static volatile string _connectionString;
+        <%= GeneratedCodeAttribute %>
         private static object _connectionLock = new Object();
 
         /// <summary>The application connection string read from web.config or app.config</summary>
@@ -80,6 +83,7 @@ namespace <%= Database.ContextNamespace %>
         /// </configuration>
         /// ]]></code>
         /// </example>
+        <%= GeneratedCodeAttribute %>
         public static string ConnectionString
         {
             get
@@ -96,6 +100,7 @@ namespace <%= Database.ContextNamespace %>
             }
         }
 
+        <%= GeneratedCodeAttribute %>
         private static string GetDefaultConnectionString()
         {
             var settings = System.Configuration.ConfigurationManager.ConnectionStrings[CONNECTION_NAME];
@@ -114,6 +119,7 @@ namespace <%= Database.ContextNamespace %>
         /// Initializes a new instance of the <see cref="<%= Database.Class %>"/> class.
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
+        <%= GeneratedCodeAttribute %>
         <%= Naming.GetModifier(Database.AccessModifier) %> <%= Database.Class %>()
             : base(ConnectionString, MappingCache)
         {
@@ -125,6 +131,7 @@ namespace <%= Database.ContextNamespace %>
         /// </summary>
         /// <param name="connection">The connection string.</param>
         [System.Diagnostics.DebuggerNonUserCode]
+        <%= GeneratedCodeAttribute %>
         <%= Naming.GetModifier(Database.AccessModifier) %> <%= Database.Class %>(string connection)
             : base(connection, MappingCache)
         {
@@ -136,6 +143,7 @@ namespace <%= Database.ContextNamespace %>
         /// </summary>
         /// <param name="connection">The database connection.</param>
         [System.Diagnostics.DebuggerNonUserCode]
+        <%= GeneratedCodeAttribute %>
         <%= Naming.GetModifier(Database.AccessModifier) %> <%= Database.Class %>(System.Data.IDbConnection connection)
             : base(connection, MappingCache)
         {
@@ -148,6 +156,7 @@ namespace <%= Database.ContextNamespace %>
         /// <param name="connection">The connection string.</param>
         /// <param name="mappingSource">The mapping source.</param>
         [System.Diagnostics.DebuggerNonUserCode]
+        <%= GeneratedCodeAttribute %>
         <%= Naming.GetModifier(Database.AccessModifier) %> <%= Database.Class %>(string connection, System.Data.Linq.Mapping.MappingSource mappingSource)
             : base(connection, mappingSource)
         {
@@ -160,6 +169,7 @@ namespace <%= Database.ContextNamespace %>
         /// <param name="connection">The database connection.</param>
         /// <param name="mappingSource">The mapping source.</param>
         [System.Diagnostics.DebuggerNonUserCode]
+        <%= GeneratedCodeAttribute %>
         <%= Naming.GetModifier(Database.AccessModifier) %> <%= Database.Class %>(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource)
             : base(connection, mappingSource)
         {
@@ -170,6 +180,7 @@ namespace <%= Database.ContextNamespace %>
         #region Tables
 <% foreach (Table table in Database.Tables) { %>
         /// <summary>Represents the <%= table.Name %> table in the underlying database.</summary>
+        <%= GeneratedCodeAttribute %>
         <%= Naming.GetModifier(table.AccessModifier, table.Modifier) %> System.Data.Linq.Table<<%= Database.EntityNamespace %>.<%= table.Type.Name %>> <%= GetName(table) %>
         {
             get { return GetTable<<%= Database.EntityNamespace %>.<%= table.Type.Name %>>(); }
@@ -183,6 +194,7 @@ namespace <%= Database.ContextNamespace %>
         /// <summary>Method that is mapped to the <%= function.Name %> database procedure.</summary>
         /// <returns></returns>
         <%= CreateAttribute(function) %>
+        <%= GeneratedCodeAttribute %>
         <%= Naming.GetModifier(function.AccessModifier, function.Modifier) %> <%= GetReturnType(function) %> <%= function.Method %>(<%= GetArguments(function) %>)
         {
             var methodInfo = (System.Reflection.MethodInfo)System.Reflection.MethodInfo.GetCurrentMethod();
@@ -216,16 +228,20 @@ for(int x = 0; x < function.Parameters.Count; x++) {
 
         #region Extensibility Method Definitions
         /// <summary>Called after this instance is created.</summary>
+        <%= GeneratedCodeAttribute %>
         partial void OnCreated();
 <% foreach (Table table in Database.Tables) { %>
         /// <summary>Called before a <see cref="<%= table.Type.Name %>"/> is inserted.</summary>
         /// <param name="instance">The instance.</param>
+        <%= GeneratedCodeAttribute %>
         partial void Insert<%= table.Type.Name %>(<%= Database.EntityNamespace %>.<%= table.Type.Name %> instance);
         /// <summary>Called before a <see cref="<%= table.Type.Name %>"/> is updated.</summary>
         /// <param name="instance">The instance.</param>
+        <%= GeneratedCodeAttribute %>
         partial void Update<%= table.Type.Name %>(<%= Database.EntityNamespace %>.<%= table.Type.Name %> instance);
         /// <summary>Called before a <see cref="<%= table.Type.Name %>"/> is deleted.</summary>
         /// <param name="instance">The instance.</param>
+        <%= GeneratedCodeAttribute %>
         partial void Delete<%= table.Type.Name %>(<%= Database.EntityNamespace %>.<%= table.Type.Name %> instance);
 <% } %>
         #endregion
@@ -238,6 +254,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <param name="targetResource">Target object that defines the property.</param>
         /// <param name="propertyName">The name of the collection property to which the resource should be added..</param>
         /// <param name="resourceToBeAdded">The opaque object representing the resource to be added.</param>
+        <%= GeneratedCodeAttribute %>
         void System.Data.Services.IUpdatable.AddReferenceToCollection(object targetResource, string propertyName, object resourceToBeAdded)
         {
             var t = targetResource.GetType();
@@ -253,6 +270,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <summary>
         /// Cancels a change to the data.
         /// </summary>
+        <%= GeneratedCodeAttribute %>
         void System.Data.Services.IUpdatable.ClearChanges()
         {
             var mi = GetType().GetMethod("ClearCache",
@@ -272,6 +290,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <returns>
         /// The object representing a resource of specified type and belonging to the specified container.
         /// </returns>
+        <%= GeneratedCodeAttribute %>
         object System.Data.Services.IUpdatable.CreateResource(string containerName, string fullTypeName)
         {
             var t = Type.GetType(fullTypeName);
@@ -287,6 +306,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// Deletes the specified resource.
         /// </summary>
         /// <param name="targetResource">The resource to be deleted.</param>
+        <%= GeneratedCodeAttribute %>
         void System.Data.Services.IUpdatable.DeleteResource(object targetResource)
         {
             var t = targetResource.GetType();
@@ -302,6 +322,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <returns>
         /// An opaque object representing a resource of the specified type, referenced by the specified query.
         /// </returns>
+        <%= GeneratedCodeAttribute %>
         object System.Data.Services.IUpdatable.GetResource(System.Linq.IQueryable query, string fullTypeName)
         {
             object result = null;
@@ -328,6 +349,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <param name="targetResource">An opaque object that represents a resource.</param>
         /// <param name="propertyName">The name of the property whose value needs to be retrieved.</param>
         /// <returns></returns>
+        <%= GeneratedCodeAttribute %>
         object System.Data.Services.IUpdatable.GetValue(object targetResource, string propertyName)
         {
             var t = targetResource.GetType();
@@ -353,6 +375,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <param name="targetResource">The target object that defines the property.</param>
         /// <param name="propertyName">The name of the property whose value needs to be updated.</param>
         /// <param name="resourceToBeRemoved">The property value that needs to be removed.</param>
+        <%= GeneratedCodeAttribute %>
         void System.Data.Services.IUpdatable.RemoveReferenceFromCollection(object targetResource, string propertyName, object resourceToBeRemoved)
         {
             var t = targetResource.GetType();
@@ -372,6 +395,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <returns>
         /// Returns the instance of the resource represented by the specified resource object.
         /// </returns>
+        <%= GeneratedCodeAttribute %>
         object System.Data.Services.IUpdatable.ResolveResource(object resource)
         {
             return resource;
@@ -380,6 +404,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <summary>
         /// Saves all the changes that have been made by using the <see cref="T:System.Data.Services.IUpdatable"/> APIs.
         /// </summary>
+        <%= GeneratedCodeAttribute %>
         void System.Data.Services.IUpdatable.SaveChanges()
         {
             try
@@ -398,6 +423,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <param name="targetResource">The target object that defines the property.</param>
         /// <param name="propertyName">The name of the property whose value needs to be updated.</param>
         /// <param name="propertyValue">The property value to be updated.</param>
+        <%= GeneratedCodeAttribute %>
         void System.Data.Services.IUpdatable.SetReference(object targetResource, string propertyName, object propertyValue)
         {
             ((System.Data.Services.IUpdatable)this).SetValue(targetResource, propertyName, propertyValue);
@@ -409,6 +435,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <param name="targetResource">The target object that defines the property.</param>
         /// <param name="propertyName">The name of the property whose value needs to be updated.</param>
         /// <param name="propertyValue">The property value for update.</param>
+        <%= GeneratedCodeAttribute %>
         void System.Data.Services.IUpdatable.SetValue(object targetResource, string propertyName, object propertyValue)
         {
             var t = targetResource.GetType();
@@ -430,6 +457,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// </summary>
         /// <param name="resource">The resource to be updated.</param>
         /// <returns></returns>
+        <%= GeneratedCodeAttribute %>
         object System.Data.Services.IUpdatable.ResetResource(object resource)
         {
             var t = resource.GetType();
@@ -437,6 +465,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             return table.GetOriginalEntityState(resource);
         }
 
+        <%= GeneratedCodeAttribute %>
         private System.Reflection.PropertyInfo GetPropertyInfoForType(Type t, string propertyName, bool setter)
         {
             System.Reflection.PropertyInfo pi;
@@ -461,6 +490,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             return (pi);
         }
 
+        <%= GeneratedCodeAttribute %>
         private System.Data.Linq.ITable GetTableForType(Type t)
         {
             var table = GetTable(t);
@@ -470,6 +500,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
             return (table);
         }
 
+        <%= GeneratedCodeAttribute %>
         private static object Construct(Type t)
         {
             var ci = t.GetConstructor(Type.EmptyTypes);
@@ -485,11 +516,13 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         <% if (IncludeDataRules) { %>
 
         #region RuleManager
+        <%= GeneratedCodeAttribute %>
         private readonly CodeSmith.Data.Rules.RuleManager _ruleManager = new CodeSmith.Data.Rules.RuleManager();
 
         /// <summary>
         /// Gets the current <see cref="CodeSmith.Data.Rules.RuleManager"/> for the <see cref="System.Data.Linq.DataContext"/>.
         /// </summary>
+        <%= GeneratedCodeAttribute %>
         public CodeSmith.Data.Rules.RuleManager RuleManager
         {
             get { return _ruleManager; }
@@ -499,6 +532,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// Sends changes made to retrieved objects to the underlying database.
         /// </summary>
         /// <param name="failureMode">How concurrency conflicts should be reported.</param>
+        <%= GeneratedCodeAttribute %>
         public override void SubmitChanges(System.Data.Linq.ConflictMode failureMode)
         {
             bool isValid = RuleManager.Run(this);
@@ -514,20 +548,24 @@ for(int x = 0; x < function.Parameters.Count; x++) {
 
         #region Auditing
         /// <summary>Called before the underlying DataContext.SubmitChanges is called.</summary>
+        <%= GeneratedCodeAttribute %>
         partial void BeforeSubmitChanges();
 
+        <%= GeneratedCodeAttribute %>
         private bool _auditingEnabled = <%= AuditingEnabled.ToString().ToLowerInvariant() %>;
 
         /// <summary>
         /// Gets or sets a value indicating whether auditing is enabled.
         /// </summary>
         /// <value><c>true</c> if auditing is enabled; otherwise, <c>false</c>.</value>
+        <%= GeneratedCodeAttribute %>
         public bool AuditingEnabled
         {
             get { return _auditingEnabled; }
             set { _auditingEnabled = value; }
         }
 
+        <%= GeneratedCodeAttribute %>
         private CodeSmith.Data.Audit.AuditLog _lastAudit;
 
         /// <summary>
@@ -537,6 +575,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <remarks>
         /// <see cref="AuditingEnabled"/> must be <c>true</c> for <see cref="LastAudit"/> to be populated.
         /// </remarks>
+        <%= GeneratedCodeAttribute %>
         public CodeSmith.Data.Audit.AuditLog LastAudit
         {
             get { return _lastAudit; }
@@ -549,6 +588,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// <remarks>
         /// <see cref="AuditingEnabled"/> must be <c>true</c> for <see cref="LastAudit"/> to be populated.
         /// </remarks>
+        <%= GeneratedCodeAttribute %>
         protected virtual void PopulateLastAudit()
         {
             if (!AuditingEnabled)
@@ -563,6 +603,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
         /// Sends changes made to retrieved objects to the underlying database.
         /// </summary>
         /// <param name="refreshMode">Defines how to handle optimistic concurrency conflicts.</param>
+        <%= GeneratedCodeAttribute %>
         public void SubmitChanges(System.Data.Linq.RefreshMode refreshMode)
         {
             try
@@ -685,4 +726,9 @@ for(int x = 0; x < function.Parameters.Count; x++) {
 
         return s.ToString();
     }
+    
+    private static readonly string GeneratedCodeAttribute =  string.Format(
+        "[System.CodeDom.Compiler.GeneratedCode(\"CodeSmith\", \"{0}\")]",
+        typeof(CodeTemplate).Assembly.GetName().Version.ToString());
+
 </script>
