@@ -16,7 +16,7 @@ Namespace Tracker.Core.Data
     <System.Data.Linq.Mapping.Table(Name:="dbo.Task")> _
     <System.Runtime.Serialization.DataContract(IsReference:=True)> _
     <System.ComponentModel.DataAnnotations.ScaffoldTable(True)> _
-    <System.ComponentModel.DataAnnotations.MetadataType(GetType(Task.Metadata))> _
+    <System.ComponentModel.DataAnnotations.MetadataType(GetType(Tracker.Core.Data.Task.Metadata))> _
     <System.Data.Services.Common.DataServiceKey("Id")> _
     <System.Diagnostics.DebuggerDisplay("Id: {Id}")> _
     Partial Public Class Task

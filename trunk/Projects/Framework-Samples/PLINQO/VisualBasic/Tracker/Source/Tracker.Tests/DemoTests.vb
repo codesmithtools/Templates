@@ -173,7 +173,7 @@ Namespace Tracker.Tests
              .Log = Console.Out _
             }
                 Dim priorites As List(Of Task) = db.Task.Where(Function(t) Not t.Priority.HasValue OrElse t.Priority.Value = Priority.High).ToList()
-                Dim something As List(Of Task) = db.Task.ByPriority(Nothing, Priority.High).ToList()
+                Dim something As List(Of Task) = db.Task.ByPriority(Priority.High).ToList()
             End Using
         End Sub
 

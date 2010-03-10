@@ -58,27 +58,27 @@ Namespace Tracker.Tests.QueryTests
              .Log = Console.Out _
             }
 
-            Dim q1 As IQueryable(Of Task) = db.Task.BySummary("Earth", ContainmentOperator.Contains)
+            Dim q1 As IQueryable(Of Task) = db.Task.BySummary(ContainmentOperator.Contains, "Earth")
             Dim list As List(Of Task) = q1.ToList()
             Assert.IsNotNull(list)
 
-            Dim q2 As IQueryable(Of Task) = db.Task.BySummary("Make", ContainmentOperator.StartsWith)
+            Dim q2 As IQueryable(Of Task) = db.Task.BySummary(ContainmentOperator.StartsWith, "Make")
             list = q2.ToList()
             Assert.IsNotNull(list)
 
-            Dim q3 As IQueryable(Of Task) = db.Task.BySummary("Earth", ContainmentOperator.EndsWith)
+            Dim q3 As IQueryable(Of Task) = db.Task.BySummary(ContainmentOperator.EndsWith, "Earth")
             list = q3.ToList()
             Assert.IsNotNull(list)
 
-            Dim q4 As IQueryable(Of Task) = db.Task.BySummary("test", ContainmentOperator.NotContains)
+            Dim q4 As IQueryable(Of Task) = db.Task.BySummary(ContainmentOperator.NotContains, "test")
             list = q4.ToList()
             Assert.IsNotNull(list)
 
-            Dim q5 As IQueryable(Of Task) = db.Task.ByDetails(Nothing, ContainmentOperator.Equals)
+            Dim q5 As IQueryable(Of Task) = db.Task.ByDetails(ContainmentOperator.Equals, Nothing)
             list = q5.ToList()
             Assert.IsNotNull(list)
 
-            Dim q6 As IQueryable(Of Task) = db.Task.ByDetails(Nothing, ContainmentOperator.NotEquals)
+            Dim q6 As IQueryable(Of Task) = db.Task.ByDetails(ContainmentOperator.NotEquals, Nothing)
             list = q6.ToList()
             Assert.IsNotNull(list)
         End Sub
@@ -90,7 +90,7 @@ Namespace Tracker.Tests.QueryTests
              .Log = Console.Out _
             }
 
-            Dim q5 As IQueryable(Of Task) = db.Task.ByDetails(Nothing, ContainmentOperator.StartsWith)
+            Dim q5 As IQueryable(Of Task) = db.Task.ByDetails(ContainmentOperator.StartsWith, Nothing)
             Dim list As List(Of Task) = q5.ToList()
             Assert.IsNotNull(list)
         End Sub
@@ -102,7 +102,7 @@ Namespace Tracker.Tests.QueryTests
              .Log = Console.Out _
             }
 
-            Dim q6 As IQueryable(Of Task) = db.Task.ByDetails(Nothing, ContainmentOperator.EndsWith)
+            Dim q6 As IQueryable(Of Task) = db.Task.ByDetails(ContainmentOperator.EndsWith, Nothing)
             Dim list As List(Of Task) = q6.ToList()
             Assert.IsNotNull(list)
         End Sub
@@ -114,7 +114,7 @@ Namespace Tracker.Tests.QueryTests
              .Log = Console.Out _
             }
 
-            Dim q8 As IQueryable(Of Task) = db.Task.ByDetails(Nothing, ContainmentOperator.Contains)
+            Dim q8 As IQueryable(Of Task) = db.Task.ByDetails(ContainmentOperator.Contains, Nothing)
             Dim list As List(Of Task) = q8.ToList()
             Assert.IsNotNull(list)
         End Sub
@@ -125,31 +125,31 @@ Namespace Tracker.Tests.QueryTests
              .Log = Console.Out _
             }
 
-            Dim q1 As IQueryable(Of Task) = db.Task.ByStartDate(DateTime.Now, ComparisonOperator.GreaterThan)
+            Dim q1 As IQueryable(Of Task) = db.Task.ByStartDate(ComparisonOperator.GreaterThan, DateTime.Now)
             Dim list As List(Of Task) = q1.ToList()
             Assert.IsNotNull(list)
 
-            Dim q2 As IQueryable(Of Task) = db.Task.ByStartDate(DateTime.Now, ComparisonOperator.GreaterThanOrEquals)
+            Dim q2 As IQueryable(Of Task) = db.Task.ByStartDate(ComparisonOperator.GreaterThanOrEquals, DateTime.Now)
             list = q2.ToList()
             Assert.IsNotNull(list)
 
-            Dim q3 As IQueryable(Of Task) = db.Task.ByStartDate(DateTime.Now, ComparisonOperator.LessThan)
+            Dim q3 As IQueryable(Of Task) = db.Task.ByStartDate(ComparisonOperator.LessThan, DateTime.Now)
             list = q3.ToList()
             Assert.IsNotNull(list)
 
-            Dim q4 As IQueryable(Of Task) = db.Task.ByStartDate(DateTime.Now, ComparisonOperator.LessThanOrEquals)
+            Dim q4 As IQueryable(Of Task) = db.Task.ByStartDate(ComparisonOperator.LessThanOrEquals, DateTime.Now)
             list = q4.ToList()
             Assert.IsNotNull(list)
 
-            Dim q5 As IQueryable(Of Task) = db.Task.ByStartDate(DateTime.Now, ComparisonOperator.NotEquals)
+            Dim q5 As IQueryable(Of Task) = db.Task.ByStartDate(ComparisonOperator.NotEquals, DateTime.Now)
             list = q5.ToList()
             Assert.IsNotNull(list)
 
-            Dim q6 As IQueryable(Of Task) = db.Task.ByStartDate(Nothing, ComparisonOperator.Equals)
+            Dim q6 As IQueryable(Of Task) = db.Task.ByStartDate(ComparisonOperator.Equals, Nothing)
             list = q6.ToList()
             Assert.IsNotNull(list)
 
-            Dim q7 As IQueryable(Of Task) = db.Task.ByStartDate(Nothing, ComparisonOperator.NotEquals)
+            Dim q7 As IQueryable(Of Task) = db.Task.ByStartDate(ComparisonOperator.NotEquals, Nothing)
             list = q7.ToList()
             Assert.IsNotNull(list)
         End Sub
@@ -161,7 +161,7 @@ Namespace Tracker.Tests.QueryTests
              .Log = Console.Out _
             }
 
-            Dim q6 As IQueryable(Of Task) = db.Task.ByStartDate(Nothing, ComparisonOperator.GreaterThan)
+            Dim q6 As IQueryable(Of Task) = db.Task.ByStartDate(ComparisonOperator.GreaterThan, Nothing)
             Dim list As List(Of Task) = q6.ToList()
             Assert.IsNotNull(list)
         End Sub
@@ -173,7 +173,7 @@ Namespace Tracker.Tests.QueryTests
              .Log = Console.Out _
             }
 
-            Dim q6 As IQueryable(Of Task) = db.Task.ByStartDate(Nothing, ComparisonOperator.GreaterThanOrEquals)
+            Dim q6 As IQueryable(Of Task) = db.Task.ByStartDate(ComparisonOperator.GreaterThanOrEquals, Nothing)
             Dim list As List(Of Task) = q6.ToList()
             Assert.IsNotNull(list)
         End Sub
@@ -185,7 +185,7 @@ Namespace Tracker.Tests.QueryTests
              .Log = Console.Out _
             }
 
-            Dim q6 As IQueryable(Of Task) = db.Task.ByStartDate(Nothing, ComparisonOperator.LessThan)
+            Dim q6 As IQueryable(Of Task) = db.Task.ByStartDate(ComparisonOperator.LessThan, Nothing)
             Dim list As List(Of Task) = q6.ToList()
             Assert.IsNotNull(list)
         End Sub
@@ -197,7 +197,7 @@ Namespace Tracker.Tests.QueryTests
              .Log = Console.Out _
             }
 
-            Dim q6 As IQueryable(Of Task) = db.Task.ByStartDate(Nothing, ComparisonOperator.LessThanOrEquals)
+            Dim q6 As IQueryable(Of Task) = db.Task.ByStartDate(ComparisonOperator.LessThanOrEquals, Nothing)
             Dim list As List(Of Task) = q6.ToList()
             Assert.IsNotNull(list)
         End Sub

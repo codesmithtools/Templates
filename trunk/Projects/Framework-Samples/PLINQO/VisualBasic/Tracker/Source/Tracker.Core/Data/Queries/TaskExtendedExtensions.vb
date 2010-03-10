@@ -97,16 +97,16 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByTaskId(ByVal queryable As IQueryable(Of Tracker.Core.Data.TaskExtended), ByVal taskId As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.TaskExtended)
+        Public Function ByTaskId(ByVal queryable As IQueryable(Of Tracker.Core.Data.TaskExtended), ByVal comparison As ComparisonOperator, ByVal taskId As Integer) As IQueryable(Of Tracker.Core.Data.TaskExtended)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(t) taskId > t.TaskId)
+                    Return queryable.Where(Function(t) t.TaskId > taskId)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(t) taskId >= t.TaskId)
+                    Return queryable.Where(Function(t) t.TaskId >= taskId)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(t) taskId < t.TaskId)
+                    Return queryable.Where(Function(t) t.TaskId < taskId)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(t) taskId <= t.TaskId)
+                    Return queryable.Where(Function(t) t.TaskId <= taskId)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(t) t.TaskId <> taskId)
                 Case Else
@@ -172,7 +172,7 @@ Namespace Tracker.Core.Data
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByBrowser(ByVal queryable As IQueryable(Of Tracker.Core.Data.TaskExtended), ByVal browser As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.TaskExtended)
+        Public Function ByBrowser(ByVal queryable As IQueryable(Of Tracker.Core.Data.TaskExtended), ByVal containment As ContainmentOperator, ByVal browser As String) As IQueryable(Of Tracker.Core.Data.TaskExtended)
             If browser Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("browser", "Parameter 'browser' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
@@ -251,7 +251,7 @@ Namespace Tracker.Core.Data
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByOs(ByVal queryable As IQueryable(Of Tracker.Core.Data.TaskExtended), ByVal os As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.TaskExtended)
+        Public Function ByOs(ByVal queryable As IQueryable(Of Tracker.Core.Data.TaskExtended), ByVal containment As ContainmentOperator, ByVal os As String) As IQueryable(Of Tracker.Core.Data.TaskExtended)
             If os Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("os", "Parameter 'os' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
@@ -326,16 +326,16 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.TaskExtended), ByVal createdDate As Date, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.TaskExtended)
+        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.TaskExtended), ByVal comparison As ComparisonOperator, ByVal createdDate As Date) As IQueryable(Of Tracker.Core.Data.TaskExtended)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(t) createdDate > t.CreatedDate)
+                    Return queryable.Where(Function(t) t.CreatedDate > createdDate)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(t) createdDate >= t.CreatedDate)
+                    Return queryable.Where(Function(t) t.CreatedDate >= createdDate)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(t) createdDate < t.CreatedDate)
+                    Return queryable.Where(Function(t) t.CreatedDate < createdDate)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(t) createdDate <= t.CreatedDate)
+                    Return queryable.Where(Function(t) t.CreatedDate <= createdDate)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(t) t.CreatedDate <> createdDate)
                 Case Else
@@ -397,16 +397,16 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByModifiedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.TaskExtended), ByVal modifiedDate As Date, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.TaskExtended)
+        Public Function ByModifiedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.TaskExtended), ByVal comparison As ComparisonOperator, ByVal modifiedDate As Date) As IQueryable(Of Tracker.Core.Data.TaskExtended)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(t) modifiedDate > t.ModifiedDate)
+                    Return queryable.Where(Function(t) t.ModifiedDate > modifiedDate)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(t) modifiedDate >= t.ModifiedDate)
+                    Return queryable.Where(Function(t) t.ModifiedDate >= modifiedDate)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(t) modifiedDate < t.ModifiedDate)
+                    Return queryable.Where(Function(t) t.ModifiedDate < modifiedDate)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(t) modifiedDate <= t.ModifiedDate)
+                    Return queryable.Where(Function(t) t.ModifiedDate <= modifiedDate)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(t) t.ModifiedDate <> modifiedDate)
                 Case Else

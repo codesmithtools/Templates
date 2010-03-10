@@ -16,7 +16,7 @@ Namespace Tracker.Core.Data
     
     <System.Runtime.Serialization.DataContract(IsReference:=True)> _
     <System.ComponentModel.DataAnnotations.ScaffoldTable(True)> _
-    <System.ComponentModel.DataAnnotations.MetadataType(GetType(GetUsersWithRolesResult1.Metadata))> _
+    <System.ComponentModel.DataAnnotations.MetadataType(GetType(Tracker.Core.Data.GetUsersWithRolesResult1.Metadata))> _
     Partial Public Class GetUsersWithRolesResult1
 
 #Region "Static Constructor"

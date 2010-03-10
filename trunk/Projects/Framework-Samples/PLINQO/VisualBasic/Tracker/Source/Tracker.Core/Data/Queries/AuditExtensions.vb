@@ -97,16 +97,16 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal id As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.Audit)
+        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal comparison As ComparisonOperator, ByVal id As Integer) As IQueryable(Of Tracker.Core.Data.Audit)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(a) id > a.Id)
+                    Return queryable.Where(Function(a) a.Id > id)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(a) id >= a.Id)
+                    Return queryable.Where(Function(a) a.Id >= id)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(a) id < a.Id)
+                    Return queryable.Where(Function(a) a.Id < id)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(a) id <= a.Id)
+                    Return queryable.Where(Function(a) a.Id <= id)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(a) a.Id <> id)
                 Case Else
@@ -168,16 +168,16 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal myDate As Date, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.Audit)
+        Public Function ByDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal comparison As ComparisonOperator, ByVal myDate As Date) As IQueryable(Of Tracker.Core.Data.Audit)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(a) myDate > a.Date)
+                    Return queryable.Where(Function(a) a.Date > myDate)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(a) myDate >= a.Date)
+                    Return queryable.Where(Function(a) a.Date >= myDate)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(a) myDate < a.Date)
+                    Return queryable.Where(Function(a) a.Date < myDate)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(a) myDate <= a.Date)
+                    Return queryable.Where(Function(a) a.Date <= myDate)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(a) a.Date <> myDate)
                 Case Else
@@ -243,20 +243,20 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByUserId(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal userId As Integer?, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.Audit)
+        Public Function ByUserId(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal comparison As ComparisonOperator, ByVal userId As Integer?) As IQueryable(Of Tracker.Core.Data.Audit)
             If userId Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
                 Throw New ArgumentNullException("userId", "Parameter 'userId' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
             End If
             
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(a) userId > a.UserId)
+                    Return queryable.Where(Function(a) a.UserId > userId)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(a) userId >= a.UserId)
+                    Return queryable.Where(Function(a) a.UserId >= userId)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(a) userId < a.UserId)
+                    Return queryable.Where(Function(a) a.UserId < userId)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(a) userId <= a.UserId)
+                    Return queryable.Where(Function(a) a.UserId <= userId)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(a) Object.Equals(a.UserId, userId) = False)
                 Case Else
@@ -322,20 +322,20 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByTaskId(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal taskId As Integer?, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.Audit)
+        Public Function ByTaskId(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal comparison As ComparisonOperator, ByVal taskId As Integer?) As IQueryable(Of Tracker.Core.Data.Audit)
             If taskId Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
                 Throw New ArgumentNullException("taskId", "Parameter 'taskId' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
             End If
             
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(a) taskId > a.TaskId)
+                    Return queryable.Where(Function(a) a.TaskId > taskId)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(a) taskId >= a.TaskId)
+                    Return queryable.Where(Function(a) a.TaskId >= taskId)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(a) taskId < a.TaskId)
+                    Return queryable.Where(Function(a) a.TaskId < taskId)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(a) taskId <= a.TaskId)
+                    Return queryable.Where(Function(a) a.TaskId <= taskId)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(a) Object.Equals(a.TaskId, taskId) = False)
                 Case Else
@@ -397,7 +397,7 @@ Namespace Tracker.Core.Data
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByContent(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal content As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.Audit)
+        Public Function ByContent(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal containment As ContainmentOperator, ByVal content As String) As IQueryable(Of Tracker.Core.Data.Audit)
             If content Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("content", "Parameter 'content' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
@@ -472,7 +472,7 @@ Namespace Tracker.Core.Data
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByUsername(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal username As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.Audit)
+        Public Function ByUsername(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal containment As ContainmentOperator, ByVal username As String) As IQueryable(Of Tracker.Core.Data.Audit)
             If username Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("username", "Parameter 'username' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
@@ -547,16 +547,16 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal createdDate As Date, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.Audit)
+        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal comparison As ComparisonOperator, ByVal createdDate As Date) As IQueryable(Of Tracker.Core.Data.Audit)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(a) createdDate > a.CreatedDate)
+                    Return queryable.Where(Function(a) a.CreatedDate > createdDate)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(a) createdDate >= a.CreatedDate)
+                    Return queryable.Where(Function(a) a.CreatedDate >= createdDate)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(a) createdDate < a.CreatedDate)
+                    Return queryable.Where(Function(a) a.CreatedDate < createdDate)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(a) createdDate <= a.CreatedDate)
+                    Return queryable.Where(Function(a) a.CreatedDate <= createdDate)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(a) a.CreatedDate <> createdDate)
                 Case Else
@@ -622,7 +622,7 @@ Namespace Tracker.Core.Data
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByMyxml(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal myxml As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.Audit)
+        Public Function ByMyxml(ByVal queryable As IQueryable(Of Tracker.Core.Data.Audit), ByVal containment As ContainmentOperator, ByVal myxml As String) As IQueryable(Of Tracker.Core.Data.Audit)
             If myxml Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("myxml", "Parameter 'myxml' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
