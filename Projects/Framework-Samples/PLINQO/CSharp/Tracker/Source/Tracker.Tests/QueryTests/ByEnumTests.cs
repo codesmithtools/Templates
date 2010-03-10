@@ -43,8 +43,8 @@ namespace Tracker.Tests.QueryTests
                     var e = db.Task.ByPriority(Priority.Normal, null, Priority.High).ToList();
                     Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
 
-                    var f = db.Task.ByPriority(null, ComparisonOperator.NotEquals).ToList();
-                    var g = db.Task.ByPriority(null, ComparisonOperator.Equals).ToList();
+                    var f = db.Task.ByPriority(ComparisonOperator.NotEquals, null).ToList();
+                    var g = db.Task.ByPriority(ComparisonOperator.Equals, null).ToList();
 
                 }
 

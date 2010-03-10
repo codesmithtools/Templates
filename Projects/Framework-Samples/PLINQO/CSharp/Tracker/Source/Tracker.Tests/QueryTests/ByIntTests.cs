@@ -45,8 +45,8 @@ namespace Tracker.Tests.QueryTests
                 var e = db.Task.ByAssignedId(UserIds[1], null, UserIds[2]).ToList();
                 Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
 
-                var f = db.Task.ByAssignedId(null, ComparisonOperator.NotEquals).ToList();
-                var g = db.Task.ByAssignedId(null, ComparisonOperator.Equals).ToList();
+                var f = db.Task.ByAssignedId(ComparisonOperator.NotEquals, null).ToList();
+                var g = db.Task.ByAssignedId(ComparisonOperator.Equals, null).ToList();
                 
             }
 

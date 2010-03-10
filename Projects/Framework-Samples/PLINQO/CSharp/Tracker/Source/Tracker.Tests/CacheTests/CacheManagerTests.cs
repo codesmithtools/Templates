@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Text;
 using CodeSmith.Data.Caching;
+using CodeSmith.Data.Linq;
+
 using NUnit.Framework;
 using Tracker.Core.Data;
 
@@ -164,6 +166,15 @@ namespace Tracker.Tests.CacheTests
 
             i = CacheManager.Get<int>(key);
             Assert.AreEqual(hashCode, i);
+        }
+
+        [Test]
+        public void GetOrSetDataContext()
+        {
+            var db = new TrackerDataContext();
+
+            var user = CacheManager.GetOrSet("test@email.com", k => db.User.GetByEmailAddress(k));
+
         }
 
         [Test]

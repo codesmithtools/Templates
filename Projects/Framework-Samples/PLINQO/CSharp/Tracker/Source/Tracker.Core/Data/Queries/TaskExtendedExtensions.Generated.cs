@@ -60,21 +60,21 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.TaskExtended.TaskId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="taskId">TaskId to search for.</param>
+        /// <param name="taskId">TaskId to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.TaskExtended> ByTaskId(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, int taskId, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.TaskExtended> ByTaskId(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, ComparisonOperator comparisonOperator, int taskId)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(t => taskId > t.TaskId);
+                    return queryable.Where(t => t.TaskId > taskId);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(t => taskId >= t.TaskId);
+                    return queryable.Where(t => t.TaskId >= taskId);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(t => taskId < t.TaskId);
+                    return queryable.Where(t => t.TaskId < taskId);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(t => taskId <= t.TaskId);
+                    return queryable.Where(t => t.TaskId <= taskId);
                 case ComparisonOperator.NotEquals:
                     return queryable.Where(t => t.TaskId != taskId);
                 default:
@@ -134,7 +134,7 @@ namespace Tracker.Core.Data
         /// <param name="browser">Browser to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.TaskExtended> ByBrowser(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, string browser, ContainmentOperator containmentOperator)
+        public static IQueryable<Tracker.Core.Data.TaskExtended> ByBrowser(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, ContainmentOperator containmentOperator, string browser)
         {
             if (browser == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("browser", "Parameter 'browser' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
@@ -216,7 +216,7 @@ namespace Tracker.Core.Data
         /// <param name="os">Os to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.TaskExtended> ByOs(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, string os, ContainmentOperator containmentOperator)
+        public static IQueryable<Tracker.Core.Data.TaskExtended> ByOs(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, ContainmentOperator containmentOperator, string os)
         {
             if (os == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("os", "Parameter 'os' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
@@ -292,21 +292,21 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.TaskExtended.CreatedDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="createdDate">CreatedDate to search for.</param>
+        /// <param name="createdDate">CreatedDate to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.TaskExtended> ByCreatedDate(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, System.DateTime createdDate, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.TaskExtended> ByCreatedDate(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, ComparisonOperator comparisonOperator, System.DateTime createdDate)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(t => createdDate > t.CreatedDate);
+                    return queryable.Where(t => t.CreatedDate > createdDate);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(t => createdDate >= t.CreatedDate);
+                    return queryable.Where(t => t.CreatedDate >= createdDate);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(t => createdDate < t.CreatedDate);
+                    return queryable.Where(t => t.CreatedDate < createdDate);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(t => createdDate <= t.CreatedDate);
+                    return queryable.Where(t => t.CreatedDate <= createdDate);
                 case ComparisonOperator.NotEquals:
                     return queryable.Where(t => t.CreatedDate != createdDate);
                 default:
@@ -360,21 +360,21 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.TaskExtended.ModifiedDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="modifiedDate">ModifiedDate to search for.</param>
+        /// <param name="modifiedDate">ModifiedDate to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.TaskExtended> ByModifiedDate(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, System.DateTime modifiedDate, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.TaskExtended> ByModifiedDate(this IQueryable<Tracker.Core.Data.TaskExtended> queryable, ComparisonOperator comparisonOperator, System.DateTime modifiedDate)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(t => modifiedDate > t.ModifiedDate);
+                    return queryable.Where(t => t.ModifiedDate > modifiedDate);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(t => modifiedDate >= t.ModifiedDate);
+                    return queryable.Where(t => t.ModifiedDate >= modifiedDate);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(t => modifiedDate < t.ModifiedDate);
+                    return queryable.Where(t => t.ModifiedDate < modifiedDate);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(t => modifiedDate <= t.ModifiedDate);
+                    return queryable.Where(t => t.ModifiedDate <= modifiedDate);
                 case ComparisonOperator.NotEquals:
                     return queryable.Where(t => t.ModifiedDate != modifiedDate);
                 default:

@@ -60,10 +60,10 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.Guid.Id"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="id">Id to search for.</param>
+        /// <param name="id">Id to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.Guid> ById(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid id, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.Guid> ById(this IQueryable<Tracker.Core.Data.Guid> queryable, ComparisonOperator comparisonOperator, System.Guid id)
         {
             switch (comparisonOperator)
             {
@@ -128,10 +128,10 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.Guid.AlternateId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="alternateId">AlternateId to search for.</param>
+        /// <param name="alternateId">AlternateId to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.Guid> ByAlternateId(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid? alternateId, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.Guid> ByAlternateId(this IQueryable<Tracker.Core.Data.Guid> queryable, ComparisonOperator comparisonOperator, System.Guid? alternateId)
         {
             if (alternateId == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
                 throw new ArgumentNullException("alternateId", "Parameter 'alternateId' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
