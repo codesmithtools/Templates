@@ -204,7 +204,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>, ByVal containment As ContainmentOperator) As IQueryable(Of <%= safeName %>)
+        Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal containment As ContainmentOperator, ByVal <%= paramName %> As <%= columnType %>) As IQueryable(Of <%= safeName %>)
             If <%= paramName %> Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
@@ -241,7 +241,7 @@ Namespace <%= Database.ContextNamespace %>
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal <%= paramName %> As <%= columnType %>, ByVal comparison As ComparisonOperator) As IQueryable(Of <%= safeName %>)
+        Public Function <%= VBKeywordEscape(functionName) %>(ByVal queryable As IQueryable(Of <%= safeName %>), ByVal comparison As ComparisonOperator, ByVal <%= paramName %> As <%= columnType %>) As IQueryable(Of <%= safeName %>)
 <% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
             If <%= paramName %> Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
                 Throw New ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
@@ -254,13 +254,13 @@ Namespace <%= Database.ContextNamespace %>
                     Throw New ArgumentException("Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support <%= columnType %> type.", "comparison")
 <% Else %>
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(<%= myAlias %>) <%= paramName %> > <%= myAlias %>.<%= c.Member %>)
+                    Return queryable.Where(Function(<%= myAlias %>) <%= myAlias %>.<%= c.Member %> > <%= paramName %>)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(<%= myAlias %>) <%= paramName %> >= <%= myAlias %>.<%= c.Member %>)
+                    Return queryable.Where(Function(<%= myAlias %>) <%= myAlias %>.<%= c.Member %> >= <%= paramName %>)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(<%= myAlias %>) <%= paramName %> < <%= myAlias %>.<%= c.Member %>)
+                    Return queryable.Where(Function(<%= myAlias %>) <%= myAlias %>.<%= c.Member %> < <%= paramName %>)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(<%= myAlias %>) <%= paramName %> <= <%= myAlias %>.<%= c.Member %>)
+                    Return queryable.Where(Function(<%= myAlias %>) <%= myAlias %>.<%= c.Member %> <= <%= paramName %>)
 <% End If 'type guid %>
 <% If (c.CanBeNull.HasValue AndAlso c.CanBeNull.Value) Then %>
                 Case ComparisonOperator.NotEquals

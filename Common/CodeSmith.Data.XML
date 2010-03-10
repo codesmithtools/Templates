@@ -2693,6 +2693,40 @@
             <param name="pageSize">Size of the page.</param>
             <param name="totalCount">The total item count.</param>
         </member>
+        <member name="M:CodeSmith.Data.Linq.PagedList`1.NextPage">
+            <summary>
+            Gets the next page of data using the original source.
+            </summary>
+            <returns>
+            A new PageList with the current page index incremented. 
+            </returns>
+            <remarks>
+            The source, page size and total will be the same as the current PageList.
+            </remarks>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.PagedList`1.PreviousPage">
+            <summary>
+            Gets the previous page of data using the original source.
+            </summary>
+            <returns>
+            A new PageList with the current page index decremented. 
+            </returns>
+            <remarks>
+            The source, page size and total will be the same as the current PageList.
+            </remarks>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.PagedList`1.GotoPage(System.Int32)">
+            <summary>
+            Gets the paged list of data from the specified page index.
+            </summary>
+            <param name="pageIndex">The zero based index of the page.</param>
+            <returns>
+            A new PageList with data from the specified page index.
+            </returns>
+            <remarks>
+            The source, page size and total will be the same as the current PageList.
+            </remarks>
+        </member>
         <member name="P:CodeSmith.Data.Linq.PagedList`1.HasPreviousPage">
             <summary>
             Gets a value indicating whether this instance has previous page.
