@@ -86,8 +86,8 @@ namespace Tracker.Tests.QueryTests
                 var e = db.Guid.ByAlternateId(_guid2Alt, null, _guid3Alt).ToList();
                 Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
 
-                var f = db.Guid.ByAlternateId(null, ComparisonOperator.NotEquals).ToList();
-                var g = db.Guid.ByAlternateId(null, ComparisonOperator.Equals).ToList();
+                var f = db.Guid.ByAlternateId(ComparisonOperator.NotEquals, null).ToList();
+                var g = db.Guid.ByAlternateId(ComparisonOperator.Equals, null).ToList();
 
             }
 

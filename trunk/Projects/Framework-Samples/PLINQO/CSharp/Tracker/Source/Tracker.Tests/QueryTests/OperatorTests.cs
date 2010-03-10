@@ -52,27 +52,27 @@ namespace Tracker.Tests.QueryTests
         {
             var db = new TrackerDataContext { Log = Console.Out };
 
-            var q1 = db.Task.BySummary("Earth", ContainmentOperator.Contains);
+            var q1 = db.Task.BySummary(ContainmentOperator.Contains, "Earth");
             var list = q1.ToList();
             Assert.IsNotNull(list);
 
-            var q2 = db.Task.BySummary("Make", ContainmentOperator.StartsWith);
+            var q2 = db.Task.BySummary(ContainmentOperator.StartsWith, "Make");
             list = q2.ToList();
             Assert.IsNotNull(list);
 
-            var q3 = db.Task.BySummary("Earth", ContainmentOperator.EndsWith);
+            var q3 = db.Task.BySummary(ContainmentOperator.EndsWith, "Earth");
             list = q3.ToList();
             Assert.IsNotNull(list);
 
-            var q4 = db.Task.BySummary("test", ContainmentOperator.NotContains);
+            var q4 = db.Task.BySummary(ContainmentOperator.NotContains, "test");
             list = q4.ToList();
             Assert.IsNotNull(list);
 
-            var q5 = db.Task.ByDetails(null, ContainmentOperator.Equals);
+            var q5 = db.Task.ByDetails(ContainmentOperator.Equals, null);
             list = q5.ToList();
             Assert.IsNotNull(list);
 
-            var q6 = db.Task.ByDetails(null, ContainmentOperator.NotEquals);
+            var q6 = db.Task.ByDetails(ContainmentOperator.NotEquals, null);
             list = q6.ToList();
             Assert.IsNotNull(list);
         }
@@ -83,7 +83,7 @@ namespace Tracker.Tests.QueryTests
         {
             var db = new TrackerDataContext { Log = Console.Out };
 
-            var q5 = db.Task.ByDetails(null, ContainmentOperator.StartsWith);
+            var q5 = db.Task.ByDetails(ContainmentOperator.StartsWith, null);
             var list = q5.ToList();
             Assert.IsNotNull(list);          
         }
@@ -94,7 +94,7 @@ namespace Tracker.Tests.QueryTests
         {
             var db = new TrackerDataContext { Log = Console.Out };
 
-            var q6 = db.Task.ByDetails(null, ContainmentOperator.EndsWith);
+            var q6 = db.Task.ByDetails(ContainmentOperator.EndsWith, null);
             var list = q6.ToList();
             Assert.IsNotNull(list);
         }
@@ -105,7 +105,7 @@ namespace Tracker.Tests.QueryTests
         {
             var db = new TrackerDataContext { Log = Console.Out };
 
-            var q8 = db.Task.ByDetails(null, ContainmentOperator.Contains);
+            var q8 = db.Task.ByDetails(ContainmentOperator.Contains, null);
             var list = q8.ToList();
             Assert.IsNotNull(list);
         }
@@ -115,31 +115,31 @@ namespace Tracker.Tests.QueryTests
         {
             var db = new TrackerDataContext { Log = Console.Out };
 
-            var q1 = db.Task.ByStartDate(DateTime.Now, ComparisonOperator.GreaterThan);
+            var q1 = db.Task.ByStartDate(ComparisonOperator.GreaterThan, DateTime.Now);
             var list = q1.ToList();
             Assert.IsNotNull(list);
 
-            var q2 = db.Task.ByStartDate(DateTime.Now, ComparisonOperator.GreaterThanOrEquals);
+            var q2 = db.Task.ByStartDate(ComparisonOperator.GreaterThanOrEquals, DateTime.Now);
             list = q2.ToList();
             Assert.IsNotNull(list);
 
-            var q3 = db.Task.ByStartDate(DateTime.Now, ComparisonOperator.LessThan);
+            var q3 = db.Task.ByStartDate(ComparisonOperator.LessThan, DateTime.Now);
             list = q3.ToList();
             Assert.IsNotNull(list);
 
-            var q4 = db.Task.ByStartDate(DateTime.Now, ComparisonOperator.LessThanOrEquals);
+            var q4 = db.Task.ByStartDate(ComparisonOperator.LessThanOrEquals, DateTime.Now);
             list = q4.ToList();
             Assert.IsNotNull(list);
 
-            var q5 = db.Task.ByStartDate(DateTime.Now, ComparisonOperator.NotEquals);
+            var q5 = db.Task.ByStartDate(ComparisonOperator.NotEquals, DateTime.Now);
             list = q5.ToList();
             Assert.IsNotNull(list);
 
-            var q6 = db.Task.ByStartDate(null, ComparisonOperator.Equals);
+            var q6 = db.Task.ByStartDate(ComparisonOperator.Equals, null);
             list = q6.ToList();
             Assert.IsNotNull(list);
 
-            var q7 = db.Task.ByStartDate(null, ComparisonOperator.NotEquals);
+            var q7 = db.Task.ByStartDate(ComparisonOperator.NotEquals, null);
             list = q7.ToList();
             Assert.IsNotNull(list);
         }
@@ -150,7 +150,7 @@ namespace Tracker.Tests.QueryTests
         {
             var db = new TrackerDataContext { Log = Console.Out };
 
-            var q6 = db.Task.ByStartDate(null, ComparisonOperator.GreaterThan);
+            var q6 = db.Task.ByStartDate(ComparisonOperator.GreaterThan, null);
             var list = q6.ToList();
             Assert.IsNotNull(list);
         }
@@ -161,7 +161,7 @@ namespace Tracker.Tests.QueryTests
         {
             var db = new TrackerDataContext { Log = Console.Out };
 
-            var q6 = db.Task.ByStartDate(null, ComparisonOperator.GreaterThanOrEquals);
+            var q6 = db.Task.ByStartDate(ComparisonOperator.GreaterThanOrEquals, null);
             var list = q6.ToList();
             Assert.IsNotNull(list);
         }
@@ -172,7 +172,7 @@ namespace Tracker.Tests.QueryTests
         {
             var db = new TrackerDataContext { Log = Console.Out };
 
-            var q6 = db.Task.ByStartDate(null, ComparisonOperator.LessThan);
+            var q6 = db.Task.ByStartDate(ComparisonOperator.LessThan, null);
             var list = q6.ToList();
             Assert.IsNotNull(list);
         }
@@ -183,7 +183,7 @@ namespace Tracker.Tests.QueryTests
         {
             var db = new TrackerDataContext { Log = Console.Out };
 
-            var q6 = db.Task.ByStartDate(null, ComparisonOperator.LessThanOrEquals);
+            var q6 = db.Task.ByStartDate(ComparisonOperator.LessThanOrEquals, null);
             var list = q6.ToList();
             Assert.IsNotNull(list);
         }

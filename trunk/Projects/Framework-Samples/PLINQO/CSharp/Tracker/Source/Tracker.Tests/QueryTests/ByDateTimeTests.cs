@@ -40,8 +40,8 @@ namespace Tracker.Tests.QueryTests
                 var e = db.Task.ByDueDate(DueDates[0], null, DueDates[1]).ToList();
                 Assert.AreEqual(a.Count + b.Count + c.Count, e.Count);
 
-                var f = db.Task.ByDueDate(null, ComparisonOperator.NotEquals).ToList();
-                var g = db.Task.ByDueDate(null, ComparisonOperator.Equals).ToList();
+                var f = db.Task.ByDueDate(ComparisonOperator.NotEquals, null).ToList();
+                var g = db.Task.ByDueDate(ComparisonOperator.Equals, null).ToList();
 
             }
 

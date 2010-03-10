@@ -73,21 +73,21 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.User.Id"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="id">Id to search for.</param>
+        /// <param name="id">Id to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ById(this IQueryable<Tracker.Core.Data.User> queryable, int id, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.User> ById(this IQueryable<Tracker.Core.Data.User> queryable, ComparisonOperator comparisonOperator, int id)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(u => id > u.Id);
+                    return queryable.Where(u => u.Id > id);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(u => id >= u.Id);
+                    return queryable.Where(u => u.Id >= id);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(u => id < u.Id);
+                    return queryable.Where(u => u.Id < id);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(u => id <= u.Id);
+                    return queryable.Where(u => u.Id <= id);
                 case ComparisonOperator.NotEquals:
                     return queryable.Where(u => u.Id != id);
                 default:
@@ -144,7 +144,7 @@ namespace Tracker.Core.Data
         /// <param name="emailAddress">EmailAddress to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByEmailAddress(this IQueryable<Tracker.Core.Data.User> queryable, string emailAddress, ContainmentOperator containmentOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByEmailAddress(this IQueryable<Tracker.Core.Data.User> queryable, ContainmentOperator containmentOperator, string emailAddress)
         {
             if (emailAddress == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("emailAddress", "Parameter 'emailAddress' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
@@ -218,7 +218,7 @@ namespace Tracker.Core.Data
         /// <param name="firstName">FirstName to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByFirstName(this IQueryable<Tracker.Core.Data.User> queryable, string firstName, ContainmentOperator containmentOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByFirstName(this IQueryable<Tracker.Core.Data.User> queryable, ContainmentOperator containmentOperator, string firstName)
         {
             if (firstName == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("firstName", "Parameter 'firstName' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
@@ -300,7 +300,7 @@ namespace Tracker.Core.Data
         /// <param name="lastName">LastName to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByLastName(this IQueryable<Tracker.Core.Data.User> queryable, string lastName, ContainmentOperator containmentOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByLastName(this IQueryable<Tracker.Core.Data.User> queryable, ContainmentOperator containmentOperator, string lastName)
         {
             if (lastName == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("lastName", "Parameter 'lastName' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
@@ -376,21 +376,21 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.User.CreatedDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="createdDate">CreatedDate to search for.</param>
+        /// <param name="createdDate">CreatedDate to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByCreatedDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime createdDate, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByCreatedDate(this IQueryable<Tracker.Core.Data.User> queryable, ComparisonOperator comparisonOperator, System.DateTime createdDate)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(u => createdDate > u.CreatedDate);
+                    return queryable.Where(u => u.CreatedDate > createdDate);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(u => createdDate >= u.CreatedDate);
+                    return queryable.Where(u => u.CreatedDate >= createdDate);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(u => createdDate < u.CreatedDate);
+                    return queryable.Where(u => u.CreatedDate < createdDate);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(u => createdDate <= u.CreatedDate);
+                    return queryable.Where(u => u.CreatedDate <= createdDate);
                 case ComparisonOperator.NotEquals:
                     return queryable.Where(u => u.CreatedDate != createdDate);
                 default:
@@ -444,21 +444,21 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.User.ModifiedDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="modifiedDate">ModifiedDate to search for.</param>
+        /// <param name="modifiedDate">ModifiedDate to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByModifiedDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime modifiedDate, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByModifiedDate(this IQueryable<Tracker.Core.Data.User> queryable, ComparisonOperator comparisonOperator, System.DateTime modifiedDate)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(u => modifiedDate > u.ModifiedDate);
+                    return queryable.Where(u => u.ModifiedDate > modifiedDate);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(u => modifiedDate >= u.ModifiedDate);
+                    return queryable.Where(u => u.ModifiedDate >= modifiedDate);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(u => modifiedDate < u.ModifiedDate);
+                    return queryable.Where(u => u.ModifiedDate < modifiedDate);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(u => modifiedDate <= u.ModifiedDate);
+                    return queryable.Where(u => u.ModifiedDate <= modifiedDate);
                 case ComparisonOperator.NotEquals:
                     return queryable.Where(u => u.ModifiedDate != modifiedDate);
                 default:
@@ -515,7 +515,7 @@ namespace Tracker.Core.Data
         /// <param name="passwordHash">PasswordHash to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByPasswordHash(this IQueryable<Tracker.Core.Data.User> queryable, string passwordHash, ContainmentOperator containmentOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByPasswordHash(this IQueryable<Tracker.Core.Data.User> queryable, ContainmentOperator containmentOperator, string passwordHash)
         {
             if (passwordHash == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("passwordHash", "Parameter 'passwordHash' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
@@ -586,7 +586,7 @@ namespace Tracker.Core.Data
         /// <param name="passwordSalt">PasswordSalt to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByPasswordSalt(this IQueryable<Tracker.Core.Data.User> queryable, string passwordSalt, ContainmentOperator containmentOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByPasswordSalt(this IQueryable<Tracker.Core.Data.User> queryable, ContainmentOperator containmentOperator, string passwordSalt)
         {
             if (passwordSalt == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("passwordSalt", "Parameter 'passwordSalt' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
@@ -660,7 +660,7 @@ namespace Tracker.Core.Data
         /// <param name="comment">Comment to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByComment(this IQueryable<Tracker.Core.Data.User> queryable, string comment, ContainmentOperator containmentOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByComment(this IQueryable<Tracker.Core.Data.User> queryable, ContainmentOperator containmentOperator, string comment)
         {
             if (comment == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("comment", "Parameter 'comment' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
@@ -736,10 +736,10 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.User.IsApproved"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="isApproved">IsApproved to search for.</param>
+        /// <param name="isApproved">IsApproved to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByIsApproved(this IQueryable<Tracker.Core.Data.User> queryable, bool isApproved, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByIsApproved(this IQueryable<Tracker.Core.Data.User> queryable, ComparisonOperator comparisonOperator, bool isApproved)
         {
             switch (comparisonOperator)
             {
@@ -804,10 +804,10 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.User.LastLoginDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="lastLoginDate">LastLoginDate to search for.</param>
+        /// <param name="lastLoginDate">LastLoginDate to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByLastLoginDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime? lastLoginDate, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByLastLoginDate(this IQueryable<Tracker.Core.Data.User> queryable, ComparisonOperator comparisonOperator, System.DateTime? lastLoginDate)
         {
             if (lastLoginDate == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
                 throw new ArgumentNullException("lastLoginDate", "Parameter 'lastLoginDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
@@ -815,13 +815,13 @@ namespace Tracker.Core.Data
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(u => lastLoginDate > u.LastLoginDate);
+                    return queryable.Where(u => u.LastLoginDate > lastLoginDate);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(u => lastLoginDate >= u.LastLoginDate);
+                    return queryable.Where(u => u.LastLoginDate >= lastLoginDate);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(u => lastLoginDate < u.LastLoginDate);
+                    return queryable.Where(u => u.LastLoginDate < lastLoginDate);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(u => lastLoginDate <= u.LastLoginDate);
+                    return queryable.Where(u => u.LastLoginDate <= lastLoginDate);
                 case ComparisonOperator.NotEquals:
                     return lastLoginDate == null 
                         ? queryable.Where(u => u.LastLoginDate != null) 
@@ -883,21 +883,21 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.User.LastActivityDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="lastActivityDate">LastActivityDate to search for.</param>
+        /// <param name="lastActivityDate">LastActivityDate to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByLastActivityDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime lastActivityDate, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByLastActivityDate(this IQueryable<Tracker.Core.Data.User> queryable, ComparisonOperator comparisonOperator, System.DateTime lastActivityDate)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(u => lastActivityDate > u.LastActivityDate);
+                    return queryable.Where(u => u.LastActivityDate > lastActivityDate);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(u => lastActivityDate >= u.LastActivityDate);
+                    return queryable.Where(u => u.LastActivityDate >= lastActivityDate);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(u => lastActivityDate < u.LastActivityDate);
+                    return queryable.Where(u => u.LastActivityDate < lastActivityDate);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(u => lastActivityDate <= u.LastActivityDate);
+                    return queryable.Where(u => u.LastActivityDate <= lastActivityDate);
                 case ComparisonOperator.NotEquals:
                     return queryable.Where(u => u.LastActivityDate != lastActivityDate);
                 default:
@@ -954,10 +954,10 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.User.LastPasswordChangeDate"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="lastPasswordChangeDate">LastPasswordChangeDate to search for.</param>
+        /// <param name="lastPasswordChangeDate">LastPasswordChangeDate to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Core.Data.User> queryable, System.DateTime? lastPasswordChangeDate, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByLastPasswordChangeDate(this IQueryable<Tracker.Core.Data.User> queryable, ComparisonOperator comparisonOperator, System.DateTime? lastPasswordChangeDate)
         {
             if (lastPasswordChangeDate == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
                 throw new ArgumentNullException("lastPasswordChangeDate", "Parameter 'lastPasswordChangeDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
@@ -965,13 +965,13 @@ namespace Tracker.Core.Data
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(u => lastPasswordChangeDate > u.LastPasswordChangeDate);
+                    return queryable.Where(u => u.LastPasswordChangeDate > lastPasswordChangeDate);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(u => lastPasswordChangeDate >= u.LastPasswordChangeDate);
+                    return queryable.Where(u => u.LastPasswordChangeDate >= lastPasswordChangeDate);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(u => lastPasswordChangeDate < u.LastPasswordChangeDate);
+                    return queryable.Where(u => u.LastPasswordChangeDate < lastPasswordChangeDate);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(u => lastPasswordChangeDate <= u.LastPasswordChangeDate);
+                    return queryable.Where(u => u.LastPasswordChangeDate <= lastPasswordChangeDate);
                 case ComparisonOperator.NotEquals:
                     return lastPasswordChangeDate == null 
                         ? queryable.Where(u => u.LastPasswordChangeDate != null) 
@@ -1039,7 +1039,7 @@ namespace Tracker.Core.Data
         /// <param name="avatarType">AvatarType to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.User> ByAvatarType(this IQueryable<Tracker.Core.Data.User> queryable, string avatarType, ContainmentOperator containmentOperator)
+        public static IQueryable<Tracker.Core.Data.User> ByAvatarType(this IQueryable<Tracker.Core.Data.User> queryable, ContainmentOperator containmentOperator, string avatarType)
         {
             if (avatarType == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("avatarType", "Parameter 'avatarType' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");

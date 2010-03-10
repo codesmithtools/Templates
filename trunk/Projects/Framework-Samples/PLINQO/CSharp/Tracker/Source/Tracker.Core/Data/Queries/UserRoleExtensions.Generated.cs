@@ -62,21 +62,21 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.UserRole.UserId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="userId">UserId to search for.</param>
+        /// <param name="userId">UserId to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.UserRole> ByUserId(this IQueryable<Tracker.Core.Data.UserRole> queryable, int userId, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.UserRole> ByUserId(this IQueryable<Tracker.Core.Data.UserRole> queryable, ComparisonOperator comparisonOperator, int userId)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(u => userId > u.UserId);
+                    return queryable.Where(u => u.UserId > userId);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(u => userId >= u.UserId);
+                    return queryable.Where(u => u.UserId >= userId);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(u => userId < u.UserId);
+                    return queryable.Where(u => u.UserId < userId);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(u => userId <= u.UserId);
+                    return queryable.Where(u => u.UserId <= userId);
                 case ComparisonOperator.NotEquals:
                     return queryable.Where(u => u.UserId != userId);
                 default:
@@ -130,21 +130,21 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.UserRole.RoleId"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="roleId">RoleId to search for.</param>
+        /// <param name="roleId">RoleId to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<Tracker.Core.Data.UserRole> ByRoleId(this IQueryable<Tracker.Core.Data.UserRole> queryable, int roleId, ComparisonOperator comparisonOperator)
+        public static IQueryable<Tracker.Core.Data.UserRole> ByRoleId(this IQueryable<Tracker.Core.Data.UserRole> queryable, ComparisonOperator comparisonOperator, int roleId)
         {
             switch (comparisonOperator)
             {
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(u => roleId > u.RoleId);
+                    return queryable.Where(u => u.RoleId > roleId);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(u => roleId >= u.RoleId);
+                    return queryable.Where(u => u.RoleId >= roleId);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(u => roleId < u.RoleId);
+                    return queryable.Where(u => u.RoleId < roleId);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(u => roleId <= u.RoleId);
+                    return queryable.Where(u => u.RoleId <= roleId);
                 case ComparisonOperator.NotEquals:
                     return queryable.Where(u => u.RoleId != roleId);
                 default:
