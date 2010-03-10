@@ -406,6 +406,25 @@ namespace Tracker.Tests
 
                 Assert.IsNotNull(users);
                 Assert.AreEqual(5, users.Count);
+
+                var p2 = users.NextPage();
+                Assert.IsNotNull(p2);
+                Assert.AreEqual(2, p2.PageNumber);
+
+                var p21 = p2.NextPage();
+                Assert.IsNotNull(p21);
+                Assert.AreEqual(3, p21.PageNumber);
+
+                var p22 = p21.NextPage();
+                Assert.IsNull(p22);
+
+                var p3 = users.PreviousPage();
+                Assert.IsNull(p3);
+
+                var p4 = users.GotoPage(2);
+                Assert.IsNotNull(p4);
+                Assert.AreEqual(3, p4.PageNumber);
+
             }
         }
     }
