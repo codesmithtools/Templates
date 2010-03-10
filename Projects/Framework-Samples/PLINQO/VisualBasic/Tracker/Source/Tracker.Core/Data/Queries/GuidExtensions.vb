@@ -97,7 +97,7 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal id As System.Guid, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.Guid)
+        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal comparison As ComparisonOperator, ByVal id As System.Guid) As IQueryable(Of Tracker.Core.Data.Guid)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan, ComparisonOperator.GreaterThanOrEquals, ComparisonOperator.LessThan, ComparisonOperator.LessThanOrEquals
                     Throw New ArgumentException("Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support System.Guid type.", "comparison")
@@ -166,7 +166,7 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByAlternateId(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal alternateId As System.Guid?, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.Guid)
+        Public Function ByAlternateId(ByVal queryable As IQueryable(Of Tracker.Core.Data.Guid), ByVal comparison As ComparisonOperator, ByVal alternateId As System.Guid?) As IQueryable(Of Tracker.Core.Data.Guid)
             If alternateId Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
                 Throw New ArgumentNullException("alternateId", "Parameter 'alternateId' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
             End If

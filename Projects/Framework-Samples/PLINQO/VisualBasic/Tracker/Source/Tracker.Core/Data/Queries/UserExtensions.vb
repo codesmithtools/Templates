@@ -112,16 +112,16 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal id As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ById(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal comparison As ComparisonOperator, ByVal id As Integer) As IQueryable(Of Tracker.Core.Data.User)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(u) id > u.Id)
+                    Return queryable.Where(Function(u) u.Id > id)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(u) id >= u.Id)
+                    Return queryable.Where(Function(u) u.Id >= id)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(u) id < u.Id)
+                    Return queryable.Where(Function(u) u.Id < id)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(u) id <= u.Id)
+                    Return queryable.Where(Function(u) u.Id <= id)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(u) u.Id <> id)
                 Case Else
@@ -183,7 +183,7 @@ Namespace Tracker.Core.Data
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByEmailAddress(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal emailAddress As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByEmailAddress(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal containment As ContainmentOperator, ByVal emailAddress As String) As IQueryable(Of Tracker.Core.Data.User)
             If emailAddress Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("emailAddress", "Parameter 'emailAddress' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
@@ -262,7 +262,7 @@ Namespace Tracker.Core.Data
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByFirstName(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal firstName As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByFirstName(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal containment As ContainmentOperator, ByVal firstName As String) As IQueryable(Of Tracker.Core.Data.User)
             If firstName Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("firstName", "Parameter 'firstName' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
@@ -341,7 +341,7 @@ Namespace Tracker.Core.Data
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByLastName(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastName As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByLastName(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal containment As ContainmentOperator, ByVal lastName As String) As IQueryable(Of Tracker.Core.Data.User)
             If lastName Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("lastName", "Parameter 'lastName' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
@@ -416,16 +416,16 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal createdDate As Date, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByCreatedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal comparison As ComparisonOperator, ByVal createdDate As Date) As IQueryable(Of Tracker.Core.Data.User)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(u) createdDate > u.CreatedDate)
+                    Return queryable.Where(Function(u) u.CreatedDate > createdDate)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(u) createdDate >= u.CreatedDate)
+                    Return queryable.Where(Function(u) u.CreatedDate >= createdDate)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(u) createdDate < u.CreatedDate)
+                    Return queryable.Where(Function(u) u.CreatedDate < createdDate)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(u) createdDate <= u.CreatedDate)
+                    Return queryable.Where(Function(u) u.CreatedDate <= createdDate)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(u) u.CreatedDate <> createdDate)
                 Case Else
@@ -487,16 +487,16 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByModifiedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal modifiedDate As Date, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByModifiedDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal comparison As ComparisonOperator, ByVal modifiedDate As Date) As IQueryable(Of Tracker.Core.Data.User)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(u) modifiedDate > u.ModifiedDate)
+                    Return queryable.Where(Function(u) u.ModifiedDate > modifiedDate)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(u) modifiedDate >= u.ModifiedDate)
+                    Return queryable.Where(Function(u) u.ModifiedDate >= modifiedDate)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(u) modifiedDate < u.ModifiedDate)
+                    Return queryable.Where(Function(u) u.ModifiedDate < modifiedDate)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(u) modifiedDate <= u.ModifiedDate)
+                    Return queryable.Where(Function(u) u.ModifiedDate <= modifiedDate)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(u) u.ModifiedDate <> modifiedDate)
                 Case Else
@@ -558,7 +558,7 @@ Namespace Tracker.Core.Data
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByPasswordHash(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal passwordHash As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByPasswordHash(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal containment As ContainmentOperator, ByVal passwordHash As String) As IQueryable(Of Tracker.Core.Data.User)
             If passwordHash Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("passwordHash", "Parameter 'passwordHash' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
@@ -633,7 +633,7 @@ Namespace Tracker.Core.Data
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByPasswordSalt(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal passwordSalt As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByPasswordSalt(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal containment As ContainmentOperator, ByVal passwordSalt As String) As IQueryable(Of Tracker.Core.Data.User)
             If passwordSalt Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("passwordSalt", "Parameter 'passwordSalt' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
@@ -712,7 +712,7 @@ Namespace Tracker.Core.Data
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByComment(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal comment As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByComment(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal containment As ContainmentOperator, ByVal comment As String) As IQueryable(Of Tracker.Core.Data.User)
             If comment Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("comment", "Parameter 'comment' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If
@@ -787,7 +787,7 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByIsApproved(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal isApproved As Boolean, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByIsApproved(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal comparison As ComparisonOperator, ByVal isApproved As Boolean) As IQueryable(Of Tracker.Core.Data.User)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan, ComparisonOperator.GreaterThanOrEquals, ComparisonOperator.LessThan, ComparisonOperator.LessThanOrEquals
                     Throw New ArgumentException("Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support Boolean type.", "comparison")
@@ -856,20 +856,20 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByLastLoginDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastLoginDate As Date?, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByLastLoginDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal comparison As ComparisonOperator, ByVal lastLoginDate As Date?) As IQueryable(Of Tracker.Core.Data.User)
             If lastLoginDate Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
                 Throw New ArgumentNullException("lastLoginDate", "Parameter 'lastLoginDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
             End If
             
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(u) lastLoginDate > u.LastLoginDate)
+                    Return queryable.Where(Function(u) u.LastLoginDate > lastLoginDate)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(u) lastLoginDate >= u.LastLoginDate)
+                    Return queryable.Where(Function(u) u.LastLoginDate >= lastLoginDate)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(u) lastLoginDate < u.LastLoginDate)
+                    Return queryable.Where(Function(u) u.LastLoginDate < lastLoginDate)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(u) lastLoginDate <= u.LastLoginDate)
+                    Return queryable.Where(Function(u) u.LastLoginDate <= lastLoginDate)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(u) Object.Equals(u.LastLoginDate, lastLoginDate) = False)
                 Case Else
@@ -931,16 +931,16 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByLastActivityDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastActivityDate As Date, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByLastActivityDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal comparison As ComparisonOperator, ByVal lastActivityDate As Date) As IQueryable(Of Tracker.Core.Data.User)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(u) lastActivityDate > u.LastActivityDate)
+                    Return queryable.Where(Function(u) u.LastActivityDate > lastActivityDate)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(u) lastActivityDate >= u.LastActivityDate)
+                    Return queryable.Where(Function(u) u.LastActivityDate >= lastActivityDate)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(u) lastActivityDate < u.LastActivityDate)
+                    Return queryable.Where(Function(u) u.LastActivityDate < lastActivityDate)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(u) lastActivityDate <= u.LastActivityDate)
+                    Return queryable.Where(Function(u) u.LastActivityDate <= lastActivityDate)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(u) u.LastActivityDate <> lastActivityDate)
                 Case Else
@@ -1006,20 +1006,20 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByLastPasswordChangeDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal lastPasswordChangeDate As Date?, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByLastPasswordChangeDate(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal comparison As ComparisonOperator, ByVal lastPasswordChangeDate As Date?) As IQueryable(Of Tracker.Core.Data.User)
             If lastPasswordChangeDate Is Nothing AndAlso comparison <> ComparisonOperator.Equals AndAlso comparison <> ComparisonOperator.NotEquals Then
                 Throw New ArgumentNullException("lastPasswordChangeDate", "Parameter 'lastPasswordChangeDate' cannot be null with the specified ComparisonOperator.  Parameter 'comparison' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.")
             End If
             
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(u) lastPasswordChangeDate > u.LastPasswordChangeDate)
+                    Return queryable.Where(Function(u) u.LastPasswordChangeDate > lastPasswordChangeDate)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(u) lastPasswordChangeDate >= u.LastPasswordChangeDate)
+                    Return queryable.Where(Function(u) u.LastPasswordChangeDate >= lastPasswordChangeDate)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(u) lastPasswordChangeDate < u.LastPasswordChangeDate)
+                    Return queryable.Where(Function(u) u.LastPasswordChangeDate < lastPasswordChangeDate)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(u) lastPasswordChangeDate <= u.LastPasswordChangeDate)
+                    Return queryable.Where(Function(u) u.LastPasswordChangeDate <= lastPasswordChangeDate)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(u) Object.Equals(u.LastPasswordChangeDate, lastPasswordChangeDate) = False)
                 Case Else
@@ -1085,7 +1085,7 @@ Namespace Tracker.Core.Data
         ''' <param name="containment">The containment operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByAvatarType(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal avatarType As String, ByVal containment As ContainmentOperator) As IQueryable(Of Tracker.Core.Data.User)
+        Public Function ByAvatarType(ByVal queryable As IQueryable(Of Tracker.Core.Data.User), ByVal containment As ContainmentOperator, ByVal avatarType As String) As IQueryable(Of Tracker.Core.Data.User)
             If avatarType Is Nothing AndAlso containment <> ContainmentOperator.Equals AndAlso containment <> ContainmentOperator.NotEquals Then
                 Throw New ArgumentNullException("avatarType", "Parameter 'avatarType' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.")
             End If

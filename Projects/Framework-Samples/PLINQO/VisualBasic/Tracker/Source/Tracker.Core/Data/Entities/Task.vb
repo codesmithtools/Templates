@@ -31,7 +31,7 @@ Namespace Tracker.Core.Data
                 End Set
             End Property
             
-            Public Property StatusId() As Object
+            Public Property Status() As Object
                 Get
                     Return Nothing
                 End Get
@@ -39,7 +39,7 @@ Namespace Tracker.Core.Data
                 End Set
             End Property
             
-            Public Property PriorityId() As Object
+            Public Property Priority() As Object
                 Get
                     Return Nothing
                 End Get

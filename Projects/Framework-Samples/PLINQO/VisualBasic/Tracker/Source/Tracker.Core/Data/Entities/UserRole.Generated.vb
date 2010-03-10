@@ -16,7 +16,7 @@ Namespace Tracker.Core.Data
     <System.Data.Linq.Mapping.Table(Name:="dbo.UserRole")> _
     <System.Runtime.Serialization.DataContract(IsReference:=True)> _
     <System.ComponentModel.DataAnnotations.ScaffoldTable(True)> _
-    <System.ComponentModel.DataAnnotations.MetadataType(GetType(UserRole.Metadata))> _
+    <System.ComponentModel.DataAnnotations.MetadataType(GetType(Tracker.Core.Data.UserRole.Metadata))> _
     <System.Data.Services.Common.DataServiceKey("UserId", "RoleId")> _
     <System.Diagnostics.DebuggerDisplay("UserId: {UserId}, RoleId: {RoleId}")> _
     Partial Public Class UserRole

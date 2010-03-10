@@ -99,16 +99,16 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByUserId(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal userId As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.UserRole)
+        Public Function ByUserId(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal comparison As ComparisonOperator, ByVal userId As Integer) As IQueryable(Of Tracker.Core.Data.UserRole)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(u) userId > u.UserId)
+                    Return queryable.Where(Function(u) u.UserId > userId)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(u) userId >= u.UserId)
+                    Return queryable.Where(Function(u) u.UserId >= userId)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(u) userId < u.UserId)
+                    Return queryable.Where(Function(u) u.UserId < userId)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(u) userId <= u.UserId)
+                    Return queryable.Where(Function(u) u.UserId <= userId)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(u) u.UserId <> userId)
                 Case Else
@@ -170,16 +170,16 @@ Namespace Tracker.Core.Data
         ''' <param name="comparison">The comparison operator.</param>
         ''' <returns>IQueryable with additional where clause.</returns>
         <System.Runtime.CompilerServices.Extension()> _
-        Public Function ByRoleId(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal roleId As Integer, ByVal comparison As ComparisonOperator) As IQueryable(Of Tracker.Core.Data.UserRole)
+        Public Function ByRoleId(ByVal queryable As IQueryable(Of Tracker.Core.Data.UserRole), ByVal comparison As ComparisonOperator, ByVal roleId As Integer) As IQueryable(Of Tracker.Core.Data.UserRole)
             Select Case comparison
                 Case ComparisonOperator.GreaterThan
-                    Return queryable.Where(Function(u) roleId > u.RoleId)
+                    Return queryable.Where(Function(u) u.RoleId > roleId)
                 Case ComparisonOperator.GreaterThanOrEquals
-                    Return queryable.Where(Function(u) roleId >= u.RoleId)
+                    Return queryable.Where(Function(u) u.RoleId >= roleId)
                 Case ComparisonOperator.LessThan
-                    Return queryable.Where(Function(u) roleId < u.RoleId)
+                    Return queryable.Where(Function(u) u.RoleId < roleId)
                 Case ComparisonOperator.LessThanOrEquals
-                    Return queryable.Where(Function(u) roleId <= u.RoleId)
+                    Return queryable.Where(Function(u) u.RoleId <= roleId)
                 Case ComparisonOperator.NotEquals
                     Return queryable.Where(Function(u) u.RoleId <> roleId)
                 Case Else

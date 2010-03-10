@@ -3,7 +3,7 @@
   <Connection Mode="ConnectionString" ConnectionString="Data Source=.;Initial Catalog=Tracker;Integrated Security=True" SettingsObjectName="Properties.Settings" SettingsPropertyName="TrackerConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Audit" Member="Audit">
     <Type Name="Audit">
-      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Id" Storage="_id" Type="System.Int32" DbType="int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Date" Storage="_date" Type="System.DateTime" DbType="datetime NOT NULL" CanBeNull="false" />
       <Column Name="UserId" Storage="_userId" Type="System.Int32" DbType="int" CanBeNull="true" />
       <Column Name="TaskId" Storage="_taskId" Type="System.Int32" DbType="int" CanBeNull="true" />

@@ -16,7 +16,7 @@ Namespace Tracker.Core.Data
     <System.Data.Linq.Mapping.Table(Name:="dbo.Audit")> _
     <System.Runtime.Serialization.DataContract(IsReference:=True)> _
     <System.ComponentModel.DataAnnotations.ScaffoldTable(True)> _
-    <System.ComponentModel.DataAnnotations.MetadataType(GetType(Audit.Metadata))> _
+    <System.ComponentModel.DataAnnotations.MetadataType(GetType(Tracker.Core.Data.Audit.Metadata))> _
     <System.Data.Services.Common.DataServiceKey("Id")> _
     <System.Diagnostics.DebuggerDisplay("Id: {Id}")> _
     Partial Public Class Audit
@@ -55,7 +55,7 @@ Namespace Tracker.Core.Data
         ''' <summary>
         ''' Gets the Id column value.
         ''' </summary>
-        <System.Data.Linq.Mapping.Column(Name:="Id", Storage:="_id", DbType:="int NOT NULL IDENTITY", IsPrimaryKey:=True, IsDbGenerated:=True, CanBeNull:=False, UpdateCheck:=System.Data.Linq.Mapping.UpdateCheck.Never)> _
+        <System.Data.Linq.Mapping.Column(Name:="Id", Storage:="_id", DbType:="int NOT NULL", IsPrimaryKey:=True, IsDbGenerated:=True, CanBeNull:=False, UpdateCheck:=System.Data.Linq.Mapping.UpdateCheck.Never)> _
         <System.Runtime.Serialization.DataMember(Order:=1)> _
         Public Property Id() As Integer
             Get

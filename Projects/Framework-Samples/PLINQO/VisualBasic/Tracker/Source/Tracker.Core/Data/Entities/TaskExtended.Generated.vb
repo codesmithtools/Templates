@@ -16,7 +16,7 @@ Namespace Tracker.Core.Data
     <System.Data.Linq.Mapping.Table(Name:="dbo.TaskExtended")> _
     <System.Runtime.Serialization.DataContract(IsReference:=True)> _
     <System.ComponentModel.DataAnnotations.ScaffoldTable(True)> _
-    <System.ComponentModel.DataAnnotations.MetadataType(GetType(TaskExtended.Metadata))> _
+    <System.ComponentModel.DataAnnotations.MetadataType(GetType(Tracker.Core.Data.TaskExtended.Metadata))> _
     <System.Data.Services.Common.DataServiceKey("TaskId")> _
     <System.Diagnostics.DebuggerDisplay("TaskId: {TaskId}")> _
     Partial Public Class TaskExtended
