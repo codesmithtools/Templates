@@ -16,6 +16,8 @@ namespace CodeSmith.Data.Linq
     /// </remarks>
     public class PagedList<T> : List<T>, IPageList<T>
     {
+        private IQueryable<T> _originalSource;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:CodeSmith.Data.Linq.PagedList`1"/> class.
         /// </summary>
@@ -137,6 +139,8 @@ namespace CodeSmith.Data.Linq
             if (source == null)
                 source = new List<T>().AsQueryable();
 
+            _originalSource = source;
+
             PageSize = pageSize;
             PageIndex = pageIndex;
 
@@ -156,7 +160,7 @@ namespace CodeSmith.Data.Linq
                 AddPage(source, skip, pageSize);
                 return;
             }
-            
+
             // use Future to batch the queries
             var q1 = source.FutureCount();
             var q2 = source.Skip(skip).Take(pageSize).Future();
@@ -165,7 +169,7 @@ namespace CodeSmith.Data.Linq
             TotalItemCount = q1.Value;
             if (TotalItemCount == 0)
                 return;
-            
+
             AddRange(q2);
         }
 
@@ -177,5 +181,58 @@ namespace CodeSmith.Data.Linq
             IQueryable<T> page = (source).Skip(skip).Take(pageSize);
             AddRange(page.ToList());
         }
+
+        /// <summary>
+        /// Gets the next page of data using the original source.
+        /// </summary>
+        /// <returns>
+        /// A new PageList with the current page index incremented. 
+        /// </returns>
+        /// <remarks>
+        /// The source, page size and total will be the same as the current PageList.
+        /// </remarks>
+        public PagedList<T> NextPage()
+        {
+            if (_originalSource == null || !HasNextPage)
+                return null;
+
+            return new PagedList<T>(_originalSource, PageIndex + 1, PageSize, TotalItemCount);
+        }
+
+        /// <summary>
+        /// Gets the previous page of data using the original source.
+        /// </summary>
+        /// <returns>
+        /// A new PageList with the current page index decremented. 
+        /// </returns>
+        /// <remarks>
+        /// The source, page size and total will be the same as the current PageList.
+        /// </remarks>
+        public PagedList<T> PreviousPage()
+        {
+            if (_originalSource == null || !HasPreviousPage)
+                return null;
+
+            return new PagedList<T>(_originalSource, PageIndex - 1, PageSize, TotalItemCount);
+        }
+
+        /// <summary>
+        /// Gets the paged list of data from the specified page index.
+        /// </summary>
+        /// <param name="pageIndex">The zero based index of the page.</param>
+        /// <returns>
+        /// A new PageList with data from the specified page index.
+        /// </returns>
+        /// <remarks>
+        /// The source, page size and total will be the same as the current PageList.
+        /// </remarks>
+        public PagedList<T> GotoPage(int pageIndex)
+        {
+            if (_originalSource == null)
+                return null;
+
+            return new PagedList<T>(_originalSource, pageIndex, PageSize, TotalItemCount);
+        }
+
     }
 }
