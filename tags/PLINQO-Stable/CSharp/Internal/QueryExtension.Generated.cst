@@ -76,7 +76,6 @@ namespace <%= Database.ContextNamespace %>
     /// <summary>
     /// The query extension class for <%= EntityManager.EntityName %>.
     /// </summary>
-    [System.Runtime.CompilerServices.CompilerGenerated()]
     public static partial class <%= EntityManager.EntityName %>Extensions
     {
 <% foreach(ManagerMethod method in EntityManager.Methods) { %>
@@ -85,6 +84,7 @@ namespace <%= Database.ContextNamespace %>
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
+        <%= GeneratedCodeAttribute %>
         public static <%= safeName %> <%= UniqueMethodPrefix %><%= MethodKeySuffix %>(this IQueryable<<%= safeName %>> queryable, <%= GetParameters(method) %>)
         {
 <% if (method.Columns.Count < 4) { %>
@@ -101,6 +101,7 @@ namespace <%= Database.ContextNamespace %>
         /// </summary>
         /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         /// <returns>The number of rows deleted from the database.</returns>
+        <%= GeneratedCodeAttribute %>
         public static int Delete(this System.Data.Linq.Table<<%= safeName %>> table, <%= GetParameters(method) %>)
         {
             return table.Delete(<%= GetLamba(method, 5) %>);
@@ -117,6 +118,7 @@ namespace <%= Database.ContextNamespace %>
         /// Gets an instance by using a unique index.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
+        <%= GeneratedCodeAttribute %>
         public static <%= safeName %> <%= UniqueMethodPrefix %><%= suffix %>(this IQueryable<<%= safeName %>> queryable, <%= GetParameters(method) %>)
         {
 <% if (method.Columns.Count < 4) { %>
@@ -146,6 +148,7 @@ namespace <%= Database.ContextNamespace %>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="<%= paramName %>"><%= column.Member %> to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        <%= GeneratedCodeAttribute %>
         public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= columnType %> <%= paramName %>)
         {
 <% if (column.CanBeNull == true) { %>
@@ -166,7 +169,8 @@ namespace <%= Database.ContextNamespace %>
         /// <param name="<%= paramName %>"><%= column.Member %> to search for.</param>
         /// <param name="containmentOperator">The containment operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= columnType %> <%= paramName %>, ContainmentOperator containmentOperator)
+        <%= GeneratedCodeAttribute %>
+        public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, ContainmentOperator containmentOperator, <%= columnType %> <%= paramName %>)
         {
             if (<%= paramName %> == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
                 throw new ArgumentNullException("<%= paramName %>", "Parameter '<%= paramName %>' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
@@ -204,10 +208,11 @@ namespace <%= Database.ContextNamespace %>
         /// Gets a query for <see cref="<%= safeName %>.<%= column.Member %>"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="<%= paramName %>"><%= column.Member %> to search for.</param>
+        /// <param name="<%= paramName %>"><%= column.Member %> to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
-        public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= columnType %> <%= paramName %>, ComparisonOperator comparisonOperator)
+        <%= GeneratedCodeAttribute %>
+        public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, ComparisonOperator comparisonOperator, <%= columnType %> <%= paramName %>)
         {
 <% if (column.CanBeNull == true) { %>
             if (<%= paramName %> == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
@@ -224,13 +229,13 @@ namespace <%= Database.ContextNamespace %>
                     throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support <%= columnType %> type.", "comparisonOperator");
 <% } else { %>
                 case ComparisonOperator.GreaterThan:
-                    return queryable.Where(<%= alias %> => <%= paramName %> > <%= alias %>.<%= column.Member %>);
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> > <%= paramName %>);
                 case ComparisonOperator.GreaterThanOrEquals:
-                    return queryable.Where(<%= alias %> => <%= paramName %> >= <%= alias %>.<%= column.Member %>);
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> >= <%= paramName %>);
                 case ComparisonOperator.LessThan:
-                    return queryable.Where(<%= alias %> => <%= paramName %> < <%= alias %>.<%= column.Member %>);
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> < <%= paramName %>);
                 case ComparisonOperator.LessThanOrEquals:
-                    return queryable.Where(<%= alias %> => <%= paramName %> <= <%= alias %>.<%= column.Member %>);
+                    return queryable.Where(<%= alias %> => <%= alias %>.<%= column.Member %> <= <%= paramName %>);
 <% } %>
 <% if (column.CanBeNull == true) { %>
                 case ComparisonOperator.NotEquals:
@@ -258,6 +263,7 @@ namespace <%= Database.ContextNamespace %>
         /// <param name="<%= paramName %>"><%= column.Member %> to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        <%= GeneratedCodeAttribute %>
         public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, <%= columnType %> <%= paramName %>, params <%= columnType %>[] additionalValues)
         {
             var <%= paramName %>List = new List<<%= columnType %>> { <%= paramName %> };
@@ -281,6 +287,7 @@ namespace <%= Database.ContextNamespace %>
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        <%= GeneratedCodeAttribute %>
         public static IQueryable<<%= safeName %>> <%= MethodPrefix %><%= column.Member %>(this IQueryable<<%= safeName %>> queryable, IEnumerable<<%= columnType %>> values)
         {
 <% if (column.CanBeNull == true) { %>
@@ -304,6 +311,7 @@ namespace <%= Database.ContextNamespace %>
 <% if (method.Columns.Count < 4) { %>
 <% if (method.IsKey) { %>
 
+            <%= GeneratedCodeAttribute %>
             internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>> <%= UniqueMethodPrefix %><%= MethodKeySuffix %> =
                 System.Data.Linq.CompiledQuery.Compile(
                     (<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) =>
@@ -313,6 +321,7 @@ namespace <%= Database.ContextNamespace %>
         if (suffix == MethodKeySuffix)
             suffix += "Member";
  %>
+            <%= GeneratedCodeAttribute %>
             internal static readonly Func<<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %>, <%= GetParametersTypes(method) %>, <%= safeName %>> <%= UniqueMethodPrefix %><%= suffix %> =
                 System.Data.Linq.CompiledQuery.Compile(
                     (<%= Database.ContextNamespace %>.<%= DataManager.DataContextName %> db, <%= GetParameters(method) %>) =>
@@ -457,5 +466,9 @@ namespace <%= Database.ContextNamespace %>
 
         return dataType;
     }
+    
+    private static readonly string GeneratedCodeAttribute =  string.Format(
+        "[System.CodeDom.Compiler.GeneratedCode(\"CodeSmith\", \"{0}\")]",
+        typeof(CodeTemplate).Assembly.GetName().Version.ToString());
 
 </script>

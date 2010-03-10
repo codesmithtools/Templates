@@ -121,7 +121,6 @@ namespace <%= Database.EntityNamespace %>
 <% if (sb.Length > 0) { %>
     [System.Diagnostics.DebuggerDisplay("<%= sb.ToString() %>")]
 <% } %>
-    [System.Runtime.CompilerServices.CompilerGenerated()]
     <%= Naming.GetModifier(Type.AccessModifier, Type.Modifier) %> partial class <%= Type.Name %>
 <% if (!string.IsNullOrEmpty(EntityBase)) { %>
         : <%= EntityBase %><% if (IncludeDataContract) { %>, ICloneable<% } %><% if(!string.IsNullOrEmpty(this.InterfaceNamespace)) { %>, <% =this.InterfaceNamespace %>.I<%=Type.Name%> <%}%> 
@@ -132,6 +131,7 @@ namespace <%= Database.EntityNamespace %>
         /// <summary>
         /// Initializes the <see cref="<%= Type.Name %>"/> class.
         /// </summary>
+        <%= GeneratedCodeAttribute %>
         static <%= Type.Name %>()
         {
             AddSharedRules();
@@ -144,12 +144,14 @@ namespace <%= Database.EntityNamespace %>
         /// Initializes a new instance of the <see cref="<%= Type.Name %>"/> class.
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
+        <%= GeneratedCodeAttribute %>
         public <%= Type.Name %>()
         {
 <% if (IncludeDataContract) { %>
             Initialize();
         }
 
+        <%= GeneratedCodeAttribute %>
         private void Initialize()
         {
 <% } %>
@@ -207,8 +209,10 @@ foreach(Column column in Type.Columns) {
 %>
 
 <% if (column.IsDbGenerated == true) { %>
+        <%= GeneratedCodeAttribute %>
         private <%= fieldType %> <%= column.Storage %> = default(<%= fieldType %>);
 <% } else { %>
+        <%= GeneratedCodeAttribute %>
         private <%= fieldType %> <%= column.Storage %>;
 <% } %>
 
@@ -232,6 +236,7 @@ foreach(Column column in Type.Columns) {
 <% if(enumType != null) { %>
         [System.ComponentModel.DataAnnotations.UIHint("Enumeration")]
 <% } %>
+        <%= GeneratedCodeAttribute %>
         <%= Naming.GetModifier(column.AccessModifier, column.Modifier) %> <%= dataType %> <%= column.Member %>
         {
             get { return <%= storageGet %>; }
@@ -267,6 +272,7 @@ foreach(Column column in Type.Columns) {
         AssociationInfo info = GetAssociationInfo(a);
 %>
 
+        <%= GeneratedCodeAttribute %>
         private System.Data.Linq.EntityRef<<%= a.Type %>> <%= a.Storage %>;
 
         /// <summary>
@@ -276,6 +282,7 @@ foreach(Column column in Type.Columns) {
 <% if (IncludeDataContract) { %>
         [System.Runtime.Serialization.DataMember(Order = <%= ++DataMemberCount %>, EmitDefaultValue = false)]
 <% } %>
+        <%= GeneratedCodeAttribute %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> <%= a.Type %> <%= a.Member %>
         {
 <% if (IncludeDataContract) { %>
@@ -331,6 +338,7 @@ foreach(Column column in Type.Columns) {
         /// Used by the <see cref="System.Xml.Serialization.XmlSerializer"/> to determine if <see cref="<%= a.Member %>"/> should be serialized.
         /// </summary>
         /// <returns><c>true</c> if <see cref="<%= a.Member %>"/> should be serialized; otherwise, <c>false</c>.</returns>
+        <%= GeneratedCodeAttribute %>
         public bool ShouldSerialize<%= a.Member %>()
         {
             return <%= a.Storage %>.HasLoadedOrAssignedValue;
@@ -343,6 +351,7 @@ foreach(Column column in Type.Columns) {
         AssociationInfo info = GetAssociationInfo(a);
 %>
 
+        <%= GeneratedCodeAttribute %>
         private System.Data.Linq.EntitySet<<%= a.Type %>> <%= a.Storage %>;
 
         /// <summary>
@@ -352,6 +361,7 @@ foreach(Column column in Type.Columns) {
 <% if (IncludeDataContract) { %>
         [System.Runtime.Serialization.DataMember(Order=<%= ++DataMemberCount %>, EmitDefaultValue=false)]
 <% } %>
+        <%= GeneratedCodeAttribute %>
         <%= Naming.GetModifier(a.AccessModifier, a.Modifier) %> System.Data.Linq.EntitySet<<%= a.Type %>> <%= a.Member %>
         {
 <% if (IncludeDataContract) { %>
@@ -367,6 +377,7 @@ foreach(Column column in Type.Columns) {
         /// Used by the <see cref="System.Xml.Serialization.XmlSerializer"/> to determine if <see cref="<%= a.Member %>"/> should be serialized.
         /// </summary>
         /// <returns><c>true</c> if <see cref="<%= a.Member %>"/> should be serialized; otherwise, <c>false</c>.</returns>
+        <%= GeneratedCodeAttribute %>
         public bool ShouldSerialize<%= a.Member %>()
         {
             return <%= a.Storage %>.HasLoadedOrAssignedValues;
@@ -374,6 +385,7 @@ foreach(Column column in Type.Columns) {
 <% } %>
 
         [System.Diagnostics.DebuggerNonUserCode]
+        <%= GeneratedCodeAttribute %>
         private void On<%= a.Member %>Add(<%= a.Type %> entity)
         {
             SendPropertyChanging(null);
@@ -382,6 +394,7 @@ foreach(Column column in Type.Columns) {
         }
 
         [System.Diagnostics.DebuggerNonUserCode]
+        <%= GeneratedCodeAttribute %>
         private void On<%= a.Member %>Remove(<%= a.Type %> entity)
         {
             SendPropertyChanging(null);
@@ -397,12 +410,14 @@ foreach(Column column in Type.Columns) {
         string memberName = StringUtil.ToCamelCase(manyMany.PropertyName);
 %>
 
+        <%= GeneratedCodeAttribute %>
         private System.Data.Linq.EntitySet<<%=manyMany.RightType.Name%>> _<%=memberName%>;
 
         /// <summary>
         /// Gets or sets the Many To Many <%=manyMany.PropertyName%> list.
         /// </summary>
         /// <value>The <%=manyMany.PropertyName%> list.</value>
+        <%= GeneratedCodeAttribute %>
         public System.Data.Linq.EntitySet<<%=manyMany.RightType.Name%>> <%=manyMany.PropertyName%>
         {
             get
@@ -426,6 +441,7 @@ foreach(Column column in Type.Columns) {
         }
 
         [System.Diagnostics.DebuggerNonUserCode]
+        <%= GeneratedCodeAttribute %>
         private void On<%=manyMany.PropertyName%>Add(<%=manyMany.RightType.Name%> entity)
         {
             SendPropertyChanging(null);
@@ -434,6 +450,7 @@ foreach(Column column in Type.Columns) {
         }
 
         [System.Diagnostics.DebuggerNonUserCode]
+        <%= GeneratedCodeAttribute %>
         private void On<%=manyMany.PropertyName%>Remove(<%=manyMany.RightType.Name%> entity)
         {
             SendPropertyChanging(null);
@@ -448,12 +465,16 @@ foreach(Column column in Type.Columns) {
 
         #region Extensibility Method Definitions
         /// <summary>Called by the static constructor to add shared rules.</summary>
+        <%= GeneratedCodeAttribute %>
         static partial void AddSharedRules();
         /// <summary>Called when this instance is loaded.</summary>
+        <%= GeneratedCodeAttribute %>
         partial void OnLoaded();
         /// <summary>Called when this instance is being saved.</summary>
+        <%= GeneratedCodeAttribute %>
         partial void OnValidate(System.Data.Linq.ChangeAction action);
         /// <summary>Called when this instance is created.</summary>
+        <%= GeneratedCodeAttribute %>
         partial void OnCreated();
 <% foreach(Column column in Type.Columns) {
     string dataType = CSharpAlias[column.Type];
@@ -466,15 +487,19 @@ foreach(Column column in Type.Columns) {
 %>
         /// <summary>Called when <see cref="<%= column.Member %>"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        <%= GeneratedCodeAttribute %>
         partial void On<%= column.Member %>Changing(<%= dataType %> value);
         /// <summary>Called after <see cref="<%= column.Member %>"/> has Changed.</summary>
+        <%= GeneratedCodeAttribute %>
         partial void On<%= column.Member %>Changed();
 <% } // foreach %>
 <% foreach(Association a in Type.EntityRefAssociations) { %>
         /// <summary>Called when <see cref="<%= a.Member %>"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        <%= GeneratedCodeAttribute %>
         partial void On<%= a.Member %>Changing(<%= a.Type %> value);
         /// <summary>Called after <see cref="<%= a.Member %>"/> has Changed.</summary>
+        <%= GeneratedCodeAttribute %>
         partial void On<%= a.Member %>Changed();
 <% } // foreach Association%>
 
@@ -482,6 +507,7 @@ foreach(Column column in Type.Columns) {
 
 <% if (IncludeDataContract) { %>
         #region Serialization
+        <%= GeneratedCodeAttribute %>
         private bool serializing;
 
         /// <summary>
@@ -490,6 +516,7 @@ foreach(Column column in Type.Columns) {
         /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         [System.Runtime.Serialization.OnSerializing]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        <%= GeneratedCodeAttribute %>
         public void OnSerializing(System.Runtime.Serialization.StreamingContext context) {
             serializing = true;
         }
@@ -500,6 +527,7 @@ foreach(Column column in Type.Columns) {
         /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         [System.Runtime.Serialization.OnSerialized]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        <%= GeneratedCodeAttribute %>
         public void OnSerialized(System.Runtime.Serialization.StreamingContext context) {
             serializing = false;
         }
@@ -510,6 +538,7 @@ foreach(Column column in Type.Columns) {
         /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         [System.Runtime.Serialization.OnDeserializing]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        <%= GeneratedCodeAttribute %>
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
         }
@@ -519,6 +548,7 @@ foreach(Column column in Type.Columns) {
         /// </summary>
         /// <param name="xml">The XML string representing a <see cref="<%= Type.Name %>"/> instance.</param>
         /// <returns>An instance of <see cref="<%= Type.Name %>"/> that is deserialized from the XML string.</returns>
+        <%= GeneratedCodeAttribute %>
         public static <%= Type.Name %> FromXml(string xml)
         {
             var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(<%= Type.Name %>));
@@ -535,6 +565,7 @@ foreach(Column column in Type.Columns) {
         /// </summary>
         /// <param name="buffer">The byte array representing a <see cref="<%= Type.Name %>"/> instance.</param>
         /// <returns>An instance of <see cref="<%= Type.Name %>"/> that is deserialized from the byte array.</returns>
+        <%= GeneratedCodeAttribute %>
         public static <%= Type.Name %> FromBinary(byte[] buffer)
         {
             var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(<%= Type.Name %>));
@@ -555,6 +586,7 @@ foreach(Column column in Type.Columns) {
         /// <returns>
         /// A new object that is a copy of this instance.
         /// </returns>
+        <%= GeneratedCodeAttribute %>
         object ICloneable.Clone()
         {
             var serializer = new System.Runtime.Serialization.DataContractSerializer(GetType());
@@ -575,6 +607,7 @@ foreach(Column column in Type.Columns) {
         /// <remarks>
         /// Only loaded <see cref="T:System.Data.Linq.EntityRef`1"/> and <see cref="T:System.Data.Linq.EntitySet`1" /> child accessions will be cloned.
         /// </remarks>
+        <%= GeneratedCodeAttribute %>
         public <%= Type.Name %> Clone()
         {
             return (<%= Type.Name %>)((ICloneable)this).Clone();
@@ -591,6 +624,7 @@ foreach(Column column in Type.Columns) {
         /// <remarks>
         /// Detaching the entity will stop all lazy loading and allow it to be added to another <see cref="System.Data.Linq.DataContext"/>.
         /// </remarks>
+        <%= GeneratedCodeAttribute %>
         public override void Detach()
         {
             if (!IsAttached())
@@ -924,4 +958,9 @@ foreach(Column column in Type.Columns) {
         public string PropertyName;
         public bool Skip;
     }
+    
+    private static readonly string GeneratedCodeAttribute =  string.Format(
+        "[System.CodeDom.Compiler.GeneratedCode(\"CodeSmith\", \"{0}\")]",
+        typeof(CodeTemplate).Assembly.GetName().Version.ToString());
+        
 </script>
