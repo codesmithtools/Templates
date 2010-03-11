@@ -22,24 +22,35 @@ namespace PLINQO.Mvc.UI.Controllers
         {
             ViewData["Message"] = "Welcome to PLINQO!";
 
-            var dashboard = new Dashboard();
-
-            using (var db = new TrackerDataContext())
+            if (User.Identity.IsAuthenticated)
             {
-                dashboard.CurrentUser = db.User.GetByEmailAddress(User.Identity.Name);
-                dashboard.TasksNotStarted = db.Task.ByAssignedId(dashboard.CurrentUser.Id).ByStatus(Status.NotStarted).Future();
-                dashboard.TasksInProgress = db.Task.ByAssignedId(dashboard.CurrentUser.Id).ByStatus(Status.InProgress).Future();
-                dashboard.TasksCompleted = db.Task.ByAssignedId(dashboard.CurrentUser.Id).ByStatus(Status.Completed).Future();
-                dashboard.TasksWaitingOnSomeone = db.Task.ByAssignedId(dashboard.CurrentUser.Id).ByStatus(Status.WaitingOnSomeoneElse).Future();
-                dashboard.TotalTasks = db.Task.FutureCount();
-                dashboard.TotalTasksCreatedByMe = db.Task.ByCreatedId(dashboard.CurrentUser.Id).FutureCount();
-                dashboard.TotalTasksAssignedToMe = db.Task.ByAssignedId(dashboard.CurrentUser.Id).FutureCount();
-                dashboard.TotalTasksCompleted = db.Task.ByStatus(Status.Completed).FutureCount();
 
-                db.ExecuteFutureQueries();
+                var dashboard = new Dashboard();
+
+                using (var db = new TrackerDataContext())
+                {
+                    dashboard.CurrentUser = db.User.GetByEmailAddress(User.Identity.Name);
+                    if (dashboard.CurrentUser != null)
+                    {
+                        dashboard.TasksNotStarted = db.Task.ByAssignedId(dashboard.CurrentUser.Id).ByStatus(Status.NotStarted).Future();
+                        dashboard.TasksInProgress = db.Task.ByAssignedId(dashboard.CurrentUser.Id).ByStatus(Status.InProgress).Future();
+                        dashboard.TasksCompleted = db.Task.ByAssignedId(dashboard.CurrentUser.Id).ByStatus(Status.Completed).Future();
+                        dashboard.TasksWaitingOnSomeone = db.Task.ByAssignedId(dashboard.CurrentUser.Id).ByStatus(Status.WaitingOnSomeoneElse).Future();
+                        dashboard.TotalTasks = db.Task.FutureCount();
+                        dashboard.TotalTasksCreatedByMe = db.Task.ByCreatedId(dashboard.CurrentUser.Id).FutureCount();
+                        dashboard.TotalTasksAssignedToMe = db.Task.ByAssignedId(dashboard.CurrentUser.Id).FutureCount();
+                        dashboard.TotalTasksCompleted = db.Task.ByStatus(Status.Completed).FutureCount();
+                    }
+
+                    db.ExecuteFutureQueries();
+                }
+
+                return View(dashboard);
             }
-
-            return View(dashboard);
+            else
+            {
+                return View();
+            }
         }
 
         public ActionResult About()

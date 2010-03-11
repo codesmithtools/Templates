@@ -19,13 +19,13 @@ namespace Tracker.Core.Data
     /// <summary>
     /// The query extension class for Guid.
     /// </summary>
-    [System.Runtime.CompilerServices.CompilerGenerated()]
     public static partial class GuidExtensions
     {
 
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static Tracker.Core.Data.Guid GetByKey(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid id)
         {
             var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.Guid>;
@@ -40,6 +40,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         /// <returns>The number of rows deleted from the database.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static int Delete(this System.Data.Linq.Table<Tracker.Core.Data.Guid> table, System.Guid id)
         {
             return table.Delete(g => g.Id == id);
@@ -51,6 +52,7 @@ namespace Tracker.Core.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="id">Id to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.Guid> ById(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid id)
         {
             return queryable.Where(g => g.Id == id);
@@ -63,6 +65,7 @@ namespace Tracker.Core.Data
         /// <param name="id">Id to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.Guid> ById(this IQueryable<Tracker.Core.Data.Guid> queryable, ComparisonOperator comparisonOperator, System.Guid id)
         {
             switch (comparisonOperator)
@@ -86,6 +89,7 @@ namespace Tracker.Core.Data
         /// <param name="id">Id to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.Guid> ById(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid id, params System.Guid[] additionalValues)
         {
             var idList = new List<System.Guid> { id };
@@ -105,6 +109,7 @@ namespace Tracker.Core.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.Guid> ById(this IQueryable<Tracker.Core.Data.Guid> queryable, IEnumerable<System.Guid> values)
         {
             return queryable.Where(g => values.Contains(g.Id));
@@ -116,6 +121,7 @@ namespace Tracker.Core.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="alternateId">AlternateId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.Guid> ByAlternateId(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid? alternateId)
         {
             // support nulls
@@ -131,6 +137,7 @@ namespace Tracker.Core.Data
         /// <param name="alternateId">AlternateId to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.Guid> ByAlternateId(this IQueryable<Tracker.Core.Data.Guid> queryable, ComparisonOperator comparisonOperator, System.Guid? alternateId)
         {
             if (alternateId == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
@@ -161,6 +168,7 @@ namespace Tracker.Core.Data
         /// <param name="alternateId">AlternateId to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.Guid> ByAlternateId(this IQueryable<Tracker.Core.Data.Guid> queryable, System.Guid? alternateId, params System.Guid?[] additionalValues)
         {
             var alternateIdList = new List<System.Guid?> { alternateId };
@@ -182,6 +190,7 @@ namespace Tracker.Core.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.Guid> ByAlternateId(this IQueryable<Tracker.Core.Data.Guid> queryable, IEnumerable<System.Guid?> values)
         {
             // creating dynmic expression to support nulls
@@ -196,6 +205,7 @@ namespace Tracker.Core.Data
         private static partial class Query
         {
 
+            [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
             internal static readonly Func<Tracker.Core.Data.TrackerDataContext, System.Guid, Tracker.Core.Data.Guid> GetByKey =
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, System.Guid id) =>

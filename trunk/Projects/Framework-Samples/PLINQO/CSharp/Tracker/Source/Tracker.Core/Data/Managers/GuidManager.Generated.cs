@@ -21,7 +21,6 @@ namespace Tracker.Core.Data
     /// <summary>
     /// The manager class for Guid.
     /// </summary>
-    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class GuidManager 
         : CodeSmith.Data.EntityManagerBase<TrackerDataManager, Tracker.Core.Data.Guid>
     {
@@ -29,6 +28,7 @@ namespace Tracker.Core.Data
         /// Initializes the <see cref="GuidManager"/> class.
         /// </summary>
         /// <param name="manager">The current manager.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public GuidManager(TrackerDataManager manager) : base(manager)
         {
             OnCreated();
@@ -37,6 +37,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets the current context.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         protected Tracker.Core.Data.TrackerDataContext Context
         {
             get { return Manager.Context; }
@@ -45,6 +46,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets the entity for this manager.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         protected System.Data.Linq.Table<Tracker.Core.Data.Guid> Entity
         {
             get { return Manager.Context.Guid; }
@@ -54,6 +56,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Creates the key for this entity.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static CodeSmith.Data.IEntityKey<System.Guid> CreateKey(System.Guid id)
         {
             return new CodeSmith.Data.EntityKey<System.Guid>(id);
@@ -70,6 +73,7 @@ namespace Tracker.Core.Data
         /// This method is expecting key to be of type IEntityKey&lt;System.Guid&gt;.
         /// </remarks>
         /// <exception cref="ArgumentException">Thrown when key is not of type IEntityKey&lt;System.Guid&gt;.</exception>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public override Tracker.Core.Data.Guid GetByKey(CodeSmith.Data.IEntityKey key)
         {
             if (key is CodeSmith.Data.IEntityKey<System.Guid>)
@@ -87,6 +91,7 @@ namespace Tracker.Core.Data
         /// Gets an instance by the primary key.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public Tracker.Core.Data.Guid GetByKey(System.Guid id)
         {
             if (Context.LoadOptions == null) 
@@ -99,6 +104,7 @@ namespace Tracker.Core.Data
         /// Immediately deletes the entity by the primary key from the underlying data source with a single delete command.
         /// </summary>
         /// <returns>The number of rows deleted from the database.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public int Delete(System.Guid id)
         {
             return Entity.Delete(g => g.Id == id);
@@ -106,6 +112,7 @@ namespace Tracker.Core.Data
 
         #region Extensibility Method Definitions
         /// <summary>Called when the class is created.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnCreated();
         #endregion
         
@@ -116,6 +123,7 @@ namespace Tracker.Core.Data
         private static partial class Query
         {
 
+            [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
             internal static readonly Func<Tracker.Core.Data.TrackerDataContext, System.Guid, Tracker.Core.Data.Guid> GetByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, System.Guid id) => 

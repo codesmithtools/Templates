@@ -21,7 +21,6 @@ namespace Tracker.Core.Data
     /// <summary>
     /// The manager class for UserRole.
     /// </summary>
-    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class UserRoleManager 
         : CodeSmith.Data.EntityManagerBase<TrackerDataManager, Tracker.Core.Data.UserRole>
     {
@@ -29,6 +28,7 @@ namespace Tracker.Core.Data
         /// Initializes the <see cref="UserRoleManager"/> class.
         /// </summary>
         /// <param name="manager">The current manager.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public UserRoleManager(TrackerDataManager manager) : base(manager)
         {
             OnCreated();
@@ -37,6 +37,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets the current context.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         protected Tracker.Core.Data.TrackerDataContext Context
         {
             get { return Manager.Context; }
@@ -45,6 +46,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets the entity for this manager.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         protected System.Data.Linq.Table<Tracker.Core.Data.UserRole> Entity
         {
             get { return Manager.Context.UserRole; }
@@ -54,6 +56,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Creates the key for this entity.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static CodeSmith.Data.IEntityKey<int, int> CreateKey(int userId, int roleId)
         {
             return new CodeSmith.Data.EntityKey<int, int>(userId, roleId);
@@ -70,6 +73,7 @@ namespace Tracker.Core.Data
         /// This method is expecting key to be of type IEntityKey&lt;int, int&gt;.
         /// </remarks>
         /// <exception cref="ArgumentException">Thrown when key is not of type IEntityKey&lt;int, int&gt;.</exception>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public override Tracker.Core.Data.UserRole GetByKey(CodeSmith.Data.IEntityKey key)
         {
             if (key is CodeSmith.Data.IEntityKey<int, int>)
@@ -87,6 +91,7 @@ namespace Tracker.Core.Data
         /// Gets an instance by the primary key.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public Tracker.Core.Data.UserRole GetByKey(int userId, int roleId)
         {
             if (Context.LoadOptions == null) 
@@ -100,6 +105,7 @@ namespace Tracker.Core.Data
         /// Immediately deletes the entity by the primary key from the underlying data source with a single delete command.
         /// </summary>
         /// <returns>The number of rows deleted from the database.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public int Delete(int userId, int roleId)
         {
             return Entity.Delete(u => u.UserId == userId 
@@ -108,6 +114,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public IQueryable<Tracker.Core.Data.UserRole> GetByUserId(int userId)
         {
             if (Context.LoadOptions == null) 
@@ -118,6 +125,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public IQueryable<Tracker.Core.Data.UserRole> GetByRoleId(int roleId)
         {
             if (Context.LoadOptions == null) 
@@ -128,6 +136,7 @@ namespace Tracker.Core.Data
 
         #region Extensibility Method Definitions
         /// <summary>Called when the class is created.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnCreated();
         #endregion
         
@@ -138,17 +147,20 @@ namespace Tracker.Core.Data
         private static partial class Query
         {
 
+            [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
             internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, int, Tracker.Core.Data.UserRole> GetByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, int userId, int roleId) => 
                         db.UserRole.FirstOrDefault(u => u.UserId == userId 
 							&& u.RoleId == roleId));
 
+            [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
             internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, IQueryable<Tracker.Core.Data.UserRole>> GetByUserId = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, int userId) => 
                         db.UserRole.Where(u => u.UserId == userId));
 
+            [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
             internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, IQueryable<Tracker.Core.Data.UserRole>> GetByRoleId = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, int roleId) => 

@@ -16,7 +16,6 @@ namespace Tracker.Core.Data
     /// A base class for Linq entities that implements notification events.
     /// </summary>
     [System.Runtime.Serialization.DataContract(IsReference = true)]
-    [System.Runtime.CompilerServices.CompilerGenerated()]
     public abstract partial class LinqEntityBase :
         CodeSmith.Data.ILinqEntity,
         System.ComponentModel.INotifyPropertyChanging,
@@ -25,6 +24,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="LinqEntityBase"/> class.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         protected LinqEntityBase()
         { }
 
@@ -34,6 +34,7 @@ namespace Tracker.Core.Data
         /// Implements a PropertyChanged event.
         /// </summary>
         [field: NonSerialized]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -41,6 +42,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="propertyName">Name of the property that has changed.</param>
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Advanced)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         protected virtual void SendPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
@@ -51,6 +53,7 @@ namespace Tracker.Core.Data
         /// Implements a PropertyChanging event.
         /// </summary>
         [field: NonSerialized]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public event System.ComponentModel.PropertyChangingEventHandler PropertyChanging;
 
         /// <summary>
@@ -58,6 +61,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="propertyName">Name of the property that is changing.</param>
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Advanced)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         protected virtual void SendPropertyChanging(string propertyName)
         {
             if (PropertyChanging != null)
@@ -73,6 +77,7 @@ namespace Tracker.Core.Data
         /// <returns>
         /// <c>true</c> if this instance is attached; otherwise, <c>false</c>.
         /// </returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public bool IsAttached()
         {
             return PropertyChanging != null;
@@ -84,6 +89,7 @@ namespace Tracker.Core.Data
         /// <remarks>
         /// Detaching the entity will allow it to be attached to another <see cref="System.Data.Linq.DataContext"/>.
         /// </remarks>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public virtual void Detach()
         {
             PropertyChanging = null;
@@ -98,6 +104,7 @@ namespace Tracker.Core.Data
         /// <param name="onAdd">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Add(`0)" />.</param>
         /// <param name="onRemove">Delegate for <see cref="M:System.Data.Linq.EntitySet`1.Remove(`0)" />.</param>
         /// <returns>A new <see cref="T:System.Data.Linq.EntitySet`1" /> with the list copied if it was loaded.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         protected static System.Data.Linq.EntitySet<TEntity> Detach<TEntity>(System.Data.Linq.EntitySet<TEntity> set, Action<TEntity> onAdd, Action<TEntity> onRemove) 
             where TEntity : LinqEntityBase
         {
@@ -119,6 +126,7 @@ namespace Tracker.Core.Data
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The <see cref="T:System.Data.Linq.EntityRef`1"/> to detach.</param>
         /// <returns>A new <see cref="T:System.Data.Linq.EntityRef`1"/> with the entity detached.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         protected static System.Data.Linq.EntityRef<TEntity> Detach<TEntity>(System.Data.Linq.EntityRef<TEntity> entity) 
             where TEntity : LinqEntityBase
         {
@@ -135,6 +143,7 @@ namespace Tracker.Core.Data
         /// <typeparam name="T">The type of the value.</typeparam>
         /// <param name="value">The lazy loaded value.</param>
         /// <returns>A new <see cref="T:System.Data.Linq.Link`1"/> that is detached.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         protected static System.Data.Linq.Link<T> Detach<T>(System.Data.Linq.Link<T> value)
         {
             if (!value.HasLoadedOrAssignedValue)
@@ -154,6 +163,7 @@ namespace Tracker.Core.Data
         /// <returns>
         /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
         /// </returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public string ToEntityString(int indentLevel, string indentValue)
         {
             System.Reflection.PropertyInfo[] props = this.GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
@@ -222,6 +232,7 @@ namespace Tracker.Core.Data
         /// Returns an XML <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>. 
         /// </summary>
         /// <returns>An XML <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public string ToXml()
         {
             var settings = new System.Xml.XmlWriterSettings();
@@ -243,6 +254,7 @@ namespace Tracker.Core.Data
         /// Returns a byte array that represents the current <see cref="T:System.Object"/>. 
         /// </summary>
         /// <returns>A byte array that represents the current <see cref="T:System.Object"/>.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public byte[] ToBinary()
         {
             byte[] buffer;
@@ -260,3 +272,4 @@ namespace Tracker.Core.Data
         #endregion
     }
 }
+

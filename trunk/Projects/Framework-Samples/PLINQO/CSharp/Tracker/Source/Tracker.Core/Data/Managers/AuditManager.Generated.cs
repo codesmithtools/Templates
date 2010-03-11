@@ -21,7 +21,6 @@ namespace Tracker.Core.Data
     /// <summary>
     /// The manager class for Audit.
     /// </summary>
-    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class AuditManager 
         : CodeSmith.Data.EntityManagerBase<TrackerDataManager, Tracker.Core.Data.Audit>
     {
@@ -29,6 +28,7 @@ namespace Tracker.Core.Data
         /// Initializes the <see cref="AuditManager"/> class.
         /// </summary>
         /// <param name="manager">The current manager.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public AuditManager(TrackerDataManager manager) : base(manager)
         {
             OnCreated();
@@ -37,6 +37,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets the current context.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         protected Tracker.Core.Data.TrackerDataContext Context
         {
             get { return Manager.Context; }
@@ -45,6 +46,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets the entity for this manager.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         protected System.Data.Linq.Table<Tracker.Core.Data.Audit> Entity
         {
             get { return Manager.Context.Audit; }
@@ -54,6 +56,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Creates the key for this entity.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static CodeSmith.Data.IEntityKey<int> CreateKey(int id)
         {
             return new CodeSmith.Data.EntityKey<int>(id);
@@ -70,6 +73,7 @@ namespace Tracker.Core.Data
         /// This method is expecting key to be of type IEntityKey&lt;int&gt;.
         /// </remarks>
         /// <exception cref="ArgumentException">Thrown when key is not of type IEntityKey&lt;int&gt;.</exception>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public override Tracker.Core.Data.Audit GetByKey(CodeSmith.Data.IEntityKey key)
         {
             if (key is CodeSmith.Data.IEntityKey<int>)
@@ -87,6 +91,7 @@ namespace Tracker.Core.Data
         /// Gets an instance by the primary key.
         /// </summary>
         /// <returns>An instance of the entity or null if not found.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public Tracker.Core.Data.Audit GetByKey(int id)
         {
             if (Context.LoadOptions == null) 
@@ -99,6 +104,7 @@ namespace Tracker.Core.Data
         /// Immediately deletes the entity by the primary key from the underlying data source with a single delete command.
         /// </summary>
         /// <returns>The number of rows deleted from the database.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public int Delete(int id)
         {
             return Entity.Delete(a => a.Id == id);
@@ -106,6 +112,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public IQueryable<Tracker.Core.Data.Audit> GetByUserId(int? userId)
         {
             if (Context.LoadOptions == null) 
@@ -116,6 +123,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Gets a query by an index.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public IQueryable<Tracker.Core.Data.Audit> GetByTaskId(int? taskId)
         {
             if (Context.LoadOptions == null) 
@@ -126,6 +134,7 @@ namespace Tracker.Core.Data
 
         #region Extensibility Method Definitions
         /// <summary>Called when the class is created.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnCreated();
         #endregion
         
@@ -136,16 +145,19 @@ namespace Tracker.Core.Data
         private static partial class Query
         {
 
+            [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
             internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, Tracker.Core.Data.Audit> GetByKey = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, int id) => 
                         db.Audit.FirstOrDefault(a => a.Id == id));
 
+            [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
             internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int?, IQueryable<Tracker.Core.Data.Audit>> GetByUserId = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, int? userId) => 
                         db.Audit.Where(a => a.UserId == userId));
 
+            [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
             internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int?, IQueryable<Tracker.Core.Data.Audit>> GetByTaskId = 
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, int? taskId) => 

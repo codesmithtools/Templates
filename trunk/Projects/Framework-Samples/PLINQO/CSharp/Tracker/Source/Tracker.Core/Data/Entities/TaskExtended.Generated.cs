@@ -20,7 +20,6 @@ namespace Tracker.Core.Data
     [System.ComponentModel.DataAnnotations.MetadataType(typeof(Tracker.Core.Data.TaskExtended.Metadata))]
     [System.Data.Services.Common.DataServiceKey("TaskId")]
     [System.Diagnostics.DebuggerDisplay("TaskId: {TaskId}")]
-    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class TaskExtended
         : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.ITaskExtended  
     {
@@ -28,6 +27,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Initializes the <see cref="TaskExtended"/> class.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         static TaskExtended()
         {
             AddSharedRules();
@@ -39,11 +39,13 @@ namespace Tracker.Core.Data
         /// Initializes a new instance of the <see cref="TaskExtended"/> class.
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public TaskExtended()
         {
             Initialize();
         }
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private void Initialize()
         {
             _task = default(System.Data.Linq.EntityRef<Task>);
@@ -53,6 +55,7 @@ namespace Tracker.Core.Data
 
         #region Column Mapped Properties
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private int _taskId;
 
         /// <summary>
@@ -60,6 +63,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "TaskId", Storage = "_taskId", DbType = "int NOT NULL", IsPrimaryKey = true, CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.Runtime.Serialization.DataMember(Order = 1)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public int TaskId
         {
             get { return _taskId; }
@@ -80,6 +84,7 @@ namespace Tracker.Core.Data
             }
         }
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private string _browser;
 
         /// <summary>
@@ -88,6 +93,7 @@ namespace Tracker.Core.Data
         [System.Data.Linq.Mapping.Column(Name = "Browser", Storage = "_browser", DbType = "nvarchar(200)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.ComponentModel.DataAnnotations.StringLength(200)]
         [System.Runtime.Serialization.DataMember(Order = 2)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public string Browser
         {
             get { return _browser; }
@@ -104,6 +110,7 @@ namespace Tracker.Core.Data
             }
         }
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private string _os;
 
         /// <summary>
@@ -112,6 +119,7 @@ namespace Tracker.Core.Data
         [System.Data.Linq.Mapping.Column(Name = "OS", Storage = "_os", DbType = "nvarchar(150)", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.ComponentModel.DataAnnotations.StringLength(150)]
         [System.Runtime.Serialization.DataMember(Order = 3)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public string Os
         {
             get { return _os; }
@@ -128,6 +136,7 @@ namespace Tracker.Core.Data
             }
         }
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private System.DateTime _createdDate;
 
         /// <summary>
@@ -135,6 +144,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "CreatedDate", Storage = "_createdDate", DbType = "datetime NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.Runtime.Serialization.DataMember(Order = 4)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public System.DateTime CreatedDate
         {
             get { return _createdDate; }
@@ -151,6 +161,7 @@ namespace Tracker.Core.Data
             }
         }
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private System.DateTime _modifiedDate;
 
         /// <summary>
@@ -158,6 +169,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "ModifiedDate", Storage = "_modifiedDate", DbType = "datetime NOT NULL", CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.Runtime.Serialization.DataMember(Order = 5)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public System.DateTime ModifiedDate
         {
             get { return _modifiedDate; }
@@ -174,6 +186,7 @@ namespace Tracker.Core.Data
             }
         }
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private System.Data.Linq.Binary _rowVersion = default(System.Data.Linq.Binary);
 
         /// <summary>
@@ -182,6 +195,7 @@ namespace Tracker.Core.Data
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         [System.Data.Linq.Mapping.Column(Name = "RowVersion", Storage = "_rowVersion", DbType = "timestamp NOT NULL", IsDbGenerated = true, IsVersion = true, CanBeNull = false, UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.Runtime.Serialization.DataMember(Order = 6)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public System.Data.Linq.Binary RowVersion
         {
             get { return _rowVersion; }
@@ -201,6 +215,7 @@ namespace Tracker.Core.Data
 
         #region Association Mapped Properties
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private System.Data.Linq.EntityRef<Task> _task;
 
         /// <summary>
@@ -208,6 +223,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Task_TaskExtended", Storage = "_task", ThisKey = "TaskId", OtherKey = "Id", IsUnique = true, IsForeignKey = true)]
         [System.Runtime.Serialization.DataMember(Order = 7, EmitDefaultValue = false)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public Task Task
         {
             get { return (serializing && !_task.HasLoadedOrAssignedValue) ? null : _task.Entity; }
@@ -243,52 +259,71 @@ namespace Tracker.Core.Data
 
         #region Extensibility Method Definitions
         /// <summary>Called by the static constructor to add shared rules.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         static partial void AddSharedRules();
         /// <summary>Called when this instance is loaded.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnLoaded();
         /// <summary>Called when this instance is being saved.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnValidate(System.Data.Linq.ChangeAction action);
         /// <summary>Called when this instance is created.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnCreated();
         /// <summary>Called when <see cref="TaskId"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnTaskIdChanging(int value);
         /// <summary>Called after <see cref="TaskId"/> has Changed.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnTaskIdChanged();
         /// <summary>Called when <see cref="Browser"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnBrowserChanging(string value);
         /// <summary>Called after <see cref="Browser"/> has Changed.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnBrowserChanged();
         /// <summary>Called when <see cref="Os"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnOsChanging(string value);
         /// <summary>Called after <see cref="Os"/> has Changed.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnOsChanged();
         /// <summary>Called when <see cref="CreatedDate"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnCreatedDateChanging(System.DateTime value);
         /// <summary>Called after <see cref="CreatedDate"/> has Changed.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnCreatedDateChanged();
         /// <summary>Called when <see cref="ModifiedDate"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnModifiedDateChanging(System.DateTime value);
         /// <summary>Called after <see cref="ModifiedDate"/> has Changed.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnModifiedDateChanged();
         /// <summary>Called when <see cref="RowVersion"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnRowVersionChanging(System.Data.Linq.Binary value);
         /// <summary>Called after <see cref="RowVersion"/> has Changed.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnRowVersionChanged();
         /// <summary>Called when <see cref="Task"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnTaskChanging(Task value);
         /// <summary>Called after <see cref="Task"/> has Changed.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnTaskChanged();
 
         #endregion
 
         #region Serialization
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private bool serializing;
 
         /// <summary>
@@ -297,6 +332,7 @@ namespace Tracker.Core.Data
         /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         [System.Runtime.Serialization.OnSerializing]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public void OnSerializing(System.Runtime.Serialization.StreamingContext context) {
             serializing = true;
         }
@@ -307,6 +343,7 @@ namespace Tracker.Core.Data
         /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         [System.Runtime.Serialization.OnSerialized]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public void OnSerialized(System.Runtime.Serialization.StreamingContext context) {
             serializing = false;
         }
@@ -317,6 +354,7 @@ namespace Tracker.Core.Data
         /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         [System.Runtime.Serialization.OnDeserializing]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
         }
@@ -326,6 +364,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="xml">The XML string representing a <see cref="TaskExtended"/> instance.</param>
         /// <returns>An instance of <see cref="TaskExtended"/> that is deserialized from the XML string.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static TaskExtended FromXml(string xml)
         {
             var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(TaskExtended));
@@ -342,6 +381,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="buffer">The byte array representing a <see cref="TaskExtended"/> instance.</param>
         /// <returns>An instance of <see cref="TaskExtended"/> that is deserialized from the byte array.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static TaskExtended FromBinary(byte[] buffer)
         {
             var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(TaskExtended));
@@ -361,6 +401,7 @@ namespace Tracker.Core.Data
         /// <returns>
         /// A new object that is a copy of this instance.
         /// </returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         object ICloneable.Clone()
         {
             var serializer = new System.Runtime.Serialization.DataContractSerializer(GetType());
@@ -381,6 +422,7 @@ namespace Tracker.Core.Data
         /// <remarks>
         /// Only loaded <see cref="T:System.Data.Linq.EntityRef`1"/> and <see cref="T:System.Data.Linq.EntitySet`1" /> child accessions will be cloned.
         /// </remarks>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public TaskExtended Clone()
         {
             return (TaskExtended)((ICloneable)this).Clone();
@@ -394,6 +436,7 @@ namespace Tracker.Core.Data
         /// <remarks>
         /// Detaching the entity will stop all lazy loading and allow it to be added to another <see cref="System.Data.Linq.DataContext"/>.
         /// </remarks>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public override void Detach()
         {
             if (!IsAttached())
