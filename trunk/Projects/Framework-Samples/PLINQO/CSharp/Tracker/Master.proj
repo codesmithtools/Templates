@@ -69,7 +69,7 @@
 
   <Target Name="Commit" DependsOnTargets="Compile">
     <CreateItem Include="Source\Tracker.Core\Data\**\*.*"
-                Exclude="Source\Tracker.Core\Data\Tracker.Core.Data.csp">
+                Exclude="@(SvnExclude);Source\Tracker.Core\Data\Tracker.Core.Data.csp">
       <Output TaskParameter="Include" ItemName="CommitFiles" />
     </CreateItem>
 
