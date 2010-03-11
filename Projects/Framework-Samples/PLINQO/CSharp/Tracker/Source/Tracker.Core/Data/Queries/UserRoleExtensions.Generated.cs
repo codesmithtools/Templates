@@ -19,13 +19,13 @@ namespace Tracker.Core.Data
     /// <summary>
     /// The query extension class for UserRole.
     /// </summary>
-    [System.Runtime.CompilerServices.CompilerGenerated()]
     public static partial class UserRoleExtensions
     {
 
         /// <summary>
         /// Gets an instance by the primary key.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static Tracker.Core.Data.UserRole GetByKey(this IQueryable<Tracker.Core.Data.UserRole> queryable, int userId, int roleId)
         {
             var entity = queryable as System.Data.Linq.Table<Tracker.Core.Data.UserRole>;
@@ -41,6 +41,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="table">Represents a table for a particular type in the underlying database containing rows are to be deleted.</param>
         /// <returns>The number of rows deleted from the database.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static int Delete(this System.Data.Linq.Table<Tracker.Core.Data.UserRole> table, int userId, int roleId)
         {
             return table.Delete(u => u.UserId == userId 
@@ -53,6 +54,7 @@ namespace Tracker.Core.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="userId">UserId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.UserRole> ByUserId(this IQueryable<Tracker.Core.Data.UserRole> queryable, int userId)
         {
             return queryable.Where(u => u.UserId == userId);
@@ -65,6 +67,7 @@ namespace Tracker.Core.Data
         /// <param name="userId">UserId to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.UserRole> ByUserId(this IQueryable<Tracker.Core.Data.UserRole> queryable, ComparisonOperator comparisonOperator, int userId)
         {
             switch (comparisonOperator)
@@ -91,6 +94,7 @@ namespace Tracker.Core.Data
         /// <param name="userId">UserId to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.UserRole> ByUserId(this IQueryable<Tracker.Core.Data.UserRole> queryable, int userId, params int[] additionalValues)
         {
             var userIdList = new List<int> { userId };
@@ -110,6 +114,7 @@ namespace Tracker.Core.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.UserRole> ByUserId(this IQueryable<Tracker.Core.Data.UserRole> queryable, IEnumerable<int> values)
         {
             return queryable.Where(u => values.Contains(u.UserId));
@@ -121,6 +126,7 @@ namespace Tracker.Core.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="roleId">RoleId to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.UserRole> ByRoleId(this IQueryable<Tracker.Core.Data.UserRole> queryable, int roleId)
         {
             return queryable.Where(u => u.RoleId == roleId);
@@ -133,6 +139,7 @@ namespace Tracker.Core.Data
         /// <param name="roleId">RoleId to search for. This is on the right side of the operator.</param>
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.UserRole> ByRoleId(this IQueryable<Tracker.Core.Data.UserRole> queryable, ComparisonOperator comparisonOperator, int roleId)
         {
             switch (comparisonOperator)
@@ -159,6 +166,7 @@ namespace Tracker.Core.Data
         /// <param name="roleId">RoleId to search for.</param>
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.UserRole> ByRoleId(this IQueryable<Tracker.Core.Data.UserRole> queryable, int roleId, params int[] additionalValues)
         {
             var roleIdList = new List<int> { roleId };
@@ -178,6 +186,7 @@ namespace Tracker.Core.Data
         /// <param name="queryable">Query to append where clause.</param>
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static IQueryable<Tracker.Core.Data.UserRole> ByRoleId(this IQueryable<Tracker.Core.Data.UserRole> queryable, IEnumerable<int> values)
         {
             return queryable.Where(u => values.Contains(u.RoleId));
@@ -190,6 +199,7 @@ namespace Tracker.Core.Data
         private static partial class Query
         {
 
+            [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
             internal static readonly Func<Tracker.Core.Data.TrackerDataContext, int, int, Tracker.Core.Data.UserRole> GetByKey =
                 System.Data.Linq.CompiledQuery.Compile(
                     (Tracker.Core.Data.TrackerDataContext db, int userId, int roleId) =>

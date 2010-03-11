@@ -20,7 +20,6 @@ namespace Tracker.Core.Data
     [System.ComponentModel.DataAnnotations.MetadataType(typeof(Tracker.Core.Data.UserRole.Metadata))]
     [System.Data.Services.Common.DataServiceKey("UserId", "RoleId")]
     [System.Diagnostics.DebuggerDisplay("UserId: {UserId}, RoleId: {RoleId}")]
-    [System.Runtime.CompilerServices.CompilerGenerated()]
     public partial class UserRole
         : LinqEntityBase, ICloneable, Tracker.Core.Data.Interfaces.IUserRole  
     {
@@ -28,6 +27,7 @@ namespace Tracker.Core.Data
         /// <summary>
         /// Initializes the <see cref="UserRole"/> class.
         /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         static UserRole()
         {
             AddSharedRules();
@@ -39,11 +39,13 @@ namespace Tracker.Core.Data
         /// Initializes a new instance of the <see cref="UserRole"/> class.
         /// </summary>
         [System.Diagnostics.DebuggerNonUserCode]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public UserRole()
         {
             Initialize();
         }
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private void Initialize()
         {
             _role = default(System.Data.Linq.EntityRef<Role>);
@@ -54,6 +56,7 @@ namespace Tracker.Core.Data
 
         #region Column Mapped Properties
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private int _userId;
 
         /// <summary>
@@ -61,6 +64,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "UserId", Storage = "_userId", DbType = "int NOT NULL", IsPrimaryKey = true, CanBeNull = false)]
         [System.Runtime.Serialization.DataMember(Order = 1)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public int UserId
         {
             get { return _userId; }
@@ -81,6 +85,7 @@ namespace Tracker.Core.Data
             }
         }
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private int _roleId;
 
         /// <summary>
@@ -88,6 +93,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Column(Name = "RoleId", Storage = "_roleId", DbType = "int NOT NULL", IsPrimaryKey = true, CanBeNull = false)]
         [System.Runtime.Serialization.DataMember(Order = 2)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public int RoleId
         {
             get { return _roleId; }
@@ -111,6 +117,7 @@ namespace Tracker.Core.Data
 
         #region Association Mapped Properties
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private System.Data.Linq.EntityRef<Role> _role;
 
         /// <summary>
@@ -118,6 +125,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "Role_UserRole", Storage = "_role", ThisKey = "RoleId", OtherKey = "Id", IsUnique = true, IsForeignKey = true, DeleteOnNull = true)]
         [System.Runtime.Serialization.DataMember(Order = 3, EmitDefaultValue = false)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public Role Role
         {
             get { return (serializing && !_role.HasLoadedOrAssignedValue) ? null : _role.Entity; }
@@ -150,6 +158,7 @@ namespace Tracker.Core.Data
         }
         
 
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private System.Data.Linq.EntityRef<User> _user;
 
         /// <summary>
@@ -157,6 +166,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [System.Data.Linq.Mapping.Association(Name = "User_UserRole", Storage = "_user", ThisKey = "UserId", OtherKey = "Id", IsUnique = true, IsForeignKey = true, DeleteOnNull = true)]
         [System.Runtime.Serialization.DataMember(Order = 4, EmitDefaultValue = false)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public User User
         {
             get { return (serializing && !_user.HasLoadedOrAssignedValue) ? null : _user.Entity; }
@@ -192,37 +202,50 @@ namespace Tracker.Core.Data
 
         #region Extensibility Method Definitions
         /// <summary>Called by the static constructor to add shared rules.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         static partial void AddSharedRules();
         /// <summary>Called when this instance is loaded.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnLoaded();
         /// <summary>Called when this instance is being saved.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnValidate(System.Data.Linq.ChangeAction action);
         /// <summary>Called when this instance is created.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnCreated();
         /// <summary>Called when <see cref="UserId"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnUserIdChanging(int value);
         /// <summary>Called after <see cref="UserId"/> has Changed.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnUserIdChanged();
         /// <summary>Called when <see cref="RoleId"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnRoleIdChanging(int value);
         /// <summary>Called after <see cref="RoleId"/> has Changed.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnRoleIdChanged();
         /// <summary>Called when <see cref="Role"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnRoleChanging(Role value);
         /// <summary>Called after <see cref="Role"/> has Changed.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnRoleChanged();
         /// <summary>Called when <see cref="User"/> is changing.</summary>
         /// <param name="value">The new value.</param>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnUserChanging(User value);
         /// <summary>Called after <see cref="User"/> has Changed.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnUserChanged();
 
         #endregion
 
         #region Serialization
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private bool serializing;
 
         /// <summary>
@@ -231,6 +254,7 @@ namespace Tracker.Core.Data
         /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         [System.Runtime.Serialization.OnSerializing]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public void OnSerializing(System.Runtime.Serialization.StreamingContext context) {
             serializing = true;
         }
@@ -241,6 +265,7 @@ namespace Tracker.Core.Data
         /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         [System.Runtime.Serialization.OnSerialized]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public void OnSerialized(System.Runtime.Serialization.StreamingContext context) {
             serializing = false;
         }
@@ -251,6 +276,7 @@ namespace Tracker.Core.Data
         /// <param name="context">The <see cref="System.Runtime.Serialization.StreamingContext"/> for the serialization.</param>
         [System.Runtime.Serialization.OnDeserializing]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public void OnDeserializing(System.Runtime.Serialization.StreamingContext context) {
             Initialize();
         }
@@ -260,6 +286,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="xml">The XML string representing a <see cref="UserRole"/> instance.</param>
         /// <returns>An instance of <see cref="UserRole"/> that is deserialized from the XML string.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static UserRole FromXml(string xml)
         {
             var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(UserRole));
@@ -276,6 +303,7 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="buffer">The byte array representing a <see cref="UserRole"/> instance.</param>
         /// <returns>An instance of <see cref="UserRole"/> that is deserialized from the byte array.</returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public static UserRole FromBinary(byte[] buffer)
         {
             var deserializer = new System.Runtime.Serialization.DataContractSerializer(typeof(UserRole));
@@ -295,6 +323,7 @@ namespace Tracker.Core.Data
         /// <returns>
         /// A new object that is a copy of this instance.
         /// </returns>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         object ICloneable.Clone()
         {
             var serializer = new System.Runtime.Serialization.DataContractSerializer(GetType());
@@ -315,6 +344,7 @@ namespace Tracker.Core.Data
         /// <remarks>
         /// Only loaded <see cref="T:System.Data.Linq.EntityRef`1"/> and <see cref="T:System.Data.Linq.EntitySet`1" /> child accessions will be cloned.
         /// </remarks>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public UserRole Clone()
         {
             return (UserRole)((ICloneable)this).Clone();
@@ -328,6 +358,7 @@ namespace Tracker.Core.Data
         /// <remarks>
         /// Detaching the entity will stop all lazy loading and allow it to be added to another <see cref="System.Data.Linq.DataContext"/>.
         /// </remarks>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public override void Detach()
         {
             if (!IsAttached())
