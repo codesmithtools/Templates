@@ -33,7 +33,11 @@
   </ItemGroup>
 
   <Target Name="Build">
-    <CallTarget Targets="Clean;Regenerate;Compile;Commit;Zip;Nightly"/>
+    <CallTarget Targets="Clean;Regenerate;Compile;Zip"/>
+  </Target>
+
+  <Target Name="Nightly">
+    <CallTarget Targets="Build;Deploy;Commit"/>
   </Target>
 
   <Target Name="Clean">
@@ -42,24 +46,25 @@
   </Target>
 
   <Target Name="Regenerate">
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="ConnectionString">
-      <Output TaskParameter="Value" PropertyName="ConnectionString" />
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\BuildServer" ValueName="TrackerConnectionString">
+      <Output TaskParameter="Value" PropertyName="TrackerConnectionString" />
     </RegistryRead>
 
     <FileUpdate Files="Source\Tracker.Core\Data\Tracker.Core.Data.csp"
                 Regex="Data Source=.;Initial Catalog=Tracker;Integrated Security=True"
-                ReplacementText="$(ConnectionString)" />
+                ReplacementText="$(TrackerConnectionString)" />
 
     <CodeSmith ProjectFiles="Source\Tracker.Core\Data\Tracker.Core.Data.csp" />
 
 
     <FileUpdate Files="Source\Tracker.Core\Data\Tracker.Core.Data.csp"
-                Regex="$(ConnectionString)"
+                Regex="$(TrackerConnectionString)"
                 ReplacementText="Data Source=.;Initial Catalog=Tracker;Integrated Security=True" />
   </Target>
 
   <Target Name="Compile" DependsOnTargets="Regenerate;Version">
-    <MSBuild Projects="Tracker.sln" Properties="Configuration=$(BuildConfiguration);" />
+    <MSBuild Projects="Tracker.sln" 
+             Properties="Configuration=$(BuildConfiguration);" />
   </Target>
 
   <Target Name="Commit" DependsOnTargets="Compile">
@@ -68,11 +73,11 @@
       <Output TaskParameter="Include" ItemName="CommitFiles" />
     </CreateItem>
 
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="GoogleUser">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\BuildServer" ValueName="GoogleUser">
       <Output TaskParameter="Value" PropertyName="GoogleUser" />
     </RegistryRead>
 
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="GooglePassword">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\BuildServer" ValueName="GooglePassword">
       <Output TaskParameter="Value" PropertyName="GooglePassword" />
     </RegistryRead>
 
@@ -82,7 +87,7 @@
                Password="$(GooglePassword)" />
   </Target>
 
-  <Target Name="Zip" DependsOnTargets="Version">
+  <Target Name="Zip" DependsOnTargets="Compile">
     <CreateItem Include="**\*.*" Exclude="@(DefaultExclude)">
       <Output TaskParameter="Include" ItemName="ZipFiles" />
     </CreateItem>
@@ -91,13 +96,13 @@
          ZipFileName="Zip\plinqo.tracker-r$(Revision).zip" />
   </Target>
 
-  <Target Name="Nightly" DependsOnTargets="Zip">
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="DeployFolder">
-      <Output TaskParameter="Value" PropertyName="DeployFolder" />
+  <Target Name="Deploy" DependsOnTargets="Zip">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\BuildServer" ValueName="TrackerDeployFolder">
+      <Output TaskParameter="Value" PropertyName="TrackerDeployFolder" />
     </RegistryRead>
 
     <Copy SourceFiles="Zip\plinqo.tracker-r$(Revision).zip"
-          DestinationFiles="$(DeployFolder)\plinqo.tracker-r$(Revision).zip" />
+          DestinationFiles="$(TrackerDeployFolder)\plinqo.tracker-r$(Revision).zip" />
   </Target>
 
   <Target Name="Version">
