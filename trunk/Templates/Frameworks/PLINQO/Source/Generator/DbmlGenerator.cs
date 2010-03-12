@@ -939,7 +939,7 @@ namespace LinqToSqlShared.Generator
         private static string GetSystemType(DataObjectBase d)
         {
             if (d.SystemType == typeof(XmlDocument))
-                return "System.Xml.Linq.XElement";
+                return "System.String";
 
             if (d.SystemType == typeof(byte[]))
                 return "System.Data.Linq.Binary";

@@ -221,7 +221,7 @@ namespace <%= Database.ContextNamespace %>
 <% } %>
             switch (comparisonOperator)
             {
-<% if (column.Type == "System.Object" || column.Type == "System.Guid" || column.Type == "System.Boolean" || column.Type == "System.Xml.Linq.XElement" ) { %>
+<% if (column.Type == "System.Object" || column.Type == "System.Guid" || column.Type == "System.Boolean") { %>
                 case ComparisonOperator.GreaterThan:
                 case ComparisonOperator.GreaterThanOrEquals:
                 case ComparisonOperator.LessThan:
