@@ -86,10 +86,10 @@
   </Target>
 
   <Target Name="Commit" DependsOnTargets="Compile">
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="GoogleUser">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\BuildServer" ValueName="GoogleUser">
       <Output TaskParameter="Value" PropertyName="GoogleUser" />
     </RegistryRead>
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="GooglePassword">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\BuildServer" ValueName="GooglePassword">
       <Output TaskParameter="Value" PropertyName="GooglePassword" />
     </RegistryRead>
 
