@@ -51,7 +51,7 @@ namespace Tracker.Core.Data.Interfaces
         /// <summary>
         /// Gets or sets the myxml column value.
         /// </summary>
-        string Myxml { get; set; }
+        System.Xml.Linq.XElement Myxml { get; set; }
         /// <summary>
         /// Gets or sets the <see cref="T:Tracker.Core.Data.Task"/> association.
         /// </summary>

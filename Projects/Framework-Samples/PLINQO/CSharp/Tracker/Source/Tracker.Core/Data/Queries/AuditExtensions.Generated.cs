@@ -591,7 +591,7 @@ namespace Tracker.Core.Data
         /// <param name="myxml">Myxml to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, string myxml)
+        public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, System.Xml.Linq.XElement myxml)
         {
             // support nulls
             return myxml == null 
@@ -603,26 +603,23 @@ namespace Tracker.Core.Data
         /// Gets a query for <see cref="Tracker.Core.Data.Audit.Myxml"/>.
         /// </summary>
         /// <param name="queryable">Query to append where clause.</param>
-        /// <param name="myxml">Myxml to search for.</param>
-        /// <param name="containmentOperator">The containment operator.</param>
+        /// <param name="myxml">Myxml to search for. This is on the right side of the operator.</param>
+        /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, ContainmentOperator containmentOperator, string myxml)
+        public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, ComparisonOperator comparisonOperator, System.Xml.Linq.XElement myxml)
         {
-            if (myxml == null && containmentOperator != ContainmentOperator.Equals && containmentOperator != ContainmentOperator.NotEquals)
-                throw new ArgumentNullException("myxml", "Parameter 'myxml' cannot be null with the specified ContainmentOperator.  Parameter 'containmentOperator' must be ContainmentOperator.Equals or ContainmentOperator.NotEquals to support null.");
+            if (myxml == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
+                throw new ArgumentNullException("myxml", "Parameter 'myxml' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
 
-            switch (containmentOperator)
+            switch (comparisonOperator)
             {
-                case ContainmentOperator.Contains:
-                    return queryable.Where(a => a.Myxml.Contains(myxml));
-                case ContainmentOperator.StartsWith:
-                    return queryable.Where(a => a.Myxml.StartsWith(myxml));
-                case ContainmentOperator.EndsWith:
-                    return queryable.Where(a => a.Myxml.EndsWith(myxml));
-                case ContainmentOperator.NotContains:
-                    return queryable.Where(a => a.Myxml.Contains(myxml) == false);
-                case ContainmentOperator.NotEquals:
+                case ComparisonOperator.GreaterThan:
+                case ComparisonOperator.GreaterThanOrEquals:
+                case ComparisonOperator.LessThan:
+                case ComparisonOperator.LessThanOrEquals:
+                    throw new ArgumentException("Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support System.Xml.Linq.XElement type.", "comparisonOperator");
+                case ComparisonOperator.NotEquals:
                     return myxml == null 
                         ? queryable.Where(a => a.Myxml != null) 
                         : queryable.Where(a => a.Myxml != myxml);
@@ -641,9 +638,9 @@ namespace Tracker.Core.Data
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, string myxml, params string[] additionalValues)
+        public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, System.Xml.Linq.XElement myxml, params System.Xml.Linq.XElement[] additionalValues)
         {
-            var myxmlList = new List<string> { myxml };
+            var myxmlList = new List<System.Xml.Linq.XElement> { myxml };
 
             if (additionalValues != null)
                 myxmlList.AddRange(additionalValues);
@@ -663,7 +660,7 @@ namespace Tracker.Core.Data
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, IEnumerable<string> values)
+        public static IQueryable<Tracker.Core.Data.Audit> ByMyxml(this IQueryable<Tracker.Core.Data.Audit> queryable, IEnumerable<System.Xml.Linq.XElement> values)
         {
             // creating dynmic expression to support nulls
             var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Audit, bool>("Myxml", values);
