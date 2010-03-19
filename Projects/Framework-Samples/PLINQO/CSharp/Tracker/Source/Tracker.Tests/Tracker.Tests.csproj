@@ -75,6 +75,7 @@
     <Compile Include="DemoTests.cs" />
     <Compile Include="FutureTests\FutureCacheTests.cs" />
     <Compile Include="FutureTests\FutureTests.cs" />
+    <Compile Include="InheritanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryTests\ByDateTimeTests.cs" />
     <Compile Include="QueryTests\ByEnumTests.cs" />
