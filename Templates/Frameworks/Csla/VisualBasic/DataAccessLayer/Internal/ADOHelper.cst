@@ -104,8 +104,126 @@ Public Class ADOHelper
         End Using
     End Function  
 
-    Private Shared Function InlineAssignHelper(Of T)(ByRef target As T, ByVal value As T) As T
-        target = value
-        Return value
+#Region "Nullable Helpers" 'This code is here to help in the Data access implementation of handling DBNull.Value.
+
+    ''' <summary>
+    ''' Simple empty string to DBNull.Value function.
+    ''' </summary>
+    ''' <param name="value"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Friend Shared Function NullStrings(ByVal value As String) As Object
+        If value Is Nothing Or value.Trim = vbNullString Then
+            Return DBNull.Value
+        Else
+            Return value
+        End If
     End Function
+
+    Friend Shared Function NullStrings(ByVal value As Nullable(Of Char)) As Object
+        If value Is Nothing Or CStr(value) = vbNullString Then
+            Return DBNull.Value
+        Else
+            Return value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Byte)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of SByte)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Single)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Short)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of UShort)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Integer)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of UInteger)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Long)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of ULong)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Double)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullBoolean(ByVal value As Nullable(Of Boolean)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Shared Function NullDates(ByVal myProperty As Nullable(Of DateTime)) As Object
+        If myProperty Is Nothing OrElse Not myProperty.HasValue OrElse myProperty.Value = Date.MaxValue OrElse myProperty.Value = Date.MinValue Then
+            Return DBNull.Value
+        Else
+            Return myProperty.Value
+        End If
+    End Function
+
+#End Region
+
 End Class
