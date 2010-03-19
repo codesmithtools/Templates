@@ -3075,6 +3075,20 @@
             <param name="evaluator">A Lambda expression returning a <typeparamref name="TEntity"/> that defines the update assignments to be performed on each item in <paramref name="filter"/>.</param>
             <returns>The number of rows updated in the database.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.XElementExtensions.AsXElement(System.String)">
+            <summary>
+            Converts a string to an XElement safely.  If the string is null or empty, null is returned.
+            </summary>
+            <param name="value">The value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.XElementExtensions.AsString(System.Xml.Linq.XElement)">
+            <summary>
+            Converts an XElement to a string safely. If element is null or invaild, null is returned.
+            </summary>
+            <param name="element">The element.</param>
+            <returns></returns>
+        </member>
         <member name="T:CodeSmith.Data.Properties.Resources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
