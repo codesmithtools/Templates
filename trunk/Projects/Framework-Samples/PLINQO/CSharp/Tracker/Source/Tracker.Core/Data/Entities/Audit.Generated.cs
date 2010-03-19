@@ -267,7 +267,7 @@ namespace Tracker.Core.Data
         }
 
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        private string _myxml;
+        private System.Xml.Linq.XElement _myxml;
 
         /// <summary>
         /// Gets or sets the myxml column value.
@@ -275,7 +275,7 @@ namespace Tracker.Core.Data
         [System.Data.Linq.Mapping.Column(Name = "myxml", Storage = "_myxml", DbType = "xml", UpdateCheck = System.Data.Linq.Mapping.UpdateCheck.Never)]
         [System.Runtime.Serialization.DataMember(Order = 9)]
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public string Myxml
+        public System.Xml.Linq.XElement Myxml
         {
             get { return _myxml; }
             set
@@ -449,7 +449,7 @@ namespace Tracker.Core.Data
         /// <summary>Called when <see cref="Myxml"/> is changing.</summary>
         /// <param name="value">The new value.</param>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        partial void OnMyxmlChanging(string value);
+        partial void OnMyxmlChanging(System.Xml.Linq.XElement value);
         /// <summary>Called after <see cref="Myxml"/> has Changed.</summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void OnMyxmlChanged();
