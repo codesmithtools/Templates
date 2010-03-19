@@ -45,9 +45,6 @@ namespace CodeSmith.SchemaHelper
         {
             string result = column.SystemType.ToString();
 
-            if (result.Equals("System.DateTime", StringComparison.InvariantCultureIgnoreCase))
-                result = "SmartDate";
-
             if (Configuration.Instance.TargetLanguage == LanguageEnum.VB)
                 result = result.Replace("[]", "()");
             bool appendNull = column.AllowDBNull && column.SystemType.IsValueType && canAppendNullable;

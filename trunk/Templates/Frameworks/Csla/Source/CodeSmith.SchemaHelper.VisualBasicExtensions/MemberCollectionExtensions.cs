@@ -119,20 +119,26 @@ namespace CodeSmith.SchemaHelper
                 
                 string originalCast;
                 string cast;
-                if (member.SystemType.Contains("SmartDate"))
-                {
-                    cast = member.IsNullable ? string.Format("If({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, Object), System.DBNull.Value))", castPrefix, propertyName)
-                                             : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, propertyName);
-                    originalCast = member.IsNullable ? string.Format("If({0}{1}.HasValue, DirectCast({0}{1}.Value.Date, Object), System.DBNull.Value))", castPrefix, originalPropertyName)
-                                                      : string.Format("DirectCast({0}{1}.Date, DateTime))", castPrefix, originalPropertyName);
-                }
-                else if (member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()" && !string.IsNullOrEmpty(includeThisPrefix))
+                if (member.IsNullable && member.SystemType != "System.Byte()" && !string.IsNullOrEmpty(includeThisPrefix))
                 {
                     //includeThisPrefix = this.
                     //castprefix = item.
                     //propertyName = bo.propertyname or propertyname
-                    cast = string.Format("If({0}{1}{2}.HasValue, DirectCast({0}{1}{2}.Value, Object), System.DBNull.Value))", includeThisPrefix, castPrefix, propertyName);
-                    originalCast = string.Format("If({0}{1}{2}.HasValue, DirectCast({0}{1}{2}.Value, Object), System.DBNull.Value))", includeThisPrefix, castPrefix, originalPropertyName);
+                    if(member.SystemType == "System.String")
+                    {
+                        cast = string.Format("ADOHelper.NullStrings({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = string.Format("ADOHelper.NullStrings({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
+                    }
+                    else if (member.SystemType == "System.Boolean") // Boolean
+                    {
+                        cast = string.Format("ADOHelper.NullBoolean({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = string.Format("ADOHelper.NullBoolean({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
+                    }
+                    else // Number
+                    {
+                        cast = string.Format("ADOHelper.NullNumbers({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = string.Format("ADOHelper.NullNumbers({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
+                    }
                 }
                 else
                 {
@@ -142,6 +148,7 @@ namespace CodeSmith.SchemaHelper
 
                 if (isUpdateStatement && !string.IsNullOrEmpty(originalPropertyName))
                     commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}Original{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, originalCast);
+                
                 commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
 
                 if (member.IsIdentity && includeOutPutParameters)
