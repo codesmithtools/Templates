@@ -119,20 +119,25 @@ namespace CodeSmith.SchemaHelper
                 
                 string originalCast;
                 string cast;
-                if (member.IsNullable && member.SystemType != "System.Byte()" && !string.IsNullOrEmpty(includeThisPrefix))
+                if (member.IsNullable && member.SystemType != "System.Byte()")
                 {
                     //includeThisPrefix = this.
                     //castprefix = item.
                     //propertyName = bo.propertyname or propertyname
-                    if(member.SystemType == "System.String")
+                    if (member.BaseSystemType == "System.String")
                     {
                         cast = string.Format("ADOHelper.NullStrings({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
                         originalCast = string.Format("ADOHelper.NullStrings({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
                     }
-                    else if (member.SystemType == "System.Boolean") // Boolean
+                    else if (member.BaseSystemType == "System.Boolean") // Boolean
                     {
                         cast = string.Format("ADOHelper.NullBoolean({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
                         originalCast = string.Format("ADOHelper.NullBoolean({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
+                    }
+                    else if (member.BaseSystemType == "System.DateTime") // DateTime
+                    {
+                        cast = string.Format("ADOHelper.NullDates({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = string.Format("ADOHelper.NullDates({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
                     }
                     else // Number
                     {

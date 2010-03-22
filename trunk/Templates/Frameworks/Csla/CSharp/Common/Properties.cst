@@ -21,7 +21,7 @@
 <% } %>
 
 <%  foreach(Member member in Entity.MembersNoRowVersion){ if (UseMemberVariables){ %>
-        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>);
+        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, null<% } %>);
         private <%= member.SystemType %> <%= member.PrivateMemberVariableName %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue;<%= member.BuildDataObjectField() %>
 <% if(member.HasDescription) { %>
         /// <summary>
@@ -35,7 +35,7 @@
         }
 
 <%if (member.IsPrimaryKey && !member.IsIdentity) { %>
-        private static readonly PropertyInfo< <%= member.SystemType %> > _original<%= member.PropertyName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.Original<%= member.PropertyName %>);
+        private static readonly PropertyInfo< <%= member.SystemType %> > _original<%= member.PropertyName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.Original<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, null<% } %>);
         private <%= member.SystemType %> _original<%= member.PropertyName %> = _original<%= member.PropertyName %>Property.DefaultValue;
         /// <summary>
         /// Holds the original value for <%= member.PropertyName %>. This is used for non identity primary keys.
@@ -47,7 +47,7 @@
         }
 
 <% } } else { %>
-        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>);<%= member.BuildDataObjectField() %>
+        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, null<% } %>);<%= member.BuildDataObjectField() %>
 <% if(member.HasDescription) { %>
         /// <summary>
         /// <%= member.Description %>
@@ -60,7 +60,7 @@
         }
 
 <%if (member.IsPrimaryKey && !member.IsIdentity) { %>
-        private static readonly PropertyInfo< <%= member.SystemType %> > _original<%= member.PropertyName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.Original<%= member.PropertyName %>);
+        private static readonly PropertyInfo< <%= member.SystemType %> > _original<%= member.PropertyName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.Original<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, null<% } %>);
         /// <summary>
         /// Holds the original value for <%= member.PropertyName %>. This is used for non identity primary keys.
         /// </summary>
