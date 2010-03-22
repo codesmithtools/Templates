@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -13,7 +13,7 @@
         #region Properties
 
 <%  foreach(Member member in Entity.MembersNoRowVersion){ if (UseMemberVariables){ %>
-        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>);
+        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, null<% } %>);
         private <%= member.SystemType %> <%= member.PrivateMemberVariableName %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue;<%= member.BuildDataObjectField() %>
 <% if(member.HasDescription) { %>
         /// <summary>
@@ -26,7 +26,7 @@
         }
 
 <% } else { %>
-        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>);<%= member.BuildDataObjectField() %>
+        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, null<% } %>);<%= member.BuildDataObjectField() %>
 <% if(member.HasDescription) { %>
         /// <summary>
         /// <%= member.Description %>

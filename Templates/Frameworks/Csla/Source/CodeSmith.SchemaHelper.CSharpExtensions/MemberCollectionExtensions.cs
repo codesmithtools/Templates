@@ -118,21 +118,31 @@ namespace CodeSmith.SchemaHelper
 
                 string originalCast;
                 string cast;
-                if (member.SystemType.Contains("SmartDate"))
-                {
-                    cast = member.IsNullable ? string.Format("(DateTime?){0}{1});", castPrefix, propertyName)
-                                             : string.Format("(DateTime){0}{1});", castPrefix, propertyName);
-
-                    originalCast = member.IsNullable ? string.Format("(DateTime?){0}{1});", castPrefix, originalPropertyName)
-                                                     : string.Format("(DateTime){0}{1});", castPrefix, originalPropertyName);
-                }
-                else if (member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" && !string.IsNullOrEmpty(includeThisPrefix))
+                if (member.IsNullable && member.SystemType != "System.Byte[]")
                 {
                     //includeThisPrefix = this.
                     //castprefix = item.
                     //propertyName = bo.propertyname or propertyname
-                    cast = string.Format("{0}{1}{2}.HasValue ? (object){0}{1}{2}.Value : DBNull.Value);", includeThisPrefix, castPrefix, propertyName);
-                    originalCast = string.Format("{0}{1}{2}.HasValue ? (object){0}{1}{2}.Value : DBNull.Value);", includeThisPrefix, castPrefix, originalPropertyName);
+                    if (member.BaseSystemType == "System.String")
+                    {
+                        cast = string.Format("ADOHelper.NullStrings({0}{1}{2}));", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = string.Format("ADOHelper.NullStrings({0}{1}{2}));", includeThisPrefix, castPrefix, originalPropertyName);
+                    }
+                    else if (member.BaseSystemType == "System.Boolean") // Boolean
+                    {
+                        cast = string.Format("ADOHelper.NullBoolean({0}{1}{2}));", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = string.Format("ADOHelper.NullBoolean({0}{1}{2}));", includeThisPrefix, castPrefix, originalPropertyName);
+                    }
+                    else if (member.BaseSystemType == "System.DateTime") // DateTime
+                    {
+                        cast = string.Format("ADOHelper.NullDates({0}{1}{2}));", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = string.Format("ADOHelper.NullDates({0}{1}{2}));", includeThisPrefix, castPrefix, originalPropertyName);
+                    }
+                    else // Number
+                    {
+                        cast = string.Format("ADOHelper.NullNumbers({0}{1}{2}));", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = string.Format("ADOHelper.NullNumbers({0}{1}{2}));", includeThisPrefix, castPrefix, originalPropertyName);
+                    }
                 }
                 else
                 {

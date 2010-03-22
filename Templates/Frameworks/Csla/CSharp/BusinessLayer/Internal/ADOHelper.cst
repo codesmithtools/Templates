@@ -107,5 +107,90 @@ namespace <%= BusinessProjectName %>
         }
 
         #endregion
+        
+        #region Nullable Helpers //This code is here to help in the Data access implementation of handling DBNull.Value.
+
+        /// <summary>
+        /// Simple empty string to DBNull.Value function.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <remarks></remarks>
+        internal static object NullStrings(string value)
+        {
+            return string.IsNullOrEmpty(value) ? (object) DBNull.Value : value;
+        }
+
+        internal static object NullStrings(char? value)
+        {
+            return value ?? (object) DBNull.Value;
+        }
+
+        internal static object NullNumbers(byte? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        internal static object NullNumbers(sbyte? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        internal static object NullNumbers(float? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        internal static object NullNumbers(short? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        internal static object NullNumbers(ushort? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        internal static object NullNumbers(int? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        internal static object NullNumbers(uint? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        internal static object NullNumbers(long? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        internal static object NullNumbers(ulong? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        internal static object NullNumbers(decimal? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        internal static object NullNumbers(double? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        internal static object NullBoolean(bool? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        internal static object NullDates(DateTime? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+        
+        #endregion
     }
 }

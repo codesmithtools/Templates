@@ -113,7 +113,7 @@ Public Class ADOHelper
     ''' <returns></returns>
     ''' <remarks></remarks>
     Friend Shared Function NullStrings(ByVal value As String) As Object
-        If value Is Nothing Or value.Trim = vbNullString Then
+        If value Is Nothing Or value = vbNullString Then
             Return DBNull.Value
         Else
             Return value
@@ -200,6 +200,14 @@ Public Class ADOHelper
         End If
     End Function
 
+    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Decimal)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
     Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Double)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
@@ -216,11 +224,11 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Shared Function NullDates(ByVal myProperty As Nullable(Of DateTime)) As Object
-        If myProperty Is Nothing OrElse Not myProperty.HasValue OrElse myProperty.Value = Date.MaxValue OrElse myProperty.Value = Date.MinValue Then
+    Friend Shared Function NullDates(ByVal value As Nullable(Of DateTime)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
-            Return myProperty.Value
+            Return value.Value
         End If
     End Function
 
