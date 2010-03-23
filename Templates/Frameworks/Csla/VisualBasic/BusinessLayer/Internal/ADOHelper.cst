@@ -112,23 +112,23 @@ Public Class ADOHelper
     ''' <param name="value"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Friend Shared Function NullStrings(ByVal value As String) As Object
-        If value Is Nothing Or value = vbNullString Then
+    Friend Overloads Shared Function NullCheck(ByVal value As String) As Object
+        If value Is Nothing OrElse value.Trim = vbNullString Then
             Return DBNull.Value
         Else
             Return value
         End If
     End Function
 
-    Friend Shared Function NullStrings(ByVal value As Nullable(Of Char)) As Object
-        If value Is Nothing Or CStr(value) = vbNullString Then
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Char)) As Object
+        If value Is Nothing OrElse CStr(value) = vbNullString Then
             Return DBNull.Value
         Else
             Return value
         End If
     End Function
 
-    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Byte)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Byte)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
@@ -136,7 +136,7 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of SByte)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of SByte)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
@@ -144,7 +144,7 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Single)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Single)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
@@ -152,7 +152,7 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Short)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Short)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
@@ -160,7 +160,7 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of UShort)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of UShort)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
@@ -168,7 +168,7 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Integer)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Integer)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
@@ -176,7 +176,7 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of UInteger)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of UInteger)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
@@ -184,7 +184,7 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Long)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Long)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
@@ -192,7 +192,7 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of ULong)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of ULong)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
@@ -200,7 +200,7 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Decimal)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Decimal)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
@@ -208,7 +208,7 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Overloads Shared Function NullNumbers(ByVal value As Nullable(Of Double)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Double)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
@@ -216,7 +216,7 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Overloads Shared Function NullBoolean(ByVal value As Nullable(Of Boolean)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Boolean)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
@@ -224,7 +224,15 @@ Public Class ADOHelper
         End If
     End Function
 
-    Friend Shared Function NullDates(ByVal value As Nullable(Of DateTime)) As Object
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of DateTime)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Guid)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
             Return DBNull.Value
         Else
