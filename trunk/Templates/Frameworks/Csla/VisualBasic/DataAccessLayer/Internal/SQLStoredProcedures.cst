@@ -29,10 +29,10 @@ End If
 Response.WriteLine("--region Drop Existing Procedures")
 Response.WriteLine("")
 
-GenerateDropStatement(GetInsertStoredProcedureName())
-GenerateDropStatement(GetUpdateStoredProcedureName())
-GenerateDropStatement(GetDeleteStoredProcedureName())
-GenerateDropStatement(GetSelectStoredProcedureName())
+GenerateDropStatement(GetInsertStoredProcedureShortName())
+GenerateDropStatement(GetUpdateStoredProcedureShortName())
+GenerateDropStatement(GetDeleteStoredProcedureShortName())
+GenerateDropStatement(GetSelectStoredProcedureShortName())
 
 Response.WriteLine("--endregion")
 Response.WriteLine("")
@@ -64,7 +64,7 @@ GO
 PRINT N'Creating <%= GetInsertStoredProcedureName() %>'
 GO
 
-IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetInsertStoredProcedureName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetInsertStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
         RAISERROR ('The procedure <%= GetInsertStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
@@ -184,7 +184,7 @@ GO
 PRINT N'Creating <%= GetUpdateStoredProcedureName() %>'
 GO
 
-IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetUpdateStoredProcedureName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetUpdateStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
         RAISERROR ('The procedure <%= GetUpdateStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
@@ -260,7 +260,7 @@ GO
 PRINT N'Creating <%= GetDeleteStoredProcedureName() %>'
 GO
 
-IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetDeleteStoredProcedureName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetDeleteStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
         RAISERROR ('The procedure <%= GetDeleteStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
@@ -325,7 +325,7 @@ GO
 PRINT N'Creating <%= GetSelectStoredProcedureName() %>'
 GO
 
-IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetSelectStoredProcedureName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetSelectStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
         RAISERROR ('The procedure <%= GetSelectStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1

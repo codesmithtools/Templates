@@ -415,9 +415,19 @@ namespace QuickStart
             return String.Format("{0}[{1}{2}_Insert]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
         }
 
+        public virtual string GetInsertStoredProcedureShortName()
+        {
+            return String.Format("{0}{1}_Insert", ProcedurePrefix, Entity.ClassName);
+        }
+
         public virtual string GetUpdateStoredProcedureName()
         {
             return String.Format("{0}[{1}{2}_Update]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
+        }
+
+        public virtual string GetUpdateStoredProcedureShortName()
+        {
+            return String.Format("{0}{1}_Update", ProcedurePrefix, Entity.ClassName);
         }
 
         public virtual string GetDeleteStoredProcedureName()
@@ -425,9 +435,19 @@ namespace QuickStart
             return String.Format("{0}[{1}{2}_Delete]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
         }
 
+        public virtual string GetDeleteStoredProcedureShortName()
+        {
+            return String.Format("{0}{1}_Delete", ProcedurePrefix, Entity.ClassName);
+        }
+
         public virtual string GetSelectStoredProcedureName()
         {
             return String.Format("{0}[{1}{2}_Select]", GetTableOwner(), ProcedurePrefix, Entity.ClassName);
+        }
+
+        public virtual string GetSelectStoredProcedureShortName()
+        {
+            return String.Format("{0}{1}_Select", ProcedurePrefix, Entity.ClassName);
         }
 
         #endregion
