@@ -124,26 +124,8 @@ namespace CodeSmith.SchemaHelper
                     //includeThisPrefix = this.
                     //castprefix = item.
                     //propertyName = bo.propertyname or propertyname
-                    if (member.BaseSystemType == "System.String")
-                    {
-                        cast = string.Format("ADOHelper.NullStrings({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
-                        originalCast = string.Format("ADOHelper.NullStrings({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
-                    }
-                    else if (member.BaseSystemType == "System.Boolean") // Boolean
-                    {
-                        cast = string.Format("ADOHelper.NullBoolean({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
-                        originalCast = string.Format("ADOHelper.NullBoolean({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
-                    }
-                    else if (member.BaseSystemType == "System.DateTime") // DateTime
-                    {
-                        cast = string.Format("ADOHelper.NullDates({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
-                        originalCast = string.Format("ADOHelper.NullDates({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
-                    }
-                    else // Number
-                    {
-                        cast = string.Format("ADOHelper.NullNumbers({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
-                        originalCast = string.Format("ADOHelper.NullNumbers({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
-                    }
+                    cast = string.Format("ADOHelper.NullCheck({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
+                    originalCast = string.Format("ADOHelper.NullCheck({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
                 }
                 else
                 {
