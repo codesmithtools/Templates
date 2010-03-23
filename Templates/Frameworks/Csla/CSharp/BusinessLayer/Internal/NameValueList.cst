@@ -4,6 +4,7 @@
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
 
 <%@ Import Namespace="SchemaExplorer" %>
@@ -33,7 +34,6 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %>
     {
-
         #region "Preserved Code"
 
 <% if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL){ %>
@@ -119,6 +119,5 @@ namespace <%= BusinessProjectName %>
 <% } %>
 
         #endregion
-
     }
 }
