@@ -1949,6 +1949,21 @@
             <param name="isForTranslate">if set to <c>true</c>, adjust the sql command to support calling DataContext.Translate().</param>
             <returns></returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextExtensions.BeginTransaction(System.Data.Linq.DataContext)">
+            <summary>
+            Starts a database transaction.
+            </summary>
+            <param name="dataContext">The data context.</param>
+            <returns>An object representing the new transaction.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.DataContextExtensions.BeginTransaction(System.Data.Linq.DataContext,System.Data.IsolationLevel)">
+            <summary>
+            Starts a database transaction with the specified isolation level. 
+            </summary>
+            <param name="dataContext">The data context.</param>
+            <param name="isolationLevel">The isolation level for the transaction.</param>
+            <returns>An object representing the new transaction.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.DataContextExtensions.CombineCommands(System.Data.Linq.DataContext,System.Collections.Generic.IEnumerable{System.Data.Common.DbCommand})">
             <summary>
             Combines multiple SELECT commands into a single <see cref="T:System.Data.SqlClient.SqlCommand"/> so that all statements can be executed in a
