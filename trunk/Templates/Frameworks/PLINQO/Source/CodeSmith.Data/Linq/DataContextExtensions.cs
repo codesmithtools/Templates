@@ -135,7 +135,12 @@ namespace CodeSmith.Data.Linq
         /// <returns></returns>
         public static DbCommand GetCommand(this DataContext context, IQueryable query, bool isForTranslate)
         {
+            // HACK: GetCommand will not work with transactions and the L2SProfiler.
+            DbTransaction tran = context.Transaction;
+            context.Transaction = null;
             var dbCommand = context.GetCommand(query);
+            dbCommand.Transaction = tran;
+            context.Transaction = tran;
 
             if (!isForTranslate)
                 return dbCommand;
