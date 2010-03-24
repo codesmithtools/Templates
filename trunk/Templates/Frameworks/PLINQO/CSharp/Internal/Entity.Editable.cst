@@ -1,5 +1,5 @@
 ﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Debug="True" Encoding="UTF-8"
-    Description="Linq to Sql Entity Class." %>
+    Description="Linq to Sql Entity Class." CompilerVersion="v3.5" %>
 
 <%@ Assembly Name="ICSharpCode.NRefactory, Version=4.0.0.9999, Culture=neutral, PublicKeyToken=efe927acf176eea2, processorArchitecture=MSIL" Path="..\..\Common" %>
 <%@ Assembly Name="CodeSmith.InsertClassMergeStrategy" Path="..\..\Common" %>
@@ -28,6 +28,9 @@
     Type="System.String" Default="" Optional="True" 
     Description="The namespace for the interfaces.  Leave blank to not generate them." %>
 
+<%@ Property Name="EnumDatabase"
+    Type="LinqToSqlShared.Generator.DbmlEnum.Database" Optional="True"
+    Description="Enum Collection for Database." %>
 
 <%@ Property Category="2.Class" Name="ExistingFile"
     Type="CodeFileParser" Optional="True" %>
@@ -75,6 +78,27 @@ namespace <%= Database.EntityNamespace %>
             }
             foreach(Column column in Type.Columns)
             {
+                string dataType = column.Type;
+                
+                bool isVersion = column.IsVersion == true && dataType.Equals("System.Data.Linq.Binary");
+                    
+                LinqToSqlShared.Generator.DbmlEnum.Enum enumType = EnumDatabase != null
+                    ? EnumDatabase.Enums.FirstOrDefault(e => e.Name == column.Type) : null;
+            
+                if (column.IsDelayLoaded == true && column.IsPrimaryKey == false)
+                {
+                    dataType = CSharpAlias[dataType];
+                }
+                else if (column.CanBeNull == true && (CommonUtility.IsNullableType(dataType) || enumType != null))
+                {
+                    dataType = string.Format("{0}?", CSharpAlias[dataType]);
+                }
+                else
+                {
+                    dataType = CSharpAlias[dataType];
+                }
+                
+
                 if(sourceAttributes.PropertyMap.ContainsKey(column.Member))
                 {
                     foreach (ICSharpCode.NRefactory.Ast.AttributeSection attributeSection in sourceAttributes.PropertyMap[column.Member].Attributes)
@@ -124,7 +148,7 @@ namespace <%= Database.EntityNamespace %>
                     }
                 }
             %>
-            public <%= CSharpAlias[column.Type] %> <%=column.Member%> { get; set; }
+            public <%= dataType %> <%=column.Member%> { get; set; }
 
 <%            } // for each column
 
