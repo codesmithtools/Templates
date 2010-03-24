@@ -200,7 +200,7 @@ Next
 
 <% If (Entity.HasIdentityMember) Then %>
 <% for each [member] As Member in Entity.PrimaryKey.KeyMembers 
-    If(member.IsIdentity) Then%>
+    If(member.IsIdentity OrElse member.DataType = DbType.Guid.ToString()) Then%>
                         item.<%= [member].PropertyName %> = <%If Not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>
 <% End If
 Next
@@ -341,7 +341,7 @@ Next
                             item.<%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
 <%For Each member As Member In Entity.PrimaryKey.KeyMembers
-    If(member.IsIdentity) Then
+    If(member.IsIdentity OrElse member.DataType = DbType.Guid.ToString()) Then
         If(UseMemberVariables) Then %>
                             item.<%= [member].PropertyName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>
 <%      End If

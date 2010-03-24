@@ -184,7 +184,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                         {
 <% if(Entity.HasRowVersionMember) { %>
                             item.<%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-<% } if(Entity.HasIdentityMember) { foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { %>
+<% } if(Entity.HasIdentityMember) { foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity || member.DataType == DbType.Guid.ToString()) { %>
                             item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>");<% } %>
 <% } } } %>
                         }
@@ -329,7 +329,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                             {
 <% if(Entity.HasRowVersionMember) { %>
                                 item.<%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { %>
+<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity || member.DataType == DbType.Guid.ToString()) { %>
                                 item.<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
 <% }  } %>
                             }

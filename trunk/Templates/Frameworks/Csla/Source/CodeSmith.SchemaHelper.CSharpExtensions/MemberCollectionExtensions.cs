@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace CodeSmith.SchemaHelper
 {
@@ -137,7 +138,7 @@ namespace CodeSmith.SchemaHelper
                 
                 commandParameters += string.Format("\n\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
 
-                if (member.IsIdentity && includeOutPutParameters)
+                if ((member.IsIdentity || (member.DataType == DbType.Guid.ToString() && member.IsPrimaryKey)) && includeOutPutParameters)
                 {
                     commandParameters += string.Format("\n\t\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Output;", Configuration.Instance.ParameterPrefix, member.ColumnName);
                 }

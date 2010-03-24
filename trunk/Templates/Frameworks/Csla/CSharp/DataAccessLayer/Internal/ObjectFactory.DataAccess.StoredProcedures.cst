@@ -183,7 +183,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 
 <% if(Entity.HasRowVersionMember) { %>
                     item.<%= Entity.RowVersionMember.PropertyName %> = (<%= Entity.RowVersionMember.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value;
-<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) {  %>
+<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity || member.DataType == DbType.Guid.ToString()) {  %>
                     item.<%= member.PropertyName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
 <% } } %>
                 }
@@ -322,7 +322,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 
 <% if(Entity.HasRowVersionMember) { %>
                         item.<%= Entity.RowVersionMember.PropertyName %> = (<%= Entity.RowVersionMember.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value;
-<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity) { %>
+<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity || member.DataType == DbType.Guid.ToString()) { %>
                         item.<%= member.PropertyName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
 <% } } %>
                     }

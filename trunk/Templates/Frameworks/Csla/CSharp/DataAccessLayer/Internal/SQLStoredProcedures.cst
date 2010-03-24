@@ -98,7 +98,7 @@ AS
 
 <%-- If the primary key is a GUID, then assign a new GUID using NEWID(). --%>
 <% if (primaryKeyColumn.DataType == DbType.Guid) { %>
-SET @<%= primaryKeyColumn.Name %> = NEWID()
+SET <%= ParameterPrefix %><%= primaryKeyColumn.Name %> = NEWID()
 
 <% } %>
 INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
@@ -108,7 +108,7 @@ INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
     <% GenerateColumns(SourceTable.NonPrimaryKeyColumns, 1, false); %>
 ) VALUES (
     <% if (primaryKeyColumn.DataType == DbType.Guid) { %>
-    @<%= primaryKeyColumn.Name %>,
+    <%= ParameterPrefix %><%= primaryKeyColumn.Name %>,
     <% } %>
     <% GenerateVariables(SourceTable.NonPrimaryKeyColumns, 1, false); %>
 )
@@ -538,6 +538,10 @@ public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst
             Response.Write(" ");
         }
     }
+    
+    // Is Guid column.
+    if(includeOriginalParam && column.DataType == DbType.Guid && column.IsPrimaryKeyMember)
+        isOutput = true;
 
     GenerateIndent(indentLevel);
     Response.Write(GetSqlParameterStatement(column, isOutput));
@@ -561,7 +565,7 @@ public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst
         }
 
         GenerateIndent(indentLevel);
-        Response.Write(GetSqlParameterStatement(column, isOutput, includeOriginalParam));
+        Response.Write(GetSqlParameterStatement(column, false, includeOriginalParam));
     }
 }
 

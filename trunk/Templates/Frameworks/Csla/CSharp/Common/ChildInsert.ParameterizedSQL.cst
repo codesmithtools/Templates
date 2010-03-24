@@ -41,7 +41,7 @@
                     throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 <% } %>
 
-<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { if(UseMemberVariables) { %>
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity || member.DataType == DbType.Guid.ToString()) { if(UseMemberVariables) { %>
                 _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
 <% } else { %>
                 LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);

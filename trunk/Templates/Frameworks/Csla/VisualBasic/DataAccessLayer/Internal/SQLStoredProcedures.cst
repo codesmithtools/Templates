@@ -90,7 +90,7 @@ AS
 
 <%-- If the primary key is a GUID, then assign a New GUID using NEWID(). --%>
 <% If (primaryKeyColumn.DataType = DbType.Guid) Then %>
-SET @<%= primaryKeyColumn.Name %> = NEWID()
+SET <%= ParameterPrefix %><%= primaryKeyColumn.Name %> = NEWID()
 
 <% End If %>
 INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
@@ -101,7 +101,7 @@ INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
 
 ) VALUES (
     <% If (primaryKeyColumn.DataType = DbType.Guid) Then %>
-    @<%= primaryKeyColumn.Name %>,
+    <%= ParameterPrefix %><%= primaryKeyColumn.Name %>,
     <% End If %>
     <% GenerateVariables(SourceTable.NonPrimaryKeyColumns, 1, false) %>
 )
@@ -517,6 +517,11 @@ Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As 
         End If
     End If
     
+    ' Is Guid column.
+    If(includeOriginalParam AndAlso column.DataType = DbType.Guid AndAlso column.IsPrimaryKeyMember) Then
+        isOutput = True
+    End If
+    
     GenerateIndent(indentLevel)
     Response.Write(GetSqlParameterStatement(column, isOutput))
     If makeParametersNullable Then
@@ -537,7 +542,7 @@ Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As 
         End If
     
         GenerateIndent(indentLevel)
-        Response.Write(GetSqlParameterStatement(column, isOutput, includeOriginalParam))
+        Response.Write(GetSqlParameterStatement(column, False, includeOriginalParam))
     End If
 End Sub
 

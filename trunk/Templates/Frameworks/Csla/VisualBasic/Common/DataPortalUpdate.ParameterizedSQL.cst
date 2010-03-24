@@ -78,7 +78,7 @@ Next
                             <%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
 <% End If %>
 <%For Each member As Member In Entity.PrimaryKey.KeyMembers
-    If(member.IsIdentity) Then
+    If(member.IsIdentity OrElse member.DataType = DbType.Guid.ToString()) Then
         If(UseMemberVariables) Then %>
                             <%= member.PrivateMemberVariableName %> = <%If not [member].HasByteArrayColumn() Then %>reader.<%= [member].GetReaderMethod() %>("<%= [member].ColumnName %>")<% else %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>")<% End If %>
 <%      Else %>
