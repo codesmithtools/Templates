@@ -200,7 +200,7 @@ Next
 <% End If %>
 <% If (Entity.HasIdentityMember) Then %>
 <% for each member As Member in Entity.PrimaryKey.KeyMembers
-    If(member.IsIdentity) Then %>
+    If(member.IsIdentity OrElse member.DataType = DbType.Guid.ToString()) Then %>
                     item.<%= [member].PropertyName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
 <% End If
 Next
@@ -337,7 +337,7 @@ Next %>
                     item.<%= Entity.RowVersionMember.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value, <%= Entity.RowVersionMember.SystemType %>)
 <% End If 
 For Each member As Member In Entity.PrimaryKey.KeyMembers
-    If(member.IsIdentity) Then %>
+    If(member.IsIdentity OrElse member.DataType = DbType.Guid.ToString()) Then %>
                     item.<%= member.PropertyName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
 <%End If
 Next %>

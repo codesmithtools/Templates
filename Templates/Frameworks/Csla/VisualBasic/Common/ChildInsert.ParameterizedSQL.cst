@@ -47,7 +47,7 @@ Next %>
 <% End If %>
 
 <% For Each member As Member In Entity.PrimaryKey.KeyMembers
-    If Not (member.IsIdentity) Then
+    If Not (member.IsIdentity OrElse member.DataType = DbType.Guid.ToString()) Then
         If(UseMemberVariables) Then %>
             _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
 <%      Else %>
