@@ -50,9 +50,9 @@ namespace Tracker.Core.Data
 
             public System.Data.Linq.Binary RowVersion { get; set; }
 
-            public int UserId { get; set; }
+            public int? UserId { get; set; }
 
-            public int TaskId { get; set; }
+            public int? TaskId { get; set; }
 
             public System.Xml.Linq.XElement Myxml { get; set; }
 

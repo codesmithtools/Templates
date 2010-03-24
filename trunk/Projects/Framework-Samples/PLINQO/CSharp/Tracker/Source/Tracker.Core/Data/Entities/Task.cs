@@ -42,13 +42,13 @@ namespace Tracker.Core.Data
             [DataType(System.ComponentModel.DataAnnotations.DataType.MultilineText)]
             public string Details { get; set; }
 
-            public System.DateTime StartDate { get; set; }
+            public System.DateTime? StartDate { get; set; }
 
-            public System.DateTime DueDate { get; set; }
+            public System.DateTime? DueDate { get; set; }
 
-            public System.DateTime CompleteDate { get; set; }
+            public System.DateTime? CompleteDate { get; set; }
 
-            public int AssignedId { get; set; }
+            public int? AssignedId { get; set; }
 
             [Now(EntityState.New)]
             [CodeSmith.Data.Audit.NotAudited]
@@ -68,7 +68,7 @@ namespace Tracker.Core.Data
             public Status Status { get; set; }
 
             [Required(ErrorMessage = "Priority is Required")]
-            public Priority Priority { get; set; }
+            public Priority? Priority { get; set; }
 
             public TaskExtended TaskExtended { get; set; }
 

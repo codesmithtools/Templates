@@ -25,7 +25,7 @@ namespace Tracker.Core.Data
 
             public System.Guid Id { get; set; }
 
-            public System.Guid AlternateId { get; set; }
+            public System.Guid? AlternateId { get; set; }
 
         }
 
