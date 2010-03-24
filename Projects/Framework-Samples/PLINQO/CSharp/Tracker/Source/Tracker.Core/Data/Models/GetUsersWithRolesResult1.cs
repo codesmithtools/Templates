@@ -57,11 +57,11 @@ namespace Tracker.Core.Data
 
             public bool IsApproved { get; set; }
 
-            public System.DateTime LastLoginDate { get; set; }
+            public System.DateTime? LastLoginDate { get; set; }
 
             public System.DateTime LastActivityDate { get; set; }
 
-            public System.DateTime LastPasswordChangeDate { get; set; }
+            public System.DateTime? LastPasswordChangeDate { get; set; }
 
             public string AvatarType { get; set; }
 
