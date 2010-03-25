@@ -28,6 +28,12 @@ namespace CodeSmith.SchemaHelper
             return string.Format("[{0}]", member.ColumnName);
         }
 
+        public static bool ExcludeBusinessSizeRule(this Member member)
+        {
+            return member.NativeType.Equals("ntext", StringComparison.InvariantCultureIgnoreCase) ||
+                  (member.NativeType.Equals("nvarchar", StringComparison.InvariantCultureIgnoreCase) && member.Size == -1);
+        }
+
         #region Internal Properties and Members
 
         internal static MapCollection _dbTypeToDataReaderMethod;
