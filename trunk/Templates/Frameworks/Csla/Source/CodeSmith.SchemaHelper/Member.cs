@@ -21,6 +21,7 @@ namespace CodeSmith.SchemaHelper
             SystemType = column.ResolveSystemType();
             Description = column.ResolveDescription();
             DataType = column.DataType.ToString();
+            NativeType = column.NativeType;
             IsUnique = column.IsUnique;
             IsNullable = column.AllowDBNull;
             IsPrimaryKey = column.IsPrimaryKeyMember;
@@ -78,6 +79,8 @@ namespace CodeSmith.SchemaHelper
         public string Name { get; protected set; }
 
         public string DataType { get; private set; }
+
+        public string NativeType { get; private set; }
         
         public string SystemType { get; private set; }
 

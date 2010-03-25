@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -20,9 +20,11 @@
 <% if(member.SystemType == "System.String" ) { %>
 <% if(!member.IsNullable) { %>
             ValidationRules.AddRule(CommonRules.StringRequired, <%= member.PrivateMemberVariableName %>Property);
-<% } %>
+<% }
+if(!member.ExcludeBusinessSizeRule()) {
+%>
             ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(<%= member.PrivateMemberVariableName %>Property, <%= member.Size %>));
-<% } } %>
+<% } } } %>
         }
 
         #endregion
