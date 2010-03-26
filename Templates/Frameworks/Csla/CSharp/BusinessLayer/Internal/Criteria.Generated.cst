@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X Criteria" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -108,10 +108,16 @@ foreach(Member member in Entity.MembersNoRowVersion){ if(member.IsNullable) { %>
         
         public override string ToString()
         {
-            if (_bag.Count == 0)
-                return "No criterion was specified";
-
             var result = string.Empty;
+            var cancel = false;
+            
+            OnToString(ref result, ref cancel);
+            if(cancel && !string.IsNullOrEmpty(result))
+                return result;
+            
+            if (_bag.Count == 0)
+                return "No criterion was specified.";
+
             foreach (KeyValuePair<string, object> key in _bag)
             {
                 result += string.Format("[{0}] = '{1}' AND ", key.Key, key.Value);
@@ -132,6 +138,12 @@ foreach(Member member in Entity.MembersNoRowVersion){ if(member.IsNullable) { %>
         
             return default(T);
         }
+        
+        #endregion
+        
+        #region Partial Methods
+        
+        partial void OnToString(ref string result, ref bool cancel);
         
         #endregion
     }
