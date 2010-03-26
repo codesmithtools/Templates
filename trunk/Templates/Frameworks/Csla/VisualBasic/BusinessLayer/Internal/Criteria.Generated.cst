@@ -119,11 +119,18 @@ End If
     #region "Overrides"
 
     Public Overrides Function ToString() As String
+        Dim result As String = String.Empty
+        Dim cancel As Boolean = False
+        
+        OnToString(cancel, result)
+        If(cancel AndAlso Not String.IsNullOrEmpty(result)) Then
+            Return result
+        End If
+    
         If _bag.Count = 0 Then
-            Return "No criterion was specified"
+            Return "No criterion was specified."
         End If
 
-        Dim result As String = String.Empty
         For Each key As KeyValuePair(Of String, Object) In _bag
             result += String.Format("[{0}] = '{1}' AND ", key.Key, key.Value)
         Next
@@ -144,6 +151,13 @@ End If
         Return Nothing
     End Function
     
+    #End Region
+    
+    #Region "Partial Methods"
+
+    Partial Private Sub OnToString(ByRef result As String, ByRef cancel As Boolean)
+    End Sub
+
     #End Region
 
 End Class
