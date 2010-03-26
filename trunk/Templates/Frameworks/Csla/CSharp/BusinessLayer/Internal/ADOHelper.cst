@@ -191,6 +191,16 @@ namespace <%= BusinessProjectName %>
             return value ?? (object)DBNull.Value;
         }
 
+        internal static object NullCheck(DateTimeOffset? value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+
+        internal static object NullCheck(System.Xml.XmlDocument value)
+        {
+            return value ?? (object)DBNull.Value;
+        }
+
         internal static object NullCheck(Guid? value)
         {
             return value ?? (object)DBNull.Value;

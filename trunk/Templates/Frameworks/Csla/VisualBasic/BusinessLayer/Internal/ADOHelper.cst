@@ -232,8 +232,24 @@ Public Class ADOHelper
         End If
     End Function
 
+    Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of DateTimeOffset)) As Object
+        If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
     Friend Overloads Shared Function NullCheck(ByVal value As Nullable(Of Guid)) As Object
         If value Is Nothing OrElse Not value.HasValue Then
+            Return DBNull.Value
+        Else
+            Return value.Value
+        End If
+    End Function
+
+    Friend Overloads Shared Function NullCheck(ByVal value As System.Xml.XmlDocument) As Object
+        If value Is Nothing Then
             Return DBNull.Value
         Else
             Return value.Value
