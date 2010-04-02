@@ -34,7 +34,7 @@ namespace <%= BusinessProjectName %>
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
     [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>InfoListFactoryName)]
 <% } %>
-    public partial class <%= BusinessClassName %> : ReadOnlyListBase< <%= BusinessClassName %>, <%= ChildBusinessClassName %><% if(IsReadOnlyBusinessObject(ChildBusinessClassName+ "Info")) { %>Info<%}%>>
+    public partial class <%= BusinessClassName %> : ReadOnlyListBase< <%= BusinessClassName %>, <%= ChildBusinessClassName %><% if(IsReadOnlyBusinessObject("Info")) { %>Info<%}%>>
     {
         #region Factory Methods 
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
