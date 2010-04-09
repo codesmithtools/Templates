@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SchemaExplorer, Version=5.0.0.0, Culture=neutral, PublicKeyToken=9fd61cdb91609a7a, processorArchitecture=x86" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -50,6 +51,7 @@
     </Compile>
     <Compile Include="AssociationExtensions.cs" />
     <Compile Include="AssociationMemberCollectionExtensions.cs" />
+    <Compile Include="EntityExtensions.cs" />
     <Compile Include="MemberCollectionExtensions.cs" />
     <Compile Include="MemberExtensions.cs" />
     <Compile Include="SearchCriteriaExtensions.cs" />

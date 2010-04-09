@@ -154,6 +154,9 @@ namespace QuickStart
                 if (BusinessClassName.EndsWith("InfoList", true, CultureInfo.InvariantCulture))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 8);
 
+                if (BusinessClassName.EndsWith("NameValueList", true, CultureInfo.InvariantCulture))
+                    return BusinessClassName.Substring(0, BusinessClassName.Length - 13);
+
                 if (BusinessClassName.EndsWith("List", true, CultureInfo.InvariantCulture))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
 

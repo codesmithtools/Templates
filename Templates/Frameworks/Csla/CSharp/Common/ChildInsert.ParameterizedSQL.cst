@@ -47,5 +47,12 @@
                 LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
 <% } } } %>
             }
+<% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0){ %>
+<% if(!RenderOptionalContent) { %>
 
+        FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>);
+<% } else { %>
+
+        FieldManager.UpdateChildren(this, connection);
+<% } } %>
             OnChildInserted();
