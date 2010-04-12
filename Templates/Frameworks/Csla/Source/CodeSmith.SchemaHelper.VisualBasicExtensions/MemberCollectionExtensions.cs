@@ -97,6 +97,7 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
+                string className = string.Empty;
                 string includeThisPrefix = !isObjectFactory ? "Me." : string.Empty;
                 string originalPropertyName = isUpdateStatement && member.IsPrimaryKey && !member.IsIdentity ? string.Format("Original{0}", member.PropertyName) : string.Empty;
                 string propertyName = member.PropertyName;
@@ -111,13 +112,18 @@ namespace CodeSmith.SchemaHelper
                             if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
                             {
                                 propertyName = string.Format("{0}.{1}", Util.NamingConventions.VariableName(associationMember.ClassName), Util.NamingConventions.PropertyName(associationMember.ColumnName));
+                                className = Util.NamingConventions.VariableName(associationMember.ClassName);
                                 includeThisPrefix = string.Empty; 
                                 break;
                             }
                         }   
                     }
                 }
-                
+
+                var nullableType = string.Format("New {0}()", member.SystemType);
+                if (member.SystemType == "System.String" || member.SystemType == "System.Byte()")
+                    nullableType = "Nothing";
+
                 string originalCast;
                 string cast;
                 if (member.IsNullable && member.SystemType != "System.Byte()")
@@ -125,13 +131,29 @@ namespace CodeSmith.SchemaHelper
                     //includeThisPrefix = this.
                     //castprefix = item.
                     //propertyName = bo.propertyname or propertyname
-                    cast = string.Format("ADOHelper.NullCheck({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
-                    originalCast = string.Format("ADOHelper.NullCheck({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
+                    if (!string.IsNullOrEmpty(className))
+                    {
+                        cast = string.Format("ADOHelper.NullCheck(If(Not({3} Is Nothing), {0}{1}{2}, {4})))", includeThisPrefix, castPrefix, propertyName, className, nullableType);
+                        originalCast = string.Format("ADOHelper.NullCheck(If(Not({3} Is Nothing), {0}{1}{2}, {4})))", includeThisPrefix, castPrefix, originalPropertyName, className, nullableType);
+                    }
+                    else
+                    {
+                        cast = string.Format("ADOHelper.NullCheck({0}{1}{2}))", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = string.Format("ADOHelper.NullCheck({0}{1}{2}))", includeThisPrefix, castPrefix, originalPropertyName);
+                    }
                 }
                 else
                 {
-                    cast = string.Format("{0}{1}{2})", includeThisPrefix, castPrefix, propertyName);
-                    originalCast = string.Format("{0}{1}{2})", includeThisPrefix, castPrefix, originalPropertyName);
+                    if (!string.IsNullOrEmpty(className))
+                    {
+                        cast = string.Format("If(Not({3} Is Nothing), {0}{1}{2}, {4}))", includeThisPrefix, castPrefix, propertyName, className, nullableType);
+                        originalCast = string.Format("If(Not({3} Is Nothing), {0}{1}{2}, {4}))", includeThisPrefix, castPrefix, originalPropertyName, className, nullableType);
+                    }
+                    else
+                    {
+                        cast = string.Format("{0}{1}{2})", includeThisPrefix, castPrefix, propertyName);
+                        originalCast = string.Format("{0}{1}{2})", includeThisPrefix, castPrefix, originalPropertyName);
+                    }
                 }
 
                 if (isUpdateStatement && !string.IsNullOrEmpty(originalPropertyName))
