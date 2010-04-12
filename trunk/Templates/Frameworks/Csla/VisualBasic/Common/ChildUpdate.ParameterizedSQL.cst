@@ -66,5 +66,12 @@ Next %>
     End If
 Next %>
         End Using
+<% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0) Then %>
+<% If (Not RenderOptionalContent) Then %>
+        FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>)
+<% Else %>
+        FieldManager.UpdateChildren(Me, connection)
+<% End If
+End If %>
 
         OnChildUpdated()

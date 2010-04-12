@@ -17,7 +17,7 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildUpdateChildrenParametersVariables(this Entity entity, bool includeConnectionParameter)
         {
-            var parameters = "this";
+            var parameters = "Me";
             var thisKey = string.Format(", {0}", Util.NamingConventions.VariableName(entity.ClassName));
             bool isFirst = true;
 
@@ -88,10 +88,10 @@ namespace CodeSmith.SchemaHelper
                     }
                 }
 
-                return string.Format(", new {0}({1})", childMember.ClassName, searchCriteria.Members.BuildVariableArguments());
+                return string.Format(", New {0}({1})", childMember.ClassName, searchCriteria.Members.BuildVariableArguments());
             }
 
-            return ", null";
+            return ", Nothing";
         }
     }
 }

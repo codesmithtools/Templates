@@ -291,7 +291,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{21833F
 		..\VisualBasic\Common\DataPortalInsert.StoredProcedures.cst = ..\VisualBasic\Common\DataPortalInsert.StoredProcedures.cst
 		..\VisualBasic\Common\DataPortalPartialMethods.cst = ..\VisualBasic\Common\DataPortalPartialMethods.cst
 		..\VisualBasic\Common\DataPortalUpdate.ParameterizedSQL.cst = ..\VisualBasic\Common\DataPortalUpdate.ParameterizedSQL.cst
-		..\VisualBasic\Common\DataPortalUpdate.StoredProcedures.cst = ..\VisualBasic\Common\DataPortalUpdate.StoredProcedures.cst
 		..\VisualBasic\Common\DataPortalUpdateList.cst = ..\VisualBasic\Common\DataPortalUpdateList.cst
 		..\VisualBasic\Common\Exists.cst = ..\VisualBasic\Common\Exists.cst
 		..\VisualBasic\Common\ExistsList.cst = ..\VisualBasic\Common\ExistsList.cst
