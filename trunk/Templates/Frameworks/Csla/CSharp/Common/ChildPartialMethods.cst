@@ -21,9 +21,10 @@
         partial void OnChildInserted();
         partial void OnChildUpdating(SqlConnection connection, ref bool cancel);
         partial void OnChildUpdated();
-        partial void OnChildSelfDeleting(ref bool cancel);
+        partial void OnChildSelfDeleting(SqlConnection connection, ref bool cancel);
         partial void OnChildSelfDeleted();
         partial void OnDeleting(<%= ChildBusinessClassName %>Criteria criteria, ref bool cancel);
+        partial void OnDeleting(<%= ChildBusinessClassName %>Criteria criteria, SqlConnection connection, ref bool cancel);
         partial void OnDeleted();
 
         #endregion

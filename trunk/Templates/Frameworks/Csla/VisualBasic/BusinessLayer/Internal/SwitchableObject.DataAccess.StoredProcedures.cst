@@ -78,7 +78,7 @@ Public Partial Class <%= BusinessClassName %>
         OnSelfDeleted()
     End Sub
 
-    <Transactional(TransactionalTypes.TransactionScope)> _
+    '<Transactional(TransactionalTypes.TransactionScope)> _
     Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria )
 <% RenderHelper(New DataPortalDelete()) %>
     End Sub

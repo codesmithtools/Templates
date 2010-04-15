@@ -83,7 +83,7 @@ namespace <%= BusinessProjectName %>
             OnSelfDeleted();
         }
 
-        [Transactional(TransactionalTypes.TransactionScope)]
+        //[Transactional(TransactionalTypes.TransactionScope)]
         protected void DataPortal_Delete(<%= BusinessClassName %>Criteria criteria)
         {
 <% RenderHelper(new DataPortalDelete()); %>

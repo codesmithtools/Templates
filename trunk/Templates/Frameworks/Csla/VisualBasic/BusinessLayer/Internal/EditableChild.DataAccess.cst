@@ -51,7 +51,6 @@ Public Partial Class <%= BusinessClassName %>
         ' TODO: delete values
     End Sub
 
-    <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria )
         ' TODO: delete values
     End Sub
