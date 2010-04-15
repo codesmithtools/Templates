@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X EditableChildList" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -41,6 +41,11 @@ namespace <%= BusinessProjectName %>
             //}
             
             RaiseListChangedEvents = true;
+        }
+        
+        protected override void Child_Update(params object[] parameters)
+        {
+            base.Child_Update(parameters);
         }
     }
 }

@@ -24,9 +24,16 @@
                 Child_Update(connection);
             }
 <% } else { %>
-            foreach(<%= ChildBusinessClassName %> item in Items)
+            for (int index = 0; index < DeletedList.Count; index++)
             {
-                item.Save();
+                DeletedList[index] = DeletedList[index].Save();
+            }
+           
+            DeletedList.Clear();
+
+            for (int index = 0; index < Items.Count; index++)
+            {
+                Items[index] = Items[index].Save();
             }
 <% } %>
 

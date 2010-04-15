@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X EditableChildList" %>
 <%@ Register Name="DataPortalFetchList" Template="..\..\Common\DataPortalFetchList.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -39,6 +39,31 @@ namespace <%= BusinessProjectName %>
         private void Child_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
         {
 <% RenderHelper(new DataPortalFetchList()); %>
+        }
+        
+        protected override void Child_Update(params object[] parameters)
+        {
+            bool cancel = false;
+            OnUpdating(ref cancel);
+            if (cancel) return;
+
+            RaiseListChangedEvents = false;
+
+            foreach (var item in DeletedList)
+            {
+                DataPortal.UpdateChild(item, parameters[1]);
+            }
+
+            DeletedList.Clear();
+
+            foreach (var item in Items)
+            {
+                DataPortal.UpdateChild(item, parameters);
+            }
+
+            RaiseListChangedEvents = true;
+
+            OnUpdated();
         }
 
 <% RenderHelper(new PartialMethods()); %>

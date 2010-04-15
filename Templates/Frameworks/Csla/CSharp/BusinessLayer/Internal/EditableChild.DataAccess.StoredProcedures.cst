@@ -5,7 +5,7 @@
 <%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildInsert" Template="..\..\Common\ChildInsert.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildUpdate" Template="..\..\Common\ChildUpdate.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="DataPortalDelete" Template="..\..\Common\ChildDelete.StoredProcedures.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="PartialMethods" Template="..\..\Common\ChildPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -76,19 +76,18 @@ namespace <%= BusinessProjectName %>
         }
 <% } %>
 
-        private void Child_DeleteSelf()
+        private void Child_DeleteSelf(SqlConnection connection)
         {
             bool cancel = false;
-            OnChildSelfDeleting(ref cancel);
+            OnChildSelfDeleting(connection, ref cancel);
             if (cancel) return;
             
-            DataPortal_Delete(new <%= BusinessClassName %>Criteria (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
+            DataPortal_Delete(new <%= BusinessClassName %>Criteria (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>), connection);
         
             OnChildSelfDeleted();
         }
 
-        [Transactional(TransactionalTypes.TransactionScope)]
-        protected void DataPortal_Delete(<%= BusinessClassName %>Criteria criteria)
+        protected void DataPortal_Delete(<%= BusinessClassName %>Criteria criteria, SqlConnection connection)
         {
 <% RenderHelper(new DataPortalDelete()); %>
         }

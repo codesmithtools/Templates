@@ -64,7 +64,7 @@ namespace <%= BusinessProjectName %>
             // TODO: delete values
         }
 
-        [Transactional(TransactionalTypes.TransactionScope)]
+        //[Transactional(TransactionalTypes.TransactionScope)]
         protected override void DataPortal_Delete(<%= BusinessClassName %>Criteria  criteria)  
         {
             // TODO: delete values
