@@ -79,9 +79,10 @@ namespace CodeSmith.Data.Linq
             }
 
             // run all non cached queries
-            using (IMultipleResults results = this.ExecuteQuery(queries))
-                foreach (IFutureQuery future in futures)
-                    future.SetResult(results);
+            if (queries.Count > 0)
+                using (IMultipleResults results = this.ExecuteQuery(queries))
+                    foreach (IFutureQuery future in futures)
+                        future.SetResult(results);
 
             // once all queries processed, clear from queue
             _futureQueries.Clear();
