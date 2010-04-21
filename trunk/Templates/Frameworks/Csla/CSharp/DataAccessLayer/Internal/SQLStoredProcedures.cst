@@ -65,7 +65,7 @@ GO
 
 IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetInsertStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure <%= GetInsertStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure <%= GetInsertStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
@@ -76,55 +76,55 @@ GO
      * identity column or a GUID.  If so, we will not include the primary key column in the
      * list of input parameters.
      */
-    
-    if (SourceTable.PrimaryKey.MemberColumns.Count == 1
-        && (SourceTable.PrimaryKey.MemberColumns[0].DataType == DbType.Guid
-        || ((SourceTable.PrimaryKey.MemberColumns[0].DataType == DbType.Int16
-        || SourceTable.PrimaryKey.MemberColumns[0].DataType == DbType.Int32
-        || SourceTable.PrimaryKey.MemberColumns[0].DataType == DbType.Int64)
-        && (bool)SourceTable.PrimaryKey.MemberColumns[0].ExtendedProperties["CS_IsIdentity"].Value == true)))
+    if (HasGuidOrIdentityColumn(SourceTable.PrimaryKey))
     {
-        ColumnSchema primaryKeyColumn = SourceTable.PrimaryKey.MemberColumns[0];
 %>
-
 CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
 <% if(Entity.HasRowVersionMember){ %>
 <% GenerateParameter(SourceTable.Columns[Entity.RowVersionMember.ColumnName], 1, true, false, true, true); %>,
 <%}%>
 <% GenerateParameters(SourceTable.NonPrimaryKeyColumns, 1, true, false); %>
-<% GenerateParameter(primaryKeyColumn, 1, false, true, true, false, false); %>
+<%-- Loop through all primary keys. --%>
+<% foreach(var column in SourceTable.PrimaryKey.MemberColumns.AsIndexedEnumerable()) {
+ GenerateParameter(column.Value, 1, false, column.IsLast, IsGuidOrIdentityColumn(column.Value), false, false);
+}%>
 
 AS
 
-<%-- If the primary key is a GUID, then assign a new GUID using NEWID(). --%>
-<% if (primaryKeyColumn.DataType == DbType.Guid) { %>
-SET <%= ParameterPrefix %><%= primaryKeyColumn.Name %> = NEWID()
+<%-- Loop through all primary keys. If the primary key is a GUID, then assign a new GUID using NEWID(). --%>
+<% foreach(var column in SourceTable.PrimaryKey.MemberColumns) {
+     if (column.DataType == DbType.Guid) {%>
+SET <%= ParameterPrefix %><%= column.Name %> = NEWID()
 
-<% } %>
+<% } } %>
 INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
-    <% if (primaryKeyColumn.DataType == DbType.Guid) { %>
-    [<%= primaryKeyColumn.Name %>],
-    <% } %>
+<% foreach(var column in SourceTable.PrimaryKey.MemberColumns) {
+     if (column.DataType == DbType.Guid || !IsIdentityColumn(column)) {%>
+    [<%= column.Name %>],
+<% } } %>
     <% GenerateColumns(SourceTable.NonPrimaryKeyColumns, 1, false); %>
+    
 ) VALUES (
-    <% if (primaryKeyColumn.DataType == DbType.Guid) { %>
-    <%= ParameterPrefix %><%= primaryKeyColumn.Name %>,
-    <% } %>
+<% foreach(var column in SourceTable.PrimaryKey.MemberColumns) {
+     if (column.DataType == DbType.Guid || !IsIdentityColumn(column)) {%>
+    <%= ParameterPrefix %><%= column.Name %>,
+<% } } %>
     <% GenerateVariables(SourceTable.NonPrimaryKeyColumns, 1, false); %>
 )
+
 <%-- If the primary key is an identity column, then capture the newly assigned identity using SCOPE_IDENTITY(). --%>
-<% if (primaryKeyColumn.DataType == DbType.Int16 || primaryKeyColumn.DataType == DbType.Int32 || primaryKeyColumn.DataType == DbType.Int64) { %>
+<% foreach(var column in SourceTable.PrimaryKey.MemberColumns) {
+     if (IsIdentityColumn(column)) {%>
+SET <%= ParameterPrefix %><%= column.Name %> = SCOPE_IDENTITY()
 
-SET <%= ParameterPrefix %><%= primaryKeyColumn.Name %> = SCOPE_IDENTITY()
-<% } %>
-
+<% } } %>
 <% if(Entity.HasRowVersionMember){ %>
 SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<%= Entity.RowVersionMember.ColumnName %>] FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false); %>)
+
 <%}%>
 
 <%-- Primary key is not a identity column or a GUID, so include all columns as input parameters. --%>
 <% } else { %>
-
 CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
 <% if(Entity.HasRowVersionMember){ %>
 <% GenerateParameter(SourceTable.Columns[Entity.RowVersionMember.ColumnName], 1, true, false, true, true); %>,
@@ -157,7 +157,7 @@ GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
-PRINT 'Stored procedure creation succedded was succeeded.'
+PRINT 'Stored procedure creation succeeded.'
 COMMIT TRANSACTION
 END
 ELSE PRINT 'Stored procedure creation failed.'
@@ -194,7 +194,7 @@ GO
 
 IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetUpdateStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure <%= GetUpdateStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure <%= GetUpdateStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
@@ -229,7 +229,7 @@ GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
-PRINT 'Stored procedure creation succedded was succeeded.'
+PRINT 'Stored procedure creation succeeded.'
 COMMIT TRANSACTION
 END
 ELSE PRINT 'Stored procedure creation failed.'
@@ -269,7 +269,7 @@ GO
 
 IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetDeleteStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure <%= GetDeleteStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure <%= GetDeleteStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
@@ -293,7 +293,7 @@ GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
-PRINT 'Stored procedure creation succedded was succeeded.'
+PRINT 'Stored procedure creation succeeded.'
 COMMIT TRANSACTION
 END
 ELSE PRINT 'Stored procedure creation failed.'
@@ -333,7 +333,7 @@ GO
 
 IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetSelectStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure <%= GetSelectStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure <%= GetSelectStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
@@ -362,7 +362,7 @@ GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
-PRINT 'Stored procedure creation succedded was succeeded.'
+PRINT 'Stored procedure creation succeeded.'
 COMMIT TRANSACTION
 END
 ELSE PRINT 'Stored procedure creation failed.'
@@ -445,7 +445,7 @@ public void GenerateDropStatement(string procedureName)
         
         Response.WriteLine("IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '{0}', default, default) WHERE name = 'CustomProcedure' and value = '1')", procedureName);
         Response.WriteLine("BEGIN");
-        Response.WriteLine("    RAISERROR ('The procedure {0} has an Extended Property \"CustomProcedure\" which means is has been customised. Please review and remove the property if you wish to drop the procedure.',16,1)", procedureName);
+        Response.WriteLine("    RAISERROR ('The procedure {0} has an Extended Property \"CustomProcedure\" which means is has been customized. Please review and remove the property if you wish to drop the procedure.',16,1)", procedureName);
         Response.WriteLine("    INSERT INTO #tmpErrors (Error) SELECT 1");
         Response.WriteLine("END");
         Response.WriteLine("GO");
@@ -855,6 +855,38 @@ public bool IsColumnFindable(ColumnSchema column)
         return false;
 
     return true;
+}
+
+// This method adds support for composite primary keys.
+public bool HasGuidOrIdentityColumn(PrimaryKeySchema key)
+{
+    foreach(MemberColumnSchema column in key.MemberColumns)
+    {
+        if(IsGuidOrIdentityColumn(column))
+            return true;   
+    }
+
+    return false;
+}
+
+public bool IsGuidOrIdentityColumn(MemberColumnSchema column)
+{
+    if(column.DataType == DbType.Guid || IsIdentityColumn(column))
+        return true;   
+        
+    return false;
+}
+
+public bool IsIdentityColumn(MemberColumnSchema column)
+{
+    if(column == null) return false;
+    
+    bool correctDataType = column.DataType == DbType.Int16 || column.DataType == DbType.Int32 || column.DataType == DbType.Int64;
+    bool extendedPropertyValue = column.ExtendedProperties.Contains("CS_IsIdentity") && (bool)column.ExtendedProperties["CS_IsIdentity"].Value;
+    if(correctDataType && extendedPropertyValue)
+        return true;   
+        
+    return false;
 }
 
 public void GenerateVariable(ColumnSchema column, int indentLevel, bool isFirst, bool isLast, bool includeTimeStamp)
