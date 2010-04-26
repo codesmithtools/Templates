@@ -56,7 +56,7 @@
             
             // A child relationship exists on this Business Object but its type is not a child type (E.G. EditableChild). 
             // Please override OnChildInserted() and insert this child manually.
-            //FieldManager.OnChildUpdated(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>);
+            //FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>);
 <% } } else { %>
 
             FieldManager.UpdateChildren(this, connection);
