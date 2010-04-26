@@ -219,7 +219,7 @@ public override void Generate()
     #endregion
     
     PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy();
-    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Custom)\"?;";
+    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Preserved Code)\"?";
     
     #region ADOHelperTemplate
     

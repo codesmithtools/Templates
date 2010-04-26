@@ -23,29 +23,23 @@ namespace CodeSmith.SchemaHelper
 
             // AssociatedOneToMany, contains properties that need to be passed into child entity update/insert.
             // AssociatedManyToOne, contains properties in the current entity.
-            
+
+            //In child class. Check its associations.. (Item)
             foreach (Association association in entity.AssociatedOneToMany)
             {
-                //In child class. Check its associations.. (Item)
-                foreach (AssociationMember member in association)
+                //Child's Parameter List. (Product, supplier)
+                foreach (Association childAssociation in GetRelatedEntity(association[0]).AssociatedManyToOne)
                 {
-                    //Child's Parameter List. (Product, supplier)
-                    foreach (Association childAssociation in GetRelatedEntity(member).AssociatedManyToOne)
+                    // see if we already passed in the param.
+                    var childParameter = string.Format(", {0}", Util.NamingConventions.VariableName(childAssociation[0].ClassName));
+                    if (!(isFirst && thisKey.Equals(childParameter)))
                     {
-                        foreach (AssociationMember childMember in childAssociation)
-                        {
-                            // see if we already passed in the param.
-                            var childParameter = string.Format(", {0}", Util.NamingConventions.VariableName(childMember.ClassName));
-                            if (!(isFirst && thisKey.Equals(childParameter)))
-                            {
-                                // look it up or append null..
-                                parameters += GetRelatedTableParameter(entity, childMember);
-                            }
-                            else
-                            {
-                                isFirst = false;
-                            }
-                        }
+                        // look it up or append null..
+                        parameters += GetRelatedTableParameter(entity, childAssociation);
+                    }
+                    else
+                    {
+                        isFirst = false;
                     }
                 }
             }
@@ -66,18 +60,20 @@ namespace CodeSmith.SchemaHelper
             return associationMember.Entity;
         }
 
-        private static string GetRelatedTableParameter(Entity entity, AssociationMember childMember)
+        private static string GetRelatedTableParameter(Entity entity, Association association)
         {
+            AssociationMember childMember = association[0];
             foreach (var searchCriteria in entity.SearchCriteria(SearchCriteriaEnum.ForeignKey))
             {
+                bool found = false;
                 foreach (Member member in searchCriteria.Members)
                 {
-                    if (childMember.TableName.Equals(member.TableName) &&
-                        childMember.ColumnName.Equals(member.ColumnName))
+                    if (childMember.AssociatedColumn.TableName.Equals(member.TableName) || childMember.TableName.Equals(member.TableName))
                     {
-                        foreach (Association association in entity.AssociatedManyToOne)
+                        found = true;
+                        foreach (Association association2 in entity.AssociatedManyToOne)
                         {
-                            foreach (AssociationMember rootMember in association)
+                            foreach (AssociationMember rootMember in association2)
                             {
                                 if (rootMember.ClassName.Equals(childMember.ClassName))
                                 {
@@ -88,7 +84,10 @@ namespace CodeSmith.SchemaHelper
                     }
                 }
 
-                return string.Format(", New {0}({1})", childMember.ClassName, searchCriteria.Members.BuildVariableArguments());
+                if (found)
+                {
+                   return string.Format(", new {0}({1})", childMember.ClassName, GetRelatedEntity(childMember).PrimaryKey.KeyMembers.BuildPropertyVariableArguments());
+                }
             }
 
             return ", Nothing";

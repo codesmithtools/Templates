@@ -96,7 +96,7 @@ public override void Generate()
 public void RenderObjectFactoryTemplates(Entity entity, bool IsReadOnly, bool IsChild)
 {
     PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy();
-    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Preserved)\"?;";
+    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Preserved Code)\"?";
     
     #region ObjectFactory
     
@@ -176,7 +176,7 @@ public void RenderObjectFactoryTemplates(Entity entity, bool IsReadOnly, bool Is
 public void RenderObjectFactoryListTemplates(Entity entity, bool IsReadOnly, bool IsChild)
 {
     PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy();
-    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Preserved)\"?;";
+    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Preserved Code)\"?";
     
     #region ObjectFactory
     
