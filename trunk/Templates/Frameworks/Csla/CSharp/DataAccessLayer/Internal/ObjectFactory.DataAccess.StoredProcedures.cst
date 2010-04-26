@@ -144,7 +144,6 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                 }
             }
 
-            MarkOld(item);
 <% if(IsChildBusinessObject) { %>
             MarkAsChild(item);
 <%}%>
@@ -432,6 +431,8 @@ foreach(Member member in Entity.MembersNoRowVersion) { %>
                 item.Original<%= member.PropertyName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>");<% } %>
 <% } } }%>
             }
+            
+            MarkOld(item);
             
             return item;
         }
