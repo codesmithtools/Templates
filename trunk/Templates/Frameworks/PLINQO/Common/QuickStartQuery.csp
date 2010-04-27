@@ -5,7 +5,7 @@
   </variables>
   <defaultProperties>
     <property name="DbmlFile">$myDatabase$.dbml</property>
-    <property name="Framework">v35_SP1</property>
+    <property name="Framework">$frameworkEnum$</property>
   </defaultProperties>
   <propertySets>
     <propertySet name="DBML" template="$linqToSql$$language$\Dbml.cst">

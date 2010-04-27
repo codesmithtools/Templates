@@ -13,29 +13,28 @@ namespace QuickStartUtils
 
         }
 
-        public SolutionItem(string name, string path, LanguageEnum language, bool website, SolutionItem[] projectReferences)
+        public SolutionItem(string name, string path, LanguageEnum language, bool website, IEnumerable<SolutionItem> projectReferences)
         {
+            Guid = Guid.NewGuid();
             Name = name;
             Path = path;
             Language = language;
             Website = website;
-            ProjectReferences = projectReferences;
+            ProjectReferences = projectReferences != null 
+                ? new List<SolutionItem>(projectReferences) 
+                : new List<SolutionItem>();
         }
 
-        public SolutionItem[] ProjectReferences { get; set; }
+        public List<SolutionItem> ProjectReferences { get; set; }
         public bool Website { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
 
-        private Guid _guid = Guid.NewGuid();
-        public Guid Guid
-        {
-            get { return _guid; }
-            set { _guid = value; }
-        }
+        public Guid Guid { get; set; }
+
         public string GuidString
         {
-            get { return _guid.ToString().ToUpper(); }
+            get { return Guid.ToString().ToUpper(); }
         }
 
         public LanguageEnum Language { get; set; }

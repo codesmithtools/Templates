@@ -54,11 +54,16 @@ namespace CodeSmith.Data.Audit
             if (dataContext == null)
                 throw new ArgumentNullException("dataContext");
 
+            ChangeSet changeSet = dataContext.GetChangeSet();
+            return CreateAuditLog(dataContext, changeSet);
+        }
+
+        public static AuditLog CreateAuditLog(DataContext dataContext, ChangeSet changeSet)
+        {
             var auditLog = new AuditLog();
             auditLog.Date = DateTime.Now;
             auditLog.Username = GetCurrentUserName();
 
-            ChangeSet changeSet = dataContext.GetChangeSet();
             AddAuditEntities(dataContext, auditLog, AuditAction.Delete, changeSet.Deletes);
             AddAuditEntities(dataContext, auditLog, AuditAction.Insert, changeSet.Inserts);
             AddAuditEntities(dataContext, auditLog, AuditAction.Update, changeSet.Updates);

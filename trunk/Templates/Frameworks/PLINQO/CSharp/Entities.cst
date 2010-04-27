@@ -110,9 +110,14 @@
             this.RegisterReference("System.Data.Services.Client");
         }
 
-        this.RegisterReference(Path.GetFullPath(Path.Combine(
-            this.CodeTemplateInfo.DirectoryName,
-            "..\\Common\\CodeSmith.Data.dll")));
+        if (this.Framework == FrameworkEnum.v40)
+            this.RegisterReference(Path.GetFullPath(Path.Combine(
+                this.CodeTemplateInfo.DirectoryName,
+                "..\\Common\\v4.0\\CodeSmith.Data.dll")));
+        else
+            this.RegisterReference(Path.GetFullPath(Path.Combine(
+                this.CodeTemplateInfo.DirectoryName,
+                "..\\Common\\v3.5\\CodeSmith.Data.dll")));
     }
 
     public void CreateEntityBaseClass(Database database)
