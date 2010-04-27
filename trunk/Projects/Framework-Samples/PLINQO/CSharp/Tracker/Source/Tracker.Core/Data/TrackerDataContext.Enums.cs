@@ -31,9 +31,9 @@ namespace Tracker.Core.Data
         [EnumMember]
         Normal = 2,
         /// <summary>
-        /// A Low Priority
+        /// A Low Priority 2
         /// </summary>
-        [Description("A Low Priority")]
+        [Description("A Low Priority 2")]
         [EnumMember]
         Low = 3
     }
@@ -54,21 +54,21 @@ namespace Tracker.Core.Data
         [EnumMember]
         InProgress = 2,
         /// <summary>
-        /// Completed
+        /// Test
         /// </summary>
-        [Description("Completed")]
+        [Description("Test")]
         [EnumMember]
         Completed = 3,
         /// <summary>
-        /// Waiting on someone else
+        /// test
         /// </summary>
-        [Description("Waiting on someone else")]
+        [Description("test")]
         [EnumMember]
         WaitingOnSomeoneElse = 4,
         /// <summary>
-        /// Deferred
+        /// asdf
         /// </summary>
-        [Description("Deferred")]
+        [Description("asdf")]
         [EnumMember]
         Deferred = 5,
         /// <summary>
@@ -76,7 +76,13 @@ namespace Tracker.Core.Data
         /// </summary>
         [Description("Done")]
         [EnumMember]
-        Done = 6
+        Done = 6,
+        /// <summary>
+        /// test
+        /// </summary>
+        [Description("test")]
+        [EnumMember]
+        Test = 7
     }
     
 }
