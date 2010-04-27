@@ -23,8 +23,8 @@
     <NamingMethod>HashedMemberName</NamingMethod>
     <IncludeFavorites>True</IncludeFavorites>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\..\Common\CodeSmith.Data.dll" xmlns="" />
-      <DocumentationSource sourceFile="..\..\Common\CodeSmith.Data.XML" xmlns="" />
+      <DocumentationSource sourceFile="..\..\Common\v3.5\CodeSmith.Data.dll" xmlns="" />
+      <DocumentationSource sourceFile="..\..\Common\v3.5\CodeSmith.Data.XML" xmlns="" />
     </DocumentationSources>
     <MissingTags>AutoDocumentCtors, AutoDocumentDispose</MissingTags>
   </PropertyGroup>
