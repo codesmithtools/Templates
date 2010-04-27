@@ -105,15 +105,52 @@ namespace <%= BusinessProjectName %>
             MarkAsChild();
         }
 
+        #region Child_Insert
+
+        private void Child_Insert(SqlConnection connection)
+        {
+<% RenderHelper(new ChildInsert(), true); %>
+        }
+<% if (Entity.AssociatedManyToOne.Count > 0) {%>
+<% if (Entity.AssociatedManyToOne.Count > 1) { int index = 0; foreach(Association association in Entity.AssociatedManyToOne) { %>
+
+        private void Child_Insert(<%= association.BuildParametersVariables(true) %>)
+        {
+            Child_Insert(<%= association.BuildUpdateStatementVariables(Entity.AssociatedManyToOne, index++, true) %>);
+        }
+
+<% } }%>
+
         private void Child_Insert(<%= Entity.AssociatedManyToOne.BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildInsert()); %>
         }
+<% } %>
 
+        #endregion
+
+        #region Child_Update
+
+        private void Child_Update(SqlConnection connection)
+        {
+<% RenderHelper(new ChildUpdate(), true); %>
+        }
+<% if (Entity.AssociatedManyToOne.Count > 0) {%>
+<% if (Entity.AssociatedManyToOne.Count > 1) { int index = 0; foreach(Association association in Entity.AssociatedManyToOne) { %>
+
+        private void Child_Update(<%= association.BuildParametersVariables(true) %>)
+        {
+            Child_Update(<%= association.BuildUpdateStatementVariables(Entity.AssociatedManyToOne, index++, true) %>);
+        }
+
+<% } }%>
+ 
         private void Child_Update(<%= Entity.AssociatedManyToOne.BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildUpdate()); %>
         }
+<% }%>
+        #endregion
 
         private void Child_DeleteSelf()
         {
