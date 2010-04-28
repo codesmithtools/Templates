@@ -50,13 +50,13 @@ namespace <%= ManagerNamespace %>
         
         #region Managers
 <% foreach (EntityManager m in DataManager.Managers) { %>
-        
+<%      Table table = Database.Tables[m.TableName];%>        
         private <%= m.ManagerName %> <%= m.FieldName %>;
 
         /// <summary>
         /// Gets the manager for <%= m.PropertyName %>.
         /// </summary>
-        public <%= m.ManagerName %> <%= m.PropertyName %>
+        <%= Naming.GetModifier(table.AccessModifier, table.Modifier) %> <%= m.ManagerName %> <%= m.PropertyName %>
         {
             get
             {
