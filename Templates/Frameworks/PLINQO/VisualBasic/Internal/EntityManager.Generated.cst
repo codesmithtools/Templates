@@ -166,7 +166,9 @@ Namespace <%= ManagerNamespace %>
             Else
 <% End If ' column count%>
                 return Entity.FirstOrDefault(<%= GetLamba(method, 5) %>)
+<% If (method.Columns.Count < 4) Then %>
             End If
+<% End If %>
         End Function
         
         ''' <summary>
