@@ -26,7 +26,6 @@ namespace Tracker.Core.Data
         { }
         
         #region Managers
-        
         private AuditManager _auditManager;
 
         /// <summary>
@@ -42,7 +41,6 @@ namespace Tracker.Core.Data
                 return _auditManager;
             }
         }
-        
         private GuidManager _guidManager;
 
         /// <summary>
@@ -58,7 +56,6 @@ namespace Tracker.Core.Data
                 return _guidManager;
             }
         }
-        
         private RoleManager _roleManager;
 
         /// <summary>
@@ -74,7 +71,6 @@ namespace Tracker.Core.Data
                 return _roleManager;
             }
         }
-        
         private TaskManager _taskManager;
 
         /// <summary>
@@ -90,7 +86,6 @@ namespace Tracker.Core.Data
                 return _taskManager;
             }
         }
-        
         private TaskExtendedManager _taskExtendedManager;
 
         /// <summary>
@@ -106,7 +101,6 @@ namespace Tracker.Core.Data
                 return _taskExtendedManager;
             }
         }
-        
         private UserManager _userManager;
 
         /// <summary>
@@ -122,7 +116,6 @@ namespace Tracker.Core.Data
                 return _userManager;
             }
         }
-        
         private UserRoleManager _userRoleManager;
 
         /// <summary>
