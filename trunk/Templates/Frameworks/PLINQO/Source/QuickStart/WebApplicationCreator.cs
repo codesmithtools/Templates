@@ -72,11 +72,9 @@ namespace QuickStartUtils
 
         protected override string ReplaceFileVariables(string content)
         {
-            string dataContextName = string.Format("{0}.{1}DataContext", 
-                ProjectBuilder.DataProjectName, ProjectBuilder.DatabaseName);
-
             return base.ReplaceFileVariables(content)
-                .Replace("$datacontext$", dataContextName);
+                .Replace("$entityNamespace$", ProjectBuilder.DataProjectName)
+                .Replace("$datacontext$", ProjectBuilder.DataContextName);
         }
     }
 }

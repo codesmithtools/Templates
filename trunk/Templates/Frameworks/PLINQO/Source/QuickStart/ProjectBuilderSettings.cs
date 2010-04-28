@@ -83,5 +83,17 @@ namespace QuickStartUtils
             }
         }
 
+        private string _dataContextName;
+        public string DataContextName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_dataContextName))
+                    _dataContextName = DatabaseName + "DataContext";
+
+                return _dataContextName;
+            }
+            set { _dataContextName = value; }
+        }
     }
 }
