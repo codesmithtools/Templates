@@ -57,6 +57,17 @@ public override void Render(System.IO.TextWriter writer)
     
     nameValueListDataAccess.RenderToFile(fileName, parentFileName, true);
     
+    if(DataAccessImplementation == DataAccessMethod.StoredProcedures)
+    {
+        //StoredProcedures
+        fileName = System.IO.Path.Combine(Location, string.Format("Collections\\{0}.StoredProcedures.sql", nameValueList.BusinessClassName));
+        SqlStoredProcedures sqlStoredProcedures = this.Create<SqlStoredProcedures>();
+        this.CopyPropertiesTo(sqlStoredProcedures);
+        sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures.";
+        
+        sqlStoredProcedures.RenderToFile(fileName, parentFileName, true);
+    }
+    
     #endregion
     
     #endregion
