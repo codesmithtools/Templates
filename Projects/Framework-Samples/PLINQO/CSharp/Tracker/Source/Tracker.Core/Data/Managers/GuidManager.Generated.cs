@@ -30,7 +30,8 @@ namespace Tracker.Core.Data
         /// </summary>
         /// <param name="manager">The current manager.</param>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public GuidManager(TrackerDataManager manager) : base(manager)
+        public GuidManager(TrackerDataManager manager)
+            : base(manager)
         {
             OnCreated();
         }
