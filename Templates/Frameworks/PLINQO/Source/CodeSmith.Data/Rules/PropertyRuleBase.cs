@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Data.Linq;
 using System.Reflection;
 
 namespace CodeSmith.Data.Rules
@@ -143,7 +145,8 @@ namespace CodeSmith.Data.Rules
         protected T GetPropertyValue<T>(object target)
         {
             object value = GetPropertyValue(target);
-            return (value == null) ? default(T) : (T)value;
+
+            return (value == null) ? default(T) : (T)CoerceValue(typeof(T), value);
         }
 
         /// <summary>
@@ -213,6 +216,99 @@ namespace CodeSmith.Data.Rules
             if (isNullable)
                 return Nullable.GetUnderlyingType(type);
             return type;
+        }
+
+        private static readonly Type StringType = typeof(string);
+        private static readonly Type ByteArrayType = typeof(byte[]);
+        private static readonly Type NullableType = typeof(Nullable<>);
+        private static readonly Type BinaryType = typeof(Binary);
+
+        /// <summary>
+        /// Attempts to coerce a value of one type into a value of a different type.
+        /// </summary>
+        /// <param name="desiredType">Type to which the value should be coerced.</param>
+        /// <param name="valueType">Original type of the value.</param>
+        /// <param name="value">The value to coerce.</param>
+        public static object CoerceValue(Type desiredType, object value)
+        {
+            if (value == null)
+                return null;
+
+            return CoerceValue(desiredType, value.GetType(), value);
+        }
+
+        /// <summary>
+        /// Attempts to coerce a value of one type into a value of a different type.
+        /// </summary>
+        /// <param name="desiredType">Type to which the value should be coerced.</param>
+        /// <param name="valueType">Original type of the value.</param>
+        /// <param name="value">The value to coerce.</param>
+        public static object CoerceValue(Type desiredType, Type valueType, object value)
+        {
+            // types match, just copy value
+            if (desiredType.Equals(valueType))
+                return value;
+
+            bool isNullable = desiredType.IsGenericType && (desiredType.GetGenericTypeDefinition() == NullableType);
+            if (isNullable)
+            {
+                if (value == null)
+                    return null;
+                if (valueType.Equals(StringType) && Convert.ToString(value) == string.Empty)
+                    return null;
+            }
+
+            desiredType = GetUnderlyingType(desiredType);
+
+            if ((desiredType.IsPrimitive || desiredType.Equals(typeof(decimal)))
+                && valueType.Equals(StringType)
+                && string.IsNullOrEmpty((string)value))
+                return 0;
+
+            if (value == null)
+                return null;
+
+            // types don't match, try to convert
+            if (desiredType.Equals(typeof(Guid)))
+                return new Guid(value.ToString());
+
+            if (desiredType.IsEnum && valueType.Equals(StringType))
+                return Enum.Parse(desiredType, value.ToString());
+
+            bool isBinary = (desiredType.IsArray && desiredType.Equals(ByteArrayType)) || desiredType.Equals(BinaryType);
+
+            if (isBinary && valueType.Equals(StringType))
+            {
+                byte[] bytes = Convert.FromBase64String((string)value);
+                if (desiredType.IsArray && desiredType.Equals(ByteArrayType))
+                    return bytes;
+
+                return new Binary(bytes);
+            }
+
+            isBinary = (valueType.IsArray && valueType.Equals(ByteArrayType)) || valueType.Equals(BinaryType);
+
+            if (isBinary && desiredType.Equals(StringType))
+            {
+                byte[] bytes = (value is Binary) ? ((Binary)value).ToArray() : (byte[])value;
+                return Convert.ToBase64String(bytes);
+            }
+
+            try
+            {
+                if (desiredType.Equals(StringType))
+                    return value.ToString();
+
+                return Convert.ChangeType(value, desiredType);
+            }
+            catch
+            {
+                TypeConverter converter = TypeDescriptor.GetConverter(desiredType);
+                if (converter != null && converter.CanConvertFrom(valueType))
+                    return converter.ConvertFrom(value);
+
+                throw;
+            }
         }
     }
 }
