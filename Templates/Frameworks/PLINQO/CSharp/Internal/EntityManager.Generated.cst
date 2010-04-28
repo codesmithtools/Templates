@@ -82,7 +82,7 @@ namespace <%= ManagerNamespace %>
     /// <summary>
     /// The manager class for <%= EntityManager.EntityName %>.
     /// </summary>
-    public partial class <%= EntityManager.ManagerName %> 
+    <%= Naming.GetModifier(Table.Type.AccessModifier, Table.Type.Modifier) %> partial class <%= EntityManager.ManagerName %> 
         : CodeSmith.Data.EntityManagerBase<<%= DataManager.DataManagerName %>, <%= safeName %>>
     {
         /// <summary>
@@ -90,7 +90,8 @@ namespace <%= ManagerNamespace %>
         /// </summary>
         /// <param name="manager">The current manager.</param>
         <%= GeneratedCodeAttribute %>
-        public <%= EntityManager.ManagerName %>(<%= DataManager.DataManagerName %> manager) : base(manager)
+        public <%= EntityManager.ManagerName %>(<%= DataManager.DataManagerName %> manager)
+            : base(manager)
         {
             OnCreated();
         }
