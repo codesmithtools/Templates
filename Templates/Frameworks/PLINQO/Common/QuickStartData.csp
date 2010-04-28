@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
-    <add key="$myDatabase$ConnectionString" value="$connectionString$" />
+    <add key="$databaseName$ConnectionString" value="$connectionString$" />
   </variables>
   <defaultProperties>
-    <property name="DbmlFile">$myDatabase$.dbml</property>
+    <property name="DbmlFile">$databaseName$.dbml</property>
     <property name="Framework">$frameworkEnum$</property>
   </defaultProperties>
   <propertySets>
@@ -47,11 +47,12 @@
         </NamingProperty>
       </property>
       <property name="SourceDatabase">
-        <connectionString>$($myDatabase$ConnectionString)</connectionString>
+        <connectionString>$($databaseName$ConnectionString)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
       </property>
-      <property name="EntityNamespace">$myContextNamespace$</property>
-      <property name="ContextNamespace">$myContextNamespace$</property>
+      <property name="EntityNamespace">$entityNamespace$</property>
+      <property name="ContextNamespace">$entityNamespace$</property>
+      <property name="DataContextName">$datacontext$</property>      
     </propertySet>
     <propertySet name="Entities" template="$linqToSql$$language$\Entities.cst">
       <property name="AuditingEnabled">True</property>
@@ -68,12 +69,12 @@
       <property name="MethodPrefix">GetBy</property>
       <property name="MethodKeySuffix">Key</property>
       <property name="SourceDatabase">
-        <connectionString>$($myDatabase$ConnectionString)</connectionString>
+        <connectionString>$($databaseName$ConnectionString)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
       </property>
-      <property name="DataContextFile">.\$myDatabase$DataContext.$languageExtension$</property>
-      <property name="DataManagerName">$myDatabase$DataManager</property>
-      <property name="ManagerNamespace">$myContextNamespace$</property>
+      <property name="DataContextFile">.\$datacontext$.$languageExtension$</property>
+      <property name="DataManagerName">$databaseName$DataManager</property>
+      <property name="ManagerNamespace">$entityNamespace$</property>
     </propertySet>
   </propertySets>
 </codeSmith>

@@ -41,10 +41,12 @@ namespace QuickStartUtils
 
             content = content
                 .Replace("$connectionString$", ProjectBuilder.SourceDatabase.ConnectionString)
-                .Replace("$myDatabase$", ProjectBuilder.DatabaseName)
-                .Replace("$myContextNamespace$", ProjectBuilder.DataProjectName)
+                .Replace("$databaseName$", ProjectBuilder.DatabaseName)
+                .Replace("$datacontext$", ProjectBuilder.DataContextName)
+                .Replace("$entityNamespace$", ProjectBuilder.DataProjectName)
                 .Replace("$language$", ProjectBuilder.LanguageFolder)
                 .Replace("$linqToSql$", linqToSqlPath)
+                .Replace("$frameworkEnum$", ProjectBuilder.FrameworkVersion == FrameworkVersion.v40 ? "v40" : "v35_SP1")
                 .Replace("$languageExtension$", ProjectBuilder.LanguageAppendage);
 
             File.WriteAllText(

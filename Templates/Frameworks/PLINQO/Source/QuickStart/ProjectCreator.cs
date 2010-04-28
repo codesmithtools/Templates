@@ -155,12 +155,14 @@ namespace QuickStartUtils
                 .Replace("$safeprojectname$", ProjectName)
                 .Replace("$rootnamespace$", ProjectName)
                 .Replace("$guid1$", SolutionItem.Guid.ToString("B"))
-                .Replace("$guid$", Guid.NewGuid().ToString())
+                .Replace("$assemblyGuid$", Guid.NewGuid().ToString())
                 .Replace("$registeredorganization$", "CodeSmith Tools, LLC")
                 .Replace("$year$", DateTime.Now.Year.ToString())
                 .Replace("$targetframeworkversion$", ProjectBuilder.FrameworkString)
                 .Replace("$frameworkEnum$", ProjectBuilder.FrameworkVersion == FrameworkVersion.v40 ? "v40" : "v35_SP1")
-                .Replace("$myDatabase$", ProjectBuilder.DatabaseName)
+                .Replace("$datacontext$", ProjectBuilder.DataContextName)
+                .Replace("$entityNamespace$", ProjectBuilder.DataProjectName)
+                .Replace("$databaseName$", ProjectBuilder.DatabaseName)
                 .Replace("$connectionString$", connectionString);
         }
 
