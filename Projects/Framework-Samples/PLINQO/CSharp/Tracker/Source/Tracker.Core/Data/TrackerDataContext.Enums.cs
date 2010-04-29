@@ -66,9 +66,9 @@ namespace Tracker.Core.Data
         [EnumMember]
         WaitingOnSomeoneElse = 4,
         /// <summary>
-        /// asdf
+        /// asdf 234
         /// </summary>
-        [Description("asdf")]
+        [Description("asdf 234")]
         [EnumMember]
         Deferred = 5,
         /// <summary>
