@@ -603,6 +603,8 @@ namespace Tracker.Core.Data
             PopulateLastAudit();
             BeforeSubmitChanges();
             base.SubmitChanges(failureMode);
+            ResetLastAudit();
+            AfterSubmitChanges();
         }
         #endregion
 
@@ -610,6 +612,10 @@ namespace Tracker.Core.Data
         /// <summary>Called before the underlying DataContext.SubmitChanges is called.</summary>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         partial void BeforeSubmitChanges();
+
+        /// <summary>Called after the underlying DataContext.SubmitChanges is called.</summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        partial void AfterSubmitChanges();
 
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private bool _auditingEnabled = true;
@@ -626,6 +632,9 @@ namespace Tracker.Core.Data
         }
 
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        private System.Data.Linq.ChangeSet _lastChangeSet;
+
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         private CodeSmith.Data.Audit.AuditLog _lastAudit;
 
         /// <summary>
@@ -638,7 +647,16 @@ namespace Tracker.Core.Data
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
         public CodeSmith.Data.Audit.AuditLog LastAudit
         {
-            get { return _lastAudit; }
+            get
+            {
+                if (_lastAudit == null && _lastChangeSet != null)
+                {
+                    _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(this, _lastChangeSet);
+                    _lastChangeSet = null;
+                }
+
+                return _lastAudit;
+            }
         }
 
         /// <summary>
@@ -654,7 +672,17 @@ namespace Tracker.Core.Data
             if (!AuditingEnabled)
                 return;
 
-            _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(this);
+            _lastAudit = null;
+            _lastChangeSet = this.GetChangeSet();
+        }
+
+        /// <summary>
+        /// Resets the <see cref="LastAudit"/> property.
+        /// </summary>
+        [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
+        protected virtual void ResetLastAudit()
+        {
+            _lastAudit = null;
         }
         #endregion
 
