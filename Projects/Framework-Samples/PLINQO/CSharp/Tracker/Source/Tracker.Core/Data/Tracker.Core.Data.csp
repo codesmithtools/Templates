@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <codeSmith xmlns="http://www.codesmithtools.com/schema/csp.xsd">
   <variables>
     <add key="TrackerConnectionString" value="Data Source=.;Initial Catalog=Tracker;Integrated Security=True" />
@@ -81,6 +81,7 @@
     <propertySet name="Queries" template="..\..\Templates\PLINQO\CSharp\Queries.cst">
       <property name="QueryDirectory">Queries</property>
       <property name="MethodPrefix">By</property>
+      <property name="UniqueMethodPrefix">GetBy</property>
       <property name="MethodKeySuffix">Key</property>
       <property name="SourceDatabase">
         <connectionString>$(TrackerConnectionString)</connectionString>

@@ -205,5 +205,27 @@ namespace Tracker.Tests
 
             var task2 = Task.FromBinary(buffer);
         }
+
+
+        [Test]
+        public void AuditLog()
+        {
+            var db = new TrackerDataContext { Log = Console.Out };
+            db.AuditingEnabled = true;
+
+            var user = new User();
+            user.EmailAddress = string.Format("test.{0}@test.com", DateTime.Now.Ticks);
+            user.FirstName = "Test";
+            user.IsApproved = true;
+            user.LastName = "User";
+            user.PasswordHash = "asdf";
+            user.PasswordSalt = "asdf";
+
+            db.User.InsertOnSubmit(user);            
+            db.SubmitChanges();
+
+            var auditLog = db.LastAudit;
+            Assert.IsNotNull(auditLog);
+        }
     }
 }
