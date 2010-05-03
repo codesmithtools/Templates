@@ -31,9 +31,9 @@ namespace Tracker.Core.Data
         [EnumMember]
         Normal = 2,
         /// <summary>
-        /// A Low Priority 2
+        /// A Low Priority
         /// </summary>
-        [Description("A Low Priority 2")]
+        [Description("A Low Priority")]
         [EnumMember]
         Low = 3
     }
@@ -76,13 +76,7 @@ namespace Tracker.Core.Data
         /// </summary>
         [Description("Done")]
         [EnumMember]
-        Done = 6,
-        /// <summary>
-        /// test
-        /// </summary>
-        [Description("test")]
-        [EnumMember]
-        Test = 7
+        Done = 6
     }
     
 }
