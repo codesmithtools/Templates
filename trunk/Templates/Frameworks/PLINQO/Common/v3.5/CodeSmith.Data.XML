@@ -2973,6 +2973,14 @@
             <param name="query">The query to be materialized.</param>
             <returns>The result of the query.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache(System.Linq.IQueryable)">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            </summary>
+            <param name="query">The query to be materialized.</param>
+            <returns>The result of the query.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},System.Int32)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
@@ -2983,12 +2991,31 @@
             <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
             <returns>The result of the query.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache(System.Linq.IQueryable,System.Int32)">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            </summary>
+            <param name="query">The query to be materialized.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <returns>The result of the query.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},System.Int32,System.String[])">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
             the query is materialized and the result cached before being returned.
             </summary>
             <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+            <returns>The result of the query.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache(System.Linq.IQueryable,System.Int32,System.String[])">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            </summary>
             <param name="query">The query to be materialized.</param>
             <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
             <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
@@ -3005,6 +3032,16 @@
             <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
             <returns>The result of the query.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache(System.Linq.IQueryable,System.Int32,System.Data.Linq.ITable[])">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            </summary>
+            <param name="query">The query to be materialized.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
+            <returns>The result of the query.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},System.String)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
@@ -3015,12 +3052,31 @@
             <param name="profileName">Name of the cache profile to use.</param>
             <returns>The result of the query.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache(System.Linq.IQueryable,System.String)">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            </summary>
+            <param name="query">The query to be materialized.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <returns>The result of the query.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},System.String,System.Data.Linq.ITable[])">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
             the query is materialized and the result cached before being returned.
             </summary>
             <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
+            <returns>The result of the query.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache(System.Linq.IQueryable,System.String,System.Data.Linq.ITable[])">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            </summary>
             <param name="query">The query to be materialized.</param>
             <param name="profileName">Name of the cache profile to use.</param>
             <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
@@ -3037,12 +3093,31 @@
             <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
             <returns>The result of the query.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache(System.Linq.IQueryable,System.String,System.String[])">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            </summary>
+            <param name="query">The query to be materialized.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+            <returns>The result of the query.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
             the query is materialized and the result cached before being returned.
             </summary>
             <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="settings">Cache settings object.</param>
+            <returns>The result of the query.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCache(System.Linq.IQueryable,CodeSmith.Data.Caching.CacheSettings)">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            </summary>
             <param name="query">The query to be materialized.</param>
             <param name="settings">Cache settings object.</param>
             <returns>The result of the query.</returns>
@@ -3058,6 +3133,16 @@
             <param name="query">The query to be materialized.</param>
             <returns>The first or default result of the query.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault(System.Linq.IQueryable)">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            The cache entry has a one minute sliding expiration with normal priority.
+            Queries, caches, and returns only the first entity.
+            </summary>
+            <param name="query">The query to be materialized.</param>
+            <returns>The first or default result of the query.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.Int32)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
@@ -3069,6 +3154,16 @@
             <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
             <returns>The first or default result of the query.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault(System.Linq.IQueryable,System.Int32)">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            Queries, caches, and returns only the first entity.
+            </summary>
+            <param name="query">The query to be materialized.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <returns>The first or default result of the query.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.Int32,System.Data.Linq.ITable[])">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
@@ -3076,6 +3171,17 @@
             Queries, caches, and returns only the first entity.
             </summary>
             <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
+            <returns>The first or default result of the query.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault(System.Linq.IQueryable,System.Int32,System.Data.Linq.ITable[])">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            Queries, caches, and returns only the first entity.
+            </summary>
             <param name="query">The query to be materialized.</param>
             <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
             <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
@@ -3093,6 +3199,17 @@
             <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
             <returns>The first or default result of the query.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault(System.Linq.IQueryable,System.Int32,System.String[])">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            Queries, caches, and returns only the first entity.
+            </summary>
+            <param name="query">The query to be materialized.</param>
+            <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+            <returns>The first or default result of the query.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.String)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
@@ -3104,6 +3221,16 @@
             <param name="profileName">Name of the cache profile to use.</param>
             <returns>The first or default result of the query.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault(System.Linq.IQueryable,System.String)">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            Queries, caches, and returns only the first entity.
+            </summary>
+            <param name="query">The query to be materialized.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <returns>The first or default result of the query.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault``1(System.Linq.IQueryable{``0},System.String,System.Data.Linq.ITable[])">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
@@ -3111,6 +3238,17 @@
             Queries, caches, and returns only the first entity.
             </summary>
             <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
+            <returns>The first or default result of the query.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault(System.Linq.IQueryable,System.String,System.Data.Linq.ITable[])">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            Queries, caches, and returns only the first entity.
+            </summary>
             <param name="query">The query to be materialized.</param>
             <param name="profileName">Name of the cache profile to use.</param>
             <param name="sqlCacheDependencyTables">The tables for which to add SQL Cache Dependencies</param>
@@ -3128,6 +3266,17 @@
             <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
             <returns>The first or default result of the query.</returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault(System.Linq.IQueryable,System.String,System.String[])">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            Queries, caches, and returns only the first entity.
+            </summary>
+            <param name="query">The query to be materialized.</param>
+            <param name="profileName">Name of the cache profile to use.</param>
+            <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+            <returns>The first or default result of the query.</returns>
+        </member>
         <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault``1(System.Linq.IQueryable{``0},CodeSmith.Data.Caching.CacheSettings)">
             <summary>
             Returns the result of the query; if possible from the cache, otherwise
@@ -3135,6 +3284,16 @@
             Queries, caches, and returns only the first entity.
             </summary>
             <typeparam name="T">The type of the data in the data source.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="settings">Cache settings object.</param>
+            <returns>The first or default result of the query.</returns>
+        </member>
+        <member name="M:CodeSmith.Data.Linq.QueryResultCache.FromCacheFirstOrDefault(System.Linq.IQueryable,CodeSmith.Data.Caching.CacheSettings)">
+            <summary>
+            Returns the result of the query; if possible from the cache, otherwise
+            the query is materialized and the result cached before being returned.
+            Queries, caches, and returns only the first entity.
+            </summary>
             <param name="query">The query to be materialized.</param>
             <param name="settings">Cache settings object.</param>
             <returns>The first or default result of the query.</returns>
