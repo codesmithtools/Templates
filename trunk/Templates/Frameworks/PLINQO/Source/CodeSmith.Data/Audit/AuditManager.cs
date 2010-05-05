@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Hosting;
+using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
 
 namespace CodeSmith.Data.Audit
@@ -350,11 +351,10 @@ namespace CodeSmith.Data.Audit
 
                 // get the fkey table
                 var fkeyTable = dataContext.GetTable(association.OtherType.Type);
-                var q = fkeyTable
+                var value = fkeyTable
                     .Where(sb.ToString(), fkeyValues.ToArray())
-                    .Select(childDisplayMember.Name);
-
-                object value = q.Cast<object>().FirstOrDefault();
+                    .Select(childDisplayMember.Name)
+                    .FromCacheFirstOrDefault();
 
                 return GetValue(childDisplayMember.Member,
                     GetUnderlyingType(childDisplayMember.Type),
