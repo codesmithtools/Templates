@@ -31,7 +31,7 @@ namespace CodeSmith.SchemaHelper
                         continue;
                    
                     bool includeManyToMany = table.IsManyToMany() && !Configuration.Instance.IncludeManyToManyEntity;
-                    if (Configuration.Instance.ExcludeTableRegexIsMatch(table.FullName) || includeManyToMany)
+                    if (Configuration.Instance.ExcludeRegexIsMatch(table.FullName) || includeManyToMany)
                         ExcludedTables.Add( table );
                     else if (!table.HasPrimaryKey)
                         Trace.WriteLine(string.Format("Skipping table: '{0}', no Primary Key was found!", table.Name));
