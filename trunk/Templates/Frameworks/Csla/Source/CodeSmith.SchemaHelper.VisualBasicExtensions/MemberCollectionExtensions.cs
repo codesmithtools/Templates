@@ -120,9 +120,10 @@ namespace CodeSmith.SchemaHelper
                     }
                 }
 
-                var nullableType = string.Format("New {0}()", member.SystemType);
-                if (member.SystemType == "System.String" || member.SystemType == "System.Byte()")
-                    nullableType = "Nothing";
+                var nullableType = string.Format("{0}{1}", !isObjectFactory ? "Me." : string.Empty, member.PropertyName);
+                //var nullableType = string.Format("New {0}()", member.SystemType);
+                //if (member.SystemType == "System.String" || member.SystemType == "System.Byte()")
+                //    nullableType = "Nothing";
 
                 string originalCast;
                 string cast;
