@@ -69,7 +69,7 @@ namespace CodeSmith.SchemaHelper
         {
             foreach (ColumnSchema column in Table.Columns)
             {
-                if (!_memberMap.ContainsKey(column.Name))
+                if (!_memberMap.ContainsKey(column.Name) && !Configuration.Instance.ExcludeRegexIsMatch(column.ToString()))
                 {
                     Member em = new Member(column, this);
                     _memberMap.Add(column.Name, em);
@@ -96,7 +96,9 @@ namespace CodeSmith.SchemaHelper
                     ColumnSchema column = tks.PrimaryKeyMemberColumns[index];
                     ColumnSchema localColumn = tks.ForeignKeyMemberColumns[index];
                     
-                    if (!Configuration.Instance.ExcludeTableRegexIsMatch(tks.PrimaryKeyTable.FullName) && 
+                    if (!Configuration.Instance.ExcludeRegexIsMatch(tks.PrimaryKeyTable.FullName) &&
+                        !Configuration.Instance.ExcludeRegexIsMatch(column.ToString()) &&
+                        !Configuration.Instance.ExcludeRegexIsMatch(localColumn.ToString()) &&
                         (!localColumn.IsPrimaryKeyMember || (localColumn.IsPrimaryKeyMember && localColumn.IsForeignKeyMember)))
                     {
                         AssociationMember member = new AssociationMember(AssociationType.ManyToOne, tks.PrimaryKeyTable, column, localColumn, this);
@@ -128,11 +130,14 @@ namespace CodeSmith.SchemaHelper
 
                     //Added a check to see if the FK is also a Foreign composite key (http://community.codesmithtools.com/forums/t/10266.aspx).
                     bool isFKAlsoComposite = column.Table.PrimaryKey.MemberColumns.Count > 1 && column.IsPrimaryKeyMember && column.IsForeignKeyMember;
-                    if (!Configuration.Instance.ExcludeTableRegexIsMatch(column.Table.FullName) && (!column.IsPrimaryKeyMember || isFKAlsoComposite))
+                    if (!Configuration.Instance.ExcludeRegexIsMatch(column.Table.FullName) &&
+                        !Configuration.Instance.ExcludeRegexIsMatch(column.ToString()) &&
+                        !Configuration.Instance.ExcludeRegexIsMatch(localColumn.ToString()) &&
+                        (!column.IsPrimaryKeyMember || isFKAlsoComposite))
                     {
                         if (!column.Table.IsManyToMany())
                         {
-                            if (!Configuration.Instance.ExcludeTableRegexIsMatch(column.Table.FullName))
+                            if (!Configuration.Instance.ExcludeRegexIsMatch(column.Table.FullName))
                             {
                                 association.Add(new AssociationMember(AssociationType.OneToMany, column.Table, column, localColumn, this));
                             }
@@ -140,7 +145,7 @@ namespace CodeSmith.SchemaHelper
                         else
                         {
                             TableSchema foreignTable = GetToManyTable(column.Table, Table);
-                            if (foreignTable != null && !Configuration.Instance.ExcludeTableRegexIsMatch(foreignTable.FullName))
+                            if (foreignTable != null && !Configuration.Instance.ExcludeRegexIsMatch(foreignTable.FullName))
                             {
                                 association.Add(new AssociationMember(AssociationType.ManyToMany, foreignTable, column, localColumn, this));
                             }
@@ -148,7 +153,7 @@ namespace CodeSmith.SchemaHelper
                     }
                     else if (GetToManyTable(column.Table, Table) == null)
                     {
-                        if (!Configuration.Instance.ExcludeTableRegexIsMatch(column.Table.FullName))
+                        if (!Configuration.Instance.ExcludeRegexIsMatch(column.Table.FullName))
                         {
                             association.Add(new AssociationMember(AssociationType.OneToZeroOrOne, column.Table, column, localColumn, this));
                         }
@@ -300,7 +305,7 @@ namespace CodeSmith.SchemaHelper
 
                 foreach (MemberColumnSchema column in indexSchema.MemberColumns)
                 {
-                    if (column.Table.Equals(Table))
+                    if (column.Table.Equals(Table) && !Configuration.Instance.ExcludeRegexIsMatch(column.ToString()))
                     {
                         Member member = GetFromColumn(column.Column);
                         if (member != null)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -143,16 +144,18 @@ namespace CodeSmith.SchemaHelper
             return ValidateName(memberName);
         }
 
-        internal bool ExcludeTableRegexIsMatch(string tableName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name">Table FullName or Column Name</param>
+        /// <returns></returns>
+        internal bool ExcludeRegexIsMatch(string name)
         {
-            bool result = false;
             foreach (Regex regex in IgnoreExpressions)
-                if (regex.IsMatch(tableName))
-                {
-                    result = true;
-                    break;
-                }
-            return result;
+                if (regex.IsMatch(name))
+                    return true;
+
+            return false;
         }
 
         #endregion
