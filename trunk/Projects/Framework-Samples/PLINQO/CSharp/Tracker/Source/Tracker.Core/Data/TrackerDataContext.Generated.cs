@@ -650,10 +650,7 @@ namespace Tracker.Core.Data
             get
             {
                 if (_lastAudit == null && _lastChangeSet != null)
-                {
                     _lastAudit = CodeSmith.Data.Audit.AuditManager.CreateAuditLog(this, _lastChangeSet);
-                    _lastChangeSet = null;
-                }
 
                 return _lastAudit;
             }
