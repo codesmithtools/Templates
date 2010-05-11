@@ -15,7 +15,7 @@ namespace NHibernateHelper
             ToManyTableKeyName = (associationType == AssociationTypeEnum.ManyToMany)
                 ? GetToManyTableKey(column.Table, table).Name
                 : String.Empty;
-            Cascade = NHibernateHelper.GetCascade(column, associationType == AssociationTypeEnum.OneToMany);
+            Cascade = NHibernateHelper.GetCascade(column, associationType);
             ClassName = NHibernateHelper.GetClassName(table);
             AssociationType = associationType;
             GenericName = GetGenericName(table, Column, AssociationType);
