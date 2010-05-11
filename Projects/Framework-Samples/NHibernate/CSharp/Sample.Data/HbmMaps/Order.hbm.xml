@@ -28,3 +28,4 @@
 		<property name="Locale" column="[Locale]" />
 	</class>
 </hibernate-mapping>
+

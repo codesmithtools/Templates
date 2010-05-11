@@ -32,9 +32,9 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.Inventory entity = new Sample.Data.Generated.BusinessObjects.Inventory();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "T";
+			entity.Id = "Te";
 			
-			entity.Qty = 33;
+			entity.Qty = 59;
 			
 			return entity;
 		}
@@ -86,7 +86,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Inventory entityA = GetFirstInventory();
 				
-				entityA.Qty = 22;
+				entityA.Qty = 32;
 				
 				manager.Update(entityA);
 

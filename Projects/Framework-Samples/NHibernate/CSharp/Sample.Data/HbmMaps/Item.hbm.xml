@@ -13,3 +13,4 @@
 		<many-to-one name="Supplier" column="[Supplier]" class="Supplier" />
 	</class>
 </hibernate-mapping>
+

@@ -147,7 +147,7 @@ namespace Sample.Data.Generated.Base
         {
             ICriteria criteria = Session.GetISession().CreateCriteria(typeof(T));
 
-            foreach (var pair in _fetchModeMap)
+            foreach (KeyValuePair<string, FetchMode> pair in _fetchModeMap)
                 criteria = criteria.SetFetchMode(pair.Key, pair.Value);
 
             return criteria;

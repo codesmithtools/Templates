@@ -32,13 +32,13 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.Item entity = new Sample.Data.Generated.BusinessObjects.Item();
 			
 			// You may need to maually enter this key if there is a constraint violation.
-			entity.Id = "T";
+			entity.Id = "Test Te";
 			
-			entity.ListPrice = 37;
-			entity.UnitCost = 54;
+			entity.ListPrice = 42;
+			entity.UnitCost = 12;
 			entity.Status = "T";
-			entity.Name = "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Tes";
-			entity.Image = "Test Test Test Test Test Test T";
+			entity.Name = "Test Test Test Tes";
+			entity.Image = "Test Test Test Test Test Test Test Test Te";
 			
 			using(Sample.Data.Generated.ManagerObjects.IProductManager productManager = managerFactory.GetProductManager())
 			    entity.Product = productManager.GetAll(1)[0];
@@ -96,7 +96,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.Item entityA = GetFirstItem();
 				
-				entityA.ListPrice = 31;
+				entityA.ListPrice = 98;
 				
 				manager.Update(entityA);
 
