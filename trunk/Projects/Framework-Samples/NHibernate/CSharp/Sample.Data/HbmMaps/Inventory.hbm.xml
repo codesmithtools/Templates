@@ -7,3 +7,4 @@
 		<property name="Qty" column="[Qty]" />
 	</class>
 </hibernate-mapping>
+

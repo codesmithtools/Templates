@@ -79,6 +79,7 @@
     <Compile Include="Base\NHibernateSession.cs" />
     <Compile Include="Base\NHibernateSessionManager.cs" />
     <Compile Include="Base\UnitTestsBase.cs" />
+    <Compile Include="Base\XmlType.cs" />
     <Compile Include="BusinessObjects\Account.cs" />
     <Compile Include="BusinessObjects\Account.generated.cs">
       <DependentUpon>Account.cs</DependentUpon>

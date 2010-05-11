@@ -32,11 +32,11 @@ namespace Sample.Data.Generated.UnitTests
 			Sample.Data.Generated.BusinessObjects.LineItem entity = new Sample.Data.Generated.BusinessObjects.LineItem();
 			
 			
-			entity.OrderId = 71;
-			entity.LineNum = 9;
-			entity.ItemId = "Te";
-			entity.Quantity = 63;
-			entity.UnitPrice = 39;
+			entity.OrderId = 40;
+			entity.LineNum = 87;
+			entity.ItemId = "T";
+			entity.Quantity = 76;
+			entity.UnitPrice = 65;
 			
 			return entity;
 		}
@@ -88,7 +88,7 @@ namespace Sample.Data.Generated.UnitTests
             {
                 Sample.Data.Generated.BusinessObjects.LineItem entityA = GetFirstLineItem();
 				
-				entityA.ItemId = "Test Tes";
+				entityA.ItemId = "Test ";
 				
 				manager.Update(entityA);
 
