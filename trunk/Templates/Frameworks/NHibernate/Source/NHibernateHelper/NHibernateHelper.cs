@@ -242,7 +242,7 @@ namespace NHibernateHelper
             throw new Exception(String.Format("Could not find Column {0} in Table {1}'s ForeignKeys.", mcs.Name, table.Name));
         }
 
-        public static string GetCascade(ColumnSchema column, bool isOneToMany)
+        public static string GetCascade(ColumnSchema column, AssociationTypeEnum association)
         {
             var ep = column.ExtendedProperties["cs_cascade"];
             if (ep != null && ep.Value != null)
@@ -252,8 +252,11 @@ namespace NHibernateHelper
                     return eps;
             }
 
-            if (isOneToMany)
+            if (association == AssociationTypeEnum.OneToMany)
                 return column.AllowDBNull ? "all" : "all-delete-orphan";
+
+            if (association == AssociationTypeEnum.ManyToMany)
+                return "save-update";
 
             return String.Empty;
         }
