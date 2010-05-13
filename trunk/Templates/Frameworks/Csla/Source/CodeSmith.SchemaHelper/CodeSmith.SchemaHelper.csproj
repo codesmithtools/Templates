@@ -74,6 +74,7 @@
     <Compile Include="AssociationMember.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="EntityManager.cs" />
+    <Compile Include="Extensions\AssociationCollectionExtensions.cs" />
     <Compile Include="Extensions\AssociationMemberExtensions.cs" />
     <Compile Include="Extensions\ColumnSchemaCollectionExtensions.cs" />
     <Compile Include="Extensions\DatabaseSchemaExtensions.cs" />

@@ -112,16 +112,16 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ChildInsert(), true); %>
         }
 <% if (Entity.AssociatedManyToOne.Count > 0) {%>
-<% if (Entity.AssociatedManyToOne.Count > 1) { int index = 0; foreach(Association association in Entity.AssociatedManyToOne) { %>
+<% if (Entity.AssociatedManyToOne.Distinct().Count > 1) { int index = 0; foreach(Association association in Entity.AssociatedManyToOne.Distinct()) { %>
 
         private void Child_Insert(<%= association.BuildParametersVariables(true) %>)
         {
-            Child_Insert(<%= association.BuildUpdateStatementVariables(Entity.AssociatedManyToOne, index++, true) %>);
+            Child_Insert(<%= association.BuildUpdateStatementVariables(Entity.AssociatedManyToOne.Distinct(), index++, true) %>);
         }
 
 <% } }%>
 
-        private void Child_Insert(<%= Entity.AssociatedManyToOne.BuildParametersVariables(true) %>)
+        private void Child_Insert(<%= Entity.AssociatedManyToOne.Distinct().BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildInsert()); %>
         }
@@ -136,16 +136,16 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ChildUpdate(), true); %>
         }
 <% if (Entity.AssociatedManyToOne.Count > 0) {%>
-<% if (Entity.AssociatedManyToOne.Count > 1) { int index = 0; foreach(Association association in Entity.AssociatedManyToOne) { %>
+<% if (Entity.AssociatedManyToOne.Distinct().Count > 1) { int index = 0; foreach(Association association in Entity.AssociatedManyToOne.Distinct()) { %>
 
         private void Child_Update(<%= association.BuildParametersVariables(true) %>)
         {
-            Child_Update(<%= association.BuildUpdateStatementVariables(Entity.AssociatedManyToOne, index++, true) %>);
+            Child_Update(<%= association.BuildUpdateStatementVariables(Entity.AssociatedManyToOne.Distinct(), index++, true) %>);
         }
 
 <% } }%>
  
-        private void Child_Update(<%= Entity.AssociatedManyToOne.BuildParametersVariables(true) %>)
+        private void Child_Update(<%= Entity.AssociatedManyToOne.Distinct().BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildUpdate()); %>
         }
