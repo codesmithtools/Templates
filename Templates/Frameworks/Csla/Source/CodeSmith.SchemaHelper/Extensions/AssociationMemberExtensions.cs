@@ -9,7 +9,7 @@ namespace CodeSmith.SchemaHelper
     /// <summary>
     /// Extension Methods for AssociationMemberCollectionExtensions
     /// </summary>
-    public static class AssociationMemberCollectionExtensions
+    public static class AssociationMemberExtensions
     {
         public static Entity AssociationEntity(this AssociationMember member)
         {
