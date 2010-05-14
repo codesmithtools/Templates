@@ -31,7 +31,7 @@ Imports <%= BaseNamespace %>
 Namespace <%= UnitTestNamespace %>
 	<TestFixture()> _
 	Public Partial Class <%= GetClassName(SourceTable) %>Tests
-		Inherits UNuitTestBase
+		Inherits UnitTestbase
 		
 		Protected manager As I<%= GetClassName(SourceTable) %>Manager
 

@@ -22,7 +22,7 @@ Imports <%= ManagerNamespace %>
 Imports <%= BusinessNamespace %>
 
 Namespace <%= BaseNamespace %>
-	Public Class UNuitTestBase
+	Public Class UnitTestbase
 		Protected managerFactory As IManagerFactory = New ManagerFactory()
 	End Class
 End Namespace

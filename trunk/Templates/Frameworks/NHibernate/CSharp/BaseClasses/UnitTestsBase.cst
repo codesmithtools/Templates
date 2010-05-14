@@ -23,7 +23,7 @@ using <%= BusinessNamespace %>;
 
 namespace <%= BaseNamespace %>
 {
-    public class UNuitTestBase
+    public class UnitTestbase
     {
         protected IManagerFactory managerFactory = new ManagerFactory();
     }

@@ -31,7 +31,7 @@ using <%= BaseNamespace %>;
 namespace <%= UnitTestNamespace %>
 {
 	[TestFixture]
-    public partial class <%= GetClassName(SourceTable) %>Tests : UNuitTestBase
+    public partial class <%= GetClassName(SourceTable) %>Tests : UnitTestbase
     {
         [SetUp]
         public void SetUp()
