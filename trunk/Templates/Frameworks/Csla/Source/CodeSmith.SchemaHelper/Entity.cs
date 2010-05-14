@@ -129,7 +129,7 @@ namespace CodeSmith.SchemaHelper
                     ColumnSchema localColumn = tks.PrimaryKeyMemberColumns[index];
 
                     //Added a check to see if the FK is also a Foreign composite key (http://community.codesmithtools.com/forums/t/10266.aspx).
-                    bool isFKAlsoComposite = column.Table.PrimaryKey.MemberColumns.Count > 1 && column.IsPrimaryKeyMember && column.IsForeignKeyMember;
+                    bool isFKAlsoComposite = column.IsPrimaryKeyMember && column.Table.PrimaryKey.MemberColumns.Count > 1 && column.IsForeignKeyMember;
                     if (!Configuration.Instance.ExcludeRegexIsMatch(column.Table.FullName) &&
                         !Configuration.Instance.ExcludeRegexIsMatch(column.ToString()) &&
                         !Configuration.Instance.ExcludeRegexIsMatch(localColumn.ToString()) &&
