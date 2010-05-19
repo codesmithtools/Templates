@@ -228,7 +228,8 @@ namespace <%= BaseNamespace %>
         {
             if (!_disposed)
             {
-                session.DecrementRefCount();
+                if (session != null)
+                    session.DecrementRefCount();
 
                 if (!finalizing)
                     GC.SuppressFinalize(this);
