@@ -44,24 +44,45 @@ namespace <%= BaseNamespace %>
 
         #region Methods
 
-        public abstract override int GetHashCode();
         public override bool Equals(object obj)
         {
-            return (obj != null)                                                    // 1) Object is not null.
-                && (obj.GetType() == this.GetType())                                // 2) Object is of same Type.
-                && (MatchingIds((BusinessBase<T>)obj) || MatchingHashCodes(obj));   // 3) Ids or Hashcodes match.
-        }
-        private bool MatchingIds(BusinessBase<T> obj)
-        {
-            return (this.Id != null && !this.Id.Equals(default(T)))                 // 1) this.Id is not null/default.
-                && (obj.Id != null && !obj.Id.Equals(default(T)))                   // 1.5) obj.Id is not null/default.
-                && (this.Id.Equals(obj.Id));                                        // 2) Ids match.
-        }
-        private bool MatchingHashCodes(object obj)
-        {
-            return this.GetHashCode().Equals(obj.GetHashCode());                    // 1) Hashcodes match.
+            BusinessBase<T> compareTo = obj as BusinessBase<T>;
+
+            return compareTo != null
+                && HasSameNonDefaultIdAs(compareTo)
+                && HasSameBusinessSignatureAs(compareTo);
         }
 
+        /// <summary>  
+        /// Transient objects are not associated with an   
+        /// item already in storage.  For instance, a   
+        /// Customer is transient if its ID is 0.  
+        /// </summary>  
+        public virtual bool IsTransient()
+        {
+            return Id == null || Id.Equals(default(T));
+        }
+
+        /// <summary>  
+        /// Must be implemented to compare two objects  
+        /// </summary>  
+        public abstract override int GetHashCode();
+
+        private bool HasSameBusinessSignatureAs(BusinessBase<T> compareTo)
+        {
+            return GetHashCode().Equals(compareTo.GetHashCode());
+        }
+
+        /// <summary>  
+        /// Returns true if self and the provided domain   
+        /// object have the same ID values and the IDs   
+        /// are not of the default ID value  
+        /// </summary>  
+        private bool HasSameNonDefaultIdAs(BusinessBase<T> compareTo)
+        {
+            return IsTransient() || compareTo.IsTransient() || Id.Equals(compareTo.Id);
+        }  
+  
         #endregion
 
         #region Properties
