@@ -102,12 +102,12 @@ namespace NHibernateHelper
                 if (!String.IsNullOrEmpty(_tablePrefix) && className.StartsWith(_tablePrefix))
                     className = className.Remove(0, _tablePrefix.Length);
 
+                className = StringUtil.ToPascalCase(className);
+
                 if (EntityNaming == EntityNamingEnum.Plural && TableNaming != TableNamingEnum.Plural)
                     className = StringUtil.ToPlural(className);
                 else if (EntityNaming == EntityNamingEnum.Singular && TableNaming != TableNamingEnum.Singular)
                     className = StringUtil.ToSingular(className);
-
-                className = StringUtil.ToPascalCase(className);
             }
 
             return ValidateName(className);
