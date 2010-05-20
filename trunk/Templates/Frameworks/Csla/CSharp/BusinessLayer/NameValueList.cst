@@ -24,7 +24,7 @@ public override void Render(System.IO.TextWriter writer)
     RegisterReferences();
 
     PreserveRegionsMergeStrategy strategy = new PreserveRegionsMergeStrategy();
-    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Custom)\"?;";
+    strategy.RegionNameRegex = "^[ \\t]*[ \\s]*\"?(?i:Preserved Code)\"?";
 
     #region NameValueList
     
