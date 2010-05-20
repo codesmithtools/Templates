@@ -15,6 +15,7 @@
             if (cancel) return;
 
             string commandText = string.Format("DELETE FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
+<%  if(!RenderOptionalContent) { %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();
@@ -28,5 +29,16 @@
                         throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
                 }
             }
+<%} else {%>
+            using (SqlCommand command = new SqlCommand(commandText, connection))
+            {
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag));
+
+                //result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                int result = command.ExecuteNonQuery();
+                if (result == 0)
+                    throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
+            }
+<%}%>
 
             OnDeleted();

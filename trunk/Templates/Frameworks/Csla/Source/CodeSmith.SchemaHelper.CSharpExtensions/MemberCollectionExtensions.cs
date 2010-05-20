@@ -157,13 +157,13 @@ namespace CodeSmith.SchemaHelper
                 }
 
                 if (isUpdateStatement && !string.IsNullOrEmpty(originalPropertyName))
-                    commandParameters += string.Format("\n\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}Original{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, originalCast);
+                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}Original{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, originalCast);
 
-                commandParameters += string.Format("\n\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
+                commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
 
                 if ((member.IsIdentity || (member.DataType == DbType.Guid.ToString() && member.IsPrimaryKey)) && includeOutPutParameters)
                 {
-                    commandParameters += string.Format("\n\t\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Output;", Configuration.Instance.ParameterPrefix, member.ColumnName);
+                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Output;", Configuration.Instance.ParameterPrefix, member.ColumnName);
                 }
             }
 
@@ -177,7 +177,7 @@ namespace CodeSmith.SchemaHelper
             foreach (Member member in members)
             {
                 if(member.IsNullable)
-                    commandParameters += string.Format("\n\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}HasValue\", criteria.{2}HasValue);", Configuration.Instance.ParameterPrefix, member.ColumnName, member.PropertyName);
+                    commandParameters += string.Format("\n\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}HasValue\", criteria.{2}HasValue);", Configuration.Instance.ParameterPrefix, member.ColumnName, member.PropertyName);
             }
 
             return commandParameters.TrimStart(new[] { '\t', '\n' });

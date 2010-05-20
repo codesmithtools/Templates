@@ -19,5 +19,7 @@
         partial void OnMapped();
         partial void OnUpdating(ref bool cancel);
         partial void OnUpdated();
+        
+        partial void OnAddNewCore(ref <%= ChildBusinessClassName %> item, ref bool cancel);
 
         #endregion

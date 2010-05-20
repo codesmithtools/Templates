@@ -29,16 +29,32 @@
                 int result = command.ExecuteNonQuery();
                 if (result == 0)
                     throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
-
 <% if(Entity.HasRowVersionMember) { %>
+
                 <%= Entity.RowVersionMember.PropertyName %> = (<%= Entity.RowVersionMember.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value;
-<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity || member.DataType == DbType.Guid.ToString()) { if(UseMemberVariables) { %>
+<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity || member.DataType == DbType.Guid.ToString()) {%> 
+
+                // Update identity or guid primary key value.
+<% if(UseMemberVariables) { %>
                 <%= member.PrivateMemberVariableName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
 <% } else { %>
                 LoadProperty(<%= member.PrivateMemberVariableName %>Property,(<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
 <% } } } %>
+<%  if(!RenderOptionalContent) { foreach(Member member in Entity.Members) { if(member.IsForeignKey && !member.IsPrimaryKey) { if(string.IsNullOrEmpty(member.ResolveAssociationPropertyClassName())) continue; %> 
 
-<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { if(UseMemberVariables) { %>
+                // Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
+<% string localParameterName = member.ResolveAssociationPropertyVariable();
+   string localParameterNameWithChildProperty = member.ResolveAssociationPropertyVariableWithChildProperty();%>
+                if(<%= localParameterName %> != null && <%= localParameterNameWithChildProperty %> != this.<%= member.PropertyName %>)
+<% if(UseMemberVariables) { %>
+                    <%= member.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>;
+<% } else { %>
+                    LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>);
+<% } } } } %>
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) {%> 
+
+                // Update non-identity primary key value.
+<% if(UseMemberVariables) { %>
                 _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
 <% } else { %>
                 LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
@@ -55,8 +71,8 @@
 <% } else { %>
             
             // A child relationship exists on this Business Object but its type is not a child type (E.G. EditableChild). 
-            // Please override OnChildInserted() and insert this child manually.
-            //FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>);
+            // TODO: Please override OnChildUpdated() and update this child manually.
+            // FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>);
 <% } } else { %>
 
             FieldManager.UpdateChildren(this, connection);

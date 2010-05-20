@@ -1,7 +1,8 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X EditableChildList" %>
 <%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="IsDirty" Template="..\..\Common\IsDirtyList.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="AddNewCore" Template="..\..\Common\ListAddNewCore.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
@@ -66,13 +67,11 @@ namespace <%= BusinessProjectName %>
         
         #endregion
 
-        #region Properties
+        #region Method Overrides
         
         protected override object AddNewCore()
         {
-            <%= ChildBusinessClassName %> item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>();
-            Add(item);
-            return item;
+<% RenderHelper(new AddNewCore()); %>
         }
         
         #endregion
