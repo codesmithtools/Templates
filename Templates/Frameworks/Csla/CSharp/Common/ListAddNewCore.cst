@@ -20,14 +20,19 @@
                 if(item == null)
                     item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>();
 
-<% foreach(Member member in Entity.Members) { if(member.IsForeignKey && !member.IsIdentity) {
-    string className = member.ResolveAssociationPropertyClassName();
-    if(string.IsNullOrEmpty(className)) continue;
-    
-    string variableName = member.ResolveAssociationPropertyVariable();
-    string variableWithChildProperty = member.ResolveAssociationPropertyVariableWithChildProperty(); %>
+<%  var list = new System.Collections.Generic.List<string>(); 
+    foreach(Member member in Entity.Members) { if(member.IsForeignKey && !member.IsIdentity) {
+        string className = member.ResolveAssociationPropertyClassName();
+        if(string.IsNullOrEmpty(className)) continue;
+
+        string variableName = member.ResolveAssociationPropertyVariable();
+        string variableWithChildProperty = member.ResolveAssociationPropertyVariableWithChildProperty(); %>
                 // Pass the parent value down to the child.
+<%if(!list.Contains(className)) { list.Add(className);%>
                 <%= className %> <%= variableName %> = this.Parent as <%= className %>;
+<%} else { %>
+                <%= variableName %> = this.Parent as <%= className %>;
+<% } %>
                 if(<%= variableName %> != null)
                     item.<%= member.PropertyName %> = <%= variableWithChildProperty %>;
 
