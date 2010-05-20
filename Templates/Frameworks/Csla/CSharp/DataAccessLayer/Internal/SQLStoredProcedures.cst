@@ -145,9 +145,9 @@ INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
 <% if(Entity.HasRowVersionMember){ %>
 SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<%= Entity.RowVersionMember.ColumnName %>] FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false); %>)
 <%}%>
-
 <% } %>
 
+GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 
@@ -220,6 +220,7 @@ WHERE
 SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<%= Entity.RowVersionMember.ColumnName %>] FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false); %>)
 <%}%>
 
+GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 
@@ -284,6 +285,7 @@ DELETE FROM
 WHERE
     <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false); %>
 
+GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 
@@ -353,6 +355,7 @@ FROM
 WHERE
     <% GenerateFindConditions(SourceTable.Columns, 1); %>
 
+GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 
@@ -456,6 +459,7 @@ public void GenerateDropStatement(string procedureName)
         Response.WriteLine("DROP PROCEDURE {0}", procedureName);
         Response.WriteLine("");
         
+        Response.WriteLine("GO");
         Response.WriteLine("IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION");
         Response.WriteLine("GO");
         Response.WriteLine("");
