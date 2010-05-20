@@ -1,0 +1,38 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.CSharpExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+            <%= ChildBusinessClassName %> item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>();
+
+            bool cancel = false;
+            OnAddNewCore(ref item, ref cancel);
+            if (!cancel)
+            {
+                // Check to see if someone set the item to null in the OnAddNewCore.
+                if(item == null)
+                    item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>();
+
+<% foreach(Member member in Entity.Members) { if(member.IsForeignKey && !member.IsIdentity) {
+    string className = member.ResolveAssociationPropertyClassName();
+    if(string.IsNullOrEmpty(className)) continue;
+    
+    string variableName = member.ResolveAssociationPropertyVariable();
+    string variableWithChildProperty = member.ResolveAssociationPropertyVariableWithChildProperty(); %>
+                // Pass the parent value down to the child.
+                <%= className %> <%= variableName %> = this.Parent as <%= className %>;
+                if(<%= variableName %> != null)
+                    item.<%= member.PropertyName %> = <%= variableWithChildProperty %>;
+
+<% } } %>
+            }
+
+            Add(item);
+            return item;

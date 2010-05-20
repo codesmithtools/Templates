@@ -36,6 +36,7 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 using Csla;
 using Csla.Data;
@@ -87,6 +88,11 @@ namespace <%= BusinessProjectName %>
         protected void DataPortal_Delete(<%= BusinessClassName %>Criteria criteria)
         {
 <% RenderHelper(new DataPortalDelete()); %>
+        }
+
+        protected void DataPortal_Delete(<%= BusinessClassName %>Criteria criteria, SqlConnection connection)
+        {
+<% RenderHelper(new DataPortalDelete(), true); %>
         }
 
         #endregion
@@ -160,6 +166,21 @@ namespace <%= BusinessProjectName %>
             
             DataPortal_Delete(new <%= BusinessClassName %>Criteria (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
         
+            OnChildSelfDeleted();
+        }
+
+        private void Child_DeleteSelf(params object[] args)
+        {
+            SqlConnection connection = args.OfType<SqlConnection>().FirstOrDefault();
+            if(connection == null)
+                throw new ArgumentNullException("args", "Must contain a SqlConnection parameter.");
+
+            bool cancel = false;
+            OnChildSelfDeleting(ref cancel);
+            if (cancel) return;
+
+            DataPortal_Delete(new <%= BusinessClassName %>Criteria (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>), connection);
+
             OnChildSelfDeleted();
         }
 
