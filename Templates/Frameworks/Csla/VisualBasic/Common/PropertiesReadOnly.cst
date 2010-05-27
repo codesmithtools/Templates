@@ -50,7 +50,7 @@ If(IsReadOnlyBusinessObject( association, "Info")) Then
 End If
 If UseMemberVariables then %>
     'OneToZeroOrOne
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child)
+    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
     Private <%= association.PrivateMemberVariableName %> As <%= associationClassName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue
 <% If(association.HasDescription) Then %>
     ''' <summary>
@@ -76,7 +76,7 @@ If UseMemberVariables then %>
 
 <% else %>
     'OneToZeroOrOne
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child)
+    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
 <% If(association.HasDescription) Then %>
     ''' <summary>
     ''' <%= association.Description %>
@@ -109,7 +109,7 @@ If(IsReadOnlyBusinessObject( association, "Info")) Then
 End If
 If UseMemberVariables Then %>
     'ManyToOne
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child)
+    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
     Private <%= association.PrivateMemberVariableName %> As <%= associationClassName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue
 <% If(association.HasDescription) Then %>
     ''' <summary>
@@ -135,7 +135,7 @@ If UseMemberVariables Then %>
     
 <%  Else  %>
     'ManyToOne
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child)
+    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
     Public ReadOnly Property <%= association.PropertyName %>() As <%= associationClassName %>
         Get
 <% If UseLazyLoading Then %>
@@ -162,7 +162,7 @@ Next  %>
         associationClassName += "Info"
     End If %>
     'OneToMany
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>List) = RegisterProperty(Of <%= associationClassName %>List)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child)
+    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>List) = RegisterProperty(Of <%= associationClassName %>List)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
 <% If(association.HasDescription) Then %>
     ''' <summary>
     ''' <%= association.Description %>
