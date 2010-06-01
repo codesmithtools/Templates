@@ -9,7 +9,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-        #region Validation Rules
+        #region Business Rules
 
         protected override void AddBusinessRules()
         {
@@ -19,12 +19,17 @@
 <%     foreach(Member member in Entity.MembersNoRowVersion){ %>
 <% if(member.SystemType == "System.String" ) { %>
 <% if(!member.IsNullable) { %>
+<% if(IsCSLA40) { %>
+            BusinessRules.AddRule(new Csla.Rules.CommonRules.Required(<%= member.PrivateMemberVariableName %>Property));
+<% } else { %>
             ValidationRules.AddRule(CommonRules.StringRequired, <%= member.PrivateMemberVariableName %>Property);
-<% }
-if(!member.ExcludeBusinessSizeRule()) {
-%>
+<% } }
+if(!member.ExcludeBusinessSizeRule()) { %>
+<% if(IsCSLA40) { %>
+            BusinessRules.AddRule(new Csla.Rules.CommonRules.MaxLength(<%= member.PrivateMemberVariableName %>Property, <%= member.Size %>));
+<% } else { %>
             ValidationRules.AddRule(CommonRules.StringMaxLength, new CommonRules.MaxLengthRuleArgs(<%= member.PrivateMemberVariableName %>Property, <%= member.Size %>));
-<% } } } %>
+<% } } } } %>
         }
 
         #endregion

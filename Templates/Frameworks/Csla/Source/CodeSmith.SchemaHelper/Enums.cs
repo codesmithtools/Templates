@@ -20,6 +20,19 @@ namespace CodeSmith.SchemaHelper
         VS_2010 = 2
     }
 
+    public enum Framework : byte
+    {
+        /// <summary>
+        /// .NET 3.5
+        /// </summary>
+        v35 = 0,
+
+        /// <summary>
+        /// .NET 4.0
+        /// </summary>
+        v40 = 1
+    }
+
     public enum AssociationType : byte
     {
         ManyToOne = 0,

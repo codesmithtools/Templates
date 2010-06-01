@@ -30,7 +30,7 @@ public override void Render(System.IO.TextWriter writer)
     
     NameValueList nameValueList = this.Create<NameValueList>();
     this.CopyPropertiesTo(nameValueList);
-    nameValueList.BusinessClassName = string.Format("{0}List", nameValueList.BusinessClassName);
+    nameValueList.BusinessClassName = string.Format("{0}NameValueList", nameValueList.BusinessClassName);
     
     string parentFileName = System.IO.Path.Combine(this.Location, string.Format("Collections\\{0}.cs", nameValueList.BusinessClassName));
     nameValueList.RenderToFile(parentFileName, strategy);
@@ -41,7 +41,7 @@ public override void Render(System.IO.TextWriter writer)
     
     NameValueListGenerated nameValueListGenerated = this.Create<NameValueListGenerated>();
     this.CopyPropertiesTo(nameValueListGenerated);
-    nameValueListGenerated.BusinessClassName = string.Format("{0}List", nameValueListGenerated.BusinessClassName);
+    nameValueListGenerated.BusinessClassName = string.Format("{0}NameValueList", nameValueListGenerated.BusinessClassName);
     
     nameValueListGenerated.RenderToFile(fileName, parentFileName, true);
     
@@ -53,7 +53,7 @@ public override void Render(System.IO.TextWriter writer)
     
     NameValueListDataAccess nameValueListDataAccess = this.Create<NameValueListDataAccess>();
     this.CopyPropertiesTo(nameValueListDataAccess);
-    nameValueListDataAccess.BusinessClassName = string.Format("{0}List", nameValueListDataAccess.BusinessClassName);
+    nameValueListDataAccess.BusinessClassName = string.Format("{0}NameValueList", nameValueListDataAccess.BusinessClassName);
     
     nameValueListDataAccess.RenderToFile(fileName, parentFileName, true);
     

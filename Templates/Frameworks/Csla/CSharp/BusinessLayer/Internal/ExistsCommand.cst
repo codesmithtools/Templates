@@ -27,7 +27,7 @@ using Csla;
 namespace <%= BusinessProjectName %>
 {
     [Serializable]
-    public class ExistsCommand : CommandBase
+    public class ExistsCommand : CommandBase<% if(IsCSLA40) { %><ExistsCommand><% } %>
     {
         #region Constructor(s)
 

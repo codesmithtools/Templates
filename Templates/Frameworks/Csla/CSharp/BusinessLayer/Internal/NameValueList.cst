@@ -22,9 +22,15 @@
 #region Using declarations
 
 using System;
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
 using System.Data;
 using System.Data.SqlClient;
+<% if(IncludeSilverlightSupport) { %>
+#endif
 
+<% } %>
 using Csla;
 using Csla.Data;
 

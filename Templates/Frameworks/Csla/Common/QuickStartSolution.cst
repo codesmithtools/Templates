@@ -7,16 +7,22 @@
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="System.Collections.Generic" %>
 
-<%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="Projects" Description="" %>
+<%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="1.Project" Description="" %>
 <%@ Property Name="Language" Type="LanguageEnum" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
+<%@ Property Name="IsCSLA40" Type="System.Boolean" Optional="False" Category="1.Project" Description="" %>
 
+<% if(IsCSLA40) { %>
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+<% } else { %>
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
+<% } %>
 <% foreach(SolutionItem solutionItem in SolutionItems) { 
 	if(solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFramework = "3.5"
+		TargetFramework = "<% if(IsCSLA40) { %>4.0<% } else { %>3.5<% } %>"
 		<% foreach(SolutionItem item in solutionItem.ProjectReferences) { %>
 		ProjectReferences = "{<%=item.Guid.ToString()%>}|<%=item.Name%>.dll;"
 		<% } %>

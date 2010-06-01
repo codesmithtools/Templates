@@ -21,6 +21,11 @@
 
 using System;
 using Csla;
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+<% } %>
 
 #endregion
 
@@ -32,6 +37,13 @@ namespace <%= BusinessProjectName %>
         #region Factory Methods 
 
         private static <%= BusinessClassName %> _list;
+
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
+
+        #region Synchronous Factory Methods         
+
         public static <%= BusinessClassName %> GetAll()
         {
             if(_list == null)
@@ -39,6 +51,23 @@ namespace <%= BusinessProjectName %>
                 
             return _list;
         }
+	
+        #endregion
+
+<% if(IncludeSilverlightSupport) { %>
+#endif
+ 	#region Asynchronous Factory Methods
+        
+	public static void GetAllAsync(EventHandler<DataPortalResult<<%= BusinessClassName %>>> handler)
+        {
+            DataPortal<<%= BusinessClassName %>> dp = new DataPortal<<%= BusinessClassName %>>();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch();
+        }
+        
+	#endregion
+	
+<% } %>
         
         public static void InvalidateCache()
         {
@@ -65,9 +94,6 @@ namespace <%= BusinessProjectName %>
         }
 
         #endregion
-
 <% } %>
-
-<% RenderHelper(new Exists()); %>
     }
 }

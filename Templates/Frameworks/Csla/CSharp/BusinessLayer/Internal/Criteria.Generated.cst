@@ -24,7 +24,19 @@
 
 using System;
 using System.Collections.Generic;
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+<% } %>
+
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
 using System.Data.SqlClient;
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
 
 using Csla;
 
@@ -33,7 +45,7 @@ using Csla;
 namespace <%= BusinessProjectName %>
 {
     [Serializable]
-    public partial class <%= BusinessClassName %> : CriteriaBase, IGeneratedCriteria
+    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : CriteriaBase<% if(IsCSLA40) { %><<%= BusinessClassName %><%= Entity.GenericProperty %>><% } %>, IGeneratedCriteria
     {
         #region Private Read-Only Members
         
@@ -43,9 +55,9 @@ namespace <%= BusinessProjectName %>
         
         #region Constructors
 
-        public <%= BusinessClassName %>() : base(typeof(<%= ChildBusinessClassName %>)){}
+        public <%= BusinessClassName %>()<% if(!IsCSLA40) { %> : base(typeof(<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% } %>{}
 
-        public <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>) : base(typeof(<%= ChildBusinessClassName %>))
+        public <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)<% if(!IsCSLA40) { %> : base(typeof(<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% } %>
         {
 <%  foreach(Member member in Entity.PrimaryKey.KeyMembers){ %>
             <%= member.PropertyName %> = <%= member.VariableName %>;

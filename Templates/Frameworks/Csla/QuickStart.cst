@@ -1,4 +1,4 @@
-<%-- 
+﻿<%-- 
 Name: Quick Start
 Author: Blake Niemyjski
 Description: Used to Quick Start Visual Studio Projects
@@ -9,6 +9,7 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Register Name="Entities" Template="CSharp\BusinessLayer\Entities.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataAccess" Template="CSharp\DataAccessLayer\DataAccessLayer.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Web" Template="CSharp\WebLayer\Default.aspx.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="NUnitTests" Template="CSharp\NUnitTests\NUnitTests.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="Common" %>
 <%@ Assembly Name="QuickStart" Path="Common" %>
@@ -20,6 +21,7 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Import Namespace="System.IO" %>
 
 <%@ Property Name="IncludeInterfaceProject" Type="System.Boolean" Default="True" Category="5. Interface Project" Description="If true, the Interface Project will be included in the generated solution." %>
+<%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="True" Category="6. Test Project" Description="If true, the Test Project will be included in the generated solution." %>
 
 <% Generate(); %>
 
@@ -69,6 +71,14 @@ public override void Generate()
         web.Location = Path.Combine(this.Location, this.InterfaceProjectName);
         web.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\Web.csp"));
     }
+    
+    if(IncludeTestProject)
+    {
+        NUnitTests nUnitTests = this.Create<NUnitTests>();
+        this.CopyPropertiesTo(nUnitTests);
+        nUnitTests.Location = Path.Combine(this.Location, this.TestProjectName);
+        nUnitTests.SavePropertiesToXmlFile(Path.Combine(CodeTemplateInfo.DirectoryName, "Common\\NUnitTests.csp"));
+    }
 
     #endregion
 
@@ -108,13 +118,15 @@ public override void Generate()
         solutionItems.Add(webAppProject);
     }
 
-    // Create UnitTests Project
-    //if(IncludeTestProject)
-    //{
-    //    UnitTestProjectCreator unitTestProjectCreator = new UnitTestProjectCreator(pbs);
-    //    SolutionItem unitTestsProject = unitTestProjectCreator.CreateProject(this.TestProjectName, dataProject);
-    //    solutionItems.Add(unitTestsProject);
-    //}
+    //Create UnitTests Project
+    if(IncludeTestProject)
+    {
+        DataProjectCreator testProjectCreator = new DataProjectCreator(pbs);
+        testProjectCreator.CspFileName = "NUnitTests.csp";
+        testProjectCreator.ProjectReferences.Add(this.BusinessProjectName);
+        SolutionItem testProject = testProjectCreator.CreateProject(this.TestProjectName);
+        solutionItems.Add(testProject);
+    }
 
     // Create Solution
     string solutionPath = CreateSolution(solutionItems);
@@ -127,6 +139,7 @@ public override void Generate()
 private string CreateSolution(List<SolutionItem> solutionItems)
 {
     QuickStartSolution quickStartSolution = this.Create<QuickStartSolution>();
+    quickStartSolution.IsCSLA40 = this.Framework == Framework.v40;
     quickStartSolution.SolutionItems = solutionItems;
 
     string filePathAboslute = Path.Combine(this.Location, String.Concat(SolutionName, ".sln"));

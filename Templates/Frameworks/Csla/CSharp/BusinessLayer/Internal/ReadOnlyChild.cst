@@ -22,13 +22,17 @@ using System;
 
 using Csla;
 using Csla.Security;
+<% if(IsCSLA40) { %>
+using Csla.Rules;
+<% } else { %>
 using Csla.Validation;
+<% } %>
 
 #endregion
 
 namespace <%= BusinessProjectName %>
 {
-    public partial class <%= BusinessClassName %>
+    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
 <% RenderHelper(new AuthorizationRules()); %>
     }

@@ -1,0 +1,79 @@
+﻿<%-- Author: Will Comeaux --%>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.TestCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="Test CSLA Object Insert" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+<%@ Property Name="MainTemplateName" Type="System.String" Default="" Category="1. Main Template Name" Description="The name of the main template." %>
+        #region Synchronous Insert <%= BusinessClassName %> Tests
+
+        /// <summary>
+        /// Tests the ability to insert
+        /// </summary>
+        [Test]
+        public void Test<%= BusinessClassName %>Insert()
+        {
+<% switch(MainTemplateName) %>
+<% { %>
+<% case "TestDynamicRoot.Generated.cst": %>
+<% case "TestDynamicRootList.Generated.cst": %>
+<% case "TestEditableChild.Generated.cst": %>
+<% case "TestEditableChildList.Generated.cst": %>
+<% case "TestEditableRoot.Generated.cst": %>
+<% case "TestEditableRootList.Generated.cst": %>
+<% case "TestNameValueList.Generated.cst": %>
+<% case "TestReadOnlyChild.Generated.cst": %>
+<% case "TestReadOnlyChildList.Generated.cst": %>
+<% case "TestReadOnlyRoot.Generated.cst": %>
+<% case "TestReadOnlyRootList.Generated.cst": %>
+<% case "TestSwitchable.Generated.cst": %>
+<% break; %>
+
+<% default: %>
+            //Unable to determine type of INSERT test to generate.
+<% break; %>
+<% } %>
+        }
+
+        #endregion
+
+<% if(IncludeSilverlightSupport) { %>
+        
+        #region Asynchronous Insert <%= BusinessClassName %> Tests
+
+        /// <summary>
+        /// Tests the ability to insert
+        /// </summary>
+        [Test]
+        public void Test<%= BusinessClassName %>InsertA()
+        {
+<% switch(MainTemplateName) %>
+<% { %>
+<% case "TestDynamicRoot.Generated.cst": %>
+<% case "TestDynamicRootList.Generated.cst": %>
+<% case "TestEditableChild.Generated.cst": %>
+<% case "TestEditableChildList.Generated.cst": %>
+<% case "TestEditableRoot.Generated.cst": %>
+<% case "TestEditableRootList.Generated.cst": %>
+<% case "TestNameValueList.Generated.cst": %>
+<% case "TestReadOnlyChild.Generated.cst": %>
+<% case "TestReadOnlyChildList.Generated.cst": %>
+<% case "TestReadOnlyRoot.Generated.cst": %>
+<% case "TestReadOnlyRootList.Generated.cst": %>
+<% case "TestSwitchable.Generated.cst": %>
+<% break; %>
+
+<% default: %>
+            //Unable to determine type of INSERT test to generate.
+<% break; %>
+<% } %>
+        }
+
+        #endregion
+
+<% } %>

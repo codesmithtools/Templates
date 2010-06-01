@@ -25,11 +25,17 @@
         }
 <% if(DataAccessImplementation == DataAccessMethod.None || DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
         internal <%= BusinessClassName %>(SafeDataReader reader)
         {
 <%if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
             Map(reader);
 <% } %>
         }
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
 <% } %>
         #endregion

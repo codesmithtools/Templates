@@ -178,5 +178,13 @@ namespace CodeSmith.SchemaHelper
         {
             get; internal set;
         }
+
+        /// <summary>
+        /// Returns a generic parameter if the table has an extended property named CS_IsGeneric and the value of CS_IsGeneric is True.
+        /// </summary>
+        public string GenericProperty 
+        {
+            get { return this.Count > 0 ? this[0].GenericProperty : string.Empty; }
+        }
     }
 }

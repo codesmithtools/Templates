@@ -19,6 +19,7 @@ namespace CodeSmith.SchemaHelper
         #region Constant(s)
 
         private const string CS_Description = "CS_Description";
+        private const string IS_GENERIC = "CS_IsGeneric";
 
         #endregion
 
@@ -135,6 +136,14 @@ namespace CodeSmith.SchemaHelper
         {
             if (column.ExtendedProperties.Contains(CS_Description))
                 return column.ExtendedProperties[CS_Description].Value.ToString().Trim();
+
+            return string.Empty;
+        }
+
+        public static string ResolveIsGenericExtendedProperty(this TableSchema column)
+        {
+            if (column.ExtendedProperties.Contains(IS_GENERIC) && ((bool)column.ExtendedProperties[IS_GENERIC].Value))
+                return "<T>";
 
             return string.Empty;
         }

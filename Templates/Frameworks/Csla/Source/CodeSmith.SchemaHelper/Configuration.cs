@@ -211,6 +211,10 @@ namespace CodeSmith.SchemaHelper
 
         public bool IncludeManyToManyEntity { get; set; }
 
+        public bool IncludeSilverlightSupport { get; set; }
+
+        public Framework Framework { get; set; }
+
         #endregion
     }
 }
