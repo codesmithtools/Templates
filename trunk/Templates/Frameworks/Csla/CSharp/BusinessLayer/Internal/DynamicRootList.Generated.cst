@@ -26,6 +26,11 @@
 using System;
 
 using Csla;
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+<% } %>
 
 #endregion
 
@@ -35,10 +40,18 @@ namespace <%= BusinessProjectName %>
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
     [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>ListFactoryName)]
 <% } %>
-    public partial class <%= BusinessClassName %> : EditableRootListBase< <%= ChildBusinessClassName %> >
+    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : EditableRootListBase< <%= ChildBusinessClassName %><%= Entity.GenericProperty %> >
     {
-        #region Method Overrides
+<% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
+        #region DataPortal partial methods
         
+        partial void OnAddNewCore(ref <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item, ref bool cancel);
+
+        #endregion
+
+<% } %>
+        #region Method Overrides
+
         protected override object AddNewCore()
         {
 <% RenderHelper(new AddNewCore()); %>
@@ -46,30 +59,72 @@ namespace <%= BusinessProjectName %>
         
         #endregion
 
-        #region Factory Methods 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
+        #region Synchronous Factory Methods 
         
-        public static <%= BusinessClassName %> NewList()
+        public static <%= BusinessClassName %><%= Entity.GenericProperty %> NewList()
         {
-            return DataPortal.Create< <%= BusinessClassName %> >();
+            return DataPortal.Create< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
         }
 
-        public static <%= BusinessClassName %> GetAll()
+        public static <%= BusinessClassName %><%= Entity.GenericProperty %> GetAll()
         {
-            return DataPortal.Fetch< <%= BusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
+            return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>());
         }
+
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
-        public static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
+        public static <%= BusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
-            return DataPortal.Fetch< <%= BusinessClassName %> >(
-                new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
+            return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %> >(
+                new <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>});
         }
 <% } %>
+        #endregion
+        
+<% if(IncludeSilverlightSupport) { %>
+#endif
+        
+        #region Asynchronous Factory Methods
+        
+		public static void NewListAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+		{
+			DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+		}
+<% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
+        public static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        {
+            DataPortal< <%= BusinessClassName %> > dp = new DataPortal< <%= BusinessClassName %> >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(new <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>});
+        }
+<% } %>
+        
+        #endregion
+
+<% } %>
+        #region Constructors
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>        
         private <%= BusinessClassName %>()
         { 
             AllowNew = true;
         }
+<% if(IncludeSilverlightSupport) { %>
+#else
+        public <%= BusinessClassName %>()
+        { 
+            AllowNew = true;
+        }
+#endif
+<% } %>
+
         
         #endregion
 

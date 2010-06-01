@@ -12,8 +12,19 @@
 <%@ Import Namespace="QuickStart" %>
         #region Contructor(s)
 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
         private <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
+<% if(IncludeSilverlightSupport) { %>
+#else
+	public <%= BusinessClassName %>()
+        { /* Require use of factory methods */ }
+<% } %>
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
 
         internal <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         {
@@ -28,11 +39,17 @@
         }
 <% if(DataAccessImplementation == DataAccessMethod.None || DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
         internal <%= BusinessClassName %>(SafeDataReader reader)
         {
 <%if(DataAccessImplementation == DataAccessMethod.ParameterizedSQL || DataAccessImplementation == DataAccessMethod.StoredProcedures){ %>
             Map(reader);
 <% } %>
         }
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
 <% } %>
         #endregion

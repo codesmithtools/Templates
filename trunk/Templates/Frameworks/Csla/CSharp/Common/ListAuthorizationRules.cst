@@ -13,6 +13,11 @@
 
         protected void AddAuthorizationRules()
         {
+<% if(IsCSLA40) { %>
+            //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"));
+            //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.EditObject, "SomeRole"));
+            //Csla.Rules.BusinessRules.AddRule(typeof(<%= BusinessClassName %>), new Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.DeleteObject, "SomeRole", "SomeAdminRole"));
+<% } else { %>
             //// More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
 
             //string[] canWrite = { "AdminUser", "RegularUser" };
@@ -50,7 +55,7 @@
             //// <%= association.PropertyName %>
             // AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead);
 
-<% } %>
+<% } } %>
         }
 
         #endregion

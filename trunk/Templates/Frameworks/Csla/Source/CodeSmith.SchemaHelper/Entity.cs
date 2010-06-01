@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Text;
 using SchemaExplorer;
 using System.Diagnostics;
 
@@ -26,6 +26,7 @@ namespace CodeSmith.SchemaHelper
         {
             Table = sourceTable;
             Description = sourceTable.ResolveDescription();
+            GenericProperty = sourceTable.ResolveIsGenericExtendedProperty();
             ClassName = sourceTable.ClassName();
         }
 
@@ -374,6 +375,11 @@ namespace CodeSmith.SchemaHelper
                 return false;
             }
         }
+
+        /// <summary>
+        /// Returns a generic parameter if the table has an extended property named CS_IsGeneric and the value of CS_IsGeneric is True.
+        /// </summary>
+        public string GenericProperty { get; private set; }
 
         public EntityKey PrimaryKey
         {

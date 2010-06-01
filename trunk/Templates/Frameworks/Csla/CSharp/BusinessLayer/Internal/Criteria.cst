@@ -23,7 +23,7 @@ using System;
 
 namespace <%= BusinessProjectName %>
 {
-    public partial class <%= BusinessClassName %>
+    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
     }
 }

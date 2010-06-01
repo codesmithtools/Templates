@@ -44,7 +44,16 @@ namespace QuickStart
         {
             get
             {
-                return "3.8.2";
+                return IsCSLA40 ? "4.0.0" : "3.8.2";
+            }
+        }
+
+        [Browsable(false)]
+        public virtual bool IsCSLA40
+        {
+            get
+            {
+                return Configuration.Instance.Framework == Framework.v40;
             }
         }
 
@@ -91,7 +100,10 @@ namespace QuickStart
 
         public virtual void RegisterReferences()
         {
-            RegisterReference(Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\Csla.dll")));
+            RegisterReference(!IsCSLA40
+                                  ? Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8.2\Client\Csla.dll"))
+                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.0.0\Client\Csla.dll")));
+
             RegisterReference("System.Configuration");
         }
 

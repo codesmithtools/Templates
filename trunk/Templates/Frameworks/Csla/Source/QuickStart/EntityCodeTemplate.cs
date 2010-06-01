@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
-
 using CodeSmith.CustomProperties;
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
@@ -23,6 +21,8 @@ namespace QuickStart
         private TableSchema _table;
         private StringCollection _ignoreExpressions;
         private StringCollection _cleanExpressions;
+        private bool _silverlightSupport;
+        private Framework _framework;
 
         #endregion
 
@@ -128,6 +128,22 @@ namespace QuickStart
         [DefaultValue(".\\")]
         public string Location { get; set; }
 
+        [Optional]
+        [Category("2. Solution")]
+        [Description("The .NET Framework Version. If you use v40 then CSLA 4.0 will be used. If you use v35 then CSLA 3.8 will be used.")]
+        public Framework Framework
+        {
+            get
+            {
+                return _framework;
+            }
+            set
+            {
+                _framework = value;
+                Configuration.Instance.Framework = value;
+            }
+        }
+
         #endregion
 
         #region 3. Business Project
@@ -179,6 +195,25 @@ namespace QuickStart
         [Description("Changes how the Business Objects are deleted, defaults to immediate deletion.")]
         [DefaultValue(false)]
         public bool UseDeferredDeletion { get; set; }
+
+        [Category("3. Business Project")]
+        [Description("If enabled Silverlight support will be added to the project..")]
+        [DefaultValue(false)]
+        public bool IncludeSilverlightSupport
+        {
+            get
+            {
+                return _silverlightSupport;
+            }
+            set
+            {
+                if (!IsCSLA40)
+                    Console.WriteLine("In order to include Silverlight support you must target CSLA 4.0.");
+
+                _silverlightSupport = value;
+                Configuration.Instance.IncludeSilverlightSupport = value;
+            }
+        }
 
         #endregion
         
@@ -271,9 +306,20 @@ namespace QuickStart
 
         #region Public Method(s)
 
+        [Browsable(false)]
+        public override bool IsCSLA40
+        {
+            get
+            {
+                return _framework == Framework.v40;
+            }
+        }
+
         public override void RegisterReferences()
         {
-            RegisterReference(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\Csla.dll"));
+            RegisterReference(!IsCSLA40
+                                  ? Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8.2\Client\Csla.dll"))
+                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.0.0\Client\Csla.dll")));
         }
 
         public bool IsReadOnlyBusinessObject(string suffix)

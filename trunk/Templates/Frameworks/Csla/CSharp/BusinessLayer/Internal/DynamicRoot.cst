@@ -26,7 +26,7 @@ using Csla;
 
 namespace <%= BusinessProjectName %>
 {
-    public partial class <%= BusinessClassName %>
+    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
 <% RenderHelper(new ValidationRules()); %>
 

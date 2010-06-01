@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-
 using CodeSmith.Engine;
 using CodeSmith.SchemaHelper;
 
@@ -117,6 +116,21 @@ namespace QuickStart
             }
         }
 
+        [Optional]
+        [Category("2. Solution")]
+        [Description("The .NET Framework Version. If you use v40 then CSLA 4.0 will be used. If you use v35 then CSLA 3.8 will be used.")]
+        public Framework Framework
+        {
+            get
+            {
+                return Configuration.Instance.Framework;
+            }
+            set
+            {
+                Configuration.Instance.Framework = value;
+            }
+        }
+
         #endregion
 
         #region 3. Business Project
@@ -129,6 +143,24 @@ namespace QuickStart
         [Description("Uses private member backing variables for properties.")]
         [DefaultValue(false)]
         public bool UseMemberVariables { get; set; }
+
+        [Category("3. Business Project")]
+        [Description("If enabled Silverlight support will be added to the project..")]
+        [DefaultValue(false)]
+        public bool IncludeSilverlightSupport
+        {
+            get
+            {
+                return Configuration.Instance.IncludeSilverlightSupport;
+            }
+            set
+            {
+                if (!IsCSLA40)
+                    Console.WriteLine("In order to include Silverlight support you must target CSLA 4.0.");
+
+                Configuration.Instance.IncludeSilverlightSupport = value;
+            }
+        }
 
         #endregion
 
@@ -183,6 +215,14 @@ namespace QuickStart
         [Category("5. Interface Project")]
         [Description("The namespace for the interface project.")]
         public string InterfaceProjectName { get; set; }
+
+        #endregion
+
+        #region 6. Test Project
+
+        [Category("6. Test Project")]
+        [Description("The namespace for the test project.")]
+        public string TestProjectName { get; set; }
 
         #endregion
 
@@ -334,10 +374,10 @@ namespace QuickStart
                 InterfaceProjectName = string.Format("{0}.UI", SolutionName);
             }
 
-            // if (string.IsNullOrEmpty(TestProjectName))
-            // {
-            //     TestProjectName = string.Format("{0}.Test", SolutionName);
-            // }
+            if (string.IsNullOrEmpty(TestProjectName))
+            {
+                TestProjectName = string.Format("{0}.Test", SolutionName);
+            }
         }
 
         #endregion

@@ -766,7 +766,10 @@ namespace QuickStart
         public override void RegisterReferences()
         {
             RegisterReference("System.Configuration");
-            RegisterReference(Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\Csla.dll")));
+
+            RegisterReference(!IsCSLA40
+                                  ? Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8.2\Client\Csla.dll"))
+                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.0.0\Client\Csla.dll")));
         }
 
         #endregion

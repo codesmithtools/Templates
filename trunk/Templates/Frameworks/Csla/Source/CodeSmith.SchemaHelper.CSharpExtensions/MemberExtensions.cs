@@ -10,8 +10,16 @@ namespace CodeSmith.SchemaHelper
     {
         public static string BuildDataObjectField(this Member member)
         {
+            return member.BuildDataObjectField(false);
+        }
+		
+		public static string BuildDataObjectField(this Member member, bool isSilverlight)
+        {
             if (member.IsPrimaryKey)
             {
+				if(isSilverlight)
+					return string.Format("\n#if !SILVERLIGHT\n\t\t[System.ComponentModel.DataObjectField(true, {0})]\n#endif", member.IsIdentity.ToString().ToLower());
+			
                 return string.Format("\n\t\t[System.ComponentModel.DataObjectField(true, {0})]", member.IsIdentity.ToString().ToLower());
             }
 

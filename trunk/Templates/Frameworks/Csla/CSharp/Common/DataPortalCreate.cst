@@ -26,6 +26,10 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 <% } else { %>
             LoadProperty(<%= member.AssociatedColumn.PrivateMemberVariableName %>Property, "BN");
 <% } } } } %>
+<% if(IsCSLA40) { %>
+            BusinessRules.CheckRules();
+<% } else { %>
             ValidationRules.CheckRules();
+<% } %>
 
             OnCreated();

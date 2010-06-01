@@ -11,9 +11,15 @@
 <%@ Import Namespace="QuickStart" %>
         #region Exists Command
 
-        public static bool Exists(<%= ChildBusinessClassName %>Criteria criteria)
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
+        public static bool Exists(<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria)
         {
             return <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria);
         }
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
 
         #endregion

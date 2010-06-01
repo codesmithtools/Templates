@@ -26,6 +26,11 @@
 using System;
 using System.Collections.Generic;
 using Csla;
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+<% } %>
 
 #endregion
 
@@ -35,9 +40,14 @@ namespace <%= BusinessProjectName %>
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
     [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>InfoListFactoryName)]
 <% } %>
-    public partial class <%= BusinessClassName %> : ReadOnlyListBase< <%= BusinessClassName %>, <%= ChildBusinessClassName %><% if(IsReadOnlyBusinessObject("Info")) { %>Info<%}%>>
+    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyListBase< <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><% if(IsReadOnlyBusinessObject("Info")) { %>Info<%}%><%= Entity.GenericProperty %> >
     {
-        #region Factory Methods 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
+        #region Synchronous Factory Methods
+
+   
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
         public static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
@@ -45,19 +55,45 @@ namespace <%= BusinessProjectName %>
             return DataPortal.Fetch< <%= BusinessClassName %> >(
                 new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
         }
+        
 <% } %>
 
-        public static <%= BusinessClassName %> GetAll()
+        public static <%= BusinessClassName %><%= Entity.GenericProperty %> GetAll()
         {
-            return DataPortal.Fetch< <%= BusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
+            return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %>(new <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>());
         }
 
         #endregion
+<% if(IncludeSilverlightSupport) { %>
+#endif
+        #region Asynchronous Factory Methods
+<% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
+
+        public static void <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        {
+            DataPortal< <%= BusinessClassName %> > dp = new DataPortal< <%= BusinessClassName %> >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>}));
+        }
+        
+<% } %>
+
+        #endregion
+<% } %>
 
         #region Constructor(s)
 
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
+        public <%= BusinessClassName %>()
+        { /* Require use of factory methods */ }
+#else
+<% } %>
         private <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
 
         #endregion
 

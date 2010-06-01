@@ -46,7 +46,7 @@
         associationClassName = association.ClassName + "Info";
     } %>
         //AssociatedOneToZeroOrOne
-        private static readonly PropertyInfo< <%= associationClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= associationClassName %> >(p => p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child);
+        private static readonly PropertyInfo< <%= associationClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= associationClassName %> >(p => p.<%= association.PropertyName %>, "<%= association.PropertyName %>");
 <% if(association.HasDescription) { %>
         /// <summary>
         /// <%= association.Description %>
@@ -56,15 +56,21 @@
         {
             get
             {
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                 {
                     if(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
-                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
                 }
 
 <% } %>
                    return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
             }
         }
 
@@ -76,7 +82,7 @@
         associationClassName = association.ClassName + "Info";
     } %>
         //AssociatedManyToOne
-        private static readonly PropertyInfo< <%= associationClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= associationClassName %> >(p => p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child);
+        private static readonly PropertyInfo< <%= associationClassName %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= associationClassName %> >(p => p.<%= association.PropertyName %>, "<%= association.PropertyName %>");
 <% if(association.HasDescription) { %>
         /// <summary>
         /// <%= association.Description %>
@@ -86,13 +92,19 @@
         {
             get
             {
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                 {
                     if(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
-                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
+                        LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
                 }
 
+<% } %>
+<% if(IncludeSilverlightSupport) { %>
+#endif
 <% } %>
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
             }
@@ -109,7 +121,7 @@
     %>
 
         //AssociatedOneToMany
-        private static readonly PropertyInfo< <%= associationClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %>List>(p => p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child);
+        private static readonly PropertyInfo< <%= associationClassName %>List > <%= association.PrivateMemberVariableName %>Property = RegisterProperty<<%= associationClassName %>List>(p => p.<%= association.PropertyName %>, "<%= association.PropertyName %>");
 <% if(association.HasDescription) { %>
         /// <summary>
         /// <%= association.Description %>
@@ -119,10 +131,13 @@
         {
             get
             {
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                 {
-<% if(IsNameValueListBusinessObject(association, "List")) { %>
+<% if(IsNameValueListBusinessObject(association, "NameValueList")) { %>
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.GetAll());
 <% } else { %>
                     if(<%= BusinessProjectName %>.<%= associationClassName %>List.Exists(new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>}))
@@ -130,6 +145,9 @@
 <% } %>
                 }
 
+<% } %>
+<% if(IncludeSilverlightSupport) { %>
+#endif
 <% } %>
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property);
             }

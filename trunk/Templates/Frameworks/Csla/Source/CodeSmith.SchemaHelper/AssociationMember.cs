@@ -21,6 +21,7 @@ namespace CodeSmith.SchemaHelper
             ClassName = table.ClassName();
             AssociationType = associationType;
             Name = column.GetName(table, associationType);
+            GenericProperty = table.ResolveIsGenericExtendedProperty();
             Table = table;
         }
 
@@ -59,6 +60,11 @@ namespace CodeSmith.SchemaHelper
                 return string.Format("{0}-{1}-{2}", TableName, ColumnName, AssociatedColumn.ColumnName);
             }
         }
+
+        /// <summary>
+        /// Returns a generic parameter if the table has an extended property named CS_IsGeneric and the value of CS_IsGeneric is True.
+        /// </summary>
+        public string GenericProperty { get; private set; }
 
         #endregion
     }
