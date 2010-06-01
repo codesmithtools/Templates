@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X DynamicRoot" %>
 <%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -39,7 +39,7 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %>
-    Private Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria )
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria )
 <% RenderHelper(New DataPortalFetch()) %>
 
         MarkOld()
