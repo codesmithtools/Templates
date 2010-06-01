@@ -28,7 +28,7 @@ Public Partial Class <%= BusinessClassName %>
     Private Sub DataPortal_Create()
     End Sub
 
-    Private Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
         RaiseListChangedEvents = False
 
         ' Fetch Child objects.
