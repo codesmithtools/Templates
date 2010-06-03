@@ -50,7 +50,7 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ChildCreate()); %>
         }
 
-        private void Child_Fetch(<%= BusinessClassName %>Criteria criteria)
+        private void Child_Fetch(<%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new ChildFetch()); %>
         }

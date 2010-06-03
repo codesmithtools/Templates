@@ -9,7 +9,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-        #region Data access partial methods
+        #region DataPortal partial methods
 
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();

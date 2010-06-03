@@ -83,15 +83,15 @@ namespace <%= BusinessProjectName %>
         #region Asynchronous Factory Methods
         
         internal static void New<%= ChildBusinessClassName %>Async(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
-		{
-			DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>();
-			dp.CreateCompleted += handler;
-			dp.BeginCreate();
-		}
+        {
+            DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>();
+            dp.CreateCompleted += handler;
+            dp.BeginCreate();
+        }
         
-        //Child objects do not expose asynchronous factory get methods
+        // Child objects do not expose asynchronous factory get methods.
         
-        //Child objects do not expose asynchronous delete methods
+        // Child objects do not expose asynchronous delete methods.
         
         #endregion
 <% } %>

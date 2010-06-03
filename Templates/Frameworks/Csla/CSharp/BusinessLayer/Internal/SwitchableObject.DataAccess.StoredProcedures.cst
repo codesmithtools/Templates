@@ -198,7 +198,7 @@ namespace <%= BusinessProjectName %>
 
 <% RenderHelper(new PartialMethods()); %>
 
-        #region Child data access partial methods
+        #region ChildPortal partial methods
 
         partial void OnChildCreating(ref bool cancel);
         partial void OnChildCreated();

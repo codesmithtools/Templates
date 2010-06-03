@@ -95,32 +95,33 @@ namespace <%= BusinessProjectName %>
         #region Asynchronous Root Factory Methods
         
         public static void New<%= BusinessClassName %>Async(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
-		{
-			DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> > dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
-			dp.CreateCompleted += handler;
-			dp.BeginCreate();
-		}
+        {
+                DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> > dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
+                dp.CreateCompleted += handler;
+                dp.BeginCreate();
+        }
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
         public static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
-			DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> > dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
-			dp.FetchCompleted += handler;
-			dp.BeginFetch(new <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>});
+                DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> > dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
+                dp.FetchCompleted += handler;
+                dp.BeginFetch(new <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>});
         }
 <% } %> 
 
 <% if(UseDeferredDeletion){ %>
         //public static void Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         //{
-        //    DataPortal.Delete<<%= BusinessClassName %><%= Entity.GenericProperty %>>(new <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer() %>});
+                //DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> > dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
+                //dp.BeginDelete(new <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>{<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer() %>});
         //}
 <% } else { %>
         public static void Delete<%= BusinessClassName %>Async(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables()%>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
-			DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> > dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
-			dp.DeleteCompleted += handler;
-			dp.BeginDelete(new <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>{<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer() %>});
+                DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> > dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %> >();
+                dp.DeleteCompleted += handler;
+                dp.BeginDelete(new <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>{<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer() %>});
         }
 <% } %>
         
@@ -156,10 +157,11 @@ namespace <%= BusinessProjectName %>
 			dp.BeginCreate();
 		}
         
-        //Child objects do not expose asynchronous factory get methods
+        // Child objects do not expose asynchronous factory get methods.
         
-        //Child objects do not expose asynchronous delete methods        
+        // Child objects do not expose asynchronous delete methods.
         #endregion
+
 <% } %>
 
 <% RenderHelper(new Exists()); %>

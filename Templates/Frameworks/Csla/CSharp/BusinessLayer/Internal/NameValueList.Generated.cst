@@ -20,6 +20,7 @@
 #region Using declarations
 
 using System;
+
 using Csla;
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
@@ -58,9 +59,9 @@ namespace <%= BusinessProjectName %>
 #endif
  	#region Asynchronous Factory Methods
         
-	public static void GetAllAsync(EventHandler<DataPortalResult<<%= BusinessClassName %>>> handler)
+	public static void GetAllAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
-            DataPortal<<%= BusinessClassName %>> dp = new DataPortal<<%= BusinessClassName %>>();
+            DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.FetchCompleted += handler;
             dp.BeginFetch();
         }

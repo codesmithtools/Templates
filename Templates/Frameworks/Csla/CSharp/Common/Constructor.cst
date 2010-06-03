@@ -21,8 +21,6 @@
 #else
 	public <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
-<% } %>
-<% if(IncludeSilverlightSupport) { %>
 #endif
 <% } %>
 

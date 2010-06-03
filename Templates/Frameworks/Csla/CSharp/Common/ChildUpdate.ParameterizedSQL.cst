@@ -35,7 +35,7 @@
 <% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity || member.DataType == DbType.Guid.ToString()) { %> 
                         // Update identity or guid primary key value.
 <%if(UseMemberVariables) { %>
-                        <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader);<% } %>
+                        <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>");<% } %>
 <% } else { %>
                         LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>"));<% } else { %>ADOHelper.GetBytes(reader," <%= member.ColumnName %>"));<% } %>
 <% } } } %>

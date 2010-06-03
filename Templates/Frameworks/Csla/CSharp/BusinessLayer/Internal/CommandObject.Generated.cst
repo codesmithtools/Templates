@@ -36,7 +36,7 @@ namespace <%= BusinessProjectName %>
         public static bool Execute()
         {
             if (!CanExecuteCommand())
-                throw new System.Security.SecurityException("Not authorized to execute command");
+                throw new System.Security.SecurityException("Not authorized to execute command.");
             
             <%= BusinessClassName %> cmd = new <%= BusinessClassName %>();
             cmd.BeforeServer();

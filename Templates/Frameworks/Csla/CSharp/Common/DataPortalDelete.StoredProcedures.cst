@@ -14,7 +14,7 @@
             OnDeleting(criteria, ref cancel);
             if (cancel) return;
 
-<%  if(!RenderOptionalContent) { %>
+<% if(!RenderOptionalContent) { %>
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();

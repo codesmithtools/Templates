@@ -36,8 +36,8 @@ namespace <%= BusinessProjectName %>
     {
         protected override void Child_Create()
         {
-            // TODO: load default values
-            // omit this override if you have no defaults to set
+            // TODO: load default values.
+            // omit this override if you have no defaults to set.
             base.Child_Create();
         }
 
@@ -61,7 +61,7 @@ namespace <%= BusinessProjectName %>
             // TODO: delete values
         }
 
-        protected override void DataPortal_Delete(object criteria)
+        protected override void DataPortal_Delete(<%= BusinessClassName %>Criteria criteria)
         {
             // TODO: delete values
         }

@@ -28,8 +28,8 @@ using System.Data;
 using System.Data.SqlClient;
 
 using Csla;
-using Csla.Server;
 using Csla.Data;
+using Csla.Server;
 
 using <%= BusinessProjectName %>;
 
@@ -99,7 +99,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
             }
 
             CheckRules(item);
-            MarkNew(resource);
+            MarkNew(item);
 <% if(IsChildBusinessObject) { %>
             MarkAsChild(item);
 <%}%>
@@ -144,6 +144,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                 }
             }
 
+            MarkOld(item);
 <% if(IsChildBusinessObject) { %>
             MarkAsChild(item);
 <%}%>

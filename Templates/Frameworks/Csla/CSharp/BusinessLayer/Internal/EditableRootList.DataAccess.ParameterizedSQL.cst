@@ -45,7 +45,7 @@ namespace <%= BusinessProjectName %>
         {
         }
 
-        private void DataPortal_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
+        private void DataPortal_Fetch(<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new DataPortalFetchList()); %>
         }
