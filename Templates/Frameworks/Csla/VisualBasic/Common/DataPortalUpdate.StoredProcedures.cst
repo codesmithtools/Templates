@@ -59,7 +59,7 @@ Next
             connection.Open()
             Using command As New SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
-                <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, False, True, True) %>
+                <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, False, False, True) %>
 <% If(Entity.HasRowVersionMember) Then %>
                 command.Parameters.AddWithValue("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>", SqlDbType.Timestamp)
                 command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value = Me.<%= Entity.RowVersionMember.PropertyName %>

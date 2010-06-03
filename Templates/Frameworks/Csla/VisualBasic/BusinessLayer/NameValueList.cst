@@ -25,12 +25,12 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim strategy As New PreserveRegionsMergeStrategy()
     strategy.Language = "VB"
-    strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved)""?"
+    strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved Code)""?"
 
     'NameValueList
     Dim nameValueList As NameValueList = Me.Create(Of NameValueList)()
     Me.CopyPropertiesTo(nameValueList)
-    nameValueList.BusinessClassName = String.Format("{0}List", nameValueList.BusinessClassName)
+    nameValueList.BusinessClassName = String.Format("{0}NameValueList", nameValueList.BusinessClassName)
 
     Dim parentFileName As String = System.IO.Path.Combine(Me.Location, String.Format("Collections\{0}.vb", nameValueList.BusinessClassName))
     nameValueList.RenderToFile(parentFileName, strategy)
@@ -40,7 +40,7 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim nameValueListGenerated As NameValueListGenerated = Me.Create(Of NameValueListGenerated)()
     Me.CopyPropertiesTo(nameValueListGenerated)
-    nameValueListGenerated.BusinessClassName = String.Format("{0}List", nameValueListGenerated.BusinessClassName)
+    nameValueListGenerated.BusinessClassName = String.Format("{0}NameValueList", nameValueListGenerated.BusinessClassName)
 
     nameValueListGenerated.RenderToFile(fileName, parentFileName, True)
 
@@ -49,9 +49,18 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim nameValueListDataAccess As NameValueListDataAccess = Me.Create(Of NameValueListDataAccess)()
     Me.CopyPropertiesTo(nameValueListDataAccess)
-    nameValueListDataAccess.BusinessClassName = String.Format("{0}List", nameValueListDataAccess.BusinessClassName)
+    nameValueListDataAccess.BusinessClassName = String.Format("{0}NameValueList", nameValueListDataAccess.BusinessClassName)
 
     nameValueListDataAccess.RenderToFile(fileName, parentFileName, True)
+    If DataAccessImplementation = DataAccessMethod.StoredProcedures Then
+	'StoredProcedures
+	fileName = System.IO.Path.Combine(Location, String.Format("Collections\{0}.StoredProcedures.sql", nameValueList.BusinessClassName))
+	Dim sqlStoredProcedures As SqlStoredProcedures = Me.Create(Of SqlStoredProcedures)()
+	Me.CopyPropertiesTo(sqlStoredProcedures)
+	sqlStoredProcedures.DataProjectName = "Not needed for sql stored procedures."
+
+	sqlStoredProcedures.RenderToFile(fileName, parentFileName, True)
+    End If
 End Sub
 
 </script>

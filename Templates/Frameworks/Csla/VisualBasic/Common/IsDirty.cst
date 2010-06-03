@@ -10,7 +10,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
 <% If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then %>
-        #Region "Property overrides"
+        #Region "Overridden properties"
 
         ''' <summary>
         ''' Returns true if the business object or any of its children properties are dirty.

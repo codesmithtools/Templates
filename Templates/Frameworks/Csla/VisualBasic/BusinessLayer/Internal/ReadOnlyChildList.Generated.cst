@@ -27,6 +27,11 @@ Option Strict On
 
 Imports System
 Imports System.Collections.Generic
+<% If(IncludeSilverlightSupport) Then %>
+#if SILVERLIGHT
+Imports Csla.Serialization
+#endif
+<% End If %>
 
 Imports Csla
 
@@ -34,17 +39,30 @@ Imports Csla
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
 <Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>InfoListFactoryName)> _
 <% End If %>
-Public Partial Class <%= BusinessClassName %> 
-    Inherits ReadOnlyListBase(Of <%= BusinessClassName %>, <%= ChildBusinessClassName %><% If(IsReadOnlyBusinessObject("Info")) Then %>Info<%End If%>)
+Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %> 
+    Inherits ReadOnlyListBase(Of <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><% If(IsReadOnlyBusinessObject("Info")) Then %>Info<%End If%><%= Entity.GenericProperty %>)
 
     #Region "Contructor(s)"
 
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
     Private Sub New()
     End Sub
+<% If(IncludeSilverlightSupport) Then %>
+#else
+    public Sub New()
+    End Sub
+#endif
+<% End If %>
 
     #End Region
 
-    #Region "Factory Methods"
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
+
+    #Region "Synchronous Factory Methods"
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
 
     Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
@@ -61,5 +79,15 @@ Public Partial Class <%= BusinessClassName %>
 
     #End Region
 
+<% If(IncludeSilverlightSupport) Then %>
+#endif
+
+    #Region "Asynchronous Factory Methods"
+
+	' Child objects do not expose asynchronous factory get methods.
+
+    #End Region
+
+<% End If %>
 <% RenderHelper(New Exists()) %>
 End Class

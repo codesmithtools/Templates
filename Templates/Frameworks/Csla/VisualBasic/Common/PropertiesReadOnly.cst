@@ -47,35 +47,8 @@ If UseMemberVariables Then %>
 Dim associationClassName As String = association.ClassName
 If(IsReadOnlyBusinessObject( association, "Info")) Then
     associationClassName += "Info"
-End If
-If UseMemberVariables then %>
-    'OneToZeroOrOne
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
-    Private <%= association.PrivateMemberVariableName %> As <%= associationClassName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue
-<% If(association.HasDescription) Then %>
-    ''' <summary>
-    ''' <%= association.Description %>
-    ''' </summary>
-<% End If %>
-    Public ReadOnly Property <%= association.PropertyName %>() As <%= associationClassName %>
-        Get
-<% If UseLazyLoading Then %>
-            If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria()
-                <%= association.BuildObjectInitializer(true) %>
-
-                If(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
-                End If
-            End If
-            
-<% End If %> 
-            Return GetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.PrivateMemberVariableName %>) 
-        End Get
-    End Property
-
-<% else %>
-    'OneToZeroOrOne
+End If %>
+    'AssociatedOneToZeroOrOne
     Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
 <% If(association.HasDescription) Then %>
     ''' <summary>
@@ -84,33 +57,38 @@ If UseMemberVariables then %>
 <% End If %>
     Public ReadOnly Property <%= association.PropertyName %>() As <%= associationClassName %>
         Get
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
+
 <% If UseLazyLoading Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                 Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria()
                 <%= association.BuildObjectInitializer(true) %>
 
                 If(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
             End If
             
 <% End If %>  
                Return GetProperty(<%= association.PrivateMemberVariableName %>Property) 
+<% If(IncludeSilverlightSupport) Then %>
+#endif
+<% End If %>
         End Get
     End Property
 
-<% End If
-Next %>
+<% Next %>
 <%-- Many-To-One --%>
 <% For Each association  As Association in Entity.AssociatedManyToOne 
 Dim associationClassName As String = association.ClassName
 If(IsReadOnlyBusinessObject( association, "Info")) Then
     associationClassName += "Info"
-End If
-If UseMemberVariables Then %>
-    'ManyToOne
+End If %>
+
+    'AssociatedManyToOne
     Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
-    Private <%= association.PrivateMemberVariableName %> As <%= associationClassName %> = <%= association.PrivateMemberVariableName %>Property.DefaultValue
 <% If(association.HasDescription) Then %>
     ''' <summary>
     ''' <%= association.Description %>
@@ -118,34 +96,20 @@ If UseMemberVariables Then %>
 <% End If %>
     Public ReadOnly Property <%= association.PropertyName %>() As <%= associationClassName %>
         Get
-<% If UseLazyLoading Then  %>
-            If Not(FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria()
-                <%= association.BuildObjectInitializer(true) %>
-
-                If(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
-                End If
-            End If
-            
-<% End If %> 
-            Return GetProperty(<%= association.PrivateMemberVariableName %>Property, <%= association.PrivateMemberVariableName %>) 
-        End Get
-    End Property
-    
-<%  Else  %>
-    'ManyToOne
-    Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
-    Public ReadOnly Property <%= association.PropertyName %>() As <%= associationClassName %>
-        Get
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
 <% If UseLazyLoading Then %>
             If Not(FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                 Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria()
                 <%= association.BuildObjectInitializer(true) %>
 
                 If(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
-                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
+                    LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
+<% If(IncludeSilverlightSupport) Then %>
+#endif
+<% End If %>
             End If
             
 <% End If %>  
@@ -153,15 +117,14 @@ If UseMemberVariables Then %>
         End Get
     End Property
     
-<% End If
-Next  %>
+<% Next  %>
 <%-- One-To-Many & Many-To-Many --%>
 <% For Each association As Association in Entity.AssociatedOneToMany 
     Dim associationClassName As String = association.ClassName
     If(IsReadOnlyBusinessObject( association, "InfoList")) Then
         associationClassName += "Info"
     End If %>
-    'OneToMany
+    'AssociatedOneToMany
     Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>List) = RegisterProperty(Of <%= associationClassName %>List)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
 <% If(association.HasDescription) Then %>
     ''' <summary>
@@ -170,9 +133,12 @@ Next  %>
 <% End If %>
     Public ReadOnly Property <%= association.PropertyName %>() As <%= associationClassName %>List 
         Get
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
 <% If(UseLazyLoading) Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property)) Then
-<% If(IsNameValueListBusinessObject(association, "List")) Then %>
+<% If(IsNameValueListBusinessObject(association, "NameValueList")) Then %>
                 LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.GetAll())
 <% Else %>
                 Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria()
@@ -182,6 +148,9 @@ Next  %>
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                 End If
 <%End If%>
+<% If(IncludeSilverlightSupport) Then %>
+#endif
+<% End If %>
             End If
             
 <% End If%>

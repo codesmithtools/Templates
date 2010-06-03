@@ -11,8 +11,14 @@
 <%@ Import Namespace="QuickStart" %>
     #Region "Exists Command"
 
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
     Public Shared Function Exists(ByVal criteria As <%= ChildBusinessClassName %>Criteria ) As Boolean
         Return ExistsCommand.Execute(criteria)
     End Function
+<% If(IncludeSilverlightSupport) Then %>
+#endif
+<% End If %>
 
     #End Region

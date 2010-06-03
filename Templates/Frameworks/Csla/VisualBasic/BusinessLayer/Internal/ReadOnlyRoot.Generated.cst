@@ -29,31 +29,61 @@ Imports System
 
 Imports Csla
 Imports Csla.Data
-Imports Csla.Validation
+<% If(IncludeSilverlightSupport) Then %>
+#if SILVERLIGHT
+Imports Csla.Serialization
+#endif
+<% End If %>
 
 <Serializable()> _
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
 <Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>InfoFactoryName)> _
 <% End If %>
-Public Partial Class <%= BusinessClassName %> 
-    Inherits ReadOnlyBase(Of <%= BusinessClassName %>)
+Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %> 
+    Inherits ReadOnlyBase(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)
 
 <% RenderHelper(New Constructor()) %>
 
 <% RenderHelper(New Properties()) %>
 
-    #Region "Factory Methods"
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
+    #Region "Synchronous Factory Methods"
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
 
-    Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
-        Dim criteria As New <%= ChildBusinessClassName %>Criteria ()
+    Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Dim criteria As New <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>()
         <%= sc.Members.BuildObjectInitializer() %>
 
-        Return DataPortal.Fetch(Of <%= BusinessClassName %>)(criteria)
+        Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
     End Function
 <% Next %>
 
     #End Region
+<% If(IncludeSilverlightSupport) Then %>
+
+#endif
+
+   #Region "Asynchronous Factory Methods"
+<% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
+
+    Public Shared Function <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>))) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+        dp.FetchCompleted += handler
+	
+        Dim criteria As New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>()
+<%For Each member As Member in sc.Members %>
+        criteria.<%= member.PropertyName %> = <%= member.VariableName %>
+<% Next %>
+
+        dp.BeginFetch(criteria))
+    End Function
+<% Next %>
+
+    #End Region
+
+<% End If %>
 
 <% RenderHelper(New Exists()) %>
 

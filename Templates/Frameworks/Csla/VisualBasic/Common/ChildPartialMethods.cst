@@ -9,13 +9,13 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-    #Region "Child data access partial methods"
+    #Region "ChildPortal partial methods"
 
     Partial Private Sub OnChildCreating(ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnChildCreated()
     End Sub
-    Partial Private Sub OnChildFetching(ByVal criteria As <%= ChildBusinessClassName %>Criteria, ByRef cancel As Boolean)
+    Partial Private Sub OnChildFetching(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnChildFetched()
     End Sub
@@ -35,7 +35,9 @@
     End Sub
     Partial Private Sub OnChildSelfDeleted()
     End Sub
-    Partial Private Sub OnDeleting(ByVal criteria As <%= ChildBusinessClassName %>Criteria, ByRef cancel As Boolean)
+    Partial Private Sub OnDeleting(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByRef cancel As Boolean)
+    End Sub
+    Partial Private Sub OnDeleting(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByVal connection As SqlConnection, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnDeleted()
     End Sub

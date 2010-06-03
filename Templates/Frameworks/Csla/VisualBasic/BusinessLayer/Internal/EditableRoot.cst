@@ -24,9 +24,13 @@ Imports System
 
 Imports Csla
 Imports Csla.Security
+<% If(IsCSLA40) Then %>
+Imports Csla.Rules
+<% Else %>
 Imports Csla.Validation
+<% End If %>
 
-Public Partial Class <%= BusinessClassName %>
+Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 <% RenderHelper(New ValidationRules()) %>
 
 <% RenderHelper(New AuthorizationRules()) %>

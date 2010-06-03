@@ -25,7 +25,8 @@ Imports Csla
 
 <Serializable()> _
 Public Class ExistsCommand
-    Inherits CommandBase
+    Inherits CommandBase<% If(IsCSLA40) Then %>(Of ExistsCommand)<% End If %>
+ 
     #Region "Constructor(s)"
 
     Private Sub New()

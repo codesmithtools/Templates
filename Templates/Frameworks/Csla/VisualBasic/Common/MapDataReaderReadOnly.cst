@@ -14,7 +14,9 @@
         If (cancel) Then
             Return
         End If
-
+<% If(Entity.HasRowVersionMember) Then %>
+            <%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")
+<% End If %>
 <% for each [member] as Member in Entity.MembersNoRowVersion 
 If UseMemberVariables Then 
     If member.IsNullable And Not member.SystemType = "System.String" And Not member.SystemType = "System.Byte()" Then %>

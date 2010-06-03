@@ -32,14 +32,23 @@ Imports System
 
 Imports Csla
 Imports Csla.Data
+<% If(IsCSLA40) Then %>
+Imports Csla.Rules
+<% Else %>
 Imports Csla.Validation
+<% End If %>
+<% If(IncludeSilverlightSupport) Then %>
+#if SILVERLIGHT
+Imports Csla.Serialization
+#endif
+<% End If %>
 
 <Serializable()> _
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
 <Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>FactoryName)> _
 <% End If %>
-Public Partial Class <%= BusinessClassName %> 
-    Inherits BusinessBase(Of <%= BusinessClassName %>)
+Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %> 
+    Inherits BusinessBase(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)
 
 <% RenderHelper(New Constructor()) %>
 
@@ -47,42 +56,88 @@ Public Partial Class <%= BusinessClassName %>
 
 <% RenderHelper(New Properties()) %>
 
-    #Region "Root Factory Methods"
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
+    #Region "Synchronous Root Factory Methods"
 
-    Public Shared Function New<%= BusinessClassName %>() As <%= BusinessClassName %> 
-        Return DataPortal.Create(Of <%= BusinessClassName %>)()
+    Public Shared Function New<%= BusinessClassName %><%= Entity.GenericProperty %>() As <%= BusinessClassName %> 
+        Return DataPortal.Create(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
     End Function
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
 
-    Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
-        Dim criteria As New <%= BusinessClassName %>Criteria ()
+    Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Dim criteria As New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>()
         <%= sc.Members.BuildObjectInitializer() %>
 
-        Return DataPortal.Fetch(Of <%= BusinessClassName %>)(criteria)
+        Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
     End Function
 <% Next %>
 
 <% If(UseDeferredDeletion)Then %>
-    'Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
-    '   DataPortal.Delete(New <%= BusinessClassName %>Criteria (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+    'Public Shared Sub Delete<%= BusinessClassName %><%= Entity.GenericProperty %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+    '   DataPortal.Delete<% If Not(IsCSLA40) Then %>< <%= BusinessClassName %><%= Entity.GenericProperty %> ><% End If %>(New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
     'End Sub
 <%Else%>
-    Public Shared Sub Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
-        DataPortal.Delete(New <%= BusinessClassName %>Criteria (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+    Public Shared Sub Delete<%= BusinessClassName %><%= Entity.GenericProperty %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+        DataPortal.Delete<% If Not(IsCSLA40) Then %>< <%= BusinessClassName %><%= Entity.GenericProperty %> ><% End If %>(New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
     End Sub
 <%End If%>
 
     #End Region
+<% If(IncludeSilverlightSupport) Then %>
 
-    #Region "Child Factory Methods"
+#endif        
 
-    Friend Shared Function New<%= BusinessClassName %>Child() As <%= BusinessClassName %>
-        Return DataPortal.CreateChild(Of <%= BusinessClassName %>)()
+        #Region "Asynchronous Root Factory Methods"
+        
+    Public Shared Sub New<%= BusinessClassName %>Async(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+        dp.CreateCompleted += handler
+        dp.BeginCreate()
+    End Sub
+<% For Each sc As SearchCriteria In Entity.SearchCriteria() %>
+
+    Public Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+        dp.FetchCompleted += handler
+	
+        Dim criteria As New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>()
+<%For Each member As Member in sc.Members %>
+        criteria.<%= member.PropertyName %> = <%= member.VariableName %>
+<% Next %>
+
+        dp.BeginFetch(criteria)
+    End Sub
+<% Next %> 
+
+<% If (UseDeferredDeletion) Then %>
+    'Public Shared Sub Delete<%= BusinessClassName %>Delete<%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+        'Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+        'dp.BeginDelete(New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+    'End Sub
+<% Else %>
+    Public Shared Sub Delete<%= BusinessClassName %>Delete<%= BusinessClassName %>Async(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables()%>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+        dp.DeleteCompleted += handler
+        dp.BeginDelete(New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+    End Sub
+
+<% End If %>
+        
+        #End Region
+
+#if !SILVERLIGHT
+<% End If %>
+    #Region "Synchronous Child Factory Methods"
+
+    Friend Shared Function New<%= BusinessClassName %>Child() As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Return DataPortal.CreateChild(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
     End Function
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
 
-    Friend Shared Function <%= sc.MethodName %>Child(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
-        Dim criteria As New <%= BusinessClassName %>Criteria ()
+    Friend Shared Function <%= sc.MethodName %>Child(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Dim criteria As New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>()
 <%For Each member As Member in sc.Members %>
         criteria.<%= member.PropertyName %> = <%= member.VariableName %>
 <% Next %>
@@ -92,6 +147,26 @@ Public Partial Class <%= BusinessClassName %>
 <% Next %>
 
     #End Region
+
+<% If(IncludeSilverlightSupport) Then %>
+
+#endif        
+
+   #Region "Asynchronous Child Factory Methods"
+
+    Friend Shared Sub New<%= BusinessClassName %>ChildAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
+        Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
+        dp.CreateCompleted += handler
+        dp.BeginCreate()
+    End Sub
+
+   ' Child objects do not expose asynchronous factory get methods.
+
+   ' Child objects do not expose asynchronous delete methods.
+
+   #End Region
+
+<% End If %>
 
 <% RenderHelper(New Exists()) %>
 

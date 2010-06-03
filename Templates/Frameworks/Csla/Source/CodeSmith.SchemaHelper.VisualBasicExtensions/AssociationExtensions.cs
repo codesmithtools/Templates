@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CodeSmith.SchemaHelper
 {
@@ -30,6 +31,54 @@ namespace CodeSmith.SchemaHelper
             }
 
             return parameters.TrimStart(new[] { '\r', '\n', '\t', ',', ' ' });
+        }
+
+        public static string BuildParametersVariables(this Association association)
+        {
+            return association.BuildParametersVariables(false);
+        }
+
+        public static string BuildParametersVariables(this Association association, bool includeConnectionParameter)
+        {
+            string parameters = string.Empty;
+
+            foreach (AssociationMember member in association)
+            {
+                var parameter = string.Format(", ByVal {1} As {0}", member.ClassName, Util.NamingConventions.VariableName(member.ClassName));
+
+                if (!parameters.Contains(parameter))
+                    parameters += parameter;
+            }
+
+            if (includeConnectionParameter)
+                parameters += ", ByVal connection As SqlConnection";
+
+            return parameters.TrimStart(new[] { ',', ' ' });
+        }
+
+        public static string BuildUpdateStatementVariables(this Association association, List<Association> associations, int currentRecord, bool includeConnectionParameter)
+        {
+            string parameters = string.Empty;
+
+            for (int index = 0; index < associations.Count; index++)
+            {
+                var parameter = string.Format(", {0}", Util.NamingConventions.VariableName(associations[index].ClassName));
+                if (parameters.Contains(parameter)) continue;
+                
+                if(index == currentRecord)
+                {
+                    parameters += parameter;
+                }
+                else
+                {
+                    parameters += ", Nothing";
+                }
+            }
+
+            if (includeConnectionParameter)
+                parameters += ", connection";
+
+            return parameters.TrimStart(new[] { ',', ' ' });
         }
     }
 }

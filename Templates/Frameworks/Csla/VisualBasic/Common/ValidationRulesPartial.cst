@@ -9,7 +9,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-    #Region "Validation Rules"
+    #Region "Business Rules"
 
     ''' <summary>
     ''' All custom rules need to be placed in this method.

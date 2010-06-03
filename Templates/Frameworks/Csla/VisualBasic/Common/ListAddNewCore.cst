@@ -1,0 +1,49 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+        Dim item As <%= ChildBusinessClassName %> = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
+
+        Dim cancel As Boolean = False
+        OnAddNewCore(item, cancel)
+        If Not (cancel) Then
+           ' Check to see if someone set the item to null in the OnAddNewCore.
+           If(item = null) Then
+              item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
+	   End If
+<%  Dim list As New System.Collections.Generic.List(Of String) 
+    Dim isObjectFactory As Boolean = DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures
+    For Each member As Member In Entity.Members
+	If member.IsForeignKey AndAlso Not member.IsIdentity Then
+
+        Dim className As String = member.ResolveAssociationPropertyClassName()
+        If String.IsNullOrEmpty(className) Then
+            Continue For
+        End If
+
+        Dim variableName As String = member.ResolveAssociationPropertyVariable()
+        Dim variableWithChildProperty As String = member.ResolveAssociationPropertyVariableWithChildProperty() %>
+        ' Pass the parent value down to the child.
+<% If Not(list.Contains(className)) Then
+	 list.Add(className) %>
+        <%If(isObjectFactory) Then %>'<% End If%>Dim <%= variableName %> As <%= className %> = Me.Parent As <%= className %>
+<% Else %>
+        <%If(isObjectFactory) Then %>'<% End If%><%= variableName %> = Me.Parent As <%= className %>
+<% End If %>
+        <%If(isObjectFactory) Then %>'<% End If%>If Not(<%= variableName %> = Nothing)
+        <%If(isObjectFactory) Then %>'<% End If%>    item.<%= member.PropertyName %> = <%= variableWithChildProperty %>
+
+<% End If
+Next %>
+	End If
+
+        Add(item)
+        Return item

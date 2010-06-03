@@ -18,13 +18,16 @@
 '------------------------------------------------------------------------------
 Option Explicit On
 Option Strict On
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
 
 Imports System
 
 Imports Csla
 Imports Csla.Data
 
-Public Partial Class <%= BusinessClassName %>
+Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 
     Protected Overrides Sub Child_Create()
     End Sub
@@ -40,8 +43,11 @@ Public Partial Class <%= BusinessClassName %>
         RaiseListChangedEvents = True
     End Sub
 
-    Protected Overrides Sub DataPortal_Update()
-        Child_Update()
+    Protected Overrides Sub Child_Update(ParamArray parameters As Object())
+        MyBase.Child_Update(parameters)
     End Sub
 
 End Class
+<% If(IncludeSilverlightSupport) Then %>
+#endif
+<% End If %>

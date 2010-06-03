@@ -20,5 +20,5 @@ Option Strict On
 
 Imports System
 
-Public Partial Class  <%= BusinessClassName %>
+Public Partial Class  <%= BusinessClassName %><%= Entity.GenericProperty %>
 End Class

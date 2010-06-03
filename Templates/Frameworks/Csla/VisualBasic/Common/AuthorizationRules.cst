@@ -10,6 +10,12 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
     #Region "Authorization Rules"
+<% If(IsCSLA40) Then %>
+    Protected Shared Sub AddObjectAuthorizationRules()
+        'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"))
+        'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.EditObject, "SomeRole"))
+        'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.DeleteObject, "SomeRole", "SomeAdminRole"))
+<% Else %>
 
     Protected Overrides Sub AddAuthorizationRules()
         ''More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
@@ -44,11 +50,13 @@
 
 <% Next%>
 <%-- One-To-Many & Many-To-Many --%>
+' NOTE: Many-To-Many support coming soon.
 <% For Each association As Association in Entity.AssociatedOneToMany %>
         ''<%= association.PropertyName %>
         'AuthorizationRules.AllowRead(<%= association.PrivateMemberVariableName %>Property, canRead)
 
-<% Next%>
+<% Next
+End If %>
     End Sub
 
     #End Region

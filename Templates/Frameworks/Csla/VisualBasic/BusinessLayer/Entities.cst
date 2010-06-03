@@ -2,6 +2,7 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X Entities" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\Common" %>
 <%@ Assembly Name="SchemaExplorer" %>
 
@@ -176,7 +177,7 @@ Public Overrides Sub Generate()
     
     Dim strategy As New PreserveRegionsMergeStrategy()
     strategy.Language = "VB"
-    strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved)""?"
+    strategy.RegionNameRegex = "^[ \t]*[ \s]*""?(?i:Preserved Code)""?"
     
     ' ADOHelperTemplate
     
@@ -193,10 +194,7 @@ Public Overrides Sub Generate()
         Dim factoryNames As FactoryNamesTemplate = Me.Create(Of FactoryNamesTemplate)()
         Me.CopyPropertiesTo(factoryNames)
     
-        Dim fileName As String = System.IO.Path.Combine(Me.Location, "Factory\FactoryNames.vb")
-        If Not System.IO.File.Exists(fileName) Then
-            factoryNames.RenderToFile(fileName, False)
-        End If
+        factoryNames.RenderToFile(System.IO.Path.Combine(Me.Location, "Factory\FactoryNames.vb"), strategy)
     End If
     
     
