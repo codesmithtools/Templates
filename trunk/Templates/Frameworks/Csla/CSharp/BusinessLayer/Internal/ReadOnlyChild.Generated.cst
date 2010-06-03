@@ -67,7 +67,7 @@ namespace <%= BusinessProjectName %>
 #endif
 
         #region Asynchronous Factory Methods
-        //Child objects do not expose asynchronous factory get methods
+        // Child objects do not expose asynchronous factory get methods.
         #endregion
 
 <% } %>

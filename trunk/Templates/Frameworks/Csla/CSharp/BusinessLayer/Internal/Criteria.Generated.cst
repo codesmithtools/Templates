@@ -24,12 +24,7 @@
 
 using System;
 using System.Collections.Generic;
-<% if(IncludeSilverlightSupport) { %>
-#if SILVERLIGHT
-using Csla.Serialization;
-#endif
-<% } %>
-
+using System.Runtime.InteropServices;
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
@@ -39,6 +34,11 @@ using System.Data.SqlClient;
 <% } %>
 
 using Csla;
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+<% } %>
 
 #endregion
 

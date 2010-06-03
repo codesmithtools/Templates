@@ -39,6 +39,15 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
+    	protected override void Child_Create()
+	{
+            bool cancel = false;
+            OnCreating(ref cancel);
+            if (cancel) return;
+	    
+	    OnCreated();
+	}
+	
         private void Child_Fetch(<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new DataPortalFetchList()); %>

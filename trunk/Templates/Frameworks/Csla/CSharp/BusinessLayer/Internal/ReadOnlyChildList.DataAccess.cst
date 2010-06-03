@@ -34,7 +34,7 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
-        private void Child_Fetch(<%= ChildBusinessClassName %>Criteria criteria)
+        private void Child_Fetch(<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria)
         {
             RaiseListChangedEvents = false;
             IsReadOnly = false;

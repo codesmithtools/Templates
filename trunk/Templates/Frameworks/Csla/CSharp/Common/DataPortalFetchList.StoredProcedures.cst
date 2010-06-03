@@ -16,6 +16,7 @@
 
             RaiseListChangedEvents = false;
 
+            // Fetch Child objects.
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();

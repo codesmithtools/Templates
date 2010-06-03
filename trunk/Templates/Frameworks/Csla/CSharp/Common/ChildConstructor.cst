@@ -17,12 +17,14 @@
 <% } %>
         private <%= BusinessClassName %>()
         {
+            // require use of factory method.
             MarkAsChild();
         }
 <% if(IncludeSilverlightSupport) { %>
 #else
         public <%= BusinessClassName %>()
         {
+            // require use of factory method.
             MarkAsChild();
         }        
 #endif

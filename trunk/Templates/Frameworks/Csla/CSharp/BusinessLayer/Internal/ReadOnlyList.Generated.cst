@@ -42,6 +42,22 @@ namespace <%= BusinessProjectName %>
 <% } %>
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyListBase< <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><% if(IsReadOnlyBusinessObject("Info")) { %>Info<%}%><%= Entity.GenericProperty %> >
     {
+        #region Constructor(s)
+
+<% if(IncludeSilverlightSupport) { %>
+#if SILVERLIGHT
+        public <%= BusinessClassName %>()
+        { /* Require use of factory methods */ }
+#else
+<% } %>
+        private <%= BusinessClassName %>()
+        { /* Require use of factory methods */ }
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
+
+        #endregion
+	
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
@@ -69,9 +85,9 @@ namespace <%= BusinessProjectName %>
         #region Asynchronous Factory Methods
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
-        public static void <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        public static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
         {
-            DataPortal< <%= BusinessClassName %> > dp = new DataPortal< <%= BusinessClassName %> >();
+            DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.FetchCompleted += handler;
             dp.BeginFetch(new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>}));
         }
@@ -80,22 +96,6 @@ namespace <%= BusinessProjectName %>
 
         #endregion
 <% } %>
-
-        #region Constructor(s)
-
-<% if(IncludeSilverlightSupport) { %>
-#if SILVERLIGHT
-        public <%= BusinessClassName %>()
-        { /* Require use of factory methods */ }
-#else
-<% } %>
-        private <%= BusinessClassName %>()
-        { /* Require use of factory methods */ }
-<% if(IncludeSilverlightSupport) { %>
-#endif
-<% } %>
-
-        #endregion
 
 <% RenderHelper(new Exists()); %>
     }

@@ -28,8 +28,8 @@ using System.Data;
 using System.Data.SqlClient;
 
 using Csla;
-using Csla.Server;
 using Csla.Data;
+using Csla.Server;
 
 using <%= BusinessProjectName %>;
 
@@ -84,6 +84,7 @@ namespace <%= DataProjectName %>
             OnFetching(criteria, ref cancel);
             if (cancel) return item;
 
+            Fetch Child objects.
             string commandText = string.Format("SELECT <%= Entity.Members.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {

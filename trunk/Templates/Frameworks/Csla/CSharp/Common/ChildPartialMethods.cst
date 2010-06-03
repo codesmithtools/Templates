@@ -9,11 +9,11 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-        #region Child data access partial methods
+        #region ChildPortal partial methods
 
         partial void OnChildCreating(ref bool cancel);
         partial void OnChildCreated();
-        partial void OnChildFetching(<%= ChildBusinessClassName %>Criteria criteria, ref bool cancel);
+        partial void OnChildFetching(<%= ChildBusinessClassName %>Criteria<%= association.GenericProperty %> criteria, ref bool cancel);
         partial void OnChildFetched();
         partial void OnMapping(SafeDataReader reader, ref bool cancel);
         partial void OnMapped();
@@ -23,8 +23,8 @@
         partial void OnChildUpdated();
         partial void OnChildSelfDeleting(SqlConnection connection, ref bool cancel);
         partial void OnChildSelfDeleted();
-        partial void OnDeleting(<%= ChildBusinessClassName %>Criteria criteria, ref bool cancel);
-        partial void OnDeleting(<%= ChildBusinessClassName %>Criteria criteria, SqlConnection connection, ref bool cancel);
+        partial void OnDeleting(<%= ChildBusinessClassName %>Criteria<%= association.GenericProperty %> criteria, ref bool cancel);
+        partial void OnDeleting(<%= ChildBusinessClassName %>Criteria<%= association.GenericProperty %> criteria, SqlConnection connection, ref bool cancel);
         partial void OnDeleted();
 
         #endregion

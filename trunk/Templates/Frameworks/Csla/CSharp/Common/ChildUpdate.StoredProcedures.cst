@@ -64,8 +64,9 @@
     int childCount = 0;
     foreach(Association a in Entity.AssociatedOneToMany) {
         if(IsChildBusinessObject(a)) childCount++; 
-    }%>
-<% if(childCount > 0) { %>
+    }
+
+    if(childCount > 0) { %>
     
             FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>);
 <% } else { %>

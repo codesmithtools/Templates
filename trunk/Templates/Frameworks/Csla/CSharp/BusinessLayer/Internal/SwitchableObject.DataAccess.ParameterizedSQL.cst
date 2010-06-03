@@ -121,7 +121,7 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ChildInsert(), true); %>
         }
 <% if (Entity.AssociatedManyToOne.Count > 0) {%>
-<% if (Entity.AssociatedManyToOne.Count > 1) { int index = 0; foreach(Association association in Entity.AssociatedManyToOne.Distinct()) { %>
+<% if (Entity.AssociatedManyToOne.Distinct().Count > 1) { int index = 0; foreach(Association association in Entity.AssociatedManyToOne.Distinct()) { %>
 
         private void Child_Insert(<%= association.BuildParametersVariables(true) %>)
         {
@@ -130,7 +130,7 @@ namespace <%= BusinessProjectName %>
 
 <% } }%>
 
-        private void Child_Insert(<%= Entity.AssociatedManyToOne.BuildParametersVariables(true) %>)
+        private void Child_Insert(<%= Entity.AssociatedManyToOne.Distinct().BuildParametersVariables(true) %>)
         {
 <% RenderHelper(new ChildInsert()); %>
         }
@@ -202,7 +202,7 @@ namespace <%= BusinessProjectName %>
 
         partial void OnChildCreating(ref bool cancel);
         partial void OnChildCreated();
-        partial void OnChildFetching(<%= BusinessClassName %>Criteria criteria, ref bool cancel);
+        partial void OnChildFetching(<%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria, ref bool cancel);
         partial void OnChildFetched();
         partial void OnChildInserting(SqlConnection connection, ref bool cancel);
         partial void OnChildInserted();
