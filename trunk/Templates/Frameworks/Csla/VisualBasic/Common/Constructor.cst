@@ -12,11 +12,21 @@
 <%@ Import Namespace="QuickStart" %>
     #Region "Contructor(s)"
 
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
     Private Sub New()
         ' require use of factory method 
     End Sub
+<% If(IncludeSilverlightSupport) Then %>
+#else
+    public Sub New()
+        ' require use of factory method 
+    End Sub
+#endif
+<% End If %>
 
-    Private Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
+    Friend Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         Using(BypassPropertyChecks)
 <% For Each member As Member in Entity.PrimaryKey.KeyMembers
 If UseMemberVariables Then %>
@@ -29,11 +39,16 @@ Next %>
     End Sub
 
 <% If(DataAccessImplementation = DataAccessMethod.None Or DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
     Friend Sub New(Byval reader As SafeDataReader)
 <%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
         Map(reader)
 <% End If %>
     End Sub
-
+<% If(IncludeSilverlightSupport) Then %>
+#endif
+<% End If %>
 <% End If %>
     #End Region

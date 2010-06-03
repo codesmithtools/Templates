@@ -29,33 +29,56 @@ Imports System
 
 Imports Csla
 Imports Csla.Data
+<% If(IncludeSilverlightSupport) Then %>
+#if SILVERLIGHT
+Imports Csla.Serialization
+#endif
+<% End If %>
+<% If(IsCSLA40) Then %>
+Imports Csla.Rules
+<% Else %>
 Imports Csla.Validation
+<% End If %>
+
 
 <Serializable()> _
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
 <Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>InfoFactoryName)> _
 <% End If %>
-Public Partial Class <%= BusinessClassName %> 
-    Inherits ReadOnlyBase(Of <%= BusinessClassName %>)
+Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %> 
+    Inherits ReadOnlyBase(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)
 
 <% RenderHelper(New Constructor()) %>
 
 <% RenderHelper(New Properties()) %>
 
-    #Region "Factory Methods" 
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
+    #Region "Synchronous Factory Methods" 
 
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
 
-    Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
-        Dim criteria As New <%= ChildBusinessClassName %>Criteria ()
+    Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Dim criteria As New <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>()
         <%= sc.Members.BuildObjectInitializer() %>
 
-        Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(criteria)
+        Return DataPortal.FetchChild(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
     End Function
 <% Next %>
     
     #End Region
+<% If(IncludeSilverlightSupport) Then %>
 
+#endif        
+
+   #Region "Asynchronous Factory Methods"
+
+   ' Child objects do not expose asynchronous factory get methods.
+
+   #End Region
+
+<% End If %>
 <% RenderHelper(New Exists()) %>
 
 <% RenderHelper(New CompositeKeyMethods()) %>

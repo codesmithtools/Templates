@@ -16,7 +16,7 @@
             Return
         End If
 
-        If connection.State <> ConnectionState.Open Then connection.Open()
+        If Not (connection.State = ConnectionState.Open) Then connection.Open()
         Using command As New SqlCommand("<%= GetInsertStoredProcedureName() %>", connection)
             command.CommandType = CommandType.StoredProcedure
             <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, Not RenderOptionalContent, True) %>
@@ -32,30 +32,64 @@
             <%= Entity.RowVersionMember.PropertyName %> = DirectCast(command.Parameters("<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>").Value, <%= Entity.RowVersionMember.SystemType %>)
 <% End If %>
 <% For Each member As Member In Entity.PrimaryKey.KeyMembers
-    If(member.IsIdentity) Then
-        If(UseMemberVariables) Then %>
-            <%= member.PrivateMemberVariableName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
-<%      Else %>
-            LoadProperty(<%= member.PrivateMemberVariableName %>Property, DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>))
-<%      End If
+    If(member.IsIdentity OrElse member.DataType = DbType.Guid.ToString()) Then %>
+
+        ' Update identity or guid primary key value.
+        <% If(UseMemberVariables) Then %>
+        <%= member.PrivateMemberVariableName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
+	    <% Else %>
+        LoadProperty(<%= member.PrivateMemberVariableName %>Property, DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>))
+	    <% End If
+    Else %> 
+
+        ' Update the original non-identity primary key value.
+        <% If(UseMemberVariables) Then %>
+        _original<%= member.PropertyName %> = this.<%= member.PropertyName %>
+	    <% Else %>
+        LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>)
+	    <% End If
     End If
 Next %>
-<% For Each member As Member In Entity.PrimaryKey.KeyMembers
-    If Not (member.IsIdentity OrElse member.DataType = DbType.Guid.ToString()) Then
-        If(UseMemberVariables) Then %>
-            _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
-<%      Else %>
-            LoadProperty(_original<%= member.PropertyName %>Property, Me.<%= member.PropertyName %>)
-<%      End If
-    End If
-Next %>
-        End Using
-<% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0) Then %>
-<% If (Not RenderOptionalContent) Then %>
-        FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>)
+<% If Not RenderOptionalContent Then
+	For Each member As Member In Entity.Members
+            If member.IsForeignKey AndAlso Not member.IsPrimaryKey Then
+		If String.IsNullOrEmpty(member.ResolveAssociationPropertyClassName()) Then
+		    Continue For
+		End If  %>
+
+            ' Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
+<% Dim localParameterName As String = member.ResolveAssociationPropertyVariable()
+   Dim localParameterNameWithChildProperty As String = member.ResolveAssociationPropertyVariableWithChildProperty() %>
+            If(Not String.IsNullOrEmpty(<%= localParameterName %>) AndAlso Not <%= localParameterNameWithChildProperty %> = Me.<%= member.PropertyName %>) Then
+<% If(UseMemberVariables) Then %>
+                    <%= member.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>
 <% Else %>
+                    LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>)
+<% End If %>
+            End If
+            <% End If
+	Next
+End If %>
+<% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0) Then
+    If (Not RenderOptionalContent) Then
+	Dim childCount As Integer = 0
+	For Each a As Association In Entity.AssociatedOneToMany
+		If IsChildBusinessObject(a) Then
+			childCount += 1
+		End If
+	Next
+
+	If childCount > 0 Then %>
+        FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>)
+	<% Else %>
+        ' A child relationship exists on this Business Object but its type is not a child type (E.G. EditableChild). 
+        ' TODO: Please override OnChildInserted() and insert this child manually.
+        'FieldManager.UpdateChildren(<%= Entity.BuildUpdateChildrenParametersVariables(true) %>)
+	<% End If 
+    Else %>
         FieldManager.UpdateChildren(Me, connection)
 <% End If
 End If %>
+
 
         OnChildInserted()

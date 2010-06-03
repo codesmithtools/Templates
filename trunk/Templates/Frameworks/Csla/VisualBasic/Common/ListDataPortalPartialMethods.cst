@@ -9,13 +9,13 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-    #Region "Data access partial methods"
+    #Region "DataPortal partial methods"
 
     Partial Private Sub OnCreating(ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnCreated()
     End Sub
-    Partial Private Sub OnFetching(ByVal criteria As <%= ChildBusinessClassName %>Criteria, ByRef cancel As Boolean)
+    Partial Private Sub OnFetching(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnFetched()
     End Sub
@@ -26,6 +26,8 @@
     Partial Private Sub OnUpdating(ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnUpdated()
+    End Sub
+    Partial Private Sub OnAddNewCore(ByVal item As <%= ChildBusinessClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
     End Sub
 
     #End Region

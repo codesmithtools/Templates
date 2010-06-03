@@ -33,15 +33,20 @@
 '------------------------------------------------------------------------------
 Option Explicit On
 Option Strict On
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
 
 Imports System
 Imports System.Data
 Imports System.Data.SqlClient
+Imports System.Linq
 
 Imports Csla
 Imports Csla.Data
 
-Public Partial Class <%= BusinessClassName %>
+
+Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 
     #Region "Root Data Access"
 
@@ -50,8 +55,7 @@ Public Partial Class <%= BusinessClassName %>
 <% RenderHelper(New DataPortalCreate()) %>
     End Sub
 
-    <Transactional(TransactionalTypes.TransactionScope)> _
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria )
+    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> )
 <% RenderHelper(New DataPortalFetch()) %>
     End Sub
 
@@ -73,14 +77,18 @@ Public Partial Class <%= BusinessClassName %>
             Return
         End If
     
-        DataPortal_Delete(New <%= BusinessClassName %>Criteria (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
+        DataPortal_Delete(New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
     
         OnSelfDeleted()
     End Sub
 
     '<Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria )
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>)
 <% RenderHelper(New DataPortalDelete()) %>
+    End Sub
+
+    Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByVal connection As SqlConnection)
+<% RenderHelper(New DataPortalDelete(), true) %>
     End Sub
 
     #End Region
@@ -92,19 +100,61 @@ Public Partial Class <%= BusinessClassName %>
 <% RenderHelper(New ChildCreate()) %>
     End Sub
 
-    Private Sub Child_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria )
+    Private Sub Child_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>)
 <% RenderHelper(New ChildFetch()) %>
 
         MarkAsChild()
     End Sub
 
-    Private Sub Child_Insert(<%= Entity.AssociatedManyToOne.BuildParametersVariables(True) %>)
+    #Region "Child_Insert"
+
+    Private Sub ChildInsert(ByVal SqlConnection connection)
+<% RenderHelper(New ChildInsert(), true) %>
+    End Sub
+<% If (Entity.AssociatedManyToOne.Count > 0) Then
+    If (Entity.AssociatedManyToOne.Distinct().Count > 1) Then
+        Dim index As Integer = 0
+	For Each association As Association In Entity.AssociatedManyToOne.Distinct() %>
+
+    Private Sub Child_Insert(<%= association.BuildParametersVariables(True) %>)
+	Child_Insert(<%= association.BuildUpdateStatementVariables(Entity.AssociatedManyToOne.Distinct(), index, true) %>)
+    End Sub
+	<% index += 1 
+    Next
+     End If %>
+
+    Private Sub Child_Insert(<%= Entity.AssociatedManyToOne.Distinct().BuildParametersVariables(True) %>)
 <% RenderHelper(New ChildInsert()) %>
     End Sub
 
-    Private Sub Child_Update(<%= Entity.AssociatedManyToOne.BuildParametersVariables(True) %>)
+<%End If%>
+
+    #End Region
+
+    #Region "Child_Update"
+
+    Private Sub Child_Update(ByVal SqlConnection connection)
+<% RenderHelper(New ChildUpdate(), true) %>
+    End Sub
+<% If (Entity.AssociatedManyToOne.Count > 0) Then
+    If (Entity.AssociatedManyToOne.Distinct().Count > 1) Then
+        Dim index As Integer = 0
+	For Each association As Association In Entity.AssociatedManyToOne.Distinct() %>
+
+    Private Sub Child_Update(<%= association.BuildParametersVariables(True) %>)
+	Child_Update(<%= association.BuildUpdateStatementVariables(Entity.AssociatedManyToOne.Distinct(), index, true) %>)
+    End Sub
+	<% index += 1 
+    Next
+     End If %>
+
+    Private Sub Child_Update(<%= Entity.AssociatedManyToOne.Distinct().BuildParametersVariables(True) %>)
 <% RenderHelper(New ChildUpdate()) %>
     End Sub
+
+<%End If%>
+
+    #End Region
 
     Private Sub Child_DeleteSelf()
         Dim cancel As Boolean = False
@@ -113,7 +163,24 @@ Public Partial Class <%= BusinessClassName %>
             Return
         End If
     
-        DataPortal_Delete(New <%= BusinessClassName %>Criteria (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
+        DataPortal_Delete(New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
+    
+        OnChildSelfDeleted()
+    End Sub
+    
+    Private Sub Child_DeleteSelf(ParamArray args As Object())
+	Dim connection As SqlConnection = args.OfType(Of SqlConnection)().FirstOrDefault()
+	If connection Is Nothing Then
+		Throw New ArgumentNullException("args", "Must contain a SqlConnection parameter.")
+	End If
+	
+        Dim cancel As Boolean = False
+        OnChildSelfDeleting(cancel)
+        If (cancel) Then
+            Return
+        End If
+    
+        DataPortal_Delete(New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>), connection)
     
         OnChildSelfDeleted()
     End Sub
@@ -134,7 +201,7 @@ Public Partial Class <%= BusinessClassName %>
     End Sub
     Partial Private Sub OnChildCreated()
     End Sub
-    Partial Private Sub OnChildFetching(ByVal criteria As <%= BusinessClassName %>Criteria , ByRef cancel As Boolean)
+    Partial Private Sub OnChildFetching(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnChildFetched()
     End Sub
@@ -153,3 +220,6 @@ Public Partial Class <%= BusinessClassName %>
 
     #End Region
 End Class
+<% If(IncludeSilverlightSupport) Then %>
+#endif
+<% End If %>

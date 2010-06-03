@@ -18,6 +18,9 @@
 '------------------------------------------------------------------------------
 Option Explicit On
 Option Strict On
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
 
 Imports System
 
@@ -27,3 +30,6 @@ Imports Csla.Data
 Public Partial Class <%= BusinessClassName %>
     'NOTE: You need to modify the DataPortal_Fetch() method in the non generated partial class.
 End Class
+<% If(IncludeSilverlightSupport) Then %>
+#endif
+<% End If %>

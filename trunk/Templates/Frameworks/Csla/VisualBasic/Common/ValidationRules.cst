@@ -9,7 +9,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-    #Region "Validation Rules"
+    #Region "Business Rules"
 
     Protected Overrides Sub AddBusinessRules()
 
@@ -18,11 +18,19 @@
 <%     For Each member As Member in Entity.MembersNoRowVersion %>
 <% If (member.SystemType = "System.String" ) Then  %>
 <% If Not member.IsNullable Then %>
+<% If(IsCSLA40) Then %>
+            BusinessRules.AddRule(New Csla.Rules.CommonRules.Required(<%= member.PrivateMemberVariableName %>Property))
+<% Else %>
         ValidationRules.AddRule(AddressOf CommonRules.StringRequired, <%= member.PrivateMemberVariableName %>Property)
 <%  End If
+End If
     If Not member.ExcludeBusinessSizeRule() Then %>
+<% If(IsCSLA40) Then %>
+            BusinessRules.AddRule(New Csla.Rules.CommonRules.MaxLength(<%= member.PrivateMemberVariableName %>Property, <%= member.Size %>))
+<% Else %>
         ValidationRules.AddRule(AddressOf CommonRules.StringMaxLength, New CommonRules.MaxLengthRuleArgs(<%= member.PrivateMemberVariableName %>Property, <%= member.Size %>))
-<%      End If 
+<% End If 
+	End If 
     End If 
 Next %>
     End Sub

@@ -28,7 +28,7 @@ End If
 Next
 For Each association As Association in Entity.AssociatedForeignKeys
     For Each member As AssociationMember in association
-If (member.AssociatedColumn.SystemType = "System.String" And Not member.AssociatedColumn.IsIdentity And member.AssociatedColumn.IsForeignKey) Then
+If (member.AssociatedColumn.SystemType = "System.String" AndAlso Not member.AssociatedColumn.IsIdentity AndAlso member.AssociatedColumn.IsForeignKey) Then
     If (UseMemberVariables) Then %>
         <%= member.AssociatedColumn.PropertyName %> = "BN"
 <% Else %>
@@ -38,6 +38,10 @@ End If
 Next
 Next
 %>
+<% If(IsCSLA40) Then %>
+        BusinessRules.CheckRules()
+<% Else %>
         ValidationRules.CheckRules()
+<% End If %>
 
         OnCreated()

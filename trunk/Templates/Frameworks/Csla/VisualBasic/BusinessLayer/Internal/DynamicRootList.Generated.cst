@@ -2,12 +2,12 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X DynamicRootList" %>
 <%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="IsDirty" Template="..\..\Common\IsDirtyList.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="AddNewCore" Template="..\..\Common\ListAddNewCore.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
-<%@ Assembly Name="SchemaExplorer" %>
 
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
@@ -28,50 +28,111 @@ Option Strict On
 Imports System
 
 Imports Csla
+<% If(IncludeSilverlightSupport) Then %>
+#if SILVERLIGHT
+Imports Csla.Serialization
+#endif
+<% End If %>
 
 <Serializable()> _
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
 <Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>ListFactoryName)> _
 <% End If %>
-Public Partial Class <%= BusinessClassName %> 
-    Inherits EditableRootListBase(Of <%= ChildBusinessClassName %>)
+Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
+    Inherits EditableRootListBase(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)
+<% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
+    #Region DataPortal partial methods
+        
+    Partial Private Sub OnAddNewCore(ByRef item As <%= ChildBusinessClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean);
     
-    #Region "Properties"
+#endregion
+
+<% End If %>
+    #region "Constructor(s)"
+    
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
+    Private Sub New()
+    	AllowNew = True
+    End Sub
+<% If(IncludeSilverlightSupport) Then %>
+#else
+    public Sub New()
+    	AllowNew = True
+    End Sub
+#endif
+<% End If %>
+
+    #End Region
+
+
+    #Region "Method Overrides"
     
     Protected Overrides Function AddNewCore() As Object
-        Dim item As <%= ChildBusinessClassName %> = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
-        Me.Add(item)
-        Return item
+<% RenderHelper(new AddNewCore()) %>
+
     End Function
     
     #End Region
 
-    #Region "Factory Methods"
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
+
+    #Region "Synchronous Factory Methods"
     
-    Public Shared Function NewList() As <%= BusinessClassName %>
-        Return DataPortal.Create(Of <%= BusinessClassName %>)()
+    Public Shared Function NewList() As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Return DataPortal.Create(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
     End Function
+
+    Public Shared Function GetAll() As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(New <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>())
+    End Function
+
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
 
-    Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
-        Dim criteria As New <%= ChildBusinessClassName %>Criteria()
+    Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %> 
+        Dim criteria As New <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>()
         <%= sc.Members.BuildObjectInitializer() %>
 
-        Return DataPortal.Fetch(Of <%= BusinessClassName %>)(criteria)
+        Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
     End Function
 <% Next %>
 
-    Public Shared Function GetAll() As <%= BusinessClassName %>
-        Return DataPortal.Fetch(Of <%= BusinessClassName %>)(New <%= ChildBusinessClassName %>Criteria())
-    End Function
-
-    Private Sub New()
-        AllowNew = true
-    End Sub
-
     #End Region
+<% If(IncludeSilverlightSupport) Then %>
+
+#endif        
+
+        #Region "Asynchronous Factory Methods"
+        
+    Public Shared Sub NewListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+        dp.CreateCompleted += handler
+        dp.BeginCreate()
+    End Sub
+<% For Each sc As SearchCriteria In Entity.SearchCriteria() %>
+
+    Public Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+        dp.FetchCompleted += handler
+	
+        Dim criteria As New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>()
+<%For Each member As Member in sc.Members %>
+        criteria.<%= member.PropertyName %> = <%= member.VariableName %>
+<% Next %>
+
+        dp.BeginFetch(criteria)
+    End Sub
+<% Next %> 
+        
+        #End Region
+
+<% End If %>
+
+<% RenderHelper(New IsDirty()) %>
 
 <% RenderHelper(New Exists()) %>
 
-<% RenderHelper(New IsDirty()) %>
 End Class

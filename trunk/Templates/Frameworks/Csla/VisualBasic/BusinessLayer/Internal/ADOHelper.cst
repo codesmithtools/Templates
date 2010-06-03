@@ -28,6 +28,7 @@ Imports System.Data
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
 Imports System.IO
+Imports System.Linq
 
 Imports Csla
 Imports Csla.Data
@@ -57,6 +58,8 @@ Public Class ADOHelper
 
     #End Region
 
+    #Region "Methods"
+    
     ''' <summary>
     ''' Returns an array of SqlParameters
     ''' </summary>
@@ -103,8 +106,10 @@ Public Class ADOHelper
             Return stream.ToArray()
         End Using
     End Function  
+    
+    #End Region
 
-#Region "Nullable Helpers" 'This code is here to help in the Data access implementation of handling DBNull.Value.
+    #Region "Nullable Helpers" 'This code is here to help in the Data access implementation of handling DBNull.Value.
 
     ''' <summary>
     ''' Simple empty string to DBNull.Value function.

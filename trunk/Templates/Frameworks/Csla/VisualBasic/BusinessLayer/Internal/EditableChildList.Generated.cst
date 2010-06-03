@@ -2,6 +2,7 @@
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X EditableChildList" %>
 <%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="IsDirty" Template="..\..\Common\IsDirtyList.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="AddNewCore" Template="..\..\Common\ListAddNewCore.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
@@ -30,6 +31,11 @@ Imports System.Collections.Generic
 
 Imports Csla
 Imports Csla.Data
+<% If(IncludeSilverlightSupport) Then %>
+#if SILVERLIGHT
+Imports Csla.Serialization
+#endif
+<% End If %>
 
 <Serializable()> _
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
@@ -39,46 +45,99 @@ Public Partial Class <%= BusinessClassName %>
     Inherits BusinessListBase(Of <%= BusinessClassName %>, <%= ChildBusinessClassName %>)
 
     #Region "Contructor(s)"
-
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
     Private Sub New()
         AllowNew = true
         MarkAsChild()
     End Sub
+<% If(IncludeSilverlightSupport) Then %>
+#else
+    public Sub New()
+        AllowNew = true
+        MarkAsChild()
+    End Sub
+#endif
+<% End If %>
 
     #End Region
 
-    #Region "Factory Methods" 
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
+    #Region "Synchronous Factory Methods" 
 
-    Friend Shared Function NewList() As <%= BusinessClassName %>
-        Return DataPortal.CreateChild(Of <%= BusinessClassName %>)()
+    Friend Shared Function NewList() As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Return DataPortal.CreateChild(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
     End Function
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
 
-    Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
-        Dim criteria As New <%= ChildBusinessClassName %>Criteria()
+    Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %> 
+        Dim criteria As New <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>()
         <%= sc.Members.BuildObjectInitializer() %>
 
-        Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(criteria)
+        Return DataPortal.FetchChild(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
     End Function
 <% Next %>
 
-    Friend Shared Function GetAll() As <%= BusinessClassName %>
-        Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(New <%= ChildBusinessClassName %>Criteria())
+    Friend Shared Function GetAll() As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Return DataPortal.FetchChild(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(New <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>())
     End Function
 
     #End Region
+<% If(IncludeSilverlightSupport) Then %>
 
-    #Region "Properties"
+#endif        
 
-    Protected Overrides Function AddNewCore() As Object
-        Dim item As <%= ChildBusinessClassName %> = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
-                Me.Add(item)
-                Return item
+   #Region "Asynchronous Factory Methods"
+
+    Friend Shared Sub New<%= ChildBusinessClassName %>ListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
+        Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
+        dp.CreateCompleted += handler
+        dp.BeginCreate()
+    End Sub
+
+   ' Child objects do not expose asynchronous factory get methods.
+
+   #End Region
+<% End If %>
+
+<% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
+        #Region DataPortal partial methods
+        
+        Partial Private Sub OnAddNewCore(ByRef item As <%= ChildBusinessClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
+
+        #End Region
+	
+<% End If %>
+    #Region "Method Overrides"
+
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
+    Protected Overrides Function AddNewCore() As <% If (IsCSLA40) Then %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% Else %>Object<% End If %>
+<% RenderHelper(new AddNewCore()) %>
+
     End Function
+<% If(IncludeSilverlightSupport) Then %>
+#endif
+
+    Protected Sub AddNewCoreAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Object)))
+	<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %>Async(Function(o, e) Do
+		If e.Error Is Nothing Then
+			Add(e.Object)
+			handler.Invoke(Me, New DataPortalResult(Of Object)(e.Object, Nothing, Nothing))
+		End If
+	End Function)
+    End Sub
+
+<% End If %>
 
     #End Region
 
-<% RenderHelper(New Exists()) %>
 
 <% RenderHelper(New IsDirty()) %>
+
+<% RenderHelper(New Exists()) %>
     End Class

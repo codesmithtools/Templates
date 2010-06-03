@@ -75,8 +75,7 @@ GO
      ' identity column or a GUID.  If so, we will not include the primary key column in the
      ' list of input parameters.
 
-    If (SourceTable.PrimaryKey.MemberColumns.Count = 1 And (SourceTable.PrimaryKey.MemberColumns(0).DataType = DbType.Guid Or ((SourceTable.PrimaryKey.MemberColumns(0).DataType = DbType.Int16 Or SourceTable.PrimaryKey.MemberColumns(0).DataType = DbType.Int32 Or SourceTable.PrimaryKey.MemberColumns(0).DataType = DbType.Int64) And CType(SourceTable.PrimaryKey.MemberColumns(0).ExtendedProperties("CS_IsIdentity").Value, Boolean) = true))) Then
-        Dim primaryKeyColumn As ColumnSchema = SourceTable.PrimaryKey.MemberColumns(0)
+    If (HasGuidOrIdentityColumn(SourceTable.PrimaryKey)) Then
 %>
 
 CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
@@ -84,33 +83,43 @@ CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
 <% GenerateParameter(SourceTable.Columns(Entity.RowVersionMember.ColumnName), 1, true, false, true, true) %>,
 <% End If %>
 <% GenerateParameters(SourceTable.NonPrimaryKeyColumns, 1, true, false) %>
-<% GenerateParameter(primaryKeyColumn, 1, false, true, true, false) %>
+<%-- Loop through all primary keys. --%>
+<% For Each column As Object In SourceTable.PrimaryKey.MemberColumns.AsIndexedEnumerable()
+    GenerateParameter(column.Value, 1, False, column.IsLast, IsGuidOrIdentityColumn(column.Value), False, False)
+Next %>
 
 AS
 
-<%-- If the primary key is a GUID, then assign a New GUID using NEWID(). --%>
-<% If (primaryKeyColumn.DataType = DbType.Guid) Then %>
-SET <%= ParameterPrefix %><%= primaryKeyColumn.Name %> = NEWID()
+<%-- Loop through all primary keys. If the primary key is a GUID, then assign a new GUID using NEWID(). --%>
+<% For Each column As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns
+ If (column.DataType = DbType.Guid) Then %>
+SET <%= ParameterPrefix %><%= column.Name %> = NEWID()
 
-<% End If %>
+<% End If
+Next %>
 INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
-    <% If (primaryKeyColumn.DataType = DbType.Guid) Then %>
-    [<%= primaryKeyColumn.Name %>],
-    <% End If %>
+<% For Each column As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns
+    If (column.DataType = DbType.Guid Or Not IsIdentityColumn(column)) Then %>
+    [<%= column.Name %>],
+    <% End If 
+Next %>
     <% GenerateColumns(SourceTable.NonPrimaryKeyColumns, 1, false) %>
 
 ) VALUES (
-    <% If (primaryKeyColumn.DataType = DbType.Guid) Then %>
-    <%= ParameterPrefix %><%= primaryKeyColumn.Name %>,
-    <% End If %>
+<% For Each column As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns
+    If (column.DataType = DbType.Guid Or Not IsIdentityColumn(column)) Then %>
+    <%= ParameterPrefix %><%= column.Name %>,
+    <% End If 
+Next %>
     <% GenerateVariables(SourceTable.NonPrimaryKeyColumns, 1, false) %>
 )
 
 <%-- If the primary key is an identity column, then capture the newly assigned identity using SCOPE_IDENTITY(). --%>
-<% If (primaryKeyColumn.DataType = DbType.Int16 Or primaryKeyColumn.DataType = DbType.Int32 Or primaryKeyColumn.DataType = DbType.Int64) Then %>
-
-SET <%= ParameterPrefix %><%= primaryKeyColumn.Name %> = SCOPE_IDENTITY()
-<% End If %>
+<% For Each column As ColumnSchema In SourceTable.PrimaryKey.MemberColumns
+	If (IsIdentityColumn(column)) Then %>
+SET <%= ParameterPrefix %><%= column.Name %> = SCOPE_IDENTITY()
+<% End If
+Next %>
 
 <% If(Entity.HasRowVersionMember) Then %>
 SET <%= ParameterPrefix %><%= Entity.RowVersionMember.ColumnName %> = (SELECT [<%= Entity.RowVersionMember.ColumnName %>] FROM [<%= SourceTable.Owner %>].[<%= SourceTable.Name %>] WHERE <% GenerateConditions(SourceTable.PrimaryKey.MemberColumns, 1, false) %>)
@@ -127,6 +136,7 @@ CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
 
 AS
 
+SET NOCOUNT ON
 INSERT INTO <%= GetTableOwner() %>[<%= SourceTable.Name %>] (
     <% GenerateColumns(SourceTable.Columns, 1, false) %>
 ) VALUES (
@@ -148,7 +158,7 @@ GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
-PRINT 'Stored procedure creation succedded was succeeded.'
+PRINT 'Stored procedure creation succeeded.'
 COMMIT TRANSACTION
 END
 ELSE PRINT 'Stored procedure creation failed.'
@@ -186,7 +196,7 @@ GO
 
 IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '<%= GetUpdateStoredProcedureShortName() %>', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure <%= GetUpdateStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure <%= GetUpdateStoredProcedureName() %> has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
@@ -229,7 +239,6 @@ ELSE PRINT 'Stored procedure creation failed.'
 GO
 DROP TABLE #tmpErrors
 GO
-
 
 <%
     GenerateProcedureFooter(GetUpdateStoredProcedureName())
@@ -288,7 +297,7 @@ GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
-PRINT 'Stored procedure creation succedded was succeeded.'
+PRINT 'Stored procedure creation succeeded.'
 COMMIT TRANSACTION
 END
 ELSE PRINT 'Stored procedure creation failed.'
@@ -359,7 +368,7 @@ GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
-PRINT 'Stored procedure creation succedded was succeeded.'
+PRINT 'Stored procedure creation succeeded.'
 COMMIT TRANSACTION
 END
 ELSE PRINT 'Stored procedure creation failed.'
@@ -772,6 +781,40 @@ Public Function IsColumnFindable(column As ColumnSchema) As Boolean
 
     Return True
 End Function
+
+' This method adds support for composite primary keys.
+Public Function HasGuidOrIdentityColumn(ByVal key As PrimaryKeySchema) As Boolean
+    For Each column As MemberColumnSchema In key.MemberColumns
+        If IsGuidOrIdentityColumn(column) Then
+            Return True
+        End If
+    Next
+    
+    Return False
+End Function
+
+Public Function IsGuidOrIdentityColumn(ByVal column As MemberColumnSchema) As Boolean
+    If column.DataType = DbType.Guid OrElse IsIdentityColumn(column) Then
+        Return True
+    End If
+    
+    Return False
+End Function
+
+Public Function IsIdentityColumn(ByVal column As MemberColumnSchema) As Boolean
+    If column Is Nothing Then
+        Return False
+    End If
+    
+    Dim correctDataType As Boolean = column.DataType = DbType.Int16 OrElse column.DataType = DbType.Int32 OrElse column.DataType = DbType.Int64
+    Dim extendedPropertyValue As Boolean = column.ExtendedProperties.Contains("CS_IsIdentity") AndAlso CBool(column.ExtendedProperties("CS_IsIdentity").Value)
+    If correctDataType AndAlso extendedPropertyValue Then
+        Return True
+    End If
+    
+    Return False
+End Function
+
 
 Public Sub GenerateVariable(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
     If Not includeTimeStamp AndAlso ColumnIsTimestamp(column) Then

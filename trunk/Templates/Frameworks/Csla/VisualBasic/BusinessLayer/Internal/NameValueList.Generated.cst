@@ -23,6 +23,11 @@ Option Strict On
 Imports System
 
 Imports Csla
+<% If(IncludeSilverlightSupport) Then %>
+#if SILVERLIGHT
+Imports Csla.Serialization
+#endif
+<% End If %>
 
 <Serializable()> _
 Public Partial Class <%= BusinessClassName %> 
@@ -31,6 +36,10 @@ Public Partial Class <%= BusinessClassName %>
     #Region "Factory Methods"
 
     Private Shared _list As <%= BusinessClassName %>
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
+    #Region "Synchronous Factory Methods"
     Public Shared Function GetAll() As <%= BusinessClassName %>
         If (_list Is Nothing) Then
             _list = DataPortal.Fetch(Of <%= BusinessClassName %>)()
@@ -38,7 +47,23 @@ Public Partial Class <%= BusinessClassName %>
         
         Return _list
     End Function
+
+    #End Region
+<% If(IncludeSilverlightSupport) Then %>
+
+#endif        
+
+    #Region "Asynchronous Factory Methods"
+        
+    Public Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+        dp.FetchCompleted += handler
+        dp.BeginFetch()
+    End Sub
     
+    #End Region
+<% End If %>
+
     Public Shared Sub InvalidateCache()
         _list = Nothing
     End Sub
@@ -47,6 +72,7 @@ Public Partial Class <%= BusinessClassName %>
     End Sub
     
     #End Region
+
 
 <% If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then %>
         #Region "Property overrides"
@@ -63,7 +89,4 @@ Public Partial Class <%= BusinessClassName %>
         #End Region
 
 <% End If %>
-
-<% RenderHelper(New Exists()) %>
-
 End Class

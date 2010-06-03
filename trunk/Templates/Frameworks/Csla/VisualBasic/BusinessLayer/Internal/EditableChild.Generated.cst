@@ -8,6 +8,7 @@
 <%@ Register Name="ValidationRules" Template="..\..\Common\ValidationRules.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
 <%@ Assembly Name="SchemaExplorer" %>
 
@@ -31,14 +32,23 @@ Imports System
 
 Imports Csla
 Imports Csla.Data
+<% If(IsCSLA40) Then %>
+Imports Csla.Rules
+<% Else %>
 Imports Csla.Validation
+<% End If %>
+<% If(IncludeSilverlightSupport) Then %>
+#if SILVERLIGHT
+Imports Csla.Serialization
+#endif
+<% End If %>
 
 <Serializable()> _
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
 <Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>FactoryName)> _
 <% End If %>
-Public Partial Class <%= BusinessClassName %> 
-    Inherits BusinessBase(Of <%= BusinessClassName %>)
+Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
+    Inherits BusinessBase(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)
 
 <% RenderHelper(New Constructor()) %>
 
@@ -46,22 +56,44 @@ Public Partial Class <%= BusinessClassName %>
 
 <% RenderHelper(New Properties()) %>
 
-    #Region "Factory Methods"
+<% If(IncludeSilverlightSupport) Then %>
+#if !SILVERLIGHT
+<% End If %>
+    #Region "Synchronous Factory Methods"
 
-    Friend Shared Function New<%= BusinessClassName %>() As <%= BusinessClassName %> 
+    Friend Shared Function New<%= ChildBusinessClassName %><%= Entity.GenericProperty %>() As <%= ChildBusinessClassName %> 
         Return DataPortal.Create(Of <%= BusinessClassName %>)()
     End Function
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
 
-    Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
-        Dim criteria As New <%= BusinessClassName %>Criteria ()
+    Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Dim criteria As New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>()
         <%= sc.Members.BuildObjectInitializer() %>
 
-        Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(criteria)
+        Return DataPortal.FetchChild(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)(criteria)
     End Function
 <% Next %>
 
     #End Region
+<% If(IncludeSilverlightSupport) Then %>
+
+#endif        
+
+   #Region "Asynchronous Factory Methods"
+
+    Friend Shared Sub New<%= BusinessClassName %>Async(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
+        Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
+        dp.CreateCompleted += handler
+        dp.BeginCreate()
+    End Sub
+
+   ' Child objects do not expose asynchronous factory get methods.
+
+   ' Child objects do not expose asynchronous delete methods.
+
+   #End Region
+
+<% End If %>
 
 <% RenderHelper(New Exists()) %>
 

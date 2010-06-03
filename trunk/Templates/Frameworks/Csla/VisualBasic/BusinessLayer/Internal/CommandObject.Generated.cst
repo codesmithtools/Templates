@@ -33,7 +33,7 @@ Public Partial Class <%= BusinessClassName %>
     
     Public Shared Function Execute() As Boolean
         If Not CanExecuteCommand() Then
-            Throw New System.Security.SecurityException("Not authorized to execute command")
+            Throw New System.Security.SecurityException("Not authorized to execute command.")
         End If
         
         Dim cmd As New <%= BusinessClassName %>()

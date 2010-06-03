@@ -26,8 +26,13 @@ namespace CodeSmith.SchemaHelper
 
         public static string BuildObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal)
         {
+            return members.BuildObjectInitializer(isObjectFactory, usePropertyName, includeOriginal, "criteria.");
+        }
+        
+        public static string BuildObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal, string prefix)
+        {
             string parameters = string.Empty;
-            
+
             foreach (Member member in members)
             {
                 var propertyName = isObjectFactory ? 
