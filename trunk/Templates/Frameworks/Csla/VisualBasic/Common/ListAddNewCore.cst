@@ -16,7 +16,7 @@
         OnAddNewCore(item, cancel)
         If Not (cancel) Then
            ' Check to see if someone set the item to null in the OnAddNewCore.
-           If(item = null) Then
+           If(item Is Nothing) Then
               item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
 	   End If
 <%  Dim list As New System.Collections.Generic.List(Of String) 
@@ -34,16 +34,18 @@
         ' Pass the parent value down to the child.
 <% If Not(list.Contains(className)) Then
 	 list.Add(className) %>
-        <%If(isObjectFactory) Then %>'<% End If%>Dim <%= variableName %> As <%= className %> = Me.Parent As <%= className %>
+        <%If(isObjectFactory) Then %>'<% End If%>Dim <%= variableName %> As <%= className %> = CType(Me.Parent, <%= className %>)
 <% Else %>
         <%If(isObjectFactory) Then %>'<% End If%><%= variableName %> = Me.Parent As <%= className %>
 <% End If %>
-        <%If(isObjectFactory) Then %>'<% End If%>If Not(<%= variableName %> = Nothing)
+        <%If(isObjectFactory) Then %>'<% End If%>If Not(<%= variableName %> Is Nothing)
         <%If(isObjectFactory) Then %>'<% End If%>    item.<%= member.PropertyName %> = <%= variableWithChildProperty %>
-
+        <%If(isObjectFactory) Then %>'<% End If%>End If
 <% End If
 Next %>
-	End If
-
+        End If
+        
+        '	BLAKE:	Not sure if this shouldn't be contained within the If Not (cancel) statement?
         Add(item)
+        
         Return item
