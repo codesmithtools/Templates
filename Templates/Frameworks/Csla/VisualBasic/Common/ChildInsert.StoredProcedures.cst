@@ -47,9 +47,10 @@
         _original<%= member.PropertyName %> = this.<%= member.PropertyName %>
 	    <% Else %>
         LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>)
-	    <% End If
-    End If
+	    <% End If %>
+<%  End If
 Next %>
+		End Using
 <% If Not RenderOptionalContent Then
 	For Each member As Member In Entity.Members
             If member.IsForeignKey AndAlso Not member.IsPrimaryKey Then
@@ -60,6 +61,7 @@ Next %>
             ' Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
 <% Dim localParameterName As String = member.ResolveAssociationPropertyVariable()
    Dim localParameterNameWithChildProperty As String = member.ResolveAssociationPropertyVariableWithChildProperty() %>
+			'   BLAKE: Parent objects in VB require a different syntax check [Please Use IsNothing(ParentObjectParameter)]			
             If(Not String.IsNullOrEmpty(<%= localParameterName %>) AndAlso Not <%= localParameterNameWithChildProperty %> = Me.<%= member.PropertyName %>) Then
 <% If(UseMemberVariables) Then %>
                     <%= member.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>

@@ -31,7 +31,7 @@
     End Sub
     Partial Private Sub OnChildUpdated()
     End Sub
-    Partial Private Sub OnChildSelfDeleting(ByRef cancel As Boolean)
+    Partial Private Sub OnChildSelfDeleting(ByVal connection As SqlConnection, ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnChildSelfDeleted()
     End Sub

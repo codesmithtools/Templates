@@ -76,17 +76,16 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 	DeletedList.Clear()
 
 	' Trim down the list to what is actually contained in the child class.
-	Dim list = New System.Collections.Generic.Dictionary(Of String, Object)() With {}
-	For Each o As Object In parameters
-		If o Is Nothing Then
-			Continue For
-		End If
-
-		Dim key = o.GetType().ToString()
-		If Not list.ContainsKey(key) Then
-			list.Add(key, o)
-		End If
-	Next
+    Dim list As New System.Collections.Generic.Dictionary(Of String, Object)
+    Dim key As String
+    For Each o As Object In parameters
+        If Not o Is Nothing Then
+            key = o.GetType().ToString()
+            If Not list.ContainsKey(key) Then
+                list.Add(key, o)
+            End If
+        End If
+    Next
 
 	For Each item As <%= ChildBusinessClassName %> In Items
 		DataPortal.UpdateChild(item, list.Values.ToArray())
