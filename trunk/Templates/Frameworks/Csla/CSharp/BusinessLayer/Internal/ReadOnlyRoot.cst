@@ -28,7 +28,6 @@ using Csla.Rules;
 using Csla.Validation;
 <% } %>
 
-
 #endregion
 
 namespace <%= BusinessProjectName %>

@@ -16,10 +16,7 @@ namespace CodeSmith.SchemaHelper
         {
             if (member.IsPrimaryKey)
             {
-				if(isSilverlight)
-                    return string.Format("{1}#if !SILVERLIGHT{1}\t\t<System.ComponentModel.DataObjectField(true, {0})> _{1}#endif", member.IsIdentity.ToString().ToLower(), Environment.NewLine);
-
-                return string.Format("{1}\t\t<System.ComponentModel.DataObjectField(true, {0})> _", member.IsIdentity.ToString().ToLower(), Environment.NewLine);
+				return string.Format("{1}\t\t<System.ComponentModel.DataObjectField(true, {0})> _", member.IsIdentity.ToString().ToLower(), Environment.NewLine);
             }
 
             return string.Empty;

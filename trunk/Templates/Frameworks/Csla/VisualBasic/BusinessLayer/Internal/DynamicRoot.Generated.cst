@@ -34,9 +34,9 @@ Imports Csla.Rules
 Imports Csla.Validation
 <% End If %>
 <% If(IncludeSilverlightSupport) Then %>
-#if SILVERLIGHT
+#If SILVERLIGHT Then
 Imports Csla.Serialization
-#endif
+#End If
 <% End If %>
 <Serializable()> _
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
@@ -52,7 +52,7 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 <% RenderHelper(New Properties()) %>
 
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
     #Region "Synchronous Factory Methods"
     
@@ -72,20 +72,20 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     #End Region
 <% If(IncludeSilverlightSupport) Then %>
 
-#endif
+#End If
 
-    #Region "Asynchronous Factory Methods"
+     #Region "Asynchronous Factory Methods"
         
     Public Shared Sub New<%= BusinessClassName %>Async(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
         Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
-        dp.CreateCompleted += handler
+        AddHandler dp.CreateCompleted, handler
         dp.BeginCreate()
     End Sub
 <% For Each sc As SearchCriteria In Entity.SearchCriteria() %>
 
     Public Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
         Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
-        dp.FetchCompleted += handler
+        AddHandler dp.FetchCompleted, handler
 	
         Dim criteria As New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>()
 <%For Each member As Member in sc.Members %>

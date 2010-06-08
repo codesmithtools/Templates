@@ -24,12 +24,12 @@ Option Strict On
 
 Imports System
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
 Imports System.Data
 Imports System.Data.SqlClient
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 <% End If %>
 
 Imports Csla

@@ -29,9 +29,9 @@ Imports System
 
 Imports Csla
 <% If(IncludeSilverlightSupport) Then %>
-#if SILVERLIGHT
+#If SILVERLIGHT Then
 Imports Csla.Serialization
-#endif
+#End If
 <% End If %>
 
 <Serializable()> _
@@ -41,27 +41,28 @@ Imports Csla.Serialization
 Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     Inherits EditableRootListBase(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
-    #Region DataPortal partial methods
+    #Region "DataPortal partial methods"
         
     Partial Private Sub OnAddNewCore(ByRef item As <%= ChildBusinessClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean);
-    
+    End Sub
+
 #endregion
 
 <% End If %>
     #region "Constructor(s)"
     
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
     Private Sub New()
     	AllowNew = True
     End Sub
 <% If(IncludeSilverlightSupport) Then %>
-#else
+#Else
     public Sub New()
     	AllowNew = True
     End Sub
-#endif
+#End If
 <% End If %>
 
     #End Region
@@ -77,7 +78,7 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     #End Region
 
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
 
     #Region "Synchronous Factory Methods"
@@ -103,20 +104,20 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     #End Region
 <% If(IncludeSilverlightSupport) Then %>
 
-#endif        
+#End If        
 
-        #Region "Asynchronous Factory Methods"
+    #Region "Asynchronous Factory Methods"
         
     Public Shared Sub NewListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
         Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
-        dp.CreateCompleted += handler
+        AddHandler dp.CreateCompleted, handler
         dp.BeginCreate()
     End Sub
 <% For Each sc As SearchCriteria In Entity.SearchCriteria() %>
 
     Public Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
         Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
-        dp.FetchCompleted += handler
+        AddHandler dp.FetchCompleted, handler
 	
         Dim criteria As New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>()
 <%For Each member As Member in sc.Members %>

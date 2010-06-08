@@ -55,7 +55,7 @@ Next %>
             'Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
 <% Dim localParameterName As String = member.ResolveAssociationPropertyVariable()
    Dim localParameterNameWithChildProperty As String = member.ResolveAssociationPropertyVariableWithChildProperty() %>
-            If(Not String.IsNullOrEmpty(<%= localParameterName %>) AndAlso Not <%= localParameterNameWithChildProperty %> = Me.<%= member.PropertyName %>) Then
+            If(Not IsNothing(<%= localParameterName %>) AndAlso Not <%= localParameterNameWithChildProperty %> = Me.<%= member.PropertyName %>) Then
 <% If(UseMemberVariables) Then %>
                     <%= member.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>
 <% Else %>

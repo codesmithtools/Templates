@@ -30,8 +30,16 @@ If UseMemberVariables Then %>
     ''' <%= member.Description %>
     ''' </summary>
 <% End If %>
+<%If IncludeSilverlightSupport Then %>
+#If Not SILVERLIGHT Then
+<% End If %>
     <%= member.BuildDataObjectField(IncludeSilverlightSupport) %>
-    Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
+	Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
+<%If IncludeSilverlightSupport Then %>
+#Else
+	Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
+#End If
+<% End If %>
         Get 
             Return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>) 
         End Get
@@ -63,8 +71,16 @@ If UseMemberVariables Then %>
     ''' <%= member.Description %>
     ''' </summary>
 <% End If %>
+<%If IncludeSilverlightSupport Then %>
+#If Not SILVERLIGHT Then
+<% End If %>
     <%= member.BuildDataObjectField(IncludeSilverlightSupport) %>
-    Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
+	Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
+<%If IncludeSilverlightSupport Then %>
+#Else
+	Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
+#End If
+<% End If %>
         Get 
             Return GetProperty(<%= member.PrivateMemberVariableName %>Property)
         End Get
@@ -109,7 +125,7 @@ End If %>
     Public ReadOnly Property <%= association.PropertyName %>() As <%= associationClassName %><%= association.GenericProperty %>
         Get
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
 <% If UseLazyLoading Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
@@ -128,7 +144,7 @@ End If %>
                 End If
 <% End If %>  
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 <% End If %>
             End If
             
@@ -159,7 +175,7 @@ End If %>
     Public ReadOnly Property <%= association.PropertyName %>() As <%= associationClassName %>
         Get
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
 <% If UseLazyLoading Then %>
             If Not(FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
@@ -178,7 +194,7 @@ End If %>
                 End If
 <% End If %> 
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 <% End If %>
             End If
             
@@ -207,7 +223,7 @@ Next %>
 Public ReadOnly Property <%= association.PropertyName %>() As <%= associationClassName %>List<%= association.GenericProperty %>
         Get
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
 <% If(UseLazyLoading) Then %>
             If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property)) Then
@@ -231,7 +247,7 @@ Public ReadOnly Property <%= association.PropertyName %>() As <%= associationCla
 End If%>
 
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 <% End If %>
             End If
             

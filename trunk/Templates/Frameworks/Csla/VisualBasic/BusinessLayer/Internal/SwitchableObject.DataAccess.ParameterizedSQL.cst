@@ -34,7 +34,7 @@
 Option Explicit On
 Option Strict On
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
 
 Imports System
@@ -195,7 +195,7 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     
 <% RenderHelper(New PartialMethods()) %>
 
-    #Region "Child data access partial methods"
+    #Region "ChildPortal partial methods"
 
     Partial Private Sub OnChildCreating(ByRef cancel As Boolean)
     End Sub
@@ -221,5 +221,5 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     #End Region
 End Class
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 <% End If %>
