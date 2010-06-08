@@ -52,7 +52,6 @@ namespace CodeSmith.Data.Caching
 
             RegisterProvider<HttpCacheProvider>(true);
             Initialize();
-            _defaultProfile = new CacheSettings();
         }
 
         private static void Initialize()
@@ -86,6 +85,9 @@ namespace CodeSmith.Data.Caching
                     if (_profiles.TryGetValue(cacheSection.DefaultProfile, out cacheSettings))
                         _defaultProfile = cacheSettings;
             }
+
+            if (_defaultProfile == null)
+                _defaultProfile = new CacheSettings();
 
             if (!String.IsNullOrEmpty(cacheSection.DefaultGroup))
                 DefaultGroup = cacheSection.DefaultGroup;
