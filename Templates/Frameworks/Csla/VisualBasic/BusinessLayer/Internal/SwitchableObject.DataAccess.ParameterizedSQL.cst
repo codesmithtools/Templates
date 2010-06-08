@@ -69,7 +69,6 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 <% RenderHelper(New DataPortalUpdate()) %>
     End Sub
 
-    <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_DeleteSelf()
         Dim cancel As Boolean = False
         OnSelfDeleting(cancel)
@@ -82,11 +81,12 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
         OnSelfDeleted()
     End Sub
 
-    '<Transactional(TransactionalTypes.TransactionScope)> _
+    <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>)
 <% RenderHelper(New DataPortalDelete()) %>
     End Sub
 
+	'<Transactional(TransactionalTypes.TransactionScope)> _
     Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByVal connection As SqlConnection)
 <% RenderHelper(New DataPortalDelete(), true) %>
     End Sub

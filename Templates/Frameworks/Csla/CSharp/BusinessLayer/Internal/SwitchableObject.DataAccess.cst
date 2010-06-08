@@ -65,6 +65,7 @@ namespace <%= BusinessProjectName %>
         protected override void DataPortal_DeleteSelf()
         {
             // TODO: delete values
+            // TODO: Review the need for TransactionScope (if you call DataPortal_Delete then you will not need the attribute on this method).
         }
 
         //[Transactional(TransactionalTypes.TransactionScope)]

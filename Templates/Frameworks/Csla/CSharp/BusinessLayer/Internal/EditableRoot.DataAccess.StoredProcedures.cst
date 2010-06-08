@@ -68,7 +68,6 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new DataPortalUpdate()); %>
         }
 
-        [Transactional(TransactionalTypes.TransactionScope)]
         protected override void DataPortal_DeleteSelf()
         {
             bool cancel = false;
