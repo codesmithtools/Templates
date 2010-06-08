@@ -4225,6 +4225,14 @@
             	<c>true</c> if rules ran successfully; otherwise, <c>false</c>.
             </returns>
         </member>
+        <member name="M:CodeSmith.Data.Rules.RuleManager.Run(System.Object,System.Data.Linq.DataContext)">
+            <summary>
+            Run the rules for the specified entity.
+            </summary>
+            <param name="entity">The entity to run validation for.</param>
+            <param name="db">The DataContext to which the entity is attached.</param>
+            <returns></returns>
+        </member>
         <member name="M:CodeSmith.Data.Rules.RuleManager.Run(System.Data.Linq.DataContext)">
             <summary>
             Run the rules for the the changed objects in the <see cref="T:System.Data.Linq.DataContext"/>.
