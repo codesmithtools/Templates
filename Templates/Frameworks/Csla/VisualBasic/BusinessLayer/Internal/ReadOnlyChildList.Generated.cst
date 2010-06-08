@@ -28,9 +28,9 @@ Option Strict On
 Imports System
 Imports System.Collections.Generic
 <% If(IncludeSilverlightSupport) Then %>
-#if SILVERLIGHT
+#If SILVERLIGHT Then
 Imports Csla.Serialization
-#endif
+#End If
 <% End If %>
 
 Imports Csla
@@ -45,21 +45,21 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     #Region "Contructor(s)"
 
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
     Private Sub New()
     End Sub
 <% If(IncludeSilverlightSupport) Then %>
-#else
+#Else
     public Sub New()
     End Sub
-#endif
+#End If
 <% End If %>
 
     #End Region
 
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
 
     #Region "Synchronous Factory Methods"
@@ -80,9 +80,9 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     #End Region
 
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 
-    #Region "Asynchronous Factory Methods"
+     #Region "Asynchronous Factory Methods"
 
 	' Child objects do not expose asynchronous factory get methods.
 

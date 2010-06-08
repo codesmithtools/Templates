@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X EditableChildList" %>
 <%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="IsDirty" Template="..\..\Common\IsDirtyList.cst" MergeProperties="False" ExcludeProperties="" %>
@@ -32,9 +32,9 @@ Imports System.Collections.Generic
 Imports Csla
 Imports Csla.Data
 <% If(IncludeSilverlightSupport) Then %>
-#if SILVERLIGHT
+#If SILVERLIGHT Then
 Imports Csla.Serialization
-#endif
+#End If
 <% End If %>
 
 <Serializable()> _
@@ -46,25 +46,25 @@ Public Partial Class <%= BusinessClassName %>
 
     #Region "Contructor(s)"
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
     Private Sub New()
         AllowNew = true
         MarkAsChild()
     End Sub
 <% If(IncludeSilverlightSupport) Then %>
-#else
+#Else
     public Sub New()
         AllowNew = true
         MarkAsChild()
     End Sub
-#endif
+#End If
 <% End If %>
 
     #End Region
 
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
     #Region "Synchronous Factory Methods" 
 
@@ -88,13 +88,13 @@ Public Partial Class <%= BusinessClassName %>
     #End Region
 <% If(IncludeSilverlightSupport) Then %>
 
-#endif        
+#End If        
 
-   #Region "Asynchronous Factory Methods"
+    #Region "Asynchronous Factory Methods"
 
     Friend Shared Sub New<%= ChildBusinessClassName %>ListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
         Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
-        dp.CreateCompleted += handler
+        AddHandler dp.CreateCompleted, handler
         dp.BeginCreate()
     End Sub
 
@@ -104,38 +104,38 @@ Public Partial Class <%= BusinessClassName %>
 <% End If %>
 
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
-        #Region DataPortal partial methods
+    #Region "DataPortal partial methods"
         
-        Partial Private Sub OnAddNewCore(ByRef item As <%= ChildBusinessClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
+    Partial Private Sub OnAddNewCore(ByRef item As <%= ChildBusinessClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
+	End Sub
 
-        #End Region
+    #End Region
 	
 <% End If %>
     #Region "Method Overrides"
 
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
     Protected Overrides Function AddNewCore() As <% If (IsCSLA40) Then %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% Else %>Object<% End If %>
 <% RenderHelper(new AddNewCore()) %>
 
     End Function
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 
-    Protected Sub AddNewCoreAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Object)))
-	<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %>Async(Function(o, e) Do
-		If e.Error Is Nothing Then
-			Add(e.Object)
-			handler.Invoke(Me, New DataPortalResult(Of Object)(e.Object, Nothing, Nothing))
-		End If
-	End Function)
+    Protected Sub AddNewCoreAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
+		<%= BusinessClassName %><%= Entity.GenericProperty %>.New<%= BusinessClassName %>Async(Sub(o, e)
+				If e.Error Is Nothing Then
+					Add(e.Object)
+					handler.Invoke(Me, New DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)(e.Object, Nothing, Nothing))
+				End If
+			End Sub)
     End Sub
 
 <% End If %>
 
     #End Region
-
 
 <% RenderHelper(New IsDirty()) %>
 

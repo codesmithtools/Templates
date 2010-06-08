@@ -13,17 +13,17 @@
     #Region "Contructor(s)"
 
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
     Private Sub New()
         ' require use of factory method 
     End Sub
 <% If(IncludeSilverlightSupport) Then %>
-#else
+#Else
     public Sub New()
         ' require use of factory method 
     End Sub
-#endif
+#End If
 <% End If %>
 
     Friend Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
@@ -40,7 +40,7 @@ Next %>
 
 <% If(DataAccessImplementation = DataAccessMethod.None Or DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
     Friend Sub New(Byval reader As SafeDataReader)
 <%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
@@ -48,7 +48,7 @@ Next %>
 <% End If %>
     End Sub
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 <% End If %>
 <% End If %>
     #End Region

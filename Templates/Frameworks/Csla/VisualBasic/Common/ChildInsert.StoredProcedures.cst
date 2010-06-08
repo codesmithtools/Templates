@@ -34,22 +34,23 @@
 <% For Each member As Member In Entity.PrimaryKey.KeyMembers
     If(member.IsIdentity OrElse member.DataType = DbType.Guid.ToString()) Then %>
 
-        ' Update identity or guid primary key value.
+            ' Update identity or guid primary key value.
         <% If(UseMemberVariables) Then %>
-        <%= member.PrivateMemberVariableName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
+            <%= member.PrivateMemberVariableName %> = DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>)
 	    <% Else %>
-        LoadProperty(<%= member.PrivateMemberVariableName %>Property, DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>))
+            LoadProperty(<%= member.PrivateMemberVariableName %>Property, DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value, <%= member.SystemType %>))
 	    <% End If
     Else %> 
 
-        ' Update the original non-identity primary key value.
+            ' Update the original non-identity primary key value.
         <% If(UseMemberVariables) Then %>
-        _original<%= member.PropertyName %> = this.<%= member.PropertyName %>
+            _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
 	    <% Else %>
-        LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>)
+            LoadProperty(_original<%= member.PropertyName %>Property, Me.<%= member.PropertyName %>)
 	    <% End If %>
 <%  End If
 Next %>
+
 		End Using
 <% If Not RenderOptionalContent Then
 	For Each member As Member In Entity.Members
@@ -58,20 +59,21 @@ Next %>
 		    Continue For
 		End If  %>
 
-            ' Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
+        ' Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
 <% Dim localParameterName As String = member.ResolveAssociationPropertyVariable()
    Dim localParameterNameWithChildProperty As String = member.ResolveAssociationPropertyVariableWithChildProperty() %>
-			'   BLAKE: Parent objects in VB require a different syntax check [Please Use IsNothing(ParentObjectParameter)]			
-            If(Not String.IsNullOrEmpty(<%= localParameterName %>) AndAlso Not <%= localParameterNameWithChildProperty %> = Me.<%= member.PropertyName %>) Then
+		'   BLAKE: Parent objects in VB require a different syntax check [Please Use IsNothing(ParentObjectParameter)]			
+        If(Not IsNothing(<%= localParameterName %>) AndAlso Not <%= localParameterNameWithChildProperty %> = Me.<%= member.PropertyName %>) Then
 <% If(UseMemberVariables) Then %>
-                    <%= member.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>
+            <%= member.PrivateMemberVariableName %> = <%= localParameterNameWithChildProperty %>
 <% Else %>
-                    LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>)
+            LoadProperty(<%= member.PrivateMemberVariableName %>Property, <%= localParameterNameWithChildProperty %>)
 <% End If %>
-            End If
+        End If
             <% End If
 	Next
 End If %>
+
 <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0) Then
     If (Not RenderOptionalContent) Then
 	Dim childCount As Integer = 0
@@ -92,6 +94,5 @@ End If %>
         FieldManager.UpdateChildren(Me, connection)
 <% End If
 End If %>
-
 
         OnChildInserted()

@@ -24,7 +24,7 @@
 Option Explicit On
 Option Strict On
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
 
 Imports System
@@ -45,5 +45,5 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 <% RenderHelper(New PartialMethods()) %>
 End Class
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 <% End If %>

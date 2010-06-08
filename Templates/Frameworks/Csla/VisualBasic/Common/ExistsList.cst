@@ -12,13 +12,13 @@
     #Region "Exists Command"
 
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
     Public Shared Function Exists(ByVal criteria As <%= ChildBusinessClassName %>Criteria) As Boolean
         Return <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria)
     End Function
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 <% End If %>
 
     #End Region

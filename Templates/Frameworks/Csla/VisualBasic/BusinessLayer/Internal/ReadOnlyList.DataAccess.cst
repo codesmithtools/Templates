@@ -21,7 +21,7 @@
 Option Explicit On
 Option Strict On
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
 
 Imports System
@@ -36,7 +36,7 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 
         ' Fetch Child objects.
         ' While(SourceHasMoreChildren)
-            'this.Add(New <%= ChildBusinessClassName %>(source))
+            'Me.Add(New <%= ChildBusinessClassName %>(source))
         ' End While
 
         IsReadOnly = true
@@ -44,5 +44,5 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     End Sub
 End Class
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 <% End If %>

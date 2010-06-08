@@ -28,7 +28,7 @@ Next %>
 
 <% If(DataAccessImplementation = DataAccessMethod.None Or DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
     Friend Sub New(Byval reader As SafeDataReader)
 <%If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.StoredProcedures) Then %>
@@ -36,7 +36,7 @@ Next %>
 <% End If %>
     End Sub
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 <% End If %>
 <% End If %>
     #End Region

@@ -30,24 +30,24 @@ Imports System.Collections.Generic
 Imports System.Runtime.InteropServices
 
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
 Imports System.Data.SqlClient
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 <% End If %>
 
 <% If(IncludeSilverlightSupport) Then %>
-#if SILVERLIGHT
+#If SILVERLIGHT Then
 Imports Csla.Serialization
-#endif
+#End If
 <% End If %>
 
 Imports Csla
 <% If(IncludeSilverlightSupport) Then %>
-#if SILVERLIGHT
+#If SILVERLIGHT Then
 Imports Csla.Serialization
-#endif
+#End If
 <% End If %>
 
 
@@ -55,7 +55,7 @@ Imports Csla.Serialization
 
 <Serializable(), ClassInterface(ClassInterfaceType.None)> _
 Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-    Inherits CriteriaBase<% If (IsCSLA40) Then %>< <%= BusinessClassName %><%= Entity.GenericProperty %> ><% End If %>
+    Inherits CriteriaBase<% If (IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>
     Implements IGeneratedCriteria
 
     #Region "Private Read-Only Members"

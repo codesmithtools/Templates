@@ -38,9 +38,9 @@ Imports Csla.Rules
 Imports Csla.Validation
 <% End If %>
 <% If(IncludeSilverlightSupport) Then %>
-#if SILVERLIGHT
+#If SILVERLIGHT Then
 Imports Csla.Serialization
-#endif
+#End If
 <% End If %>
 
 <Serializable()> _
@@ -57,7 +57,7 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 <% RenderHelper(New Properties()) %>
 
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
     #Region "Synchronous Factory Methods"
 
@@ -77,13 +77,13 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     #End Region
 <% If(IncludeSilverlightSupport) Then %>
 
-#endif        
+#End If        
 
-   #Region "Asynchronous Factory Methods"
+    #Region "Asynchronous Factory Methods"
 
     Friend Shared Sub New<%= BusinessClassName %>Async(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
         Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
-        dp.CreateCompleted += handler
+        AddHandler dp.CreateCompleted, handler
         dp.BeginCreate()
     End Sub
 

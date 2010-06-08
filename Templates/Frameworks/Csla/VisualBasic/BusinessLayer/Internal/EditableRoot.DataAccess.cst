@@ -22,14 +22,19 @@
 Option Explicit On
 Option Strict On
 <% If(IncludeSilverlightSupport) Then %>
-#if !SILVERLIGHT
+#If Not SILVERLIGHT Then
 <% End If %>
 
 Imports System
 
 Imports Csla
 Imports Csla.Data
+<% If(IsCSLA40) Then %>
+Imports Csla.Rules
+<% Else %>
 Imports Csla.Validation
+<% End If %>
+
 
 Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     <RunLocal()> _
@@ -66,5 +71,5 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     End Sub
 End Class
 <% If(IncludeSilverlightSupport) Then %>
-#endif
+#End If
 <% End If %>
