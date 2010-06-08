@@ -75,7 +75,6 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new DataPortalUpdate()); %>
         }
 
-        [Transactional(TransactionalTypes.TransactionScope)]
         protected override void DataPortal_DeleteSelf()
         {
             bool cancel = false;
@@ -87,12 +86,13 @@ namespace <%= BusinessProjectName %>
             OnSelfDeleted();
         }
 
-        //[Transactional(TransactionalTypes.TransactionScope)]
+        [Transactional(TransactionalTypes.TransactionScope)]
         protected void DataPortal_Delete(<%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new DataPortalDelete()); %>
         }
 
+        //[Transactional(TransactionalTypes.TransactionScope)]
         protected void DataPortal_Delete(<%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria, SqlConnection connection)
         {
 <% RenderHelper(new DataPortalDelete(), true); %>

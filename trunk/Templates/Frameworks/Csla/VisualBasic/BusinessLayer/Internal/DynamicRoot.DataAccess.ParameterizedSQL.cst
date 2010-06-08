@@ -61,7 +61,6 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 <% RenderHelper(New DataPortalUpdate()) %>
     End Sub
 
-    <Transactional(TransactionalTypes.TransactionScope)> _
     Protected Overrides Sub DataPortal_DeleteSelf()
         Dim cancel As Boolean = False
         OnSelfDeleting(cancel)
