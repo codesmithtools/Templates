@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace CodeSmith.SchemaHelper
 {
@@ -18,9 +17,9 @@ namespace CodeSmith.SchemaHelper
             if (member.IsPrimaryKey)
             {
 				if(isSilverlight)
-					return string.Format(Environment.NewLine + "#if !SILVERLIGHT" + Environment.NewLine + "\t\t[System.ComponentModel.DataObjectField(true, {0})]" + Environment.NewLine + "#endif", member.IsIdentity.ToString().ToLower());
-			
-                return string.Format(Environment.NewLine + "\t\t[System.ComponentModel.DataObjectField(true, {0})]", member.IsIdentity.ToString().ToLower());
+                    return string.Format("{1}#if !SILVERLIGHT{1}\t\t[System.ComponentModel.DataObjectField(true, {0})]{1}#endif", member.IsIdentity.ToString().ToLower(), Environment.NewLine);
+
+                return string.Format("{1}\t\t[System.ComponentModel.DataObjectField(true, {0})]", member.IsIdentity.ToString().ToLower(), Environment.NewLine);
             }
 
             return string.Empty;
@@ -39,7 +38,11 @@ namespace CodeSmith.SchemaHelper
                 {
                     if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
                     {
-                        return Util.NamingConventions.VariableName(associationMember.ClassName);
+                        var className = Util.NamingConventions.VariableName(associationMember.ClassName);
+                        if (className.Equals("item", StringComparison.InvariantCultureIgnoreCase))
+                            className += "1";
+
+                        return className;
                     }
                 }
             }
@@ -81,7 +84,11 @@ namespace CodeSmith.SchemaHelper
                 {
                     if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
                     {
-                        return string.Format("{0}.{1}", Util.NamingConventions.VariableName(associationMember.ClassName), Util.NamingConventions.PropertyName(associationMember.ColumnName));
+                        var className = Util.NamingConventions.VariableName(associationMember.ClassName);
+                        if (className.Equals("item", StringComparison.InvariantCultureIgnoreCase))
+                            className += "1";
+
+                        return string.Format("{0}.{1}", className, Util.NamingConventions.PropertyName(associationMember.ColumnName));
                     }
                 }
             }
