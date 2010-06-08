@@ -30,7 +30,7 @@ If UseMemberVariables Then %>
     ''' <%= member.Description %>
     ''' </summary>
 <% End If %>
-    <%= member.BuildDataObjectField() %>
+    <%= member.BuildDataObjectField(IncludeSilverlightSupport) %>
     Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
         Get 
             Return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>) 
@@ -63,7 +63,7 @@ If UseMemberVariables Then %>
     ''' <%= member.Description %>
     ''' </summary>
 <% End If %>
-    <%= member.BuildDataObjectField() %>
+    <%= member.BuildDataObjectField(IncludeSilverlightSupport) %>
     Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
         Get 
             Return GetProperty(<%= member.PrivateMemberVariableName %>Property)
