@@ -2959,6 +2959,16 @@
             	<c>true</c> if query supports a future query; otherwise, <c>false</c>.
             </returns>
         </member>
+        <member name="M:CodeSmith.Data.Linq.QueryExtensions.Include``2(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Specifies the related objects to include in the query results.
+            </summary>
+            <typeparam name="T">The type of the data in the data source.</typeparam>
+            <typeparam name="TInclude">The type of the include.</typeparam>
+            <param name="query">The query to be materialized.</param>
+            <param name="includeExpression">The expression of related objects to return in the query results.</param>
+            <returns>The result of the query.</returns>
+        </member>
         <member name="T:CodeSmith.Data.Linq.QueryResultCache">
             <summary>
             Extension methods for caching IQuerable objects.
