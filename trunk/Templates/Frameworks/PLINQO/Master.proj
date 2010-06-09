@@ -3,10 +3,10 @@
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
 
   <PropertyGroup>
-    <Major>4</Major>
+    <Major>5</Major>
     <Minor>0</Minor>
     <Build>0</Build>
-    <Revision>1</Revision>
+    <Revision>0</Revision>
 
     <BindMinor>0</BindMinor>
     <BindBuild>0</BindBuild>
