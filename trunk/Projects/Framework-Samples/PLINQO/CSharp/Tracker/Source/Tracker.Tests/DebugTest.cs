@@ -227,5 +227,28 @@ namespace Tracker.Tests
             var auditLog = db.LastAudit;
             Assert.IsNotNull(auditLog);
         }
+
+        [Test]
+        public void IncludeTest()
+        {
+            var db = new TrackerDataContext { Log = Console.Out };
+            //db.DeferredLoadingEnabled = false;
+
+            var tasks = db.Task
+                .Where(t => t.CreatedId != null)
+                .Include(t => t.CreatedUser);
+
+
+            var task = tasks.FirstOrDefault();
+            Assert.IsNotNull(task);
+            Assert.IsNotNull(task.CreatedUser);
+
+            var users = db.User
+                .Take(5)
+                .Include(u=> u.CreatedTaskList).ToList();
+
+            Assert.IsNotNull(users);
+
+        }
     }
 }
