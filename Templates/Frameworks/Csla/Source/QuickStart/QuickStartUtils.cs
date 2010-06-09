@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace QuickStart
 {
-    public class QuickStartHelper
+    public class QuickStartUtils
     {
         public static void ReplaceAllInDirectory(string path, string find, string replace, string[] exemptDirectories)
         {
@@ -17,7 +17,7 @@ namespace QuickStart
             ReplaceAllInDirectory(path, find, replace, null ,0);
         }
 
-        private static void ReplaceAllInDirectory(string path, string find, string replace, string[] exemptDirectories, int level)
+        private static void ReplaceAllInDirectory(string path, string find, string replace,string[] exemptDirectories, int level)
         {
             //Taken in part from http://weblogs.asp.net/israelio/archive/2004/06/23/162913.aspx
             if (level <= 3)
@@ -125,6 +125,15 @@ namespace QuickStart
                     File.Copy(file.Replace(directoryFind, directoryReplace), file, false);
                 }
             }
+        }
+
+        public static string EnsureMultipleResultSets(string connectionString)
+        {
+            if (connectionString.Contains("MultipleActiveResultSets"))
+                return connectionString;
+
+            string s = connectionString.Trim();
+            return s + (s.EndsWith(";") ? "MultipleActiveResultSets=true;" : ";MultipleActiveResultSets=true;");
         }
     }
 }

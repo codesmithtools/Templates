@@ -20,7 +20,7 @@ namespace CodeSmith.SchemaHelper
         VS_2010 = 2
     }
 
-    public enum Framework : byte
+    public enum FrameworkVersion : byte
     {
         /// <summary>
         /// .NET 3.5

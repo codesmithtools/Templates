@@ -22,7 +22,7 @@ namespace QuickStart
         private StringCollection _ignoreExpressions;
         private StringCollection _cleanExpressions;
         private bool _silverlightSupport;
-        private Framework _framework;
+        private FrameworkVersion frameworkVersion;
 
         #endregion
 
@@ -131,16 +131,16 @@ namespace QuickStart
         [Optional]
         [Category("2. Solution")]
         [Description("The .NET Framework Version. If you use v40 then CSLA 4.0 will be used. If you use v35 then CSLA 3.8 will be used.")]
-        public Framework Framework
+        public FrameworkVersion FrameworkVersion
         {
             get
             {
-                return _framework;
+                return this.frameworkVersion;
             }
             set
             {
-                _framework = value;
-                Configuration.Instance.Framework = value;
+                this.frameworkVersion = value;
+                Configuration.Instance.FrameworkVersion = value;
             }
         }
 
@@ -311,7 +311,7 @@ namespace QuickStart
         {
             get
             {
-                return _framework == Framework.v40;
+                return this.frameworkVersion == FrameworkVersion.v40;
             }
         }
 

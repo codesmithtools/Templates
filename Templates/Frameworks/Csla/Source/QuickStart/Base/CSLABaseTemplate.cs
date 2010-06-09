@@ -53,7 +53,7 @@ namespace QuickStart
         {
             get
             {
-                return Configuration.Instance.Framework == Framework.v40;
+                return Configuration.Instance.FrameworkVersion == FrameworkVersion.v40;
             }
         }
 

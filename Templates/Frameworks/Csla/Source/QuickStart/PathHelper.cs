@@ -1,28 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace QuickStart
 {
-    public class PathHelper
+    public static class PathHelper
     {
-        public PathHelper(string fileName, string directoryName, string parentPath)
+        public static IEnumerable<string> GetFiles(string directory, SearchOption searchOption, params string[] searchPatterns)
         {
-            FileName = fileName;
-            DirectoryName = directoryName;
+            var files = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var pattern in searchPatterns)
+                files.UnionWith(Directory.GetFiles(directory, pattern, SearchOption.AllDirectories));
 
-            DirectoryFile = Path.Combine(DirectoryName, FileName);
-
-            DirectoryPath = Path.Combine(parentPath, DirectoryName);
-            FilePath = Path.Combine(DirectoryPath, FileName);
+            return files;
         }
-
-        public string FileName { get; private set; }
-        public string DirectoryName { get; private set; }
-
-        public string DirectoryFile { get; private set; }
-
-        public string DirectoryPath { get; private set; }
-        public string FilePath { get; private set; }
     }
 
 }
