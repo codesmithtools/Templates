@@ -14,7 +14,7 @@ namespace QuickStart
         ObjectFactoryStoredProcedures = 12
     }
 
-    public enum ProjectTypeEnum : byte
+    public enum ProjectTypeEnum
     {
         None = 0,
         DynamicDataWebApp = 1,

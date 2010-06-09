@@ -213,7 +213,7 @@ namespace CodeSmith.SchemaHelper
 
         public bool IncludeSilverlightSupport { get; set; }
 
-        public Framework Framework { get; set; }
+        public FrameworkVersion FrameworkVersion { get; set; }
 
         #endregion
     }

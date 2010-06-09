@@ -119,15 +119,15 @@ namespace QuickStart
         [Optional]
         [Category("2. Solution")]
         [Description("The .NET Framework Version. If you use v40 then CSLA 4.0 will be used. If you use v35 then CSLA 3.8 will be used.")]
-        public Framework Framework
+        public FrameworkVersion FrameworkVersion
         {
             get
             {
-                return Configuration.Instance.Framework;
+                return Configuration.Instance.FrameworkVersion;
             }
             set
             {
-                Configuration.Instance.Framework = value;
+                Configuration.Instance.FrameworkVersion = value;
             }
         }
 
