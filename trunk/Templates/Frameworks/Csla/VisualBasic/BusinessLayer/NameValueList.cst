@@ -40,7 +40,7 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim nameValueListGenerated As NameValueListGenerated = Me.Create(Of NameValueListGenerated)()
     Me.CopyPropertiesTo(nameValueListGenerated)
-    nameValueListGenerated.BusinessClassName = String.Format("{0}NameValueList", nameValueListGenerated.BusinessClassName)
+    nameValueListGenerated.BusinessClassName = nameValueList.BusinessClassName
 
     nameValueListGenerated.RenderToFile(fileName, parentFileName, True)
 
@@ -49,7 +49,7 @@ Public Overloads Overrides Sub Render(writer As System.IO.TextWriter)
 
     Dim nameValueListDataAccess As NameValueListDataAccess = Me.Create(Of NameValueListDataAccess)()
     Me.CopyPropertiesTo(nameValueListDataAccess)
-    nameValueListDataAccess.BusinessClassName = String.Format("{0}NameValueList", nameValueListDataAccess.BusinessClassName)
+    nameValueListDataAccess.BusinessClassName = nameValueList.BusinessClassName
 
     nameValueListDataAccess.RenderToFile(fileName, parentFileName, True)
     If DataAccessImplementation = DataAccessMethod.StoredProcedures Then
