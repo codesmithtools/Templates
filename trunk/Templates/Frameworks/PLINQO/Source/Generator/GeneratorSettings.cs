@@ -61,6 +61,12 @@ namespace LinqToSqlShared.Generator
             get { return _ignoreExpressions; }
         }
 
+        private List<Regex> _includeExpressions = new List<Regex>();
+        public List<Regex> IncludeExpressions
+        {
+            get { return _includeExpressions; }
+        }
+
         private List<Regex> _cleanExpressions = new List<Regex>();
         public List<Regex> CleanExpressions
         {
@@ -101,7 +107,7 @@ namespace LinqToSqlShared.Generator
 
         public bool IsIgnored(string name)
         {
-            return IsRegexMatch(name, IgnoreExpressions);
+            return !IsRegexMatch(name, IncludeExpressions) || IsRegexMatch(name, IgnoreExpressions);
         }
 
         public bool IsEnum(TableSchema table)
