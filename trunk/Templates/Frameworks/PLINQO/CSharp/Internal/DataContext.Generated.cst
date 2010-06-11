@@ -212,7 +212,7 @@ for(int x = 0; x < function.Parameters.Count; x++) {
 
     //set out params
     Response.WriteLine("            {0} = (({1})(result.GetParameterValue({2})));",
-        p.ParameterName, GetParameterType(p), x);
+        CSharpKeyWordEscape[p.ParameterName], GetParameterType(p), x);
 }
 %>
 
