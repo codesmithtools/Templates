@@ -33,6 +33,11 @@
     Description="List of regular expressions to ignore tables and views when generating mapping."
     Default="sysdiagrams$" %>
 
+<%@ Property Category="1.Database" Name="IncludeList"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of regular expressions to include tables and views when generating mapping."
+    Default="" %>
+
 <%@ Property Category="1.Database" Name="CleanExpression"
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
     Description="List of regular expressions to clean table, view and column names."
@@ -136,9 +141,17 @@
         foreach(string clean in CleanExpression)
             if (!string.IsNullOrEmpty(clean))
                 settings.CleanExpressions.Add(new Regex(clean));
+        
         foreach(string ignore in IgnoreList)
             if (!string.IsNullOrEmpty(ignore))
                 settings.IgnoreExpressions.Add(new Regex(ignore));
+
+        if (IncludeList != null)
+            foreach(string include in IncludeList)
+                if (!string.IsNullOrEmpty(include))
+                    settings.IncludeExpressions.Add(new Regex(include));
+        if (settings.IncludeExpressions.Count == 0)
+            settings.IncludeExpressions.Add(new Regex(".*"));
                 
         foreach(string enumRegex in EnumList)
             if (!string.IsNullOrEmpty(enumRegex))

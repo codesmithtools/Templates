@@ -35,6 +35,11 @@
     Description="List of regular expressions to ignore tables and views when generating mapping."
     Default="sysdiagrams$" %>
 
+<%@ Property Category="1.Database" Name="IncludeList"
+    Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
+    Description="List of regular expressions to include tables and views when generating mapping."
+    Default="" %>
+
 <%@ Property Category="1.Database" Name="CleanExpression"
     Type="CodeSmith.CustomProperties.StringCollection" Optional="True"
     Description="List of regular expressions to clean table, view and column names."
@@ -148,6 +153,17 @@ Public Sub Generate()
         End If
     Next
 
+    If IncludeList IsNot Nothing
+        For Each include As String In IncludeList
+            If Not String.IsNullOrEmpty(include)
+                settings.IncludeExpressions.Add(New Regex(include))
+            End If
+        Next
+    End If
+    If settings.IncludeExpressions.Count = 0 Then
+        settings.IncludeExpressions.Add(New Regex(".*"))
+    End If
+
     For Each enumRegex As String in EnumList
         If Not String.IsNullOrEmpty(enumRegex) Then
             settings.EnumExpressions.Add(New Regex(enumRegex))
@@ -159,6 +175,7 @@ Public Sub Generate()
             settings.EnumNameExpressions.Add(New Regex(name))
         End IF
     Next
+    
     For Each description As String In DescriptionColumm
         If Not String.IsNullOrEmpty(description) Then
             settings.EnumDescriptionExpressions.Add(New Regex(description))
