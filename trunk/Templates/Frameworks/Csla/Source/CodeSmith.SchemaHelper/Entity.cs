@@ -7,6 +7,8 @@ using System.Diagnostics;
 
 namespace CodeSmith.SchemaHelper
 {
+    using System.Data;
+
     public class Entity
     {
         #region Private Member(s)
@@ -415,6 +417,14 @@ namespace CodeSmith.SchemaHelper
         }
 
         /// <summary>
+        /// Does the Entity have an Guid primary key column
+        /// </summary>
+        public bool HasGuidPrimaryKeyMember
+        {
+            get { return PrimaryKey.KeyMembers.Count(m => m.DataType == DbType.Guid.ToString()) > 0; }
+        }
+
+        /// <summary>
         /// The Identity Column
         /// </summary>
         public Member IdentityMember
@@ -476,6 +486,17 @@ namespace CodeSmith.SchemaHelper
             get
             {
                 return Members.Where(m => !m.IsIdentity && !m.IsComputed && !m.IsRowVersion).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Returns a list of Members that are non-identity primary keys
+        /// </summary>
+        public List<Member> MembersNonIdentityPrimaryKeys
+        {
+            get
+            {
+                return PrimaryKey.KeyMembers.Where(m => !m.IsIdentity).ToList();
             }
         }
 

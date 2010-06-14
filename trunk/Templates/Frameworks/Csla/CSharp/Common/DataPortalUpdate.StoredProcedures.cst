@@ -68,7 +68,9 @@
 
 <% if(Entity.HasRowVersionMember) { %>
                     <%= Entity.RowVersionMember.PropertyName %> = (<%= Entity.RowVersionMember.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value;
-<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity || member.DataType == DbType.Guid.ToString()) { if(UseMemberVariables) { %>
+<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) {%> 
+                    //  Update non-identity primary key value.
+<% if(UseMemberVariables) { %>
                     <%= member.PrivateMemberVariableName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
 <% } else { %>
                     LoadProperty(<%= member.PrivateMemberVariableName %>Property,(<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
