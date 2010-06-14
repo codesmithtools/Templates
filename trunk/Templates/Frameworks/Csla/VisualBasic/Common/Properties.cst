@@ -17,7 +17,7 @@
     ''' Used for optimistic concurrency.
     ''' </summary>
     <NotUndoable()> _
-    Friend <%= Entity.RowVersionMember.PropertyName %> As <%= Entity.RowVersionMember.SystemType %> = New <%= Entity.RowVersionMember.SystemTypeWithSize %>
+    Friend <%= Entity.RowVersionMember.PropertyName %> As <%= Entity.RowVersionMember.SystemType %> = New <%= Entity.RowVersionMember.SystemTypeWithSize %> {}
     
 <% End If %>
 <%  For Each member As Member in Entity.MembersNoRowVersion
