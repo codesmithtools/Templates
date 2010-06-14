@@ -32,9 +32,9 @@
 <% if(Entity.HasRowVersionMember) { %>
 
                 <%= Entity.RowVersionMember.PropertyName %> = (<%= Entity.RowVersionMember.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value;
-<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity || member.DataType == DbType.Guid.ToString()) {%> 
+<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) {%> 
 
-                // Update identity or guid primary key value.
+                // Update non-identity primary key value.
 <% if(UseMemberVariables) { %>
                 <%= member.PrivateMemberVariableName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
 <% } else { %>

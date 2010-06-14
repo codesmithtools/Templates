@@ -32,8 +32,8 @@
                     {
 <% if(Entity.HasRowVersionMember) { %>
                         <%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>");
-<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(member.IsIdentity || member.DataType == DbType.Guid.ToString()) { %> 
-                        // Update identity or guid primary key value.
+<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { %> 
+                        //  Update non-identity primary key value.
 <%if(UseMemberVariables) { %>
                         <%= member.PrivateMemberVariableName %> = <%if(!member.HasByteArrayColumn()) { %>reader.<%= member.GetReaderMethod() %>("<%= member.ColumnName %>");<% } else { %>ADOHelper.GetBytes(reader, "<%= member.ColumnName %>");<% } %>
 <% } else { %>
