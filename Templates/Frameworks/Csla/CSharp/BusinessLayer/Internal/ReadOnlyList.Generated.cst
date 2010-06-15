@@ -76,7 +76,7 @@ namespace <%= BusinessProjectName %>
 
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> GetAll()
         {
-            return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %>(new <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>());
+            return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %> >(new <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>());
         }
 
         #endregion
