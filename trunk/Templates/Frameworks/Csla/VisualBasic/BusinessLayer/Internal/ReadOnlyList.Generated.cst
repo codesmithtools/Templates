@@ -80,7 +80,7 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 
 #End If
 
-       #Region "Asynchronous Factory Methods"
+    #Region "Asynchronous Factory Methods"
         
 <% For Each sc As SearchCriteria In Entity.SearchCriteria() %>
 
