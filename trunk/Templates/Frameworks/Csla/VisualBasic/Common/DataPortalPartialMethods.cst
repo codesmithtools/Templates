@@ -11,6 +11,9 @@
 <%@ Import Namespace="QuickStart" %>
     #Region "DataPortal partial methods"
 
+<%If IncludeSilverlightSupport Then %>
+#If Not SILVERLIGHT Then
+<% End If %>
     Partial Private Sub OnCreating(ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnCreated()
@@ -39,5 +42,8 @@
     End Sub
     Partial Private Sub OnDeleted()
     End Sub
+<% If(IncludeSilverlightSupport) Then %>
+#End If
+<% End If %>
 
     #End Region

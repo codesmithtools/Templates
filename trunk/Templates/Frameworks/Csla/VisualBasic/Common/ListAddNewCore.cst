@@ -43,9 +43,9 @@
         <%If(isObjectFactory) Then %>'<% End If%>End If
 <% End If
 Next %>
+            Add(item)
         End If
-        
-        '	BLAKE:	Not sure if this shouldn't be contained within the If Not (cancel) statement?
-        Add(item)
-        
+<% If(Not RenderOptionalContent) Then %>        
+
         Return item
+<% End If %>

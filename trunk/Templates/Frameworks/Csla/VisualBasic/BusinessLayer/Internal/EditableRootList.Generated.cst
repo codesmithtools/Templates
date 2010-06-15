@@ -1,8 +1,9 @@
-<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X EditableRootList" %>
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableRootList" %>
 <%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="IsDirty" Template="..\..\Common\IsDirtyList.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="AddNewCore" Template="..\..\Common\ListAddNewCore.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
@@ -64,6 +65,14 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 <% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
 <% End If %>
+    #Region "Method Overrides"
+
+    Protected Overrides Function AddNewCore() As <% If (IsCSLA40) Then %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% Else %>Object<% End If %>
+<% RenderHelper(new AddNewCore(IncludeSilverlightSupport)) %>
+    End Function
+
+    #End Region
+
     #Region "Synchronous Factory Methods"
 
     Public Shared Function NewList() As <%= BusinessClassName %><%= Entity.GenericProperty %>
@@ -90,6 +99,14 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 #End If        
 
     #Region "Asynchronous Factory Methods"
+
+    Protected Overrides Sub AddNewCore() 
+<% RenderHelper(new AddNewCore(IncludeSilverlightSupport)) %>
+    End Sub
+
+    #End Region
+
+    #Region "Asynchronous Factory Methods"
         
     Public Shared Sub NewListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
         Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
@@ -114,24 +131,9 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     #End Region
 <% End If %>
 
-<% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
-    #Region "DataPortal partial methods"
-        
-    Partial Private Sub OnAddNewCore(ByRef item As <%= ChildBusinessClassName %><%= Entity.GenericProperty %>, ByRef cancel AsBoolean);
-	End Sub
-
-    #End Region
-    
-<% End If %>
-    #Region "Method Overrides"
-
-    Protected Overrides Function AddNewCore() As <% If (IsCSLA40) Then %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% Else %>Object<% End If %>
-<% RenderHelper(new AddNewCore()) %>
-    End Function
-
-    #End Region
-
 <% RenderHelper(New Exists()) %>
 
 <% RenderHelper(New IsDirty()) %>
+
+<% RenderHelper(New PartialMethods()) %>
 End Class

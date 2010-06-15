@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X Entities" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" OutputType="None" Debug="False" Inherits="QuickStart.EntityMasterCodeTemplate" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Entities" %>
 
 <%@ Assembly Name="CodeSmith.CustomProperties" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>

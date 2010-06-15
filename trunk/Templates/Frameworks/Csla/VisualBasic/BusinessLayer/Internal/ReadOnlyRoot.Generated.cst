@@ -1,9 +1,10 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X ReadOnlyRoot" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA ReadOnlyRoot" %>
 <%@ Register Name="CompositeKeyMethods" Template="..\..\Common\CompositeKeyMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Constructor" Template="..\..\Common\ConstructorReadOnly.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Exists" Template="..\..\Common\Exists.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="Properties" Template="..\..\Common\PropertiesReadOnly.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="QuickStart" Path="..\..\..\Common" %>
@@ -88,4 +89,6 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 <% RenderHelper(New Exists()) %>
 
 <% RenderHelper(New CompositeKeyMethods()) %>
+    
+<% RenderHelper(New PartialMethods()) %>
 End Class
