@@ -30,6 +30,21 @@ namespace QuickStart
         [DefaultValue("")]
         public string Location { get; set; }
 
+        [Optional]
+        [Category("2. Solution")]
+        [Description("The .NET Framework Version. If you use v40 then CSLA 4.0 will be used. If you use v35 then CSLA 3.8 will be used.")]
+        public FrameworkVersion FrameworkVersion
+        {
+            get
+            {
+                return CodeSmith.SchemaHelper.Configuration.Instance.FrameworkVersion;
+            }
+            set
+            {
+                CodeSmith.SchemaHelper.Configuration.Instance.FrameworkVersion = value;
+            }
+        }
+
         #endregion
 
         #region 3. Business Project
