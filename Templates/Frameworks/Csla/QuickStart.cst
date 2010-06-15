@@ -21,7 +21,7 @@ Description: Used to Quick Start Visual Studio Projects
 <%@ Import Namespace="System.IO" %>
 
 <%@ Property Name="IncludeInterfaceProject" Type="System.Boolean" Default="True" Category="5. Interface Project" Description="If true, the Interface Project will be included in the generated solution." %>
-<%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="True" Category="6. Test Project" Description="If true, the Test Project will be included in the generated solution." %>
+<%@ Property Name="IncludeTestProject" Type="System.Boolean" Default="False" Category="6. Test Project" Description="If true, the Test Project will be included in the generated solution." %>
 
 <% Generate(); %>
 

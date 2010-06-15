@@ -138,10 +138,12 @@ namespace CodeSmith.SchemaHelper
 
         internal string ValidateName(ColumnSchema column, string memberName)
         {
+            memberName = ValidateName(memberName);
+
             if (String.Compare(column.Table.ClassName(), memberName, true) == 0)
                 memberName = string.Format("{0}{1}", memberName, SingularMemberSuffix);
 
-            return ValidateName(memberName);
+            return memberName;
         }
 
         /// <summary>
