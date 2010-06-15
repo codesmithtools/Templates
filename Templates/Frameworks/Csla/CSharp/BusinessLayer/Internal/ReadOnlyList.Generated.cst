@@ -89,7 +89,7 @@ namespace <%= BusinessProjectName %>
         {
             DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal< <%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.FetchCompleted += handler;
-            dp.BeginFetch(new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>}));
+            dp.BeginFetch(new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
         }
         
 <% } %>
