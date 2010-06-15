@@ -1,7 +1,6 @@
-<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X ReadOnlyList" %>
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA ReadOnlyList" %>
 <%@ Register Name="DataPortalFetchList" Template="..\..\Common\DataPortalFetchList.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -42,8 +41,6 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 
         IsReadOnly = true
     End Sub
-    
-<% RenderHelper(New PartialMethods()) %>
 End Class
 <% If(IncludeSilverlightSupport) Then %>
 #End If

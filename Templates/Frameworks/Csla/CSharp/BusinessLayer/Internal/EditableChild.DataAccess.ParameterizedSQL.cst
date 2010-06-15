@@ -1,12 +1,11 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X EditableRoot" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableRoot" %>
 <%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildCreate" Template="..\..\Common\ChildCreate.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildFetch" Template="..\..\Common\ChildFetch.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildInsert" Template="..\..\Common\ChildInsert.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="ChildUpdate" Template="..\..\Common\ChildUpdate.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalDelete" Template="..\..\Common\ChildDelete.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="PartialMethods" Template="..\..\Common\ChildPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -125,8 +124,6 @@ namespace <%= BusinessProjectName %>
             MarkAsChild();
             MarkOld();
         }
-
-<% RenderHelper(new PartialMethods()); %>
     }
 }
 <% if(IncludeSilverlightSupport) { %>

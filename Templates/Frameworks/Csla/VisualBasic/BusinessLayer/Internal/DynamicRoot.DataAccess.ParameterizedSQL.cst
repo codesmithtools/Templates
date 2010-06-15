@@ -1,12 +1,11 @@
-<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X DynamicRoot" %>
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DynamicRoot" %>
 <%@ Register Name="MapDataReader" Template="..\..\Common\MapDataReader.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalCreate" Template="..\..\Common\DataPortalCreate.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalFetch" Template="..\..\Common\DataPortalFetch.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalInsert" Template="..\..\Common\DataPortalInsert.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalUpdate" Template="..\..\Common\DataPortalUpdate.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="DataPortalDelete" Template="..\..\Common\DataPortalDelete.ParameterizedSQL.cst" MergeProperties="False" ExcludeProperties="" %>
-<%@ Register Name="PartialMethods" Template="..\..\Common\DataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
@@ -83,8 +82,6 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 
         MarkOld()
     End Sub
-
-<% RenderHelper(New PartialMethods()) %>
 End Class
 <% If(IncludeSilverlightSupport) Then %>
 #End If

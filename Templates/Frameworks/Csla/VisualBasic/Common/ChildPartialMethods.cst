@@ -11,6 +11,9 @@
 <%@ Import Namespace="QuickStart" %>
     #Region "ChildPortal partial methods"
 
+<%If IncludeSilverlightSupport Then %>
+#If Not SILVERLIGHT Then
+<% End If %>
     Partial Private Sub OnChildCreating(ByRef cancel As Boolean)
     End Sub
     Partial Private Sub OnChildCreated()
@@ -41,5 +44,8 @@
     End Sub
     Partial Private Sub OnDeleted()
     End Sub
+<% If(IncludeSilverlightSupport) Then %>
+#End If
+<% End If %>
 
     #End Region

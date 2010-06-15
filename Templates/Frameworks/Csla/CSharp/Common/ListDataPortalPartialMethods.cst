@@ -11,6 +11,9 @@
 <%@ Import Namespace="QuickStart" %>
         #region DataPortal partial methods
 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria, ref bool cancel);
@@ -19,7 +22,9 @@
         partial void OnMapped();
         partial void OnUpdating(ref bool cancel);
         partial void OnUpdated();
-        
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
         partial void OnAddNewCore(ref <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item, ref bool cancel);
 
         #endregion

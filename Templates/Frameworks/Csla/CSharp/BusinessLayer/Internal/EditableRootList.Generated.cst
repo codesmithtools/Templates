@@ -1,8 +1,9 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA 3.8.X EditableRootList" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableRootList" %>
 <%@ Register Name="Exists" Template="..\..\Common\ExistsList.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="IsDirty" Template="..\..\Common\IsDirtyList.cst" MergeProperties="False" ExcludeProperties="" %>
 <%@ Register Name="AddNewCore" Template="..\..\Common\ListAddNewCore.cst" MergeProperties="False" ExcludeProperties="" %>
+<%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\..\Common" %>
@@ -68,6 +69,15 @@ namespace <%= BusinessProjectName %>
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
+        #region Method Overrides
+        
+        protected override <% if(IsCSLA40) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
+        {
+<% RenderHelper(new AddNewCore(IncludeSilverlightSupport)); %>
+        }
+        
+        #endregion
+
         #region Synchronous Factory Methods 
         
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> NewList()
@@ -94,6 +104,15 @@ namespace <%= BusinessProjectName %>
 <% if(IncludeSilverlightSupport) { %>
 #endif
 
+        #region Method Overrides
+
+        protected override void AddNewCore()
+        {
+<% RenderHelper(new AddNewCore(IncludeSilverlightSupport)); %>
+        }
+        
+        #endregion
+
         #region Asynchronous Factory Methods
         
 		public static void NewListAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
@@ -116,25 +135,11 @@ namespace <%= BusinessProjectName %>
         #endregion        
 
 <% } %>
-<% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
-        #region DataPortal partial methods
-        
-        partial void OnAddNewCore(ref <%= ChildBusinessClassName %><%= Entity.GenericProperty %> item, ref bool cancel);
-
-        #endregion
-
-<% } %>
-        #region Method Overrides
-        
-        protected override <% if(IsCSLA40) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
-        {
-<% RenderHelper(new AddNewCore()); %>
-        }
-        
-        #endregion
 
 <% RenderHelper(new IsDirty()); %>
 
 <% RenderHelper(new Exists()); %>
+
+<% RenderHelper(new PartialMethods()); %>
     }
 }

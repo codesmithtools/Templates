@@ -11,6 +11,9 @@
 <%@ Import Namespace="QuickStart" %>
         #region ChildPortal partial methods
 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
         partial void OnChildCreating(ref bool cancel);
         partial void OnChildCreated();
         partial void OnChildFetching(<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria, ref bool cancel);
@@ -26,5 +29,8 @@
         partial void OnDeleting(<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria, ref bool cancel);
         partial void OnDeleting(<%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria, SqlConnection connection, ref bool cancel);
         partial void OnDeleted();
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
 
         #endregion
