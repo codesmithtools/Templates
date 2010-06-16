@@ -70,7 +70,7 @@ namespace <%= BusinessProjectName %>
 
         protected override <% if(IsCSLA40) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
         {
-<% RenderHelper(new AddNewCore(IncludeSilverlightSupport)); %>
+<% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
         }
         
         #endregion
@@ -104,7 +104,7 @@ namespace <%= BusinessProjectName %>
 
         protected override void AddNewCore()
         {
-<% RenderHelper(new AddNewCore(IncludeSilverlightSupport)); %>
+<% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
         }
         
         #endregion
