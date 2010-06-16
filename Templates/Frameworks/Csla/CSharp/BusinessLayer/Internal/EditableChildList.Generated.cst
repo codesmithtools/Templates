@@ -118,14 +118,14 @@ namespace <%= BusinessProjectName %>
 <% } %>
         protected override <% if(IsCSLA40) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
         {
-<% RenderHelper(new AddNewCore(IncludeSilverlightSupport)); %>
+<% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
         }
 <% if(IncludeSilverlightSupport) { %>
 #endif
 
         protected override void AddNewCore()
         {
-<% RenderHelper(new AddNewCore(IncludeSilverlightSupport)); %>
+<% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
         }
 
 		protected void AddNewCoreAsync(EventHandler<DataPortalResult<object>> handler)
