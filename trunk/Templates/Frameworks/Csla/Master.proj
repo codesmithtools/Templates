@@ -15,7 +15,7 @@
 
   <PropertyGroup>
     <BuildConfiguration>Release</BuildConfiguration>
-    <DeployFolder>\\WEB\nightly\CSLA</DeployFolder>
+    <DeployFolder>\\WEB02\nightly\CSLA</DeployFolder>
   </PropertyGroup>
 
   <ItemGroup>

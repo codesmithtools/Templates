@@ -15,7 +15,7 @@
 
   <PropertyGroup>
     <BuildConfiguration>Release</BuildConfiguration>
-    <DeployFolder>\\WEB\nightly\Plinqo</DeployFolder>
+    <DeployFolder>\\WEB02\nightly\Plinqo</DeployFolder>
   </PropertyGroup>
 
   <ItemGroup>

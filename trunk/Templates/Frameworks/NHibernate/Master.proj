@@ -15,7 +15,7 @@
 
   <PropertyGroup>
     <BuildConfiguration>Release</BuildConfiguration>
-    <DeployFolder>\\WEB\nightly\NHibernate</DeployFolder>
+    <DeployFolder>\\WEB02\nightly\NHibernate</DeployFolder>
   </PropertyGroup>
 
   <ItemGroup>
