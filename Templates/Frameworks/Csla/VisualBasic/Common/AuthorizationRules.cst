@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -10,6 +10,10 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
     #Region "Authorization Rules"
+
+<% If(IncludeSilverlightSupport) Then %>
+#If Not SILVERLIGHT Then
+<% End If %>
 <% If(IsCSLA40) Then %>
     Protected Shared Sub AddObjectAuthorizationRules()
         'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"))
@@ -59,4 +63,7 @@
 End If %>
     End Sub
 
+<% If(IncludeSilverlightSupport) Then %>
+#End If
+<% End If %>
     #End Region

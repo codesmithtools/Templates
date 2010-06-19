@@ -11,6 +11,9 @@
 <%@ Import Namespace="QuickStart" %>
 #Region "Authorization Rules"
 
+<% If(IncludeSilverlightSupport) Then %>
+#If Not SILVERLIGHT Then
+<% End If %>
     Private Sub AddAuthorizationRules()
 <% If(IsCSLA40) Then %>
 	    'Csla.Rules.BusinessRules.AddRule(GetType(<%= BusinessClassName %>), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"))
@@ -58,4 +61,7 @@
 End If %>
     End Sub
 
+<% If(IncludeSilverlightSupport) Then %>
+#End If
+<% End If %>
     #End Region
