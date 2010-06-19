@@ -41,7 +41,11 @@ Imports Csla.Validation
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
 Imports Csla.Serialization
+#Else
+Imports System.Data.SqlClient
 #End If
+<% Else %>
+Imports System.Data.SqlClient
 <% End If %>
 
 <Serializable()> _
@@ -57,14 +61,14 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 
 <% RenderHelper(New Properties()) %>
 
-<% If(IncludeSilverlightSupport) Then %>
-#If Not SILVERLIGHT Then
-<% End If %>
     #Region "Synchronous Factory Methods"
 
     Friend Shared Function New<%= ChildBusinessClassName %><%= Entity.GenericProperty %>() As <%= ChildBusinessClassName %> 
         Return DataPortal.Create(Of <%= BusinessClassName %>)()
     End Function
+<% If(IncludeSilverlightSupport) Then %>
+#If Not SILVERLIGHT Then
+<% End If %>
 <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
 
     Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
@@ -74,11 +78,12 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
         Return DataPortal.FetchChild(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)(criteria)
     End Function
 <% Next %>
+<% If(IncludeSilverlightSupport) Then %>
+#End If
+<% End If %>
 
     #End Region
-<% If(IncludeSilverlightSupport) Then %>
-
-#End If        
+<% If(IncludeSilverlightSupport) Then %>     
 
     #Region "Asynchronous Factory Methods"
 
