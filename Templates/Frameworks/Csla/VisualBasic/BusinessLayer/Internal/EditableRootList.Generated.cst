@@ -120,7 +120,7 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     Public Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
         Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
         AddHandler dp.FetchCompleted, handler
-	
+
         Dim criteria As New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>()
 <%For Each member As Member in sc.Members %>
         criteria.<%= member.PropertyName %> = <%= member.VariableName %>
@@ -129,7 +129,13 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
         dp.BeginFetch(criteria)
     End Sub
 <% Next %> 
-        
+
+    Public Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
+        Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+        AddHandler dp.FetchCompleted, handler
+        dp.BeginFetch(New <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>())
+    End Sub
+
     #End Region
 <% End If %>
 

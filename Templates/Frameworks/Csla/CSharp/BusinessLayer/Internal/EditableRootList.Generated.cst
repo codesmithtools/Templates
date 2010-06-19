@@ -117,12 +117,12 @@ namespace <%= BusinessProjectName %>
 
         #region Asynchronous Factory Methods
         
-		public static void NewListAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
-		{
-			DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
-			dp.CreateCompleted += handler;
-			dp.BeginCreate();
-		}
+        public static void NewListAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        {
+            DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
+            dp.CreateCompleted += handler;
+            dp.BeginCreate();
+        }
 
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
@@ -133,8 +133,15 @@ namespace <%= BusinessProjectName %>
             dp.BeginFetch(new <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>});
         }
 <% } %>
-        
-        #endregion        
+
+        public static void GetAllAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        {
+            DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(new <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>());
+        }
+
+        #endregion
 
 <% } %>
 
