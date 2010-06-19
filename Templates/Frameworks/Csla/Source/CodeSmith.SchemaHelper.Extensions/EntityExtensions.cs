@@ -108,6 +108,19 @@ namespace CodeSmith.SchemaHelper
         /// <returns>Returns the select for the update parameterized sql.</returns>
         public static string BuildUpdateSelectStatement(this Entity entity)
         {
+            Member guidColumn = entity.PrimaryKey.KeyMember;
+            if (entity.HasGuidPrimaryKeyMember)
+            {
+                foreach (Member primaryKey in entity.PrimaryKey.KeyMembers)
+                {
+                    if (primaryKey.DataType == DbType.Guid.ToString())
+                    {
+                        guidColumn = primaryKey;
+                        break;
+                    }
+                }
+            }
+
             if (entity.HasIdentityMember && entity.HasRowVersionMember && entity.MembersNonIdentityPrimaryKeys.Count > 0)
             {
                 return string.Format("; SELECT {0}, {1} FROM [{2}].[{3}] WHERE {4} = {5}{4}",
@@ -135,6 +148,25 @@ namespace CodeSmith.SchemaHelper
                     entity.Table.Name,
                     entity.IdentityMember.ColumnName,
                     Configuration.Instance.ParameterPrefix);
+            }
+            if (entity.HasGuidPrimaryKeyMember && entity.HasRowVersionMember)
+            {
+                return string.Format("; SELECT {0}, {1} FROM [{2}].[{3}] WHERE {5} = {4}{5}",
+                                      entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),
+                                      entity.RowVersionMember.BuildDataBaseColumn(),
+                                      entity.Table.Owner,
+                                      entity.Table.Name,
+                                      Configuration.Instance.ParameterPrefix,
+                                      guidColumn.ColumnName);
+            }
+            if (entity.HasGuidPrimaryKeyMember)
+            {
+                return string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {4} = {3}{4}",
+                                      entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),
+                                      entity.Table.Owner,
+                                      entity.Table.Name,
+                                      Configuration.Instance.ParameterPrefix,
+                                      guidColumn.ColumnName);
             }
             if (entity.HasRowVersionMember)
             {
