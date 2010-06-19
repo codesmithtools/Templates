@@ -30,6 +30,7 @@ Option Explicit On
 Option Strict On
 
 Imports System
+Imports System.Data.SqlClient
 
 Imports Csla
 Imports Csla.Data
