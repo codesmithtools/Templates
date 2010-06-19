@@ -32,7 +32,11 @@ using Csla.Data;
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
 using Csla.Serialization;
+#else
+using System.Data.SqlClient;
 #endif
+<% } else { %>
+using System.Data.SqlClient;
 <% } %>
 
 #endregion

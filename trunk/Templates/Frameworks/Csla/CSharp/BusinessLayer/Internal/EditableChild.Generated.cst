@@ -40,7 +40,11 @@ using Csla.Validation;
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
 using Csla.Serialization;
+#else
+using System.Data.SqlClient;
 #endif
+<% } else { %>
+using System.Data.SqlClient;
 <% } %>
 
 #endregion
@@ -59,15 +63,15 @@ namespace <%= BusinessProjectName %>
 
 <% RenderHelper(new Properties()); %>
 
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
-<% } %>
         #region Synchronous Factory Methods 
 
         internal static <%= ChildBusinessClassName %><%= Entity.GenericProperty %> New<%= ChildBusinessClassName %>()
         {
             return DataPortal.CreateChild< <%= ChildBusinessClassName %><%= Entity.GenericProperty %> >();
         }
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
 <% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
 
         internal static <%= ChildBusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
@@ -76,11 +80,13 @@ namespace <%= BusinessProjectName %>
                 new <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> {<%= sc.Members.BuildObjectInitializer() %>});
         }
 <% } %>
-
-        #endregion
 <% if(IncludeSilverlightSupport) { %>
 #endif
-        
+<% } %>
+
+        #endregion
+
+<% if(IncludeSilverlightSupport) { %>
         #region Asynchronous Factory Methods
         
         internal static void New<%= ChildBusinessClassName %>Async(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)

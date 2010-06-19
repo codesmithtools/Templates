@@ -33,14 +33,12 @@ Imports Csla.Data
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
 Imports Csla.Serialization
+#Else
+Imports System.Data.SqlClient
 #End If
-<% End If %>
-<% If(IsCSLA40) Then %>
-Imports Csla.Rules
 <% Else %>
-Imports Csla.Validation
+Imports System.Data.SqlClient
 <% End If %>
-
 
 <Serializable()> _
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>

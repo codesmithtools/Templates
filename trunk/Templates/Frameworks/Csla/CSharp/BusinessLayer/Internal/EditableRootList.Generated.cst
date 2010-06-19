@@ -73,7 +73,7 @@ namespace <%= BusinessProjectName %>
         
         protected override <% if(IsCSLA40) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
         {
-<% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
+<% RenderHelper(new AddNewCore()); %>
         }
         
         #endregion
@@ -102,7 +102,7 @@ namespace <%= BusinessProjectName %>
         #endregion
 
 <% if(IncludeSilverlightSupport) { %>
-#endif
+#else
 
         #region Method Overrides
 
@@ -112,6 +112,8 @@ namespace <%= BusinessProjectName %>
         }
         
         #endregion
+
+#endif
 
         #region Asynchronous Factory Methods
         

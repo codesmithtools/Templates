@@ -33,7 +33,11 @@ using Csla;
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
 using Csla.Serialization;
+#else
+using Csla.Data;
 #endif
+<% } else { %>
+using Csla.Data;
 <% } %>
 
 #endregion
@@ -118,16 +122,16 @@ namespace <%= BusinessProjectName %>
 <% } %>
         protected override <% if(IsCSLA40) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
         {
-<% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
+<% RenderHelper(new AddNewCore()); %>
         }
 <% if(IncludeSilverlightSupport) { %>
-#endif
+#else
 
         protected override void AddNewCore()
         {
 <% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
         }
-
+#endif
 		protected void AddNewCoreAsync(EventHandler<DataPortalResult<object>> handler)
 		{
 			<%= BusinessProjectName %>.<%= ChildBusinessClassName %><%= Entity.GenericProperty %>.New<%= ChildBusinessClassName %>Async((o, e) =>
