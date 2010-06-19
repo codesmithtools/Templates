@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -11,6 +11,9 @@
 <%@ Import Namespace="QuickStart" %>
         #region Authorization Rules
 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
         protected void AddAuthorizationRules()
         {
 <% if(IsCSLA40) { %>
@@ -57,6 +60,8 @@
 
 <% } } %>
         }
-
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
         #endregion
 
