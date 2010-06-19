@@ -29,6 +29,7 @@ Option Strict On
 Imports System
 
 Imports Csla
+Imports Csla.Data
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
 Imports Csla.Serialization

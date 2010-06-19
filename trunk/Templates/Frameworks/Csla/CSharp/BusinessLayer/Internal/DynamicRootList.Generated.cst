@@ -28,6 +28,7 @@
 using System;
 
 using Csla;
+using Csla.Data;
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
 using Csla.Serialization;
