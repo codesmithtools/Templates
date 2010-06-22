@@ -3,10 +3,10 @@
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
 
   <PropertyGroup>
-    <Major>4</Major>
+    <Major>5</Major>
     <Minor>0</Minor>
     <Build>0</Build>
-    <Revision>1</Revision>
+    <Revision>0</Revision>
 
     <BindMinor>0</BindMinor>
     <BindBuild>0</BindBuild>
@@ -78,6 +78,9 @@
   <Target Name="Compile" DependsOnTargets="Libaries">
     <MSBuild Projects="Source\Plinqo.sln"
              Properties="Configuration=$(BuildConfiguration)" />
+    
+    <MSBuild Projects="Source\CodeSmith.Data\CodeSmith.Data.csproj"
+             Properties="Configuration=$(BuildConfiguration);TargetFrameworkVersion=v3.5;DefineConstants=TRACE" />
   </Target>
 
   <ItemGroup>
@@ -87,8 +90,10 @@
 
   <ItemGroup>
     <CommitFiles Include="Common\CodeSmith.CodeParser.dll" />
-    <CommitFiles Include="Common\CodeSmith.Data.dll" />
-    <CommitFiles Include="Common\CodeSmith.Data.xml" />
+    <CommitFiles Include="Common\v3.5\CodeSmith.Data.dll" />
+    <CommitFiles Include="Common\v3.5\CodeSmith.Data.xml" />
+    <CommitFiles Include="Common\v4.0\CodeSmith.Data.dll" />
+    <CommitFiles Include="Common\v4.0\CodeSmith.Data.xml" />
     <CommitFiles Include="Common\CodeSmith.Data.chm" />
     <CommitFiles Include="Common\CodeSmith.InsertClassMergeStrategy.dll" />
     <CommitFiles Include="Common\Dbml.dll" />
@@ -110,10 +115,10 @@
   </Target>
 
   <Target Name="Commit" DependsOnTargets="Compile">
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="GoogleUser">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\BuildServer" ValueName="GoogleUser">
       <Output TaskParameter="Value" PropertyName="GoogleUser" />
     </RegistryRead>
-    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\CodeSmith" ValueName="GooglePassword">
+    <RegistryRead KeyName="HKEY_LOCAL_MACHINE\SOFTWARE\BuildServer" ValueName="GooglePassword">
       <Output TaskParameter="Value" PropertyName="GooglePassword" />
     </RegistryRead>
 

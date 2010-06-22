@@ -28,4 +28,12 @@ namespace QuickStartUtils
         ManagerClasses,
         QueryExtensions
     }
+
+    public enum FrameworkVersion
+    {
+        v35,
+        v40
+    }
+
+
 }

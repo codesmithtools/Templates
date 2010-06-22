@@ -135,7 +135,12 @@ namespace CodeSmith.Data.Linq
         /// <returns></returns>
         public static DbCommand GetCommand(this DataContext context, IQueryable query, bool isForTranslate)
         {
+            // HACK: GetCommand will not work with transactions and the L2SProfiler.
+            DbTransaction tran = context.Transaction;
+            context.Transaction = null;
             var dbCommand = context.GetCommand(query);
+            dbCommand.Transaction = tran;
+            context.Transaction = tran;
 
             if (!isForTranslate)
                 return dbCommand;
@@ -167,6 +172,22 @@ namespace CodeSmith.Data.Linq
             return commandObject as DbCommand;
         }
 
+        /// <summary>
+        /// Starts a database transaction.
+        /// </summary>
+        /// <param name="dataContext">The data context.</param>
+        /// <returns>An object representing the new transaction.</returns>
+        public static DbTransaction BeginTransaction(this DataContext dataContext)
+        {
+            return BeginTransaction(dataContext, IsolationLevel.Unspecified);
+        }
+
+        /// <summary>
+        /// Starts a database transaction with the specified isolation level. 
+        /// </summary>
+        /// <param name="dataContext">The data context.</param>
+        /// <param name="isolationLevel">The isolation level for the transaction.</param>
+        /// <returns>An object representing the new transaction.</returns>
         public static DbTransaction BeginTransaction(this DataContext dataContext, IsolationLevel isolationLevel)
         {
             if (dataContext == null)

@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Hosting;
+using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
 
 namespace CodeSmith.Data.Audit
@@ -54,11 +55,16 @@ namespace CodeSmith.Data.Audit
             if (dataContext == null)
                 throw new ArgumentNullException("dataContext");
 
+            ChangeSet changeSet = dataContext.GetChangeSet();
+            return CreateAuditLog(dataContext, changeSet);
+        }
+
+        public static AuditLog CreateAuditLog(DataContext dataContext, ChangeSet changeSet)
+        {
             var auditLog = new AuditLog();
             auditLog.Date = DateTime.Now;
             auditLog.Username = GetCurrentUserName();
 
-            ChangeSet changeSet = dataContext.GetChangeSet();
             AddAuditEntities(dataContext, auditLog, AuditAction.Delete, changeSet.Deletes);
             AddAuditEntities(dataContext, auditLog, AuditAction.Insert, changeSet.Inserts);
             AddAuditEntities(dataContext, auditLog, AuditAction.Update, changeSet.Updates);
@@ -345,11 +351,10 @@ namespace CodeSmith.Data.Audit
 
                 // get the fkey table
                 var fkeyTable = dataContext.GetTable(association.OtherType.Type);
-                var q = fkeyTable
+                var value = fkeyTable
                     .Where(sb.ToString(), fkeyValues.ToArray())
-                    .Select(childDisplayMember.Name);
-
-                object value = q.Cast<object>().FirstOrDefault();
+                    .Select(childDisplayMember.Name)
+                    .FromCacheFirstOrDefault();
 
                 return GetValue(childDisplayMember.Member,
                     GetUnderlyingType(childDisplayMember.Type),

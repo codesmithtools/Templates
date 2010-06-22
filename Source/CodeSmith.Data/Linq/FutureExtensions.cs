@@ -64,6 +64,24 @@ namespace CodeSmith.Data.Linq
         /// </summary>
         /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
         /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <param name="profileName">Name of the cache profile to use.</param>
+        /// <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+        /// <returns>
+        /// An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
+        /// </returns>
+        /// <seealso cref="T:CodeSmith.Data.Linq.FutureQuery`1"/>
+        public static FutureQuery<T> FutureCache<T>(this IQueryable<T> source, string profileName
+            , params string[] sqlCacheDependencyTableNames)
+        {
+            CacheSettings cacheSettings = CacheManager.GetProfile(profileName).AddCacheDependency(source, sqlCacheDependencyTableNames);
+            return FutureCache(source, cacheSettings);
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
         /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
         /// <returns>
         /// An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
@@ -72,6 +90,24 @@ namespace CodeSmith.Data.Linq
         public static FutureQuery<T> FutureCache<T>(this IQueryable<T> source, int duration)
         {
             return FutureCache(source, new CacheSettings(duration));
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+        /// <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+        /// <returns>
+        /// An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements from the input sequence.
+        /// </returns>
+        /// <seealso cref="T:CodeSmith.Data.Linq.FutureQuery`1"/>
+        public static FutureQuery<T> FutureCache<T>(this IQueryable<T> source, int duration,
+            params string[] sqlCacheDependencyTableNames)
+        {
+            return FutureCache(source, new CacheSettings(duration)
+                .AddCacheDependency(source, sqlCacheDependencyTableNames));
         }
 
         /// <summary>
@@ -144,6 +180,39 @@ namespace CodeSmith.Data.Linq
         /// </summary>
         /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
         /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <param name="profileName">Name of the cache profile to use.</param>
+        /// <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+        /// <returns>
+        /// An instance of <see cref="FutureCount"/> that contains the result of the query.
+        /// </returns>
+        /// <seealso cref="T:CodeSmith.Data.Linq.FutureCount"/>
+        public static FutureCount FutureCacheCount<T>(this IQueryable<T> source, string profileName, params string[] sqlCacheDependencyTableNames)
+        {
+            CacheSettings cacheSettings = CacheManager.GetProfile(profileName).AddCacheDependency(source, sqlCacheDependencyTableNames);
+            return FutureCacheCount(source, cacheSettings);
+        }
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+        /// <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+        /// <returns>
+        /// An instance of <see cref="FutureCount"/> that contains the result of the query.
+        /// </returns>
+        /// <seealso cref="T:CodeSmith.Data.Linq.FutureCount"/>
+        public static FutureCount FutureCacheCount<T>(this IQueryable<T> source, int duration
+            , params string[] sqlCacheDependencyTableNames)
+        {
+            return FutureCacheCount(source, new CacheSettings(duration).AddCacheDependency(source, sqlCacheDependencyTableNames));
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
         /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
         /// <returns>
         /// An instance of <see cref="FutureCount"/> that contains the result of the query.
@@ -153,7 +222,6 @@ namespace CodeSmith.Data.Linq
         {
             return FutureCacheCount(source, new CacheSettings(duration));
         }
-
         /// <summary>
         /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
         /// </summary>
@@ -224,6 +292,24 @@ namespace CodeSmith.Data.Linq
         /// </summary>
         /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
         /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <param name="profileName">Name of the cache profile to use.</param>
+        /// <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+        /// <returns>
+        /// An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
+        /// </returns>
+        /// <seealso cref="T:CodeSmith.Data.Linq.FutureValue`1"/>
+        public static FutureValue<T> FutureCacheFirstOrDefault<T>(this IQueryable<T> source, string profileName
+            , params string[] sqlCacheDependencyTableNames)
+        {
+            CacheSettings cacheSettings = CacheManager.GetProfile(profileName).AddCacheDependency(source, sqlCacheDependencyTableNames);
+            return FutureCacheFirstOrDefault(source, cacheSettings);
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
         /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
         /// <returns>
         /// An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
@@ -232,6 +318,23 @@ namespace CodeSmith.Data.Linq
         public static FutureValue<T> FutureCacheFirstOrDefault<T>(this IQueryable<T> source, int duration)
         {
             return FutureCacheFirstOrDefault(source, new CacheSettings(duration));
+        }
+
+        /// <summary>
+        /// Provides for defering the execution of the <paramref name="source"/> query to a batch of future queries.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">An <see cref="T:System.Linq.IQueryable`1"/> to add to the batch of future queries.</param>
+        /// <param name="duration">The amount of time, in seconds, that a cache entry is to remain in the output cache.</param>
+        /// <param name="sqlCacheDependencyTableNames">The table names for which to add SQL Cache Dependencies</param>
+        /// <returns>
+        /// An instance of <see cref="T:CodeSmith.Data.Linq.FutureValue`1"/> that contains the result of the query.
+        /// </returns>
+        /// <seealso cref="T:CodeSmith.Data.Linq.FutureValue`1"/>
+        public static FutureValue<T> FutureCacheFirstOrDefault<T>(this IQueryable<T> source, int duration
+            , params string[] sqlCacheDependencyTableNames)
+        {
+            return FutureCacheFirstOrDefault(source, new CacheSettings(duration).AddCacheDependency(source, sqlCacheDependencyTableNames));
         }
 
         /// <summary>
@@ -252,7 +355,7 @@ namespace CodeSmith.Data.Linq
             // make sure to only get the first value
             var firstQuery = source.Take(1);
 
-            IFutureContext db = GetFutureContext(source); 
+            IFutureContext db = GetFutureContext(source);
             var future = new FutureValue<T>(firstQuery, db.ExecuteFutureQueries, cacheSettings);
             db.FutureQueries.Add(future);
             return future;

@@ -129,7 +129,7 @@ namespace QuickStartUtils
             }
         }
 
-        public static string ModifyConnectionString(string connectionString)
+        public static string EnsureMultipleResultSets(string connectionString)
         {
             if (connectionString.Contains("MultipleActiveResultSets"))
                 return connectionString;

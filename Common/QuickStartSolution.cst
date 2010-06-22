@@ -3,17 +3,34 @@
 <%@ Import Namespace="System.Collections.Generic" %>
 <%@ Import Namespace="QuickStartUtils" %>
 <%@ Property Name="SolutionItems" Type="List<SolutionItem>" Optional="False" Category="Projects" Description="" %>
-<%@ Property Name="Language" Type="LanguageEnum" Default="CSharp" Optional="False" Category="1.Project" Description="Language the project will be in." %>
+<%@ Property Name="Language" Type="LanguageEnum" 
+    Default="CSharp" Optional="False" Category="1.Project" 
+    Description="Language the project will be in." %>
+<%@ Property Name="Framework" Type="FrameworkVersion" 
+    Default="v40" Optional="False" Category="1.Project" 
+    Description="The .net Framework version." %>
+<%@ Property Name="Location" Type="System.String" 
+    Default="" Optional="True" Category="1.Project" 
+    Description="This is the path to the Solution location." %>
 
+<% if (Framework == FrameworkVersion.v40) { %>
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+<% } else { %>
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
+<% } %>
 <% foreach(SolutionItem solutionItem in SolutionItems) { 
-	if(solutionItem.Website) { %>
+    string path = solutionItem.Path;
+    if (!string.IsNullOrEmpty(Location))    
+        path = CodeSmith.Engine.Utility.PathUtil.RelativePathTo(Location, path);
+    
+	if (solutionItem.Website) { %>
 Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Name %>\", "{<%= solutionItem.GuidString %>}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFramework = "3.5"
+		TargetFramework = <%= Framework == FrameworkVersion.v35 ? "3.5" : "4.0" %>
 		<% foreach(SolutionItem item in solutionItem.ProjectReferences) { %>
-		ProjectReferences = "{<%=item.Guid.ToString()%>}|<%=item.Name%>.dll;"
+		ProjectReferences = "<%=item.Guid.ToString("B")%>|<%=item.Name%>.dll;"
 		<% } %>
 		Debug.AspNetCompiler.VirtualPath = "/<%= solutionItem.Name %>"
 		Debug.AspNetCompiler.PhysicalPath = "<%= solutionItem.Name %>\"
@@ -32,9 +49,8 @@ Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>"
 		VWDPort = "33693"
 		DefaultWebSiteLanguage = <%= solutionItem.Language == LanguageEnum.CSharp ? "Visual C#" : "Visual Basic" %>
 	EndProjectSection
-	<% } 
-	else {%>
-Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= solutionItem.Path %>", "{<%= solutionItem.GuidString %>}"
+	<% } else {%>
+Project("{<%= solutionItem.LanguageGuidString %>}") = "<%= solutionItem.Name %>", "<%= path %>", "{<%= solutionItem.GuidString %>}"
 	<% } %>
 EndProject
 <% } %>

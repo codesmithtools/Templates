@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using CodeSmith.Engine;
 using SchemaExplorer;
@@ -16,49 +13,87 @@ namespace QuickStartUtils
         }
 
         public DatabaseSchema SourceDatabase { get; set; }
-        public String Location { get; set; }
-        public String SolutionName { get; set; }
+
+        public string Location { get; set; }
+        public string WorkingDirectory { get; set; }
+
+        public string SolutionName { get; set; }
+        public string DataProjectName { get; set; }
+        public string InterfaceProjectName { get; set; }
+        public string TestProjectName { get; set; }
+
         public LanguageEnum Language { get; set; }
         public ProjectTypeEnum ProjectType { get; set; }
+
         public bool IncludeDataServices { get; set; }
-        public String DataProjectName { get; set; }
-        public bool CopyTemplatesToFolder { get; set; }
-        public String InterfaceProjectName { get; set; }
-        public String TestProjectName { get; set; }
         public bool IncludeTestProject { get; set; }
-        public CodeTemplate CodeTemplate { get; set; }
+        public bool CopyTemplatesToFolder { get; set; }
+        
         public string WebSkin { get; set; }
         public QueryPatternEnum QueryPattern { get; set; }
+        public FrameworkVersion FrameworkVersion { get; set; }
+
+        public string FrameworkFolder
+        {
+            get { return (FrameworkVersion == FrameworkVersion.v35) ? "v3.5" : "v4.0"; }
+        }
+
+        public string FrameworkString
+        {
+            get { return (FrameworkVersion == FrameworkVersion.v35) ? "3.5" : "4.0"; }
+        }
 
         public string LanguageFolder
         {
-            get { return (this.Language == LanguageEnum.CSharp) ? "CSharp" : "VisualBasic"; }
+            get { return (Language == LanguageEnum.CSharp) ? "CSharp" : "VisualBasic"; }
         }
+
         public string LanguageAppendage
         {
-            get { return (this.Language == LanguageEnum.CSharp) ? "cs" : "vb"; }
+            get { return (Language == LanguageEnum.CSharp) ? "cs" : "vb"; }
         }
-        public string FileName
+
+        private string _zipFileFolder;
+
+        public string ZipFileFolder
         {
             get
             {
-                string projectTypeFileName;
-                switch (ProjectType)
+                if (string.IsNullOrEmpty(_zipFileFolder))
                 {
-                    default:
-                    case ProjectTypeEnum.DynamicDataWebApp:
-                        projectTypeFileName = "DynamicDataLinqToSqlWebApplication";
-                        break;
-                    case ProjectTypeEnum.DynamicDataWebSite:
-                        projectTypeFileName = "DynamicDataLinqToSqlWebSite";
-                        break;
+                    _zipFileFolder = Path.Combine(WorkingDirectory, "Common");
+                    _zipFileFolder = Path.Combine(_zipFileFolder, FrameworkFolder);
+                    _zipFileFolder = Path.Combine(_zipFileFolder, LanguageFolder);
                 }
-                return projectTypeFileName;
+
+                return _zipFileFolder;
             }
         }
-        public string ZipFileFolder
+
+        private string _databaseName;
+
+        public string DatabaseName
         {
-            get { return Path.Combine(CodeTemplate.CodeTemplateInfo.DirectoryName, Path.Combine("Common", LanguageFolder)); }
+            get
+            {
+                if (string.IsNullOrEmpty(_databaseName))
+                    _databaseName = StringUtil.ToPascalCase(SourceDatabase.Database.Name);
+
+                return _databaseName;
+            }
+        }
+
+        private string _dataContextName;
+        public string DataContextName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_dataContextName))
+                    _dataContextName = DatabaseName + "DataContext";
+
+                return _dataContextName;
+            }
+            set { _dataContextName = value; }
         }
     }
 }

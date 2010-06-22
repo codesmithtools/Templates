@@ -32,7 +32,7 @@
 
 <p>PLINQO, which stands for Professional LINQ to Objects, is a collection of CodeSmith 
 templates that are meant to replace and extend the LINQ to SQL designers that are 
-included with Visual Studio 2008.</p>
+included with Visual Studio.</p>
 
 <p>Go learn more about Plinqo even faster, please check out our Video Tutorials!<br>
 <a href="http://codesmithtools.com/video/plinqo-part-1-quick-start.html">Plinqo Part 1: The Quick Start</a><br>
@@ -47,7 +47,7 @@ included with Visual Studio 2008.</p>
 		<li>Ability to automatically remove object prefix and suffixes (ie. tbl_ 
 		and usp_).</li>
 		<li>Ability to standardize object names produced from database tables.</li>
-		<li>Dbml file can still be customized with the normal Visual Studio 2008 
+		<li>Dbml file can still be customized with the normal Visual Studio 
 		designer.</li>
 		<li>Dbml file can be refreshed based on the current database schema without 
 		losing customizations. <em>(See Safe Attributes)</em></li>
@@ -126,7 +126,7 @@ templates over the Visual Studio designer. Here is a list of the main reasons:</
 <h2><a title="DoItYourself" name="DoItYourself">Do It Yourself</a></h2>
 <p>Use the following steps to get started using the Linq to Sql templates.</p>
 <ol>
-	<li>Create a new Class Library project in Visual Studio 2008.</li>
+	<li>Create a new Class Library project in Visual Studio.</li>
 	<li>Add a new CodeSmith project file to the Visual Studio project.<br />
 	</li>
 	<li>Add a new Output to the project file for the
@@ -671,6 +671,30 @@ routing.</p>
 </ul>
 <h2>History</h2>
 <ul>
+	<li>Release 5.0
+	<ul>
+		<li>Added Visual Studio 2010 and .NET 4 Support</li>
+		<li>Updated QuickStart with latest Dynamic Data and DataServices</li>
+		<li>Added SQLCacheDependancy Support</li>
+		<li>Added IQueryable Cache Extensions</li>
+		<li>Added Include extension for advanced eager loading </li>
+		<li>Improved AuditLog, now includes updates after SubmitChanges</li>
+		<li>Fixed bug in CacheManager where default profile did not load properly</li>
+		<li>Added override RuleManager.Run override that populates the TrackedObject.Original</li>
+		<li>Fixed bug in AuditLog</li>
+		<li>Fixed bugs in VB Quick Start</li>
+		<li>Added DataContextName to QuickStart.cst</li>
+		<li>Fixed Managers didn't have the same access modifier as entities</li>
+		<li>Fixed bug in GetByKey function in VB</li>
+		<li>Fixed invalid cast exception for Range attribute on short properties</li>
+		<li>Fixed bug in ExecuteFutureQueries when no queries were loaded</li>
+		<li>Fixed bug in Manager when column didn't exist </li>
+		<li>Added logic to skip columns of type 'hierarchyid'</li>
+		<li>Added work around for L2S Profiler not working with transactions</li>
+		<li>Fixed bug where Metadata property types did not match up with Enums</li>
+		<li>Added BeginTransaction with no overload</li>
+	</ul>
+	</li>
 	<li>Release 4.0.1
 	<ul>
 		<li class="style1">Change to argument order of operators to make it more 
