@@ -39,7 +39,7 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
-         private void Child_Fetch(<%= ChildBusinessClassName %>Criteria criteria<%= Entity.GenericProperty %>)
+        private void Child_Fetch(<%= ChildBusinessClassName %>Criteria criteria<%= Entity.GenericProperty %>)
         {
 <% RenderHelper(new ChildFetch()); %>
         }
