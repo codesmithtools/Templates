@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Linq;
 using System.Linq;
 using CodeSmith.Data.Attributes;
+using CodeSmith.Data.Audit;
 using CodeSmith.Data.Rules.Validation;
 
 namespace CodeSmith.Data.Rules
@@ -302,13 +303,38 @@ namespace CodeSmith.Data.Rules
         /// </returns>
         public bool Run(object entity, bool modified)
         {
-            TrackedObject trackedObject = new TrackedObject();
+            var trackedObject = new TrackedObject
+            {
+                Current = entity,
+                IsNew = !modified,
+                IsDeleted = false,
+                IsChanged = modified
+            };
 
-            trackedObject.Current = entity;
-            trackedObject.IsNew = !modified;
-            trackedObject.IsDeleted = false;
-            trackedObject.IsChanged = modified;
+            return Run(trackedObject);
+        }
 
+        /// <summary>
+        /// Run the rules for the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity to run validation for.</param>
+        /// <param name="db">The DataContext to which the entity is attached.</param>
+        /// <returns></returns>
+        public bool Run(object entity, DataContext db)
+        {
+            var audit = AuditManager.CreateAuditLog(db);
+            var auditEntity = audit.Entities.FirstOrDefault(e => e.Current == entity);
+            if (auditEntity == null)
+                return Run(entity);
+
+            var trackedObject = new TrackedObject
+            {
+                Current = auditEntity.Current,
+                Original = auditEntity.Original,
+                IsNew = auditEntity.Action == AuditAction.Insert,
+                IsDeleted = auditEntity.Action == AuditAction.Delete,
+                IsChanged = auditEntity.Action == AuditAction.Update
+            };
             return Run(trackedObject);
         }
 

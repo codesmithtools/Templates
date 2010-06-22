@@ -7,7 +7,8 @@ namespace LinqToSqlShared.Generator
     public enum FrameworkEnum
     {
         v35 = 1,
-        v35_SP1 = 2
+        v35_SP1 = 2,
+        v40 = 3
     }
 
     public enum TableNamingEnum

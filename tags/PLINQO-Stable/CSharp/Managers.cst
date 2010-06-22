@@ -90,9 +90,14 @@
         CreateDataContextManagerClass(database, databaseManager);
         CreateEntityManagerClasses(database, databaseManager);
         
-        this.RegisterReference(Path.GetFullPath(Path.Combine(
-            this.CodeTemplateInfo.DirectoryName,
-            @"..\Common\CodeSmith.Data.dll")));
+        if (this.Framework == FrameworkEnum.v40)
+            this.RegisterReference(Path.GetFullPath(Path.Combine(
+                this.CodeTemplateInfo.DirectoryName,
+                "..\\Common\\v4.0\\CodeSmith.Data.dll")));
+        else
+            this.RegisterReference(Path.GetFullPath(Path.Combine(
+                this.CodeTemplateInfo.DirectoryName,
+                "..\\Common\\v3.5\\CodeSmith.Data.dll")));
     }
     
     public void CreateEntityManagerClasses(Database database, DataManager dataManager)
@@ -112,21 +117,21 @@
             Stopwatch watch = Stopwatch.StartNew();
 
             string className = manager.ManagerName;
-            
+            Table table = database.Tables[manager.TableName];
+
             string parentFileName = className + ".cs";
             parentFileName = Path.Combine(ManagerDirectory, parentFileName);
 
             if (!File.Exists(parentFileName))
             {
                 p.ClassName = className;
+                p.Table = table;
                 Response.WriteLine(parentFileName);
                 p.RenderToFile(parentFileName, false);
             }
             
             string fileName = className + ".Generated.cs";
             fileName = Path.Combine(ManagerDirectory, fileName);
-            
-            Table table = database.Tables[manager.TableName];
             
             Debug.WriteLine(string.Format("Creating Entity Manager Class '{0}' ...", className));
             t.EntityManager = manager;

@@ -359,6 +359,7 @@ namespace CodeSmith.Data.Caching
             string cleanName = Regex.Replace(group, @"\W+", "");
             return "g_" + cleanName;
         }
+
         private static T Convert<T>(object data)
         {
             if (data == null)

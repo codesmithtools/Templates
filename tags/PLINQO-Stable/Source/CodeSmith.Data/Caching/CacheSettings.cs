@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Caching;
+using System.Collections.Generic;
+using CodeSmith.Data.Linq;
+using System.Data.Linq;
 
 namespace CodeSmith.Data.Caching
 {
@@ -263,6 +267,84 @@ namespace CodeSmith.Data.Caching
         {
             settings.CacheDependency = cacheDependency;
             return settings;
+        }
+
+        public static CacheSettings AddCacheDependency(this CacheSettings settings, CacheDependency cacheDependency)
+        {
+            if (settings.CacheDependency == null)
+                settings.CacheDependency = cacheDependency;
+            else if (settings.CacheDependency is AggregateCacheDependency)
+                (settings.CacheDependency as AggregateCacheDependency).Add(cacheDependency);
+            else
+            {
+                var dependencies = new AggregateCacheDependency();
+                dependencies.Add(settings.CacheDependency, cacheDependency);
+                settings.CacheDependency = dependencies;
+            }
+            return settings;
+        }
+
+        public static CacheSettings AddCacheDependency(this CacheSettings settings, params CacheDependency[] cacheDependencies)
+        {
+            return AddCacheDependency(settings, (IEnumerable<CacheDependency>)cacheDependencies);
+        }
+
+        public static CacheSettings AddCacheDependency(this CacheSettings settings, IEnumerable<CacheDependency> cacheDependencies)
+        {
+            if (cacheDependencies != null)
+            {
+                if (settings.CacheDependency is AggregateCacheDependency)
+                {
+                    var agregateDependency = settings.CacheDependency as AggregateCacheDependency;
+                    foreach (var dependency in cacheDependencies)
+                        agregateDependency.Add(dependency);
+                }
+                else
+                {
+                    var agregateDependency = new AggregateCacheDependency();
+                    if (settings.CacheDependency != null)
+                        agregateDependency.Add(settings.CacheDependency);
+                    
+                    foreach (var dependency in cacheDependencies)
+                        agregateDependency.Add(dependency);
+                    
+                    settings.CacheDependency = agregateDependency;
+                }
+            }
+            return settings;
+        }
+
+        public static CacheSettings AddCacheDependency(this CacheSettings settings, params SqlCacheDependency[] cacheDependencies)
+        {
+            return AddCacheDependency(settings, cacheDependencies.Cast<CacheDependency>());
+        }
+
+        public static CacheSettings AddCacheDependency(this CacheSettings settings, string databaseName, params string[] sqlCacheDependencyTableNames)
+        {
+            if (sqlCacheDependencyTableNames == null)
+                return settings;
+            
+            var cacheDependencies = sqlCacheDependencyTableNames.Select(t => new SqlCacheDependency(databaseName, t));
+            return AddCacheDependency(settings, cacheDependencies.Cast<CacheDependency>());
+        }
+
+        public static CacheSettings AddCacheDependency<T>(this CacheSettings settings, IQueryable<T> queryable, params string[] sqlCacheDependencyTableNames)
+        {
+            return AddCacheDependency(settings, queryable.GetDataContext().Connection.Database, sqlCacheDependencyTableNames);
+        }
+
+        public static CacheSettings AddCacheDependency(this CacheSettings settings, string databaseName, params ITable[] sqlCacheDependencyTables)
+        {
+            if (sqlCacheDependencyTables == null)
+                return settings;
+            
+            var cacheDependencies = sqlCacheDependencyTables.Select(t => new SqlCacheDependency(databaseName, t.TableName()));
+            return AddCacheDependency(settings, cacheDependencies.Cast<CacheDependency>());
+        }
+
+        public static CacheSettings AddCacheDependency<T>(this CacheSettings settings, IQueryable<T> queryable, params ITable[] sqlCacheDependencyTables)
+        {
+            return AddCacheDependency(settings, queryable.GetDataContext().Connection.Database, sqlCacheDependencyTables);
         }
 
         public static CacheSettings WithCacheItemRemovedCallback(this CacheSettings settings, CacheItemRemovedCallback cacheItemRemovedCallback)

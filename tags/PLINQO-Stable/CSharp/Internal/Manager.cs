@@ -25,6 +25,9 @@ namespace Manager
         {
             foreach (EntityManager manager in managerMapping.Managers)
             {
+                if (!database.Tables.Contains(manager.TableName))
+                    continue;
+
                 Table tableMapping = database.Tables[manager.TableName];
                 TableSchema table;
                 string[] parts = manager.TableName.Split('.');
@@ -40,9 +43,12 @@ namespace Manager
                 if (table.HasPrimaryKey)
                 {
                     ManagerMethod method = GetMethodFromColumns(tableMapping, table.PrimaryKey.MemberColumns);
-                    method.IsKey = true;
-                    if (!manager.Methods.Contains(method.NameSuffix))
-                        manager.Methods.Add(method);
+                    if (method != null)
+                    {
+                        method.IsKey = true;
+                        if (!manager.Methods.Contains(method.NameSuffix))
+                            manager.Methods.Add(method);
+                    }
                 }
 
                 GetIndexes(manager, tableMapping, table);
@@ -59,7 +65,7 @@ namespace Manager
                 columns.Add(column);
 
                 ManagerMethod method = GetMethodFromColumns(tableMapping, columns);
-                if (!manager.Methods.Contains(method.NameSuffix))
+                if (method != null && !manager.Methods.Contains(method.NameSuffix))
                     manager.Methods.Add(method);
 
                 columns.Clear();
@@ -71,6 +77,9 @@ namespace Manager
             foreach (IndexSchema index in table.Indexes)
             {
                 ManagerMethod method = GetMethodFromColumns(tableMapping, index.MemberColumns);
+                if (method == null)
+                    continue;
+
                 method.IsUnique = index.IsUnique;
 
                 if (!manager.Methods.Contains(method.NameSuffix))
@@ -83,12 +92,20 @@ namespace Manager
             ManagerMethod method = new ManagerMethod();
             method.EntityName = tableMapping.Type.Name;
             string methodName = string.Empty;
+            
             foreach (ColumnSchema column in columns)
             {
+                if (!tableMapping.Type.Columns.Contains(column.Name))
+                    continue;
+
                 Column columnMapping = tableMapping.Type.Columns[column.Name];
                 method.Columns.Add(columnMapping);
                 methodName += columnMapping.Member;
             }
+
+            if (method.Columns.Count == 0)
+                return null;
+
             method.NameSuffix = methodName;
             return method;
         }

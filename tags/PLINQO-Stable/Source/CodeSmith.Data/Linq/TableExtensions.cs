@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using System.Web.Caching;
 
 namespace CodeSmith.Data.Linq
 {
@@ -307,6 +308,28 @@ namespace CodeSmith.Data.Linq
             }
 
             return tableName;
+        }
+        
+        public static void EnableSqlCacheDependency<TEntity>(this Table<TEntity> table) where TEntity: class
+        {
+            Type entityType = typeof(TEntity);
+            MetaTable metaTable = table.Context.Mapping.GetTable(entityType);
+            SqlCacheDependencyAdmin.EnableTableForNotifications(table.Context.Connection.ConnectionString, metaTable.TableName);
+        }
+
+        public static string TableName<TEntity>(this Table<TEntity> table) where TEntity : class
+        {
+            Type entityType = typeof(TEntity);
+            MetaTable metaTable = table.Context.Mapping.GetTable(entityType);
+            
+            return metaTable.TableName;
+        }
+
+        public static string TableName(this ITable table)
+        {
+            MetaTable metaTable = table.Context.Mapping.GetTable(table.GetType().GetGenericArguments()[0]);
+
+            return metaTable.TableName;
         }
 
         private static void ValidateExpression(ITable table, Expression expression)
