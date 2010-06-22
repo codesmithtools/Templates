@@ -35,7 +35,7 @@ Imports Csla
 Imports Csla.Data
 
 Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-    Private Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>
+    Private Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>)
 <% RenderHelper(New ChildFetch()) %>
     End Sub
 
