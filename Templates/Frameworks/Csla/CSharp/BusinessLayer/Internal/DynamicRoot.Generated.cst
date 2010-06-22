@@ -30,7 +30,6 @@
 using System;
 
 using Csla;
-using Csla.Data;
 <% if(IsCSLA40) { %>
 using Csla.Rules;
 <% } else { %>
@@ -39,7 +38,11 @@ using Csla.Validation;
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
 using Csla.Serialization;
+#else
+using Csla.Data;
 #endif
+<% } else { %>
+using Csla.Data;
 <% } %>
 
 #endregion

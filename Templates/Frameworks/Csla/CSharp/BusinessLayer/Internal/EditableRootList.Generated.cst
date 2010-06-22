@@ -29,11 +29,14 @@
 using System;
 
 using Csla;
-using Csla.Data;
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
 using Csla.Serialization;
+#else
+using Csla.Data;
 #endif
+<% } else { %>
+using Csla.Data;
 <% } %>
 
 #endregion

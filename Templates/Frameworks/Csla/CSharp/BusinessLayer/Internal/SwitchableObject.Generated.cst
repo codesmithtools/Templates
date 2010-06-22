@@ -29,10 +29,8 @@
 #region Using declarations
 
 using System;
-using System.Data.SqlClient;
 
 using Csla;
-using Csla.Data;
 <% if(IsCSLA40) { %>
 using Csla.Rules;
 <% } else { %>
@@ -41,7 +39,13 @@ using Csla.Validation;
 <% if(IncludeSilverlightSupport) { %>
 #if SILVERLIGHT
 using Csla.Serialization;
+#else
+using Csla.Data;
+using System.Data.SqlClient;
 #endif
+<% } else { %>
+using Csla.Data;
+using System.Data.SqlClient;
 <% } %>
 
 #endregion
