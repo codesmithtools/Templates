@@ -51,7 +51,7 @@ Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
 
     #Region "Child_Insert"
 
-    Private Sub ChildInsert(ByVal connection as SqlConnection)
+    Private Sub Child_Insert(ByVal connection as SqlConnection)
 <% RenderHelper(New ChildInsert(), true) %>
     End Sub
 <% If (Entity.AssociatedManyToOne.Count > 0) Then
