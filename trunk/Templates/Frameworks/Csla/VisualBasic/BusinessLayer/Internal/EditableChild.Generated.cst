@@ -32,7 +32,6 @@ Option Strict On
 Imports System
 
 Imports Csla
-Imports Csla.Data
 <% If(IsCSLA40) Then %>
 Imports Csla.Rules
 <% Else %>
@@ -42,9 +41,11 @@ Imports Csla.Validation
 #If SILVERLIGHT Then
 Imports Csla.Serialization
 #Else
+Imports Csla.Data
 Imports System.Data.SqlClient
 #End If
 <% Else %>
+Imports Csla.Data
 Imports System.Data.SqlClient
 <% End If %>
 

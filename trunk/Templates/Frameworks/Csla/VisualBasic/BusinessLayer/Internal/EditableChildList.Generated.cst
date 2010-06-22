@@ -31,7 +31,6 @@ Imports System
 Imports System.Collections.Generic
 
 Imports Csla
-Imports Csla.Data
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
 Imports Csla.Serialization

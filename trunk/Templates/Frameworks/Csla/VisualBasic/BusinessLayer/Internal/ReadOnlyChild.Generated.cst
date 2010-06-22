@@ -29,14 +29,15 @@ Option Strict On
 Imports System
 
 Imports Csla
-Imports Csla.Data
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
 Imports Csla.Serialization
 #Else
+Imports Csla.Data
 Imports System.Data.SqlClient
 #End If
 <% Else %>
+Imports Csla.Data
 Imports System.Data.SqlClient
 <% End If %>
 

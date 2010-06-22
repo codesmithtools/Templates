@@ -27,6 +27,8 @@ Option Strict On
 
 Imports System
 Imports System.Collections.Generic
+
+Imports Csla
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
 Imports Csla.Serialization
@@ -36,9 +38,6 @@ Imports Csla.Data
 <% Else %>
 Imports Csla.Data
 <% End If %>
-
-Imports Csla
-Imports Csla.Data
 
 <Serializable()> _
 <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
