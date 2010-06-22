@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FE25E33F-95B9-453C-98DC-82DF44CED946}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LinqToSqlShared.DbmlObjectModel</RootNamespace>
+    <AssemblyName>Dbml</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Common\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Common\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AccessModifier.cs" />
+    <Compile Include="Association.cs" />
+    <Compile Include="AssociationCollection.cs" />
+    <Compile Include="AssociationKey.cs" />
+    <Compile Include="AutoSync.cs" />
+    <Compile Include="Cardinality.cs" />
+    <Compile Include="ClassModifier.cs" />
+    <Compile Include="Naming.cs" />
+    <Compile Include="TableFunctionParameterCollection.cs" />
+    <Compile Include="Column.cs" />
+    <Compile Include="ColumnCollection.cs" />
+    <Compile Include="Connection.cs" />
+    <Compile Include="ConnectionMode.cs" />
+    <Compile Include="Database.cs" />
+    <Compile Include="Dbml.cs" />
+    <Compile Include="DbmlConstant.cs" />
+    <Compile Include="DbmlDefaultValueAssigner.cs" />
+    <Compile Include="DbmlDefaultValueNullifier.cs" />
+    <Compile Include="DbmlDuplicator.cs" />
+    <Compile Include="DbmlReader.cs" />
+    <Compile Include="DbmlSerializer.cs" />
+    <Compile Include="DbmlVisitor.cs" />
+    <Compile Include="Error.cs" />
+    <Compile Include="Function.cs" />
+    <Compile Include="FunctionCollection.cs" />
+    <Compile Include="IProcessed.cs" />
+    <Compile Include="MemberModifier.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="PairAssociations.cs" />
+    <Compile Include="Parameter.cs" />
+    <Compile Include="ParameterCollection.cs" />
+    <Compile Include="ParameterDirection.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Return.cs" />
+    <Compile Include="SerializationMode.cs" />
+    <Compile Include="Strings.cs" />
+    <Compile Include="Table.cs" />
+    <Compile Include="TableCollection.cs" />
+    <Compile Include="TableFunction.cs" />
+    <Compile Include="TableFunctionParameter.cs" />
+    <Compile Include="TableFunctionReturn.cs" />
+    <Compile Include="Type.cs" />
+    <Compile Include="TypeCollection.cs" />
+    <Compile Include="TypeTableLookup.cs" />
+    <Compile Include="UpdateCheck.cs" />
+    <Compile Include="VerifyDbml.cs" />
+    <Compile Include="Version.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
