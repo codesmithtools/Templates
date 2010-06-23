@@ -30,6 +30,9 @@ namespace QuickStart
 
         public EntityCodeTemplate()
         {
+            DataAccessImplementation = DataAccessMethod.ParameterizedSQL;
+            UseLazyLoading = true;
+
             CleanExpressions = new StringCollection();
             IgnoreExpressions = new StringCollection();
         }
@@ -240,7 +243,7 @@ namespace QuickStart
 
         [Category("4. Data Project")]
         [Description("Changes how the business layer and data acces layer is implemented.")]
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         public bool UseLazyLoading { get; set; }
 
         [Category("4. Data Project")]
