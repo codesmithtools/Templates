@@ -1,6 +1,7 @@
 ﻿Imports System
 Imports System.Diagnostics
 Imports NUnit.Framework
+Imports PetShop.Tests.ParameterizedSQL
 
 <TestFixture()> _
 Public Class CategoryTests
@@ -91,7 +92,7 @@ Public Class CategoryTests
 
     <Test()> _
     Private Sub CreateCategory(ByVal categoryID As String)
-        Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
+        Dim category As PetShop.Tests.StoredProcedures.Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         category.CategoryId = categoryID
         category.Name = TestUtility.Instance.RandomString(80, False)
         category.Description = TestUtility.Instance.RandomString(255, False)
@@ -113,7 +114,7 @@ Public Class CategoryTests
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
         'Insert should fail as there should be a duplicate key.
-        Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
+        Dim category As PetShop.Tests.StoredProcedures.Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         category.CategoryId = TestCategoryID
         category.Name = TestUtility.Instance.RandomString(80, False)
         category.Description = TestUtility.Instance.RandomString(255, False)
@@ -138,7 +139,7 @@ Public Class CategoryTests
         Console.WriteLine("2. Inserting new category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
+        Dim category As PetShop.Tests.StoredProcedures.Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         category.CategoryId = TestCategoryID2
         category.Name = TestUtility.Instance.RandomString(80, False)
         category.Description = TestUtility.Instance.RandomString(255, False)
@@ -158,7 +159,7 @@ Public Class CategoryTests
         Console.WriteLine("3. Selecting all categories by calling GetByCategoryId(""{0}"").", TestCategoryID)
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim list As CategoryList = CategoryList.GetByCategoryId(TestCategoryID)
+        Dim list As PetShop.Tests.StoredProcedures.CategoryList = PetShop.Tests.StoredProcedures.CategoryList.GetByCategoryId(TestCategoryID)
         Assert.IsTrue(list.Count = 1)
 
         Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds)
@@ -172,7 +173,7 @@ Public Class CategoryTests
         Console.WriteLine("4. Updating the category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         Dim name = category.Name
         Dim desc = category.Description
 
@@ -205,7 +206,7 @@ Public Class CategoryTests
         Console.WriteLine("5. Deleting the category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         category.Delete()
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
@@ -224,7 +225,7 @@ Public Class CategoryTests
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
         Console.WriteLine(vbTab & "Getting category ""{0}""", TestCategoryID)
-        Dim category As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         category.CategoryId = TestCategoryID2
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
@@ -239,7 +240,7 @@ Public Class CategoryTests
             Assert.IsTrue(True)
         End Try
 
-        Dim validCategory As Category = category.GetByCategoryId(TestCategoryID2)
+        Dim validCategory As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID2)
         Assert.IsTrue(validCategory.CategoryId = TestCategoryID2)
         Console.WriteLine(vbTab & "PrimaryKey has been updated.")
 
@@ -254,7 +255,7 @@ Public Class CategoryTests
         Console.WriteLine("7. Testing the state of the rules for the entity.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
+        Dim category As PetShop.Tests.StoredProcedures.Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         Assert.IsFalse(category.IsValid)
 
         category.CategoryId = TestCategoryID
@@ -308,7 +309,7 @@ Public Class CategoryTests
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
         'Insert should fail as there should be a duplicate key.
-        Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
+        Dim category As PetShop.Tests.StoredProcedures.Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         Assert.IsTrue(category.IsDirty)
 
         category.CategoryId = TestCategoryID2
@@ -353,7 +354,7 @@ Public Class CategoryTests
         Console.WriteLine("9. Testing child collections on a new category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
+        Dim category As PetShop.Tests.StoredProcedures.Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         Dim count = category.Products.Count
 
         Assert.IsTrue(count = 0)
@@ -369,7 +370,7 @@ Public Class CategoryTests
         Console.WriteLine("10. Testing child collections on a category with no child collection items.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         Dim count = category.Products.Count
 
         Assert.IsTrue(count = 0)
@@ -422,7 +423,7 @@ Public Class CategoryTests
         Console.WriteLine("14. Testing insert on child collections in a new category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
+        Dim category As PetShop.Tests.StoredProcedures.Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         category.CategoryId = TestCategoryID2
         category.Name = TestUtility.Instance.RandomString(80, False)
         category.Description = TestUtility.Instance.RandomString(255, False)
@@ -430,7 +431,7 @@ Public Class CategoryTests
         Assert.IsTrue(category.Products.Count = 0)
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
 
-        Dim product As Product = category.Products.AddNew()
+        Dim product As PetShop.Tests.StoredProcedures.Product = category.Products.AddNew()
 
         Assert.IsTrue(category.Products.Count = 1)
 
@@ -443,7 +444,7 @@ Public Class CategoryTests
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
 
-        Dim category2 As Category = category.GetByCategoryId(TestCategoryID2)
+        Dim category2 As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID2)
 
         Assert.IsTrue(category.Products.Count = category2.Products.Count)
         Assert.IsTrue(category.CategoryId = category2.Products(0).CategoryId)
@@ -459,10 +460,10 @@ Public Class CategoryTests
         Console.WriteLine("15. Testing insert on child collections in a category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         Assert.IsTrue(category.Products.Count = 0)
 
-        Dim product As Product = category.Products.AddNew()
+        Dim product As PetShop.Tests.StoredProcedures.Product = category.Products.AddNew()
 
         Assert.IsTrue(category.Products.Count = 1)
 
@@ -474,7 +475,7 @@ Public Class CategoryTests
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
 
-        Dim category2 As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category2 As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
 
         Assert.IsTrue(category.Products.Count = category2.Products.Count)
         Assert.IsTrue(category.CategoryId = category2.Products(0).CategoryId)
@@ -490,7 +491,7 @@ Public Class CategoryTests
         Console.WriteLine("16. Testing update on new child collections in a new category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
+        Dim category As PetShop.Tests.StoredProcedures.Category = PetShop.Tests.StoredProcedures.Category.NewCategory()
         category.CategoryId = TestCategoryID2
         category.Name = TestUtility.Instance.RandomString(80, False)
         category.Description = TestUtility.Instance.RandomString(255, False)
@@ -498,7 +499,7 @@ Public Class CategoryTests
         Assert.IsTrue(category.Products.Count = 0)
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
 
-        Dim product As Product = category.Products.AddNew()
+        Dim product As PetShop.Tests.StoredProcedures.Product = category.Products.AddNew()
 
         Assert.IsTrue(category.Products.Count = 1)
 
@@ -508,14 +509,14 @@ Public Class CategoryTests
         product.Image = TestUtility.Instance.RandomString(80, False)
 
         Dim newName = TestUtility.Instance.RandomString(80, False)
-        For Each item As Product In category.Products
+        For Each item As PetShop.Tests.StoredProcedures.Product In category.Products
             item.Name = newName
         Next
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
 
-        Dim category2 As Category = category.GetByCategoryId(TestCategoryID2)
+        Dim category2 As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID2)
         Assert.IsTrue(String.Equals(category2.Products(0).Name, newName, StringComparison.InvariantCultureIgnoreCase))
 
         Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds)
@@ -529,10 +530,10 @@ Public Class CategoryTests
         Console.WriteLine("17. Testing update on child collections in a category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         Assert.IsTrue(category.Products.Count = 0)
 
-        Dim product As Product = category.Products.AddNew()
+        Dim product As PetShop.Tests.StoredProcedures.Product = category.Products.AddNew()
 
         Assert.IsTrue(category.Products.Count = 1)
 
@@ -545,15 +546,15 @@ Public Class CategoryTests
         category = category.Save()
 
         Dim newName = TestUtility.Instance.RandomString(80, False)
-        For Each item As Product In category.Products
+        For Each item As PetShop.Tests.StoredProcedures.Product In category.Products
             item.Name = newName
         Next
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
 
-        Dim category2 As Category = category.GetByCategoryId(TestCategoryID)
-        Dim list As ProductList = category2.Products
+        Dim category2 As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
+        Dim list As PetShop.Tests.StoredProcedures.ProductList = category2.Products
 
         Assert.IsTrue(String.Equals(category2.Products(0).Name, newName, StringComparison.InvariantCultureIgnoreCase))
 
@@ -568,10 +569,10 @@ Public Class CategoryTests
         Console.WriteLine("18. Testing update of PK on child collections in a category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         Assert.IsTrue(category.Products.Count = 0)
 
-        Dim product As Product = category.Products.AddNew()
+        Dim product As PetShop.Tests.StoredProcedures.Product = category.Products.AddNew()
 
         Assert.IsTrue(category.Products.Count = 1)
 
@@ -588,7 +589,7 @@ Public Class CategoryTests
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
 
-        Dim category2 As Category = category.GetByCategoryId(TestCategoryID2)
+        Dim category2 As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID2)
         Assert.IsTrue(category2.Products.Count = 1)
         Assert.IsTrue(String.Equals(category2.Products(0).CategoryId, category.CategoryId, StringComparison.InvariantCultureIgnoreCase))
 
@@ -603,10 +604,10 @@ Public Class CategoryTests
         Console.WriteLine("19. Testing update of every PK in a child collections in a category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         Assert.IsTrue(category.Products.Count = 0)
 
-        Dim product As Product = category.Products.AddNew()
+        Dim product As PetShop.Tests.StoredProcedures.Product = category.Products.AddNew()
 
         Assert.IsTrue(category.Products.Count = 1)
 
@@ -615,7 +616,7 @@ Public Class CategoryTests
         product.Description = TestUtility.Instance.RandomString(255, False)
         product.Image = TestUtility.Instance.RandomString(80, False)
 
-        Dim product2 As Product = category.Products.AddNew()
+        Dim product2 As PetShop.Tests.StoredProcedures.Product = category.Products.AddNew()
 
         Assert.IsTrue(category.Products.Count = 2)
 
@@ -628,14 +629,14 @@ Public Class CategoryTests
         category = category.Save()
 
         Dim newName = TestUtility.Instance.RandomString(80, False)
-        For Each item As Product In category.Products
+        For Each item As PetShop.Tests.StoredProcedures.Product In category.Products
             item.Name = newName
         Next
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
 
-        Dim category2 As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category2 As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         Assert.IsTrue(category2.Products.Count = 2)
         Assert.IsTrue(String.Equals(category2.Products(0).Name, newName, StringComparison.InvariantCultureIgnoreCase))
         Assert.IsTrue(String.Equals(category2.Products(1).Name, newName, StringComparison.InvariantCultureIgnoreCase))
@@ -652,10 +653,10 @@ Public Class CategoryTests
         Console.WriteLine("20. Testing insert of a duplicate Product into a child collections.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         Assert.IsTrue(category.Products.Count = 0)
 
-        Dim product As Product = category.Products.AddNew()
+        Dim product As PetShop.Tests.StoredProcedures.Product = category.Products.AddNew()
 
         Assert.IsTrue(category.Products.Count = 1)
 
@@ -664,7 +665,7 @@ Public Class CategoryTests
         product.Description = TestUtility.Instance.RandomString(255, False)
         product.Image = TestUtility.Instance.RandomString(80, False)
 
-        Dim product2 As Product = category.Products.AddNew()
+        Dim product2 As PetShop.Tests.StoredProcedures.Product = category.Products.AddNew()
 
         Assert.IsTrue(category.Products.Count = 2)
 
@@ -692,7 +693,7 @@ Public Class CategoryTests
         Console.WriteLine("20. Deleting the category twice.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         Assert.IsTrue(String.Equals(category.CategoryId, TestCategoryID, StringComparison.InvariantCultureIgnoreCase))
         Assert.IsFalse(category.IsDeleted)
         category.Delete()
@@ -727,7 +728,7 @@ Public Class CategoryTests
         Console.WriteLine("20. Deleting the category twice.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         Assert.IsTrue(String.Equals(category.CategoryId, TestCategoryID, StringComparison.InvariantCultureIgnoreCase))
         Assert.IsFalse(category.IsDeleted)
         category.Delete()
@@ -766,14 +767,14 @@ Public Class CategoryTests
         Console.WriteLine("23. Updating the category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = Category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         Dim name As String = category.Name
         Dim desc As String = category.Description
 
         category.Name = TestUtility.Instance.RandomString(80, False)
         category.Description = TestUtility.Instance.RandomString(255, False)
 
-        Dim category2 As Category = Category.GetByCategoryId(TestCategoryID)
+        Dim category2 As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
@@ -803,10 +804,10 @@ Public Class CategoryTests
         Console.WriteLine("24. Testing update on child collections in a category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = Category.GetByCategoryId(TestCategoryID)
+        Dim category As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
         Assert.IsTrue(category.Products.Count = 0)
 
-        Dim product As Product = category.Products.AddNew()
+        Dim product As PetShop.Tests.StoredProcedures.Product = category.Products.AddNew()
 
         Assert.IsTrue(category.Products.Count = 1)
 
@@ -818,14 +819,14 @@ Public Class CategoryTests
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
 
-        Dim category2 As Category = Category.GetByCategoryId(TestCategoryID)
+        Dim category2 As PetShop.Tests.StoredProcedures.Category = category.GetByCategoryId(TestCategoryID)
 
         Dim newName As String = TestUtility.Instance.RandomString(80, False)
-        For Each item As Product In category.Products
+        For Each item As PetShop.Tests.StoredProcedures.Product In category.Products
             item.Name = newName
         Next
 
-        For Each item As Product In category2.Products
+        For Each item As PetShop.Tests.StoredProcedures.Product In category2.Products
             item.Name = newName
         Next
 

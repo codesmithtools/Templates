@@ -1,6 +1,8 @@
 ﻿Imports System
 Imports System.Diagnostics
 Imports NUnit.Framework
+Imports PetShop.Tests.OF.ParameterizedSQL.PetShop.Tests.OF.ParameterizedSQL
+Imports PetShop.Tests.OF.ParameterizedSQL
 
 <TestFixture()> _
 Public Class CategoryTests
@@ -766,14 +768,14 @@ Public Class CategoryTests
         Console.WriteLine("23. Updating the category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = Category.GetByCategoryId(TestCategoryID)
+        Dim category As Category = category.GetByCategoryId(TestCategoryID)
         Dim name As String = category.Name
         Dim desc As String = category.Description
 
         category.Name = TestUtility.Instance.RandomString(80, False)
         category.Description = TestUtility.Instance.RandomString(255, False)
 
-        Dim category2 As Category = Category.GetByCategoryId(TestCategoryID)
+        Dim category2 As Category = category.GetByCategoryId(TestCategoryID)
 
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
@@ -803,7 +805,7 @@ Public Class CategoryTests
         Console.WriteLine("24. Testing update on child collections in a category.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim category As Category = Category.GetByCategoryId(TestCategoryID)
+        Dim category As Category = category.GetByCategoryId(TestCategoryID)
         Assert.IsTrue(category.Products.Count = 0)
 
         Dim product As Product = category.Products.AddNew()
@@ -818,7 +820,7 @@ Public Class CategoryTests
         Assert.IsTrue(category.IsValid, category.BrokenRulesCollection.ToString())
         category = category.Save()
 
-        Dim category2 As Category = Category.GetByCategoryId(TestCategoryID)
+        Dim category2 As Category = category.GetByCategoryId(TestCategoryID)
 
         Dim newName As String = TestUtility.Instance.RandomString(80, False)
         For Each item As Product In category.Products

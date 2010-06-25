@@ -1,6 +1,7 @@
 ﻿Imports System
 Imports System.Diagnostics
 Imports NUnit.Framework
+Imports PetShop.Tests.StoredProcedures
 
 <TestFixture()> _
 Public Class LineItemTests
@@ -42,26 +43,26 @@ Public Class LineItemTests
     <TearDown()> _
     Public Sub TearDown()
         Try
-            Dim items As LineItemList = LineItemList.GetByOrderId(LineItemOrderID)
+            Dim items As PetShop.Tests.StoredProcedures.LineItemList = PetShop.Tests.StoredProcedures.LineItemList.GetByOrderId(LineItemOrderID)
             items.Clear()
             items = items.Save()
         Catch generatedExceptionName As Exception
         End Try
 
         Try
-            Order.DeleteOrder(LineItemOrderID)
+            PetShop.Tests.StoredProcedures.Order.DeleteOrder(LineItemOrderID)
         Catch generatedExceptionName As Exception
         End Try
 
         Try
-            Dim items As LineItemList = LineItemList.GetByOrderId(LineItemOrderID2)
+            Dim items As PetShop.Tests.StoredProcedures.LineItemList = PetShop.Tests.StoredProcedures.LineItemList.GetByOrderId(LineItemOrderID2)
             items.Clear()
             items = items.Save()
         Catch generatedExceptionName As Exception
         End Try
 
         Try
-            Order.DeleteOrder(LineItemOrderID2)
+            PetShop.Tests.StoredProcedures.Order.DeleteOrder(LineItemOrderID2)
         Catch generatedExceptionName As Exception
         End Try
     End Sub
@@ -108,7 +109,7 @@ Public Class LineItemTests
 
     <Test()> _
     Private Sub CreateLineItem(ByVal orderID As Integer, ByVal lineNum As Integer)
-        Dim lineItem As LineItem = lineItem.NewLineItem()
+        Dim lineItem As PetShop.Tests.StoredProcedures.LineItem = lineItem.NewLineItem()
         lineItem.OrderId = orderID
         lineItem.LineNum = lineNum
         lineItem.ItemId = TestUtility.Instance.RandomString(10, False)
@@ -132,7 +133,7 @@ Public Class LineItemTests
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
         'Insert should fail as there should be a duplicate key.
-        Dim lineItem As LineItem = lineItem.NewLineItem()
+        Dim lineItem As PetShop.Tests.StoredProcedures.LineItem = lineItem.NewLineItem()
         lineItem.OrderId = LineItemOrderID
         lineItem.LineNum = TestUtility.Instance.RandomNumber()
         lineItem.ItemId = TestUtility.Instance.RandomString(10, False)
@@ -159,7 +160,7 @@ Public Class LineItemTests
         Console.WriteLine("2. Inserting new lineItem.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim lineItem As LineItem = lineItem.NewLineItem()
+        Dim lineItem As PetShop.Tests.StoredProcedures.LineItem = lineItem.NewLineItem()
         lineItem.OrderId = LineItemOrderID
         lineItem.LineNum = TestUtility.Instance.RandomNumber()
         lineItem.ItemId = TestUtility.Instance.RandomString(10, False)
@@ -181,7 +182,7 @@ Public Class LineItemTests
         Console.WriteLine("3. Selecting all LineItems by calling GetByOrderId(""{0}"").", LineItemOrderID)
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim list As LineItemList = LineItemList.GetByOrderId(LineItemOrderID)
+        Dim list As PetShop.Tests.StoredProcedures.LineItemList = LineItemList.GetByOrderId(LineItemOrderID)
         Assert.IsTrue(list.Count = 1)
 
         Console.WriteLine("Time: {0} ms", watch.ElapsedMilliseconds)
@@ -195,7 +196,7 @@ Public Class LineItemTests
         Console.WriteLine("4. Updating the lineItem.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim lineItem As LineItem = lineItem.GetByOrderId(LineItemOrderID)
+        Dim lineItem As PetShop.Tests.StoredProcedures.LineItem = PetShop.Tests.StoredProcedures.LineItem.GetByOrderId(LineItemOrderID)
         Dim quantity = lineItem.Quantity
         Dim unitPrice = lineItem.UnitPrice
 
@@ -228,7 +229,7 @@ Public Class LineItemTests
         Console.WriteLine("5. Deleting the lineItem.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim lineItem As LineItem = lineItem.GetByOrderId(LineItemOrderID)
+        Dim lineItem As PetShop.Tests.StoredProcedures.LineItem = PetShop.Tests.StoredProcedures.LineItem.GetByOrderId(LineItemOrderID)
         lineItem.Delete()
 
         Assert.IsTrue(lineItem.IsValid, lineItem.BrokenRulesCollection.ToString())
@@ -247,20 +248,20 @@ Public Class LineItemTests
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
         Console.WriteLine(vbTab & "Getting lineItem ""{0}""", LineItemOrderID)
-        Dim lineItem As LineItem = lineItem.GetByOrderId(LineItemOrderID)
+        Dim lineItem As PetShop.Tests.StoredProcedures.LineItem = PetShop.Tests.StoredProcedures.LineItem.GetByOrderId(LineItemOrderID)
         lineItem.OrderId = LineItemOrderID2
         lineItem = lineItem.Save()
         Console.WriteLine(vbTab & "Set lineItemID to ""{0}""", LineItemOrderID2)
         Assert.IsTrue(lineItem.OrderId = LineItemOrderID2)
 
         Try
-            lineItem.GetByOrderId(LineItemOrderID)
+            PetShop.Tests.StoredProcedures.LineItem.GetByOrderId(LineItemOrderID)
             Assert.Fail("Record exists when it should have been updated.")
         Catch generatedExceptionName As Exception
             Assert.IsTrue(True)
         End Try
 
-        Dim validLineItem As LineItem = lineItem.GetByOrderId(LineItemOrderID2)
+        Dim validLineItem As PetShop.Tests.StoredProcedures.LineItem = PetShop.Tests.StoredProcedures.LineItem.GetByOrderId(LineItemOrderID2)
         Assert.IsTrue(validLineItem.OrderId = LineItemOrderID2)
         Console.WriteLine(vbTab & "PrimaryKey has been updated.")
 
@@ -275,7 +276,7 @@ Public Class LineItemTests
         Console.WriteLine("7. Testing the state of the rules for the entity.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim lineItem As LineItem = lineItem.NewLineItem()
+        Dim lineItem As PetShop.Tests.StoredProcedures.LineItem = PetShop.Tests.StoredProcedures.LineItem.NewLineItem()
         Assert.IsFalse(lineItem.IsValid)
 
         lineItem.OrderId = LineItemOrderID
@@ -311,8 +312,8 @@ Public Class LineItemTests
         Console.WriteLine("8. Updating the lineItem.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim lineItem As LineItem = LineItem.GetByOrderId(LineItemOrderID)
-        Dim lineItem2 As LineItem = LineItem.GetByOrderId(LineItemOrderID)
+        Dim lineItem As PetShop.Tests.StoredProcedures.LineItem = PetShop.Tests.StoredProcedures.LineItem.GetByOrderId(LineItemOrderID)
+        Dim lineItem2 As PetShop.Tests.StoredProcedures.LineItem = PetShop.Tests.StoredProcedures.LineItem.GetByOrderId(LineItemOrderID)
         Dim quantity As Integer = lineItem.Quantity
         Dim unitPrice As Decimal = lineItem.UnitPrice
 
