@@ -631,8 +631,6 @@ namespace QuickStart
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
-
-                AddChildEntity(entity.Table, true, true);
             }
         }
 
