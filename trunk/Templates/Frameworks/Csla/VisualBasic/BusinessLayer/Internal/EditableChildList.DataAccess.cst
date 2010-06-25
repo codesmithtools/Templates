@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableChildList" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -27,27 +27,29 @@ Imports System
 Imports Csla
 Imports Csla.Data
 
-Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-
-    Protected Overrides Sub Child_Create()
-    End Sub
-
-    Private Shadows Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
-        RaiseListChangedEvents = False
-
-        ' Fetch Child objects.
-        ' While(SourceHasMoreChildren)
-            'Me.Add(New <%= ChildBusinessClassName %>(source))
-        ' End While
-
-        RaiseListChangedEvents = True
-    End Sub
-
-    Protected Overrides Sub Child_Update(ParamArray parameters As Object())
-        MyBase.Child_Update(parameters)
-    End Sub
-
-End Class
+Namespace <%= BusinessProjectName %>
+    Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
+    
+        Protected Overrides Sub Child_Create()
+        End Sub
+    
+        Private Shadows Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
+            RaiseListChangedEvents = False
+    
+            ' Fetch Child objects.
+            ' While(SourceHasMoreChildren)
+                'Me.Add(New <%= ChildBusinessClassName %>(source))
+            ' End While
+    
+            RaiseListChangedEvents = True
+        End Sub
+    
+        Protected Overrides Sub Child_Update(ParamArray parameters As Object())
+            MyBase.Child_Update(parameters)
+        End Sub
+    
+    End Class
+End Namespace
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>

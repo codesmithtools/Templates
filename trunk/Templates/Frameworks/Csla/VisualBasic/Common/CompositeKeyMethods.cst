@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -9,14 +9,14 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-<% If(Entity.PrimaryKey.IsCompositeKey) Then %>
-    #Region "Protected Overriden Method(s)"
-    
-    ' NOTE: This is needed for Composite Keys. 
-    Private ReadOnly _guidID As Guid = Guid.NewGuid()
-    Protected Overrides Function GetIdValue() As Object
-        Return _guidID
-    End Function
-    
-    #End Region
-<% End If %>
+    <% If(Entity.PrimaryKey.IsCompositeKey) Then %>
+        #Region "Protected Overriden Method(s)"
+        
+        ' NOTE: This is needed for Composite Keys. 
+        Private ReadOnly _guidID As Guid = Guid.NewGuid()
+        Protected Overrides Function GetIdValue() As Object
+            Return _guidID
+        End Function
+        
+        #End Region
+    <% End If %>

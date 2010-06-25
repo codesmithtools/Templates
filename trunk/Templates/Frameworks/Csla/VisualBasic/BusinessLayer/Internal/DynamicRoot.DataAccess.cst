@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DynamicRoot" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -29,40 +29,42 @@ Imports System
 Imports Csla
 Imports Csla.Data
 
-Public Partial Class <%= BusinessClassName %>
-    <RunLocal()> _
-    Protected Overrides Sub DataPortal_Create()
-        ' TODO: load default values.
-	' omit this override if you have no defaults to set.
-	base.DataPortal.Create()
-    End Sub
+Namespace <%= BusinessProjectName %>
+    Public Partial Class <%= BusinessClassName %>
+        <RunLocal()> _
+        Protected Overrides Sub DataPortal_Create()
+            ' TODO: load default values.
+        ' omit this override if you have no defaults to set.
+        base.DataPortal.Create()
+        End Sub
+        
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria )
+            ' TODO: load values
+            MarkOld()
+        End Sub
     
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria )
-        ' TODO: load values
-        MarkOld()
-    End Sub
-
-    <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Overrides Sub DataPortal_Insert()
-        ' TODO: insert values
-    End Sub
-
-    <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Overrides Sub DataPortal_Update()        
-        ' TODO: update values
-    End Sub
-
-    <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Overrides Sub DataPortal_DeleteSelf()
-        ' TODO: delete values
-        ' TODO: Review the need for TransactionScope (if you call DataPortal_Delete then you will not need the attribute on this method).
-    End Sub
-
-    <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Overrides Sub DataPortal_Delete(object criteria)
-        ' TODO: delete values
-    End Sub
-End Class
+        <Transactional(TransactionalTypes.TransactionScope)> _
+        Protected Overrides Sub DataPortal_Insert()
+            ' TODO: insert values
+        End Sub
+    
+        <Transactional(TransactionalTypes.TransactionScope)> _
+        Protected Overrides Sub DataPortal_Update()        
+            ' TODO: update values
+        End Sub
+    
+        <Transactional(TransactionalTypes.TransactionScope)> _
+        Protected Overrides Sub DataPortal_DeleteSelf()
+            ' TODO: delete values
+            ' TODO: Review the need for TransactionScope (if you call DataPortal_Delete then you will not need the attribute on this method).
+        End Sub
+    
+        <Transactional(TransactionalTypes.TransactionScope)> _
+        Protected Overrides Sub DataPortal_Delete(object criteria)
+            ' TODO: delete values
+        End Sub
+    End Class
+End Namespace
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>

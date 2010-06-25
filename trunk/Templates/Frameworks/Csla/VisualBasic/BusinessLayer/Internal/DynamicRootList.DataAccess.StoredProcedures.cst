@@ -32,14 +32,16 @@ Imports System.Data.SqlClient
 Imports Csla
 Imports Csla.Data
 
-Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-    Private Sub DataPortal_Create()
-    End Sub
-
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
-<% RenderHelper(New DataPortalFetchList()) %>
-    End Sub
-End Class
+Namespace <%= BusinessProjectName %>
+    Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Private Sub DataPortal_Create()
+        End Sub
+    
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
+    <% RenderHelper(New DataPortalFetchList()) %>
+        End Sub
+    End Class
+End Namespace
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>

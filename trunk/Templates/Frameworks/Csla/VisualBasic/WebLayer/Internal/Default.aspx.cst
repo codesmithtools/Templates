@@ -10,7 +10,7 @@ Description: The following template will generate a ASP.Net page.
 
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
-<%%@ Page Language="VB" AutoEventWireup="false" CodeFile="Default.aspx.vb" Inherits="_Default" %>
+<%%@ Page Language="VB" AutoEventWireup="false" CodeFile="Default.aspx.vb" Inherits="<%= InterfaceProjectName %>._Default" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 

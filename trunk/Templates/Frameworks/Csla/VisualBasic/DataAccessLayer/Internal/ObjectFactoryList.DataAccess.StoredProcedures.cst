@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.DataCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DataAccessLayer" %>
 <%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
@@ -39,92 +39,94 @@ Imports <%= BusinessProjectName %>
 
 #End Region
 
-Public Partial Class <%= Entity.ClassName %>ListFactory
-    Inherits ObjectFactory
-<% If Not(IsReadOnlyBusinessObject) Then %>
-
-    #Region "Create"
-
-    ''' <summary>
-    ''' Creates New <%= Entity.ClassName %>List with default values.
-    ''' </summary>
-    ''' <Returns>New <%= Entity.ClassName %>List.</Returns>
-    <RunLocal()> _
-    Public Function Create() As <%= Entity.ClassName %>List
-        Dim item As <%= Entity.ClassName %>List = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>List), True), <%= Entity.ClassName %>List)
-
-        Dim cancel As Boolean = False
-        OnCreating(cancel)
-        If (cancel) Then
+Namespace <%= DataProjectName %>
+    Public Partial Class <%= Entity.ClassName %>ListFactory
+        Inherits ObjectFactory
+    <% If Not(IsReadOnlyBusinessObject) Then %>
+    
+        #Region "Create"
+    
+        ''' <summary>
+        ''' Creates New <%= Entity.ClassName %>List with default values.
+        ''' </summary>
+        ''' <Returns>New <%= Entity.ClassName %>List.</Returns>
+        <RunLocal()> _
+        Public Function Create() As <%= Entity.ClassName %>List
+            Dim item As <%= Entity.ClassName %>List = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>List), True), <%= Entity.ClassName %>List)
+    
+            Dim cancel As Boolean = False
+            OnCreating(cancel)
+            If (cancel) Then
+                Return item
+            End If
+    
+            CheckRules(item)
+            MarkNew(item)
+    <% If(IsChildBusinessObject) Then %>
+            MarkAsChild(item)
+    <% End If%>
+    
+            OnCreated()
+    
             Return item
-        End If
-
-        CheckRules(item)
-        MarkNew(item)
-<% If(IsChildBusinessObject) Then %>
-        MarkAsChild(item)
-<% End If%>
-
-        OnCreated()
-
-        Return item
-    End Function
-
-    #End Region
-<% End If %>
-
-    #Region "Fetch
-
-    ''' <summary>
-    ''' Fetch <%= Entity.ClassName %>List.
-    ''' </summary>
-    ''' <param name="criteria">The criteria.</param>
-    ''' <Returns></Returns>
-    Public Function Fetch(ByVal criteria As <%= Entity.ClassName %>Criteria) As <%= Entity.ClassName %>List
-        Dim item As <%= Entity.ClassName %>List = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>List), True), <%= Entity.ClassName %>List)
-
-        Dim cancel As Boolean = False
-        OnFetching(criteria, cancel)
-        If (cancel) Then
-            Return item
-        End If
-
-        ' Fetch Child objects.
-        Using connection As New SqlConnection(ADOHelper.ConnectionString)
-            connection.Open()
-            Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)
-                command.CommandType = CommandType.StoredProcedure
-                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                <%= Entity.Members.BuildHasValueCommandParameters() %>
-                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                    If reader.Read() Then
-<% If(IsReadOnlyBusinessObject) Then %>
-                        SetIsReadOnly(item, False)
-<% End If %>
-                        Do
-                            item.Add(new <%= ChildBusinessClassName %>Factory().Map(reader))
-                        Loop While reader.Read()
-<% If(IsReadOnlyBusinessObject) Then %>
-                        SetIsReadOnly(item, True)
-<% End If %>
-                    Else
-                        Throw New Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria))
-                    End If
+        End Function
+    
+        #End Region
+    <% End If %>
+    
+        #Region "Fetch
+    
+        ''' <summary>
+        ''' Fetch <%= Entity.ClassName %>List.
+        ''' </summary>
+        ''' <param name="criteria">The criteria.</param>
+        ''' <Returns></Returns>
+        Public Function Fetch(ByVal criteria As <%= Entity.ClassName %>Criteria) As <%= Entity.ClassName %>List
+            Dim item As <%= Entity.ClassName %>List = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>List), True), <%= Entity.ClassName %>List)
+    
+            Dim cancel As Boolean = False
+            OnFetching(criteria, cancel)
+            If (cancel) Then
+                Return item
+            End If
+    
+            ' Fetch Child objects.
+            Using connection As New SqlConnection(ADOHelper.ConnectionString)
+                connection.Open()
+                Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)
+                    command.CommandType = CommandType.StoredProcedure
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+                    <%= Entity.MembersNoRowVersion.BuildHasValueCommandParameters() %>
+                    Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                        If reader.Read() Then
+    <% If(IsReadOnlyBusinessObject) Then %>
+                            SetIsReadOnly(item, False)
+    <% End If %>
+                            Do
+                                item.Add(new <%= ChildBusinessClassName %>Factory().Map(reader))
+                            Loop While reader.Read()
+    <% If(IsReadOnlyBusinessObject) Then %>
+                            SetIsReadOnly(item, True)
+    <% End If %>
+                        Else
+                            Throw New Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria))
+                        End If
+                    End Using
                 End Using
             End Using
-        End Using
-
-        MarkOld(item)
-<% If(IsChildBusinessObject) Then %>
-        MarkAsChild(item)
-<% End If %>
-
-        OnFetched()
-
-        Return item
-    End Function
-
-    #End Region
-
-<% RenderHelper(New PartialMethods()) %>
-End Class
+    
+            MarkOld(item)
+    <% If(IsChildBusinessObject) Then %>
+            MarkAsChild(item)
+    <% End If %>
+    
+            OnFetched()
+    
+            Return item
+        End Function
+    
+        #End Region
+    
+    <% RenderHelper(New PartialMethods()) %>
+    End Class
+End Namespace

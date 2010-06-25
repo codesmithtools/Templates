@@ -39,91 +39,93 @@ Imports System.Data.SqlClient
 Imports Csla
 Imports Csla.Data
 
-Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-    <RunLocal()> _
-    Protected Overrides Sub Child_Create()
-<% RenderHelper(New ChildCreate()) %>
-    End Sub
+Namespace <%= BusinessProjectName %>
+    Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
+        <RunLocal()> _
+        Protected Overrides Sub Child_Create()
+    <% RenderHelper(New ChildCreate()) %>
+        End Sub
+        
+        Private Sub Child_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>)
+    <% RenderHelper(New ChildFetch()) %>
+        End Sub
     
-    Private Sub Child_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>)
-<% RenderHelper(New ChildFetch()) %>
-    End Sub
-
-    #Region "Child_Insert"
-
-    Private Sub Child_Insert(ByVal connection as SqlConnection)
-<% RenderHelper(New ChildInsert(), true) %>
-    End Sub
-<% If (Entity.AssociatedManyToOne.Count > 0) Then
-    If (Entity.AssociatedManyToOne.Distinct().Count > 1) Then
-        Dim index As Integer = 0
-	For Each association As Association In Entity.AssociatedManyToOne.Distinct() %>
-
-    Private Sub Child_Insert(<%= association.BuildParametersVariables(True) %>)
-	Child_Insert(<%= association.BuildUpdateStatementVariables(Entity.AssociatedManyToOne.Distinct(), index, true) %>)
-    End Sub
-	<% index += 1 
-    Next
-     End If %>
-
-    Private Sub Child_Insert(<%= Entity.AssociatedManyToOne.Distinct().BuildParametersVariables(True) %>)
-<% RenderHelper(New ChildInsert()) %>
-    End Sub
-
-<%End If%>
-
-    #End Region
-
-    #Region "Child_Update"
-
-    Private Sub Child_Update(ByVal connection as SqlConnection)
-<% RenderHelper(New ChildUpdate(), true) %>
-    End Sub
-<% If (Entity.AssociatedManyToOne.Count > 0) Then
-    If (Entity.AssociatedManyToOne.Distinct().Count > 1) Then
-        Dim index As Integer = 0
-	For Each association As Association In Entity.AssociatedManyToOne.Distinct() %>
-
-    Private Sub Child_Update(<%= association.BuildParametersVariables(True) %>)
-	Child_Update(<%= association.BuildUpdateStatementVariables(Entity.AssociatedManyToOne.Distinct(), index, true) %>)
-    End Sub
-	<% index += 1 
-    Next
-     End If %>
-
-    Private Sub Child_Update(<%= Entity.AssociatedManyToOne.Distinct().BuildParametersVariables(True) %>)
-<% RenderHelper(New ChildUpdate()) %>
-    End Sub
-
-<%End If%>
-
-    #End Region
-
-
-    Private Sub Child_DeleteSelf(ByVal connection as SqlConnection)
-        Dim cancel As Boolean = False
-        OnChildSelfDeleting(connection, cancel)
-        If (cancel) Then
-            Return
-        End If
+        #Region "Child_Insert"
     
-        DataPortal_Delete(New <%= BusinessClassName %>Criteria (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>), connection)
+        Private Sub Child_Insert(ByVal connection as SqlConnection)
+    <% RenderHelper(New ChildInsert(), true) %>
+        End Sub
+    <% If (Entity.AssociatedManyToOne.Count > 0) Then
+        If (Entity.AssociatedManyToOne.Distinct().Count > 1) Then
+            Dim index As Integer = 0
+        For Each association As Association In Entity.AssociatedManyToOne.Distinct() %>
     
-        OnChildSelfDeleted()
-    End Sub
+        Private Sub Child_Insert(<%= association.BuildParametersVariables(True) %>)
+        Child_Insert(<%= association.BuildUpdateStatementVariables(Entity.AssociatedManyToOne.Distinct(), index, true) %>)
+        End Sub
+        <% index += 1 
+        Next
+        End If %>
     
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByVal connection as SqlConnection)
-<% RenderHelper(New DataPortalDelete()) %>
-    End Sub
-
+        Private Sub Child_Insert(<%= Entity.AssociatedManyToOne.Distinct().BuildParametersVariables(True) %>)
+    <% RenderHelper(New ChildInsert()) %>
+        End Sub
     
-    Private Sub Map(ByVal reader As SafeDataReader)
-<% RenderHelper(New MapDataReader()) %>
-
-        MarkAsChild()
-        MarkOld()
-    End Sub
-End Class
+    <%End If%>
+    
+        #End Region
+    
+        #Region "Child_Update"
+    
+        Private Sub Child_Update(ByVal connection as SqlConnection)
+    <% RenderHelper(New ChildUpdate(), true) %>
+        End Sub
+    <% If (Entity.AssociatedManyToOne.Count > 0) Then
+        If (Entity.AssociatedManyToOne.Distinct().Count > 1) Then
+            Dim index As Integer = 0
+        For Each association As Association In Entity.AssociatedManyToOne.Distinct() %>
+    
+        Private Sub Child_Update(<%= association.BuildParametersVariables(True) %>)
+        Child_Update(<%= association.BuildUpdateStatementVariables(Entity.AssociatedManyToOne.Distinct(), index, true) %>)
+        End Sub
+        <% index += 1 
+        Next
+        End If %>
+    
+        Private Sub Child_Update(<%= Entity.AssociatedManyToOne.Distinct().BuildParametersVariables(True) %>)
+    <% RenderHelper(New ChildUpdate()) %>
+        End Sub
+    
+    <%End If%>
+    
+        #End Region
+    
+    
+        Private Sub Child_DeleteSelf(ByVal connection as SqlConnection)
+            Dim cancel As Boolean = False
+            OnChildSelfDeleting(connection, cancel)
+            If (cancel) Then
+                Return
+            End If
+        
+            DataPortal_Delete(New <%= BusinessClassName %>Criteria (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>), connection)
+        
+            OnChildSelfDeleted()
+        End Sub
+        
+        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByVal connection as SqlConnection)
+    <% RenderHelper(New DataPortalDelete()) %>
+        End Sub
+    
+        
+        Private Sub Map(ByVal reader As SafeDataReader)
+    <% RenderHelper(New MapDataReader()) %>
+    
+            MarkAsChild()
+            MarkOld()
+        End Sub
+    End Class
+End Namespace
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>

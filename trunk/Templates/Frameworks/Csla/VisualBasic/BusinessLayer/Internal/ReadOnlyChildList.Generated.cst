@@ -36,61 +36,63 @@ Imports Csla.Serialization
 #End If
 <% End If %>
 
-<Serializable()> _
-<% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
-<Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>InfoListFactoryName)> _
-<% End If %>
-Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %> 
-    Inherits ReadOnlyListBase(Of <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><% If(IsReadOnlyBusinessObject("Info")) Then %>Info<%End If%><%= Entity.GenericProperty %>)
-
-    #Region "Contructor(s)"
-
-<% If(IncludeSilverlightSupport) Then %>
-#If Not SILVERLIGHT Then
-<% End If %>
-    Private Sub New()
-    End Sub
-<% If(IncludeSilverlightSupport) Then %>
-#Else
-    public Sub New()
-    End Sub
-#End If
-<% End If %>
-
-    #End Region
-
-<% If(IncludeSilverlightSupport) Then %>
-#If Not SILVERLIGHT Then
-<% End If %>
-
-    #Region "Synchronous Factory Methods"
-<% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
-
-    Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
-        Dim criteria As New <%= ChildBusinessClassName %>Criteria()
-        <%= sc.Members.BuildObjectInitializer() %>
-
-        Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(criteria)
-    End Function
-<% Next %>
-
-    Friend Shared Function GetAll() As <%= BusinessClassName %>
-        Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(New <%= ChildBusinessClassName %>Criteria())
-    End Function
-
-    #End Region
-
-<% If(IncludeSilverlightSupport) Then %>
-#End If
-
-     #Region "Asynchronous Factory Methods"
-
-	' Child objects do not expose asynchronous factory get methods.
-
-    #End Region
-
-<% End If %>
-<% RenderHelper(New Exists()) %>
+Namespace <%= BusinessProjectName %>
+    <Serializable()> _
+    <% If(DataAccessImplementation = DataAccessMethod.ObjectFactoryNone Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) %>
+    <Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>InfoListFactoryName)> _
+    <% End If %>
+    Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %> 
+        Inherits ReadOnlyListBase(Of <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><% If(IsReadOnlyBusinessObject("Info")) Then %>Info<%End If%><%= Entity.GenericProperty %>)
     
-<% RenderHelper(New PartialMethods()) %>
-End Class
+        #Region "Contructor(s)"
+    
+    <% If(IncludeSilverlightSupport) Then %>
+    #If Not SILVERLIGHT Then
+    <% End If %>
+        Private Sub New()
+        End Sub
+    <% If(IncludeSilverlightSupport) Then %>
+    #Else
+        public Sub New()
+        End Sub
+    #End If
+    <% End If %>
+    
+        #End Region
+    
+    <% If(IncludeSilverlightSupport) Then %>
+    #If Not SILVERLIGHT Then
+    <% End If %>
+    
+        #Region "Synchronous Factory Methods"
+    <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
+    
+        Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
+            Dim criteria As New <%= ChildBusinessClassName %>Criteria()
+            <%= sc.Members.BuildObjectInitializer() %>
+    
+            Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(criteria)
+        End Function
+    <% Next %>
+    
+        Friend Shared Function GetAll() As <%= BusinessClassName %>
+            Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(New <%= ChildBusinessClassName %>Criteria())
+        End Function
+    
+        #End Region
+    
+    <% If(IncludeSilverlightSupport) Then %>
+    #End If
+    
+        #Region "Asynchronous Factory Methods"
+    
+        ' Child objects do not expose asynchronous factory get methods.
+    
+        #End Region
+    
+    <% End If %>
+    <% RenderHelper(New Exists()) %>
+        
+    <% RenderHelper(New PartialMethods()) %>
+    End Class
+End Namespace

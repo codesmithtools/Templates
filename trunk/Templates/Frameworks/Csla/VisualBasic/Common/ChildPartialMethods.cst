@@ -9,43 +9,43 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-    #Region "ChildPortal partial methods"
-
-<%If IncludeSilverlightSupport Then %>
-#If Not SILVERLIGHT Then
-<% End If %>
-    Partial Private Sub OnChildCreating(ByRef cancel As Boolean)
-    End Sub
-    Partial Private Sub OnChildCreated()
-    End Sub
-    Partial Private Sub OnChildFetching(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByRef cancel As Boolean)
-    End Sub
-    Partial Private Sub OnChildFetched()
-    End Sub
-    Partial Private Sub OnMapping(ByVal reader As SafeDataReader, ByRef cancel As Boolean)
-    End Sub
-    Partial Private Sub OnMapped()
-    End Sub
-    Partial Private Sub OnChildInserting(ByVal connection As SqlConnection, ByRef cancel As Boolean)
-    End Sub
-    Partial Private Sub OnChildInserted()
-    End Sub
-    Partial Private Sub OnChildUpdating(ByVal connection As SqlConnection, ByRef cancel As Boolean)
-    End Sub
-    Partial Private Sub OnChildUpdated()
-    End Sub
-    Partial Private Sub OnChildSelfDeleting(ByVal connection As SqlConnection, ByRef cancel As Boolean)
-    End Sub
-    Partial Private Sub OnChildSelfDeleted()
-    End Sub
-    Partial Private Sub OnDeleting(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByRef cancel As Boolean)
-    End Sub
-    Partial Private Sub OnDeleting(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByVal connection As SqlConnection, ByRef cancel As Boolean)
-    End Sub
-    Partial Private Sub OnDeleted()
-    End Sub
-<% If(IncludeSilverlightSupport) Then %>
-#End If
-<% End If %>
-
-    #End Region
+        #Region "ChildPortal partial methods"
+    
+    <%If IncludeSilverlightSupport Then %>
+    #If Not SILVERLIGHT Then
+    <% End If %>
+        Partial Private Sub OnChildCreating(ByRef cancel As Boolean)
+        End Sub
+        Partial Private Sub OnChildCreated()
+        End Sub
+        Partial Private Sub OnChildFetching(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByRef cancel As Boolean)
+        End Sub
+        Partial Private Sub OnChildFetched()
+        End Sub
+        Partial Private Sub OnMapping(ByVal reader As SafeDataReader, ByRef cancel As Boolean)
+        End Sub
+        Partial Private Sub OnMapped()
+        End Sub
+        Partial Private Sub OnChildInserting(ByVal connection As SqlConnection, ByRef cancel As Boolean)
+        End Sub
+        Partial Private Sub OnChildInserted()
+        End Sub
+        Partial Private Sub OnChildUpdating(ByVal connection As SqlConnection, ByRef cancel As Boolean)
+        End Sub
+        Partial Private Sub OnChildUpdated()
+        End Sub
+        Partial Private Sub OnChildSelfDeleting(ByVal connection As SqlConnection, ByRef cancel As Boolean)
+        End Sub
+        Partial Private Sub OnChildSelfDeleted()
+        End Sub
+        Partial Private Sub OnDeleting(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByRef cancel As Boolean)
+        End Sub
+        Partial Private Sub OnDeleting(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>, ByVal connection As SqlConnection, ByRef cancel As Boolean)
+        End Sub
+        Partial Private Sub OnDeleted()
+        End Sub
+    <% If(IncludeSilverlightSupport) Then %>
+    #End If
+    <% End If %>
+    
+        #End Region
