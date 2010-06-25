@@ -29,8 +29,6 @@
                             Do
                                 Me.Add(New <%= ChildBusinessClassName %><% If(BusinessClassName.Contains("InfoList") AndAlso IsReadOnlyBusinessObject("Info")) Then %>Info<%End If%>(reader))
                             Loop While reader.Read()
-                        Else
-                            Throw New Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria))
                         End If
                     End Using
                 End Using

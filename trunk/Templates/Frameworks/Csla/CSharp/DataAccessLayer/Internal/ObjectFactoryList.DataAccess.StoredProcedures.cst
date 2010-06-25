@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.DataCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DataAccessLayer" %>
 <%@ Register Name="PartialMethods" Template="..\..\Common\ListDataPortalPartialMethods.cst" MergeProperties="False" ExcludeProperties="" %>
 
@@ -108,8 +108,6 @@ namespace <%= DataProjectName %>
                             SetIsReadOnly(item, true);
 <%}%>
                         }
-                        else
-                            throw new Exception(string.Format("The record was not found in '<%= Entity.Table.Name %>' using the following criteria: {0}.", criteria));
                     }
                 }
             }

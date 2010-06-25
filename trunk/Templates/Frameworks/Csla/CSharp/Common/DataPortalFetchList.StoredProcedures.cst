@@ -34,8 +34,6 @@
                                 this.Add(new <%= ChildBusinessClassName %><% if(BusinessClassName.Contains("InfoList") && IsReadOnlyBusinessObject("Info")) { %>Info<% }%>(reader));
                             } while(reader.Read());
                         }
-                        else
-                            throw new Exception(string.Format("The record was not found in '<%= Entity.Table.Name %>' using the following criteria: {0}.", criteria));
                     }
                 }
             }

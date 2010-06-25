@@ -107,8 +107,6 @@ namespace <%= DataProjectName %>
                             SetIsReadOnly(item, true);
 <%}%>
                         }
-                        else
-                            throw new Exception(String.Format("The record was not found in '<%= Entity.Table.Name %>' using the following criteria: {0}.", criteria));
                     }
                 }
             }
