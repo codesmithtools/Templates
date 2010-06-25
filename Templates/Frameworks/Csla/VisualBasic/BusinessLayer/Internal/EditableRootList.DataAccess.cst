@@ -29,28 +29,30 @@ Imports System
 Imports Csla
 Imports Csla.Data
 
-Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-
-    <RunLocal()> _
-    Protected Overrides Sub DataPortal_Create()
-    End Sub
-
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>)
-        RaiseListChangedEvents = False
-
-        ' Fetch Child objects.
-        ' While(SourceHasMoreChildren)
-            'Me.Add(New <%= ChildBusinessClassName %>(source))
-        ' End While
-
-        RaiseListChangedEvents = True
-    End Sub
+Namespace <%= BusinessProjectName %>
+    Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     
-    Protected Overrides Sub DataPortal_Update()
-        'Child_Update()
-    End Sub
-
-End Class
+        <RunLocal()> _
+        Protected Overrides Sub DataPortal_Create()
+        End Sub
+    
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>)
+            RaiseListChangedEvents = False
+    
+            ' Fetch Child objects.
+            ' While(SourceHasMoreChildren)
+                'Me.Add(New <%= ChildBusinessClassName %>(source))
+            ' End While
+    
+            RaiseListChangedEvents = True
+        End Sub
+        
+        Protected Overrides Sub DataPortal_Update()
+            'Child_Update()
+        End Sub
+    
+    End Class
+End Namespace
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>

@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.DataCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DataAccessLayer" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -36,68 +36,70 @@ Imports <%= BusinessProjectName %>
 
 #End Region
 
-Public Function Partial class <%= Entity.ClassName %>ListFactory
-    Inherits ObjectFactory
-<% If Not(IsReadOnlyBusinessObject) Then %>
-    #Region "Create"
-
-    ''' <summary>
-    ''' Creates new <%= Entity.ClassName %>List with default values.
-    ''' </summary>
-    ''' <Returns>new <%= Entity.ClassName %>List.</Returns>
-    <RunLocal()> _
-    Public Function Create() As <%= Entity.ClassName %>List
-        Dim item As <%= Entity.ClassName %>List = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), True)
-
-        Dim cancel As Boolean = False
-        OnCreating(cancel)
-        If (cancel) Then
-            Return
-        End If
-
-        Using BypassPropertyChecks(item)
-            ' Default values.
-
-            CheckRules(item)
-            MarkNew(item)
-<% If(IsChildBusinessObject) Then %>
+Namespace <%= DataProjectName %>
+    Public Function Partial class <%= Entity.ClassName %>ListFactory
+        Inherits ObjectFactory
+    <% If Not(IsReadOnlyBusinessObject) Then %>
+        #Region "Create"
+    
+        ''' <summary>
+        ''' Creates new <%= Entity.ClassName %>List with default values.
+        ''' </summary>
+        ''' <Returns>new <%= Entity.ClassName %>List.</Returns>
+        <RunLocal()> _
+        Public Function Create() As <%= Entity.ClassName %>List
+            Dim item As <%= Entity.ClassName %>List = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), True)
+    
+            Dim cancel As Boolean = False
+            OnCreating(cancel)
+            If (cancel) Then
+                Return
+            End If
+    
+            Using BypassPropertyChecks(item)
+                ' Default values.
+    
+                CheckRules(item)
+                MarkNew(item)
+    <% If(IsChildBusinessObject) Then %>
+                MarkAsChild(item)
+    <% End If %>
+            End Using
+    
+            OnCreated()
+    
+            Return item
+        End Function
+    
+        #End Region
+    
+    <% End If %>
+        #Region "Fetch"
+    
+        ''' <summary>
+        ''' Fetch <%= Entity.ClassName %>List.
+        ''' </summary>
+        ''' <param name="criteria">The criteria.</param>
+        ''' <Returns></Returns>
+        Public Function Fetch(ByVal criteria As <%= Entity.ClassName %>Criteria) As <%= Entity.ClassName %>List
+            Dim cancel As Boolean = False
+            OnFetching(criteria, cancel)
+            If (cancel) Then
+                Return
+            End If
+    
+            Dim item As <%= Entity.ClassName %>List
+    
+            MarkOld(item)
+    <% If(IsChildBusinessObject) Then %>
             MarkAsChild(item)
-<% End If %>
-        End Using
-
-        OnCreated()
-
-        Return item
-    End Function
-
-    #End Region
-
-<% End If %>
-    #Region "Fetch"
-
-    ''' <summary>
-    ''' Fetch <%= Entity.ClassName %>List.
-    ''' </summary>
-    ''' <param name="criteria">The criteria.</param>
-    ''' <Returns></Returns>
-    Public Function Fetch(ByVal criteria As <%= Entity.ClassName %>Criteria) As <%= Entity.ClassName %>List
-        Dim cancel As Boolean = False
-        OnFetching(criteria, cancel)
-        If (cancel) Then
-            Return
-        End If
-
-        Dim item As <%= Entity.ClassName %>List
-
-        MarkOld(item)
-<% If(IsChildBusinessObject) Then %>
-        MarkAsChild(item)
-<% End If %>
-
-        OnFetched()
-
-        Return item
-    End Function
-
-    #End Region
-End Class
+    <% End If %>
+    
+            OnFetched()
+    
+            Return item
+        End Function
+    
+        #End Region
+    End Class
+End Namespace

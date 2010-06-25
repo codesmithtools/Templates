@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -10,26 +10,26 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-        Dim cancel As Boolean = False
-        OnChildFetching(criteria, cancel)
-        If (cancel) Then
-            Return
-        End If
-
-        Using connection As New SqlConnection(ADOHelper.ConnectionString)
-            connection.Open()
-            Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)
-                command.CommandType = CommandType.StoredProcedure
-                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                <%= Entity.Members.BuildHasValueCommandParameters() %>
-                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                    If reader.Read() Then
-                        Map(reader)
-                    Else
-                        Throw New Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria))
-                    End If
+            Dim cancel As Boolean = False
+            OnChildFetching(criteria, cancel)
+            If (cancel) Then
+                Return
+            End If
+    
+            Using connection As New SqlConnection(ADOHelper.ConnectionString)
+                connection.Open()
+                Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)
+                    command.CommandType = CommandType.StoredProcedure
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+                    <%= Entity.MembersNoRowVersion.BuildHasValueCommandParameters() %>
+                    Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                        If reader.Read() Then
+                            Map(reader)
+                        Else
+                            Throw New Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria))
+                        End If
+                    End Using
                 End Using
             End Using
-        End Using
-
-        OnChildFetched()
+    
+            OnChildFetched()

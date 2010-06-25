@@ -10,32 +10,32 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-        Dim cancel As Boolean = False
-        OnFetching(criteria, cancel)
-        If (cancel) Then
-            Return
-        End If
-
-        RaiseListChangedEvents = False
-
-        ' Fetch Child objects.
-        Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
-        Using connection As New SqlConnection(ADOHelper.ConnectionString)
-            connection.Open()
-            Using command As New SqlCommand(commandText, connection)
-                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-                Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
-                    If reader.Read() Then
-                        Do
-                            Me.Add(New <%= ChildBusinessClassName %><% If(BusinessClassName.Contains("InfoList") AndAlso IsReadOnlyBusinessObject("Info")) Then %>Info<%End If%>(reader))
-                        Loop While reader.Read()
-                    Else
-                        Throw New Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria))
-                    End If
+            Dim cancel As Boolean = False
+            OnFetching(criteria, cancel)
+            If (cancel) Then
+                Return
+            End If
+    
+            RaiseListChangedEvents = False
+    
+            ' Fetch Child objects.
+            Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+            Using connection As New SqlConnection(ADOHelper.ConnectionString)
+                connection.Open()
+                Using command As New SqlCommand(commandText, connection)
+                    command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+                    Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
+                        If reader.Read() Then
+                            Do
+                                Me.Add(New <%= ChildBusinessClassName %><% If(BusinessClassName.Contains("InfoList") AndAlso IsReadOnlyBusinessObject("Info")) Then %>Info<%End If%>(reader))
+                            Loop While reader.Read()
+                        Else
+                            Throw New Exception(String.Format("The record was not found in '<%= entity.Table.Name %>' using the following criteria: {0}.", criteria))
+                        End If
+                    End Using
                 End Using
             End Using
-        End Using
-
-        RaiseListChangedEvents = True
-
-        OnFetched()
+    
+            RaiseListChangedEvents = True
+    
+            OnFetched()

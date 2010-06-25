@@ -53,131 +53,133 @@ Imports Csla.Serialization
 
 #End Region
 
-<Serializable(), ClassInterface(ClassInterfaceType.None)> _
-Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-    Inherits CriteriaBase<% If (IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>
-    Implements IGeneratedCriteria
-
-    #Region "Private Read-Only Members"
+Namespace <%= BusinessProjectName %>
+    <Serializable(), ClassInterface(ClassInterfaceType.None)> _
+    Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Inherits CriteriaBase<% If (IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>
+        Implements IGeneratedCriteria
     
-    Private ReadOnly _bag As New Dictionary(Of String, Object)()
+        #Region "Private Read-Only Members"
+        
+        Private ReadOnly _bag As New Dictionary(Of String, Object)()
+        
+        #End Region
     
-    #End Region
-
-    #Region "Constructors"
-
-    Public Sub New()
-       <% If Not(IsCSLA40) Then %>MyBase.New(GetType(<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% End If %>
-    End Sub
+        #Region "Constructors"
     
-    Public Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>) 
+        Public Sub New()
         <% If Not(IsCSLA40) Then %>MyBase.New(GetType(<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% End If %>
+        End Sub
         
-<% For Each member As Member In Entity.PrimaryKey.KeyMembers %>
-        Me.<%= member.PropertyName %> = <%= member.VariableName %>
-<% Next %>
-    End Sub
-
-    #End Region
-
-    #Region "Public Properties"
+        Public Sub New(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>) 
+            <% If Not(IsCSLA40) Then %>MyBase.New(GetType(<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% End If %>
+            
+    <% For Each member As Member In Entity.PrimaryKey.KeyMembers %>
+            Me.<%= member.PropertyName %> = <%= member.VariableName %>
+    <% Next %>
+        End Sub
     
-    #Region "Read-Write"
-
-<% For Each member As Member In Entity.MembersNoRowVersion %>
+        #End Region
     
-    Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
-        Get
-            Return GetValue(Of <%= member.SystemType %>)("<%= member.ColumnName %>")
-        End Get
-        Set
-            _bag("<%= member.ColumnName %>") = value
-        End Set
-    End Property
-<% Next %>
-
-    #End Region
-    
-    #Region "Read-Only"
-<% If(DataAccessImplementation = DataAccessMethod.StoredProcedures Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures)
-    For Each member As Member In Entity.MembersNoRowVersion
-        If(member.IsNullable) Then
-%>
-
-    Public ReadOnly Property <%= member.PropertyName %>HasValue As Boolean
-        Get
-            Return _bag.ContainsKey("<%= member.ColumnName %>")
-        End Get
-    End Property
-<%      End If
-    Next
-End If
-%>
-
-    ''' <summary>
-    ''' Returns a list of all the modified properties and values.
-    ''' </summary>
-    Public ReadOnly Property StateBag() As Dictionary(Of String, Object) Implements IGeneratedCriteria.StateBag
-        Get
-            Return _bag
-        End Get
-    End Property
-
-    ''' <summary>
-    ''' Returns a list of all the modified properties and values.
-    ''' </summary>
-    Public ReadOnly Property TableFullName() As String Implements IGeneratedCriteria.TableFullName
-        Get
-            Return "[<%= Entity.Table.Owner%>].<%= Entity.Table.Name%>"
-        End Get
-    End Property
-
-    #End Region
-
-    #End Region
-
-    #region "Overrides"
-
-    Public Overrides Function ToString() As String
-        Dim result As String = String.Empty
-        Dim cancel As Boolean = False
+        #Region "Public Properties"
         
-        OnToString(result, cancel)
-        If(cancel AndAlso Not String.IsNullOrEmpty(result)) Then
-            Return result
-        End If
+        #Region "Read-Write"
     
-        If _bag.Count = 0 Then
-            Return "No criterion was specified."
-        End If
-
-        For Each key As KeyValuePair(Of String, Object) In _bag
-            result += String.Format("[{0}] = '{1}' AND ", key.Key, key.Value)
+    <% For Each member As Member In Entity.MembersNoRowVersion %>
+        
+        Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
+            Get
+                Return GetValue(Of <%= member.SystemType %>)("<%= member.ColumnName %>")
+            End Get
+            Set
+                _bag("<%= member.ColumnName %>") = value
+            End Set
+        End Property
+    <% Next %>
+    
+        #End Region
+        
+        #Region "Read-Only"
+    <% If(DataAccessImplementation = DataAccessMethod.StoredProcedures Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures)
+        For Each member As Member In Entity.MembersNoRowVersion
+            If(member.IsNullable) Then
+    %>
+    
+        Public ReadOnly Property <%= member.PropertyName %>HasValue As Boolean
+            Get
+                Return _bag.ContainsKey("<%= member.ColumnName %>")
+            End Get
+        End Property
+    <%      End If
         Next
-
-        Return result.Remove(result.Length - 5, 5)
-    End Function
-
-    #End Region
-
-    #Region "Private Methods"
+    End If
+    %>
     
-    Private Function GetValue(Of T)(name As String) As T
-        Dim value As New Object
-        If _bag.TryGetValue(name, value) Then
-            Return DirectCast(value, T)
-        End If
+        ''' <summary>
+        ''' Returns a list of all the modified properties and values.
+        ''' </summary>
+        Public ReadOnly Property StateBag() As Dictionary(Of String, Object) Implements IGeneratedCriteria.StateBag
+            Get
+                Return _bag
+            End Get
+        End Property
     
-        Return Nothing
-    End Function
+        ''' <summary>
+        ''' Returns a list of all the modified properties and values.
+        ''' </summary>
+        Public ReadOnly Property TableFullName() As String Implements IGeneratedCriteria.TableFullName
+            Get
+                Return "[<%= Entity.Table.Owner%>].<%= Entity.Table.Name%>"
+            End Get
+        End Property
     
-    #End Region
+        #End Region
     
-    #Region "Partial Methods"
-
-    Partial Private Sub OnToString(ByRef result As String, ByRef cancel As Boolean)
-    End Sub
-
-    #End Region
-
-End Class
+        #End Region
+    
+        #region "Overrides"
+    
+        Public Overrides Function ToString() As String
+            Dim result As String = String.Empty
+            Dim cancel As Boolean = False
+            
+            OnToString(result, cancel)
+            If(cancel AndAlso Not String.IsNullOrEmpty(result)) Then
+                Return result
+            End If
+        
+            If _bag.Count = 0 Then
+                Return "No criterion was specified."
+            End If
+    
+            For Each key As KeyValuePair(Of String, Object) In _bag
+                result += String.Format("[{0}] = '{1}' AND ", key.Key, key.Value)
+            Next
+    
+            Return result.Remove(result.Length - 5, 5)
+        End Function
+    
+        #End Region
+    
+        #Region "Private Methods"
+        
+        Private Function GetValue(Of T)(name As String) As T
+            Dim value As New Object
+            If _bag.TryGetValue(name, value) Then
+                Return DirectCast(value, T)
+            End If
+        
+            Return Nothing
+        End Function
+        
+        #End Region
+        
+        #Region "Partial Methods"
+    
+        Partial Private Sub OnToString(ByRef result As String, ByRef cancel As Boolean)
+        End Sub
+    
+        #End Region
+    
+    End Class
+End Namespace

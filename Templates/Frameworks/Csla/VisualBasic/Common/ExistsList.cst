@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -9,16 +9,16 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-    #Region "Exists Command"
-
-<% If(IncludeSilverlightSupport) Then %>
-#If Not SILVERLIGHT Then
-<% End If %>
-    Public Shared Function Exists(ByVal criteria As <%= ChildBusinessClassName %>Criteria) As Boolean
-        Return <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria)
-    End Function
-<% If(IncludeSilverlightSupport) Then %>
-#End If
-<% End If %>
-
-    #End Region
+        #Region "Exists Command"
+    
+    <% If(IncludeSilverlightSupport) Then %>
+    #If Not SILVERLIGHT Then
+    <% End If %>
+        Public Shared Function Exists(ByVal criteria As <%= ChildBusinessClassName %>Criteria) As Boolean
+            Return <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria)
+        End Function
+    <% If(IncludeSilverlightSupport) Then %>
+    #End If
+    <% End If %>
+    
+        #End Region

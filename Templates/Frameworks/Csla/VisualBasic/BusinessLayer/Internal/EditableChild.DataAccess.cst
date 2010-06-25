@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA EditableRoot" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -29,33 +29,35 @@ Imports System
 Imports Csla
 Imports Csla.Data
 
-Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-    Protected Overrides Sub Child_Create()
-        ' TODO: load default values.
-        ' omit this override if you have no defaults to set.
-        'MyBase.Child_Create()
-    End Sub
-
-    Private Sub Child_Fetch(ByVal childData As Object)
-        ' TODO: load values
-    End Sub
-
-    Private Sub Child_Insert(ByVal parent As Object)
-        ' TODO: insert values
-    End Sub
-
-    Private Sub Child_Update(ByVal parent As Object)
-        ' TODO: update values
-    End Sub
-
-    Private Sub Child_DeleteSelf(ByVal parent As Object)
-        ' TODO: delete values
-    End Sub
-
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria )
-        ' TODO: delete values
-    End Sub
-End Class
+Namespace <%= BusinessProjectName %>
+    Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Protected Overrides Sub Child_Create()
+            ' TODO: load default values.
+            ' omit this override if you have no defaults to set.
+            'MyBase.Child_Create()
+        End Sub
+    
+        Private Sub Child_Fetch(ByVal childData As Object)
+            ' TODO: load values
+        End Sub
+    
+        Private Sub Child_Insert(ByVal parent As Object)
+            ' TODO: insert values
+        End Sub
+    
+        Private Sub Child_Update(ByVal parent As Object)
+            ' TODO: update values
+        End Sub
+    
+        Private Sub Child_DeleteSelf(ByVal parent As Object)
+            ' TODO: delete values
+        End Sub
+    
+        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria )
+            ' TODO: delete values
+        End Sub
+    End Class
+End Namespace
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>

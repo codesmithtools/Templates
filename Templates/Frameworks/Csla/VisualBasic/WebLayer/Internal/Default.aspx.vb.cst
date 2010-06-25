@@ -11,10 +11,12 @@ Description: The following template will generate a ASP.Net code behind.
 <%@ Import Namespace="QuickStart" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 
-Partial Class _Default
-    Inherits System.Web.UI.Page
-
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-    End Sub
+Namespace <%= InterfaceProjectName %>
+    Partial Class _Default
+        Inherits System.Web.UI.Page
     
-End Class
+        Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        End Sub
+        
+    End Class
+End Namespace

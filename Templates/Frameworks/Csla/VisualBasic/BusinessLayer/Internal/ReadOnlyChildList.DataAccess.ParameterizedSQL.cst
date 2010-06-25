@@ -33,15 +33,17 @@ Imports System.Data.SqlClient
 Imports Csla
 Imports Csla.Data
 
-Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-    Private Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>)
-        IsReadOnly = false
-
-<% RenderHelper(New DataPortalFetchList()) %>
-
-        IsReadOnly = true
-    End Sub
-End Class
+Namespace <%= BusinessProjectName %>
+    Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
+        Private Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>)
+            IsReadOnly = false
+    
+    <% RenderHelper(New DataPortalFetchList()) %>
+    
+            IsReadOnly = true
+        End Sub
+    End Class
+End Namespace
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>

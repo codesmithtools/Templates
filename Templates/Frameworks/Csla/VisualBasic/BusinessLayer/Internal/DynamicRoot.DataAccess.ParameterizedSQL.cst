@@ -39,50 +39,52 @@ Imports System.Data.SqlClient
 Imports Csla
 Imports Csla.Data
 
-Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-    <RunLocal()> _
-    Protected Overrides Sub DataPortal_Create()
-<% RenderHelper(new DataPortalCreate()) %>
-    End Sub
-    Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria )
-<% RenderHelper(New DataPortalFetch()) %>
-
-        MarkOld()
-    End Sub
+Namespace <%= BusinessProjectName %>
+    Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
+        <RunLocal()> _
+        Protected Overrides Sub DataPortal_Create()
+    <% RenderHelper(new DataPortalCreate()) %>
+        End Sub
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria )
+    <% RenderHelper(New DataPortalFetch()) %>
     
-    <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Overrides Sub DataPortal_Insert()
-<% RenderHelper(New DataPortalInsert()) %>
-    End Sub
-
-    <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Overrides Sub DataPortal_Update()
-<% RenderHelper(New DataPortalUpdate()) %>
-    End Sub
-
-    Protected Overrides Sub DataPortal_DeleteSelf()
-        Dim cancel As Boolean = False
-        OnSelfDeleting(cancel)
-        If (cancel) Then
-            Return
-        End If
+            MarkOld()
+        End Sub
+        
+        <Transactional(TransactionalTypes.TransactionScope)> _
+        Protected Overrides Sub DataPortal_Insert()
+    <% RenderHelper(New DataPortalInsert()) %>
+        End Sub
     
-        DataPortal_Delete(New <%= BusinessClassName %>Criteria (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
+        <Transactional(TransactionalTypes.TransactionScope)> _
+        Protected Overrides Sub DataPortal_Update()
+    <% RenderHelper(New DataPortalUpdate()) %>
+        End Sub
     
-        OnSelfDeleted()
-    End Sub
-
-    <Transactional(TransactionalTypes.TransactionScope)> _
-    Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria )
-<% RenderHelper(New DataPortalDelete()) %>
-    End Sub
+        Protected Overrides Sub DataPortal_DeleteSelf()
+            Dim cancel As Boolean = False
+            OnSelfDeleting(cancel)
+            If (cancel) Then
+                Return
+            End If
+        
+            DataPortal_Delete(New <%= BusinessClassName %>Criteria (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
+        
+            OnSelfDeleted()
+        End Sub
     
-    Private Sub Map(ByVal reader As SafeDataReader)
-<% RenderHelper(New MapDataReader()) %>
-
-        MarkOld()
-    End Sub
-End Class
+        <Transactional(TransactionalTypes.TransactionScope)> _
+        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria )
+    <% RenderHelper(New DataPortalDelete()) %>
+        End Sub
+        
+        Private Sub Map(ByVal reader As SafeDataReader)
+    <% RenderHelper(New MapDataReader()) %>
+    
+            MarkOld()
+        End Sub
+    End Class
+End Namespace
 <% If(IncludeSilverlightSupport) Then %>
 #End If
 <% End If %>

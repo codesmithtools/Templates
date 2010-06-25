@@ -68,8 +68,8 @@
 
 <% if(Entity.HasRowVersionMember) { %>
                     <%= Entity.RowVersionMember.PropertyName %> = (<%= Entity.RowVersionMember.SystemType %>)command.Parameters["<%= ParameterPrefix  %><%= Entity.RowVersionMember.ColumnName %>"].Value;
-<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) {%> 
-                    //  Update non-identity primary key value.
+<% } foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity && member.IsNullable) {%> 
+                    //  Update non-identity nullable primary key value.
 <% if(UseMemberVariables) { %>
                     <%= member.PrivateMemberVariableName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
 <% } else { %>

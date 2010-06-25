@@ -1,0 +1,28 @@
+﻿<%-- Author: Blake Niemyjski --%>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.Extensions" Path="..\..\Common" %>
+<%@ Assembly Name="CodeSmith.SchemaHelper.VisualBasicExtensions" Path="..\..\Common" %>
+<%@ Assembly Name="QuickStart" Path="..\..\Common" %>
+
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="CodeSmith.SchemaHelper" %>
+<%@ Import Namespace="QuickStart" %>
+            Dim item As <%= ChildBusinessClassName %> = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
+    
+            Dim cancel As Boolean = False
+            OnAddNewCore(item, cancel)
+            If Not (cancel) Then
+                ' Check to see if someone set the item to null in the OnAddNewCore.
+                If(item Is Nothing) Then
+                    item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
+                End If
+                
+                Add(item)
+            End If
+    <% If(Not RenderOptionalContent) Then %>        
+    
+            Return item
+    <% End If %>

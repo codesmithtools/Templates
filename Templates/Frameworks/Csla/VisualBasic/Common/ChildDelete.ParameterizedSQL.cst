@@ -10,22 +10,22 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-        Dim cancel As Boolean = False
-        OnDeleting(criteria, connection, cancel)
-        If (cancel) Then
-            Return
-        End If
-
-	Dim commandText As String = String.Format("DELETE FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
-	Using command As New SqlCommand(commandText, connection)
-            command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
-
-            'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
-            Dim result As Integer = command.ExecuteNonQuery()
-            If result = 0 Then
-            	Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+            Dim cancel As Boolean = False
+            OnDeleting(criteria, connection, cancel)
+            If (cancel) Then
+                Return
             End If
-
-        End Using
-
-	OnDeleted()
+    
+        Dim commandText As String = String.Format("DELETE FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
+        Using command As New SqlCommand(commandText, connection)
+                command.Parameters.AddRange(ADOHelper.SqlParameters(criteria.StateBag))
+    
+                'result: The number of rows changed, inserted, or deleted. -1 for select statements; 0 if no rows were affected, or the statement failed. 
+                Dim result As Integer = command.ExecuteNonQuery()
+                If result = 0 Then
+                    Throw New DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.")
+                End If
+    
+            End Using
+    
+        OnDeleted()
