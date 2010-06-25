@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
@@ -12,9 +12,17 @@
 <%@ Import Namespace="QuickStart" %>
         #region Contructor(s)
 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
         private <%= BusinessClassName %>()
         { /* Require use of factory methods */ }
-
+<% if(IncludeSilverlightSupport) { %>
+#else
+	public <%= BusinessClassName %>()
+        { /* Require use of factory methods */ }
+#endif
+<% } %>
         internal <%= BusinessClassName %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         {
 <% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(UseMemberVariables) { %>
