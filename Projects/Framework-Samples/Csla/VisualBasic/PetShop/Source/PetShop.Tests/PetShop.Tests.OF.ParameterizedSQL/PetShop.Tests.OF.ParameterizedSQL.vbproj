@@ -7,7 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{81BE355E-E9DF-4242-A3C5-575489C54EC8}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>PetShop.Tests.OF.ParameterizedSQL</RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <AssemblyName>PetShop.Tests.OF.ParameterizedSQL</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
@@ -36,9 +37,9 @@
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Csla, Version=3.8.0.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+    <Reference Include="Csla, Version=3.8.2.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\..\..\Common\Csla\Csla.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\Common\Csla\3.8.2\Client\Csla.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -72,109 +73,88 @@
     <Compile Include="CategoryTests.vb" />
     <Compile Include="Generated\Collections\CategoryList.Generated.vb">
       <DependentUpon>CategoryList.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Collections\CategoryList.vb" />
     <Compile Include="Generated\Collections\ItemList.Generated.vb">
       <DependentUpon>ItemList.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Collections\ItemList.vb" />
     <Compile Include="Generated\Collections\LineItemList.Generated.vb">
       <DependentUpon>LineItemList.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Collections\LineItemList.vb" />
     <Compile Include="Generated\Collections\OrderList.Generated.vb">
       <DependentUpon>OrderList.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Collections\OrderList.vb" />
     <Compile Include="Generated\Collections\OrderStatusList.Generated.vb">
       <DependentUpon>OrderStatusList.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Collections\OrderStatusList.vb" />
     <Compile Include="Generated\Collections\ProductList.Generated.vb">
       <DependentUpon>ProductList.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Collections\ProductList.vb" />
     <Compile Include="Generated\Collections\SupplierList.Generated.vb">
       <DependentUpon>SupplierList.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Collections\SupplierList.vb" />
     <Compile Include="Generated\Commands\ExistsCommand.vb" />
     <Compile Include="Generated\Criteria\CategoryCriteria.Generated.vb">
       <DependentUpon>CategoryCriteria.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Criteria\CategoryCriteria.vb" />
     <Compile Include="Generated\Criteria\Interfaces\IGeneratedCriteria.vb" />
     <Compile Include="Generated\Criteria\ItemCriteria.Generated.vb">
       <DependentUpon>ItemCriteria.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Criteria\ItemCriteria.vb" />
     <Compile Include="Generated\Criteria\LineItemCriteria.Generated.vb">
       <DependentUpon>LineItemCriteria.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Criteria\LineItemCriteria.vb" />
     <Compile Include="Generated\Criteria\OrderCriteria.Generated.vb">
       <DependentUpon>OrderCriteria.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Criteria\OrderCriteria.vb" />
     <Compile Include="Generated\Criteria\OrderStatusCriteria.Generated.vb">
       <DependentUpon>OrderStatusCriteria.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Criteria\OrderStatusCriteria.vb" />
     <Compile Include="Generated\Criteria\ProductCriteria.Generated.vb">
       <DependentUpon>ProductCriteria.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Criteria\ProductCriteria.vb" />
     <Compile Include="Generated\Criteria\SupplierCriteria.Generated.vb">
       <DependentUpon>SupplierCriteria.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Criteria\SupplierCriteria.vb" />
     <Compile Include="Generated\Entities\Category.Generated.vb">
       <DependentUpon>Category.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Entities\Category.vb" />
     <Compile Include="Generated\Entities\Item.Generated.vb">
       <DependentUpon>Item.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Entities\Item.vb" />
     <Compile Include="Generated\Entities\LineItem.Generated.vb">
       <DependentUpon>LineItem.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Entities\LineItem.vb" />
     <Compile Include="Generated\Entities\Order.Generated.vb">
       <DependentUpon>Order.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Entities\Order.vb" />
     <Compile Include="Generated\Entities\OrderStatus.Generated.vb">
       <DependentUpon>OrderStatus.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Entities\OrderStatus.vb" />
     <Compile Include="Generated\Entities\Product.Generated.vb">
       <DependentUpon>Product.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Entities\Product.vb" />
     <Compile Include="Generated\Entities\Supplier.Generated.vb">
       <DependentUpon>Supplier.vb</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Generated\Entities\Supplier.vb" />
     <Compile Include="Generated\Factory\FactoryNames.vb" />

@@ -7,7 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F6247C42-9359-44FC-9D11-68987437592A}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>PetShop.Tests.StoredProcedures</RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <AssemblyName>PetShop.Tests.StoredProcedures</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
@@ -36,9 +37,9 @@
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Csla, Version=3.8.0.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+    <Reference Include="Csla, Version=3.8.2.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\Common\Csla\Csla.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\Common\Csla\3.8.2\Client\Csla.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -279,6 +280,12 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PetShop.Tests.ParameterizedSQL\PetShop.Tests.ParameterizedSQL.vbproj">
+      <Project>{B5772F1F-5418-4C85-8C83-1BC333F19884}</Project>
+      <Name>PetShop.Tests.ParameterizedSQL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

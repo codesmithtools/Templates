@@ -1,6 +1,8 @@
 ﻿Imports System
 Imports System.Diagnostics
 Imports NUnit.Framework
+Imports PetShop.Tests.OF.StoredProcedures.PetShop.Tests.OF.StoredProcedures
+Imports PetShop.Tests.OF.StoredProcedures
 
 <TestFixture()> _
 Public Class LineItemTests
@@ -311,8 +313,8 @@ Public Class LineItemTests
         Console.WriteLine("8. Updating the lineItem.")
         Dim watch As Stopwatch = Stopwatch.StartNew()
 
-        Dim lineItem As LineItem = LineItem.GetByOrderId(LineItemOrderID)
-        Dim lineItem2 As LineItem = LineItem.GetByOrderId(LineItemOrderID)
+        Dim lineItem As LineItem = lineItem.GetByOrderId(LineItemOrderID)
+        Dim lineItem2 As LineItem = lineItem.GetByOrderId(LineItemOrderID)
         Dim quantity As Integer = lineItem.Quantity
         Dim unitPrice As Decimal = lineItem.UnitPrice
 
