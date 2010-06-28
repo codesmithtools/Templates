@@ -67,7 +67,7 @@ namespace <%= BusinessProjectName %>
                             do
                             {
                                 // TODO: You will need to update the GetInt32 and GetString values.
-                                this.Add(new NameValuePair(reader.GetInt32("<%= Entity.PrimaryKey.KeyMember.Name %>"), reader.GetString("<%= Entity.Members[0].Name %>")));
+                                this.Add(new NameValuePair(reader.GetInt32("<%= Entity.PrimaryKey.KeyMember.ColumnName %>"), reader.GetString("<%= Entity.MembersNoPrimaryKeys[0].ColumnName %>")));
                             } while(reader.Read());
                         }
                         else
@@ -107,7 +107,7 @@ namespace <%= BusinessProjectName %>
                             do
                             {
                                 // TODO: You will need to update the GetInt32 and GetString values.
-                                this.Add(new NameValuePair(reader.GetInt32("<%= Entity.PrimaryKey.KeyMember.Name %>"), reader.GetString("<%= Entity.Members[0].Name %>")));
+                                this.Add(new NameValuePair(reader.GetInt32("<%= Entity.PrimaryKey.KeyMember.ColumnName %>"), reader.GetString("<%= Entity.MembersNoPrimaryKeys[0].ColumnName %>")));
                             } while(reader.Read());
                         }
                         else
