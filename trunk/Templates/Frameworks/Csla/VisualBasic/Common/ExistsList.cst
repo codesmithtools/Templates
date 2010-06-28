@@ -14,7 +14,7 @@
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
-        Public Shared Function Exists(ByVal criteria As <%= ChildBusinessClassName %>Criteria) As Boolean
+        Public Shared Function Exists(ByVal criteria As <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>) As Boolean
             Return <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.Exists(criteria)
         End Function
     <% If(IncludeSilverlightSupport) Then %>

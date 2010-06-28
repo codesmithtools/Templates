@@ -47,7 +47,7 @@ namespace <%= BusinessProjectName %>
 <% if(DataAccessImplementation == DataAccessMethod.ObjectFactoryNone || DataAccessImplementation == DataAccessMethod.ObjectFactoryParameterizedSQL || DataAccessImplementation == DataAccessMethod.ObjectFactoryStoredProcedures){ %>
     [Csla.Server.ObjectFactory(FactoryNames.<%= Entity.ClassName %>InfoListFactoryName)]
 <% } %>
-    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyListBase< <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><% if(IsReadOnlyBusinessObject("Info")) { %>Info<%}%><%= Entity.GenericProperty %> >
+    public partial class <%= BusinessClassName %><%= Entity.GenericProperty %> : ReadOnlyListBase< <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %><%= Entity.GenericProperty %> >
     {
     
     	#region Constructor(s)
@@ -75,14 +75,14 @@ namespace <%= BusinessProjectName %>
         internal static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             return DataPortal.FetchChild< <%= BusinessClassName %> >(
-                new <%= ChildBusinessClassName %>Criteria{<%= sc.Members.BuildObjectInitializer() %>});
+                new <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>{<%= sc.Members.BuildObjectInitializer() %>});
         }
         
 <% } %>
 
 	internal static <%= BusinessClassName %> GetAll()
         {
-            return DataPortal.FetchChild< <%= BusinessClassName %> >(new <%= ChildBusinessClassName %>Criteria());
+            return DataPortal.FetchChild< <%= BusinessClassName %> >(new <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>());
         }
 	
         #endregion

@@ -48,7 +48,7 @@ Namespace <%= BusinessProjectName %>
             RaiseListChangedEvents = false
             IsReadOnly = false
     
-            Dim criteria as New <%= ChildBusinessClassName %>Criteria()
+            Dim criteria as New <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>()
             Dim commandText As String = String.Format("SELECT <%= entity.Members.BuildDataBaseColumns() %> FROM [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag))
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
@@ -81,7 +81,7 @@ Namespace <%= BusinessProjectName %>
             RaiseListChangedEvents = false
             IsReadOnly = false
     
-            Dim criteria as New <%= ChildBusinessClassName %>Criteria()
+            Dim criteria as New <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>()
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
                 connection.Open()
                 Using command As New SqlCommand("<%= GetSelectStoredProcedureName() %>", connection)

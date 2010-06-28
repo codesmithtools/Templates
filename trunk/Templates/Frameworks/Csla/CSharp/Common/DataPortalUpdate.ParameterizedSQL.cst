@@ -37,7 +37,7 @@
                 }
 
                 // Delete the old.
-                DataPortal_Delete(new <%= BusinessClassName %>Criteria {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(false, false, true) %>});
+                DataPortal_Delete(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %> {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(false, false, true) %>});
 
                 // Mark the original as the new one.
 <% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { %>

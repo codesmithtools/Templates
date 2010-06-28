@@ -42,13 +42,13 @@
             {
                 int idToUse = 1;
                 Console.WriteLine("Getting test object suitable for deletion");
-                Assert.True(<%= BusinessClassName %>.Exists(new <%= BusinessClassName %>Criteria(idToUse)));
+                Assert.True(<%= BusinessClassName %>.Exists(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %>(idToUse)));
                 <%= BusinessClassName %> testObject = <%= BusinessClassName %>.Get<%= BusinessClassName %>(idToUse);
                 Console.WriteLine("Verifying test object IsValid");
                 Assert.True(testObject.IsValid);
                 Console.WriteLine("Deleting test object");
                 testObject.Delete();
-                Assert.False(<%= BusinessClassName %>.Exists(new <%= BusinessClassName %>Criteria(testObject.<%= Entity.PrimaryKey.KeyMember %>)));
+                Assert.False(<%= BusinessClassName %>.Exists(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %>(testObject.<%= Entity.PrimaryKey.KeyMember %>)));
             }
 <% } else {%>
             //Non-integer foreign key detected. Unable to generate DELETE test.
@@ -96,13 +96,13 @@
             {
                 int idToUse = 1;
                 Console.WriteLine("Getting test object suitable for deletion");
-                Assert.True(<%= BusinessClassName %>.Exists(new <%= BusinessClassName %>Criteria(idToUse)));
+                Assert.True(<%= BusinessClassName %>.Exists(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %>(idToUse)));
                 <%= BusinessClassName %> testObject = <%= BusinessClassName %>.Get<%= BusinessClassName %>(idToUse);
                 Console.WriteLine("Verifying test object IsValid");
                 Assert.True(testObject.IsValid);
                 Console.WriteLine("Deleting test object");
                 testObject.Delete();
-                Assert.False(<%= BusinessClassName %>.Exists(new <%= BusinessClassName %>Criteria(testObject.<%= Entity.PrimaryKey.KeyMember %>)));
+                Assert.False(<%= BusinessClassName %>.Exists(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %>(testObject.<%= Entity.PrimaryKey.KeyMember %>)));
             }
 <% } else {%>
             //Non-integer foreign key detected. Unable to generate DELETE test.

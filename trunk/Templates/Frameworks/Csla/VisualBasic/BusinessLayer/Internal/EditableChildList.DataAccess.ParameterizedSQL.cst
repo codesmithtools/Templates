@@ -51,7 +51,7 @@ Namespace <%= BusinessProjectName %>
             OnCreated()
         End Sub
     
-        Private Shadows Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>)
+        Private Shadows Sub Child_Fetch(ByVal criteria As <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>)
     <% RenderHelper(New DataPortalFetchList()) %>
         End Sub
         ''' <summary>

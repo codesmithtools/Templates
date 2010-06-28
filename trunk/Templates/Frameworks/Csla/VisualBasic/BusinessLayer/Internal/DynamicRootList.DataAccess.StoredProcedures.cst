@@ -37,7 +37,7 @@ Namespace <%= BusinessProjectName %>
         Private Sub DataPortal_Create()
         End Sub
     
-        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria)
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>)
     <% RenderHelper(New DataPortalFetchList()) %>
         End Sub
     End Class

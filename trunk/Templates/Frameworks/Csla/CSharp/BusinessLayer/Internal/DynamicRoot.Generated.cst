@@ -76,7 +76,7 @@ namespace <%= BusinessProjectName %>
         internal static <%= BusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %> >(
-                new <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %> {<%= sc.Members.BuildObjectInitializer() %>});
+                new <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %> {<%= sc.Members.BuildObjectInitializer() %>});
         }
 <% } %>
 
@@ -99,7 +99,7 @@ namespace <%= BusinessProjectName %>
         {
             DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal<<%= BusinessClassName %><%= Entity.GenericProperty %>>();
             dp.FetchCompleted += handler;
-            dp.BeginFetch(new <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>});
+            dp.BeginFetch(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>});
         }
 
 <% } %> 

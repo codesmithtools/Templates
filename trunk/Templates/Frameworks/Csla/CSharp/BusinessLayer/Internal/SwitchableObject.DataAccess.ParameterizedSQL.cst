@@ -57,7 +57,7 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new DataPortalCreate()); %>
         }
 
-        private void DataPortal_Fetch(<%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria)
+        private void DataPortal_Fetch(<%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new DataPortalFetch()); %>
         }
@@ -80,19 +80,19 @@ namespace <%= BusinessProjectName %>
             OnSelfDeleting(ref cancel);
             if (cancel) return;
             
-            DataPortal_Delete(new <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
+            DataPortal_Delete(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
         
             OnSelfDeleted();
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]
-        protected void DataPortal_Delete(<%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria)
+        protected void DataPortal_Delete(<%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new DataPortalDelete()); %>
         }
 
         //[Transactional(TransactionalTypes.TransactionScope)]
-        protected void DataPortal_Delete(<%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria, SqlConnection connection)
+        protected void DataPortal_Delete(<%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> criteria, SqlConnection connection)
         {
 <% RenderHelper(new DataPortalDelete(), true); %>
         }
@@ -106,7 +106,7 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new ChildCreate()); %>
         }
 
-        private void Child_Fetch(<%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> criteria)
+        private void Child_Fetch(<%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new ChildFetch()); %>
 
@@ -166,7 +166,7 @@ namespace <%= BusinessProjectName %>
             OnChildSelfDeleting(ref cancel);
             if (cancel) return;
             
-            DataPortal_Delete(new <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
+            DataPortal_Delete(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
         
             OnChildSelfDeleted();
         }
@@ -181,7 +181,7 @@ namespace <%= BusinessProjectName %>
             OnChildSelfDeleting(ref cancel);
             if (cancel) return;
 
-            DataPortal_Delete(new <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>), connection);
+            DataPortal_Delete(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>), connection);
 
             OnChildSelfDeleted();
         }
