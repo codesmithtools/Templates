@@ -85,7 +85,7 @@ Namespace <%= BusinessProjectName %>
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
         Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %> 
-            Dim criteria As New <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>()
+            Dim criteria As New <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>()
             <%= sc.Members.BuildObjectInitializer() %>
     
             Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
@@ -93,7 +93,7 @@ Namespace <%= BusinessProjectName %>
     <% Next %>
     
         Public Shared Function GetAll() As <%= BusinessClassName %><%= Entity.GenericProperty %>
-            Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(New <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>())
+            Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(New <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>())
         End Function
     
         #End Region
@@ -125,7 +125,7 @@ Namespace <%= BusinessProjectName %>
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.FetchCompleted, handler
     
-            Dim criteria As New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>()
+            Dim criteria As New <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %>()
     <%For Each member As Member in sc.Members %>
             criteria.<%= member.PropertyName %> = <%= member.VariableName %>
     <% Next %>
@@ -137,7 +137,7 @@ Namespace <%= BusinessProjectName %>
         Public Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.FetchCompleted, handler
-            dp.BeginFetch(New <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>())
+            dp.BeginFetch(New <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>())
         End Sub
     
         #End Region

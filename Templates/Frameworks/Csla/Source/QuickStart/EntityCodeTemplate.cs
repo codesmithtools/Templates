@@ -167,26 +167,54 @@ namespace QuickStart
                 if (string.IsNullOrEmpty(BusinessClassName))
                     return BusinessClassName;
 
-                if (BusinessClassName.EndsWith("ListList", true, CultureInfo.InvariantCulture))
+                if (BusinessClassNameExists("ListList", 4))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
 
-                if (BusinessClassName.EndsWith("InfoList", true, CultureInfo.InvariantCulture))
+                if (BusinessClassNameExists("InfoList", 8))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 8);
 
-                if (BusinessClassName.EndsWith("NameValueList", true, CultureInfo.InvariantCulture))
+                if (BusinessClassNameExists("NameValueList", 13))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 13);
 
-                if (BusinessClassName.EndsWith("List", true, CultureInfo.InvariantCulture))
+                if (BusinessClassNameExists("List", 4))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
 
-                if (BusinessClassName.EndsWith("Info", true, CultureInfo.InvariantCulture))
+                if (BusinessClassNameExists("Info", 4))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
 
-                if (BusinessClassName.EndsWith("Criteria", true, CultureInfo.InvariantCulture))
+                if (BusinessClassNameExists("Criteria", 8))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 8);
 
                 return BusinessClassName;
             }
+        }
+
+        /// <summary>
+        /// Gets the Root BusinessName + the suffix.
+        /// </summary>
+        /// <param name="className"></param>
+        /// <param name="suffix"></param>
+        /// <returns></returns>
+        [Browsable(false)]
+        public string ResolveTargetClassName(string className, string suffix)
+        {
+            return ResolveTargetClassName(className, suffix, true);
+        }
+
+        /// <summary>
+        /// Gets the Root BusinessName + the suffix.
+        /// </summary>
+        /// <param name="className"></param>
+        /// <param name="suffix"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        [Browsable(false)]
+        public string ResolveTargetClassName(string className, string suffix, bool expression)
+        {
+            if (BusinessObjectExists(suffix) && expression)
+                return string.Concat(Entity.ClassName, suffix);
+
+            return expression ? string.Concat(Entity.ClassName, suffix.Trim()) : Entity.ClassName;
         }
 
         [Category("3. Business Project")]
@@ -432,6 +460,38 @@ namespace QuickStart
         }
 
         /// <summary>
+        /// Checks to see if a Business Object exists without a suffix.
+        /// </summary>
+        /// <param name="suffix">The Suffix</param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public bool BusinessClassNameExists(string suffix, int length)
+        {
+            if(!BusinessClassName.EndsWith(suffix, true, CultureInfo.InvariantCulture))
+                return false;
+
+            if (Entity.ClassName == BusinessClassName.Substring(0, BusinessClassName.Length - length))
+                return BusinessObjectExists(string.Empty);
+
+            return BusinessObjectExists(BusinessClassName.Substring(BusinessClassName.Length - length, length));
+        }
+
+        /// <summary>
+        /// This is used to detect to see if the context data contains a class. It is used in the case where we want to see if a read-write class exists before a read only..
+        /// </summary>
+        /// <param name="suffix"></param>
+        /// <returns></returns>
+        public bool BusinessObjectExists(string suffix)
+        {
+            if (_table == null)
+                return false;
+
+            string key = string.Format("{0}{1}", _table.Name, suffix);
+
+            return ContextData.Get(key) != null;
+        }
+
+        /// <summary>
         /// This is used to detect to see if the context data contains a class. It is used in the case where we want to see if a read-write class exists before a read only..
         /// </summary>
         /// <param name="association"></param>
@@ -456,7 +516,6 @@ namespace QuickStart
 
             return ContextData.Get(key) != null;
         }
-
 
         #endregion
 

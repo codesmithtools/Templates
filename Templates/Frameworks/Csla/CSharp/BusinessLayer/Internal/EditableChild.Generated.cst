@@ -78,7 +78,7 @@ namespace <%= BusinessProjectName %>
         internal static <%= ChildBusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
             return DataPortal.FetchChild< <%= ChildBusinessClassName %><%= Entity.GenericProperty %> >(
-                new <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %> {<%= sc.Members.BuildObjectInitializer() %>});
+                new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> {<%= sc.Members.BuildObjectInitializer() %>});
         }
 <% } %>
 <% if(IncludeSilverlightSupport) { %>

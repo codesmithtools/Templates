@@ -34,7 +34,7 @@ Imports Csla.Data
 
 Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-        Private Sub Child_Fetch(ByVal criteria As <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>)
+        Private Sub Child_Fetch(ByVal criteria As <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>)
             IsReadOnly = false
     
     <% RenderHelper(New DataPortalFetchList()) %>

@@ -300,7 +300,7 @@ Namespace <%= DataProjectName %>
     <% Next %>
         
                     ' Delete the old.
-                    Dim criteria As New <%= BusinessClassName %>Criteria()
+                    Dim criteria As New <%= ResolveTargetClassName(BusinessClassName, "Criteria") %>()
                     <%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(true, false, true) %>
                     Delete(criteria)
         
@@ -409,7 +409,7 @@ Namespace <%= DataProjectName %>
                 Return
             End If
     
-            Dim criteria As New <%= ChildBusinessClassName %>Criteria()
+            Dim criteria As New <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>()
     <%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(True) %>
             DoDelete(criteria)
     

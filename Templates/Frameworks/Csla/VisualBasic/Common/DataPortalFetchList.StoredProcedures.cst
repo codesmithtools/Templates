@@ -28,7 +28,7 @@
                     Using reader As SafeDataReader = New SafeDataReader(command.ExecuteReader())
                         If reader.Read() Then
                             Do
-                                Me.Add(New <%= ChildBusinessClassName %><% If(BusinessClassName.Contains("InfoList") AndAlso IsReadOnlyBusinessObject("Info")) Then %>Info<%End If%>(reader))
+                                Me.Add(New <%= ResolveTargetClassName(ChildBusinessClassName, "Info", BusinessClassName.Contains("InfoList") AndAlso IsReadOnlyBusinessObject("Info")) %>(reader))
                             Loop While reader.Read()
                         End If
                     End Using

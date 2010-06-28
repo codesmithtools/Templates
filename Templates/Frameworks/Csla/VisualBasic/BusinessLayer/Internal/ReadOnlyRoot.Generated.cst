@@ -58,7 +58,7 @@ Namespace <%= BusinessProjectName %>
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
         Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
-            Dim criteria As New <%= ChildBusinessClassName %>Criteria<%= Entity.GenericProperty %>()
+            Dim criteria As New <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>()
             <%= sc.Members.BuildObjectInitializer() %>
     
             Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
@@ -77,7 +77,7 @@ Namespace <%= BusinessProjectName %>
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.FetchCompleted, handler
         
-            Dim criteria As New <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>()
+            Dim criteria As New <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %>()
     <%For Each member As Member in sc.Members %>
             criteria.<%= member.PropertyName %> = <%= member.VariableName %>
     <% Next %>

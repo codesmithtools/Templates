@@ -42,7 +42,7 @@ Namespace <%= BusinessProjectName %>
             MyBase.DataPortal_Create()
         End Sub
     
-        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>)
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %>)
             ' TODO: load values
         End Sub
     
@@ -63,7 +63,7 @@ Namespace <%= BusinessProjectName %>
         End Sub
     
         '<Transactional(TransactionalTypes.TransactionScope)> _
-        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= BusinessClassName %>Criteria<%= Entity.GenericProperty %>)
+        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %>)
             ' TODO: delete values
         End Sub
     
