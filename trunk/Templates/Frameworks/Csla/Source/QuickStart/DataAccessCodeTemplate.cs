@@ -244,8 +244,8 @@ namespace QuickStart
             EntityManager em = new EntityManager(DynamicRoot);
             foreach (Entity entity in em.Entities)
             {
-                if (ContextData.Get(entity.ClassName) != null)
-                    ContextData.Remove(entity.ClassName);
+                if (ContextData.Get(entity.Table.Name) != null)
+                    ContextData.Remove(entity.Table.Name);
 
                 EditableChild.Remove(entity.Table);
                 EditableRoot.Remove(entity.Table);
@@ -253,7 +253,7 @@ namespace QuickStart
                 ReadOnlyRoot.Remove(entity.Table);
                 SwitchableObject.Remove(entity.Table);
 
-                ContextData.Add(entity.ClassName, Constants.DynamicRoot);
+                ContextData.Add(entity.Table.Name, Constants.DynamicRoot);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -285,14 +285,14 @@ namespace QuickStart
             EntityManager em = new EntityManager(EditableChild);
             foreach (Entity entity in em.Entities)
             {
-                if (ContextData.Get(entity.ClassName) != null)
-                    ContextData.Remove(entity.ClassName);
+                if (ContextData.Get(entity.Table.Name) != null)
+                    ContextData.Remove(entity.Table.Name);
 
                 DynamicRoot.Remove(entity.Table);
                 EditableRoot.Remove(entity.Table);
                 SwitchableObject.Remove(entity.Table);
 
-                ContextData.Add(entity.ClassName, Constants.EditableChild);
+                ContextData.Add(entity.Table.Name, Constants.EditableChild);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -324,14 +324,14 @@ namespace QuickStart
             EntityManager em = new EntityManager(EditableRoot);
             foreach (Entity entity in em.Entities)
             {
-                if (ContextData.Get(entity.ClassName) != null)
-                    ContextData.Remove(entity.ClassName);
+                if (ContextData.Get(entity.Table.Name) != null)
+                    ContextData.Remove(entity.Table.Name);
 
                 DynamicRoot.Remove(entity.Table);
                 EditableChild.Remove(entity.Table);
                 SwitchableObject.Remove(entity.Table);
 
-                ContextData.Add(entity.ClassName, Constants.EditableRoot);
+                ContextData.Add(entity.Table.Name, Constants.EditableRoot);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
@@ -441,14 +441,14 @@ namespace QuickStart
             EntityManager em = new EntityManager(SwitchableObject);
             foreach (Entity entity in em.Entities)
             {
-                if (ContextData.Get(entity.ClassName) != null)
-                    ContextData.Remove(entity.ClassName);
+                if (ContextData.Get(entity.Table.Name) != null)
+                    ContextData.Remove(entity.Table.Name);
 
                 DynamicRoot.Remove(entity.Table);
                 EditableChild.Remove(entity.Table);
                 EditableRoot.Remove(entity.Table);
 
-                ContextData.Add(entity.ClassName, Constants.SwitchableObject);
+                ContextData.Add(entity.Table.Name, Constants.SwitchableObject);
 
                 if (this.State == TemplateState.RestoringProperties)
                     return;
