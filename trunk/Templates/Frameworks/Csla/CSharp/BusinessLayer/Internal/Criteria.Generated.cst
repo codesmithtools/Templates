@@ -25,6 +25,15 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+
+<% if(IncludeSilverlightSupport) { %>
+using Csla.Core;
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+using Csla.Serialization.Mobile;
+<% } %>
+
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
@@ -34,11 +43,6 @@ using System.Data.SqlClient;
 <% } %>
 
 using Csla;
-<% if(IncludeSilverlightSupport) { %>
-#if SILVERLIGHT
-using Csla.Serialization;
-#endif
-<% } %>
 
 #endregion
 
@@ -158,5 +162,27 @@ foreach(Member member in Entity.MembersNoRowVersion){ if(member.IsNullable) { %>
         partial void OnToString(ref string result, ref bool cancel);
         
         #endregion
+        
+<% if(IncludeSilverlightSupport) { %>
+        #region Serialization
+        
+        protected override void OnGetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnGetState(info, mode);
+    <% foreach(Member member in Entity.MembersNoRowVersion){ %>
+            if (_bag.ContainsKey("<%= member.ColumnName %>")) info.AddValue("<%= member.ColumnName %>", GetValue< <%= member.SystemType %> >("<%= member.ColumnName %>"));
+    <% } %>
+        }
+
+        protected override void OnSetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnSetState(info, mode);
+    <% foreach(Member member in Entity.MembersNoRowVersion){ %>
+            if(info.Values.ContainsKey("<%= member.ColumnName %>")) _bag["<%= member.ColumnName %>"] = info.GetValue< <%= member.SystemType %> >("<%= member.ColumnName %>");
+    <% } %>
+        }
+
+        #endregion
+<% } %>
     }
 }

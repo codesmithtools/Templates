@@ -37,19 +37,14 @@ Imports System.Data.SqlClient
 #End If
 <% End If %>
 
-<% If(IncludeSilverlightSupport) Then %>
-#If SILVERLIGHT Then
-Imports Csla.Serialization
-#End If
-<% End If %>
-
 Imports Csla
 <% If(IncludeSilverlightSupport) Then %>
+Imports Csla.Core
 #If SILVERLIGHT Then
 Imports Csla.Serialization
 #End If
+Imports Csla.Serialization.Mobile
 <% End If %>
-
 
 #End Region
 
@@ -175,11 +170,37 @@ Namespace <%= BusinessProjectName %>
         #End Region
         
         #Region "Partial Methods"
-    
+
         Partial Private Sub OnToString(ByRef result As String, ByRef cancel As Boolean)
         End Sub
-    
+
         #End Region
-    
+
+<% If(IncludeSilverlightSupport) Then %>
+        #Region "Serialization"
+
+        Protected Overrides Sub OnGetState(ByVal info As SerializationInfo, ByVal mode As StateMode)
+            MyBase.OnGetState(info, mode)
+            
+<% For Each member As Member In Entity.MembersNoRowVersion %>
+            If _bag.ContainsKey("<%= member.ColumnName %>") Then
+                info.AddValue("<%= member.ColumnName %>", GetValue(Of <%= member.SystemType %>)("<%= member.ColumnName %>"))
+            End If
+<% Next %>
+        End Sub
+        
+        Protected Overrides Sub OnSetState(ByVal info As SerializationInfo, ByVal mode As StateMode)
+            MyBase.OnSetState(info, mode)
+            
+<% For Each member As Member In Entity.MembersNoRowVersion %>
+            If info.Values.ContainsKey("<%= member.ColumnName %>") Then
+                _bag("<%= member.ColumnName %>") = info.GetValue(Of <%= member.SystemType %>)("<%= member.ColumnName %>")
+            End If
+<% Next %>
+        End Sub
+
+        #End Region
+
+<% End If %>
     End Class
 End Namespace
