@@ -33,7 +33,11 @@ Imports Csla
 <% If(IncludeSilverlightSupport) Then %>
 #If SILVERLIGHT Then
 Imports Csla.Serialization
+#Else
+Imports Csla.Data
 #End If
+<% Else %>
+Imports Csla.Data
 <% End If %>
 
 Namespace <%= BusinessProjectName %>
