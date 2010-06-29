@@ -72,9 +72,9 @@ namespace <%= BusinessProjectName %>
 <% } %>
         #region Method Overrides
 
-        protected override <% if(IsCSLA40) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>object<% } %> AddNewCore()
+        protected override object AddNewCore()
         {
-<% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
+<% RenderHelper(new AddNewCore()); %>
         }
         
         #endregion
@@ -102,7 +102,7 @@ namespace <%= BusinessProjectName %>
         #endregion
         
 <% if(IncludeSilverlightSupport) { %>
-#endif
+#else
 
         #region Method Overrides
 
@@ -112,7 +112,8 @@ namespace <%= BusinessProjectName %>
         }
         
         #endregion
-        
+#endif
+
         #region Asynchronous Factory Methods
         
         public static void NewListAsync(EventHandler<DataPortalResult<<%= BusinessClassName %><%= Entity.GenericProperty %>>> handler)
