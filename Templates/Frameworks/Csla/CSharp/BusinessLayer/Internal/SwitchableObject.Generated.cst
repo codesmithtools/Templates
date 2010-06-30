@@ -85,12 +85,12 @@ namespace <%= BusinessProjectName %>
 <% if(UseDeferredDeletion){ %>
         //public static void Delete<%= BusinessClassName %><%= Entity.GenericProperty %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         //{
-        //      DataPortal.Delete<% if(!IsCSLA40) { %>< <%= BusinessClassName %><%= Entity.GenericProperty %> ><% } %>(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
+        //      DataPortal.Delete<% if(IsCSLA40) { %>< <%= BusinessClassName %><%= Entity.GenericProperty %> ><% } %>(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
         //}
 <% } else { %> 
         public static void Delete<%= BusinessClassName %><%= Entity.GenericProperty %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
         {
-                DataPortal.Delete<% if(!IsCSLA40) { %>< <%= BusinessClassName %><%= Entity.GenericProperty %> ><% } %>(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
+                DataPortal.Delete<% if(IsCSLA40) { %>< <%= BusinessClassName %><%= Entity.GenericProperty %> ><% } %>(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>));
         }
 <% } %>
         
