@@ -83,11 +83,11 @@ Namespace <%= BusinessProjectName %>
     
     <% If(UseDeferredDeletion)Then %>
         'Public Shared Sub Delete<%= BusinessClassName %><%= Entity.GenericProperty %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
-        '   DataPortal.Delete<% If Not(IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+        '   DataPortal.Delete<% If (IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
         'End Sub
     <%Else%>
         Public Shared Sub Delete<%= BusinessClassName %><%= Entity.GenericProperty %>(<%= Entity.PrimaryKey.KeyMembers.BuildParametersVariables() %>)
-            DataPortal.Delete<% If Not(IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
+            DataPortal.Delete<% If (IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>(New <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<%= Entity.PrimaryKey.KeyMembers.BuildVariableArguments() %>))
         End Sub
     <%End If%>
     
