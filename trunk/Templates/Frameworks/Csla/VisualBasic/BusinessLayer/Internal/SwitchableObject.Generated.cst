@@ -185,7 +185,10 @@ Namespace <%= BusinessProjectName %>
     <% RenderHelper(New PartialMethods()) %>
     
         #Region "ChildPortal partial methods"
-    
+
+<% If(IncludeSilverlightSupport) Then %>
+    #If Not SILVERLIGHT Then
+<% End If %>
         Partial Private Sub OnChildCreating(ByRef cancel As Boolean)
         End Sub
         Partial Private Sub OnChildCreated()
@@ -206,6 +209,9 @@ Namespace <%= BusinessProjectName %>
         End Sub
         Partial Private Sub OnChildSelfDeleted()
         End Sub
+<% If(IncludeSilverlightSupport) Then %>
+#End If 
+<% End If %>
     
         #End Region
     End Class
