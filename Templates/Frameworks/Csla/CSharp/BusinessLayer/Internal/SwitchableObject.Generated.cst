@@ -180,6 +180,9 @@ namespace <%= BusinessProjectName %>
 
         #region ChildPortal partial methods
 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
         partial void OnChildCreating(ref bool cancel);
         partial void OnChildCreated();
         partial void OnChildFetching(<%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> criteria, ref bool cancel);
@@ -190,7 +193,9 @@ namespace <%= BusinessProjectName %>
         partial void OnChildUpdated();
         partial void OnChildSelfDeleting(ref bool cancel);
         partial void OnChildSelfDeleted();
-
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
         #endregion
     }
 }
