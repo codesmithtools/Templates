@@ -23,14 +23,80 @@ namespace CodeSmith.SchemaHelper
                 {
                     if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
                     {
-                        parameters += string.Format("\r\n\t\t\t\tcriteria.{0} = {1}{2}", Util.NamingConventions.PropertyName(associationMember.ColumnName),
-                            usePropertyName ? member.PropertyName : member.VariableName,
-                            member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()" ? ".Value" : string.Empty);
+                        bool isNullable = member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()";
+                        if(isNullable)
+                        {
+                            parameters += string.Format("\r\n\t\t\t\tIf({1}.HasValue) Then criteria.{0} = {1}.Value",
+                                Util.NamingConventions.PropertyName(associationMember.ColumnName),
+                                usePropertyName ? member.PropertyName : member.VariableName);
+                        }
+                        else
+                        {
+                            parameters += string.Format("\r\n\t\t\t\tcriteria.{0} = {1}",
+                                Util.NamingConventions.PropertyName(associationMember.ColumnName),
+                                usePropertyName ? member.PropertyName : member.VariableName);
+                        }
                     }
                 }
             }
 
             return parameters.TrimStart(new[] { '\r', '\n', '\t', ',', ' ' });
+        }
+
+        /// <summary>
+        /// Builds a null check HasValue Statements for the Property Templates.
+        /// </summary>
+        /// <param name="association"></param>
+        /// <returns></returns>
+        public static string BuildNullCheckStatement(this Association association)
+        {
+            return association.BuildNullCheckStatement(false, true, false, false);
+        }
+
+        /// <summary>
+        /// Builds a null check HasValue Statements for the Property Templates.
+        /// </summary>
+        /// <param name="association"></param>
+        /// <param name="usePropertyName"></param>
+        /// <param name="useNot"></param>
+        /// <param name="useAndAlso"></param>
+        /// <param name="trimEnd"></param>
+        /// <returns></returns>
+        public static string BuildNullCheckStatement(this Association association, bool usePropertyName, bool useNot, bool useAndAlso, bool trimEnd)
+        {
+            string exspression = useAndAlso ? "AndAlso " : "OrElse ";
+            string lastParameter = string.Empty;
+            string parameters = string.Empty;
+
+            foreach (Member member in association.SearchCriteria.Members)
+            {
+                foreach (AssociationMember associationMember in association)
+                {
+                    if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                    {
+                        if ((member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte()") == false) continue;
+
+                        lastParameter = parameters.Length == 0 ? 
+                            string.Format("({0} {1}.HasValue {2}", useNot ? "Not" : string.Empty, usePropertyName ? member.PropertyName : member.VariableName, exspression) : 
+                            string.Format(" {0} {1}.HasValue {2}", useNot ? "Not" : string.Empty, usePropertyName ? member.PropertyName : member.VariableName, exspression);
+
+                        parameters += lastParameter; 
+                    }
+                }
+            }
+
+            // If there are no parameters then return.
+            if (parameters.Length == 0) return string.Empty;
+
+            // Insert the last paren.
+            parameters = parameters.Replace(lastParameter, lastParameter.Insert(lastParameter.IndexOf("HasValue") + 8, ")"));
+
+            // Remove the last exspression if needed.
+            if(trimEnd)
+                parameters = parameters.Remove(parameters.Length - exspression.Length);
+
+            // Remove leading characters.
+            return parameters.TrimStart(new[] { ' ' });
         }
 
         public static string BuildParametersVariables(this Association association)

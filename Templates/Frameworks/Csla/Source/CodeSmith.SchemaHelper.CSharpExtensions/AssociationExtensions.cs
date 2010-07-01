@@ -8,6 +8,8 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class AssociationExtensions
     {
+        #region BuildObjectInitializer
+
         public static string BuildObjectInitializer(this Association association)
         {
             return association.BuildObjectInitializer(false);
@@ -23,15 +25,110 @@ namespace CodeSmith.SchemaHelper
                 {
                     if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
                     {
-                        parameters += string.Format(", {0} = {1}{2}", Util.NamingConventions.PropertyName(associationMember.ColumnName),
-                            usePropertyName ? member.PropertyName : member.VariableName,
-                            member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
+                        if (member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") continue;
+
+                        parameters += string.Format(", {0} = {1}", Util.NamingConventions.PropertyName(associationMember.ColumnName),
+                            usePropertyName ? member.PropertyName : member.VariableName);
                     }
                 }
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
+
+        #endregion
+
+        #region BuildNullableObjectInitializer
+
+        public static string BuildNullableObjectInitializer(this Association association)
+        {
+            return association.BuildNullableObjectInitializer(false);
+        }
+
+        public static string BuildNullableObjectInitializer(this Association association, bool usePropertyName)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in association.SearchCriteria.Members)
+            {
+                foreach (AssociationMember associationMember in association)
+                {
+                    if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                    {
+                        if ((member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") == false) continue;
+
+                        parameters += string.Format("\r\n\t\t\t\tif({1}.HasValue) criteria.{0} = {1}.Value;", Util.NamingConventions.PropertyName(associationMember.ColumnName),
+                            usePropertyName ? member.PropertyName : member.VariableName);
+                    }
+                }
+            }
+
+            return parameters.TrimStart(new[] { '\r', '\n', '\t' });
+        }
+
+        #endregion
+
+        #region BuildNullCheckStatement
+
+        /// <summary>
+        /// Builds a null check HasValue Statements for the Property Templates.
+        /// </summary>
+        /// <param name="association"></param>
+        /// <returns></returns>
+        public static string BuildNullCheckStatement(this Association association)
+        {
+            return association.BuildNullCheckStatement(false, true, false, false);
+        }
+
+        /// <summary>
+        /// Builds a null check HasValue Statements for the Property Templates.
+        /// </summary>
+        /// <param name="association"></param>
+        /// <param name="usePropertyName"></param>
+        /// <param name="useNot"></param>
+        /// <param name="useAndAlso"></param>
+        /// <param name="trimEnd"></param>
+        /// <returns></returns>
+        public static string BuildNullCheckStatement(this Association association, bool usePropertyName, bool useNot, bool useAndAlso, bool trimEnd)
+        {
+            string exspression = useAndAlso ? "&& " : "|| ";
+            string lastParameter = string.Empty;
+            string parameters = string.Empty;
+
+            foreach (Member member in association.SearchCriteria.Members)
+            {
+                foreach (AssociationMember associationMember in association)
+                {
+                    if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
+                    {
+                        if ((member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") == false) continue;
+
+                        lastParameter = parameters.Length == 0 ?
+                            string.Format("({0}{1}.HasValue {2}", useNot ? "!" : string.Empty, usePropertyName ? member.PropertyName : member.VariableName, exspression) :
+                            string.Format(" {0}{1}.HasValue {2}", useNot ? "!" : string.Empty, usePropertyName ? member.PropertyName : member.VariableName, exspression);
+
+                        parameters += lastParameter;
+                    }
+                }
+            }
+
+            // If there are no parameters then return.
+            if (parameters.Length == 0) return string.Empty;
+
+            // Insert the last paren.
+            parameters = parameters.Replace(lastParameter, lastParameter.Insert(lastParameter.IndexOf("HasValue") + 8, ")"));
+
+            // Remove the last exspression if needed.
+            if (trimEnd)
+                parameters = parameters.Remove(parameters.Length - exspression.Length);
+
+            // Remove leading characters.
+            return parameters.TrimStart(new[] { ' ' });
+        }
+
+        #endregion
+
+        #region BuildParametersVariables
 
         public static string BuildParametersVariables(this Association association)
         {
@@ -55,6 +152,8 @@ namespace CodeSmith.SchemaHelper
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
+
+        #endregion
 
         public static string BuildUpdateStatementVariables(this Association association, List<Association> associations, int currentRecord, bool includeConnectionParameter)
         {

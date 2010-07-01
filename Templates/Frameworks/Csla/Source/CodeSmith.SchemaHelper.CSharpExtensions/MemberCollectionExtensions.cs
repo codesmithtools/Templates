@@ -9,6 +9,8 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class MemberCollectionExtensions
     {
+        #region BuildObjectInitializer
+
         public static string BuildObjectInitializer(this List<Member> members)
         {
             return members.BuildObjectInitializer(false);
@@ -35,6 +37,8 @@ namespace CodeSmith.SchemaHelper
 
             foreach (Member member in members)
             {
+                if(member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") continue;
+
                 var propertyName = isObjectFactory ? 
                                 string.Format("item.{0}", member.PropertyName) : 
                                 usePropertyName ? member.PropertyName : member.VariableName;
@@ -42,11 +46,60 @@ namespace CodeSmith.SchemaHelper
                 if (includeOriginal && member.IsPrimaryKey && !member.IsIdentity)
                     propertyName = isObjectFactory ? string.Format("item.Original{0}", member.PropertyName) : string.Format("Original{0}", member.PropertyName);
                 
-                parameters += string.Format(", {0} = {1}{2}", member.PropertyName, propertyName, member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
+                parameters += string.Format(", {0} = {1}", member.PropertyName, propertyName);
             }
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
+
+        #endregion
+
+        #region BuildNullableObjectInitializer
+
+        public static string BuildNullableObjectInitializer(this List<Member> members)
+        {
+            return members.BuildNullableObjectInitializer(false);
+        }
+
+        public static string BuildNullableObjectInitializer(this List<Member> members, bool isObjectFactory)
+        {
+            return members.BuildNullableObjectInitializer(isObjectFactory, false);
+        }
+
+        public static string BuildNullableObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName)
+        {
+            return members.BuildNullableObjectInitializer(isObjectFactory, usePropertyName, false);
+        }
+
+        public static string BuildNullableObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal)
+        {
+            return members.BuildNullableObjectInitializer(isObjectFactory, usePropertyName, includeOriginal, "criteria.");
+        }
+
+        public static string BuildNullableObjectInitializer(this List<Member> members, bool isObjectFactory, bool usePropertyName, bool includeOriginal, string prefix)
+        {
+            string parameters = string.Empty;
+
+            foreach (Member member in members)
+            {
+                if ((member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") == false) continue;
+
+                var propertyName = isObjectFactory ?
+                                string.Format("item.{0}", member.PropertyName) :
+                                usePropertyName ? member.PropertyName : member.VariableName;
+
+                if (includeOriginal && member.IsPrimaryKey && !member.IsIdentity)
+                    propertyName = isObjectFactory ? string.Format("item.Original{0}", member.PropertyName) : string.Format("Original{0}", member.PropertyName);
+
+                parameters += string.Format("\r\n\t\t\t\tif({1}.HasValue) {2}{0} = {1}.Value;", member.PropertyName, propertyName, prefix);
+            }
+
+            return parameters.TrimStart(new[] { '\r', '\n', '\t' });
+        }
+
+        #endregion
+
+        #region BuildParametersVariables
 
         public static string BuildParametersVariables(this List<Member> members)
         {
@@ -65,6 +118,10 @@ namespace CodeSmith.SchemaHelper
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
+
+        #endregion
+
+        #region BuildCommandParameters
 
         public static string BuildCommandParameters(this List<Member> members)
         {
@@ -174,6 +231,8 @@ namespace CodeSmith.SchemaHelper
 
             return commandParameters.TrimStart(new[] { '\t', '\r', '\n' });
         }
+
+        #endregion
 
         public static string BuildHasValueCommandParameters(this List<Member> members)
         {
