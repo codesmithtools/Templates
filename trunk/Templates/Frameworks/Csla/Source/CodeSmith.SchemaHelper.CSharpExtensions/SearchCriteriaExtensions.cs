@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace CodeSmith.SchemaHelper
 {
@@ -8,6 +7,8 @@ namespace CodeSmith.SchemaHelper
     /// </summary>
     public static class SearchCriteriaExtensions
     {
+        #region BuildObjectInitializer
+
         public static string BuildObjectInitializer(this SearchCriteria sc)
         {
             return sc.BuildObjectInitializer(false);
@@ -27,15 +28,17 @@ namespace CodeSmith.SchemaHelper
                     {
                         if (sc.IsChild)
                         {
+                            if (member.AssociatedColumn.IsNullable && member.AssociatedColumn.SystemType != "System.String") continue;
+
                             resolvedPropertyName = Util.NamingConventions.PropertyName(member.ColumnName);
-                            var nullable = member.AssociatedColumn.IsNullable && member.AssociatedColumn.SystemType != "System.String" ? ".Value" : string.Empty;
-                            propertyName = string.Format("item.{0}{1}", Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName), nullable);
+                            propertyName = string.Format("item.{0}", Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName));
                         }
                         else
                         {
+                            if (member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") continue;
+
                             resolvedPropertyName = Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName);
-                            var nullable = member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty;
-                            propertyName = string.Format("item.{0}{1}", Util.NamingConventions.PropertyName(member.ColumnName), nullable);
+                            propertyName = string.Format("item.{0}", Util.NamingConventions.PropertyName(member.ColumnName));
                         }
                     }
 
@@ -48,8 +51,10 @@ namespace CodeSmith.SchemaHelper
 
                 foreach (Member member in sc.Members)
                 {
+                    if(member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") continue;
+
                     var propertyName = isObjectFactory ? string.Format("item.{0}", member.PropertyName) : member.VariableName;
-                    parameters += string.Format(", {0} = {1}{2}", member.PropertyName, propertyName, member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty);
+                    parameters += string.Format(", {0} = {1}", member.PropertyName, propertyName);
                 }
 
                 #endregion
@@ -57,6 +62,69 @@ namespace CodeSmith.SchemaHelper
 
             return parameters.TrimStart(new[] { ',', ' ' });
         }
+
+        #endregion
+
+        #region BuildNullableObjectInitializer
+
+        public static string BuildNullableObjectInitializer(this SearchCriteria sc)
+        {
+            return sc.BuildNullableObjectInitializer(false);
+        }
+
+        public static string BuildNullableObjectInitializer(this SearchCriteria sc, bool isObjectFactory)
+        {
+            string parameters = string.Empty;
+
+            if (sc.SearchCriteriaType == SearchCriteriaEnum.ForeignKey)
+            {
+                foreach (AssociationMember member in sc.AssociationMembers)
+                {
+                    var propertyName = isObjectFactory ? string.Format("item.{0}", member.PropertyName) : member.VariableName;
+                    var resolvedPropertyName = member.PropertyName;
+                    if (isObjectFactory)
+                    {
+                        if (sc.IsChild)
+                        {
+                            if ((member.AssociatedColumn.IsNullable && member.AssociatedColumn.SystemType != "System.String") == false) continue;
+
+                            resolvedPropertyName = Util.NamingConventions.PropertyName(member.ColumnName);
+                            var nullable = member.AssociatedColumn.IsNullable && member.AssociatedColumn.SystemType != "System.String" ? ".Value" : string.Empty;
+                            propertyName = string.Format("item.{0}{1}", Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName), nullable);
+                        }
+                        else
+                        {
+                            if ((member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") == false) continue;
+
+                            resolvedPropertyName = Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName);
+                            propertyName = string.Format("item.{0}.Value", Util.NamingConventions.PropertyName(member.ColumnName));
+                        }
+                    }
+
+                    parameters += string.Format("\r\n\t\t\t\tif({1}.HasValue) criteria.{0} = {1};", resolvedPropertyName, propertyName);
+                }
+            }
+            else
+            {
+                #region Handle anything not a ForeignKey.
+
+                foreach (Member member in sc.Members)
+                {
+                    if((member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") == false) continue;
+
+                    var propertyName = isObjectFactory ? string.Format("item.{0}", member.PropertyName) : member.VariableName;
+                    parameters += string.Format("\r\n\t\t\t\tif({1}.HasValue) criteria.{0} = {1}.Value;", member.PropertyName, propertyName);
+                }
+
+                #endregion
+            }
+
+            return parameters.TrimStart(new[] { '\r', '\n', '\t' });
+        }
+
+        #endregion
+
+        #region BuildUpdateStatements
 
         public static string BuildUpdateStatements(this SearchCriteria sc, string associationPropertyName)
         {
@@ -104,5 +172,7 @@ namespace CodeSmith.SchemaHelper
 
             return parameters.TrimStart(new[] { '\r', '\n', });
         }
+
+        #endregion
     }
 }

@@ -25,7 +25,7 @@ internal static class ThisAssembly {
 
     internal const string AssemblyProduct = "CSLA";
     
-    internal const string AssemblyCopyright = "Copyright (c) 2002-2009 CodeSmith Tools, LLC.  All rights reserved.";
+    internal const string AssemblyCopyright = "Copyright (c) 2002-2010 CodeSmith Tools, LLC.  All rights reserved.";
     
     internal const string AssemblyConfiguration = "Release";
 

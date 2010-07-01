@@ -85,8 +85,10 @@ namespace <%= BusinessProjectName %>
 
         internal static <%= BusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
-            return DataPortal.FetchChild< <%= BusinessClassName %><%= Entity.GenericProperty %> >(
-                new <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>});
+			var criteria = new <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>};
+			<%=sc.Members.BuildNullableObjectInitializer()%>
+            
+            return DataPortal.FetchChild< <%= BusinessClassName %><%= Entity.GenericProperty %> >(criteria);
         }
         
 <% } %>
@@ -105,7 +107,7 @@ namespace <%= BusinessProjectName %>
         
         internal static void New<%= ChildBusinessClassName %>ListAsync(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
 		{
-			DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>> dp = new DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>();
+			var dp = new DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>();
 			dp.CreateCompleted += handler;
 			dp.BeginCreate();
 		}

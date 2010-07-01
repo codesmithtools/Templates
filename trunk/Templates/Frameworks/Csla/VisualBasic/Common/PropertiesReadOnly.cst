@@ -82,7 +82,7 @@
                     Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria()
                     <%= association.BuildObjectInitializer(true) %>
     
-                    If(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
+                    If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                     End If
                 End If
@@ -120,7 +120,7 @@
                     Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria()
                     <%= association.BuildObjectInitializer(true) %>
     
-                    If(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
+                    If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                     End If
     <% If(IncludeSilverlightSupport) Then %>
@@ -160,7 +160,7 @@
                     Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria()
                     <%= association.BuildObjectInitializer(true) %>
     
-                    If(<%= BusinessProjectName %>.<%= associationClassName %>List.Exists(criteria)) Then
+                    If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>List.Exists(criteria)) Then
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                     End If
     <%End If%>

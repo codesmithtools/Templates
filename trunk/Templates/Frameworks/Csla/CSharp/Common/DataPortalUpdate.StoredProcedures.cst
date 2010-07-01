@@ -19,6 +19,7 @@
             {
                 // Insert new child.
                 <%= BusinessClassName %> item = new <%= BusinessClassName %> {<%= Entity.MembersNoRowVersion.BuildObjectInitializer(false, true) %>};
+                <%= Entity.MembersNoRowVersion.BuildNullableObjectInitializer(false, true, false, "item.")%>
                 item = item.Save();
 
                 // Mark child lists as dirty. This code may need to be updated to one-to-one relationships.
@@ -37,7 +38,9 @@
                 }
 
                 // Delete the old.
-                DataPortal_Delete(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %> {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(false, false, true) %>});
+				var criteria = new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %> {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(false, false, true) %>};
+				<%= Entity.PrimaryKey.KeyMembers.BuildNullableObjectInitializer(false, false, true) %>
+                DataPortal_Delete(criteria);
 
                 // Mark the original as the new one.
 <% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { %>
