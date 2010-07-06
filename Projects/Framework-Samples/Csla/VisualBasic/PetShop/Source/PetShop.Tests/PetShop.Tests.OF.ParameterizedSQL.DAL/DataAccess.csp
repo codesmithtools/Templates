@@ -5,7 +5,7 @@
     <add key="ConnectionString2" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="DataAccessLayer.cs" output="DataAccessLayer.cs" template="A:\CodeSmith.Google.Code.CSLA.Trunk\VisualBasic\DataAccessLayer\DataAccessLayer.cst">
+    <propertySet name="DataAccessLayer.cs" output="DataAccessLayer.cs" template="C:\Code\Google.Templates.Trunk\Templates\Frameworks\Csla\VisualBasic\DataAccessLayer\DataAccessLayer.cst">
       <property name="DataAccessImplementation">ObjectFactoryParameterizedSQL</property>
       <property name="DataProjectName">PetShop.Tests.OF.ParameterizedSQL.DAL</property>
       <property name="ParameterPrefix">@p_</property>

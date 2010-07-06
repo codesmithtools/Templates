@@ -2,7 +2,6 @@
 Imports System.Diagnostics
 Imports NUnit.Framework
 Imports PetShop.Tests.OF.ParameterizedSQL
-Imports PetShop.Tests.OF.ParameterizedSQL.PetShop.Tests.OF.ParameterizedSQL
 
 <TestFixture()> _
 Public Class LineItemTests

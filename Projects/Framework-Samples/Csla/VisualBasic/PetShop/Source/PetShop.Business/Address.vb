@@ -1,4 +1,6 @@
-﻿Public Class Address
+﻿Imports PetShop.Business
+
+Public Class Address
 
 #Region "Private Members"
 

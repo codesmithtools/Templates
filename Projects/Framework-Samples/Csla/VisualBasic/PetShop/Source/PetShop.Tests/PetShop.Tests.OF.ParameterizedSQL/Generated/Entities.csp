@@ -5,7 +5,7 @@
     <add key="ConnectionString2" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="Entities.cs" output="Entities.cs" template="A:\CodeSmith.Google.Code.CSLA.Trunk\VisualBasic\BusinessLayer\Entities.cst">
+    <propertySet name="Entities.cs" output="Entities.cs" template="C:\Code\Google.Templates.Trunk\Templates\Frameworks\Csla\VisualBasic\BusinessLayer\Entities.cst">
       <property name="CommandObject" />
       <property name="Criteria">
         <connectionString>$(ConnectionString2)</connectionString>

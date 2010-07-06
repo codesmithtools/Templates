@@ -1,4 +1,7 @@
-﻿Public Class ProfileManager
+﻿Imports PetShop.Business
+
+Public Class ProfileManager
+
 #Region "Private Members"
 
     Private Const _ANONYMOUS_USERNAME As String = "Anonymous"
@@ -46,7 +49,7 @@
         End If
 
         'Get the profile.
-        Dim profile As Profile = Profile.GetProfile(username)
+        Dim profile As Profile = profile.GetProfile(username)
 
         'Check to see if the profile exists.
         If String.IsNullOrEmpty(profile.Username) Then
@@ -69,7 +72,7 @@
     ''' <param name="isAnonymous">True if the the user anonymous.</param>
     ''' <returns>A newly created user.</returns>
     Public Function CreateUser(ByVal username As String, ByVal isAnonymous As Boolean) As Profile
-        Dim profile As Profile = Profile.NewProfile()
+        Dim profile As Profile = profile.NewProfile()
         profile.Username = username
         profile.ApplicationName = ".NET Pet Shop 4.0"
         profile.IsAnonymous = isAnonymous

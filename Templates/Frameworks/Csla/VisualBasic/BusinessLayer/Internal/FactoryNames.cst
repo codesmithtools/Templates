@@ -26,11 +26,12 @@ Option Strict On
 Imports System
 Imports System.Runtime.CompilerServices
 
+' Note: I really don't like having this here but if someone can come up with a better way to populate identity columns after update let me know.
+' Documentation: http://msdn.microsoft.com/en-us/library/system.runtime.compilerservices.internalsvisibletoattribute.aspx
+<assembly: InternalsVisibleTo("<%= DataProjectName %>")>
+
 Namespace <%= BusinessProjectName %>
-    ' Note: I really don't like having this here but if someone can come up with a better way to populate identity columns after update let me know.
-    ' Documentation: http://msdn.microsoft.com/en-us/library/system.runtime.compilerservices.internalsvisibletoattribute.aspx
-    <assembly: InternalsVisibleTo("<%= DataProjectName %>")> _
-    Public Module FactoryNames
+    Public Class FactoryNames
     
         #Region "Preserved Code"
     
@@ -70,5 +71,6 @@ Namespace <%= BusinessProjectName %>
     <% For Each entity As Entity In new EntityManager(ReadOnlyChildList).Entities %>
         Public Const <%= entity.ClassName %>InfoListFactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>ListFactory, <%= DataProjectName %>"
     <% Next %>
-    End Module
+    
+    End Class
 End Namespace
