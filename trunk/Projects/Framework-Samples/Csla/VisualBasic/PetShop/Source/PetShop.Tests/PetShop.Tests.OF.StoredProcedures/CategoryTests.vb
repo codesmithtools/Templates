@@ -1,7 +1,6 @@
 ﻿Imports System
 Imports System.Diagnostics
 Imports NUnit.Framework
-Imports PetShop.Tests.OF.StoredProcedures.PetShop.Tests.OF.StoredProcedures
 Imports PetShop.Tests.OF.StoredProcedures
 
 <TestFixture()> _

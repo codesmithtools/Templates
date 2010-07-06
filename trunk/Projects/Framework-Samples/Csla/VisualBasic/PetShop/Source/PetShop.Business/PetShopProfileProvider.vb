@@ -1,6 +1,8 @@
 ﻿Imports System.Web.Profile
 Imports System.Configuration
 
+Imports PetShop.Business
+
 Public NotInheritable Class PetShopProfileProvider
     Inherits ProfileProvider
 
