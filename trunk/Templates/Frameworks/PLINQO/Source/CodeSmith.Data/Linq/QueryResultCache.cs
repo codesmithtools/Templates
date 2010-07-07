@@ -627,6 +627,11 @@ namespace CodeSmith.Data.Linq
             // use the string representation of the query for the cache key
             string key = expression.ToString();
 
+            // make key DB specific
+            DataContext db = query.GetDataContext();
+            if (db != null && db.Connection != null && !String.IsNullOrEmpty(db.Connection.Database))
+                key += db.Connection.Database;
+
             // the key is potentially very long, so use an md5 fingerprint
             // (fine if the query result data isn't critically sensitive)
             return ToMd5Fingerprint(key);
