@@ -211,10 +211,18 @@ namespace QuickStart
         [Browsable(false)]
         public string ResolveTargetClassName(string className, string suffix, bool expression)
         {
-            if (BusinessObjectExists(suffix) && expression)
-                return string.Concat(Entity.ClassName, suffix);
+            var temp = className.Replace(Entity.ClassName, string.Empty);
+            if(temp.Equals("criteria", StringComparison.InvariantCultureIgnoreCase) ||
+               temp.Equals("info", StringComparison.InvariantCultureIgnoreCase) ||
+               temp.Equals("list", StringComparison.InvariantCultureIgnoreCase))
+            {
+                className = Entity.ClassName;
+            }
 
-            return expression ? string.Concat(Entity.ClassName, suffix.Trim()) : Entity.ClassName;
+            if (BusinessObjectExists(suffix) && expression)
+                return string.Concat(className, suffix);
+
+            return expression ? string.Concat(className, suffix.Trim()) : className;
         }
 
         [Category("3. Business Project")]
