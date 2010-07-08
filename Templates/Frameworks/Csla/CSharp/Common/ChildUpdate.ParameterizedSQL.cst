@@ -47,7 +47,7 @@
                 if (result == 0)
                     throw new DBConcurrencyException("The entity is out of date on the client. Please update the entity and try again. This could also be thrown if the sql statement failed to execute.");
 <% } %>
-<%  if(!RenderOptionalContent) { foreach(Member member in Entity.Members) { if(member.IsForeignKey && !member.IsPrimaryKey) { if(string.IsNullOrEmpty(member.ResolveAssociationPropertyClassName())) continue; %> 
+<%  if(!RenderOptionalContent) { foreach(Member member in Entity.Members) { if(member.IsForeignKey) { if(string.IsNullOrEmpty(member.ResolveAssociationPropertyClassName())) continue; %> 
 
                 // Update foreign keys values. This code will update the values passed in from the parent only if no errors occurred after executing the query.
 <% string localParameterName = member.ResolveAssociationPropertyVariable();
@@ -67,7 +67,7 @@
                 LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
 <% } } } %>
             }
-<% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0){ if(!RenderOptionalContent) { 
+<% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0 || Entity.AssociatedOneToZeroOrOne.Count > 0){ if(!RenderOptionalContent) { 
     int childCount = 0;
     foreach(Association a in Entity.AssociatedOneToMany) {
         if(IsChildBusinessObject(a)) childCount++;

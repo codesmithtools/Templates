@@ -40,17 +40,21 @@
             <% Else %>
                         LoadProperty(<%= member.PrivateMemberVariableName %>Property, DirectCast(command.Parameters("<%= member.BuildParameterVariableName() %>").Value,<%= member.SystemType %>))
             <% End If
-        Else 
-            If(UseMemberVariables) Then %>
-                        _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
-        <% Else %>
-                        LoadProperty(_original<%= member.PropertyName %>Property, Me.<%= member.PropertyName %>)
-        <% End If
         End If
     Next %>
                     End Using
                 End Using
-    <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0) Then %>
+                
+    <% For Each member As Member In Entity.PrimaryKey.KeyMembers
+        If Not (member.IsIdentity) Then
+            If(UseMemberVariables) Then %>
+                _original<%= member.PropertyName %> = Me.<%= member.PropertyName %>
+        <% Else %>
+                LoadProperty(_original<%= member.PropertyName %>Property, Me.<%= member.PropertyName %>)
+        <% End If
+        End If
+    Next %>
+    <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0 OrElse Entity.AssociatedOneToZeroOrOne.Count > 0) Then %>
     
                 FieldManager.UpdateChildren(Me, connection)
     <% End If %>

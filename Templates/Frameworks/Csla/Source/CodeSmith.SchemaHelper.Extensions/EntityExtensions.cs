@@ -78,7 +78,7 @@ namespace CodeSmith.SchemaHelper
                                       Configuration.Instance.ParameterPrefix,
                                       guidColumn.ColumnName);
             }
-            if (entity.HasGuidPrimaryKeyMember)
+            if (entity.HasGuidPrimaryKeyMember && entity.PrimaryKey.KeyMembers.Count > 1)
             {
                 return string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {4} = {3}{4}",
                                       entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),
@@ -159,7 +159,7 @@ namespace CodeSmith.SchemaHelper
                                       Configuration.Instance.ParameterPrefix,
                                       guidColumn.ColumnName);
             }
-            if (entity.HasGuidPrimaryKeyMember)
+            if (entity.HasGuidPrimaryKeyMember && entity.PrimaryKey.KeyMembers.Count > 1)
             {
                 return string.Format("; SELECT {0} FROM [{1}].[{2}] WHERE {4} = {3}{4}",
                                       entity.PrimaryKey.KeyMembers.BuildDataBaseColumns(),

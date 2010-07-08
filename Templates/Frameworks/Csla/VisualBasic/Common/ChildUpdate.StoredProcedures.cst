@@ -47,7 +47,7 @@
     Next %>
     <% If Not RenderOptionalContent Then
         For Each member As Member In Entity.Members
-            If member.IsForeignKey AndAlso Not member.IsPrimaryKey Then
+            If member.IsForeignKey Then
                 If String.IsNullOrEmpty(member.ResolveAssociationPropertyClassName()) Then
                     Continue For
                 End If  %>
@@ -76,7 +76,7 @@
         End If
     Next %>
             End Using
-    <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0) Then
+    <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0 OrElse Entity.AssociatedOneToZeroOrOne.Count > 0) Then
         If (Not RenderOptionalContent) Then
         Dim childCount As Integer = 0
         For Each a As Association In Entity.AssociatedOneToMany

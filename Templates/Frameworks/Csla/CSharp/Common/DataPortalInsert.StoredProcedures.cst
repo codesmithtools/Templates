@@ -36,14 +36,16 @@
                         <%= member.PrivateMemberVariableName %> = (<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value;
 <% } else { %>
                         LoadProperty(<%= member.PrivateMemberVariableName %>Property,(<%= member.SystemType %>)command.Parameters["<%= member.BuildParameterVariableName() %>"].Value);
-<% } } else { if(UseMemberVariables) {  %>
-                        _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
-<% } else { %>
-                        LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
 <% } } } %>
                     }
                 }
-<% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0){ %>
+                
+<% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity) { if(UseMemberVariables) { %>
+                _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
+<% } else { %>
+                LoadProperty(_original<%= member.PropertyName %>Property, this.<%= member.PropertyName %>);
+<% } } } %>
+<% if(Entity.AssociatedToManyUnion.Count > 0 || Entity.AssociatedManyToOne.Count > 0 || Entity.AssociatedOneToZeroOrOne.Count > 0){ %>
 
                 FieldManager.UpdateChildren(this, connection);
 <% } %>

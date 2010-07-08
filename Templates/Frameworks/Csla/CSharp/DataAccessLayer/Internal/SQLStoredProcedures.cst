@@ -86,14 +86,14 @@ CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
 <% GenerateParameters(SourceTable.NonPrimaryKeyColumns, 1, true, false); %>
 <%-- Loop through all primary keys. --%>
 <% foreach(var column in SourceTable.PrimaryKey.MemberColumns.AsIndexedEnumerable()) {
- GenerateParameter(column.Value, 1, false, column.IsLast, IsGuidOrIdentityColumn(column.Value), false, false);
+ GenerateParameter(column.Value, 1, false, column.IsLast, IsGuidOrIdentityColumn(column.Value) && !column.Value.IsForeignKeyMember, false, false);
 }%>
 
 AS
 
 <%-- Loop through all primary keys. If the primary key is a GUID, then assign a new GUID using NEWID(). --%>
 <% foreach(var column in SourceTable.PrimaryKey.MemberColumns) {
-     if (column.DataType == DbType.Guid) {%>
+     if (column.DataType == DbType.Guid && !column.IsForeignKeyMember) {%>
 SET <%= ParameterPrefix %><%= column.Name %> = NEWID()
 
 <% } } %>
@@ -544,7 +544,7 @@ public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst
     }
     
     // Is Guid column.
-    if(includeOriginalParam && column.DataType == DbType.Guid && column.IsPrimaryKeyMember)
+    if(includeOriginalParam && column.DataType == DbType.Guid && column.IsPrimaryKeyMember && !column.IsForeignKeyMember)
         isOutput = true;
 
     GenerateIndent(indentLevel);
