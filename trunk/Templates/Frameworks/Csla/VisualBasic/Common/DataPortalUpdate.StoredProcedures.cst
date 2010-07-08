@@ -95,7 +95,7 @@
         End If
     Next %>
                 End Using
-    <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0) Then %>
+    <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0 OrElse Entity.AssociatedOneToZeroOrOne.Count > 0) Then %>
     
                 FieldManager.UpdateChildren(Me, connection)
     <% End If %>

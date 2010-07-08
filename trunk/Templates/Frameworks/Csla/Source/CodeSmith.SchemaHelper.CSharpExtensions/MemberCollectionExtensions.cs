@@ -157,9 +157,9 @@ namespace CodeSmith.SchemaHelper
             {
                 string className = string.Empty;
                 string includeThisPrefix = !isObjectFactory ? "this." : string.Empty;
-                string originalPropertyName = isUpdateStatement && member.IsPrimaryKey && !member.IsIdentity ? string.Format("Original{0}", member.PropertyName) : string.Empty;
                 string propertyName = member.PropertyName;
-
+                string originalPropertyName = string.Format("Original{0}", member.PropertyName);
+                
                 // Resolve property Name from relationship.
                 if (isChildInsertUpdate && member.IsForeignKey)
                 {
@@ -169,9 +169,10 @@ namespace CodeSmith.SchemaHelper
                         {
                             if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
                             {
-                                propertyName = string.Format("{0}.{1}",
-                                    Util.NamingConventions.VariableName(associationMember.ClassName),
-                                    Util.NamingConventions.PropertyName(associationMember.ColumnName));
+                                propertyName = string.Format("{0}.{1}", Util.NamingConventions.VariableName(associationMember.ClassName), Util.NamingConventions.PropertyName(associationMember.ColumnName));
+
+                                var format = associationMember.IsPrimaryKey && !associationMember.IsIdentity ? "{0}.Original{1}" : "{0}.{1}";
+                                originalPropertyName = string.Format(format, Util.NamingConventions.VariableName(associationMember.ClassName), Util.NamingConventions.PropertyName(associationMember.ColumnName));
 
                                 className = Util.NamingConventions.VariableName(associationMember.ClassName);
                                 includeThisPrefix = string.Empty;
@@ -182,6 +183,7 @@ namespace CodeSmith.SchemaHelper
                 }
 
                 var nullableType = string.Format("{0}{1}", !isObjectFactory ? "this." : string.Empty, member.PropertyName);
+                var originalNullableType = string.Format("{0}Original{1}", !isObjectFactory ? "this." : string.Empty, member.PropertyName);
                 //var nullableType = string.Format("new {0}()", member.SystemType);
                 //if (member.SystemType == "System.String" || member.SystemType == "System.Byte[]")
                 //    nullableType = "null";
@@ -196,7 +198,7 @@ namespace CodeSmith.SchemaHelper
                     if (!string.IsNullOrEmpty(className))
                     {
                         cast = string.Format("ADOHelper.NullCheck({3} != null ? {0}{1}{2} : {4}));", includeThisPrefix, castPrefix, propertyName, className, nullableType);
-                        originalCast = string.Format("ADOHelper.NullCheck({3} != null ? {0}{1}{2} : {4}));", includeThisPrefix, castPrefix, originalPropertyName, className, nullableType);
+                        originalCast = string.Format("ADOHelper.NullCheck({3} != null ? {0}{1}{2} : {4}));", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
                     }
                     else
                     {
@@ -209,7 +211,7 @@ namespace CodeSmith.SchemaHelper
                     if (!string.IsNullOrEmpty(className))
                     {
                         cast = string.Format("{3} != null ? {0}{1}{2} : {4});", includeThisPrefix, castPrefix, propertyName, className, nullableType);
-                        originalCast = string.Format("{3} != null ? {0}{1}{2} : {4});", includeThisPrefix, castPrefix, originalPropertyName, className, nullableType);
+                        originalCast = string.Format("{3} != null ? {0}{1}{2} : {4});", includeThisPrefix, castPrefix, originalPropertyName, className, originalNullableType);
                     }
                     else
                     {
@@ -218,12 +220,13 @@ namespace CodeSmith.SchemaHelper
                     }
                 }
 
-                if (isUpdateStatement && !string.IsNullOrEmpty(originalPropertyName))
+                bool includeOriginalPropertyName = isUpdateStatement && member.IsPrimaryKey && !member.IsIdentity;
+                if (isUpdateStatement && includeOriginalPropertyName)
                     commandParameters += string.Format(Environment.NewLine + "\t\t\t\tcommand.Parameters.AddWithValue(\"{0}Original{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, originalCast);
 
                 commandParameters += string.Format(Environment.NewLine + "\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}\", {2}", Configuration.Instance.ParameterPrefix, member.ColumnName, cast);
 
-                if ((member.IsIdentity || (member.DataType == DbType.Guid.ToString() && member.IsPrimaryKey)) && includeOutPutParameters)
+                if ((member.IsIdentity || (member.DataType == DbType.Guid.ToString() && member.IsPrimaryKey && !member.IsForeignKey)) && includeOutPutParameters)
                 {
                     commandParameters += string.Format(Environment.NewLine + "\t\t\t\tcommand.Parameters[\"{0}{1}\"].Direction = ParameterDirection.Output;", Configuration.Instance.ParameterPrefix, member.ColumnName);
                 }

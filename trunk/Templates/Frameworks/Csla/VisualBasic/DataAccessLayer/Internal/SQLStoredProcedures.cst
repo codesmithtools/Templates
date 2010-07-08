@@ -85,14 +85,14 @@ CREATE PROCEDURE <%= GetInsertStoredProcedureName() %>
 <% GenerateParameters(SourceTable.NonPrimaryKeyColumns, 1, true, false) %>
 <%-- Loop through all primary keys. --%>
 <% For Each column As Object In SourceTable.PrimaryKey.MemberColumns.AsIndexedEnumerable()
-    GenerateParameter(column.Value, 1, False, column.IsLast, IsGuidOrIdentityColumn(column.Value), False, False)
+    GenerateParameter(column.Value, 1, False, column.IsLast, IsGuidOrIdentityColumn(column.Value) AndAlso Not column.Value.IsForeignKeyMember, False, False)
 Next %>
 
 AS
 
 <%-- Loop through all primary keys. If the primary key is a GUID, then assign a new GUID using NEWID(). --%>
 <% For Each column As MemberColumnSchema In SourceTable.PrimaryKey.MemberColumns
- If (column.DataType = DbType.Guid) Then %>
+ If (column.DataType = DbType.Guid AndAlso Not column.IsForeignKeyMember) Then %>
 SET <%= ParameterPrefix %><%= column.Name %> = NEWID()
 
 <% End If
@@ -531,7 +531,7 @@ Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As 
     End If
     
     ' Is Guid column.
-    If(includeOriginalParam AndAlso column.DataType = DbType.Guid AndAlso column.IsPrimaryKeyMember) Then
+    If(includeOriginalParam AndAlso column.DataType = DbType.Guid AndAlso column.IsPrimaryKeyMember AndAlso Not column.IsForeignKeyMember) Then
         isOutput = True
     End If
     

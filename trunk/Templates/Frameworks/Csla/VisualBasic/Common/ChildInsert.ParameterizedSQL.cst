@@ -80,7 +80,7 @@
     <% End If 
         End If
     Next %>
-    <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0) Then
+    <% If (Entity.AssociatedToManyUnion.Count > 0 OrElse Entity.AssociatedManyToOne.Count > 0 OrElse Entity.AssociatedOneToZeroOrOne.Count > 0) Then
         If (Not RenderOptionalContent) Then
         Dim childCount As Integer = 0
         For Each a As Association In Entity.AssociatedOneToMany
