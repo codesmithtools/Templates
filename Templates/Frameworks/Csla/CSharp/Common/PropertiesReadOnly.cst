@@ -99,12 +99,15 @@
 #if !SILVERLIGHT
 <% } %>
 <% if(UseLazyLoading) { %>
+                if<%= association.BuildNullCheckStatement(true, true, false, true, false) %>
+                    return null;
+                        
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                 {
 					var criteria = new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>};
 					<%= association.BuildNullableObjectInitializer(true)%>
-					
-                    if(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria))
+
+                    if(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
                 }
 

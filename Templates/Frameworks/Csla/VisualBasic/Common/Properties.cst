@@ -178,6 +178,10 @@
     #If Not SILVERLIGHT Then
     <% End If %>
     <% If UseLazyLoading Then %>
+				If<%= association.BuildNullCheckStatement(true, true, false, true, false) %> Then
+					Return Nothing
+				End If
+    
                 If Not(FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                     Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria<%= association.GenericProperty %>()
                     <%= association.BuildObjectInitializer(true) %>
@@ -187,7 +191,7 @@
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                     End If
     <% Else %>
-                    If (Me.IsNew OrElse <%= association.BuildNullCheckStatement(true, true, false, false) %>Not <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria)) Then
+                    If (Me.IsNew OrElse Not <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria)) Then
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.New<%= associationClassName %>())
                     Else
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
