@@ -211,15 +211,31 @@ namespace QuickStart
         [Browsable(false)]
         public string ResolveTargetClassName(string className, string suffix, bool expression)
         {
+            // We will use these eventually..
+            //bool isReadOnly;
+            //bool searchingForCriteriaObject = suffix.Equals("criteria", StringComparison.InvariantCultureIgnoreCase);
+            
             var temp = className.Replace(Entity.ClassName, string.Empty);
-            if(temp.Equals("criteria", StringComparison.InvariantCultureIgnoreCase) ||
-               temp.Equals("info", StringComparison.InvariantCultureIgnoreCase) ||
-               temp.Equals("list", StringComparison.InvariantCultureIgnoreCase))
+            if (temp.Equals("criteria", StringComparison.InvariantCultureIgnoreCase) ||
+                temp.Equals("list", StringComparison.InvariantCultureIgnoreCase))
             {
                 className = Entity.ClassName;
             }
 
-            if (BusinessObjectExists(suffix) && expression)
+            // Try to detect if we are generating a read only object..
+            if (temp.Equals("info", StringComparison.InvariantCultureIgnoreCase) ||
+                temp.Equals("infolist", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // Try to detect double endings.
+                if (suffix.Equals("info", StringComparison.InvariantCultureIgnoreCase))
+                    return string.Format("{0}Info", Entity.ClassName);
+
+                //isReadOnly = true;
+                className = string.Format("{0}Info", Entity.ClassName);
+            }
+
+            // If the keys are 0 then that means they are not generating from the entities.csp.
+            if ((BusinessObjectExists(suffix) && expression) || ContextData.Keys.Count == 0)
                 return string.Concat(className, suffix);
 
             return expression ? string.Concat(className, suffix.Trim()) : className;
