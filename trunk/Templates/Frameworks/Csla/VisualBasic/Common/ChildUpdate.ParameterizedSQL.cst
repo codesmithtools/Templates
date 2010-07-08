@@ -16,7 +16,7 @@
                 Return
             End If
     
-            If connection.State <> ConnectionState.Open Then connection.Open()
+            If Not connection.State = ConnectionState.Open Then connection.Open()
             Const commandText As String = "UPDATE [<%= entity.Table.Owner %>].[<%= entity.Table.Name %>] <%= entity.MembersUpdateInsert.BuildSetStatements() %> <%= entity.PrimaryKey.KeyMembers.BuildWhereStatements(True) %><% If (entity.HasRowVersionMember) Then %> AND [<%= entity.RowVersionMember.ColumnName %>] = <%= ParameterPrefix  %><%= entity.RowVersionMember.ColumnName %><% End If %><%= entity.BuildUpdateSelectStatement() %>"
             Using command As New SqlCommand(commandText, connection)
                 <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, Not RenderOptionalContent, False, True) %>
