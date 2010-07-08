@@ -57,7 +57,7 @@
 <% } } } }%>
 <% foreach(Member member in Entity.PrimaryKey.KeyMembers) { if(!member.IsIdentity || member.DataType == DbType.Guid.ToString()) {%> 
 
-                // Update non-identity primary key value.
+                // Update the original non-identity primary key value.
 <% if(UseMemberVariables) { %>
                 _original<%= member.PropertyName %> = this.<%= member.PropertyName %>;
 <% } else { %>
