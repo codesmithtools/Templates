@@ -48,7 +48,7 @@ Namespace <%= DataProjectName %>
         ''' <Returns>new <%= Entity.ClassName %>List.</Returns>
         <RunLocal()> _
         Public Function Create() As <%= Entity.ClassName %>List
-            Dim item As <%= Entity.ClassName %>List = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), True)
+            Dim item As <%= Entity.ClassName %>List = <%= Entity.ClassName %>List.NewList()
     
             Dim cancel As Boolean = False
             OnCreating(cancel)

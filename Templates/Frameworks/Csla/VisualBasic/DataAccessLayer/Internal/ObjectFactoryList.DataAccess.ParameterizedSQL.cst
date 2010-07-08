@@ -52,7 +52,7 @@ Namespace <%= DataProjectName %>
         ''' <Returns>New <%= Entity.ClassName %>List.</Returns>
         <RunLocal()> _
         Public Function Create() As <%= Entity.ClassName %>List
-            Dim item As <%= Entity.ClassName %>List = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>List), True), <%= Entity.ClassName %>List)
+            Dim item As <%= Entity.ClassName %>List = <%= Entity.ClassName %>List.NewList()
     
             Dim cancel As Boolean = False
             OnCreating(cancel)
@@ -82,7 +82,7 @@ Namespace <%= DataProjectName %>
         ''' <param name="criteria">The criteria.</param>
         ''' <Returns></Returns>
         Public Function Fetch(ByVal criteria As <%= Entity.ClassName %>Criteria) As <%= Entity.ClassName %>List
-            Dim item As <%= Entity.ClassName %>List = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>List), True), <%= Entity.ClassName %>List)
+            Dim item As <%= Entity.ClassName %>List = <%= Entity.ClassName %>List.NewList()
     
             Dim cancel As Boolean = False
             OnFetching(criteria, cancel)
