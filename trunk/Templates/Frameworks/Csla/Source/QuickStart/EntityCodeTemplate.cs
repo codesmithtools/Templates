@@ -167,6 +167,9 @@ namespace QuickStart
                 if (string.IsNullOrEmpty(BusinessClassName))
                     return BusinessClassName;
 
+                if (BusinessClassName.Equals(Entity.ClassName, StringComparison.InvariantCultureIgnoreCase))
+                    return BusinessClassName;
+
                 if (BusinessClassNameExists("ListList", 4))
                     return BusinessClassName.Substring(0, BusinessClassName.Length - 4);
 
