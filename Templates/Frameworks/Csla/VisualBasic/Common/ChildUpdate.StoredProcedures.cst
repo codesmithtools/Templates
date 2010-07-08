@@ -16,7 +16,7 @@
                 Return
             End If
     
-            If connection.State <> ConnectionState.Open Then connection.Open()
+            If Not connection.State = ConnectionState.Open Then connection.Open()
             Using command As New SqlCommand("<%= GetUpdateStoredProcedureName() %>", connection)
                 command.CommandType = CommandType.StoredProcedure
                 <%= entity.MembersNoRowVersion.BuildCommandParameters(False, False, Not RenderOptionalContent, True, True) %>
