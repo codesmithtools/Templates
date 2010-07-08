@@ -116,11 +116,15 @@
     #If Not SILVERLIGHT Then
     <% End If %>
     <% If UseLazyLoading Then %>
+				If<%= association.BuildNullCheckStatement(true, true, false, true, false) %> Then
+					Return Nothing
+				End If
+    
                 If Not(FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                     Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria()
                     <%= association.BuildObjectInitializer(true) %>
     
-                    If(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
+                    If(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria)) Then
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>))
                     End If
     <% If(IncludeSilverlightSupport) Then %>

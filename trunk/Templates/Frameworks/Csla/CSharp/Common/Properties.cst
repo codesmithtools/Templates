@@ -141,16 +141,19 @@
 #if !SILVERLIGHT
 <% } %>
 <% if(UseLazyLoading) { %>
+                if<%= association.BuildNullCheckStatement(true, true, false, true, false) %>
+                    return null;
+                
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                 {
 					var criteria = new <%= BusinessProjectName %>.<%= association.ClassName %><%= association.GenericProperty %>Criteria {<%= association.BuildObjectInitializer(true) %>};
 					<%= association.BuildNullableObjectInitializer(true)%>
-
+                    
 <% if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject(association, "Info")) { %>
-                    if(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria))
+                    if(<%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
 <% } else { %>
-                    if(IsNew || <%= association.BuildNullCheckStatement(true, true, false, false) %>!<%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria))
+                    if(IsNew || !<%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.Exists(criteria))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.New<%= associationClassName %>());
                     else
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));

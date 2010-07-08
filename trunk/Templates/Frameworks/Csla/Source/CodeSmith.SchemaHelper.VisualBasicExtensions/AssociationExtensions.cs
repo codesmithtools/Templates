@@ -64,6 +64,21 @@ namespace CodeSmith.SchemaHelper
         /// <returns></returns>
         public static string BuildNullCheckStatement(this Association association, bool usePropertyName, bool useNot, bool useAndAlso, bool trimEnd)
         {
+            return association.BuildNullCheckStatement(false, true, false, false, null);
+        }
+
+        /// <summary>
+        /// Builds a null check HasValue Statements for the Property Templates.
+        /// </summary>
+        /// <param name="association"></param>
+        /// <param name="usePropertyName"></param>
+        /// <param name="useNot"></param>
+        /// <param name="useAndAlso"></param>
+        /// <param name="trimEnd"></param>
+        /// <param name="nullExpression">If this value is not set to null and the parameters is blank, then this exspression will be returned.</param>
+        /// <returns></returns>
+        public static string BuildNullCheckStatement(this Association association, bool usePropertyName, bool useNot, bool useAndAlso, bool trimEnd, bool? nullExpression )
+        {
             string exspression = useAndAlso ? "AndAlso " : "OrElse ";
             string lastParameter = string.Empty;
             string parameters = string.Empty;
@@ -86,7 +101,13 @@ namespace CodeSmith.SchemaHelper
             }
 
             // If there are no parameters then return.
-            if (parameters.Length == 0) return string.Empty;
+            if (parameters.Length == 0)
+            {
+                if (!nullExpression.HasValue)
+                    return string.Empty;
+
+                return nullExpression.Value ? "(True)" : "(False)";
+            }
 
             // Insert the last paren.
             parameters = parameters.Replace(lastParameter, lastParameter.Insert(lastParameter.IndexOf("HasValue") + 8, ")"));
