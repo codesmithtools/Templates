@@ -8,7 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A3DD79D2-92AD-4BAF-893F-7230A4A7D1E6}"
 	ProjectSection(SolutionItems) = preProject
 		..\Master.proj = ..\Master.proj
-		..\QuickStart.cst = ..\QuickStart.cst
 		..\Readme.html = ..\Readme.html
 	EndProjectSection
 EndProject

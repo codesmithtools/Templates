@@ -77,7 +77,7 @@ namespace <%= BusinessProjectName %>
 
         internal static <%= ChildBusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
-			var criteria = new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> {<%= sc.Members.BuildObjectInitializer() %>};
+			var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %> {<%= sc.Members.BuildObjectInitializer() %>};
 			<%=sc.Members.BuildNullableObjectInitializer()%>
         
             return DataPortal.FetchChild< <%= ChildBusinessClassName %><%= Entity.GenericProperty %> >(criteria);

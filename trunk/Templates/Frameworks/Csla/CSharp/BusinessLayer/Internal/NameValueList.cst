@@ -51,7 +51,7 @@ namespace <%= BusinessProjectName %>
             RaiseListChangedEvents = false;
             IsReadOnly = false;
 
-            var criteria = new <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>();
+            var criteria = new <%= CriteriaClassName %>();
             string commandText = string.Format("SELECT <%= Entity.Members.BuildDataBaseColumns() %> FROM [<%= Entity.Table.Owner %>].[<%= Entity.Table.Name %>] {0}", ADOHelper.BuildWhereStatement(criteria.StateBag));
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
@@ -91,7 +91,7 @@ namespace <%= BusinessProjectName %>
             RaiseListChangedEvents = false;
             IsReadOnly = false;
 
-            var criteria = new <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>();
+            var criteria = new <%= CriteriaClassName %>();
             using (SqlConnection connection = new SqlConnection(ADOHelper.ConnectionString))
             {
                 connection.Open();

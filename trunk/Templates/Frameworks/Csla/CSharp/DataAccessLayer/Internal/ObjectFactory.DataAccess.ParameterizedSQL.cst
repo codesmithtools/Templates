@@ -289,7 +289,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 <% } %>
     
                     // Delete the old.
-					var criteria = new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %> {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(true, false, true) %>};
+					var criteria = new <%= CriteriaClassName %> {<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(true, false, true) %>};
 					<%= Entity.PrimaryKey.KeyMembers.BuildNullableObjectInitializer(true, false, true)%>
                     Delete(criteria);
     
@@ -390,7 +390,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
             // If we're new then don't call delete.
             if (item.IsNew) return;
 
-			var criteria = new <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>{<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(true) %>};
+			var criteria = new <%= CriteriaClassName %>{<%= Entity.PrimaryKey.KeyMembers.BuildObjectInitializer(true) %>};
 			<%= Entity.PrimaryKey.KeyMembers.BuildNullableObjectInitializer(true)%>
             DoDelete(criteria);
 

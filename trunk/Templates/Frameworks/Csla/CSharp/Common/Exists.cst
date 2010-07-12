@@ -14,7 +14,7 @@
 <% if(IncludeSilverlightSupport) { %>
 #if !SILVERLIGHT
 <% } %>
-        public static bool Exists(<%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %> criteria)
+        public static bool Exists(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             return ExistsCommand.Execute(criteria);
         }

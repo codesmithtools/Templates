@@ -61,7 +61,7 @@ namespace <%= BusinessProjectName %>
             // TODO: delete values
         }
 
-        protected override void DataPortal_Delete(<%= ResolveTargetClassName(BusinessClassName, "Criteria") %> criteria)
+        protected override void DataPortal_Delete(<%= CriteriaClassName %> criteria)
         {
             // TODO: delete values
         }

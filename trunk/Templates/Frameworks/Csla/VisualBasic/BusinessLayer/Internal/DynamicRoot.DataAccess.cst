@@ -38,7 +38,7 @@ Namespace <%= BusinessProjectName %>
         base.DataPortal.Create()
         End Sub
         
-        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ResolveTargetClassName(BusinessClassName, "Criteria") %> )
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= CriteriaClassName %> )
             ' TODO: load values
             MarkOld()
         End Sub

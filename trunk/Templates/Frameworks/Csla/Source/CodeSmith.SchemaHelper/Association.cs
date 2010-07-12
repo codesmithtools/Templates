@@ -168,9 +168,26 @@ namespace CodeSmith.SchemaHelper
             get
             {
                 if (string.IsNullOrEmpty(_tableName) && this.Count > 0)
+                {
+                    // Note: note user why we were checking for ManyToOne...
                     _tableName = this.AssociationType == AssociationType.ManyToOne ? this[0].AssociatedColumn.TableName : this[0].TableName;
+                }
 
                 return _tableName;
+            }
+        }
+
+        private string _tableKey = string.Empty;
+        public string TableKey
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_tableKey) && this.Count > 0)
+                {
+                    _tableKey = this[0].TableName;
+                }
+
+                return _tableKey;
             }
         }
 

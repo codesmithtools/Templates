@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+<%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.EntityCodeTemplate" Debug="True" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
@@ -58,8 +58,8 @@
             get { return GetProperty(<%= member.PrivateMemberVariableName %>Property); }
             <% if(member.IsReadOnly) { %>internal <% } %>set{ SetProperty(<%= member.PrivateMemberVariableName %>Property, value); }
         }
-
 <%if (member.IsPrimaryKey && !member.IsIdentity) { %>
+
         private static readonly PropertyInfo< <%= member.SystemType %> > _original<%= member.PropertyName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.Original<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, null<% } %>);
         /// <summary>
         /// Holds the original value for <%= member.PropertyName %>. This is used for non identity primary keys.
@@ -69,7 +69,6 @@
             get { return GetProperty(_original<%= member.PropertyName %>Property); }
             set{ SetProperty(_original<%= member.PropertyName %>Property, value); }
         }
-
 <% } } } %>
 <%-- One-To-Zero-Or-One --%>
 <% foreach(Association association in Entity.AssociatedOneToZeroOrOne) { 
@@ -79,6 +78,7 @@
     if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject( association, "Info")) {
         associationClassName = association.ClassName + "Info";
     } %>
+
         //AssociatedOneToZeroOrOne
         private static readonly PropertyInfo< <%= associationClassName %><%= association.GenericProperty %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= associationClassName %><%= association.GenericProperty %> >(p => p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child);
 <% if(association.HasDescription) { %>
@@ -126,6 +126,7 @@
     if(!BusinessObjectExists(association) && IsReadOnlyBusinessObject(association, "Info")) {
         associationClassName = association.ClassName + "Info";
     } %>
+
         //AssociatedManyToOne
         private static readonly PropertyInfo< <%= associationClassName %><%= association.GenericProperty %> > <%= association.PrivateMemberVariableName %>Property = RegisterProperty< <%= associationClassName %><%= association.GenericProperty %> >(p => p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child);
 <% if(association.HasDescription) { %>
@@ -160,9 +161,7 @@
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property); 
             }
         }
-
 <% } } %>
-
 <%-- One-To-Many & Many-To-Many --%>
 <% foreach(Association association in Entity.AssociatedOneToMany) { 
     // For now, don't generate properties based on tables generated as generics.
@@ -214,6 +213,5 @@
                 return GetProperty(<%= association.PrivateMemberVariableName %>Property);
             }
         }
-
 <% } } %>
         #endregion

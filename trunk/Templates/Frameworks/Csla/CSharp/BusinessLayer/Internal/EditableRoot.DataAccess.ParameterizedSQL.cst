@@ -50,7 +50,7 @@ namespace <%= BusinessProjectName %>
 <% RenderHelper(new DataPortalCreate()); %>
         }
 
-        protected void DataPortal_Fetch(<%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> criteria)
+        protected void DataPortal_Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new DataPortalFetch()); %>
         }
@@ -73,13 +73,13 @@ namespace <%= BusinessProjectName %>
             OnSelfDeleting(ref cancel);
             if (cancel) return;
             
-            DataPortal_Delete(new <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
+            DataPortal_Delete(new <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% if(UseMemberVariables) { %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% } else { %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% } %>));
         
             OnSelfDeleted();
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]
-        protected void DataPortal_Delete(<%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> criteria)
+        protected void DataPortal_Delete(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new DataPortalDelete()); %>
         }

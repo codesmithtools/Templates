@@ -54,7 +54,7 @@ Namespace <%= BusinessProjectName %>
     <% RenderHelper(New DataPortalCreate()) %>
         End Sub
     
-        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> )
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %> )
     <% RenderHelper(New DataPortalFetch()) %>
         End Sub
     
@@ -75,18 +75,18 @@ Namespace <%= BusinessProjectName %>
                 Return
             End If
         
-            DataPortal_Delete(New <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
+            DataPortal_Delete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
         
             OnSelfDeleted()
         End Sub
     
         <Transactional(TransactionalTypes.TransactionScope)> _
-        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %>)
+        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>)
     <% RenderHelper(New DataPortalDelete()) %>
         End Sub
     
         '<Transactional(TransactionalTypes.TransactionScope)> _
-        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %>, ByVal connection As SqlConnection)
+        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>, ByVal connection As SqlConnection)
     <% RenderHelper(New DataPortalDelete(), true) %>
         End Sub
     
@@ -99,7 +99,7 @@ Namespace <%= BusinessProjectName %>
     <% RenderHelper(New ChildCreate()) %>
         End Sub
     
-        Private Sub Child_Fetch(ByVal criteria As <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %>)
+        Private Sub Child_Fetch(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>)
     <% RenderHelper(New ChildFetch()) %>
     
             MarkAsChild()
@@ -162,7 +162,7 @@ Namespace <%= BusinessProjectName %>
                 Return
             End If
         
-            DataPortal_Delete(New <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
+            DataPortal_Delete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
         
             OnChildSelfDeleted()
         End Sub
@@ -179,7 +179,7 @@ Namespace <%= BusinessProjectName %>
                 Return
             End If
         
-            DataPortal_Delete(New <%= ResolveTargetClassName(BusinessClassName, "Criteria") %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>), connection)
+            DataPortal_Delete(New <%= CriteriaClassName %><%= Entity.GenericProperty %> (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>), connection)
         
             OnChildSelfDeleted()
         End Sub

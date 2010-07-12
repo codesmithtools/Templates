@@ -38,7 +38,7 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
-        private void Child_Fetch(<%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %> criteria)
+        private void Child_Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             IsReadOnly = false;
 

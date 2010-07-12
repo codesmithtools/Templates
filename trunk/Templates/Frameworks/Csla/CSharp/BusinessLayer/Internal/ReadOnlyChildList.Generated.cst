@@ -74,7 +74,7 @@ namespace <%= BusinessProjectName %>
 
         internal static <%= BusinessClassName %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
-			var criteria = new <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>{<%= sc.Members.BuildObjectInitializer() %>};
+			var criteria = new <%= CriteriaClassName %>{<%= sc.Members.BuildObjectInitializer() %>};
 			<%= sc.Members.BuildNullableObjectInitializer()%>
 			
             return DataPortal.FetchChild< <%= BusinessClassName %> >(criteria);
@@ -84,7 +84,7 @@ namespace <%= BusinessProjectName %>
 
 	internal static <%= BusinessClassName %> GetAll()
         {
-            return DataPortal.FetchChild< <%= BusinessClassName %> >(new <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>());
+            return DataPortal.FetchChild< <%= BusinessClassName %> >(new <%= CriteriaClassName %>());
         }
 	
         #endregion

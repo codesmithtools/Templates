@@ -41,7 +41,7 @@ Namespace <%= BusinessProjectName %>
         Protected Overrides Sub DataPortal_Create()
         End Sub
     
-        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>)
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>)
     <% RenderHelper(New DataPortalFetchList()) %>
         End Sub
     

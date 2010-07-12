@@ -39,7 +39,7 @@ namespace <%= BusinessProjectName %>
         {
         }
         
-        private void DataPortal_Fetch(<%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %> criteria)
+        private void DataPortal_Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             RaiseListChangedEvents = false;
 

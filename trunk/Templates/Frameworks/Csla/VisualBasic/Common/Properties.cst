@@ -1,5 +1,5 @@
 ﻿<%-- Author: Blake Niemyjski --%>
-<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
+<%@ CodeTemplate Language="VB" TargetLanguage="VB" Inherits="QuickStart.EntityCodeTemplate" Debug="True" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA Map" %>
 
 <%@ Assembly Name="SchemaExplorer" %>
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\Common" %>
@@ -152,10 +152,8 @@
                 Return GetProperty(<%= association.PrivateMemberVariableName %>Property) 
             End Get
         End Property
-    
     <% End If
     Next %>
-    
     <%-- Many-To-One --%>
     <% For Each association  As Association in Entity.AssociatedManyToOne 
         ' For now, don't generate properties based on tables generated as generics.
@@ -197,8 +195,7 @@
     <% End If %>  
                 Return GetProperty(<%= association.PrivateMemberVariableName %>Property) 
             End Get
-        End Property
-        
+        End Property     
     <% End If
     Next %>
     <%-- One-To-Many & Many-To-Many --%>
@@ -209,6 +206,7 @@
         If(BusinessObjectExists(association, "List") = False AndAlso IsReadOnlyBusinessObject( association, "InfoList")) Then
             associationClassName += "Info"
         End If %>
+
         'AssociatedOneToMany
         Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>List<%= association.GenericProperty %>) = RegisterProperty(Of <%= associationClassName %>List<%= association.GenericProperty %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, Csla.RelationshipTypes.Child)
     <% If(association.HasDescription) Then %>
@@ -250,8 +248,7 @@
     <% End If%>
                 Return GetProperty(<%= association.PrivateMemberVariableName %>Property) 
             End Get
-        End Property
-        
+        End Property  
     <% End If
     Next %>
         #End Region

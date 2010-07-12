@@ -53,7 +53,7 @@ Namespace <%= BusinessProjectName %>
             ' TODO: delete values
         End Sub
     
-        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= ResolveTargetClassName(BusinessClassName, "Criteria") %> )
+        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= CriteriaClassName %> )
             ' TODO: delete values
         End Sub
     End Class

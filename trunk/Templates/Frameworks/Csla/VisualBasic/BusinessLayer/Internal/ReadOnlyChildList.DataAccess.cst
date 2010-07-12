@@ -31,7 +31,7 @@ Imports Csla.Data
 
 Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-        Private Sub Child_Fetch(ByVal criteria As <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>)
+        Private Sub Child_Fetch(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>)
             RaiseListChangedEvents = false
             IsReadOnly = false
     
