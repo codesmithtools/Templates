@@ -151,7 +151,7 @@ namespace CodeSmith.SchemaHelper
         /// </summary>
         /// <param name="name">Table FullName or Column Name</param>
         /// <returns></returns>
-        internal bool ExcludeRegexIsMatch(string name)
+        public bool ExcludeRegexIsMatch(string name)
         {
             foreach (Regex regex in IgnoreExpressions)
                 if (regex.IsMatch(name))

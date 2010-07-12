@@ -527,7 +527,7 @@ public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst
 
 public void GenerateParameter(ColumnSchema column, int indentLevel, bool isFirst, bool isLast, bool isOutput, bool includeTimeStamp, bool makeParametersNullable, bool includeOriginalParam)
 {
-    if(!includeTimeStamp && ColumnIsTimestamp(column))
+    if(ColumnIsIgnored(column) || (!includeTimeStamp && ColumnIsTimestamp(column)))
         return;
 
     if (!isFirst)
@@ -686,7 +686,7 @@ public void GenerateParameters(IList<ColumnSchema> columns, int indentLevel, boo
 
 public void GenerateColumn(ColumnSchema column, int indentLevel, bool isFirst, bool isLast, bool includeTimeStamp)
 {
-    if(!includeTimeStamp && ColumnIsTimestamp(column))
+    if(ColumnIsIgnored(column) || (!includeTimeStamp && ColumnIsTimestamp(column)))
         return;
 
     if (!isFirst)
@@ -722,7 +722,7 @@ public void GenerateColumns(IList<ColumnSchema> columns, int indentLevel, bool i
 
 public void GenerateUpdate(ColumnSchema column, int indentLevel, bool isFirst, bool isLast, bool includeTimeStamp)
 {
-    if(!includeTimeStamp && ColumnIsTimestamp(column))
+    if(ColumnIsIgnored(column) || (!includeTimeStamp && ColumnIsTimestamp(column)))
         return;
 
     if (!isFirst) 
@@ -761,6 +761,9 @@ public void GenerateUpdates(IList<ColumnSchema> columns, int indentLevel, bool i
 
 public void GenerateCondition(ColumnSchema column, int indentLevel, bool isFirst, bool isLast, bool includeOriginal)
 {
+    if(ColumnIsIgnored(column))
+        return;
+    
     GenerateIndent(indentLevel);
     if (!isFirst) Response.Write("AND ");
     Response.Write("[");
@@ -812,7 +815,7 @@ public void GenerateFindConditions(IList<ColumnSchema> columns, int indentLevel)
 
 public void GenerateFindCondition(ColumnSchema column, int indentLevel, bool isFirst, bool isLast)
 {
-    if (!IsColumnFindable(column))
+    if (ColumnIsIgnored(column) || !IsColumnFindable(column))
         return;
 
     GenerateIndent(indentLevel);
@@ -895,7 +898,7 @@ public bool IsIdentityColumn(MemberColumnSchema column)
 
 public void GenerateVariable(ColumnSchema column, int indentLevel, bool isFirst, bool isLast, bool includeTimeStamp)
 {
-    if(!includeTimeStamp && ColumnIsTimestamp(column))
+    if(ColumnIsIgnored(column) || (!includeTimeStamp && ColumnIsTimestamp(column)))
         return;
 
     if (!isFirst)
@@ -937,6 +940,11 @@ public bool ColumnIsTimestamp(DataObjectBase column)
         return true;
 
     return false;
+}
+
+public bool ColumnIsIgnored(DataObjectBase column)
+{
+    return CodeSmith.SchemaHelper.Configuration.Instance.ExcludeRegexIsMatch(column.ToString());
 }
 
 #endregion

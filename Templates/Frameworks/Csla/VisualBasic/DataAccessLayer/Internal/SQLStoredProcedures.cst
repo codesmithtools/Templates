@@ -517,7 +517,7 @@ Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As 
 End Sub
 
 Public Sub GenerateParameter(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal isOutput As Boolean, ByVal includeTimeStamp As Boolean, ByVal makeParametersNullable As Boolean, ByVal includeOriginalParam As Boolean)
-    If Not includeTimeStamp AndAlso ColumnIsTimestamp(column) Then
+    If (ColumnIsIgnored(column) OrElse (Not includeTimeStamp AndAlso ColumnIsTimestamp(column))) Then
         Exit Sub
     End If
     
@@ -635,7 +635,7 @@ Public Sub GenerateParameters(ByVal columns As IList(Of ColumnSchema), ByVal ind
 End Sub
 
 Public Sub GenerateColumn(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
-    If Not includeTimeStamp AndAlso ColumnIsTimestamp(column) Then
+    If (ColumnIsIgnored(column) OrElse (Not includeTimeStamp AndAlso ColumnIsTimestamp(column))) Then
         Exit Sub
     End If
     
@@ -664,7 +664,7 @@ Public Sub GenerateColumns(ByVal columns As IList(Of ColumnSchema), ByVal indent
 End Sub
 
 Public Sub GenerateUpdate(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
-    If Not includeTimeStamp AndAlso ColumnIsTimestamp(column) Then
+    If (ColumnIsIgnored(column) OrElse (Not includeTimeStamp AndAlso ColumnIsTimestamp(column))) Then
         Exit Sub
     End If
     
@@ -698,6 +698,11 @@ Public Sub GenerateUpdates(ByVal columns As IList(Of ColumnSchema), ByVal indent
 End Sub
 
 Public Sub GenerateCondition(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeOriginal As Boolean)
+    
+    If (ColumnIsIgnored(column)) Then
+        Exit Sub
+    End If
+    
     GenerateIndent(indentLevel)
     If Not isFirst Then
         Response.Write("AND ")
@@ -739,7 +744,7 @@ Public Sub GenerateFindConditions(columns As IList(Of ColumnSchema), indentLevel
 End Sub
 
 Public Sub GenerateFindCondition(column As ColumnSchema, indentLevel As Integer, isFirst As Boolean, isLast As Boolean)
-    If Not IsColumnFindable(column) Then
+    If ColumnIsIgnored(column) OrElse Not IsColumnFindable(column) Then
         Return
     End If
 
@@ -817,7 +822,7 @@ End Function
 
 
 Public Sub GenerateVariable(ByVal column As ColumnSchema, ByVal indentLevel As Integer, ByVal isFirst As Boolean, ByVal isLast As Boolean, ByVal includeTimeStamp As Boolean)
-    If Not includeTimeStamp AndAlso ColumnIsTimestamp(column) Then
+    If (ColumnIsIgnored(column) OrElse (Not includeTimeStamp AndAlso ColumnIsTimestamp(column))) Then
         Exit Sub
     End If
     
@@ -852,6 +857,10 @@ Public Function ColumnIsTimestamp(ByVal column As DataObjectBase) As Boolean
     End If
     
     Return False
+End Function
+
+Public Function ColumnIsIgnored(ByVal column As DataObjectBase) As Boolean
+    Return CodeSmith.SchemaHelper.Configuration.Instance.ExcludeRegexIsMatch(column.ToString())
 End Function
 
 #End Region
