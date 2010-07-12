@@ -192,6 +192,26 @@ namespace QuickStart
             }
         }
 
+        private string _criteriaClassName;
+
+        [Category("3. Business Project")]
+        [Description("The name of the criteria business class.")]
+        public string CriteriaClassName
+        {
+            get
+            {
+                if(string.IsNullOrEmpty(_criteriaClassName))
+                    _criteriaClassName = ResolveTargetClassName(ChildBusinessClassName, "Criteria");
+
+                return _criteriaClassName;
+            }
+            set
+            {
+                if(value.EndsWith("Criteria", StringComparison.InvariantCultureIgnoreCase))
+                    _criteriaClassName = value;
+            }
+        }
+
         /// <summary>
         /// Gets the Root BusinessName + the suffix.
         /// </summary>
@@ -403,7 +423,7 @@ namespace QuickStart
             if (association.Count <= 0)
                 return false;
 
-            string key = string.Format("{0}{1}", association.TableName, suffix);
+            string key = string.Format("{0}{1}", association.TableKey, suffix);
             if (ContextData.Get(key) == null) return false;
 
             var value = ContextData[key];
@@ -447,7 +467,7 @@ namespace QuickStart
             if (association.Count <= 0)
                 return false;
 
-            string key = string.Format("{0}{1}", association.TableName, suffix);
+            string key = string.Format("{0}{1}", association.TableKey, suffix);
             if (ContextData.Get(key) == null) return false;
 
             var value = ContextData[key];
@@ -473,7 +493,7 @@ namespace QuickStart
             if (association.Count <= 0)
                 return false;
 
-            string key = string.Format("{0}{1}", association.TableName, suffix);
+            string key = string.Format("{0}{1}", association.TableKey, suffix);
             if (ContextData.Get(key) == null) return false;
 
             var value = ContextData[key];
@@ -539,7 +559,7 @@ namespace QuickStart
             if (association.Count <= 0)
                 return false;
 
-            string key = string.Format("{0}{1}", association.TableName, suffix);
+            string key = string.Format("{0}{1}", association.TableKey, suffix);
 
             return ContextData.Get(key) != null;
         }

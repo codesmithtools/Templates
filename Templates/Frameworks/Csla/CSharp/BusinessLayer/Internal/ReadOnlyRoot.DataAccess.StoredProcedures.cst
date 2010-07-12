@@ -39,7 +39,7 @@ namespace <%= BusinessProjectName %>
 {
     public partial class <%= BusinessClassName %><%= Entity.GenericProperty %>
     {
-        private void DataPortal_Fetch(<%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %> criteria)
+        private void DataPortal_Fetch(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
 <% RenderHelper(new DataPortalFetch()); %>
         }

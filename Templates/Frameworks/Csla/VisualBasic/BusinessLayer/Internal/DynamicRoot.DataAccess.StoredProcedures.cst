@@ -45,7 +45,7 @@ Namespace <%= BusinessProjectName %>
         Protected Overrides Sub DataPortal_Create()
     <% RenderHelper(new DataPortalCreate()) %>
         End Sub
-        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ResolveTargetClassName(BusinessClassName, "Criteria") %> )
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= CriteriaClassName %> )
     <% RenderHelper(New DataPortalFetch()) %>
     
             MarkOld()
@@ -68,13 +68,13 @@ Namespace <%= BusinessProjectName %>
                 Return
             End If
         
-            DataPortal_Delete(New <%= ResolveTargetClassName(BusinessClassName, "Criteria") %> (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
+            DataPortal_Delete(New <%= CriteriaClassName %> (<% If (UseMemberVariables) Then %><%= Entity.PrimaryKey.KeyMembers.BuildPrivateMemberVariableArguments() %><% else %><%= Entity.PrimaryKey.KeyMembers.BuildPropertyVariableArguments() %><% End If %>))
         
             OnSelfDeleted()
         End Sub
     
         <Transactional(TransactionalTypes.TransactionScope)> _
-        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= ResolveTargetClassName(BusinessClassName, "Criteria") %> )
+        Protected Shadows Sub DataPortal_Delete(ByVal criteria As <%= CriteriaClassName %> )
     <% RenderHelper(New DataPortalDelete()) %>
         End Sub
     

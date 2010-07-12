@@ -33,7 +33,7 @@ Namespace <%= BusinessProjectName %>
         Protected Overrides Sub Child_Create()
         End Sub
     
-        Private Shadows Sub Child_Fetch(ByVal criteria As <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>)
+        Private Shadows Sub Child_Fetch(ByVal criteria As <%= CriteriaClassName %>)
             RaiseListChangedEvents = False
     
             ' Fetch Child objects.

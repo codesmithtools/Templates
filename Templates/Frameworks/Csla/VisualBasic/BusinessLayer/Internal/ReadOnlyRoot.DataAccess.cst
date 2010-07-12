@@ -29,7 +29,7 @@ Imports Csla.Data
 
 Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
-        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>)
+        Private Shadows Sub DataPortal_Fetch(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>)
             ' TODO: load values
         End Sub
     End Class

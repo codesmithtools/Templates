@@ -85,7 +85,7 @@ namespace <%= BusinessProjectName %>
 
         internal static <%= BusinessClassName %><%= Entity.GenericProperty %> <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>)
         {
-			var criteria = new <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>};
+			var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>};
 			<%=sc.Members.BuildNullableObjectInitializer()%>
             
             return DataPortal.FetchChild< <%= BusinessClassName %><%= Entity.GenericProperty %> >(criteria);
@@ -95,7 +95,7 @@ namespace <%= BusinessProjectName %>
 
         internal static <%= BusinessClassName %><%= Entity.GenericProperty %> GetAll()
         {
-            return DataPortal.FetchChild< <%= BusinessClassName %><%= Entity.GenericProperty %> >(new <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>());
+            return DataPortal.FetchChild< <%= BusinessClassName %><%= Entity.GenericProperty %> >(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
         }
 
 		#endregion

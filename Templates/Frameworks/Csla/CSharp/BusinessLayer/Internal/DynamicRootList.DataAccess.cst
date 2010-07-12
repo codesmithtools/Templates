@@ -34,7 +34,7 @@ namespace <%= BusinessProjectName %>
         {
         }
 
-        private void DataPortal_Fetch(<%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %> criteria)
+        private void DataPortal_Fetch(<%= CriteriaClassName %> criteria)
         {
             RaiseListChangedEvents = false;
 

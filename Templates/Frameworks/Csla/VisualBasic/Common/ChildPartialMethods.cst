@@ -18,7 +18,7 @@
         End Sub
         Partial Private Sub OnChildCreated()
         End Sub
-        Partial Private Sub OnChildFetching(ByVal criteria As <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
+        Partial Private Sub OnChildFetching(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
         End Sub
         Partial Private Sub OnChildFetched()
         End Sub
@@ -38,9 +38,9 @@
         End Sub
         Partial Private Sub OnChildSelfDeleted()
         End Sub
-        Partial Private Sub OnDeleting(ByVal criteria As <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
+        Partial Private Sub OnDeleting(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
         End Sub
-        Partial Private Sub OnDeleting(ByVal criteria As <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %><%= Entity.GenericProperty %>, ByVal connection As SqlConnection, ByRef cancel As Boolean)
+        Partial Private Sub OnDeleting(ByVal criteria As <%= CriteriaClassName %><%= Entity.GenericProperty %>, ByVal connection As SqlConnection, ByRef cancel As Boolean)
         End Sub
         Partial Private Sub OnDeleted()
         End Sub

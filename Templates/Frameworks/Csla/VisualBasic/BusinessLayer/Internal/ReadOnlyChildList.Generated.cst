@@ -72,7 +72,7 @@ Namespace <%= BusinessProjectName %>
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
         Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
-            Dim criteria As New <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>()
+            Dim criteria As New <%= CriteriaClassName %>()
             <%= sc.Members.BuildObjectInitializer() %>
     
             Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(criteria)
@@ -80,7 +80,7 @@ Namespace <%= BusinessProjectName %>
     <% Next %>
     
         Friend Shared Function GetAll() As <%= BusinessClassName %>
-            Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(New <%= ResolveTargetClassName(ChildBusinessClassName, "Criteria") %>())
+            Return DataPortal.FetchChild(Of <%= BusinessClassName %>)(New <%= CriteriaClassName %>())
         End Function
     
         #End Region
