@@ -27,7 +27,7 @@ namespace CodeSmith.SchemaHelper
                     {
                         if (member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") continue;
 
-                        parameters += string.Format(", {0} = {1}", Util.NamingConventions.PropertyName(associationMember.ColumnName),
+                        parameters += string.Format(", {0} = {1}", associationMember.MemberPropertyName,
                             usePropertyName ? member.PropertyName : member.VariableName);
                     }
                 }
@@ -57,7 +57,7 @@ namespace CodeSmith.SchemaHelper
                     {
                         if ((member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") == false) continue;
 
-                        parameters += string.Format("\r\n\t\t\t\tif({1}.HasValue) criteria.{0} = {1}.Value;", Util.NamingConventions.PropertyName(associationMember.ColumnName),
+                        parameters += string.Format("\r\n\t\t\t\tif({1}.HasValue) criteria.{0} = {1}.Value;", associationMember.MemberPropertyName,
                             usePropertyName ? member.PropertyName : member.VariableName);
                     }
                 }

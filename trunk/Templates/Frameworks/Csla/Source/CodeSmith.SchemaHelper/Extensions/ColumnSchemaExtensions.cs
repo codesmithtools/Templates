@@ -83,7 +83,7 @@ namespace CodeSmith.SchemaHelper
                     name = StringUtil.ToPlural(name);
             }
 
-            return Configuration.Instance.ValidateName(column, name);
+            return Configuration.Instance.ValidateName(column, name, true);
         }
 
         #endregion

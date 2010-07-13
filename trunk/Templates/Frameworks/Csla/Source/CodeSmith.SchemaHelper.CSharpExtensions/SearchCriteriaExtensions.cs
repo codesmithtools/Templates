@@ -30,15 +30,15 @@ namespace CodeSmith.SchemaHelper
                         {
                             if (member.AssociatedColumn.IsNullable && member.AssociatedColumn.SystemType != "System.String") continue;
 
-                            resolvedPropertyName = Util.NamingConventions.PropertyName(member.ColumnName);
-                            propertyName = string.Format("item.{0}", Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName));
+                            resolvedPropertyName = member.MemberPropertyName;
+                            propertyName = string.Format("item.{0}", member.AssociatedMemberPropertyName);
                         }
                         else
                         {
                             if (member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") continue;
 
-                            resolvedPropertyName = Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName);
-                            propertyName = string.Format("item.{0}", Util.NamingConventions.PropertyName(member.ColumnName));
+                            resolvedPropertyName = member.AssociatedMemberPropertyName;
+                            propertyName = string.Format("item.{0}", member.MemberPropertyName);
                         }
                     }
 
@@ -88,16 +88,16 @@ namespace CodeSmith.SchemaHelper
                         {
                             if ((member.AssociatedColumn.IsNullable && member.AssociatedColumn.SystemType != "System.String") == false) continue;
 
-                            resolvedPropertyName = Util.NamingConventions.PropertyName(member.ColumnName);
+                            resolvedPropertyName = member.MemberPropertyName;
                             var nullable = member.AssociatedColumn.IsNullable && member.AssociatedColumn.SystemType != "System.String" ? ".Value" : string.Empty;
-                            propertyName = string.Format("item.{0}{1}", Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName), nullable);
+                            propertyName = string.Format("item.{0}{1}", member.AssociatedMemberPropertyName, nullable);
                         }
                         else
                         {
                             if ((member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]") == false) continue;
 
-                            resolvedPropertyName = Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName);
-                            propertyName = string.Format("item.{0}.Value", Util.NamingConventions.PropertyName(member.ColumnName));
+                            resolvedPropertyName = member.AssociatedMemberPropertyName;
+                            propertyName = string.Format("item.{0}.Value", member.MemberPropertyName);
                         }
                     }
 
@@ -145,14 +145,14 @@ namespace CodeSmith.SchemaHelper
                     if (sc.IsChild)
                     {
                         var nullable = member.AssociatedColumn.IsNullable && member.AssociatedColumn.SystemType != "System.String" ? ".Value" : string.Empty;
-                        resolvedPropertyName = Util.NamingConventions.PropertyName(member.ColumnName);
-                        propertyName = string.Format("{0}{1}", Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName), nullable);
+                        resolvedPropertyName = member.MemberPropertyName;
+                        propertyName = string.Format("{0}{1}", member.AssociatedMemberPropertyName, nullable);
                     }
                     else
                     {
                         var nullable = member.IsNullable && member.SystemType != "System.String" && member.SystemType != "System.Byte[]" ? ".Value" : string.Empty;
-                        resolvedPropertyName = Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName);
-                        propertyName = string.Format("{0}{1}", Util.NamingConventions.PropertyName(member.ColumnName), nullable);
+                        resolvedPropertyName = member.AssociatedMemberPropertyName;
+                        propertyName = string.Format("{0}{1}", member.MemberPropertyName, nullable);
                     }
 
                     parameters += string.Format("\r\n\t\t\t\t{0}.{1} = {2}{3};", associationPropertyName, resolvedPropertyName, prefix, propertyName);

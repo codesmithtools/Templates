@@ -169,10 +169,10 @@ namespace CodeSmith.SchemaHelper
                         {
                             if (member.ColumnName == associationMember.AssociatedColumn.ColumnName && member.TableName == associationMember.AssociatedColumn.TableName)
                             {
-                                propertyName = string.Format("{0}.{1}", Util.NamingConventions.VariableName(associationMember.ClassName), Util.NamingConventions.PropertyName(associationMember.ColumnName));
+                                propertyName = string.Format("{0}.{1}", Util.NamingConventions.VariableName(associationMember.ClassName), associationMember.MemberPropertyName);
 
                                 var format = associationMember.IsPrimaryKey && !associationMember.IsIdentity ? "{0}.Original{1}" : "{0}.{1}";
-                                originalPropertyName = string.Format(format, Util.NamingConventions.VariableName(associationMember.ClassName), Util.NamingConventions.PropertyName(associationMember.ColumnName));
+                                originalPropertyName = string.Format(format, Util.NamingConventions.VariableName(associationMember.ClassName), associationMember.MemberPropertyName);
 
                                 className = Util.NamingConventions.VariableName(associationMember.ClassName);
                                 includeThisPrefix = string.Empty;

@@ -30,7 +30,7 @@ namespace CodeSmith.SchemaHelper
             IsComputed = column.IsComputed();
             IsRowVersion = column.IsRowVersion();
 
-            Entity = entity ?? new Entity(column.Table);
+            Entity = entity != null && entity.Table.FullName.Equals(column.Table.FullName, StringComparison.InvariantCultureIgnoreCase) ? entity : new Entity(column.Table);
         }
 
         #endregion

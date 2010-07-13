@@ -6,6 +6,8 @@ using SchemaExplorer;
 
 namespace CodeSmith.SchemaHelper
 {
+    using CodeSmith.SchemaHelper.Util;
+
     public class AssociationMember : Member
     {
         #region Constructor(s)
@@ -16,9 +18,15 @@ namespace CodeSmith.SchemaHelper
                                      ? GetToManyTableKey(column.Table, table).Name
                                      : String.Empty;
 
-            AssociatedColumn = new Member(localColumn, new Entity(localColumn.Table));
+            AssociatedColumn = new Member(localColumn,
+                entity != null && entity.Table.FullName.Equals(localColumn.Table.FullName, StringComparison.InvariantCultureIgnoreCase) ? entity : new Entity(localColumn.Table));
+            
             Cascade = (associationType == SchemaHelper.AssociationType.OneToMany && !column.AllowDBNull);
             ClassName = table.ClassName();
+
+            AssociatedMemberPropertyName = localColumn.GetName();
+            MemberPropertyName = column.GetName();
+
             AssociationType = associationType;
             Name = column.GetName(table, associationType);
             GenericProperty = table.ResolveIsGenericExtendedProperty();
@@ -40,11 +48,21 @@ namespace CodeSmith.SchemaHelper
 
         #endregion
 
-        #region Public Read-Only Methods
+        #region Properties
 
-        public Member AssociatedColumn { get; private set; }
         internal TableSchema Table { get; private set; }
 
+        /// <summary>
+        /// This is used to get easy acces to the Member's colum property name.
+        /// </summary>
+        public string MemberPropertyName { get; private set; }
+
+        /// <summary>
+        /// This is used to get easy acces to the Associated Member's column property name.
+        /// </summary>
+        public string AssociatedMemberPropertyName { get; private set; } 
+
+        public Member AssociatedColumn { get; private set; }
         public AssociationType AssociationType { get; private set; }
         public string ClassName { get; private set; }
         public string ToManyTableKeyName { get; private set; }

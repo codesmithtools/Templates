@@ -94,9 +94,9 @@ namespace CodeSmith.SchemaHelper
                         isFirst = false;
                     }
                     if(this.AssociationType == AssociationType.ManyToOne)
-                        sb.Append(Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName));
+                        sb.Append(member.AssociatedMemberPropertyName);
                     else
-                        sb.Append(Util.NamingConventions.PropertyName(member.ColumnName));
+                        sb.Append(member.MemberPropertyName);
                 }
 
                 return sb.ToString();

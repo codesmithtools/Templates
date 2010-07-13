@@ -48,6 +48,12 @@ namespace CodeSmith.SchemaHelper
         Singular = 2
     }
 
+    public enum ColumnNaming : byte
+    {
+        Preserve = 0,
+        RemoveTablePrefix = 1,
+    }
+
     public enum EntityNaming : byte
     {
         Preserve = 0,

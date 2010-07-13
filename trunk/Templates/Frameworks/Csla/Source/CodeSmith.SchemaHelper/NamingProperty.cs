@@ -14,6 +14,7 @@ namespace CodeSmith.SchemaHelper
         #region Private Member(s)
 
         private TableNaming _tableNaming = SchemaHelper.TableNaming.Singular;
+        private ColumnNaming _columnNaming = SchemaHelper.ColumnNaming.RemoveTablePrefix;
         private EntityNaming _entityNaming = SchemaHelper.EntityNaming.Singular;
         private AssociationNaming _associationNaming = SchemaHelper.AssociationNaming.Table;
         private AssociationSuffix _associationSuffix = SchemaHelper.AssociationSuffix.Plural;
@@ -48,7 +49,15 @@ namespace CodeSmith.SchemaHelper
         }
 
         [NotifyParentProperty(true)]
-        [Description("Desired naming naming convention to be used by generator.")]
+        [Description("Desired column naming convention to be used by generator.")]
+        public ColumnNaming ColumnNaming
+        {
+            get { return _columnNaming; }
+            set { _columnNaming = value; }
+        }
+
+        [NotifyParentProperty(true)]
+        [Description("Desired naming convention to be used by generator.")]
         public EntityNaming EntityNaming
         {
             get { return _entityNaming; }

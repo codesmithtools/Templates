@@ -88,7 +88,7 @@ namespace CodeSmith.SchemaHelper
                         if (className.Equals("item", StringComparison.InvariantCultureIgnoreCase))
                             className += "1";
 
-                        return string.Format("{0}.{1}", className, Util.NamingConventions.PropertyName(associationMember.ColumnName));
+                        return string.Format("{0}.{1}", className, associationMember.MemberPropertyName);
                     }
                 }
             }
