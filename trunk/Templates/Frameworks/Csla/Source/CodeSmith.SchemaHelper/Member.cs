@@ -76,7 +76,7 @@ namespace CodeSmith.SchemaHelper
 
         public bool IsRowVersion { get; private set; }
 
-        public string Name { get; protected set; }
+        public string Name { get; internal set; }
 
         public string DataType { get; private set; }
 
@@ -106,19 +106,40 @@ namespace CodeSmith.SchemaHelper
             }
         }
 
+        private string _propertyName = string.Empty;
         public string PropertyName
         {
-            get { return NamingConventions.PropertyName(Name); }
+            get
+            {
+                if (string.IsNullOrEmpty(_propertyName))
+                    _propertyName = NamingConventions.PropertyName(Name, false);
+
+                return _propertyName;
+            }
         }
 
+        private string _privateMemberVariableName = string.Empty;
         public string PrivateMemberVariableName
         {
-            get { return NamingConventions.PrivateMemberVariableName(Name); }
+            get
+            {
+                if (string.IsNullOrEmpty(_privateMemberVariableName))
+                    _privateMemberVariableName = NamingConventions.PrivateMemberVariableName(Name, false);
+
+                return _privateMemberVariableName;
+            }
         }
 
+        private string _variableName = string.Empty;
         public string VariableName
         {
-            get { return NamingConventions.VariableName(Name); }
+            get
+            {
+                if(string.IsNullOrEmpty(_variableName))
+                    _variableName = NamingConventions.VariableName(Name, false);
+
+                return _variableName;
+            }
         }
 
         public Entity Entity { get; private set; }
