@@ -36,7 +36,8 @@ namespace CodeSmith.SchemaHelper
             NamingProperty = new NamingProperty
                                  {
                                      EntityNaming = EntityNaming.Singular,
-                                     TableNaming = TableNaming.Mixed
+                                     TableNaming = TableNaming.Mixed,
+                                     ColumnNaming = ColumnNaming.RemoveTablePrefix
                                  };
 
             SearchCriteriaProperty = new SearchCriteriaProperty {Prefix = "GetBy"};
@@ -138,9 +139,33 @@ namespace CodeSmith.SchemaHelper
 
         internal string ValidateName(ColumnSchema column, string memberName)
         {
-            memberName = ValidateName(memberName);
+            return ValidateName(column, memberName, false);
+        }
 
-            if (String.Compare(column.Table.ClassName(), memberName, true) == 0)
+        /// <summary>
+        /// Returns a valid name.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        /// <param name="memberName">The name to be validated.</param>
+        /// <param name="isAssociation">If this is an association, then the table prefix on columns will not be removed.</param>
+        /// <returns>A valid name.</returns>
+        internal string ValidateName(ColumnSchema column, string memberName, bool isAssociation)
+        {
+            memberName = ValidateName(memberName);
+            var tableName = column.Table.ClassName();
+
+            // Check to see if the column name is prefixed with the table name
+            if (Instance.NamingProperty.ColumnNaming == ColumnNaming.RemoveTablePrefix && !isAssociation)
+            {
+                // Does the updated column name start with the table name? The overrides file takes presidence.
+                // Also make sure that the stripped name is atleast two characters (E.G CategoryID --> ID)
+                if(memberName.StartsWith(tableName, StringComparison.CurrentCultureIgnoreCase) && memberName.Length > tableName.Length + 1)
+                {
+                    memberName = NamingConventions.PropertyName(memberName.Remove(0, tableName.Length));
+                }
+            }
+
+            if (String.Compare(tableName, memberName, true) == 0)
                 memberName = string.Format("{0}{1}", memberName, SingularMemberSuffix);
 
             return memberName;

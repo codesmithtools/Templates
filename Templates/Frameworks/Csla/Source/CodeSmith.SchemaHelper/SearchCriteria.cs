@@ -42,9 +42,9 @@ namespace CodeSmith.SchemaHelper
                         sb.Append(Configuration.Instance.SearchCriteriaProperty.Delimeter);
 
                     if (IsChild)
-                        sb.Append(Util.NamingConventions.PropertyName(member.ColumnName));
+                        sb.Append(member.MemberPropertyName);
                     else
-                        sb.Append(Util.NamingConventions.PropertyName(member.AssociatedColumn.ColumnName));
+                        sb.Append(member.AssociatedMemberPropertyName);
                 }
             }
             else

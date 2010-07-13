@@ -192,7 +192,7 @@ namespace QuickStart
             }
         }
 
-        private string _criteriaClassName;
+        private string _criteriaClassName = string.Empty;
 
         [Category("3. Business Project")]
         [Description("The name of the criteria business class.")]
@@ -237,7 +237,10 @@ namespace QuickStart
             // We will use these eventually..
             //bool isReadOnly;
             //bool searchingForCriteriaObject = suffix.Equals("criteria", StringComparison.InvariantCultureIgnoreCase);
-            
+         
+            if(string.IsNullOrEmpty(className))
+                className = Entity.ClassName;
+
             var temp = className.Replace(Entity.ClassName, string.Empty);
             if (temp.Equals("criteria", StringComparison.InvariantCultureIgnoreCase) ||
                 temp.Equals("list", StringComparison.InvariantCultureIgnoreCase))

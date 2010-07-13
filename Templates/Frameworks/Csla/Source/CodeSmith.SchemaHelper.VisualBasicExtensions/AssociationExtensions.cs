@@ -27,13 +27,13 @@ namespace CodeSmith.SchemaHelper
                         if(isNullable)
                         {
                             parameters += string.Format("\r\n\t\t\t\tIf({1}.HasValue) Then criteria.{0} = {1}.Value",
-                                Util.NamingConventions.PropertyName(associationMember.ColumnName),
+                                associationMember.MemberPropertyName,
                                 usePropertyName ? member.PropertyName : member.VariableName);
                         }
                         else
                         {
                             parameters += string.Format("\r\n\t\t\t\tcriteria.{0} = {1}",
-                                Util.NamingConventions.PropertyName(associationMember.ColumnName),
+                                associationMember.MemberPropertyName,
                                 usePropertyName ? member.PropertyName : member.VariableName);
                         }
                     }
