@@ -1,0 +1,91 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Business", "Source\PetShop.Business\PetShop.Business.csproj", "{AC433AE0-A1DF-4D32-98C4-168D6DA1DF38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.UI", "Source\PetShop.UI\PetShop.UI.csproj", "{A761202E-412C-4F8D-8F01-18781D9CA7B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Controls", "Source\PetShop.Controls\PetShop.Controls.csproj", "{BF6714B1-2B59-4014-8476-744638F18362}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Tests", "Unit Tests", "{7674CE61-4F24-471D-A1C0-34A3F1E07E4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Tests.Collections", "Source\PetShop.Tests\PetShop.Tests.Collections\PetShop.Tests.Collections.csproj", "{72D8B438-C055-46F6-B360-C06D87E577AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Tests.ParameterizedSQL", "Source\PetShop.Tests\PetShop.Tests.ParameterizedSQL\PetShop.Tests.ParameterizedSQL.csproj", "{78F36102-3934-4C9E-8834-5DE18AE2E106}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Tests.StoredProcedures", "Source\PetShop.Tests\PetShop.Tests.StoredProcedures\PetShop.Tests.StoredProcedures.csproj", "{62132C02-5986-4588-9C20-4429DCBE5BFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Tests.ObjF.StoredProcedures", "Source\PetShop.Tests\PetShop.Tests.ObjF.StoredProcedures\PetShop.Tests.ObjF.StoredProcedures.csproj", "{30ACB4D3-473C-4B6C-A239-D0B6A86DFD26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Tests.ObjF.StoredProcedures.DAL", "Source\PetShop.Tests\PetShop.Tests.ObjF.StoredProcedures.DAL\PetShop.Tests.ObjF.StoredProcedures.DAL.csproj", "{A717EDD6-1E36-4509-965A-E28A1056F3B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Tests.ObjF.ParameterizedSQL", "Source\PetShop.Tests\PetShop.Tests.ObjF.ParameterizedSQL\PetShop.Tests.ObjF.ParameterizedSQL.csproj", "{C2B87D52-3D49-4073-A70B-402D59410D7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetShop.Tests.ObjF.ParameterizedSQL.DAL", "Source\PetShop.Tests\PetShop.Tests.ObjF.ParameterizedSQL.DAL\PetShop.Tests.ObjF.ParameterizedSQL.DAL.csproj", "{BC6F5F88-0DCD-4BE8-9EA4-B827AABD9D76}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Object Factory", "Object Factory", "{B8FEC14A-EEFB-4654-8FC7-B5D003285893}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Collections", "Collections", "{00867D37-220E-4127-9574-EC4B83BC0CD5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC433AE0-A1DF-4D32-98C4-168D6DA1DF38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC433AE0-A1DF-4D32-98C4-168D6DA1DF38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC433AE0-A1DF-4D32-98C4-168D6DA1DF38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC433AE0-A1DF-4D32-98C4-168D6DA1DF38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A761202E-412C-4F8D-8F01-18781D9CA7B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A761202E-412C-4F8D-8F01-18781D9CA7B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A761202E-412C-4F8D-8F01-18781D9CA7B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A761202E-412C-4F8D-8F01-18781D9CA7B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF6714B1-2B59-4014-8476-744638F18362}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF6714B1-2B59-4014-8476-744638F18362}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF6714B1-2B59-4014-8476-744638F18362}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF6714B1-2B59-4014-8476-744638F18362}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72D8B438-C055-46F6-B360-C06D87E577AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72D8B438-C055-46F6-B360-C06D87E577AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72D8B438-C055-46F6-B360-C06D87E577AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72D8B438-C055-46F6-B360-C06D87E577AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78F36102-3934-4C9E-8834-5DE18AE2E106}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78F36102-3934-4C9E-8834-5DE18AE2E106}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78F36102-3934-4C9E-8834-5DE18AE2E106}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78F36102-3934-4C9E-8834-5DE18AE2E106}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62132C02-5986-4588-9C20-4429DCBE5BFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62132C02-5986-4588-9C20-4429DCBE5BFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62132C02-5986-4588-9C20-4429DCBE5BFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62132C02-5986-4588-9C20-4429DCBE5BFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30ACB4D3-473C-4B6C-A239-D0B6A86DFD26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30ACB4D3-473C-4B6C-A239-D0B6A86DFD26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30ACB4D3-473C-4B6C-A239-D0B6A86DFD26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30ACB4D3-473C-4B6C-A239-D0B6A86DFD26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A717EDD6-1E36-4509-965A-E28A1056F3B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A717EDD6-1E36-4509-965A-E28A1056F3B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A717EDD6-1E36-4509-965A-E28A1056F3B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A717EDD6-1E36-4509-965A-E28A1056F3B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B87D52-3D49-4073-A70B-402D59410D7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B87D52-3D49-4073-A70B-402D59410D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B87D52-3D49-4073-A70B-402D59410D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B87D52-3D49-4073-A70B-402D59410D7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC6F5F88-0DCD-4BE8-9EA4-B827AABD9D76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC6F5F88-0DCD-4BE8-9EA4-B827AABD9D76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC6F5F88-0DCD-4BE8-9EA4-B827AABD9D76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC6F5F88-0DCD-4BE8-9EA4-B827AABD9D76}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{78F36102-3934-4C9E-8834-5DE18AE2E106} = {7674CE61-4F24-471D-A1C0-34A3F1E07E4B}
+		{62132C02-5986-4588-9C20-4429DCBE5BFB} = {7674CE61-4F24-471D-A1C0-34A3F1E07E4B}
+		{B8FEC14A-EEFB-4654-8FC7-B5D003285893} = {7674CE61-4F24-471D-A1C0-34A3F1E07E4B}
+		{00867D37-220E-4127-9574-EC4B83BC0CD5} = {7674CE61-4F24-471D-A1C0-34A3F1E07E4B}
+		{C2B87D52-3D49-4073-A70B-402D59410D7A} = {B8FEC14A-EEFB-4654-8FC7-B5D003285893}
+		{A717EDD6-1E36-4509-965A-E28A1056F3B0} = {B8FEC14A-EEFB-4654-8FC7-B5D003285893}
+		{BC6F5F88-0DCD-4BE8-9EA4-B827AABD9D76} = {B8FEC14A-EEFB-4654-8FC7-B5D003285893}
+		{30ACB4D3-473C-4B6C-A239-D0B6A86DFD26} = {B8FEC14A-EEFB-4654-8FC7-B5D003285893}
+		{72D8B438-C055-46F6-B360-C06D87E577AC} = {00867D37-220E-4127-9574-EC4B83BC0CD5}
+	EndGlobalSection
+EndGlobal
