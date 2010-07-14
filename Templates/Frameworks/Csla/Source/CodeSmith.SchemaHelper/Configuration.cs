@@ -37,7 +37,7 @@ namespace CodeSmith.SchemaHelper
                                  {
                                      EntityNaming = EntityNaming.Singular,
                                      TableNaming = TableNaming.Mixed,
-                                     ColumnNaming = ColumnNaming.RemoveTablePrefix
+                                     ColumnNaming = ColumnNaming.Preserve
                                  };
 
             SearchCriteriaProperty = new SearchCriteriaProperty {Prefix = "GetBy"};

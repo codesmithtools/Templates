@@ -730,25 +730,17 @@ namespace QuickStart
         public void PopulateDefaultTables()
         {
             //EditableChild
-            foreach (Entity entity in GetChildEntities())
+            foreach (Entity entity in GetChildEntities().Values)
             {
                 if (!EditableChild.Contains(entity.Table.Owner, entity.Table.Name))
                     EditableChild.Add(entity.Table);
             }
 
             //EditableChildList
-            foreach (Entity entity in GetListEntities())
+            foreach (Entity entity in GetListEntities().Values)
             {
-                foreach (Association association in entity.AssociatedToManyUnion)
-                {
-                    foreach (AssociationMember member in association)
-                    {
-                        var table = new TableSchema(SourceDatabase, member.TableName, entity.Table.Owner, DateTime.Now);
-
-                        if (!EditableChildList.Contains(table.Owner, table.Name))
-                            EditableChildList.Add(table);
-                    }
-                }
+                if (!EditableChildList.Contains(entity.Table.Owner, entity.Table.Name))
+                    EditableChildList.Add(entity.Table);
             }
 
             //EditableRoot

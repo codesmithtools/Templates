@@ -74,9 +74,7 @@ namespace CodeSmith.SchemaHelper.Util
             value = StringUtil.ToCamelCase(CleanName(value.Trim(), useKeywordRenameAlias));
 
             // Replace system keywords..
-            value = Configuration.Instance.SystemTypeEscape[value, value];
-
-            return value;
+            return Configuration.Instance.SystemTypeEscape[value, value];
         }
 
         private static string CleanName(string value, bool useKeywordRenameAlias)
