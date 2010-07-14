@@ -232,9 +232,9 @@ namespace QuickStart
         {
         }
 
-        public List<Entity> GetChildEntities()
+        public Dictionary<string, Entity> GetChildEntities()
         {
-            List<Entity> entities = new List<Entity>(Entities.Count);
+            var entities = new Dictionary<string, Entity>();
 
             foreach (var entity in Entities)
             {
@@ -242,9 +242,9 @@ namespace QuickStart
                 {
                     foreach (AssociationMember member in associationMember)
                     {
-                        if (!entities.Contains(member.Entity))
+                        if (!entities.ContainsKey(member.Entity.Table.FullName))
                         {
-                            entities.Add(member.Entity);
+                            entities.Add(member.Entity.Table.FullName, member.Entity);
                         }
                     }
                 }
@@ -253,9 +253,9 @@ namespace QuickStart
                 {
                     foreach (AssociationMember member in associationMember)
                     {
-                        if (!entities.Contains(member.Entity))
+                        if (!entities.ContainsKey(member.Entity.Table.FullName))
                         {
-                            entities.Add(member.Entity);
+                            entities.Add(member.Entity.Table.FullName, member.Entity);
                         }
                     }
                 }
@@ -264,19 +264,19 @@ namespace QuickStart
             return entities;
         }
 
-        public List<Entity> GetListEntities()
+        public Dictionary<string, Entity> GetListEntities()
         {
-            var entities = new List<Entity>(Entities.Count);
+            var entities = new Dictionary<string, Entity>();
 
             foreach (var entity in Entities)
             {
-                foreach (Association associationMember in entity.AssociatedOneToMany)
+                foreach (Association associationMember in entity.AssociatedToManyUnion)
                 {
                     foreach (AssociationMember member in associationMember)
                     {
-                        if (!entities.Contains(member.Entity))
+                        if (!entities.ContainsKey(member.Entity.Table.FullName))
                         {
-                            entities.Add(member.Entity);
+                            entities.Add(member.Entity.Table.FullName, member.Entity);
                         }
                     }
                 }
@@ -287,13 +287,13 @@ namespace QuickStart
 
         public IEnumerable<Entity> GetEntities()
         {
-            IEnumerable<Entity> excludedEntities = GetChildEntities();
+            var excludedEntities = GetChildEntities();
 
-            if(excludedEntities == null)
+            if(excludedEntities == null || excludedEntities.Count == 0)
                 return Entities;
 
             return from entity in Entities
-                    where !excludedEntities.Contains(entity)
+                    where !excludedEntities.ContainsKey(entity.Table.FullName)
                     select entity;
         }
 

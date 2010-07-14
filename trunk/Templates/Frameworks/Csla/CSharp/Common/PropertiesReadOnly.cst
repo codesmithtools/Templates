@@ -13,7 +13,7 @@
         #region Properties
 
 <%  foreach(Member member in Entity.MembersNoRowVersion){ if (UseMemberVariables){ %>
-        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, null<% } %>);
+        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, (<%= member.SystemType %>)null<% } %>);
         private <%= member.SystemType %> <%= member.PrivateMemberVariableName %> = <%= member.PrivateMemberVariableName %>Property.DefaultValue;<%= member.BuildDataObjectField(IncludeSilverlightSupport) %>
 <% if(member.HasDescription) { %>
         /// <summary>
@@ -27,7 +27,7 @@
         }
 
 <% } else { %>
-        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, null<% } %>);<%= member.BuildDataObjectField(IncludeSilverlightSupport) %>
+        private static readonly PropertyInfo< <%= member.SystemType %> > <%= member.PrivateMemberVariableName %>Property = RegisterProperty< <%= member.SystemType %> >(p => p.<%= member.PropertyName %>, string.Empty<% if(member.IsNullable) { %>, (<%= member.SystemType %>)null<% } %>);<%= member.BuildDataObjectField(IncludeSilverlightSupport) %>
 <% if(member.HasDescription) { %>
         /// <summary>
         /// <%= member.Description %>
