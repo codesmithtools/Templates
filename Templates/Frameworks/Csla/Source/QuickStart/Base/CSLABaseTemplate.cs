@@ -44,7 +44,7 @@ namespace QuickStart
         {
             get
             {
-                return IsCSLA40 ? "4.0.0" : "3.8.2";
+                return IsCSLA40 ? "4.0" : "3.8";
             }
         }
 
@@ -101,8 +101,8 @@ namespace QuickStart
         public virtual void RegisterReferences()
         {
             RegisterReference(!IsCSLA40
-                                  ? Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8.2\Client\Csla.dll"))
-                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.0.0\Client\Csla.dll")));
+                                  ? Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\3.8\Client\Csla.dll"))
+                                  : Path.GetFullPath(Path.Combine(CodeTemplateInfo.DirectoryName, @"..\..\Common\Csla\4.0\Client\Csla.dll")));
 
             RegisterReference("System.Configuration");
         }
