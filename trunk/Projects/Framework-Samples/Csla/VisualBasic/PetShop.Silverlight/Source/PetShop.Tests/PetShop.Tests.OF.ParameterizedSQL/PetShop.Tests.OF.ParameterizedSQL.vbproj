@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{81BE355E-E9DF-4242-A3C5-575489C54EC8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>
+    </RootNamespace>
+    <AssemblyName>PetShop.Tests.OF.ParameterizedSQL</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>PetShop.Tests.OF.ParameterizedSQL.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>PetShop.Tests.OF.ParameterizedSQL.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Csla, Version=3.8.2.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\Common\Csla\3.8.2\Client\Csla.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Libraries\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CategoryTests.vb" />
+    <Compile Include="Generated\Collections\CategoryList.Generated.vb">
+      <DependentUpon>CategoryList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Collections\CategoryList.vb" />
+    <Compile Include="Generated\Collections\ItemList.Generated.vb">
+      <DependentUpon>ItemList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Collections\ItemList.vb" />
+    <Compile Include="Generated\Collections\LineItemList.Generated.vb">
+      <DependentUpon>LineItemList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Collections\LineItemList.vb" />
+    <Compile Include="Generated\Collections\OrderList.Generated.vb">
+      <DependentUpon>OrderList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Collections\OrderList.vb" />
+    <Compile Include="Generated\Collections\OrderStatusList.Generated.vb">
+      <DependentUpon>OrderStatusList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Collections\OrderStatusList.vb" />
+    <Compile Include="Generated\Collections\ProductList.Generated.vb">
+      <DependentUpon>ProductList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Collections\ProductList.vb" />
+    <Compile Include="Generated\Collections\SupplierList.Generated.vb">
+      <DependentUpon>SupplierList.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Collections\SupplierList.vb" />
+    <Compile Include="Generated\Commands\ExistsCommand.vb" />
+    <Compile Include="Generated\Criteria\CategoryCriteria.Generated.vb">
+      <DependentUpon>CategoryCriteria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Criteria\CategoryCriteria.vb" />
+    <Compile Include="Generated\Criteria\Interfaces\IGeneratedCriteria.vb" />
+    <Compile Include="Generated\Criteria\ItemCriteria.Generated.vb">
+      <DependentUpon>ItemCriteria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Criteria\ItemCriteria.vb" />
+    <Compile Include="Generated\Criteria\LineItemCriteria.Generated.vb">
+      <DependentUpon>LineItemCriteria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Criteria\LineItemCriteria.vb" />
+    <Compile Include="Generated\Criteria\OrderCriteria.Generated.vb">
+      <DependentUpon>OrderCriteria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Criteria\OrderCriteria.vb" />
+    <Compile Include="Generated\Criteria\OrderStatusCriteria.Generated.vb">
+      <DependentUpon>OrderStatusCriteria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Criteria\OrderStatusCriteria.vb" />
+    <Compile Include="Generated\Criteria\ProductCriteria.Generated.vb">
+      <DependentUpon>ProductCriteria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Criteria\ProductCriteria.vb" />
+    <Compile Include="Generated\Criteria\SupplierCriteria.Generated.vb">
+      <DependentUpon>SupplierCriteria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Criteria\SupplierCriteria.vb" />
+    <Compile Include="Generated\Entities\Category.Generated.vb">
+      <DependentUpon>Category.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Entities\Category.vb" />
+    <Compile Include="Generated\Entities\Item.Generated.vb">
+      <DependentUpon>Item.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Entities\Item.vb" />
+    <Compile Include="Generated\Entities\LineItem.Generated.vb">
+      <DependentUpon>LineItem.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Entities\LineItem.vb" />
+    <Compile Include="Generated\Entities\Order.Generated.vb">
+      <DependentUpon>Order.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Entities\Order.vb" />
+    <Compile Include="Generated\Entities\OrderStatus.Generated.vb">
+      <DependentUpon>OrderStatus.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Entities\OrderStatus.vb" />
+    <Compile Include="Generated\Entities\Product.Generated.vb">
+      <DependentUpon>Product.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Entities\Product.vb" />
+    <Compile Include="Generated\Entities\Supplier.Generated.vb">
+      <DependentUpon>Supplier.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Entities\Supplier.vb" />
+    <Compile Include="Generated\Factory\FactoryNames.vb" />
+    <Compile Include="Generated\Utility\ADOHelper.vb" />
+    <Compile Include="LineItemTests.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="TestUtility.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Generated\Entities.csp" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
