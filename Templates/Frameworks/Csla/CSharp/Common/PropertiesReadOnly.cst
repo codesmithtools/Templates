@@ -23,6 +23,7 @@
         public <%= member.SystemType %> <%= member.PropertyName %>
         {
             get { return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>); }
+            internal set { LoadProperty(<%= member.PrivateMemberVariableName %>Property, value); }
         }
 
 <% } else { %>
@@ -35,6 +36,7 @@
         public <%= member.SystemType %> <%= member.PropertyName %>
         {
             get { return GetProperty(<%= member.PrivateMemberVariableName %>Property); }
+            internal set { LoadProperty(<%= member.PrivateMemberVariableName %>Property, value); }
         }
 
 <% } } %>
@@ -61,10 +63,10 @@
 <% } %>
 <% if(UseLazyLoading) { %>
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
-                {	
-					var criteria = new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>};
-					<%= association.BuildNullableObjectInitializer(true)%>
-					
+                {
+                    var criteria = new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>};
+                    <%= association.BuildNullableObjectInitializer(true)%>
+
                     if(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
                 }
@@ -104,8 +106,8 @@
                         
                 if(!FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                 {
-					var criteria = new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>};
-					<%= association.BuildNullableObjectInitializer(true)%>
+                    var criteria = new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>};
+                    <%= association.BuildNullableObjectInitializer(true)%>
 
                     if(<%= BusinessProjectName %>.<%= associationClassName %>.Exists(criteria))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %><%= association.GenericProperty %>.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
@@ -149,8 +151,8 @@
 <% if(IsNameValueListBusinessObject(association, "NameValueList")) { %>
                     LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.GetAll());
 <% } else { %>
-					var criteria = new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>};
-					<%= association.BuildNullableObjectInitializer(true)%>
+                    var criteria = new <%= BusinessProjectName %>.<%= association.ClassName %>Criteria {<%= association.BuildObjectInitializer(true) %>};
+                    <%= association.BuildNullableObjectInitializer(true)%>
 
                     if(<%= association.BuildNullCheckStatement(true, false, false, false) %><%= BusinessProjectName %>.<%= associationClassName %>List.Exists(criteria))
                         LoadProperty(<%= association.PrivateMemberVariableName %>Property, <%= BusinessProjectName %>.<%= associationClassName %>List.<%= association.SearchCriteria.MethodName%>(<%= association.SearchCriteria.Members.BuildPropertyVariableArguments() %>));
