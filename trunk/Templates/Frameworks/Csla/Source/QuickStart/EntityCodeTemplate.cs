@@ -239,25 +239,27 @@ namespace QuickStart
             //bool searchingForCriteriaObject = suffix.Equals("criteria", StringComparison.InvariantCultureIgnoreCase);
          
             if(string.IsNullOrEmpty(className))
-                className = Entity.ClassName;
+                className = Entity != null ? Entity.ClassName : string.Empty;
 
-            var temp = className.Replace(Entity.ClassName, string.Empty);
-            if (temp.Equals("criteria", StringComparison.InvariantCultureIgnoreCase) ||
-                temp.Equals("list", StringComparison.InvariantCultureIgnoreCase))
+            if (Entity != null)
             {
-                className = Entity.ClassName;
-            }
+                var temp = className.Replace(Entity.ClassName, string.Empty);
+                if (temp.Equals("criteria", StringComparison.InvariantCultureIgnoreCase) ||
+                    temp.Equals("list", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    className = Entity.ClassName;
+                }
 
-            // Try to detect if we are generating a read only object..
-            if (temp.Equals("info", StringComparison.InvariantCultureIgnoreCase) ||
-                temp.Equals("infolist", StringComparison.InvariantCultureIgnoreCase))
-            {
-                // Try to detect double endings.
-                if (suffix.Equals("info", StringComparison.InvariantCultureIgnoreCase))
-                    return string.Format("{0}Info", Entity.ClassName);
+                // Try to detect if we are generating a read only object..
+                if (temp.Equals("info", StringComparison.InvariantCultureIgnoreCase) ||
+                    temp.Equals("infolist", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    // Try to detect double endings.
+                    if (suffix.Equals("info", StringComparison.InvariantCultureIgnoreCase)) return string.Format("{0}Info", Entity.ClassName);
 
-                //isReadOnly = true;
-                className = string.Format("{0}Info", Entity.ClassName);
+                    //isReadOnly = true;
+                    className = string.Format("{0}Info", Entity.ClassName);
+                }
             }
 
             // If the keys are 0 then that means they are not generating from the entities.csp.
@@ -353,13 +355,16 @@ namespace QuickStart
 
         public virtual void OnTableChanged()
         {
-            Entity = new Entity( SourceTable );
+            Entity = new Entity(SourceTable);
 
             if (string.IsNullOrEmpty(BusinessClassName))
                 BusinessClassName = Entity.ClassName;
 
+            if (string.IsNullOrEmpty(CriteriaClassName) || CriteriaClassName.Equals("Criteria", StringComparison.InvariantCultureIgnoreCase))
+                BusinessClassName = String.Concat(Entity.ClassName, "Criteria");
+
             if (string.IsNullOrEmpty(BusinessProjectName))
-                BusinessProjectName = string.Format("{0}.Business", SourceTable.Namespace());
+                BusinessProjectName = String.Concat(SourceTable.Namespace(), ".Business");
 
             if (string.IsNullOrEmpty(Location))
                 Location = ".\\";
