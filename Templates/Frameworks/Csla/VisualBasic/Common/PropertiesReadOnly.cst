@@ -10,6 +10,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+
         #Region "Properties"
     
     <%  For Each member As Member in Entity.MembersNoRowVersion
@@ -24,11 +25,11 @@
     <%If IncludeSilverlightSupport Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
-        <%= member.BuildDataObjectField(IncludeSilverlightSupport) %>
-        Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
+        <%If member.IsPrimaryKey Then %><%= member.BuildDataObjectField(IncludeSilverlightSupport) %><% End If %>
+        Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
     <%If IncludeSilverlightSupport Then %>
     #Else
-        Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
+        Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
     #End If
     <% End If %>
             Get 
@@ -44,8 +45,8 @@
     <%If IncludeSilverlightSupport Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
-        <%= member.BuildDataObjectField(IncludeSilverlightSupport) %>
-        Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
+        <%If member.IsPrimaryKey Then %><%= member.BuildDataObjectField(IncludeSilverlightSupport) %><% End If %>
+        Public Property <%= member.PropertyName %>() As <%= member.SystemType %>
     <%If IncludeSilverlightSupport Then %>
     #Else
         Public ReadOnly Property <%= member.PropertyName %>() As <%= member.SystemType %>
@@ -79,7 +80,6 @@
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
-    
     <% If UseLazyLoading Then %>
                 If Not (FieldManager.FieldExists(<%= association.PrivateMemberVariableName %>Property))
                     Dim criteria As New <%= BusinessProjectName %>.<%= association.ClassName %>Criteria()
@@ -97,7 +97,7 @@
     <% End If %>
             End Get
         End Property
-    
+
     <% Next %>
     <%-- Many-To-One --%>
     <% For Each association  As Association in Entity.AssociatedManyToOne 
@@ -105,7 +105,6 @@
     If(IsReadOnlyBusinessObject( association, "Info")) Then
         associationClassName += "Info"
     End If %>
-    
         'AssociatedManyToOne
         Private Shared ReadOnly <%= association.PrivateMemberVariableName %>Property As PropertyInfo(Of <%= associationClassName %>) = RegisterProperty(Of <%= associationClassName %>)(Function(p As <%= BusinessClassName %>) p.<%= association.PropertyName %>, "<%= association.PropertyName %>")
     <% If(association.HasDescription) Then %>
