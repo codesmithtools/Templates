@@ -88,8 +88,8 @@ namespace <%= BusinessProjectName %>
 <% } %>
 
         #endregion
-
 <% if(IncludeSilverlightSupport) { %>
+
         #region Asynchronous Factory Methods
         
         internal static void New<%= ChildBusinessClassName %>Async(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
@@ -106,12 +106,9 @@ namespace <%= BusinessProjectName %>
         #endregion
 <% } %>
 
-<% RenderHelper(new Exists()); %>
-
 <% RenderHelper(new IsDirty()); %>
-
-<% RenderHelper(new CompositeKeyMethods()); %>
-
 <% RenderHelper(new PartialMethods()); %>
+<% RenderHelper(new Exists()); %>
+<% RenderHelper(new CompositeKeyMethods()); %>
     }
 }

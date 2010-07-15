@@ -9,7 +9,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-        #Region "DataPortal partial methods"
+#Region "DataPortal partial methods"
     
     <%If IncludeSilverlightSupport Then %>
     #If Not SILVERLIGHT Then
@@ -36,4 +36,4 @@
         Partial Private Sub OnAddNewCore(ByVal item As <%= ChildBusinessClassName %><%= Entity.GenericProperty %>, ByRef cancel As Boolean)
         End Sub
     
-        #End Region
+#End Region

@@ -54,13 +54,13 @@ Namespace <%= BusinessProjectName %>
         Inherits CriteriaBase<% If (IsCSLA40) Then %>(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)<% End If %>
         Implements IGeneratedCriteria
     
-        #Region "Private Read-Only Members"
+#Region "Private Read-Only Members"
         
         Private ReadOnly _bag As New Dictionary(Of String, Object)()
         
-        #End Region
+#End Region
     
-        #Region "Constructors"
+#Region "Constructors"
     
         Public Sub New()
         <% If Not(IsCSLA40) Then %>MyBase.New(GetType(<%= ChildBusinessClassName %><%= Entity.GenericProperty %>))<% End If %>
@@ -74,11 +74,11 @@ Namespace <%= BusinessProjectName %>
     <% Next %>
         End Sub
     
-        #End Region
+#End Region
     
-        #Region "Public Properties"
+#Region "Public Properties"
         
-        #Region "Read-Write"
+#Region "Read-Write"
     
     <% For Each member As Member In Entity.MembersNoRowVersion %>
         
@@ -92,9 +92,9 @@ Namespace <%= BusinessProjectName %>
         End Property
     <% Next %>
     
-        #End Region
+#End Region
         
-        #Region "Read-Only"
+#Region "Read-Only"
     <% If(DataAccessImplementation = DataAccessMethod.StoredProcedures Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures)
         For Each member As Member In Entity.MembersNoRowVersion
             If(member.IsNullable) Then
@@ -128,11 +128,11 @@ Namespace <%= BusinessProjectName %>
             End Get
         End Property
     
-        #End Region
+#End Region
     
-        #End Region
+#End Region
     
-        #region "Overrides"
+#Region "Overrides"
     
         Public Overrides Function ToString() As String
             Dim result As String = String.Empty
@@ -154,9 +154,9 @@ Namespace <%= BusinessProjectName %>
             Return result.Remove(result.Length - 5, 5)
         End Function
     
-        #End Region
+#End Region
     
-        #Region "Private Methods"
+#Region "Private Methods"
         
         Private Function GetValue(Of T)(name As String) As T
             Dim value As New Object
@@ -167,17 +167,17 @@ Namespace <%= BusinessProjectName %>
             Return Nothing
         End Function
         
-        #End Region
+#End Region
         
-        #Region "Partial Methods"
+#Region "Partial Methods"
 
         Partial Private Sub OnToString(ByRef result As String, ByRef cancel As Boolean)
         End Sub
 
-        #End Region
+#End Region
 
 <% If(IncludeSilverlightSupport) Then %>
-        #Region "Serialization"
+#Region "Serialization"
 
         Protected Overrides Sub OnGetState(ByVal info As SerializationInfo, ByVal mode As StateMode)
             MyBase.OnGetState(info, mode)
@@ -199,7 +199,7 @@ Namespace <%= BusinessProjectName %>
 <% Next %>
         End Sub
 
-        #End Region
+#End Region
 
 <% End If %>
     End Class

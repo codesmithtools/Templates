@@ -28,22 +28,22 @@ Namespace <%= BusinessProjectName %>
     Public Class ExistsCommand
         Inherits CommandBase<% If(IsCSLA40) Then %>(Of ExistsCommand)<% End If %>
     
-        #Region "Constructor(s)"
+#Region "Constructor(s)"
     
         Private Sub New()
         End Sub
     
-        #End Region
+#End Region
     
-        #Region "Authorization Methods"
+#Region "Authorization Methods"
     
         Public Shared Function CanExecuteCommand() As Boolean
             Return True
         End Function
     
-        #End Region
+#End Region
     
-        #Region "Factory Methods"
+#Region "Factory Methods"
     
         Public Shared Function Execute(Of T As IGeneratedCriteria)(ByVal criteria As T) As Boolean
             If Not CanExecuteCommand() Then
@@ -58,9 +58,9 @@ Namespace <%= BusinessProjectName %>
             Return cmd.Result
         End Function
     
-        #End Region
+#End Region
     
-        #Region "Client-side Code"
+#Region "Client-side Code"
     
         Private _criteria As IGeneratedCriteria
         Private Property Criteria() As IGeneratedCriteria
@@ -90,9 +90,9 @@ Namespace <%= BusinessProjectName %>
         Private Sub AfterServer()
         End Sub
     
-        #End Region
+#End Region
     
-        #Region "Data Access"
+#Region "Data Access"
     
         Protected Overloads Overrides Sub DataPortal_Execute()
             Dim commandText As String = String.Format("SELECT COUNT(1) FROM {0} {1}", Criteria.TableFullName, ADOHelper.BuildWhereStatement(Criteria.StateBag))
@@ -105,6 +105,6 @@ Namespace <%= BusinessProjectName %>
             End Using
         End Sub
         
-        #End Region
+#End Region
     End Class
 End Namespace

@@ -32,7 +32,7 @@ Imports Csla.Data
 Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     
-        #Region "Root Data Access"
+#Region "Root Data Access"
     
         <RunLocal()> _
         Protected Sub DataPortal_Create()
@@ -67,9 +67,9 @@ Namespace <%= BusinessProjectName %>
             ' TODO: delete values
         End Sub
     
-        #End Region
+#End Region
     
-        #Region "Child Data Access"
+#Region "Child Data Access"
     
         <RunLocal()> _
         Protected Overrides Sub Child_Create()
@@ -94,7 +94,7 @@ Namespace <%= BusinessProjectName %>
             ' TODO: delete values
         End Sub
     
-        #End Region
+#End Region
     
     End Class
 End Namespace

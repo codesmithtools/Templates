@@ -54,7 +54,7 @@ Namespace <%= BusinessProjectName %>
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
-        #Region "Synchronous Factory Methods"
+#Region "Synchronous Factory Methods"
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
         Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>
@@ -65,12 +65,12 @@ Namespace <%= BusinessProjectName %>
         End Function
     <% Next %>
     
-        #End Region
+#End Region
     <% If(IncludeSilverlightSupport) Then %>
     
     #End If
     
-        #Region "Asynchronous Factory Methods"
+#Region "Asynchronous Factory Methods"
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
         Public Shared Function <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>))) As <%= BusinessClassName %><%= Entity.GenericProperty %>
@@ -86,14 +86,12 @@ Namespace <%= BusinessProjectName %>
         End Function
     <% Next %>
     
-        #End Region
+#End Region
     
     <% End If %>
-    
-    <% RenderHelper(New Exists()) %>
-    
-    <% RenderHelper(New CompositeKeyMethods()) %>
         
     <% RenderHelper(New PartialMethods()) %>
+    <% RenderHelper(New Exists()) %>
+    <% RenderHelper(New CompositeKeyMethods()) %>
     End Class
 End Namespace

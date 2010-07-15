@@ -27,7 +27,7 @@ Imports Csla
 Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %>
     
-        #Region "Authorization Methods"
+#Region "Authorization Methods"
     
         Public Shared Function CanExecuteCommand() As Boolean
             ' TODO: customize to check user role.
@@ -35,7 +35,7 @@ Namespace <%= BusinessProjectName %>
             Return True
         End Function
         
-        #End Region
+#End Region
         
     End Class
 End Namespace

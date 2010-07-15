@@ -66,7 +66,7 @@ Namespace <%= BusinessProjectName %>
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
-        #Region "Synchronous Factory Methods"
+#Region "Synchronous Factory Methods"
     
         Public Shared Function New<%= BusinessClassName %>() As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Return DataPortal.Create(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
@@ -91,12 +91,12 @@ Namespace <%= BusinessProjectName %>
         End Sub
     <%End If%>
     
-        #End Region
+#End Region
     
     <% If(IncludeSilverlightSupport) Then %>
     #End If        
     
-        #Region "Asynchronous Factory Methods"
+#Region "Asynchronous Factory Methods"
             
         Public Shared Sub New<%= BusinessClassName %>Async(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
@@ -132,15 +132,13 @@ Namespace <%= BusinessProjectName %>
     
     <% End If %>
             
-        #End Region
+#End Region
     <% End If %>
-    
-    <% RenderHelper(New Exists()) %>
     
     <% RenderHelper(New IsDirty()) %>
     
-    <% RenderHelper(New CompositeKeyMethods()) %>
-        
     <% RenderHelper(New PartialMethods()) %>
+    <% RenderHelper(New Exists()) %>
+    <% RenderHelper(New CompositeKeyMethods()) %>
     End Class
 End Namespace

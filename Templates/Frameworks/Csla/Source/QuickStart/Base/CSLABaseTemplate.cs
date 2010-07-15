@@ -35,7 +35,7 @@ namespace QuickStart
                     return FileVersionInfo.GetVersionInfo(fileName).FileVersion;
                 }
 
-                return "0.0.0.0";
+                return "3.0.0.0";
             }
         }
 
@@ -44,7 +44,7 @@ namespace QuickStart
         {
             get
             {
-                return IsCSLA40 ? "4.0" : "3.8";
+                return IsCSLA40 ? "4.0.0" : "3.8.4";
             }
         }
 

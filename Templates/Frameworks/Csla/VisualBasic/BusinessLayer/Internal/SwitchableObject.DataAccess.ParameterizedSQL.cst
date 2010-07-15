@@ -47,7 +47,7 @@ Imports Csla.Data
 Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
     
-        #Region "Root Data Access"
+#Region "Root Data Access"
     
         <RunLocal()> _
         Protected Overrides Sub DataPortal_Create()
@@ -90,9 +90,9 @@ Namespace <%= BusinessProjectName %>
     <% RenderHelper(New DataPortalDelete(), true) %>
         End Sub
     
-        #End Region
+#End Region
     
-        #Region "Child Data Access"
+#Region "Child Data Access"
     
         <RunLocal()> _
         Protected Overrides Sub Child_Create()
@@ -105,7 +105,7 @@ Namespace <%= BusinessProjectName %>
             MarkAsChild()
         End Sub
     
-        #Region "Child_Insert"
+#Region "Child_Insert"
     
         Private Sub Child_Insert(ByVal connection as SqlConnection)
     <% RenderHelper(New ChildInsert(), true) %>
@@ -128,9 +128,9 @@ Namespace <%= BusinessProjectName %>
     
     <%End If%>
     
-        #End Region
+#End Region
     
-        #Region "Child_Update"
+#Region "Child_Update"
     
         Private Sub Child_Update(ByVal connection as SqlConnection)
     <% RenderHelper(New ChildUpdate(), true) %>
@@ -153,7 +153,7 @@ Namespace <%= BusinessProjectName %>
     
     <%End If%>
     
-        #End Region
+#End Region
     
         Private Sub Child_DeleteSelf()
             Dim cancel As Boolean = False
@@ -184,7 +184,7 @@ Namespace <%= BusinessProjectName %>
             OnChildSelfDeleted()
         End Sub
     
-        #End Region
+#End Region
     
         Private Sub Map(ByVal reader As SafeDataReader)
     <% RenderHelper(New MapDataReader()) %>

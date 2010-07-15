@@ -10,7 +10,8 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
     <% If(Entity.PrimaryKey.IsCompositeKey) Then %>
-        #Region "Protected Overriden Method(s)"
+
+#Region "Protected Overriden Method(s)"
         
         ' NOTE: This is needed for Composite Keys. 
         Private ReadOnly _guidID As Guid = Guid.NewGuid()
@@ -18,5 +19,5 @@
             Return _guidID
         End Function
         
-        #End Region
+#End Region
     <% End If %>

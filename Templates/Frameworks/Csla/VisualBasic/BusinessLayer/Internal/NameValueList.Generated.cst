@@ -34,13 +34,13 @@ Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %> 
         Inherits NameValueListBase(Of Integer, String)
     
-        #Region "Factory Methods"
+#Region "Factory Methods"
     
         Private Shared _list As <%= BusinessClassName %>
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
-        #Region "Synchronous Factory Methods"
+#Region "Synchronous Factory Methods"
         Public Shared Function GetAll() As <%= BusinessClassName %>
             If (_list Is Nothing) Then
                 _list = DataPortal.Fetch(Of <%= BusinessClassName %>)()
@@ -49,12 +49,12 @@ Namespace <%= BusinessProjectName %>
             Return _list
         End Function
     
-        #End Region
+#End Region
     <% If(IncludeSilverlightSupport) Then %>
     
     #End If        
     
-        #Region "Asynchronous Factory Methods"
+#Region "Asynchronous Factory Methods"
             
         Public Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
@@ -62,7 +62,7 @@ Namespace <%= BusinessProjectName %>
             dp.BeginFetch()
         End Sub
         
-        #End Region
+#End Region
     <% End If %>
     
         Public Shared Sub InvalidateCache()
@@ -72,11 +72,11 @@ Namespace <%= BusinessProjectName %>
         Private Sub New()
         End Sub
         
-        #End Region
+#End Region
     
     
     <% If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then %>
-            #Region "Property overrides"
+    #Region "Property overrides"
     
             ''' <summary>
             ''' Returns true if any children are dirty
@@ -87,7 +87,7 @@ Namespace <%= BusinessProjectName %>
                 End Get
             End Property
     
-            #End Region
+    #End Region
     
     <% End If %>
     End Class

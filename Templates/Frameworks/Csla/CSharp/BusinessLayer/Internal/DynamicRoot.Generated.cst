@@ -112,12 +112,10 @@ namespace <%= BusinessProjectName %>
         #endregion
 <% } %>
 
-<% RenderHelper(new Exists()); %>
-
 <% RenderHelper(new IsDirty()); %>
 
-<% RenderHelper(new CompositeKeyMethods()); %>
-
 <% RenderHelper(new PartialMethods()); %>
+<% RenderHelper(new Exists()); %>
+<% RenderHelper(new CompositeKeyMethods()); %>
     }
 }

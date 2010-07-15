@@ -30,7 +30,7 @@ Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %>
         Inherits CommandBase
         
-        #Region "Factory Methods"
+#Region "Factory Methods"
         
         Public Shared Function Execute() As Boolean
             If Not CanExecuteCommand() Then
@@ -49,9 +49,9 @@ Namespace <%= BusinessProjectName %>
             ' Require use of factory methods
         End Sub
         
-        #End Region
+#End Region
         
-        #Region "Client-side Code"
+#Region "Client-side Code"
     
         ' TODO: add your own fields and properties
         Private _result As Boolean
@@ -71,7 +71,7 @@ Namespace <%= BusinessProjectName %>
             ' after server is called
         End Sub
         
-        #End Region
+#End Region
     
     End Class
 End Namespace

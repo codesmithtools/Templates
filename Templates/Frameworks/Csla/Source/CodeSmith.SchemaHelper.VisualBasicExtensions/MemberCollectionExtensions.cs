@@ -184,7 +184,7 @@ namespace CodeSmith.SchemaHelper
             foreach (Member member in members)
             {
                 if (member.IsNullable)
-                    commandParameters += string.Format(Environment.NewLine + "\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}HasValue\", criteria.{2}HasValue)", Configuration.Instance.ParameterPrefix, member.ColumnName, member.PropertyName);
+                    commandParameters += string.Format(Environment.NewLine + "\t\t\t\t\tcommand.Parameters.AddWithValue(\"{0}{1}HasValue\", criteria.{2}HasValue)", Configuration.Instance.ParameterPrefix, member.ColumnName, member.PropertyName);
             }
 
             return commandParameters.TrimStart(new[] { '\t', '\r', '\n' });

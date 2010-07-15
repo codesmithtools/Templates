@@ -63,7 +63,7 @@ Namespace <%= BusinessProjectName %>
     
     <% RenderHelper(New Properties()) %>
     
-        #Region "Synchronous Factory Methods"
+#Region "Synchronous Factory Methods"
     
         Friend Shared Function New<%= ChildBusinessClassName %><%= Entity.GenericProperty %>() As <%= ChildBusinessClassName %> 
             Return DataPortal.Create(Of <%= BusinessClassName %>)()
@@ -84,10 +84,10 @@ Namespace <%= BusinessProjectName %>
     #End If
     <% End If %>
     
-        #End Region
+#End Region
     <% If(IncludeSilverlightSupport) Then %>     
     
-        #Region "Asynchronous Factory Methods"
+#Region "Asynchronous Factory Methods"
     
         Friend Shared Sub New<%= BusinessClassName %>Async(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
@@ -103,12 +103,10 @@ Namespace <%= BusinessProjectName %>
     
     <% End If %>
     
-    <% RenderHelper(New Exists()) %>
-    
     <% RenderHelper(New IsDirty()) %>
     
-    <% RenderHelper(New CompositeKeyMethods()) %>
-        
     <% RenderHelper(New PartialMethods()) %>
+    <% RenderHelper(New Exists()) %>
+    <% RenderHelper(New CompositeKeyMethods()) %>
     End Class
 End Namespace

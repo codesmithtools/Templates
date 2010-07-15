@@ -90,7 +90,6 @@ namespace <%= BusinessProjectName %>
             
             return DataPortal.FetchChild< <%= BusinessClassName %><%= Entity.GenericProperty %> >(criteria);
         }
-        
 <% } %>
 
         internal static <%= BusinessClassName %><%= Entity.GenericProperty %> GetAll()
@@ -102,7 +101,6 @@ namespace <%= BusinessProjectName %>
 
 <% if(IncludeSilverlightSupport) { %>
 #endif  
-
         #region Asynchronous Factory Methods
         
         internal static void New<%= ChildBusinessClassName %>ListAsync(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
@@ -115,8 +113,8 @@ namespace <%= BusinessProjectName %>
         //Child objects do not expose asynchronous factory get methods
  
         #endregion
+        
 <% } %>   
-
         #region Method Overrides
         
 <% if(IncludeSilverlightSupport) { %>
@@ -128,7 +126,6 @@ namespace <%= BusinessProjectName %>
         }
 <% if(IncludeSilverlightSupport) { %>
 #else
-
         protected override void AddNewCore()
         {
 <% RenderHelper(new AddNewCore(), IncludeSilverlightSupport); %>
@@ -151,9 +148,7 @@ namespace <%= BusinessProjectName %>
         #endregion
 
 <% RenderHelper(new IsDirty()); %>
-
-<% RenderHelper(new Exists()); %>
-
 <% RenderHelper(new PartialMethods()); %>
+<% RenderHelper(new Exists()); %>
     }
 }

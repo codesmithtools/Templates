@@ -9,7 +9,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-        #Region "ChildPortal partial methods"
+#Region "ChildPortal partial methods"
     
     <%If IncludeSilverlightSupport Then %>
     #If Not SILVERLIGHT Then
@@ -48,4 +48,4 @@
     #End If
     <% End If %>
     
-        #End Region
+#End Region
