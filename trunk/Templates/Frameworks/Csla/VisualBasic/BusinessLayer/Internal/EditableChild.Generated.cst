@@ -60,7 +60,6 @@ Namespace <%= BusinessProjectName %>
     <% RenderHelper(New Constructor()) %>
     
     <% RenderHelper(New ValidationRules()) %>
-    
     <% RenderHelper(New Properties()) %>
     
 #Region "Synchronous Factory Methods"
@@ -100,11 +99,9 @@ Namespace <%= BusinessProjectName %>
     ' Child objects do not expose asynchronous delete methods.
     
     #End Region
-    
     <% End If %>
     
     <% RenderHelper(New IsDirty()) %>
-    
     <% RenderHelper(New PartialMethods()) %>
     <% RenderHelper(New Exists()) %>
     <% RenderHelper(New CompositeKeyMethods()) %>
