@@ -60,7 +60,6 @@ Namespace <%= BusinessProjectName %>
     <% RenderHelper(New Constructor()) %>
     
     <% RenderHelper(New ValidationRules()) %>
-    
     <% RenderHelper(New Properties()) %>
     
     <% If(IncludeSilverlightSupport) Then %>
@@ -92,7 +91,6 @@ Namespace <%= BusinessProjectName %>
     <%End If%>
     
 #End Region
-    
     <% If(IncludeSilverlightSupport) Then %>
     #End If        
     
@@ -136,7 +134,6 @@ Namespace <%= BusinessProjectName %>
     <% End If %>
     
     <% RenderHelper(New IsDirty()) %>
-    
     <% RenderHelper(New PartialMethods()) %>
     <% RenderHelper(New Exists()) %>
     <% RenderHelper(New CompositeKeyMethods()) %>
