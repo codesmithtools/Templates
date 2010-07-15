@@ -255,7 +255,7 @@ namespace QuickStart
 
                 ContextData.Add(entity.Table.Name, Constants.DynamicRoot);
 
-                if (this.State == TemplateState.RestoringProperties)
+                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
                     return;
 
                 //Many-To-One
@@ -294,7 +294,7 @@ namespace QuickStart
 
                 ContextData.Add(entity.Table.Name, Constants.EditableChild);
 
-                if (this.State == TemplateState.RestoringProperties)
+                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
                     return;
 
                 //Many-To-One
@@ -333,7 +333,7 @@ namespace QuickStart
 
                 ContextData.Add(entity.Table.Name, Constants.EditableRoot);
 
-                if (this.State == TemplateState.RestoringProperties)
+                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
                     return;
 
                 //Many-To-One
@@ -372,7 +372,7 @@ namespace QuickStart
 
                 ContextData.Add(key, Constants.ReadOnlyChild);
 
-                if (this.State == TemplateState.RestoringProperties)
+                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
                     return;
 
                 //Many-To-One
@@ -411,7 +411,7 @@ namespace QuickStart
 
                 ContextData.Add(key, Constants.ReadOnlyRoot);
 
-                if (this.State == TemplateState.RestoringProperties)
+                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
                     return;
 
                 //Many-To-One
@@ -450,7 +450,7 @@ namespace QuickStart
 
                 ContextData.Add(entity.Table.Name, Constants.SwitchableObject);
 
-                if (this.State == TemplateState.RestoringProperties)
+                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
                     return;
 
                 //Many-To-One
@@ -494,7 +494,7 @@ namespace QuickStart
 
                 ContextData.Add(key, Constants.DynamicRootList);
 
-                if (this.State == TemplateState.RestoringProperties)
+                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
                     return;
 
                 AddChildEntity(entity.Table, false, true);
@@ -520,7 +520,7 @@ namespace QuickStart
 
                 ContextData.Add(key, Constants.EditableRootList);
 
-                if (this.State == TemplateState.RestoringProperties)
+                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
                     return;
 
                 AddChildEntity(entity.Table, false, false);
@@ -545,7 +545,7 @@ namespace QuickStart
 
                 ContextData.Add(key, Constants.EditableChildList);
 
-                if (this.State == TemplateState.RestoringProperties)
+                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
                     return;
 
                 AddChildEntity(entity.Table, false, true);
@@ -569,7 +569,7 @@ namespace QuickStart
 
                 ContextData.Add(key, Constants.ReadOnlyList);
 
-                if (this.State == TemplateState.RestoringProperties)
+                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
                     return;
 
                 AddChildEntity(entity.Table, true, true);
@@ -593,7 +593,7 @@ namespace QuickStart
 
                 ContextData.Add(key, Constants.ReadOnlyChildList);
 
-                if (this.State == TemplateState.RestoringProperties)
+                if (this.State == TemplateState.RestoringProperties || SourceDatabase == null)
                     return;
 
                 AddChildEntity(entity.Table, true, true);
