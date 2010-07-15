@@ -150,8 +150,6 @@ namespace CodeSmith.SchemaHelper
             for (int index = 0; index < associations.Count; index++)
             {
                 var parameter = string.Format(", {0}", Util.NamingConventions.VariableName(associations[index].ClassName));
-                if (parameters.Contains(parameter)) continue;
-                
                 if(index == currentRecord)
                 {
                     parameters += parameter;
