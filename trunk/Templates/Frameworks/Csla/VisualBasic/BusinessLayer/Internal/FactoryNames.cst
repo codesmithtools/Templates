@@ -33,9 +33,9 @@ Imports System.Runtime.CompilerServices
 Namespace <%= BusinessProjectName %>
     Public Class FactoryNames
     
-        #Region "Preserved Code"
+#Region "Preserved Code"
     
-        #End Region
+#End Region
     
     <% For Each entity As Entity In new EntityManager(DynamicRoot).Entities %>
         Public Const <%= entity.ClassName %>FactoryName As String = "<%= DataProjectName %>.<%= entity.ClassName %>Factory, <%= DataProjectName %>"

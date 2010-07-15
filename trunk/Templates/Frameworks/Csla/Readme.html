@@ -3,11 +3,6 @@
 
 <head>
 <title>CodeSmith CSLA Templates</title>
-<style type="text/css">
-.style1 {
-    color: #FF0000;
-}
-</style>
 </head>
 
 <body>
@@ -130,6 +125,9 @@ under the file that can be changed.</p>
 
 <h2><a title="KnownIssues" name="KnownIssues"></a>Known Issues</h2>
 <ul>
+    <li>A full list of known CSLA issue can be found on our
+        <a href="http://code.google.com/p/codesmith/issues/list?q=label:Framework-CSLA">
+        template issue tracker</a></li>
     <li>Please report any issues to the following <a href="http://community.codesmithtools.com/forums/68.aspx">forum</a>.</li>
     <li>When scripting stored procedures in SSMS, extended properties will not be 
         scripted by default.&nbsp; You must enable the option by going into SSMS Options 
@@ -137,9 +135,8 @@ under the file that can be changed.</p>
 </ul>
 <h2><a title="Roadmap" name="Roadmap"></a>Roadmap</h2>
 <ul>
-    <li>Add L2S (Linq to SQL support), NHibernate, MySQL, Oracle</li>
-    <li>Unit test generation</li>
-    <li>Generate from a View.</li>
+    <li>Add L2S (Linq to SQL support), NHibernate, MySQL, Oracle, AS400</li>
+    <li>Generate from a View or stored procedure.</li>
     <li>Generation from an xml file.</li>
 </ul>
 <h2><a name="Download"></a>Download</h2>
@@ -149,6 +146,30 @@ under the file that can be changed.</p>
 </ul>
 <h2>History</h2>
 <ul>
+    <li>Release 3.0<ul>
+        <li>Added CSLA 4.0 support.</li>
+        <li>Added support for CSLA 4.0 (Requires CSLA 4).</li>
+        <li>Added (beta version) unit test templates for C#. These are basic unit tests that 
+            will be expanded on in a future release.</li>
+        <li>Added Namespace support into the VB Templates <span style="color:red">*Breaking 
+            Change: Ever partial non generated class needs to be updated to contain a 
+            namespace.</span></li>
+        <li>Added better support for overriding column and table names.</li>
+        <li>Added better support for detecting child properties of different business object 
+            types (read only etc..).</li>
+        <li>Fixed many runtime performance issues.</li>
+        <li>Added more partial method hooks.</li>
+        <li>Added better support for nullable types.</li>
+        <li>Added better support for Composite keys and Guid columns.</li>
+        <li>Fixed a few bugs around saving and updating grand children.</li>
+        <li>Fixed a bug where parameterized sql would generate invalid select statements.</li>
+        <li>Updated Record Not Found behavior on lists.&nbsp; <span style="color:red">*Breaking 
+            Change: Collections will no longer throw exceptions when no records exist in the 
+            database.</span></li>
+        <li>Fixed many other 
+            <a href="http://code.google.com/p/codesmith/issues/list?can=1&amp;q=label:Framework-CSLA+AND+label:version-3.0.0">template bugs</a>.</li>
+        </ul>
+    </li>
     <li>Release 2.0
         <ul>
             <li>Added SQL Stored Procedure support</li>

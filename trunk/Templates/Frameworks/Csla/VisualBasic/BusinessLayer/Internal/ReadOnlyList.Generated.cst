@@ -47,7 +47,7 @@ Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
         Inherits ReadOnlyListBase(Of <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %><%= Entity.GenericProperty %>)
     
-        #Region "Contructor(s)"
+#Region "Contructor(s)"
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
@@ -60,12 +60,12 @@ Namespace <%= BusinessProjectName %>
     #End If
     <% End If %>
         
-        #End Region
+#End Region
     
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
-        #Region "Synchronous Factory Methods"
+#Region "Synchronous Factory Methods"
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
         Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %> 
@@ -80,12 +80,12 @@ Namespace <%= BusinessProjectName %>
             Return DataPortal.Fetch(Of <%= BusinessClassName %>)(New <%= CriteriaClassName %>())
         End Function
     
-        #End Region
+#End Region
     <% If(IncludeSilverlightSupport) Then %>
     
     #End If
     
-        #Region "Asynchronous Factory Methods"
+#Region "Asynchronous Factory Methods"
             
     <% For Each sc As SearchCriteria In Entity.SearchCriteria() %>
     
@@ -102,11 +102,10 @@ Namespace <%= BusinessProjectName %>
         End Sub
     <% Next %> 
     
-        #End Region
+#End Region
     <% End If %>
-    
-        <% RenderHelper(New Exists()) %>
         
     <% RenderHelper(New PartialMethods()) %>
+    <% RenderHelper(New Exists()) %>
     End Class
 End Namespace

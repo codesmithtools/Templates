@@ -44,7 +44,7 @@ Namespace <%= DataProjectName %>
         Inherits ObjectFactory
     <% If Not(IsReadOnlyBusinessObject) Then %>
     
-        #Region "Create"
+#Region "Create"
     
         ''' <summary>
         ''' Creates New <%= Entity.ClassName %> with default values.
@@ -122,10 +122,10 @@ Namespace <%= DataProjectName %>
             Return item
         End Function
     
-        #End Region
+#End Region
     <% End If %>
     
-        #Region "Fetch
+#Region "Fetch
     
         ''' <summary>
         ''' Fetch <%= Entity.ClassName %>.
@@ -166,10 +166,10 @@ Namespace <%= DataProjectName %>
             Return item
         End Function
     
-        #End Region
+#End Region
     
     <% If Not(IsReadOnlyBusinessObject) Then %>
-        #Region "Insert"
+#Region "Insert"
     
         Private Sub DoInsert(ByRef item As <%= Entity.ClassName %>, ByVal stopProccessingChildren As Boolean)
             ' Don't update If the item isn't dirty.
@@ -240,9 +240,9 @@ Namespace <%= DataProjectName %>
             OnInserted()
         End Sub
     
-        #End Region
+#End Region
     
-        #Region "Update"
+#Region "Update"
     
         <Transactional(TransactionalTypes.TransactionScope)> _
         Public Function Update(ByVal item As <%= Entity.ClassName %>) As <%= Entity.ClassName %>
@@ -388,9 +388,9 @@ Namespace <%= DataProjectName %>
             OnUpdated()
         End Sub
     
-        #End Region
+#End Region
     
-        #Region "Delete"
+#Region "Delete"
     
         <Transactional(TransactionalTypes.TransactionScope)> _
         Public Sub Delete(ByVal criteria As <%= Entity.ClassName %>Criteria)
@@ -444,10 +444,10 @@ Namespace <%= DataProjectName %>
             OnDeleted()
         End Sub
     
-        #End Region
+#End Region
     <% End If %>
     
-        #Region "Helper Methods"
+#Region "Helper Methods"
     
         Public Function Map(ByVal reader As SafeDataReader) As <%= Entity.ClassName %>
             Dim item As <%= Entity.ClassName %> = <%= Entity.ClassName %>.New<%= Entity.ClassName %>()
@@ -507,7 +507,7 @@ Namespace <%= DataProjectName %>
         End Sub
     <% Next %>
     
-        #End Region
+#End Region
     
     <% RenderHelper(New PartialMethods()) %>
     End Class

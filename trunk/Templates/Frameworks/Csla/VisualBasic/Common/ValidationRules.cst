@@ -10,7 +10,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
     
-        #Region "Business Rules"
+#Region "Business Rules"
     
         Protected Overrides Sub AddBusinessRules()
     
@@ -36,4 +36,4 @@
     Next %>
         End Sub
     
-        #End Region
+#End Region

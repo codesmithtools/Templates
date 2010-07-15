@@ -10,7 +10,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-        #Region "Contructor(s)"
+#Region "Contructor(s)"
     
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
@@ -57,4 +57,4 @@
     #End If
     <% End If %>
     <% End If %>
-        #End Region
+#End Region

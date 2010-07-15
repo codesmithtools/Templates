@@ -47,7 +47,7 @@ Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %>
         Inherits EditableRootListBase(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)
     
-        #region "Constructor(s)"
+#Region "Constructor(s)"
         
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
@@ -63,20 +63,20 @@ Namespace <%= BusinessProjectName %>
     #End If
     <% End If %>
     
-        #End Region
+#End Region
     
     <% If(IncludeSilverlightSupport) Then %>
 #If Not SILVERLIGHT Then
     <% End If %>
-        #Region "Method Overrides"
+#Region "Method Overrides"
         
         Protected Overrides Function AddNewCore() As Object
     <% RenderHelper(new AddNewCore()) %>
         End Function
         
-        #End Region
+#End Region
     
-        #Region "Synchronous Factory Methods"
+#Region "Synchronous Factory Methods"
         
         Public Shared Function NewList() As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Return DataPortal.Create(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
@@ -96,21 +96,21 @@ Namespace <%= BusinessProjectName %>
         End Function
     <% Next %>
     
-        #End Region
+#End Region
 
     <% If(IncludeSilverlightSupport) Then %>
 #Else
 
-        #Region "Method Overrides"
+#Region "Method Overrides"
 
         Protected Overrides Sub AddNewCore() 
     <% RenderHelper(new AddNewCore(), IncludeSilverlightSupport) %>
         End Sub
 
-        #End Region
+#End Region
 #End If 
 
-        #Region "Asynchronous Factory Methods"
+#Region "Asynchronous Factory Methods"
             
         Public Shared Sub NewListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
@@ -132,14 +132,13 @@ Namespace <%= BusinessProjectName %>
         End Sub
     <% Next %> 
             
-        #End Region
+#End Region
     
     <% End If %>
     
     <% RenderHelper(New IsDirty()) %>
-    
-    <% RenderHelper(New Exists()) %>
         
     <% RenderHelper(New PartialMethods()) %>
+    <% RenderHelper(New Exists()) %>
     End Class
 End Namespace

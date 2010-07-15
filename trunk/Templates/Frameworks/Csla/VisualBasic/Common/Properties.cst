@@ -11,7 +11,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
 
-        #Region "Properties"
+#Region "Properties"
     
     <% If(Entity.HasRowVersionMember) Then %>
         ''' <summary>
@@ -250,4 +250,4 @@
 
     <% End If
     Next %>
-        #End Region
+#End Region

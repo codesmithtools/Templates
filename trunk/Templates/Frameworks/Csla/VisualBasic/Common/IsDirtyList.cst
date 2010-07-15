@@ -10,7 +10,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
     <% If DataAccessImplementation = DataAccessMethod.ObjectFactoryNone OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL OrElse DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures Then %>
-            #Region "Property overrides"
+    #Region "Property overrides"
     
             ''' <summary>
             ''' Returns true if any children are dirty
@@ -27,6 +27,6 @@
                 End Get
             End Property
     
-            #End Region
+    #End Region
     
     <% End If %>

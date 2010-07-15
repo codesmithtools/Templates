@@ -9,6 +9,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+
         #region Exists Command
 
 <% if(IncludeSilverlightSupport) { %>
@@ -23,3 +24,4 @@
 <% } %>
 
         #endregion
+

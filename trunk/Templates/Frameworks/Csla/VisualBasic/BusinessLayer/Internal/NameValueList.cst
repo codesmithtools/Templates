@@ -38,11 +38,11 @@ Imports Csla.Data
 Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %>
     
-        #Region "Preserved Code"
+#Region "Preserved Code"
     
     <% If(DataAccessImplementation = DataAccessMethod.ParameterizedSQL Or DataAccessImplementation = DataAccessMethod.ObjectFactoryParameterizedSQL) Then %>
     
-        #Region "Custom Data Access"
+#Region "Custom Data Access"
     
         Private Shadows Sub DataPortal_Fetch()
             RaiseListChangedEvents = false
@@ -71,11 +71,11 @@ Namespace <%= BusinessProjectName %>
             RaiseListChangedEvents = true
         End Sub
     
-        #End Region
+#End Region
     
     <% Else If(DataAccessImplementation = DataAccessMethod.StoredProcedures Or DataAccessImplementation = DataAccessMethod.ObjectFactoryStoredProcedures) Then %>
     
-        #Region "Custom Data Access"
+#Region "Custom Data Access"
     
         Private Shadows Sub DataPortal_Fetch()
             RaiseListChangedEvents = false
@@ -105,11 +105,11 @@ Namespace <%= BusinessProjectName %>
             RaiseListChangedEvents = true
         End Sub
     
-        #End Region
+#End Region
     
     <% End If %>
     
-        #End Region
+#End Region
     
     End Class
 End Namespace

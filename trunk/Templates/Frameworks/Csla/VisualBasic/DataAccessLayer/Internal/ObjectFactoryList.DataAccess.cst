@@ -40,7 +40,7 @@ Namespace <%= DataProjectName %>
     Public Function Partial class <%= Entity.ClassName %>ListFactory
         Inherits ObjectFactory
     <% If Not(IsReadOnlyBusinessObject) Then %>
-        #Region "Create"
+#Region "Create"
     
         ''' <summary>
         ''' Creates new <%= Entity.ClassName %>List with default values.
@@ -71,10 +71,10 @@ Namespace <%= DataProjectName %>
             Return item
         End Function
     
-        #End Region
+#End Region
     
     <% End If %>
-        #Region "Fetch"
+#Region "Fetch"
     
         ''' <summary>
         ''' Fetch <%= Entity.ClassName %>List.
@@ -100,6 +100,6 @@ Namespace <%= DataProjectName %>
             Return item
         End Function
     
-        #End Region
+#End Region
     End Class
 End Namespace

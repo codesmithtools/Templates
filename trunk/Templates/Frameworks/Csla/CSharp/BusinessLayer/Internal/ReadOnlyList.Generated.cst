@@ -108,8 +108,7 @@ namespace <%= BusinessProjectName %>
         #endregion
 <% } %>
 
-<% RenderHelper(new Exists()); %>
-
 <% RenderHelper(new PartialMethods()); %>
+<% RenderHelper(new Exists()); %>
     }
 }

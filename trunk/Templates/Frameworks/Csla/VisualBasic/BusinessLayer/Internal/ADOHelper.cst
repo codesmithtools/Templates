@@ -40,7 +40,7 @@ Namespace <%= BusinessProjectName %>
         Private Sub New()
         End Sub
     
-        #Region "Preserved Code"
+#Region "Preserved Code"
     
         Private Shared _connectionString As String = String.Empty
     
@@ -57,9 +57,9 @@ Namespace <%= BusinessProjectName %>
             End Get
         End Property
     
-        #End Region
+#End Region
     
-        #Region "Methods"
+#Region "Methods"
         
         ''' <summary>
         ''' Returns an array of SqlParameters
@@ -108,9 +108,9 @@ Namespace <%= BusinessProjectName %>
             End Using
         End Function  
         
-        #End Region
+#End Region
     
-        #Region "Nullable Helpers" 'This code is here to help in the Data access implementation of handling DBNull.Value.
+#Region "Nullable Helpers" 'This code is here to help in the Data access implementation of handling DBNull.Value.
     
         ''' <summary>
         ''' Simple empty string to DBNull.Value function.

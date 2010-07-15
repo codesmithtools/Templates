@@ -9,7 +9,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
-        #Region "Authorization Rules"
+#Region "Authorization Rules"
     
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
@@ -64,4 +64,4 @@
     <% If(IncludeSilverlightSupport) Then %>
     #End If
     <% End If %>
-        #End Region
+#End Region

@@ -97,8 +97,7 @@ namespace <%= BusinessProjectName %>
 
 <% } %>
 
-<% RenderHelper(new Exists()); %>
-
 <% RenderHelper(new PartialMethods()); %>
+<% RenderHelper(new Exists()); %>
     }
 }

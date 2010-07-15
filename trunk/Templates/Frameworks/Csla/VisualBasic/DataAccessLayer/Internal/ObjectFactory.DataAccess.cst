@@ -40,7 +40,7 @@ Namespace <%= DataProjectName %>
     Public Function Partial class <%= Entity.ClassName %>Factory
         Inherits ObjectFactory
     <% If Not(IsReadOnlyBusinessObject) Then %>
-        #Region "Create"
+#Region "Create"
     
         ''' <summary>
         ''' Creates new <%= Entity.ClassName %> with default values.
@@ -103,10 +103,10 @@ Namespace <%= DataProjectName %>
             Return item
         End Function
     
-        #End Region
+#End Region
     
     <% End If %>
-        #Region "Fetch"
+#Region "Fetch"
     
         ''' <summary>
         ''' Fetch <%= Entity.ClassName %>.
@@ -132,10 +132,10 @@ Namespace <%= DataProjectName %>
             Return item
         End Function
     
-        #End Region
+#End Region
     <% If Not(IsReadOnlyBusinessObject) Then %>
     
-        #Region "Update"
+#Region "Update"
     
         <Transactional(TransactionalTypes.TransactionScope)> _
         Public Function Update(ByVal item As <%= Entity.ClassName %>, ByVal stopProccessingChildren as Boolean) As <%= Entity.ClassName %>
@@ -155,16 +155,16 @@ Namespace <%= DataProjectName %>
             Return item
         End Function
     
-        #End Region
+#End Region
     
-        #Region "Delete"
+#Region "Delete"
     
         <Transactional(TransactionalTypes.TransactionScope)> _
         Public Sub Delete(ByVal criteria As <%= Entity.ClassName %>Criteria)
             ' Delete data here.
         End Sub
     
-        #End Region
+#End Region
     <% End If %>
     End Class
 End Namespace

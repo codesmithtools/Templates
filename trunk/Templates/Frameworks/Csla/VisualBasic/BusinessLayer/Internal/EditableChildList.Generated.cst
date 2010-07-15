@@ -49,7 +49,7 @@ Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %> 
         Inherits BusinessListBase(Of <%= BusinessClassName %>, <%= ChildBusinessClassName %>)
     
-        #Region "Contructor(s)"
+#Region "Contructor(s)"
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
@@ -66,12 +66,12 @@ Namespace <%= BusinessProjectName %>
     #End If
     <% End If %>
     
-        #End Region
+#End Region
     
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
-        #Region "Synchronous Factory Methods" 
+#Region "Synchronous Factory Methods" 
     
         Friend Shared Function NewList() As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Return DataPortal.CreateChild(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
@@ -90,12 +90,12 @@ Namespace <%= BusinessProjectName %>
             Return DataPortal.FetchChild(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
         End Function
     
-        #End Region
+#End Region
     <% If(IncludeSilverlightSupport) Then %>
     
     #End If        
     
-        #Region "Asynchronous Factory Methods"
+#Region "Asynchronous Factory Methods"
     
         Friend Shared Sub New<%= ChildBusinessClassName %>ListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
@@ -108,7 +108,7 @@ Namespace <%= BusinessProjectName %>
     #End Region
     <% End If %>
     
-        #Region "Method Overrides"
+#Region "Method Overrides"
     
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
@@ -136,12 +136,11 @@ Namespace <%= BusinessProjectName %>
     
     <% End If %>
     
-        #End Region
+#End Region
     
     <% RenderHelper(New IsDirty()) %>
     
-    <% RenderHelper(New Exists()) %>
-        
     <% RenderHelper(New PartialMethods()) %>
+    <% RenderHelper(New Exists()) %>
     End Class
 End Namespace

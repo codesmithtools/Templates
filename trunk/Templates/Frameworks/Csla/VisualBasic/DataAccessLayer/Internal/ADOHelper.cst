@@ -39,7 +39,7 @@ Namespace <%= DataProjectName %>
         Private Sub New()
         End Sub
     
-        #Region "Preserved Code"
+#Region "Preserved Code"
     
         Private Shared _connectionString As String = String.Empty
     
@@ -56,7 +56,7 @@ Namespace <%= DataProjectName %>
             End Get
         End Property
     
-        #End Region
+#End Region
     
         ''' <summary>
         ''' Returns an array of SqlParameters

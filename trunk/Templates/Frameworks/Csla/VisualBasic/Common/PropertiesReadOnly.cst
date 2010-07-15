@@ -11,7 +11,7 @@
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
 
-        #Region "Properties"
+#Region "Properties"
     
     <%  For Each member As Member in Entity.MembersNoRowVersion
     If UseMemberVariables Then %>
@@ -181,4 +181,4 @@
         End Property
         
     <% Next %>
-        #End Region
+#End Region

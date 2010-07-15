@@ -48,7 +48,7 @@ Namespace <%= BusinessProjectName %>
     Public Partial Class <%= BusinessClassName %><%= Entity.GenericProperty %> 
         Inherits BusinessListBase(Of <%= BusinessClassName %><%= Entity.GenericProperty %>, <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)
     
-        #Region "Contructor(s)"
+#Region "Contructor(s)"
         
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
@@ -64,20 +64,20 @@ Namespace <%= BusinessProjectName %>
     #End If
     <% End If %>    
     
-        #End Region
+#End Region
     
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
-        #Region "Method Overrides"
+#Region "Method Overrides"
     
         Protected Overrides Function AddNewCore() As <% If (IsCSLA40) Then %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% Else %>Object<% End If %>
     <% RenderHelper(new AddNewCore()) %>
         End Function
     
-        #End Region
+#End Region
     
-        #Region "Synchronous Factory Methods"
+#Region "Synchronous Factory Methods"
     
         Public Shared Function NewList() As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Return DataPortal.Create(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
@@ -96,23 +96,23 @@ Namespace <%= BusinessProjectName %>
             Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
         End Function
     
-        #End Region
+#End Region
     
     <% If(IncludeSilverlightSupport) Then %>
     
     #Else       
     
-        #Region "Method Overrides"
+#Region "Method Overrides"
     
         Protected Overrides Sub AddNewCore() 
     <% RenderHelper(new AddNewCore(), IncludeSilverlightSupport) %>
         End Sub
     
-        #End Region
+#End Region
     
     #End If
     
-        #Region "Asynchronous Factory Methods"
+#Region "Asynchronous Factory Methods"
             
         Public Shared Sub NewListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
@@ -140,13 +140,12 @@ Namespace <%= BusinessProjectName %>
             dp.BeginFetch(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
         End Sub
     
-        #End Region
+#End Region
     <% End If %>
-    
-    <% RenderHelper(New Exists()) %>
     
     <% RenderHelper(New IsDirty()) %>
     
     <% RenderHelper(New PartialMethods()) %>
+    <% RenderHelper(New Exists()) %>
     End Class
 End Namespace
