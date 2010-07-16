@@ -14,7 +14,11 @@ using System;
 using System.Collections.Generic;
 
 using Csla;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
+#endif
 
 #endregion
 
@@ -25,14 +29,23 @@ namespace PetShop.Business
     {
         #region Constructor(s)
 
+#if !SILVERLIGHT
         private AccountList()
         { 
             AllowNew = true;
             MarkAsChild();
         }
+#else
+        public AccountList()
+        { 
+            AllowNew = true;
+            MarkAsChild();
+        }
+#endif
         
         #endregion
 
+#if !SILVERLIGHT
         #region Synchronous Factory Methods 
         
         internal static AccountList NewList()
@@ -63,8 +76,23 @@ namespace PetShop.Business
 
 		#endregion
 
+#endif  
+        #region Asynchronous Factory Methods
+        
+        internal static void NewAccountListAsync(EventHandler<DataPortalResult<Account>> handler)
+		{
+			var dp = new DataPortal<Account>();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+		}
+        
+        //Child objects do not expose asynchronous factory get methods
+ 
+        #endregion
+        
         #region Method Overrides
         
+#if !SILVERLIGHT
         protected override Account AddNewCore()
         {
             Account item = PetShop.Business.Account.NewAccount();
@@ -88,11 +116,47 @@ namespace PetShop.Business
 
             return item;
         }
+#else
+        protected override void AddNewCore()
+        {
+            Account item = PetShop.Business.Account.NewAccount();
+
+            bool cancel = false;
+            OnAddNewCore(ref item, ref cancel);
+            if (!cancel)
+            {
+                // Check to see if someone set the item to null in the OnAddNewCore.
+                if(item == null)
+                    item = PetShop.Business.Account.NewAccount();
+
+                // Pass the parent value down to the child.
+                Profile profile = this.Parent as Profile;
+                if(profile != null)
+                    item.UniqueID = profile.UniqueID;
+
+
+                Add(item);
+            }
+        }
+#endif
+		protected void AddNewCoreAsync(EventHandler<DataPortalResult<object>> handler)
+		{
+			PetShop.Business.Account.NewAccountAsync((o, e) =>
+			{
+				if(e.Error == null)
+				{
+					Add(e.Object);
+					handler.Invoke(this, new DataPortalResult<object>(e.Object, null, null));
+				}
+			});
+		}
+
         
         #endregion
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(AccountCriteria criteria, ref bool cancel);
@@ -101,16 +165,19 @@ namespace PetShop.Business
         partial void OnMapped();
         partial void OnUpdating(ref bool cancel);
         partial void OnUpdated();
+#endif
         partial void OnAddNewCore(ref Account item, ref bool cancel);
 
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(AccountCriteria criteria)
         {
             return PetShop.Business.Account.Exists(criteria);
         }
+#endif
 
         #endregion
 

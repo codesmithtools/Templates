@@ -13,7 +13,11 @@
 using System;
 
 using Csla;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
+#endif
 
 #endregion
 
@@ -23,13 +27,21 @@ namespace PetShop.Business
     public partial class ProductList : EditableRootListBase< Product >
     {
         #region Constructor(s)
+#if !SILVERLIGHT
         private ProductList()
         { 
             AllowNew = true;
         }
+#else
+        public ProductList()
+        { 
+            AllowNew = true;
+        }
+#endif
         
         #endregion
 
+#if !SILVERLIGHT
         #region Method Overrides
 
         protected override object AddNewCore()
@@ -106,10 +118,95 @@ namespace PetShop.Business
         }
         #endregion
         
+#else
+
+        #region Method Overrides
+
+        protected override void AddNewCore()
+        {
+            Product item = PetShop.Business.Product.NewProduct();
+
+            bool cancel = false;
+            OnAddNewCore(ref item, ref cancel);
+            if (!cancel)
+            {
+                // Check to see if someone set the item to null in the OnAddNewCore.
+                if(item == null)
+                    item = PetShop.Business.Product.NewProduct();
+
+                Add(item);
+            }
+        }
+        
+        #endregion
+#endif
+
+        #region Asynchronous Factory Methods
+        
+        public static void NewListAsync(EventHandler<DataPortalResult<ProductList>> handler)
+        {
+            var dp = new DataPortal<ProductList>();
+            dp.CreateCompleted += handler;
+            dp.BeginCreate();
+        }
+
+        public static void GetByProductIdAsync(System.String productId, EventHandler<DataPortalResult<ProductList>> handler)
+        {
+ 			var criteria = new ProductCriteria{ProductId = productId};
+			
+			
+			var dp = new DataPortal< ProductList >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+
+        public static void GetByNameAsync(System.String name, EventHandler<DataPortalResult<ProductList>> handler)
+        {
+ 			var criteria = new ProductCriteria{Name = name};
+			
+			
+			var dp = new DataPortal< ProductList >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+
+        public static void GetByCategoryIdAsync(System.String categoryId, EventHandler<DataPortalResult<ProductList>> handler)
+        {
+ 			var criteria = new ProductCriteria{CategoryId = categoryId};
+			
+			
+			var dp = new DataPortal< ProductList >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+
+        public static void GetByCategoryIdNameAsync(System.String categoryId, System.String name, EventHandler<DataPortalResult<ProductList>> handler)
+        {
+ 			var criteria = new ProductCriteria{CategoryId = categoryId, Name = name};
+			
+			
+			var dp = new DataPortal< ProductList >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+
+        public static void GetByCategoryIdProductIdNameAsync(System.String categoryId, System.String productId, System.String name, EventHandler<DataPortalResult<ProductList>> handler)
+        {
+ 			var criteria = new ProductCriteria{CategoryId = categoryId, ProductId = productId, Name = name};
+			
+			
+			var dp = new DataPortal< ProductList >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+        
+        #endregion
+
 
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(ProductCriteria criteria, ref bool cancel);
@@ -118,16 +215,19 @@ namespace PetShop.Business
         partial void OnMapped();
         partial void OnUpdating(ref bool cancel);
         partial void OnUpdated();
+#endif
         partial void OnAddNewCore(ref Product item, ref bool cancel);
 
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(ProductCriteria criteria)
         {
             return PetShop.Business.Product.Exists(criteria);
         }
+#endif
 
         #endregion
 

@@ -14,7 +14,11 @@ using System;
 
 using Csla;
 using Csla.Rules;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
+#endif
 
 #endregion
 
@@ -25,8 +29,13 @@ namespace PetShop.Business
     {
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private Supplier()
         { /* Require use of factory methods */ }
+#else
+	public Supplier()
+        { /* Require use of factory methods */ }
+#endif
 
         internal Supplier(System.Int32 suppId)
         {
@@ -36,10 +45,12 @@ namespace PetShop.Business
             }
         }
 
+#if !SILVERLIGHT
         internal Supplier(SafeDataReader reader)
         {
             Map(reader);
         }
+#endif
         #endregion
 
         #region Business Rules
@@ -65,7 +76,9 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo< System.Int32 > _suppIdProperty = RegisterProperty< System.Int32 >(p => p.SuppId, string.Empty);
+#if !SILVERLIGHT
 		[System.ComponentModel.DataObjectField(true, false)]
+#endif
         public System.Int32 SuppId
         {
             get { return GetProperty(_suppIdProperty); }
@@ -136,6 +149,7 @@ namespace PetShop.Business
         {
             get
             {
+#if !SILVERLIGHT
                 if(!FieldManager.FieldExists(_itemsProperty))
                 {
 					var criteria = new PetShop.Business.ItemCriteria {Supplier = SuppId};
@@ -147,11 +161,13 @@ namespace PetShop.Business
                         LoadProperty(_itemsProperty, PetShop.Business.ItemList.GetBySupplier(SuppId));
                 }
 
+#endif
                 return GetProperty(_itemsProperty);
             }
         }
         #endregion
 
+#if !SILVERLIGHT
         #region Synchronous Factory Methods 
 
         public static Supplier NewSupplier()
@@ -176,9 +192,42 @@ namespace PetShop.Business
         }
 
         #endregion
+#endif
+
+        #region Asynchronous Factory Methods
+        
+        public static void NewSupplierAsync(EventHandler<DataPortalResult<Supplier>> handler)
+		{
+			var dp = new DataPortal<Supplier>();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+		}
+
+        public static void GetBySuppIdAsync(System.Int32 suppId, EventHandler<DataPortalResult< Supplier >> handler)
+        {
+			var criteria = new SupplierCriteria{ SuppId = suppId};
+			
+			
+			var dp = new DataPortal< Supplier >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void DeleteSupplierAsync(System.Int32 suppId, EventHandler<DataPortalResult<Supplier>> handler)
+        {
+			var criteria = new SupplierCriteria{SuppId = suppId};
+			
+			
+			var dp = new DataPortal< Supplier >();
+			dp.DeleteCompleted += handler;
+			dp.BeginDelete(criteria);
+        }
+        
+        #endregion
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(SupplierCriteria criteria, ref bool cancel);
@@ -193,15 +242,18 @@ namespace PetShop.Business
         partial void OnSelfDeleted();
         partial void OnDeleting(SupplierCriteria criteria, ref bool cancel);
         partial void OnDeleted();
+#endif
 
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(SupplierCriteria criteria)
         {
             return ExistsCommand.Execute(criteria);
         }
+#endif
 
         #endregion
 

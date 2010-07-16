@@ -14,8 +14,12 @@ using System;
 
 using Csla;
 using Csla.Rules;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
 using System.Data.SqlClient;
+#endif
 
 #endregion
 
@@ -26,11 +30,19 @@ namespace PetShop.Business
     {
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private Account()
         {
             // require use of factory method.
             MarkAsChild();
         }
+#else
+        public Account()
+        {
+            // require use of factory method.
+            MarkAsChild();
+        }        
+#endif
 
         internal Account(System.Int32 accountId)
         {
@@ -42,12 +54,14 @@ namespace PetShop.Business
             MarkAsChild();
         }
 
+#if !SILVERLIGHT
         internal Account(SafeDataReader reader)
         {
             Map(reader);
 
             MarkAsChild();
         }
+#endif
         #endregion
 
         #region Business Rules
@@ -82,7 +96,9 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo< System.Int32 > _accountIdProperty = RegisterProperty< System.Int32 >(p => p.AccountId, string.Empty);
+#if !SILVERLIGHT
 		[System.ComponentModel.DataObjectField(true, true)]
+#endif
         public System.Int32 AccountId
         {
             get { return GetProperty(_accountIdProperty); }
@@ -161,6 +177,7 @@ namespace PetShop.Business
         {
             get
             {
+#if !SILVERLIGHT
                 if(false)
                     return null;
                 
@@ -173,6 +190,7 @@ namespace PetShop.Business
                         LoadProperty(_profileMemberProperty, PetShop.Business.Profile.GetByUniqueID(UniqueID));
                 }
 
+#endif
                 return GetProperty(_profileMemberProperty); 
             }
         }
@@ -184,6 +202,7 @@ namespace PetShop.Business
         {
             return DataPortal.CreateChild< Account >();
         }
+#if !SILVERLIGHT
 
         internal static Account GetByAccountId(System.Int32 accountId)
         {
@@ -200,11 +219,28 @@ namespace PetShop.Business
         
             return DataPortal.FetchChild< Account >(criteria);
         }
+#endif
 
+        #endregion
+
+        #region Asynchronous Factory Methods
+        
+        internal static void NewAccountAsync(EventHandler<DataPortalResult<Account>> handler)
+        {
+            var dp = new DataPortal<Account>();
+            dp.CreateCompleted += handler;
+            dp.BeginCreate();
+        }
+        
+        // Child objects do not expose asynchronous factory get methods.
+        
+        // Child objects do not expose asynchronous delete methods.
+        
         #endregion
 
         #region ChildPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnChildCreating(ref bool cancel);
         partial void OnChildCreated();
         partial void OnChildFetching(AccountCriteria criteria, ref bool cancel);
@@ -220,15 +256,18 @@ namespace PetShop.Business
         partial void OnDeleting(AccountCriteria criteria, ref bool cancel);
         partial void OnDeleting(AccountCriteria criteria, SqlConnection connection, ref bool cancel);
         partial void OnDeleted();
+#endif
 
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(AccountCriteria criteria)
         {
             return ExistsCommand.Execute(criteria);
         }
+#endif
 
         #endregion
 

@@ -14,8 +14,12 @@ using System;
 
 using Csla;
 using Csla.Rules;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
 using System.Data.SqlClient;
+#endif
 
 #endregion
 
@@ -26,8 +30,13 @@ namespace PetShop.Business
     {
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private Product()
         { /* Require use of factory methods */ }
+#else
+	public Product()
+        { /* Require use of factory methods */ }
+#endif
 
         internal Product(System.String productId)
         {
@@ -37,10 +46,12 @@ namespace PetShop.Business
             }
         }
 
+#if !SILVERLIGHT
         internal Product(SafeDataReader reader)
         {
             Map(reader);
         }
+#endif
         #endregion
 
         #region Business Rules
@@ -64,7 +75,9 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo< System.String > _productIdProperty = RegisterProperty< System.String >(p => p.ProductId, string.Empty);
+#if !SILVERLIGHT
 		[System.ComponentModel.DataObjectField(true, false)]
+#endif
         public System.String ProductId
         {
             get { return GetProperty(_productIdProperty); }
@@ -111,6 +124,7 @@ namespace PetShop.Business
         {
             get
             {
+#if !SILVERLIGHT
                 if(false)
                     return null;
                 
@@ -123,6 +137,7 @@ namespace PetShop.Business
                         LoadProperty(_categoryMemberProperty, PetShop.Business.Category.GetByCategoryId(CategoryId));
                 }
 
+#endif
                 return GetProperty(_categoryMemberProperty); 
             }
         }
@@ -133,6 +148,7 @@ namespace PetShop.Business
         {
             get
             {
+#if !SILVERLIGHT
                 if(!FieldManager.FieldExists(_itemsProperty))
                 {
 					var criteria = new PetShop.Business.ItemCriteria {ProductId = ProductId};
@@ -144,11 +160,13 @@ namespace PetShop.Business
                         LoadProperty(_itemsProperty, PetShop.Business.ItemList.GetByProductId(ProductId));
                 }
 
+#endif
                 return GetProperty(_itemsProperty);
             }
         }
         #endregion
 
+#if !SILVERLIGHT
         #region Synchronous Root Factory Methods 
         
         public static Product NewProduct()
@@ -202,6 +220,80 @@ namespace PetShop.Business
         }
         
         #endregion
+#endif        
+
+        #region Asynchronous Root Factory Methods
+        
+        public static void NewProductAsync(EventHandler<DataPortalResult<Product>> handler)
+        {
+			var dp = new DataPortal< Product >();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+        }
+
+        public static void GetByProductIdAsync(System.String productId, EventHandler<DataPortalResult<Product>> handler)
+        {
+			var criteria = new ProductCriteria{ProductId = productId};
+			
+
+			var dp = new DataPortal< Product >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void GetByNameAsync(System.String name, EventHandler<DataPortalResult<Product>> handler)
+        {
+			var criteria = new ProductCriteria{Name = name};
+			
+
+			var dp = new DataPortal< Product >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void GetByCategoryIdAsync(System.String categoryId, EventHandler<DataPortalResult<Product>> handler)
+        {
+			var criteria = new ProductCriteria{CategoryId = categoryId};
+			
+
+			var dp = new DataPortal< Product >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void GetByCategoryIdNameAsync(System.String categoryId, System.String name, EventHandler<DataPortalResult<Product>> handler)
+        {
+			var criteria = new ProductCriteria{CategoryId = categoryId, Name = name};
+			
+
+			var dp = new DataPortal< Product >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void GetByCategoryIdProductIdNameAsync(System.String categoryId, System.String productId, System.String name, EventHandler<DataPortalResult<Product>> handler)
+        {
+			var criteria = new ProductCriteria{CategoryId = categoryId, ProductId = productId, Name = name};
+			
+
+			var dp = new DataPortal< Product >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void DeleteProductAsync(System.String productId, EventHandler<DataPortalResult<Product>> handler)
+        {
+			var criteria = new ProductCriteria{ProductId = productId};
+			
+
+			var dp = new DataPortal< Product >();
+			dp.DeleteCompleted += handler;
+			dp.BeginDelete(criteria);
+        }
+        
+        #endregion
+
+#if !SILVERLIGHT
 
         #region Synchronous Child Factory Methods 
         
@@ -246,10 +338,27 @@ namespace PetShop.Business
         }
 
         #endregion
+#endif        
+
+        #region Asynchronous Child Factory Methods
+        
+        internal static void NewProductChildAsync(EventHandler<DataPortalResult<Product>> handler)
+		{
+			DataPortal<Product> dp = new DataPortal<Product>();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+		}
+        
+        // Child objects do not expose asynchronous factory get methods.
+        
+        // Child objects do not expose asynchronous delete methods.
+        #endregion
+
 
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(ProductCriteria criteria, ref bool cancel);
@@ -264,11 +373,13 @@ namespace PetShop.Business
         partial void OnSelfDeleted();
         partial void OnDeleting(ProductCriteria criteria, ref bool cancel);
         partial void OnDeleted();
+#endif
 
         #endregion
 
         #region ChildPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnChildCreating(ref bool cancel);
         partial void OnChildCreated();
         partial void OnChildFetching(ProductCriteria criteria, ref bool cancel);
@@ -279,14 +390,17 @@ namespace PetShop.Business
         partial void OnChildUpdated();
         partial void OnChildSelfDeleting(ref bool cancel);
         partial void OnChildSelfDeleted();
+#endif
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(ProductCriteria criteria)
         {
             return ExistsCommand.Execute(criteria);
         }
+#endif
 
         #endregion
 

@@ -14,8 +14,15 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+using Csla.Core;
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+using Csla.Serialization.Mobile;
 
+#if !SILVERLIGHT
 using System.Data.SqlClient;
+#endif
 
 using Csla;
 
@@ -156,5 +163,30 @@ namespace PetShop.Business
         
         #endregion
         
+        #region Serialization
+        
+        protected override void OnGetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnGetState(info, mode);
+            if (_bag.ContainsKey("UniqueID")) info.AddValue("UniqueID", GetValue< System.Int32 >("UniqueID"));
+            if (_bag.ContainsKey("Username")) info.AddValue("Username", GetValue< System.String >("Username"));
+            if (_bag.ContainsKey("ApplicationName")) info.AddValue("ApplicationName", GetValue< System.String >("ApplicationName"));
+            if (_bag.ContainsKey("IsAnonymous")) info.AddValue("IsAnonymous", GetValue< System.Boolean? >("IsAnonymous"));
+            if (_bag.ContainsKey("LastActivityDate")) info.AddValue("LastActivityDate", GetValue< System.DateTime? >("LastActivityDate"));
+            if (_bag.ContainsKey("LastUpdatedDate")) info.AddValue("LastUpdatedDate", GetValue< System.DateTime? >("LastUpdatedDate"));
+        }
+
+        protected override void OnSetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnSetState(info, mode);
+            if(info.Values.ContainsKey("UniqueID")) _bag["UniqueID"] = info.GetValue< System.Int32 >("UniqueID");
+            if(info.Values.ContainsKey("Username")) _bag["Username"] = info.GetValue< System.String >("Username");
+            if(info.Values.ContainsKey("ApplicationName")) _bag["ApplicationName"] = info.GetValue< System.String >("ApplicationName");
+            if(info.Values.ContainsKey("IsAnonymous")) _bag["IsAnonymous"] = info.GetValue< System.Boolean? >("IsAnonymous");
+            if(info.Values.ContainsKey("LastActivityDate")) _bag["LastActivityDate"] = info.GetValue< System.DateTime? >("LastActivityDate");
+            if(info.Values.ContainsKey("LastUpdatedDate")) _bag["LastUpdatedDate"] = info.GetValue< System.DateTime? >("LastUpdatedDate");
+        }
+
+        #endregion
     }
 }

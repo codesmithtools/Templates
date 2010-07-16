@@ -14,8 +14,15 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+using Csla.Core;
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+using Csla.Serialization.Mobile;
 
+#if !SILVERLIGHT
 using System.Data.SqlClient;
+#endif
 
 using Csla;
 
@@ -138,5 +145,24 @@ namespace PetShop.Business
         
         #endregion
         
+        #region Serialization
+        
+        protected override void OnGetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnGetState(info, mode);
+            if (_bag.ContainsKey("CategoryId")) info.AddValue("CategoryId", GetValue< System.String >("CategoryId"));
+            if (_bag.ContainsKey("Name")) info.AddValue("Name", GetValue< System.String >("Name"));
+            if (_bag.ContainsKey("Descn")) info.AddValue("Descn", GetValue< System.String >("Descn"));
+        }
+
+        protected override void OnSetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnSetState(info, mode);
+            if(info.Values.ContainsKey("CategoryId")) _bag["CategoryId"] = info.GetValue< System.String >("CategoryId");
+            if(info.Values.ContainsKey("Name")) _bag["Name"] = info.GetValue< System.String >("Name");
+            if(info.Values.ContainsKey("Descn")) _bag["Descn"] = info.GetValue< System.String >("Descn");
+        }
+
+        #endregion
     }
 }

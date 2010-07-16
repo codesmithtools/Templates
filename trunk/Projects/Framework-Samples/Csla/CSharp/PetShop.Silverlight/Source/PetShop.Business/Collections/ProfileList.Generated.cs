@@ -13,7 +13,11 @@
 using System;
 
 using Csla;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
+#endif
 
 #endregion
 
@@ -24,13 +28,21 @@ namespace PetShop.Business
     {    
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private ProfileList()
         { 
             AllowNew = true;
         }
+#else
+        public ProfileList()
+        { 
+            AllowNew = true;
+        }
+#endif
         
         #endregion
 
+#if !SILVERLIGHT
         #region Method Overrides
         
         protected override Profile AddNewCore()
@@ -86,10 +98,75 @@ namespace PetShop.Business
 
         #endregion
 
+#else
+
+        #region Method Overrides
+
+        protected override void AddNewCore()
+        {
+            Profile item = PetShop.Business.Profile.NewProfile();
+
+            bool cancel = false;
+            OnAddNewCore(ref item, ref cancel);
+            if (!cancel)
+            {
+                // Check to see if someone set the item to null in the OnAddNewCore.
+                if(item == null)
+                    item = PetShop.Business.Profile.NewProfile();
+
+
+                Add(item);
+            }
+        }
+        
+        #endregion
+
+#endif
+
+        #region Asynchronous Factory Methods
+        
+        public static void NewListAsync(EventHandler<DataPortalResult<ProfileList>> handler)
+        {
+            var dp = new DataPortal<ProfileList>();
+            dp.CreateCompleted += handler;
+            dp.BeginCreate();
+        }
+
+
+        public static void GetByUniqueIDAsync(System.Int32 uniqueID, EventHandler<DataPortalResult<ProfileList>> handler)
+        {
+			var criteria = new ProfileCriteria{UniqueID = uniqueID};
+			
+			
+            var dp = new DataPortal< ProfileList >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+
+        public static void GetByUsernameApplicationNameAsync(System.String username, System.String applicationName, EventHandler<DataPortalResult<ProfileList>> handler)
+        {
+			var criteria = new ProfileCriteria{Username = username, ApplicationName = applicationName};
+			
+			
+            var dp = new DataPortal< ProfileList >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+
+        public static void GetAllAsync(EventHandler<DataPortalResult<ProfileList>> handler)
+        {
+            var dp = new DataPortal<ProfileList>();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(new ProfileCriteria());
+        }
+
+        #endregion
+
 
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(ProfileCriteria criteria, ref bool cancel);
@@ -98,16 +175,19 @@ namespace PetShop.Business
         partial void OnMapped();
         partial void OnUpdating(ref bool cancel);
         partial void OnUpdated();
+#endif
         partial void OnAddNewCore(ref Profile item, ref bool cancel);
 
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(ProfileCriteria criteria)
         {
             return PetShop.Business.Profile.Exists(criteria);
         }
+#endif
 
         #endregion
 

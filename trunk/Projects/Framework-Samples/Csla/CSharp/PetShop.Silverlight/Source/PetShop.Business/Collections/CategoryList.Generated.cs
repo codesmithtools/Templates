@@ -13,7 +13,11 @@
 using System;
 
 using Csla;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
+#endif
 
 #endregion
 
@@ -24,13 +28,21 @@ namespace PetShop.Business
     {    
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private CategoryList()
         { 
             AllowNew = true;
         }
+#else
+        public CategoryList()
+        { 
+            AllowNew = true;
+        }
+#endif
         
         #endregion
 
+#if !SILVERLIGHT
         #region Method Overrides
         
         protected override Category AddNewCore()
@@ -77,10 +89,65 @@ namespace PetShop.Business
 
         #endregion
 
+#else
+
+        #region Method Overrides
+
+        protected override void AddNewCore()
+        {
+            Category item = PetShop.Business.Category.NewCategory();
+
+            bool cancel = false;
+            OnAddNewCore(ref item, ref cancel);
+            if (!cancel)
+            {
+                // Check to see if someone set the item to null in the OnAddNewCore.
+                if(item == null)
+                    item = PetShop.Business.Category.NewCategory();
+
+
+                Add(item);
+            }
+        }
+        
+        #endregion
+
+#endif
+
+        #region Asynchronous Factory Methods
+        
+        public static void NewListAsync(EventHandler<DataPortalResult<CategoryList>> handler)
+        {
+            var dp = new DataPortal<CategoryList>();
+            dp.CreateCompleted += handler;
+            dp.BeginCreate();
+        }
+
+
+        public static void GetByCategoryIdAsync(System.String categoryId, EventHandler<DataPortalResult<CategoryList>> handler)
+        {
+			var criteria = new CategoryCriteria{CategoryId = categoryId};
+			
+			
+            var dp = new DataPortal< CategoryList >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+
+        public static void GetAllAsync(EventHandler<DataPortalResult<CategoryList>> handler)
+        {
+            var dp = new DataPortal<CategoryList>();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(new CategoryCriteria());
+        }
+
+        #endregion
+
 
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(CategoryCriteria criteria, ref bool cancel);
@@ -89,16 +156,19 @@ namespace PetShop.Business
         partial void OnMapped();
         partial void OnUpdating(ref bool cancel);
         partial void OnUpdated();
+#endif
         partial void OnAddNewCore(ref Category item, ref bool cancel);
 
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(CategoryCriteria criteria)
         {
             return PetShop.Business.Category.Exists(criteria);
         }
+#endif
 
         #endregion
 

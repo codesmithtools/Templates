@@ -14,8 +14,12 @@ using System;
 
 using Csla;
 using Csla.Rules;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
 using System.Data.SqlClient;
+#endif
 
 #endregion
 
@@ -26,8 +30,13 @@ namespace PetShop.Business
     {
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private Profile()
         { /* Require use of factory methods */ }
+#else
+	public Profile()
+        { /* Require use of factory methods */ }
+#endif
 
         internal Profile(System.Int32 uniqueID)
         {
@@ -37,10 +46,12 @@ namespace PetShop.Business
             }
         }
 
+#if !SILVERLIGHT
         internal Profile(SafeDataReader reader)
         {
             Map(reader);
         }
+#endif
         #endregion
 
         #region Business Rules
@@ -61,7 +72,9 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo< System.Int32 > _uniqueIDProperty = RegisterProperty< System.Int32 >(p => p.UniqueID, string.Empty);
+#if !SILVERLIGHT
 		[System.ComponentModel.DataObjectField(true, true)]
+#endif
         public System.Int32 UniqueID
         {
             get { return GetProperty(_uniqueIDProperty); }
@@ -104,6 +117,7 @@ namespace PetShop.Business
         {
             get
             {
+#if !SILVERLIGHT
                 if(!FieldManager.FieldExists(_accountsProperty))
                 {
 					var criteria = new PetShop.Business.AccountCriteria {UniqueID = UniqueID};
@@ -115,6 +129,7 @@ namespace PetShop.Business
                         LoadProperty(_accountsProperty, PetShop.Business.AccountList.GetByUniqueID(UniqueID));
                 }
 
+#endif
                 return GetProperty(_accountsProperty);
             }
         }
@@ -125,6 +140,7 @@ namespace PetShop.Business
         {
             get
             {
+#if !SILVERLIGHT
                 if(!FieldManager.FieldExists(_cartsProperty))
                 {
 					var criteria = new PetShop.Business.CartCriteria {UniqueID = UniqueID};
@@ -136,11 +152,13 @@ namespace PetShop.Business
                         LoadProperty(_cartsProperty, PetShop.Business.CartList.GetByUniqueID(UniqueID));
                 }
 
+#endif
                 return GetProperty(_cartsProperty);
             }
         }
         #endregion
 
+#if !SILVERLIGHT
         #region Synchronous Root Factory Methods 
         
         public static Profile NewProfile()
@@ -170,6 +188,50 @@ namespace PetShop.Business
         }
         
         #endregion
+#endif        
+
+        #region Asynchronous Root Factory Methods
+        
+        public static void NewProfileAsync(EventHandler<DataPortalResult<Profile>> handler)
+        {
+			var dp = new DataPortal< Profile >();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+        }
+
+        public static void GetByUniqueIDAsync(System.Int32 uniqueID, EventHandler<DataPortalResult<Profile>> handler)
+        {
+			var criteria = new ProfileCriteria{UniqueID = uniqueID};
+			
+
+			var dp = new DataPortal< Profile >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void GetByUsernameApplicationNameAsync(System.String username, System.String applicationName, EventHandler<DataPortalResult<Profile>> handler)
+        {
+			var criteria = new ProfileCriteria{Username = username, ApplicationName = applicationName};
+			
+
+			var dp = new DataPortal< Profile >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void DeleteProfileAsync(System.Int32 uniqueID, EventHandler<DataPortalResult<Profile>> handler)
+        {
+			var criteria = new ProfileCriteria{UniqueID = uniqueID};
+			
+
+			var dp = new DataPortal< Profile >();
+			dp.DeleteCompleted += handler;
+			dp.BeginDelete(criteria);
+        }
+        
+        #endregion
+
+#if !SILVERLIGHT
 
         #region Synchronous Child Factory Methods 
         
@@ -193,10 +255,27 @@ namespace PetShop.Business
         }
 
         #endregion
+#endif        
+
+        #region Asynchronous Child Factory Methods
+        
+        internal static void NewProfileChildAsync(EventHandler<DataPortalResult<Profile>> handler)
+		{
+			DataPortal<Profile> dp = new DataPortal<Profile>();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+		}
+        
+        // Child objects do not expose asynchronous factory get methods.
+        
+        // Child objects do not expose asynchronous delete methods.
+        #endregion
+
 
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(ProfileCriteria criteria, ref bool cancel);
@@ -211,11 +290,13 @@ namespace PetShop.Business
         partial void OnSelfDeleted();
         partial void OnDeleting(ProfileCriteria criteria, ref bool cancel);
         partial void OnDeleted();
+#endif
 
         #endregion
 
         #region ChildPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnChildCreating(ref bool cancel);
         partial void OnChildCreated();
         partial void OnChildFetching(ProfileCriteria criteria, ref bool cancel);
@@ -226,14 +307,17 @@ namespace PetShop.Business
         partial void OnChildUpdated();
         partial void OnChildSelfDeleting(ref bool cancel);
         partial void OnChildSelfDeleted();
+#endif
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(ProfileCriteria criteria)
         {
             return ExistsCommand.Execute(criteria);
         }
+#endif
 
         #endregion
 

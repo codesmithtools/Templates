@@ -14,8 +14,15 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+using Csla.Core;
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+using Csla.Serialization.Mobile;
 
+#if !SILVERLIGHT
 using System.Data.SqlClient;
+#endif
 
 using Csla;
 
@@ -180,5 +187,38 @@ namespace PetShop.Business
         
         #endregion
         
+        #region Serialization
+        
+        protected override void OnGetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnGetState(info, mode);
+            if (_bag.ContainsKey("CartId")) info.AddValue("CartId", GetValue< System.Int32 >("CartId"));
+            if (_bag.ContainsKey("UniqueID")) info.AddValue("UniqueID", GetValue< System.Int32 >("UniqueID"));
+            if (_bag.ContainsKey("ItemId")) info.AddValue("ItemId", GetValue< System.String >("ItemId"));
+            if (_bag.ContainsKey("Name")) info.AddValue("Name", GetValue< System.String >("Name"));
+            if (_bag.ContainsKey("Type")) info.AddValue("Type", GetValue< System.String >("Type"));
+            if (_bag.ContainsKey("Price")) info.AddValue("Price", GetValue< System.Decimal >("Price"));
+            if (_bag.ContainsKey("CategoryId")) info.AddValue("CategoryId", GetValue< System.String >("CategoryId"));
+            if (_bag.ContainsKey("ProductId")) info.AddValue("ProductId", GetValue< System.String >("ProductId"));
+            if (_bag.ContainsKey("IsShoppingCart")) info.AddValue("IsShoppingCart", GetValue< System.Boolean >("IsShoppingCart"));
+            if (_bag.ContainsKey("Quantity")) info.AddValue("Quantity", GetValue< System.Int32 >("Quantity"));
+        }
+
+        protected override void OnSetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnSetState(info, mode);
+            if(info.Values.ContainsKey("CartId")) _bag["CartId"] = info.GetValue< System.Int32 >("CartId");
+            if(info.Values.ContainsKey("UniqueID")) _bag["UniqueID"] = info.GetValue< System.Int32 >("UniqueID");
+            if(info.Values.ContainsKey("ItemId")) _bag["ItemId"] = info.GetValue< System.String >("ItemId");
+            if(info.Values.ContainsKey("Name")) _bag["Name"] = info.GetValue< System.String >("Name");
+            if(info.Values.ContainsKey("Type")) _bag["Type"] = info.GetValue< System.String >("Type");
+            if(info.Values.ContainsKey("Price")) _bag["Price"] = info.GetValue< System.Decimal >("Price");
+            if(info.Values.ContainsKey("CategoryId")) _bag["CategoryId"] = info.GetValue< System.String >("CategoryId");
+            if(info.Values.ContainsKey("ProductId")) _bag["ProductId"] = info.GetValue< System.String >("ProductId");
+            if(info.Values.ContainsKey("IsShoppingCart")) _bag["IsShoppingCart"] = info.GetValue< System.Boolean >("IsShoppingCart");
+            if(info.Values.ContainsKey("Quantity")) _bag["Quantity"] = info.GetValue< System.Int32 >("Quantity");
+        }
+
+        #endregion
     }
 }

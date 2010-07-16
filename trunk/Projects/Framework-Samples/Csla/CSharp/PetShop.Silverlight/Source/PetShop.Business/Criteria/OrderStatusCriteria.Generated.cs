@@ -14,8 +14,15 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+using Csla.Core;
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+using Csla.Serialization.Mobile;
 
+#if !SILVERLIGHT
 using System.Data.SqlClient;
+#endif
 
 using Csla;
 
@@ -145,5 +152,26 @@ namespace PetShop.Business
         
         #endregion
         
+        #region Serialization
+        
+        protected override void OnGetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnGetState(info, mode);
+            if (_bag.ContainsKey("OrderId")) info.AddValue("OrderId", GetValue< System.Int32 >("OrderId"));
+            if (_bag.ContainsKey("LineNum")) info.AddValue("LineNum", GetValue< System.Int32 >("LineNum"));
+            if (_bag.ContainsKey("Timestamp")) info.AddValue("Timestamp", GetValue< System.DateTime >("Timestamp"));
+            if (_bag.ContainsKey("Status")) info.AddValue("Status", GetValue< System.String >("Status"));
+        }
+
+        protected override void OnSetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnSetState(info, mode);
+            if(info.Values.ContainsKey("OrderId")) _bag["OrderId"] = info.GetValue< System.Int32 >("OrderId");
+            if(info.Values.ContainsKey("LineNum")) _bag["LineNum"] = info.GetValue< System.Int32 >("LineNum");
+            if(info.Values.ContainsKey("Timestamp")) _bag["Timestamp"] = info.GetValue< System.DateTime >("Timestamp");
+            if(info.Values.ContainsKey("Status")) _bag["Status"] = info.GetValue< System.String >("Status");
+        }
+
+        #endregion
     }
 }

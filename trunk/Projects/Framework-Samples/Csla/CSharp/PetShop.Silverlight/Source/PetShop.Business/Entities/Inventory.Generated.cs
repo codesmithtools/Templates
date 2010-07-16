@@ -14,7 +14,11 @@ using System;
 
 using Csla;
 using Csla.Rules;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
+#endif
 
 #endregion
 
@@ -25,8 +29,13 @@ namespace PetShop.Business
     {
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private Inventory()
         { /* Require use of factory methods */ }
+#else
+	public Inventory()
+        { /* Require use of factory methods */ }
+#endif
 
         internal Inventory(System.String itemId)
         {
@@ -36,10 +45,12 @@ namespace PetShop.Business
             }
         }
 
+#if !SILVERLIGHT
         internal Inventory(SafeDataReader reader)
         {
             Map(reader);
         }
+#endif
         #endregion
 
         #region Business Rules
@@ -58,7 +69,9 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo< System.String > _itemIdProperty = RegisterProperty< System.String >(p => p.ItemId, string.Empty);
+#if !SILVERLIGHT
 		[System.ComponentModel.DataObjectField(true, false)]
+#endif
         public System.String ItemId
         {
             get { return GetProperty(_itemIdProperty); }
@@ -82,6 +95,7 @@ namespace PetShop.Business
         }
         #endregion
 
+#if !SILVERLIGHT
         #region Synchronous Factory Methods 
 
         public static Inventory NewInventory()
@@ -106,9 +120,42 @@ namespace PetShop.Business
         }
 
         #endregion
+#endif
+
+        #region Asynchronous Factory Methods
+        
+        public static void NewInventoryAsync(EventHandler<DataPortalResult<Inventory>> handler)
+		{
+			var dp = new DataPortal<Inventory>();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+		}
+
+        public static void GetByItemIdAsync(System.String itemId, EventHandler<DataPortalResult< Inventory >> handler)
+        {
+			var criteria = new InventoryCriteria{ ItemId = itemId};
+			
+			
+			var dp = new DataPortal< Inventory >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void DeleteInventoryAsync(System.String itemId, EventHandler<DataPortalResult<Inventory>> handler)
+        {
+			var criteria = new InventoryCriteria{ItemId = itemId};
+			
+			
+			var dp = new DataPortal< Inventory >();
+			dp.DeleteCompleted += handler;
+			dp.BeginDelete(criteria);
+        }
+        
+        #endregion
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(InventoryCriteria criteria, ref bool cancel);
@@ -123,15 +170,18 @@ namespace PetShop.Business
         partial void OnSelfDeleted();
         partial void OnDeleting(InventoryCriteria criteria, ref bool cancel);
         partial void OnDeleted();
+#endif
 
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(InventoryCriteria criteria)
         {
             return ExistsCommand.Execute(criteria);
         }
+#endif
 
         #endregion
 

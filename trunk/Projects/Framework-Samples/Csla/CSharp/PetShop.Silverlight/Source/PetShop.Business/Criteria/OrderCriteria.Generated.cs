@@ -14,8 +14,15 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+using Csla.Core;
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+using Csla.Serialization.Mobile;
 
+#if !SILVERLIGHT
 using System.Data.SqlClient;
+#endif
 
 using Csla;
 
@@ -258,5 +265,64 @@ namespace PetShop.Business
         
         #endregion
         
+        #region Serialization
+        
+        protected override void OnGetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnGetState(info, mode);
+            if (_bag.ContainsKey("OrderId")) info.AddValue("OrderId", GetValue< System.Int32 >("OrderId"));
+            if (_bag.ContainsKey("UserId")) info.AddValue("UserId", GetValue< System.String >("UserId"));
+            if (_bag.ContainsKey("OrderDate")) info.AddValue("OrderDate", GetValue< System.DateTime >("OrderDate"));
+            if (_bag.ContainsKey("ShipAddr1")) info.AddValue("ShipAddr1", GetValue< System.String >("ShipAddr1"));
+            if (_bag.ContainsKey("ShipAddr2")) info.AddValue("ShipAddr2", GetValue< System.String >("ShipAddr2"));
+            if (_bag.ContainsKey("ShipCity")) info.AddValue("ShipCity", GetValue< System.String >("ShipCity"));
+            if (_bag.ContainsKey("ShipState")) info.AddValue("ShipState", GetValue< System.String >("ShipState"));
+            if (_bag.ContainsKey("ShipZip")) info.AddValue("ShipZip", GetValue< System.String >("ShipZip"));
+            if (_bag.ContainsKey("ShipCountry")) info.AddValue("ShipCountry", GetValue< System.String >("ShipCountry"));
+            if (_bag.ContainsKey("BillAddr1")) info.AddValue("BillAddr1", GetValue< System.String >("BillAddr1"));
+            if (_bag.ContainsKey("BillAddr2")) info.AddValue("BillAddr2", GetValue< System.String >("BillAddr2"));
+            if (_bag.ContainsKey("BillCity")) info.AddValue("BillCity", GetValue< System.String >("BillCity"));
+            if (_bag.ContainsKey("BillState")) info.AddValue("BillState", GetValue< System.String >("BillState"));
+            if (_bag.ContainsKey("BillZip")) info.AddValue("BillZip", GetValue< System.String >("BillZip"));
+            if (_bag.ContainsKey("BillCountry")) info.AddValue("BillCountry", GetValue< System.String >("BillCountry"));
+            if (_bag.ContainsKey("Courier")) info.AddValue("Courier", GetValue< System.String >("Courier"));
+            if (_bag.ContainsKey("TotalPrice")) info.AddValue("TotalPrice", GetValue< System.Decimal >("TotalPrice"));
+            if (_bag.ContainsKey("BillToFirstName")) info.AddValue("BillToFirstName", GetValue< System.String >("BillToFirstName"));
+            if (_bag.ContainsKey("BillToLastName")) info.AddValue("BillToLastName", GetValue< System.String >("BillToLastName"));
+            if (_bag.ContainsKey("ShipToFirstName")) info.AddValue("ShipToFirstName", GetValue< System.String >("ShipToFirstName"));
+            if (_bag.ContainsKey("ShipToLastName")) info.AddValue("ShipToLastName", GetValue< System.String >("ShipToLastName"));
+            if (_bag.ContainsKey("AuthorizationNumber")) info.AddValue("AuthorizationNumber", GetValue< System.Int32 >("AuthorizationNumber"));
+            if (_bag.ContainsKey("Locale")) info.AddValue("Locale", GetValue< System.String >("Locale"));
+        }
+
+        protected override void OnSetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnSetState(info, mode);
+            if(info.Values.ContainsKey("OrderId")) _bag["OrderId"] = info.GetValue< System.Int32 >("OrderId");
+            if(info.Values.ContainsKey("UserId")) _bag["UserId"] = info.GetValue< System.String >("UserId");
+            if(info.Values.ContainsKey("OrderDate")) _bag["OrderDate"] = info.GetValue< System.DateTime >("OrderDate");
+            if(info.Values.ContainsKey("ShipAddr1")) _bag["ShipAddr1"] = info.GetValue< System.String >("ShipAddr1");
+            if(info.Values.ContainsKey("ShipAddr2")) _bag["ShipAddr2"] = info.GetValue< System.String >("ShipAddr2");
+            if(info.Values.ContainsKey("ShipCity")) _bag["ShipCity"] = info.GetValue< System.String >("ShipCity");
+            if(info.Values.ContainsKey("ShipState")) _bag["ShipState"] = info.GetValue< System.String >("ShipState");
+            if(info.Values.ContainsKey("ShipZip")) _bag["ShipZip"] = info.GetValue< System.String >("ShipZip");
+            if(info.Values.ContainsKey("ShipCountry")) _bag["ShipCountry"] = info.GetValue< System.String >("ShipCountry");
+            if(info.Values.ContainsKey("BillAddr1")) _bag["BillAddr1"] = info.GetValue< System.String >("BillAddr1");
+            if(info.Values.ContainsKey("BillAddr2")) _bag["BillAddr2"] = info.GetValue< System.String >("BillAddr2");
+            if(info.Values.ContainsKey("BillCity")) _bag["BillCity"] = info.GetValue< System.String >("BillCity");
+            if(info.Values.ContainsKey("BillState")) _bag["BillState"] = info.GetValue< System.String >("BillState");
+            if(info.Values.ContainsKey("BillZip")) _bag["BillZip"] = info.GetValue< System.String >("BillZip");
+            if(info.Values.ContainsKey("BillCountry")) _bag["BillCountry"] = info.GetValue< System.String >("BillCountry");
+            if(info.Values.ContainsKey("Courier")) _bag["Courier"] = info.GetValue< System.String >("Courier");
+            if(info.Values.ContainsKey("TotalPrice")) _bag["TotalPrice"] = info.GetValue< System.Decimal >("TotalPrice");
+            if(info.Values.ContainsKey("BillToFirstName")) _bag["BillToFirstName"] = info.GetValue< System.String >("BillToFirstName");
+            if(info.Values.ContainsKey("BillToLastName")) _bag["BillToLastName"] = info.GetValue< System.String >("BillToLastName");
+            if(info.Values.ContainsKey("ShipToFirstName")) _bag["ShipToFirstName"] = info.GetValue< System.String >("ShipToFirstName");
+            if(info.Values.ContainsKey("ShipToLastName")) _bag["ShipToLastName"] = info.GetValue< System.String >("ShipToLastName");
+            if(info.Values.ContainsKey("AuthorizationNumber")) _bag["AuthorizationNumber"] = info.GetValue< System.Int32 >("AuthorizationNumber");
+            if(info.Values.ContainsKey("Locale")) _bag["Locale"] = info.GetValue< System.String >("Locale");
+        }
+
+        #endregion
     }
 }

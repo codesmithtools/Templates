@@ -14,8 +14,15 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+using Csla.Core;
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+using Csla.Serialization.Mobile;
 
+#if !SILVERLIGHT
 using System.Data.SqlClient;
+#endif
 
 using Csla;
 
@@ -174,5 +181,36 @@ namespace PetShop.Business
         
         #endregion
         
+        #region Serialization
+        
+        protected override void OnGetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnGetState(info, mode);
+            if (_bag.ContainsKey("SuppId")) info.AddValue("SuppId", GetValue< System.Int32 >("SuppId"));
+            if (_bag.ContainsKey("Name")) info.AddValue("Name", GetValue< System.String >("Name"));
+            if (_bag.ContainsKey("Status")) info.AddValue("Status", GetValue< System.String >("Status"));
+            if (_bag.ContainsKey("Addr1")) info.AddValue("Addr1", GetValue< System.String >("Addr1"));
+            if (_bag.ContainsKey("Addr2")) info.AddValue("Addr2", GetValue< System.String >("Addr2"));
+            if (_bag.ContainsKey("City")) info.AddValue("City", GetValue< System.String >("City"));
+            if (_bag.ContainsKey("State")) info.AddValue("State", GetValue< System.String >("State"));
+            if (_bag.ContainsKey("Zip")) info.AddValue("Zip", GetValue< System.String >("Zip"));
+            if (_bag.ContainsKey("Phone")) info.AddValue("Phone", GetValue< System.String >("Phone"));
+        }
+
+        protected override void OnSetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnSetState(info, mode);
+            if(info.Values.ContainsKey("SuppId")) _bag["SuppId"] = info.GetValue< System.Int32 >("SuppId");
+            if(info.Values.ContainsKey("Name")) _bag["Name"] = info.GetValue< System.String >("Name");
+            if(info.Values.ContainsKey("Status")) _bag["Status"] = info.GetValue< System.String >("Status");
+            if(info.Values.ContainsKey("Addr1")) _bag["Addr1"] = info.GetValue< System.String >("Addr1");
+            if(info.Values.ContainsKey("Addr2")) _bag["Addr2"] = info.GetValue< System.String >("Addr2");
+            if(info.Values.ContainsKey("City")) _bag["City"] = info.GetValue< System.String >("City");
+            if(info.Values.ContainsKey("State")) _bag["State"] = info.GetValue< System.String >("State");
+            if(info.Values.ContainsKey("Zip")) _bag["Zip"] = info.GetValue< System.String >("Zip");
+            if(info.Values.ContainsKey("Phone")) _bag["Phone"] = info.GetValue< System.String >("Phone");
+        }
+
+        #endregion
     }
 }
