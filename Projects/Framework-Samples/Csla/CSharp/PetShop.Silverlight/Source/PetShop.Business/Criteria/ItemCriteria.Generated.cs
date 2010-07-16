@@ -14,8 +14,15 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
+using Csla.Core;
+#if SILVERLIGHT
+using Csla.Serialization;
+#endif
+using Csla.Serialization.Mobile;
 
+#if !SILVERLIGHT
 using System.Data.SqlClient;
+#endif
 
 using Csla;
 
@@ -168,5 +175,34 @@ namespace PetShop.Business
         
         #endregion
         
+        #region Serialization
+        
+        protected override void OnGetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnGetState(info, mode);
+            if (_bag.ContainsKey("ItemId")) info.AddValue("ItemId", GetValue< System.String >("ItemId"));
+            if (_bag.ContainsKey("ProductId")) info.AddValue("ProductId", GetValue< System.String >("ProductId"));
+            if (_bag.ContainsKey("ListPrice")) info.AddValue("ListPrice", GetValue< System.Decimal? >("ListPrice"));
+            if (_bag.ContainsKey("UnitCost")) info.AddValue("UnitCost", GetValue< System.Decimal? >("UnitCost"));
+            if (_bag.ContainsKey("Supplier")) info.AddValue("Supplier", GetValue< System.Int32? >("Supplier"));
+            if (_bag.ContainsKey("Status")) info.AddValue("Status", GetValue< System.String >("Status"));
+            if (_bag.ContainsKey("Name")) info.AddValue("Name", GetValue< System.String >("Name"));
+            if (_bag.ContainsKey("Image")) info.AddValue("Image", GetValue< System.String >("Image"));
+        }
+
+        protected override void OnSetState(SerializationInfo info, StateMode mode)
+        {
+            base.OnSetState(info, mode);
+            if(info.Values.ContainsKey("ItemId")) _bag["ItemId"] = info.GetValue< System.String >("ItemId");
+            if(info.Values.ContainsKey("ProductId")) _bag["ProductId"] = info.GetValue< System.String >("ProductId");
+            if(info.Values.ContainsKey("ListPrice")) _bag["ListPrice"] = info.GetValue< System.Decimal? >("ListPrice");
+            if(info.Values.ContainsKey("UnitCost")) _bag["UnitCost"] = info.GetValue< System.Decimal? >("UnitCost");
+            if(info.Values.ContainsKey("Supplier")) _bag["Supplier"] = info.GetValue< System.Int32? >("Supplier");
+            if(info.Values.ContainsKey("Status")) _bag["Status"] = info.GetValue< System.String >("Status");
+            if(info.Values.ContainsKey("Name")) _bag["Name"] = info.GetValue< System.String >("Name");
+            if(info.Values.ContainsKey("Image")) _bag["Image"] = info.GetValue< System.String >("Image");
+        }
+
+        #endregion
     }
 }

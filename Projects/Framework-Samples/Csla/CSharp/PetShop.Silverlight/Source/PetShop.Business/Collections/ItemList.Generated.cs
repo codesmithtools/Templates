@@ -14,7 +14,11 @@ using System;
 using System.Collections.Generic;
 
 using Csla;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
+#endif
 
 #endregion
 
@@ -25,14 +29,23 @@ namespace PetShop.Business
     {
         #region Constructor(s)
 
+#if !SILVERLIGHT
         private ItemList()
         { 
             AllowNew = true;
             MarkAsChild();
         }
+#else
+        public ItemList()
+        { 
+            AllowNew = true;
+            MarkAsChild();
+        }
+#endif
         
         #endregion
 
+#if !SILVERLIGHT
         #region Synchronous Factory Methods 
         
         internal static ItemList NewList()
@@ -79,8 +92,23 @@ namespace PetShop.Business
 
 		#endregion
 
+#endif  
+        #region Asynchronous Factory Methods
+        
+        internal static void NewItemListAsync(EventHandler<DataPortalResult<Item>> handler)
+		{
+			var dp = new DataPortal<Item>();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+		}
+        
+        //Child objects do not expose asynchronous factory get methods
+ 
+        #endregion
+        
         #region Method Overrides
         
+#if !SILVERLIGHT
         protected override Item AddNewCore()
         {
             Item item = PetShop.Business.Item.NewItem();
@@ -109,11 +137,52 @@ namespace PetShop.Business
 
             return item;
         }
+#else
+        protected override void AddNewCore()
+        {
+            Item item = PetShop.Business.Item.NewItem();
+
+            bool cancel = false;
+            OnAddNewCore(ref item, ref cancel);
+            if (!cancel)
+            {
+                // Check to see if someone set the item to null in the OnAddNewCore.
+                if(item == null)
+                    item = PetShop.Business.Item.NewItem();
+
+                // Pass the parent value down to the child.
+                Product product = this.Parent as Product;
+                if(product != null)
+                    item.ProductId = product.ProductId;
+
+                // Pass the parent value down to the child.
+                Supplier supplier = this.Parent as Supplier;
+                if(supplier != null)
+                    item.Supplier = supplier.SuppId;
+
+
+                Add(item);
+            }
+        }
+#endif
+		protected void AddNewCoreAsync(EventHandler<DataPortalResult<object>> handler)
+		{
+			PetShop.Business.Item.NewItemAsync((o, e) =>
+			{
+				if(e.Error == null)
+				{
+					Add(e.Object);
+					handler.Invoke(this, new DataPortalResult<object>(e.Object, null, null));
+				}
+			});
+		}
+
         
         #endregion
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(ItemCriteria criteria, ref bool cancel);
@@ -122,16 +191,19 @@ namespace PetShop.Business
         partial void OnMapped();
         partial void OnUpdating(ref bool cancel);
         partial void OnUpdated();
+#endif
         partial void OnAddNewCore(ref Item item, ref bool cancel);
 
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(ItemCriteria criteria)
         {
             return PetShop.Business.Item.Exists(criteria);
         }
+#endif
 
         #endregion
 

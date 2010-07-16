@@ -14,8 +14,12 @@ using System;
 
 using Csla;
 using Csla.Rules;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
 using System.Data.SqlClient;
+#endif
 
 #endregion
 
@@ -26,8 +30,13 @@ namespace PetShop.Business
     {
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private LineItem()
         { /* Require use of factory methods */ }
+#else
+	public LineItem()
+        { /* Require use of factory methods */ }
+#endif
 
         internal LineItem(System.Int32 orderId, System.Int32 lineNum)
         {
@@ -38,10 +47,12 @@ namespace PetShop.Business
             }
         }
 
+#if !SILVERLIGHT
         internal LineItem(SafeDataReader reader)
         {
             Map(reader);
         }
+#endif
         #endregion
 
         #region Business Rules
@@ -60,7 +71,9 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo< System.Int32 > _orderIdProperty = RegisterProperty< System.Int32 >(p => p.OrderId, string.Empty);
+#if !SILVERLIGHT
 		[System.ComponentModel.DataObjectField(true, false)]
+#endif
         public System.Int32 OrderId
         {
             get { return GetProperty(_orderIdProperty); }
@@ -77,7 +90,9 @@ namespace PetShop.Business
             set{ SetProperty(_originalOrderIdProperty, value); }
         }
         private static readonly PropertyInfo< System.Int32 > _lineNumProperty = RegisterProperty< System.Int32 >(p => p.LineNum, string.Empty);
+#if !SILVERLIGHT
 		[System.ComponentModel.DataObjectField(true, false)]
+#endif
         public System.Int32 LineNum
         {
             get { return GetProperty(_lineNumProperty); }
@@ -118,6 +133,7 @@ namespace PetShop.Business
         {
             get
             {
+#if !SILVERLIGHT
                 if(false)
                     return null;
                 
@@ -130,11 +146,13 @@ namespace PetShop.Business
                         LoadProperty(_orderMemberProperty, PetShop.Business.Order.GetByOrderId(OrderId));
                 }
 
+#endif
                 return GetProperty(_orderMemberProperty); 
             }
         }
         #endregion
 
+#if !SILVERLIGHT
         #region Synchronous Root Factory Methods 
         
         public static LineItem NewLineItem()
@@ -164,6 +182,50 @@ namespace PetShop.Business
         }
         
         #endregion
+#endif        
+
+        #region Asynchronous Root Factory Methods
+        
+        public static void NewLineItemAsync(EventHandler<DataPortalResult<LineItem>> handler)
+        {
+			var dp = new DataPortal< LineItem >();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+        }
+
+        public static void GetByOrderIdLineNumAsync(System.Int32 orderId, System.Int32 lineNum, EventHandler<DataPortalResult<LineItem>> handler)
+        {
+			var criteria = new LineItemCriteria{OrderId = orderId, LineNum = lineNum};
+			
+
+			var dp = new DataPortal< LineItem >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void GetByOrderIdAsync(System.Int32 orderId, EventHandler<DataPortalResult<LineItem>> handler)
+        {
+			var criteria = new LineItemCriteria{OrderId = orderId};
+			
+
+			var dp = new DataPortal< LineItem >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void DeleteLineItemAsync(System.Int32 orderId, System.Int32 lineNum, EventHandler<DataPortalResult<LineItem>> handler)
+        {
+			var criteria = new LineItemCriteria{OrderId = orderId, LineNum = lineNum};
+			
+
+			var dp = new DataPortal< LineItem >();
+			dp.DeleteCompleted += handler;
+			dp.BeginDelete(criteria);
+        }
+        
+        #endregion
+
+#if !SILVERLIGHT
 
         #region Synchronous Child Factory Methods 
         
@@ -187,10 +249,27 @@ namespace PetShop.Business
         }
 
         #endregion
+#endif        
+
+        #region Asynchronous Child Factory Methods
+        
+        internal static void NewLineItemChildAsync(EventHandler<DataPortalResult<LineItem>> handler)
+		{
+			DataPortal<LineItem> dp = new DataPortal<LineItem>();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+		}
+        
+        // Child objects do not expose asynchronous factory get methods.
+        
+        // Child objects do not expose asynchronous delete methods.
+        #endregion
+
 
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(LineItemCriteria criteria, ref bool cancel);
@@ -205,11 +284,13 @@ namespace PetShop.Business
         partial void OnSelfDeleted();
         partial void OnDeleting(LineItemCriteria criteria, ref bool cancel);
         partial void OnDeleted();
+#endif
 
         #endregion
 
         #region ChildPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnChildCreating(ref bool cancel);
         partial void OnChildCreated();
         partial void OnChildFetching(LineItemCriteria criteria, ref bool cancel);
@@ -220,14 +301,17 @@ namespace PetShop.Business
         partial void OnChildUpdated();
         partial void OnChildSelfDeleting(ref bool cancel);
         partial void OnChildSelfDeleted();
+#endif
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(LineItemCriteria criteria)
         {
             return ExistsCommand.Execute(criteria);
         }
+#endif
 
         #endregion
 

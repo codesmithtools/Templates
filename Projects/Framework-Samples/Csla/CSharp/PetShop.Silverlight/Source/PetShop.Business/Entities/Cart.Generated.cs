@@ -14,8 +14,12 @@ using System;
 
 using Csla;
 using Csla.Rules;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
 using System.Data.SqlClient;
+#endif
 
 #endregion
 
@@ -26,11 +30,19 @@ namespace PetShop.Business
     {
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private Cart()
         {
             // require use of factory method.
             MarkAsChild();
         }
+#else
+        public Cart()
+        {
+            // require use of factory method.
+            MarkAsChild();
+        }        
+#endif
 
         internal Cart(System.Int32 cartId)
         {
@@ -42,12 +54,14 @@ namespace PetShop.Business
             MarkAsChild();
         }
 
+#if !SILVERLIGHT
         internal Cart(SafeDataReader reader)
         {
             Map(reader);
 
             MarkAsChild();
         }
+#endif
         #endregion
 
         #region Business Rules
@@ -74,7 +88,9 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo< System.Int32 > _cartIdProperty = RegisterProperty< System.Int32 >(p => p.CartId, string.Empty);
+#if !SILVERLIGHT
 		[System.ComponentModel.DataObjectField(true, true)]
+#endif
         public System.Int32 CartId
         {
             get { return GetProperty(_cartIdProperty); }
@@ -141,6 +157,7 @@ namespace PetShop.Business
         {
             get
             {
+#if !SILVERLIGHT
                 if(false)
                     return null;
                 
@@ -153,6 +170,7 @@ namespace PetShop.Business
                         LoadProperty(_profileMemberProperty, PetShop.Business.Profile.GetByUniqueID(UniqueID));
                 }
 
+#endif
                 return GetProperty(_profileMemberProperty); 
             }
         }
@@ -164,6 +182,7 @@ namespace PetShop.Business
         {
             return DataPortal.CreateChild< Cart >();
         }
+#if !SILVERLIGHT
 
         internal static Cart GetByCartId(System.Int32 cartId)
         {
@@ -188,11 +207,28 @@ namespace PetShop.Business
         
             return DataPortal.FetchChild< Cart >(criteria);
         }
+#endif
 
+        #endregion
+
+        #region Asynchronous Factory Methods
+        
+        internal static void NewCartAsync(EventHandler<DataPortalResult<Cart>> handler)
+        {
+            var dp = new DataPortal<Cart>();
+            dp.CreateCompleted += handler;
+            dp.BeginCreate();
+        }
+        
+        // Child objects do not expose asynchronous factory get methods.
+        
+        // Child objects do not expose asynchronous delete methods.
+        
         #endregion
 
         #region ChildPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnChildCreating(ref bool cancel);
         partial void OnChildCreated();
         partial void OnChildFetching(CartCriteria criteria, ref bool cancel);
@@ -208,15 +244,18 @@ namespace PetShop.Business
         partial void OnDeleting(CartCriteria criteria, ref bool cancel);
         partial void OnDeleting(CartCriteria criteria, SqlConnection connection, ref bool cancel);
         partial void OnDeleted();
+#endif
 
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(CartCriteria criteria)
         {
             return ExistsCommand.Execute(criteria);
         }
+#endif
 
         #endregion
 

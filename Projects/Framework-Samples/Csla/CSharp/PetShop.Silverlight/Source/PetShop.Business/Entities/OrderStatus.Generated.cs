@@ -14,7 +14,11 @@ using System;
 
 using Csla;
 using Csla.Rules;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
+#endif
 
 #endregion
 
@@ -25,8 +29,13 @@ namespace PetShop.Business
     {
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private OrderStatus()
         { /* Require use of factory methods */ }
+#else
+	public OrderStatus()
+        { /* Require use of factory methods */ }
+#endif
 
         internal OrderStatus(System.Int32 orderId, System.Int32 lineNum)
         {
@@ -37,10 +46,12 @@ namespace PetShop.Business
             }
         }
 
+#if !SILVERLIGHT
         internal OrderStatus(SafeDataReader reader)
         {
             Map(reader);
         }
+#endif
         #endregion
 
         #region Business Rules
@@ -59,7 +70,9 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo< System.Int32 > _orderIdProperty = RegisterProperty< System.Int32 >(p => p.OrderId, string.Empty);
+#if !SILVERLIGHT
 		[System.ComponentModel.DataObjectField(true, false)]
+#endif
         public System.Int32 OrderId
         {
             get { return GetProperty(_orderIdProperty); }
@@ -76,7 +89,9 @@ namespace PetShop.Business
             set{ SetProperty(_originalOrderIdProperty, value); }
         }
         private static readonly PropertyInfo< System.Int32 > _lineNumProperty = RegisterProperty< System.Int32 >(p => p.LineNum, string.Empty);
+#if !SILVERLIGHT
 		[System.ComponentModel.DataObjectField(true, false)]
+#endif
         public System.Int32 LineNum
         {
             get { return GetProperty(_lineNumProperty); }
@@ -111,6 +126,7 @@ namespace PetShop.Business
         {
             get
             {
+#if !SILVERLIGHT
                 if(false)
                     return null;
                 
@@ -123,11 +139,13 @@ namespace PetShop.Business
                         LoadProperty(_orderMemberProperty, PetShop.Business.Order.GetByOrderId(OrderId));
                 }
 
+#endif
                 return GetProperty(_orderMemberProperty); 
             }
         }
         #endregion
 
+#if !SILVERLIGHT
         #region Synchronous Factory Methods 
 
         public static OrderStatus NewOrderStatus()
@@ -160,9 +178,52 @@ namespace PetShop.Business
         }
 
         #endregion
+#endif
+
+        #region Asynchronous Factory Methods
+        
+        public static void NewOrderStatusAsync(EventHandler<DataPortalResult<OrderStatus>> handler)
+		{
+			var dp = new DataPortal<OrderStatus>();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+		}
+
+        public static void GetByOrderIdLineNumAsync(System.Int32 orderId, System.Int32 lineNum, EventHandler<DataPortalResult< OrderStatus >> handler)
+        {
+			var criteria = new OrderStatusCriteria{ OrderId = orderId, LineNum = lineNum};
+			
+			
+			var dp = new DataPortal< OrderStatus >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void GetByOrderIdAsync(System.Int32 orderId, EventHandler<DataPortalResult< OrderStatus >> handler)
+        {
+			var criteria = new OrderStatusCriteria{ OrderId = orderId};
+			
+			
+			var dp = new DataPortal< OrderStatus >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void DeleteOrderStatusAsync(System.Int32 orderId, System.Int32 lineNum, EventHandler<DataPortalResult<OrderStatus>> handler)
+        {
+			var criteria = new OrderStatusCriteria{OrderId = orderId, LineNum = lineNum};
+			
+			
+			var dp = new DataPortal< OrderStatus >();
+			dp.DeleteCompleted += handler;
+			dp.BeginDelete(criteria);
+        }
+        
+        #endregion
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(OrderStatusCriteria criteria, ref bool cancel);
@@ -177,15 +238,18 @@ namespace PetShop.Business
         partial void OnSelfDeleted();
         partial void OnDeleting(OrderStatusCriteria criteria, ref bool cancel);
         partial void OnDeleted();
+#endif
 
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(OrderStatusCriteria criteria)
         {
             return ExistsCommand.Execute(criteria);
         }
+#endif
 
         #endregion
 

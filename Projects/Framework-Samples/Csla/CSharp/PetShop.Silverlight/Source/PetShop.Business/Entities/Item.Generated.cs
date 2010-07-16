@@ -14,8 +14,12 @@ using System;
 
 using Csla;
 using Csla.Rules;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
 using System.Data.SqlClient;
+#endif
 
 #endregion
 
@@ -26,8 +30,13 @@ namespace PetShop.Business
     {
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private Item()
         { /* Require use of factory methods */ }
+#else
+	public Item()
+        { /* Require use of factory methods */ }
+#endif
 
         internal Item(System.String itemId)
         {
@@ -37,10 +46,12 @@ namespace PetShop.Business
             }
         }
 
+#if !SILVERLIGHT
         internal Item(SafeDataReader reader)
         {
             Map(reader);
         }
+#endif
         #endregion
 
         #region Business Rules
@@ -64,7 +75,9 @@ namespace PetShop.Business
         #region Properties
 
         private static readonly PropertyInfo< System.String > _itemIdProperty = RegisterProperty< System.String >(p => p.ItemId, string.Empty);
+#if !SILVERLIGHT
 		[System.ComponentModel.DataObjectField(true, false)]
+#endif
         public System.String ItemId
         {
             get { return GetProperty(_itemIdProperty); }
@@ -129,6 +142,7 @@ namespace PetShop.Business
         {
             get
             {
+#if !SILVERLIGHT
                 if(false)
                     return null;
                 
@@ -141,6 +155,7 @@ namespace PetShop.Business
                         LoadProperty(_productMemberProperty, PetShop.Business.Product.GetByProductId(ProductId));
                 }
 
+#endif
                 return GetProperty(_productMemberProperty); 
             }
         }
@@ -151,6 +166,7 @@ namespace PetShop.Business
         {
             get
             {
+#if !SILVERLIGHT
                 if(!Supplier.HasValue) 
                     return null;
                 
@@ -163,11 +179,13 @@ namespace PetShop.Business
                         LoadProperty(_supplierMemberProperty, PetShop.Business.Supplier.GetBySuppId(Supplier.Value));
                 }
 
+#endif
                 return GetProperty(_supplierMemberProperty); 
             }
         }
         #endregion
 
+#if !SILVERLIGHT
         #region Synchronous Root Factory Methods 
         
         public static Item NewItem()
@@ -213,6 +231,70 @@ namespace PetShop.Business
         }
         
         #endregion
+#endif        
+
+        #region Asynchronous Root Factory Methods
+        
+        public static void NewItemAsync(EventHandler<DataPortalResult<Item>> handler)
+        {
+			var dp = new DataPortal< Item >();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+        }
+
+        public static void GetByItemIdAsync(System.String itemId, EventHandler<DataPortalResult<Item>> handler)
+        {
+			var criteria = new ItemCriteria{ItemId = itemId};
+			
+
+			var dp = new DataPortal< Item >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void GetByProductIdItemIdListPriceNameAsync(System.String productId, System.String itemId, System.Decimal? listPrice, System.String name, EventHandler<DataPortalResult<Item>> handler)
+        {
+			var criteria = new ItemCriteria{ProductId = productId, ItemId = itemId, Name = name};
+			if(listPrice.HasValue) criteria.ListPrice = listPrice.Value;
+
+			var dp = new DataPortal< Item >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void GetByProductIdAsync(System.String productId, EventHandler<DataPortalResult<Item>> handler)
+        {
+			var criteria = new ItemCriteria{ProductId = productId};
+			
+
+			var dp = new DataPortal< Item >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void GetBySupplierAsync(System.Int32? supplier, EventHandler<DataPortalResult<Item>> handler)
+        {
+			var criteria = new ItemCriteria{};
+			if(supplier.HasValue) criteria.Supplier = supplier.Value;
+
+			var dp = new DataPortal< Item >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void DeleteItemAsync(System.String itemId, EventHandler<DataPortalResult<Item>> handler)
+        {
+			var criteria = new ItemCriteria{ItemId = itemId};
+			
+
+			var dp = new DataPortal< Item >();
+			dp.DeleteCompleted += handler;
+			dp.BeginDelete(criteria);
+        }
+        
+        #endregion
+
+#if !SILVERLIGHT
 
         #region Synchronous Child Factory Methods 
         
@@ -250,10 +332,27 @@ namespace PetShop.Business
         }
 
         #endregion
+#endif        
+
+        #region Asynchronous Child Factory Methods
+        
+        internal static void NewItemChildAsync(EventHandler<DataPortalResult<Item>> handler)
+		{
+			DataPortal<Item> dp = new DataPortal<Item>();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+		}
+        
+        // Child objects do not expose asynchronous factory get methods.
+        
+        // Child objects do not expose asynchronous delete methods.
+        #endregion
+
 
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(ItemCriteria criteria, ref bool cancel);
@@ -268,11 +367,13 @@ namespace PetShop.Business
         partial void OnSelfDeleted();
         partial void OnDeleting(ItemCriteria criteria, ref bool cancel);
         partial void OnDeleted();
+#endif
 
         #endregion
 
         #region ChildPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnChildCreating(ref bool cancel);
         partial void OnChildCreated();
         partial void OnChildFetching(ItemCriteria criteria, ref bool cancel);
@@ -283,14 +384,17 @@ namespace PetShop.Business
         partial void OnChildUpdated();
         partial void OnChildSelfDeleting(ref bool cancel);
         partial void OnChildSelfDeleted();
+#endif
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(ItemCriteria criteria)
         {
             return ExistsCommand.Execute(criteria);
         }
+#endif
 
         #endregion
 

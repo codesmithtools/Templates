@@ -13,7 +13,11 @@
 using System;
 
 using Csla;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
+#endif
 
 #endregion
 
@@ -24,13 +28,21 @@ namespace PetShop.Business
     {    
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private LineItemList()
         { 
             AllowNew = true;
         }
+#else
+        public LineItemList()
+        { 
+            AllowNew = true;
+        }
+#endif
         
         #endregion
 
+#if !SILVERLIGHT
         #region Method Overrides
         
         protected override LineItem AddNewCore()
@@ -91,10 +103,80 @@ namespace PetShop.Business
 
         #endregion
 
+#else
+
+        #region Method Overrides
+
+        protected override void AddNewCore()
+        {
+            LineItem item = PetShop.Business.LineItem.NewLineItem();
+
+            bool cancel = false;
+            OnAddNewCore(ref item, ref cancel);
+            if (!cancel)
+            {
+                // Check to see if someone set the item to null in the OnAddNewCore.
+                if(item == null)
+                    item = PetShop.Business.LineItem.NewLineItem();
+
+                // Pass the parent value down to the child.
+                Order order = this.Parent as Order;
+                if(order != null)
+                    item.OrderId = order.OrderId;
+
+
+                Add(item);
+            }
+        }
+        
+        #endregion
+
+#endif
+
+        #region Asynchronous Factory Methods
+        
+        public static void NewListAsync(EventHandler<DataPortalResult<LineItemList>> handler)
+        {
+            var dp = new DataPortal<LineItemList>();
+            dp.CreateCompleted += handler;
+            dp.BeginCreate();
+        }
+
+
+        public static void GetByOrderIdLineNumAsync(System.Int32 orderId, System.Int32 lineNum, EventHandler<DataPortalResult<LineItemList>> handler)
+        {
+			var criteria = new LineItemCriteria{OrderId = orderId, LineNum = lineNum};
+			
+			
+            var dp = new DataPortal< LineItemList >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+
+        public static void GetByOrderIdAsync(System.Int32 orderId, EventHandler<DataPortalResult<LineItemList>> handler)
+        {
+			var criteria = new LineItemCriteria{OrderId = orderId};
+			
+			
+            var dp = new DataPortal< LineItemList >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+
+        public static void GetAllAsync(EventHandler<DataPortalResult<LineItemList>> handler)
+        {
+            var dp = new DataPortal<LineItemList>();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(new LineItemCriteria());
+        }
+
+        #endregion
+
 
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(LineItemCriteria criteria, ref bool cancel);
@@ -103,16 +185,19 @@ namespace PetShop.Business
         partial void OnMapped();
         partial void OnUpdating(ref bool cancel);
         partial void OnUpdated();
+#endif
         partial void OnAddNewCore(ref LineItem item, ref bool cancel);
 
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(LineItemCriteria criteria)
         {
             return PetShop.Business.LineItem.Exists(criteria);
         }
+#endif
 
         #endregion
 

@@ -14,7 +14,11 @@ using System;
 
 using Csla;
 using Csla.Rules;
+#if SILVERLIGHT
+using Csla.Serialization;
+#else
 using Csla.Data;
+#endif
 
 #endregion
 
@@ -25,8 +29,13 @@ namespace PetShop.Business
     {
         #region Contructor(s)
 
+#if !SILVERLIGHT
         private Category()
         { /* Require use of factory methods */ }
+#else
+	public Category()
+        { /* Require use of factory methods */ }
+#endif
 
         internal Category(System.String categoryId)
         {
@@ -36,10 +45,12 @@ namespace PetShop.Business
             }
         }
 
+#if !SILVERLIGHT
         internal Category(SafeDataReader reader)
         {
             Map(reader);
         }
+#endif
         #endregion
 
         #region Business Rules
@@ -66,7 +77,9 @@ namespace PetShop.Business
         internal System.Byte[] TheVersion = new System.Byte[8];
 
         private static readonly PropertyInfo< System.String > _categoryIdProperty = RegisterProperty< System.String >(p => p.CategoryId, string.Empty);
+#if !SILVERLIGHT
 		[System.ComponentModel.DataObjectField(true, false)]
+#endif
         public System.String CategoryId
         {
             get { return GetProperty(_categoryIdProperty); }
@@ -101,6 +114,7 @@ namespace PetShop.Business
         {
             get
             {
+#if !SILVERLIGHT
                 if(!FieldManager.FieldExists(_productsProperty))
                 {
 					var criteria = new PetShop.Business.ProductCriteria {CategoryId = CategoryId};
@@ -112,11 +126,13 @@ namespace PetShop.Business
                         LoadProperty(_productsProperty, PetShop.Business.ProductList.GetByCategoryId(CategoryId));
                 }
 
+#endif
                 return GetProperty(_productsProperty);
             }
         }
         #endregion
 
+#if !SILVERLIGHT
         #region Synchronous Factory Methods 
 
         public static Category NewCategory()
@@ -141,9 +157,42 @@ namespace PetShop.Business
         }
 
         #endregion
+#endif
+
+        #region Asynchronous Factory Methods
+        
+        public static void NewCategoryAsync(EventHandler<DataPortalResult<Category>> handler)
+		{
+			var dp = new DataPortal<Category>();
+			dp.CreateCompleted += handler;
+			dp.BeginCreate();
+		}
+
+        public static void GetByCategoryIdAsync(System.String categoryId, EventHandler<DataPortalResult< Category >> handler)
+        {
+			var criteria = new CategoryCriteria{ CategoryId = categoryId};
+			
+			
+			var dp = new DataPortal< Category >();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+
+        public static void DeleteCategoryAsync(System.String categoryId, EventHandler<DataPortalResult<Category>> handler)
+        {
+			var criteria = new CategoryCriteria{CategoryId = categoryId};
+			
+			
+			var dp = new DataPortal< Category >();
+			dp.DeleteCompleted += handler;
+			dp.BeginDelete(criteria);
+        }
+        
+        #endregion
 
         #region DataPortal partial methods
 
+#if !SILVERLIGHT
         partial void OnCreating(ref bool cancel);
         partial void OnCreated();
         partial void OnFetching(CategoryCriteria criteria, ref bool cancel);
@@ -158,15 +207,18 @@ namespace PetShop.Business
         partial void OnSelfDeleted();
         partial void OnDeleting(CategoryCriteria criteria, ref bool cancel);
         partial void OnDeleted();
+#endif
 
         #endregion
 
         #region Exists Command
 
+#if !SILVERLIGHT
         public static bool Exists(CategoryCriteria criteria)
         {
             return ExistsCommand.Execute(criteria);
         }
+#endif
 
         #endregion
 
