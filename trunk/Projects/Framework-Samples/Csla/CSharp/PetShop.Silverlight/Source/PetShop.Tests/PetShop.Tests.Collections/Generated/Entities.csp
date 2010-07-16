@@ -5,7 +5,7 @@
     <add key="ConnectionString2" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="DynamicRoot" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\DynamicRoot.cst">
+    <propertySet name="DynamicRoot" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\DynamicRoot.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -31,7 +31,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="DynamicRootList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\DynamicRootList.cst">
+    <propertySet name="DynamicRootList" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\DynamicRootList.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -57,7 +57,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="DynmaicRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
+    <propertySet name="DynmaicRootCriteria" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -83,7 +83,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="ADOHelper" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ADOHelper.cst">
+    <propertySet name="ADOHelper" enabled="false" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Internal\ADOHelper.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -115,7 +115,7 @@
       <property name="DataClassName">none</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
     </propertySet>
-    <propertySet name="ExistsCommand" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ExistsCommand.cst">
+    <propertySet name="ExistsCommand" enabled="false" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Internal\ExistsCommand.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -148,7 +148,7 @@
       <property name="DataClassName">DataAccessLayer</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
     </propertySet>
-    <propertySet name="EditableChild" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\EditableChild.cst">
+    <propertySet name="EditableChild" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\EditableChild.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -174,7 +174,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="EditableChildList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\EditableChildList.cst">
+    <propertySet name="EditableChildList" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\EditableChildList.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -200,7 +200,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="EditableChildCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
+    <propertySet name="EditableChildCriteria" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -226,7 +226,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="ADOHelper" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ADOHelper.cst">
+    <propertySet name="ADOHelper" enabled="false" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Internal\ADOHelper.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -258,7 +258,7 @@
       <property name="DataClassName">none</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
     </propertySet>
-    <propertySet name="ExistsCommand" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ExistsCommand.cst">
+    <propertySet name="ExistsCommand" enabled="false" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Internal\ExistsCommand.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -291,7 +291,7 @@
       <property name="DataClassName">DataAccessLayer</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
     </propertySet>
-    <propertySet name="EditableRoot" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\EditableRoot.cst">
+    <propertySet name="EditableRoot" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\EditableRoot.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -317,7 +317,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="EditableRootList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\EditableRootList.cst">
+    <propertySet name="EditableRootList" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\EditableRootList.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -343,7 +343,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="EditableRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
+    <propertySet name="EditableRootCriteria" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -369,7 +369,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="ADOHelper" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ADOHelper.cst">
+    <propertySet name="ADOHelper" enabled="false" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Internal\ADOHelper.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -401,7 +401,7 @@
       <property name="DataClassName">none</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
     </propertySet>
-    <propertySet name="ExistsCommand" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ExistsCommand.cst">
+    <propertySet name="ExistsCommand" enabled="false" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Internal\ExistsCommand.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -434,7 +434,7 @@
       <property name="DataClassName">DataAccessLayer</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
     </propertySet>
-    <propertySet name="ReadOnlyChild" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\ReadOnlyChild.cst">
+    <propertySet name="ReadOnlyChild" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\ReadOnlyChild.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -460,7 +460,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="ReadOnlyChildList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\ReadOnlyChildList.cst">
+    <propertySet name="ReadOnlyChildList" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\ReadOnlyChildList.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -486,7 +486,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="ReadOnlyChildCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
+    <propertySet name="ReadOnlyChildCriteria" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -512,7 +512,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="ADOHelper" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ADOHelper.cst">
+    <propertySet name="ADOHelper" enabled="false" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Internal\ADOHelper.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -544,7 +544,7 @@
       <property name="DataClassName">none</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
     </propertySet>
-    <propertySet name="ExistsCommand" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ExistsCommand.cst">
+    <propertySet name="ExistsCommand" enabled="false" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Internal\ExistsCommand.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -577,7 +577,7 @@
       <property name="DataClassName">DataAccessLayer</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
     </propertySet>
-    <propertySet name="ReadOnlyRoot" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\ReadOnlyRoot.cst">
+    <propertySet name="ReadOnlyRoot" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\ReadOnlyRoot.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -603,7 +603,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="ReadOnlyList" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\ReadOnlyList.cst">
+    <propertySet name="ReadOnlyList" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\ReadOnlyList.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -629,7 +629,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="ReadOnlyRootCriteria" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Criteria.cst">
+    <propertySet name="ReadOnlyRootCriteria" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Criteria.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -655,7 +655,7 @@
       </property>
       <property name="BusinessClassName">Category</property>
     </propertySet>
-    <propertySet name="ADOHelper" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ADOHelper.cst">
+    <propertySet name="ADOHelper" enabled="false" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Internal\ADOHelper.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>
@@ -687,7 +687,7 @@
       <property name="DataClassName">none</property>
       <property name="InterfaceProjectName">PetShop.UI</property>
     </propertySet>
-    <propertySet name="ExistsCommand" enabled="false" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Internal\ExistsCommand.cst">
+    <propertySet name="ExistsCommand" enabled="false" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Internal\ExistsCommand.cst">
       <property name="CleanExpressions">
         <stringList>
           <string>^\w+_</string>

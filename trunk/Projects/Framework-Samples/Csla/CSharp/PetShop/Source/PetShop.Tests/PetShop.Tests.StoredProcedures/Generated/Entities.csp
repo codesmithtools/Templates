@@ -5,7 +5,7 @@
     <add key="ConnectionString2" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\BusinessLayer\Entities.cst">
+    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Entities.cst">
       <property name="Criteria">
         <connectionString>$(ConnectionString2)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
@@ -171,7 +171,10 @@
       <property name="ProcedurePrefix">CSLA_</property>
       <property name="AutoExecuteStoredProcedures">True</property>
       <property name="IsolationLevel">ReadCommitted</property>
-      <property name="CommandObject" />
+      <property name="NameValueList" />
+      <property name="FrameworkVersion">v35</property>
+      <property name="IncludeSilverlightSupport">False</property>
+      <property name="TestProjectName">PetShop.Test</property>
     </propertySet>
   </propertySets>
 </codeSmith>

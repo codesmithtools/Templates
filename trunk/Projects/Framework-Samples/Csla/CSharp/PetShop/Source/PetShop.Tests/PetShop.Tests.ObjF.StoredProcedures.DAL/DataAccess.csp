@@ -5,7 +5,7 @@
     <add key="ConnectionString2" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="DataAccessLayer.cs" output="DataAccessLayer.cs" template="..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\CSharp\DataAccessLayer\DataAccessLayer.cst">
+    <propertySet name="DataAccessLayer.cs" output="DataAccessLayer.cs" template="..\..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\CSharp\DataAccessLayer\DataAccessLayer.cst">
       <property name="DataAccessImplementation">ObjectFactoryStoredProcedures</property>
       <property name="DataProjectName">PetShop.Tests.ObjF.StoredProcedures.DAL</property>
       <property name="ParameterPrefix">@p_</property>
@@ -149,6 +149,9 @@
       <property name="ProcedurePrefix">CSLA_</property>
       <property name="AutoExecuteStoredProcedures">True</property>
       <property name="IsolationLevel">ReadCommitted</property>
+      <property name="FrameworkVersion">v35</property>
+      <property name="IncludeSilverlightSupport">False</property>
+      <property name="TestProjectName">PetShop.Test</property>
     </propertySet>
   </propertySets>
 </codeSmith>
