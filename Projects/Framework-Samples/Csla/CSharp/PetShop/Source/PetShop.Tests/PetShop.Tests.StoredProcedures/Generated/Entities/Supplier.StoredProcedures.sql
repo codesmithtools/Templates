@@ -14,18 +14,19 @@ SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
 GO
 BEGIN TRANSACTION
 GO
-PRINT N'Dropping [dbo].[CSLA_Supplier_Insert]'
+PRINT N'Dropping CSLA_Supplier_Insert'
 GO
-IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Supplier_Insert]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', 'CSLA_Supplier_Insert', default, default) WHERE name = 'CustomProcedure' and value = '1')
 BEGIN
-    RAISERROR ('The procedure [dbo].[CSLA_Supplier_Insert] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to drop the procedure.',16,1)
+    RAISERROR ('The procedure CSLA_Supplier_Insert has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to drop the procedure.',16,1)
     INSERT INTO #tmpErrors (Error) SELECT 1
 END
 GO
 
-IF OBJECT_ID(N'[dbo].[CSLA_Supplier_Insert]') IS NOT NULL
-	DROP PROCEDURE [dbo].[CSLA_Supplier_Insert]
+IF OBJECT_ID(N'CSLA_Supplier_Insert') IS NOT NULL
+	DROP PROCEDURE CSLA_Supplier_Insert
 
+GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 
@@ -58,18 +59,19 @@ SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
 GO
 BEGIN TRANSACTION
 GO
-PRINT N'Dropping [dbo].[CSLA_Supplier_Update]'
+PRINT N'Dropping CSLA_Supplier_Update'
 GO
-IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Supplier_Update]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', 'CSLA_Supplier_Update', default, default) WHERE name = 'CustomProcedure' and value = '1')
 BEGIN
-    RAISERROR ('The procedure [dbo].[CSLA_Supplier_Update] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to drop the procedure.',16,1)
+    RAISERROR ('The procedure CSLA_Supplier_Update has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to drop the procedure.',16,1)
     INSERT INTO #tmpErrors (Error) SELECT 1
 END
 GO
 
-IF OBJECT_ID(N'[dbo].[CSLA_Supplier_Update]') IS NOT NULL
-	DROP PROCEDURE [dbo].[CSLA_Supplier_Update]
+IF OBJECT_ID(N'CSLA_Supplier_Update') IS NOT NULL
+	DROP PROCEDURE CSLA_Supplier_Update
 
+GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 
@@ -102,18 +104,19 @@ SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
 GO
 BEGIN TRANSACTION
 GO
-PRINT N'Dropping [dbo].[CSLA_Supplier_Delete]'
+PRINT N'Dropping CSLA_Supplier_Delete'
 GO
-IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Supplier_Delete]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', 'CSLA_Supplier_Delete', default, default) WHERE name = 'CustomProcedure' and value = '1')
 BEGIN
-    RAISERROR ('The procedure [dbo].[CSLA_Supplier_Delete] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to drop the procedure.',16,1)
+    RAISERROR ('The procedure CSLA_Supplier_Delete has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to drop the procedure.',16,1)
     INSERT INTO #tmpErrors (Error) SELECT 1
 END
 GO
 
-IF OBJECT_ID(N'[dbo].[CSLA_Supplier_Delete]') IS NOT NULL
-	DROP PROCEDURE [dbo].[CSLA_Supplier_Delete]
+IF OBJECT_ID(N'CSLA_Supplier_Delete') IS NOT NULL
+	DROP PROCEDURE CSLA_Supplier_Delete
 
+GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 
@@ -146,18 +149,19 @@ SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
 GO
 BEGIN TRANSACTION
 GO
-PRINT N'Dropping [dbo].[CSLA_Supplier_Select]'
+PRINT N'Dropping CSLA_Supplier_Select'
 GO
-IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Supplier_Select]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', 'CSLA_Supplier_Select', default, default) WHERE name = 'CustomProcedure' and value = '1')
 BEGIN
-    RAISERROR ('The procedure [dbo].[CSLA_Supplier_Select] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to drop the procedure.',16,1)
+    RAISERROR ('The procedure CSLA_Supplier_Select has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to drop the procedure.',16,1)
     INSERT INTO #tmpErrors (Error) SELECT 1
 END
 GO
 
-IF OBJECT_ID(N'[dbo].[CSLA_Supplier_Select]') IS NOT NULL
-	DROP PROCEDURE [dbo].[CSLA_Supplier_Select]
+IF OBJECT_ID(N'CSLA_Supplier_Select') IS NOT NULL
+	DROP PROCEDURE CSLA_Supplier_Select
 
+GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 
@@ -184,7 +188,7 @@ GO
 --region [dbo].[CSLA_Supplier_Insert]
 
 ------------------------------------------------------------------------------------------------------------------------
--- Generated By:   Blake Niemyjski using CodeSmith: v5.2.1, CSLA Templates: v2.0.0.1440, CSLA Framework: v3.8.2
+-- Generated By:   Blake Niemyjski using CodeSmith: v5.2.2, CSLA Templates: v3.0.0.1817, CSLA Framework: v3.8.4
 -- Procedure Name: [dbo].[CSLA_Supplier_Insert]
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -206,13 +210,12 @@ GO
 PRINT N'Creating [dbo].[CSLA_Supplier_Insert]'
 GO
 
-IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Supplier_Insert]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', 'CSLA_Supplier_Insert', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure [dbo].[CSLA_Supplier_Insert] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure [dbo].[CSLA_Supplier_Insert] has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
-
 
 CREATE PROCEDURE [dbo].[CSLA_Supplier_Insert]
 	@p_SuppId int,
@@ -250,7 +253,7 @@ INSERT INTO [dbo].[Supplier] (
 	@p_Phone)
 
 
-
+GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 
@@ -260,7 +263,7 @@ GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
-PRINT 'Stored procedure creation succedded was succeeded.'
+PRINT 'Stored procedure creation succeeded.'
 COMMIT TRANSACTION
 END
 ELSE PRINT 'Stored procedure creation failed.'
@@ -276,7 +279,7 @@ GO
 --region [dbo].[CSLA_Supplier_Update]
 
 ------------------------------------------------------------------------------------------------------------------------
--- Generated By:   Blake Niemyjski using CodeSmith: v5.2.1, CSLA Templates: v2.0.0.1440, CSLA Framework: v3.8.2
+-- Generated By:   Blake Niemyjski using CodeSmith: v5.2.2, CSLA Templates: v3.0.0.1817, CSLA Framework: v3.8.4
 -- Procedure Name: [dbo].[CSLA_Supplier_Update]
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -298,9 +301,9 @@ GO
 PRINT N'Creating [dbo].[CSLA_Supplier_Update]'
 GO
 
-IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Supplier_Update]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', 'CSLA_Supplier_Update', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure [dbo].[CSLA_Supplier_Update] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure [dbo].[CSLA_Supplier_Update] has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
@@ -332,6 +335,7 @@ WHERE
 	[SuppId] = @p_OriginalSuppId
 
 
+GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 
@@ -341,7 +345,7 @@ GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
-PRINT 'Stored procedure creation succedded was succeeded.'
+PRINT 'Stored procedure creation succeeded.'
 COMMIT TRANSACTION
 END
 ELSE PRINT 'Stored procedure creation failed.'
@@ -356,7 +360,7 @@ GO
 --region [dbo].[CSLA_Supplier_Delete]
 
 ------------------------------------------------------------------------------------------------------------------------
--- Generated By:   Blake Niemyjski using CodeSmith: v5.2.1, CSLA Templates: v2.0.0.1440, CSLA Framework: v3.8.2
+-- Generated By:   Blake Niemyjski using CodeSmith: v5.2.2, CSLA Templates: v3.0.0.1817, CSLA Framework: v3.8.4
 -- Procedure Name: [dbo].[CSLA_Supplier_Delete]
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -378,9 +382,9 @@ GO
 PRINT N'Creating [dbo].[CSLA_Supplier_Delete]'
 GO
 
-IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Supplier_Delete]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', 'CSLA_Supplier_Delete', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure [dbo].[CSLA_Supplier_Delete] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure [dbo].[CSLA_Supplier_Delete] has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
@@ -394,6 +398,7 @@ DELETE FROM
 WHERE
 	[SuppId] = @p_SuppId
 
+GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 
@@ -403,7 +408,7 @@ GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
-PRINT 'Stored procedure creation succedded was succeeded.'
+PRINT 'Stored procedure creation succeeded.'
 COMMIT TRANSACTION
 END
 ELSE PRINT 'Stored procedure creation failed.'
@@ -418,7 +423,7 @@ GO
 --region [dbo].[CSLA_Supplier_Select]
 
 ------------------------------------------------------------------------------------------------------------------------
--- Generated By:   Blake Niemyjski using CodeSmith: v5.2.1, CSLA Templates: v2.0.0.1440, CSLA Framework: v3.8.2
+-- Generated By:   Blake Niemyjski using CodeSmith: v5.2.2, CSLA Templates: v3.0.0.1817, CSLA Framework: v3.8.4
 -- Procedure Name: [dbo].[CSLA_Supplier_Select]
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -440,9 +445,9 @@ GO
 PRINT N'Creating [dbo].[CSLA_Supplier_Select]'
 GO
 
-IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', '[dbo].[CSLA_Supplier_Select]', default, default) WHERE name = 'CustomProcedure' and value = '1')
+IF EXISTS(SELECT 1 FROM fn_listextendedproperty (NULL, 'SCHEMA', 'dbo', 'PROCEDURE', 'CSLA_Supplier_Select', default, default) WHERE name = 'CustomProcedure' and value = '1')
     BEGIN
-        RAISERROR ('The procedure [dbo].[CSLA_Supplier_Select] has an Extended Property "CustomProcedure" which means is has been customised. Please review and remove the property if you wish to create the stored procedure.',16,1)
+        RAISERROR ('The procedure [dbo].[CSLA_Supplier_Select] has an Extended Property "CustomProcedure" which means is has been customized. Please review and remove the property if you wish to create the stored procedure.',16,1)
         INSERT INTO #tmpErrors (Error) SELECT 1
     END
 GO
@@ -491,6 +496,7 @@ WHERE
 	AND ([Zip] = @p_Zip OR (@p_Zip IS NULL AND @p_ZipHasValue = 0))
 	AND ([Phone] = @p_Phone OR (@p_Phone IS NULL AND @p_PhoneHasValue = 0))
 
+GO
 IF @@ERROR!=0 AND @@TRANCOUNT>0 ROLLBACK TRANSACTION
 GO
 
@@ -500,7 +506,7 @@ GO
 IF EXISTS (SELECT * FROM #tmpErrors) ROLLBACK TRANSACTION
 GO
 IF @@TRANCOUNT>0 BEGIN
-PRINT 'Stored procedure creation succedded was succeeded.'
+PRINT 'Stored procedure creation succeeded.'
 COMMIT TRANSACTION
 END
 ELSE PRINT 'Stored procedure creation failed.'
