@@ -52,7 +52,7 @@ Namespace <%= DataProjectName %>
         ''' <Returns>New <%= Entity.ClassName %>.</Returns>
         <RunLocal()> _
         Public Function Create() As <%= Entity.ClassName %>
-            Dim item As <%= Entity.ClassName %> = <%= Entity.ClassName %>.New<%= Entity.ClassName %>()
+            Dim item As <%= Entity.ClassName %> = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True), <%= Entity.ClassName %>)
     
             Dim cancel As Boolean = False
             OnCreating(cancel)
@@ -95,7 +95,7 @@ Namespace <%= DataProjectName %>
         ''' <Returns>New <%= Entity.ClassName %>.</Returns>
         <RunLocal()> _
         Private Function Create(ByVal criteria As <%= Entity.ClassName %>Criteria) As  <%= Entity.ClassName %>
-            Dim item As <%= Entity.ClassName %> = <%= Entity.ClassName %>.New<%= Entity.ClassName %>()
+            Dim item As <%= Entity.ClassName %> = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True), <%= Entity.ClassName %>)
     
             Dim cancel As Boolean = False
             OnCreating(cancel)
@@ -275,7 +275,7 @@ Namespace <%= DataProjectName %>
     <% If Not(Entity.HasIdentityMember) Then %>
                 If <%= Entity.PrimaryKey.KeyMembers.BuildIdentityKeyEqualityStatements("item.")%> Then
                     ' Insert new child.
-                    Dim temp As <%= Entity.ClassName %> = <%= Entity.ClassName %>.New<%= Entity.ClassName %>()
+                    Dim temp As <%= Entity.ClassName %> = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True), <%= Entity.ClassName %>)
                     <%= Entity.MembersNoRowVersion.BuildObjectInitializer(true, true, false, "temp.") %>
                     temp = temp.Save()
     
@@ -450,7 +450,7 @@ Namespace <%= DataProjectName %>
 #Region "Helper Methods"
     
         Public Function Map(ByVal reader As SafeDataReader) As <%= Entity.ClassName %>
-            Dim item As <%= Entity.ClassName %> = <%= Entity.ClassName %>.New<%= Entity.ClassName %>()
+            Dim item As <%= Entity.ClassName %> = CType(Activator.CreateInstance(GetType(<%= Entity.ClassName %>), True), <%= Entity.ClassName %>)
             Using BypassPropertyChecks(item)
     <% If Entity.HasRowVersionMember Then %>
                 item.<%= Entity.RowVersionMember.PropertyName %> = ADOHelper.GetBytes(reader, "<%= Entity.RowVersionMember.ColumnName %>")

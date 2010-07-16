@@ -49,7 +49,7 @@ namespace <%= DataProjectName %>
         [RunLocal]
         public <%= Entity.ClassName %>List Create()
         {
-            var item = <%= Entity.ClassName %>List.NewList();
+            var item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
 
             bool cancel = false;
             OnCreating(ref cancel);
@@ -78,7 +78,7 @@ namespace <%= DataProjectName %>
         /// <returns></returns>
         public <%= Entity.ClassName %>List Fetch(<%= Entity.ClassName %>Criteria criteria)
         {
-            <%= Entity.ClassName %>List item = <%= Entity.ClassName %>List.NewList();
+            <%= Entity.ClassName %>List item = (<%= Entity.ClassName %>List)Activator.CreateInstance(typeof(<%= Entity.ClassName %>List), true);
 
             bool cancel = false;
             OnFetching(criteria, ref cancel);

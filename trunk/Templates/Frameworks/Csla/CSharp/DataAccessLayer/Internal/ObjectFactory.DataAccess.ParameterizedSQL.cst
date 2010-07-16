@@ -49,7 +49,7 @@ namespace <%= DataProjectName %>
         [RunLocal]
         public <%= Entity.ClassName %> Create()
         {
-            var item = <%= Entity.ClassName %>.New<%= Entity.ClassName %>();
+            var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
 
             bool cancel = false;
             OnCreating(ref cancel);
@@ -84,7 +84,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
         [RunLocal]
         private <%= Entity.ClassName %> Create(<%= Entity.ClassName %>Criteria criteria)
         {
-            var item = <%= Entity.ClassName %>.New<%= Entity.ClassName %>();
+            var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
 
             bool cancel = false;
             OnCreating(ref cancel);
@@ -260,7 +260,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
                 if(<%= Entity.PrimaryKey.KeyMembers.BuildIdentityKeyEqualityStatements("item.")%>)
                 {
                     // Insert new child.
-                    var temp = <%= Entity.ClassName %>.New<%= Entity.ClassName %>();
+                    var temp = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
 <% foreach(Member member in Entity.MembersNoRowVersion) { %>
                     temp.<%= member.PropertyName %> = item.<%= member.PropertyName %>;
 <% } %>
@@ -432,7 +432,7 @@ if(member.AssociatedColumn.SystemType == "System.String" && !member.AssociatedCo
 
         public <%= Entity.ClassName %> Map(SafeDataReader reader)
         {
-            var item = <%= Entity.ClassName %>.New<%= Entity.ClassName %>();
+            var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
             using (BypassPropertyChecks(item))
             {
 <% if(Entity.HasRowVersionMember) { %>
