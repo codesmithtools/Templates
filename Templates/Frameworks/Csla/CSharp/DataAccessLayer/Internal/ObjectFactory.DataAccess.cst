@@ -1,4 +1,4 @@
-﻿<%-- Author: Blake Niemyjski --%>
+<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.DataCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA DataAccessLayer" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -46,7 +46,7 @@ namespace <%= DataProjectName %>
         [RunLocal]
         public <%= Entity.ClassName %> Create()
         {
-            var item = <%= Entity.ClassName %>.New<%= Entity.ClassName %>();
+            var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
 
             bool cancel = false;
             OnCreating(ref cancel);
@@ -75,7 +75,7 @@ namespace <%= DataProjectName %>
         [RunLocal]
         private <%= Entity.ClassName %> Create(<%= Entity.ClassName %>Criteria criteria)
         {
-            var item = <%= Entity.ClassName %>.New<%= Entity.ClassName %>();
+            var item = (<%= Entity.ClassName %>)Activator.CreateInstance(typeof(<%= Entity.ClassName %>), true);
 
             bool cancel = false;
             OnCreating(ref cancel);
