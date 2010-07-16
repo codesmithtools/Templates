@@ -71,7 +71,7 @@ namespace PetShop.Tests.ParameterizedSQL
         /// <summary>
         /// Holds the original value for OrderId. This is used for non identity primary keys.
         /// </summary>
-        internal System.Int32 OriginalOrderId
+        public System.Int32 OriginalOrderId
         {
             get { return GetProperty(_originalOrderIdProperty); }
             set{ SetProperty(_originalOrderIdProperty, value); }
