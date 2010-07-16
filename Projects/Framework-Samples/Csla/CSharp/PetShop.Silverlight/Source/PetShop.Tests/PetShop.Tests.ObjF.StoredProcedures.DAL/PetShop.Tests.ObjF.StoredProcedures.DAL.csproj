@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,10 +10,30 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PetShop.Tests.ObjF.StoredProcedures.DAL</RootNamespace>
     <AssemblyName>PetShop.Tests.ObjF.StoredProcedures.DAL</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,6 +43,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,11 +52,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Csla, Version=3.8.0.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Templates\Frameworks\Csla\Common\Csla\Csla.dll</HintPath>
+    <Reference Include="Csla">
+      <HintPath>..\..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\Common\Csla\4.0\Client\Csla.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -132,70 +153,89 @@
     <Compile Include="Utility\ADOHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Collections\AccountListFactory.StoredProcedures.sql">
-      <DependentUpon>AccountListFactory.cs</DependentUpon>
-    </None>
-    <None Include="Collections\CartListFactory.StoredProcedures.sql">
-      <DependentUpon>CartListFactory.cs</DependentUpon>
-    </None>
-    <None Include="Collections\CategoryListFactory.StoredProcedures.sql">
-      <DependentUpon>CategoryListFactory.cs</DependentUpon>
-    </None>
-    <None Include="Collections\ItemListFactory.StoredProcedures.sql">
-      <DependentUpon>ItemListFactory.cs</DependentUpon>
-    </None>
-    <None Include="Collections\LineItemListFactory.StoredProcedures.sql">
-      <DependentUpon>LineItemListFactory.cs</DependentUpon>
-    </None>
-    <None Include="Collections\OrderStatusListFactory.StoredProcedures.sql">
-      <DependentUpon>OrderStatusListFactory.cs</DependentUpon>
-    </None>
-    <None Include="Collections\ProductListFactory.StoredProcedures.sql">
-      <DependentUpon>ProductListFactory.cs</DependentUpon>
-    </None>
-    <None Include="Collections\ProfileListFactory.StoredProcedures.sql">
-      <DependentUpon>ProfileListFactory.cs</DependentUpon>
-    </None>
     <None Include="DataAccess.csp" />
-    <None Include="Entities\AccountFactory.StoredProcedures.sql">
-      <DependentUpon>AccountFactory.cs</DependentUpon>
-    </None>
-    <None Include="Entities\CartFactory.StoredProcedures.sql">
-      <DependentUpon>CartFactory.cs</DependentUpon>
-    </None>
-    <None Include="Entities\CategoryFactory.StoredProcedures.sql">
-      <DependentUpon>CategoryFactory.cs</DependentUpon>
-    </None>
-    <None Include="Entities\InventoryFactory.StoredProcedures.sql">
-      <DependentUpon>InventoryFactory.cs</DependentUpon>
-    </None>
-    <None Include="Entities\ItemFactory.StoredProcedures.sql">
-      <DependentUpon>ItemFactory.cs</DependentUpon>
-    </None>
-    <None Include="Entities\LineItemFactory.StoredProcedures.sql">
-      <DependentUpon>LineItemFactory.cs</DependentUpon>
-    </None>
-    <None Include="Entities\OrderFactory.StoredProcedures.sql">
-      <DependentUpon>OrderFactory.cs</DependentUpon>
-    </None>
-    <None Include="Entities\OrderStatusFactory.StoredProcedures.sql">
-      <DependentUpon>OrderStatusFactory.cs</DependentUpon>
-    </None>
-    <None Include="Entities\ProductFactory.StoredProcedures.sql">
-      <DependentUpon>ProductFactory.cs</DependentUpon>
-    </None>
-    <None Include="Entities\ProfileFactory.StoredProcedures.sql">
-      <DependentUpon>ProfileFactory.cs</DependentUpon>
-    </None>
-    <None Include="Entities\SupplierFactory.StoredProcedures.sql">
-      <DependentUpon>SupplierFactory.cs</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PetShop.Tests.ObjF.StoredProcedures\PetShop.Tests.ObjF.StoredProcedures.csproj">
       <Project>{30ACB4D3-473C-4B6C-A239-D0B6A86DFD26}</Project>
       <Name>PetShop.Tests.ObjF.StoredProcedures</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Collections\AccountListFactory.StoredProcedures.sql">
+      <DependentUpon>AccountListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\CartListFactory.StoredProcedures.sql">
+      <DependentUpon>CartListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\CategoryListFactory.StoredProcedures.sql">
+      <DependentUpon>CategoryListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\ItemListFactory.StoredProcedures.sql">
+      <DependentUpon>ItemListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\LineItemListFactory.StoredProcedures.sql">
+      <DependentUpon>LineItemListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\OrderStatusListFactory.StoredProcedures.sql">
+      <DependentUpon>OrderStatusListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\ProductListFactory.StoredProcedures.sql">
+      <DependentUpon>ProductListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Collections\ProfileListFactory.StoredProcedures.sql">
+      <DependentUpon>ProfileListFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\AccountFactory.StoredProcedures.sql">
+      <DependentUpon>AccountFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\CartFactory.StoredProcedures.sql">
+      <DependentUpon>CartFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\CategoryFactory.StoredProcedures.sql">
+      <DependentUpon>CategoryFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\InventoryFactory.StoredProcedures.sql">
+      <DependentUpon>InventoryFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\ItemFactory.StoredProcedures.sql">
+      <DependentUpon>ItemFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\LineItemFactory.StoredProcedures.sql">
+      <DependentUpon>LineItemFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\OrderFactory.StoredProcedures.sql">
+      <DependentUpon>OrderFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\OrderStatusFactory.StoredProcedures.sql">
+      <DependentUpon>OrderStatusFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\ProductFactory.StoredProcedures.sql">
+      <DependentUpon>ProductFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\ProfileFactory.StoredProcedures.sql">
+      <DependentUpon>ProfileFactory.cs</DependentUpon>
+    </Content>
+    <Content Include="Entities\SupplierFactory.StoredProcedures.sql">
+      <DependentUpon>SupplierFactory.cs</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
