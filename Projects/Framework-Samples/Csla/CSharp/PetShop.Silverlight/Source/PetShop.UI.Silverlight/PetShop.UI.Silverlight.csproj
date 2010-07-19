@@ -159,6 +159,7 @@
     <None Include="Properties\DataSources\PetShop.Business.ProfileList.datasource" />
     <None Include="Properties\DataSources\PetShop.Business.Supplier.datasource" />
     <None Include="Properties\DataSources\PetShop.Business.SupplierCriteria.datasource" />
+    <Content Include="ServiceReferences.ClientConfig" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PetShop.Business.Silverlight\PetShop.Business.Silverlight.csproj">

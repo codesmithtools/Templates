@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectView>ProjectFiles</ProjectView>
+    <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
@@ -24,6 +24,9 @@
           </StartWorkingDirectory>
           <EnableENC>False</EnableENC>
           <AlwaysStartWebServerOnDebug>True</AlwaysStartWebServerOnDebug>
+          <ProjectOutputReferences>
+            <Ref Project="{56CA55D0-CFEB-492B-9E86-9B6F504F4533}" Folder="ClientBin">Debug\PetShop.UI.Silverlight.xap</Ref>
+          </ProjectOutputReferences>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
