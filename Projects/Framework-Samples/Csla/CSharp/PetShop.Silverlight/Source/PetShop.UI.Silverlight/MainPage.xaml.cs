@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using PetShop.Business;
 
 namespace PetShop.UI.Silverlight
 {
@@ -17,6 +18,37 @@ namespace PetShop.UI.Silverlight
         public MainPage()
         {
             InitializeComponent();
+
+            BusyAnimation.IsRunning = true;
+            //BusyAnimation.IsEnabled = false;
+            CategoryList.GetAllAsync((o, e) =>
+                    {
+                        if (e.Error != null) throw e.Error;
+
+                        categoryListDataGrid.DataContext = e.Object;
+
+                        BusyAnimation.IsRunning = false;
+                    });
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Create_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ImportData_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
