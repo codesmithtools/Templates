@@ -66,11 +66,30 @@ namespace PetShop.Business
             {
                 if (!FieldManager.FieldExists(_shoppingCart))
                 {
-                    if (IsNew)
-                        LoadProperty(_shoppingCart, PetShop.Business.CartList.NewList());
-                    else
+                    MarkBusy();
 
-                        LoadProperty(_shoppingCart, PetShop.Business.CartList.GetCart(UniqueID, true));
+                    if (IsNew)
+                        PetShop.Business.CartList.NewCartListAsync((o, e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error; 
+
+                                this.LoadProperty(_shoppingCart, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_shoppingCart);
+                            });
+                    else
+                       PetShop.Business.CartList.GetCart(UniqueID, true, (o, e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error; 
+
+                                this.LoadProperty(_shoppingCart, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_shoppingCart);
+                            });
                 }
 
                 return GetProperty(_shoppingCart);

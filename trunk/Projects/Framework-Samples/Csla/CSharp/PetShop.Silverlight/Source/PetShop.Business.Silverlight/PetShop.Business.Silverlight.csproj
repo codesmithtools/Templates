@@ -106,8 +106,8 @@
     <Compile Include="..\PetShop.Business\Collections\ProfileList.cs">
       <Link>Collections\ProfileList.cs</Link>
     </Compile>
-    <Compile Include="..\PetShop.Business\Collections\ProfileList.Generated.cs">
-      <Link>Collections\ProfileList.Generated.cs</Link>
+    <Compile Include="..\PetShop.Business\Commands\ExistsCommand.cs">
+      <Link>Commands\ExistsCommand.cs</Link>
     </Compile>
     <Compile Include="..\PetShop.Business\CreditCard.cs">
       <Link>CreditCard.cs</Link>
