@@ -4,90 +4,6 @@
         <name>Csla.Windows</name>
     </assembly>
     <members>
-        <member name="T:Csla.Windows.BindingSourceNode">
-            <summary>
-            Maintains a reference to a BindingSource object
-            on the form.
-            </summary>
-        </member>
-        <member name="M:Csla.Windows.BindingSourceNode.#ctor(System.Windows.Forms.BindingSource)">
-            <summary>
-            Creates an instance of the object.
-            </summary>
-            <param name="source">
-            BindingSource object to be mananaged.
-            </param>
-        </member>
-        <member name="M:Csla.Windows.BindingSourceNode.Bind(System.Object)">
-            <summary>
-            Binds a business object to the BindingSource.
-            </summary>
-            <param name="objectToBind">
-            Business object.
-            </param>
-        </member>
-        <member name="M:Csla.Windows.BindingSourceNode.Apply">
-            <summary>
-            Applies changes to the business object.
-            </summary>
-        </member>
-        <member name="M:Csla.Windows.BindingSourceNode.Cancel(System.Object)">
-            <summary>
-            Cancels changes to the business object.
-            </summary>
-            <param name="businessObject"></param>
-        </member>
-        <member name="M:Csla.Windows.BindingSourceNode.Close">
-            <summary>
-            Disconnects from the BindingSource object.
-            </summary>
-        </member>
-        <member name="T:Csla.Windows.CslaFormAction">
-            <summary>
-            The possible form actions.
-            </summary>
-        </member>
-        <member name="F:Csla.Windows.CslaFormAction.None">
-            <summary>
-            No action.
-            </summary>
-        </member>
-        <member name="F:Csla.Windows.CslaFormAction.Save">
-            <summary>
-            Perform a save.
-            </summary>
-        </member>
-        <member name="F:Csla.Windows.CslaFormAction.Cancel">
-            <summary>
-            Perform a cancel.
-            </summary>
-        </member>
-        <member name="F:Csla.Windows.CslaFormAction.Close">
-            <summary>
-            Close the form.
-            </summary>
-        </member>
-        <member name="T:Csla.Windows.PostSaveActionType">
-            <summary>
-            The possible options for posting
-            and saving.
-            </summary>
-        </member>
-        <member name="F:Csla.Windows.PostSaveActionType.None">
-            <summary>
-            No action.
-            </summary>
-        </member>
-        <member name="F:Csla.Windows.PostSaveActionType.AndClose">
-            <summary>
-            Also close the form.
-            </summary>
-        </member>
-        <member name="F:Csla.Windows.PostSaveActionType.AndNew">
-            <summary>
-            Also create a new object.
-            </summary>
-        </member>
         <member name="T:Csla.Windows.BusyAnimation">
             <summary>
             User control that displays busy animation
@@ -131,78 +47,63 @@
             progress bar animation
             </summary>
         </member>
-        <member name="T:Csla.Windows.CslaActionEventArgs">
+        <member name="T:Csla.Windows.BindingSourceHelper">
             <summary>
-            Event args for an action.
+            Helper methods for dealing with BindingSource
+            objects and data binding.
             </summary>
         </member>
-        <member name="M:Csla.Windows.CslaActionEventArgs.#ctor(System.String)">
+        <member name="M:Csla.Windows.BindingSourceHelper.InitializeBindingSourceTree(System.ComponentModel.IContainer,System.Windows.Forms.BindingSource)">
+            <summary>
+            Sets up BindingSourceNode objects for all
+            BindingSource objects related to the provided
+            root source.
+            </summary>
+            <param name="container">
+            Container for the components.
+            </param>
+            <param name="rootSource">
+            Root BindingSource object.
+            </param>
+            <returns></returns>
+        </member>
+        <member name="T:Csla.Windows.ObjectSaveException">
+            <summary>
+            Exception indicating a failure during an object
+            save operation.
+            </summary>
+        </member>
+        <member name="M:Csla.Windows.ObjectSaveException.#ctor">
             <summary>
             Creates an instance of the object.
             </summary>
-            <param name="commandName">
-            Name of the command.
+        </member>
+        <member name="M:Csla.Windows.ObjectSaveException.#ctor(System.String)">
+            <summary>
+            Creates an instance of the object.
+            </summary>
+            <param name="message">
+            Exception message text.
             </param>
         </member>
-        <member name="P:Csla.Windows.CslaActionEventArgs.CommandName">
-            <summary>
-            Gets the name of the command.
-            </summary>
-        </member>
-        <member name="T:Csla.Windows.ReadWriteAuthorization">
-            <summary>
-            Windows Forms extender control that automatically
-            enables and disables detail form controls based
-            on the authorization settings from a CSLA .NET 
-            business object.
-            </summary>
-        </member>
-        <member name="M:Csla.Windows.ReadWriteAuthorization.#ctor(System.ComponentModel.IContainer)">
+        <member name="M:Csla.Windows.ObjectSaveException.#ctor(System.String,System.Exception)">
             <summary>
             Creates an instance of the object.
             </summary>
-            <param name="container">The container of the control.</param>
+            <param name="message">
+            Exception message text.
+            </param>
+            <param name="innerException">
+            Reference to an inner exception.
+            </param>
         </member>
-        <member name="M:Csla.Windows.ReadWriteAuthorization.CanExtend(System.Object)">
+        <member name="M:Csla.Windows.ObjectSaveException.#ctor(System.Exception)">
             <summary>
-            Gets a value indicating whether the extender control
-            can extend the specified control.
+            Creates an instance of the object.
             </summary>
-            <param name="extendee">The control to be extended.</param>
-            <remarks>
-            Any control implementing either a ReadOnly property or
-            Enabled property can be extended.
-            </remarks>
-        </member>
-        <member name="M:Csla.Windows.ReadWriteAuthorization.GetApplyAuthorization(System.Windows.Forms.Control)">
-            <summary>
-            Gets the custom ApplyAuthorization extender
-            property added to extended controls.
-            </summary>
-            <param name="source">Control being extended.</param>
-        </member>
-        <member name="M:Csla.Windows.ReadWriteAuthorization.SetApplyAuthorization(System.Windows.Forms.Control,System.Boolean)">
-            <summary>
-            Sets the custom ApplyAuthorization extender
-            property added to extended controls.
-            </summary>
-            <param name="source">Control being extended.</param>
-            <param name="value">New value of property.</param>
-        </member>
-        <member name="M:Csla.Windows.ReadWriteAuthorization.ResetControlAuthorization">
-            <summary>
-            Causes the ReadWriteAuthorization control
-            to apply authorization rules from the business
-            object to all extended controls on the form.
-            </summary>
-            <remarks>
-            Call this method to refresh the display of detail
-            controls on the form any time the authorization
-            rules may have changed. Examples include: after
-            a user logs in or out, and after an object has
-            been updated, inserted, deleted or retrieved
-            from the database.
-            </remarks>
+            <param name="innerException">
+            Reference to an inner exception.
+            </param>
         </member>
         <member name="T:Csla.Windows.HostPropertyAttribute">
             <summary>
@@ -317,9 +218,65 @@
             to show broken rules.
             </summary>
         </member>
+        <member name="T:Csla.Windows.BindingSourceNode">
+            <summary>
+            Maintains a reference to a BindingSource object
+            on the form.
+            </summary>
+        </member>
+        <member name="M:Csla.Windows.BindingSourceNode.#ctor(System.Windows.Forms.BindingSource)">
+            <summary>
+            Creates an instance of the object.
+            </summary>
+            <param name="source">
+            BindingSource object to be mananaged.
+            </param>
+        </member>
+        <member name="M:Csla.Windows.BindingSourceNode.Bind(System.Object)">
+            <summary>
+            Binds a business object to the BindingSource.
+            </summary>
+            <param name="objectToBind">
+            Business object.
+            </param>
+        </member>
+        <member name="M:Csla.Windows.BindingSourceNode.Apply">
+            <summary>
+            Applies changes to the business object.
+            </summary>
+        </member>
+        <member name="M:Csla.Windows.BindingSourceNode.Cancel(System.Object)">
+            <summary>
+            Cancels changes to the business object.
+            </summary>
+            <param name="businessObject"></param>
+        </member>
+        <member name="M:Csla.Windows.BindingSourceNode.Close">
+            <summary>
+            Disconnects from the BindingSource object.
+            </summary>
+        </member>
         <member name="T:Csla.Windows.ErrorEncounteredEventArgs">
             <summary>
             Event args indicating an error.
+            </summary>
+        </member>
+        <member name="T:Csla.Windows.CslaActionEventArgs">
+            <summary>
+            Event args for an action.
+            </summary>
+        </member>
+        <member name="M:Csla.Windows.CslaActionEventArgs.#ctor(System.String)">
+            <summary>
+            Creates an instance of the object.
+            </summary>
+            <param name="commandName">
+            Name of the command.
+            </param>
+        </member>
+        <member name="P:Csla.Windows.CslaActionEventArgs.CommandName">
+            <summary>
+            Gets the name of the command.
             </summary>
         </member>
         <member name="M:Csla.Windows.ErrorEncounteredEventArgs.#ctor(System.String,System.Exception)">
@@ -498,43 +455,106 @@
             Binding gets the binding that caused the exception.
             </summary>
         </member>
-        <member name="T:Csla.Windows.ObjectSaveException">
+        <member name="T:Csla.Windows.ReadWriteAuthorization">
             <summary>
-            Exception indicating a failure during an object
-            save operation.
+            Windows Forms extender control that automatically
+            enables and disables detail form controls based
+            on the authorization settings from a CSLA .NET 
+            business object.
             </summary>
         </member>
-        <member name="M:Csla.Windows.ObjectSaveException.#ctor">
+        <member name="M:Csla.Windows.ReadWriteAuthorization.#ctor(System.ComponentModel.IContainer)">
             <summary>
             Creates an instance of the object.
             </summary>
+            <param name="container">The container of the control.</param>
         </member>
-        <member name="M:Csla.Windows.ObjectSaveException.#ctor(System.String)">
+        <member name="M:Csla.Windows.ReadWriteAuthorization.CanExtend(System.Object)">
             <summary>
-            Creates an instance of the object.
+            Gets a value indicating whether the extender control
+            can extend the specified control.
             </summary>
-            <param name="message">
-            Exception message text.
-            </param>
+            <param name="extendee">The control to be extended.</param>
+            <remarks>
+            Any control implementing either a ReadOnly property or
+            Enabled property can be extended.
+            </remarks>
         </member>
-        <member name="M:Csla.Windows.ObjectSaveException.#ctor(System.String,System.Exception)">
+        <member name="M:Csla.Windows.ReadWriteAuthorization.GetApplyAuthorization(System.Windows.Forms.Control)">
             <summary>
-            Creates an instance of the object.
+            Gets the custom ApplyAuthorization extender
+            property added to extended controls.
             </summary>
-            <param name="message">
-            Exception message text.
-            </param>
-            <param name="innerException">
-            Reference to an inner exception.
-            </param>
+            <param name="source">Control being extended.</param>
         </member>
-        <member name="M:Csla.Windows.ObjectSaveException.#ctor(System.Exception)">
+        <member name="M:Csla.Windows.ReadWriteAuthorization.SetApplyAuthorization(System.Windows.Forms.Control,System.Boolean)">
             <summary>
-            Creates an instance of the object.
+            Sets the custom ApplyAuthorization extender
+            property added to extended controls.
             </summary>
-            <param name="innerException">
-            Reference to an inner exception.
-            </param>
+            <param name="source">Control being extended.</param>
+            <param name="value">New value of property.</param>
+        </member>
+        <member name="M:Csla.Windows.ReadWriteAuthorization.ResetControlAuthorization">
+            <summary>
+            Causes the ReadWriteAuthorization control
+            to apply authorization rules from the business
+            object to all extended controls on the form.
+            </summary>
+            <remarks>
+            Call this method to refresh the display of detail
+            controls on the form any time the authorization
+            rules may have changed. Examples include: after
+            a user logs in or out, and after an object has
+            been updated, inserted, deleted or retrieved
+            from the database.
+            </remarks>
+        </member>
+        <member name="T:Csla.Windows.CslaFormAction">
+            <summary>
+            The possible form actions.
+            </summary>
+        </member>
+        <member name="F:Csla.Windows.CslaFormAction.None">
+            <summary>
+            No action.
+            </summary>
+        </member>
+        <member name="F:Csla.Windows.CslaFormAction.Save">
+            <summary>
+            Perform a save.
+            </summary>
+        </member>
+        <member name="F:Csla.Windows.CslaFormAction.Cancel">
+            <summary>
+            Perform a cancel.
+            </summary>
+        </member>
+        <member name="F:Csla.Windows.CslaFormAction.Close">
+            <summary>
+            Close the form.
+            </summary>
+        </member>
+        <member name="T:Csla.Windows.PostSaveActionType">
+            <summary>
+            The possible options for posting
+            and saving.
+            </summary>
+        </member>
+        <member name="F:Csla.Windows.PostSaveActionType.None">
+            <summary>
+            No action.
+            </summary>
+        </member>
+        <member name="F:Csla.Windows.PostSaveActionType.AndClose">
+            <summary>
+            Also close the form.
+            </summary>
+        </member>
+        <member name="F:Csla.Windows.PostSaveActionType.AndNew">
+            <summary>
+            Also create a new object.
+            </summary>
         </member>
         <member name="T:Csla.Windows.CslaActionExtender">
             <summary>
@@ -750,26 +770,6 @@
             <summary>
             Event indicating that the object has been saved.
             </summary>
-        </member>
-        <member name="T:Csla.Windows.BindingSourceHelper">
-            <summary>
-            Helper methods for dealing with BindingSource
-            objects and data binding.
-            </summary>
-        </member>
-        <member name="M:Csla.Windows.BindingSourceHelper.InitializeBindingSourceTree(System.ComponentModel.IContainer,System.Windows.Forms.BindingSource)">
-            <summary>
-            Sets up BindingSourceNode objects for all
-            BindingSource objects related to the provided
-            root source.
-            </summary>
-            <param name="container">
-            Container for the components.
-            </param>
-            <param name="rootSource">
-            Root BindingSource object.
-            </param>
-            <returns></returns>
         </member>
     </members>
 </doc>
