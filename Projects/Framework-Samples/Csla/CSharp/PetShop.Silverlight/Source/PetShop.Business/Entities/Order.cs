@@ -49,6 +49,7 @@ namespace PetShop.Business
 
         #region Custom Factory Methods
 
+#if !SILVERLIGHT
         /// <summary>
         /// Uses the profile's uniqueID to look up the order.
         /// </summary>
@@ -58,6 +59,18 @@ namespace PetShop.Business
         {
             return DataPortal.Fetch<Order>(new OrderCriteria { UserId = uniqueId });
         }
+#else
+        /// <summary>
+        /// Uses the profile's uniqueID to look up the order.
+        /// </summary>
+        /// <param name="uniqueId">assumes UserId == Profile.UniqueId</param>
+        /// <param name="handler"></param>
+        /// <returns>an Order.</returns>
+        public static void GetOrder(string uniqueId, EventHandler<Csla.DataPortalResult<Order>> handler)
+        {
+            DataPortal.BeginFetch<Order>(new OrderCriteria { UserId = uniqueId }, (o, e) => handler(null, e));
+        }
+#endif
 
         #endregion
 
@@ -69,8 +82,23 @@ namespace PetShop.Business
             get
             {
                 if (!FieldManager.FieldExists(_itemsProperty))
-                    SetProperty(_itemsProperty, LineItemList.GetByOrderId(OrderId));
+                {
+#if SILVERLIGHT
+                    MarkBusy();
+                    LineItemList.GetByOrderIdAsync(OrderId, (o, e) =>
+                            {
+                                if (e.Error != null) throw e.Error;
 
+                                this.LoadProperty(_itemsProperty, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_itemsProperty);
+                            });
+#else
+                    LoadProperty(_itemsProperty, LineItemList.GetByOrderId(OrderId));
+#endif
+                }
+                
                 return GetProperty(_itemsProperty);
             }
         }

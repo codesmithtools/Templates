@@ -53,8 +53,7 @@ namespace PetShop.Business
 
         internal static void GetCart(int uniqueID, bool isShoppingCart, EventHandler<Csla.DataPortalResult<CartList>> handler)
         {
-            DataPortal.BeginFetch<CartList>(
-                new CartCriteria { UniqueID = uniqueID, IsShoppingCart = isShoppingCart }, (o, e) => handler(null, e));
+            DataPortal.BeginFetch<CartList>(new CartCriteria { UniqueID = uniqueID, IsShoppingCart = isShoppingCart }, (o, e) => handler(null, e));
         }
 
 #endif

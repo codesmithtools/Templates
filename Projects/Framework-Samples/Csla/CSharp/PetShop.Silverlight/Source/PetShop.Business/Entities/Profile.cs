@@ -49,11 +49,18 @@ namespace PetShop.Business
 
         #region Custom Factory Methods
 
+#if !SILVERLIGHT
         public static Profile GetProfile(string username)
         {
             return DataPortal.Fetch<Profile>(
                 new ProfileCriteria { Username = username });
         }
+#else
+        public static void GetProfile(string username, EventHandler<Csla.DataPortalResult<Profile>> handler)
+        {
+            DataPortal.BeginFetch<Profile>(new ProfileCriteria { Username = username }, (o, e) => handler(null, e));
+        }
+#endif
 
         #endregion
 
@@ -66,10 +73,11 @@ namespace PetShop.Business
             {
                 if (!FieldManager.FieldExists(_shoppingCart))
                 {
-                    MarkBusy();
+#if SILVERLIGHT
+                     MarkBusy();
 
                     if (IsNew)
-                        PetShop.Business.CartList.NewCartListAsync((o, e) =>
+                        PetShop.Business.CartList.NewListAsync((o, e) =>
                             {
                                 if (e.Error != null)
                                     throw e.Error; 
@@ -90,6 +98,12 @@ namespace PetShop.Business
                                 MarkIdle();
                                 OnPropertyChanged(_shoppingCart);
                             });
+#else
+                    if (IsNew)
+                        LoadProperty(_shoppingCart, PetShop.Business.CartList.NewList());
+                    else
+                        LoadProperty(_shoppingCart, PetShop.Business.CartList.GetCart(UniqueID, true));
+#endif
                 }
 
                 return GetProperty(_shoppingCart);
@@ -103,11 +117,38 @@ namespace PetShop.Business
             {
                 if (!FieldManager.FieldExists(_wishList))
                 {
+#if SILVERLIGHT
+                     MarkBusy();
+
+                    if (IsNew)
+                        PetShop.Business.CartList.NewListAsync((o, e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error; 
+
+                                this.LoadProperty(_wishList, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_wishList);
+                            });
+                    else
+                       PetShop.Business.CartList.GetCart(UniqueID, false, (o, e) =>
+                            {
+                                if (e.Error != null)
+                                    throw e.Error; 
+
+                                this.LoadProperty(_wishList, e.Object);
+
+                                MarkIdle();
+                                OnPropertyChanged(_wishList);
+                            });
+#else
                     if (IsNew)
                         LoadProperty(_wishList, PetShop.Business.CartList.NewList());
                     else
 
                         LoadProperty(_wishList, PetShop.Business.CartList.GetCart(UniqueID, false));
+#endif
                 }
 
                 return GetProperty(_wishList);
