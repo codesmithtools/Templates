@@ -17,6 +17,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
+    <SilverlightApplicationList>{56CA55D0-CFEB-492B-9E86-9B6F504F4533}|..\PetShop.UI.Silverlight\PetShop.UI.Silverlight.csproj|ClientBin|True</SilverlightApplicationList>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,6 +59,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="clientaccesspolicy.xml" />
+    <Content Include="ClientBin\Debug\PetShop.UI.Silverlight.xap" />
     <Content Include="Comm_Images\bg-body.gif" />
     <Content Include="Comm_Images\bg-labelLists.gif" />
     <Content Include="Comm_Images\bg-search.gif" />
@@ -81,6 +84,10 @@
     <Content Include="Comm_Images\seahorse.gif" />
     <Content Include="Comm_Images\spacer.gif" />
     <Content Include="Comm_Images\vertigo-icon.gif" />
+    <Content Include="CompressedWcfPortal.svc" />
+    <Content Include="crossdomain.xml" />
+    <Content Include="PetShop.UI.SilverlightTestPage.aspx" />
+    <Content Include="PetShop.UI.SilverlightTestPage.html" />
     <Content Include="Prod_Images\Backyard\icon-cat.gif" />
     <Content Include="Prod_Images\Backyard\icon-crab.gif" />
     <Content Include="Prod_Images\Backyard\icon-goose.gif" />
@@ -194,6 +201,8 @@
     <Content Include="Prod_Images\Fish\item-nosyfish-sneaky.gif" />
     <Content Include="Prod_Images\Fish\item-toothferry-toothless.gif" />
     <Content Include="Prod_Images\Fish\item-toothferry-withteeth.gif" />
+    <Content Include="Silverlight.js" />
+    <Content Include="WcfPortal.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -422,8 +431,8 @@
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>64799</DevelopmentServerPort>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>60000</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
