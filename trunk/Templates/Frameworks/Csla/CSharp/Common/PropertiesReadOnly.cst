@@ -23,7 +23,6 @@
         public <%= member.SystemType %> <%= member.PropertyName %>
         {
             get { return GetProperty(<%= member.PrivateMemberVariableName %>Property, <%= member.PrivateMemberVariableName %>); }
-            internal set { LoadProperty(<%= member.PrivateMemberVariableName %>Property, value); }
         }
 
 <% } else { %>
@@ -36,7 +35,6 @@
         public <%= member.SystemType %> <%= member.PropertyName %>
         {
             get { return GetProperty(<%= member.PrivateMemberVariableName %>Property); }
-            internal set { LoadProperty(<%= member.PrivateMemberVariableName %>Property, value); }
         }
 
 <% } } %>

@@ -56,9 +56,6 @@
                 Return GetProperty(<%= member.PrivateMemberVariableName %>Property)
             End Get
     <% End If %>
-            Friend Set
-               LoadProperty(<%= member.PrivateMemberVariableName %>Property, value)
-            End Set
         End Property
         
     <% Next %>
