@@ -13,6 +13,7 @@
     <RootNamespace>PetShop.UI.Silverlight.Web</RootNamespace>
     <AssemblyName>PetShop.UI.Silverlight.Web</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightApplicationList>{56CA55D0-CFEB-492B-9E86-9B6F504F4533}|..\PetShop.UI.Silverlight\PetShop.UI.Silverlight.csproj|ClientBin|False</SilverlightApplicationList>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,6 +51,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ClientBin\PetShop.UI.Silverlight.xap" />
+    <Content Include="PetShop.UI.SilverlightTestPage.aspx" />
+    <Content Include="PetShop.UI.SilverlightTestPage.html" />
+    <Content Include="Silverlight.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

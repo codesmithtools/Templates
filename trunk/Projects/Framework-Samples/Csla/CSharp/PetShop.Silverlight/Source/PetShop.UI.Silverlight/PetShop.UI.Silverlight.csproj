@@ -25,7 +25,7 @@
     <TestPageFileName>PetShop.UI.SilverlightTestPage.html</TestPageFileName>
     <CreateTestPage>true</CreateTestPage>
     <ValidateXaml>true</ValidateXaml>
-    <EnableOutOfBrowser>false</EnableOutOfBrowser>
+    <EnableOutOfBrowser>true</EnableOutOfBrowser>
     <OutOfBrowserSettingsFile>Properties\OutOfBrowserSettings.xml</OutOfBrowserSettingsFile>
     <UsePlatformExtensions>false</UsePlatformExtensions>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
@@ -42,7 +42,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>Bin\Debug</OutputPath>
+    <OutputPath>Bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -60,11 +60,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Csla, Version=4.0.0.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL" />
+    <Reference Include="Csla.Xaml">
+      <HintPath>..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\Common\Csla\4.0\Silverlight\Csla.Xaml.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
+    <Reference Include="System.ComponentModel.DataAnnotations, Version=2.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217" />
+    <Reference Include="System.ServiceModel.DomainServices.Client, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Controls.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Data.Input, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.DomainServices, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
@@ -89,6 +99,75 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AppManifest.xml" />
+    <None Include="Properties\DataSources\Csla.Silverlight.PrimitiveCriteria.datasource" />
+    <None Include="Properties\DataSources\Csla.Silverlight.Security.WindowsIdentity.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.BookmarkInformation.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.BrokenRuleSeverityConverter.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.BusyAnimation.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.ControlNameFactory.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.CslaDataProvider.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.ErrorDialog.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.ErrorEventArgs.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.ExecuteEventArgs.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.IControlNameFactory.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.IErrorDialog.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.InvokeMethod.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.IsNotConverter.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.ISupportNavigation.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.IViewModel.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.NavigationBookmarkProcessedEventArgs.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.NavigationEventArgs.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.Navigator.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.NavigatorProvider.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.PropertyStatus.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.TriggerAction.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.ValidatedDataGridCheckBoxColumn.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.ValidatedDataGridColumn.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.ValidatedDataGridTextColumn.datasource" />
+    <None Include="Properties\DataSources\Csla.Xaml.VisualTree.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.Account.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.AccountCriteria.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.AccountList.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.Address.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.Cart.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.CartCriteria.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.CartList.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.Category.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.CategoryCriteria.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.CategoryList.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.CreditCard.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.ExistsCommand.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.IGeneratedCriteria.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.Inventory.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.InventoryCriteria.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.Item.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.ItemCriteria.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.ItemList.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.LineItem.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.LineItemCriteria.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.LineItemList.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.Order.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.OrderCriteria.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.OrderStatus.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.OrderStatusCriteria.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.OrderStatusList.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.Product.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.ProductCriteria.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.ProductList.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.Profile.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.ProfileCriteria.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.ProfileList.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.Supplier.datasource" />
+    <None Include="Properties\DataSources\PetShop.Business.SupplierCriteria.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PetShop.Business.Silverlight\PetShop.Business.Silverlight.csproj">
+      <Project>{C09737F1-D503-4AD0-8BC4-C8420D56AB5C}</Project>
+      <Name>PetShop.Business.Silverlight</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\OutOfBrowserSettings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
