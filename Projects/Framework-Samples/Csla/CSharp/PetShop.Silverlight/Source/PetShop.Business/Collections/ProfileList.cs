@@ -31,10 +31,25 @@ namespace PetShop.Business
 
         #region Custom Criteria
 
+#if !SILVERLIGHT
+
         public static ProfileList GetProfileList(string username)
         {
             return DataPortal.Fetch<ProfileList>(new ProfileCriteria { Username = username });
         }
+
+#else
+
+        public static void GetProfileList(System.String username, EventHandler<DataPortalResult<ProfileList>> handler)
+        {
+            var criteria = new ProfileCriteria { Username = username };
+
+            var dp = new DataPortal<ProfileList>();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(criteria);
+        }
+
+#endif
 
         #endregion
     }

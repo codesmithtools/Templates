@@ -31,6 +31,8 @@ namespace PetShop.Business
 
         #region Custom Factory Methods
 
+#if !SILVERLIGHT
+
         internal static CartList GetCart(int uniqueID, bool isShoppingCart)
         {
             CartList list = null;
@@ -46,6 +48,16 @@ namespace PetShop.Business
 
             return list;
         }
+
+#else
+
+        internal static void GetCart(int uniqueID, bool isShoppingCart, EventHandler<Csla.DataPortalResult<CartList>> handler)
+        {
+            DataPortal.BeginFetch<CartList>(
+                new CartCriteria { UniqueID = uniqueID, IsShoppingCart = isShoppingCart }, (o, e) => handler(null, e));
+        }
+
+#endif
 
         #endregion
 
@@ -128,6 +140,7 @@ namespace PetShop.Business
                 Items[index].Quantity += quantity;
             else
             {
+#if !SILVERLIGHT
                 Item item = Item.GetByItemId(itemId);
                 Product product = Product.GetByProductId(item.ProductId);
                 Cart cart = Cart.NewCart();
@@ -142,6 +155,37 @@ namespace PetShop.Business
                 cart.Quantity = quantity;
 
                 Add(cart);
+#else
+                Item.GetByItemIdAsync(itemId, (o, e) =>
+                {
+                    if (e.Error == null) return;
+
+                    Item item = e.Object;
+                    Product.GetByProductIdAsync(item.ProductId, (o1, e1) =>
+                        {
+                            Product product = e1.Object;
+
+                            Cart.NewCartAsync((o2, e2) =>
+                                {
+                                    Cart cart = e2.Object;
+
+                                    cart.UniqueID = uniqueID;
+                                    cart.ItemId = itemId;
+                                    cart.Name = item.Name;
+                                    cart.ProductId = item.ProductId;
+                                    cart.IsShoppingCart = isShoppingCart;
+                                    cart.Price = item.ListPrice ?? item.UnitCost ?? 0;
+                                    cart.Type = product.Name;
+                                    cart.CategoryId = product.CategoryId;
+                                    cart.Quantity = quantity;
+
+                                    Add(cart);
+                                });
+
+                        });
+                });
+
+#endif
             }
         }
 
@@ -172,6 +216,7 @@ namespace PetShop.Business
 
             foreach (Cart item in this)
             {
+#if !SILVERLIGHT
                 LineItem lineItem = LineItem.NewLineItem();
                 lineItem.OrderId = orderId;
                 lineItem.ItemId = item.ItemId;
@@ -180,6 +225,23 @@ namespace PetShop.Business
                 lineItem.UnitPrice = item.Price;
 
                 lineItem = lineItem.Save();
+
+#else
+                LineItem.NewLineItemAsync((o, e) =>
+                    {
+                        if (e.Error == null) return;
+
+                        LineItem lineItem = e.Object;
+                        lineItem.OrderId = orderId;
+                        lineItem.ItemId = item.ItemId;
+                        lineItem.LineNum = ++lineNum;
+                        lineItem.Quantity = item.Quantity;
+                        lineItem.UnitPrice = item.Price;
+
+                        lineItem.BeginSave();
+                    });
+                
+#endif
             }
         }
 
