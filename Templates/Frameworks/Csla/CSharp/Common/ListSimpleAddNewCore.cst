@@ -10,6 +10,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+<% if(!RenderOptionalContent) { %>  
             <%= ChildBusinessClassName %> item = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>();
 
             bool cancel = false;
@@ -22,7 +23,20 @@
 
                 Add(item);
             }
-<% if(!RenderOptionalContent) { %>        
 
             return item;
+<% } else { %>
+            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>Async((o, e) =>
+                {
+                    <%= ChildBusinessClassName %> item = e.Object;
+                    
+                    bool cancel = false;
+                    OnAddNewCore(ref item, ref cancel);
+                    if (!cancel)
+                    {
+                        // Check to see if someone set the item to null in the OnAddNewCore.
+                        if(item != null)
+                            Add(item);
+                    }
+                });
 <% } %>
