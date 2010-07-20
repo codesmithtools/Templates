@@ -79,8 +79,7 @@ namespace PetShop.Business
 			
 			
             return DataPortal.Fetch< ProfileList >(criteria);
-        }
-        
+        }  
 
         public static ProfileList GetByUsernameApplicationName(System.String username, System.String applicationName)
         {
@@ -88,8 +87,7 @@ namespace PetShop.Business
 			
 			
             return DataPortal.Fetch< ProfileList >(criteria);
-        }
-        
+        }  
 
         public static ProfileList GetAll()
         {
@@ -97,9 +95,7 @@ namespace PetShop.Business
         }
 
         #endregion
-
 #else
-
         #region Method Overrides
 
         protected override void AddNewCore()
@@ -121,7 +117,6 @@ namespace PetShop.Business
         }
         
         #endregion
-
 #endif
 
         #region Asynchronous Factory Methods
@@ -138,7 +133,6 @@ namespace PetShop.Business
         {
 			var criteria = new ProfileCriteria{UniqueID = uniqueID};
 			
-			
             var dp = new DataPortal< ProfileList >();
             dp.FetchCompleted += handler;
             dp.BeginFetch(criteria);
@@ -147,7 +141,6 @@ namespace PetShop.Business
         public static void GetByUsernameApplicationNameAsync(System.String username, System.String applicationName, EventHandler<DataPortalResult<ProfileList>> handler)
         {
 			var criteria = new ProfileCriteria{Username = username, ApplicationName = applicationName};
-			
 			
             var dp = new DataPortal< ProfileList >();
             dp.FetchCompleted += handler;
@@ -162,8 +155,6 @@ namespace PetShop.Business
         }
 
         #endregion
-
-
 
         #region DataPortal partial methods
 

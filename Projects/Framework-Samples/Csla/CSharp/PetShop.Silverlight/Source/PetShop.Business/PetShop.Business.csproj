@@ -262,7 +262,9 @@
     <Compile Include="Utility\ADOHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Entities.csp" />
+    <None Include="Entities.csp">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

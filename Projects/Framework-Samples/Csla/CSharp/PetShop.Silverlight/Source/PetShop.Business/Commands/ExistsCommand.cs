@@ -88,7 +88,7 @@ namespace PetShop.Business
                 
             cmd.AfterServer();
 
-            bool result = waitHandle.WaitOne(10000);
+            bool result = waitHandle.WaitOne(30000);
             if (result)
                 return cmd.Result;
             

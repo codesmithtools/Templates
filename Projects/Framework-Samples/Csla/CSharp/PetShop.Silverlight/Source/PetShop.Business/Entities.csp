@@ -5,7 +5,7 @@
     <add key="ConnectionString2" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="Entities.cs" output="Entities.cs" template="A:\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Entities.cst">
+    <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\CSharp\BusinessLayer\Entities.cst">
       <property name="Criteria">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
@@ -132,13 +132,9 @@
     </tableList>
       </property>
       <property name="EditableRootList">
-        <connectionString>$(ConnectionString1)</connectionString>
+        <connectionString>$(ConnectionString2)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
-      <table>
-        <owner>dbo</owner>
-        <name>Category</name>
-      </table>
       <table>
         <owner>dbo</owner>
         <name>LineItem</name>
@@ -207,7 +203,16 @@
       <property name="AutoExecuteStoredProcedures">False</property>
       <property name="IsolationLevel">ReadCommitted</property>
       <property name="TestProjectName">PetShop.Test</property>
-      <property name="CommandObject" />
+      <property name="DynamicListBase">
+        <connectionString>$(ConnectionString2)</connectionString>
+        <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
+        <tableList>
+      <table>
+        <owner>dbo</owner>
+        <name>Category</name>
+      </table>
+    </tableList>
+      </property>
     </propertySet>
   </propertySets>
 </codeSmith>
