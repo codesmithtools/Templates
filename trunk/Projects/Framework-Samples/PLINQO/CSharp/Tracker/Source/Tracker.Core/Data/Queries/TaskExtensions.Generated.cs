@@ -933,7 +933,7 @@ namespace Tracker.Core.Data
         /// <param name="status">Status to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Core.Data.Task> ByStatus(this IQueryable<Tracker.Core.Data.Task> queryable, Status status)
+        public static IQueryable<Tracker.Core.Data.Task> ByStatus(this IQueryable<Tracker.Core.Data.Task> queryable, Tracker.Core.Data.Status status)
         {
             return queryable.Where(t => t.Status == status);
         }
@@ -946,7 +946,7 @@ namespace Tracker.Core.Data
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Core.Data.Task> ByStatus(this IQueryable<Tracker.Core.Data.Task> queryable, ComparisonOperator comparisonOperator, Status status)
+        public static IQueryable<Tracker.Core.Data.Task> ByStatus(this IQueryable<Tracker.Core.Data.Task> queryable, ComparisonOperator comparisonOperator, Tracker.Core.Data.Status status)
         {
             switch (comparisonOperator)
             {
@@ -973,9 +973,9 @@ namespace Tracker.Core.Data
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Core.Data.Task> ByStatus(this IQueryable<Tracker.Core.Data.Task> queryable, Status status, params Status[] additionalValues)
+        public static IQueryable<Tracker.Core.Data.Task> ByStatus(this IQueryable<Tracker.Core.Data.Task> queryable, Tracker.Core.Data.Status status, params Tracker.Core.Data.Status[] additionalValues)
         {
-            var statusList = new List<Status> { status };
+            var statusList = new List<Tracker.Core.Data.Status> { status };
 
             if (additionalValues != null)
                 statusList.AddRange(additionalValues);
@@ -993,7 +993,7 @@ namespace Tracker.Core.Data
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Core.Data.Task> ByStatus(this IQueryable<Tracker.Core.Data.Task> queryable, IEnumerable<Status> values)
+        public static IQueryable<Tracker.Core.Data.Task> ByStatus(this IQueryable<Tracker.Core.Data.Task> queryable, IEnumerable<Tracker.Core.Data.Status> values)
         {
             return queryable.Where(t => values.Contains(t.Status));
         }
@@ -1005,7 +1005,7 @@ namespace Tracker.Core.Data
         /// <param name="priority">Priority to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Core.Data.Task> ByPriority(this IQueryable<Tracker.Core.Data.Task> queryable, Priority? priority)
+        public static IQueryable<Tracker.Core.Data.Task> ByPriority(this IQueryable<Tracker.Core.Data.Task> queryable, Tracker.Core.Data.Priority? priority)
         {
             // support nulls
             return priority == null 
@@ -1021,7 +1021,7 @@ namespace Tracker.Core.Data
         /// <param name="comparisonOperator">The comparison operator.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Core.Data.Task> ByPriority(this IQueryable<Tracker.Core.Data.Task> queryable, ComparisonOperator comparisonOperator, Priority? priority)
+        public static IQueryable<Tracker.Core.Data.Task> ByPriority(this IQueryable<Tracker.Core.Data.Task> queryable, ComparisonOperator comparisonOperator, Tracker.Core.Data.Priority? priority)
         {
             if (priority == null && comparisonOperator != ComparisonOperator.Equals && comparisonOperator != ComparisonOperator.NotEquals)
                 throw new ArgumentNullException("priority", "Parameter 'priority' cannot be null with the specified ComparisonOperator.  Parameter 'comparisonOperator' must be ComparisonOperator.Equals or ComparisonOperator.NotEquals to support null.");
@@ -1055,9 +1055,9 @@ namespace Tracker.Core.Data
         /// <param name="additionalValues">Additional values to search for.</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Core.Data.Task> ByPriority(this IQueryable<Tracker.Core.Data.Task> queryable, Priority? priority, params Priority?[] additionalValues)
+        public static IQueryable<Tracker.Core.Data.Task> ByPriority(this IQueryable<Tracker.Core.Data.Task> queryable, Tracker.Core.Data.Priority? priority, params Tracker.Core.Data.Priority?[] additionalValues)
         {
-            var priorityList = new List<Priority?> { priority };
+            var priorityList = new List<Tracker.Core.Data.Priority?> { priority };
 
             if (additionalValues != null)
                 priorityList.AddRange(additionalValues);
@@ -1077,7 +1077,7 @@ namespace Tracker.Core.Data
         /// <param name="values">The values to search for..</param>
         /// <returns><see cref="IQueryable"/> with additional where clause.</returns>
         [System.CodeDom.Compiler.GeneratedCode("CodeSmith", "5.0.0.0")]
-        public static IQueryable<Tracker.Core.Data.Task> ByPriority(this IQueryable<Tracker.Core.Data.Task> queryable, IEnumerable<Priority?> values)
+        public static IQueryable<Tracker.Core.Data.Task> ByPriority(this IQueryable<Tracker.Core.Data.Task> queryable, IEnumerable<Tracker.Core.Data.Priority?> values)
         {
             // creating dynmic expression to support nulls
             var expression = DynamicExpression.BuildExpression<Tracker.Core.Data.Task, bool>("Priority", values);
