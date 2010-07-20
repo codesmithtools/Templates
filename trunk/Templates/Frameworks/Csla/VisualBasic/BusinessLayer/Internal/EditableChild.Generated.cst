@@ -63,13 +63,13 @@ Namespace <%= BusinessProjectName %>
     <% RenderHelper(New Properties()) %>
     
 #Region "Synchronous Factory Methods"
-    
-        Friend Shared Function New<%= ChildBusinessClassName %><%= Entity.GenericProperty %>() As <%= ChildBusinessClassName %> 
-            Return DataPortal.Create(Of <%= BusinessClassName %>)()
-        End Function
+
     <% If(IncludeSilverlightSupport) Then %>
     #If Not SILVERLIGHT Then
     <% End If %>
+        Friend Shared Function New<%= ChildBusinessClassName %><%= Entity.GenericProperty %>() As <%= ChildBusinessClassName %> 
+            Return DataPortal.Create(Of <%= BusinessClassName %>)()
+        End Function
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
         Friend Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %>

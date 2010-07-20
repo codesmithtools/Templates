@@ -70,7 +70,7 @@ Namespace <%= BusinessProjectName %>
     <% End If %>
 #Region "Method Overrides"
         
-        Protected Overrides Function AddNewCore() As Object
+        Protected Overrides Function AddNewCore() As <% if(IsCSLA40) { %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% } else { %>Object<% } %>
     <% RenderHelper(new AddNewCore()) %>
         End Function
         
@@ -81,17 +81,17 @@ Namespace <%= BusinessProjectName %>
         Public Shared Function NewList() As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Return DataPortal.Create(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
         End Function
-    
+
         Public Shared Function GetAll() As <%= BusinessClassName %><%= Entity.GenericProperty %>
             Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
         End Function
-    
+
     <% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
         Public Shared Function <%= sc.MethodName %>(<%= sc.Members.BuildParametersVariables() %>) As <%= BusinessClassName %><%= Entity.GenericProperty %> 
             Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
             <%= sc.Members.BuildObjectInitializer() %>
-    
+
             Return DataPortal.Fetch(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)(criteria)
         End Function
     <% Next %>
@@ -131,13 +131,17 @@ Namespace <%= BusinessProjectName %>
             dp.BeginFetch(criteria)
         End Sub
     <% Next %> 
-            
+
+        Public Shared Function GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>))) As <%= BusinessClassName %><%= Entity.GenericProperty %>
+            Dim dp As New DataPortal(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
+        End Function
+
 #End Region
     
     <% End If %>
-    
     <% RenderHelper(New IsDirty()) %>
-        
     <% RenderHelper(New PartialMethods()) %>
     <% RenderHelper(New Exists()) %>
     End Class
