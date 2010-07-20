@@ -24,7 +24,7 @@ using Csla.Data;
 namespace PetShop.Business
 {
     [Serializable]
-    public partial class ProductList : EditableRootListBase< Product >
+    public partial class ProductList : DynamicBindingListBase< Product >
     {
         #region Constructor(s)
 #if !SILVERLIGHT
@@ -155,7 +155,6 @@ namespace PetShop.Business
         {
  			var criteria = new ProductCriteria{ProductId = productId};
 			
-			
 			var dp = new DataPortal< ProductList >();
             dp.FetchCompleted += handler;
             dp.BeginFetch(criteria);
@@ -164,7 +163,6 @@ namespace PetShop.Business
         public static void GetByNameAsync(System.String name, EventHandler<DataPortalResult<ProductList>> handler)
         {
  			var criteria = new ProductCriteria{Name = name};
-			
 			
 			var dp = new DataPortal< ProductList >();
             dp.FetchCompleted += handler;
@@ -175,7 +173,6 @@ namespace PetShop.Business
         {
  			var criteria = new ProductCriteria{CategoryId = categoryId};
 			
-			
 			var dp = new DataPortal< ProductList >();
             dp.FetchCompleted += handler;
             dp.BeginFetch(criteria);
@@ -184,7 +181,6 @@ namespace PetShop.Business
         public static void GetByCategoryIdNameAsync(System.String categoryId, System.String name, EventHandler<DataPortalResult<ProductList>> handler)
         {
  			var criteria = new ProductCriteria{CategoryId = categoryId, Name = name};
-			
 			
 			var dp = new DataPortal< ProductList >();
             dp.FetchCompleted += handler;
@@ -195,15 +191,19 @@ namespace PetShop.Business
         {
  			var criteria = new ProductCriteria{CategoryId = categoryId, ProductId = productId, Name = name};
 			
-			
 			var dp = new DataPortal< ProductList >();
             dp.FetchCompleted += handler;
             dp.BeginFetch(criteria);
         }
         
+        public static void GetAllAsync(EventHandler<DataPortalResult<ProductList>> handler)
+        {
+            var dp = new DataPortal< ProductList >();
+            dp.FetchCompleted += handler;
+            dp.BeginFetch(new ProductCriteria());
+        }
+        
         #endregion
-
-
 
         #region DataPortal partial methods
 

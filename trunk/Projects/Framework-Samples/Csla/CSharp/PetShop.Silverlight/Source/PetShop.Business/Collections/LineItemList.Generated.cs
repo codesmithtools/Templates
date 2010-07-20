@@ -84,8 +84,7 @@ namespace PetShop.Business
 			
 			
             return DataPortal.Fetch< LineItemList >(criteria);
-        }
-        
+        }  
 
         public static LineItemList GetByOrderId(System.Int32 orderId)
         {
@@ -93,8 +92,7 @@ namespace PetShop.Business
 			
 			
             return DataPortal.Fetch< LineItemList >(criteria);
-        }
-        
+        }  
 
         public static LineItemList GetAll()
         {
@@ -102,9 +100,7 @@ namespace PetShop.Business
         }
 
         #endregion
-
 #else
-
         #region Method Overrides
 
         protected override void AddNewCore()
@@ -131,7 +127,6 @@ namespace PetShop.Business
         }
         
         #endregion
-
 #endif
 
         #region Asynchronous Factory Methods
@@ -148,7 +143,6 @@ namespace PetShop.Business
         {
 			var criteria = new LineItemCriteria{OrderId = orderId, LineNum = lineNum};
 			
-			
             var dp = new DataPortal< LineItemList >();
             dp.FetchCompleted += handler;
             dp.BeginFetch(criteria);
@@ -157,7 +151,6 @@ namespace PetShop.Business
         public static void GetByOrderIdAsync(System.Int32 orderId, EventHandler<DataPortalResult<LineItemList>> handler)
         {
 			var criteria = new LineItemCriteria{OrderId = orderId};
-			
 			
             var dp = new DataPortal< LineItemList >();
             dp.FetchCompleted += handler;
@@ -172,8 +165,6 @@ namespace PetShop.Business
         }
 
         #endregion
-
-
 
         #region DataPortal partial methods
 

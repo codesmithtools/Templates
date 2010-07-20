@@ -17,7 +17,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
-    <SilverlightApplicationList>{56CA55D0-CFEB-492B-9E86-9B6F504F4533}|..\PetShop.UI.Silverlight\PetShop.UI.Silverlight.csproj|ClientBin|True</SilverlightApplicationList>
+    <SilverlightApplicationList>{56CA55D0-CFEB-492B-9E86-9B6F504F4533}|..\PetShop.UI.Silverlight\PetShop.UI.Silverlight.csproj|ClientBin|False</SilverlightApplicationList>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,7 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="clientaccesspolicy.xml" />
-    <Content Include="ClientBin\Debug\PetShop.UI.Silverlight.xap" />
+    <Content Include="ClientBin\PetShop.UI.Silverlight.xap" />
     <Content Include="Comm_Images\bg-body.gif" />
     <Content Include="Comm_Images\bg-labelLists.gif" />
     <Content Include="Comm_Images\bg-search.gif" />
@@ -382,8 +382,7 @@
       <Name>PetShop.Controls</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="App_Themes\PetShop\StyleSheet.css" />
     <Content Include="Controls\BreadCrumbControl.ascx" />
