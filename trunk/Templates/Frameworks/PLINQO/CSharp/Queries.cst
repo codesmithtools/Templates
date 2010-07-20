@@ -68,6 +68,7 @@
     
     public void CreateQueryClasses(Database databaseMap, DataManager dataManager)
     {
+        string ns = string.IsNullOrEmpty(QueryNamespace) ? databaseMap.ContextNamespace : QueryNamespace;
         QueryExtensionGeneratedClass t = this.Create<QueryExtensionGeneratedClass>();
         this.CopyPropertiesTo(t);
         t.DataManager = dataManager;
@@ -75,7 +76,7 @@
         t.EnumDatabase = this.EnumDatabase;
         
         QueryExtensionEditableClass p = this.Create<QueryExtensionEditableClass>();
-        p.ClassNamespace = databaseMap.ContextNamespace;
+        p.ClassNamespace = ns;
         
         foreach(EntityManager manager in dataManager.Managers)
         {

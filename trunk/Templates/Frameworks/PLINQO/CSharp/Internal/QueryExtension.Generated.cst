@@ -40,6 +40,10 @@
 <%@ Property Category="3.Query" Name="MethodKeySuffix"
     Type="System.String" Default="Key" Optional="False"
     Description="The suffix of the primary key query method names." %>
+    
+<%@ Property Category="3.Query" Name="QueryNamespace"
+    Type="System.String" Default="" Optional="True"
+    Description="The namespace for the interfaces.  Leave blank to not generate them." %>
 
 <%@ Property Name="EnumDatabase"
     Type="LinqToSqlShared.Generator.DbmlEnum.Database" Optional="True"
@@ -72,7 +76,11 @@ using System.Data.Linq;
 using CodeSmith.Data.Linq;
 using CodeSmith.Data.Linq.Dynamic;
 
+<% if (string.IsNullOrEmpty(QueryNamespace)) { %>
 namespace <%= Database.ContextNamespace %>
+<% } else { %>
+namespace <%= QueryNamespace %>
+<% } %>
 {
     /// <summary>
     /// The query extension class for <%= EntityManager.EntityName %>.
