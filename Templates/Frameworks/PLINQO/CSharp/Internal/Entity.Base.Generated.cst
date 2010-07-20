@@ -37,6 +37,9 @@ namespace <%= ClassNamespace %>
     /// <summary>
     /// A base class for Linq entities that implements notification events.
     /// </summary>
+<% if (IncludeXmlSerialization) { %>
+    [System.Serializable]
+<% } %>
     <%if (IncludeDataContract) { %>
     [System.Runtime.Serialization.DataContract(IsReference = true)]
     <%}%>
