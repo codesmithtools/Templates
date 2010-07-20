@@ -12,16 +12,10 @@
 
         #region Exists Command
 
-<% if(IncludeSilverlightSupport) { %>
-#if !SILVERLIGHT
-<% } %>
         public static bool Exists(<%= CriteriaClassName %><%= Entity.GenericProperty %> criteria)
         {
             return <%= BusinessProjectName %>.<%= ResolveTargetClassName(ChildBusinessClassName, "Info", IsReadOnlyBusinessObject("Info")) %>.Exists(criteria);
         }
-<% if(IncludeSilverlightSupport) { %>
-#endif
-<% } %>
 
         #endregion
 

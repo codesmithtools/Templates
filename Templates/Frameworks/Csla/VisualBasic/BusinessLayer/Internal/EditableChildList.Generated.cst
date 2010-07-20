@@ -92,21 +92,37 @@ Namespace <%= BusinessProjectName %>
     
 #End Region
     <% If(IncludeSilverlightSupport) Then %>
-    
     #End If        
     
 #Region "Asynchronous Factory Methods"
     
-        Friend Shared Sub New<%= ChildBusinessClassName %>ListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
+        Friend Shared Sub NewListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
             Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
             AddHandler dp.CreateCompleted, handler
             dp.BeginCreate()
         End Sub
+<% For Each sc As SearchCriteria In  Entity.SearchCriteria() %>
     
-    ' Child objects do not expose asynchronous factory get methods.
+        Friend Shared Sub <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
+            Dim criteria As New <%= CriteriaClassName %><%= Entity.GenericProperty %>()
+            <%= sc.Members.BuildObjectInitializer() %>
+
+            'How should this be called? In the sync method we call FetchChild.
+            Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(criteria)
+        End Sub
+<% Next %>
+    
+        Friend Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)))
+            'How should this be called? In the sync method we call FetchChild.
+            Dim dp As New DataPortal(Of <%= ChildBusinessClassName %><%= Entity.GenericProperty %>)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(New <%= CriteriaClassName %><%= Entity.GenericProperty %>())
+        End Sub
     
     #End Region
-    <% End If %>
+<% End If %>
     
 #Region "Method Overrides"
     
@@ -137,9 +153,7 @@ Namespace <%= BusinessProjectName %>
     <% End If %>
     
 #End Region
-    
     <% RenderHelper(New IsDirty()) %>
-    
     <% RenderHelper(New PartialMethods()) %>
     <% RenderHelper(New Exists()) %>
     End Class

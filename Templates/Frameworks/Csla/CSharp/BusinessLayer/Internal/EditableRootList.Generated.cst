@@ -96,7 +96,6 @@ namespace <%= BusinessProjectName %>
 			
             return DataPortal.Fetch< <%= BusinessClassName %><%= Entity.GenericProperty %> >(criteria);
         }
-        
 <% } %>
 
         public static <%= BusinessClassName %><%= Entity.GenericProperty %> GetAll()
@@ -105,10 +104,8 @@ namespace <%= BusinessProjectName %>
         }
 
         #endregion
-
 <% if(IncludeSilverlightSupport) { %>
 #else
-
         #region Method Overrides
 
         protected override void AddNewCore()
@@ -117,8 +114,6 @@ namespace <%= BusinessProjectName %>
         }
         
         #endregion
-
-#endif
 
         #region Asynchronous Factory Methods
         
@@ -135,7 +130,6 @@ namespace <%= BusinessProjectName %>
         {
 			var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>};
 			<%= sc.Members.BuildNullableObjectInitializer()%>
-			
             var dp = new DataPortal< <%= BusinessClassName %> >();
             dp.FetchCompleted += handler;
             dp.BeginFetch(criteria);
@@ -150,11 +144,9 @@ namespace <%= BusinessProjectName %>
         }
 
         #endregion
-
+#endif
 <% } %>
-
 <% RenderHelper(new IsDirty()); %>
-
 <% RenderHelper(new PartialMethods()); %>
 <% RenderHelper(new Exists()); %>
     }
