@@ -10,6 +10,7 @@
 <%@ Import Namespace="SchemaExplorer" %>
 <%@ Import Namespace="CodeSmith.SchemaHelper" %>
 <%@ Import Namespace="QuickStart" %>
+<% If(Not RenderOptionalContent) Then %>
             Dim item As <%= ChildBusinessClassName %> = <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>()
     
             Dim cancel As Boolean = False
@@ -22,7 +23,20 @@
                 
                 Add(item)
             End If
-    <% If(Not RenderOptionalContent) Then %>        
-    
+
             Return item
-    <% End If %>
+<% Else %>
+            <%= BusinessProjectName %>.<%= ChildBusinessClassName %>.New<%= ChildBusinessClassName %>Async(Sub(o, e)
+                    Dim item As <%= ChildBusinessClassName %> = e.Object
+        
+                    Dim cancel As Boolean = False
+                    OnAddNewCore(item, cancel)
+                    If Not (cancel) Then
+                        ' Check to see if someone set the item to null in the OnAddNewCore.
+                        If Not (item Is Nothing) Then
+                            Add(item)
+                        End If
+
+                    End If
+                End Sub)
+<% End If %>
