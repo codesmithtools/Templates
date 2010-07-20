@@ -6,7 +6,6 @@
   </variables>
   <propertySets>
     <propertySet name="Entities.cs" output="Entities.cs" template="..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\VisualBasic\BusinessLayer\Entities.cst">
-      <property name="CommandObject" />
       <property name="Criteria">
         <connectionString>$(ConnectionString1)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
@@ -133,13 +132,9 @@
     </tableList>
       </property>
       <property name="EditableRootList">
-        <connectionString>$(ConnectionString1)</connectionString>
+        <connectionString>$(ConnectionString2)</connectionString>
         <providerType>SchemaExplorer.SqlSchemaProvider,SchemaExplorer.SqlSchemaProvider</providerType>
         <tableList>
-      <table>
-        <owner>dbo</owner>
-        <name>Category</name>
-      </table>
       <table>
         <owner>dbo</owner>
         <name>LineItem</name>

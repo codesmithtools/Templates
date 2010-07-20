@@ -11,9 +11,16 @@ Option Explicit On
 Option Strict On
 
 Imports System
+
+#If SILVERLIGHT Then
+Imports Csla
+Imports Csla.Serialization
+#Else
 Imports System.Data.SqlClient
 
 Imports Csla
+Imports Csla.Data
+#End If
 
 Namespace PetShop.Business
     <Serializable()> _
@@ -35,8 +42,9 @@ Namespace PetShop.Business
     
 #End Region
     
-#Region "Factory Methods"
-    
+#Region "Synchronous Factory Methods"
+
+#If Not SILVERLIGHT Then
         Public Shared Function Execute(Of T As IGeneratedCriteria)(ByVal criteria As T) As Boolean
             If Not CanExecuteCommand() Then
                 Throw New System.Security.SecurityException("Not authorized to execute command")
@@ -49,9 +57,46 @@ Namespace PetShop.Business
     
             Return cmd.Result
         End Function
-    
+#End If
+
 #End Region
-    
+
+#Region "Asynchronous Factory Methods"
+
+#If SILVERLIGHT Then
+        Public Shared Function Execute(Of T As IGeneratedCriteria)(ByVal criteria As T) As Boolean
+            If Not CanExecuteCommand() Then
+                Throw New System.Security.SecurityException("Not authorized to execute command")
+            End If
+
+            Dim cmd As New ExistsCommand()
+            cmd.BeforeServer(criteria)
+
+            Dim waitHandle = New System.Threading.ManualResetEvent(False)
+
+            DataPortal.BeginExecute(cmd, Sub(o, e)
+                                             If e.Error IsNot Nothing Then
+                                                 Throw e.Error
+                                             End If
+
+                                             cmd.Result = e.Object.Result
+
+                                             waitHandle.Set()
+                                         End Sub)
+
+            cmd.AfterServer()
+
+            Dim result As Boolean = waitHandle.WaitOne(30000)
+            If result Then
+                Return cmd.Result
+            End If
+
+            Throw New Exception("Exists timed out.")
+        End Function
+#End If
+
+#End Region
+        
 #Region "Client-side Code"
     
         Private _criteria As IGeneratedCriteria
@@ -85,7 +130,8 @@ Namespace PetShop.Business
 #End Region
     
 #Region "Data Access"
-    
+
+#If Not SILVERLIGHT Then
         Protected Overloads Overrides Sub DataPortal_Execute()
             Dim commandText As String = String.Format("SELECT COUNT(1) FROM {0} {1}", Criteria.TableFullName, ADOHelper.BuildWhereStatement(Criteria.StateBag))
             Using connection As New SqlConnection(ADOHelper.ConnectionString)
@@ -96,7 +142,8 @@ Namespace PetShop.Business
                 End Using
             End Using
         End Sub
-        
+#End If
+
 #End Region
     End Class
 End Namespace

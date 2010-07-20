@@ -98,7 +98,6 @@ Namespace PetShop.Business
         End Sub
     
 #End Region
-    
 
 #Region "Properties"
     
@@ -452,8 +451,37 @@ Namespace PetShop.Business
         Private Shared ReadOnly _lineItemsProperty As PropertyInfo(Of LineItemList) = RegisterProperty(Of LineItemList)(Function(p As Order) p.LineItems, Csla.RelationshipTypes.Child)
     Public ReadOnly Property LineItems() As LineItemList
             Get
-    #If Not SILVERLIGHT Then
                 If Not (FieldManager.FieldExists(_lineItemsProperty)) Then
+#If SILVERLIGHT Then
+                    MarkBusy()
+                    
+                    Dim criteria As New PetShop.Business.LineItemCriteria()
+                    criteria.OrderId = OrderId
+
+                    If (Me.IsNew OrElse Not PetShop.Business.LineItemList.Exists(criteria)) Then
+                        PetShop.Business.LineItemList.NewListAsync(Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_lineItemsProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_lineItemsProperty)
+                            End Sub)
+                    Else
+                        PetShop.Business.LineItemList.GetByOrderIdAsync(OrderId, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_lineItemsProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_lineItemsProperty)
+                            End Sub)
+                    End If
+#Else
                     Dim criteria As New PetShop.Business.LineItemCriteria()
                     criteria.OrderId = OrderId
     
@@ -473,8 +501,37 @@ Namespace PetShop.Business
         Private Shared ReadOnly _orderStatusesProperty As PropertyInfo(Of OrderStatusList) = RegisterProperty(Of OrderStatusList)(Function(p As Order) p.OrderStatuses, Csla.RelationshipTypes.Child)
     Public ReadOnly Property OrderStatuses() As OrderStatusList
             Get
-    #If Not SILVERLIGHT Then
                 If Not (FieldManager.FieldExists(_orderStatusesProperty)) Then
+#If SILVERLIGHT Then
+                    MarkBusy()
+                    
+                    Dim criteria As New PetShop.Business.OrderStatusCriteria()
+                    criteria.OrderId = OrderId
+
+                    If (Me.IsNew OrElse Not PetShop.Business.OrderStatusList.Exists(criteria)) Then
+                        PetShop.Business.OrderStatusList.NewListAsync(Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_orderStatusesProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_orderStatusesProperty)
+                            End Sub)
+                    Else
+                        PetShop.Business.OrderStatusList.GetByOrderIdAsync(OrderId, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_orderStatusesProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_orderStatusesProperty)
+                            End Sub)
+                    End If
+#Else
                     Dim criteria As New PetShop.Business.OrderStatusCriteria()
                     criteria.OrderId = OrderId
     
@@ -511,7 +568,6 @@ Namespace PetShop.Business
         End Sub
     
 #End Region
-    
     #End If        
     
 #Region "Asynchronous Root Factory Methods"
@@ -532,17 +588,16 @@ Namespace PetShop.Business
             dp.BeginFetch(criteria)
         End Sub
     
-        Public Shared Sub DeleteOrderDeleteOrderAsync(ByVal orderId As System.Int32, ByVal handler As EventHandler(Of DataPortalResult(Of Order)))
+        Public Shared Sub DeleteOrderAsync(ByVal orderId As System.Int32, ByVal handler As EventHandler(Of DataPortalResult(Of Order)))
             Dim dp As New DataPortal(Of Order)()
-            dp.DeleteCompleted += handler
+            AddHandler dp.DeleteCompleted, handler
             dp.BeginDelete(New OrderCriteria (orderId))
         End Sub
     
             
     #End Region
     
-    #If Not SILVERLIGHT Then
-    
+#If Not SILVERLIGHT Then
 #Region "Synchronous Child Factory Methods"
     
         Friend Shared Function NewOrderChild() As Order
@@ -557,11 +612,9 @@ Namespace PetShop.Business
         End Function
     
 #End Region
+#End If        
     
-    
-    #End If        
-    
-    #Region "Asynchronous Child Factory Methods"
+#Region "Asynchronous Child Factory Methods"
     
         Friend Shared Sub NewOrderChildAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Order)))
             Dim dp As New DataPortal(Of Order)()
@@ -573,10 +626,8 @@ Namespace PetShop.Business
     
     ' Child objects do not expose asynchronous delete methods.
     
-    #End Region
-    
-    
-        
+#End Region
+
 #Region "DataPortal partial methods"
     
     #If Not SILVERLIGHT Then
@@ -640,14 +691,11 @@ Namespace PetShop.Business
 #End Region
 
 #Region "Exists Command"
-    
-    #If Not SILVERLIGHT Then
+
         Public Shared Function Exists(ByVal criteria As OrderCriteria ) As Boolean
             Return ExistsCommand.Execute(criteria)
         End Function
-    #End If
-    
-#End Region
 
+#End Region
     End Class
 End Namespace

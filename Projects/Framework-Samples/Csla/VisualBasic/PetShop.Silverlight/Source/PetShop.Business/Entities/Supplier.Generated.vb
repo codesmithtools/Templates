@@ -226,8 +226,37 @@ Namespace PetShop.Business
         Private Shared ReadOnly _itemsProperty As PropertyInfo(Of ItemList) = RegisterProperty(Of ItemList)(Function(p As Supplier) p.Items, Csla.RelationshipTypes.Child)
     Public ReadOnly Property Items() As ItemList
             Get
-    #If Not SILVERLIGHT Then
                 If Not (FieldManager.FieldExists(_itemsProperty)) Then
+#If SILVERLIGHT Then
+                    MarkBusy()
+                    
+                    Dim criteria As New PetShop.Business.ItemCriteria()
+                    criteria.Supplier = SuppId
+
+                    If (Me.IsNew OrElse Not PetShop.Business.ItemList.Exists(criteria)) Then
+                        PetShop.Business.ItemList.NewListAsync(Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_itemsProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_itemsProperty)
+                            End Sub)
+                    Else
+                        PetShop.Business.ItemList.GetBySupplierAsync(SuppId, Sub(o, e)
+                                If Not (e.Error Is Nothing) Then
+                                    Throw e.Error
+                                End If
+
+                                Me.LoadProperty(_itemsProperty, e.Object)
+
+                                MarkIdle()
+                                OnPropertyChanged(_itemsProperty)
+                            End Sub)
+                    End If
+#Else
                     Dim criteria As New PetShop.Business.ItemCriteria()
                     criteria.Supplier = SuppId
     
@@ -329,14 +358,11 @@ Namespace PetShop.Business
 #End Region
 
 #Region "Exists Command"
-    
-    #If Not SILVERLIGHT Then
+
         Public Shared Function Exists(ByVal criteria As SupplierCriteria ) As Boolean
             Return ExistsCommand.Execute(criteria)
         End Function
-    #End If
-    
-#End Region
 
+#End Region
     End Class
 End Namespace

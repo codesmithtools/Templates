@@ -23,7 +23,7 @@ Imports Csla.Data
 Namespace PetShop.Business
     <Serializable()> _
     Public Partial Class ProductList
-        Inherits EditableRootListBase(Of Product)
+        Inherits DynamicBindingListBase(Of Product)
     
 #Region "Constructor(s)"
         
@@ -42,7 +42,7 @@ Namespace PetShop.Business
 #If Not SILVERLIGHT Then
 #Region "Method Overrides"
         
-        Protected Overrides Function AddNewCore() As Product
+        Protected Overrides Function AddNewCore() As Object
             Dim item As Product = PetShop.Business.Product.NewProduct()
     
             Dim cancel As Boolean = False
@@ -55,7 +55,7 @@ Namespace PetShop.Business
                 
                 Add(item)
             End If
-    
+
             Return item
         End Function
         
@@ -117,18 +117,19 @@ Namespace PetShop.Business
 #Region "Method Overrides"
 
         Protected Overrides Sub AddNewCore() 
-            Dim item As Product = PetShop.Business.Product.NewProduct()
-    
-            Dim cancel As Boolean = False
-            OnAddNewCore(item, cancel)
-            If Not (cancel) Then
-                ' Check to see if someone set the item to null in the OnAddNewCore.
-                If(item Is Nothing) Then
-                    item = PetShop.Business.Product.NewProduct()
-                End If
-                
-                Add(item)
-            End If
+            PetShop.Business.Product.NewProductAsync(Sub(o, e)
+                    Dim item As Product = e.Object
+        
+                    Dim cancel As Boolean = False
+                    OnAddNewCore(item, cancel)
+                    If Not (cancel) Then
+                        ' Check to see if someone set the item to null in the OnAddNewCore.
+                        If Not (item Is Nothing) Then
+                            Add(item)
+                        End If
+
+                    End If
+                End Sub)
         End Sub
 
 #End Region
@@ -229,14 +230,11 @@ Namespace PetShop.Business
 #End Region
 
 #Region "Exists Command"
-    
-    #If Not SILVERLIGHT Then
+
         Public Shared Function Exists(ByVal criteria As ProductCriteria) As Boolean
             Return PetShop.Business.Product.Exists(criteria)
         End Function
-    #End If
-    
-#End Region
 
+#End Region
     End Class
 End Namespace

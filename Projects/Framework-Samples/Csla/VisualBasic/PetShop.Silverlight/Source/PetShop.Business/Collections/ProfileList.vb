@@ -17,52 +17,16 @@ Imports Csla
 
 Namespace PetShop.Business
     Public Partial Class ProfileList
-        #Region "Authorization Rules"
+#Region "Authorization Rules"
     
+    #If Not SILVERLIGHT Then
         Private Sub AddAuthorizationRules()
-            ''More information on these rules can be found here (http://www.devx.com/codemag/Article/40663/1763/page/2).
-    
-            'Dim canWrite As String() = { "AdminUser", "RegularUser" }
-            'Dim canRead As String() = { "AdminUser", "RegularUser", "ReadOnlyUser" }
-            'Dim admin As String() = { "AdminUser" }
-    
-            'AuthorizationRules.AllowCreate(GetType(ProfileList), admin)
-            'AuthorizationRules.AllowDelete(GetType(ProfileList), admin)
-            'AuthorizationRules.AllowEdit(GetType(ProfileList), canWrite)
-            'AuthorizationRules.AllowGet(GetType(ProfileList), canRead)
-    
-            ''UniqueID
-            'AuthorizationRules.AllowRead(_uniqueIDProperty, canRead)
-    
-            ''Username
-            'AuthorizationRules.AllowWrite(_usernameProperty, canWrite)
-            'AuthorizationRules.AllowRead(_usernameProperty, canRead)
-    
-            ''ApplicationName
-            'AuthorizationRules.AllowWrite(_applicationNameProperty, canWrite)
-            'AuthorizationRules.AllowRead(_applicationNameProperty, canRead)
-    
-            ''IsAnonymous
-            'AuthorizationRules.AllowWrite(_isAnonymousProperty, canWrite)
-            'AuthorizationRules.AllowRead(_isAnonymousProperty, canRead)
-    
-            ''LastActivityDate
-            'AuthorizationRules.AllowWrite(_lastActivityDateProperty, canWrite)
-            'AuthorizationRules.AllowRead(_lastActivityDateProperty, canRead)
-    
-            ''LastUpdatedDate
-            'AuthorizationRules.AllowWrite(_lastUpdatedDateProperty, canWrite)
-            'AuthorizationRules.AllowRead(_lastUpdatedDateProperty, canRead)
-    
-    ' NOTE: Many-To-Many support coming soon.
-            ''Accounts
-            'AuthorizationRules.AllowRead(_accountsProperty, canRead)
-    
-            ''Carts
-            'AuthorizationRules.AllowRead(_cartsProperty, canRead)
-    
+            'Csla.Rules.BusinessRules.AddRule(GetType(ProfileList), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.CreateObject, "SomeRole"))
+            'Csla.Rules.BusinessRules.AddRule(GetType(ProfileList), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.EditObject, "SomeRole"))
+            'Csla.Rules.BusinessRules.AddRule(GetType(ProfileList), New Csla.Rules.CommonRules.IsInRole(Csla.Rules.AuthorizationActions.DeleteObject, "SomeRole", "SomeAdminRole"))
         End Sub
-	
+    #End If
+
 	#End Region
 
 #Region "Custom Factory Methods"

@@ -84,18 +84,65 @@ Namespace PetShop.Business
         End Function
     
 #End Region
-    
     #End If        
     
 #Region "Asynchronous Factory Methods"
     
-        Friend Shared Sub NewItemListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Item)))
+        Friend Shared Sub NewListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Item)))
             Dim dp As New DataPortal(Of Item)()
             AddHandler dp.CreateCompleted, handler
             dp.BeginCreate()
         End Sub
     
-    ' Child objects do not expose asynchronous factory get methods.
+        Friend Shared Sub GetByItemIdAsync(ByVal itemId As System.String, ByVal handler As EventHandler(Of DataPortalResult(Of Item)))
+            Dim criteria As New ItemCriteria()
+            criteria.ItemId = itemId
+
+            'How should this be called? In the sync method we call FetchChild.
+            Dim dp As New DataPortal(Of Item)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(criteria)
+        End Sub
+    
+        Friend Shared Sub GetByProductIdItemIdListPriceNameAsync(ByVal productId As System.String, ByVal itemId As System.String, ByVal listPrice As System.Nullable(Of System.Decimal), ByVal name As System.String, ByVal handler As EventHandler(Of DataPortalResult(Of Item)))
+            Dim criteria As New ItemCriteria()
+            criteria.ProductId = productId
+			criteria.ItemId = itemId
+			criteria.ListPrice = listPrice.Value
+			criteria.Name = name
+
+            'How should this be called? In the sync method we call FetchChild.
+            Dim dp As New DataPortal(Of Item)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(criteria)
+        End Sub
+    
+        Friend Shared Sub GetByProductIdAsync(ByVal productId As System.String, ByVal handler As EventHandler(Of DataPortalResult(Of Item)))
+            Dim criteria As New ItemCriteria()
+            criteria.ProductId = productId
+
+            'How should this be called? In the sync method we call FetchChild.
+            Dim dp As New DataPortal(Of Item)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(criteria)
+        End Sub
+    
+        Friend Shared Sub GetBySupplierAsync(ByVal supplier As System.Nullable(Of System.Int32), ByVal handler As EventHandler(Of DataPortalResult(Of Item)))
+            Dim criteria As New ItemCriteria()
+            criteria.Supplier = supplier.Value
+
+            'How should this be called? In the sync method we call FetchChild.
+            Dim dp As New DataPortal(Of Item)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(criteria)
+        End Sub
+    
+        Friend Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Item)))
+            'How should this be called? In the sync method we call FetchChild.
+            Dim dp As New DataPortal(Of Item)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(New ItemCriteria())
+        End Sub
     
     #End Region
     
@@ -104,7 +151,7 @@ Namespace PetShop.Business
     #If Not SILVERLIGHT Then
         Protected Overrides Function AddNewCore() As Item
             Dim item As Item = PetShop.Business.Item.NewItem()
-    
+
             Dim cancel As Boolean = False
             OnAddNewCore(item, cancel)
             If Not (cancel) Then
@@ -124,39 +171,39 @@ Namespace PetShop.Business
                 End If
                 Add(item)
             End If
-    
+
             Return item
         End Function
     #Else
-    
         Protected Overrides Sub AddNewCore() 
-            Dim item As Item = PetShop.Business.Item.NewItem()
-    
-            Dim cancel As Boolean = False
-            OnAddNewCore(item, cancel)
-            If Not (cancel) Then
-                ' Check to see if someone set the item to null in the OnAddNewCore.
-                If(item Is Nothing) Then
-                    item = PetShop.Business.Item.NewItem()
-                End If
-            ' Pass the parent value down to the child.
-                Dim product As Product = CType(Me.Parent, Product)
-                If Not(product Is Nothing)
-                    item.ProductId = product.ProductId
-                End If
-            ' Pass the parent value down to the child.
-                Dim supplier As Supplier = CType(Me.Parent, Supplier)
-                If Not(supplier Is Nothing)
-                    item.Supplier = supplier.SuppId
-                End If
-                Add(item)
-            End If
+            PetShop.Business.Item.NewItemAsync(Sub(o, e)
+                    Dim item As Item = e.Object
+        
+                    Dim cancel As Boolean = False
+                    OnAddNewCore(item, cancel)
+                    If Not (cancel) Then
+                        ' Check to see if someone set the item to null in the OnAddNewCore.
+                        If(item Is Nothing) Then
+                            Return
+                        End If
+                        ' Pass the parent value down to the child.
+                        Dim product As Product = CType(Me.Parent, Product)
+                        If Not(product Is Nothing)
+                            item.ProductId = product.ProductId
+                        End If
+                        ' Pass the parent value down to the child.
+                        Dim supplier As Supplier = CType(Me.Parent, Supplier)
+                        If Not(supplier Is Nothing)
+                            item.Supplier = supplier.SuppId
+                        End If
+                        Add(item)
+                    End If
+                End Sub)
         End Sub
-    
     #End If
     
         Protected Sub AddNewCoreAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Item)))
-            ItemList.NewItemListAsync(Sub(o, e)
+            PetShop.Business.Item.NewItemAsync(Sub(o, e)
                     If e.Error Is Nothing Then
                         Add(e.Object)
                         handler.Invoke(Me, New DataPortalResult(Of Item)(e.Object, Nothing, Nothing))
@@ -166,8 +213,6 @@ Namespace PetShop.Business
     
     
 #End Region
-    
-    
 #Region "DataPortal partial methods"
     
     #If Not SILVERLIGHT Then
@@ -194,14 +239,11 @@ Namespace PetShop.Business
 #End Region
 
 #Region "Exists Command"
-    
-    #If Not SILVERLIGHT Then
+
         Public Shared Function Exists(ByVal criteria As ItemCriteria) As Boolean
             Return PetShop.Business.Item.Exists(criteria)
         End Function
-    #End If
-    
-#End Region
 
+#End Region
     End Class
 End Namespace

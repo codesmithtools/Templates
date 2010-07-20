@@ -5,7 +5,7 @@
     <add key="ConnectionString2" value="Data Source=.;Initial Catalog=PetShop;Integrated Security=True" />
   </variables>
   <propertySets>
-    <propertySet name="DataAccessLayer.cs" output="DataAccessLayer.cs" template="C:\Code\Google.Templates.Trunk\Templates\Frameworks\Csla\VisualBasic\DataAccessLayer\DataAccessLayer.cst">
+    <propertySet name="DataAccessLayer.cs" output="DataAccessLayer.cs" template="..\..\..\..\..\..\CodeSmith.Google.Code.CSLA.Trunk\VisualBasic\DataAccessLayer\DataAccessLayer.cst">
       <property name="DataAccessImplementation">ObjectFactoryParameterizedSQL</property>
       <property name="DataProjectName">PetShop.Tests.OF.ParameterizedSQL.DAL</property>
       <property name="ParameterPrefix">@p_</property>
@@ -124,6 +124,10 @@
       <property name="ProcedurePrefix">CSLA_</property>
       <property name="AutoExecuteStoredProcedures">True</property>
       <property name="IsolationLevel">ReadCommitted</property>
+      <property name="DynamicListBase" />
+      <property name="FrameworkVersion">v40</property>
+      <property name="IncludeSilverlightSupport">False</property>
+      <property name="TestProjectName">PetShop.Test</property>
     </propertySet>
   </propertySets>
 </codeSmith>

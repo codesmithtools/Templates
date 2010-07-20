@@ -74,18 +74,52 @@ Namespace PetShop.Business
         End Function
     
 #End Region
-    
     #End If        
     
 #Region "Asynchronous Factory Methods"
     
-        Friend Shared Sub NewCartListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Cart)))
+        Friend Shared Sub NewListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Cart)))
             Dim dp As New DataPortal(Of Cart)()
             AddHandler dp.CreateCompleted, handler
             dp.BeginCreate()
         End Sub
     
-    ' Child objects do not expose asynchronous factory get methods.
+        Friend Shared Sub GetByCartIdAsync(ByVal cartId As System.Int32, ByVal handler As EventHandler(Of DataPortalResult(Of Cart)))
+            Dim criteria As New CartCriteria()
+            criteria.CartId = cartId
+
+            'How should this be called? In the sync method we call FetchChild.
+            Dim dp As New DataPortal(Of Cart)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(criteria)
+        End Sub
+    
+        Friend Shared Sub GetByUniqueIDAsync(ByVal uniqueID As System.Int32, ByVal handler As EventHandler(Of DataPortalResult(Of Cart)))
+            Dim criteria As New CartCriteria()
+            criteria.UniqueID = uniqueID
+
+            'How should this be called? In the sync method we call FetchChild.
+            Dim dp As New DataPortal(Of Cart)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(criteria)
+        End Sub
+    
+        Friend Shared Sub GetByIsShoppingCartAsync(ByVal isShoppingCart As System.Boolean, ByVal handler As EventHandler(Of DataPortalResult(Of Cart)))
+            Dim criteria As New CartCriteria()
+            criteria.IsShoppingCart = isShoppingCart
+
+            'How should this be called? In the sync method we call FetchChild.
+            Dim dp As New DataPortal(Of Cart)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(criteria)
+        End Sub
+    
+        Friend Shared Sub GetAllAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Cart)))
+            'How should this be called? In the sync method we call FetchChild.
+            Dim dp As New DataPortal(Of Cart)()
+            AddHandler dp.FetchCompleted, handler
+            dp.BeginFetch(New CartCriteria())
+        End Sub
     
     #End Region
     
@@ -94,7 +128,7 @@ Namespace PetShop.Business
     #If Not SILVERLIGHT Then
         Protected Overrides Function AddNewCore() As Cart
             Dim item As Cart = PetShop.Business.Cart.NewCart()
-    
+
             Dim cancel As Boolean = False
             OnAddNewCore(item, cancel)
             If Not (cancel) Then
@@ -109,34 +143,34 @@ Namespace PetShop.Business
                 End If
                 Add(item)
             End If
-    
+
             Return item
         End Function
     #Else
-    
         Protected Overrides Sub AddNewCore() 
-            Dim item As Cart = PetShop.Business.Cart.NewCart()
-    
-            Dim cancel As Boolean = False
-            OnAddNewCore(item, cancel)
-            If Not (cancel) Then
-                ' Check to see if someone set the item to null in the OnAddNewCore.
-                If(item Is Nothing) Then
-                    item = PetShop.Business.Cart.NewCart()
-                End If
-            ' Pass the parent value down to the child.
-                Dim profile As Profile = CType(Me.Parent, Profile)
-                If Not(profile Is Nothing)
-                    item.UniqueID = profile.UniqueID
-                End If
-                Add(item)
-            End If
+            PetShop.Business.Cart.NewCartAsync(Sub(o, e)
+                    Dim item As Cart = e.Object
+        
+                    Dim cancel As Boolean = False
+                    OnAddNewCore(item, cancel)
+                    If Not (cancel) Then
+                        ' Check to see if someone set the item to null in the OnAddNewCore.
+                        If(item Is Nothing) Then
+                            Return
+                        End If
+                        ' Pass the parent value down to the child.
+                        Dim profile As Profile = CType(Me.Parent, Profile)
+                        If Not(profile Is Nothing)
+                            item.UniqueID = profile.UniqueID
+                        End If
+                        Add(item)
+                    End If
+                End Sub)
         End Sub
-    
     #End If
     
         Protected Sub AddNewCoreAsync(ByVal handler As EventHandler(Of DataPortalResult(Of Cart)))
-            CartList.NewCartListAsync(Sub(o, e)
+            PetShop.Business.Cart.NewCartAsync(Sub(o, e)
                     If e.Error Is Nothing Then
                         Add(e.Object)
                         handler.Invoke(Me, New DataPortalResult(Of Cart)(e.Object, Nothing, Nothing))
@@ -146,8 +180,6 @@ Namespace PetShop.Business
     
     
 #End Region
-    
-    
 #Region "DataPortal partial methods"
     
     #If Not SILVERLIGHT Then
@@ -174,14 +206,11 @@ Namespace PetShop.Business
 #End Region
 
 #Region "Exists Command"
-    
-    #If Not SILVERLIGHT Then
+
         Public Shared Function Exists(ByVal criteria As CartCriteria) As Boolean
             Return PetShop.Business.Cart.Exists(criteria)
         End Function
-    #End If
-    
-#End Region
 
+#End Region
     End Class
 End Namespace
