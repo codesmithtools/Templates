@@ -1,4 +1,4 @@
-<%-- Author: Blake Niemyjski --%>
+﻿<%-- Author: Blake Niemyjski --%>
 <%@ CodeTemplate Language="C#" TargetLanguage="C#" Inherits="QuickStart.QuickStartCodeTemplate" Debug="False" CompilerVersion="v3.5" Encoding="UTF-8" Description="CSLA CommandObject" %>
 
 <%@ Assembly Name="CodeSmith.SchemaHelper" Path="..\..\..\Common" %>
@@ -18,9 +18,23 @@
 #region Using declarations
 
 using System;
+<% if(IncludeSilverlightSupport) { %>
+
+#if SILVERLIGHT
+using Csla;
+using Csla.Serialization;
+#else
 using System.Data.SqlClient;
 
 using Csla;
+using Csla.Data;
+#endif
+<% } else { %>
+using System.Data.SqlClient;
+
+using Csla;
+using Csla.Data;
+<% } %>
 
 #endregion
 
@@ -46,23 +60,65 @@ namespace <%= BusinessProjectName %>
 
         #endregion
 
-        #region Factory Methods 
+        #region Synchronous Factory Methods 
 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
         public static bool Execute<T>(T criteria) where T : IGeneratedCriteria
         {
             if (!CanExecuteCommand())
                 throw new System.Security.SecurityException("Not authorized to execute command");
 
-            ExistsCommand cmd = new ExistsCommand();
+            var cmd = new ExistsCommand();
             cmd.BeforeServer(criteria);
             cmd = DataPortal.Execute(cmd);
             cmd.AfterServer();
 
             return cmd.Result;
         }
+<% if(IncludeSilverlightSupport) { %>
+#endif  
+<% } %>
 
         #endregion
 
+<% if(IncludeSilverlightSupport) { %>
+        #region Asynchronous Factory Methods
+
+#if SILVERLIGHT
+        public static bool Execute<T>(T criteria) where T : IGeneratedCriteria
+        {
+            if (!CanExecuteCommand())
+                throw new System.Security.SecurityException("Not authorized to execute command");
+
+            var cmd = new ExistsCommand();
+            cmd.BeforeServer(criteria);
+
+            var waitHandle = new System.Threading.ManualResetEvent(false);
+            DataPortal.BeginExecute(cmd, (o, e) =>
+                    {
+                        if (e.Error != null) 
+                            throw e.Error;
+                        
+                        cmd.Result = e.Object.Result;
+
+                        waitHandle.Set();
+                    });
+                
+            cmd.AfterServer();
+
+            bool result = waitHandle.WaitOne(30000);
+            if (result)
+                return cmd.Result;
+            
+            throw new Exception("Exists timed out.");
+        }
+#endif  
+        
+        #endregion
+
+<% } %>
         #region Client-side Code
 
         private IGeneratedCriteria Criteria { get; set; }
@@ -82,6 +138,9 @@ namespace <%= BusinessProjectName %>
 
         #region Data Access
 
+<% if(IncludeSilverlightSupport) { %>
+#if !SILVERLIGHT
+<% } %>
         protected override void DataPortal_Execute()
         {
             string commandText = string.Format("SELECT COUNT(1) FROM {0} {1}", Criteria.TableFullName, ADOHelper.BuildWhereStatement(Criteria.StateBag));
@@ -95,6 +154,9 @@ namespace <%= BusinessProjectName %>
                 }
             }
         }
+<% if(IncludeSilverlightSupport) { %>
+#endif
+<% } %>
 
         #endregion
     }

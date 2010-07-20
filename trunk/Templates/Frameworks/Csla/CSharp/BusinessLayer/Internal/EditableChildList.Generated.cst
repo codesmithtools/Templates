@@ -103,14 +103,32 @@ namespace <%= BusinessProjectName %>
 #endif  
         #region Asynchronous Factory Methods
         
-        internal static void New<%= ChildBusinessClassName %>ListAsync(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        internal static void NewListAsync(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
 		{
 			var dp = new DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>();
 			dp.CreateCompleted += handler;
 			dp.BeginCreate();
 		}
-        
-        //Child objects do not expose asynchronous factory get methods
+<% foreach(SearchCriteria sc in Entity.SearchCriteria()) { %>
+
+        internal static void <%= sc.MethodName %>Async(<%= sc.Members.BuildParametersVariables() %>, EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        {
+			var criteria = new <%= CriteriaClassName %><%= Entity.GenericProperty %>{<%= sc.Members.BuildObjectInitializer() %>};
+			<%=sc.Members.BuildNullableObjectInitializer()%>
+            // How should this be called? In the sync method we call FetchChild.
+            var dp = new DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(criteria);
+        }
+<% } %>
+
+        internal static void GetAllAsync(EventHandler<DataPortalResult<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>> handler)
+        {
+            // How should this be called? In the sync method we call FetchChild.
+            var dp = new DataPortal<<%= ChildBusinessClassName %><%= Entity.GenericProperty %>>();
+			dp.FetchCompleted += handler;
+			dp.BeginFetch(new <%= CriteriaClassName %><%= Entity.GenericProperty %>());
+        }
  
         #endregion
         

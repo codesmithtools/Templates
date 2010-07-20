@@ -66,9 +66,9 @@ Namespace <%= BusinessProjectName %>
     
 #End Region
     
-    <% If(IncludeSilverlightSupport) Then %>
-    #If Not SILVERLIGHT Then
-    <% End If %>
+<% If(IncludeSilverlightSupport) Then %>
+#If Not SILVERLIGHT Then
+<% End If %>
 #Region "Method Overrides"
     
         Protected Overrides Function AddNewCore() As <% If (IsCSLA40) Then %><%= ChildBusinessClassName %><%= Entity.GenericProperty %><% Else %>Object<% End If %>
@@ -97,11 +97,9 @@ Namespace <%= BusinessProjectName %>
         End Function
     
 #End Region
-    
-    <% If(IncludeSilverlightSupport) Then %>
-    
-    #Else       
-    
+<% If(IncludeSilverlightSupport) Then %>
+#Else
+
 #Region "Method Overrides"
     
         Protected Overrides Sub AddNewCore() 
@@ -109,9 +107,7 @@ Namespace <%= BusinessProjectName %>
         End Sub
     
 #End Region
-    
-    #End If
-    
+
 #Region "Asynchronous Factory Methods"
             
         Public Shared Sub NewListAsync(ByVal handler As EventHandler(Of DataPortalResult(Of <%= BusinessClassName %><%= Entity.GenericProperty %>)))
@@ -141,10 +137,9 @@ Namespace <%= BusinessProjectName %>
         End Sub
     
 #End Region
-    <% End If %>
-    
+#End If
+<% End If %>
     <% RenderHelper(New IsDirty()) %>
-    
     <% RenderHelper(New PartialMethods()) %>
     <% RenderHelper(New Exists()) %>
     End Class
